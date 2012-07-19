@@ -32,6 +32,9 @@ import org.teiid.designer.core.compare.EObjectMatcherFactory;
 import org.teiid.designer.core.transaction.UnitOfWork;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 
+/**
+ * @since 8.0
+ */
 public class BasicModelGenerator extends AbstractModelGenerator {
 
     private static final int UNITS_GENERATION = 10000;

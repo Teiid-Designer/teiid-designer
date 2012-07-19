@@ -19,6 +19,8 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 
 /**
  * AddTransformationSource
+ *
+ * @since 8.0
  */
 public class AddToDiagramAction extends DiagramAction {
 

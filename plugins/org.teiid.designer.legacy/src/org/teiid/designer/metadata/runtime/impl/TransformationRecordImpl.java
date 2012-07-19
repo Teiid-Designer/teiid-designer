@@ -15,6 +15,8 @@ import org.teiid.designer.metadata.runtime.TransformationRecord;
 
 /**
  * TransformationRecordImpl
+ *
+ * @since 8.0
  */
 public class TransformationRecordImpl extends AbstractMetadataRecord implements TransformationRecord {
 

@@ -39,6 +39,8 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
  * Import wizard designed to import metadata from one or more Teiid formatted data files and create a relational
  * model containing the standard/generated File Connector procedures and create view relational tables containing
  * the SQL containing the function call which will return the data from the file in relational table format
+ *
+ * @since 8.0
  */
 public class TeiidMetadataImportWizard extends AbstractWizard implements
 		IPropertiesContext, IImportWizard, UiConstants {

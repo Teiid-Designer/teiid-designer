@@ -39,6 +39,8 @@ import org.teiid.designer.ui.common.wizard.AbstractWizard;
 
 /**
  * This wizard is used to drive the creation of XSD and XML from Relational Selections.
+ *
+ * @since 8.0
  */
 
 public class ConvertToEnterpriseTypesWizard extends AbstractWizard implements UiConstants {

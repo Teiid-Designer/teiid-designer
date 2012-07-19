@@ -14,6 +14,8 @@ import org.teiid.designer.diagram.ui.editor.IDiagramSelectionHandler;
 /**
  * @author blafond AbstractDiagramEditPartFactory provides a base class for all Diagram Edit Part Factories This class handles the
  *         notation ID as well as implements the default method for creating Edit Parts for the EditPartFactory interface method.
+ *
+ * @since 8.0
  */
 public abstract class AbstractDiagramEditPartFactory implements DiagramEditPartFactory {
 

@@ -23,6 +23,8 @@ import org.teiid.query.sql.lang.Command;
 
 /**
  * SqlTransformationResult
+ *
+ * @since 8.0
  */
 public class SqlTransformationResult implements QueryValidationResult {
     

@@ -9,6 +9,8 @@ package org.teiid.designer.metamodels.relational;
 
 /**
  * RelationalMetamodelConstants
+ *
+ * @since 8.0
  */
 public interface RelationalMetamodelConstants {
     public static final String PLUGIN_ID="org.teiid.designer.metamodels.relational"; //$NON-NLS-1$

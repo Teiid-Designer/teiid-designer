@@ -32,6 +32,8 @@ import org.teiid.designer.metadata.runtime.MetadataConstants;
 
 /**
  * TargetTransformationRule
+ *
+ * @since 8.0
  */
 public class TargetTransformationRule implements ResourceValidationRule {
 

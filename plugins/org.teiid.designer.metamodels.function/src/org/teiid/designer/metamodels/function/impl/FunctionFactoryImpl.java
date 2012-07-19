@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.function.ScalarFunction;
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class FunctionFactoryImpl extends EFactoryImpl implements FunctionFactory {
     /**

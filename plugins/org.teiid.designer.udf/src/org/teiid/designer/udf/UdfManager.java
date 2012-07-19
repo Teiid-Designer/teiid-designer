@@ -56,6 +56,9 @@ import org.teiid.query.function.SystemFunctionManager;
 import org.teiid.query.function.UDFSource;
 
 
+/**
+ * @since 8.0
+ */
 public final class UdfManager implements IResourceChangeListener {
     
     public static final UdfManager INSTANCE = new UdfManager();

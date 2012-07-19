@@ -21,6 +21,9 @@ import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.editor.VdbEditor;
 
 
+/**
+ * @since 8.0
+ */
 public class VdbRequiresSaveChecker {
 	
     public static boolean insureOpenVdbSaved(IFile vdbFile) {

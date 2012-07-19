@@ -32,6 +32,8 @@ import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 /**
  * AttributeMappingHelper - static methods for keeping the target attribute mappings for
  * a transformation up-to-date.
+ *
+ * @since 8.0
  */
 public class AttributeMappingHelper {
     private static final boolean NOT_SIGNIFICANT = false;

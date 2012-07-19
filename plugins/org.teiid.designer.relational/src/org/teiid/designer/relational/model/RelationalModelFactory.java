@@ -60,6 +60,8 @@ import org.teiid.designer.relational.RelationalPlugin;
 
 /**
  * Class provides building EMF Relational Metamodel objects from Relational Model objects
+ *
+ * @since 8.0
  */
 public class RelationalModelFactory implements RelationalConstants {
     public static final String RELATIONAL_PACKAGE_URI = RelationalPackage.eNS_URI;

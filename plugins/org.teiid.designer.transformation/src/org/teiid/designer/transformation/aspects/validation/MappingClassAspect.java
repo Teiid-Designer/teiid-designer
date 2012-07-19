@@ -29,6 +29,8 @@ import org.teiid.designer.metamodels.transformation.TransformationPackage;
 
 /**
  * MappingClassAspect
+ *
+ * @since 8.0
  */
 public class MappingClassAspect extends TransformationAspect {
 

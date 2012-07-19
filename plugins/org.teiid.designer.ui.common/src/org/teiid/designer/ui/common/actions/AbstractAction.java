@@ -26,6 +26,8 @@ import org.teiid.designer.ui.common.graphics.ImageImageDescriptor;
 
 /**
  * AbstractAction
+ *
+ * @since 8.0
  */
 public abstract class AbstractAction extends Action
 implements INullSelectionListener, ISelectionChangedListener {

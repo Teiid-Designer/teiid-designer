@@ -9,6 +9,8 @@ package org.teiid.designer.diagram.ui.model;
 
 /**
  * LabelModelNode
+ *
+ * @since 8.0
  */
 public class LabelModelNode extends AbstractFreeDiagramModelNode {
     /**

@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.EReference;
  * @see org.teiid.designer.metamodels.core.CoreFactory
  * @model kind="package"
  * @generated
+ *
+ * @since 8.0
  */
 public interface CorePackage extends EPackage {
     /**

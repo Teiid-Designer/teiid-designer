@@ -48,6 +48,8 @@ import org.teiid.designer.ui.common.InternalUiConstants;
 
 /**
  * CalendarWidget
+ *
+ * @since 8.0
  */
 public class CalendarWidget extends Composite implements InternalUiConstants {
 

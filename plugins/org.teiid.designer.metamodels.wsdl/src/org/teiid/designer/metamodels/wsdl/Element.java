@@ -23,6 +23,8 @@ package org.teiid.designer.metamodels.wsdl;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getElement()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Element extends AttributeOwner, ElementOwner {
 

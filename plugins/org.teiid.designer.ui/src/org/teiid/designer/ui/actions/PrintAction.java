@@ -15,6 +15,8 @@ import org.teiid.designer.ui.common.actions.AbstractAction;
 
 /**
  * PrintAction
+ *
+ * @since 8.0
  */
 public class PrintAction extends AbstractAction {
 

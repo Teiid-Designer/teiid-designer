@@ -15,6 +15,8 @@ import org.eclipse.emf.ecore.EFactory;
  * 
  * @see org.teiid.designer.metamodels.core.extension.ExtensionPackage
  * @generated
+ *
+ * @since 8.0
  */
 public interface ExtensionFactory extends EFactory {
 

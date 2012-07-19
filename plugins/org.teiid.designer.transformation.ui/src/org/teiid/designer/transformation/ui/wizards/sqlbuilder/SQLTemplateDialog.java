@@ -29,16 +29,18 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.transformation.ui.Messages;
-import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.UiConstants.Images;
+import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlTextViewer;
 import org.teiid.designer.ui.common.graphics.ColorManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
-/*
+/**
  * SQLTemplateDialog - Display the relevant SQL Templates for Tables or Procedures, so that user can choose some SQL
  * to start editing.
+ *
+ * @since 8.0
  */
 public class SQLTemplateDialog  extends TitleAreaDialog {
 

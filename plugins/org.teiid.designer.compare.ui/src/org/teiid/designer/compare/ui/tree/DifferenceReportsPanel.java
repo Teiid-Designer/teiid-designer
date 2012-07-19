@@ -46,6 +46,8 @@ import org.teiid.designer.ui.common.widget.StatusLabel;
 
 /**
  * Panel to show the tree of changes, allowing for selection / deselection of parts of them.
+ *
+ * @since 8.0
  */
 public class DifferenceReportsPanel extends Composite implements CoreStringUtil.Constants {
 

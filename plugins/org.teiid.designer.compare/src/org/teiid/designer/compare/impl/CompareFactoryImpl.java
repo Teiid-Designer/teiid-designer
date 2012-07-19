@@ -22,6 +22,8 @@ import org.teiid.designer.compare.PropertyDifference;
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
     /**

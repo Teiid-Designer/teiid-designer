@@ -26,6 +26,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.datatools.models.teiidsqlmodel.TeiidsqlmodelPackage#getTeiidSchema()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface TeiidSchema extends Schema {
 	/**

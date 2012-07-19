@@ -10,6 +10,9 @@ package org.teiid.designer.diagram.ui.util;
 import org.eclipse.gef.GraphicalEditPart;
 import org.teiid.designer.diagram.ui.figure.DiagramPolylineConnection;
 
+/**
+ * @since 8.0
+ */
 public class DiagramConnectionEndpointEditPolicy
 	extends org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy {
 

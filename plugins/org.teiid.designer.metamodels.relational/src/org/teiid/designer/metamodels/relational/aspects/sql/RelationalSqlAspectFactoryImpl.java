@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 
 /**
  * RelationalSqlAspectFactoryImpl
+ *
+ * @since 8.0
  */
 public class RelationalSqlAspectFactoryImpl implements MetamodelAspectFactory {
     @Override

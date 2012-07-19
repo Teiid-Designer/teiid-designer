@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * SqlModelAspect is used to get the model source information 
  * for runtime metadata.
+ *
+ * @since 8.0
  */
 public interface SqlModelSourceAspect extends SqlAspect {
     

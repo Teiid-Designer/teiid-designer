@@ -50,6 +50,8 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
  * <p>
  * IMPORTANT: This class is <em>not</em> intended to be subclassed.
  * </p>
+ *
+ * @since 8.0
  */
 public class DiagramViewForm extends Composite {
 

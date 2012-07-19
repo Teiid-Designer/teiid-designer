@@ -26,6 +26,8 @@ import org.teiid.designer.core.ModelerCore;
 
 /**
  * The ModelWorkspaceView represents a filtered view of the {@link ModelWorkspace}, including the contents of models.
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceView {
 

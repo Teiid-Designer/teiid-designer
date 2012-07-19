@@ -15,6 +15,8 @@ import org.teiid.designer.core.search.runtime.RelationshipRecord;
 
 /**
  * This interface is used to find relationships between models based on specified criteria.
+ *
+ * @since 8.0
  */
 public interface FindRelationshipsCommand	extends SearchCommand {
 

@@ -51,6 +51,8 @@ import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 
 /**
  * ModelBuildUtil has utility methoods that help validate a Resource.
+ *
+ * @since 8.0
  */
 public class ModelBuildUtil {
     public static final int MONITOR_TASK_NAME_MAX_LENGTH = 200;

@@ -24,6 +24,9 @@ import org.teiid.core.PluginUtil;
 import org.teiid.core.util.PluginUtilImpl;
 
 
+/**
+ * @since 8.0
+ */
 public class FunctionPlugin extends Plugin {
 
     public static final String PLUGIN_ID = "org.teiid.designer.metamodels.function"; //$NON-NLS-1$

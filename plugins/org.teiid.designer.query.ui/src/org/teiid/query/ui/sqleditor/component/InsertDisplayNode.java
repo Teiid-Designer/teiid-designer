@@ -14,6 +14,8 @@ import org.teiid.query.sql.lang.Option;
 
 /**
  * The <code>InsertDisplayNode</code> class is used to represent a INSERT command.
+ *
+ * @since 8.0
  */
 public class InsertDisplayNode extends DisplayNode {
 

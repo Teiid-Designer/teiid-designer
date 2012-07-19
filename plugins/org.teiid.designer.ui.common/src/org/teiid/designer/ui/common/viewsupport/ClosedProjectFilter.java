@@ -13,6 +13,8 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
  * ClosedProjectFilter
+ *
+ * @since 8.0
  */
 public class ClosedProjectFilter extends ViewerFilter {
 

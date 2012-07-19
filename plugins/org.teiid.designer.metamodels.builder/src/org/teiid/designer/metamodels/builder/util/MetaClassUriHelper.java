@@ -9,6 +9,8 @@ package org.teiid.designer.metamodels.builder.util;
 
 /** 
  * This is a helper class for getting parts of a MetaClass URI
+ *
+ * @since 8.0
  */
 public class MetaClassUriHelper {
     private static final String METACLASS_URI_DELIMITER = "#//";  //$NON-NLS-1$

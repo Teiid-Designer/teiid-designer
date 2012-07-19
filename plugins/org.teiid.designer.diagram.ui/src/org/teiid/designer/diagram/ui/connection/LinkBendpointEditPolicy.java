@@ -16,6 +16,9 @@ import org.teiid.designer.diagram.ui.connection.commands.CreateBendpointCommand;
 import org.teiid.designer.diagram.ui.connection.commands.DeleteBendpointCommand;
 import org.teiid.designer.diagram.ui.connection.commands.MoveBendpointCommand;
 
+/**
+ * @since 8.0
+ */
 public class LinkBendpointEditPolicy extends org.eclipse.gef.editpolicies.BendpointEditPolicy {
 
     @Override

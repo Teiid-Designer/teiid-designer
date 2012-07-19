@@ -17,6 +17,8 @@ import org.teiid.core.util.CoreStringUtil;
 /**
  * This class allows for the original URL of a URL object that was used to create a File object to be saved. The File object is
  * created from the URL by saving the InputStream from the URL off to a local file.
+ *
+ * @since 8.0
  */
 public class FileUrl extends File {
 

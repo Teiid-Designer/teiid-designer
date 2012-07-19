@@ -22,6 +22,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.wsdl.mime.MimePackage#getMimeElementOwner()
  * @model interface="true" abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface MimeElementOwner extends EObject {
 

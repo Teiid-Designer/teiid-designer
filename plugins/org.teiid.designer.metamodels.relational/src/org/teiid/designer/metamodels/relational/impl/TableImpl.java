@@ -50,6 +50,8 @@ import org.teiid.designer.metamodels.relational.Table;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public abstract class TableImpl extends ColumnSetImpl implements Table {
     /**

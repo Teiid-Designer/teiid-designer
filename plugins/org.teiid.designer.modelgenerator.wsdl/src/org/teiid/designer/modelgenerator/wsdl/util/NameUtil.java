@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.util;
 
+/**
+ * @since 8.0
+ */
 public class NameUtil {
 
     public static String normalizeNameForRelationalTable( String nameIn ) {

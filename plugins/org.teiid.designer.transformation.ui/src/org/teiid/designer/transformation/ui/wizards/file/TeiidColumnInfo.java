@@ -20,6 +20,8 @@ import org.teiid.query.sql.symbol.ElementSymbol;
 
 /**
  * A <code>TeiidColumnInfo</code> defines extension properties for metaclasses within a metamodel.
+ *
+ * @since 8.0
  */
 public class TeiidColumnInfo {
 	public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$

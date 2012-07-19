@@ -43,6 +43,9 @@ import org.teiid.designer.xml.ui.wizards.XmlDocumentContentProvider;
 import org.teiid.designer.xml.ui.wizards.XmlDocumentSelectorDialog;
 
 
+/**
+ * @since 8.0
+ */
 public class GenerateWebServiceModelAction2 extends SortableSelectionAction implements IInternalUiConstants {
 
     private static final String KEY_NO_SEL_DLG_MSG = "GenerateWebServiceModelAction.noSelMsg"; //$NON-NLS-1$

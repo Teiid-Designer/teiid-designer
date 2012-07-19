@@ -39,6 +39,8 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 
 /**
  *
+ *
+ * @since 8.0
  */
 public class MetadataSearchResultPage extends AbstractTextSearchViewPage implements IAdaptable, UiConstants {
 

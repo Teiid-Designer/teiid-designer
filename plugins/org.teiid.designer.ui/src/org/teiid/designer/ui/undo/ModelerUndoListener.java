@@ -13,6 +13,8 @@ import java.util.EventObject;
  * ModelerUndoListener is an interface for notification that some sort of change
  * occurred in the ModelerUndoManager.  Events are fired to all listeners whenever
  * the manager's undo or redo stacks are modified.
+ *
+ * @since 8.0
  */
 public interface ModelerUndoListener {
 

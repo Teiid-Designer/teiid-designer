@@ -15,6 +15,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * define a org.eclipse.emf.ecore.resource.ResourceSet that is
  * external to the model container but may be needed by the container
  * for resolution of resource references.
+ *
+ * @since 8.0
  */
 public interface ExternalResourceSet {
 

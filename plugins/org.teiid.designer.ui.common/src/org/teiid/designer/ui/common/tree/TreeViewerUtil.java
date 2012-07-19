@@ -18,6 +18,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 
 /**
  * TreeViewerUtil is a set of static utility methods for operating on TreeViewer.
+ *
+ * @since 8.0
  */
 abstract public class TreeViewerUtil {
 

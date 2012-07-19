@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
 
 /**
  * UuidMatcherFactory
+ *
+ * @since 8.0
  */
 public class RelationalMatcherFactory implements EObjectMatcherFactory {
 

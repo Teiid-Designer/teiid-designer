@@ -50,6 +50,8 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
  * The <code>ServerPage</code> is used to create or modify a server.
+ *
+ * @since 8.0
  */
 public final class ServerPage extends WizardPage implements HostProvider {
 

@@ -39,6 +39,9 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.webservice.gen.BasicWsdlGenerator;
 
 
+/**
+ * @since 8.0
+ */
 public class PreviewWsdlAction extends SortableSelectionAction {
 
     public List<ModelResource> wsResources = new ArrayList<ModelResource>();

@@ -29,6 +29,8 @@ import org.teiid.designer.extension.Messages;
 
 /**
  * The <code>ModelExtensionPropertyDefinitionImpl</code> is a default implementation of a model extension property definition.
+ *
+ * @since 8.0
  */
 public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPropertyDefinition {
 

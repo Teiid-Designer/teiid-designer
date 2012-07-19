@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.diagram.ui.model;
 
+/**
+ * @since 8.0
+ */
 public interface ExpandableNode {
     
     boolean isExpanded();

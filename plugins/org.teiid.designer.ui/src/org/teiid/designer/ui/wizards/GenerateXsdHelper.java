@@ -84,6 +84,8 @@ import org.teiid.designer.webservice.util.WebServiceBuildOptions;
 
 /**
  * Helper class used by the Generate Web Service Schemas Wizard
+ *
+ * @since 8.0
  */
 public class GenerateXsdHelper {
     public static boolean HEADLESS = false;

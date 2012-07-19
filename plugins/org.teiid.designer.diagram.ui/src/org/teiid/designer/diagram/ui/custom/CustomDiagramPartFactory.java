@@ -17,6 +17,8 @@ import org.teiid.designer.diagram.ui.part.DiagramEditPart;
 
 /**
  * PackageDiagramPartFactory
+ *
+ * @since 8.0
  */
 public class CustomDiagramPartFactory extends PackageDiagramPartFactory  {
     private DiagramFigureFactory figureFactory;

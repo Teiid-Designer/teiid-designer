@@ -35,6 +35,8 @@ import org.teiid.designer.compare.PropertyDifference;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class PropertyDifferenceImpl extends EObjectImpl implements PropertyDifference {
     /**

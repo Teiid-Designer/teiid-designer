@@ -21,6 +21,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.xml.XmlDocumentPackage#getXmlBaseElement()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface XmlHolderEntity extends EObject {
 

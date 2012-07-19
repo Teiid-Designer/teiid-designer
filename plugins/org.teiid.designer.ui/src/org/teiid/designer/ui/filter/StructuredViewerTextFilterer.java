@@ -32,6 +32,9 @@ import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.ui.UiConstants;
 
 
+/**
+ * @since 8.0
+ */
 public class StructuredViewerTextFilterer extends StructuredViewerFilterer implements IFilter {
 
     public static final String DEFAULT_PROMPT = UiConstants.Util.getString("StructuredViewerTextFilterer.defaultPromptText"); //$NON-NLS-1$

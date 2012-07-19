@@ -38,6 +38,8 @@ import org.teiid.designer.webservice.WebServicePlugin;
 
 /**
  *
+ *
+ * @since 8.0
  */
 public class WsdlFileSelectionComposite extends Composite implements UiConstants {
 

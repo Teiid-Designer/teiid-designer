@@ -25,6 +25,8 @@ import org.teiid.designer.ui.common.widget.ButtonProvider;
 
 /**
  * @param <T>
+ *
+ * @since 8.0
  */
 public final class TableAndToolBar<T> {
 

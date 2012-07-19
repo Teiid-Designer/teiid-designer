@@ -19,6 +19,8 @@ package org.teiid.designer.metamodels.wsdl;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getBindingInput()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface BindingInput extends BindingParam {
 

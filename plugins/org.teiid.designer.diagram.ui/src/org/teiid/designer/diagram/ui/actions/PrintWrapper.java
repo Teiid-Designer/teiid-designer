@@ -31,6 +31,8 @@ import org.teiid.designer.ui.editors.ModelEditor;
 
 /**
  * PrintWrapper
+ *
+ * @since 8.0
  */
 public class PrintWrapper extends DiagramAction
                        implements DiagramUiConstants,

@@ -59,6 +59,9 @@ import org.teiid.query.ui.builder.model.SetCriteriaEditorModel;
 import org.teiid.query.ui.builder.util.ElementViewerFactory;
 
 
+/**
+ * @since 8.0
+ */
 public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     private final static String PREFIX = I18nUtil.getPropertyPrefix(SetCriteriaEditor.class);
     private final static int HORIZONTAL_GAP_BETWEEN_BUTTONS = 7;

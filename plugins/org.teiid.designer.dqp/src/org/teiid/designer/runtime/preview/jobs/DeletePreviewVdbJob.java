@@ -22,6 +22,8 @@ import org.teiid.designer.runtime.preview.PreviewContext;
 
 /**
  * The <code>DeletePreviewVdbJob</code> job deletes a Preview VDB from the Eclipse workspace.
+ *
+ * @since 8.0
  */
 public final class DeletePreviewVdbJob extends WorkspacePreviewVdbJob {
 

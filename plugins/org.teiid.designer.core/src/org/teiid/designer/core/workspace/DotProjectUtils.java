@@ -31,6 +31,8 @@ import org.teiid.designer.core.ModelerCore;
 /**
  * Utility class for inquiring about eclipse and Designer project-related info.
  *
+ *
+ * @since 8.0
  */
 public class DotProjectUtils {
 

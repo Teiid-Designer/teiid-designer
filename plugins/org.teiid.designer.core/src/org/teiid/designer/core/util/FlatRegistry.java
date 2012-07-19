@@ -18,6 +18,8 @@ import org.teiid.designer.core.spi.RegistrySPI;
 
 
 /**
+ *
+ * @since 8.0
  */
 public class FlatRegistry implements RegistrySPI {
 

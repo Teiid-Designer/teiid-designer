@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.diagram.Diagram;
  * @author mdrilling
  *
  * Model Node for UML Classifier Container
+ *
+ * @since 8.0
  */
 public class UmlClassifierContainerNode extends AbstractLocalDiagramModelNode {
     public static final int ATTRIBUTES = 0;

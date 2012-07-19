@@ -11,6 +11,8 @@ import org.teiid.query.sql.symbol.Expression;
 
 /**
  * CriteriaExpressionEditorModel
+ *
+ * @since 8.0
  */
 public class CriteriaExpressionEditorModel extends CompositeLanguageObjectEditorModel {
     

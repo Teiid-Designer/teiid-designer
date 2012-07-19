@@ -38,6 +38,8 @@ import org.teiid.designer.metamodels.relational.View;
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class RelationalFactoryImpl extends EFactoryImpl implements RelationalFactory {
     /**

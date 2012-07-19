@@ -30,6 +30,8 @@ import org.teiid.designer.jdbc.JdbcPackage;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class JdbcDriverItemProvider
     extends ItemProviderAdapter

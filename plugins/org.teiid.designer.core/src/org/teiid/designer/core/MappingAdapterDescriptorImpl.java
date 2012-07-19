@@ -11,6 +11,8 @@ import org.osgi.framework.Bundle;
 
 /**
  * MappingAdapterDescriptorImpl
+ *
+ * @since 8.0
  */
 public class MappingAdapterDescriptorImpl
     extends ExtensionDescriptorImpl

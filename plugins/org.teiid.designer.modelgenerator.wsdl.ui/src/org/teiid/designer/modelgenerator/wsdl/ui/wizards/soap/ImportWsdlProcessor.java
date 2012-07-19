@@ -60,6 +60,9 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class ImportWsdlProcessor {
 	public static final RelationalFactory factory = RelationalFactory.eINSTANCE;
 	public static final DatatypeManager datatypeManager = ModelerCore.getWorkspaceDatatypeManager();

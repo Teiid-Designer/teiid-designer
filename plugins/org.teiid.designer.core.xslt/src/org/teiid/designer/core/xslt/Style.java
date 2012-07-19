@@ -14,6 +14,8 @@ import org.teiid.core.TeiidException;
 
 /**
  * Style
+ *
+ * @since 8.0
  */
 public interface Style {
     

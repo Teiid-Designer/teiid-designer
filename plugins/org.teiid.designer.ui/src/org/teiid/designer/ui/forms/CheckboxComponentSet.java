@@ -22,6 +22,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+/**
+ * @since 8.0
+ */
 public class CheckboxComponentSet extends SimpleComponentSet {
     //
     // Class constants:

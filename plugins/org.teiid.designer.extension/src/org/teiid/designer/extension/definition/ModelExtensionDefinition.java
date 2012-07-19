@@ -32,6 +32,8 @@ import org.teiid.designer.extension.properties.NamespaceProvider;
 
 /**
  * A <code>ModelExtensionDefinition</code> defines extension properties for metaclasses within a metamodel.
+ *
+ * @since 8.0
  */
 public class ModelExtensionDefinition implements NamespaceProvider, PropertyChangeListener {
 

@@ -19,6 +19,8 @@ import org.teiid.designer.extension.properties.Translation;
 /**
  * The <code>ModelExtensionAssistant</code> is used when a model extension definition file is parsed and also when working with
  * model objects.
+ *
+ * @since 8.0
  */
 public class ModelExtensionAssistant implements ExtensionConstants {
 

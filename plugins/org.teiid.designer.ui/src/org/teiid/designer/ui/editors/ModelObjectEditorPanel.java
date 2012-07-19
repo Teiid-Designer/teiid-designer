@@ -47,6 +47,8 @@ import org.teiid.designer.ui.common.actions.ActionService;
 
 /**
  * ModelObjectEditorPanel is a container for ModelObjectEditor controls to be placed beneath the ModelEditor.
+ *
+ * @since 8.0
  */
 public class ModelObjectEditorPanel implements IAdaptable, FocusListener, IPropertyListener {
 

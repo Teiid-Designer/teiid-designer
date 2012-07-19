@@ -90,6 +90,8 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiPlugin;
 
 /**
  * XsdSemanticsEditorPage
+ *
+ * @since 8.0
  */
 public class XsdSimpleDatatypesEditorPage extends EditorPart implements ModelEditorPage// , ISelectionChangedListener
 {

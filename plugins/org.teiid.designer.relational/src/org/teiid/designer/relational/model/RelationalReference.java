@@ -21,6 +21,8 @@ import org.teiid.designer.relational.RelationalPlugin;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class RelationalReference implements RelationalConstants {
     public static final String KEY_NAME = "NAME"; //$NON-NLS-1$

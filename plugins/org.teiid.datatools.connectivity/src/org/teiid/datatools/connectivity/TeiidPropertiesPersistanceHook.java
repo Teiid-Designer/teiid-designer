@@ -9,6 +9,9 @@ package org.teiid.datatools.connectivity;
 
 import org.eclipse.datatools.connectivity.PropertiesPersistenceHook;
 
+/**
+ * @since 8.0
+ */
 public class TeiidPropertiesPersistanceHook extends PropertiesPersistenceHook {
 
 }

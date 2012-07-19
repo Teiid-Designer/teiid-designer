@@ -21,6 +21,8 @@ import org.eclipse.emf.mapping.MappingFactory;
 
 /**
  * ENamedElementMatcher
+ *
+ * @since 8.0
  */
 public class ENamedElementMatcher extends AbstractEObjectMatcher {
 

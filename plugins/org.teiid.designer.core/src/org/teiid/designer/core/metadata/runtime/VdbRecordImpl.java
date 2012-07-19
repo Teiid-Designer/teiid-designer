@@ -16,6 +16,8 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlVdbAspect;
 
 /**
  * ModelRecordImpl
+ *
+ * @since 8.0
  */
 public class VdbRecordImpl extends org.teiid.designer.metadata.runtime.impl.VdbRecordImpl {
 

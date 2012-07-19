@@ -14,6 +14,8 @@ import org.teiid.query.sql.lang.Update;
 
 /**
  * The <code>UpdateDisplayNode</code> class is used to represent a UPDATE command.
+ *
+ * @since 8.0
  */
 public class UpdateDisplayNode extends DisplayNode {
 

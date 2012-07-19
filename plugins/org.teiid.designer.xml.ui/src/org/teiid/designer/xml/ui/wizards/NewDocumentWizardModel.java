@@ -26,6 +26,8 @@ import org.teiid.designer.xml.PluginConstants;
 
 /**
  * @author PForhan
+ *
+ * @since 8.0
  */
 public class NewDocumentWizardModel {
     private Composite                      wizHolder;

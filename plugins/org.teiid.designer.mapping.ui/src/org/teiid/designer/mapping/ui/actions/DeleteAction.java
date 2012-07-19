@@ -31,6 +31,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectEditHelperManager;
 
 /**
  * DeleteAction
+ *
+ * @since 8.0
  */
 public class DeleteAction extends MappingAction implements UiConstants {
     //============================================================================================================================

@@ -22,6 +22,8 @@ import java.util.Map;
  * fills an inMemoryIndex up to it reaches a certain size, and then merges it with a main index on the disk. <br>
  * <br>
  * The changes are only taken into account by the queries after a merge.
+ *
+ * @since 8.0
  */
 
 public class Index implements IIndex {

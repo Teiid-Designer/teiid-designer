@@ -11,6 +11,8 @@ import java.sql.DatabaseMetaData;
 
 /**
  * MetadataRequest
+ *
+ * @since 8.0
  */
 public class MetadataRequest extends MethodRequest {
 

@@ -11,6 +11,8 @@ package org.teiid.designer.core.workspace;
 /**
  * Holds cached structure and properties for a Model Workspace item.
  * Subclassed to carry properties for specific kinds of elements.
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceItemInfo {
 

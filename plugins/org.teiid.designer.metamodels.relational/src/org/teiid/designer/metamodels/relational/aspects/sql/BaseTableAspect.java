@@ -18,6 +18,8 @@ import org.teiid.designer.metamodels.relational.BaseTable;
 
 /**
  * TableAspect
+ *
+ * @since 8.0
  */
 public class BaseTableAspect extends TableAspect {
     

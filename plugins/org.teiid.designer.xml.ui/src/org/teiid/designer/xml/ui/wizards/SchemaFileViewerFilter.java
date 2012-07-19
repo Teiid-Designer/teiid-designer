@@ -18,6 +18,8 @@ import org.teiid.designer.core.workspace.ModelUtil;
 /**
  * SchemaFileViewerFilter is a ViewerFilter that only displays projects, folders, and
  * .xsd files within open projects.
+ *
+ * @since 8.0
  */
 public class SchemaFileViewerFilter extends ViewerFilter {
 

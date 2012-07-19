@@ -30,6 +30,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  * PropertySourceProvder for metadata model objects.  This implementation is necessary
  * because EObject does not extend IAdaptable and therefore cannot be registered with
  * the IAdapterManager.
+ *
+ * @since 8.0
  */
 public class ModelObjectPropertySourceProvider implements IPropertySourceProvider {
 

@@ -17,6 +17,8 @@ import org.teiid.designer.diagram.ui.util.colors.ColorPalette;
 
 /**
  * DiagramFigure
+ *
+ * @since 8.0
  */
 public interface DiagramFigure {
     

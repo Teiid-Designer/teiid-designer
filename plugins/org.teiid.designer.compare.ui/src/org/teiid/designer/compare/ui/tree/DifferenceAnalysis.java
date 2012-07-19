@@ -17,6 +17,8 @@ import org.teiid.designer.compare.DifferenceType;
 
 /**
  * DifferenceAnalysis
+ *
+ * @since 8.0
  */
 public class DifferenceAnalysis {
     

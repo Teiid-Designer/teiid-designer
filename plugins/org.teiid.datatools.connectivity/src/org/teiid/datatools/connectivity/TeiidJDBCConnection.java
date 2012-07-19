@@ -14,6 +14,9 @@ import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileCon
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.JDBCConnection;
 
+/**
+ * @since 8.0
+ */
 public class TeiidJDBCConnection extends JDBCConnection {
 
     public TeiidJDBCConnection( IConnectionProfile profile,

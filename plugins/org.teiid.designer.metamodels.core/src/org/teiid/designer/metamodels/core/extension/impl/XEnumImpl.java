@@ -18,6 +18,8 @@ import org.teiid.designer.metamodels.core.extension.XEnum;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XEnumImpl extends EEnumImpl implements XEnum {
 

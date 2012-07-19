@@ -14,6 +14,8 @@ import org.teiid.designer.core.validation.ValidationRuleSet;
 
 /** 
  * OutputAspect
+ *
+ * @since 8.0
  */
 public class OutputAspect extends WebServiceComponentAspect {
 

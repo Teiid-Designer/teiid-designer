@@ -17,6 +17,9 @@ import org.teiid.designer.metamodels.core.CoreFactory;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 
 
+/**
+ * @since 8.0
+ */
 public class NullModelSelector implements ModelSelector {
 
     public static final String DEFAULT_URI = "http://default.model.selector"; //$NON-NLS-1$

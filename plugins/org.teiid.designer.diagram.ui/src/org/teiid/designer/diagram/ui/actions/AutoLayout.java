@@ -9,6 +9,8 @@ package org.teiid.designer.diagram.ui.actions;
 
 /**
  * AutoLayout
+ *
+ * @since 8.0
  */
 public interface AutoLayout {
     

@@ -21,6 +21,8 @@ import org.teiid.designer.core.util.ModelObjectCollector;
 /**
  * Validator looksup the <code>ValidationManager</code> to access the set of
  * validation rules defines and executes each of them.  
+ *
+ * @since 8.0
  */
 public class Validator {
     private static final String VALIDATING = ModelerCore.Util.getString("Validator.validating"); //$NON-NLS-1$

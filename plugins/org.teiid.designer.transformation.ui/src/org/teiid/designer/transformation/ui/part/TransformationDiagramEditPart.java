@@ -60,6 +60,8 @@ import org.teiid.query.ui.UiPlugin;
 
 /**
  * TransformationDiagramEditPart
+ *
+ * @since 8.0
  */
 
 public class TransformationDiagramEditPart extends AbstractDiagramEditPart 

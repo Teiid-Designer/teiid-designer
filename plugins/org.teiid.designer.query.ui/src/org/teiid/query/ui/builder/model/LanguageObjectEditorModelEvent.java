@@ -12,6 +12,8 @@ import java.util.EventObject;
 
 /**
  * LanguageObjectModelEvent
+ *
+ * @since 8.0
  */
 public class LanguageObjectEditorModelEvent extends EventObject {
     

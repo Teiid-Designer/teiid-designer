@@ -19,6 +19,8 @@ import org.teiid.designer.core.types.DatatypeManager;
 
 /**
  * BuiltInDatatypeFinder
+ *
+ * @since 8.0
  */
 public class BuiltInDatatypeFinder implements DatatypeFinder {
     

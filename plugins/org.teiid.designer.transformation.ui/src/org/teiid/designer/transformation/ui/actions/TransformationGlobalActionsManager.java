@@ -22,6 +22,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
  * TransformationGlobalActionsManager is a class of static utility methods that can: Determine if objects support the standard
  * global edit actions: delete, cut, copy, paste, and clone. Execute these actions on the selected object(s). It is intended to
  * work with diagrams of type Transformation.
+ *
+ * @since 8.0
  */
 public class TransformationGlobalActionsManager {
 

@@ -14,6 +14,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * @since 8.0
+ */
 public class XmlFileContentHandler extends DefaultHandler
 {
 

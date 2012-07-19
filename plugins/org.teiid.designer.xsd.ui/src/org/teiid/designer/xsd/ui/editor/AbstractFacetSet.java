@@ -25,6 +25,9 @@ import org.teiid.designer.ui.forms.SimpleComponentSet;
 import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 
 
+/**
+ * @since 8.0
+ */
 public abstract class AbstractFacetSet extends SimpleComponentSet implements FacetSet {
     //
     // Class Constants:

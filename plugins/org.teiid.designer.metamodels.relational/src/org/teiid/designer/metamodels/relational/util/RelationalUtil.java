@@ -35,6 +35,8 @@ import org.teiid.designer.metamodels.relational.UniqueKey;
 
 /**
  * RelationalUtil
+ *
+ * @since 8.0
  */
 public class RelationalUtil {
 

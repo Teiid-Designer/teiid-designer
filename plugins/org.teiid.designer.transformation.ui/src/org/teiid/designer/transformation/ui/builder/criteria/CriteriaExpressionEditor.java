@@ -21,6 +21,8 @@ import org.teiid.query.ui.builder.model.CriteriaExpressionEditorModel;
 
 /**
  * ExpressionEditor
+ *
+ * @since 8.0
  */
 public class CriteriaExpressionEditor extends AbstractCompositeExpressionEditor {
 

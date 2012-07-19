@@ -13,6 +13,8 @@ import org.teiid.designer.metamodels.function.util.FunctionUtil;
 
 /**
  * FunctionParameterUniquenessRule
+ *
+ * @since 8.0
  */
 public class FunctionParameterUniquenessRule extends FunctionEntityUniquenessRule {
 

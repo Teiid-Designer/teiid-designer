@@ -40,6 +40,8 @@ import org.teiid.designer.metamodels.relational.View;
  * <!-- end-user-doc -->
  * @see org.teiid.designer.metamodels.relational.RelationalPackage
  * @generated
+ *
+ * @since 8.0
  */
 public class RelationalAdapterFactory extends AdapterFactoryImpl {
     /**

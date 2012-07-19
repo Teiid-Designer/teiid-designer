@@ -21,6 +21,8 @@ import org.teiid.designer.ui.common.widget.ExtendedTitleAreaDialog;
 
 /**
  * ReconcilerDialog
+ *
+ * @since 8.0
  */
 public class ReconcilerDialog extends ExtendedTitleAreaDialog {
     //=============================================================

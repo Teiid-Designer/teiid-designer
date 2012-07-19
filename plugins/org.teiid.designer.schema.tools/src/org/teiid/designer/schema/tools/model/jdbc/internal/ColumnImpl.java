@@ -10,6 +10,9 @@ package org.teiid.designer.schema.tools.model.jdbc.internal;
 import org.teiid.designer.schema.tools.model.jdbc.Column;
 import org.teiid.designer.schema.tools.model.jdbc.DataType;
 
+/**
+ * @since 8.0
+ */
 public class ColumnImpl extends DatabaseElementImpl implements Column {
 
 	private boolean m_attrOfParent;

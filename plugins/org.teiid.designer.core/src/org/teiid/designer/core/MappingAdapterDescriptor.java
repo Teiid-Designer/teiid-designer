@@ -9,6 +9,8 @@ package org.teiid.designer.core;
 
 /**
  * MappingAdapterDescriptor
+ *
+ * @since 8.0
  */
 public interface MappingAdapterDescriptor extends ExtensionDescriptor {
     

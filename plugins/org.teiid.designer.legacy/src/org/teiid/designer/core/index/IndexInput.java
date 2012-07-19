@@ -19,6 +19,8 @@ import java.io.IOException;
  * getNextFile(), getCurrentFile() and moveToNextFile() (idem for the word entries). The usage is the same for every subclass:
  * creation (constructor), opening (the open() method), usage, and closing (the close() method), to release the data source used
  * by this input.
+ *
+ * @since 8.0
  */
 public abstract class IndexInput {
     protected int filePosition;

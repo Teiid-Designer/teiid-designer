@@ -13,6 +13,8 @@ import org.teiid.designer.metadata.runtime.ModelRecord;
 
 /**
  * ModelRecordImpl
+ *
+ * @since 8.0
  */
 public class ModelRecordImpl extends AbstractMetadataRecord implements ModelRecord {
 

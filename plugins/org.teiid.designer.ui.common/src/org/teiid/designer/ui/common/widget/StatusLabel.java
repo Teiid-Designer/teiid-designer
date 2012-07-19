@@ -21,6 +21,8 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * The <code>StatusLabel</code> widget is a wrapping label with an icon.
+ *
+ * @since 8.0
  */
 public class StatusLabel extends Composite  {
 

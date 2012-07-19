@@ -11,6 +11,8 @@ import org.teiid.core.TeiidException;
 
 /**
  * StructuralCopyException
+ *
+ * @since 8.0
  */
 public class StructuralCopyException extends TeiidException {
 

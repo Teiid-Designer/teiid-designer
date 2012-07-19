@@ -24,6 +24,9 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.UiConstants;
 
 
+/**
+ * @since 8.0
+ */
 public class StructuredViewerDatatypeFilterer extends StructuredViewerFilterer implements IFilter {
 
     private static final String GROUP_TITLE = UiConstants.Util.getString("StructuredViewerDatatypeFilterer.title"); //$NON-NLS-1$

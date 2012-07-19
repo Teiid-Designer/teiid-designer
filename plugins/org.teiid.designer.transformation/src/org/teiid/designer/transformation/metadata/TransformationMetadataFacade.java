@@ -42,6 +42,8 @@ import org.teiid.query.metadata.StoredProcedureInfo;
  * Modelers implementation of QueryMetadataInterface that reads columns, groups, modeles etc. index files for various metadata
  * properties. TransformationMetadataFacade should only be used when the metadata is read only. It is used in the modeler with in
  * the context of validating a Query(when the metadata is read only).
+ *
+ * @since 8.0
  */
 public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
 

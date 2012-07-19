@@ -43,6 +43,9 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 
 
+/**
+ * @since 8.0
+ */
 public class FacetHelper {
     //
     // Class constants:

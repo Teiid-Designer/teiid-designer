@@ -24,6 +24,8 @@ import org.teiid.designer.metamodels.wsdl.Binding;
  * @see org.teiid.designer.metamodels.wsdl.soap.SoapPackage#getSoapBinding()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface SoapBinding extends EObject {
 

@@ -13,6 +13,8 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * ModelGenerator
+ *
+ * @since 8.0
  */
 public interface ModelGenerator {
     

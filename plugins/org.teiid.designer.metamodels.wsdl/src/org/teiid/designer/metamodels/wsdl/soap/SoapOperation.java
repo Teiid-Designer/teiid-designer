@@ -24,6 +24,8 @@ import org.teiid.designer.metamodels.wsdl.BindingOperation;
  * @see org.teiid.designer.metamodels.wsdl.soap.SoapPackage#getSoapOperation()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface SoapOperation extends EObject {
 

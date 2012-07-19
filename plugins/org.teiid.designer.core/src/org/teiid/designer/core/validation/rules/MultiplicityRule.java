@@ -26,6 +26,8 @@ import org.teiid.designer.core.validation.ValidationResultImpl;
 /**
  * MultiplicityRule, this is a core rule that needs to be run for all features, this rule checks the multiplicity of a feature
  * with the upper and lower bounds of multiplicity allowed for that feature.
+ *
+ * @since 8.0
  */
 public class MultiplicityRule implements StructuralFeatureValidationRule {
 

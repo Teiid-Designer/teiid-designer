@@ -32,6 +32,8 @@ import org.teiid.designer.metamodels.function.util.FunctionAdapterFactory;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class FunctionItemProviderAdapterFactory extends FunctionAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier {
     /**

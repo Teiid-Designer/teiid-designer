@@ -59,6 +59,8 @@ import org.teiid.designer.metamodels.core.ModelAnnotation;
 /**
  * ModelCopyCommand is a RefactorCommand implementation that can generate a new copy of a model in memory. The command assumes
  * that there may be existing changes to the
+ *
+ * @since 8.0
  */
 public class ModelCopyCommand implements RefactorCommand {
 

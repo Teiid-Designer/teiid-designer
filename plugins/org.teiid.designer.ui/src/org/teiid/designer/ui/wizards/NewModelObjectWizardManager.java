@@ -31,6 +31,8 @@ import org.teiid.designer.ui.UiPlugin;
 /**
  * NewModelObjectWizardManager is a static class that manages the existance and
  * the running of New Model Object Wizard and New Association Wizard extensions.
+ *
+ * @since 8.0
  */
 public abstract class NewModelObjectWizardManager implements UiConstants.ExtensionPoints {
 

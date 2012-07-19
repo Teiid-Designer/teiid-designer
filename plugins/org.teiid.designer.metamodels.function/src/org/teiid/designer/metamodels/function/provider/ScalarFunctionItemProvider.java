@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.function.ScalarFunction;
  * --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class ScalarFunctionItemProvider extends FunctionItemProvider {
     /**

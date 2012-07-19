@@ -28,6 +28,8 @@ import org.teiid.designer.diagram.ui.util.colors.ColorPalette;
 
 /**
  * UmlClassifierContainerFigure
+ *
+ * @since 8.0
  */
 public class UmlClassifierContainerFigure extends AbstractDiagramFigure implements ContainerFigure {
     private int numContainedItems = 0;

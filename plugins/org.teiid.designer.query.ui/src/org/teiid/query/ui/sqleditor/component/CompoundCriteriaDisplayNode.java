@@ -11,6 +11,8 @@ import org.teiid.query.sql.lang.CompoundCriteria;
 
 /**
  * The <code>CompoundCriteriaDisplayNode</code> class is used to represent CompoundCriteria.
+ *
+ * @since 8.0
  */
 public class CompoundCriteriaDisplayNode extends DisplayNode {
 

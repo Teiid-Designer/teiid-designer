@@ -17,6 +17,8 @@ import org.teiid.core.designer.CoreModelerPlugin;
  * This class contains a set of static utility methods for checking method arguments. It contains many of the common checks that
  * are done, such as checking that an Object is non-null, checking the range of a value, etc. All of these methods throw
  * {@link IllegalArgumentException}.
+ *
+ * @since 8.0
  */
 public class CoreArgCheck {
 

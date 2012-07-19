@@ -41,6 +41,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * PackageDiagramModelFactory
+ *
+ * @since 8.0
  */
 public class CustomDiagramModelFactory extends PackageDiagramModelFactory {
 

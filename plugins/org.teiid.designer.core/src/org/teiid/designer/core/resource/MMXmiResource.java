@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.core.ModelType;
 
 /**
  * MTK implementation of a Resource
+ *
+ * @since 8.0
  */
 public interface MMXmiResource extends Resource.Internal {
 

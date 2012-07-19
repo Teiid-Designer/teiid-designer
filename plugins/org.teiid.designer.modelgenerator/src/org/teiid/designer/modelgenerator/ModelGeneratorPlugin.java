@@ -17,6 +17,8 @@ import org.teiid.core.util.PluginUtilImpl;
 
 /**
  * ModelGeneratorPlugin
+ *
+ * @since 8.0
  */
 public class ModelGeneratorPlugin extends Plugin {
     public static final String PLUGIN_ID = "org.teiid.designer.modelgenerator" ; //$NON-NLS-1$

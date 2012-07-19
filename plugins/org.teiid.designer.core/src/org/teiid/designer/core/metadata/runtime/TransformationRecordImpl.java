@@ -15,6 +15,8 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlTransformationInfo;
 
 /**
  * TransformationRecordImpl
+ *
+ * @since 8.0
  */
 public class TransformationRecordImpl extends org.teiid.designer.metadata.runtime.impl.TransformationRecordImpl {
 

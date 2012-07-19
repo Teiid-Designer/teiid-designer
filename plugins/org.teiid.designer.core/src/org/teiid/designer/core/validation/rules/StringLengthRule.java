@@ -18,6 +18,8 @@ import org.teiid.designer.core.validation.ValidationResultImpl;
 /**
  * StringLengthRule, this rule checks the length of name of an entity against a known length. The length to validate against is
  * provided by the aspect creating this rule.
+ *
+ * @since 8.0
  */
 public class StringLengthRule implements StructuralFeatureValidationRule {
 

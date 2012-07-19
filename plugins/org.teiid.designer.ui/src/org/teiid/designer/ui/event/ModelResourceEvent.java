@@ -14,6 +14,8 @@ import org.teiid.designer.core.workspace.ModelResource;
 
 /**
  * ModelResourceEvent
+ *
+ * @since 8.0
  */
 public class ModelResourceEvent extends EventObject {
 

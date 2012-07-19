@@ -31,6 +31,9 @@ import org.teiid.designer.transformation.ui.UiConstants.Images;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
+/**
+ * @since 8.0
+ */
 public class TextTableFunctionOptionsDialog  extends TitleAreaDialog {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TextTableFunctionOptionsDialog.class);
 	private final String TITLE = getString("title"); //$NON-NLS-1$

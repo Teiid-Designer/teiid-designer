@@ -43,6 +43,8 @@ import org.teiid.designer.metamodels.diagram.DiagramEntity;
  * stale.
  * 
  *
+ *
+ * @since 8.0
  */
 public class DiagramRefactorModelHandler implements IRefactorModelHandler {
 

@@ -10,6 +10,8 @@ package org.teiid.designer.jdbc.metadata;
 /**
  * This interface defines the information that should be included when
  * accessing the metadata for a {@link JdbcDatabase}.
+ *
+ * @since 8.0
  */
 public interface Includes {
     

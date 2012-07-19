@@ -24,6 +24,9 @@ import org.teiid.core.PluginUtil;
 import org.teiid.core.util.PluginUtilImpl;
 
 
+/**
+ * @since 8.0
+ */
 public class XsdPlugin extends Plugin {
 
     public static final String PLUGIN_ID = "org.teiid.designer.metamodels.xsd"; //$NON-NLS-1$

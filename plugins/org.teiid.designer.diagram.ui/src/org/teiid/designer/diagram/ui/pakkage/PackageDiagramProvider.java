@@ -35,6 +35,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  * PackageDiagramProvider implements IPackageDiagramProvider because this interface has the right methods to locate the package
  * diagram for an EObject or ModelResource
  * </p>
+ *
+ * @since 8.0
  */
 
 public class PackageDiagramProvider implements IPackageDiagramProvider {

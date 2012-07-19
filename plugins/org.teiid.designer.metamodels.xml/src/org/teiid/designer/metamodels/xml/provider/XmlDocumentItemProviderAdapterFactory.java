@@ -33,6 +33,8 @@ import org.teiid.designer.metamodels.xml.util.XmlDocumentAdapterFactory;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlDocumentItemProviderAdapterFactory extends XmlDocumentAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
     /**

@@ -8,6 +8,9 @@
 package org.teiid.designer.diagram.ui.printing;
 
 
+/**
+ * @since 8.0
+ */
 public class PrintMargins {
 
     public double top;

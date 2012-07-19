@@ -28,6 +28,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * Class designed to provide validation logic and IStatus values for the WSDL importer wizard.
+ *
+ * @since 8.0
  */
 public class ImportManagerValidator {
 	

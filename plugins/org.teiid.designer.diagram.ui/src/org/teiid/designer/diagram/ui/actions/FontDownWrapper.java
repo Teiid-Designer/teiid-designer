@@ -12,6 +12,8 @@ import org.teiid.designer.diagram.ui.editor.DiagramEditor;
 
 /**
  * FontDownWrapper
+ *
+ * @since 8.0
  */
 public class FontDownWrapper extends AbstractFontWrapper {
 

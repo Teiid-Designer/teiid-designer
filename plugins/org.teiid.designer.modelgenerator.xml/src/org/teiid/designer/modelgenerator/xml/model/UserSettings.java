@@ -11,6 +11,9 @@ import java.util.List;
 
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 
+/**
+ * @since 8.0
+ */
 public class UserSettings {
     private static final String REQUEST_RESPONSE_TABLE_XPATH = "."; //$NON-NLS-1$
 

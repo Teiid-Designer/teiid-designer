@@ -41,6 +41,8 @@ import org.teiid.designer.core.util.OverflowingLRUCache;
 /**
  * The buffer manager manages the set of open buffers.
  * It implements an LRU cache of buffers.
+ *
+ * @since 8.0
  */
 public class ModelBufferManager implements ModelBufferFactory {
 

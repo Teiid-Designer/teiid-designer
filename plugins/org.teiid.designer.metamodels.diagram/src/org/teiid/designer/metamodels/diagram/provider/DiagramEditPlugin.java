@@ -16,6 +16,8 @@ import org.teiid.designer.metamodels.diagram.DiagramPlugin;
  * This is the central singleton for the Diagram edit plugin. <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public final class DiagramEditPlugin extends EMFPlugin {
 

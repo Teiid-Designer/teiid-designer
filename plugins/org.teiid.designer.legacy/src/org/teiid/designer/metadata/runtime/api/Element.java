@@ -10,6 +10,8 @@ package org.teiid.designer.metadata.runtime.api;
 
 /**
  * <p>Instances of this interface represent Elements for a Group.  The values of an Element are analogous to a Column ion a table in a database.</p> 
+ *
+ * @since 8.0
  */
 public interface Element extends MetadataObject {
 

@@ -33,6 +33,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * ModelRowElement represents a row of properties in the ModelTableEditor's TableViewer.
+ *
+ * @since 8.0
  */
 public class ModelRowElement {
 

@@ -14,6 +14,9 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.teiid.datatools.models.teiidsqlmodel.impl.TeiidSchemaImpl;
 
+/**
+ * @since 8.0
+ */
 public class TeiidCatalogSchema extends TeiidSchemaImpl {
 
     private Boolean documentsLoaded = Boolean.FALSE;

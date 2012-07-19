@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.transformation.SqlNode;
  * --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class SqlNodeItemProvider extends OperationNodeItemProvider {
 

@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 /**
  * ModelInitializer
+ *
+ * @since 8.0
  */
 public interface ModelInitializer {
     

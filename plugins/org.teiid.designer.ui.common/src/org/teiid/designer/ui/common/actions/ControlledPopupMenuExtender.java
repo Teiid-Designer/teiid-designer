@@ -26,6 +26,8 @@ import org.eclipse.ui.internal.ViewerActionBuilder;
  * the external contributed object actions can be customized by specific menu adapters.
  * 
  * The initial case came from PackageDiagramActionAdapter, which needed to control the context menu when a link is selected.
+ *
+ * @since 8.0
  */
 public class ControlledPopupMenuExtender implements IMenuListener {
     private String menuID;

@@ -21,6 +21,8 @@ import java.io.RandomAccessFile;
  *  - FileListBlocks;<br>
  *  - IndexBlocks;<br>
  *  - Summary of the index.
+ *
+ * @since 8.0
  */
 
 public class BlocksIndexOutput extends IndexOutput {

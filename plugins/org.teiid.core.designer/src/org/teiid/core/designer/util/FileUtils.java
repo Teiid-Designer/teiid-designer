@@ -25,6 +25,9 @@ import org.teiid.core.util.ChecksumUtil;
 import org.teiid.core.util.CoreArgCheck;
 
 
+/**
+ * @since 8.0
+ */
 public class FileUtils {
 
     public static int DEFAULT_BUFFER_SIZE = 8092;

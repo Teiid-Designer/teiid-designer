@@ -32,6 +32,8 @@ import org.teiid.designer.metamodels.relational.SearchabilityType;
 
 /**
  * ColumnAspect
+ *
+ * @since 8.0
  */
 public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAspect {
     

@@ -9,6 +9,8 @@ package org.teiid.designer.diagram.ui.connection.decorator;
 
 /**
  * RectangleDecoration
+ *
+ * @since 8.0
  */
 
 import org.eclipse.draw2d.ColorConstants;
@@ -21,6 +23,8 @@ import org.eclipse.draw2d.geometry.PointList;
  * A decorative Figure intended to be placed on a 
  * {@link Polyline}.
  * It has the default shape of right-pointing triangle.
+ *
+ * @since 8.0
  */
 public class RectangleDecoration extends PolygonDecoration {
 

@@ -34,6 +34,9 @@ import org.teiid.designer.transformation.validation.TransformationValidator;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class FlatFileViewModelFactory extends FlatFileRelationalModelFactory {
     public static final String RELATIONAL_PACKAGE_URI	= RelationalPackage.eNS_URI;
     public static final RelationalFactory relationalFactory = RelationalFactory.eINSTANCE;

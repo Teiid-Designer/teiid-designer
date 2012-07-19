@@ -29,6 +29,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 /**
  * @author PForhan
+ *
+ * @since 8.0
  */
 public abstract class AbstractDiagramType implements IDiagramType {
 

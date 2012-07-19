@@ -16,6 +16,8 @@ import org.eclipse.emf.ecore.EPackage;
  * @see org.teiid.designer.metamodels.core.extension.ExtensionPackage#getXPackage()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface XPackage extends EPackage {
     /**

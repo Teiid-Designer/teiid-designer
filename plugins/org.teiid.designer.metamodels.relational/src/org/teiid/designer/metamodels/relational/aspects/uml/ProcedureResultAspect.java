@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 
 /**
  * ProcedureResultAspect
+ *
+ * @since 8.0
  */
 public class ProcedureResultAspect extends RelationalEntityAspect implements UmlClassifier {
 

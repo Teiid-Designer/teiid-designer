@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.transformation.TransformationPackage;
 
 /** 
  * TransformationMatcherFactory
+ *
+ * @since 8.0
  */
 public class TransformationMatcherFactory implements EObjectMatcherFactory {
 

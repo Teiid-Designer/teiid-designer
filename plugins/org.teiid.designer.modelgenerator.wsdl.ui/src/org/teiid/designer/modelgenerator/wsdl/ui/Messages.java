@@ -9,6 +9,9 @@ package org.teiid.designer.modelgenerator.wsdl.ui;
 
 import org.eclipse.osgi.util.NLS;
 
+/**
+ * @since 8.0
+ */
 public class Messages  extends NLS {
 
 

@@ -12,6 +12,8 @@ package org.teiid.designer.metadata.runtime.api;
 
 /**
  * The GroupID is the unique identifier for a Group. 
+ *
+ * @since 8.0
  */
 public interface GroupID extends MetadataID {
 /**

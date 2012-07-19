@@ -12,6 +12,9 @@ import org.jdom.Namespace;
 import org.teiid.designer.schema.tools.model.schema.SchemaModel;
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 
+/**
+ * @since 8.0
+ */
 public interface Table extends DatabaseElement {
 
 	/**

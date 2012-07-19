@@ -11,7 +11,9 @@ package org.teiid.designer.ui.editors;
   *  it manages.  Should this extend IEditorPart?  That would get us editor-related
   *  methods like isDirty() and save().
   * @author PForhan
-  */
+ *
+ * @since 8.0
+ */
 public interface IRevertable {
     public void doRevertToSaved();
 }

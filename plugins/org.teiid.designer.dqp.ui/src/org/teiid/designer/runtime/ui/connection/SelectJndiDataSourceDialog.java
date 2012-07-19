@@ -30,6 +30,8 @@ import org.teiid.designer.vdb.Vdb;
 
 /**
  * Provides dialog for selecting a JNDI Data Source from existing Teiid Servers.
+ *
+ * @since 8.0
  */
 public class SelectJndiDataSourceDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
 

@@ -9,6 +9,9 @@ package org.teiid.designer.diagram.ui.figure;
 
 import org.eclipse.draw2d.IFigure;
 
+/**
+ * @since 8.0
+ */
 public interface ExpandableFigure {
 	
     IFigure getExpansionFigure();

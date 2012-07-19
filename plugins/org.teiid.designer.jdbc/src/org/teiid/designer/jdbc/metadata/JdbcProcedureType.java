@@ -9,6 +9,8 @@ package org.teiid.designer.jdbc.metadata;
 
 /**
  * JdbcProcedureType
+ *
+ * @since 8.0
  */
 public interface JdbcProcedureType extends JdbcNode {
 

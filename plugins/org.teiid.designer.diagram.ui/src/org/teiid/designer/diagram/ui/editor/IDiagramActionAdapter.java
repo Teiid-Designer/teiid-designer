@@ -16,6 +16,8 @@ import org.teiid.designer.ui.editors.ModelEditorPage;
 
 /**
  * DiagramActionAdapter
+ *
+ * @since 8.0
  */
 public interface IDiagramActionAdapter {
     

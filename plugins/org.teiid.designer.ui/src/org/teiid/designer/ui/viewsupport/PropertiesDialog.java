@@ -23,6 +23,8 @@ import org.teiid.designer.ui.properties.ModelObjectPropertySheetPage;
 
 /**
  * PropertiesDialog is a dialog that displays the ModelObjectPropertySheet for an EObject
+ *
+ * @since 8.0
  */
 public class PropertiesDialog extends SelectionDialog {
 

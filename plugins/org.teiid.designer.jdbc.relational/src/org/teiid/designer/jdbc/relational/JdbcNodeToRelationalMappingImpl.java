@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
 
 /**
  * JdbcNodeToRelationalMappingImpl
+ *
+ * @since 8.0
  */
 public class JdbcNodeToRelationalMappingImpl implements JdbcNodeToRelationalMapping {
 

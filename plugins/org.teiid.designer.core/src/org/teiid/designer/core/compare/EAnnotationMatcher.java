@@ -21,6 +21,8 @@ import org.eclipse.emf.mapping.MappingFactory;
 
 /**
  * UmlNamedElementMatcher
+ *
+ * @since 8.0
  */
 public class EAnnotationMatcher extends AbstractEObjectMatcher {
 

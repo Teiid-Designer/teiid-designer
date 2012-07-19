@@ -13,6 +13,8 @@ import java.util.Properties;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssistant {
 

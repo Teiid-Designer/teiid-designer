@@ -14,6 +14,8 @@ import org.eclipse.jface.text.Position;
 
 /**
  * Execution Plan Element Object
+ *
+ * @since 8.0
  */
 public class PlanElement {
     private final String SEPARATOR = "/"; //$NON-NLS-1$

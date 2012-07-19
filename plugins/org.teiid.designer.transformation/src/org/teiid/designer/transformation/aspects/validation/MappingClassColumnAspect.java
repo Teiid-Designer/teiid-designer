@@ -20,7 +20,7 @@ import org.teiid.designer.metamodels.transformation.TransformationPackage;
 
 
 /**
- * @
+ * @since 8.0
  */
 public class MappingClassColumnAspect extends TransformationAspect {
 

@@ -22,6 +22,8 @@ import org.teiid.designer.runtime.ServerManager;
 
 /**
  * The <code>RuntimeAssistant<code> ensures that the preview preference is enabled and that a default Teiid server exists.
+ *
+ * @since 8.0
  */
 public final class RuntimeAssistant {
 

@@ -10,6 +10,8 @@ package org.teiid.designer.core.workspace;
 
 /**
  * ModelFolderInfo
+ *
+ * @since 8.0
  */
 public class ModelFolderInfo extends OpenableModelWorkspaceItemInfo {
 

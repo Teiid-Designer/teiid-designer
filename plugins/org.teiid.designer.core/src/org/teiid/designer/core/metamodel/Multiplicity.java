@@ -73,6 +73,8 @@ import org.teiid.designer.core.ModelerCore;
  * chance of the instance being modified. This also simplifies the interface (since no modification methods need be provided) and
  * makes possible the use of different underlying classes to handle different situations without exposing the specific
  * implementation classes to the user; modification methods would make this very difficult to successfully implement.
+ *
+ * @since 8.0
  */
 public abstract class Multiplicity implements Serializable, Comparable {
 

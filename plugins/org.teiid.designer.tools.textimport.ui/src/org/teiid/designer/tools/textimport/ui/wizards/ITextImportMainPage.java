@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.tools.textimport.ui.wizards;
 
+/**
+ * @since 8.0
+ */
 public interface ITextImportMainPage {
 
 	

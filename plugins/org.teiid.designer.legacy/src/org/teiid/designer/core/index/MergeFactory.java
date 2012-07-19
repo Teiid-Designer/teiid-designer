@@ -21,6 +21,8 @@ import java.util.Map;
  *   - The files are sorted in alphabetical order;<br>
  *   - if a file is in oldIndex and addsIndex, the one which is added 
  * is the one in the addsIndex.<br>
+ *
+ * @since 8.0
  */
 public class MergeFactory {
 	/**

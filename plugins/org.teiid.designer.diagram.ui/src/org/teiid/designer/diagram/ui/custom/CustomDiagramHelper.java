@@ -23,6 +23,8 @@ import org.teiid.designer.ui.viewsupport.DiagramHelper;
  *
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ *
+ * @since 8.0
  */
 public class CustomDiagramHelper extends DiagramHelper {
 //	private static final String PROBLEM = "CustomDiagramHelper.paste.problem"; //$NON-NLS-1$

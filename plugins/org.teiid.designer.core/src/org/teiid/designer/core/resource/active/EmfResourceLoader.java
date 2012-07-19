@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * ResourceLoader
+ *
+ * @since 8.0
  */
 public interface EmfResourceLoader {
 

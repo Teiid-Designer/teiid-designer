@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.model;
 
+/**
+ * @since 8.0
+ */
 public interface Part extends WSDLElement {
 	
 	public String getElementName();

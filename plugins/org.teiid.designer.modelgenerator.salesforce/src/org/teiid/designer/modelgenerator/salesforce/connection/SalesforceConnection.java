@@ -10,6 +10,9 @@ package org.teiid.designer.modelgenerator.salesforce.connection;
 import java.net.URL;
 import com.sforce.soap.partner.Soap;
 
+/**
+ * @since 8.0
+ */
 public interface SalesforceConnection {
 
     public abstract Soap getBinding();

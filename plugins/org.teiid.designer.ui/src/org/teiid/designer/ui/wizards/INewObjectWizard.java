@@ -12,6 +12,8 @@ import org.teiid.designer.core.workspace.ModelResource;
 
 /**
  * INewObjectWizard
+ *
+ * @since 8.0
  */
 public interface INewObjectWizard extends IWorkbenchWizard {
 

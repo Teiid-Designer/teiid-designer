@@ -14,6 +14,8 @@ import org.teiid.query.sql.lang.SetQuery;
 
 /**
  * The <code>SetQueryDisplayNode</code> class is used to represent a Set Query, for example Union Queries.
+ *
+ * @since 8.0
  */
 public class SetQueryDisplayNode extends DisplayNode {
 

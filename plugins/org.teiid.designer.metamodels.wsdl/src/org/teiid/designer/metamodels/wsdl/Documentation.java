@@ -23,6 +23,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getDocumentation()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Documentation extends ElementOwner {
 

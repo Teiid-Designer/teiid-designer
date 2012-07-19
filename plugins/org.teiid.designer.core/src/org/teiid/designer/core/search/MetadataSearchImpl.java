@@ -56,6 +56,8 @@ import org.teiid.designer.metamodels.transformation.TransformationPackage;
 
 /**
  * MetadataSearchImpl
+ *
+ * @since 8.0
  */
 public class MetadataSearchImpl implements MetadataSearch {
 

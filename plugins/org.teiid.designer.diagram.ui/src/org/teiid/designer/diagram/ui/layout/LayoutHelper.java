@@ -17,6 +17,8 @@ import org.teiid.designer.diagram.ui.util.DiagramUiUtilities;
 /**
  * LayoutHelper
  * This class is designed to provide a diagram a means for breaking down diagram components into managable 
+ *
+ * @since 8.0
  */
 public class LayoutHelper {
     public static final int NO_LINKS_LAYOUT = 0;

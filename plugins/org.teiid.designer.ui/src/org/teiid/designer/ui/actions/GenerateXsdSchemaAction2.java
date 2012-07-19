@@ -58,6 +58,9 @@ import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
 import org.teiid.designer.ui.wizards.GenerateXsdWizard;
 
 
+/**
+ * @since 8.0
+ */
 public class GenerateXsdSchemaAction2 extends SortableSelectionAction {
     static final IStatus STATUS_OK = new StatusInfo(UiConstants.PLUGIN_ID);
     static final IStatus STATUS_ERROR = new StatusInfo(UiConstants.PLUGIN_ID, IStatus.ERROR,

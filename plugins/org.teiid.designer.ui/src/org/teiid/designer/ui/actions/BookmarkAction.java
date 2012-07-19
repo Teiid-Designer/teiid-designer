@@ -34,6 +34,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * BookmarkAction
+ *
+ * @since 8.0
  */
 public class BookmarkAction extends AbstractAction implements UiConstants {
     /**

@@ -13,6 +13,8 @@ import org.teiid.designer.metamodels.diagram.Diagram;
 
 /**
  * A ModelDiagrams represents the set of diagrams available in the model.
+ *
+ * @since 8.0
  */
 public interface ModelDiagrams extends ModelWorkspaceItem {
     /**

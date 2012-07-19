@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.core.extension.XPackage;
 
 /**
  * SchemaAspect
+ *
+ * @since 8.0
  */
 public class XPackageUmlAspect extends AbstractExtensionUmlAspect implements UmlPackage {
     /**

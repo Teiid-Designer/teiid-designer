@@ -11,6 +11,8 @@ import org.teiid.query.sql.lang.Criteria;
 
 /**
  * The <code>WhereDisplayNode</code> class is used to represent a Query's WHERE clause.
+ *
+ * @since 8.0
  */
 public class WhereDisplayNode extends DisplayNode {
 

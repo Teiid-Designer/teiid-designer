@@ -15,6 +15,8 @@ import org.teiid.designer.metadata.runtime.TransformationRecord;
 
 /**
  * SqlTransformationAspect
+ *
+ * @since 8.0
  */
 public interface SqlTransformationAspect extends SqlAspect {
 

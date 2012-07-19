@@ -12,6 +12,8 @@ import org.eclipse.core.resources.IProjectNature;
 
 /**
  *
+ *
+ * @since 8.0
  */
 public class HiddenProjectNature implements IProjectNature {
 

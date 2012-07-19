@@ -17,6 +17,9 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ResourceAnnotationHelper;
 import org.teiid.designer.datatools.DatatoolsPlugin;
 
+/**
+ * @since 8.0
+ */
 public class ConnectionInfoHelper implements IConnectionInfoHelper {
 
     private ResourceAnnotationHelper resourceAnnotationHelper;

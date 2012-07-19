@@ -10,6 +10,8 @@ package org.teiid.designer.core;
 
 /**
  * ValidationDescriptorImpl
+ *
+ * @since 8.0
  */
 public class ValidationDescriptorImpl implements ValidationDescriptor {
     

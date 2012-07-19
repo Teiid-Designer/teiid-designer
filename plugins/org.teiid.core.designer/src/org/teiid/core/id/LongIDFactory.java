@@ -27,6 +27,9 @@ import java.io.Serializable;
 import org.teiid.core.CorePlugin;
 
 
+/**
+ * @since 8.0
+ */
 public class LongIDFactory implements ObjectIDFactory, Serializable {
     private long lastID = 0;
     public LongIDFactory() {

@@ -21,6 +21,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getSourceNode()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface SourceNode extends DataFlowNode {
 

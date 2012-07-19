@@ -19,6 +19,8 @@ import org.teiid.query.ui.builder.util.BuilderUtils;
 
 /**
  * AbstractLanguageObjectEditorModel
+ *
+ * @since 8.0
  */
 public abstract class AbstractLanguageObjectEditorModel implements ILanguageObjectEditorModel, UiConstants {
 

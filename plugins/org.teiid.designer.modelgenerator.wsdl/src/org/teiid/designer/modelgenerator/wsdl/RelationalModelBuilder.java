@@ -75,6 +75,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  * are not linked to any particular WS operation. The elements defined in a WSDL
  * Schema are often used across operations, and binding them to an operation
  * would limit reuse or require duplication.
+ *
+ * @since 8.0
  */
 public class RelationalModelBuilder {
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(RelationalModelBuilder.class);

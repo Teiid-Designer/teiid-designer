@@ -27,6 +27,8 @@ import org.teiid.designer.diagram.ui.actions.ScaledFontManager;
  *
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
+ *
+ * @since 8.0
  */
 public class UmlClassifierHeader extends RectangleFigure {
     private Label stereotypeLabel;

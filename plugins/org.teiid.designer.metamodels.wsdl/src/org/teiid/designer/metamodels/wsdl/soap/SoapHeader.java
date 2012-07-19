@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.wsdl.BindingParam;
  * @see org.teiid.designer.metamodels.wsdl.soap.SoapPackage#getSoapHeader()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface SoapHeader extends EObject {
 

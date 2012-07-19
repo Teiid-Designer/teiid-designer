@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.core.extension.XAttribute;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XAttributeImpl extends EAttributeImpl implements XAttribute {
 

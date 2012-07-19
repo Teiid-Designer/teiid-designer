@@ -22,6 +22,8 @@ import org.teiid.designer.diagram.ui.PluginConstants;
  * This class represents the preference page for setting the
  * Diagram Appearance Preferences.
  * 
+ *
+ * @since 8.0
  */
 public class AppearancePreferencePage extends PreferencePage
     	implements DiagramUiConstants, PluginConstants, IWorkbenchPreferencePage {

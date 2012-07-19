@@ -42,6 +42,8 @@ import org.teiid.designer.metamodels.core.ModelImport;
 
 /**
  * ModelEditor
+ *
+ * @since 8.0
  */
 public interface ModelEditor {
 

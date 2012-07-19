@@ -40,6 +40,9 @@ import org.teiid.designer.webservice.ui.IInternalUiConstants;
 import org.teiid.designer.webservice.ui.editor.OperationObjectEditorPage;
 
 
+/**
+ * @since 8.0
+ */
 public class WebServiceNotificationListener implements INotifyChangedListener, IInternalUiConstants {
 
     private static final String I18N_PFX = I18nUtil.getPropertyPrefix(WebServiceNotificationListener.class);

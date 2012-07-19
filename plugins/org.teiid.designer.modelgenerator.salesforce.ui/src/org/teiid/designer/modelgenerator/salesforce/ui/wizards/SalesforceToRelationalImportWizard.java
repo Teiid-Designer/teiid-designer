@@ -36,6 +36,9 @@ import org.teiid.designer.ui.common.wizard.AbstractWizard;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 
+/**
+ * @since 8.0
+ */
 public class SalesforceToRelationalImportWizard extends AbstractWizard
     implements IImportWizard, ModelGeneratorSalesforceUiConstants {
 

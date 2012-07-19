@@ -17,6 +17,8 @@ import org.teiid.designer.ui.common.table.TableViewerSorter;
  *
  * This viewer contains an optimized indexForElement method that better handles
  * when all rows are unsorted.
+ *
+ * @since 8.0
  */
 public class ModelTableEditorViewer extends DoubleClickTableViewer {
     public ModelTableEditorViewer(Composite parent, int style) {

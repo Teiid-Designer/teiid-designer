@@ -19,6 +19,8 @@ import org.eclipse.emf.common.util.AbstractEnumerator;
  * @see org.teiid.designer.metamodels.wsdl.soap.SoapPackage#getSoapUseType()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public final class SoapUseType extends AbstractEnumerator {
 

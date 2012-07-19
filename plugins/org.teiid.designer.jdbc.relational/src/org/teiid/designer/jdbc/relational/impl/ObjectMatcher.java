@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.relational.RelationalEntity;
  * instances to the {@link EObject objects} in a model, but the {@link #findBestMatches(List, List)} method is invoked once with
  * the children from each model object and the children from the corresponding database object. This is because the
  * {@link #findBestMatches(List, List)} method only compares the name (rather than the full name or path to the object).
+ *
+ * @since 8.0
  */
 public class ObjectMatcher {
 

@@ -26,6 +26,9 @@ import org.teiid.designer.ui.common.graphics.GlobalUiFontManager;
 
 
 
+/**
+ * @since 8.0
+ */
 public class SummaryExtentFigure extends /*AbstractDiagramFigure*/ MappingExtentFigure { 
 
     private int iMappingNodeCount;

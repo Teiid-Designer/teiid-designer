@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.diagram.Diagram;
 
 /**
  * DiagramModelFactoryImpl
+ *
+ * @since 8.0
  */
 abstract public class DiagramModelFactoryImpl implements DiagramModelFactory {
 //    private static final String THIS_CLASS = "DiagramModelFactoryImpl"; //$NON-NLS-1$

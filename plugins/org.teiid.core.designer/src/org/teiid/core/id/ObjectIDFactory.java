@@ -26,6 +26,8 @@ package org.teiid.core.id;
 /**
  * The ObjectIDDescriptor defines the interface that is used to describe a particular type of 
  * {@link ObjectID}.
+ *
+ * @since 8.0
  */
 public interface ObjectIDFactory {
     

@@ -20,6 +20,8 @@ import org.teiid.designer.runtime.preview.PreviewManager;
 /**
  * The <code>ModelChangedJob</code> job synchronizes and saves the Preview VDB associated with the changed model. If the Preview
  * does not yet exist it is created.
+ *
+ * @since 8.0
  */
 public final class ModelChangedJob extends CompositePreviewJob {
 

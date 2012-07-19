@@ -19,6 +19,8 @@ import org.teiid.designer.jdbc.metadata.JdbcDatabase;
 
 /**
  * Context
+ *
+ * @since 8.0
  */
 public interface Context {
 

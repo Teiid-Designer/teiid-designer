@@ -26,6 +26,8 @@ import org.teiid.designer.xml.ui.wizards.XMLDocumentWizard.DocSrcUpdater;
 
 /**
  * VirtualDocumentWizardContributor
+ *
+ * @since 8.0
  */
 public class VirtualDocumentWizardContributor implements INewModelWizardContributor,
 		ModelerXmlUiConstants {

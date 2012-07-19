@@ -15,6 +15,8 @@ import org.teiid.designer.jdbc.data.Response;
 
 /**
  * DisabledRequest
+ *
+ * @since 8.0
  */
 public class DisabledRequest extends MetadataRequest {
 

@@ -21,6 +21,8 @@ import org.teiid.designer.core.ModelerCore;
  * Root of Model Workspace item handle hierarchy.
  * 
  * @see ModelWorkspaceItem
+ *
+ * @since 8.0
  */
 public abstract class ModelWorkspaceItemImpl extends PlatformObject implements ModelWorkspaceItem {
 

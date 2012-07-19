@@ -14,6 +14,9 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * @since 8.0
+ */
 final public class LabelCellEditorLocator implements CellEditorLocator {
 
     private Label label;

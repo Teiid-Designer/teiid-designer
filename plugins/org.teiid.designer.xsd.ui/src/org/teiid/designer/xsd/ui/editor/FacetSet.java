@@ -9,6 +9,9 @@ package org.teiid.designer.xsd.ui.editor;
 
 import org.teiid.designer.ui.forms.LinkedComponentSet;
 
+/**
+ * @since 8.0
+ */
 public interface FacetSet extends LinkedComponentSet {
 //    public FacetValue getValue();
 //    public void       setValue(FacetValue fv);

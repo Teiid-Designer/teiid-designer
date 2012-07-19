@@ -16,6 +16,8 @@ import org.teiid.designer.core.container.Container;
 
 /**
  * ModelResourceSelector
+ *
+ * @since 8.0
  */
 public abstract class TemporaryResourceModelSelector extends AbstractModelSelector {
 

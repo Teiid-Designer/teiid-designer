@@ -36,6 +36,8 @@ import org.teiid.designer.metamodels.transformation.TransformationPackage;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public abstract class AbstractOperationNodeImpl extends DataFlowNodeImpl implements AbstractOperationNode {
 

@@ -11,6 +11,8 @@ import org.teiid.designer.jdbc.metadata.DatabaseInfo;
 
 /**
  * DatabaseInfoImpl
+ *
+ * @since 8.0
  */
 public class DatabaseInfoImpl implements DatabaseInfo {
     

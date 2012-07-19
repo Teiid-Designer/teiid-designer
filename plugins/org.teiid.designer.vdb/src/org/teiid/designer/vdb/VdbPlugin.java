@@ -9,6 +9,8 @@ import org.teiid.core.util.PluginUtilImpl;
 
 /**
  * The activator class controls the plug-in life cycle
+ *
+ * @since 8.0
  */
 public class VdbPlugin extends Plugin {
 

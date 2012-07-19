@@ -17,6 +17,9 @@ import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.util.CoreArgCheck;
 
 
+/**
+ * @since 8.0
+ */
 abstract public class AbstractEventBroker extends AbstractEventSource implements EventBroker {
     private static final String CANNOT_ADD_SELF_AS_LISTENER_MESSAGE = CorePlugin.Util.getString("AbstractEventBroker.CannotAddSelfAsListener"); //$NON-NLS-1$
     private boolean shutdownRequested = false;

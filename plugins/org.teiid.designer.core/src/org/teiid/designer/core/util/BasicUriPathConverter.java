@@ -15,6 +15,8 @@ import org.teiid.core.util.CoreArgCheck;
 
 /**
  * BasicUriHelper
+ *
+ * @since 8.0
  */
 public class BasicUriPathConverter implements UriPathConverter {
     

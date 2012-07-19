@@ -26,6 +26,8 @@ import org.teiid.designer.metamodels.diagram.DiagramEntity;
 /**
  * @author blafond AbstractFreeDiagramModelNode This class provides a base class for any DiagramModelNode that doesn't have any
  *         need for an EObject or DiagramEntity. First cut is for Label objects on Associations
+ *
+ * @since 8.0
  */
 abstract public class AbstractFreeDiagramModelNode implements DiagramModelNode, DiagramUiConstants {
     private int x;

@@ -30,6 +30,8 @@ import org.teiid.designer.xml.ui.ModelerXmlUiPlugin;
 
 /**
  * NumberOfLevelsWizard
+ *
+ * @since 8.0
  */
 public class NumberOfLevelsWizard extends AbstractWizard implements ModelerXmlUiConstants {
     // ============================================================================================================================

@@ -32,6 +32,8 @@ import org.teiid.designer.metamodels.dependency.util.DependencyAdapterFactory;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class DependencyItemProviderAdapterFactory extends DependencyAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier {
     /**

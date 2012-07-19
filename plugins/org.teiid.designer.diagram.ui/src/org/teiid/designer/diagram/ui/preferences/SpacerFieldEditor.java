@@ -11,6 +11,8 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * A field editor for adding space to a preference page.
+ *
+ * @since 8.0
  */
 public class SpacerFieldEditor extends LabelFieldEditor {
     // Implemented as an empty label field editor.

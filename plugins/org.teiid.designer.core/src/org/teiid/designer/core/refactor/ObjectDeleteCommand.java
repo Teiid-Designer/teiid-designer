@@ -26,6 +26,8 @@ import org.teiid.designer.core.workspace.ModelResource;
 
 /**
  * ObjectDeleteCommand
+ *
+ * @since 8.0
  */
 public class ObjectDeleteCommand extends ResourceRefactorCommand {
 

@@ -8,6 +8,9 @@
 
 package org.teiid.designer.metadata.runtime.api;
 
+/**
+ * @since 8.0
+ */
 public class RuntimeMetadataPropertyNames {
 
     /**

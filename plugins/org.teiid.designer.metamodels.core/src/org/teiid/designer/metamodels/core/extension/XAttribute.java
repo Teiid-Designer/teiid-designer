@@ -15,6 +15,8 @@ import org.eclipse.emf.ecore.EAttribute;
  * @see org.teiid.designer.metamodels.core.extension.ExtensionPackage#getXAttribute()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface XAttribute extends EAttribute {
 

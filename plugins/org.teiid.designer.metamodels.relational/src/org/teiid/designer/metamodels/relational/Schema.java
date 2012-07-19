@@ -28,6 +28,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.relational.RelationalPackage#getSchema()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Schema extends RelationalEntity{
     /**

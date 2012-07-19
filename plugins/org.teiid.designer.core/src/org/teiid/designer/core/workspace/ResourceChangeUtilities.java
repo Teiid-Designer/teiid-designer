@@ -18,6 +18,8 @@ import org.teiid.core.util.CoreArgCheck;
 /**
  * The <code>ResourceChangeUtilities</code> class contains utility methods for use with
  * {@link org.eclipse.core.resources.IResourceChangeEvent}s.
+ *
+ * @since 8.0
  */
 public class ResourceChangeUtilities {
 

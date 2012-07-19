@@ -11,6 +11,8 @@ import org.teiid.designer.core.association.AssociationDescriptor;
 
 /**
  * INewAssociationWizard
+ *
+ * @since 8.0
  */
 public interface INewAssociationWizard extends INewObjectWizard {
 

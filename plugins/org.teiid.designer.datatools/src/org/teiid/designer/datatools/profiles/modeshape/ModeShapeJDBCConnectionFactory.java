@@ -4,6 +4,9 @@ import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionFactory;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 
+/**
+ * @since 8.0
+ */
 public class ModeShapeJDBCConnectionFactory implements IConnectionFactory {
 
 	@Override

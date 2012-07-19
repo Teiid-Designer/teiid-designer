@@ -9,6 +9,8 @@ package org.teiid.datatools.views;
 
 /**
  * Execution Plan Attribute Object
+ *
+ * @since 8.0
  */
 public class PlanAttribute {
     private String name;

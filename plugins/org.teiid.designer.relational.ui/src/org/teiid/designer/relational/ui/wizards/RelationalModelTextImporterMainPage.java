@@ -83,6 +83,8 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class RelationalModelTextImporterMainPage extends WizardDataTransferPage implements IListPanelController, ITextImportMainPage {
 

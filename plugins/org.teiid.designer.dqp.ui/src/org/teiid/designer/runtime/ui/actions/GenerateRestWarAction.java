@@ -58,6 +58,9 @@ import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
 
 
+/**
+ * @since 8.0
+ */
 public class GenerateRestWarAction extends Action implements ISelectionListener, Comparable, ISelectionAction {
     static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(GenerateRestWarAction.class);
     private static final String VDB_EXTENSION = "vdb"; //$NON-NLS-1$

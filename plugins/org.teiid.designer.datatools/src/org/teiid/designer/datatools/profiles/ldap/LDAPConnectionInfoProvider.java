@@ -9,6 +9,9 @@ import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 
 
+/**
+ * @since 8.0
+ */
 public class LDAPConnectionInfoProvider extends ConnectionInfoHelper implements IConnectionInfoProvider {
 	public final static String LDAP_DATASOURCE_PASSWORD = "password"; //$NON-NLS-1$
 	public final static String LDAP_DATASOURCE_URL = "url"; //$NON-NLS-1$

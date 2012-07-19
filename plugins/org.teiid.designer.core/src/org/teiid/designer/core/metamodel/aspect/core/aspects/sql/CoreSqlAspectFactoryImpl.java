@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.core.CorePackage;
 
 /**
  * AnnotationSqlAspectFactoryImpl
+ *
+ * @since 8.0
  */
 public class CoreSqlAspectFactoryImpl implements MetamodelAspectFactory {
 

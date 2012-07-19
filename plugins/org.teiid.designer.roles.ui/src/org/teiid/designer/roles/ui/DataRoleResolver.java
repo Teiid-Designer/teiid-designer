@@ -13,6 +13,9 @@ import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
 
 
+/**
+ * @since 8.0
+ */
 public class DataRoleResolver {
 	private static final char DELIM = StringUtil.Constants.DOT_CHAR;
 	private static final char B_SLASH = '/';

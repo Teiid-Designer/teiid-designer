@@ -24,6 +24,8 @@ import org.teiid.designer.metamodels.diagram.DiagramPosition;
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class DiagramFactoryImpl extends EFactoryImpl implements DiagramFactory {
 

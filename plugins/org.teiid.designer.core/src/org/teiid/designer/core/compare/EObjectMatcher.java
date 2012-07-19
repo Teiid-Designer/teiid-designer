@@ -15,6 +15,8 @@ import org.eclipse.emf.mapping.MappingFactory;
 /**
  * This interface defines an object that can match up objects from two separate lists.
  * Implementations of this class must be stateless and should be thread-safe.
+ *
+ * @since 8.0
  */
 public interface EObjectMatcher {
     

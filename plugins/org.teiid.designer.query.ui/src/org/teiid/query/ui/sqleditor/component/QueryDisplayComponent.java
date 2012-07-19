@@ -44,6 +44,8 @@ import org.teiid.query.ui.UiConstants;
  * text will be parsed, reconciled and optimized into the appropriate type of SQL
  * query.  If the string is not recognized, it is stored as "Unknown".  There are
  * various accessor methods to get information about the parsed query.
+ *
+ * @since 8.0
  */
 public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants {
 

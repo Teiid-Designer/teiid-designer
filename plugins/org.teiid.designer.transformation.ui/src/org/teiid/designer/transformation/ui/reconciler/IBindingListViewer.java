@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.transformation.ui.reconciler;
 
+/**
+ * @since 8.0
+ */
 public interface IBindingListViewer {
 	
     /**

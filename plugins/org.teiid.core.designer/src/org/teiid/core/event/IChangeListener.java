@@ -10,6 +10,8 @@ package org.teiid.core.event;
 /**
  * The <code>IChangeListener</code> interface is informed of changes from a <code>IContentChangeNotifier</code>
  * whom the listener is registered with.
+ *
+ * @since 8.0
  */
 public interface IChangeListener {
 

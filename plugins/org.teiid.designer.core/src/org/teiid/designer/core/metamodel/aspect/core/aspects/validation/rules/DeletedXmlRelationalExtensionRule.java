@@ -17,6 +17,9 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metamodels.core.extension.XPackage;
 
 
+/**
+ * @since 8.0
+ */
 public class DeletedXmlRelationalExtensionRule implements ResourceValidationRule {
 
 	@Override

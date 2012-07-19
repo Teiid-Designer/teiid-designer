@@ -117,6 +117,8 @@ import org.teiid.query.ui.builder.util.ElementViewerFactory;
 
 /**
  * TransformationObjectEditorPage is the class for editing Transformation Objects.
+ *
+ * @since 8.0
  */
 public class TransformationObjectEditorPage
     implements ModelObjectEditorPage, UiConstants, ITransformationDiagramActionConstants, IAdaptable, EventObjectListener,

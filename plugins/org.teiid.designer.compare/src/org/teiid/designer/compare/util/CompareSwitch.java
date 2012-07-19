@@ -28,6 +28,8 @@ import org.teiid.designer.compare.PropertyDifference;
  * <!-- end-user-doc -->
  * @see org.teiid.designer.compare.ComparePackage
  * @generated
+ *
+ * @since 8.0
  */
 public class CompareSwitch {
     /**

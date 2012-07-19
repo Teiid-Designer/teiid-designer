@@ -19,6 +19,8 @@ import org.teiid.designer.core.workspace.ModelResource;
  * models as a result of the refactor operation.
  * 
  *
+ *
+ * @since 8.0
  */
 public interface IRefactorModelHandler {
 	public final static int RENAME = 0;

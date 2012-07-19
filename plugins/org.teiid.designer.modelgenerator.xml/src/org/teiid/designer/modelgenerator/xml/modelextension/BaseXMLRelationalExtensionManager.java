@@ -13,6 +13,8 @@ import org.teiid.designer.metamodels.relational.RelationalEntity;
  * 
  * Adds namespace metadata extensions to the Table class.
  *
+ *
+ * @since 8.0
  */
 public interface BaseXMLRelationalExtensionManager extends ExtensionManager {
 

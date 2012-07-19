@@ -17,6 +17,8 @@ import org.teiid.core.util.PluginUtilImpl;
 
 /**
  * CorePlugin
+ *
+ * @since 8.0
  */
 public class CoreModelerPlugin extends Plugin {
     //

@@ -23,6 +23,9 @@ import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.printing.PrinterData;
 import org.eclipse.swt.widgets.Display;
 
+/**
+ * @since 8.0
+ */
 public class DiagramPrintingOperation extends PrintGraphicalViewerOperation {
 
     private PrintSettings psSettings;

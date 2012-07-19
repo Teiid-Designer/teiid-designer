@@ -37,6 +37,8 @@ import org.teiid.designer.metamodels.xsd.XsdPlugin;
 
 /**
  * SimpleXsdResourceValidator
+ *
+ * @since 8.0
  */
 public class SimpleXsdResourceValidator implements ResourceValidator {
 

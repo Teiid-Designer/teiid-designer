@@ -17,6 +17,8 @@ import org.teiid.designer.diagram.ui.figure.DiagramPolylineConnection;
 
 /**
  * MappingLinkEditPart
+ *
+ * @since 8.0
  */
 public class MappingLinkEditPart extends NodeConnectionEditPart {
     /**

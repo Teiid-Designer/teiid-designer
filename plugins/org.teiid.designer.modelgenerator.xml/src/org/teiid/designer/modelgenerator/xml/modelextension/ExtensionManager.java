@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.core.extension.XPackage;
 /**
  * Base interface for creating model extensions. The envisioned implementation is limited to creating a single extension to the
  * Table class and a single extension to the Column class.
+ *
+ * @since 8.0
  */
 public interface ExtensionManager {
 

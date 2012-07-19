@@ -42,6 +42,8 @@ import org.teiid.query.sql.lang.SetQuery;
  * always act on the wrong item, or not at all (action disabled).
  * By asking the toolBarManager for a focusedToolItem() during the selectionChanged() method, we could enable 
  * the action based on the "old selection" from the previous part (i.e. the tree, or another diagram).
+ *
+ * @since 8.0
  */
 public class AddUnionSourceAction extends TransformationAction {
     private static final String ACTION_DESCRIPTION_1 = "Add Union Transformation Source"; //$NON-NLS-1$

@@ -26,6 +26,8 @@ import org.teiid.designer.ui.UiConstants;
  * in the tree.  Any object of type PresentationEntity will be passed through all extensions of the 
  * diagramProvider extension point to render the object.  The first one that provides a non-null label
  * will be used to provide the label and icon.
+ *
+ * @since 8.0
  */
 public class DiagramLabelProvider implements ILabelProvider, UiConstants.ExtensionPoints.DiagramLabelProvider {
 

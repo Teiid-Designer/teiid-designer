@@ -22,6 +22,8 @@ import org.teiid.core.util.CoreArgCheck;
  * Initial implementation was for managing the cheat sheet properties state where the "id" is the 
  * cheat sheet id.
  * 
+ *
+ * @since 8.0
  */
 public class PropertiesContextManager extends CheatSheetListener {
 

@@ -24,6 +24,8 @@ import org.eclipse.xsd.XSDComponent;
  * @see org.teiid.designer.metamodels.xml.XmlDocumentPackage#getXmlContainerNode()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface XmlContainerNode extends XmlDocumentEntity, XmlEntityHolder, ChoiceOption, XmlBuildable, XmlHolderEntity {
 

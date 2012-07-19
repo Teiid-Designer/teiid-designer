@@ -17,6 +17,9 @@ import org.teiid.designer.metamodels.relational.RelationalEntity;
 import org.teiid.designer.metamodels.relational.RelationalPlugin;
 
 
+/**
+ * @since 8.0
+ */
 public class MissingNameInSourceRule implements ObjectValidationRule {
 
 	private static final String nameInSourceFeatureName = RelationalPlugin.Util.getString("_UI_RelationalEntity_nameInSource_feature"); //$NON-NLS-1$

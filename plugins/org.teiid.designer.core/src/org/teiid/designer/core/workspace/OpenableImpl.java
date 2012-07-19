@@ -20,6 +20,8 @@ import org.teiid.designer.core.ModelerCore;
 
 /**
  * OpenableImpl
+ *
+ * @since 8.0
  */
 public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Openable, InternalOpenable {
 

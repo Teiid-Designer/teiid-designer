@@ -38,6 +38,8 @@ import org.teiid.designer.transformation.TransformationPlugin;
 
 /**
  * MappingClassColumnSqlAspect
+ *
+ * @since 8.0
  */
 public class MappingClassColumnSqlAspect extends MappingClassObjectSqlAspect implements SqlColumnAspect {
     /**

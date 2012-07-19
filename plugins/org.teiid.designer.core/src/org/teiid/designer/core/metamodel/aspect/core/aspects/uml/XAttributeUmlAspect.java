@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.core.extension.XAttribute;
 
 /**
  * ColumnAspect
+ *
+ * @since 8.0
  */
 public class XAttributeUmlAspect extends AbstractExtensionUmlAspect implements UmlProperty {
     /**

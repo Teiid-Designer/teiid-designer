@@ -14,6 +14,8 @@ import org.eclipse.swt.dnd.TransferData;
  * Holds on to the object being transferred in a field so that DropTargetListeners can know what's being dragged before the drop
  * occurs. The object isn't converted to bytes, so this Transfer will only work when dragging within the same instance of Eclipse.
  * Subclasses should maintain a single instance of their Transfer and provide a static method to obtain that instance.
+ *
+ * @since 8.0
  */
 public class EObjectTransfer extends ByteArrayTransfer {
 

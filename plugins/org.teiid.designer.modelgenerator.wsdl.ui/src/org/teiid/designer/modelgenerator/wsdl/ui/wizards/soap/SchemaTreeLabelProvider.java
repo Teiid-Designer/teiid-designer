@@ -21,6 +21,9 @@ import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
 
 
+/**
+ * @since 8.0
+ */
 public class SchemaTreeLabelProvider extends AdapterFactoryLabelProvider {
 	private final Image XSD_COMPLEX_ELEMENT_ICON_IMG = 
 			ModelGeneratorWsdlUiUtil.getImage(ModelGeneratorWsdlUiConstants.Images.XSD_COMPLEX_ELEMENT_ICON);

@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.wsdl.BindingOperation;
  * @see org.teiid.designer.metamodels.wsdl.http.HttpPackage#getHttpOperation()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface HttpOperation extends EObject {
 

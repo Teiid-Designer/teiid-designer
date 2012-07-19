@@ -14,6 +14,8 @@ import org.teiid.designer.diagram.ui.editor.IDiagramSelectionHandler;
 
 /**
  * DiagramEditPartFactory
+ *
+ * @since 8.0
  */
 public interface DiagramEditPartFactory extends EditPartFactory {
 

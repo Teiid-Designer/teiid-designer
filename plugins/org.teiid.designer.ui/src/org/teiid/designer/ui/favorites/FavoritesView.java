@@ -69,6 +69,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * FavoritesView is a class designed to provide a table summary of user-defined EObjects or objects contained in models. The
  * objects can be added to this table in various ways and removed or cleared via the actions and toolbar buttons provided.
+ *
+ * @since 8.0
  */
 public class FavoritesView extends ViewPart
     implements ISelectionProvider, ISelectionListener, IModelerCacheListener, CoreStringUtil.Constants {

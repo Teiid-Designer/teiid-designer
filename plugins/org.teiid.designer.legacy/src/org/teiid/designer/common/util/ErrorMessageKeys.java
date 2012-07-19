@@ -55,6 +55,8 @@ package org.teiid.designer.common.util;
  * <li>031 - xa</li>
  * <li>032 - xml</li>
  * </p>
+ *
+ * @since 8.0
  */
 public interface ErrorMessageKeys {
 

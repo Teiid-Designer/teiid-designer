@@ -34,6 +34,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * PackageDiagramPermanentActionContributor
+ *
+ * @since 8.0
  */
 public class CustomDiagramPermanentActionContributor implements IModelObjectActionContributor {
     

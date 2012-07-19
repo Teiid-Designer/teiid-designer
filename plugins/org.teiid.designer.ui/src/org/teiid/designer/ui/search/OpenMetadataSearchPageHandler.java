@@ -9,6 +9,9 @@ import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * @since 8.0
+ */
 public final class OpenMetadataSearchPageHandler extends AbstractHandler {
 
     /**

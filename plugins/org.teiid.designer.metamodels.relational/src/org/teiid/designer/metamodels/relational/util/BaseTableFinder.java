@@ -16,6 +16,8 @@ import org.teiid.designer.metamodels.relational.Table;
 
 /**
  * BaseTableFinder
+ *
+ * @since 8.0
  */
 public class BaseTableFinder extends TableFinder {
 

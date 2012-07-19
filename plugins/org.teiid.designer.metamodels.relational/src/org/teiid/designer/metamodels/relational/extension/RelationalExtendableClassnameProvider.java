@@ -12,6 +12,8 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class RelationalExtendableClassnameProvider extends AbstractMetaclassNameProvider {
 

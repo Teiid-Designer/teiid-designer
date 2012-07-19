@@ -16,6 +16,8 @@ import org.teiid.designer.diagram.ui.actions.DiagramAction;
 
 /**
  * DeleteAction
+ *
+ * @since 8.0
  */
 public class DeleteAction extends DiagramAction implements DiagramUiConstants {
     //============================================================================================================================

@@ -35,6 +35,8 @@ import org.teiid.core.CorePlugin;
  * Of course, this class does <i>not</i> consider it an error to attempt to transition to the current state
  * (since the net result is no change in state).
  * </p>
+ *
+ * @since 8.0
  */
 public class RunnableState {
     

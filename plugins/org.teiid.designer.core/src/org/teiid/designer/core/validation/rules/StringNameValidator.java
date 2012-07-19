@@ -25,6 +25,8 @@ import org.teiid.designer.core.ModelerCoreRuntimeException;
 
 /**
  * StringNameValidator
+ *
+ * @since 8.0
  */
 public class StringNameValidator {
 

@@ -13,6 +13,8 @@ import org.teiid.designer.core.validation.ValidationRuleSet;
 
 /**
  * UniqueKeyAspect
+ *
+ * @since 8.0
  */
 public abstract class UniqueKeyAspect extends RelationalEntityAspect {
     

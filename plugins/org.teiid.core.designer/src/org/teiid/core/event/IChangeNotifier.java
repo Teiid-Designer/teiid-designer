@@ -9,6 +9,8 @@ package org.teiid.core.event;
 
 /**
  * The <code>IChangeNotifier</code> interface provides a means for registering for change notification.
+ *
+ * @since 8.0
  */
 public interface IChangeNotifier {
 

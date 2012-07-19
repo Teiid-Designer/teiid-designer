@@ -25,6 +25,8 @@ import org.teiid.designer.diagram.ui.part.DiagramEditPart;
 
 /**
  * UmlPartGenerator
+ *
+ * @since 8.0
  */
 public class UmlPartGenerator implements NotationPartGenerator {
 

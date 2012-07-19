@@ -11,6 +11,8 @@ import java.text.MessageFormat;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class I18n {
 

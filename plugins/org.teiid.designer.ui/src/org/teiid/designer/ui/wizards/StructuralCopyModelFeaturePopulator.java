@@ -36,6 +36,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 /**
  * StructuralCopyModelFeaturePopulator
+ *
+ * @since 8.0
  */
 public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreePopulator {
 

@@ -20,6 +20,9 @@ import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.util.EquivalenceUtil;
 import org.teiid.core.util.ExternalizeUtil;
 
+/**
+ * @since 8.0
+ */
 public class ModelerCoreException extends CoreException implements Externalizable {
     private static final String NO_MESSAGE = "No Error Message"; //$NON-NLS-1$
 

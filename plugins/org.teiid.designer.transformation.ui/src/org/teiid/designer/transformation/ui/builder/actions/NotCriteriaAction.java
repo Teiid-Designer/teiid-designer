@@ -11,6 +11,8 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * The <code>DeleteAction</code> class deletes expressions and criteria found in the builders.
+ *
+ * @since 8.0
  */
 public class NotCriteriaAction extends AbstractButtonAction {
 

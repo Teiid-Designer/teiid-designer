@@ -23,6 +23,8 @@ import org.teiid.designer.ui.undo.ModelerUndoManager;
 
 /**
  * SplitMappingClassAction
+ *
+ * @since 8.0
  */
 public class SplitMappingClassAction extends MappingAction {
     private static final String ERROR_MESSAGE = "Cannot Split Mapping Class.\n\n" + //$NON-NLS-1$

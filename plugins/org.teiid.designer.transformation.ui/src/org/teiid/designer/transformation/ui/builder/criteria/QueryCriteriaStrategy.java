@@ -16,6 +16,8 @@ import org.teiid.query.ui.builder.util.CriteriaStrategy;
 
 /**
  * QueryCriteriaStrategy
+ *
+ * @since 8.0
  */
 public class QueryCriteriaStrategy extends CriteriaStrategy {
 

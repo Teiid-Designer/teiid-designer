@@ -39,6 +39,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 /**
  * ResourceRenameCommand is a specialization of ResourceRefactorCommand for renaming files
  * and folders.
+ *
+ * @since 8.0
  */
 public class ResourceRenameCommand extends ResourceRefactorCommand {
 

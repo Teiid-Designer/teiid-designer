@@ -18,6 +18,8 @@ import org.teiid.designer.ui.common.actions.ActionService;
 
 /**
  * ModelerXsdUiPlugin
+ *
+ * @since 8.0
  */
 public class ModelerXsdUiPlugin extends AbstractUiPlugin implements Debug, ModelerXsdUiConstants {
 

@@ -43,6 +43,8 @@ import org.teiid.designer.metamodels.xml.XmlValueHolder;
  * 
  * @see org.teiid.designer.metamodels.xml.XmlDocumentPackage
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlDocumentSwitch {
     /**

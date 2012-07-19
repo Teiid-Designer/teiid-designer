@@ -9,6 +9,9 @@ package org.teiid.designer.schema.tools.model.jdbc.internal;
 
 import org.teiid.designer.schema.tools.model.jdbc.DatabaseElement;
 
+/**
+ * @since 8.0
+ */
 public abstract class DatabaseElementImpl implements DatabaseElement {
 
 	private String m_name;

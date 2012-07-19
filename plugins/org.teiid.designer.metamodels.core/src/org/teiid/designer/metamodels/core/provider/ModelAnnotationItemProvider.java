@@ -44,6 +44,8 @@ import org.teiid.designer.metamodels.core.custom.impl.XsdModelAnnotationImpl;
  * <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class ModelAnnotationItemProvider extends ItemProviderAdapter
     implements IEditingDomainItemProvider, ITreeItemContentProvider, IItemLabelProvider,

@@ -34,6 +34,8 @@ import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
  * the workspace, with models expandable.  Users may set an ISelectionStatusValidator on this
  * AccumulatorSource to validate the objects selected in the tree.  If no validator is used, then
  * all selections in this tree are considered valid.
+ *
+ * @since 8.0
  */
 public class WorkspaceTreeAccumulatorSource implements IAccumulatorSource {
     

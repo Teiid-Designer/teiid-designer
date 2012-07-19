@@ -18,6 +18,8 @@ import org.teiid.designer.ui.table.ModelTableEditor;
 
 /**
  * TableClipboardPasteAction
+ *
+ * @since 8.0
  */
 public class TableClipboardPasteAction extends AbstractModelerAction {
 

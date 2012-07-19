@@ -37,6 +37,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * The <code>DiagramActionService</code> class is the Modeler Plugin's action service. It is responsible for managing all actions
  * for this plugin.
+ *
+ * @since 8.0
  */
 public final class DiagramActionService extends AbstractActionService implements DiagramUiConstants, IDiagramActionConstants {
 

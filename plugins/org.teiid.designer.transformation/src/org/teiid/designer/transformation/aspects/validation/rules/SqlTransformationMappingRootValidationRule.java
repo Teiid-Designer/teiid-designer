@@ -92,6 +92,8 @@ import org.teiid.query.sql.visitor.PredicateCollectorVisitor;
 
 /**
  * SqlTransformationMappingRootValidationRule
+ *
+ * @since 8.0
  */
 public class SqlTransformationMappingRootValidationRule implements ObjectValidationRule {
 

@@ -13,6 +13,8 @@ import org.teiid.core.util.PluginUtilImpl;
 
 /**
  * ModelerXmlPlugin is the plugin class for org.teiid.designer.mapping
+ *
+ * @since 8.0
  */
 public class ModelerXmlPlugin extends Plugin implements PluginConstants {
 

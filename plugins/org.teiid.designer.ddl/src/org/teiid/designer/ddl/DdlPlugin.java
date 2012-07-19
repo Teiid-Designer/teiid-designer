@@ -27,6 +27,8 @@ import org.teiid.designer.core.xslt.impl.StyleRegistryImpl;
 
 /**
  * DdlPlugin
+ *
+ * @since 8.0
  */
 public class DdlPlugin extends Plugin {
 

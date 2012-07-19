@@ -9,6 +9,8 @@ package org.teiid.query.ui.sqleditor.component;
 
 /**
  * The <code>SeparatorDisplayNode</code> class is used to represent a text separator.
+ *
+ * @since 8.0
  */
 public class SeparatorDisplayNode extends TextDisplayNode {
 

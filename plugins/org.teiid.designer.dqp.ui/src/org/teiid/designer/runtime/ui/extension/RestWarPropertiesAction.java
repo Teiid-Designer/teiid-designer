@@ -32,6 +32,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public abstract class RestWarPropertiesAction extends SortableSelectionAction {
 

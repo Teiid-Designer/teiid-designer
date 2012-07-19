@@ -18,6 +18,8 @@ import org.teiid.designer.diagram.ui.connection.NodeConnectionEditPart;
  * This interface defines common methods for Diagram Editor, Diagram Viewer, and Edit Parts
  * to communicate based on their specific diagram type.  Each diagram type plugin may provide their
  * own handler for selection, hiliting and double-clicking (editing).
+ *
+ * @since 8.0
  */
 public interface IDiagramSelectionHandler {
     

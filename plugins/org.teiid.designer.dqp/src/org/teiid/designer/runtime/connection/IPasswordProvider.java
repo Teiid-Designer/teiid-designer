@@ -10,6 +10,8 @@ package org.teiid.designer.runtime.connection;
 /**
  * Simple interface provides DQP preview manager ability to ask for user password
  * during Preview action setup.
+ *
+ * @since 8.0
  */
 public interface IPasswordProvider {
 

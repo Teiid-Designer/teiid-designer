@@ -22,6 +22,8 @@ import org.teiid.designer.core.validation.ValidationResultImpl;
 
 /**
  * StringNameRule, rule that validates the string name
+ *
+ * @since 8.0
  */
 public class StringNameRule implements StructuralFeatureValidationRule {
 

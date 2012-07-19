@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * The <code>ITreeToRelationalMapper</code> class defines the methods needed to transform a tree-based
  * model to/from relational model.
+ *
+ * @since 8.0
  */
 public interface ITreeToRelationalMapper {
 

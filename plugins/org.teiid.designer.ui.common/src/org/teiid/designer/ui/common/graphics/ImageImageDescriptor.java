@@ -15,6 +15,8 @@ import org.eclipse.swt.graphics.ImageData;
  * The <code>ExistingImageDescriptor</code> is a descriptor for an existing <code>Image</code>.
  * Most code copied from org.eclipse.jdt.internal.ui.viewsupport.ImageImageDescriptor. Since it is an internal
  * package it was not used.
+ *
+ * @since 8.0
  */
 public class ImageImageDescriptor extends ImageDescriptor {
 

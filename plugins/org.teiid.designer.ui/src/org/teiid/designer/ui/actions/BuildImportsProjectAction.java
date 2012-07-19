@@ -43,6 +43,8 @@ import org.teiid.designer.ui.event.ModelResourceEvent;
 
 /**
  * RebuildImportsProjectAction
+ *
+ * @since 8.0
  */
 public class BuildImportsProjectAction extends ActionDelegate implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
 

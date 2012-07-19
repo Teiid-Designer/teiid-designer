@@ -16,6 +16,8 @@ import org.eclipse.emf.ecore.EFactory;
  * <!-- end-user-doc -->
  * @see org.teiid.designer.compare.ComparePackage
  * @generated
+ *
+ * @since 8.0
  */
 public interface CompareFactory extends EFactory{
     /**

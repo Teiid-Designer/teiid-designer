@@ -12,6 +12,9 @@ import org.eclipse.datatools.sqltools.core.services.SQLEditorUIService;
 import org.eclipse.datatools.sqltools.editor.ui.core.SQLDevToolsUIConfiguration;
 import org.teiid.datatools.connectivity.ui.plan.TeiidExplainSQLActionDelegate;
 
+/**
+ * @since 8.0
+ */
 public class TeiidDBUIConfiguration extends SQLDevToolsUIConfiguration {
 
     @Override

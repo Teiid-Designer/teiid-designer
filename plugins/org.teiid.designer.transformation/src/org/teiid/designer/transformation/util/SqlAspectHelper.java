@@ -15,6 +15,8 @@ import org.teiid.designer.transformation.aspects.sql.InputSetSqlAspect;
 
 /**
  * SqlAspectManager - maintains cache of SqlAspects
+ *
+ * @since 8.0
  */
 public class SqlAspectHelper extends org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper {
 

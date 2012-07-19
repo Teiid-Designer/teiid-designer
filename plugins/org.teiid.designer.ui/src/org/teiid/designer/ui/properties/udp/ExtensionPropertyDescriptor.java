@@ -39,6 +39,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  * the wrapper itself and allows the ModelObjectPropertySource to recognize that this Descriptor
  * is for the extensions object rather than the real model object.  This allows the source to
  * get and set property values on the correct object.
+ *
+ * @since 8.0
  */
 public class ExtensionPropertyDescriptor implements IPropertyDescriptor {
 

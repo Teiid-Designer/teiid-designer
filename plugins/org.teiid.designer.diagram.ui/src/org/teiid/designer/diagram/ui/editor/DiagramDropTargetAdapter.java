@@ -26,6 +26,8 @@ import org.teiid.designer.ui.util.EObjectTransfer;
 
 /**
  * DiagramDropTargetAdapter
+ *
+ * @since 8.0
  */
 public class DiagramDropTargetAdapter extends AbstractTransferDropTargetListener {
     private EditPart currentEditPart = null;

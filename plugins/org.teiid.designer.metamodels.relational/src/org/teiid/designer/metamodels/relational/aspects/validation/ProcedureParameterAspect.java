@@ -11,6 +11,8 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 
 /**
  * ProcedureParameterAspect
+ *
+ * @since 8.0
  */
 public class ProcedureParameterAspect extends RelationalEntityAspect {
 

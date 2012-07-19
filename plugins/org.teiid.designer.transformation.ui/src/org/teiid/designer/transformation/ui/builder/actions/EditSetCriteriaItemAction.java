@@ -11,6 +11,8 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * EditSetCriteriaItemAction
+ *
+ * @since 8.0
  */
 public class EditSetCriteriaItemAction extends AbstractButtonAction {
 	public EditSetCriteriaItemAction(Composite parent, Runnable handler) {

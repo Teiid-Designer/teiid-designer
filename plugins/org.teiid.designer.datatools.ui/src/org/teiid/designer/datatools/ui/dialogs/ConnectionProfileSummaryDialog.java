@@ -28,6 +28,9 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Dialog;
 
 
+/**
+ * @since 8.0
+ */
 public class ConnectionProfileSummaryDialog extends Dialog {
 	private static final int WIDTH = 700;
     private static final int HEIGHT = 400;

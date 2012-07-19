@@ -9,6 +9,9 @@ import org.eclipse.ui.actions.CompoundContributionItem;
 import org.teiid.designer.ui.UiPlugin;
 
 
+/**
+ * @since 8.0
+ */
 public abstract class NewMenuContributionsManager extends CompoundContributionItem {
 
     /**

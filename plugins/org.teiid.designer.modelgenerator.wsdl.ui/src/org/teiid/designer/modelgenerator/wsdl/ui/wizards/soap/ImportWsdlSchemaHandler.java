@@ -56,6 +56,9 @@ import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class ImportWsdlSchemaHandler {
 
     private static final String WSDL_SCHEMA_HANDLER_RECURSIVE_DEPTH_PROPERTY = "WsdlSchemaHandlerRecursiveDepth"; //$NON-NLS-1$

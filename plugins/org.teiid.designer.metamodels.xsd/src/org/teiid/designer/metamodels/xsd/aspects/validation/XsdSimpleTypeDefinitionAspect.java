@@ -18,6 +18,8 @@ import org.teiid.designer.metamodels.xsd.aspects.validation.rules.ItemTypeRule;
 
 /**
  * SimpleDatatypeAspect
+ *
+ * @since 8.0
  */
 public class XsdSimpleTypeDefinitionAspect extends AbstractValidationAspect {
     

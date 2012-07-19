@@ -9,6 +9,9 @@
 package org.teiid.core.event;
 
 
+/**
+ * @since 8.0
+ */
 public interface EventSource {
 
     void addListener( Class eventClass,

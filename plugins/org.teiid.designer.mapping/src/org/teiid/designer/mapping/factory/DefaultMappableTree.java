@@ -23,6 +23,8 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect;
 
 /**
  * DefaultMappableTree
+ *
+ * @since 8.0
  */
 public class DefaultMappableTree implements IMappableTree {
 

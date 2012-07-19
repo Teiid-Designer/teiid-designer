@@ -26,6 +26,8 @@ import org.teiid.designer.metamodels.xml.XmlEntityHolder;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlAllImpl extends XmlContainerNodeImpl implements XmlAll {
     /**

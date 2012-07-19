@@ -25,6 +25,8 @@ import org.teiid.designer.metadata.runtime.impl.RecordFactory;
 
 /**
  * IndexUtil
+ *
+ * @since 8.0
  */
 public class SimpleIndexUtil {
 	

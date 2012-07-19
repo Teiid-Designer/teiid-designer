@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.xsd.XsdPlugin;
 
 /**
  * StringNameRule, rule that validates the string name
+ *
+ * @since 8.0
  */
 public class ItemTypeRule implements StructuralFeatureValidationRule {
     

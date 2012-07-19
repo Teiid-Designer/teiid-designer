@@ -14,6 +14,8 @@ import org.teiid.designer.core.index.IndexSelector;
 
 /**
  * IndexSelectorFactory
+ *
+ * @since 8.0
  */
 public interface IndexSelectorFactory {
 

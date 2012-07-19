@@ -11,6 +11,8 @@ import org.teiid.query.sql.LanguageObject;
 
 /**
  * The <code>SymbolDisplayNode</code> class is used to represent a Symbol.
+ *
+ * @since 8.0
  */
 public class SymbolDisplayNode extends DisplayNode {
 

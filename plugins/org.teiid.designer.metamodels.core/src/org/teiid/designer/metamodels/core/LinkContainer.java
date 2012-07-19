@@ -22,6 +22,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.core.CorePackage#getLinkContainer()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface LinkContainer extends EObject {
 

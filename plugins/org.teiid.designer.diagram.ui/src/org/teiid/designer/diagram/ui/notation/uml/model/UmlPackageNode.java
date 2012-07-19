@@ -20,6 +20,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
  * @author mdrilling
  *
  * Model Node for UML Package.
+ *
+ * @since 8.0
  */
 public class UmlPackageNode extends UmlModelNode {
 

@@ -9,6 +9,9 @@ package org.teiid.designer.ui.forms;
 
 import java.util.EventObject;
 
+/**
+ * @since 8.0
+ */
 public class ComponentSetEvent extends EventObject {
 
     private static final long serialVersionUID = 1L;

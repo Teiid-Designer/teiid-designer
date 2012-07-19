@@ -10,6 +10,8 @@ package org.teiid.designer.core;
 import org.teiid.core.TeiidRuntimeException;
 
 /**
+ *
+ * @since 8.0
  */
 public class ModelerCoreRuntimeException extends TeiidRuntimeException {
     /**

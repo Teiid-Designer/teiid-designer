@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.roles;
 
+/**
+ * @since 8.0
+ */
 public class Crud {
 	public enum Type
 	{

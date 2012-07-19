@@ -16,6 +16,8 @@ import org.teiid.core.util.LoggingUtil;
 
 /**
  * Common extension constants.
+ *
+ * @since 8.0
  */
 public interface ExtensionConstants {
 

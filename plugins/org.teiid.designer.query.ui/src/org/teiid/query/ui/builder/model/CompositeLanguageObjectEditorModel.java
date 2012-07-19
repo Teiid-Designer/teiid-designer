@@ -16,6 +16,8 @@ import org.teiid.query.sql.LanguageObject;
 
 /**
  * The <code>CompositeLanguageObjectEditorModel</code> manages a collection of <code>ILanguageObjectEditorModel</code>s.
+ *
+ * @since 8.0
  */
 public abstract class CompositeLanguageObjectEditorModel extends AbstractLanguageObjectEditorModel {
 

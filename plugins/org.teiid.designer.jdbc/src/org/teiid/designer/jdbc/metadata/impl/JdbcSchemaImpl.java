@@ -25,6 +25,8 @@ import org.teiid.designer.jdbc.metadata.JdbcSchema;
 
 /**
  * JdbcSchemaImpl
+ *
+ * @since 8.0
  */
 public class JdbcSchemaImpl extends JdbcNodeImpl implements JdbcSchema {
 

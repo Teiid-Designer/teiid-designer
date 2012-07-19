@@ -35,6 +35,8 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
  * other users.
  * 
  *
+ *
+ * @since 8.0
  */
 public class RemoveConnectionInfoAction extends SortableSelectionAction {
     private static final String label = DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.title"); //$NON-NLS-1$

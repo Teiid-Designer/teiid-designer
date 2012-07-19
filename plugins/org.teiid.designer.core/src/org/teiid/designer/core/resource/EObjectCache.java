@@ -15,6 +15,8 @@ import org.teiid.core.id.ObjectID;
  * in the workspace.  The maps are keyed on the UUID associated with the EObject.
  * Models not found in the "Model Container" cannot be found through the
  * ObjectManager.
+ *
+ * @since 8.0
  */
 public interface EObjectCache {
 

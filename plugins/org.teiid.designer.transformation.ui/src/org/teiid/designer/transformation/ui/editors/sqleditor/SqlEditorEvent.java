@@ -14,6 +14,8 @@ import org.teiid.query.sql.lang.Command;
  * The <code>SqlEditorEvent</code> class notifies interested
  * EventListeners that a change in the status of SqlEditorPanel
  * has occured.
+ *
+ * @since 8.0
  */
 public class SqlEditorEvent extends EventObject {
 

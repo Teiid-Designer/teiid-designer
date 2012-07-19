@@ -47,6 +47,9 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.vdb.Vdb;
 
 
+/**
+ * @since 8.0
+ */
 public class DeployVdbAction extends Action implements ISelectionListener, Comparable, ISelectionAction {
 
     static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(DeployVdbAction.class);

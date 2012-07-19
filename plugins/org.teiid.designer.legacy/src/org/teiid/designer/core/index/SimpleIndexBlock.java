@@ -15,6 +15,8 @@ import java.io.UTFDataFormatException;
 import java.util.Arrays;
 /**
  * Does no compression of words, and uses 4-byte ints for file numbers and number of files.
+ *
+ * @since 8.0
  */
 public class SimpleIndexBlock extends IndexBlock {
 	protected int offset= 0;

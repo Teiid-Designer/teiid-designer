@@ -65,6 +65,8 @@ import org.w3c.dom.Node;
 
 /**
  * XsdUtil
+ *
+ * @since 8.0
  */
 public class XsdUtil {
     public static final String BUILT_IN_DATATYPE_NAMESPACE_URI = DatatypeConstants.BUILTIN_DATATYPES_URI;

@@ -11,6 +11,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * ValidationRuleSet
+ *
+ * @since 8.0
  */
 public interface ValidationRuleSet {
     

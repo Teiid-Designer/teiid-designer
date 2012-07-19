@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.EClass;
 
 /**
  * MetamodelRootClass
+ *
+ * @since 8.0
  */
 public class MetamodelRootClass {
     

@@ -15,6 +15,8 @@ import org.teiid.designer.diagram.ui.editor.IDiagramSelectionHandler;
 
 /**
  * AbstractFreeEditPart
+ *
+ * @since 8.0
  */
 public abstract class AbstractFreeEditPart extends AbstractDefaultEditPart {
 

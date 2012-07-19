@@ -8,6 +8,9 @@
 package org.teiid.designer.modelgenerator.xml.modelextension;
 
 
+/**
+ * @since 8.0
+ */
 public interface ExtensionReplaceAction {
 
 	public abstract String getExtensionName();

@@ -23,6 +23,8 @@ import org.teiid.designer.ui.UiConstants;
 
 /**
  * DatatypeHierarchyTreeViewer is a reusable TreeViewer to display the Datatype hierarchy.
+ *
+ * @since 8.0
  */
 public class DatatypeHierarchyTreeViewer extends TreeViewer {
 

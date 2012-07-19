@@ -40,6 +40,9 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.ui.UiConstants;
 
 
+/**
+ * @since 8.0
+ */
 public class RelationalObjectBuilder implements UiConstants {
     // ============================================================================================================================
     // Static Constants

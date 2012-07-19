@@ -13,6 +13,8 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * This class defines the interfaces for building a WAR file and validating the input properties.
+ *
+ * @since 8.0
  */
 public interface WebArchiveBuilder {
 

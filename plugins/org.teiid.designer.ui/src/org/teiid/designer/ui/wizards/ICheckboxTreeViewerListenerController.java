@@ -9,6 +9,8 @@ package org.teiid.designer.ui.wizards;
 
 /**
  * ICheckboxTreeViewerListenerController
+ *
+ * @since 8.0
  */
 public interface ICheckboxTreeViewerListenerController {
 	void enableCheckboxChangeListener(boolean flag);

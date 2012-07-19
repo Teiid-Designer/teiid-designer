@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.diagram.ui.part;
 
+/**
+ * @since 8.0
+ */
 public interface ExpandableDiagram {
 	
 	boolean canExpand();

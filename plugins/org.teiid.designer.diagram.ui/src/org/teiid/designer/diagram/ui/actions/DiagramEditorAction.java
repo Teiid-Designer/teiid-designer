@@ -14,6 +14,8 @@ import org.teiid.designer.ui.common.actions.AbstractAction;
 
 /**
  * DrawingAction
+ *
+ * @since 8.0
  */
 public class DiagramEditorAction extends AbstractAction {
     protected DiagramEditor editor;

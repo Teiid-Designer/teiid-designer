@@ -11,6 +11,8 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * GeneratorOptions
+ *
+ * @since 8.0
  */
 public interface GeneratorOptions {
 

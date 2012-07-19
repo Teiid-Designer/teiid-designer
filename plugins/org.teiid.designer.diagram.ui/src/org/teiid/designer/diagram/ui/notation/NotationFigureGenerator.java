@@ -12,6 +12,8 @@ import org.eclipse.draw2d.Figure;
 
 /**
  * NotationFigureGenerator
+ *
+ * @since 8.0
  */
 public interface NotationFigureGenerator {
     public Figure createFigure(Object someModelbject );

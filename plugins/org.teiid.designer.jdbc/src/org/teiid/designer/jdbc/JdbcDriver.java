@@ -30,6 +30,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.jdbc.JdbcPackage#getJdbcDriver()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface JdbcDriver extends EObject{
     /**

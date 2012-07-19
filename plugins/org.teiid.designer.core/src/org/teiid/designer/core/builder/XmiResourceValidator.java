@@ -31,6 +31,8 @@ import org.teiid.designer.core.workspace.ModelWorkspace;
 
 /**
  * XmiResourceValidator
+ *
+ * @since 8.0
  */
 public class XmiResourceValidator implements ResourceValidator {
     

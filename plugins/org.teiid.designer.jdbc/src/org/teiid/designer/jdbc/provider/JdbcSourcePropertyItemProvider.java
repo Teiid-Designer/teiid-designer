@@ -30,6 +30,8 @@ import org.teiid.designer.jdbc.JdbcSourceProperty;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class JdbcSourcePropertyItemProvider
     extends ItemProviderAdapter

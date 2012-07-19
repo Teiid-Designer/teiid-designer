@@ -24,6 +24,8 @@ package org.teiid.designer.metamodels.xml;
  * @see org.teiid.designer.metamodels.xml.XmlDocumentPackage#getXmlComment()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface XmlComment extends XmlDocumentEntity{
     /**

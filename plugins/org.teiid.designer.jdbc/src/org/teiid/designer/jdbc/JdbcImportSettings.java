@@ -39,6 +39,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.jdbc.JdbcPackage#getJdbcImportSettings()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface JdbcImportSettings extends EObject{
     /**

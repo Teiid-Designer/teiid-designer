@@ -30,6 +30,8 @@ import org.teiid.query.ui.builder.model.CompositeLanguageObjectEditorModel;
 
 /**
  * AbstractCompositeExpressionEditor As editors get added, the editor models are added to the composite editor's model.
+ *
+ * @since 8.0
  */
 public abstract class AbstractCompositeExpressionEditor extends AbstractCompositeLanguageObjectEditor {
 

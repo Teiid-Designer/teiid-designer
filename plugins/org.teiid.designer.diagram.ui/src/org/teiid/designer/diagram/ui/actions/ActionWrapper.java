@@ -9,6 +9,8 @@ package org.teiid.designer.diagram.ui.actions;
 
 /**
  * ActionWrapper
+ *
+ * @since 8.0
  */
 public interface ActionWrapper {
     

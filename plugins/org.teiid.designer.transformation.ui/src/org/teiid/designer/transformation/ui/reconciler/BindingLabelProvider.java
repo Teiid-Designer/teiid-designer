@@ -26,6 +26,8 @@ import org.teiid.query.sql.symbol.SingleElementSymbol;
 /**
  * ModelOutlineLabelProvider is a specialization of ModelExplorerLabelProvider
  * that allows us to display or hide additional features of a model in the outline view.
+ *
+ * @since 8.0
  */
 public class BindingLabelProvider extends ModelExplorerLabelProvider
     implements ITableLabelProvider, PluginConstants.Images {

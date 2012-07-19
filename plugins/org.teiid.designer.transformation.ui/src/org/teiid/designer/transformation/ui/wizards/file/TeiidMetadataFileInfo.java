@@ -25,6 +25,8 @@ import org.teiid.designer.transformation.ui.UiConstants;
 /**
  * Business object used to manage Teiid-specific Metadata File information used during import
  * 
+ *
+ * @since 8.0
  */
 public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataFileInfo.class);

@@ -43,6 +43,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * RootElementsPage is the wizard page contribution for building Virtual XMLDocument models from XML Schema files in the
  * workspace.
+ *
+ * @since 8.0
  */
 
 public class RootElementsPage extends WizardPage implements IUiConstants, IUiConstants.HelpContexts, IUiConstants.Images {

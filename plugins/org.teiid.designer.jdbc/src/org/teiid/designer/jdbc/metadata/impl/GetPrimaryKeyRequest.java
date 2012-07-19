@@ -18,6 +18,8 @@ import org.teiid.designer.jdbc.data.Response;
 
 /**
  * GetPrimaryKeyRequest
+ *
+ * @since 8.0
  */
 public class GetPrimaryKeyRequest extends MetadataRequest {
     

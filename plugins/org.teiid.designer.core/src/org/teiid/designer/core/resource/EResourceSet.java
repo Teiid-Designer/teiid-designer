@@ -10,6 +10,9 @@ package org.teiid.designer.core.resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 
+/**
+ * @since 8.0
+ */
 public interface EResourceSet extends ResourceSet {
 
     /**

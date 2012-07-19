@@ -9,6 +9,9 @@ package org.teiid.designer.modelgenerator.salesforce.model;
 
 import java.util.List;
 
+/**
+ * @since 8.0
+ */
 public interface SalesforceField {
 
 	public static final String AUDIT_FIELD_CREATED_BY_ID = "CreatedById"; //$NON-NLS-1$

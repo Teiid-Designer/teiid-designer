@@ -14,6 +14,8 @@ import org.teiid.designer.core.index.WordEntry;
 
 /**
  * WordEntryComparator
+ *
+ * @since 8.0
  */
 public class WordEntryComparator implements Comparator {
 

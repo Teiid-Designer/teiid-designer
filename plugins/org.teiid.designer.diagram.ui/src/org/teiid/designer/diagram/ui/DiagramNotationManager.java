@@ -27,6 +27,8 @@ import org.teiid.designer.diagram.ui.preferences.NotationIDAndName;
  * DiagramNotationManager - instantiates and provides access to the extensions that control Notation; Each must supply an
  * EditPartGenerator, DiagramModelGenerator and FigureGenerator. - Reflects user's choice/preference of available Notation
  * extensions - Supports the generation of dynamic Actions representing the available Notation extensions
+ *
+ * @since 8.0
  */
 public class DiagramNotationManager
     implements PluginConstants, DiagramUiConstants, DiagramUiConstants.ExtensionPoints, NotationChangeListener {

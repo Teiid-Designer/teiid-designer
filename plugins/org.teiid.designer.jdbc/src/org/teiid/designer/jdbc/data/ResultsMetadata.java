@@ -16,6 +16,8 @@ import java.util.List;
 
 /**
  * ResultsMetadata
+ *
+ * @since 8.0
  */
 public class ResultsMetadata {
 

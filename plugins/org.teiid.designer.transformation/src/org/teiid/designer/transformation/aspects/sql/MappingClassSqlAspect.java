@@ -31,6 +31,8 @@ import org.teiid.designer.transformation.TransformationPlugin;
 
 /**
  * MappingClassSqlAspect
+ *
+ * @since 8.0
  */
 public class MappingClassSqlAspect extends MappingClassObjectSqlAspect implements SqlTableAspect {
 

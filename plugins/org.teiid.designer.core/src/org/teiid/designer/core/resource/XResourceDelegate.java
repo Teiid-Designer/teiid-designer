@@ -17,6 +17,8 @@ import org.teiid.designer.core.resource.xmi.MtkXmiResourceImpl;
 
 /**
  * @author John Verhaeg
+ *
+ * @since 8.0
  */
 public final class XResourceDelegate extends XmlXResourceDelegate {
 

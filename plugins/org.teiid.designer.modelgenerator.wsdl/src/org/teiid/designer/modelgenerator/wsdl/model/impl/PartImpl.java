@@ -11,6 +11,9 @@ import org.teiid.designer.modelgenerator.wsdl.model.Message;
 import org.teiid.designer.modelgenerator.wsdl.model.Part;
 import org.teiid.designer.modelgenerator.wsdl.model.WSDLElement;
 
+/**
+ * @since 8.0
+ */
 public class PartImpl extends WSDLElementImpl implements Part {
 
 	

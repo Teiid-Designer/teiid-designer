@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.xml.XmlFragment;
  * 
  * Interface used by NewVirtualDocumentWizardPage to initially populate the documents
  * and fragments accumulators.  Also returns the item name.
+ *
+ * @since 8.0
  */
 public interface IDocumentsAndFragmentsPopulator {
 

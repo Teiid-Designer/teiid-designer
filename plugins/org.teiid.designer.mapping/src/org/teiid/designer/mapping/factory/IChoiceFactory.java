@@ -13,6 +13,8 @@ import org.teiid.designer.mapping.choice.IChoiceObject;
 /**
  * The <code>IChoiceFactory</code> class defines the methods needed to convert
  * a given object into an instance of IChoiceObject.
+ *
+ * @since 8.0
  */
 public interface IChoiceFactory {
 

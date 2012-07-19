@@ -22,6 +22,8 @@ import org.teiid.designer.relational.RelationalPlugin;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class RelationalForeignKey extends RelationalReference {
     public static final String KEY_FOREIGN_KEY_MULTIPLICITY = "FKMULTIPLICITY"; //$NON-NLS-1$

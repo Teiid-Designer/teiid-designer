@@ -18,6 +18,8 @@ import org.eclipse.emf.ecore.EReference;
 /**
  * A cache of {@link org.teiid.designer.core.compare.EObjectMatcher instances}.  This class
  * is not thread-safe.
+ *
+ * @since 8.0
  */
 public class EObjectMatcherCache {
 

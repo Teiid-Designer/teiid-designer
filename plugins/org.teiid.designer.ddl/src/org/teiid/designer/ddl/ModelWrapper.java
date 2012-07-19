@@ -17,6 +17,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceSelections;
 
 /**
  * ModelWrapper
+ *
+ * @since 8.0
  */
 public class ModelWrapper {
 

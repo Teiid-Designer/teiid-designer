@@ -33,6 +33,8 @@ import org.teiid.designer.metamodels.diagram.DiagramPosition;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class DiagramPositionImpl extends EObjectImpl implements DiagramPosition {
 

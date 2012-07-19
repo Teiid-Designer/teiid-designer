@@ -26,6 +26,9 @@ import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.product.IModelerProductContexts;
 
 
+/**
+ * @since 8.0
+ */
 public abstract class ModelerSpecialActionManager {
 	public static final String SPECIAL_LABEL = UiConstants.Util.getString("ModelerSpecialActionManager.specialLabel"); //$NON-NLS-1$
 	private static Collection actions;

@@ -22,6 +22,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getExpression()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Expression extends EObject {
 

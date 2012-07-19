@@ -24,6 +24,8 @@ import org.teiid.designer.jdbc.JdbcSourceProperty;
 
 /**
  * RelationalEntityAspect
+ *
+ * @since 8.0
  */
 public class JdbcSourceAspect extends AbstractMetamodelAspect implements SqlModelSourceAspect {
 

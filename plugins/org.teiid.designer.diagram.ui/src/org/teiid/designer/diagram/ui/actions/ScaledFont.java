@@ -11,6 +11,8 @@ import org.eclipse.swt.graphics.Font;
 
 /**
  * ScaledFont
+ *
+ * @since 8.0
  */
 public interface ScaledFont {
 	static final int PLAIN_STYLE = 0;

@@ -19,6 +19,8 @@ import org.teiid.designer.metadata.runtime.api.MetadataConstants.DATATYPE_TYPES;
 /**
  * SqlDatatypeAspect is used to get the different properties on a datatype 
  * for runtime metadata.
+ *
+ * @since 8.0
  */
 public interface SqlDatatypeAspect extends SqlAspect, SqlDatatypeCheckerAspect {
     

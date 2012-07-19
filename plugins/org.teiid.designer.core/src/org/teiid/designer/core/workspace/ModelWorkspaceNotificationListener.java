@@ -13,6 +13,8 @@ import org.eclipse.emf.edit.provider.INotifyChangedListener;
 /**
  * This listener receives notification of changes to model workspace. This listener
  * helps maintain workspace items in synch with the file system.
+ *
+ * @since 8.0
  */
 public interface ModelWorkspaceNotificationListener extends INotifyChangedListener {
 

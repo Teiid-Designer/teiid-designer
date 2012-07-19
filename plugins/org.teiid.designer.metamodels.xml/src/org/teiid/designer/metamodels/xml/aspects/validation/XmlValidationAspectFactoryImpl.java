@@ -16,6 +16,8 @@ import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
 
 /**
  * RelationalValidationAspectFactoryImpl
+ *
+ * @since 8.0
  */
 public class XmlValidationAspectFactoryImpl implements MetamodelAspectFactory {
 

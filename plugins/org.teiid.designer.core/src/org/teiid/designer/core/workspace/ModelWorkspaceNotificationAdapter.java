@@ -16,6 +16,8 @@ import org.eclipse.emf.common.notify.Notification;
  * The <code>ModelWorkspaceNotificationAdapter</code> class provides default (empty) implementations for the methods
  * described by the <code>ModelWorkspaceNotificationListener</code> interface. Classes that wish to deal with
  * individual methods can extend this class and override those methods which they are interested in.
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceNotificationAdapter implements ModelWorkspaceNotificationListener {
 

@@ -28,6 +28,8 @@ import org.teiid.designer.ui.UiPlugin;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class ModelProjectActionManager {
     /** Array of all extensions to the DiagramHelper extension point */

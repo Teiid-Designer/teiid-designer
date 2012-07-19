@@ -24,6 +24,8 @@ import org.teiid.designer.runtime.preview.PreviewContext;
 /**
  * The <code>DeleteDeployedPreviewVdbJob</code> deletes a Preview VDB from a Teiid server and also deletes its associated JNDI
  * name.
+ *
+ * @since 8.0
  */
 public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob {
 

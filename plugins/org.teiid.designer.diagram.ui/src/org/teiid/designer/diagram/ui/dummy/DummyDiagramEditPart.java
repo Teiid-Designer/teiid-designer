@@ -19,6 +19,8 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 /**
  * DummyDiagramEditPart
+ *
+ * @since 8.0
  */
 public class DummyDiagramEditPart extends AbstractGraphicalEditPart {
 

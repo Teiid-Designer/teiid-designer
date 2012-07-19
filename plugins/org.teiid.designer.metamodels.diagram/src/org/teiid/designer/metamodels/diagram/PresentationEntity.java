@@ -24,6 +24,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.diagram.DiagramPackage#getPresentationEntity()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface PresentationEntity extends EObject{
 

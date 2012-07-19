@@ -58,6 +58,8 @@ import org.teiid.query.sql.visitor.FunctionCollectorVisitor;
 /**
  * TransformationMappingHelper This class is responsible for handling mapping changes and source / target changes, in response to
  * SQL changes.
+ *
+ * @since 8.0
  */
 public class TransformationMappingHelper implements SqlConstants {
 

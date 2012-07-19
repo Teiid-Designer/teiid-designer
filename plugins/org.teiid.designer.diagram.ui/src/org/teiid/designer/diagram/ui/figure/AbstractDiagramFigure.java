@@ -26,6 +26,8 @@ import org.teiid.designer.diagram.ui.util.colors.ColorPalette;
 
 /**
  * AbstractDiagramFigure
+ *
+ * @since 8.0
  */
 public abstract class AbstractDiagramFigure extends Figure implements DiagramFigure {
     private ColorPalette colorPalette;

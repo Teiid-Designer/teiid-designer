@@ -9,6 +9,8 @@ package org.teiid.designer.modelgenerator.wsdl.model;
 
 /**
  * This class represents a Binding as defined in a WSDL
+ *
+ * @since 8.0
  */
 public interface Binding extends WSDLElement {
 

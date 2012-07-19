@@ -61,6 +61,9 @@ import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 
+/**
+ * @since 8.0
+ */
 public class SelectSalesforceObjectsPage extends AbstractWizardPage
     implements Listener, FileUtils.Constants, CoreStringUtil.Constants, ModelGeneratorSalesforceUiConstants,
     ModelGeneratorSalesforceUiConstants.Images, ModelGeneratorSalesforceUiConstants.HelpContexts, ISelectionChangedListener,

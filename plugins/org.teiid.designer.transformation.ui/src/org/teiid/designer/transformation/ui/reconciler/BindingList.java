@@ -18,6 +18,8 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect;
 /**
  * BindingList class - for maintaining the list of attribute - SQL Symbol bindings.
  * 
+ *
+ * @since 8.0
  */
 public class BindingList {
 

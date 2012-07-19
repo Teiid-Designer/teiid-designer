@@ -35,6 +35,8 @@ import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
 
 /**
  * CloneCommand
+ *
+ * @since 8.0
  */
 public class CloneCommand extends CompoundCommand {
 

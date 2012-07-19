@@ -12,6 +12,8 @@ import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class XmlExtendableClassnameProvider extends AbstractMetaclassNameProvider {
 

@@ -49,6 +49,8 @@ import org.teiid.designer.core.xmi.XMIHeader;
 
 /**
  * ModelWorkspaceManager
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceManager implements XmiHeaderCache {
 

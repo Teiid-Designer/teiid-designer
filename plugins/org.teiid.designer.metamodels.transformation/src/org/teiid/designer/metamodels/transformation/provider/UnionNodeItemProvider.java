@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.transformation.UnionNode;
  * --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class UnionNodeItemProvider extends OperationNodeItemProvider {
 

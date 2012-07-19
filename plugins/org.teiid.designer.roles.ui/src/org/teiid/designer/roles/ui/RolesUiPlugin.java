@@ -21,6 +21,8 @@ import org.teiid.designer.ui.common.actions.ActionService;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public final class RolesUiPlugin extends AbstractUiPlugin {
 

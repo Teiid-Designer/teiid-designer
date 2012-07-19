@@ -32,6 +32,8 @@ import org.teiid.query.ui.builder.util.ICriteriaStrategy;
 
 /**
  * ElementEditor
+ *
+ * @since 8.0
  */
 public class ElementEditor extends AbstractLanguageObjectEditor {
 

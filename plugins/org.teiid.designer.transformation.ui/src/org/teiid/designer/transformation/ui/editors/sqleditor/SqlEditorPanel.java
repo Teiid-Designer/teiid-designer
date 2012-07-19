@@ -116,6 +116,9 @@ import org.teiid.query.ui.sqleditor.component.UpdateDisplayNode;
 import org.teiid.query.ui.sqleditor.component.WhereDisplayNode;
 
 
+/**
+ * @since 8.0
+ */
 public class SqlEditorPanel extends SashForm
     implements UiConstants, DisplayNodeConstants, SelectionListener, ISelectionChangedListener, IPropertyChangeListener,
     KeyListener, MouseListener, IMenuListener {

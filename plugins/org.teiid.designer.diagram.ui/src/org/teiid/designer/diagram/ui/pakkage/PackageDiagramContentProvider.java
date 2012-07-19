@@ -33,6 +33,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  *  objects inside ModelResources.</p>
  * <p>PackageDiagramContentProvider implements ITreeContentProvider because this interface has the right
  * methods for the functionality this class provides.</p>
+ *
+ * @since 8.0
  */
 final public class PackageDiagramContentProvider implements ITreeContentProvider, IDiagramProvider, DiagramUiConstants {
     private IPackageDiagramProvider packageDiagramProvider;

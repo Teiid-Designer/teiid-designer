@@ -24,6 +24,8 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 /**
  * The SQL content assis processor. This content assist processor proposes 
  * text completions and computes context information for a SQL content type.
+ *
+ * @since 8.0
  */
 public class SqlCompletionProcessor
 	implements IContentAssistProcessor {

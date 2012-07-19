@@ -34,6 +34,9 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
 
+/**
+ * @since 8.0
+ */
 public class ColumnsInfoPanel {
 	private ProcedureInfo procedureInfo;
 	private Button addButton, deleteButton, upButton, downButton;

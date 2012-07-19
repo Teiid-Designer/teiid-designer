@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.webservice.WebServicePackage;
 
 /** 
  * OutputAspect
+ *
+ * @since 8.0
  */
 public class OutputAspect extends WebServiceComponentAspect implements SqlResultSetAspect, SqlDatatypeCheckerAspect {
 

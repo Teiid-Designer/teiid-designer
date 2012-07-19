@@ -23,6 +23,8 @@ import org.teiid.core.util.StringUtil;
 
 /**
  * Class that represents the content of an XMI file's header.
+ *
+ * @since 8.0
  */
 public final class XMIHeader {
 

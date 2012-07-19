@@ -19,6 +19,9 @@ import org.teiid.designer.diagram.ui.layout.LayoutNode;
 import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 import org.teiid.designer.diagram.ui.util.DiagramUiUtilities;
 
+/**
+ * @since 8.0
+ */
 public class Spring {
     private double[] delta;
     private double[] deltaX;

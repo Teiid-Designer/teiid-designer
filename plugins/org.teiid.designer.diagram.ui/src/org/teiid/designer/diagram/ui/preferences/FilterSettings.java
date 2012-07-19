@@ -12,6 +12,8 @@ import org.teiid.designer.diagram.ui.PluginConstants;
 
 /**
  * This class contains the Diagram Filter Settings and Groupings
+ *
+ * @since 8.0
  */
 public class FilterSettings implements PluginConstants {
 

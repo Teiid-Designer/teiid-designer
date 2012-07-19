@@ -16,6 +16,8 @@ import org.eclipse.emf.ecore.EFactory;
  * <!-- end-user-doc -->
  * @see org.teiid.datatools.models.teiidsqlmodel.TeiidsqlmodelPackage
  * @generated
+ *
+ * @since 8.0
  */
 public interface TeiidsqlmodelFactory extends EFactory {
 	/**

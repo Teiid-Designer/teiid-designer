@@ -12,6 +12,9 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
 import org.teiid.designer.diagram.ui.connection.NodeConnectionModel;
 
+/**
+ * @since 8.0
+ */
 public class BendpointCommand extends Command {
 
     protected int index;

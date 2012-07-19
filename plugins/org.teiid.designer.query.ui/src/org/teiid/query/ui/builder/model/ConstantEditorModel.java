@@ -23,6 +23,8 @@ import org.teiid.query.ui.builder.util.BuilderUtils;
 /**
  * The <code>ConstantEditorModel</code> class is used as a model for the
  * org.teiid.designer.transformation.ui.builder.expression.ConstantEditor.
+ *
+ * @since 8.0
  */
 public class ConstantEditorModel extends AbstractLanguageObjectEditorModel implements BuilderUtils.LoggingConstants {
 

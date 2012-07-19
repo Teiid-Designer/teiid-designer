@@ -11,6 +11,9 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.ui.views.navigator.ResourcePatternFilter;
 
+/**
+ * @since 8.0
+ */
 public class XMLExtensionsFilter extends ViewerFilter {
 
     private ResourcePatternFilter filter;

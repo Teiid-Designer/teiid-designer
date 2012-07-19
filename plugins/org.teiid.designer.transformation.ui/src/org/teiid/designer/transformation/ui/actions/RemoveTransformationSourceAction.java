@@ -26,6 +26,8 @@ import org.teiid.designer.ui.undo.ModelerUndoManager;
 
 /**
  * RemoveTransformationSource
+ *
+ * @since 8.0
  */
 public class RemoveTransformationSourceAction extends TransformationAction {
     private static final String ACTION_DESCRIPTION_1 = UiConstants.Util.getString("RemoveTransformationSourceAction.actionTitleSingle"); //$NON-NLS-1$

@@ -11,6 +11,8 @@ import org.teiid.designer.relational.model.RelationalView;
 
 /**
  * Virtual version of the RelationalView, also includes transformation SQL
+ *
+ * @since 8.0
  */
 public class RelationalViewView extends RelationalView {
 

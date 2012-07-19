@@ -17,6 +17,8 @@ import org.eclipse.draw2d.geometry.PointList;
  * A decorative Figure intended to be placed on a 
  * {@link Polyline}.
  * It has the default shape of diamond that is wider than it is tall.
+ *
+ * @since 8.0
  */
 
 public class NotNavigableDecoration extends PolygonDecoration {

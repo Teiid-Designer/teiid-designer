@@ -13,6 +13,8 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelAspect;
 
 /**
  * RelationshipMetamodelAspect
+ *
+ * @since 8.0
  */
 public interface RelationshipMetamodelAspect extends MetamodelAspect {
 

@@ -13,6 +13,8 @@ import org.eclipse.jface.text.rules.IWhitespaceDetector;
 
 /**
  * A class that determines if a character is an SQL whitespace character
+ *
+ * @since 8.0
  */
 public class SqlWhiteSpaceDetector implements IWhitespaceDetector {
 

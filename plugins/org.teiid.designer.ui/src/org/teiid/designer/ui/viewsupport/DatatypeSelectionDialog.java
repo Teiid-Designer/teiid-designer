@@ -51,6 +51,8 @@ import org.teiid.designer.ui.filter.StructuredViewerTextFilterer;
 
 /**
  * DatatypeSelectionDialog
+ *
+ * @since 8.0
  */
 public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
 

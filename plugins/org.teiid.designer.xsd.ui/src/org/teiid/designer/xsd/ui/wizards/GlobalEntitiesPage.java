@@ -61,6 +61,9 @@ import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 
 
+/**
+ * @since 8.0
+ */
 public class GlobalEntitiesPage extends WizardPage implements InternalUiConstants.Widgets, IAccumulatedValuesChangeListener {
 
     private static final String TITLE = ModelerXsdUiConstants.Util.getString("ComplexSchemaTypesPage.title"); //$NON-NLS-1$

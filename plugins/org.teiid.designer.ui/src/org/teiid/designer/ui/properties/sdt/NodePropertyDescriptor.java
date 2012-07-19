@@ -30,6 +30,8 @@ import org.w3c.dom.Node;
 /**
  * NodePropertyDescriptor is a TextPropertyDescriptor for handling the DOM Node properties of 
  * XSDSimpleTypeDefinitions.
+ *
+ * @since 8.0
  */
 public class NodePropertyDescriptor extends TextPropertyDescriptor {
 

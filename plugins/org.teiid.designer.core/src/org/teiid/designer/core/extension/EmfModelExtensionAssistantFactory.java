@@ -12,6 +12,8 @@ import org.teiid.designer.extension.definition.ModelObjectExtensionAssistantFact
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class EmfModelExtensionAssistantFactory implements ModelObjectExtensionAssistantFactory {
 

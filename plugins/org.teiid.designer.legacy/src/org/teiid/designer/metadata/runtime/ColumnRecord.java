@@ -11,6 +11,8 @@ package org.teiid.designer.metadata.runtime;
 
 /**
  * ColumnRecord
+ *
+ * @since 8.0
  */
 public interface ColumnRecord extends MetadataRecord {
     

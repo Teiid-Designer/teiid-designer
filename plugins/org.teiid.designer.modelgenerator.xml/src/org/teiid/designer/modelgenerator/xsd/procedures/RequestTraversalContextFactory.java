@@ -2,6 +2,9 @@ package org.teiid.designer.modelgenerator.xsd.procedures;
 
 import javax.xml.namespace.QName;
 
+/**
+ * @since 8.0
+ */
 public class RequestTraversalContextFactory implements ITraversalCtxFactory {
 	
 	/* (non-Javadoc)

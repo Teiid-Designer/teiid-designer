@@ -17,6 +17,8 @@ import org.teiid.query.sql.symbol.Expression;
  * <li> {@link ElementEditorModel}, and
  * <li> {@link FunctionEditorModel}.
  * </ul>
+ *
+ * @since 8.0
  */
 public class ExpressionEditorModel extends CompositeLanguageObjectEditorModel {
     

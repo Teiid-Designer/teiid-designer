@@ -12,6 +12,8 @@ import org.osgi.framework.Bundle;
 
 /**
  *
+ *
+ * @since 8.0
  */
 public class ExtensionMultiDescriptorImpl extends ExtensionDescriptorImpl {
 

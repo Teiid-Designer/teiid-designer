@@ -26,6 +26,9 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 
 
+/**
+ * @since 8.0
+ */
 public class DeleteDataSourceAction extends SortableSelectionAction implements DqpUiConstants {
     private static final String label = DqpUiConstants.UTIL.getString("DeleteDataSourceAction.label"); //$NON-NLS-1$
     public static final String JDBC_DS_TYPE = "connector-jdbc"; //$NON-NLS-1$

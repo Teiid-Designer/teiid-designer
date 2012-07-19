@@ -10,6 +10,8 @@ package org.teiid.designer.ui.common.print;
 /**
  * IPrintable
  *    An interface for printable objects.
+ *
+ * @since 8.0
  */
 public interface IPrintable {
 

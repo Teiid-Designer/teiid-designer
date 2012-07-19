@@ -23,6 +23,8 @@ import org.teiid.designer.common.vdb.ModelInfo;
  * 
  * 2/28/06 VAH - commented out the statics that were no longer referenced so that no maintenanance is required in the future
  *              These variables have been moved to ResourceNameUtil.
+ *
+ * @since 8.0
  */
 final public class MetadataConstants {
 	/**

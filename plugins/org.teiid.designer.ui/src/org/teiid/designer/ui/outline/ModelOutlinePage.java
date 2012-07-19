@@ -39,6 +39,8 @@ import org.teiid.designer.ui.editors.ModelEditorPageOutline;
 /**
  * ModelOutlinePage is the ContentOutlinePage for the ModelEditor. It contains a PageBook which can display a TreeViewer of the
  * Model, plus any other controls that are contributed by ModelEditorPage extensions.
+ *
+ * @since 8.0
  */
 public class ModelOutlinePage extends ContentOutlinePage {
 

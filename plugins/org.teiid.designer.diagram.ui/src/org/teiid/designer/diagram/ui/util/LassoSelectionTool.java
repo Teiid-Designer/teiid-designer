@@ -30,6 +30,8 @@ import org.eclipse.swt.graphics.Color;
 
 /**
  * This tool implements the selection of multiple objects in rectangular area.
+ *
+ * @since 8.0
  */
 public class LassoSelectionTool extends AbstractTool {
 

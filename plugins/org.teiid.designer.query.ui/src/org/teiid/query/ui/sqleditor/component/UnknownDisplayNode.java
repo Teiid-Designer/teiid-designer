@@ -10,6 +10,8 @@ package org.teiid.query.ui.sqleditor.component;
 /**
  * The <code>UnknownDisplayNode</code> class is a type of <code>TextDisplayNode</code> that is used to represent an unknown
  * node.
+ *
+ * @since 8.0
  */
 public class UnknownDisplayNode extends TextDisplayNode {
 

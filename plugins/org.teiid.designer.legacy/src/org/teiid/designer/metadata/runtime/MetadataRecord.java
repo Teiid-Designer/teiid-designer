@@ -12,6 +12,8 @@ import java.io.Serializable;
 
 /**
  * RuntimeRecord
+ *
+ * @since 8.0
  */
 public interface MetadataRecord extends Serializable {
 

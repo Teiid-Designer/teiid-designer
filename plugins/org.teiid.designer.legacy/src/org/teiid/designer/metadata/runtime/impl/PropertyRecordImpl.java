@@ -12,6 +12,8 @@ import org.teiid.designer.metadata.runtime.PropertyRecord;
 
 /**
  * PropertyRecordImpl
+ *
+ * @since 8.0
  */
 public class PropertyRecordImpl extends AbstractMetadataRecord implements PropertyRecord {
 

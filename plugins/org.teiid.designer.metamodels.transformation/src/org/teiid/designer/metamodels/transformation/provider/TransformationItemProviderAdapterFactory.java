@@ -33,6 +33,8 @@ import org.teiid.designer.metamodels.transformation.util.TransformationAdapterFa
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class TransformationItemProviderAdapterFactory extends TransformationAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
     /**

@@ -31,6 +31,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * ModelObjectAction
+ *
+ * @since 8.0
  */
 public abstract class ModelObjectAction extends AbstractModelerAction {
     private IActionWorker actionWorker;

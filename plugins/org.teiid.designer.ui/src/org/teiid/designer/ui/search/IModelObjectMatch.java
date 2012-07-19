@@ -10,6 +10,9 @@ package org.teiid.designer.ui.search;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.search.runtime.SearchRecord;
 
+/**
+ * @since 8.0
+ */
 public interface IModelObjectMatch {
 
     /**

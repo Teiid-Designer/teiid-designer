@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.core.extension.XEnum;
  * <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XEnumItemProvider extends EEnumItemProvider {
 

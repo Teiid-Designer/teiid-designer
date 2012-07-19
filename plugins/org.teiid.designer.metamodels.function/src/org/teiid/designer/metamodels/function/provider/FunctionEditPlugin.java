@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.function.FunctionPlugin;
  * This is the central singleton for the Function edit plugin. <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public final class FunctionEditPlugin extends EMFPlugin {
     /**

@@ -13,6 +13,8 @@ import org.teiid.core.TeiidException;
 /**
  * Subclasses of this exception typically only need to implement whatever constructors they need.
  * <p>
+ *
+ * @since 8.0
  */
 public class EventSourceException extends TeiidException {
 

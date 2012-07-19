@@ -23,6 +23,8 @@ import org.teiid.designer.transformation.TransformationPlugin;
 
 /**
  * MappingClassUmlAspect
+ *
+ * @since 8.0
  */
 public class MappingClassUmlAspect extends AbstractTransformationUmlAspect implements UmlClassifier {
 

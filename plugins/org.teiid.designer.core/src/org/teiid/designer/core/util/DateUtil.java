@@ -17,6 +17,9 @@ import java.util.GregorianCalendar;
 import org.teiid.core.CorePlugin;
 import org.teiid.core.util.CoreArgCheck;
 
+/**
+ * @since 8.0
+ */
 public final class DateUtil {
 
     public static final String COMPLETE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS-ZZ:zz"; //$NON-NLS-1$

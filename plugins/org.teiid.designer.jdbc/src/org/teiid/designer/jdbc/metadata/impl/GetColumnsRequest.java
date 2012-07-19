@@ -18,6 +18,8 @@ import org.teiid.designer.jdbc.data.Response;
 
 /**
  * GetColumnsRequest
+ *
+ * @since 8.0
  */
 public class GetColumnsRequest extends MetadataRequest {
     

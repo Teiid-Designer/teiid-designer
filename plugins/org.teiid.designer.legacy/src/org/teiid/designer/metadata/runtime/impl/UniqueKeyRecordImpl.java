@@ -14,6 +14,8 @@ import org.teiid.designer.metadata.runtime.UniqueKeyRecord;
 
 /**
  * UniqueKeyRecordImpl
+ *
+ * @since 8.0
  */
 public class UniqueKeyRecordImpl extends ColumnSetRecordImpl implements UniqueKeyRecord {
 

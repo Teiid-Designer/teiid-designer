@@ -92,6 +92,8 @@ import org.w3c.dom.Node;
 
 /**
  * XsdTextEditorPage is a ModelEditorPage for displaying the source of an XMLSchema file.
+ *
+ * @since 8.0
  */
 public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, ISelectionProvider, IDocumentListener {
 

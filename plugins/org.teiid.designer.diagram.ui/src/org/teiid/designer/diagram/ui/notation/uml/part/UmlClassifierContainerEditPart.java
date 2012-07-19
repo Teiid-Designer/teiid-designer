@@ -36,6 +36,8 @@ import org.teiid.designer.diagram.ui.util.SelectionTracker;
 
 /**
  * UmlClassifierContainerEditPart
+ *
+ * @since 8.0
  */
 public class UmlClassifierContainerEditPart extends AbstractNotationEditPart {
     

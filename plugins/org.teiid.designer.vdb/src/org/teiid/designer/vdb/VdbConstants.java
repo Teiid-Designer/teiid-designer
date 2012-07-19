@@ -10,6 +10,8 @@ package org.teiid.designer.vdb;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public interface VdbConstants {
 

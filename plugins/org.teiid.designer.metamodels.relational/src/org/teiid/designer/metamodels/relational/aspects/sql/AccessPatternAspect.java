@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.relational.AccessPattern;
 
 /**
  * AccessPatternAspect
+ *
+ * @since 8.0
  */
 public class AccessPatternAspect extends RelationalEntityAspect implements SqlColumnSetAspect {
 

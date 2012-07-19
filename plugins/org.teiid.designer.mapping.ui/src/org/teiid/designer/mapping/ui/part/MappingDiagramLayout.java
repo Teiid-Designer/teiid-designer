@@ -46,6 +46,8 @@ import org.teiid.designer.xsd.util.ModelerXsdUtils;
 
 /**
  * TransformationDiagramLayout
+ *
+ * @since 8.0
  */
 public class MappingDiagramLayout extends DiagramLayout {
     public static final int TOP_MARGIN = TransformationDiagramLayout.TOP_MARGIN;

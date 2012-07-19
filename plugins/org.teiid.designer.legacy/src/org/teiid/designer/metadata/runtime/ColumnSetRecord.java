@@ -12,6 +12,8 @@ import java.util.List;
 
 /**
  * ColumnSetRecord
+ *
+ * @since 8.0
  */
 public interface ColumnSetRecord extends MetadataRecord {
 

@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.function.ReturnParameter;
 
 /**
  * ColumnAspect
+ *
+ * @since 8.0
  */
 public class ReturnParameterAspect extends AbstractFunctionAspect implements UmlProperty {
     /**

@@ -17,6 +17,8 @@ import org.teiid.designer.core.refactor.OrganizeImportHandler;
 
 /**
  * AbstractModelSelector
+ *
+ * @since 8.0
  */
 public abstract class AbstractModelSelector implements ModelSelector {
 

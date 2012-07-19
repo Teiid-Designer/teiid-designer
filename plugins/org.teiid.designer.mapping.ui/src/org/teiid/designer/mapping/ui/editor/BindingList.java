@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.transformation.InputParameter;
 
 /**
  * BindingList class - for maintaining the list of attribute - attribute bindings.
+ *
+ * @since 8.0
  */
 public class BindingList {
 

@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.relational.Table;
 
 /**
  * JdbcNodeToRelationalMapping
+ *
+ * @since 8.0
  */
 public interface JdbcNodeToRelationalMapping {
     

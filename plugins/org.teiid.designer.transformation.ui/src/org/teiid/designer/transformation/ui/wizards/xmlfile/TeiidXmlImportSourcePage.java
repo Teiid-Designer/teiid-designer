@@ -102,6 +102,9 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
+/**
+ * @since 8.0
+ */
 public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		implements UiConstants, InternalUiConstants.Widgets,
 		CoreStringUtil.Constants {
@@ -1209,6 +1212,9 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		return false;
 	}
 
+/**
+ * @since 8.0
+ */
 	public class CPListener implements IProfileListener {
 
 		IConnectionProfile latestProfile;

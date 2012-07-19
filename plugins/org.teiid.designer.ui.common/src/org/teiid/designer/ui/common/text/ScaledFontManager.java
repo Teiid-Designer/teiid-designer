@@ -11,6 +11,8 @@ import org.eclipse.swt.graphics.Font;
 
 /**
  * ScaledFontManager
+ *
+ * @since 8.0
  */
 public class ScaledFontManager {
 

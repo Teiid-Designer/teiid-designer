@@ -37,6 +37,9 @@ import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 
+/**
+ * @since 8.0
+ */
 public class ShowDifferencesPage extends AbstractWizardPage
     implements ModelGeneratorSalesforceUiConstants, ModelGeneratorSalesforceUiConstants.Images,
     ModelGeneratorSalesforceUiConstants.HelpContexts {

@@ -23,6 +23,8 @@ package org.teiid.designer.metamodels.relational;
  * @see org.teiid.designer.metamodels.relational.RelationalPackage#getPrimaryKey()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface PrimaryKey extends UniqueKey{
     /**

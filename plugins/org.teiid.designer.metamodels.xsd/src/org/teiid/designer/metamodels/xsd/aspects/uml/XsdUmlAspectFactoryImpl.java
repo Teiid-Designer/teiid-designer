@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.xsd.XsdPlugin;
 
 /**
  * RelationalSqlAspectFactoryImpl
+ *
+ * @since 8.0
  */
 public class XsdUmlAspectFactoryImpl implements MetamodelAspectFactory {
     @Override

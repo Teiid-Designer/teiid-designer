@@ -36,6 +36,8 @@ import org.teiid.query.ui.sqleditor.component.QueryDisplayComponent;
 
 /**
  * SqlEditorPanel
+ *
+ * @since 8.0
  */
 public class SqlDisplayPanel extends Composite implements UiConstants {
 

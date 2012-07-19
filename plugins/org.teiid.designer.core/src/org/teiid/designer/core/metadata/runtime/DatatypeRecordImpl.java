@@ -15,6 +15,8 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect;
 
 /**
  * ColumnRecordImpl
+ *
+ * @since 8.0
  */
 public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl.DatatypeRecordImpl {
 

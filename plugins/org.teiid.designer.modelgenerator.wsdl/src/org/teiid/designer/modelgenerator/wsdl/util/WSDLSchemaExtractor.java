@@ -35,6 +35,8 @@ import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
  * tools uses Eclipse XSD to understand schema. This class bridges the gap by creating schemas in a way that Eclipse XSD does as
  * much of the work of resolving schema dependencies as possible. This is largely accomplished through the behind the scenes work
  * of Resources and ResourceSets.
+ *
+ * @since 8.0
  */
 public class WSDLSchemaExtractor {
 

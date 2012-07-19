@@ -33,6 +33,9 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 
 
+/**
+ * @since 8.0
+ */
 public class WrapperProcedurePanel {
 
 	Text wrapperProcedureText;

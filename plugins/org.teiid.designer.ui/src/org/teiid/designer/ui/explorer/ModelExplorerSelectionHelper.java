@@ -26,6 +26,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  * resource for the wizard initialization
  * 
  * @author BLaFond
+ *
+ * @since 8.0
  */
 public class ModelExplorerSelectionHelper {
 

@@ -23,6 +23,8 @@ import org.eclipse.ui.PlatformUI;
  * 
  * To make this simpler, the whole thread logic has been inserted into this
  * class so that clients can simply create a runnable with their work inside it.
+ *
+ * @since 8.0
  */
 public abstract class UiBusyIndicator {
 

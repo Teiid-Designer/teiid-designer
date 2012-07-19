@@ -18,6 +18,8 @@ import org.teiid.designer.core.types.EnterpriseDatatypeInfo;
 
 /**
  * DatatypeManager
+ *
+ * @since 8.0
  */
 public interface DatatypeManager {
 

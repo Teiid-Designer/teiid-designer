@@ -20,6 +20,8 @@ import org.teiid.core.event.EventObjectListener;
  * ModelEditorPage is the interface that all Contributors to the multi-page ModelEditor must implement. The interface defines the
  * integration behavior between the active ModelEditorPage and other open views, and cross-communication between the set of
  * ModelEditorPages within the ModelEditor multi-page editor.
+ *
+ * @since 8.0
  */
 public interface ModelEditorPage extends
                                 IEditorPart,

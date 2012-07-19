@@ -30,6 +30,8 @@ import org.teiid.core.CorePlugin;
  * class should no longer be needed and all usage of assertions should be replaced with 
  * use of the built-in JDK assertion facility.
  * </p>
+ *
+ * @since 8.0
  */
 public final class AssertionUtil {
     //============================================================================================================================

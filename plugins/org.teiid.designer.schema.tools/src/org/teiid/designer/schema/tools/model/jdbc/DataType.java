@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.schema.tools.model.jdbc;
 
+/**
+ * @since 8.0
+ */
 public interface DataType {
 
 	public String getTypeName();

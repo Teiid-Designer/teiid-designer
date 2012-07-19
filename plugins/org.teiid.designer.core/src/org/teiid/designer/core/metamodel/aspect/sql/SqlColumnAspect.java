@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * SqlColumnAspect is used to get the different properties on a column for runtime metadata.
+ *
+ * @since 8.0
  */
 public interface SqlColumnAspect extends SqlAspect, SqlDatatypeCheckerAspect {
     

@@ -11,6 +11,8 @@ import org.eclipse.core.resources.IMarker;
 
 /**
  * INavigationSupported
+ *
+ * @since 8.0
  */
 public interface INavigationSupported {
     

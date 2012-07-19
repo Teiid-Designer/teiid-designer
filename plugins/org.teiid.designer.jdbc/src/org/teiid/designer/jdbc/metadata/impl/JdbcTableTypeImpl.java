@@ -22,6 +22,8 @@ import org.teiid.designer.jdbc.metadata.JdbcTableType;
 
 /**
  * JdbcTableTypeImpl
+ *
+ * @since 8.0
  */
 public class JdbcTableTypeImpl extends JdbcNodeImpl implements JdbcTableType {
     static final String SQL_SERVER_DB_METADATA = "SQLServerDatabaseMetaData"; //$NON-NLS-1$

@@ -12,6 +12,8 @@ import org.teiid.designer.core.ModelerCore;
 
 /**
  * ModelWorkspaceInfo
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceInfo extends OpenableModelWorkspaceItemInfo {
 

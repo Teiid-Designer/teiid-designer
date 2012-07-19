@@ -11,6 +11,8 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 
 /**
  * CatalogAspect
+ *
+ * @since 8.0
  */
 public class CatalogAspect extends RelationalEntityAspect {
 

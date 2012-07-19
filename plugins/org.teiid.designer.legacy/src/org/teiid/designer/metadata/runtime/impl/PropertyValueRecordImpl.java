@@ -12,6 +12,8 @@ import org.teiid.designer.metadata.runtime.PropertyValueRecord;
 
 /**
  * PropertyValueRecordImpl
+ *
+ * @since 8.0
  */
 public class PropertyValueRecordImpl implements PropertyValueRecord {
 

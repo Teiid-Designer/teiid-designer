@@ -28,6 +28,8 @@ import org.teiid.core.TeiidRuntimeException;
 
 /**
  * This is a common place to put String utility methods.
+ *
+ * @since 8.0
  */
 public final class CoreStringUtil {
 

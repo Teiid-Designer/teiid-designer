@@ -25,6 +25,8 @@ import org.teiid.designer.jdbc.metadata.JdbcTableType;
 
 /**
  * JdbcTableImpl
+ *
+ * @since 8.0
  */
 public class JdbcTableImpl extends JdbcNodeImpl implements JdbcTable {
 

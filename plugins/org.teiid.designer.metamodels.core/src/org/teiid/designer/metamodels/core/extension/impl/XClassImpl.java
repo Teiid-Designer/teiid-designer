@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.core.extension.XClass;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XClassImpl extends EClassImpl implements XClass {
 

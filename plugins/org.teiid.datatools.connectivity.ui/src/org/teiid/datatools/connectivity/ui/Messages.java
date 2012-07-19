@@ -10,6 +10,9 @@ package org.teiid.datatools.connectivity.ui;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+/**
+ * @since 8.0
+ */
 public class Messages {
 	private static final String BUNDLE_NAME = "org.teiid.datatools.connectivity.ui.messages"; //$NON-NLS-1$
 

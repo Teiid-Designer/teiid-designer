@@ -55,6 +55,8 @@ import org.teiid.query.ui.builder.util.ElementViewerFactory;
 
 /**
  * RecursionPanel
+ *
+ * @since 8.0
  */
 public class RecursionPanel extends SashForm implements SelectionListener, UiConstants, PluginConstants {
 

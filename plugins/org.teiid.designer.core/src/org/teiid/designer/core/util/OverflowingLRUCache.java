@@ -33,6 +33,8 @@ import org.teiid.core.util.LRUCache;
  *  will also cause the cache to attempt to shrink.
  *
  *  @see LRUCache
+ *
+ * @since 8.0
  */
 public abstract class OverflowingLRUCache<K, V> extends LRUCache<K, V> {
 	

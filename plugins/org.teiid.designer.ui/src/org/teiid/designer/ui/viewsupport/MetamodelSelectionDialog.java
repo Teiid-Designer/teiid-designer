@@ -38,6 +38,8 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
  * MetamodelSelectionDialog is a tree selection dialog specialized to optionally filter out all non-primary metamodels.
+ *
+ * @since 8.0
  */
 public class MetamodelSelectionDialog extends ElementTreeSelectionDialog {
 

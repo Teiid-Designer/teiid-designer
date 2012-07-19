@@ -13,6 +13,8 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
 
 /**
  * The options for writing out the DDL for a {@link RelationalPackage relational} model.
+ *
+ * @since 8.0
  */
 public interface DdlOptions {
 

@@ -14,6 +14,9 @@ package org.teiid.designer.core.index;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * @since 8.0
+ */
 public class FileListBlock extends Block {
 
     protected int offset = 0;

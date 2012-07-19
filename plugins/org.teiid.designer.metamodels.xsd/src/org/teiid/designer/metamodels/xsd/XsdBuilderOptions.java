@@ -12,6 +12,8 @@ import java.util.Collection;
 
 /** 
  * Used to capture user preferences to pass to the XSD Builder.
+ *
+ * @since 8.0
  */
 public class XsdBuilderOptions {
     private static final String XSD_EXT = ".xsd"; //$NON-NLS-1$

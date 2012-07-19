@@ -41,6 +41,9 @@ import org.teiid.designer.ui.common.table.CheckBoxEditingSupport;
 import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 
 
+/**
+ * @since 8.0
+ */
 public class EditColumnsPanel {
 	TableViewer columnsViewer;
 	ProcedureInfo procedureInfo;

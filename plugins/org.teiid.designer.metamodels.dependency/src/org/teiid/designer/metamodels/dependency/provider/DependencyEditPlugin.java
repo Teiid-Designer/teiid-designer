@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.dependency.DependencyPlugin;
  * This is the central singleton for the Dependency edit plugin. <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public final class DependencyEditPlugin extends EMFPlugin {
     /**

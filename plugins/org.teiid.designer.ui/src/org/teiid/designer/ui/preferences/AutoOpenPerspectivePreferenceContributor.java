@@ -16,6 +16,9 @@ import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
+/**
+ * @since 8.0
+ */
 public class AutoOpenPerspectivePreferenceContributor implements IGeneralPreferencePageContributor, UiConstants {
 
     private static final String PREF_ID = PluginConstants.Prefs.General.AUTO_OPEN_PERSPECTIVE_WHEN_MODEL_EDITOR_OPENED;

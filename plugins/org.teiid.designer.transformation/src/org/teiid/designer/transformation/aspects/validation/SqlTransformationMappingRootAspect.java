@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot
 
 /**
  * SqlTransformationMappingRootAspect
+ *
+ * @since 8.0
  */
 public class SqlTransformationMappingRootAspect extends TransformationAspect {
 

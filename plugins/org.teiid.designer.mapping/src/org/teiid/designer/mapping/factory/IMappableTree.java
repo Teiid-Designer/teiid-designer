@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * IMappableTree is an interface for obtaining the tree structure of mappable model objects.
+ *
+ * @since 8.0
  */
 public interface IMappableTree {
 

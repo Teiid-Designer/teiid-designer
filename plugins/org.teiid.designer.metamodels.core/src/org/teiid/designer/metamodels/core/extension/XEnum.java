@@ -15,6 +15,8 @@ import org.eclipse.emf.ecore.EEnum;
  * @see org.teiid.designer.metamodels.core.extension.ExtensionPackage#getXEnum()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface XEnum extends EEnum {
 

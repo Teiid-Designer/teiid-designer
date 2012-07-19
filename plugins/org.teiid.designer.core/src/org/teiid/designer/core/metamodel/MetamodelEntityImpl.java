@@ -24,6 +24,8 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 
 /**
  * MetamodelEntityImpl
+ *
+ * @since 8.0
  */
 public class MetamodelEntityImpl implements MetamodelEntity {
     

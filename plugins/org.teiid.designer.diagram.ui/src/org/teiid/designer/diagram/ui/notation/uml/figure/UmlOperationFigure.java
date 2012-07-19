@@ -20,6 +20,8 @@ import org.teiid.designer.diagram.ui.util.directedit.DirectEditFigure;
 
 /**
  * UmlOperationFigure
+ *
+ * @since 8.0
  */
 public class UmlOperationFigure extends LabeledRectangleFigure implements DirectEditFigure {
 	private ImageFigure errorIcon;

@@ -67,6 +67,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectPathLabelProvider;
 
 /**
  * PropertyEditorFactory is a static class for generating CellEditors for a given model object and IPropertyDescriptor.
+ *
+ * @since 8.0
  */
 public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoints.PropertyEditorFactoryExtension {
 

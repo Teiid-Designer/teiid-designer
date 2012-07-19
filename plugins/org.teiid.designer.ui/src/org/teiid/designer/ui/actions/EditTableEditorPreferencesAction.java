@@ -15,6 +15,8 @@ import org.teiid.designer.ui.preferences.TableEditorPreferencesDialog;
 
 /**
  * InsertRowsAction
+ *
+ * @since 8.0
  */
 public class EditTableEditorPreferencesAction extends AbstractAction {
     public EditTableEditorPreferencesAction() {

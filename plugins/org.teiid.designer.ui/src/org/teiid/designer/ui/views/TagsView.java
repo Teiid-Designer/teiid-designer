@@ -25,6 +25,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * TagsView is a properties view for the user-defined properties on an EObject.
+ *
+ * @since 8.0
  */
 public class TagsView extends ModelerView implements INotifyChangedListener {
 

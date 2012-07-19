@@ -11,6 +11,8 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 
 /**
  * SchemaAspect
+ *
+ * @since 8.0
  */
 public class SchemaAspect extends RelationalEntityAspect {
     

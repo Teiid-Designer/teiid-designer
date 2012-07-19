@@ -30,6 +30,8 @@ import org.teiid.designer.ui.common.actions.ActionService;
 
 /**
  * RelationalPlugin
+ *
+ * @since 8.0
  */
 public class XsdUiPlugin extends AbstractUiPlugin {
     public static final String PLUGIN_ID = "org.teiid.designer.metamodels.xsd.ui" ; //$NON-NLS-1$

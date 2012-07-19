@@ -27,6 +27,9 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 import org.teiid.designer.xsd.ui.wizards.CreateVirtualModelFromSchemaWizard;
 
 
+/**
+ * @since 8.0
+ */
 public class CreateVirtualModelFromSchemaAction2 extends ActionDelegate implements IWorkbenchWindowActionDelegate,
                                                                     IViewActionDelegate {
 

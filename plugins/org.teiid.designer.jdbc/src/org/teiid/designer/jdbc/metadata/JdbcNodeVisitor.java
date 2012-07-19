@@ -29,6 +29,8 @@ import org.teiid.designer.jdbc.JdbcException;
  * </p>
  *
  * @see JdbcNode#accept
+ *
+ * @since 8.0
  */
 public interface JdbcNodeVisitor {
 

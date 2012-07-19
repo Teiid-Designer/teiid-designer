@@ -9,6 +9,8 @@ package org.teiid.core.selection;
 
 /**
  * TreeSelection
+ *
+ * @since 8.0
  */
 public interface TreeSelection {
 

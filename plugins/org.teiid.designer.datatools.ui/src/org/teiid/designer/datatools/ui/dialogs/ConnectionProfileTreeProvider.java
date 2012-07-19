@@ -14,6 +14,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
+/**
+ * @since 8.0
+ */
 public class ConnectionProfileTreeProvider extends LabelProvider
 	 implements ITreeContentProvider {    /**
      * @since 5.0

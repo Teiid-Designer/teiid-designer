@@ -27,6 +27,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * @author SDelap
+ *
+ * @since 8.0
  */
 
 public class EObjectPropertiesOrderPreferences implements Serializable {

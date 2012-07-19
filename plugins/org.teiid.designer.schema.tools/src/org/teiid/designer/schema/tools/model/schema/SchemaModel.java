@@ -17,6 +17,9 @@ import org.teiid.designer.schema.tools.model.jdbc.Table;
 import org.teiid.designer.schema.tools.processing.SchemaProcessingException;
 
 
+/**
+ * @since 8.0
+ */
 public interface SchemaModel {
 
     /**

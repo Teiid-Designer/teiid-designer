@@ -34,6 +34,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * CloseModelAction
+ *
+ * @since 8.0
  */
 public class CloseModelAction extends ActionDelegate implements IWorkbenchWindowActionDelegate,
                                                                 IViewActionDelegate {

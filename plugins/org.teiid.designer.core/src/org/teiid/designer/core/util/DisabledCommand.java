@@ -15,6 +15,8 @@ import org.eclipse.emf.edit.command.CommandParameter;
 /**
  * This DisabledCommandParameter is a wrapper for a {@link CommandParameter} that signals that the
  * command parameter should be disabled.
+ *
+ * @since 8.0
  */
 public class DisabledCommand implements Command {
     

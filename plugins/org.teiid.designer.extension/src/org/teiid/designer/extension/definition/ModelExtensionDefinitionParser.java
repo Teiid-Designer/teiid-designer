@@ -37,6 +37,8 @@ import org.xml.sax.helpers.DefaultHandler;
 /**
  * The <code>ModelExtensionDefinitionParser</code> parses model extension definition input streams. Each input stream is validated
  * against a model extension definition schema.
+ *
+ * @since 8.0
  */
 public class ModelExtensionDefinitionParser {
 

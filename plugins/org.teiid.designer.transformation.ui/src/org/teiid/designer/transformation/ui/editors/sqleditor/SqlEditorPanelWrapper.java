@@ -25,6 +25,8 @@ import org.teiid.designer.ui.common.util.UiUtil;
  * SqlEditorPanelWrapper
  *   This serves as an adapter between a single set of Actions and multiple sets of
  *   SqlEditorPanels.
+ *
+ * @since 8.0
  */
 public class SqlEditorPanelWrapper extends SqlEditorPanel
                                 implements EventObjectListener {

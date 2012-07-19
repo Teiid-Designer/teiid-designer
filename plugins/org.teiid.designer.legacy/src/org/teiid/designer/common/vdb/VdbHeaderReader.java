@@ -27,6 +27,9 @@ import org.teiid.core.TeiidException;
 import org.teiid.core.TeiidRuntimeException;
 import org.teiid.core.util.ArgCheck;
 
+/**
+ * @since 8.0
+ */
 public class VdbHeaderReader {
 
     private static final String XML_DECLARATION_PREFIX_STRING = "<?xml version="; //$NON-NLS-1$

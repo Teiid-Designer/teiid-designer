@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * NullDatatypeFinder
+ *
+ * @since 8.0
  */
 public class NullDatatypeFinder implements DatatypeFinder {
 

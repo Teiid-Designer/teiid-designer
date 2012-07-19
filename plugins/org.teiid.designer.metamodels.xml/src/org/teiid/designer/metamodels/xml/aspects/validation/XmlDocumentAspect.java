@@ -16,6 +16,8 @@ import org.teiid.designer.core.validation.ValidationRuleSet;
 
 /**
  * XmlDocumentAspect
+ *
+ * @since 8.0
  */
 public class XmlDocumentAspect extends AbstractXmlAspect {
 

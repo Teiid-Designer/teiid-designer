@@ -21,6 +21,8 @@ import org.teiid.designer.metamodels.webservice.WebServicePackage;
  * <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class OutputItemProvider extends MessageItemProvider {
 

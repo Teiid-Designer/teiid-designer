@@ -14,6 +14,8 @@ import org.eclipse.swt.widgets.Control;
 /**
  * ModelEditorPageOutline is an interface for contributing a control to the
  * Outline PageBook.
+ *
+ * @since 8.0
  */
 public interface ModelEditorPageOutline {
 

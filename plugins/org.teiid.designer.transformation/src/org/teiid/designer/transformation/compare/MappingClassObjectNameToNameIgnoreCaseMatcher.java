@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.transformation.MappingClassObject;
 
 /** 
  * MappingClassObjectNameToNameIgnoreCaseMatcher
+ *
+ * @since 8.0
  */
 public class MappingClassObjectNameToNameIgnoreCaseMatcher extends AbstractEObjectNameMatcher {
 

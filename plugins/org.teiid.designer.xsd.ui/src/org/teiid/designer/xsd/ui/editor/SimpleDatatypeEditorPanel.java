@@ -25,6 +25,9 @@ import org.teiid.designer.ui.forms.FormUtil;
 import org.teiid.designer.xsd.ui.ModelerXsdUiPlugin;
 
 
+/**
+ * @since 8.0
+ */
 public class SimpleDatatypeEditorPanel extends Composite {
     //
     // Instance variables:

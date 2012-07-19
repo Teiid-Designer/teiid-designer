@@ -15,6 +15,8 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @param <T>
  * @param <V>
+ *
+ * @since 8.0
  */
 public abstract class DefaultColumnProvider<T, V> implements ColumnProvider<T, V> {
 

@@ -22,6 +22,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 
 /**
  * ModelWorkspaceIndexSelectorFactory
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceIndexSelectorFactory implements IndexSelectorFactory {
 

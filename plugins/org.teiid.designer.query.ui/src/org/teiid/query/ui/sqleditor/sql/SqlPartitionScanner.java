@@ -24,6 +24,8 @@ import org.eclipse.jface.text.rules.Token;
  * partitions are computed dynamically as events signal that the document has 
  * changed. The document partitions are based on tokens that represent comments
  * and SQL code sections.
+ *
+ * @since 8.0
  */
 public class SqlPartitionScanner extends RuleBasedPartitionScanner {
 	public final static String SQL_COMMENT= "sql_comment"; //$NON-NLS-1$

@@ -28,6 +28,8 @@ import org.eclipse.emf.ecore.EReference;
  * @see org.teiid.datatools.models.teiidsqlmodel.TeiidsqlmodelFactory
  * @model kind="package"
  * @generated
+ *
+ * @since 8.0
  */
 public interface TeiidsqlmodelPackage extends EPackage {
 	/**

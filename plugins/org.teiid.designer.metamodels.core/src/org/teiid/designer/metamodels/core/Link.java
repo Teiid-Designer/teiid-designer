@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.core.CorePackage#getLink()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Link extends EObject {
 

@@ -33,6 +33,8 @@ import org.teiid.designer.metamodels.core.extension.util.ExtensionAdapterFactory
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class ExtensionItemProviderAdapterFactory extends ExtensionAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
     /**

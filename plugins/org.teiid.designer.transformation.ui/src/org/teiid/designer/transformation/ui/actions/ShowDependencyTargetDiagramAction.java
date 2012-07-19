@@ -27,6 +27,9 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class ShowDependencyTargetDiagramAction extends DiagramEditorAction {
     private static final String textString = "org.teiid.designer.transformation.ui.actions.ShowParentDiagramAction.text";  //$NON-NLS-1$
     private static final String toolTipString = "org.teiid.designer.transformation.ui.actions.ShowParentDiagramAction.toolTip";  //$NON-NLS-1$

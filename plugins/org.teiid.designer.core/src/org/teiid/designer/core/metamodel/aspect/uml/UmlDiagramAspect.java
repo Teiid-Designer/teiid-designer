@@ -12,6 +12,8 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelAspect;
 
 /**
  * UmlDiagramAspect
+ *
+ * @since 8.0
  */
 public interface UmlDiagramAspect extends MetamodelAspect {
     //Visibility Constants

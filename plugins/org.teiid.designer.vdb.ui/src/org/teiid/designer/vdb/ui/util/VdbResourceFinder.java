@@ -38,6 +38,8 @@ import org.teiid.designer.vdb.Vdb;
 
 /**
  * This class provides utilities to find resources given in input VDB file
+ *
+ * @since 8.0
  */
 public class VdbResourceFinder {
 	@SuppressWarnings("javadoc")

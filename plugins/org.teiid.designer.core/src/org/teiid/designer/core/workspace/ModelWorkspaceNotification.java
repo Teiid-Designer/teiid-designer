@@ -12,6 +12,8 @@ import org.eclipse.emf.common.notify.Notification;
 
 /**
  * ModelWorkspaceNotification
+ *
+ * @since 8.0
  */
 public interface ModelWorkspaceNotification extends Notification {
     public static final int CHANGE = 50;

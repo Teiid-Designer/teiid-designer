@@ -15,6 +15,8 @@ package org.teiid.designer.metadata.runtime.api;
  * The MetaMatrix standard types are called Runtime Types. Simple Types are called User Defined Types.  
  * Additionally, a complex data type can be defined to support a structure. This data type, called ResultSet, 
  * which can be defined by specifying the elements and their order.</p> 
+ *
+ * @since 8.0
  */
 public interface DataType extends MetadataObject {
 	/**

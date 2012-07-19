@@ -9,6 +9,8 @@ package org.teiid.designer.jdbc.metadata;
 
 /**
  * DatabaseInfo
+ *
+ * @since 8.0
  */
 public interface DatabaseInfo {
     

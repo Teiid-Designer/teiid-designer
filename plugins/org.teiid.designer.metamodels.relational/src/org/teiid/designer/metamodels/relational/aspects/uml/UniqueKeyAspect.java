@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.relational.UniqueKey;
 
 /**
  * KeyAspect
+ *
+ * @since 8.0
  */
 public abstract class UniqueKeyAspect extends RelationalEntityAspect implements UmlAssociation {
     /* (non-Javadoc)

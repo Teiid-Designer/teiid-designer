@@ -10,6 +10,8 @@ package org.teiid.designer.transformation.ui.wizards.sqlbuilder;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class SQLTemplates {
 

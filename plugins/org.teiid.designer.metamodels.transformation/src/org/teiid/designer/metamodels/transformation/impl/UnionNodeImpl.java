@@ -24,6 +24,8 @@ import org.teiid.designer.metamodels.transformation.UnionNode;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class UnionNodeImpl extends OperationNodeImpl implements UnionNode {
 

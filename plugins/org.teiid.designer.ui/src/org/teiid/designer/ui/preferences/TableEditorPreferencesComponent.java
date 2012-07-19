@@ -51,6 +51,8 @@ import org.teiid.designer.ui.table.PropertyOrder;
 
 /**
  * @author SDelap Editor Component For Table Editor Columns
+ *
+ * @since 8.0
  */
 public class TableEditorPreferencesComponent implements IEditorPreferencesComponent {
 

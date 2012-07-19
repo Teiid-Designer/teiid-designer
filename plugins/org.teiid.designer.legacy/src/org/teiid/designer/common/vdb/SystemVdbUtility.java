@@ -12,6 +12,9 @@ import org.teiid.designer.core.util.ResourceNameUtil;
 
 
 
+/**
+ * @since 8.0
+ */
 public class SystemVdbUtility {
 
     public static final String VDB_NAME = ResourceNameUtil.SYSTEM_NAME;

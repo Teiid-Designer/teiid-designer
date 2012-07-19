@@ -9,6 +9,8 @@ package org.teiid.designer.core.metamodel.aspect.uml;
 
 /**
  * UmlProperty
+ *
+ * @since 8.0
  */
 public interface UmlProperty extends UmlDiagramAspect {
     //  Show Mask Constants    

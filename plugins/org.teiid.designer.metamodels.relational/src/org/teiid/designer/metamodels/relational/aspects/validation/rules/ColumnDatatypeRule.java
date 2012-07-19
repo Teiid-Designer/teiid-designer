@@ -29,6 +29,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 
 /**
  * StringNameRule, rule that validates the string name
+ *
+ * @since 8.0
  */
 public class ColumnDatatypeRule implements StructuralFeatureValidationRule {
     private static final String EMPTY_STR = ""; //$NON-NLS-1$

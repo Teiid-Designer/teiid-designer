@@ -65,6 +65,8 @@ import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
  * 
  * @see org.teiid.designer.core.ClearReferencesUponDelete
  * @see org.teiid.designer.core.ModelEditor#delete(EObject)
+ *
+ * @since 8.0
  */
 public class FindRelatedObjectsToDeleted implements ModelVisitor {
 

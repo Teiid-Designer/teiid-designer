@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.wsdl.soap.SoapFault;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getBindingFault()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface BindingFault extends ExtensibleDocumented, WsdlNameRequiredEntity {
 

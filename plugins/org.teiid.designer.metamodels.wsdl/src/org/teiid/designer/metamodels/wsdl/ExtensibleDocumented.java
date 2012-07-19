@@ -13,6 +13,8 @@ package org.teiid.designer.metamodels.wsdl;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getExtensibleDocumented()
  * @model interface="true" abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface ExtensibleDocumented extends ElementOwner {
 

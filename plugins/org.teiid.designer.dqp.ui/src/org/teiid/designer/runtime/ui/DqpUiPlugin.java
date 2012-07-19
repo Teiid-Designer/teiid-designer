@@ -38,6 +38,8 @@ import org.teiid.designer.ui.common.util.UiUtil;
 
 /**
  * The main plugin class to be used in the desktop.
+ *
+ * @since 8.0
  */
 public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
 

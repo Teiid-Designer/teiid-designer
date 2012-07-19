@@ -9,6 +9,8 @@ package org.teiid.designer.diagram.ui.part;
 
 /**
  * EditableEditPart
+ *
+ * @since 8.0
  */
 public interface EditableEditPart {
     void edit();

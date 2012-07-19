@@ -21,6 +21,8 @@ import org.teiid.designer.metamodels.core.extension.XPackage;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XPackageImpl extends EPackageImpl implements XPackage {
 

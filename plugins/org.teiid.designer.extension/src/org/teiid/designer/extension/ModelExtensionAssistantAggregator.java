@@ -22,6 +22,8 @@ import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class ModelExtensionAssistantAggregator {
 

@@ -16,6 +16,8 @@ import org.teiid.designer.ui.actions.IModelObjectEditHelper;
  * action enabling logic. Since some metamodel objects may have certain global edit policies
  * (i.e. can't delete some objects), there needed to be a way to override the actions.
  * This abstract defines defaults all canXXX() methods to return true.
+ *
+ * @since 8.0
  */
 public abstract class ModelObjectEditHelper implements IModelObjectEditHelper {
 

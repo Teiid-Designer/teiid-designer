@@ -33,6 +33,8 @@ import org.teiid.designer.metamodels.wsdl.soap.SoapStyleType;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class SoapBindingImpl extends EObjectImpl implements SoapBinding {
 

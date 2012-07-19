@@ -15,6 +15,9 @@ import org.teiid.designer.modelgenerator.salesforce.model.SalesforceField;
 import com.sforce.soap.partner.Field;
 import com.sforce.soap.partner.PicklistEntry;
 
+/**
+ * @since 8.0
+ */
 public class SalesforceFieldImpl implements SalesforceField {
 
     public Field salesforceField;

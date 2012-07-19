@@ -28,6 +28,8 @@ import org.teiid.designer.ui.UiConstants;
 
 /**
  * ModelStatisticsDialog is a dialog for displaying the results of a ModelStatisticsVisitor.
+ *
+ * @since 8.0
  */
 public class ModelStatisticsDialog extends Dialog {
 

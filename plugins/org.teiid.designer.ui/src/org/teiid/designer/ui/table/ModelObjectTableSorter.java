@@ -14,6 +14,8 @@ import org.teiid.designer.ui.common.table.TableViewerSorter;
  * ModelObjectTableSorter is the ViewerSorter for the ModelTableEditor.  It automatically
  * hooks up the TableViewer's TableColumn for selection and decorates the columns with the
  * appropriate icons.
+ *
+ * @since 8.0
  */
 public class ModelObjectTableSorter extends TableViewerSorter {
 

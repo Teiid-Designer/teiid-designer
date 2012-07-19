@@ -4,6 +4,9 @@ import org.teiid.designer.modelgenerator.xsd.procedures.ITraversalCtxFactory;
 import org.teiid.designer.modelgenerator.xsd.procedures.RequestTraversalContextFactory;
 
 
+/**
+ * @since 8.0
+ */
 public class CreateXSDElementCreateProcedure extends XSDElementProcedureBaseAction {
 
 	@Override

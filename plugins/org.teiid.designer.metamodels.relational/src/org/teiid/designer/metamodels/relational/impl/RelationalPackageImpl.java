@@ -51,6 +51,8 @@ import org.teiid.designer.metamodels.relational.View;
  * An implementation of the model <b>Package</b>.
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class RelationalPackageImpl extends EPackageImpl implements RelationalPackage {
     /**

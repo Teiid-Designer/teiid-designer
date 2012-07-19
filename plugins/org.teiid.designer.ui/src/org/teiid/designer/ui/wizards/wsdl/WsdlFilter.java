@@ -22,6 +22,8 @@ import org.teiid.designer.webservice.WebServicePlugin;
 
 /**
  *
+ *
+ * @since 8.0
  */
 public class WsdlFilter extends ViewerFilter implements UiConstants {
 

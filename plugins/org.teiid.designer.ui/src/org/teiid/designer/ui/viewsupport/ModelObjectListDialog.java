@@ -59,6 +59,8 @@ import org.teiid.designer.ui.filter.StructuredViewerTextFilterer;
 
 /**
  * ModelObjectListDialog is a SelectionDialog for displaying and selecting a list of EObjects.
+ *
+ * @since 8.0
  */
 public class ModelObjectListDialog extends ListDialog implements IFilter.IConstants, ISelectionChangedListener {
 

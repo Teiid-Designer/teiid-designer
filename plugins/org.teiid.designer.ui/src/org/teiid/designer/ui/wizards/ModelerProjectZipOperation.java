@@ -37,8 +37,9 @@ import org.xml.sax.SAXException;
 
 /**
  *  Operation for exporting a resource and its children to a new .zip file
+ *
+ * @since 8.0
  */
-/*package*/
 public class ModelerProjectZipOperation implements IRunnableWithProgress {
     private static final String EXPORT_TITLE = getString("zipExportTitle"); //$NON-NLS-1$
     private static final String ZIPPING_PROBLEM = "zippingProblem"; //$NON-NLS-1$

@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * DatatypeUtil
+ *
+ * @since 8.0
  */
 public interface SimpleDatatypeUtil {
     

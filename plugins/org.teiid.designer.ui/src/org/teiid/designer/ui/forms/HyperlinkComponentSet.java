@@ -14,6 +14,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 
+/**
+ * @since 8.0
+ */
 public class HyperlinkComponentSet extends SimpleComponentSet {
 
     String urlText;

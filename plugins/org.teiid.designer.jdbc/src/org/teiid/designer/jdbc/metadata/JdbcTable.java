@@ -10,6 +10,8 @@ package org.teiid.designer.jdbc.metadata;
 
 /**
  * JdbcTable
+ *
+ * @since 8.0
  */
 public interface JdbcTable extends JdbcNode {
 

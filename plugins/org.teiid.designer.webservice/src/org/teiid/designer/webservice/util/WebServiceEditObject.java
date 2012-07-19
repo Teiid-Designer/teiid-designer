@@ -40,6 +40,8 @@ import org.teiid.designer.webservice.WebServicePlugin;
 
 /**
  * The WebServiceEditObject is a business object which works with WebService Models, interfaces and operations.
+ *
+ * @since 8.0
  */
 public class WebServiceEditObject {
 

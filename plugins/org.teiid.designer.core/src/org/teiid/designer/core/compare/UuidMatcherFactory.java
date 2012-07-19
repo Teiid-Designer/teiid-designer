@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.EReference;
 
 /**
  * UuidMatcherFactory
+ *
+ * @since 8.0
  */
 public class UuidMatcherFactory implements EObjectMatcherFactory {
 

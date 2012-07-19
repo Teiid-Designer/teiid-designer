@@ -96,6 +96,8 @@ import org.teiid.query.mapping.xml.Namespace;
 
 /**
  * MappingDocumentFormatter
+ *
+ * @since 8.0
  */
 public class MappingDocumentFormatter {
 

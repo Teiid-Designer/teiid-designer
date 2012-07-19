@@ -9,6 +9,8 @@ package org.teiid.designer.metamodels.relational.util;
 
 /**
  * Class to hold basic Pushdown-function parameter data structure and method access to key values
+ *
+ * @since 8.0
  */
 public class ParameterData {
 	private String name;

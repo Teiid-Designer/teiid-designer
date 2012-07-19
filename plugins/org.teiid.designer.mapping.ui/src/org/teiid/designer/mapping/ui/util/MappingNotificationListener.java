@@ -37,6 +37,8 @@ import org.teiid.designer.ui.undo.ModelerUndoManager;
  * cleanup) This class provides a way for the mapping world to listen for any kind of notification which it may need to clean up
  * stuff behind the scenes. In particular, when a document node is deleted, there may be mapping classes that hang around and mess
  * up the model... Initial implementation 1/15/04 BML
+ *
+ * @since 8.0
  */
 public class MappingNotificationListener implements INotifyChangedListener {
     private static final String THIS_CLASS = "MappingNotificationListener"; //$NON-NLS-1$

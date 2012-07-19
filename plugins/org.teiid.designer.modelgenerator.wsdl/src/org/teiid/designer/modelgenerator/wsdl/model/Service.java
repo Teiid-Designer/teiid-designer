@@ -9,6 +9,8 @@ package org.teiid.designer.modelgenerator.wsdl.model;
 
 /**
  * This class represents a services as defined by as WSDL
+ *
+ * @since 8.0
  */
 public interface Service extends WSDLElement {
 

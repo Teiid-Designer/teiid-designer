@@ -47,6 +47,8 @@ import org.teiid.designer.transformation.TransformationPlugin;
  * In particular, a Rename of a model could result in mis-named models in USER SQL.
  * 
  *
+ *
+ * @since 8.0
  */
 public class TransformationRefactorModelHandler extends
 		MappingRefactorModelHandler {

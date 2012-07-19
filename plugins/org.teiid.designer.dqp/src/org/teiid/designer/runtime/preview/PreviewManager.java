@@ -108,6 +108,8 @@ import org.teiid.designer.vdb.VdbUtil;
  * user but will be contained within the workspace. When a model is changed, the PVDB is automatically synchronized. When a model
  * is deleted, the PVDB is also deleted. Upon preview of a model object, the PVDB of that model, along with any dependent models
  * will be deployed to the designated preview Teiid server (if there is one). Deploying of the PVDBs is only done if necessary.
+ *
+ * @since 8.0
  */
 @ThreadSafe
 public final class PreviewManager extends JobChangeAdapter

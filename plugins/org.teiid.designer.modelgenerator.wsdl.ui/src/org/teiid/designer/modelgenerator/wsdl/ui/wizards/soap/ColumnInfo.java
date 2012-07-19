@@ -21,6 +21,9 @@ import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 
 
+/**
+ * @since 8.0
+ */
 public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
 	public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
 	public static final String INTEGER_DATATYPE = "integer"; //$NON-NLS-1$

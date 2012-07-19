@@ -25,6 +25,8 @@ import org.teiid.designer.ui.wizards.IStructuralCopyTreePopulator;
 
 /**
  * TransformationLinkWizardPage
+ *
+ * @since 8.0
  */
 public class TransformationLinkWizardPage extends WizardPage implements UiConstants,
 		INodeDescendantsDeselectionHandler {

@@ -28,6 +28,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.function.FunctionPackage#getScalarFunction()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface ScalarFunction extends Function{
     /**

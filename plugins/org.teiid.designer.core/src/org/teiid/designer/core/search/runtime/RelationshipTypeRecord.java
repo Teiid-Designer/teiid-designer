@@ -9,6 +9,8 @@ package org.teiid.designer.core.search.runtime;
 
 /**
  * RelationshipTypeRecord
+ *
+ * @since 8.0
  */
 public interface RelationshipTypeRecord extends RelationshipSearchRecord {
 

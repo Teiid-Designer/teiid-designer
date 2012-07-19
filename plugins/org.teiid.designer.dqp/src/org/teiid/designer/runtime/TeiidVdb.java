@@ -4,6 +4,9 @@ import org.teiid.adminapi.VDB;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.vdb.Vdb;
 
+/**
+ * @since 8.0
+ */
 public class TeiidVdb implements Comparable<TeiidVdb> {
     public static final String VDB_EXTENSION = "vdb"; //$NON-NLS-1$
     public static final String VDB_DOT_EXTENSION = ".vdb"; //$NON-NLS-1$

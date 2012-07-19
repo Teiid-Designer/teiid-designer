@@ -19,6 +19,8 @@ import org.teiid.designer.core.ModelerCore;
 
 /**
  * ValidationResultImpl
+ *
+ * @since 8.0
  */
 public class ValidationResultImpl implements ValidationResult {
 

@@ -11,6 +11,8 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 
 /**
  * TableAspect
+ *
+ * @since 8.0
  */
 public class ViewAspect extends TableAspect {
     

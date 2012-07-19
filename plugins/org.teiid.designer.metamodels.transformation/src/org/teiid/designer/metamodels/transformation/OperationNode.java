@@ -13,6 +13,8 @@ package org.teiid.designer.metamodels.transformation;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getOperationNode()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface OperationNode extends AbstractOperationNode {
 

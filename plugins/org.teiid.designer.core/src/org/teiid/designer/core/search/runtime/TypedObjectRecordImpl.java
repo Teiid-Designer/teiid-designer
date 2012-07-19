@@ -13,6 +13,8 @@ import org.teiid.designer.core.index.IndexConstants;
 /**
  * TypedObjectRecord
  * recordType|objectID|name|fullname|uri|datatypeName|datatypeID|runtimeType|modelPath|metaclassURI|
+ *
+ * @since 8.0
  */
 public class TypedObjectRecordImpl extends ResourceObjectRecordImpl implements TypedObjectRecord {
     

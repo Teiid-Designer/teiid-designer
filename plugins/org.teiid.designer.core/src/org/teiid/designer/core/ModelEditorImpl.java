@@ -138,6 +138,9 @@ import org.teiid.designer.metamodels.core.extension.XPackage;
 import org.teiid.designer.metamodels.core.extension.impl.ExtensionFactoryImpl;
 import org.teiid.designer.metamodels.diagram.Diagram;
 
+/**
+ * @since 8.0
+ */
 public class ModelEditorImpl implements ModelEditor {
 
     /**
@@ -5123,6 +5126,9 @@ public class ModelEditorImpl implements ModelEditor {
         return resolvedEObject;
     }
 
+/**
+ * @since 8.0
+ */
     public class EnterpriseDatatypeInfoSetCommand extends AbstractOverrideableCommand {
 
         private EnterpriseDatatypeInfo oldEdtInfo;
@@ -5199,6 +5205,9 @@ public class ModelEditorImpl implements ModelEditor {
         }
     }
 
+/**
+ * @since 8.0
+ */
     public class EnterpriseDatatypeInfoUnsetCommand extends AbstractOverrideableCommand {
 
         private EnterpriseDatatypeInfo oldEdtInfo;
@@ -5276,6 +5285,9 @@ public class ModelEditorImpl implements ModelEditor {
         }
     }
 
+/**
+ * @since 8.0
+ */
     public class AddValueToMapCommand extends AbstractOverrideableCommand {
 
         private Object owner;
@@ -5358,6 +5370,9 @@ public class ModelEditorImpl implements ModelEditor {
         }
     }
 
+/**
+ * @since 8.0
+ */
     public class RemoveValueFromMapCommand extends AbstractOverrideableCommand {
 
         private Object owner;

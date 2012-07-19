@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.relational.Table;
 
 /**
  * The <code>ModeShapeModelProcessor</code> performs special processing when performing an import using the ModeShape JDBC driver.
+ *
+ * @since 8.0
  */
 public class ModeShapeModelProcessor extends RelationalModelProcessorImpl {
 

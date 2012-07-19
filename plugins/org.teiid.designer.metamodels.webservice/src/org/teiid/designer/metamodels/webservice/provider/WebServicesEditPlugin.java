@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.xml.provider.XmlDocumentEditPlugin;
  * This is the central singleton for the WebServices edit plugin. <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public final class WebServicesEditPlugin extends EMFPlugin {
 

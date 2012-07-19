@@ -22,6 +22,8 @@ import org.teiid.designer.core.compare.EObjectMatcherFactory;
 
 /**
  * CompositeModelGenerator
+ *
+ * @since 8.0
  */
 public class CompositeModelGenerator extends AbstractModelGenerator {
 

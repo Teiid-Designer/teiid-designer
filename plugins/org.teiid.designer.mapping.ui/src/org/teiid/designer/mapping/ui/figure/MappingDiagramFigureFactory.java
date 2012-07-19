@@ -40,6 +40,8 @@ import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 
 /**
  * MappingDiagramFigureFactory
+ *
+ * @since 8.0
  */
 
 public class MappingDiagramFigureFactory extends AbstractDiagramFigureFactory implements UiConstants {

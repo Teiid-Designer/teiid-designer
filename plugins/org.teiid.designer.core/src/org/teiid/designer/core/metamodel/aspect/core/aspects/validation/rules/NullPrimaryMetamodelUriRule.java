@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.core.ModelAnnotation;
 
 /**
  * StringNameRule, rule that validates the string name
+ *
+ * @since 8.0
  */
 public class NullPrimaryMetamodelUriRule implements StructuralFeatureValidationRule {
     

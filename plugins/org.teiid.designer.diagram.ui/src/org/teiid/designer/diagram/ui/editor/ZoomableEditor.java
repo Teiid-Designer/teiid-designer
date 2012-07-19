@@ -9,6 +9,8 @@ package org.teiid.designer.diagram.ui.editor;
 
 /**
  * ZoomableEditor
+ *
+ * @since 8.0
  */
 public interface ZoomableEditor {
 

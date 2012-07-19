@@ -11,6 +11,8 @@ import org.teiid.query.sql.lang.GroupBy;
 
 /**
  * The <code>GroupByDisplayNode</code> class is used to represent a Query's GROUPBY clause.
+ *
+ * @since 8.0
  */
 public class GroupByDisplayNode extends DisplayNode {
 

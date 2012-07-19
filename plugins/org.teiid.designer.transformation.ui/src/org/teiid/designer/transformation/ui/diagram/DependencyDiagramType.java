@@ -18,6 +18,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * PackageDiagramType
+ *
+ * @since 8.0
  */
 public class DependencyDiagramType extends TransformationDiagramType {
     //============================================================================================================================

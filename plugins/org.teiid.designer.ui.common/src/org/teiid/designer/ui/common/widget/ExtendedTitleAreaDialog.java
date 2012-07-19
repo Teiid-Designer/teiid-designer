@@ -18,6 +18,8 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 /**
  * The <code>ExtendedTitleAreaDialog</code> class extends the functionality of the <code>TitleAreaDialog</code>.
  * The <code>Shell</code> is resizable and it's location and size is persisted in the dialog settings by default.
+ *
+ * @since 8.0
  */
 public class ExtendedTitleAreaDialog extends TitleAreaDialog {
 

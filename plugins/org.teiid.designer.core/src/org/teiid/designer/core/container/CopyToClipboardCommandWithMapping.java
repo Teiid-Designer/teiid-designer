@@ -15,6 +15,8 @@ import org.teiid.designer.core.ModelEditorImpl;
 
 /**
  * CopyToClipboardCommandWithMapping
+ *
+ * @since 8.0
  */
 public class CopyToClipboardCommandWithMapping extends CopyToClipboardCommand {
 

@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 /** 
  * ModelBuilder interface
+ *
+ * @since 8.0
  */
 public interface ModelBuilder {
 	

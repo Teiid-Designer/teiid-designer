@@ -10,6 +10,8 @@ package org.teiid.designer.transformation.aspects.uml;
 
 /**
  * StagingTableUmlAspect
+ *
+ * @since 8.0
  */
 public class StagingTableUmlAspect extends MappingClassUmlAspect {
 

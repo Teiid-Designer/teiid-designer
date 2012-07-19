@@ -15,6 +15,8 @@ import java.sql.Types;
 /**
  * The Results interface is the primary means of accessing the cached data returned
  * from a JDBC {@link ResultSet}.
+ *
+ * @since 8.0
  */
 public interface Results {
     

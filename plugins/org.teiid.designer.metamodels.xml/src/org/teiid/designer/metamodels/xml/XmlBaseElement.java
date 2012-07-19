@@ -13,6 +13,8 @@ package org.teiid.designer.metamodels.xml;
  * @see org.teiid.designer.metamodels.xml.XmlDocumentPackage#getXmlBaseElement()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface XmlBaseElement extends XmlDocumentNode, ChoiceOption, XmlHolderEntity {
 }

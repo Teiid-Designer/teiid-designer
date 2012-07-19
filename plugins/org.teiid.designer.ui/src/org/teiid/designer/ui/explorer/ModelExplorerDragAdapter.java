@@ -30,6 +30,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * The <code>ModelExplorerDragAdapter</code> prevents certain resources from being dragged unless
  * they are being dragged from outside of Eclipse.
+ *
+ * @since 8.0
  */
 public class ModelExplorerDragAdapter extends NavigatorDragAdapter
                                       implements UiConstants {

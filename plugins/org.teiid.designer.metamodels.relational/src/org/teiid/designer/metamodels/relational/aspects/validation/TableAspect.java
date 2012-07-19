@@ -18,6 +18,8 @@ import org.teiid.designer.core.validation.ValidationRuleSet;
 
 /**
  * TableAspect
+ *
+ * @since 8.0
  */
 public abstract class TableAspect extends RelationalEntityAspect {
     

@@ -34,6 +34,8 @@ import org.teiid.designer.metamodels.core.CorePackage;
  *             </ul>
  *             </p>
  * @generated
+ *
+ * @since 8.0
  */
 public class AnnotationContainerImpl extends EObjectImpl implements AnnotationContainer, InternalAnnotationContainer {
 

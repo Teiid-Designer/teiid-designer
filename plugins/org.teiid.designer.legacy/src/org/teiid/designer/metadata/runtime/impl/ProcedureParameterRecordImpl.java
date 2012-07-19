@@ -12,6 +12,8 @@ import org.teiid.designer.metadata.runtime.ProcedureParameterRecord;
 
 /**
  * ProcedureParameterRecordImpl
+ *
+ * @since 8.0
  */
 public class ProcedureParameterRecordImpl extends AbstractMetadataRecord implements ProcedureParameterRecord {
 

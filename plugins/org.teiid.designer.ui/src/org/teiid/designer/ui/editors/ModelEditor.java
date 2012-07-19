@@ -113,6 +113,8 @@ import org.teiid.designer.ui.viewsupport.StatusBarUpdater;
 
 /**
  * ModelEditor is a MultiPageEditorPart shell that ModelEditorPage extensions can provide ModelEditorPage pages.
+ *
+ * @since 8.0
  */
 public class ModelEditor extends MultiPageModelEditor
     implements IEditorActionExporter, INavigationLocationProvider, INotifyChangedListener, ITextEditorExtension2,

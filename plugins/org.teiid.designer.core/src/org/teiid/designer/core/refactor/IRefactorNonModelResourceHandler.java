@@ -14,6 +14,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * A <code>IRefactorNonModelResourceHandler</code> will proces model-related files that do not have a <code>ModelResource</code>.
+ *
+ * @since 8.0
  */
 public interface IRefactorNonModelResourceHandler extends IRefactorModelHandler {
 

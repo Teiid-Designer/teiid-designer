@@ -18,6 +18,9 @@ import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 import org.teiid.designer.mapping.ui.UiConstants;
 
 
+/**
+ * @since 8.0
+ */
 public class EnumeratedTypeLink extends AbstractNodeConnectionModel
                                 implements UiConstants {
     

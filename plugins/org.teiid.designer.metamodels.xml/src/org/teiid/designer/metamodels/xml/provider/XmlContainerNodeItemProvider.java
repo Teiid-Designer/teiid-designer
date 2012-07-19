@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
  * <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlContainerNodeItemProvider extends XmlDocumentEntityItemProvider {
     /**

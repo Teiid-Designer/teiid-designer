@@ -13,6 +13,8 @@ import java.util.List;
  * This interface represents a handler that a 
  * {@link org.teiid.designer.core.refactor.OrganizeImportCommand OrganizeImportCommand} uses
  * when there are ambiguous choices.
+ *
+ * @since 8.0
  */
 public interface OrganizeImportHandler {
 

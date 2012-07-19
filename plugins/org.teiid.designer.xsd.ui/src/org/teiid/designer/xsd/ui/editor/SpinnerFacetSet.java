@@ -19,6 +19,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.teiid.designer.ui.forms.ComponentSetEvent;
 import org.teiid.designer.ui.forms.ComponentSetMonitor;
 
+/**
+ * @since 8.0
+ */
 public class SpinnerFacetSet extends AbstractFacetSet {
 
     private static final InclusiveInteger DEFAULT_VALUE = new InclusiveInteger(0, true);

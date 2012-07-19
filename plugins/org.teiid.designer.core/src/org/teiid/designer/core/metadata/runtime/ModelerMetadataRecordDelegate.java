@@ -18,6 +18,9 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;
 import org.teiid.designer.metadata.runtime.impl.MetadataRecordDelegate;
 
 
+/**
+ * @since 8.0
+ */
 public class ModelerMetadataRecordDelegate extends MetadataRecordDelegate {
 
 	private SqlAspect sqlAspect;

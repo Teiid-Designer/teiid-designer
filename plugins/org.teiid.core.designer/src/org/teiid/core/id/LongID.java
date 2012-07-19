@@ -27,6 +27,9 @@ import java.io.Serializable;
 import org.teiid.core.util.Assertion;
 
 
+/**
+ * @since 8.0
+ */
 public class LongID implements ObjectID, Serializable {
     public static final String PROTOCOL = "mmlong"; //$NON-NLS-1$
 

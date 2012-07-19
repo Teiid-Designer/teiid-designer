@@ -30,6 +30,8 @@ import org.teiid.query.ui.builder.util.ElementViewerFactory;
  *             a good start is to expect that the args to these methods will be either
  *             MappingClass or MappingClassColumn objects.
  *             Also, expet to drop the 'GroupSymbol'
+ *
+ * @since 8.0
  */
 public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider {
 

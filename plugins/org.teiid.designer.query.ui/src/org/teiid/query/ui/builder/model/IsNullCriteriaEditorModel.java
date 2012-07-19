@@ -14,6 +14,8 @@ import org.teiid.query.sql.symbol.Expression;
 
 /**
  * IsNullCriteriaEditorModel
+ *
+ * @since 8.0
  */
 public class IsNullCriteriaEditorModel extends AbstractPredicateCriteriaTypeEditorModel
     implements ILanguageObjectEditorModelListener {

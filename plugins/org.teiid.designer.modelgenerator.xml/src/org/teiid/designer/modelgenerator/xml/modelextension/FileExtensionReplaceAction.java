@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.modelgenerator.xml.modelextension;
 
+/**
+ * @since 8.0
+ */
 public class FileExtensionReplaceAction extends BaseExtensionReplaceAction {
 
     @Override

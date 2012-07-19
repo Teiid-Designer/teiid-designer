@@ -14,6 +14,8 @@ import org.teiid.designer.metamodels.xml.XmlDocumentPlugin;
 
 /**
  * XmlSequenceSqlAspect
+ *
+ * @since 8.0
  */
 public class XmlChoiceSqlAspect extends XmlContainerNodeSqlAspect {
 

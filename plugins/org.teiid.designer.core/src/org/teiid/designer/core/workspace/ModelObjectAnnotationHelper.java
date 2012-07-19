@@ -13,6 +13,9 @@ import org.teiid.designer.metamodels.core.Annotation;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 
 
+/**
+ * @since 8.0
+ */
 public class ModelObjectAnnotationHelper {
 
     public static final String EXTENDED_PROPERTY_NAMESPACE = "ext-custom:"; //$NON-NLS-1$

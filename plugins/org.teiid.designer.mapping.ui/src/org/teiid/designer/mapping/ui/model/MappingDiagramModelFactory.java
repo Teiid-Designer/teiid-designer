@@ -70,6 +70,8 @@ import org.teiid.designer.xsd.util.ModelerXsdUtils;
 
 /**
  * MappingDiagramModelFactory
+ *
+ * @since 8.0
  */
 public class MappingDiagramModelFactory extends TransformationDiagramModelFactory {
 

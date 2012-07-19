@@ -26,6 +26,8 @@ import org.teiid.designer.ui.common.UiPlugin;
  * <li>a value indicating the default action should be used (constant provided), and
  * <li>an IAction that will never be enabled indicating the action is not supported (constant provided).
  * </ul>
+ *
+ * @since 8.0
  */
 public class GlobalActionsMap implements Map,
                                          IActionConstants,

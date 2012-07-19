@@ -18,6 +18,9 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.ui.common.graphics.GlobalUiFontManager;
 
+/**
+ * @since 8.0
+ */
 public class DirectEditPartManager extends DirectEditManager {
 
     Font scaledFont;

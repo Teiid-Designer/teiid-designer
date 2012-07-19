@@ -49,6 +49,8 @@ import org.teiid.designer.ui.viewsupport.SingleProjectFilter;
  * table or procedure from the workspace.
  * 
  * Upon "FINISH" or "EXECUTE", the "PreviewTableDataContext" action
+ *
+ * @since 8.0
  */
 public class PreviewDataDialog extends TitleAreaDialog implements
 		DqpUiConstants, IChangeListener {

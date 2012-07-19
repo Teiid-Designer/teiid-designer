@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.dependency.DependencyPackage;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class DependencyInfoImpl extends EObjectImpl implements DependencyInfo {
     /**

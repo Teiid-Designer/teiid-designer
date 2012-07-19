@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.teiid.designer.core.index;
 
+/**
+ * @since 8.0
+ */
 public interface IQueryResult {
 	String getPath();
 }

@@ -13,6 +13,8 @@ import org.teiid.designer.core.validation.ValidationRuleSet;
 
 /**
  * ValidationAspect
+ *
+ * @since 8.0
  */
 public interface ValidationAspect extends MetamodelAspect {
 

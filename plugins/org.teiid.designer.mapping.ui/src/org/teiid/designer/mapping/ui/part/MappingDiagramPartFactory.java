@@ -50,6 +50,8 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 
 /**
  * TransformationPartFactory
+ *
+ * @since 8.0
  */
 public class MappingDiagramPartFactory extends AbstractDiagramEditPartFactory implements UiConstants {
 

@@ -17,6 +17,8 @@ import java.util.List;
 /**
  * This class simply takes a ResultSet and turns it into a List of HashMaps for passing to the 
  * builder framework
+ *
+ * @since 8.0
  */
 public class ResultSetTranslator {
 

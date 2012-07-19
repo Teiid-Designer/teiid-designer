@@ -22,6 +22,8 @@ import org.teiid.designer.ui.common.viewsupport.StatusInfo;
  * validation on only Model files.  If a MetamodelDescriptor is provided via the
  * constructor, then this validator will only pass ModelResources of the same
  * metamodel type.
+ *
+ * @since 8.0
  */
 public class ModelResourceSelectionValidator implements ISelectionStatusValidator {
 

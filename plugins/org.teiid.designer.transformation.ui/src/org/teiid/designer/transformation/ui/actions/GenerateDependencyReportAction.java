@@ -35,6 +35,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * GenerateDependencyReportAction
+ *
+ * @since 8.0
  */
 public class GenerateDependencyReportAction extends TransformationAction implements UiConstants {
 

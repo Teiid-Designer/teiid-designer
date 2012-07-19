@@ -53,6 +53,8 @@ import org.teiid.query.ui.tree.QueryTreeSelectionDialog;
 /**
  * TransformationSourceManager is a class of static utility methods for easily determining if objects can be added or removed as
  * source to a transformation as well as whether or not the transformation can be cleared.
+ *
+ * @since 8.0
  */
 public class TransformationSourceManager implements UiConstants {
     private static final String ALIAS_ENTRY_DIALOG_TITLE = UiConstants.Util.getString("TransformationSourceManager.aliasEntryDialogTitle"); //$NON-NLS-1$

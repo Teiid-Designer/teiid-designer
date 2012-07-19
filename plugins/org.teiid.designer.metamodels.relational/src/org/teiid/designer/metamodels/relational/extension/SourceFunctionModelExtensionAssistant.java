@@ -9,6 +9,9 @@ package org.teiid.designer.metamodels.relational.extension;
 
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 
+/**
+ * @since 8.0
+ */
 public class SourceFunctionModelExtensionAssistant extends EmfModelObjectExtensionAssistant {
 
 }

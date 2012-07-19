@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * NullRelationTracker
+ *
+ * @since 8.0
  */
 public class NullRelationTracker implements RelationTracker {
 

@@ -11,6 +11,8 @@ import org.eclipse.gef.EditPart;
 
 /**
  * NotationPartGenerator
+ *
+ * @since 8.0
  */
 public interface NotationPartGenerator {
     public EditPart createEditPart(EditPart context, Object model, String diagramTypeId);

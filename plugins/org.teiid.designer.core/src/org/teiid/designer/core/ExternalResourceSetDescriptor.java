@@ -11,6 +11,8 @@ import java.util.Properties;
 
 /**
  * ExtensionDescriptor
+ *
+ * @since 8.0
  */
 public interface ExternalResourceSetDescriptor extends ExtensionDescriptor {
     

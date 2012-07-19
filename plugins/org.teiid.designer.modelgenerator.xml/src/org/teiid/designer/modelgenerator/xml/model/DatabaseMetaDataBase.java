@@ -16,6 +16,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @since 8.0
+ */
 public abstract class DatabaseMetaDataBase implements DatabaseMetaData {
     // Dividing the database metadata into DatabaseMetaDataBase and
     // DatabaseMetaDataImpl is just a way of keeping the "uninteresting"

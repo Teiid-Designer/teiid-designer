@@ -28,6 +28,8 @@ import org.teiid.designer.jdbc.metadata.JdbcSchema;
 
 /**
  * JdbcNodeImpl
+ *
+ * @since 8.0
  */
 public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbcNode {
 

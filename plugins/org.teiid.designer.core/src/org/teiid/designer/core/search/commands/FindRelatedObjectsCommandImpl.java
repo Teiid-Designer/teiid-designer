@@ -28,6 +28,8 @@ import org.teiid.designer.core.search.runtime.SearchRuntimeAdapter;
 
 /**
  * FindRelatedObjectsCommandImpl.java
+ *
+ * @since 8.0
  */
 public class FindRelatedObjectsCommandImpl implements FindRelatedObjectsCommand {
 

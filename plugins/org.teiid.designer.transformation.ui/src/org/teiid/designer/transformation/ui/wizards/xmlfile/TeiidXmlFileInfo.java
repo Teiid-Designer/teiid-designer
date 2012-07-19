@@ -31,6 +31,8 @@ import org.xml.sax.helpers.LocatorImpl;
 /**
  * Business object used to manage Teiid-specific XML Data File information used during import
  * 
+ *
+ * @since 8.0
  */
 public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlConstants {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidXmlFileInfo.class);

@@ -10,6 +10,8 @@ package org.teiid.designer.core.search.runtime;
 /**
  * TypedObjectRecord
  * recordType|objectID|name|fullname|uri|datatypeName|datatypeID|runtimeType|modelPath|metaclassURI|
+ *
+ * @since 8.0
  */
 public interface TypedObjectRecord extends ResourceObjectRecord {
     

@@ -9,6 +9,8 @@ package org.teiid.query.ui.sqleditor.component;
 
 /**
  * The <code>TextDisplayNode</code> class is used to represent text display nodes.
+ *
+ * @since 8.0
  */
 public class TextDisplayNode extends DisplayNode {
 

@@ -49,6 +49,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * ModelExplorerContentProvider
+ *
+ * @since 8.0
  */
 public class ModelExplorerContentProvider extends WorkbenchContentProvider implements UiConstants, IPropertyChangeListener {
 

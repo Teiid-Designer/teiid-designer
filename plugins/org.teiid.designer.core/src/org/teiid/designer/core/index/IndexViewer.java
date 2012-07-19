@@ -22,6 +22,8 @@ import org.teiid.designer.core.util.StringUtilities;
 
 /**
  * IndexViewer
+ *
+ * @since 8.0
  */
 public class IndexViewer {
 

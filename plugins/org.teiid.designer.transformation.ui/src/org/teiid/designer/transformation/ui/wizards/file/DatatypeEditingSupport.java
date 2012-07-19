@@ -12,6 +12,8 @@ import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class DatatypeEditingSupport extends ComboBoxEditingSupport {
 	

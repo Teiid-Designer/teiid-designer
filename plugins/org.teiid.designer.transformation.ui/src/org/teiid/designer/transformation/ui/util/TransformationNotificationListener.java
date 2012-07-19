@@ -92,6 +92,8 @@ import org.teiid.query.sql.lang.Select;
  * listener will use the SqlTransformationHelper to modify the SqlTransformation SQL strings SqlTable o Children added/removed -
  * respond to addition or removal of children (Sql Columns). o rename - responds to table rename SqlColumn o Change - responds to
  * changes to the Column (eg rename).
+ *
+ * @since 8.0
  */
 public class TransformationNotificationListener implements INotifyChangedListener, EventObjectListener, UiConstants {
     static final String ADD_SQL_ELEM_GRP_REFS_TITLE = UiConstants.Util.getString("TransformationNotificationListener.addSQLElemGrpAttrsTitle"); //$NON-NLS-1$

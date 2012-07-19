@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.relational.UniqueKey;
 
 /**
  * UniqueKeyAspect
+ *
+ * @since 8.0
  */
 public class UniqueKeyAspect extends RelationalEntityAspect implements SqlUniqueKeyAspect {
     

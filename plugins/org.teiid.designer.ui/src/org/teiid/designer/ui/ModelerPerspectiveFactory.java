@@ -28,6 +28,8 @@ import org.teiid.designer.ui.util.PerspectiveObject;
 
 /**
  * ModelerPerspectiveFactory
+ *
+ * @since 8.0
  */
 public class ModelerPerspectiveFactory
 implements Extensions, IPerspectiveFactory, ModelerPerspectiveContributorExtension {

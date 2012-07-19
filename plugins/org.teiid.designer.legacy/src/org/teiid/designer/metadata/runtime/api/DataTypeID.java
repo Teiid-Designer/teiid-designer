@@ -10,6 +10,8 @@ package org.teiid.designer.metadata.runtime.api;
 
 /**
  * DataTypeID uniquely identifies a DataType 
+ *
+ * @since 8.0
  */
 public interface DataTypeID extends MetadataID {         
 /**

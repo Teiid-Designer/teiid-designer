@@ -35,6 +35,8 @@ import org.teiid.designer.metamodels.xml.XmlDocument;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class OutputImpl extends MessageImpl implements Output {
 

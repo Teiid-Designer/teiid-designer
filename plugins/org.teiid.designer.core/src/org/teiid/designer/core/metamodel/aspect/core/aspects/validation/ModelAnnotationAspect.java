@@ -13,6 +13,8 @@ import org.teiid.designer.core.validation.ValidationRuleSet;
 
 /**
  * ModelAnnotationAspect
+ *
+ * @since 8.0
  */
 public class ModelAnnotationAspect extends CoreEntityAspect {
 

@@ -15,6 +15,9 @@ import org.teiid.designer.schema.tools.ToolsPlugin;
 import org.teiid.designer.schema.tools.model.schema.QName;
 import org.teiid.designer.schema.tools.model.schema.impl.QNameImpl;
 
+/**
+ * @since 8.0
+ */
 public class SchemaUtil {
 
     private static XSDSimpleTypeDefinition stringType = null;

@@ -13,6 +13,8 @@ package org.teiid.designer.core.index;
 
 /**
  * This interface provides constants used by the search engine.
+ *
+ * @since 8.0
  */
 public interface IIndexConstants {
 	/**

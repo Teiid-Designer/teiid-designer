@@ -28,6 +28,8 @@ import org.teiid.designer.metamodels.core.CorePackage;
  * --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class AnnotationContainerItemProvider extends ItemProviderAdapter
     implements IEditingDomainItemProvider, ITreeItemContentProvider, IItemLabelProvider,

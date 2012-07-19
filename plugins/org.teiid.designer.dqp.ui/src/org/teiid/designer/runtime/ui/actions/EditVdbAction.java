@@ -26,6 +26,9 @@ import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
 
+/**
+ * @since 8.0
+ */
 public class EditVdbAction  extends Action implements VdbConstants {
 	private static final String PREFIX = I18nUtil.getPropertyPrefix(EditVdbAction.class);
 	

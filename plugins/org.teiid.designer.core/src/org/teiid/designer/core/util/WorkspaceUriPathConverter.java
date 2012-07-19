@@ -13,6 +13,8 @@ import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 
 /**
  * WorkspaceUriHelper
+ *
+ * @since 8.0
  */
 public class WorkspaceUriPathConverter extends BasicUriPathConverter {
 

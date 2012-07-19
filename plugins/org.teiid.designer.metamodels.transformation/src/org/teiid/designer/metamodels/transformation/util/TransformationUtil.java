@@ -15,6 +15,8 @@ import org.teiid.core.util.CoreArgCheck;
 
 /**
  * RelationalUtil
+ *
+ * @since 8.0
  */
 public class TransformationUtil {
     

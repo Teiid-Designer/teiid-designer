@@ -8,6 +8,9 @@ import org.eclipse.datatools.connectivity.internal.ConnectionProfile;
 import org.teiid.core.util.CoreArgCheck;
 
 
+/**
+ * @since 8.0
+ */
 public class ConnectionProfileFactory {
 	
 	public ConnectionProfileFactory() {

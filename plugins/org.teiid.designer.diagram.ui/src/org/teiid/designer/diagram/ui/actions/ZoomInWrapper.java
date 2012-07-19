@@ -21,6 +21,8 @@ import org.teiid.designer.ui.editors.ModelEditor;
 
 /**
  * ZoomInWrapper
+ *
+ * @since 8.0
  */
 public class ZoomInWrapper
     extends DiagramAction

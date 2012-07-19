@@ -37,6 +37,8 @@ import org.teiid.designer.metamodels.xml.impl.XmlDocumentPackageImpl;
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class WebServicePackageImpl extends EPackageImpl implements WebServicePackage {
 

@@ -90,6 +90,8 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 /**
  * The ConnectorsView provides a tree view of workspace connector bindings which are stored in a configuration.xml file and
  * corresponding model-to-connector mappings in a WorkspaceBindings.def file.
+ *
+ * @since 8.0
  */
 public class TeiidView extends ViewPart implements IExecutionConfigurationListener {
     

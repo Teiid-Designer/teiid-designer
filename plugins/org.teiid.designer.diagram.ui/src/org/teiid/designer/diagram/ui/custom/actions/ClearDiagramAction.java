@@ -23,6 +23,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 /**
  * ClearTransformation
+ *
+ * @since 8.0
  */
 public class ClearDiagramAction extends DiagramAction {
 	private static final String THIS_CLASS = "ClearDiagramAction"; //$NON-NLS-1$

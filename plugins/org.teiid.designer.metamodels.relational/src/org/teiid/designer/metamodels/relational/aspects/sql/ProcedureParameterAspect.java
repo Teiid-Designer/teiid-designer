@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
 
 /**
  * ProcedureParameterAspect
+ *
+ * @since 8.0
  */
 public class ProcedureParameterAspect extends RelationalEntityAspect implements SqlProcedureParameterAspect {
     

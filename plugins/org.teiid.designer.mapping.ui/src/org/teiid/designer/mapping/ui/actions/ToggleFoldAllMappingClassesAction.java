@@ -21,6 +21,8 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 
 /**
  * ToggleFoldAllMappingClassesAction
+ *
+ * @since 8.0
  */
 public class ToggleFoldAllMappingClassesAction extends MappingAction {
 

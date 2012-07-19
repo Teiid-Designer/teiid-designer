@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.core.ModelType;
 
 /**
  * AmbiguousModelImportsRule
+ *
+ * @since 8.0
  */
 public class AmbiguousModelImportsRule implements ObjectValidationRule {
 

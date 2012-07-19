@@ -27,6 +27,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * DeleteAction
+ *
+ * @since 8.0
  */
 public class CutAction 
      extends TransformationAction

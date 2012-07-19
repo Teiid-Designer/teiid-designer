@@ -29,6 +29,8 @@ import org.teiid.designer.ui.wizards.ConvertToEnterpriseTypesWizard;
 
 /**
  * ModelStatisticsAction
+ *
+ * @since 8.0
  */
 public class ConvertToEnterpriseDatatypesAction extends ActionDelegate implements IWorkbenchWindowActionDelegate,
                                                                     IViewActionDelegate {

@@ -15,6 +15,8 @@ import org.teiid.designer.modelgenerator.salesforce.connection.SalesforceConnect
  * 
  * Contains the metadata about the Salesforce Objects.
  *
+ *
+ * @since 8.0
  */
 public interface DataModel {
 

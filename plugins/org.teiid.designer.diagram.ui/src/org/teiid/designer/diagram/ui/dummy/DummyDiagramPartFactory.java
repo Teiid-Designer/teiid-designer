@@ -12,6 +12,8 @@ import org.eclipse.gef.EditPartFactory;
 
 /**
  * DummyDiagramPartFactory
+ *
+ * @since 8.0
  */
 public class DummyDiagramPartFactory implements EditPartFactory {
     

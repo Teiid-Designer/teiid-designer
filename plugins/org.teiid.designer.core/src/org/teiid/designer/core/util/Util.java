@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.core.ModelAnnotation;
 
 /**
  * Util
+ *
+ * @since 8.0
  */
 public class Util {
 

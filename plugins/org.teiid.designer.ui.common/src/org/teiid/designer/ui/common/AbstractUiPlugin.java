@@ -40,6 +40,8 @@ import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 
 /**
  * The main plugin class to be used in the desktop.
+ *
+ * @since 8.0
  */
 public abstract class AbstractUiPlugin extends org.eclipse.ui.plugin.AbstractUIPlugin {
 

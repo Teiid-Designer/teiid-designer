@@ -56,6 +56,8 @@ import org.teiid.designer.metamodels.xsd.ui.XsdUiPlugin;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class XsdModelWizard extends Wizard implements
                                                     INewWizard {

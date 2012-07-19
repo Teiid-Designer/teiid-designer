@@ -29,6 +29,8 @@ import org.teiid.designer.metamodels.relational.View;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class ViewImpl extends TableImpl implements View {
     /**

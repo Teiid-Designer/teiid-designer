@@ -9,6 +9,9 @@ package org.teiid.designer.modelgenerator.wsdl.schema.extensions;
 
 import org.teiid.designer.schema.tools.model.jdbc.DataType;
 
+/**
+ * @since 8.0
+ */
 public class SoapDataTypeImpl implements DataType {
 
     private String name;

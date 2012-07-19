@@ -18,6 +18,8 @@ import org.eclipse.emf.common.notify.Notification;
  * dependent on modeler... so the modeler.ui plugin creates it's own implementation of this interface and
  * sets the helper in NotificationUtilities on plugin start-up.
  * 
+ *
+ * @since 8.0
  */
 public interface INotificationHelper {
 

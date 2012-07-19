@@ -36,6 +36,8 @@ import org.xml.sax.SAXException;
 
 /**
  * Utility methods used to query VDB manifest and VDB's
+ *
+ * @since 8.0
  */
 public class VdbUtil {
 

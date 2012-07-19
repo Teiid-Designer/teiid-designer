@@ -13,6 +13,8 @@ import org.teiid.designer.metamodels.function.FunctionPackage;
 
 /**
  * ScalarFunctionNameRule
+ *
+ * @since 8.0
  */
 public class FunctionEntityNameRule extends StringNameRule {
 

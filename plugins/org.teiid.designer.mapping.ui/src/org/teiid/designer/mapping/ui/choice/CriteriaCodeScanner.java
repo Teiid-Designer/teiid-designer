@@ -30,6 +30,8 @@ import org.teiid.query.ui.sqleditor.sql.SqlWordDetector;
 /**
  * The SQLCodeScanner is a RuleBaseScanner.This class finds SQL comments and keywords, as the user edits the document. It is
  * "programmed" with a sequence of rules that evaluates and returns the offset and the length of the last found token.
+ *
+ * @since 8.0
  */
 public class CriteriaCodeScanner extends RuleBasedScanner {
 

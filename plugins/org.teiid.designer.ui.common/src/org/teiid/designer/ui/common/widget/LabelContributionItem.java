@@ -15,6 +15,8 @@ import org.eclipse.swt.widgets.Control;
 
 /**
  * A label that can be added to a toolbar.
+ *
+ * @since 8.0
  */
 public class LabelContributionItem extends ControlContribution {
     

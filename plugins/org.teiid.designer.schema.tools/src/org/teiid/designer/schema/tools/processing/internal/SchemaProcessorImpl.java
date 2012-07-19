@@ -46,6 +46,9 @@ import org.teiid.designer.schema.tools.processing.SchemaProcessor;
 import org.teiid.designer.schema.tools.processing.SchemaUtil;
 
 
+/**
+ * @since 8.0
+ */
 public class SchemaProcessorImpl implements SchemaProcessor {
 
     private Map namespaces;

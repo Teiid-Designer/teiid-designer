@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.function.FunctionPlugin;
 
 /**
  * ColumnAspect
+ *
+ * @since 8.0
  */
 public class FunctionParameterAspect extends AbstractFunctionAspect implements UmlProperty {
     /**

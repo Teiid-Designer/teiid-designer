@@ -47,6 +47,8 @@ import org.teiid.designer.metamodels.core.extension.XPackage;
 
 /**
  * ModelBufferImpl
+ *
+ * @since 8.0
  */
 public class ModelBufferImpl implements ModelBuffer {
 

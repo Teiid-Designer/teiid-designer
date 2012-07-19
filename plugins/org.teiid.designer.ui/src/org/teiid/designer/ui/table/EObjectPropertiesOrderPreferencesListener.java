@@ -12,6 +12,8 @@ import java.util.List;
 /**
  * @author SDelap
  * Listens for then ModelTableColumnUtils has changed.
+ *
+ * @since 8.0
  */
 public interface EObjectPropertiesOrderPreferencesListener {
     public void propertiesChanged(List changedProperties);

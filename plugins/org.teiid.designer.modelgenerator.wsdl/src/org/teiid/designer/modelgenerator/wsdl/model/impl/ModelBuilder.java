@@ -58,6 +58,8 @@ import com.ibm.wsdl.ImportImpl;
  * consumption problems that were seen in the schema importer The usage model is as follows: String myWSDL = "c:\temp\my.wsdl";
  * ModelBuilder builder = new ModelBuilder(); builder.setWSDL(myWSDL); if(!builder.isWSDLParsed()) { WSDLException myEx =
  * builder.getWSDLException(); handleExceptionInSomeWay(myEx); } Model wsdlModel = builder.getModel();
+ *
+ * @since 8.0
  */
 public class ModelBuilder {
 

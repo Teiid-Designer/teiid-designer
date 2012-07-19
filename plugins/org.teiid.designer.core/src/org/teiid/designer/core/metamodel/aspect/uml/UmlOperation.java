@@ -15,6 +15,8 @@ import org.eclipse.emf.ecore.EObject;
  * UmlOperation - An operation is owned by a class and may be invoked in the context 
  * of objects that are instances of that class. It is a typed element and a multiplicity 
  * element.
+ *
+ * @since 8.0
  */
 public interface UmlOperation extends UmlDiagramAspect {
     

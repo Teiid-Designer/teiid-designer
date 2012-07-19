@@ -72,6 +72,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  * The <code>DeleteResourceAction</code> is used to close models before deletion. If the model is open in an editor, the editor is
  * closed. It delegates to Eclipse's delete resource action for the actual delete. Also it deletes EObjects by delegating to
  * {@link org.teiid.designer.ui.actions.DeleteAction}.
+ *
+ * @since 8.0
  */
 public class DeleteResourceAction extends AbstractAction implements UiConstants {
 	

@@ -9,6 +9,8 @@ package org.teiid.designer.core.search.runtime;
 
 /**
  * ResourceObjectRecord
+ *
+ * @since 8.0
  */
 public interface ResourceObjectRecord extends SearchRecord {
     

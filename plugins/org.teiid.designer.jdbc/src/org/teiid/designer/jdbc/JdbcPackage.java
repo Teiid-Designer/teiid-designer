@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see org.teiid.designer.jdbc.JdbcFactory
  * @generated
+ *
+ * @since 8.0
  */
 public interface JdbcPackage extends EPackage{
     /**

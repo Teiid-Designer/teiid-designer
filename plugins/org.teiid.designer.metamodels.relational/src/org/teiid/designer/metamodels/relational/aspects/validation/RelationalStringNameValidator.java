@@ -9,6 +9,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
  * This class provides the RelationlStringNameRule the ability to relax the valid characters allowed for relational names.
  * 
  *
+ *
+ * @since 8.0
  */
 public class RelationalStringNameValidator extends StringNameValidator {
 	

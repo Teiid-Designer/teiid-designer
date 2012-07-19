@@ -31,6 +31,9 @@ import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlImportXmlCon
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
+/**
+ * @since 8.0
+ */
 public class ColumnsInfoPanel {
 	
 	private Button addButton, deleteButton, upButton, downButton;

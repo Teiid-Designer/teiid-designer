@@ -42,6 +42,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * This page is used to capture the user preferences for Generation of XSD from Relational objects.
+ *
+ * @since 8.0
  */
 
 public class ConvertEnterpriseTypesPage extends WizardPage

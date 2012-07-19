@@ -14,6 +14,8 @@ import org.teiid.designer.core.ModelerCoreException;
 
 /**
  * AssociationProvider
+ *
+ * @since 8.0
  */
 public interface AssociationProvider {
     

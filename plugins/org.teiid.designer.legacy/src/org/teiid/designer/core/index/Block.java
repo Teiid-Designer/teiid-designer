@@ -18,6 +18,8 @@ import java.io.RandomAccessFile;
 /**
  * A block is a container that can hold information (a list of file names, a list of
  * words, ...), be saved on the disk and loaded in memory.
+ *
+ * @since 8.0
  */
 
 public abstract class Block {

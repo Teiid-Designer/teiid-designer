@@ -20,6 +20,8 @@ import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 
 /**
  * UmlPackageDiagramEditPart
+ *
+ * @since 8.0
  */
 public class CustomDiagramEditPart extends PackageDiagramEditPart {
 

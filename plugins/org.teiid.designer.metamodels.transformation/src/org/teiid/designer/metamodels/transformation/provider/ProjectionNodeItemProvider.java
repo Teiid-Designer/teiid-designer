@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.transformation.ProjectionNode;
  * begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class ProjectionNodeItemProvider extends OperationNodeItemProvider {
 

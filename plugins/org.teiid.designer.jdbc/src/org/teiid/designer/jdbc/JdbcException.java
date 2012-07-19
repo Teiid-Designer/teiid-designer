@@ -11,6 +11,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.teiid.designer.core.ModelerCoreException;
 
 
+/**
+ * @since 8.0
+ */
 public class JdbcException extends ModelerCoreException {
 
     /**

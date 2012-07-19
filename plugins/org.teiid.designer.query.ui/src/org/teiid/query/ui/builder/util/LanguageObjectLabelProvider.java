@@ -23,6 +23,8 @@ import org.teiid.query.ui.UiPlugin;
 
 /**
  * LanguageObjectLabelProvider
+ *
+ * @since 8.0
  */
 public class LanguageObjectLabelProvider extends LabelProvider implements UiConstants {
 

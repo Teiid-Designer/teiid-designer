@@ -38,6 +38,8 @@ import org.teiid.designer.jdbc.metadata.JdbcTable;
  * <li>are {@link JdbcSchema JdbcSchema} instances specify that {@link JdbcImportSettings#isCreateSchemasInModel() schemas} are to
  * be placed in the model</li> </li>
  * </ul>
+ *
+ * @since 8.0
  */
 public class JdbcModelStructure {
 

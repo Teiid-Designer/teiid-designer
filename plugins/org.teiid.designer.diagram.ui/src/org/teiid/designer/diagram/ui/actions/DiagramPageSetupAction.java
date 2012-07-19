@@ -16,6 +16,8 @@ import org.teiid.designer.diagram.ui.printing.DiagramPageSetupDialog;
 
 /**
  * DiagramPageSetupAction
+ *
+ * @since 8.0
  */
 public class DiagramPageSetupAction extends DiagramAction 
                                  implements DiagramUiConstants {

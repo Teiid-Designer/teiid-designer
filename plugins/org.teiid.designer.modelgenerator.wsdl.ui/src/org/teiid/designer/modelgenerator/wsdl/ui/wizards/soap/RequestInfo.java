@@ -19,6 +19,9 @@ import org.teiid.designer.modelgenerator.wsdl.model.Part;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 
 
+/**
+ * @since 8.0
+ */
 public class RequestInfo extends ProcedureInfo {
 
 	public RequestInfo(Operation operation, ProcedureGenerator generator) {

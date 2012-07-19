@@ -29,6 +29,8 @@ import org.teiid.designer.metamodels.core.ModelImport;
  * end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class ModelImportItemProvider extends ItemProviderAdapter
     implements IEditingDomainItemProvider, ITreeItemContentProvider, IItemLabelProvider,

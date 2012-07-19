@@ -26,6 +26,8 @@ import org.teiid.designer.metamodels.builder.util.MetaClassUriHelper;
 
 /**
  * RecordGenerator - creates Model or Entity Records from ResultSets
+ *
+ * @since 8.0
  */
 public class RecordGenerator {
 

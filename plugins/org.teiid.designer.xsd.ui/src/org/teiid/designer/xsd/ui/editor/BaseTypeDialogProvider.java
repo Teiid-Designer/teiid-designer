@@ -11,6 +11,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.ui.viewsupport.DatatypeSelectionDialog;
 
+/**
+ * @since 8.0
+ */
 public class BaseTypeDialogProvider extends TextDialogProvider {
     private static final String DIALOG_BASETYPE_TITLE  = "BaseTypeDialogProvider.dialog.basetype.title"; //$NON-NLS-1$
     private static final String DIALOG_BASETYPE_DESC   = "BaseTypeDialogProvider.dialog.basetype.desc"; //$NON-NLS-1$

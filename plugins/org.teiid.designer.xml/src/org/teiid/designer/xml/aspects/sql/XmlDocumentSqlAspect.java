@@ -32,6 +32,8 @@ import org.teiid.designer.metamodels.xml.XmlElement;
 
 /**
  * XmlDocumentSqlAspect
+ *
+ * @since 8.0
  */
 public class XmlDocumentSqlAspect extends AbstractXmlDocumentEntitySqlAspect implements SqlTableAspect {
 

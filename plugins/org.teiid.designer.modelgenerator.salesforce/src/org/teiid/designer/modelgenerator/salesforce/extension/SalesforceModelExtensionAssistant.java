@@ -21,6 +21,8 @@ import org.teiid.designer.modelgenerator.salesforce.SalesforceConstants.SF_Table
 
 /**
  * The <code>SalesforceModelExtensionAssistant</code> provides help when working with the Salesforce model extension properties.
+ *
+ * @since 8.0
  */
 public final class SalesforceModelExtensionAssistant extends EmfModelObjectExtensionAssistant {
 

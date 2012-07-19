@@ -19,6 +19,8 @@ import org.teiid.designer.diagram.ui.figure.DiagramPolylineConnection;
 
 /**
  * TransformationLinkEditPart
+ *
+ * @since 8.0
  */
 public class TransformationLinkEditPart extends NodeConnectionEditPart {
     /**

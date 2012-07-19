@@ -41,6 +41,8 @@ import org.teiid.designer.vdb.connections.VdbSourceConnection;
 /**
  * Implements the SourceHandler interface which provides the VDB Editor the ability to access DQP-related connection info.
  * 
+ *
+ * @since 8.0
  */
 public class VdbSourceConnectionHandler implements SourceHandler {
     static final String PREFIX = I18nUtil.getPropertyPrefix(VdbSourceConnectionHandler.class);

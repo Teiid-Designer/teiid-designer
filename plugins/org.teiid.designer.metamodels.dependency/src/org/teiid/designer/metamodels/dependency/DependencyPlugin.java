@@ -26,6 +26,8 @@ import org.teiid.core.util.PluginUtilImpl;
 
 /**
  * DependencyPlugin
+ *
+ * @since 8.0
  */
 public class DependencyPlugin extends Plugin {
 

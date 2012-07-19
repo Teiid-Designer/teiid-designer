@@ -28,6 +28,8 @@ import org.teiid.designer.metamodels.transformation.MappingClassSet;
  * <p>
  * This interface is not intended to be implemented by clients.
  * </p>
+ *
+ * @since 8.0
  */
 public interface ModelWorkspaceItem extends IAdaptable {
     

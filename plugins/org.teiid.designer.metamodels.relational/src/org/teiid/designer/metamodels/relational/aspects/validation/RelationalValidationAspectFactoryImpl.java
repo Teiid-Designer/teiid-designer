@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 
 /**
  * RelationalValidationAspectFactoryImpl
+ *
+ * @since 8.0
  */
 public class RelationalValidationAspectFactoryImpl implements MetamodelAspectFactory {
 

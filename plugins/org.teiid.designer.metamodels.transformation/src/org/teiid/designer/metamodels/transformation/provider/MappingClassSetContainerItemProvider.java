@@ -28,6 +28,8 @@ import org.teiid.designer.metamodels.transformation.TransformationPackage;
  * begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class MappingClassSetContainerItemProvider extends ItemProviderAdapter
     implements IEditingDomainItemProvider, ITreeItemContentProvider, IItemLabelProvider,

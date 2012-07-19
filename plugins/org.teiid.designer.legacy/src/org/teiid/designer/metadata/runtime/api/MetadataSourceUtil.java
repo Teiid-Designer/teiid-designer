@@ -12,6 +12,9 @@ import org.teiid.core.util.StringUtil;
 import org.teiid.designer.core.util.AssertionUtil;
 
 
+/**
+ * @since 8.0
+ */
 public class MetadataSourceUtil {
 
     public static String getFileContentAsString( String path,

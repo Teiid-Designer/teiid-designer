@@ -12,6 +12,8 @@ package org.teiid.designer.metadata.runtime.api;
 
 /**
  * The ElementID is the uniue identifier for an Element. 
+ *
+ * @since 8.0
  */
 public interface ElementID extends MetadataID {
 /**

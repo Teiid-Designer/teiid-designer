@@ -17,6 +17,8 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 
 /**
  * XsdAspectFactoryImpl
+ *
+ * @since 8.0
  */
 public class XsdImportAspectFactoryImpl implements MetamodelAspectFactory {
 

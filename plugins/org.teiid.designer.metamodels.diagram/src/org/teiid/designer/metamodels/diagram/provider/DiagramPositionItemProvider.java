@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.diagram.DiagramPosition;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class DiagramPositionItemProvider
     extends ItemProviderAdapter

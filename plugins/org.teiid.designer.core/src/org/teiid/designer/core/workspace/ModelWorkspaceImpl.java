@@ -36,6 +36,8 @@ import org.teiid.designer.core.refactor.ModelResourceCollectorVisitor;
 
 /**
  * ModelWorkspaceImpl
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     // ============================================================================================================================

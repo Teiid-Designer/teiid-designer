@@ -24,6 +24,8 @@ import org.teiid.designer.metamodels.core.extension.XPackage;
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class ExtensionFactoryImpl extends EFactoryImpl implements ExtensionFactory {
 

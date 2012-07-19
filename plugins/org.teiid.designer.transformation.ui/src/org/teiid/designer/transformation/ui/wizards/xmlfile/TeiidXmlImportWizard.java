@@ -21,6 +21,9 @@ import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 
 
+/**
+ * @since 8.0
+ */
 public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
     
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidXmlImportWizard.class);

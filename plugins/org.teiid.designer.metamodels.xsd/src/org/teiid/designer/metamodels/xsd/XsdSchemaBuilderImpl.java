@@ -63,6 +63,8 @@ import org.teiid.designer.metamodels.relational.View;
 
 /**
  * Build XSD models from a set of Relational Entities.
+ *
+ * @since 8.0
  */
 public class XsdSchemaBuilderImpl {
     // Constants for creating entity names

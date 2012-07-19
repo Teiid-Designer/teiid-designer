@@ -30,6 +30,8 @@ import org.teiid.designer.core.types.DatatypeManager;
 
 /**
  * ValidationContext contains state information stored durring validation process.
+ *
+ * @since 8.0
  */
 public class ValidationContext {
 

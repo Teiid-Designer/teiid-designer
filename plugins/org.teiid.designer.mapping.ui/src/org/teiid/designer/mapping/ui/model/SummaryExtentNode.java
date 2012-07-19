@@ -31,6 +31,8 @@ import org.teiid.designer.metamodels.transformation.TreeMappingRoot;
 
 /**
  * SummaryExtentModelNode
+ *
+ * @since 8.0
  */
 public class SummaryExtentNode extends MappingExtentNode implements UiConstants {
 

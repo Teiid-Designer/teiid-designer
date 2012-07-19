@@ -25,6 +25,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * CopyAction
+ *
+ * @since 8.0
  */
 public class CopyAction 
      extends MappingAction

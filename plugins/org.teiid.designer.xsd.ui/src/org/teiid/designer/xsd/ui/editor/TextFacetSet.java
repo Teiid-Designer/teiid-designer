@@ -22,6 +22,9 @@ import org.teiid.designer.ui.forms.ComponentSetMonitor;
 import org.teiid.designer.ui.forms.DialogProvider;
 import org.teiid.designer.ui.forms.FormUtil;
 
+/**
+ * @since 8.0
+ */
 public class TextFacetSet extends AbstractFacetSet {
 
     private final int myStyle;

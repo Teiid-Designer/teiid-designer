@@ -18,6 +18,8 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
  * Simple dialog to display parsed data column values from selected flat file data row
+ *
+ * @since 8.0
  */
 public class ParsedDataRowDialog extends TitleAreaDialog {
 	private final String TITLE = UiConstants.Util.getString("ParsedDataRowDialog.title"); //$NON-NLS-1$

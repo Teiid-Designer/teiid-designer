@@ -30,6 +30,8 @@ import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 
 /**
  * TransformationFigureFactory
+ *
+ * @since 8.0
  */
 public class TransformationDiagramFigureFactory extends AbstractDiagramFigureFactory implements UiConstants {
     private static final int TRANSFORM = 1;

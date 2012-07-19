@@ -22,6 +22,8 @@ import org.teiid.designer.relational.RelationalPlugin;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class RelationalUniqueConstraint extends RelationalReference {
     private Collection<RelationalColumn> columns;

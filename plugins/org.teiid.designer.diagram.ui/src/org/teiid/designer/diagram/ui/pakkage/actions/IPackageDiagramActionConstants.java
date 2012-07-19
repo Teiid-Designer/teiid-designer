@@ -11,6 +11,8 @@ import org.teiid.designer.ui.actions.IModelerActionConstants;
 
 /**
  * IPackageDiagramActionConstants
+ *
+ * @since 8.0
  */
 public interface IPackageDiagramActionConstants {
 

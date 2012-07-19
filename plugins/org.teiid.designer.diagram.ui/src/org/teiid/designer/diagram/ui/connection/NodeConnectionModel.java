@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.diagram.DiagramLink;
 
 /**
  * NodeConnectionModel
+ *
+ * @since 8.0
  */
 public interface NodeConnectionModel {
 

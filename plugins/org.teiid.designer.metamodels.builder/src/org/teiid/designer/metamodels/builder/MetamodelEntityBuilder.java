@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /** 
  * MetamodelEntityBuilder interface
+ *
+ * @since 8.0
  */
 public interface MetamodelEntityBuilder {
 	

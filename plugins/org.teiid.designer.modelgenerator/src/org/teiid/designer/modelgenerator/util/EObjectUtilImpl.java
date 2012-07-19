@@ -15,6 +15,8 @@ import org.teiid.designer.core.ModelerCoreException;
 
 /**
  * EObjectUtilImpl
+ *
+ * @since 8.0
  */
 public class EObjectUtilImpl implements EObjectUtil {
 

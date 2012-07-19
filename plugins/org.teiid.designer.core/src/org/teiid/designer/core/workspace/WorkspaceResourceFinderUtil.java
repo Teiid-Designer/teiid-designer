@@ -42,6 +42,8 @@ import org.teiid.designer.core.xmi.XMIHeaderReader;
 
 /**
  * WorkspaceResourceFinder
+ *
+ * @since 8.0
  */
 public class WorkspaceResourceFinderUtil {
 

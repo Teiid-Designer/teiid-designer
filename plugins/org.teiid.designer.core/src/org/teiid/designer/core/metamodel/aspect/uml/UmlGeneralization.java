@@ -14,6 +14,8 @@ import org.eclipse.emf.ecore.EObject;
  * and a more specific classifier. Eachinstance of the specific classifier is also an instance of the 
  * general classifier. Thus, the specific classifier indirectly has features of the more general 
  * classifier.
+ *
+ * @since 8.0
  */
 public interface UmlGeneralization extends UmlRelationship {
     

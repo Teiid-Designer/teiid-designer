@@ -30,6 +30,9 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.vdb.VdbUtil;
 
 
+/**
+ * @since 8.0
+ */
 public class GenerateWarAction extends Action implements ISelectionListener,
 		Comparable, ISelectionAction {
 	protected static final String I18N_PREFIX = I18nUtil

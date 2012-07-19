@@ -10,6 +10,9 @@ package org.teiid.designer.metadata.runtime.impl;
 
 import org.teiid.designer.core.index.IndexConstants;
 
+/**
+ * @since 8.0
+ */
 public class MetadataRecordDelegate {
 
     private String uuid;

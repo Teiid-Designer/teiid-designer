@@ -50,6 +50,8 @@ import org.teiid.designer.metamodels.xml.XmlValueHolder;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlElementImpl extends XmlBaseElementImpl implements XmlElement {
     /**

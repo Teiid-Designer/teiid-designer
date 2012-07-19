@@ -14,6 +14,8 @@ package org.teiid.designer.metamodels.wsdl;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getExtensibleAttributesDocumented()
  * @model interface="true" abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface ExtensibleAttributesDocumented extends Documented, AttributeOwner {
 

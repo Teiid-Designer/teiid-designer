@@ -14,6 +14,8 @@ import org.teiid.designer.ui.event.ModelResourceEvent;
 
 /**
  * Interface to expose methods for handling model object change notifications
+ *
+ * @since 8.0
  */
 public interface IModelNotificationHandler {
     public static final boolean NOT_SIGNIFICANT = false;

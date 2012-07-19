@@ -27,6 +27,9 @@ import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 
 
+/**
+ * @since 8.0
+ */
 public class TeiidXmlImportOptionsPage extends AbstractWizardPage implements
 		UiConstants {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidXmlImportOptionsPage.class);

@@ -29,6 +29,8 @@ import org.teiid.designer.core.util.ModelVisitorProcessor;
 
 /**
  * MappingProducer
+ *
+ * @since 8.0
  */
 public class MappingProducer {
 

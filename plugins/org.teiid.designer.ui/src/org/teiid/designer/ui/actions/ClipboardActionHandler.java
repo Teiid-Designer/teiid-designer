@@ -9,6 +9,9 @@ package org.teiid.designer.ui.actions;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 
+/**
+ * @since 8.0
+ */
 public interface ClipboardActionHandler {
     public void cut();
     public void copy();

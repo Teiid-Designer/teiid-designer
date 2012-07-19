@@ -22,6 +22,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 
+/**
+ * @since 8.0
+ */
 public class XmlParser {
 	private ErrorHandler errorHandler;
 	private ContentHandler contentHandler;

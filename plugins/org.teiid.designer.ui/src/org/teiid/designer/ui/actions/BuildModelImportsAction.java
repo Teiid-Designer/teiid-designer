@@ -35,6 +35,9 @@ import org.teiid.designer.ui.event.ModelResourceEvent;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class BuildModelImportsAction extends Action implements ISelectionListener, Comparable, ISelectionAction {
     private List selectedModels;
 

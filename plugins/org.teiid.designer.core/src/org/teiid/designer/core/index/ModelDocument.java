@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 /**
  * ResourceDocument
+ *
+ * @since 8.0
  */
 public interface ModelDocument extends ResourceDocument {
 

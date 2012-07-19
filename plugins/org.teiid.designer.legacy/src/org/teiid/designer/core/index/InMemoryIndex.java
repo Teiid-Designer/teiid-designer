@@ -20,6 +20,8 @@ import java.util.List;
 
 /**
  * This index stores the document names in an <code>ArrayList</code>, and the words in an <code>HashtableOfObjects</code>.
+ *
+ * @since 8.0
  */
 
 public class InMemoryIndex {

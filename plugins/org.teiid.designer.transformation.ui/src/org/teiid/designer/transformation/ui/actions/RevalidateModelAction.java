@@ -31,6 +31,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * RevalidateModelAction
+ *
+ * @since 8.0
  */
 public class RevalidateModelAction extends ActionDelegate implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
 

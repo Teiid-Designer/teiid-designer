@@ -9,6 +9,8 @@ package org.teiid.designer.jdbc.relational.impl;
 
 /**
  * MatchValueProvider
+ *
+ * @since 8.0
  */
 public interface MatchValueProvider {
     public String getMatchValue( final Object obj );

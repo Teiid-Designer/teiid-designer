@@ -42,6 +42,8 @@ import org.teiid.designer.metamodels.relational.Table;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class SchemaImpl extends RelationalEntityImpl implements Schema {
     /**

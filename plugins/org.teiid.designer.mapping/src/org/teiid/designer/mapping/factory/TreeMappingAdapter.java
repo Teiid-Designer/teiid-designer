@@ -29,6 +29,8 @@ import org.teiid.designer.metamodels.transformation.TreeMappingRoot;
 
 /**
  * The <code>TreeMappingAdapter</code> class 
+ *
+ * @since 8.0
  */
 public class TreeMappingAdapter implements PluginConstants {
     //private PerformanceTracker pTracker = new PerformanceTracker(getClass().getName());

@@ -25,6 +25,8 @@ import org.eclipse.swt.widgets.TableItem;
  * to edit. It works by intercepting the CellModifier and wrapping it with a DoubleClickCellModifier, which basically disables
  * cell editing unless a double-click occurs. Then this class hooks up a double-click mouse listener to the table and directly
  * calls editElement on the TableViewer.
+ *
+ * @since 8.0
  */
 public class DoubleClickTableViewer extends TableViewer {
 

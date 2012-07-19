@@ -31,6 +31,8 @@ import org.teiid.designer.compare.DifferenceReport;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class DifferenceReportItemProvider
     extends ItemProviderAdapter

@@ -14,6 +14,8 @@ package org.teiid.designer.metamodels.transformation;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getSqlTransformationMappingRoot()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface SqlTransformationMappingRoot extends TransformationMappingRoot {
 

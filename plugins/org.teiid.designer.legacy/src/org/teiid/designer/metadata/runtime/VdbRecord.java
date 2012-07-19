@@ -12,6 +12,8 @@ import java.util.List;
 
 /**
  * ModelRecord
+ *
+ * @since 8.0
  */
 public interface VdbRecord extends MetadataRecord {
     

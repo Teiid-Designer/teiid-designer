@@ -60,6 +60,9 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class CreateMaterializedViewWizard extends AbstractWizard
     implements INewWizard, InternalUiConstants.Widgets, CoreStringUtil.Constants, UiConstants {
 

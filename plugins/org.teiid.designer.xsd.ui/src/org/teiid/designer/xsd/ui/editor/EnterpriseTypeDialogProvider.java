@@ -15,6 +15,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.teiid.designer.core.types.DatatypeConstants;
 
+/**
+ * @since 8.0
+ */
 public class EnterpriseTypeDialogProvider extends TextDialogProvider {
 
     private static final String DIALOG_MSG = GUIFacetHelper.getString("EnterpriseTypeDialogProvider.dialog.desc"); //$NON-NLS-1$

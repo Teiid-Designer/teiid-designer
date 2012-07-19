@@ -22,6 +22,8 @@ import org.teiid.designer.core.ModelInitializer;
 
 /**
  * AbstractXsdInitializer
+ *
+ * @since 8.0
  */
 public abstract class AbstractXsdInitializer implements ModelInitializer {
 

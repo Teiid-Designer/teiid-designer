@@ -25,6 +25,8 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
  * property; READ_ONLY_RESOURCE, which announces to the user that the model file is read-only; and
  * NO_MODEL_EDITOR, which announces that the property cannot be modified unless the model is opened
  * in a Model Editor, and offers the option to open the model.
+ *
+ * @since 8.0
  */
 public class ReadOnlyPropertyDescriptor implements IPropertyDescriptor {
 

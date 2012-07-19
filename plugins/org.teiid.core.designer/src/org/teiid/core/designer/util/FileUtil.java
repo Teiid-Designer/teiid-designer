@@ -12,6 +12,9 @@ import java.io.File;
 import org.teiid.core.util.CoreStringUtil;
 import org.teiid.core.util.FileUtils.Constants;
 
+/**
+ * @since 8.0
+ */
 public final class FileUtil {
 
     /**
@@ -19,6 +22,9 @@ public final class FileUtil {
      * 
      * @since 6.0.0
      */
+/**
+ * @since 8.0
+ */
     public interface Extensions {
 
         /**

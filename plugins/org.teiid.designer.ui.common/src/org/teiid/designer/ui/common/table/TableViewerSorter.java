@@ -20,6 +20,8 @@ import org.teiid.designer.ui.common.UiPlugin;
 /**
  * TableViewerSorter is a ViewerSorter for TableViewers. It automatically hooks up the TableViewer's TableColumn for selection and
  * decorates the columns with the appropriate icons.
+ *
+ * @since 8.0
  */
 public class TableViewerSorter extends ViewerSorter implements UiConstants.Images {
 

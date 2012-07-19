@@ -9,6 +9,8 @@ package org.teiid.designer.core;
 
 /**
  * ExtensionDescriptor
+ *
+ * @since 8.0
  */
 public interface ExtensionDescriptor {
     

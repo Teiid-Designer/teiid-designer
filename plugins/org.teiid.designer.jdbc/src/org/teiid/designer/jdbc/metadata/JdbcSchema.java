@@ -9,6 +9,8 @@ package org.teiid.designer.jdbc.metadata;
 
 /**
  * JdbcSchema
+ *
+ * @since 8.0
  */
 public interface JdbcSchema extends JdbcNode {
 

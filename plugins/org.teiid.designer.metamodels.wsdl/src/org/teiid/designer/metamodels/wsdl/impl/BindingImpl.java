@@ -53,6 +53,8 @@ import org.teiid.designer.metamodels.wsdl.soap.SoapPackage;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class BindingImpl extends EObjectImpl implements Binding {
 

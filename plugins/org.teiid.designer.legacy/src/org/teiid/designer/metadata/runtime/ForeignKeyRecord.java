@@ -10,6 +10,8 @@ package org.teiid.designer.metadata.runtime;
 
 /**
  * ForeignKeyRecord
+ *
+ * @since 8.0
  */
 public interface ForeignKeyRecord extends ColumnSetRecord {
     

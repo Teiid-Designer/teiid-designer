@@ -19,6 +19,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
  * The <code>CompositeSelectionProvider</code> class contains a collection of <code>ISelectionProvider</code>s.
  * All selections generated from the providers in this collection are propagated out to the registered
  * <code>ISelectionChangedListener</code>s using this provider as the event source.
+ *
+ * @since 8.0
  */
 public class CompositeSelectionProvider extends SelectionProvider
                                         implements ISelectionChangedListener {

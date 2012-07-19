@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -36,7 +37,7 @@ import org.teiid.designer.xml.aspects.sql.MappingContext;
 
 
 /**
- * @
+ * @since 8.0
  */
 public class TreeMappingRootSqlAspect extends TransformationMappingRootSqlAspect {
 

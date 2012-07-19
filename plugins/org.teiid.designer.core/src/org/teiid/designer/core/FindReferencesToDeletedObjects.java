@@ -23,6 +23,8 @@ import org.teiid.designer.core.util.ModelVisitor;
  * 
  * @see org.teiid.designer.core.FindRelatedObjectsToDeleted
  * @see org.teiid.designer.core.ModelEditor#delete(EObject)
+ *
+ * @since 8.0
  */
 public class FindReferencesToDeletedObjects implements ModelVisitor {
 

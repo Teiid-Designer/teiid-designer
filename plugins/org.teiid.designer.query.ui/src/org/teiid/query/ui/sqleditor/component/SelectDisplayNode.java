@@ -11,6 +11,8 @@ import org.teiid.query.sql.lang.Select;
 
 /**
  * The <code>SelectDisplayNode</code> class is used to represent a Query's SELECT clause.
+ *
+ * @since 8.0
  */
 public class SelectDisplayNode extends DisplayNode {
 

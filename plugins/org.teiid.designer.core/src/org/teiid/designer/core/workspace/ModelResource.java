@@ -34,6 +34,8 @@ import org.teiid.designer.metamodels.core.ModelType;
  * <p>
  * This interface is not intended to be implemented by clients.
  * </p>
+ *
+ * @since 8.0
  */
 public interface ModelResource extends ModelWorkspaceItem, Openable {
 

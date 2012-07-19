@@ -14,6 +14,9 @@ import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.SetQuery;
 
+/**
+ * @since 8.0
+ */
 public class SetQueryUtil {
 
     public static int setQueryAtIndex(SetQuery query, int index, QueryCommand newQuery) {

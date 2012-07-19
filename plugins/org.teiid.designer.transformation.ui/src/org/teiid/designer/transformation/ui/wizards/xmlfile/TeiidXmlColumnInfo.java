@@ -19,6 +19,9 @@ import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.query.sql.symbol.ElementSymbol;
 
 
+/**
+ * @since 8.0
+ */
 public class TeiidXmlColumnInfo {
 	public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
 	public static final String INTEGER_DATATYPE = "integer"; //$NON-NLS-1$

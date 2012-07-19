@@ -23,6 +23,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.xml.XmlDocumentPackage#getXmlElement()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface XmlElement extends XmlBaseElement, XmlCommentHolder, ProcessingInstructionHolder, XmlEntityHolder, XmlValueHolder {
     /**

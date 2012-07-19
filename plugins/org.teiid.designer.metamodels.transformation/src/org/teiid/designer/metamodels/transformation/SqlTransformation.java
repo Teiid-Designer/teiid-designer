@@ -33,6 +33,8 @@ import org.eclipse.emf.mapping.MappingHelper;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getSqlTransformation()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface SqlTransformation extends MappingHelper {
 

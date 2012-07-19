@@ -28,6 +28,8 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public abstract class RelationalEntityImpl extends EObjectImpl implements RelationalEntity {
     /**

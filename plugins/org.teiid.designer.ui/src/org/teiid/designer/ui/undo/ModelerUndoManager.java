@@ -31,6 +31,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * ModelerUndoManager is the manager of all UndoableEdits that are generated from ModelerCore.
+ *
+ * @since 8.0
  */
 public class ModelerUndoManager implements UndoableListener, IUndoManager {
 

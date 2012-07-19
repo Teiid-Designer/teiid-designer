@@ -13,6 +13,8 @@ import org.eclipse.draw2d.geometry.Point;
 
 /**
  * MmColumnLayout
+ *
+ * @since 8.0
  */
 public class ColumnLayout {
     public static final int ERROR_1 = -1;

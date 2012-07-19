@@ -40,6 +40,8 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 
 /**
  * TransformationPartFactory
+ *
+ * @since 8.0
  */
 public class TransformationDiagramPartFactory extends AbstractDiagramEditPartFactory implements UiConstants {
     private DiagramFigureFactory figureFactory;

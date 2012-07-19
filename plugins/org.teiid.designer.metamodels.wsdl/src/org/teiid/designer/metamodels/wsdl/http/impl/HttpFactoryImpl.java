@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.wsdl.http.HttpPackage;
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class HttpFactoryImpl extends EFactoryImpl implements HttpFactory {
 

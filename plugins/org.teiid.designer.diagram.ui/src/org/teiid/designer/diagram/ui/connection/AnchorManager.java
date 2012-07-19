@@ -12,6 +12,8 @@ import org.eclipse.draw2d.ConnectionAnchor;
 
 /**
  * AnchorManager
+ *
+ * @since 8.0
  */
 public interface AnchorManager {
     public static final int NORTH = 0;

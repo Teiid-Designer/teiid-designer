@@ -24,6 +24,8 @@ import org.teiid.designer.ui.util.ModelObjectTreeViewerNotificationHandler;
 
 /**
  * XsdSemanticsNotificationHandler is the notification handler for the semantic editor tree.
+ *
+ * @since 8.0
  */
 public class XsdSemanticsNotificationHandler extends ModelObjectTreeViewerNotificationHandler {
 

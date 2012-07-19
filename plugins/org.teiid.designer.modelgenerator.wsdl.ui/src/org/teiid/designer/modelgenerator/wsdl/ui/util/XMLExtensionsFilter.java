@@ -16,6 +16,9 @@ import org.eclipse.ui.views.navigator.ResourcePatternFilter;
 // At some time these should be moved to a common library, but it's not worth it
 // for this tiny amount of code.
 
+/**
+ * @since 8.0
+ */
 public class XMLExtensionsFilter extends ViewerFilter {
 
     private ResourcePatternFilter filter;

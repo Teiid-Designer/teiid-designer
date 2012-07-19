@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * ColorPaletteManager
+ *
+ * @since 8.0
  */
 public interface ColorPaletteManager {
 

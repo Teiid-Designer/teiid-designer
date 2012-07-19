@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * A converter to normalize EObject URI instances of the form resourceURI#fragment. 
+ *
+ * @since 8.0
  */
 public interface EObjectHrefConverter {
     

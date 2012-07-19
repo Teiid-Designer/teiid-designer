@@ -7,6 +7,9 @@ import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.metamodels.relational.RelationalFactory;
 
 
+/**
+ * @since 8.0
+ */
 public class BaseTraversalContext {
 	
 	protected RelationalFactory factory = org.teiid.designer.metamodels.relational.RelationalPackage.eINSTANCE

@@ -18,6 +18,8 @@ import org.eclipse.emf.mapping.MappingFactory;
 
 /**
  * EcoreEStringToStringMapEntryMatcher
+ *
+ * @since 8.0
  */
 public class EcoreEStringToStringMapEntryMatcher extends AbstractEObjectMatcher {
 

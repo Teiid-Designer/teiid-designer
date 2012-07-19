@@ -27,6 +27,9 @@ import org.teiid.designer.metamodels.relational.RelationalEntity;
 import org.teiid.designer.modelgenerator.xml.modelextension.XMLRequestResponseExtensionManager;
 
 
+/**
+ * @since 8.0
+ */
 public abstract class XMLRequestResponseExtensionManagerImpl extends BaseXMLRelationalExtensionManagerImpl
     implements XMLRequestResponseExtensionManager {
 

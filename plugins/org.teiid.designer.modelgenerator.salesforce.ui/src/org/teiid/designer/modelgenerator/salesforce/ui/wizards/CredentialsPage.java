@@ -46,6 +46,9 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 
+/**
+ * @since 8.0
+ */
 public class CredentialsPage extends AbstractWizardPage
     implements Listener, IProfileChangedListener, ModelGeneratorSalesforceUiConstants, ModelGeneratorSalesforceUiConstants.Images,
     ModelGeneratorSalesforceUiConstants.HelpContexts {

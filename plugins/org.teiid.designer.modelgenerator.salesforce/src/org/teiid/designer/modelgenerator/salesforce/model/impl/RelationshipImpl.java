@@ -9,6 +9,9 @@ package org.teiid.designer.modelgenerator.salesforce.model.impl;
 
 import org.teiid.designer.modelgenerator.salesforce.model.Relationship;
 
+/**
+ * @since 8.0
+ */
 public class RelationshipImpl implements Relationship {
 
     private boolean cascadeDelete;

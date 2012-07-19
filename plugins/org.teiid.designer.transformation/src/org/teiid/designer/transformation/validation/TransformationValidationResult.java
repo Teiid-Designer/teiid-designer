@@ -12,6 +12,8 @@ import java.util.List;
 
 /**
  * TransformationValidationResult.  Result object returned when entire transformation is validated.
+ *
+ * @since 8.0
  */
 public class TransformationValidationResult {
     private List statusList = null;

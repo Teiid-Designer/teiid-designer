@@ -11,6 +11,8 @@ import org.teiid.designer.core.container.Container;
 
 /**
  * MTK implementation of a ResourceSet
+ *
+ * @since 8.0
  */
 public interface EmfResourceSet {
        

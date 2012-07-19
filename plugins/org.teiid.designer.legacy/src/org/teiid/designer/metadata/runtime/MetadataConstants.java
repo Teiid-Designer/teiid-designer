@@ -14,6 +14,8 @@ import org.teiid.core.util.StringUtil;
  * MetadataConstants are all the constant values used to identify all the valid values for a multi-value attribute.
  * All assigned short values start with 1.  Therefore, when the get...TypeName(type) method is called, the
  * method needs to subtract 1 from the argument.
+ *
+ * @since 8.0
  */
 public final class MetadataConstants {
     

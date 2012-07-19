@@ -31,6 +31,8 @@ import org.teiid.designer.metamodels.webservice.WebServicePackage;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class SampleFileImpl extends EObjectImpl implements SampleFile {
 

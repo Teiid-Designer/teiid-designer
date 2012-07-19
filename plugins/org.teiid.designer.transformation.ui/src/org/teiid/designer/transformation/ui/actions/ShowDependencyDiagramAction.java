@@ -37,6 +37,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * ShowDependencyDiagramAction
+ *
+ * @since 8.0
  */
 public class ShowDependencyDiagramAction extends TransformationAction implements UiConstants{
     

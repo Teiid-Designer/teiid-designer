@@ -28,6 +28,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.relational.RelationalPackage#getCatalog()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Catalog extends RelationalEntity{
     /**

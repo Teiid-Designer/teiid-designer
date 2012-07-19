@@ -27,6 +27,8 @@ import org.teiid.core.util.PluginUtilImpl;
 
 /**
  * The main plugin class to be used in the desktop.
+ *
+ * @since 8.0
  */
 public class DqpPlugin extends Plugin {
 

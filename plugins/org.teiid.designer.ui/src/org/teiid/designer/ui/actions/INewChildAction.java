@@ -13,6 +13,8 @@ import org.eclipse.jface.action.IAction;
 
 /**
  * INewChildAction is an interface for extensions of the New Child Action extension point.
+ *
+ * @since 8.0
  */
 public interface INewChildAction extends IAction {
 

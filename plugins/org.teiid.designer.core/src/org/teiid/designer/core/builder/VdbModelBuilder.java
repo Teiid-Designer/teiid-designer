@@ -53,6 +53,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
  * 
  * Also, a synchronizing flag is accessible via start() and stop() methods so a VDB can notify the builder that indexed or validated resources should
  * be cached so any attempt to re-index or re-validate will be ignored. This can be a performance hog if not enabled in the VDB's synchronize ALL process.
+ *
+ * @since 8.0
  */
 @SuppressWarnings("javadoc")
 public class VdbModelBuilder {

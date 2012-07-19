@@ -30,6 +30,8 @@ import org.teiid.query.sql.symbol.SingleElementSymbol;
  * new) (2) SQL Symbol
  * 
  * @author Mark Drilling
+ *
+ * @since 8.0
  */
 public class Binding {
 

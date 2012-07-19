@@ -38,6 +38,9 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 import org.teiid.designer.xsd.ui.ModelerXsdUiPlugin;
 
 
+/**
+ * @since 8.0
+ */
 public class CreateVirtualModelFromSchemaWizard extends AbstractWizard {
     public static boolean HEADLESS = false; // Flag to set Wizard to run in headless mode for testing
 

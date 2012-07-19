@@ -11,6 +11,9 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.favorites.actions.AddToMetadataFavoritesAction;
 
 
+/**
+ * @since 8.0
+ */
 public class DesignerPermanentActionContributor implements IModelObjectActionContributor {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

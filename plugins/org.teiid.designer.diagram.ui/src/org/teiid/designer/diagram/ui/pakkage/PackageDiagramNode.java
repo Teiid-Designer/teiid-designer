@@ -22,6 +22,8 @@ import org.teiid.designer.diagram.ui.model.LabelModelNode;
 
 /**
  * PackageDiagramNode
+ *
+ * @since 8.0
  */
 public class PackageDiagramNode extends AbstractLocalDiagramModelNode {
 

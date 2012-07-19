@@ -20,6 +20,8 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
  * A SimpleFacet is a linkedComponentSet that handles a label and a single control.
  * 
  * @author PForhan
+ *
+ * @since 8.0
  */
 public abstract class SimpleComponentSet implements LinkedComponentSet {
     //

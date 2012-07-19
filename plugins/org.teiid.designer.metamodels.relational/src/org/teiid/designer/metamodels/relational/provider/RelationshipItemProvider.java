@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.relational.Relationship;
  * --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class RelationshipItemProvider extends RelationalEntityItemProvider {
     /**

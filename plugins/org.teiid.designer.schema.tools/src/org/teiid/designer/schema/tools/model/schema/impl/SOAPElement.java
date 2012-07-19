@@ -13,6 +13,9 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.teiid.designer.schema.tools.model.schema.ISchemaModelCopyTraversalContext;
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 
+/**
+ * @since 8.0
+ */
 public class SOAPElement extends ElementImpl {
 
     public SOAPElement( XSDElementDeclaration elem,

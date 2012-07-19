@@ -36,6 +36,8 @@ import org.teiid.designer.xml.PluginConstants;
 
 /**
  * XmlFragmentMapper
+ *
+ * @since 8.0
  */
 public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstants {
     

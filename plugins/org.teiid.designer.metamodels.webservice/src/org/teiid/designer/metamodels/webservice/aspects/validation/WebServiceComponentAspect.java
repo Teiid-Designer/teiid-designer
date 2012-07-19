@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.webservice.aspects.validation.rules.WebServ
 
 /** 
  * WebServiceComponentAspect
+ *
+ * @since 8.0
  */
 public abstract class WebServiceComponentAspect extends AbstractValidationAspect {
 

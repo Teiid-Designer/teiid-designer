@@ -34,6 +34,8 @@ import org.teiid.designer.metamodels.webservice.WebServicePackage;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public abstract class MessageImpl extends WebServiceComponentImpl implements Message {
 

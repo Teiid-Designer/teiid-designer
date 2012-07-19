@@ -18,6 +18,8 @@ import org.teiid.designer.relational.RelationalPlugin;
 
 /**
  * Handles basic datatype lookup for Teiid-supported Runtime types
+ *
+ * @since 8.0
  */
 public class DatatypeProcessor {
     

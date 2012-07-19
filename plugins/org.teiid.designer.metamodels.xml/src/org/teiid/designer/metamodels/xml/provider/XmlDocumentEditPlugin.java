@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.xml.XmlDocumentPlugin;
  * This is the central singleton for the XmlDocument edit plugin. <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public final class XmlDocumentEditPlugin extends EMFPlugin {
     /**

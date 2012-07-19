@@ -14,6 +14,9 @@ import org.teiid.designer.metamodels.core.extension.XClass;
 import org.teiid.designer.modelgenerator.xml.modelextension.impl.XMLRequestResponseExtensionManagerImpl;
 
 
+/**
+ * @since 8.0
+ */
 public class XMLHTTPExtensionManager extends XMLRequestResponseExtensionManagerImpl {
 
     public XMLHTTPExtensionManager() {

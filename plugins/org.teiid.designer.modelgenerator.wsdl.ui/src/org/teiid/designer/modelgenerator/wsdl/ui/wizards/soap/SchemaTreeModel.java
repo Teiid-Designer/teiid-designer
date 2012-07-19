@@ -22,6 +22,9 @@ import org.eclipse.xsd.impl.XSDParticleImpl;
 import org.teiid.designer.modelgenerator.wsdl.model.Part;
 
 
+/**
+ * @since 8.0
+ */
 public class SchemaTreeModel {
 
 	Collection<SchemaNode> nodeList = new ArrayList<SchemaNode>();
@@ -127,6 +130,9 @@ public class SchemaTreeModel {
 		return commonRoot.toString();
 	}
 	
+/**
+ * @since 8.0
+ */
     public class SchemaNode {
 		protected Object element;
 		protected SchemaNode parent;

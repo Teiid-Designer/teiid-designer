@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.transformation.TransformationPlugin;
  * This is the central singleton for the Transformation edit plugin. <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public final class TransformationEditPlugin extends EMFPlugin {
 

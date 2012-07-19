@@ -45,6 +45,8 @@ import org.teiid.query.sql.symbol.ElementSymbol;
 
 /**
  * SqlTransformationMappingRootSqlAspect
+ *
+ * @since 8.0
  */
 public class SqlTransformationMappingRootSqlAspect extends TransformationMappingRootSqlAspect {
 

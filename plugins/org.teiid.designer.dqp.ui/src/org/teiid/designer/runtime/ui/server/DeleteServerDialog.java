@@ -27,6 +27,8 @@ import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
 /**
  * The <code>DeleteServerDialog</code> class provides a UI for deleting a {@link Server server}.
+ *
+ * @since 8.0
  */
 public final class DeleteServerDialog extends MessageDialog {
 

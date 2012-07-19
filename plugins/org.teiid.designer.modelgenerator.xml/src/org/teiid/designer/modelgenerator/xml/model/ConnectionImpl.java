@@ -29,6 +29,9 @@ import org.teiid.designer.modelgenerator.xml.wizards.StateManager;
 import org.teiid.designer.schema.tools.processing.RelationshipProcessor;
 
 
+/**
+ * @since 8.0
+ */
 public class ConnectionImpl implements Connection {
 
     UserSettings userSettings;

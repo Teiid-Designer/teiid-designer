@@ -24,6 +24,8 @@ import org.teiid.designer.ui.views.DescriptionView;
  * supported in Views.
  * 
  * @see DescriptionView
+ *
+ * @since 8.0
  */
 public class ClipboardActionsAdapter {
     //

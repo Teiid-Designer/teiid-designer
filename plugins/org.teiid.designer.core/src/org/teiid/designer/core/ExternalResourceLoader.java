@@ -32,6 +32,9 @@ import org.teiid.designer.core.container.ContainerImpl;
 import org.teiid.designer.core.workspace.ModelFileUtil;
 
 
+/**
+ * @since 8.0
+ */
 public class ExternalResourceLoader {
 
     private static final String BUNDLE_RESOURCE_URL = "bundleresource://"; //$NON-NLS-1$

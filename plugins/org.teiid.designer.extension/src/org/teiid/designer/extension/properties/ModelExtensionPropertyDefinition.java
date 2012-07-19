@@ -24,6 +24,8 @@ import org.teiid.designer.extension.Messages;
 
 /**
  * A <code>ModelExtensionPropertyDefinition</code> is the property definition of all extension properties.
+ *
+ * @since 8.0
  */
 public interface ModelExtensionPropertyDefinition extends Cloneable, PropertyDefinition {
 

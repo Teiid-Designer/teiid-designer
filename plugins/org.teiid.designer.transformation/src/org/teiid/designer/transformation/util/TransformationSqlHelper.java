@@ -94,6 +94,8 @@ import org.teiid.query.sql.visitor.ReferenceCollectorVisitor;
 
 /**
  * TransformationSqlHelper This class is responsible for handling sql validation, changes, etc.
+ *
+ * @since 8.0
  */
 public class TransformationSqlHelper implements SqlConstants {
 

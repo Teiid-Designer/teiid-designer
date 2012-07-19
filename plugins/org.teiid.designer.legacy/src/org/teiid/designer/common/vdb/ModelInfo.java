@@ -16,6 +16,8 @@ import java.util.Properties;
 
 /**
  * This interface provides the model information.
+ *
+ * @since 8.0
  */
 public interface ModelInfo {
 

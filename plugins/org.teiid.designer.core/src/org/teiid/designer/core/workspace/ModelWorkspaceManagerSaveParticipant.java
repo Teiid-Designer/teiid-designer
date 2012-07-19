@@ -14,6 +14,8 @@ import org.teiid.designer.core.ModelerCore;
 
 /**
  * ModelWorkspaceManagerSaveParticipantSaveParticipant
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceManagerSaveParticipant implements ISaveParticipant {
 

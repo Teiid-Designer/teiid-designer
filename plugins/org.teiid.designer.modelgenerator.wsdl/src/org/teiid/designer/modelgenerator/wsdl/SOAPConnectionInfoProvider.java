@@ -18,6 +18,8 @@ import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class SOAPConnectionInfoProvider extends ConnectionInfoHelper implements IConnectionInfoProvider {
 

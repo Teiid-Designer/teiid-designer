@@ -52,6 +52,8 @@ import org.teiid.designer.metamodels.wsdl.soap.SoapPackage;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class BindingInputImpl extends EObjectImpl implements BindingInput {
 

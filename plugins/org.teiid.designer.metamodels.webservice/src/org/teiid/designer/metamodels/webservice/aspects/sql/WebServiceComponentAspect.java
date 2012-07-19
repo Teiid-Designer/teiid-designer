@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.webservice.WebServiceComponent;
 
 /** 
  * WebServiceComponentAspect
+ *
+ * @since 8.0
  */
 public abstract class WebServiceComponentAspect extends AbstractMetamodelAspect implements SqlAspect {
 

@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.function.Function;
 
 /** 
  * FunctionNameToNameIgnoreCaseMatcher
+ *
+ * @since 8.0
  */
 public class FunctionNameToNameIgnoreCaseMatcher extends AbstractEObjectNameMatcher {
 

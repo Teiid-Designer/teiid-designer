@@ -11,6 +11,8 @@ import org.eclipse.emf.common.command.Command;
 
 /**
  * INewModelObjectWizard
+ *
+ * @since 8.0
  */
 public interface INewModelObjectWizard extends INewObjectWizard {
 

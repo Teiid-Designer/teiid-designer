@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.diagram.Diagram;
 
 /**
  * ModelDiagramsImpl
+ *
+ * @since 8.0
  */
 public class ModelDiagramsImpl extends NonOpenableModelWorkspaceItemImpl implements ModelDiagrams {
     protected static final String DEFAULT_NAME = ModelerCore.Util.getString("ModelDiagramsImpl.defaultName"); //$NON-NLS-1$

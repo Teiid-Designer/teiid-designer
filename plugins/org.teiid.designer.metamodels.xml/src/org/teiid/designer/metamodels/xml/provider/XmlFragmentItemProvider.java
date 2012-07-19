@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.xml.XmlFragment;
  * end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlFragmentItemProvider extends XmlDocumentEntityItemProvider {
     /**

@@ -90,6 +90,8 @@ import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 /**
  * Source WSDL and Target Relational Model Selection page. This page of the WSDL to Relational Importer is used to select the
  * source wsdl file for processing and the target relational model in which the generated entities will be placed.
+ *
+ * @since 8.0
  */
 public class SelectWsdlPage extends WizardPage
     implements Listener, IProfileChangedListener, FileUtils.Constants, ModelGeneratorWsdlUiConstants, ModelGeneratorWsdlUiConstants.Images,

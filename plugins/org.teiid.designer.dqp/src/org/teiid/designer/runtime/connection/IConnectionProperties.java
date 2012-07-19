@@ -9,6 +9,8 @@ package org.teiid.designer.runtime.connection;
 
 /**
  *
+ *
+ * @since 8.0
  */
 public interface IConnectionProperties {
 

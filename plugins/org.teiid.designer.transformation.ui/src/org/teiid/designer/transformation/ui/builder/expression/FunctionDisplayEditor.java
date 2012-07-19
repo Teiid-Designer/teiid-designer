@@ -34,6 +34,8 @@ import org.teiid.query.ui.builder.util.BuilderUtils;
 
 /**
  * FunctionDisplayEditor
+ *
+ * @since 8.0
  */
 public class FunctionDisplayEditor extends AbstractLanguageObjectEditor {
 

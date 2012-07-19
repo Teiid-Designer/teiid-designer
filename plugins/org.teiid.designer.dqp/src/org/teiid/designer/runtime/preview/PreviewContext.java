@@ -17,6 +17,8 @@ import org.teiid.designer.vdb.Vdb;
 
 /**
  * The <code>PreviewContext</code> stores information required to perform data preview.
+ *
+ * @since 8.0
  */
 public interface PreviewContext {
 

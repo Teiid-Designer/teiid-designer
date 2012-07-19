@@ -34,6 +34,8 @@ import org.teiid.designer.metamodels.transformation.TransformationContainer;
 
 /**
  * Utility class for the {@link ModelerComparePlugin}.
+ *
+ * @since 8.0
  */
 public class CompareUtil {
 

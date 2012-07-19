@@ -9,7 +9,9 @@ package org.teiid.designer.diagram.ui;
 
     /**
      * NotationChangeListener
-     */
+ *
+ * @since 8.0
+ */
     public interface NotationChangeListener {
     
         public void setNotationId( String sNotationId );

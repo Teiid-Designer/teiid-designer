@@ -16,6 +16,8 @@ import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 
 /**
  * ModelTableLabelProvider
+ *
+ * @since 8.0
  */
 public class ModelTableLabelProvider extends ModelExplorerLabelProvider implements ITableLabelProvider {
 

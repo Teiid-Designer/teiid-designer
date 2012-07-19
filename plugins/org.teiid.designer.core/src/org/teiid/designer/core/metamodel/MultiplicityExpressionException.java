@@ -9,6 +9,9 @@ package org.teiid.designer.core.metamodel;
 
 import org.teiid.core.TeiidException;
 
+/**
+ * @since 8.0
+ */
 public class MultiplicityExpressionException extends TeiidException {
 
 

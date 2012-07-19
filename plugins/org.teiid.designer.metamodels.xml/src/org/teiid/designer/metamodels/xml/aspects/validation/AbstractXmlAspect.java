@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.xml.aspects.validation.rules.XmlNamespaceRu
 
 /**
  * AbstractXmlAspect
+ *
+ * @since 8.0
  */
 public abstract class AbstractXmlAspect extends AbstractValidationAspect {
 

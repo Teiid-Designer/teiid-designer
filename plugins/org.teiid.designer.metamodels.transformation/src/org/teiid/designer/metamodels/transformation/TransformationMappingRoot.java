@@ -22,6 +22,8 @@ import org.eclipse.emf.mapping.MappingRoot;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getTransformationMappingRoot()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface TransformationMappingRoot extends MappingRoot {
 

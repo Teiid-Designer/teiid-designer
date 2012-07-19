@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.transformation.TransformationPackage;
  * begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class AbstractOperationNodeItemProvider extends DataFlowNodeItemProvider {
 

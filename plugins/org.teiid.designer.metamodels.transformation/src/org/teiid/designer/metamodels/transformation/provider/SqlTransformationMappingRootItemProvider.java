@@ -18,6 +18,8 @@ import org.eclipse.emf.common.util.ResourceLocator;
  * <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class SqlTransformationMappingRootItemProvider extends TransformationMappingRootItemProvider {
 

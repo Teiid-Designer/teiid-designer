@@ -14,6 +14,8 @@ import org.teiid.designer.core.search.runtime.RelatedObjectRecord;
 
 /**
  * Command that helps find all the objects that have relationships to a given object.
+ *
+ * @since 8.0
  */
 public interface FindRelatedObjectsCommand extends SearchCommand {
 

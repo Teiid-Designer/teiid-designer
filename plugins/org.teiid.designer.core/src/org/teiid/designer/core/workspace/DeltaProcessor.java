@@ -24,6 +24,8 @@ import org.teiid.designer.core.ModelerCoreRuntimeException;
 
 /**
  * DeltaProcessor
+ *
+ * @since 8.0
  */
 public class DeltaProcessor implements IResourceChangeListener {
     private final ModelWorkspaceManager manager;

@@ -16,6 +16,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.teiid.designer.core.util.StringUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class RestUtils {
 
 	public List<String> getRepositoryList(URL url, String user, String pass)

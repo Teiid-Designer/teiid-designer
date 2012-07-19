@@ -9,6 +9,8 @@ package org.teiid.designer.vdb.ui.preferences;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public interface VdbPreferenceConstants {
 

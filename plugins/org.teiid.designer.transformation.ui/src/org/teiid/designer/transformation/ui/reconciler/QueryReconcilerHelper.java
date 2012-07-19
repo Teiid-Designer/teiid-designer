@@ -33,6 +33,8 @@ import org.teiid.query.sql.lang.SetQuery;
 /**
  * Reconciler Helper that the Reconciler Panel works with
  * 
+ *
+ * @since 8.0
  */
 public class QueryReconcilerHelper  {
     

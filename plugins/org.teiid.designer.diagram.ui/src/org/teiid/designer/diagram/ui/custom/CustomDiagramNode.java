@@ -15,6 +15,8 @@ import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 
 /**
  * PackageDiagramNode
+ *
+ * @since 8.0
  */
 public class CustomDiagramNode extends AbstractLocalDiagramModelNode {
 

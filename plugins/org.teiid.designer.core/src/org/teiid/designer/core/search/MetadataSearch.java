@@ -25,6 +25,8 @@ import org.teiid.designer.core.workspace.ModelWorkspace;
  * <li>RuntimeType if the EObject has a type feature referencing XSDSimpleTypeDefinition instances
  * <li>Specific EObject features such as name, UUID, or description.
  * </ul>
+ *
+ * @since 8.0
  */
 public interface MetadataSearch extends ISearchEngine {
 

@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.dependency.DependencyPackage;
  * <!-- end-user-doc -->
  * @see org.teiid.designer.metamodels.dependency.DependencyPackage
  * @generated
+ *
+ * @since 8.0
  */
 public class DependencySwitch {
     /**

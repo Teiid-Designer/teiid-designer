@@ -25,6 +25,8 @@ import org.teiid.designer.compare.selector.ModelSelector;
 
 /**
  * XsdDatatypeFinder
+ *
+ * @since 8.0
  */
 public class XsdDatatypeFinder implements DatatypeFinder {
 

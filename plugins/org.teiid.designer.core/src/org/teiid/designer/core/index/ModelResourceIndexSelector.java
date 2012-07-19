@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.core.ModelImport;
 
 /**
  * ModelResourceIndexSelector finds all index files associated with any projects and resources within the model workspace
+ *
+ * @since 8.0
  */
 public class ModelResourceIndexSelector extends AbstractIndexSelector {
 

@@ -37,6 +37,8 @@ import org.teiid.core.util.CoreArgCheck;
  * </ul>
  * Note that if you do not shutdown the plugin framework after instantiating an application, the application will never terminate.
  * 
+ *
+ * @since 8.0
  */
 public abstract class PluginUtilities {
 

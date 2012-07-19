@@ -24,6 +24,9 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.search.ModelObjectSelectionDialog;
 
 
+/**
+ * @since 8.0
+ */
 public final class FindModelObjectHandler extends AbstractHandler {
 
     /**

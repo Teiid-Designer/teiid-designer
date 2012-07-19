@@ -11,6 +11,8 @@ import org.eclipse.xsd.util.XSDConstants;
 
 /**
  * XSDInitializer1999
+ *
+ * @since 8.0
  */
 public class XsdInitializer2000 extends AbstractXsdInitializer {
 

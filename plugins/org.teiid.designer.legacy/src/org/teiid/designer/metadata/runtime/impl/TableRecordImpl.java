@@ -14,6 +14,8 @@ import org.teiid.designer.metadata.runtime.TableRecord;
 
 /**
  * TableRecordImpl
+ *
+ * @since 8.0
  */
 public class TableRecordImpl extends ColumnSetRecordImpl implements TableRecord {
 

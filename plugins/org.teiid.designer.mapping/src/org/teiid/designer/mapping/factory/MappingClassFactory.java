@@ -44,6 +44,8 @@ import org.teiid.designer.metamodels.transformation.TransformationFactory;
 
 /**
  * MappingClassFactory is a class for creating and editing mapping classes and attributes in a mappable tree.
+ *
+ * @since 8.0
  */
 public class MappingClassFactory {
 

@@ -18,6 +18,8 @@ import org.teiid.designer.metamodels.core.extension.XPackage;
 
 /**
  * Utility class for the Extension Metamodel classes
+ *
+ * @since 8.0
  */
 public class ExtensionUtil {
 

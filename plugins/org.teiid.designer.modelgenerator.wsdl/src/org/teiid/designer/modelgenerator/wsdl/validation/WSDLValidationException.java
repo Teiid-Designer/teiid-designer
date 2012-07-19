@@ -13,6 +13,8 @@ import javax.wsdl.WSDLException;
 
 /**
  * This class represents any errors that might occur while reading or validating a WSDL
+ *
+ * @since 8.0
  */
 public class WSDLValidationException extends Exception {
 

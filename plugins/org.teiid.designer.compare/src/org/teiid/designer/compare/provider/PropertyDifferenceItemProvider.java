@@ -30,6 +30,8 @@ import org.teiid.designer.compare.PropertyDifference;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class PropertyDifferenceItemProvider
     extends ItemProviderAdapter

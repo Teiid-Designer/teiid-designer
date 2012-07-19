@@ -21,6 +21,8 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 
 /**
  * TogglePopulateDiagramFromTreeSelectionAction
+ *
+ * @since 8.0
  */
 public class TogglePopulateDiagramFromTreeSelectionAction extends MappingAction {
 

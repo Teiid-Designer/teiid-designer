@@ -51,6 +51,8 @@ import org.teiid.designer.core.ModelerCoreException;
  * </ul>
  * </p>
  * @see ModelVisitor.
+ *
+ * @since 8.0
  */
 public class ConcurrentModelVisitorProcessor extends ModelVisitorProcessor {
 

@@ -15,6 +15,8 @@ import org.eclipse.draw2d.geometry.Point;
  * This interface provides EditParts a mechanism to allow dropping objects into
  * itself.  Initially created for adding relationship role objects to relationship
  * role containers.  But could be used for others.
+ *
+ * @since 8.0
  */
 public interface DropEditPart {
 

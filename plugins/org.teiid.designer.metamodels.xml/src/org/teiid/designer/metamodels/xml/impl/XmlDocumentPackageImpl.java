@@ -53,6 +53,8 @@ import org.teiid.designer.metamodels.xml.XmlValueHolder;
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentPackage {
 

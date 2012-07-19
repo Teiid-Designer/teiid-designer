@@ -16,6 +16,8 @@ import org.teiid.designer.modelgenerator.salesforce.connection.impl.Connection;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class SalesForceConnection implements IConnection {
 

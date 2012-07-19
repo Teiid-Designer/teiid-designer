@@ -29,6 +29,8 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinition.Property
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class ModelExtensionDefinitionHeader {
 

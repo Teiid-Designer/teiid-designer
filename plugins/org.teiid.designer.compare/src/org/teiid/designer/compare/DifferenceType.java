@@ -20,6 +20,8 @@ import org.eclipse.emf.common.util.AbstractEnumerator;
  * @see org.teiid.designer.compare.ComparePackage#getDifferenceType()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public final class DifferenceType extends AbstractEnumerator {
     /**

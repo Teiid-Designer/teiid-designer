@@ -12,6 +12,8 @@ import org.teiid.designer.extension.properties.NamespaceProvider;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public interface RestModelExtensionConstants {
 	

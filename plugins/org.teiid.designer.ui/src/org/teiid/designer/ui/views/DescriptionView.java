@@ -71,6 +71,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  * Editing (or clearing) the text is done via Edit and Clear actions located on the toolbar or via a context menu.
  * 
  *
+ *
+ * @since 8.0
  */
 
 public class DescriptionView extends ModelerView

@@ -29,6 +29,8 @@ import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
 /**
  * DiagramSelectionHandler
+ *
+ * @since 8.0
  */
 public class DiagramSelectionHandler implements IDiagramSelectionHandler {
     private DiagramViewer viewer;

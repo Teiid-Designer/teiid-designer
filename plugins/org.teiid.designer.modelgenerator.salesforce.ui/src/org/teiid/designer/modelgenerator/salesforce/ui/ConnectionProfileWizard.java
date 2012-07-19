@@ -3,6 +3,9 @@ package org.teiid.designer.modelgenerator.salesforce.ui;
 import java.util.Properties;
 import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizard;
 
+/**
+ * @since 8.0
+ */
 public class ConnectionProfileWizard extends NewConnectionProfileWizard implements ModelGeneratorSalesforceUiConstants {
 
     Properties profileProperties = new Properties();

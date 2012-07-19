@@ -12,6 +12,8 @@ import org.eclipse.core.runtime.IStatus;
 
 /** 
  * Processor interface
+ *
+ * @since 8.0
  */
 public interface Processor {
 	

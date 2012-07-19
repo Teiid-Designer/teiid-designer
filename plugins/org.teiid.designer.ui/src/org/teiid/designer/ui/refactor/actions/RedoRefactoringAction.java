@@ -23,6 +23,8 @@ import org.teiid.designer.ui.refactor.RefactorUndoManager;
 
 /**
  * RedoRefactoringAction
+ *
+ * @since 8.0
  */
 public class RedoRefactoringAction
     extends ActionDelegate

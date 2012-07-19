@@ -11,6 +11,8 @@ import org.teiid.query.sql.symbol.Function;
 
 /**
  * The <code>FunctionDisplayNode</code> class is used to represent a Function.
+ *
+ * @since 8.0
  */
 public class FunctionDisplayNode extends DisplayNode {
 

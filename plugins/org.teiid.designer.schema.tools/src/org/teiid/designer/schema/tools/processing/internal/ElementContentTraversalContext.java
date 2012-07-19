@@ -14,6 +14,9 @@ import java.util.Map;
 
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 
+/**
+ * @since 8.0
+ */
 public class ElementContentTraversalContext {
 	/**
 	 * The ElementContentTraversalContext is passed along as a parameter during

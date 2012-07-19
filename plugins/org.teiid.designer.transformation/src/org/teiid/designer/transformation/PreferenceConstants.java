@@ -4,6 +4,8 @@ import static org.teiid.designer.transformation.TransformationPlugin.PLUGIN_ID;
 
 /**
  * Designer runtime preference names and default values.
+ *
+ * @since 8.0
  */
 public interface PreferenceConstants {
 

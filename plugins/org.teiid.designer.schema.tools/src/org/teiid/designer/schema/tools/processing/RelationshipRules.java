@@ -13,6 +13,8 @@ package org.teiid.designer.schema.tools.processing;
  *can be different for different purposes with the same values.
  *This interface provides a place to change the way relations
  *are determined.  
+ *
+ * @since 8.0
  */
 public interface RelationshipRules {
 	

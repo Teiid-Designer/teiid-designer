@@ -15,6 +15,8 @@ import java.util.Map;
 
 /**
  * Class that represents the content of an MetaMatrix-VdbManifestModel.xmi header.
+ *
+ * @since 8.0
  */
 public final class VdbHeader {
 

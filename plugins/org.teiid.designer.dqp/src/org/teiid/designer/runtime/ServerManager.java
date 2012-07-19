@@ -45,6 +45,8 @@ import org.w3c.dom.NodeList;
 
 /**
  * The <code>ServerManager</code> class manages the creation, deletion, and editing of servers hosting Teiid servers.
+ *
+ * @since 8.0
  */
 public final class ServerManager implements EventManager {
 

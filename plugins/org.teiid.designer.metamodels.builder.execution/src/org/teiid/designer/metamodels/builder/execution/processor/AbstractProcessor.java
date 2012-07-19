@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.builder.processor.Processor;
 
 /** 
  * AbstractProcessor that the specific processors extend.
+ *
+ * @since 8.0
  */
 public abstract class AbstractProcessor implements Processor {
 	

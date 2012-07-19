@@ -18,6 +18,8 @@ import org.teiid.designer.diagram.ui.DiagramUiPlugin;
 
 /**
  * AbstractBinaryAssociation
+ *
+ * @since 8.0
  */
 public class AbstractBinaryAssociation 
   implements BinaryAssociation,

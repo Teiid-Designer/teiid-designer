@@ -9,6 +9,8 @@ package org.teiid.designer.common.util;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class I18nUtil {
 

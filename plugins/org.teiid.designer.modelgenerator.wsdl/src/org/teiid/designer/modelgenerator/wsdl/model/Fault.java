@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.model;
 
+/**
+ * @since 8.0
+ */
 public interface Fault extends WSDLElement {
 	
 	public void setMessage(Message message);

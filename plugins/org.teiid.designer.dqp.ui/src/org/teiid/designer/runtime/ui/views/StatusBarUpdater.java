@@ -17,6 +17,8 @@ import org.teiid.designer.runtime.ui.DqpUiConstants;
 
 /**
  * StatusBarUpdater
+ *
+ * @since 8.0
  */
 public class StatusBarUpdater implements DqpUiConstants,
                                          ISelectionChangedListener {

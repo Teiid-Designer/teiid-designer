@@ -13,6 +13,9 @@ package org.teiid.designer.core.index;
 
 import java.io.UTFDataFormatException;
 
+/**
+ * @since 8.0
+ */
 public class Field {
 	protected byte[] buffer; // contents
 	protected int offset; // offset of the field within the byte array

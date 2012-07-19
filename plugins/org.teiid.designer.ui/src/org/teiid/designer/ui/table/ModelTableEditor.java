@@ -103,6 +103,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * ModelTableEditor is a tabbed panel of tables containing the content of the model, with the tab names corresponding to the
  * different types of objects in the model.
+ *
+ * @since 8.0
  */
 public class ModelTableEditor extends NavigableEditor
     implements ModelEditorPage, IInlineRenameable, ITablePasteValidator, INavigationSupported, UiConstants {

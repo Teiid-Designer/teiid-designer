@@ -29,6 +29,8 @@ import org.teiid.designer.jdbc.JdbcSourceContainer;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class JdbcSourceContainerItemProvider
     extends ItemProviderAdapter

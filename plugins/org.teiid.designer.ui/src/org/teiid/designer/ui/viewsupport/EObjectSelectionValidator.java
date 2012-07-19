@@ -16,6 +16,8 @@ import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 
 /**
  * EObjectSelectionValidator
+ *
+ * @since 8.0
  */
 public class EObjectSelectionValidator implements ISelectionStatusValidator {
 

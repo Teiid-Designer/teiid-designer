@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.xml.XmlFragmentUse;
  * <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlFragmentUseItemProvider extends XmlBaseElementItemProvider {
     /**

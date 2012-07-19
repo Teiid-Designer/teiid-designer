@@ -21,6 +21,8 @@ import org.teiid.designer.diagram.ui.part.DiagramEditPart;
 
 /**
  * AnchorManager
+ *
+ * @since 8.0
  */
 public class TransformationAnchorManager implements AnchorManager {
     

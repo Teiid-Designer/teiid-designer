@@ -9,6 +9,8 @@ package org.teiid.designer.runtime.ui.wizards.webservices.util;
 
 /**
  * This class is able to create an instance of a WebArchiveBuilder class.
+ *
+ * @since 8.0
  */
 public class WebArchiveBuilderFactory {
 

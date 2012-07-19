@@ -25,6 +25,8 @@ import org.teiid.designer.ui.UiConstants;
  * NewModelWizardDescriptor is a Java object representation of a NewModelWizardContributor
  * Extension.  The class encapsulates the parsing of the Extension from the plugin manifest
  * to expose needed properties as method calls.
+ *
+ * @since 8.0
  */
 public class NewModelWizardDescriptor extends ExtensionDescriptorImpl
     implements UiConstants.ExtensionPoints.NewModelWizardContributor {

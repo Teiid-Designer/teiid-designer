@@ -16,6 +16,8 @@ package org.teiid.designer.roles;
  * None of the values need to be present, so Boolean is used to handle the "null" state.
  *
  *
+ *
+ * @since 8.0
  */
 public class Permission {
 

@@ -22,6 +22,8 @@ import org.teiid.designer.ui.common.widget.Dialog;
  * Dialog designed to display an editable text box.
  * 
  *
+ *
+ * @since 8.0
  */
 public class EditDescriptionDialog extends Dialog implements KeyListener {
 	//============================================================================================================================

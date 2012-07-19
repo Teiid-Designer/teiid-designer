@@ -55,6 +55,8 @@ import org.teiid.designer.metamodels.core.ModelType;
 
 /**
  * ModelResourceImpl
+ *
+ * @since 8.0
  */
 public class ModelResourceImpl extends OpenableImpl implements ModelResource {
 

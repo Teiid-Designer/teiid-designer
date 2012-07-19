@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.xmi.impl.XMIHelperImpl;
 
 /**
  * MtkXmiHelper
+ *
+ * @since 8.0
  */
 public class MtkXmiHelper extends XMIHelperImpl {
 

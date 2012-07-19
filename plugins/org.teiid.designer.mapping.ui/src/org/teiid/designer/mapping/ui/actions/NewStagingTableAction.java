@@ -20,6 +20,8 @@ import org.teiid.designer.ui.undo.ModelerUndoManager;
 
 /**
  * NewTempTableAction
+ *
+ * @since 8.0
  */
 public class NewStagingTableAction extends MappingAction {
     private static final String ACTION_DESCRIPTION = "New Staging Table"; //$NON-NLS-1$

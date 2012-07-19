@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.relational.Schema;
 
 /**
  * ProcedurePameterFinder
+ *
+ * @since 8.0
  */
 public class ProcedureParameterFinder extends RelationalEntityFinder {
 

@@ -10,6 +10,8 @@ package org.teiid.designer.metadata.runtime;
 
 /**
  * ModelRecord
+ *
+ * @since 8.0
  */
 public interface ModelRecord extends MetadataRecord {
     

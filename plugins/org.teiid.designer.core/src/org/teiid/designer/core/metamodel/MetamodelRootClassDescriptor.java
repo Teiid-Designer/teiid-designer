@@ -11,6 +11,8 @@ import org.teiid.designer.core.ExtensionDescriptor;
 
 /**
  * MetamodelRootClassDescriptor
+ *
+ * @since 8.0
  */
 public interface MetamodelRootClassDescriptor extends ExtensionDescriptor {
     

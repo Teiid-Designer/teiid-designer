@@ -34,6 +34,8 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
  * This class represents the preference page for setting the Diagram Appearance Preferences.
+ *
+ * @since 8.0
  */
 public class AppearanceProcessor implements DiagramUiConstants, PluginConstants {
 

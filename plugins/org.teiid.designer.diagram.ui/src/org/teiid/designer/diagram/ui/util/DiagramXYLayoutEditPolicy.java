@@ -21,6 +21,8 @@ import org.teiid.designer.diagram.ui.part.DiagramEditPart;
 
 /**
  * Layout policy for our Hello Gef Editor.
+ *
+ * @since 8.0
  */
 public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy {
     boolean logging = true;

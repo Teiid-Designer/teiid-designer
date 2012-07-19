@@ -41,6 +41,8 @@ import org.teiid.designer.sdt.ModelerSdtPlugin;
 
 /**
  * DatatypeManagerImpl
+ *
+ * @since 8.0
  */
 public abstract class AbstractDatatypeManager implements DatatypeManager, DatatypeManagerLifecycle {
 

@@ -32,6 +32,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * DocumentNotificationHandler
+ *
+ * @since 8.0
  */
 public class DocumentNotificationHandler {
     private static final String[] notificationTypes = {"CREATE", //$NON-NLS-1$

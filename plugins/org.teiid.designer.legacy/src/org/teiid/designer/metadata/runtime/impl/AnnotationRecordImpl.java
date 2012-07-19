@@ -12,6 +12,8 @@ import org.teiid.designer.metadata.runtime.AnnotationRecord;
 
 /**
  * AnnotationRecordImpl
+ *
+ * @since 8.0
  */
 public class AnnotationRecordImpl extends AbstractMetadataRecord implements AnnotationRecord {
 

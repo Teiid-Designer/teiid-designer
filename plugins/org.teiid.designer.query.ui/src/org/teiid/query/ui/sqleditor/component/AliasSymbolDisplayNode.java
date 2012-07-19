@@ -11,6 +11,8 @@ import org.teiid.query.sql.symbol.AliasSymbol;
 
 /**
  * The <code>AliasSymbolDisplayNode</code> class is used to represent AliasSymbols.
+ *
+ * @since 8.0
  */
 public class AliasSymbolDisplayNode extends DisplayNode {
 

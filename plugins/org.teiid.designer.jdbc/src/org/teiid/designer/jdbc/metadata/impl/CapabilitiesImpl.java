@@ -20,6 +20,8 @@ import org.teiid.designer.jdbc.metadata.Capabilities;
 
 /**
  * CapabilitiesImpl
+ *
+ * @since 8.0
  */
 public class CapabilitiesImpl implements Capabilities {
 

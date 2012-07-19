@@ -12,6 +12,8 @@ import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistant {
 

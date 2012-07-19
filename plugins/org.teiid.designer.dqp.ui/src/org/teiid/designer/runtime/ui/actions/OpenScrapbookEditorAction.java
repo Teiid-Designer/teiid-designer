@@ -26,6 +26,9 @@ import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.ui.common.util.UiUtil;
 
 
+/**
+ * @since 8.0
+ */
 public class OpenScrapbookEditorAction extends OpenScrapbookAction {
 
 	public OpenScrapbookEditorAction() {

@@ -38,6 +38,8 @@ import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 /**
  * An <code>ModelIndexer</code> indexes ONE document at each time. It adds the document names and the words references to an
  * IIndex. Each IIndexer can index certain types of document, and should not index the other files.
+ *
+ * @since 8.0
  */
 public class ModelIndexer implements ResourceIndexer {
 

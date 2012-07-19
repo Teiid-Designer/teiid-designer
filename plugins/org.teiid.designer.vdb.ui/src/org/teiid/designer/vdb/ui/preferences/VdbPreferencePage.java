@@ -28,6 +28,8 @@ import org.teiid.designer.vdb.ui.VdbUiPlugin;
 
 /**
  * The <code>VdbPreferencePage</code> is the UI for managing general VDB Editor-related preferences.
+ *
+ * @since 8.0
  */
 public final class VdbPreferencePage implements IEditorPreferencesComponent {
 

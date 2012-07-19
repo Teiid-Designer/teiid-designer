@@ -26,6 +26,8 @@ import java.util.List;
  * @see org.teiid.designer.metamodels.xml.XmlDocumentPackage#getXmlChoice()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface XmlChoice extends XmlContainerNode{
     /**

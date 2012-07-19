@@ -36,6 +36,9 @@ import org.teiid.designer.modelgenerator.salesforce.util.ModelBuildingException;
 import org.teiid.designer.modelgenerator.salesforce.util.SalesForceConnectionInfoProvider;
 
 
+/**
+ * @since 8.0
+ */
 public class SalesforceImportWizardManager {
 
     public static final int WORKSPACE_SOURCE = 0;

@@ -60,6 +60,8 @@ import org.teiid.designer.webservice.ui.util.WebServiceUiUtil;
 
 /**
  * SchemaLocationEditor
+ *
+ * @since 8.0
  */
 public class SchemaLocationEditor extends GridPanel
     implements IInternalUiConstants, IInternalUiConstants.HelpContexts, IInternalUiConstants.Images {

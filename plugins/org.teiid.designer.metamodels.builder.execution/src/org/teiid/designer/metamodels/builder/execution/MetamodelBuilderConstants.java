@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
 
 /**
  * Defines the constants used in the MetaModel entity builder process.
+ *
+ * @since 8.0
  */
 public interface MetamodelBuilderConstants {
     // Plug-in constants

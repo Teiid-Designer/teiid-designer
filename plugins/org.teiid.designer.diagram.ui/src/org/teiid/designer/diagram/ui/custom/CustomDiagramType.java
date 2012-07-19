@@ -25,6 +25,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 /**
  * CustomDiagramType
+ *
+ * @since 8.0
  */
 public class CustomDiagramType extends AbstractDiagramType {
 

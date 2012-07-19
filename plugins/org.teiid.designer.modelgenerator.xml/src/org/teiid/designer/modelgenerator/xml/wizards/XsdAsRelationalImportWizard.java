@@ -76,6 +76,9 @@ import org.teiid.designer.ui.common.wizard.AbstractWizard;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 
 
+/**
+ * @since 8.0
+ */
 public class XsdAsRelationalImportWizard extends AbstractWizard implements IImportWizard {
     protected static final String WIZARD_TITLE = "title"; //$NON-NLS-1$
     protected static final String XML_FILE_EXTENSION_NAME = "XMLFileExtension"; //$NON-NLS-1$

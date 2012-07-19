@@ -24,6 +24,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.wsdl.soap.SoapPackage#getSoapHeaderFault()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface SoapHeaderFault extends SoapFault {
 

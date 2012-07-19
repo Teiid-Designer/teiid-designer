@@ -14,6 +14,8 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 /**
  * A <code>RegistryEvent</code> is broadcast to all registered listeners when a model extension definition is added, changed, or
  * removed from the registry.
+ *
+ * @since 8.0
  */
 public class RegistryEvent {
 

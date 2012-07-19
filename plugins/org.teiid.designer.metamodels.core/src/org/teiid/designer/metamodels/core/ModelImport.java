@@ -27,6 +27,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.core.CorePackage#getModelImport()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface ModelImport extends EObject {
 

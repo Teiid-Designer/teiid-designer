@@ -22,6 +22,8 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 
 /**
  * The <code>ReconnectToServerAction</code> tries to reconnect to a selected server.
+ *
+ * @since 8.0
  */
 public final class ReconnectToServerAction extends BaseSelectionListenerAction {
 

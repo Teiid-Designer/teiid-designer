@@ -11,6 +11,8 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * The <code>DeleteViewerObjectAction</code> class deletes expressions and criteria found in the builders.
+ *
+ * @since 8.0
  */
 public class DeleteViewerObjectAction extends AbstractButtonAction {
 

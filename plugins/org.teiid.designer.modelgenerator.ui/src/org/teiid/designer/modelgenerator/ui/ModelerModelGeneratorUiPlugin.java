@@ -20,6 +20,8 @@ import org.teiid.designer.ui.common.actions.ActionService;
 
 /**
  * The main plugin class to be used in the desktop.
+ *
+ * @since 8.0
  */
 public class ModelerModelGeneratorUiPlugin extends AbstractUiPlugin implements ModelGeneratorUiConstants{
 	//The shared instance.

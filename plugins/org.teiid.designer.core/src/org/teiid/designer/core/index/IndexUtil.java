@@ -30,6 +30,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 
 /**
  * IndexUtil
+ *
+ * @since 8.0
  */
 public class IndexUtil {
 

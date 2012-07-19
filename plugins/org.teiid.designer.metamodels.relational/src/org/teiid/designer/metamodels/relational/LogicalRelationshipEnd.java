@@ -25,6 +25,8 @@ package org.teiid.designer.metamodels.relational;
  * @see org.teiid.designer.metamodels.relational.RelationalPackage#getLogicalRelationshipEnd()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface LogicalRelationshipEnd extends RelationalEntity{
     /**

@@ -12,6 +12,9 @@ import org.teiid.designer.schema.tools.processing.internal.RelationshipProcessor
 import org.teiid.designer.schema.tools.processing.internal.RequestProcessorImpl;
 import org.teiid.designer.schema.tools.processing.internal.RequestRelationshipRules;
 
+/**
+ * @since 8.0
+ */
 public class RelationshipProcessorFactory {
 	
 	/**

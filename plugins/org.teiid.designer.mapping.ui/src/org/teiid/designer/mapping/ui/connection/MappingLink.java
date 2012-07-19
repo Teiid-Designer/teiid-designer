@@ -16,6 +16,8 @@ import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 
 /**
  * DiagramAssociation
+ *
+ * @since 8.0
  */
 public class MappingLink extends AbstractNodeConnectionModel {
 

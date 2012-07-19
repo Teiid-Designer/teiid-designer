@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.transformation.util.TransformationUtil;
  * begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class MappingClassColumnItemProvider extends MappingClassObjectItemProvider {
 

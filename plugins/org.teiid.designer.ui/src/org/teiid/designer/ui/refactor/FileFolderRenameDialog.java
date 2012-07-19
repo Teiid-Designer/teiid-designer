@@ -35,6 +35,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * FileFolderRenameDialog is a dialog that displays the ModelObjectPropertySheet for an EObject
+ *
+ * @since 8.0
  */
 public class FileFolderRenameDialog extends SelectionDialog {
 

@@ -25,6 +25,8 @@ import org.teiid.designer.jdbc.metadata.JdbcNode;
 
 /**
  * JdbcCatalogImpl
+ *
+ * @since 8.0
  */
 public class JdbcCatalogImpl extends JdbcNodeImpl implements JdbcCatalog {
     

@@ -22,6 +22,8 @@ import org.teiid.designer.core.util.CharOperation;
  * An indexSummary is used when saving an index into a BlocksIndexOuput or 
  * reading it from a BlocksIndexInput. It contains basic informations about 
  * an index: first files/words in each block, number of files/words.
+ *
+ * @since 8.0
  */
 
 public class IndexSummary {

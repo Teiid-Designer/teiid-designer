@@ -16,6 +16,8 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
  * Simple filter for insuring that only the project defined in the properties is displayed
+ *
+ * @since 8.0
  */
 public class SingleProjectFilter extends ViewerFilter {
 	

@@ -28,6 +28,9 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
+/**
+ * @since 8.0
+ */
 public class ElementsInfoPanel {
 	private ProcedureInfo procedureInfo;
 	private Button addButton, deleteButton, upButton, downButton;

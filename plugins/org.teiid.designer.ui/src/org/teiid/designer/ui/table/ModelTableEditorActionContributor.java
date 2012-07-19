@@ -35,6 +35,8 @@ import org.teiid.designer.ui.editors.ModelEditorPage;
 
 /**
  * ModelTableEditorActionContributor
+ *
+ * @since 8.0
  */
 public class ModelTableEditorActionContributor extends AbstractModelEditorPageActionBarContributor
                                                implements IModelerActionConstants,

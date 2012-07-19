@@ -40,6 +40,8 @@ import org.teiid.designer.metamodels.wsdl.WsdlPackage;
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
 

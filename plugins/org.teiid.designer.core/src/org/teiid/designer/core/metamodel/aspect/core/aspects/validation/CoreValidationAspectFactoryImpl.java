@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.core.CorePackage;
 
 /**
  * RelationalValidationAspectFactoryImpl
+ *
+ * @since 8.0
  */
 public class CoreValidationAspectFactoryImpl implements MetamodelAspectFactory {
 

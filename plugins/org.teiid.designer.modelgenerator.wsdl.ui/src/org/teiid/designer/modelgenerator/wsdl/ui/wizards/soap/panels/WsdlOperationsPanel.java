@@ -55,6 +55,9 @@ import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.common.widget.Label;
 
 
+/**
+ * @since 8.0
+ */
 public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.Constants,
 	ModelGeneratorWsdlUiConstants, ModelGeneratorWsdlUiConstants.Images {
 	

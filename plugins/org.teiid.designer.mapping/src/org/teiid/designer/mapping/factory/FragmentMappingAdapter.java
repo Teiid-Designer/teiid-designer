@@ -26,6 +26,8 @@ import org.teiid.designer.metamodels.transformation.FragmentMappingRoot;
 /**
  * The <code>FragmentMappingAdapter</code> class is responsible for managing the
  * {@link org.teiid.designer.metamodels.transformation.FragmentMappingRoot) of a tree root.
+ *
+ * @since 8.0
  */
 public class FragmentMappingAdapter implements PluginConstants {
 

@@ -14,6 +14,8 @@ import org.teiid.query.metadata.QueryMetadataInterface;
 
 /**
  * TransformationMetadataFactory
+ *
+ * @since 8.0
  */
 public class ServerMetadataFactory {
 

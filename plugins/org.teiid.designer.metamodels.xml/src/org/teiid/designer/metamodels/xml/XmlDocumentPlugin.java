@@ -23,6 +23,9 @@ import org.teiid.core.PluginUtil;
 import org.teiid.core.util.PluginUtilImpl;
 
 
+/**
+ * @since 8.0
+ */
 public class XmlDocumentPlugin extends Plugin {
 
     private static final String MISSING_RESOURCE = "<Missing message for key"; //$NON-NLS-1$

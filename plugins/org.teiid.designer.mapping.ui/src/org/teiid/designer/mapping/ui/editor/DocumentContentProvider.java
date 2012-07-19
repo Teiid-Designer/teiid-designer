@@ -16,6 +16,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * DocumentContentProvider
+ *
+ * @since 8.0
  */
 public class DocumentContentProvider implements ITreeContentProvider {
 

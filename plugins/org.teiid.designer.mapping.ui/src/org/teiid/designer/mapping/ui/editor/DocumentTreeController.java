@@ -43,6 +43,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * DocumentTreeController
+ *
+ * @since 8.0
  */
 public class DocumentTreeController implements ITreeViewerListener, ISelectionProvider, ISelectionChangedListener {
 

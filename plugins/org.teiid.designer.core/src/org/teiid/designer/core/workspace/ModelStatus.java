@@ -12,6 +12,8 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * ModelStatus
+ *
+ * @since 8.0
  */
 public interface ModelStatus extends IStatus {
 

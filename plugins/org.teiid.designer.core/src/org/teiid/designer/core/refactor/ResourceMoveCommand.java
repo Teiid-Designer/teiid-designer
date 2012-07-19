@@ -36,6 +36,8 @@ import org.teiid.designer.metamodels.core.ModelImport;
 
 /**
  * ResourceMoveCommand is the ModelRefactorCommand for moving a resource to a new destination.
+ *
+ * @since 8.0
  */
 public class ResourceMoveCommand extends ResourceRefactorCommand {
 

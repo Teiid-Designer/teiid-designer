@@ -16,6 +16,8 @@ import org.teiid.designer.core.workspace.ModelResource;
 
 /**
  * StructuralCopyTreeContentProvider
+ *
+ * @since 8.0
  */
 public class StructuralCopyTreeContentProvider implements ITreeContentProvider {
 	////////////////////////////////////////////////////////////////////////////////////////

@@ -11,6 +11,8 @@ import org.teiid.core.util.HashCodeUtil;
 
 /**
  * The <code>TeiidJdbcInfo</code> defines the properties needed to make a Teiid JDBC connection.
+ *
+ * @since 8.0
  */
 public class TeiidJdbcInfo extends TeiidConnectionInfo {
 

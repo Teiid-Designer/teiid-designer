@@ -34,10 +34,14 @@ import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 
 /**
  * WSDL Import Manager - Business Object for interacting with GUI
+ *
+ * @since 8.0
  */
 /**
  * @author tejones
  *
+ *
+ * @since 8.0
  */
 public class WSDLImportWizardManager implements IChangeNotifier {
 

@@ -20,6 +20,8 @@ import org.teiid.designer.jdbc.metadata.JdbcDatabase;
 /**
  * The RelationalModelProcessor is used to create or update a model so that it reflects
  * a {@link JdbcDatabase JDBC data source}.
+ *
+ * @since 8.0
  */
 public interface RelationalModelProcessor {
 

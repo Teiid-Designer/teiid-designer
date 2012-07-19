@@ -9,6 +9,8 @@ package org.teiid.designer.ui.common.widget;
 
 /**
  * INodeDescendantsDeselectionHandler
+ *
+ * @since 8.0
  */
 public interface INodeDescendantsDeselectionHandler {
 	boolean deselectDescendants(Object node);

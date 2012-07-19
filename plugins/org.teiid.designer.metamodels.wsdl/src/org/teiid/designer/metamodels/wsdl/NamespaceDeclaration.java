@@ -23,6 +23,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getNamespaceDeclaration()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface NamespaceDeclaration extends EObject {
 

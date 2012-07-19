@@ -70,6 +70,9 @@ import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class ModelSelectionPage extends AbstractWizardPage
     implements Listener, ModelGeneratorSalesforceUiConstants, ModelGeneratorSalesforceUiConstants.Images,
     ModelGeneratorSalesforceUiConstants.HelpContexts {

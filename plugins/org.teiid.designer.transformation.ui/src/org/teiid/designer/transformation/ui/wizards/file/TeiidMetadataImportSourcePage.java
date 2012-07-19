@@ -96,6 +96,9 @@ import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
 
+/**
+ * @since 8.0
+ */
 public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		UiConstants, InternalUiConstants.Widgets,
 		CoreStringUtil.Constants {
@@ -1189,6 +1192,9 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     	public String delimiterType = VALUE_COMMA;
     }
 
+/**
+ * @since 8.0
+ */
 	public class CPListener implements IProfileListener {
 
 		IConnectionProfile latestProfile;

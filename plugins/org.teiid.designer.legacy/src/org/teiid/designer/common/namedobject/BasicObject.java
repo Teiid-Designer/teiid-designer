@@ -28,6 +28,8 @@ import org.teiid.designer.common.util.I18nUtil;
  * <p>
  * This class and all of its subclasses are designed to be publicly immutable. That is, no component outside of the Configuration
  * Service changes these objects once they are created.
+ *
+ * @since 8.0
  */
 public abstract class BasicObject implements BaseObject, Serializable {
 

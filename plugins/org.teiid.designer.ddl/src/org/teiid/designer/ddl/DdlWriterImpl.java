@@ -43,6 +43,8 @@ import org.teiid.logging.Logger;
 
 /**
  * DdlWriterImpl
+ *
+ * @since 8.0
  */
 public class DdlWriterImpl implements DdlWriter {
 

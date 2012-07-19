@@ -29,6 +29,8 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
  * This class is the preference page for setting the Modeler Diagram Printing Preferences.
+ *
+ * @since 8.0
  */
 public class DiagramPrintPreferencePage extends PreferencePage
     implements DiagramUiConstants, PluginConstants, IWorkbenchPreferencePage {

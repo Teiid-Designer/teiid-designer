@@ -25,6 +25,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.relational.RelationalPackage#getRelationalEntity()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface RelationalEntity extends EObject{
     /**

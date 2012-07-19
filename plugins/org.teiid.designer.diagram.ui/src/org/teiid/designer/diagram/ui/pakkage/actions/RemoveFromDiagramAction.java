@@ -18,6 +18,8 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 
 /**
  * RemoveTransformationSource
+ *
+ * @since 8.0
  */
 public class RemoveFromDiagramAction extends DiagramAction {
 

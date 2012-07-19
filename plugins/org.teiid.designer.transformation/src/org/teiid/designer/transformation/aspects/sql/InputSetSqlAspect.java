@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.transformation.StagingTable;
 
 /**
  * MappingClassSqlAspect
+ *
+ * @since 8.0
  */
 public class InputSetSqlAspect extends AbstractTransformationSqlAspect implements SqlTableAspect {
 

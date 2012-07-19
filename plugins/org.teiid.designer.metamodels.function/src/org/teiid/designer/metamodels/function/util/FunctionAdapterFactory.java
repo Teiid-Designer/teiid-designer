@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.function.ScalarFunction;
  * <!-- end-user-doc -->
  * @see org.teiid.designer.metamodels.function.FunctionPackage
  * @generated
+ *
+ * @since 8.0
  */
 public class FunctionAdapterFactory extends AdapterFactoryImpl {
     /**

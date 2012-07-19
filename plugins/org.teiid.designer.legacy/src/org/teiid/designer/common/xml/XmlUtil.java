@@ -14,6 +14,8 @@ import org.teiid.core.util.StringUtil;
 
 /**
  * Utility class for XML documents and related items.
+ *
+ * @since 8.0
  */
 public class XmlUtil {
     

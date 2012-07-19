@@ -11,6 +11,8 @@ import org.teiid.core.TeiidException;
 
 /**
  * DdlException
+ *
+ * @since 8.0
  */
 public class DdlException extends TeiidException {
 

@@ -12,6 +12,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * @since 8.0
+ */
 public class TerminatingVdbHeaderContentHandler extends DefaultHandler {
 
     public static final String HEADER_FOUND_EXCEPTION_MESSAGE = "HeaderFoundException"; //$NON-NLS-1$

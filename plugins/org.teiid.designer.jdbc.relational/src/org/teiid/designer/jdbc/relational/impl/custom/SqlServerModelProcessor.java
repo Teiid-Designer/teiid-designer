@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.relational.util.RelationalTypeMapping;
 
 /**
  * SqlServerModelProcessor
+ *
+ * @since 8.0
  */
 public class SqlServerModelProcessor extends RelationalModelProcessorImpl {
     private static final String TEXT_TYPE_NAME = "TEXT"; //$NON-NLS-1$

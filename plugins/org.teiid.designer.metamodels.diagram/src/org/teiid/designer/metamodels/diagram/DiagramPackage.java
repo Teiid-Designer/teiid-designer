@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see org.teiid.designer.metamodels.diagram.DiagramFactory
  * @generated
+ *
+ * @since 8.0
  */
 public interface DiagramPackage extends EPackage{
 

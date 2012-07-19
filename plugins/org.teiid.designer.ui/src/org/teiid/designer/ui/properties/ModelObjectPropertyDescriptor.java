@@ -23,6 +23,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectPathLabelProvider;
 
 /**
  * ModelObjectPropertyDescriptor Extension to PropertyDescriptor
+ *
+ * @since 8.0
  */
 public class ModelObjectPropertyDescriptor extends PropertyDescriptor {
 

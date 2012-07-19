@@ -34,6 +34,9 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.datatools.connectivity.TeiidServerJDBCURL;
 
+/**
+ * @since 8.0
+ */
 public class TeiidDriverUIContributor implements IDriverUIContributor, Listener {
 
     protected String VDB_LBL_UI_ = Messages.getString("TeiidDriverUIContributor.VDB_LBL_UI_"); //$NON-NLS-1$

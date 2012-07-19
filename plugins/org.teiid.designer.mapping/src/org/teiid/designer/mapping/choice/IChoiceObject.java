@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * IChoiceObject
+ *
+ * @since 8.0
  */
 public interface IChoiceObject {
 

@@ -31,6 +31,8 @@ import org.teiid.designer.ui.editors.ModelEditorPage;
  * IDiagramType provides a standard set of methods for the diagram editor
  * to access critical compononent factories for diagram models, edit parts,
  * figures, actions and selection handlers.
+ *
+ * @since 8.0
  */
 public interface IDiagramType {
     

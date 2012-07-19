@@ -31,6 +31,8 @@ import org.teiid.core.TeiidRuntimeException;
  * Similarly, the writer can terminate the operation by closing its {@link getOutputStream() OutputStream}.
  * When this occurs, the reader simply sees the termination as a normal termination of the stream.
  * </p>
+ *
+ * @since 8.0
  */
 public class StreamPipe {
     

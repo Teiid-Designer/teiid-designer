@@ -22,6 +22,8 @@ import org.teiid.designer.common.util.I18nUtil;
  * <li>The first character of the full name is a letter; and</li>
  * <li>Each of the remaining characters of the full name is either is a letter, the MetadataID.DELIMITER_CHARACTER, a decimal
  * digit, or the underscore character ('_').
+ *
+ * @since 8.0
  */
 public class IDVerifier {
 

@@ -31,6 +31,8 @@ import org.teiid.designer.datatools.ui.actions.EditConnectionProfileAction;
  * By registering as a listener through the constructor, a wizard page will be notified that a connection profile has changed and that
  * the UI should re-load components that display profile info (i.e. Combo Box, or current selected connection profile).
  * 
+ *
+ * @since 8.0
  */
 public class ConnectionProfileWorker {
 

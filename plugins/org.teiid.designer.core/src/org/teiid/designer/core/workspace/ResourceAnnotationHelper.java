@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.core.AnnotationContainer;
  * Users of this class can add specific name-space key'd Properties to the model for persistence and retrieval at a later time.
  * 
  *
+ *
+ * @since 8.0
  */
 
 

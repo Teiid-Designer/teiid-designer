@@ -17,6 +17,8 @@ import java.io.IOException;
 /**
  * An IIndex is the interface used to generate an index file, and to make queries on
  * this index.
+ *
+ * @since 8.0
  */
 
 public interface IIndex {

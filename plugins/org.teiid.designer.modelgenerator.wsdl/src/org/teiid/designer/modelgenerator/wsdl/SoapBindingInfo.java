@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.modelgenerator.wsdl;
 
+/**
+ * @since 8.0
+ */
 public class SoapBindingInfo {
 
     public static final int STYLE_RPC_ENCODED = 0;

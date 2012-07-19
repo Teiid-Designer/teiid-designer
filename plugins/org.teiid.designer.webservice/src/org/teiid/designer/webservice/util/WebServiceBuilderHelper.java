@@ -72,6 +72,8 @@ import org.teiid.query.sql.lang.Query;
 
 /**
  * Build XSD models from a set of Relational Entities.
+ *
+ * @since 8.0
  */
 public class WebServiceBuilderHelper {
 

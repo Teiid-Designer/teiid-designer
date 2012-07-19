@@ -10,6 +10,9 @@ package org.teiid.designer.schema.tools.model.schema.impl;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.teiid.designer.schema.tools.model.schema.SchemaObjectKey;
 
+/**
+ * @since 8.0
+ */
 public class TypeDefinitionKey implements SchemaObjectKey {
 
 	XSDTypeDefinition type;

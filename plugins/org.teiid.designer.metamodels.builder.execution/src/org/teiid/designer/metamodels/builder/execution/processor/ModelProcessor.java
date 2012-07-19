@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.builder.translator.ResultSetTranslator;
 /**
  * ModelsProcessor - executes a query against the provided schema 'ToCreate' table, using the sqlConnection. The results of the
  * query are used to generate model Resources.
+ *
+ * @since 8.0
  */
 public class ModelProcessor extends AbstractProcessor {
 

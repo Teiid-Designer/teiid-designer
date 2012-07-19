@@ -16,6 +16,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 /**
  * @author dfuglsang
  *
+ *
+ * @since 8.0
  */
 public interface StreamWriter{
         

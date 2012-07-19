@@ -20,6 +20,8 @@ import org.teiid.designer.core.ModelEditorImpl;
 
 /**
  * PasteFromClipboardWithMappingCommand
+ *
+ * @since 8.0
  */
 public class PasteFromClipboardWithMappingCommand extends PasteFromClipboardCommand {
 

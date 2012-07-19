@@ -32,6 +32,8 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
 
 /**
  * Implementation of the ModelBuilder - creates a Resource given a ModelRecord or List of records.
+ *
+ * @since 8.0
  */
 public class ModelBuilderImpl implements ModelBuilder, MetamodelBuilderConstants {
     private final ResourceSet eResourceSet;

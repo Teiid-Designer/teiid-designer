@@ -16,6 +16,8 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 /**
  * IPropertyEditorFactory is an interface for creating custom property cell editors.
  * See the extension point <code>propertyEditorFactory</code> for details.
+ *
+ * @since 8.0
  */
 public interface IPropertyEditorFactory {
 

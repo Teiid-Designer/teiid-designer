@@ -74,6 +74,8 @@ import org.teiid.designer.ui.properties.ModelObjectPropertyDescriptor;
 
 /**
  * ModelObjectUtilities is a set of static utility methods for working with EObjects.
+ *
+ * @since 8.0
  */
 public abstract class ModelObjectUtilities {
 

@@ -19,6 +19,8 @@ import org.teiid.designer.ui.editors.ModelEditor;
 
 /**
  * AutoLayoutWrapper
+ *
+ * @since 8.0
  */
 public class AutoLayoutWrapper extends DiagramAction
                           implements DiagramUiConstants,

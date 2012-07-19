@@ -24,6 +24,8 @@ import org.teiid.designer.ui.common.actions.AbstractAction;
  * wiring so an action can ask for a specific tool item which may be in focuse when pressed. This is to get around the
  * "part activation" problem of selection events being fired on a re-focused part. AddTransformationSourceAction needed to respond
  * to selected objects outside a diagram when the button action (ToolItem) was pressed.
+ *
+ * @since 8.0
  */
 public class DiagramToolBarManager extends ToolBarManager {
 

@@ -26,6 +26,8 @@ import org.teiid.core.util.PluginUtilImpl;
 
 /**
  * RelationalPlugin
+ *
+ * @since 8.0
  */
 public class RelationalPlugin extends Plugin {
 

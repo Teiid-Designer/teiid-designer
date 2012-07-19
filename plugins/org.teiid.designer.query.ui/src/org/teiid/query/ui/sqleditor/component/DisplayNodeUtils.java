@@ -33,6 +33,8 @@ import org.teiid.query.ui.UiPlugin;
 
 /**
  * The <code>DisplayNodeUtils</code> class contains static methods that are useful in working with DisplayNodes.
+ *
+ * @since 8.0
  */
 public final class DisplayNodeUtils implements DisplayNodeConstants {
 

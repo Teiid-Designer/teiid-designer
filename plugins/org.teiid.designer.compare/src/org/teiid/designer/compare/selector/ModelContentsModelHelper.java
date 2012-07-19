@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.core.Annotation;
 
 /**
  * ModelContentsModelHelper
+ *
+ * @since 8.0
  */
 public class ModelContentsModelHelper implements ModelHelper {
     

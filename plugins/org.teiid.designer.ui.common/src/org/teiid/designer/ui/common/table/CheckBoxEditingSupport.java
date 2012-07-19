@@ -16,6 +16,8 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * Simple abstract class for use in table viewers with columns.
+ *
+ * @since 8.0
  */
 public abstract class CheckBoxEditingSupport  extends EditingSupport {
 

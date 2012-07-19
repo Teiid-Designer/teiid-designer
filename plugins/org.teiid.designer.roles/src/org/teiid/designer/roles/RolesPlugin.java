@@ -15,6 +15,9 @@ import org.teiid.core.PluginUtil;
 import org.teiid.core.util.PluginUtilImpl;
 
 
+/**
+ * @since 8.0
+ */
 public class RolesPlugin extends Plugin {
 
     public static final String PLUGIN_ID = RolesPlugin.class.getPackage().getName();

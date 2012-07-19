@@ -89,6 +89,8 @@ import org.teiid.query.ui.builder.util.ElementViewerFactory;
 
 /**
  * ChoicePanel
+ *
+ * @since 8.0
  */
 public class ChoicePanel extends SashForm
     implements ISelectionChangedListener, SelectionListener, UiConstants, PluginConstants, INotifyChangedListener {

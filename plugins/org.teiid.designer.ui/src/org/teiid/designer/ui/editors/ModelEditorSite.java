@@ -28,6 +28,8 @@ import org.eclipse.ui.internal.PopupMenuExtender;
  * ModelEditorSite is an IEditorSite layer between the ModelEditor multi-page editor and the ModelEditorPage IEditorParts that it
  * contains. Each ModelEditorPage has a ModelEditorSite. This class was overridden because ModelEditorSelectionProvider handles
  * the selection for all ModelEditorPages.
+ *
+ * @since 8.0
  */
 @SuppressWarnings( "deprecation" )
 public class ModelEditorSite implements IEditorSite {

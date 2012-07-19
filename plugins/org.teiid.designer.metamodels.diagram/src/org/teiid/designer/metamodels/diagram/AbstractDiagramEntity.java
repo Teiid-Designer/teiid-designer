@@ -27,6 +27,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.diagram.DiagramPackage#getAbstractDiagramEntity()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface AbstractDiagramEntity extends PresentationEntity{
 

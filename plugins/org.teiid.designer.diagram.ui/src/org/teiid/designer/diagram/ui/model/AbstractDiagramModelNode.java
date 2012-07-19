@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.diagram.DiagramEntity;
 
 
 /**
+ *
+ * @since 8.0
  */
 abstract public class AbstractDiagramModelNode implements DiagramModelNode, DiagramUiConstants {
     private boolean layoutState = false;

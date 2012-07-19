@@ -14,6 +14,8 @@ import org.teiid.designer.core.metamodel.aspect.uml.UmlRelationship;
 
 /**
  * BinaryAssocation
+ *
+ * @since 8.0
  */
 public interface BinaryAssociation {
 	// Source/Target Constants

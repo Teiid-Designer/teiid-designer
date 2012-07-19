@@ -32,6 +32,8 @@ import org.teiid.designer.metamodels.core.ModelImport;
 
 /**
  * ForeignKeyColumnsRule
+ *
+ * @since 8.0
  */
 public class MissingModelImportRule implements ObjectValidationRule {
 

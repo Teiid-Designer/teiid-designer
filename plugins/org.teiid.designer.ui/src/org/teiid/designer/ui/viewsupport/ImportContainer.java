@@ -18,6 +18,8 @@ import org.teiid.designer.ui.UiConstants;
  * ImportContainer is the import declaration node beneath the Model node in the ModelOutline tree.
  * It wrapps a ModelAnnotation so that the NewChild/NewSibling action won't see the ModelAnnotation
  * as an EObject in the tree.
+ *
+ * @since 8.0
  */
 public class ImportContainer
 implements UiConstants, IAdaptable {

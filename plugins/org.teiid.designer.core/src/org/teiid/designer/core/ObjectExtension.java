@@ -34,6 +34,8 @@ import org.teiid.designer.metamodels.core.extension.XClass;
 
 /**
  * ObjectExtension
+ *
+ * @since 8.0
  */
 public class ObjectExtension extends EObjectImpl {
 

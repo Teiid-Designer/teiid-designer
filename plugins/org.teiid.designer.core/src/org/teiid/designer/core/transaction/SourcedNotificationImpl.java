@@ -16,6 +16,8 @@ import org.eclipse.emf.common.notify.impl.NotificationImpl;
 
 /**
  * SourcedNotificationImpl
+ *
+ * @since 8.0
  */
 public class SourcedNotificationImpl implements SourcedNotification {
     

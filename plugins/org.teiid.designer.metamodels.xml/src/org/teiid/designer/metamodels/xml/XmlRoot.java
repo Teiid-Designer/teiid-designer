@@ -23,6 +23,8 @@ package org.teiid.designer.metamodels.xml;
  * @see org.teiid.designer.metamodels.xml.XmlDocumentPackage#getXmlRoot()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface XmlRoot extends XmlElement{
     /**

@@ -28,6 +28,8 @@ import org.teiid.designer.metamodels.xml.XmlElement;
  * end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlElementItemProvider extends XmlBaseElementItemProvider {
 

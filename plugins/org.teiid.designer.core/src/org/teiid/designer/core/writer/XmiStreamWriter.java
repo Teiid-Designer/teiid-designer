@@ -21,6 +21,8 @@ import org.teiid.designer.core.ModelerCore;
 /**
  * @author dfuglsang To change this generated comment edit the template variable "typecomment": Window>Preferences>Java>Templates.
  *         To enable and disable the creation of type comments go to Window>Preferences>Java>Code Generation.
+ *
+ * @since 8.0
  */
 public class XmiStreamWriter implements StreamWriter {
 

@@ -19,6 +19,8 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
  * AliasEntryPanel
+ *
+ * @since 8.0
  */
 public class AssociatedLevelsPanel extends Composite {
 

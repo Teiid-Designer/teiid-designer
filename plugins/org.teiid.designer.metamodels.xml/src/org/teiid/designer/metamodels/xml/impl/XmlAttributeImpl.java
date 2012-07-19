@@ -41,6 +41,8 @@ import org.teiid.designer.metamodels.xsd.XsdUtil;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlAttributeImpl extends XmlDocumentNodeImpl implements XmlAttribute {
     /**

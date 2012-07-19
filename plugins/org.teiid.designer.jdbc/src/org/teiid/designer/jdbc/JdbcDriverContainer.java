@@ -25,6 +25,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.jdbc.JdbcPackage#getJdbcDriverContainer()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface JdbcDriverContainer extends EObject{
     /**

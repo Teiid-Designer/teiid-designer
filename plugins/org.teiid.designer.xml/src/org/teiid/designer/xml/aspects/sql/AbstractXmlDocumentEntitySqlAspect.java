@@ -21,6 +21,8 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect;
 
 /**
  * AbstractXmlDocumentEntitySqlAspect
+ *
+ * @since 8.0
  */
 public abstract class AbstractXmlDocumentEntitySqlAspect extends AbstractMetamodelAspect implements SqlAspect {
 

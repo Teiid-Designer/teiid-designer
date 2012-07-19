@@ -12,6 +12,8 @@ import org.eclipse.core.resources.IResource;
 /** ResourceFilter that only accepts Resources that are models.
  *  Uses ModelUtil.isModelFile to determine this.
  * @author PForhan
+ *
+ * @since 8.0
  */
 public class ModelResourceFilter implements ResourceFilter {
 

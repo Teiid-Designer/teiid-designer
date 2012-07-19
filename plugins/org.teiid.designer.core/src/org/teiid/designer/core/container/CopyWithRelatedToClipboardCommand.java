@@ -45,6 +45,8 @@ import org.teiid.designer.metamodels.transformation.TransformationPackage;
  * the {@link org.teiid.designer.core.container.ContainerEditingDomain#getClipboardModelContents(boolean) ContainerEditingDomain's clipboard ModelContents}
  * object (which is reset each time the clipboard contents are set).
  * @see org.teiid.designer.core.container.PasteWithRelatedFromClipboardCommand
+ *
+ * @since 8.0
  */
 public class CopyWithRelatedToClipboardCommand extends CompoundCommand {
 

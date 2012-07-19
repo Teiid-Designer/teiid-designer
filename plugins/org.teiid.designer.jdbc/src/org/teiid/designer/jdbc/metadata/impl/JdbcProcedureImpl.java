@@ -25,6 +25,8 @@ import org.teiid.designer.jdbc.metadata.JdbcSchema;
 
 /**
  * JdbcProcedureImpl
+ *
+ * @since 8.0
  */
 public class JdbcProcedureImpl extends JdbcNodeImpl implements JdbcProcedure {
 

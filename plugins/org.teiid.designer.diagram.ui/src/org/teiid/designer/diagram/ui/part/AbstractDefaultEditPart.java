@@ -42,6 +42,8 @@ import org.teiid.designer.metamodels.diagram.DiagramLinkType;
 
 /**
  * AbstractDefaultEditPart
+ *
+ * @since 8.0
  */
 public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     implements PropertyChangeListener, DiagramEditPart, DropEditPart {

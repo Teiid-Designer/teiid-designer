@@ -28,6 +28,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * MappingDiagramProvider
+ *
+ * @since 8.0
  */
 public class MappingDiagramProvider implements IPackageDiagramProvider {
 

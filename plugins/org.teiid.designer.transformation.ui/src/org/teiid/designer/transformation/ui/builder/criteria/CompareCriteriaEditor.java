@@ -22,6 +22,8 @@ import org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent;
 
 /**
  * CompareCriteriaEditor
+ *
+ * @since 8.0
  */
 public class CompareCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
 

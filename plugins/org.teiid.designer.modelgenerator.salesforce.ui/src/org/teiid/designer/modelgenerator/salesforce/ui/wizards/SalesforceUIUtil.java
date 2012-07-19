@@ -12,6 +12,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.teiid.core.util.FileUtils;
 
+/**
+ * @since 8.0
+ */
 public class SalesforceUIUtil implements FileUtils.Constants {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

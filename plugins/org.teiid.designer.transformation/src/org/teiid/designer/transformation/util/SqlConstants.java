@@ -9,6 +9,8 @@ package org.teiid.designer.transformation.util;
 
 /**
  * SqlConstants
+ *
+ * @since 8.0
  */
 public interface SqlConstants {
 

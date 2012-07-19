@@ -14,6 +14,9 @@ package org.teiid.designer.core.index;
 import java.util.Arrays;
 
 
+/**
+ * @since 8.0
+ */
 public class EntryResult implements IEntryResult {
     private char[] word;
     private int[] fileRefs;

@@ -31,6 +31,8 @@ import org.teiid.designer.metamodels.xsd.XsdPlugin;
 
 /**
  * XsdSchemaDerivativeAspect
+ *
+ * @since 8.0
  */
 public class XsdSchemaDerivativeAspect extends AbstractMetamodelAspect implements ImportsAspect,
                                                                                   FileUtils.Constants {

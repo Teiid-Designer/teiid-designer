@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.model;
 
+/**
+ * @since 8.0
+ */
 public interface Message extends WSDLElement {
 	
 	public Part[] getParts();	

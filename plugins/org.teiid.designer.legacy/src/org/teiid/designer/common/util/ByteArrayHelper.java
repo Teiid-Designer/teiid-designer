@@ -16,6 +16,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * @since 8.0
+ */
 public class ByteArrayHelper {
 
     /**

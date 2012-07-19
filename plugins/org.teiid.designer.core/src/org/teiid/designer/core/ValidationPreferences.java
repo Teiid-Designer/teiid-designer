@@ -12,6 +12,8 @@ import java.util.Map;
 
 /**
  * ValidationPreferences
+ *
+ * @since 8.0
  */
 public interface ValidationPreferences {
 

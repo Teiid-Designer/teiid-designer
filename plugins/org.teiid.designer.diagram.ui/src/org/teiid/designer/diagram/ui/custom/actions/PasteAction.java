@@ -16,6 +16,8 @@ import org.teiid.designer.diagram.ui.actions.DiagramAction;
 
 /**
  * PasteAction
+ *
+ * @since 8.0
  */
 public class PasteAction 
      extends DiagramAction

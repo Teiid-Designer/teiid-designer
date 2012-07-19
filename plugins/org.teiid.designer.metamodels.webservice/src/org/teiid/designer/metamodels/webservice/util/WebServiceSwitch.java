@@ -29,6 +29,8 @@ import org.teiid.designer.metamodels.webservice.WebServicePackage;
  * 
  * @see org.teiid.designer.metamodels.webservice.WebServicePackage
  * @generated
+ *
+ * @since 8.0
  */
 public class WebServiceSwitch {
 

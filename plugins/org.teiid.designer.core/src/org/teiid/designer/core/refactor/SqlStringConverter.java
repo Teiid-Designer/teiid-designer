@@ -29,6 +29,8 @@ import org.teiid.designer.core.resource.EmfResource;
 
 /**
  * SqlStringConverter
+ *
+ * @since 8.0
  */
 public class SqlStringConverter {
 

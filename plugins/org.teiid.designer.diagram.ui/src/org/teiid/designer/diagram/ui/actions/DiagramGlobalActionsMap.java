@@ -11,6 +11,8 @@ import org.teiid.designer.ui.actions.ModelerGlobalActionsMap;
 
 /**
  * DiagramGlobalActionsMap
+ *
+ * @since 8.0
  */
 public class DiagramGlobalActionsMap extends ModelerGlobalActionsMap                                  
                                   implements IDiagramActionConstants {

@@ -10,6 +10,8 @@ package org.teiid.designer.relational.model;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class RelationalView extends RelationalTable {
 

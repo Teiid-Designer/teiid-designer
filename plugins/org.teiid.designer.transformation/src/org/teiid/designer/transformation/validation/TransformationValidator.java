@@ -75,6 +75,8 @@ import org.teiid.query.validator.UpdateValidator.UpdateType;
 
 /**
  * TransformationValidator Static methods for doing Validation on the transformation.
+ *
+ * @since 8.0
  */
 public class TransformationValidator implements QueryValidator {
 

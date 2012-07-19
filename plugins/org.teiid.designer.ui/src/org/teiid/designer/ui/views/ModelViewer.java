@@ -13,6 +13,8 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
  * ModelViewer is a common interface for all ViewParts and ViewPages that show 
  * model contents and wish to be double-click enabled with the ModelEditor.  
  * ModelViewer may be implemented by any IViewPart or any IPage.
+ *
+ * @since 8.0
  */
 public interface ModelViewer {
 

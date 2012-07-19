@@ -60,6 +60,8 @@ import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 /**
  * WSDL Operations Selection page. This page of the WSDL to Relational Importer is used to select the operations in the source
  * wsdl that will be used to generate the relational entities.
+ *
+ * @since 8.0
  */
 public class SelectWsdlOperationsPage extends AbstractWizardPage
     implements Listener, FileUtils.Constants, CoreStringUtil.Constants, ModelGeneratorWsdlUiConstants,

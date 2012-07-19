@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.core.ModelType;
 
 /**
  * Descriptor 
+ *
+ * @since 8.0
  */
 public interface MetamodelDescriptor {
     

@@ -5,6 +5,9 @@ import java.util.Properties;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.HashCodeUtil;
 
+/**
+ * @since 8.0
+ */
 public class TeiidDataSource implements Comparable<TeiidDataSource> {
 
     private final String displayName;

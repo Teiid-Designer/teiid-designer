@@ -13,6 +13,8 @@ import java.util.Date;
 
 /**
  * <p>The VirtualDatabase identifies a collection of DataSources and Virtual DataSources that a client can connect to and interrogate its metadata.</p> 
+ *
+ * @since 8.0
  */
 public interface VirtualDatabase extends MetadataObject {
 /**

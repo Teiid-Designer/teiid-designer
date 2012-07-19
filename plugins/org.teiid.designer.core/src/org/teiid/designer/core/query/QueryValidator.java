@@ -13,6 +13,8 @@ import org.teiid.query.metadata.QueryMetadataInterface;
 
 /** 
  * QueryValidator, a helper utility that validate the sql and returns a result.
+ *
+ * @since 8.0
  */
 public interface QueryValidator {
     

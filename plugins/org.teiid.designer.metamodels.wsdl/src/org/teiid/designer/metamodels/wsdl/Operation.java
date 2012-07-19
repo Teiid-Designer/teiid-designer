@@ -25,6 +25,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getOperation()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Operation extends WsdlNameRequiredEntity, ExtensibleDocumented {
 

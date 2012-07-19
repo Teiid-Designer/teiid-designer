@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.core.extension.XEnumLiteral;
  * begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XEnumLiteralItemProvider extends EEnumLiteralItemProvider {
 

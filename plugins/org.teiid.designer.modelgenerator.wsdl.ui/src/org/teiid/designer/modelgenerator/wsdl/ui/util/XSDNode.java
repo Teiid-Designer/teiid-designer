@@ -9,6 +9,9 @@ package org.teiid.designer.modelgenerator.wsdl.ui.util;
 
 import java.util.Collection;
 
+/**
+ * @since 8.0
+ */
 public class XSDNode {
 	Object schemaObject;
 	String name;

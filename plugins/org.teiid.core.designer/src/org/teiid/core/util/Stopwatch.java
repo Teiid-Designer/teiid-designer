@@ -13,6 +13,9 @@ import org.teiid.core.CorePlugin;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.logging.MessageLevel;
 
+/**
+ * @since 8.0
+ */
 public class Stopwatch implements Serializable {
     private static final long serialVersionUID = 8632873770474816540L;
 
@@ -158,6 +161,9 @@ public class Stopwatch implements Serializable {
         return "" + valueString; //$NON-NLS-1$
     }
 
+/**
+ * @since 8.0
+ */
     public class Statistics implements Serializable {
         private static final long serialVersionUID = 6451257438010489623L;
         private long minimum = 0;

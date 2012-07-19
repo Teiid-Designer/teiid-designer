@@ -19,6 +19,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.ui.Messages;
 
+/**
+ * @since 8.0
+ */
 public class EditRelationalObjectDialog extends TitleAreaDialog implements IDialogStatusListener {
 
     private final String TITLE = Messages.createRelationalTableTitle;

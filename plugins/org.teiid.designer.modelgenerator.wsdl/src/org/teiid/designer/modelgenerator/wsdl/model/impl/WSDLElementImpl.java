@@ -9,6 +9,9 @@ package org.teiid.designer.modelgenerator.wsdl.model.impl;
 
 import org.teiid.designer.modelgenerator.wsdl.model.WSDLElement;
 
+/**
+ * @since 8.0
+ */
 public abstract class WSDLElementImpl implements WSDLElement {
 
 	private String m_id;

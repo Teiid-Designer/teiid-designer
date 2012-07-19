@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.core.ModelAnnotation;
 
 /**
  * The URIModelSelector represents a selector for a model that exists and can be loaded via a URI.
+ *
+ * @since 8.0
  */
 public class URIModelSelector extends TemporaryResourceModelSelector {
 

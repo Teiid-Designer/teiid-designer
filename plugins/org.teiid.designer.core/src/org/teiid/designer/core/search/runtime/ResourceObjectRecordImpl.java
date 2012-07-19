@@ -12,6 +12,8 @@ import org.teiid.designer.core.index.IndexConstants;
 
 /**
  * ResourceObjectRecordImpl
+ *
+ * @since 8.0
  */
 public class ResourceObjectRecordImpl extends AbstractSearchRecord implements ResourceObjectRecord {
 

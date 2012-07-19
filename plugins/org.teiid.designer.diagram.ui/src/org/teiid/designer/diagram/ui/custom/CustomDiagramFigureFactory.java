@@ -24,6 +24,8 @@ import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 
 /**
  * PackageDiagramFigureFactory
+ *
+ * @since 8.0
  */
 public class CustomDiagramFigureFactory extends AbstractDiagramFigureFactory implements DiagramUiConstants {
     private static final int CUSTOM_DIAGRAM = 0;

@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.xml.XmlAll;
  * end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlAllItemProvider extends XmlContainerNodeItemProvider {
     /**

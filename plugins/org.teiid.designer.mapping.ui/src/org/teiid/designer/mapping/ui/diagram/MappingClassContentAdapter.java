@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.transformation.MappingClass;
 
 /**
  * MappingClassContentAdapter
+ *
+ * @since 8.0
  */
 public class MappingClassContentAdapter implements IClassifierContentAdapter {
     

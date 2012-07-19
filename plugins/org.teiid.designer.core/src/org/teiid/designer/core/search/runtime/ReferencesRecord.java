@@ -10,6 +10,8 @@ package org.teiid.designer.core.search.runtime;
 
 /**
  * ReferencesRecord
+ *
+ * @since 8.0
  */
 public interface ReferencesRecord extends SearchRecord {
 

@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.builder.util.MetaClassUriHelper;
 
 /**
  * Record object for creating MetaModelEnties for this builder framework 
+ *
+ * @since 8.0
  */
 public class MetamodelEntityRecord {
 	

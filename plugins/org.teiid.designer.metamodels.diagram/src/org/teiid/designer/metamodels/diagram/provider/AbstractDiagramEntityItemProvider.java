@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.diagram.DiagramPackage;
  * begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class AbstractDiagramEntityItemProvider extends PresentationEntityItemProvider {
 

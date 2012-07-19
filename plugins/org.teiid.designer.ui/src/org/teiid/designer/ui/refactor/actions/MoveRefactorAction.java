@@ -34,6 +34,8 @@ import org.teiid.designer.ui.viewsupport.OrganizeImportHandlerDialog;
 
 /**
  * MoveRefactorAction
+ *
+ * @since 8.0
  */
 public class MoveRefactorAction extends RefactorAction {
 

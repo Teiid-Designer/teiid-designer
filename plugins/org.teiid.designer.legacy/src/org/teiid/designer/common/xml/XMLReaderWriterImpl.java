@@ -20,7 +20,9 @@ import org.jdom.output.XMLOutputter;
 /** 
 * This implementation will use the JDOMhelper to read in XML files and will
 * use the JDOM utility to write out JDOM XML files.
-*/
+ *
+ * @since 8.0
+ */
 public class XMLReaderWriterImpl implements XMLReaderWriter{
 
     public static final int DEFAULT_INDENT_SIZE = 4;

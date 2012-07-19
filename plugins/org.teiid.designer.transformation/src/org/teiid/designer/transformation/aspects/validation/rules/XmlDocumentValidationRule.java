@@ -89,6 +89,8 @@ import org.teiid.query.validator.ValidatorReport;
 
 /**
  * XmlDocumentValidationRule
+ *
+ * @since 8.0
  */
 public class XmlDocumentValidationRule implements ObjectValidationRule {
 

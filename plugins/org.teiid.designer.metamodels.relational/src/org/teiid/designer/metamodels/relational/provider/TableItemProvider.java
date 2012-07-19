@@ -33,6 +33,8 @@ import org.teiid.designer.metamodels.relational.util.RelationalUtil;
  * end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class TableItemProvider extends ColumnSetItemProvider {
     /**

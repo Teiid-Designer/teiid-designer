@@ -28,6 +28,9 @@ import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.MessageLabel;
 
+/**
+ * @since 8.0
+ */
 public class SelectConnectionProfileDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
     private static final String DEFAULT_TITLE = DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.title"); //$NON-NLS-1$ 
     private static final String NEW_BUTTON_TEXT = DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.newButton"); //$NON-NLS-1$

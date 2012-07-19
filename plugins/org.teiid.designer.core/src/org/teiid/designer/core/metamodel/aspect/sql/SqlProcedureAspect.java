@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * SqlProcedureAspect
+ *
+ * @since 8.0
  */
 public interface SqlProcedureAspect extends
                                    SqlAspect {

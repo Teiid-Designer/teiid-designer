@@ -32,6 +32,8 @@ import org.w3c.dom.Node;
  * adding the runtime type DOM Node properties.  This class creates property descriptors for
  * the DOM Node properties and handles the get/set of property values.  All other EObject 
  * properties on XSDSimpleTypeDefinition are handled by the EMF property source.
+ *
+ * @since 8.0
  */
 public class SimpleDatatypePropertySource implements IPropertySource {
 

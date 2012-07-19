@@ -11,6 +11,8 @@ import org.teiid.designer.jdbc.data.Request;
 
 /**
  * ResultsContainer
+ *
+ * @since 8.0
  */
 public class RequestContainer {
 

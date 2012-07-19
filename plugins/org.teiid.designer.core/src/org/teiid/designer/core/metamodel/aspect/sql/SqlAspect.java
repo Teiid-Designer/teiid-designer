@@ -13,6 +13,8 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelAspect;
 
 /**
  * SqlAspect
+ *
+ * @since 8.0
  */
 public interface SqlAspect extends MetamodelAspect {
 

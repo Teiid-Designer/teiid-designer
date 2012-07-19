@@ -26,6 +26,8 @@ import org.teiid.designer.metamodels.transformation.TreeMappingRoot;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class TreeMappingRootImpl extends TransformationMappingRootImpl implements TreeMappingRoot {
 

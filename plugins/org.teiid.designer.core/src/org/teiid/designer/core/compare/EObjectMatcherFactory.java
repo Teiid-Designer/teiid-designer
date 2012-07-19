@@ -14,6 +14,8 @@ import org.eclipse.emf.ecore.EReference;
 /**
  * This interface represents a factory for {@link EObjectMatcher} instances.  Extensions of the
  * {@link org.teiid.designer.core.ModelerCore.EXTENSION_POINT.EOBJECT_MATCHER_FACTORY#UNIQUE_ID }
+ *
+ * @since 8.0
  */
 public interface EObjectMatcherFactory {
     

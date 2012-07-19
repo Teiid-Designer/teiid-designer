@@ -24,6 +24,8 @@ import org.teiid.core.event.IChangeNotifier;
  * tree nodes such that it can quickly return a list of visible objects.  The class works
  * by listening to tree expansion and collapse, then marking the child TreeItems with
  * a visibility key.
+ *
+ * @since 8.0
  */
 public class TreeExpansionMonitor implements TreeListener, IChangeNotifier {
 

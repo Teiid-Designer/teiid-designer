@@ -27,6 +27,8 @@ import org.teiid.designer.vdb.manifest.PermissionElement;
 
 /**
  *
+ *
+ * @since 8.0
  */
 @XmlAccessorType( XmlAccessType.NONE )
 @XmlType( name = "" )

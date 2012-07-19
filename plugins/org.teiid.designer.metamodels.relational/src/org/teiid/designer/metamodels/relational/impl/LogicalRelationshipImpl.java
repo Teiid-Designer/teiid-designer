@@ -38,6 +38,8 @@ import org.teiid.designer.metamodels.relational.Schema;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class LogicalRelationshipImpl extends RelationshipImpl implements LogicalRelationship {
     /**

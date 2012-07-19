@@ -73,6 +73,8 @@ import org.teiid.designer.ui.viewsupport.RelationalObjectFactory;
  * 
  * Basically, this provides users the ability to model functions defined in databases and use the function call within
  * virtual table or procedure SQL statements/transformations. (see {@link UdfManager})
+ *
+ * @since 8.0
  */
 public class CreatePushdownFunctionAction extends Action implements INewChildAction, INewSiblingAction, SourceFunctionModelExtensionConstants {
 	private IFile selectedModel;

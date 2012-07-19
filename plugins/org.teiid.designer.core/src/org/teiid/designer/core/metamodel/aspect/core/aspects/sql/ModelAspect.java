@@ -28,6 +28,8 @@ import org.teiid.designer.metamodels.core.ModelType;
 
 /**
  * ModelAspect
+ *
+ * @since 8.0
  */
 public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspect, SqlAnnotationAspect {
 

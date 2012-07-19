@@ -3,6 +3,8 @@ package org.teiid.designer.vdb.connections;
 /**
  * Class to hold the basic info required for a VDB source connection
  *
+ *
+ * @since 8.0
  */
 public class VdbSourceConnection {
 	

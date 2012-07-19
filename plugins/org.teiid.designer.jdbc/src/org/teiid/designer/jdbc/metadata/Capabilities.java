@@ -12,6 +12,8 @@ import java.sql.SQLException;
 
 /**
  * This interface provides access to the (metadata) capabilities of a JDBC driver
+ *
+ * @since 8.0
  */
 public interface Capabilities {
 

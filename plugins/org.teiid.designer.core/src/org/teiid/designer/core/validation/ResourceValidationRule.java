@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 /**
  * ResourceValidationRule
+ *
+ * @since 8.0
  */
 public interface ResourceValidationRule extends ValidationRule {
 

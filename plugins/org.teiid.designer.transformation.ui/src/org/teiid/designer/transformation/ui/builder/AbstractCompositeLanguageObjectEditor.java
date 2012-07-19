@@ -23,6 +23,8 @@ import org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent;
 
 /**
  * The <code>AbstractCompositeLanguageObjectEditor</code> manages a set of
+ *
+ * @since 8.0
  */
 public abstract class AbstractCompositeLanguageObjectEditor extends AbstractLanguageObjectEditor {
 

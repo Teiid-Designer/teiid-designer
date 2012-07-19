@@ -32,6 +32,8 @@ import org.teiid.designer.jdbc.SourceNames;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class JdbcImportSettingsItemProvider
     extends ItemProviderAdapter

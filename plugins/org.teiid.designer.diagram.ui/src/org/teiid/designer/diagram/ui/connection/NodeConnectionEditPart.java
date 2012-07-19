@@ -28,6 +28,8 @@ import org.teiid.designer.diagram.ui.part.DiagramEditPart;
 
 /**
  * NodeConnectionEditPart
+ *
+ * @since 8.0
  */
 public class NodeConnectionEditPart extends AbstractConnectionEditPart 
                                  implements PropertyChangeListener, FigureListener {

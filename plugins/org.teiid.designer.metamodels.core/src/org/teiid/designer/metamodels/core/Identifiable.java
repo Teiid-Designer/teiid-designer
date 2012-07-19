@@ -21,6 +21,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.core.CorePackage#getIdentifiable()
  * @model interface="true" abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface Identifiable extends EObject {
 

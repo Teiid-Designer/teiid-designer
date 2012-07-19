@@ -10,6 +10,8 @@ package org.teiid.designer.metadata.runtime.api;
 
 /**
  * The runtime id used to uniquely identify a Model. 
+ *
+ * @since 8.0
  */
 public interface ModelID extends MetadataID {
 /**

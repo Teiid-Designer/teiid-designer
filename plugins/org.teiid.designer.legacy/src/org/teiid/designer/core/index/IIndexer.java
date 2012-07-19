@@ -15,6 +15,8 @@ package org.teiid.designer.core.index;
  * An <code>IIndexer</code> indexes ONE document at each time. It adds the document names and
  * the words references to an IIndex. Each IIndexer can index certain types of document, and should
  * not index the other files. 
+ *
+ * @since 8.0
  */
 public interface IIndexer {
 	/**

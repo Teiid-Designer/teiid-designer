@@ -26,6 +26,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
+/**
+ * @since 8.0
+ */
 public class FormUtil {
 
     public static final String HTML_BEGIN = "<form><p>"; //$NON-NLS-1$

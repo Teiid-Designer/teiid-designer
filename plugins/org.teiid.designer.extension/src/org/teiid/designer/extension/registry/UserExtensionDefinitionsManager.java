@@ -27,6 +27,8 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 
 /**
  * The <code>UserDefinitionsManager</code> class manages the persistence of User-Defined ModelExtensionDefintions
+ *
+ * @since 8.0
  */
 public final class UserExtensionDefinitionsManager {
 

@@ -13,6 +13,8 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * A ModelRefactorCommand is the interface that all refactoring commands have to implement
+ *
+ * @since 8.0
  */
 public interface ModelRefactorCommand {
 

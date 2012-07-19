@@ -8,5 +8,8 @@
 
 package org.teiid.core.event;
 
+/**
+ * @since 8.0
+ */
 public interface EventBroker extends EventSource, EventObjectListener {
 }

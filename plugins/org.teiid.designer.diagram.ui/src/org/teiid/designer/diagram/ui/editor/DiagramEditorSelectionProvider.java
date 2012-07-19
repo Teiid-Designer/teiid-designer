@@ -22,6 +22,8 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 /**
  * DiagramEditorSelectionProvider is the ModelObjectSelectionProvider for the DiagramViewer.
  * It handles diagram selection for the viewer, plus an optional provider for the DiagramController.
+ *
+ * @since 8.0
  */
 public class DiagramEditorSelectionProvider implements ISelectionProvider, ISelectionChangedListener {
 

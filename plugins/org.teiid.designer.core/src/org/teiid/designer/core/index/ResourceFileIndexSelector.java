@@ -39,6 +39,8 @@ import org.teiid.designer.core.workspace.ModelFileUtil;
  * ResourceFileIndexSelector returns indexes associated with a specified file. The specified file can represent a single EMF
  * resource, a folder containing zero or more resources, or an archive containing resource files. Indexes will be generated for
  * all resources associated with the specified file.
+ *
+ * @since 8.0
  */
 
 // mtkTODO: Remove this class (and the subclass, associated tests, and factory functionality)

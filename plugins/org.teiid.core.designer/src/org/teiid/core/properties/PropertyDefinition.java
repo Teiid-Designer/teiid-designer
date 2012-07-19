@@ -9,6 +9,8 @@ package org.teiid.core.properties;
 
 /**
  * The attributes of a property.
+ *
+ * @since 8.0
  */
 public interface PropertyDefinition {
 

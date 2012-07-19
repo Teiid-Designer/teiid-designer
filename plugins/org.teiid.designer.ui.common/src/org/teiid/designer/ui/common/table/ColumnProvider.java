@@ -17,6 +17,8 @@ import org.teiid.metadata.Column;
 /**
  * @param <T>
  * @param <V>
+ *
+ * @since 8.0
  */
 public interface ColumnProvider<T, V> extends Comparator<T> {
 

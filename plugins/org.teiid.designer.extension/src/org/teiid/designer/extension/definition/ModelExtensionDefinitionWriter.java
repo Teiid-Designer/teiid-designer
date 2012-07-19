@@ -37,6 +37,8 @@ import org.w3c.dom.Text;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class ModelExtensionDefinitionWriter {
 

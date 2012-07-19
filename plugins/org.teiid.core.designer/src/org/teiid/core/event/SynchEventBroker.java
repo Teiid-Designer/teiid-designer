@@ -10,6 +10,9 @@ package org.teiid.core.event;
 import java.util.EventObject;
 import org.teiid.core.CorePlugin;
 
+/**
+ * @since 8.0
+ */
 public class SynchEventBroker extends AbstractEventBroker {
 
     private static final String DEFAULT_NAME = CorePlugin.Util.getString("SynchEventBroker.DefaultName"); //$NON-NLS-1$

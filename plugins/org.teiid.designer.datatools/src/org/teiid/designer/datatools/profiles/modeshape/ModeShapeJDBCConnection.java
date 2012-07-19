@@ -7,6 +7,9 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.JDBCConnection;
 
+/**
+ * @since 8.0
+ */
 public class ModeShapeJDBCConnection extends JDBCConnection {
 
 	public ModeShapeJDBCConnection( IConnectionProfile profile,

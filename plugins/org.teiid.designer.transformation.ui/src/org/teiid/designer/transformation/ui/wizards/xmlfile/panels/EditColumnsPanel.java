@@ -41,6 +41,9 @@ import org.teiid.designer.ui.common.table.CheckBoxEditingSupport;
 import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 
 
+/**
+ * @since 8.0
+ */
 public class EditColumnsPanel {
     private final String EMPTY = ""; //$NON-NLS-1$
     private final int NAME_PROP = 0;

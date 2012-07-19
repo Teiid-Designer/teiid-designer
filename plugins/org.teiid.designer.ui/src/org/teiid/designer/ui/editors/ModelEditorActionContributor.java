@@ -36,6 +36,8 @@ import org.teiid.designer.ui.common.actions.GlobalActionsMap;
  * Manages the installation/deinstallation of global actions for multi-page editors. Responsible for the redirection of global
  * actions to the active editor. Multi-page contributor replaces the contributors for the individual editors in the multi-page
  * editor.
+ *
+ * @since 8.0
  */
 public class ModelEditorActionContributor extends MultiPageEditorActionBarContributor
     implements IModelerActionConstants, UiConstants {

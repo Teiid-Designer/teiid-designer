@@ -14,6 +14,8 @@ import org.eclipse.jface.viewers.ISelection;
  * and should I be displayed to the user.
  * @author BLaFond
  *
+ *
+ * @since 8.0
  */
 public interface ISelectionAction {
 

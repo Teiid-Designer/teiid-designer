@@ -41,6 +41,8 @@ import org.eclipse.ui.dialogs.PropertyPage;
  * 
  * It contains code from DTP's ViewPropertyAction because it handled the complex nature of the property contributions for connection 
  * profiles.
+ *
+ * @since 8.0
  */
 public class EditConnectionProfileAction extends Action {
 

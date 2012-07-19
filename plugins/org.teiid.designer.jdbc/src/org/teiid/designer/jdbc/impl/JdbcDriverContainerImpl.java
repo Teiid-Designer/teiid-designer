@@ -32,6 +32,8 @@ import org.teiid.designer.jdbc.JdbcPackage;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class JdbcDriverContainerImpl extends EObjectImpl implements JdbcDriverContainer {
     /**

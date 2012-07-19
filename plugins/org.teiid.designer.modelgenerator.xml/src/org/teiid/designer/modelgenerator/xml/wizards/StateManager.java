@@ -41,6 +41,9 @@ import org.teiid.designer.schema.tools.processing.SchemaUtil;
 import org.teiid.designer.schema.tools.processing.internal.SchemaProcessorImpl;
 
 
+/**
+ * @since 8.0
+ */
 public class StateManager {
 
     /** Key=File or IFile, Value=Resource. */

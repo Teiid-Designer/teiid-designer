@@ -20,6 +20,8 @@ import org.teiid.designer.core.workspace.ModelResource;
  * INewModelWizardContributor is an interface for the newModelWizardContributor extension point.
  * It allows a plugin to contribute pages to the NewModelWizard that will do additional work
  * to populate a model of a given MetamodelDescriptor.
+ *
+ * @since 8.0
  */
 public interface INewModelWizardContributor {
 

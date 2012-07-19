@@ -35,6 +35,9 @@ import org.teiid.designer.jdbc.metadata.impl.JdbcDatabaseImpl;
 import org.teiid.designer.jdbc.metadata.impl.JdbcNodeSelections;
 
 
+/**
+ * @since 8.0
+ */
 public class JdbcPlugin extends Plugin {
 
     /**

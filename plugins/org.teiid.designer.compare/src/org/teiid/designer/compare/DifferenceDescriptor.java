@@ -27,6 +27,8 @@ import org.eclipse.emf.mapping.MappingHelper;
  * @see org.teiid.designer.compare.ComparePackage#getDifferenceDescriptor()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface DifferenceDescriptor extends MappingHelper{
     /**

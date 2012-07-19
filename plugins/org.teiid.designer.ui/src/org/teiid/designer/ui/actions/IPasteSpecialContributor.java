@@ -12,6 +12,8 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
  * IPasteSpecialContributor
+ *
+ * @since 8.0
  */
 public interface IPasteSpecialContributor extends IWorkbenchWindowActionDelegate, ISelectionListener {
 

@@ -17,6 +17,9 @@ import org.teiid.designer.schema.tools.model.schema.SchemaModel;
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 import org.teiid.designer.schema.tools.model.schema.impl.SchemaModelImpl;
 
+/**
+ * @since 8.0
+ */
 public class RequestProcessorImpl extends BaseRelationshipProcessor {
 
     public boolean DEBUG_SOUT_REPRESENTATIONS = true;

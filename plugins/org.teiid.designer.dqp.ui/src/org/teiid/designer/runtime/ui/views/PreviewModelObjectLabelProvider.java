@@ -17,6 +17,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class PreviewModelObjectLabelProvider implements ILightweightLabelDecorator {
 

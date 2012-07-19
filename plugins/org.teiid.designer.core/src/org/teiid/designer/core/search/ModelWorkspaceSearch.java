@@ -35,6 +35,8 @@ import org.teiid.designer.core.search.runtime.SearchRuntimeAdapter;
 
 /**
  * ModelWorkspaceSearch
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceSearch {
     private static final IQueryResult[] EMTPY_QUERY_RESULT_ARRAY = new IQueryResult[0];

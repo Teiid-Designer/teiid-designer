@@ -23,6 +23,8 @@ import org.teiid.designer.core.resource.XmlXResourceDelegate;
  * 
  * @see org.teiid.designer.metamodels.wsdl.io.WsdlResourceFactoryImpl
  * @generated
+ *
+ * @since 8.0
  */
 public class WsdlResourceImpl extends XMLResourceImpl implements XResource {
 

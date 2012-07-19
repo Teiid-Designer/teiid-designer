@@ -16,6 +16,8 @@ import org.teiid.designer.ui.common.actions.ActionService;
 
 /**
  * The activator class controls the plug-in life cycle
+ *
+ * @since 8.0
  */
 public class Activator extends AbstractUiPlugin implements ModelGeneratorSalesforceUiConstants {
 

@@ -20,6 +20,9 @@ import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.viewsupport.ModelStatisticsDialog;
 
 
+/**
+ * @since 8.0
+ */
 public class ModelStatisticsReporter {
 	private IFile modelFile;
 	

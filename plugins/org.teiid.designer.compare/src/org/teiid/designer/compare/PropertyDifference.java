@@ -29,6 +29,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * @see org.teiid.designer.compare.ComparePackage#getPropertyDifference()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface PropertyDifference extends EObject{
     /**

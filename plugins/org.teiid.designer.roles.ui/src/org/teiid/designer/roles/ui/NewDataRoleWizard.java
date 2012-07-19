@@ -61,6 +61,9 @@ import org.teiid.designer.ui.common.widget.ListPanel;
 import org.teiid.designer.ui.common.widget.ListPanelAdapter;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
 
+/**
+ * @since 8.0
+ */
 public class NewDataRoleWizard extends AbstractWizard {
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(NewDataRoleWizard.class);
 

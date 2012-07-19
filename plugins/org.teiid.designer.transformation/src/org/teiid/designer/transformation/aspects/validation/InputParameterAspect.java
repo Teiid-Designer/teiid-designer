@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.transformation.TransformationPackage;
 
 /**
  * InputParameterAspect
+ *
+ * @since 8.0
  */
 public class InputParameterAspect extends TransformationAspect {
 	

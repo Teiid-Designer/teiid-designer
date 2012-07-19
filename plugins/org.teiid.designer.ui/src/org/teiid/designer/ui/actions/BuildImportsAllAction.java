@@ -43,6 +43,8 @@ import org.teiid.designer.ui.event.ModelResourceEvent;
 /**
  * RebuildImportsAllAction rebuilds the model import declarations for all the models in the workspace. The models must be in open
  * model projects.
+ *
+ * @since 8.0
  */
 public class BuildImportsAllAction extends ActionDelegate implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
 

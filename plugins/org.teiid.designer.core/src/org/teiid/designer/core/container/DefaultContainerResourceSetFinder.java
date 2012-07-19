@@ -17,6 +17,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 /**
  * The DefaultContainerResourceSetFinder always returns the one {@link ResourceSet} that is available from
  * the {@link ModelerCore#getModelContainer() default model container}.
+ *
+ * @since 8.0
  */
 public class DefaultContainerResourceSetFinder implements ResourceSetFinder {
 

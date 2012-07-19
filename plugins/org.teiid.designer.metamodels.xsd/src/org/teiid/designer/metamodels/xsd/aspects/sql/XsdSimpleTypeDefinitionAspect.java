@@ -57,6 +57,8 @@ import org.teiid.designer.metamodels.xsd.XsdUtil;
 
 /**
  * XsdSimpleTypeDefinitionAspect
+ *
+ * @since 8.0
  */
 public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect implements SqlDatatypeAspect {
 

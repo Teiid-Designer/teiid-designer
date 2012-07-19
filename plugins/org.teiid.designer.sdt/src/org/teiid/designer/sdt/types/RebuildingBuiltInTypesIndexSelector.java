@@ -26,6 +26,9 @@ import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.sdt.ModelerSdtPlugin;
 
 
+/**
+ * @since 8.0
+ */
 public class RebuildingBuiltInTypesIndexSelector extends ResourceFileIndexSelector {
 
     /** Defines the expected name of the built-in datatypes model file and index file */

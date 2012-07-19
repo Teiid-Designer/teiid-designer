@@ -16,6 +16,8 @@ import org.eclipse.emf.edit.provider.INotifyChangedListener;
  * The <code>CompositeNotifyChangeListener</code> class contains a collection of
  * <code>INotifyChangedListener</code>s. This collection of listeners is notified by this class
  * every time it receives a {@link org.eclipse.emf.common.notify.Notification}.
+ *
+ * @since 8.0
  */
 public class CompositeNotifyChangeListener implements INotifyChangedListener {
 

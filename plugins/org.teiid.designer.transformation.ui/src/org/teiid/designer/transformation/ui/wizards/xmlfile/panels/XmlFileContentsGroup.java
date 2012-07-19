@@ -36,6 +36,9 @@ import org.teiid.designer.ui.common.tree.AbstractTreeContentProvider;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
+/**
+ * @since 8.0
+ */
 public class XmlFileContentsGroup {
 	
 	TreeViewer xmlTreeViewer;

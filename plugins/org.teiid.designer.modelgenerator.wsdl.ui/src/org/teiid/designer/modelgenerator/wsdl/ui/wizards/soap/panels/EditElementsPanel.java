@@ -42,6 +42,9 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsP
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
 
 
+/**
+ * @since 8.0
+ */
 public class EditElementsPanel {
 	private final Image XSD_ELEMENT_ICON_IMG = 
 			ModelGeneratorWsdlUiUtil.getImage(ModelGeneratorWsdlUiConstants.Images.XSD_ELEMENT_ICON);

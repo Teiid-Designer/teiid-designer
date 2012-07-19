@@ -28,6 +28,8 @@ import org.teiid.designer.runtime.preview.PreviewContext;
 /**
  * The <code>CompositePreviewJob</code> is a job that wraps multiple {@link PreviewVdbJob}s. Jobs can be run in sequence or
  * asynchronously. At least one job must be added before running.
+ *
+ * @since 8.0
  */
 public class CompositePreviewJob extends Job implements PreviewVdbJob {
 

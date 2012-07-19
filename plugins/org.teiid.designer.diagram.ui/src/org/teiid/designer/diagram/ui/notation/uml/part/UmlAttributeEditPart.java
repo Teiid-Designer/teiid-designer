@@ -47,6 +47,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 /**
  * UmlAttributeEditPart
+ *
+ * @since 8.0
  */
 public class UmlAttributeEditPart extends AbstractNotationEditPart implements DirectEditPart {
     private DirectEditManager manager;

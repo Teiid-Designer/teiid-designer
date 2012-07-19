@@ -16,6 +16,8 @@ import org.teiid.designer.diagram.ui.util.DiagramEntityAdapter;
  * @author mdrilling
  *
  * Model Node for UML Attribute.
+ *
+ * @since 8.0
  */
 public class UmlOperationNode extends UmlModelNode {
 

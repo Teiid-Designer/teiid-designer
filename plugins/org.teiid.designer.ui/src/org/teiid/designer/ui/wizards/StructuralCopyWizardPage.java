@@ -24,6 +24,9 @@ import org.teiid.designer.ui.common.widget.INodeDescendantsDeselectionHandler;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
 		INodeDescendantsDeselectionHandler {
 	//////////////////////////////////////////////////////////////////////////////////////

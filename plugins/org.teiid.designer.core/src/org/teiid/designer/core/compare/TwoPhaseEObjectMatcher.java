@@ -27,6 +27,8 @@ import org.eclipse.emf.mapping.MappingFactory;
  * <p>
  * Implementations of this class must be stateless and should be thread-safe.
  * </p>
+ *
+ * @since 8.0
  */
 public interface TwoPhaseEObjectMatcher extends EObjectMatcher {
 

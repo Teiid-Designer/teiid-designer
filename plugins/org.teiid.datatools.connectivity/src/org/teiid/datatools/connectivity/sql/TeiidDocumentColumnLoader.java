@@ -14,6 +14,9 @@ import java.sql.Statement;
 import org.eclipse.datatools.connectivity.sqm.core.rte.ICatalogObject;
 import org.eclipse.datatools.connectivity.sqm.loader.JDBCTableColumnLoader;
 
+/**
+ * @since 8.0
+ */
 public class TeiidDocumentColumnLoader extends JDBCTableColumnLoader {
 
 	private TeiidDocument document;

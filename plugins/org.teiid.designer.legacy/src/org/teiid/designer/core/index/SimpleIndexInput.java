@@ -16,6 +16,8 @@ import java.util.ArrayList;
 
 /**
  * A simpleIndexInput is an input on an in memory Index.
+ *
+ * @since 8.0
  */
 
 public class SimpleIndexInput extends IndexInput {

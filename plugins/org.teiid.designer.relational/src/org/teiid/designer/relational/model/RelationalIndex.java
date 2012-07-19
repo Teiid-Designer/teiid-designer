@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStr
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class RelationalIndex extends RelationalReference {
     public static final String KEY_AUTO_UPDATE = "AUTOUPDATE"; //$NON-NLS-1$

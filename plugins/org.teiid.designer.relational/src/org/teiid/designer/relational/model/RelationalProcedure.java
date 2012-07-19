@@ -22,6 +22,8 @@ import org.teiid.designer.relational.RelationalPlugin;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class RelationalProcedure extends RelationalReference {
     public static final String KEY_FUNCTION = "FUNCTION"; //$NON-NLS-1$

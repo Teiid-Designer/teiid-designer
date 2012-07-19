@@ -15,6 +15,9 @@ import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
+/**
+ * @since 8.0
+ */
 public class FormTextObjectEditor {
 
     private static final String LINK_VALUE = "val"; //$NON-NLS-1$

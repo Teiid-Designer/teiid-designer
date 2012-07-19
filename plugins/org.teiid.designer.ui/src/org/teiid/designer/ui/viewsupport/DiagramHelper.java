@@ -18,6 +18,8 @@ import org.teiid.designer.ui.actions.IDiagramHelper;
  * how to deal with different types of diagrams.  The plan is to integrate this class into the
  * diagram framework and provide an interface that can allow plugins to answer these questions
  * for specific diagram types.
+ *
+ * @since 8.0
  */
 public abstract class DiagramHelper implements IDiagramHelper {
 	

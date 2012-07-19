@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStr
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class RelationalParameter extends RelationalReference {
     public static final String KEY_DATATYPE = "DATATYPE"; //$NON-NLS-1$

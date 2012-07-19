@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.webservice.WebServicePackage;
 
 /** 
  * WebServiceValidationAspectFactoryImpl
+ *
+ * @since 8.0
  */
 public class WebServiceValidationAspectFactoryImpl implements MetamodelAspectFactory {
 

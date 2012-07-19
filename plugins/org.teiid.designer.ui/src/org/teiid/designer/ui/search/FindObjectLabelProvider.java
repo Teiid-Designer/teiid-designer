@@ -22,6 +22,9 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 
     
+/**
+ * @since 8.0
+ */
     public class FindObjectLabelProvider extends LabelProvider {
     
         public static final int OBJECT      = 0; 

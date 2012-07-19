@@ -68,6 +68,8 @@ import org.teiid.designer.ui.viewsupport.StatusBarUpdater;
 
 /**
  * ModelOutlineTreeViewer
+ *
+ * @since 8.0
  */
 public class ModelOutlineTreeViewer extends ContentOutlinePage
     implements ModelEditorPageOutline, IMenuListener, IModelerActionConstants, ModelViewer {

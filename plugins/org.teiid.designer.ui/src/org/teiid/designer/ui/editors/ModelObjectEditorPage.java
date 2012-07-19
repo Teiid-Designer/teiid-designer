@@ -17,6 +17,8 @@ import org.eclipse.ui.IPropertyListener;
 
 /**
  * ModelObjectEditor is an interface for classes to display a complex control that edits a particular type of object.
+ *
+ * @since 8.0
  */
 public interface ModelObjectEditorPage extends
                                       IEditorActionExporter {

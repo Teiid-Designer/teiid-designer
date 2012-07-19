@@ -22,6 +22,8 @@ import org.teiid.designer.ui.editors.ModelEditor;
  * ZoomOutWrapper
  * 
  * 
+ *
+ * @since 8.0
  */
 public class ZoomOutWrapper extends DiagramAction
                   implements DiagramUiConstants,

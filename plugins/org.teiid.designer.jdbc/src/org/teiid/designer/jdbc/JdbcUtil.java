@@ -17,6 +17,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 /**
  * JdbcUtil
+ *
+ * @since 8.0
  */
 public class JdbcUtil {
 

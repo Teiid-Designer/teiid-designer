@@ -35,6 +35,8 @@ import org.teiid.query.ui.UiPlugin;
 
 /**
  * EditorPreferencePage
+ *
+ * @since 8.0
  */
 public class TransformationEditorPreferencesComponent implements IEditorPreferencesComponent {
 

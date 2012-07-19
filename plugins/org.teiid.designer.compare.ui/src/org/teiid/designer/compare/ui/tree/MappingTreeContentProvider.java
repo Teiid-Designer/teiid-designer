@@ -44,6 +44,8 @@ import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
 
 /**
  * MappingTreeContentProvider
+ *
+ * @since 8.0
  */
 public class MappingTreeContentProvider implements ITreeContentProvider {
 

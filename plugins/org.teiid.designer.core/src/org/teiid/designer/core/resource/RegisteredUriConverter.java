@@ -26,6 +26,8 @@ import org.teiid.designer.core.ModelerCore;
  * a {@link URI}) that are returned when the input stream contains the resource contents
  * for the supplied URI.  This class can be assigned to a {@link ResourceSet} when the model
  * that is only accessible as an InputStream must be loaded into a resource set.
+ *
+ * @since 8.0
  */
 public class RegisteredUriConverter implements URIConverter {
 

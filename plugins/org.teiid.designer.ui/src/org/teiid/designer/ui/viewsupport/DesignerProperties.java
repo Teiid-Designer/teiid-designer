@@ -29,6 +29,9 @@ import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.ui.UiPlugin;
 
 
+/**
+ * @since 8.0
+ */
 public class DesignerProperties extends Properties {
 
 	/**

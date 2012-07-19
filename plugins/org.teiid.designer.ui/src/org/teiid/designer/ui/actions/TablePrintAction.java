@@ -21,6 +21,8 @@ import org.teiid.designer.ui.editors.ModelEditor;
 
 /**
  * TablePrintAction
+ *
+ * @since 8.0
  */
 public class TablePrintAction extends AbstractModelerAction
                            implements UiConstants,                                   

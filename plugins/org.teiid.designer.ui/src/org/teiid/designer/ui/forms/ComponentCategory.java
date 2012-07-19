@@ -22,7 +22,9 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 /** A Category is a way multiple component representations of data values
   *  can be grouped together into the same section.
   * @author PForhan
-  */
+ *
+ * @since 8.0
+ */
 public class ComponentCategory implements Cloneable {
     //
     // Instance variables:

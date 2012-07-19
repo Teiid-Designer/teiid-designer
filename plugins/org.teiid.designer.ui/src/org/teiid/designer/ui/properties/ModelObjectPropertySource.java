@@ -40,6 +40,8 @@ import org.teiid.designer.ui.viewsupport.StatusBarUpdater;
  * The class creates {@link ModelObjectPropertyDescriptor} instances rather than 
  * EMF PropertyDescriptors.  It also provides Metamodel Extension properties
  * along with the core metamodel properties.
+ *
+ * @since 8.0
  */
 public class ModelObjectPropertySource extends PropertySource {
 

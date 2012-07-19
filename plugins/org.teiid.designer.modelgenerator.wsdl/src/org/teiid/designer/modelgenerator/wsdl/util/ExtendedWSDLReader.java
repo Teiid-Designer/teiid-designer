@@ -27,6 +27,8 @@ import com.ibm.wsdl.xml.WSDLReaderImpl;
  * The {@link WSDLReaderImpl} is not able to read WSDL files secured by
  * authentication credentials. This class extends the implementation to set the
  * credentials using the request property of the HTTPURLConnection.
+ *
+ * @since 8.0
  */
 public class ExtendedWSDLReader extends WSDLReaderImpl {
 

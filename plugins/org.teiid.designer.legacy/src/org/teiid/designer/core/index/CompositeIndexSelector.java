@@ -20,6 +20,8 @@ import org.teiid.core.util.ArgCheck;
 /**
  * CompositeIndexSelector, this selector returns indexes if aggrgates from all the 
  * selectors it is constructed from.
+ *
+ * @since 8.0
  */
 public class CompositeIndexSelector extends AbstractIndexSelector {
 

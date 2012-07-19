@@ -11,6 +11,8 @@ import org.teiid.query.sql.lang.Criteria;
 
 /**
  * The <code>HavingDisplayNode</code> class is used to represent a Query's HAVING clause.
+ *
+ * @since 8.0
  */
 public class HavingDisplayNode extends DisplayNode {
 

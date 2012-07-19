@@ -14,6 +14,8 @@ import org.teiid.designer.metamodels.relational.Schema;
 
 /**
  * IndexFinder
+ *
+ * @since 8.0
  */
 public class IndexFinder extends RelationalEntityFinder {
 

@@ -24,6 +24,8 @@ import org.teiid.designer.transformation.ui.util.TransformationDiagramUtil;
 
 /**
  * TransformationDiagramLayout
+ *
+ * @since 8.0
  */
 public class TransformationDiagramLayout extends DiagramLayout {
     public static final int TOP_MARGIN = 50;

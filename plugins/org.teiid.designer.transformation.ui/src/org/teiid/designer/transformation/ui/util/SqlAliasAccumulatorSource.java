@@ -27,6 +27,8 @@ import org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource;
 
 /**
  * SqlAliasAccumulatorSource
+ *
+ * @since 8.0
  */
 public class SqlAliasAccumulatorSource implements IAccumulatorSource {
 

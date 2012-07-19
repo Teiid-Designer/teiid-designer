@@ -17,6 +17,8 @@ import org.teiid.designer.core.ModelerCore;
  * </p>
  *
  * @see org.eclipse.core.runtime.IStatus#getCode()
+ *
+ * @since 8.0
  */
 public interface ModelStatusConstants {
 

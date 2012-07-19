@@ -61,6 +61,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  * Also, if a function model is reloaded/changed or removed we'd like to invalidate any Transformation status objects
  * for models dependent on that function model.
  * 
+ *
+ * @since 8.0
  */
 public class FunctionModelNotificationHandler implements IModelNotificationHandler, UiConstants {
     

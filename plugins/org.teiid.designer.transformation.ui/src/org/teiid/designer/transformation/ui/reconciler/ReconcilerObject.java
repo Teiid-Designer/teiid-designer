@@ -38,6 +38,8 @@ import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 
 /**
  * Reconciler Business Object that the Reconciler Panel works with
+ *
+ * @since 8.0
  */
 public class ReconcilerObject {
 

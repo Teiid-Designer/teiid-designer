@@ -12,6 +12,9 @@ import org.eclipse.gef.editpolicies.DirectEditPolicy;
 import org.eclipse.gef.requests.DirectEditRequest;
 
 
+/**
+ * @since 8.0
+ */
 public class DirectEditPartEditPolicy extends DirectEditPolicy {
 
     /**

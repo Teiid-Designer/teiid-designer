@@ -23,6 +23,8 @@ import org.teiid.designer.ui.common.UiConstants;
 
 /**
  *
+ *
+ * @since 8.0
  */
 public class CredentialsComposite extends Composite implements UiConstants, Listener,
         ICredentialsCommon {

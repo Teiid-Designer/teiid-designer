@@ -12,6 +12,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.designer.core.search.runtime.SearchRecord;
 
+/**
+ * @since 8.0
+ */
 public interface ISearchEngine {
 
     /**

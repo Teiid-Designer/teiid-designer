@@ -87,6 +87,8 @@ import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 
 /**
  * TransformationHelper This class contains helper methods for getting "properties" from TransformationMappings
+ *
+ * @since 8.0
  */
 public class TransformationHelper implements SqlConstants {
     public static final String THIS_CLASS = "TransformationHelper"; //$NON-NLS-1$

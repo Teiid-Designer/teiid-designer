@@ -22,6 +22,8 @@ import org.teiid.designer.jdbc.JdbcUtil;
 
 /**
  * QueryRequest
+ *
+ * @since 8.0
  */
 public class QueryRequest extends Request {
     

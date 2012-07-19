@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.wsdl.mime.MimePart;
  * 
  * @see org.teiid.designer.metamodels.wsdl.mime.MimePackage
  * @generated
+ *
+ * @since 8.0
  */
 public class MimeSwitch { // NO_UCD
 

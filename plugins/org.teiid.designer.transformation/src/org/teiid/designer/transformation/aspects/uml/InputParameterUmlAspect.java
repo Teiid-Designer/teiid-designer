@@ -21,6 +21,8 @@ import org.teiid.designer.transformation.TransformationPlugin;
 
 /**
  * InputParameterUmlAspect
+ *
+ * @since 8.0
  */
 public class InputParameterUmlAspect extends AbstractTransformationUmlAspect implements UmlProperty {
     

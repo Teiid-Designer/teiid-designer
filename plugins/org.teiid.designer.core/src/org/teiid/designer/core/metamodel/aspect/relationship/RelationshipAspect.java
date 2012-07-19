@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * RelationshipAspect
+ *
+ * @since 8.0
  */
 public interface RelationshipAspect extends RelationshipEntityAspect {
 

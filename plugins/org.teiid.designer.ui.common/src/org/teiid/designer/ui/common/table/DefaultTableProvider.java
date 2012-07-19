@@ -10,6 +10,8 @@ package org.teiid.designer.ui.common.table;
 
 /**
  * @param <T>
+ *
+ * @since 8.0
  */
 public abstract class DefaultTableProvider<T> implements TableProvider<T> {
 

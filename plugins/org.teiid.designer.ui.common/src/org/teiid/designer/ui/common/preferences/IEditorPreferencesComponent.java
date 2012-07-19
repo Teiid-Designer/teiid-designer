@@ -12,6 +12,8 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * @author SDelap
  * Interface for contributed editor preferences
+ *
+ * @since 8.0
  */
 public interface IEditorPreferencesComponent {
     /**

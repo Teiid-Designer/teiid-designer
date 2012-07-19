@@ -31,6 +31,8 @@ import org.teiid.designer.ui.UiPlugin;
 
 /**
  * Contains static helper methods for working with IPropertiesContext properties
+ *
+ * @since 8.0
  */
 public class DesignerPropertiesUtil {
 

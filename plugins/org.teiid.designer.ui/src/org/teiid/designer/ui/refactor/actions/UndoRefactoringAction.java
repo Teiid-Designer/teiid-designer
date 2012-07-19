@@ -22,6 +22,8 @@ import org.teiid.designer.ui.refactor.RefactorUndoManager;
 
 /**
  * UndoRefactoringAction
+ *
+ * @since 8.0
  */
 public class UndoRefactoringAction extends ActionDelegate 
     implements IWorkbenchWindowActionDelegate, IViewActionDelegate, RefactorUndoListener {

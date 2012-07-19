@@ -12,6 +12,9 @@ import org.teiid.designer.modelgenerator.wsdl.model.Port;
 import org.teiid.designer.modelgenerator.wsdl.model.Service;
 import org.teiid.designer.modelgenerator.wsdl.model.WSDLElement;
 
+/**
+ * @since 8.0
+ */
 public class PortImpl extends WSDLElementImpl implements Port {
 
 	private Service m_parent;

@@ -28,6 +28,8 @@ import org.teiid.designer.ui.common.widget.MessageLabel;
  * This class provides an easy means for developers to present a radio-button dialog.
  * 
  * @author pforhan
+ *
+ * @since 8.0
  */
 public class RadioMessageDialog extends MessageDialog {
 

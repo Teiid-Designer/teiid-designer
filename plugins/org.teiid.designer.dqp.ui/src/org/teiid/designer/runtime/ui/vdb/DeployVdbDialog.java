@@ -46,6 +46,9 @@ import org.teiid.designer.ui.viewsupport.DesignerProperties;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
 import org.teiid.designer.ui.viewsupport.SingleProjectFilter;
 
+/**
+ * @since 8.0
+ */
 public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 		VdbConstants, IChangeListener {
 

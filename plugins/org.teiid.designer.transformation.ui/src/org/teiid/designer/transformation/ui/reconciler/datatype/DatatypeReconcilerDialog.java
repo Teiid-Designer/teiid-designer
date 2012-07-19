@@ -20,6 +20,8 @@ import org.teiid.designer.ui.common.widget.ExtendedTitleAreaDialog;
 
 /**
  * DatatypeReconcilerDialog
+ *
+ * @since 8.0
  */
 public class DatatypeReconcilerDialog extends ExtendedTitleAreaDialog {
     //=============================================================

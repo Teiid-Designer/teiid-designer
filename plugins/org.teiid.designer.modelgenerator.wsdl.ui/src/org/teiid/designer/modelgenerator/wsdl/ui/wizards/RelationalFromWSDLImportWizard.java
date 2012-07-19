@@ -43,6 +43,8 @@ import org.teiid.designer.ui.common.wizard.AbstractWizard;
 
 /**
  * Wizard for import of WSDL Source and generation of Relational Model from it.
+ *
+ * @since 8.0
  */
 public class RelationalFromWSDLImportWizard extends AbstractWizard implements IImportWizard, ModelGeneratorWsdlUiConstants {
 

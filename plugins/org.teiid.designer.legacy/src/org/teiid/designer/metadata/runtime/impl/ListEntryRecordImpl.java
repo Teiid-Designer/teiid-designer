@@ -12,6 +12,8 @@ import org.teiid.designer.metadata.runtime.ListEntryRecord;
 
 /**
  * ListEntryRecordImpl
+ *
+ * @since 8.0
  */
 public class ListEntryRecordImpl implements ListEntryRecord {
     

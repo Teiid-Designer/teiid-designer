@@ -15,6 +15,8 @@ import org.teiid.designer.metadata.runtime.MetadataConstants.DATATYPE_VARIETIES;
 
 /**
  * ColumnRecord
+ *
+ * @since 8.0
  */
 public interface DatatypeRecord extends MetadataRecord {
 

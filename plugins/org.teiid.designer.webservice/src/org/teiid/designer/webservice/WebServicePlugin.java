@@ -38,6 +38,8 @@ import org.teiid.designer.webservice.gen.BasicWsdlGenerator;
 
 /**
  * The main plugin class to be used in the desktop.
+ *
+ * @since 8.0
  */
 public class WebServicePlugin extends Plugin {
     

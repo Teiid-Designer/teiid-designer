@@ -16,6 +16,8 @@ import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 
 /**
  * CoreUtil
+ *
+ * @since 8.0
  */
 public class CoreUtil {
 

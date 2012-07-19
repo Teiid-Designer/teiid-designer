@@ -47,6 +47,8 @@ import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 
 /**
  * OrganizeImportCommand
+ *
+ * @since 8.0
  */
 public class OrganizeImportCommandFinderHelper {
 

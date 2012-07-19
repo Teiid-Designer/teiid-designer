@@ -123,6 +123,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * MM implementation of a GEF editor.
+ *
+ * @since 8.0
  */
 public class DiagramEditor extends GraphicalEditor
     implements ModelEditorPage, AutoLayout, ZoomableEditor, INotifyChangedListener, ISelectionChangedListener,

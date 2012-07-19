@@ -18,6 +18,8 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 
 /**
  * JdbcManager
+ *
+ * @since 8.0
  */
 public interface JdbcManager {
     

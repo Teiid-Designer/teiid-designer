@@ -12,6 +12,8 @@ import org.teiid.designer.metadata.runtime.api.VirtualDatabaseException;
 
 /**
  * Thrown when the VirtualDatabase is not found.
+ *
+ * @since 8.0
  */
 public class VirtualDatabaseDoesNotExistException extends VirtualDatabaseException {
 

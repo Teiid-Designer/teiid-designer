@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.mapping.ui.editor;
 
+/**
+ * @since 8.0
+ */
 public interface IBindingListViewer {
 
     /**

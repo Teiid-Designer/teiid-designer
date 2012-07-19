@@ -16,6 +16,8 @@ import org.teiid.designer.ui.editors.ModelEditor;
 
 /**
  * AbstractAction
+ *
+ * @since 8.0
  */
 public abstract class AbstractModelerAction extends AbstractAction {
     

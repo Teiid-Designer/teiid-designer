@@ -16,6 +16,8 @@ import org.eclipse.ui.ide.IDE;
 
 /**
  * DefaultModelEditorNavigationLocation
+ *
+ * @since 8.0
  */
 public class DefaultModelEditorNavigationLocation extends NavigationLocation {
 

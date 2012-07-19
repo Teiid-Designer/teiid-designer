@@ -53,6 +53,8 @@ import org.teiid.designer.vdb.ui.VdbUiConstants;
 
 /**
  *
+ *
+ * @since 8.0
  */
 public class DefineVdbDialog extends TitleAreaDialog implements IChangeListener {
 

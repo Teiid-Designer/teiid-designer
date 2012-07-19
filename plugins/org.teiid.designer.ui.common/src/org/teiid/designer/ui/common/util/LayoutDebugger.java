@@ -29,6 +29,8 @@ import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 
 /**
  * @author PForhan
+ *
+ * @since 8.0
  */
 public class LayoutDebugger { // NO_UCD (Indicates this is ignored by unused code detection tool)
 

@@ -24,6 +24,8 @@ import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
 /**
  * The <code>DeleteServerAction</code> deletes one or more servers from the server registry.
+ *
+ * @since 8.0
  */
 public final class DeleteServerAction extends BaseSelectionListenerAction {
 

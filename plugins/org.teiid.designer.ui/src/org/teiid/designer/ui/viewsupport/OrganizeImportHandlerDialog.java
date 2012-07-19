@@ -26,6 +26,8 @@ import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 
 /**
  * OrganizeImportHandlerDialog
+ *
+ * @since 8.0
  */
 public class OrganizeImportHandlerDialog implements OrganizeImportHandler {
 

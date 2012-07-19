@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.core.ModelType;
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 

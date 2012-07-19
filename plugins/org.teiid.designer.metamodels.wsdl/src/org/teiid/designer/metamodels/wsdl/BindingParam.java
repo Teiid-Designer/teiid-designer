@@ -24,6 +24,8 @@ import org.teiid.designer.metamodels.wsdl.soap.SoapHeader;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getBindingParam()
  * @model interface="true" abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface BindingParam extends ExtensibleDocumented, MimeElementOwner, WsdlNameOptionalEntity {
 

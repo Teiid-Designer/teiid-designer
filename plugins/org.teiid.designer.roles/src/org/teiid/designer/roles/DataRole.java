@@ -16,6 +16,9 @@ import java.util.Set;
 import org.teiid.core.util.CoreArgCheck;
 
 
+/**
+ * @since 8.0
+ */
 public class DataRole {
 	
 	private String name;

@@ -48,6 +48,8 @@ import org.teiid.designer.xsd.util.ModelerXsdUtils;
 
 /**
  * MappingDiagramUtil
+ *
+ * @since 8.0
  */
 public class MappingDiagramUtil {
 

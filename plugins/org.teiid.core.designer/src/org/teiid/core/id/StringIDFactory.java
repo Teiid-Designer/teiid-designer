@@ -26,6 +26,9 @@ import org.teiid.core.CorePlugin;
 
 
 
+/**
+ * @since 8.0
+ */
 public class StringIDFactory implements ObjectIDFactory {
     private long lastID = 0;
     public StringIDFactory() {

@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see org.teiid.designer.metamodels.wsdl.soap.SoapFactory
  * @generated
+ *
+ * @since 8.0
  */
 public interface SoapPackage extends EPackage{
     /**

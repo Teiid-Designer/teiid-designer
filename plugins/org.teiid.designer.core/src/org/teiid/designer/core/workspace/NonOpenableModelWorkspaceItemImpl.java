@@ -11,6 +11,8 @@ import org.eclipse.core.resources.IResource;
 
 /**
  * NonOpenableModelWorkspaceItemImpl
+ *
+ * @since 8.0
  */
 public abstract class NonOpenableModelWorkspaceItemImpl extends ModelWorkspaceItemImpl {
 

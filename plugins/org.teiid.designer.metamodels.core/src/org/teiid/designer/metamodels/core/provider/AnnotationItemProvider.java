@@ -33,6 +33,8 @@ import org.teiid.designer.metamodels.core.extension.ExtensionFactory;
  * end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class AnnotationItemProvider extends ItemProviderAdapter
     implements IEditingDomainItemProvider, ITreeItemContentProvider, IItemLabelProvider,

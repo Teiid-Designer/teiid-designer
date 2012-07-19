@@ -42,6 +42,8 @@ import org.teiid.designer.metamodels.core.ModelType;
  * Window>Preferences>Java>Templates.
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
+ *
+ * @since 8.0
  */
 public class MetamodelDescriptorImpl implements MetamodelDescriptor {
 

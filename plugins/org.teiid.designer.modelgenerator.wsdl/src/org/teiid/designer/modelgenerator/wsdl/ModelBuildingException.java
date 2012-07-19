@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.modelgenerator.wsdl;
 
+/**
+ * @since 8.0
+ */
 public class ModelBuildingException extends Exception {
 
 	private static final long serialVersionUID = 1L;

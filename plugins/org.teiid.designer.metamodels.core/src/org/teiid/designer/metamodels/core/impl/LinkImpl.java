@@ -38,6 +38,8 @@ import org.teiid.designer.metamodels.core.LinkContainer;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class LinkImpl extends EObjectImpl implements Link {
 

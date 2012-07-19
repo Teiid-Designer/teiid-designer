@@ -21,6 +21,8 @@ package org.teiid.designer.metamodels.wsdl;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getMessagePart()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface MessagePart extends ExtensibleAttributesDocumented, WsdlNameOptionalEntity {
 

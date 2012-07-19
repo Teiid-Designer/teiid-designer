@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.xml.util.XmlDocumentUtil;
 
 /**
  * XmlDocumentMappingHelper
+ *
+ * @since 8.0
  */
 public class XmlDocumentMappingHelper {
 

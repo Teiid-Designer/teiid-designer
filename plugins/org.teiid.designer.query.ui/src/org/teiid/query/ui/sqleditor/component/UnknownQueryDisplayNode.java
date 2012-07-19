@@ -13,6 +13,8 @@ import java.util.ArrayList;
  * The <code>UnknownQueryDisplayNode</code> class is used to represent an Unknown SQL Statement.
  * This class will simply take a String Query and tokenize it, creating DisplayNodes
  * for each String Token.
+ *
+ * @since 8.0
  */
 public class UnknownQueryDisplayNode extends DisplayNode {
 

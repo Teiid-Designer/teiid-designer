@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class RelationalEntityItemProvider
     extends ItemProviderAdapter

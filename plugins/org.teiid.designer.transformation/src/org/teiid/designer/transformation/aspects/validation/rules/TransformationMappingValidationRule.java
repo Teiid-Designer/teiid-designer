@@ -30,6 +30,8 @@ import org.teiid.designer.transformation.TransformationPlugin;
 
 /**
  * TransformationMappingValidationRule
+ *
+ * @since 8.0
  */
 public class TransformationMappingValidationRule implements ObjectValidationRule {
     

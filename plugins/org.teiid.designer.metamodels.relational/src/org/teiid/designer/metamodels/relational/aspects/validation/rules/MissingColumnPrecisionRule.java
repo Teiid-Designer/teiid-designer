@@ -24,6 +24,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 
 /**
  * MissingColumnPrecisionRule
+ *
+ * @since 8.0
  */
 public class MissingColumnPrecisionRule implements
                                        ObjectValidationRule {

@@ -31,6 +31,8 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public abstract class ColumnSetImpl extends RelationalEntityImpl implements ColumnSet {
     /**

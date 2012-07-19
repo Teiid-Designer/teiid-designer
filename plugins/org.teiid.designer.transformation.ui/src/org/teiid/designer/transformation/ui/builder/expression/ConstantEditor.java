@@ -43,6 +43,8 @@ import org.teiid.query.ui.builder.util.BuilderUtils;
 
 /**
  * ConstantEditor
+ *
+ * @since 8.0
  */
 public final class ConstantEditor extends AbstractLanguageObjectEditor {
 

@@ -14,6 +14,8 @@ import org.teiid.query.sql.lang.Option;
 
 /**
  * The <code>DeleteDisplayNode</code> class is used to represent a DELETE command.
+ *
+ * @since 8.0
  */
 public class DeleteDisplayNode extends DisplayNode {
 

@@ -20,6 +20,9 @@ import org.teiid.designer.diagram.ui.layout.LayoutNode;
 import org.teiid.designer.diagram.ui.layout.LayoutUtilities;
 import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 
+/**
+ * @since 8.0
+ */
 public class SpringLayout extends DiagramLayout {
     static final String CLASS_NAME = "SpringLayout"; //$NON-NLS-1$
     public static final int LEFT_ALIGNMENT = 0;

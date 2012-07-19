@@ -17,6 +17,8 @@ import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 
 /**
  * ModelContainerSelectionValidator
+ *
+ * @since 8.0
  */
 public class ModelContainerSelectionValidator 
   implements ISelectionStatusValidator {

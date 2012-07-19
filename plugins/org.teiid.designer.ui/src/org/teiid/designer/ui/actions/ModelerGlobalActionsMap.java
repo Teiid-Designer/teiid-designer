@@ -25,6 +25,8 @@ import org.teiid.designer.ui.common.actions.GlobalActionsMap;
  * <p>
  * Sometimes an action is unsupported. An action which is never enabled will be used as the value
  * for that global action key.
+ *
+ * @since 8.0
  */
 public class ModelerGlobalActionsMap extends GlobalActionsMap
                                      implements IModelerActionConstants,

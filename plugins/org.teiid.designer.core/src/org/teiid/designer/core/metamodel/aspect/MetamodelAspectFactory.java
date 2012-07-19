@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.EClassifier;
 
 /**
  * MetamodelAspectFactory
+ *
+ * @since 8.0
  */
 public interface MetamodelAspectFactory {
     MetamodelAspect create(EClassifier classifier, MetamodelEntity entity);

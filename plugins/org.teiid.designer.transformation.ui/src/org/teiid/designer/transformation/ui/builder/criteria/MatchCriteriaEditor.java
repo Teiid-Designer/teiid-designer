@@ -29,6 +29,8 @@ import org.teiid.query.ui.builder.model.MatchCriteriaEditorModel;
 
 /**
  * MatchCriteriaEditor
+ *
+ * @since 8.0
  */
 public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     private final static String PREFIX = I18nUtil.getPropertyPrefix(MatchCriteriaEditor.class);

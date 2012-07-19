@@ -23,6 +23,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getMessage()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Message extends WsdlNameRequiredEntity, ExtensibleDocumented {
 

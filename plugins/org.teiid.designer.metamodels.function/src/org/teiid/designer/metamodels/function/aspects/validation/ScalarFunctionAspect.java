@@ -13,6 +13,8 @@ import org.teiid.designer.core.validation.ValidationRuleSet;
 
 /**
  * ScalarFunctionAspect
+ *
+ * @since 8.0
  */
 public class ScalarFunctionAspect extends FunctionEntityAspect {
 

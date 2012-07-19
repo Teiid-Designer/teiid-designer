@@ -31,6 +31,8 @@ import org.teiid.designer.metamodels.diagram.PresentationEntity;
  * An implementation of the model <b>Package</b>.
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
 

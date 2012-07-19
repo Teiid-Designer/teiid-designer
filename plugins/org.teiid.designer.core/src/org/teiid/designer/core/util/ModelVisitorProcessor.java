@@ -61,6 +61,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManager;
  * </ul>
  * </p>
  * @see ModelVisitor.
+ *
+ * @since 8.0
  */
 public class ModelVisitorProcessor {
     

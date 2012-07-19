@@ -33,6 +33,8 @@ import org.teiid.designer.ui.viewsupport.StatusBarUpdater;
 
 /**
  * ModelerView is a base class for adding property and status bar support to ViewParts in the Modeler.
+ *
+ * @since 8.0
  */
 public abstract class ModelerView extends ViewPart {
 

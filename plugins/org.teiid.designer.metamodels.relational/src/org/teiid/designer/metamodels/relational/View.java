@@ -17,6 +17,8 @@ package org.teiid.designer.metamodels.relational;
  * @see org.teiid.designer.metamodels.relational.RelationalPackage#getView()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface View extends Table{
 } // View

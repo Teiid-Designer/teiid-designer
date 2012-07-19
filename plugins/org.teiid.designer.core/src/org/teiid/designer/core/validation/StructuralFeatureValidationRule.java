@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * StructuralFeatureValidationRule
+ *
+ * @since 8.0
  */
 public interface StructuralFeatureValidationRule extends ValidationRule {
     

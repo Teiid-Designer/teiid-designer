@@ -39,6 +39,8 @@ import org.teiid.query.sql.lang.UnaryFromClause;
 /**
  * AddJoinExpressionAction This action will create an inner join on the two selected columns. The action is currently contributed
  * by the TransformationObjectEditorPage, so that it only appears when the editor is displayed.
+ *
+ * @since 8.0
  */
 public class AddJoinExpressionAction extends TransformationAction {
 

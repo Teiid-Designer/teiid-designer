@@ -11,6 +11,8 @@ import java.util.Collection;
 
 /**
  * UmlClassifier
+ *
+ * @since 8.0
  */
 public interface UmlClassifier extends UmlDiagramAspect {
     //Show Mask Constants    

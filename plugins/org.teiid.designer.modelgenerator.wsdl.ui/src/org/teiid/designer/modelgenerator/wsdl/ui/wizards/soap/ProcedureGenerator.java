@@ -30,6 +30,8 @@ import org.teiid.language.SQLConstants;
  * There will be both Request and Response information managed by this class.
  * 
  * 
+ *
+ * @since 8.0
  */
 public class ProcedureGenerator implements SqlConstants {
 	public static final String PLUGIN_ID = ModelGeneratorWsdlUiConstants.PLUGIN_ID;

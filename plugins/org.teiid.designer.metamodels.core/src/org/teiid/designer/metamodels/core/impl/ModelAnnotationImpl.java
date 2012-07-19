@@ -60,6 +60,8 @@ import org.teiid.designer.metamodels.core.util.UriValidator;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation {
 

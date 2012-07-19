@@ -23,6 +23,8 @@ import org.teiid.designer.core.ModelerCore;
  * <p>
  * This interface is not intended to be implemented by clients.
  * </p>
+ *
+ * @since 8.0
  */
 public interface ModelProject extends ModelWorkspaceItem, Openable {
 

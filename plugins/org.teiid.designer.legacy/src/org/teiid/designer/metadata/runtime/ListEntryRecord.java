@@ -10,6 +10,8 @@ package org.teiid.designer.metadata.runtime;
 
 /**
  * ListEntryRecord
+ *
+ * @since 8.0
  */
 public interface ListEntryRecord {
 

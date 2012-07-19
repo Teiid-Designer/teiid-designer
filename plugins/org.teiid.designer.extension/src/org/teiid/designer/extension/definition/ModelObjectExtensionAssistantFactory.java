@@ -10,6 +10,8 @@ package org.teiid.designer.extension.definition;
 /**
  * A <code>ModelObjectExtensionAssistantFactory</code> creates <code>ModelObjectExtensionAssistant</code> for a specific type of
  * model object.
+ *
+ * @since 8.0
  */
 public interface ModelObjectExtensionAssistantFactory {
 

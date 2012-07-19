@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.webservice.WebServiceMetamodelPlugin;
 
 /** 
  * InterfaceAspect
+ *
+ * @since 8.0
  */
 public class InterfaceAspect extends WebServiceComponentAspect implements UmlPackage {
 

@@ -11,6 +11,9 @@ import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.FileUtils;
 
 
+/**
+ * @since 8.0
+ */
 public class ResourceRefactorFileHelper {
 	
 	public static void updateHrefsForFile(final File changedFile, final Map<String, String> refactoredPaths  ) throws IOException {

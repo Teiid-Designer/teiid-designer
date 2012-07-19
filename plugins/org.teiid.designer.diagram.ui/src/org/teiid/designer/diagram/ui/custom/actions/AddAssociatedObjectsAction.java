@@ -33,6 +33,8 @@ import org.teiid.designer.ui.editors.ModelEditor;
 /**
  * AddAssociatedObjectsAction This class provides custom diagrams the ability to allow the user to add any objects associated with
  * objects selected in the diagram. This action should only be offered on diagram node selection.
+ *
+ * @since 8.0
  */
 public class AddAssociatedObjectsAction extends DiagramAction {
     private static final String THIS_CLASS = "AddAssociatedObjectsAction"; //$NON-NLS-1$

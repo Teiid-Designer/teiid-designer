@@ -14,6 +14,8 @@ import org.eclipse.jface.text.rules.IWordDetector;
 /**
  * Determines whether a given character is valid as part of an SQL keyword in 
  * the current context.
+ *
+ * @since 8.0
  */
 public class SqlWordDetector implements IWordDetector {
 

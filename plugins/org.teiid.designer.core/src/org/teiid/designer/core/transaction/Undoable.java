@@ -16,6 +16,8 @@ import org.teiid.designer.core.ModelerCoreException;
 
 /**
  * Undoable
+ *
+ * @since 8.0
  */
 public interface Undoable extends Serializable {
     /**

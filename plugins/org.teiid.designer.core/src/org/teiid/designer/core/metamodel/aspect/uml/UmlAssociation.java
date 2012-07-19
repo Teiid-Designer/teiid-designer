@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * UmlAssociation
+ *
+ * @since 8.0
  */
 public interface UmlAssociation extends UmlRelationship {
     //Show Mask Constants    

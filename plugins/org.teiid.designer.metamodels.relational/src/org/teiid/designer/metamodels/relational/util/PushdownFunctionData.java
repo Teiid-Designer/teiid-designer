@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 
 /**
  * Class to hold basic Pushdown-function data structure and method access to key values
+ *
+ * @since 8.0
  */
 
 public class PushdownFunctionData {

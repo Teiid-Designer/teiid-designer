@@ -11,6 +11,8 @@ import java.util.Collection;
 
 /**
  * StyleRegistry
+ *
+ * @since 8.0
  */
 public interface StyleRegistry {
     

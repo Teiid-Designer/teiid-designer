@@ -10,6 +10,9 @@ package org.teiid.designer.modelgenerator.salesforce.model.impl;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+/**
+ * @since 8.0
+ */
 public class Messages {
 	private static final String I18N_NAME = "org.teiid.designer.modelgenerator.salesforce.model.impl.messages"; //$NON-NLS-1$
 

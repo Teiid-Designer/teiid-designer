@@ -12,6 +12,8 @@ import org.teiid.designer.metamodels.core.Annotation;
 
 /**
  * ModelObjectAnnotations
+ *
+ * @since 8.0
  */
 public interface ModelObjectAnnotations  extends ModelWorkspaceItem {
     /**

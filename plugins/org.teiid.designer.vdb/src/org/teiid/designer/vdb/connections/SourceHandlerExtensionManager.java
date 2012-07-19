@@ -17,6 +17,8 @@ import org.teiid.designer.vdb.VdbPlugin;
  * In this particular case, there isn't expected to be more than ONE extension point so we need to log an error if
  * we find more than the expected.
  *
+ *
+ * @since 8.0
  */
 public class SourceHandlerExtensionManager {
 	private static boolean extensionsLoaded;

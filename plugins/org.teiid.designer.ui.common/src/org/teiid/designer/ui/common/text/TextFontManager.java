@@ -14,7 +14,9 @@ import org.eclipse.jface.text.TextViewer;
 
     /**
      * TextFontManager
-     */
+ *
+ * @since 8.0
+ */
     public class TextFontManager implements ScaledFont {
         private TextViewer viewer;
         private ScaledFontManager sfmManager;

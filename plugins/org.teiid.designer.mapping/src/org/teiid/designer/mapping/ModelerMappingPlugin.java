@@ -15,6 +15,8 @@ import org.teiid.designer.core.ModelerCore;
 
 /**
  * ModelerMappingPlugin is the plugin class for org.teiid.designer.mapping
+ *
+ * @since 8.0
  */
 public class ModelerMappingPlugin extends Plugin {
 

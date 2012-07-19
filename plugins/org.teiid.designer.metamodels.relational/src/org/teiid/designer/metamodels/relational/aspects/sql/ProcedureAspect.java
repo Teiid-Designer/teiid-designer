@@ -26,6 +26,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 
 /**
  * ProcedureAspect
+ *
+ * @since 8.0
  */
 public class ProcedureAspect extends RelationalEntityAspect implements SqlProcedureAspect {
 

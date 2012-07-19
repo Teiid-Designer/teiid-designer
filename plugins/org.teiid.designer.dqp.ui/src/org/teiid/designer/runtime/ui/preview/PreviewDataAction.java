@@ -17,6 +17,9 @@ import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
 
+/**
+ * @since 8.0
+ */
 public class PreviewDataAction extends Action {
 	public static final String THIS_CLASS = I18nUtil.getPropertyPrefix(PreviewDataAction.class);
 

@@ -22,6 +22,8 @@ import org.teiid.designer.core.ModelerCore;
 
 /**
  * ValidationRuleSet
+ *
+ * @since 8.0
  */
 public class ValidationRuleSetImpl implements ValidationRuleSet {
 

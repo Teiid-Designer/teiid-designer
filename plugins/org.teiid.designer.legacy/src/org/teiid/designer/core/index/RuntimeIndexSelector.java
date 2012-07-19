@@ -39,6 +39,8 @@ import org.teiid.logging.LogManager;
  * This selector reads in a bunch of index files that the QueryMetadataInterface implementation needs to use for looking up
  * metadata. The index files could be part of a directory, and archive file or an index file by itself.
  * </p>
+ *
+ * @since 8.0
  */
 public class RuntimeIndexSelector extends AbstractIndexSelector {
 

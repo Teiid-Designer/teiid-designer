@@ -13,6 +13,9 @@ package org.teiid.designer.core.index;
 
 import java.io.UTFDataFormatException;
 
+/**
+ * @since 8.0
+ */
 public class CodeByteStream {
 	protected byte[] bytes;
 	protected int byteOffset= 0;

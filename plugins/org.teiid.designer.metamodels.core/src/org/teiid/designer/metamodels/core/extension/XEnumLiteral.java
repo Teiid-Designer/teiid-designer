@@ -15,6 +15,8 @@ import org.eclipse.emf.ecore.EEnumLiteral;
  * @see org.teiid.designer.metamodels.core.extension.ExtensionPackage#getXEnumLiteral()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface XEnumLiteral extends EEnumLiteral {
 

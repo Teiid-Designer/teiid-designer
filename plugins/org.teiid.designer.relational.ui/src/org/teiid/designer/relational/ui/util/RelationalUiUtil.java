@@ -15,6 +15,9 @@ import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
 
 
+/**
+ * @since 8.0
+ */
 public class RelationalUiUtil implements RelationalConstants {
 	private static int OK = IStatus.OK;
 	private static int WARNING = IStatus.WARNING;

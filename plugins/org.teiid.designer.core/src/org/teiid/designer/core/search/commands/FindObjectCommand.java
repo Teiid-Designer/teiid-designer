@@ -15,6 +15,8 @@ import org.teiid.designer.core.search.MetadataSearch;
 
 /**
  * This interface is used to find typed objects based on datatype criteria.
+ *
+ * @since 8.0
  */
 public interface FindObjectCommand extends SearchCommand {
 

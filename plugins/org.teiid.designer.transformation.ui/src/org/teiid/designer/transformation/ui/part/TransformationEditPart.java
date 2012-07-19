@@ -37,6 +37,8 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 
 
 /**
+ *
+ * @since 8.0
  */
 public class TransformationEditPart extends AbstractDiagramEditPart implements EditableEditPart {
     private ChopboxAnchor singleAnchor;

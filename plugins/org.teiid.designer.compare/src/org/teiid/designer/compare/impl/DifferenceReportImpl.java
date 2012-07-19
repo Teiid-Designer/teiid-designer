@@ -37,6 +37,8 @@ import org.teiid.designer.compare.DifferenceReport;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class DifferenceReportImpl extends EObjectImpl implements DifferenceReport {
     /**

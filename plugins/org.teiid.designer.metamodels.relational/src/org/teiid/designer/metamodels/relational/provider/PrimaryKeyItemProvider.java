@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.relational.PrimaryKey;
  * <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class PrimaryKeyItemProvider extends UniqueKeyItemProvider {
     /**

@@ -17,6 +17,8 @@ import org.teiid.core.util.CoreArgCheck;
 
 /**
  * MultiDatatypeFinder
+ *
+ * @since 8.0
  */
 public class MultiDatatypeFinder implements DatatypeFinder {
 

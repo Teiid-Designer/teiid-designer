@@ -35,6 +35,8 @@ import org.teiid.designer.ui.viewsupport.DatatypeSelectionDialog;
 
 /**
  * AliasEntryPanel
+ *
+ * @since 8.0
  */
 public class ColumnEntryPanel extends Composite implements ModifyListener {
 

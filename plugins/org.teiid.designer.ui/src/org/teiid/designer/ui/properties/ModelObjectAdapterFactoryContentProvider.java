@@ -18,6 +18,8 @@ import org.eclipse.ui.views.properties.IPropertySource;
  * whose sole purpose is to provide a {@link ModelObjectPropertySource} wrapper around EMF's
  * PropertySource.  The wrapper also is responsible for hooking up the IExtensionPropertiesController
  * to the ModelObjectPropertySource so that metamodel extension properties can be displayed.
+ *
+ * @since 8.0
  */
 public class ModelObjectAdapterFactoryContentProvider extends AdapterFactoryContentProvider {
 

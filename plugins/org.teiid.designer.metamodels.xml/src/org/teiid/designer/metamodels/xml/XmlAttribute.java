@@ -26,6 +26,8 @@ import org.eclipse.xsd.XSDAttributeUseCategory;
  * @see org.teiid.designer.metamodels.xml.XmlDocumentPackage#getXmlAttribute()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface XmlAttribute extends XmlDocumentNode, XmlValueHolder{
     /**

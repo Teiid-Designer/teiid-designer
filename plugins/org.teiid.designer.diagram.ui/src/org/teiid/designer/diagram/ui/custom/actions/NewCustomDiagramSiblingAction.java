@@ -26,6 +26,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * NewCustomDiagramAction
+ *
+ * @since 8.0
  */
 public class NewCustomDiagramSiblingAction extends DiagramAction implements DiagramUiConstants {
     

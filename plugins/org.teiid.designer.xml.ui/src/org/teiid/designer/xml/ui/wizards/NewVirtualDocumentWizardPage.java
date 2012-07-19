@@ -85,6 +85,8 @@ import org.teiid.designer.xml.ui.ModelerXmlUiConstants;
 /**
  * NewVirtualDocumentWizardPage is the wizard page contribution for building Virtual XMLDocument models from XML Schema files in
  * the workspace.
+ *
+ * @since 8.0
  */
 
 public class NewVirtualDocumentWizardPage extends WizardPage implements ModelerXmlUiConstants, IVirtualDocumentFragmentSource {

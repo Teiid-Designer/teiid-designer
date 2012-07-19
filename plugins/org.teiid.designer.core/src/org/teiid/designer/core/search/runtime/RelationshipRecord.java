@@ -7,8 +7,10 @@
  */
 package org.teiid.designer.core.search.runtime;
 
-/*
+/**
  * RelationshipRecord.java
+ *
+ * @since 8.0
  */
 public interface RelationshipRecord extends RelationshipSearchRecord {
 	

@@ -35,6 +35,8 @@ import org.teiid.datatools.models.teiidsqlmodel.TeiidsqlmodelPackage;
  * An implementation of the model <b>Package</b>.
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class TeiidsqlmodelPackageImpl extends EPackageImpl implements TeiidsqlmodelPackage {
 	/**

@@ -29,6 +29,8 @@ import org.teiid.designer.core.compare.EObjectMatcherFactory;
  * The AbstractModelGenerator class is the abstract base class that can be used to implement 
  * {@link ModelGenerator}.  It provide an implementation of the public methods by defining and using
  * a (fewer) number of abstract methods.
+ *
+ * @since 8.0
  */
 public abstract class AbstractModelGenerator implements ModelGenerator {
     

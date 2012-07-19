@@ -19,6 +19,8 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlTransformationAspect;
 
 /**
  * SqlTransformationMappingRootSqlAspect
+ *
+ * @since 8.0
  */
 public abstract class TransformationMappingRootSqlAspect extends AbstractTransformationSqlAspect implements SqlTransformationAspect {
 

@@ -15,6 +15,8 @@ import org.teiid.designer.compare.selector.ModelSelector;
 
 /**
  * ModelProducer
+ *
+ * @since 8.0
  */
 public interface ModelProducer {
 

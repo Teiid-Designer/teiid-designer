@@ -13,6 +13,8 @@ import org.teiid.designer.compare.DifferenceGuidelines;
 
 /**
  * NullDifferenceGuidelines
+ *
+ * @since 8.0
  */
 public class NullDifferenceGuidelines implements DifferenceGuidelines {
 

@@ -33,6 +33,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.jdbc.JdbcPackage#getJdbcSource()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface JdbcSource extends EObject{
     /**

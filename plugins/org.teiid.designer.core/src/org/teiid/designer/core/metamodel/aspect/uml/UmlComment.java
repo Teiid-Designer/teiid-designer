@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * UmlComment - A comment is a textual annotation that can be attached to a set of elements.
+ *
+ * @since 8.0
  */
 public interface UmlComment extends UmlDiagramAspect {
     

@@ -25,6 +25,8 @@ package org.teiid.designer.metamodels.xml;
  * @see org.teiid.designer.metamodels.xml.XmlDocumentPackage#getXmlNamespace()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface XmlNamespace extends XmlDocumentEntity{
     /**

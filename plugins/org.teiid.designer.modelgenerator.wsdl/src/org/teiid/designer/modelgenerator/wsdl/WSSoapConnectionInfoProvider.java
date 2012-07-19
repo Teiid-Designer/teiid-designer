@@ -17,6 +17,9 @@ import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 
 
+/**
+ * @since 8.0
+ */
 public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implements IConnectionInfoProvider {
 
     /*

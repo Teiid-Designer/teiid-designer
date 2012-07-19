@@ -18,6 +18,9 @@ import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelUtil;
 
 
+/**
+ * @since 8.0
+ */
 public class Util extends PluginUtilImpl {
     /**
      * XSD extensions prefixed with the file wildcard and extension separator. Suitable for use in the

@@ -12,6 +12,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.ui.common.widget.Dialog;
 
+/**
+ * @since 8.0
+ */
 public class AssociatedLevelsDialog extends Dialog {
 
     //=============================================================

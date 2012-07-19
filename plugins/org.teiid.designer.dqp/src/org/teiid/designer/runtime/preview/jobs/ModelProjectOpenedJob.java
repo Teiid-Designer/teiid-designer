@@ -21,6 +21,8 @@ import org.teiid.designer.runtime.preview.PreviewManager;
 
 /**
  * The <code>ModelProjectOpenedJob</code> ensures there is a Preview VDB for each model in the opened project.
+ *
+ * @since 8.0
  */
 public final class ModelProjectOpenedJob extends CompositePreviewJob {
 

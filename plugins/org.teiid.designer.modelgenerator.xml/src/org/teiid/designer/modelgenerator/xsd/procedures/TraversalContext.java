@@ -4,6 +4,9 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.teiid.designer.core.ModelerCoreException;
 
 
+/**
+ * @since 8.0
+ */
 public interface TraversalContext {
 
 	public abstract boolean isReachedResultNode();

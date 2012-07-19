@@ -11,6 +11,8 @@ import java.lang.reflect.Method;
 
 /**
  * InvocationFactoryHelper
+ *
+ * @since 8.0
  */
 public interface InvocationFactoryHelper {
     

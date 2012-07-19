@@ -24,6 +24,8 @@ import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
 /**
  * The <code>NewServerAction</code> runs a UI that allows the user to create a new {@link Server server}.
+ *
+ * @since 8.0
  */
 public class NewServerAction extends Action {
 

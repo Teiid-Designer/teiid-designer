@@ -16,6 +16,8 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * ElementViewerFactory is a static class for building TreeViewer instances from a specified
  * ITreeContentProvider and ILabelProvider.
+ *
+ * @since 8.0
  */
 abstract public class ElementViewerFactory {
 

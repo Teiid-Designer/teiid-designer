@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.diagram.Diagram;
 
 /**
  * MappingDiagramNode
+ *
+ * @since 8.0
  */
 public class MappingDiagramNode extends AbstractLocalDiagramModelNode implements ExpandableDiagram {
 	private int coarseCheck = -1;

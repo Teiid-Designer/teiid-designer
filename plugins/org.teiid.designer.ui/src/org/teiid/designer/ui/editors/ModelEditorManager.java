@@ -54,6 +54,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * ModelEditorManager is a class of static utility methods for easily focusing on an object in the correct ModelEditor, or editing
  * an object in the correct ModelObjectEditor.
+ *
+ * @since 8.0
  */
 abstract public class ModelEditorManager {
 

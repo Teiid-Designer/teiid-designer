@@ -78,6 +78,8 @@ import org.teiid.core.designer.CoreModelerPlugin;
  * &lt;pluginpackage>.i18n_&lt;language2>.properties <BR>
  * &lt;pluginpackage>.i18n.properties
  * </p>
+ *
+ * @since 8.0
  */
 public class PluginUtilImpl extends BundleUtil implements PluginUtil {
 

@@ -20,6 +20,8 @@ import org.teiid.designer.ui.undo.ModelerUndoManager;
 
 /**
  * AddTransformationSource
+ *
+ * @since 8.0
  */
 public class NewMappingClassAction extends MappingAction {
     private static final String ACTION_DESCRIPTION = "New Mapping Class"; //$NON-NLS-1$

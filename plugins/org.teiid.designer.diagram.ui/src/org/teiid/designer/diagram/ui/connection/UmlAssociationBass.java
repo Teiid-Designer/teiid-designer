@@ -14,6 +14,8 @@ import org.eclipse.emf.ecore.EObject;
  *
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ *
+ * @since 8.0
  */
 public class UmlAssociationBass extends AbstractBinaryAssociation {
 

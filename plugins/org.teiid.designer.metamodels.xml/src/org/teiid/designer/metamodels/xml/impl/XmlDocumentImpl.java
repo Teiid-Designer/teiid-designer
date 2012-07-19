@@ -36,6 +36,8 @@ import org.teiid.designer.metamodels.xml.XmlRoot;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlDocumentImpl extends XmlFragmentImpl implements XmlDocument {
     /**

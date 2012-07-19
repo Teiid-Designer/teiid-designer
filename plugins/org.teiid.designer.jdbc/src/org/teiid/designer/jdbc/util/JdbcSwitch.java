@@ -31,6 +31,8 @@ import org.teiid.designer.jdbc.JdbcSourceProperty;
  * <!-- end-user-doc -->
  * @see org.teiid.designer.jdbc.JdbcPackage
  * @generated
+ *
+ * @since 8.0
  */
 public class JdbcSwitch {
     /**

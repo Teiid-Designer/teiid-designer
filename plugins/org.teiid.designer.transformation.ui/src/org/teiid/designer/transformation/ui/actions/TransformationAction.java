@@ -17,6 +17,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 /**
  * TransformationAction provides transformation-specific helper methods.
+ *
+ * @since 8.0
  */
 public class TransformationAction extends ModelObjectAction {
 //    private static int nAction = -1;

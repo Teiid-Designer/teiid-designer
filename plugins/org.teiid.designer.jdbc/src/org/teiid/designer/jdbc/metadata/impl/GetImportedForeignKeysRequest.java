@@ -20,6 +20,8 @@ import org.teiid.designer.jdbc.data.TupleValidator;
 
 /**
  * GetImportedForeignKeysRequest
+ *
+ * @since 8.0
  */
 public class GetImportedForeignKeysRequest extends MetadataRequest {
     

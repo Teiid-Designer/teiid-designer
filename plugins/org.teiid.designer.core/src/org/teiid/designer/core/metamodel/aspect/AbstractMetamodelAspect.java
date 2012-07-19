@@ -14,6 +14,8 @@ import org.teiid.designer.core.ModelerCore;
 
 /**
  * AbstractMetamodelAspect
+ *
+ * @since 8.0
  */
 public abstract class AbstractMetamodelAspect implements MetamodelAspect {
     private MetamodelEntity entity;

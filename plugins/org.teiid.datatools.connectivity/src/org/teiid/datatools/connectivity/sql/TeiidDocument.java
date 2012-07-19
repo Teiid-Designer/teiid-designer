@@ -14,6 +14,9 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.teiid.datatools.models.teiidsqlmodel.impl.DocumentImpl;
 
+/**
+ * @since 8.0
+ */
 public class TeiidDocument extends DocumentImpl {
 
     private Boolean columnsLoaded = Boolean.FALSE;

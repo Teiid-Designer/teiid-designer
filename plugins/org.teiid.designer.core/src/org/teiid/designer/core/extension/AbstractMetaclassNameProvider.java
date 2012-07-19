@@ -18,6 +18,8 @@ import org.teiid.designer.extension.definition.ExtendableMetaclassNameProvider;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public abstract class AbstractMetaclassNameProvider implements ExtendableMetaclassNameProvider {
 

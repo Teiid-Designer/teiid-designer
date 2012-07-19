@@ -14,6 +14,8 @@ import org.teiid.designer.core.ModelerCore;
 
 /**
  * ValidationProblemImpl
+ *
+ * @since 8.0
  */
 public class ValidationProblemImpl implements ValidationProblem {
     

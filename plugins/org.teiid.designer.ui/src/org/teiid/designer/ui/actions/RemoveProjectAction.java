@@ -18,6 +18,9 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.views.DatatypeHierarchyView;
 
 
+/**
+ * @since 8.0
+ */
 public class RemoveProjectAction extends AbstractAction {
 	private static final String TITLE = UiConstants.Util.getString("RemoveProjectAction.title"); //$NON-NLS-1$
     /**

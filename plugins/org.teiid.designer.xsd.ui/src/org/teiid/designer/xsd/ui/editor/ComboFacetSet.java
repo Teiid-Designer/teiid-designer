@@ -18,6 +18,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.teiid.designer.ui.forms.ComponentSetEvent;
 import org.teiid.designer.ui.forms.ComponentSetMonitor;
 
+/**
+ * @since 8.0
+ */
 public class ComboFacetSet extends AbstractFacetSet {
     //
     // Instance variables:

@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * ImportsAspect
+ *
+ * @since 8.0
  */
 public interface ImportsAspect extends MetamodelAspect {
 

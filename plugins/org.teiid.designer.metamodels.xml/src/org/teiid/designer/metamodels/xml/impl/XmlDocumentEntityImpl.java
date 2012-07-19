@@ -21,6 +21,8 @@ import org.teiid.designer.metamodels.xml.util.XmlDocumentUtil;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public abstract class XmlDocumentEntityImpl extends EObjectImpl implements XmlDocumentEntity {
     /**

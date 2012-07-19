@@ -59,6 +59,8 @@ import java.util.NoSuchElementException;
  *     test
  * </pre></blockquote>
  *
+ *
+ * @since 8.0
  */
 public class EnhancedStringTokenizer implements Enumeration {
     private int currentPosition;

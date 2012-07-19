@@ -35,6 +35,8 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 
 /**
  * Class provides building EMF Relational Metamodel objects from Relational Model objects
+ *
+ * @since 8.0
  */
 public class RelationalViewModelFactory extends RelationalModelFactory {
 

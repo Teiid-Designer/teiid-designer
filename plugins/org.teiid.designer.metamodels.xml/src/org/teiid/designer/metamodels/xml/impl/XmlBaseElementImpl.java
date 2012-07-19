@@ -38,6 +38,8 @@ import org.teiid.designer.metamodels.xml.XmlNamespace;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public abstract class XmlBaseElementImpl extends XmlDocumentNodeImpl implements XmlBaseElement {
     /**

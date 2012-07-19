@@ -36,6 +36,9 @@ import org.teiid.designer.ui.common.graphics.ColorManager;
 import org.teiid.query.ui.sqleditor.sql.SqlPartitionScanner;
 
 
+/**
+ * @since 8.0
+ */
 public class SqlTextViewer extends SourceViewer {
 
     IPresentationReconciler fPresentationReconciler;

@@ -21,6 +21,8 @@ import org.teiid.designer.metamodels.transformation.TransformationFactory;
  * object that is bound to the item
  * 
  * @author Jerry Helbling
+ *
+ * @since 8.0
  */
 public class BindingAdapter {
 

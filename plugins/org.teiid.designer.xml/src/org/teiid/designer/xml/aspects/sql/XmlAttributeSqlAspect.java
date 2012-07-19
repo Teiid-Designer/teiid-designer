@@ -30,6 +30,8 @@ import org.teiid.designer.xml.PluginConstants;
 
 /**
  * XmlContainerNodeSqlAspect
+ *
+ * @since 8.0
  */
 public class XmlAttributeSqlAspect extends AbstractXmlDocumentEntitySqlAspect implements SqlColumnAspect {
 

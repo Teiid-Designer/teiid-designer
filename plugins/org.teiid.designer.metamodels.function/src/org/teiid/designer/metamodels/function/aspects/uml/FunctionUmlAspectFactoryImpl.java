@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.function.FunctionPlugin;
 
 /**
  * RelationalUmlAspectFactoryImpl
+ *
+ * @since 8.0
  */
 public class FunctionUmlAspectFactoryImpl implements MetamodelAspectFactory {
     @Override

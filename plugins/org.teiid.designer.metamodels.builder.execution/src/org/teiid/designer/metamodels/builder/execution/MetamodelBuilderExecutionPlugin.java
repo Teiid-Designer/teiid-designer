@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.xsd.XsdResourceFactory;
 
 /**
  * MetamodelBuilderExecutionPlugin
+ *
+ * @since 8.0
  */
 public class MetamodelBuilderExecutionPlugin extends Plugin {
 

@@ -9,6 +9,8 @@ package org.teiid.designer.core;
 
 /**
  * ValidationDescriptor
+ *
+ * @since 8.0
  */
 public interface ValidationDescriptor {
 

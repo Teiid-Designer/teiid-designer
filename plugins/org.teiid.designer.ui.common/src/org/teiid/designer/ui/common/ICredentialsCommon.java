@@ -9,6 +9,8 @@ package org.teiid.designer.ui.common;
 
 /**
  *
+ *
+ * @since 8.0
  */
 public interface ICredentialsCommon {
 

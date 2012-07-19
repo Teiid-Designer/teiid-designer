@@ -32,6 +32,8 @@ import org.teiid.designer.metamodels.xml.XmlNamespace;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlFragmentUseImpl extends XmlBaseElementImpl implements XmlFragmentUse {
     /**

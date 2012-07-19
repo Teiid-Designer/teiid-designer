@@ -15,6 +15,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 /**
  * ColorPalatteManager
+ *
+ * @since 8.0
  */
 public class DefaultColorPaletteManager implements ColorPaletteManager {
     /**

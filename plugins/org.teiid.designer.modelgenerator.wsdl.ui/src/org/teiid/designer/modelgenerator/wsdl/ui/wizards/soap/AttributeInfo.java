@@ -16,6 +16,9 @@ import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 
 
+/**
+ * @since 8.0
+ */
 public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
 	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false, true);
 	

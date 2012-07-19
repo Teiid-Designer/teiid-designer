@@ -13,6 +13,8 @@ package org.teiid.designer.metamodels.transformation;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getProjectionNode()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface ProjectionNode extends OperationNode {
 

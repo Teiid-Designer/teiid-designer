@@ -32,6 +32,8 @@ import org.teiid.designer.transformation.ui.model.TransformationNode;
  *
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
+ *
+ * @since 8.0
  */
 public class TransformationFigure extends AbstractDiagramFigure {
 //	private static final Font tFont = new Font(null, "Comic Sans MS", 16, 3); //$NON-NLS-1$

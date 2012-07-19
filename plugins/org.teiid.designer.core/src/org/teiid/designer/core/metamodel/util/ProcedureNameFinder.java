@@ -15,7 +15,7 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect;
 
 
 /**
- * @
+ * @since 8.0
  */
 public class ProcedureNameFinder extends AbstractNameFinder {
 

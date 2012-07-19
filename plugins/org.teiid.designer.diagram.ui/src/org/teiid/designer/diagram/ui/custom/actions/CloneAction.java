@@ -14,6 +14,8 @@ import org.teiid.designer.diagram.ui.actions.DiagramAction;
 
 /**
  * CloneAction
+ *
+ * @since 8.0
  */
 public class CloneAction 
      extends DiagramAction

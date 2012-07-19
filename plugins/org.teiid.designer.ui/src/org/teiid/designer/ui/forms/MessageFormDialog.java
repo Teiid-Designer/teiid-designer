@@ -28,6 +28,8 @@ import org.teiid.core.util.I18nUtil;
 
 /**
  * A form-based message dialog.
+ *
+ * @since 8.0
  */
 public class MessageFormDialog extends FormDialog {
 

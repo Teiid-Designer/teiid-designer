@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.relational.Schema;
 
 /**
  * LogicalRelationshipEndFinder
+ *
+ * @since 8.0
  */
 public class LogicalRelationshipEndFinder extends RelationalEntityFinder {
 

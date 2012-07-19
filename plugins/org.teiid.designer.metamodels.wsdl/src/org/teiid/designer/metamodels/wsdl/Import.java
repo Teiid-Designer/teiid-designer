@@ -21,6 +21,8 @@ package org.teiid.designer.metamodels.wsdl;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getImport()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Import extends ExtensibleAttributesDocumented {
 

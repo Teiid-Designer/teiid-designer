@@ -12,12 +12,16 @@ package org.teiid.designer.diagram.ui.util;
  *
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
+ *
+ * @since 8.0
  */
 
 import org.eclipse.gef.DragTracker;
 
 /**
  * A marqueeSelectionTool that implements the DragTracker interface.
+ *
+ * @since 8.0
  */
 public class LassoDragTracker extends LassoSelectionTool implements DragTracker {
     

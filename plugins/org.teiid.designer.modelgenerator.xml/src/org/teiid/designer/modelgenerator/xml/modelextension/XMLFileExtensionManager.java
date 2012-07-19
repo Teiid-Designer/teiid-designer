@@ -18,6 +18,8 @@ import org.teiid.designer.modelgenerator.xml.modelextension.impl.BaseXMLRelation
  * The model extension for the XML Relational File Connector. Adds the File Name metadata extension.
  * 
  * @author jdoyle
+ *
+ * @since 8.0
  */
 public class XMLFileExtensionManager extends BaseXMLRelationalExtensionManagerImpl {
 

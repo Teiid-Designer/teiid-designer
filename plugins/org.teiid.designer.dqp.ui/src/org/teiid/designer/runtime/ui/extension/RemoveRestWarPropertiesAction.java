@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.relational.Procedure;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class RemoveRestWarPropertiesAction extends RestWarPropertiesAction {
 

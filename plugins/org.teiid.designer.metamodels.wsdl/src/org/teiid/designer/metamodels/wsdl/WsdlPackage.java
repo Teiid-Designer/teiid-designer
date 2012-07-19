@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see org.teiid.designer.metamodels.wsdl.WsdlFactory
  * @generated
+ *
+ * @since 8.0
  */
 public interface WsdlPackage extends EPackage{
     /**

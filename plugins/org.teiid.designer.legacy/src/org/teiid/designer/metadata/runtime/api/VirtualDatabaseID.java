@@ -11,6 +11,8 @@ package org.teiid.designer.metadata.runtime.api;
 
 /**
  * <p>The VirtualDatabaseID should uniquely identify a  VirutalDatabase.  This is accomplished when instantiating the class by passing the full name of the VirtualDatabase and the version.  These 2 arguments uniquely identify a Virtual Database.</p> 
+ *
+ * @since 8.0
  */
 public interface VirtualDatabaseID extends MetadataID {
 

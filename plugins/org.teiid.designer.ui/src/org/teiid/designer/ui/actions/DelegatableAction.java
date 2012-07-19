@@ -20,6 +20,8 @@ import org.teiid.designer.ui.UiConstants;
 
 /**
  * DelegatableAction
+ *
+ * @since 8.0
  */
 public class DelegatableAction extends Action
                      implements ISelectionListener {

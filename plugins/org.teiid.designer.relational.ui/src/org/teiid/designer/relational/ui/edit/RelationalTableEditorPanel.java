@@ -86,6 +86,9 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class RelationalTableEditorPanel extends RelationalEditorPanel implements RelationalConstants {
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	

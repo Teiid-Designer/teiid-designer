@@ -71,6 +71,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
     } 
       
     
+ *
+ * @since 8.0
  */
 public class SaveModifiedResourcesDialog extends SelectionDialog {
 

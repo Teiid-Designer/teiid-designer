@@ -17,6 +17,8 @@ import org.eclipse.emf.ecore.xmi.impl.XMLResourceFactoryImpl;
  * The <b>Resource Factory</b> associated with the package.
  * <!-- end-user-doc -->
  * @see org.teiid.designer.metamodels.wsdl.io.WsdlResourceImpl
+ *
+ * @since 8.0
  */
 public class WsdlResourceFactoryImpl extends XMLResourceFactoryImpl {
 	/**

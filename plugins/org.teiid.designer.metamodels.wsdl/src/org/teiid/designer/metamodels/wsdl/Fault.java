@@ -20,6 +20,8 @@ package org.teiid.designer.metamodels.wsdl;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getFault()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Fault extends WsdlNameRequiredEntity, ExtensibleAttributesDocumented {
 

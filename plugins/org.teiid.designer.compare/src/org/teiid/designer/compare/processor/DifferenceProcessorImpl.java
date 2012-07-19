@@ -55,6 +55,8 @@ import org.w3c.dom.Node;
 
 /**
  * DifferenceProcessorImpl
+ *
+ * @since 8.0
  */
 public class DifferenceProcessorImpl implements DifferenceProcessor {
 

@@ -69,6 +69,8 @@ import org.teiid.designer.metamodels.transformation.XQueryTransformationMappingR
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class TransformationPackageImpl extends EPackageImpl implements TransformationPackage {
 

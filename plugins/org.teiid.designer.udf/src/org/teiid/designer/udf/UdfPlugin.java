@@ -18,6 +18,8 @@ import org.teiid.core.util.PluginUtilImpl;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public final class UdfPlugin extends Plugin {
 

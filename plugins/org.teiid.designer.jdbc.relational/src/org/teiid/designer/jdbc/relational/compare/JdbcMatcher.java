@@ -23,6 +23,8 @@ import org.teiid.designer.jdbc.JdbcSource;
 
 /**
  * UuidEObjectMatcher
+ *
+ * @since 8.0
  */
 public class JdbcMatcher extends AbstractEObjectMatcher {
 

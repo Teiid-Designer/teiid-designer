@@ -40,6 +40,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.teiid.datatools.views.ExecutionPlanView;
 
+/**
+ * @since 8.0
+ */
 public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
 
 	// these are not shared by the base class

@@ -25,6 +25,8 @@ import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionCons
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class ConnectivityUtil {
 

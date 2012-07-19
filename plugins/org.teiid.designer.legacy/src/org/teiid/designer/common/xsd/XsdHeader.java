@@ -13,6 +13,8 @@ import java.util.List;
 
 /**
  * Class that represents the content of an XMI file's header.
+ *
+ * @since 8.0
  */
 public final class XsdHeader {
 

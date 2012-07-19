@@ -19,6 +19,8 @@ import org.eclipse.emf.common.util.AbstractEnumerator;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getSortDirection()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public final class SortDirection extends AbstractEnumerator {
 

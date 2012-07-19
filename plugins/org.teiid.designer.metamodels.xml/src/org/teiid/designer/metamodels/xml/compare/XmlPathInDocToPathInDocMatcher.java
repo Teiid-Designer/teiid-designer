@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.xml.XmlDocumentEntity;
 
 /** 
  * XmlPathInDocToPathInDocMatcher
+ *
+ * @since 8.0
  */
 public class XmlPathInDocToPathInDocMatcher extends AbstractEObjectNameMatcher {
 

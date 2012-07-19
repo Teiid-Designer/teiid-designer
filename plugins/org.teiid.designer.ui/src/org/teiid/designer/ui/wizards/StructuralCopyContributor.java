@@ -22,6 +22,8 @@ import org.teiid.designer.ui.common.UiConstants;
 
 /**
  * StructuralCopyContributor
+ *
+ * @since 8.0
  */
 public class StructuralCopyContributor implements INewModelWizardContributor, UiConstants {
 

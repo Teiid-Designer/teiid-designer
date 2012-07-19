@@ -11,6 +11,9 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.teiid.designer.schema.tools.model.jdbc.internal.ColumnImpl;
 import org.teiid.designer.schema.tools.model.schema.Column;
 
+/**
+ * @since 8.0
+ */
 public class TextColumn extends BaseColumn {
     public TextColumn( boolean pk,
                        XSDSimpleTypeDefinition type ) {

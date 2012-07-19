@@ -61,6 +61,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * InputSetPanel
+ *
+ * @since 8.0
  */
 public class InputSetPanel extends SashForm implements SelectionListener, UiConstants {
 

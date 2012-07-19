@@ -18,6 +18,8 @@ import org.teiid.designer.transformation.TransformationPlugin;
 /**
  * Metadata implementation used by server to resolve queries.
  * 
+ *
+ * @since 8.0
  */
 public class ServerRuntimeMetadata extends TransformationMetadata {
 

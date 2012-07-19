@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.transformation.TransformationContainer;
 
 /**
  * CoreModelImportMatcher
+ *
+ * @since 8.0
  */
 public class TransformationRootObjectMatcher extends AbstractEObjectMatcher {
 

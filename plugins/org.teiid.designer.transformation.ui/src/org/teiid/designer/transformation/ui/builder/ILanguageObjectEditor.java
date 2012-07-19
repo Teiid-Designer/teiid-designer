@@ -15,6 +15,8 @@ import org.teiid.query.ui.builder.model.ILanguageObjectEditorModel;
  * The <code>ILanguageObjectEditor</code> interface represents an editor capable of editing a
  * {@link org.teiid.query.sql.LanguageObject}. Editor's may have a saved value and may
  * have a current value.
+ *
+ * @since 8.0
  */
 public interface ILanguageObjectEditor {
 

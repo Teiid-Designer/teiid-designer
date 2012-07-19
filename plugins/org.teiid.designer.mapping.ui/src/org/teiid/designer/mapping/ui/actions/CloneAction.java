@@ -23,6 +23,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * CloneAction
+ *
+ * @since 8.0
  */
 public class CloneAction extends MappingAction implements UiConstants {
     //============================================================================================================================

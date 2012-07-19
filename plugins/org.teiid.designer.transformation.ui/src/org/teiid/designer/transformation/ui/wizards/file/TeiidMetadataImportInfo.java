@@ -25,6 +25,8 @@ import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo;
 /**
  * Business object used to manage the Teiid Metadata File Import data
  * 
+ *
+ * @since 8.0
  */
 public class TeiidMetadataImportInfo implements UiConstants {
 	public static final int FILE_MODE_ODA_FLAT_FILE = 0;

@@ -10,6 +10,8 @@ package org.teiid.designer.metadata.runtime;
 
 /**
  * ProcedureParameterRecord
+ *
+ * @since 8.0
  */
 public interface ProcedureParameterRecord extends MetadataRecord {
 

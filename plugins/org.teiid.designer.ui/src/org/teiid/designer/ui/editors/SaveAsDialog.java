@@ -52,6 +52,8 @@ import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
  command.execute();
  }
  *</code>
+ *
+ * @since 8.0
  */
 public class SaveAsDialog extends ElementTreeSelectionDialog implements UiConstants {
 

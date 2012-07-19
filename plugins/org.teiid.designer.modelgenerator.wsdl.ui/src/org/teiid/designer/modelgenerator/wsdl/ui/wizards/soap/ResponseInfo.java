@@ -18,6 +18,9 @@ import org.teiid.designer.modelgenerator.wsdl.model.Operation;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 
 
+/**
+ * @since 8.0
+ */
 public class ResponseInfo extends ProcedureInfo {
 
 	private String defaultNSPrefix;

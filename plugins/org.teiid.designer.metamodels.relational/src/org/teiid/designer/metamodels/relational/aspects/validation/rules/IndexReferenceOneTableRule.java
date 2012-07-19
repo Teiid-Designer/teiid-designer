@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.relational.Table;
 
 /**
  * ColumnIntegerDatatypeRule
+ *
+ * @since 8.0
  */
 public class IndexReferenceOneTableRule implements ObjectValidationRule {
     

@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.core.ModelAnnotation;
 
 /**
  * ModelSelector
+ *
+ * @since 8.0
  */
 public interface ModelSelector {
     

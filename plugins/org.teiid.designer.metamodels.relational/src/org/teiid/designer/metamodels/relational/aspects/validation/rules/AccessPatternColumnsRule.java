@@ -26,6 +26,8 @@ import org.teiid.designer.metamodels.relational.Table;
 
 /**
  * AccessPatternColumnsRule
+ *
+ * @since 8.0
  */
 public class AccessPatternColumnsRule implements ObjectValidationRule {
 

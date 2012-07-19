@@ -29,6 +29,9 @@ import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportProc
 import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 
+/**
+ * @since 8.0
+ */
 public class TeiidXmlFileImportProcessor extends TeiidMetadataImportProcessor {
 	
 	public TeiidXmlFileImportProcessor(TeiidMetadataImportInfo info, Shell shell) {

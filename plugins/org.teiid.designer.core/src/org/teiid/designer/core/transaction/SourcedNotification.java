@@ -13,6 +13,8 @@ import org.eclipse.emf.common.notify.NotificationChain;
 
 /**
  * SourcedNotification
+ *
+ * @since 8.0
  */
 public interface SourcedNotification extends Notification, NotificationChain {
     /**

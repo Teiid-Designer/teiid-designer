@@ -16,6 +16,8 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 /**
  * The <code>MaskedTextPropertyDescriptor</code> class is a property editor for masked properties. The editor defaults to being
  * editable.
+ *
+ * @since 8.0
  */
 public class MaskedTextPropertyDescriptor extends TextPropertyDescriptor {
     

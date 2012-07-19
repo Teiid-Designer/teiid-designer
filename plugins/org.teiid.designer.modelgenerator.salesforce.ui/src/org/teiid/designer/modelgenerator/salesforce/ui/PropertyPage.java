@@ -25,6 +25,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.datatools.salesforce.ISalesForceProfileConstants;
 
+/**
+ * @since 8.0
+ */
 public class PropertyPage extends ProfileDetailsPropertyPage implements IContextProvider, ModelGeneratorSalesforceUiConstants {
 
     private ContextProviderDelegate contextProviderDelegate = new ContextProviderDelegate(

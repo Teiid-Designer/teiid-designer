@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.xsd.XsdPlugin;
 
 /**
  * RelationalValidationAspectFactoryImpl
+ *
+ * @since 8.0
  */
 public class XsdValidationAspectFactoryImpl implements MetamodelAspectFactory {
 

@@ -21,6 +21,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getWsdlNameRequiredEntity()
  * @model interface="true" abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface WsdlNameRequiredEntity extends EObject {
 

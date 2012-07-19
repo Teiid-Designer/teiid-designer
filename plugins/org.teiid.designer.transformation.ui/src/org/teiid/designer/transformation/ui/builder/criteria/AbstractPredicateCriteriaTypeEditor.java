@@ -16,6 +16,8 @@ import org.teiid.query.ui.builder.model.AbstractPredicateCriteriaTypeEditorModel
 
 /**
  * AbstractPredicateCriteriaTypeEditor
+ *
+ * @since 8.0
  */
 public abstract class AbstractPredicateCriteriaTypeEditor extends AbstractLanguageObjectEditor
 		implements IPredicateCriteriaTypeEditor {

@@ -23,6 +23,8 @@ package org.teiid.designer.metamodels.webservice;
  * @see org.teiid.designer.metamodels.webservice.WebServicePackage#getOperation()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Operation extends WebServiceComponent {
 

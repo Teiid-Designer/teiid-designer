@@ -21,6 +21,8 @@ import org.teiid.designer.ui.common.viewsupport.StatusInfo;
  * ModelProjectSelectionStatusValidator is an implementation of ISelectionStatusValidator.
  * It checks that the selection is not empty, not multi, a folder or project, and ensures that
  * the project is open and is a Model Project.
+ *
+ * @since 8.0
  */
 public class ModelProjectSelectionStatusValidator implements ISelectionStatusValidator, UiConstants {
 

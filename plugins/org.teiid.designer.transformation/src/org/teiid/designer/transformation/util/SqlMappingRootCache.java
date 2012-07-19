@@ -37,6 +37,8 @@ import org.teiid.query.sql.lang.Command;
 
 /**
  * SqlMappingRootCache
+ *
+ * @since 8.0
  */
 public class SqlMappingRootCache implements SqlConstants {
 

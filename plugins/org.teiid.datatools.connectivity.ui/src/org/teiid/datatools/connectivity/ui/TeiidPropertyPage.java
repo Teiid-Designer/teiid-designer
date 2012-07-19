@@ -14,6 +14,9 @@ import org.eclipse.help.IContextProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
+/**
+ * @since 8.0
+ */
 public class TeiidPropertyPage extends ExtensibleProfileDetailsPropertyPage 
     implements IContextProvider {
 

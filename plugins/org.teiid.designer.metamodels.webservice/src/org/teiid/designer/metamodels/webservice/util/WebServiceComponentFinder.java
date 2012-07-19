@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.webservice.WebServiceComponent;
 
 /**
  * WebServiceComponentFinder
+ *
+ * @since 8.0
  */
 public abstract class WebServiceComponentFinder implements ModelVisitor {
 

@@ -28,6 +28,8 @@ import org.teiid.designer.core.validation.ValidationResultImpl;
 
 /**
  * CoreValidationRulesUtil
+ *
+ * @since 8.0
  */
 public class CoreValidationRulesUtil {
     

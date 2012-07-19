@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.xml.XmlNamespace;
 
 /**
  * AccessPatternColumnsRule
+ *
+ * @since 8.0
  */
 public class XmlNamespaceRule implements ObjectValidationRule {
     final static String XML_NS = "http://www.w3.org/XML/1998/namespace"; //$NON-NLS-1$

@@ -18,6 +18,8 @@ import org.eclipse.swt.widgets.Composite;
  * This indirection is necessary because only objects with a default
  * constructor can be created via an extension point
  * (this precludes Viewers).
+ *
+ * @since 8.0
  */
 public class ModelObjectStructureViewerCreator implements IViewerCreator {
     

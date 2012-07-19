@@ -38,6 +38,8 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 
 /**
  * DiagramAssociation
+ *
+ * @since 8.0
  */
 public class TransformationLink extends AbstractNodeConnectionModel {
                                                                   

@@ -25,6 +25,8 @@ import org.teiid.designer.ui.wizards.ConvertToEnterpriseTypesWizard;
 
 /**
  * ModelStatisticsAction
+ *
+ * @since 8.0
  */
 public class ConvertToEnterpriseTypesAction extends Action implements ISelectionListener, Comparable, ISelectionAction{
 

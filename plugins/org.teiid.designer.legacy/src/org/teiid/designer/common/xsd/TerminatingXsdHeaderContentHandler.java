@@ -12,6 +12,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * @since 8.0
+ */
 public class TerminatingXsdHeaderContentHandler extends DefaultHandler {
 
     public static final String SCHEMA_NOT_FOUND_EXCEPTION_MESSAGE = "SchemaNotFoundException"; //$NON-NLS-1$

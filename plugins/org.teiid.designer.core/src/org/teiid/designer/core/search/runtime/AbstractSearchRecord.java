@@ -10,6 +10,8 @@ package org.teiid.designer.core.search.runtime;
 
 /**
  * AbstractSearchRecord
+ *
+ * @since 8.0
  */
 public abstract class AbstractSearchRecord implements SearchRecord {
 

@@ -41,6 +41,8 @@ import org.xml.sax.SAXException;
 
 /**
  * Exports resources to a .zip file
+ *
+ * @since 8.0
  */
 public class ModelerZipExporter {
 

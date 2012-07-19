@@ -15,6 +15,9 @@ import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+/**
+ * @since 8.0
+ */
 public class Util {
 
 	private Util() {

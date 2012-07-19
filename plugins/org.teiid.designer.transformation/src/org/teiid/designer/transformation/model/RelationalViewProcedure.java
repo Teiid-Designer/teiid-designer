@@ -11,6 +11,8 @@ import org.teiid.designer.relational.model.RelationalProcedure;
 
 /**
  * Virtual version of the RelationalProcedure, also includes transformation SQL
+ *
+ * @since 8.0
  */
 public class RelationalViewProcedure extends RelationalProcedure {
 

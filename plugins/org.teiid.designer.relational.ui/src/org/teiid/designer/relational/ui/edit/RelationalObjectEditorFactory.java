@@ -12,6 +12,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.model.RelationalTable;
 
+/**
+ * @since 8.0
+ */
 public class RelationalObjectEditorFactory {
 
 	public static RelationalEditorPanel getEditorPanel( IDialogStatusListener statusListener, 

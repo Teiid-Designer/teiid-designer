@@ -9,6 +9,8 @@ package org.teiid.query.ui.sqleditor.sql;
 
 /**
  * SqlFormattingConstants
+ *
+ * @since 8.0
  */
 public interface SqlFormattingConstants {
     

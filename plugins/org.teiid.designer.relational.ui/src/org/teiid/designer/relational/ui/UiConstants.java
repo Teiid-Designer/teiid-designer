@@ -13,6 +13,9 @@ import org.teiid.core.PluginUtil;
 import org.teiid.core.util.PluginUtilImpl;
 
 
+/**
+ * @since 8.0
+ */
 public interface UiConstants {
     /**
      * The ID of the plug-in containing this constants class.

@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * SqlForeignKeyAspect
+ *
+ * @since 8.0
  */
 public interface SqlForeignKeyAspect extends SqlColumnSetAspect {
     

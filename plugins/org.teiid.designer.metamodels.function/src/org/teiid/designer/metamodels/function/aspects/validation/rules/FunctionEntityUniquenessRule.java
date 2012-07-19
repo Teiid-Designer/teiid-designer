@@ -28,6 +28,8 @@ import org.teiid.designer.metamodels.function.ScalarFunction;
 
 /**
  * ScalarFunctionUniquenessRule
+ *
+ * @since 8.0
  */
 public abstract class FunctionEntityUniquenessRule implements ObjectValidationRule {
 

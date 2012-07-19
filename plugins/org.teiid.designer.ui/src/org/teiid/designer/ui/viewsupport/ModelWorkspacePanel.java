@@ -48,6 +48,8 @@ import org.teiid.designer.ui.search.IFinderPanel;
 
 /**
  * ModelWorkspacePanel is a panel that displays the workspace tree and allows selection
+ *
+ * @since 8.0
  */
 public class ModelWorkspacePanel extends Composite implements IFinderPanel, ISelectionChangedListener {
 

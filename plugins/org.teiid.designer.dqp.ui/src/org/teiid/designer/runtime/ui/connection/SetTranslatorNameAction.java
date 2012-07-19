@@ -37,6 +37,9 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class SetTranslatorNameAction extends SortableSelectionAction {
     private static final String ACTION_TITLE = DqpUiConstants.UTIL.getString("SetTranslatorNameAction.title"); //$NON-NLS-1$
     private static final String DIALOG_TITLE = DqpUiConstants.UTIL.getString("EnterTranslatorNameDialog.title"); //$NON-NLS-1$

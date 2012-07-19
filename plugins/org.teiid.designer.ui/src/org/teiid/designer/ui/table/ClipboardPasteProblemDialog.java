@@ -54,6 +54,8 @@ import org.teiid.designer.ui.common.widget.ExtendedTitleAreaDialog;
 
 /**
  * ClipboardPasteProblemDialog
+ *
+ * @since 8.0
  */
 public class ClipboardPasteProblemDialog extends ExtendedTitleAreaDialog
     implements UiConstants, PluginConstants.Images {

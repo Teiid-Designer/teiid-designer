@@ -64,6 +64,9 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 
 
+/**
+ * @since 8.0
+ */
 public class WsdlDefinitionPage extends WizardPage 
 	implements IChangeListener, Listener, IProfileChangedListener, FileUtils.Constants,
 	ModelGeneratorWsdlUiConstants, ModelGeneratorWsdlUiConstants.Images, ModelGeneratorWsdlUiConstants.HelpContexts {

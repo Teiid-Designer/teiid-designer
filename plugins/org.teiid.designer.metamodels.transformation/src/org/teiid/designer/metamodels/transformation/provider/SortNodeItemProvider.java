@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.transformation.SortNode;
  * --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class SortNodeItemProvider extends OperationNodeItemProvider {
 

@@ -10,6 +10,8 @@ package org.teiid.designer.core.workspace;
 
 /**
  * ModelWorkspaceInfo
+ *
+ * @since 8.0
  */
 public class ModelProjectInfo extends OpenableModelWorkspaceItemInfo {
 

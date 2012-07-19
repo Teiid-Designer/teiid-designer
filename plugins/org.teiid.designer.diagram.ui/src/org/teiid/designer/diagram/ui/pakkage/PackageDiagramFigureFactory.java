@@ -24,6 +24,8 @@ import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 
 /**
  * PackageDiagramFigureFactory
+ *
+ * @since 8.0
  */
 public class PackageDiagramFigureFactory extends AbstractDiagramFigureFactory implements DiagramUiConstants {
     private static final int PACKAGE_DIAGRAM = 0;

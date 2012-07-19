@@ -13,6 +13,8 @@ import org.teiid.query.sql.lang.Command;
 
 /** 
  * ValidationResult, utility containign the status of validating sql.
+ *
+ * @since 8.0
  */
 public interface QueryValidationResult {
 

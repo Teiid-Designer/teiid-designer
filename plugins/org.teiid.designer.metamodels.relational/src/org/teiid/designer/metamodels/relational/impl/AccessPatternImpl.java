@@ -36,6 +36,8 @@ import org.teiid.designer.metamodels.relational.Table;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class AccessPatternImpl extends RelationalEntityImpl implements AccessPattern {
     /**

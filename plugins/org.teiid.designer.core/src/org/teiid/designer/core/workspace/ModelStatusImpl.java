@@ -18,6 +18,8 @@ import org.teiid.designer.core.ModelerCore;
 
 /**
  * ModelStatus
+ *
+ * @since 8.0
  */
 public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusConstants, IResourceStatus {
 

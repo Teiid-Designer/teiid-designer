@@ -14,6 +14,8 @@ import org.teiid.designer.core.util.OverflowingLRUCache;
 
 /**
  * An LRU cache of <code>ModelBuffers</code>.
+ *
+ * @since 8.0
  */
 public class ModelBufferCache extends OverflowingLRUCache {
     /**

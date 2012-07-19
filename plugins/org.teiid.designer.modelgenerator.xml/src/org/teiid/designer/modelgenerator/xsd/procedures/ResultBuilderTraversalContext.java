@@ -38,6 +38,8 @@ import org.teiid.designer.transformation.util.TransformationMappingHelper;
  *
  * Responsible for keeping a list of procedures created from XSD
  * so that we do not duplicate.
+ *
+ * @since 8.0
  */
 public class ResultBuilderTraversalContext extends BaseTraversalContext implements TraversalContext {
 	

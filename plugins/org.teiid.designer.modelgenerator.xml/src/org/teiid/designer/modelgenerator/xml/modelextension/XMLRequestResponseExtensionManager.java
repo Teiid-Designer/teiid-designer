@@ -10,6 +10,9 @@ package org.teiid.designer.modelgenerator.xml.modelextension;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.RelationalEntity;
 
+/**
+ * @since 8.0
+ */
 public interface XMLRequestResponseExtensionManager extends BaseXMLRelationalExtensionManager {
 
 	public abstract void setColumnRoleAttribute(Column column, Integer role);

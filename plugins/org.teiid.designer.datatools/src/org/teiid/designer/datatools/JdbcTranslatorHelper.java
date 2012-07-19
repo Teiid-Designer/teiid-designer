@@ -2,6 +2,9 @@ package org.teiid.designer.datatools;
 
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 
+/**
+ * @since 8.0
+ */
 public class JdbcTranslatorHelper {
 	public static final String VENDOR_KEY = "org.eclipse.datatools.connectivity.db.vendor";  //$NON-NLS-1$
 	public static final String VERSION_KEY = "org.eclipse.datatools.connectivity.db.version";  //$NON-NLS-1$

@@ -18,6 +18,8 @@ import org.teiid.designer.jdbc.data.Response;
 
 /**
  * GetExportedForeignKeysRequest
+ *
+ * @since 8.0
  */
 public class GetExportedForeignKeysRequest extends MetadataRequest {
     

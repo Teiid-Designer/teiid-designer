@@ -31,6 +31,8 @@ import org.teiid.designer.metamodels.wsdl.http.HttpPackage;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class HttpBindingImpl extends EObjectImpl implements HttpBinding {
 

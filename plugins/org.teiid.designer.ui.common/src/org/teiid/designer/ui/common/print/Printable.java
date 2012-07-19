@@ -9,6 +9,8 @@ package org.teiid.designer.ui.common.print;
 
 /**
  * Printable
+ *
+ * @since 8.0
  */
 public class Printable implements IPrintable {
 

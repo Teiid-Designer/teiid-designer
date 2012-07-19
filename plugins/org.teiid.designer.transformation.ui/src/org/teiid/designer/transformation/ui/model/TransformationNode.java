@@ -23,6 +23,8 @@ import org.teiid.query.ui.sqleditor.sql.SqlFormattingStrategy;
  *
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
+ *
+ * @since 8.0
  */
 public class TransformationNode extends AbstractDiagramModelNode {
     private static final String T_STRING = "T"; //$NON-NLS-1$

@@ -41,6 +41,8 @@ import org.teiid.designer.jdbc.impl.JdbcFactoryImpl;
 
 /**
  * JdbcManagerImpl
+ *
+ * @since 8.0
  */
 public class JdbcManagerImpl implements JdbcManager {
 

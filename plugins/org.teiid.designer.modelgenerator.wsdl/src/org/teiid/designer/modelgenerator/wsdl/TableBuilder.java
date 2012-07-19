@@ -39,6 +39,9 @@ import org.teiid.designer.schema.tools.processing.SchemaProcessingException;
 import org.teiid.designer.schema.tools.processing.SchemaProcessor;
 
 
+/**
+ * @since 8.0
+ */
 public class TableBuilder {
 
     public static final String RESPONSE_IN = "ResponseIn"; //$NON-NLS-1$

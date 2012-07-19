@@ -26,6 +26,8 @@ import org.eclipse.core.runtime.IStatus;
  * arrows with their heads on the suppliers. A small dot can be placed on the junction if
  * desired. A note on the dependency should be attached at the junction point.
  * </p>
+ *
+ * @since 8.0
  */
 public interface UmlDependency extends UmlRelationship {
     

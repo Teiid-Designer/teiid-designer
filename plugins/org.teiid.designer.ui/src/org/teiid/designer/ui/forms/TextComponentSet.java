@@ -18,6 +18,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 
+/**
+ * @since 8.0
+ */
 public class TextComponentSet extends SimpleComponentSet {
 
     private final int mystyle;

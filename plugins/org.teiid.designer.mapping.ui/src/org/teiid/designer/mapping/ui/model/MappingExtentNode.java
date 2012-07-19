@@ -31,6 +31,8 @@ import org.teiid.designer.metamodels.transformation.TreeMappingRoot;
 
 /**
  * MappingExtentModelNode
+ *
+ * @since 8.0
  */
 public class MappingExtentNode extends AbstractDiagramModelNode {
     protected static final String sNone = UiConstants.Util.getString("MappingExtentTooltip.none"); //$NON-NLS-1$

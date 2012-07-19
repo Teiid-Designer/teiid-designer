@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.relational.UniqueKey;
 /**
  * TableUniqueKeysRule, unique keys (i.e., unique constraint or primary key) under the same group
  * object should not reference the same elements (independent of the order of the elements). 
+ *
+ * @since 8.0
  */
 public class TableUniqueKeysRule implements ObjectValidationRule {
 

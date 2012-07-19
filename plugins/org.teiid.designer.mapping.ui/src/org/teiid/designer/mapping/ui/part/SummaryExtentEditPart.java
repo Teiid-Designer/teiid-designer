@@ -35,6 +35,8 @@ import org.teiid.designer.metamodels.transformation.StagingTable;
  *
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
+ *
+ * @since 8.0
  */
 public class SummaryExtentEditPart extends MappingExtentEditPart /*AbstractDiagramEditPart*/ {
     ///////////////////////////////////////////////////////////////////////////////////////////////

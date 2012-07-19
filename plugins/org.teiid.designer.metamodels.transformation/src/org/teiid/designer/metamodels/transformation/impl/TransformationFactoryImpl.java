@@ -66,6 +66,8 @@ import org.teiid.designer.metamodels.transformation.provider.TransformationItemP
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class TransformationFactoryImpl extends EFactoryImpl implements TransformationFactory {
 

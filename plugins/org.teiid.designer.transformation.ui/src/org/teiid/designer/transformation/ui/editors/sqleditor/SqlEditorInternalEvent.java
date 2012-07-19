@@ -13,6 +13,8 @@ import java.util.EventObject;
  * The <code>SqlEditorInternalEvent</code> class is the event that the
  * SqlEditor uses internally to notify interested EventListeners that a change 
  * has occurred in the SqlEditorPanel.
+ *
+ * @since 8.0
  */
 public class SqlEditorInternalEvent extends EventObject {
 

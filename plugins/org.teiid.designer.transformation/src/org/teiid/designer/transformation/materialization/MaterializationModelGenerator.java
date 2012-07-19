@@ -43,6 +43,9 @@ import org.teiid.designer.metamodels.relational.UniqueKey;
 import org.teiid.designer.transformation.TransformationPlugin;
 
 
+/**
+ * @since 8.0
+ */
 public class MaterializationModelGenerator {
     private static String MV_PREFIX = SqlTableAspect.MATERIALIZED_VIEW_PREFIX;
     private static int STARTING_INDEX = 1000000;

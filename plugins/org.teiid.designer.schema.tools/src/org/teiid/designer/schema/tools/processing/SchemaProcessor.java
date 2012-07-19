@@ -22,6 +22,8 @@ import org.teiid.designer.schema.tools.processing.internal.SchemaProcessorImpl;
  *produced will combine the elements and optionally the types defined
  *in all the provided XSDSchema into a model that creates relates 
  *parents and children within and across schemas. 
+ *
+ * @since 8.0
  */
 public interface SchemaProcessor {
 

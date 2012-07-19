@@ -18,6 +18,8 @@ import org.teiid.designer.metamodels.core.ModelAnnotation;
 
 /**
  * ModelResourceSelector
+ *
+ * @since 8.0
  */
 public class EmfResourceSelector extends AbstractModelSelector {
 

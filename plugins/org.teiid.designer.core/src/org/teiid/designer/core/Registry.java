@@ -10,6 +10,8 @@ package org.teiid.designer.core;
 /**
  * A Registry represents a single naming/directory service through which objects
  * can be registered and discovered.
+ *
+ * @since 8.0
  */
 public interface Registry {
 

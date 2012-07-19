@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.transformation.FilterNode;
  * --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class FilterNodeItemProvider extends OperationNodeItemProvider {
 

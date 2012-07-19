@@ -14,6 +14,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * SqlAnnotationAspect is used to get the differrent properties on entity annotation for runtime metadata.
+ *
+ * @since 8.0
  */
 public interface SqlAnnotationAspect extends SqlAspect {
     

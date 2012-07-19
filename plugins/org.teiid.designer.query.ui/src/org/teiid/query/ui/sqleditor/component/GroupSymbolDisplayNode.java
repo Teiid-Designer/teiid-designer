@@ -11,6 +11,8 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  * The <code>GroupSymbolDisplayNode</code> class is used to represent a GroupSymbol.
+ *
+ * @since 8.0
  */
 public class GroupSymbolDisplayNode extends DisplayNode {
 

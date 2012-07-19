@@ -9,6 +9,8 @@ package org.teiid.designer.core.metamodel.aspect.uml;
 
 /**
  * UmlRelationship
+ *
+ * @since 8.0
  */
 public interface UmlRelationship extends UmlDiagramAspect {
     

@@ -22,6 +22,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
  * so by always registering as a SelectionChangeListener with the current ModelEditorPage's model object SelectionProvider. When
  * the currently active ModelEditorPage calls selectionChanged, that selection event is broadcast to whatever listeners have
  * registered with this object via the ISelectionProvider interface.
+ *
+ * @since 8.0
  */
 public class ModelEditorSelectionProvider implements ISelectionProvider {
 

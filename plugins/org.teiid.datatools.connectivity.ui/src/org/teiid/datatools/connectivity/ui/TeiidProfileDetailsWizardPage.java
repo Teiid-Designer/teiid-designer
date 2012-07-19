@@ -33,6 +33,8 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * This class pulls in the code from ExtensibleProfileDetailsWizardPage
  * so that we can access and set the driver displayed in the driverCombo
+ *
+ * @since 8.0
  */
 public class TeiidProfileDetailsWizardPage extends
 		ConnectionProfileDetailsPage implements IDriverUIContributorInformation {

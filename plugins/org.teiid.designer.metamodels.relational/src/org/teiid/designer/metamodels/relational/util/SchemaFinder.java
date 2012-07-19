@@ -13,6 +13,8 @@ import org.teiid.designer.metamodels.relational.Schema;
 
 /**
  * SchemaFinder
+ *
+ * @since 8.0
  */
 public class SchemaFinder extends RelationalEntityFinder {
 

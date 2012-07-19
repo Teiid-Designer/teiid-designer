@@ -23,6 +23,8 @@ import org.teiid.designer.mapping.PluginConstants;
 
 /**
  * ChoiceFactoryManager :: point="org.teiid.designer.mapping.choiceObjectHandler">
+ *
+ * @since 8.0
  */
 public class ChoiceFactoryManager implements PluginConstants, PluginConstants.ExtensionPoints.ChoiceObjectHandler {
 

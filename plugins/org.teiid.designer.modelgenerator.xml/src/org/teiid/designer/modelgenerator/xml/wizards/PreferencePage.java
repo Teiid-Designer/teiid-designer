@@ -21,6 +21,8 @@ import org.teiid.designer.modelgenerator.xml.XmlImporterUiPlugin;
 /**
  * This class represents the preference page for setting the
  * Modeler Logging Preferences.
+ *
+ * @since 8.0
  */
 public class PreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
 {

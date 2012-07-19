@@ -13,6 +13,9 @@ import org.teiid.designer.modelgenerator.wsdl.model.Message;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
 import org.teiid.designer.modelgenerator.wsdl.model.WSDLElement;
 
+/**
+ * @since 8.0
+ */
 public class FaultImpl extends WSDLElementImpl implements Fault {
 
 	private Message m_message;

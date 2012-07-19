@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.webservice.Input;
  * end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class InputItemProvider extends MessageItemProvider {
 

@@ -12,6 +12,8 @@ import org.teiid.core.designer.CoreI18n;
 
 /**
  * Thrown when a method argument is <code>null</code> or empty.
+ *
+ * @since 8.0
  */
 public class EmptyArgumentException extends IllegalArgumentException {
 

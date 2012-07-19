@@ -25,6 +25,8 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class DependencyInfoItemProvider
     extends ItemProviderAdapter

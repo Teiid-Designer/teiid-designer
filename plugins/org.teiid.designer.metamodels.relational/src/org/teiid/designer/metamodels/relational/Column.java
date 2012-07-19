@@ -52,6 +52,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.relational.RelationalPackage#getColumn()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Column extends RelationalEntity{
     /**

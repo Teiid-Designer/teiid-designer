@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.core.Annotation;
 /**
  * The <code>NotificationUtilities</code> class contains utility methods for use with
  * {@link org.eclipse.emf.common.notify.Notification} objects.
+ *
+ * @since 8.0
  */
 public class NotificationUtilities {
 

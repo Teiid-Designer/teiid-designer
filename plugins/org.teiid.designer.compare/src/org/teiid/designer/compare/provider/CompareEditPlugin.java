@@ -17,6 +17,8 @@ import org.teiid.designer.compare.ModelerComparePlugin;
  * This is the central singleton for the Compare edit plugin. <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public final class CompareEditPlugin extends EMFPlugin {
     /**

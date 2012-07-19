@@ -19,6 +19,8 @@ import org.teiid.core.util.CoreArgCheck;
 
 /**
  * ModelWorkspaceNotificationImpl
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceNotificationImpl extends NotificationImpl implements ModelWorkspaceNotification {
     protected final IResourceDelta delta;

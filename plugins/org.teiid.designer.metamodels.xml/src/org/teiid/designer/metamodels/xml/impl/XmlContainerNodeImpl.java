@@ -51,6 +51,8 @@ import org.teiid.designer.metamodels.xsd.XsdUtil;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl implements XmlContainerNode {
 

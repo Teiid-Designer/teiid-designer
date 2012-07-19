@@ -13,6 +13,8 @@ import org.teiid.core.designer.CoreModelerPlugin;
 
 /**
  * UserCancelledException
+ *
+ * @since 8.0
  */
 public class UserCancelledException extends TeiidRuntimeException {
 

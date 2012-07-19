@@ -22,6 +22,8 @@ import org.teiid.designer.ui.UiPlugin;
 
 /**
  * ModelLabelProvider
+ *
+ * @since 8.0
  */
 public class ModelLabelProvider extends LabelProvider implements PluginConstants.Images {
 

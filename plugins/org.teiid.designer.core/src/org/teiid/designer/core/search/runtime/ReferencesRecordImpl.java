@@ -12,6 +12,8 @@ import org.teiid.designer.core.index.IndexConstants;
 
 /**
  * ReferencesRecordImpl
+ *
+ * @since 8.0
  */
 public class ReferencesRecordImpl extends AbstractSearchRecord implements ReferencesRecord {
 	

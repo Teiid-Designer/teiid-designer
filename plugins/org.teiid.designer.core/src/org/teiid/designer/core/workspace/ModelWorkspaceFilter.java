@@ -11,6 +11,8 @@ package org.teiid.designer.core.workspace;
  * The ModelWorkspaceFilter interface defines the operations that allow
  * a {@link ModelWorkspaceView} to determine whether an object should
  * appear in the view.
+ *
+ * @since 8.0
  */
 public interface ModelWorkspaceFilter {
     

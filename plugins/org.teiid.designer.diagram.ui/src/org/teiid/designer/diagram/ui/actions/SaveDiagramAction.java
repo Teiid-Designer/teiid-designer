@@ -16,6 +16,8 @@ import org.teiid.designer.diagram.ui.util.SaveDiagramHelper;
 
 /**
  * SaveDiagramAction
+ *
+ * @since 8.0
  */
 public class SaveDiagramAction extends DiagramAction {
     private DiagramEditor editor;

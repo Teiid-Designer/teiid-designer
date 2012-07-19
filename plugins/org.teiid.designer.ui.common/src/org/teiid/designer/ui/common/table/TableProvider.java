@@ -10,6 +10,8 @@ package org.teiid.designer.ui.common.table;
 
 /**
  * @param <T>
+ *
+ * @since 8.0
  */
 public interface TableProvider<T> {
 

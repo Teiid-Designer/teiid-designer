@@ -47,6 +47,8 @@ import org.teiid.designer.core.util.ModelVisitorWithFinish;
 
 /**
  * MergeProcessorImpl
+ *
+ * @since 8.0
  */
 public class MergeProcessorImpl implements MergeProcessor {
 

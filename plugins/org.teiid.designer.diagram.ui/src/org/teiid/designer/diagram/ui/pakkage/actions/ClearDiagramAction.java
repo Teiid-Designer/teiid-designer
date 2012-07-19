@@ -19,6 +19,8 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 
 /**
  * ClearTransformation
+ *
+ * @since 8.0
  */
 public class ClearDiagramAction extends DiagramAction {
 

@@ -12,6 +12,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 
+/**
+ * @since 8.0
+ */
 public class FormTextComponentSet extends SimpleComponentSet {
 
     FormTextObjectEditor fText;

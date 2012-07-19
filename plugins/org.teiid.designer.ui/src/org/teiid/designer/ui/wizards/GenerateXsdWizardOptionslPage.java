@@ -68,6 +68,8 @@ import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
 /**
  * This page is used to capture the user preferences for Generation of XSD from Relational objects.
+ *
+ * @since 8.0
  */
 
 public class GenerateXsdWizardOptionslPage extends WizardPage

@@ -39,6 +39,8 @@ import org.teiid.designer.ui.UiConstants;
  * methods for the functionality this class provides.</p>
  * <p>ModelObjectContentProvider is a singleton to ensure that any operations it performs on a given
  * ModelResource is safe and synchronous.</p>
+ *
+ * @since 8.0
  */
 final public class ModelObjectContentProvider 
     implements ITreeContentProvider, UiConstants.ExtensionPoints.DiagramContentProvider {

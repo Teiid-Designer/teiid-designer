@@ -27,6 +27,8 @@ package org.teiid.designer.metamodels.xml;
  * @see org.teiid.designer.metamodels.xml.XmlDocumentPackage#getXmlDocument()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface XmlDocument extends XmlFragment{
     /**

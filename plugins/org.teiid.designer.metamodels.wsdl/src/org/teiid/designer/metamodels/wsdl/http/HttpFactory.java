@@ -15,6 +15,8 @@ import org.eclipse.emf.ecore.EFactory;
  * 
  * @see org.teiid.designer.metamodels.wsdl.http.HttpPackage
  * @generated
+ *
+ * @since 8.0
  */
 public interface HttpFactory extends EFactory {
 

@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.relational.Index;
 
 /**
  * IndexAspect
+ *
+ * @since 8.0
  */
 public class IndexAspect extends RelationalEntityAspect implements SqlColumnSetAspect {
 

@@ -14,6 +14,9 @@ import org.teiid.core.id.UUID;
 import org.teiid.designer.core.types.DatatypeConstants;
 
 
+/**
+ * @since 8.0
+ */
 public class UuidUtil {
 
 	/** Delimiter character used when specifying fully qualified entity names */

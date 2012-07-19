@@ -8,6 +8,9 @@ import java.util.Set;
 import org.teiid.designer.common.vdb.ModelInfo;
 
 
+/**
+ * @since 8.0
+ */
 public interface MetadataSource {
 	
 	String getName();

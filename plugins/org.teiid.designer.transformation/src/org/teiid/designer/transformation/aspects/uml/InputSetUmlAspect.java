@@ -21,6 +21,8 @@ import org.teiid.designer.transformation.TransformationPlugin;
 
 /**
  * InputSetUmlAspect
+ *
+ * @since 8.0
  */
 public class InputSetUmlAspect extends AbstractTransformationUmlAspect implements UmlClassifier {
 

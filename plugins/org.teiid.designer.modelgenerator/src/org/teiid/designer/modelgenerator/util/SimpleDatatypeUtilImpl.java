@@ -15,6 +15,8 @@ import org.teiid.designer.core.types.DatatypeManager;
 
 /**
  * SimpleDatatypeUtilImpl
+ *
+ * @since 8.0
  */
 public class SimpleDatatypeUtilImpl implements SimpleDatatypeUtil {
     

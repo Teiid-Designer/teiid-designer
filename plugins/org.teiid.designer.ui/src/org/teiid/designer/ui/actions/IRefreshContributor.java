@@ -12,6 +12,8 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
  * IRefreshContributor
+ *
+ * @since 8.0
  */
 public interface IRefreshContributor extends IWorkbenchWindowActionDelegate, ISelectionListener {
 

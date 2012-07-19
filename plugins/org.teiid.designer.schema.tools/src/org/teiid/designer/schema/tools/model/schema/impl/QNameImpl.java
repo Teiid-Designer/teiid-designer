@@ -9,6 +9,9 @@ package org.teiid.designer.schema.tools.model.schema.impl;
 
 import org.teiid.designer.schema.tools.model.schema.QName;
 
+/**
+ * @since 8.0
+ */
 public class QNameImpl implements QName {
     public String namespace;
 

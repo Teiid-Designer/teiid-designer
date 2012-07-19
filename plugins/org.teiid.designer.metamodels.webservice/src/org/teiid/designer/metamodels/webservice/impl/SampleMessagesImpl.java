@@ -37,6 +37,8 @@ import org.teiid.designer.metamodels.webservice.WebServicePackage;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class SampleMessagesImpl extends EObjectImpl implements SampleMessages {
 

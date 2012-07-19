@@ -42,6 +42,8 @@ import org.teiid.designer.metamodels.relational.UniqueConstraint;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class BaseTableImpl extends TableImpl implements BaseTable {
     /**

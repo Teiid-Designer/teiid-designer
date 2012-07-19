@@ -35,6 +35,8 @@ import org.teiid.designer.metamodels.wsdl.mime.MimePart;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class MimeMultipartRelatedImpl extends EObjectImpl implements MimeMultipartRelated {
 

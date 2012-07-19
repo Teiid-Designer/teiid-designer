@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 
 /**
  * MissingColumnLengthRule
+ *
+ * @since 8.0
  */
 public class MissingColumnLengthRule implements ObjectValidationRule {
         

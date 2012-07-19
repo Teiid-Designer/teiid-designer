@@ -14,6 +14,8 @@ package org.teiid.designer.ui.actions;
  * action service.  Since some metamodel objects may have certain global edit policies
  * (i.e. can't delete some objects), there needed to be a way to override the actions.
  * This interface defines the methods available.
+ *
+ * @since 8.0
  */
 public interface IModelObjectEditHelper {
 	/**

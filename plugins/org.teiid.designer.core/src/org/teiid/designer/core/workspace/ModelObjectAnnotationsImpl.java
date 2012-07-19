@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.core.Annotation;
 
 /**
  * ModelObjectAnnotationsImpl
+ *
+ * @since 8.0
  */
 public class ModelObjectAnnotationsImpl extends NonOpenableModelWorkspaceItemImpl implements ModelObjectAnnotations {
 

@@ -28,6 +28,9 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.Sc
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
+/**
+ * @since 8.0
+ */
 public class ResponseSchemaContentsGroup {
 	TreeViewer schemaTreeViewer;
 	Action createColumnAction;

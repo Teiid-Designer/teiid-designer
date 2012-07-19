@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.builder.translator.ResultSetTranslator;
 /**
  * EntityProcessor - executes queries against the provided schema, using the sqlConnection. Tables in the schema are processed in
  * the order provided in MetamodelBuilderConstants for the type of model.
+ *
+ * @since 8.0
  */
 public class EntityProcessor extends AbstractProcessor implements MetamodelBuilderConstants {
 

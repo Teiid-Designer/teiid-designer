@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.function.aspects.validation.FunctionEntityA
 
 /**
  * ScalarFunctionRule
+ *
+ * @since 8.0
  */
 public class ScalarFunctionRule implements ObjectValidationRule {
 

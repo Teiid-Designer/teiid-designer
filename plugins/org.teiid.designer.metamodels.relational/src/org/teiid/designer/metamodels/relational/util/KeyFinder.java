@@ -16,6 +16,8 @@ import org.teiid.designer.metamodels.relational.UniqueKey;
 
 /**
  * KeyFinder
+ *
+ * @since 8.0
  */
 public class KeyFinder extends RelationalEntityFinder {
 

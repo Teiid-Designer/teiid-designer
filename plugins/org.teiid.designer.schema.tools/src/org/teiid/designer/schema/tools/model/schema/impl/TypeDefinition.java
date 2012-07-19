@@ -16,6 +16,9 @@ import org.teiid.designer.schema.tools.model.schema.RootElement;
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 import org.teiid.designer.schema.tools.model.schema.SchemaObjectKey;
 
+/**
+ * @since 8.0
+ */
 public class TypeDefinition extends BaseSchemaObject implements ComplexSchemaObject {
 
     private boolean doesNotHaveUniqueName;

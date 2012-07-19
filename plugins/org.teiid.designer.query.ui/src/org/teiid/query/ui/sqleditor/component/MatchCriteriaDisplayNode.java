@@ -11,6 +11,8 @@ import org.teiid.query.sql.lang.MatchCriteria;
 
 /**
  * The <code>MatchCriteriaDisplayNode</code> class is used to represent a Match Criteria.
+ *
+ * @since 8.0
  */
 public class MatchCriteriaDisplayNode extends DisplayNode {
 

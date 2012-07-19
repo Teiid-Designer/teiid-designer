@@ -9,6 +9,8 @@ package org.teiid.designer.extension.registry;
 
 /**
  * A registered <codeRegistryListener</code> will be notified of registry events.
+ *
+ * @since 8.0
  */
 public interface RegistryListener {
 

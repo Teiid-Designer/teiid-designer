@@ -20,6 +20,8 @@ import org.teiid.core.util.CoreStringUtil;
 
 /**
  * ValidationPreferencesImpl
+ *
+ * @since 8.0
  */
 public class ValidationPreferencesImpl implements ValidationPreferences {
 

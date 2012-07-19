@@ -13,6 +13,9 @@ import java.util.List;
 
 import org.eclipse.jface.text.Position;
 
+/**
+ * @since 8.0
+ */
 public class XmlElement {
 	private final String SEPARATOR = "/";  //$NON-NLS-1$
 	private List<XmlElement> elementChildren = new ArrayList<XmlElement>();

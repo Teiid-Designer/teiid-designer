@@ -21,6 +21,8 @@ import org.teiid.designer.ui.common.tree.TreeViewerUtil;
  * Extension to CheckboxTreeViewer in which: A checkmark at a node automatically places a checkmark at all descendant nodes.
  * Clearing a checkmark at a node automatically clears a checkmark at all ancestor nodes. The case where a node has no checkmark
  * but at least one descendant node has a checkmark is handled by the 'style' parameter.
+ *
+ * @since 8.0
  */
 public class InheritanceCheckboxTreeViewer extends CheckboxTreeViewer implements ICheckStateListener {
 

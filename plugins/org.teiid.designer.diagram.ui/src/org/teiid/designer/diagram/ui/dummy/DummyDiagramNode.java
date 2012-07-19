@@ -11,6 +11,8 @@ import org.teiid.designer.diagram.ui.model.AbstractLocalDiagramModelNode;
 
 /**
  * DummyDiagramNode
+ *
+ * @since 8.0
  */
 public class DummyDiagramNode extends AbstractLocalDiagramModelNode {
 

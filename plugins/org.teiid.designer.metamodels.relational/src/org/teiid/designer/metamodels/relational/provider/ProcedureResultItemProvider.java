@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.relational.ProcedureResult;
  * begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class ProcedureResultItemProvider extends ColumnSetItemProvider {
     /**

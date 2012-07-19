@@ -11,6 +11,8 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 
 /**
  * XmlContainerNodeSqlAspect
+ *
+ * @since 8.0
  */
 public abstract class XmlContainerNodeSqlAspect extends AbstractXmlDocumentEntitySqlAspect {
 

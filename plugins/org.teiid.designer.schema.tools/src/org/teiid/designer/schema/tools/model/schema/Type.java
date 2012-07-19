@@ -9,6 +9,9 @@ package org.teiid.designer.schema.tools.model.schema;
 
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 
+/**
+ * @since 8.0
+ */
 public interface Type {
 	/**
 	 * Returns the type as a namespace prefix qualified string; 

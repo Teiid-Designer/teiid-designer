@@ -19,6 +19,8 @@ import org.teiid.designer.core.util.StringUtilities;
 
 /**
  * UndoableImpl
+ *
+ * @since 8.0
  */
 public class UndoableImpl implements Undoable {
     /**

@@ -18,6 +18,8 @@ import org.teiid.designer.metamodels.core.ModelImport;
 
 /**
  * CoreModelImportMatcher
+ *
+ * @since 8.0
  */
 public class CoreModelImportMatcher extends AbstractEObjectMatcher {
 

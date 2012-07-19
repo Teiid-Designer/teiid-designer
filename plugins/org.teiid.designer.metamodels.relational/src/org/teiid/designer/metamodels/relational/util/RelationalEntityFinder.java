@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.relational.RelationalEntity;
 
 /**
  * UniqueKeyFinder
+ *
+ * @since 8.0
  */
 public abstract class RelationalEntityFinder implements ModelVisitor {
 

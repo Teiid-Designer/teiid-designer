@@ -13,6 +13,8 @@ package org.teiid.designer.core.index;
 /**
  * This class represents the output from an indexer to an index 
  * for a single document.
+ *
+ * @since 8.0
  */
 
 public interface IIndexerOutput {

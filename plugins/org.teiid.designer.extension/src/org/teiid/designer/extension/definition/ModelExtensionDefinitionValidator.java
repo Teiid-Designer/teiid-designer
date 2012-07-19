@@ -28,6 +28,8 @@ import org.teiid.designer.extension.properties.Translation;
 
 /**
  * Validates the properties of a {@link ModelExtensionDefinition}.
+ *
+ * @since 8.0
  */
 public final class ModelExtensionDefinitionValidator {
 

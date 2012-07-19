@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.core.Annotation;
 
 /**
  * CoreAnnotationMatcher
+ *
+ * @since 8.0
  */
 public class CoreAnnotationMatcher extends AbstractEObjectMatcher implements TwoPhaseEObjectMatcher {
 

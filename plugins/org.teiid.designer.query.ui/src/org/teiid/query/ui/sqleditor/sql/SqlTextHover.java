@@ -16,6 +16,8 @@ import org.eclipse.swt.graphics.Point;
 
 /**
  * Example implementation for an <code>ITextHover</code> which hovers over Sql text.
+ *
+ * @since 8.0
  */
 public class SqlTextHover implements ITextHover {
 

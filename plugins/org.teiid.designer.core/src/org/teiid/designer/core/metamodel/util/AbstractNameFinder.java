@@ -9,6 +9,7 @@ package org.teiid.designer.core.metamodel.util;
 
 import java.util.Collection;
 import java.util.HashSet;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.util.CoreArgCheck;
@@ -16,7 +17,7 @@ import org.teiid.designer.core.util.ModelVisitor;
 
 
 /**
- * @
+ * @since 8.0
  */
 public abstract class AbstractNameFinder implements ModelVisitor {
 

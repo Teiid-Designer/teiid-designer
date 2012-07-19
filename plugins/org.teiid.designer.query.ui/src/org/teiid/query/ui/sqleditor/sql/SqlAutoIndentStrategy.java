@@ -16,6 +16,8 @@ import org.teiid.query.ui.UiPlugin;
 
 /**
  * SqlAutoIndentStrategy
+ *
+ * @since 8.0
  */
 public class SqlAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy
   implements SqlFormattingConstants,

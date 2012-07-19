@@ -5,6 +5,9 @@ import java.util.Properties;
 import org.teiid.core.util.CoreArgCheck;
 
 
+/**
+ * @since 8.0
+ */
 public class TranslatorProfile {
 
 

@@ -13,6 +13,8 @@ package org.teiid.designer.metamodels.transformation;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getTreeMappingRoot()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface TreeMappingRoot extends TransformationMappingRoot {
 

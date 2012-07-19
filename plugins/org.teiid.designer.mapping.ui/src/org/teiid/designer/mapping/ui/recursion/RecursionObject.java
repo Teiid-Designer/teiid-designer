@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.transformation.RecursionErrorMode;
 
 /**
  * RecursionObject
+ *
+ * @since 8.0
  */
 public class RecursionObject {
 

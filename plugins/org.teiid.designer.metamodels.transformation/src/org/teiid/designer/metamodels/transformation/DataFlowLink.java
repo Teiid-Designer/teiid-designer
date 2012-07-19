@@ -23,6 +23,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getDataFlowLink()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface DataFlowLink extends EObject {
 

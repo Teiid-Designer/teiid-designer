@@ -41,6 +41,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
  * XML document models.
  * 
  *
+ *
+ * @since 8.0
  */
 public class RefactorModelExtensionManager {
     public final static String ID = "refactorModelHandler"; //$NON-NLS-1$

@@ -15,6 +15,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 
 /**
  * OpenEditorMap
+ *
+ * @since 8.0
  */
 public class OpenEditorMap {
     

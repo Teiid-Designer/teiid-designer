@@ -14,6 +14,8 @@ import org.teiid.designer.core.Registry;
 
 /**
  *
+ *
+ * @since 8.0
  */
 public interface RegistrySPI extends Registry, PropertyChangeListener {
 

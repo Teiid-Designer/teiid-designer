@@ -50,6 +50,8 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class ModelExtensionPropertyDescriptor extends PropertyDescriptor implements Comparable<ModelExtensionPropertyDescriptor> {
 

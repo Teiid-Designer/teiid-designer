@@ -29,6 +29,8 @@ import org.eclipse.emf.mapping.MappingPackage;
  * @see org.teiid.designer.metamodels.transformation.TransformationFactory
  * @model kind="package"
  * @generated
+ *
+ * @since 8.0
  */
 public interface TransformationPackage extends EPackage{
     /**

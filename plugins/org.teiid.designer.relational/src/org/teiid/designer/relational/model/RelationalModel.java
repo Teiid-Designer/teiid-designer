@@ -14,6 +14,8 @@ import org.teiid.core.util.CoreArgCheck;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class RelationalModel extends RelationalReference {
     private Collection<RelationalReference> children;

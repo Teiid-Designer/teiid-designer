@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.wsdl.soap.SoapBinding;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getBinding()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Binding extends WsdlNameRequiredEntity, ExtensibleDocumented {
 

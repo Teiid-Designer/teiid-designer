@@ -17,6 +17,8 @@ import org.teiid.logging.LogManager;
 
 /**
  * Creates and deletes temporary directories.
+ *
+ * @since 8.0
  */
 public class TempDirectory {
     private static TempDirectoryMonitor monitor;

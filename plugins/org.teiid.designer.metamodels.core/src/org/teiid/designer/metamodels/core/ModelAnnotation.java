@@ -42,6 +42,8 @@ import org.teiid.designer.metamodels.core.extension.XPackage;
  * @see org.teiid.designer.metamodels.core.CorePackage#getModelAnnotation()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface ModelAnnotation extends EObject {
 

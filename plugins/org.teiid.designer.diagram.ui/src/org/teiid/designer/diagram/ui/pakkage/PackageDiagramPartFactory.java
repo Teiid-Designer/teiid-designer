@@ -41,6 +41,8 @@ import org.teiid.designer.diagram.ui.part.RelationalDropEditPartHelper;
 
 /**
  * PackageDiagramPartFactory
+ *
+ * @since 8.0
  */
 public class PackageDiagramPartFactory extends AbstractDiagramEditPartFactory implements DiagramUiConstants {
     private DiagramFigureFactory figureFactory;

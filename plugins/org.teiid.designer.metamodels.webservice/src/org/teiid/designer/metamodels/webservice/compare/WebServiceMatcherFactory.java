@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.webservice.WebServicePackage;
 
 /** 
  * WebServiceMatcherFactory
+ *
+ * @since 8.0
  */
 public class WebServiceMatcherFactory implements
                                      EObjectMatcherFactory {

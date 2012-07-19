@@ -28,6 +28,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.core.CorePackage#getAnnotation()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Annotation extends EObject {
 

@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.dependency.DependencyPackage;
  * An implementation of the model <b>Package</b>.
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class DependencyPackageImpl extends EPackageImpl implements DependencyPackage {
     /**

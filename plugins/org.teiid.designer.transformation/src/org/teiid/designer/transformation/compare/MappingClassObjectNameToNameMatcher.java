@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.transformation.MappingClassObject;
 
 /** 
  * MappingClassObjectNameToNameMatcher
+ *
+ * @since 8.0
  */
 public class MappingClassObjectNameToNameMatcher extends AbstractEObjectNameMatcher {
     

@@ -55,6 +55,8 @@ import org.teiid.core.CorePlugin;
  * <p>All references in this code to bit positions as "least significant" and
  * "most significant" refer to the bits moving from right to left, respectively.
  * </p>
+ *
+ * @since 8.0
  */
 public class UUIDFactory implements ObjectIDFactory {
     

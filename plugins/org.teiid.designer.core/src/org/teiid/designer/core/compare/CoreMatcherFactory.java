@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.core.CorePackage;
 
 /**
  * CoreMatcherFactory
+ *
+ * @since 8.0
  */
 public class CoreMatcherFactory implements EObjectMatcherFactory {
 

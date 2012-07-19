@@ -48,6 +48,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 
 /**
  * ModelerComparePlugin
+ *
+ * @since 8.0
  */
 public class ModelerComparePlugin extends Plugin {
 

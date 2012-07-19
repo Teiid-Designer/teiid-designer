@@ -40,6 +40,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * MoveRefactorAction
+ *
+ * @since 8.0
  */
 public abstract class RefactorAction extends ActionDelegate implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
 

@@ -52,6 +52,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * InputSetObjectEditorPage is the class for editing Transformation Objects.
+ *
+ * @since 8.0
  */
 public class XmlChoiceObjectEditorPage
   implements ModelObjectEditorPage, INotifyChangedListener,

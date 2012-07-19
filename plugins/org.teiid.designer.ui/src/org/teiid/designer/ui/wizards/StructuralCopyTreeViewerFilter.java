@@ -14,6 +14,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 /**
  * StructuralCopyTreeViewerFilter
+ *
+ * @since 8.0
  */
 public class StructuralCopyTreeViewerFilter extends ViewerFilter {
 	public StructuralCopyTreeViewerFilter() {

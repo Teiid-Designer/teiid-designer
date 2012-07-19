@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.transformation.MappingClassSet;
  * A ModelMappingClassSets objects represents the container of {@link MappingClassSet} objects
  * available in the model.
  * One {@link ModelResource} has a single ModelMappingClassSets object.
+ *
+ * @since 8.0
  */
 public interface ModelMappingClassSets extends ModelWorkspaceItem {
 

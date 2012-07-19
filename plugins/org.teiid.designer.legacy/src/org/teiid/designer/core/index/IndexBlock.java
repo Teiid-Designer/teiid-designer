@@ -17,6 +17,8 @@ import org.teiid.designer.core.util.CharOperation;
 
 /**
  * An indexBlock stores wordEntries.
+ *
+ * @since 8.0
  */
 
 public abstract class IndexBlock extends Block {

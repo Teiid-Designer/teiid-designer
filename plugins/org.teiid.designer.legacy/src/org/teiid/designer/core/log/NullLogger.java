@@ -11,6 +11,8 @@ import org.teiid.logging.Logger;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class NullLogger implements Logger {
 

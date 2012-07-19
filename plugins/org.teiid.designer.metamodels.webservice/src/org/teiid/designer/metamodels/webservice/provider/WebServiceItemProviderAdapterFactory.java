@@ -33,6 +33,8 @@ import org.teiid.designer.metamodels.webservice.util.WebServiceAdapterFactory;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class WebServiceItemProviderAdapterFactory extends WebServiceAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
     /**

@@ -11,6 +11,8 @@ import org.teiid.query.sql.lang.From;
 
 /**
  * The <code>FromDisplayNode</code> class is used to represent a Query's entire FROM clause.
+ *
+ * @since 8.0
  */
 public class FromDisplayNode extends DisplayNode {
 

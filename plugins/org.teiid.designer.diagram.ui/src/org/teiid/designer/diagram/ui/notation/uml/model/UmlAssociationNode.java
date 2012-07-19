@@ -19,6 +19,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
  * @author mdrilling
  *
  * Model Node for UML Association.
+ *
+ * @since 8.0
  */
 public class UmlAssociationNode extends UmlModelNode {
     public static final int SOURCE = 0;

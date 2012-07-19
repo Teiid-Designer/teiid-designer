@@ -17,6 +17,8 @@ import org.teiid.core.util.PluginUtilImpl;
 
 /**
  * The main plugin class.
+ *
+ * @since 8.0
  */
 public class ModelGeneratorWsdlPlugin extends Plugin {
 

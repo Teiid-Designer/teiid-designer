@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.function.aspects.validation.rules.ScalarFun
 
 /**
  * FunctionEntityAspect
+ *
+ * @since 8.0
  */
 public abstract class FunctionEntityAspect extends AbstractValidationAspect {
 

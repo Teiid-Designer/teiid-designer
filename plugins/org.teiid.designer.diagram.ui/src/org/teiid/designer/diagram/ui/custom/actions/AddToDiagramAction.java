@@ -37,6 +37,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * AddTransformationSource
+ *
+ * @since 8.0
  */
 public class AddToDiagramAction extends DiagramAction {
 

@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.relational.Relationship;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public abstract class RelationshipImpl extends RelationalEntityImpl implements Relationship {
     /**

@@ -39,6 +39,9 @@ import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 
+/**
+ * @since 8.0
+ */
 public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage implements
 		UiConstants {
 	// ===========================================================================================================================

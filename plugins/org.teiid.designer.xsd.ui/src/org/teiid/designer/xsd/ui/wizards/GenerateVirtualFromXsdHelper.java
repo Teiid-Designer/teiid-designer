@@ -46,6 +46,8 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 
 /** 
  * Class to externalize the logic for building Virtual Relational from XSD
+ *
+ * @since 8.0
  */
 public class GenerateVirtualFromXsdHelper {
     private static final String SPACER = "_";//$NON-NLS-1$

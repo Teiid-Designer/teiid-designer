@@ -16,6 +16,8 @@ import org.teiid.core.util.CoreArgCheck;
 /**
  * The <code>PseudoTranslator</code> class is an implementation of {@link Translator} that keeps track of the
  * initial property values and allows its name to be changed.
+ *
+ * @since 8.0
  */
 public class PseudoTranslator implements Translator {
 

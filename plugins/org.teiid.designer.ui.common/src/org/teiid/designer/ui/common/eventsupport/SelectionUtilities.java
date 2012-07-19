@@ -20,6 +20,8 @@ import org.teiid.designer.ui.common.UiConstants;
 /**
  * The <code>SelectionUtilities</code> class contains utility methods for the {@link ISelection}
  * objects.
+ *
+ * @since 8.0
  */
 public class SelectionUtilities implements UiConstants {
 

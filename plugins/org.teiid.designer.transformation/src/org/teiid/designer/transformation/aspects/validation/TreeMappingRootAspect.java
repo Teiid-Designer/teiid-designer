@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.transformation.TreeMappingRoot;
 
 /**
  * TreeMappingRootAspect
+ *
+ * @since 8.0
  */
 public class TreeMappingRootAspect extends TransformationAspect {
 

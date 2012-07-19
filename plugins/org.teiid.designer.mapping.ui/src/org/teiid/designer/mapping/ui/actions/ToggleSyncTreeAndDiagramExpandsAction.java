@@ -20,6 +20,8 @@ import org.teiid.designer.mapping.ui.editor.MappingDiagramBehavior;
 
 /**
  * ToggleSyncTreeAndDiagramExpandsAction
+ *
+ * @since 8.0
  */
 public class ToggleSyncTreeAndDiagramExpandsAction extends MappingAction {
 

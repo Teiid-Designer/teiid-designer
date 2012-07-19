@@ -42,6 +42,8 @@ import org.teiid.designer.metamodels.xsd.XsdPlugin;
 
 /**
  * ColumnAspect
+ *
+ * @since 8.0
  */
 public class XSDFacetAspect extends AbstractMetamodelAspect implements UmlProperty {
     

@@ -24,6 +24,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.relational.RelationalPackage#getColumnSet()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface ColumnSet extends RelationalEntity{
     /**

@@ -11,6 +11,9 @@ import java.util.List;
 
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
 
+/**
+ * @since 8.0
+ */
 public class SchemaNodeWrapper {
 	List<SchemaNode> schemaNodeList;
 	

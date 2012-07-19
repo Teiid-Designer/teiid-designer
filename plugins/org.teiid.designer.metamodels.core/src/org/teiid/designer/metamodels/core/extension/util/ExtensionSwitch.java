@@ -35,6 +35,8 @@ import org.teiid.designer.metamodels.core.extension.XPackage;
  * 
  * @see org.teiid.designer.metamodels.core.extension.ExtensionPackage
  * @generated
+ *
+ * @since 8.0
  */
 public class ExtensionSwitch {
     /**

@@ -8,6 +8,9 @@
 
 package org.teiid.designer.common.util;
 
+/**
+ * @since 8.0
+ */
 public interface LogConstants {
 	// add the new contexts to the Log4JUtil.java class, for configuration purpose
 	public static final String CTX_CONFIG = "CONFIG"; //$NON-NLS-1$

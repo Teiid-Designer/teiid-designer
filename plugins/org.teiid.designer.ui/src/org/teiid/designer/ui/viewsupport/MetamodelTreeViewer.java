@@ -48,6 +48,8 @@ import org.teiid.designer.ui.product.IModelerProductContexts.Metamodel;
 
 /**
  * MetamodelTreeViewer
+ *
+ * @since 8.0
  */
 public class MetamodelTreeViewer extends TreeViewer {
 

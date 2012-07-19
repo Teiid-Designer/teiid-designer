@@ -16,6 +16,8 @@ import org.eclipse.swt.graphics.Color;
  *
  * Simple rectangle figure designed to be placed as a footer to the
  * UmlClassifierFigure
+ *
+ * @since 8.0
  */
 public class UmlClassifierFooter extends RectangleFigure {
     /**

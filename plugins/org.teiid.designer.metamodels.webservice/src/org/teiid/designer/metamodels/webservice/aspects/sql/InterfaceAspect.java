@@ -13,6 +13,8 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 
 /** 
  * InterfaceAspect
+ *
+ * @since 8.0
  */
 public class InterfaceAspect extends WebServiceComponentAspect {
 

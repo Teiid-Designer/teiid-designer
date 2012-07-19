@@ -30,6 +30,8 @@ import org.teiid.designer.ui.common.widget.MessageLabel;
 /**
  * Provides dialog for selecting a Translator from existing Teiid Servers.
  * 
+ *
+ * @since 8.0
  */
 public class SelectTranslatorDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
 

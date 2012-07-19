@@ -16,6 +16,8 @@ import org.teiid.designer.metamodels.core.CoreMetamodelPlugin;
  * This is the central singleton for the Extension edit plugin. <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public final class ExtensionEditPlugin extends EMFPlugin {
 

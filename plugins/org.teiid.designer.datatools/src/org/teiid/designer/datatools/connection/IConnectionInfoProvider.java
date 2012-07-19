@@ -14,6 +14,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 
 /**
  * Provides Teiid Data Source specific capabilites for a Data Source Type.
+ *
+ * @since 8.0
  */
 public interface IConnectionInfoProvider extends IConnectionInfoHelper {
     /**

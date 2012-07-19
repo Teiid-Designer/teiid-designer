@@ -12,6 +12,8 @@ import org.teiid.designer.metamodels.webservice.WebServicePackage;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class WebServiceExtendableClassnameProvider extends AbstractMetaclassNameProvider {
 

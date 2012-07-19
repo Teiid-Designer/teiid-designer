@@ -48,6 +48,9 @@ import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 
+/**
+ * @since 8.0
+ */
 public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizard, IPropertiesContext {
 
     private static final String TITLE = Messages.ImportWsdlSoapWizard_title;

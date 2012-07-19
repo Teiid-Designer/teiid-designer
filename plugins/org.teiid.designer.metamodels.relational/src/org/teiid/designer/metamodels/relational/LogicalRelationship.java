@@ -26,6 +26,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.relational.RelationalPackage#getLogicalRelationship()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface LogicalRelationship extends Relationship{
     /**

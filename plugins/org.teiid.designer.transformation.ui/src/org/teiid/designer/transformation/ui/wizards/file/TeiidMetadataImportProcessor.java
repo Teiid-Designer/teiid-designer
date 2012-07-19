@@ -37,6 +37,9 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class TeiidMetadataImportProcessor implements UiConstants {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataImportProcessor.class);
 	protected static final String DEFAULT_EXTENSION_LCASE = ".xmi"; //$NON-NLS-1$

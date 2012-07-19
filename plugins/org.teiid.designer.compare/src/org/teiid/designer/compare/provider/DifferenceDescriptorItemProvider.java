@@ -27,6 +27,8 @@ import org.teiid.designer.compare.DifferenceType;
  * --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class DifferenceDescriptorItemProvider extends MappingHelperItemProvider {
     /**

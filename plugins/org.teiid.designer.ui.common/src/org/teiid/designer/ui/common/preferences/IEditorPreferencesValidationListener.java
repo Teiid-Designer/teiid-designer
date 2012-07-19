@@ -12,6 +12,8 @@ package org.teiid.designer.ui.common.preferences;
  *
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
+ *
+ * @since 8.0
  */
 public interface IEditorPreferencesValidationListener {
     /**

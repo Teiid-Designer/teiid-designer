@@ -10,6 +10,9 @@ package org.teiid.designer.modelgenerator.salesforce.connection.impl;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+/**
+ * @since 8.0
+ */
 public class Messages {
 	private static final String PACKAGE_ID = Messages.class.getPackage().getName();
 	

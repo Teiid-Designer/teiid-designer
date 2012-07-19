@@ -36,6 +36,8 @@ import org.teiid.designer.ui.wizards.NewModelWizard;
 
 /**
  * TableNotificationHandler
+ *
+ * @since 8.0
  */
 public class TableNotificationHandler implements INotifyChangedListener, UiConstants {
 

@@ -32,6 +32,9 @@ import org.teiid.designer.ui.util.ModelObjectTreeViewerNotificationHandler;
 import org.teiid.designer.ui.wizards.INewModelObjectWizard;
 
 
+/**
+ * @since 8.0
+ */
 public class ModelExplorerNotificationHandler extends ModelObjectTreeViewerNotificationHandler implements UiConstants {
 
     private static final EObject[] EMPTY_EOBJECT_ARRAY = new EObject[] {};

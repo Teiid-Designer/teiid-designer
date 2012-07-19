@@ -39,6 +39,8 @@ import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 
 /**
  * RelationalStringNameRule
+ *
+ * @since 8.0
  */
 public class RelationalStringNameRule extends StringNameRule {
 

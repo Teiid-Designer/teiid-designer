@@ -63,6 +63,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 /**
  * UmlClassifierEditPart
+ *
+ * @since 8.0
  */
 public class UmlClassifierEditPart extends AbstractNotationEditPart implements DirectEditPart {
 

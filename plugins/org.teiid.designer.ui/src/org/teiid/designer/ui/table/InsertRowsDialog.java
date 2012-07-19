@@ -26,6 +26,9 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
 
+/**
+ * @since 8.0
+ */
 public class InsertRowsDialog extends TitleAreaDialog
                            implements UiConstants,
                                       PluginConstants {

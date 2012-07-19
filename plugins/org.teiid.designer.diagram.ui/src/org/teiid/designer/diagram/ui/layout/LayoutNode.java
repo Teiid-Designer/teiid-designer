@@ -13,6 +13,8 @@ import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 
 /**
  * LayoutNode
+ *
+ * @since 8.0
  */
 public interface LayoutNode {
 

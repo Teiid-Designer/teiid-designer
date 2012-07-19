@@ -21,6 +21,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getMappingClassObject()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface MappingClassObject extends EObject {
 

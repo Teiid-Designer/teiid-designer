@@ -30,6 +30,8 @@ import org.teiid.designer.ui.common.InternalUiConstants;
 
 /**
  * Based on the eclipse class of the same name.
+ *
+ * @since 8.0
  */
 public class FolderSelectionDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
 

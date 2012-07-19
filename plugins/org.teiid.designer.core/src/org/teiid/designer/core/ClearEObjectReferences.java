@@ -26,6 +26,8 @@ import org.teiid.designer.core.util.ModelVisitor;
  * for references to the "refdObject". If one is found the reference is unset if the feature is single valued or the object is
  * removed if the feature is multivalued. This vistor will only clear references for the objects inside the resource being visited
  * and will not check the opposite end of any EReference for a reference to "refdObject".
+ *
+ * @since 8.0
  */
 public class ClearEObjectReferences implements ModelVisitor {
 

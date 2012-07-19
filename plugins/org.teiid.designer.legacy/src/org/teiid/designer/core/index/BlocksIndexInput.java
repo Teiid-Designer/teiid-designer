@@ -21,6 +21,8 @@ import org.teiid.designer.core.util.CharOperation;
 
 /**
  * This input is used for reading indexes saved using a BlocksIndexOutput.
+ *
+ * @since 8.0
  */
 public class BlocksIndexInput extends IndexInput {
     public static final int CACHE_SIZE = 16; // Cache 16 blocks of 8K each, for a cache size of 128K

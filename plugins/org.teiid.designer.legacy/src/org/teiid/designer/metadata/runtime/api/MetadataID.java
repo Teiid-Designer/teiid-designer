@@ -35,6 +35,8 @@ import java.util.List;
  * Finally, several key methods that are very commonly used and that will not be
  * overridden in subclasses are marked as <code>final</code> as an inlining hint to the
  * compiler.
+ *
+ * @since 8.0
  */
 public interface MetadataID extends Cloneable, Comparable, Serializable {
 

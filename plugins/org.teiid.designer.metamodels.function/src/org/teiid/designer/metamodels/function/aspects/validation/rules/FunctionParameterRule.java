@@ -24,6 +24,8 @@ import org.teiid.designer.metamodels.function.FunctionPlugin;
 
 /**
  * FunctionParameterRule
+ *
+ * @since 8.0
  */
 public class FunctionParameterRule implements ObjectValidationRule {
 

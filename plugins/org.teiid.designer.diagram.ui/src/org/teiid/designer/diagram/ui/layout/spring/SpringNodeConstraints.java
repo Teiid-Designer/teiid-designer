@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.diagram.ui.layout.spring;
 
+/**
+ * @since 8.0
+ */
 public class SpringNodeConstraints {
     private boolean _fixed;
     private double _weight;

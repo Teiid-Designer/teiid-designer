@@ -13,6 +13,8 @@ import org.teiid.designer.core.validation.ValidationRuleSet;
 
 /**
  * ColumnAspect
+ *
+ * @since 8.0
  */
 public class ColumnAspect extends RelationalEntityAspect {
 

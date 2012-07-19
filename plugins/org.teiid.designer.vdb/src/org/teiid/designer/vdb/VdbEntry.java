@@ -39,6 +39,8 @@ import org.teiid.designer.vdb.manifest.PropertyElement;
 
 /**
  *
+ *
+ * @since 8.0
  */
 @ThreadSafe
 public class VdbEntry {

@@ -12,6 +12,8 @@ import org.teiid.core.util.CoreArgCheck;
 
 /**
  * Record object for use in creating models for this builder framework 
+ *
+ * @since 8.0
  */
 public class ModelRecord {
 	

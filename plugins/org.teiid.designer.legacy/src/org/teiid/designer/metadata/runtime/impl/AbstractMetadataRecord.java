@@ -27,6 +27,8 @@ import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;
 
 /**
  * AbstractMetadataRecord
+ *
+ * @since 8.0
  */
 public abstract class AbstractMetadataRecord implements MetadataRecord {
 

@@ -12,6 +12,8 @@ import org.eclipse.jface.viewers.Viewer;
 
 /**
  * ModelTableContentProvider
+ *
+ * @since 8.0
  */
 public class ModelTableContentProvider implements IStructuredContentProvider {
 

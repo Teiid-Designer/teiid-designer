@@ -13,6 +13,8 @@ import org.teiid.designer.core.util.ModelContents;
 
 /**
  * MTK implementation of a Resource
+ *
+ * @since 8.0
  */
 public interface EmfResource extends MMXmiResource {
        

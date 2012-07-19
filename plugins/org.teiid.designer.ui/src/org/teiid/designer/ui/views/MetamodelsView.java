@@ -13,6 +13,8 @@ import org.teiid.designer.ui.viewsupport.MetamodelTreeViewer;
 
 /**
  * MetamodelsView is a ViewPart for browsing the structure of metamodels.
+ *
+ * @since 8.0
  */
 public class MetamodelsView extends ModelerView {
 

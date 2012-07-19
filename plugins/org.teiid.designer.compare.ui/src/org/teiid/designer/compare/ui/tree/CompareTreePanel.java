@@ -51,6 +51,8 @@ import org.teiid.designer.ui.common.widget.DefaultTreeViewerController;
 
 /**
  * Panel to show the tree of changes, allowing for selection / deselection of parts of them.
+ *
+ * @since 8.0
  */
 public class CompareTreePanel implements UiConstants, PluginConstants {
 

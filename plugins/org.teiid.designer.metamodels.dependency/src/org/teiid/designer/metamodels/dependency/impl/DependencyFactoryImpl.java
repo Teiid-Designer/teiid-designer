@@ -18,6 +18,8 @@ import org.teiid.designer.metamodels.dependency.DependencyPackage;
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class DependencyFactoryImpl extends EFactoryImpl implements DependencyFactory {
     /**

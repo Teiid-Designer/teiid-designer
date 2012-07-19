@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.relational.Table;
 
 /**
  * ForeignKeyAssociationProvider
+ *
+ * @since 8.0
  */
 public class ForeignKeyAssociationProvider implements AssociationProvider {
 

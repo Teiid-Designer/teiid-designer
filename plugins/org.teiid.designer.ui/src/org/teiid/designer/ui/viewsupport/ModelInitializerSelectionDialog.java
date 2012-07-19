@@ -30,6 +30,8 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 /**
  * ModelInitializerSelectionDialog is used by the NewModelWizard to allow the user to select from a list of ModelInitializer names
  * provided by the MetamodelDescriptor.
+ *
+ * @since 8.0
  */
 public class ModelInitializerSelectionDialog extends ListDialog implements IStructuredContentProvider {
 

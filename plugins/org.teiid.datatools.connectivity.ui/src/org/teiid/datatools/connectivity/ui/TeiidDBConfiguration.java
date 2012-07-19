@@ -11,6 +11,9 @@ import org.eclipse.datatools.sqltools.core.SQLDevToolsConfiguration;
 import org.eclipse.datatools.sqltools.core.services.ExecutionService;
 import org.eclipse.datatools.sqltools.core.services.SQLService;
 
+/**
+ * @since 8.0
+ */
 public class TeiidDBConfiguration extends SQLDevToolsConfiguration {
 
     /**

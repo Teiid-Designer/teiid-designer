@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.diagram.PresentationEntity;
  * <!-- end-user-doc -->
  * @see org.teiid.designer.metamodels.diagram.DiagramPackage
  * @generated
+ *
+ * @since 8.0
  */
 public class DiagramAdapterFactory extends AdapterFactoryImpl {
 

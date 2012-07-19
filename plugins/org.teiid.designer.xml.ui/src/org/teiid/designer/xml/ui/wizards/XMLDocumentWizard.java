@@ -69,6 +69,8 @@ import org.teiid.designer.xml.ui.dialogs.ConvertSimpleTypesToEnteriseTypesDialog
 
 /**
  * XMLDocumentWizard
+ *
+ * @since 8.0
  */
 public class XMLDocumentWizard extends AbstractWizard implements INewModelObjectWizard, ModelerXmlUiConstants {
 

@@ -18,6 +18,8 @@ import org.teiid.designer.transformation.aspects.validation.rules.XmlDocumentVal
 
 /**
  * TransformationAspect
+ *
+ * @since 8.0
  */
 public abstract class TransformationAspect extends AbstractValidationAspect {
 	

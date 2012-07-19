@@ -9,6 +9,8 @@ package org.teiid.designer.datatools.profiles.ldap;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public interface ILdapProfileConstants {
 

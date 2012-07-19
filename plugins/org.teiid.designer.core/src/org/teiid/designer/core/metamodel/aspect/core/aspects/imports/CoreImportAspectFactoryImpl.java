@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.core.CorePackage;
 
 /**
  * CoreImportAspectFactoryImpl
+ *
+ * @since 8.0
  */
 public class CoreImportAspectFactoryImpl implements MetamodelAspectFactory {
 

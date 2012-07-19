@@ -24,6 +24,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.webservice.WebServicePackage#getSampleMessages()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface SampleMessages extends EObject {
 

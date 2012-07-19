@@ -12,6 +12,8 @@ import org.teiid.designer.metamodels.relational.Catalog;
 
 /**
  * CatalogFinder
+ *
+ * @since 8.0
  */
 public class CatalogFinder extends RelationalEntityFinder {
 

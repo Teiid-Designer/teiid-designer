@@ -14,6 +14,8 @@ import java.util.Comparator;
 import org.teiid.designer.metadata.runtime.ColumnRecord;
 
 /**
+ *
+ * @since 8.0
  */
 public class ColumnRecordComparator implements Comparator<ColumnRecord>, Serializable {
 

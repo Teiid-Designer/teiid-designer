@@ -22,6 +22,8 @@ import org.teiid.designer.jdbc.metadata.JdbcProcedureType;
 
 /**
  * JdbcProcedureTypeImpl
+ *
+ * @since 8.0
  */
 public class JdbcProcedureTypeImpl extends JdbcNodeImpl implements JdbcProcedureType {
     static final String SQL_SERVER_DB_METADATA = "SQLServerDatabaseMetaData"; //$NON-NLS-1$

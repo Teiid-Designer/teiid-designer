@@ -13,6 +13,8 @@ import org.teiid.designer.core.ModelerCoreException;
 
 /**
  * ResourceDescriptor
+ *
+ * @since 8.0
  */
 public interface ResourceDescriptor {
     

@@ -32,6 +32,8 @@ import org.eclipse.emf.mapping.Mapping;
  * @see org.teiid.designer.compare.ComparePackage#getDifferenceReport()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface DifferenceReport extends EObject{
     /**

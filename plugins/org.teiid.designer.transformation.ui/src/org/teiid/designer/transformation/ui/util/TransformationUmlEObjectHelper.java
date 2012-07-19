@@ -14,6 +14,8 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 
 /**
  * @author PForhan
+ *
+ * @since 8.0
  */
 public class TransformationUmlEObjectHelper extends RelationalUmlEObjectHelper {
 

@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.function.FunctionPackage;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class FunctionItemProvider
     extends ItemProviderAdapter

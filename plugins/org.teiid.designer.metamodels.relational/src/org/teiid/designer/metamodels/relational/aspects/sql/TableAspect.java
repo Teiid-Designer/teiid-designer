@@ -38,6 +38,8 @@ import org.teiid.designer.metamodels.relational.View;
 
 /**
  * BaseTableAspect
+ *
+ * @since 8.0
  */
 public class TableAspect extends RelationalEntityAspect implements SqlTableAspect {
 

@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.relational.Table;
  * --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class AccessPatternItemProvider extends RelationalEntityItemProvider {
     /**

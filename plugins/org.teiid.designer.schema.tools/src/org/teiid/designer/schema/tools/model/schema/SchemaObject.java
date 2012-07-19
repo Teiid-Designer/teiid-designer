@@ -14,6 +14,9 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.teiid.designer.schema.tools.processing.RelationshipProcessor;
 
+/**
+ * @since 8.0
+ */
 public interface SchemaObject {
 
 	public abstract SchemaObject copy(ISchemaModelCopyTraversalContext ctx);

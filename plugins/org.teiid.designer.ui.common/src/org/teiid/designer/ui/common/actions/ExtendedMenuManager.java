@@ -18,6 +18,8 @@ import org.eclipse.jface.action.MenuManager;
  * that are empty or <code>null</code> are allowed to be added. Also items added using the <code>insertAfter</code>
  * and <code>insertBefore</code> methods will be added if they are added next to an item with the same ID.
  * By default duplicates are not allowed.
+ *
+ * @since 8.0
  */
 public class ExtendedMenuManager extends MenuManager {
 

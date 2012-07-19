@@ -13,6 +13,8 @@ import org.teiid.designer.ui.actions.ModelObjectAction;
 
 /**
  * DiagramAction
+ *
+ * @since 8.0
  */
 public class DiagramAction extends ModelObjectAction {
 

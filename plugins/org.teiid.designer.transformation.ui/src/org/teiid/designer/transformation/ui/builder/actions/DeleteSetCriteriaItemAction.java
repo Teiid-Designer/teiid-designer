@@ -11,6 +11,8 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * DeleteSetCriteriaItemAction
+ *
+ * @since 8.0
  */
 public class DeleteSetCriteriaItemAction extends AbstractButtonAction {
 	public DeleteSetCriteriaItemAction(Composite parent, Runnable handler) {

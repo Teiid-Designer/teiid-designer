@@ -18,6 +18,8 @@ import org.eclipse.swt.graphics.Rectangle;
  * PreferenceKeyAndDefaultValue
  * 
  * Data class to encapsulate the key and default value for a preference
+ *
+ * @since 8.0
  */
 public class PreferenceKeyAndDefaultValue {
 	/////////////////////////////////////////////////////////////////////

@@ -13,6 +13,8 @@ import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 
 /**
  * MmColumnLayout
+ *
+ * @since 8.0
  */
 public class MmColumnLayout extends DiagramLayout {
     public static final int ERROR_1 = -1;

@@ -12,6 +12,8 @@ import org.teiid.designer.core.index.IDocument;
 
 /**
  * ResourceDocument
+ *
+ * @since 8.0
  */
 public interface ResourceDocument extends IDocument {
 

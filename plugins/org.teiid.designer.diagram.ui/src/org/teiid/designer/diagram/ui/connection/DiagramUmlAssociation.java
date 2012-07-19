@@ -41,6 +41,8 @@ import org.teiid.designer.metamodels.diagram.DiagramLinkType;
 
 /**
  * DiagramAssociation
+ *
+ * @since 8.0
  */
 public class DiagramUmlAssociation implements NodeConnectionModel {
     private DiagramLink diagramLink;

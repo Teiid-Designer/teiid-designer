@@ -13,6 +13,8 @@ import org.teiid.designer.metamodels.core.ModelImport;
 
 /**
  * ModelImportComparator
+ *
+ * @since 8.0
  */
 public class ModelImportComparator implements Comparator {
 

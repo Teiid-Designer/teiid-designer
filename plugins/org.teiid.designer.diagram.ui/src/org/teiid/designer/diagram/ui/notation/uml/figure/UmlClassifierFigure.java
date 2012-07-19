@@ -43,6 +43,8 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 
 /**
  * UmlClassifierFigure
+ *
+ * @since 8.0
  */
 public class UmlClassifierFigure extends AbstractDiagramFigure implements DirectEditFigure, ExpandableFigure {
 

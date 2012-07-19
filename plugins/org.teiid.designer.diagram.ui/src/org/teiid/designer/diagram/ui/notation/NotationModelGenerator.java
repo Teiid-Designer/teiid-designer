@@ -16,6 +16,8 @@ import org.teiid.designer.metamodels.diagram.Diagram;
 
 /**
  * NotationModelGenerator
+ *
+ * @since 8.0
  */
 public interface NotationModelGenerator {
     /**

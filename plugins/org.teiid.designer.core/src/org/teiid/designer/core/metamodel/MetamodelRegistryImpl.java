@@ -43,6 +43,8 @@ import org.teiid.designer.metamodels.core.extension.XClass;
  * The MetaBase Toolkit Registry represents a single naming/directory service through which metamodels can be registered and
  * discovered. Each MetamodelRegistry includes a reference to a {@link ResourceSet} used when materializing metamodels as model
  * entities. The MetamodelRegistry/ResourceSet pair represents a single meta-level.
+ *
+ * @since 8.0
  */
 public class MetamodelRegistryImpl implements MetamodelRegistry {
 

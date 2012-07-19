@@ -29,6 +29,8 @@ import org.teiid.designer.metamodels.core.ModelAnnotation;
 
 /**
  * OrganizeImportCommand
+ *
+ * @since 8.0
  */
 public class OrganizeImportCommand implements ModelRefactorCommand {
 

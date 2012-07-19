@@ -18,6 +18,8 @@ import org.teiid.designer.jdbc.data.Response;
 
 /**
  * GetIndexesRequest
+ *
+ * @since 8.0
  */
 public class GetIndexesRequest extends MetadataRequest {
     

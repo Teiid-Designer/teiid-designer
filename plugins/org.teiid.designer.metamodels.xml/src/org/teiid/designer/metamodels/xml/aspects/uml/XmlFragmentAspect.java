@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.xml.XmlFragment;
 
 /**
  * SchemaAspect
+ *
+ * @since 8.0
  */
 public class XmlFragmentAspect extends AbstractMetamodelAspect implements UmlPackage {
 

@@ -4,6 +4,8 @@ import org.jdom.input.SAXBuilder;
 
 /**
  * Utility class used to create a SAXBuilder
+ *
+ * @since 8.0
  */
 public class SAXBuilderHelper {
 

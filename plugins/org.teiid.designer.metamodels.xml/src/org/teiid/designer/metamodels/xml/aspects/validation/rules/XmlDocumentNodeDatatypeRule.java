@@ -28,6 +28,8 @@ import org.teiid.designer.metamodels.xsd.XsdUtil;
 
 /**
  * XmlDocumentNodeDatatypeRule, rule that validates the datatypes associated with XmlDocumentNodes
+ *
+ * @since 8.0
  */
 public class XmlDocumentNodeDatatypeRule implements ObjectValidationRule {
 

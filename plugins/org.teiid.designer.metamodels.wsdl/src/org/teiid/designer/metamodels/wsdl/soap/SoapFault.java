@@ -26,6 +26,8 @@ import org.teiid.designer.metamodels.wsdl.BindingFault;
  * @see org.teiid.designer.metamodels.wsdl.soap.SoapPackage#getSoapFault()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface SoapFault extends EObject {
 

@@ -26,6 +26,8 @@ import org.teiid.designer.metamodels.xml.XmlSequence;
 
 /**
  * XmlChoiceObject
+ *
+ * @since 8.0
  */
 public class XmlChoiceObject implements IChoiceObject {
 

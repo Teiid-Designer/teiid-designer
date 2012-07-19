@@ -13,6 +13,8 @@ import org.teiid.designer.diagram.ui.notation.NotationFigureGenerator;
 
 /**
  * AbstractNotationEditPart
+ *
+ * @since 8.0
  */
 public abstract class AbstractNotationEditPart extends AbstractDefaultEditPart {
 

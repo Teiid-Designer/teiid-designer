@@ -63,6 +63,9 @@ import org.teiid.designer.ui.wizards.NewModelWizard;
 import org.teiid.designer.ui.wizards.NewModelWizardInput;
 
 
+/**
+ * @since 8.0
+ */
 public class DefineViewTableDialog extends TitleAreaDialog implements
 		IChangeListener, UiConstants {
 

@@ -20,6 +20,8 @@ import org.teiid.designer.ui.common.AbstractUiPlugin;
  * The <code>ActionService</code> interface defines how to create and obtain actions registered in the
  * service. Since each workbench window has it's own selection service, each window must have their own
  * action service.
+ *
+ * @since 8.0
  */
 public interface ActionService {
     

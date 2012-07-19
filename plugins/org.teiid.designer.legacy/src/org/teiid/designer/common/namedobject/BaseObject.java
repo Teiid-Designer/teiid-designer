@@ -8,6 +8,9 @@
 
 package org.teiid.designer.common.namedobject;
 
+/**
+ * @since 8.0
+ */
 public interface BaseObject extends Comparable, Cloneable {
 
     /**

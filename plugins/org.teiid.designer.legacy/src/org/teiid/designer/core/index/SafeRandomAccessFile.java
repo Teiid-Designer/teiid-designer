@@ -17,6 +17,8 @@ import java.io.RandomAccessFile;
 /**
  * A safe subclass of RandomAccessFile, which ensure that it's closed
  * on finalize.
+ *
+ * @since 8.0
  */
 public class SafeRandomAccessFile extends RandomAccessFile {
 	public SafeRandomAccessFile(java.io.File file, String mode) throws java.io.IOException {

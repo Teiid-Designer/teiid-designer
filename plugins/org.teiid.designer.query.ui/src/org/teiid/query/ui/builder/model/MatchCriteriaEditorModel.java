@@ -14,6 +14,8 @@ import org.teiid.query.sql.symbol.Expression;
 
 /**
  * MatchCriteriaEditorModel
+ *
+ * @since 8.0
  */
 public class MatchCriteriaEditorModel extends AbstractPredicateCriteriaTypeEditorModel
     implements ILanguageObjectEditorModelListener {

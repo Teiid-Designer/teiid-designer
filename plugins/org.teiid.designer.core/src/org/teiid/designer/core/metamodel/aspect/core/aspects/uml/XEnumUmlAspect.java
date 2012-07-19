@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.core.extension.XEnum;
 
 /**
  * TableAspect
+ *
+ * @since 8.0
  */
 public class XEnumUmlAspect extends AbstractExtensionUmlAspect implements UmlClassifier {
     /**

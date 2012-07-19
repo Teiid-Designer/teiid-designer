@@ -12,6 +12,8 @@ package org.teiid.designer.metadata.runtime.api;
 
 /**
  * The KeyID is the unique identifier for a Key. 
+ *
+ * @since 8.0
  */
 public interface KeyID extends MetadataID {
 /**

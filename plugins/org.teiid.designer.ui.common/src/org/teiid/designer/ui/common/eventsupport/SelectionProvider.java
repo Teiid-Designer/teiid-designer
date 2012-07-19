@@ -20,6 +20,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
  * SelectionProvider is a simple implementation of ISelectionProvider that handles the listener list
  * and firing events to it.  Can be either extended or used directly.  
  * Now why didn't Eclipse think of this? :-)
+ *
+ * @since 8.0
  */
 public class SelectionProvider implements ISelectionProvider {
 

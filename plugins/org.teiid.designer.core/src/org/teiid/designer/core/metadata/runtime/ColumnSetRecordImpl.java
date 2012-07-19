@@ -13,6 +13,8 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect;
 
 /**
  * ColumnSetRecordImpl
+ *
+ * @since 8.0
  */
 public class ColumnSetRecordImpl extends org.teiid.designer.metadata.runtime.impl.ColumnSetRecordImpl {
     

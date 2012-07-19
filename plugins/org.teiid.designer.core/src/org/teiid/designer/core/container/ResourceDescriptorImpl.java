@@ -24,6 +24,8 @@ import org.teiid.designer.core.ModelerCoreException;
 
 /**
  * ResourceDescriptorImpl
+ *
+ * @since 8.0
  */
 public class ResourceDescriptorImpl implements ResourceDescriptor {
 

@@ -20,6 +20,8 @@ import org.teiid.designer.xsd.util.ModelerXsdUtils;
 
 /**
  * MappingColorPaletteManager
+ *
+ * @since 8.0
  */
 public class MappingColorPaletteManager extends DefaultColorPaletteManager {
 

@@ -20,6 +20,8 @@ import org.teiid.designer.core.ModelerCoreException;
 
 /**
  * AbstractAssociationDescriptor
+ *
+ * @since 8.0
  */
 public abstract class AbstractAssociationDescriptor implements AssociationDescriptor {
 

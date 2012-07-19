@@ -25,6 +25,8 @@ import org.teiid.core.util.PluginUtilImpl;
 
 /**
  * CoreXsltPlugin
+ *
+ * @since 8.0
  */
 public class CoreXsltPlugin extends Plugin {
 

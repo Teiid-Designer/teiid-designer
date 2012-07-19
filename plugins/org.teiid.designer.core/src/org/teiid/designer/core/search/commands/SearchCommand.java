@@ -11,6 +11,8 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * Command when executed help look up relationships between entities.
+ *
+ * @since 8.0
  */
 public interface SearchCommand {
 	

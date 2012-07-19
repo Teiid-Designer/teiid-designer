@@ -9,6 +9,8 @@ package org.teiid.designer.diagram.ui.model;
 
 /**
  * AssociationLabelModelNode
+ *
+ * @since 8.0
  */
 public class AssociationLabelModelNode extends LabelModelNode {
 	public static final int GENERAL = -1;

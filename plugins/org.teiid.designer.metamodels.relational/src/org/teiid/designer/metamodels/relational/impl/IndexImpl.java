@@ -42,6 +42,8 @@ import org.teiid.designer.metamodels.relational.Schema;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class IndexImpl extends RelationalEntityImpl implements Index {
     /**

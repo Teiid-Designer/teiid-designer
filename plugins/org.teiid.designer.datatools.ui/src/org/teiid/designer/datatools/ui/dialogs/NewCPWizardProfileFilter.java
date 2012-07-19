@@ -8,6 +8,9 @@ import org.eclipse.datatools.connectivity.ui.wizards.IWizardCategoryProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
+/**
+ * @since 8.0
+ */
 public class NewCPWizardProfileFilter extends ViewerFilter {
 
 	private String profileID;

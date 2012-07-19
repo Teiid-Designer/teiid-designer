@@ -19,6 +19,8 @@ package org.teiid.designer.metamodels.transformation;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getJoinNode()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface JoinNode extends OperationNode {
 

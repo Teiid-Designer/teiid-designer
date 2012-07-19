@@ -42,6 +42,9 @@ import org.teiid.designer.ui.event.ModelResourceEvent;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public abstract class BaseExtensionReplaceAction extends Action
     implements ISelectionListener, Comparable, ISelectionAction, ExtensionReplaceAction {
     private List selectedModels;

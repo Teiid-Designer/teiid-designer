@@ -16,6 +16,8 @@ import org.teiid.designer.ui.common.UiConstants;
 
 /**
  * ModelerXsdUiConstants
+ *
+ * @since 8.0
  */
 public interface ModelerXsdUiConstants {
 

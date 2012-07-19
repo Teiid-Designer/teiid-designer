@@ -25,6 +25,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 
 /**
  * ModelResourceIndexSelector finds all index files associated with any projects and resources within the model workspace
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceIndexSelector extends TargetLocationIndexSelector {
 

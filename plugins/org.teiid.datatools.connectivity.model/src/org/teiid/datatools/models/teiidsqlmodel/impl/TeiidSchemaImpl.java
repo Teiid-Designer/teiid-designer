@@ -32,6 +32,8 @@ import org.teiid.datatools.models.teiidsqlmodel.TeiidsqlmodelPackage;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class TeiidSchemaImpl extends JDBCSchema implements TeiidSchema {
 	/**

@@ -14,6 +14,8 @@ import org.teiid.designer.metamodels.diagram.Diagram;
  * IClassifierContentAdapter
  * Provides an interface between generic diagram world to specific content-type questions for
  * classifier objects.
+ *
+ * @since 8.0
  */
 public interface IClassifierContentAdapter {
 

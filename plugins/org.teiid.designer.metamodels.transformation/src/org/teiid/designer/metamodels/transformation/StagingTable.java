@@ -13,6 +13,8 @@ package org.teiid.designer.metamodels.transformation;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getStagingTable()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface StagingTable extends MappingClass {
 

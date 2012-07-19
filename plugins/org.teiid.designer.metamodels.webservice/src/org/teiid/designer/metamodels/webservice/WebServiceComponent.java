@@ -22,6 +22,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.webservice.WebServicePackage#getWebServiceComponent()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface WebServiceComponent extends EObject {
 

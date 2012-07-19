@@ -66,9 +66,11 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 
 
-/*
+/**
  *  ViewTableEditorPanel - this class creates the tabbed panel which is used
  *  for creating view tables, complete with SQL transformation. 
+ *
+ * @since 8.0
  */
 public class ViewTableEditorPanel implements RelationalConstants {
     private static final String EMPTY_STRING = ""; //$NON-NLS-1$

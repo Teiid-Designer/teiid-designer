@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 /**
  * ResourceAction
+ *
+ * @since 8.0
  */
 public class ResourceAction {
 

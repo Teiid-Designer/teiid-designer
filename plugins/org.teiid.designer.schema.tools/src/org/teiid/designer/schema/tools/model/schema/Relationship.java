@@ -8,6 +8,9 @@
 package org.teiid.designer.schema.tools.model.schema;
 
 
+/**
+ * @since 8.0
+ */
 public interface Relationship {
 	public static final int UNBOUNDED = -1;
 

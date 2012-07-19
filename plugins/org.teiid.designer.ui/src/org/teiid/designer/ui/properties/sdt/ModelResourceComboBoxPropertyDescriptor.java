@@ -24,6 +24,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * ModelResourceComboBoxPropertyDescriptor
+ *
+ * @since 8.0
  */
 public class ModelResourceComboBoxPropertyDescriptor extends ComboBoxPropertyDescriptor {
 

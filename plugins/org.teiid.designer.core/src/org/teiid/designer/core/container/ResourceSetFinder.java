@@ -14,6 +14,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 /**
  * A ResourceSetFinder is used by the ModelBufferManager to identify which {@link ResourceSet} should be used
  * for a particular IResource.
+ *
+ * @since 8.0
  */
 public interface ResourceSetFinder {
     

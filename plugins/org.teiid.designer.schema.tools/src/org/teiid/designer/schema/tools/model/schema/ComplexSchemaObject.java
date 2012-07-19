@@ -8,6 +8,9 @@
 package org.teiid.designer.schema.tools.model.schema;
 
 
+/**
+ * @since 8.0
+ */
 public interface ComplexSchemaObject extends SchemaObject {
 
 }

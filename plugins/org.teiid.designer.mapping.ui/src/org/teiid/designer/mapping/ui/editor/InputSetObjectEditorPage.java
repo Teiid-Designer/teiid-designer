@@ -51,6 +51,8 @@ import org.teiid.designer.ui.viewsupport.StatusBarUpdater;
 
 /**
  * InputSetObjectEditorPage is the class for editing ???.
+ *
+ * @since 8.0
  */
 public class InputSetObjectEditorPage
     implements ModelObjectEditorPage, INotifyChangedListener, UiConstants, ITransformationDiagramActionConstants {

@@ -21,6 +21,8 @@ import org.teiid.designer.modelgenerator.ModelGeneratorPlugin;
 
 /**
  * AnnotationHelperImpl
+ *
+ * @since 8.0
  */
 public class AnnotationHelperImpl implements AnnotationHelper {
 

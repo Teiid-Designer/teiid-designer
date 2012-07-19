@@ -19,6 +19,8 @@ import org.eclipse.emf.mapping.MappingFactory;
 
 /** 
  * AbstractEObjectNameMatcher
+ *
+ * @since 8.0
  */
 public abstract class AbstractEObjectNameMatcher extends AbstractEObjectMatcher {
 

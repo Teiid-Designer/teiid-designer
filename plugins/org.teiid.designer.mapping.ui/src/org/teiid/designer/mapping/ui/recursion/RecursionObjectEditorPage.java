@@ -36,6 +36,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * RecursionObjectEditorPage is the class for editing Recursion info in mapping classes.
+ *
+ * @since 8.0
  */
 public class RecursionObjectEditorPage
   implements ModelObjectEditorPage, INotifyChangedListener,

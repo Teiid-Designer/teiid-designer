@@ -14,6 +14,8 @@ import org.teiid.designer.core.util.OverflowingLRUCache;
 
 /**
  * An LRU cache of <code>JavaElements</code>.
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceItemCache extends OverflowingLRUCache {
     /**

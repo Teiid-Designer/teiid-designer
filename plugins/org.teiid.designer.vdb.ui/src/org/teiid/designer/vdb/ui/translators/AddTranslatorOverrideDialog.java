@@ -33,6 +33,8 @@ import org.teiid.designer.vdb.TranslatorOverride;
 
 /**
  * Use for adding a translator override when no translator types are available.
+ *
+ * @since 8.0
  */
 public class AddTranslatorOverrideDialog extends MessageDialog {
 

@@ -18,6 +18,8 @@ import org.teiid.designer.transformation.TransformationPlugin;
 
 /**
  * SqlTransformationMappingRootSqlAspect
+ *
+ * @since 8.0
  */
 public class MappingClassSetSqlAspect extends AbstractTransformationSqlAspect {
 

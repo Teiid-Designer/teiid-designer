@@ -18,7 +18,9 @@ import org.eclipse.swt.graphics.Image;
   *  for short-term usage, such as in dialogs that are sorted and filtered.
   *  
   * @author PForhan
-  */
+ *
+ * @since 8.0
+ */
 public class TextCachingLabelProvider extends LabelProvider {
     //
     // Instance variables:

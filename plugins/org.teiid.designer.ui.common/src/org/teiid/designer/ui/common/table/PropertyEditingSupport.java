@@ -17,6 +17,8 @@ import org.teiid.core.properties.PropertyDefinition;
 
 /**
  * An editing support implementation for a {@link PropertyDefinition}.
+ *
+ * @since 8.0
  */
 public abstract class PropertyEditingSupport extends ResourceEditingSupport {
 

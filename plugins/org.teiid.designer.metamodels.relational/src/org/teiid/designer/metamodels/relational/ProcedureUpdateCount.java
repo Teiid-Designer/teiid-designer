@@ -19,6 +19,8 @@ import org.eclipse.emf.common.util.AbstractEnumerator;
  * @see org.teiid.designer.metamodels.relational.RelationalPackage#getProcedureUpdateCount()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public final class ProcedureUpdateCount extends AbstractEnumerator {
     /**

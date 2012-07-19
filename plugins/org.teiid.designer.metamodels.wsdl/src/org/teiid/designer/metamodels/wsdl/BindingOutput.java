@@ -19,6 +19,8 @@ package org.teiid.designer.metamodels.wsdl;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getBindingOutput()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface BindingOutput extends BindingParam {
 

@@ -13,6 +13,9 @@ import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
+/**
+ * @since 8.0
+ */
 public class WebServiceRelationalModelWizardPage extends WizardPage implements UiConstants{
 	
 	private Button invokeCB;

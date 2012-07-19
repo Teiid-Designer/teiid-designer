@@ -10,6 +10,9 @@ package org.teiid.designer.modelgenerator.xml.wizards;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+/**
+ * @since 8.0
+ */
 public class LocalMessages {
 	
 	private static final String I18N_NAME = "org.teiid.designer.modelgenerator.xml.i18n"; //$NON-NLS-1$

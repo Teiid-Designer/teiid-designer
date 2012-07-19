@@ -11,6 +11,8 @@ import org.teiid.designer.jdbc.metadata.JdbcNode;
 
 /**
  * InternalJdbcNode
+ *
+ * @since 8.0
  */
 public interface InternalJdbcNode {
 

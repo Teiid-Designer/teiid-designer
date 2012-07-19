@@ -16,6 +16,8 @@ import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
 
 /**
  * XmlSqlAspectFactory
+ *
+ * @since 8.0
  */
 public class XmlSqlAspectFactory implements MetamodelAspectFactory {
 

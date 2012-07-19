@@ -13,7 +13,9 @@ import org.teiid.designer.ui.common.actions.IActionConstants;
 
 /**
  * IDiagramActionConstants
- */ 
+ *
+ * @since 8.0
+ */
 public interface IDiagramActionConstants extends IActionConstants {
  
     interface DiagramGlobalActions {

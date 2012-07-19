@@ -16,6 +16,8 @@ import org.eclipse.emf.ecore.EcorePackage;
 
 /**
  * EcoreMatcherFactory
+ *
+ * @since 8.0
  */
 public class EcoreMatcherFactory implements EObjectMatcherFactory {
 

@@ -31,6 +31,9 @@ import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.ui.builder.util.BuilderUtils;
 import org.teiid.query.ui.builder.util.LanguageObjectLabelProvider;
 
+/**
+ * @since 8.0
+ */
 public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILanguageObjectInputProvider, UiConstants {
 
     private static final String PREFIX = I18nUtil.getPropertyPrefix(LanguageObjectBuilderTreeViewer.class);

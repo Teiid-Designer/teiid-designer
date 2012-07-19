@@ -20,6 +20,8 @@ import org.teiid.designer.ui.actions.ModelObjectAction;
 
 /**
  * MappingAction provides transformation-specific helper methods.
+ *
+ * @since 8.0
  */
 public class MappingAction extends ModelObjectAction {
 

@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.xml.XmlDocumentFactory;
  * --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class SampleFromXsdItemProvider extends ItemProviderAdapter
     implements IEditingDomainItemProvider, ITreeItemContentProvider, IItemLabelProvider,

@@ -24,6 +24,8 @@ import org.teiid.designer.diagram.ui.util.DiagramUiUtilities;
  *
  * This factory class provides static methods to create one or more UML BinaryAssociation objects
  * given an eObject that contains a UmlRelationship aspect
+ *
+ * @since 8.0
  */
 public class UmlRelationshipFactory {
 	

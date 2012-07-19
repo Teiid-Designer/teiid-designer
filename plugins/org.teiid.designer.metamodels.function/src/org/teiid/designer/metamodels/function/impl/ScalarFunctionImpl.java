@@ -39,6 +39,8 @@ import org.teiid.designer.metamodels.function.ScalarFunction;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class ScalarFunctionImpl extends FunctionImpl implements ScalarFunction {
     /**

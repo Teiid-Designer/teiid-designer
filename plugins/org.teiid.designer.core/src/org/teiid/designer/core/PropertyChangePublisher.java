@@ -11,6 +11,8 @@ import java.beans.PropertyChangeListener;
 
 /**
  * Implemented by objects that publish property changes
+ *
+ * @since 8.0
  */
 public interface PropertyChangePublisher {
 

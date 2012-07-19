@@ -52,6 +52,8 @@ import org.teiid.designer.metamodels.wsdl.mime.MimeElementOwner;
  * 
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage
  * @generated
+ *
+ * @since 8.0
  */
 public class WsdlSwitch {
 

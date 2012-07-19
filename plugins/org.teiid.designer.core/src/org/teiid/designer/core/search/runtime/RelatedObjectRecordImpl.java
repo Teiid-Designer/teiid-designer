@@ -12,6 +12,8 @@ import org.teiid.designer.core.index.IndexConstants;
 
 /**
  * RelatedObjectRecordImpl.java
+ *
+ * @since 8.0
  */
 public class RelatedObjectRecordImpl extends AbstractRelationshipRecord implements RelatedObjectRecord {
 

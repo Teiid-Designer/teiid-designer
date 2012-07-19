@@ -18,6 +18,8 @@ import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 /**
  * This command is used to move or to resize the nodes in  Hello Gef editor.
  * Support for undo/redo is ready but not used in the example.
+ *
+ * @since 8.0
  */
 public class SetConstraintCommand extends Command {
 

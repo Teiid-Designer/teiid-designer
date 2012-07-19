@@ -9,6 +9,8 @@ package org.teiid.designer.ui.table;
 
 /**
  * @author SDelap Wrapper for column order and visibility
+ *
+ * @since 8.0
  */
 public class PropertyOrder implements Comparable, Cloneable {
     private String name;

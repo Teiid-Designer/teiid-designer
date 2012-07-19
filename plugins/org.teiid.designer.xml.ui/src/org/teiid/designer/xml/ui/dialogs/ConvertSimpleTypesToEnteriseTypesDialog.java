@@ -33,6 +33,8 @@ import org.teiid.designer.xml.ui.ModelerXmlUiConstants;
 /**
  * This dialog prompts the user to inform them that there are Simple Types in the document they are creating that are not
  * Enterprise Types.
+ *
+ * @since 8.0
  */
 public class ConvertSimpleTypesToEnteriseTypesDialog extends Dialog implements ModelerXmlUiConstants {
 

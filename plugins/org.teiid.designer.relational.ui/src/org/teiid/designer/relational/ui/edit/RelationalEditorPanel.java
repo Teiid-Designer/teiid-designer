@@ -12,6 +12,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
 import org.teiid.designer.relational.model.RelationalReference;
 
+/**
+ * @since 8.0
+ */
 public abstract class RelationalEditorPanel {
 	public static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	RelationalReference relationalObject;

@@ -21,6 +21,8 @@ import org.teiid.core.util.CoreStringUtil;
 
 /**
  * A <code>ModelExtensionProperty</code> is a model extension property that may have an overridden value.
+ *
+ * @since 8.0
  */
 public class ModelExtensionProperty implements Property {
 

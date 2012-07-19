@@ -9,6 +9,9 @@ package org.teiid.designer.relational;
 
 import org.eclipse.osgi.util.NLS;
 
+/**
+ * @since 8.0
+ */
 public class Messages extends NLS {
 	
 	public static String datatypeProcessor_error_while_computing_datatype;

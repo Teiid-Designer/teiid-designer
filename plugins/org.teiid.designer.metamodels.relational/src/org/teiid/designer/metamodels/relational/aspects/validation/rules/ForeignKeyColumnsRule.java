@@ -26,6 +26,8 @@ import org.teiid.designer.metamodels.relational.UniqueKey;
 
 /**
  * ForeignKeyColumnsRule
+ *
+ * @since 8.0
  */
 public class ForeignKeyColumnsRule implements ObjectValidationRule {
 

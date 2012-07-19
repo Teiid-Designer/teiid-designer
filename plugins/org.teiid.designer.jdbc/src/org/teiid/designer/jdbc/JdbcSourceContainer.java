@@ -25,6 +25,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.jdbc.JdbcPackage#getJdbcSourceContainer()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface JdbcSourceContainer extends EObject{
     /**

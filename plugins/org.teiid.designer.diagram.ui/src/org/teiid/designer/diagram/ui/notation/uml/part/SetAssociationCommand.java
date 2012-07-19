@@ -34,6 +34,8 @@ import org.teiid.designer.ui.wizards.NewModelObjectWizardManager;
 
 /**
  * SetAssociationCommand
+ *
+ * @since 8.0
  */
 public class SetAssociationCommand extends org.eclipse.gef.commands.Command implements DiagramUiConstants {
     private static final String PREFIX = I18nUtil.getPropertyPrefix(SetAssociationCommand.class);

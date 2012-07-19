@@ -12,6 +12,8 @@ import javax.swing.text.SimpleAttributeSet;
 /**
  * The <code>DisplayNodeAttributes</code> class contains all of the settable
  * attributes of Display Nodes.
+ *
+ * @since 8.0
  */
 public class DisplayNodeAttributes {
 

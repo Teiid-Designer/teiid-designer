@@ -13,6 +13,8 @@ import java.util.List;
 
 /**
  * TableRecord
+ *
+ * @since 8.0
  */
 public interface TableRecord extends MetadataRecord  {
     

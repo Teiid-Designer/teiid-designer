@@ -97,6 +97,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManagerSaveParticipant;
 
 /**
  * The main plugin class to be used in the desktop.
+ *
+ * @since 8.0
  */
 public class ModelerCore extends Plugin implements DeclarativeTransactionManager {
 

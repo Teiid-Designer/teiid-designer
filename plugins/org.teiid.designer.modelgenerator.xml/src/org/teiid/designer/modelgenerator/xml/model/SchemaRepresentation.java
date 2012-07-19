@@ -19,6 +19,9 @@ import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 import org.teiid.designer.schema.tools.processing.SchemaUtil;
 
 
+/**
+ * @since 8.0
+ */
 public class SchemaRepresentation
 {
     private List schemaURIs;

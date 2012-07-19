@@ -38,6 +38,9 @@ import org.teiid.query.ui.sqleditor.sql.SqlPartitionScanner;
 
 
 
+/**
+ * @since 8.0
+ */
 public class CriteriaTextViewer extends SourceViewer {
 
 	IPresentationReconciler fPresentationReconciler;

@@ -14,6 +14,8 @@ import org.teiid.designer.ui.common.widget.Dialog;
 
 /**
  * AliasEntryDialog
+ *
+ * @since 8.0
  */
 public class LargeDiagramDialog extends Dialog {
 

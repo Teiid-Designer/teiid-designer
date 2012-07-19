@@ -24,6 +24,8 @@ import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 
 /**
  * LabelEditPart
+ *
+ * @since 8.0
  */
 public class LabelEditPart extends AbstractFreeEditPart {
     private static int labelCount = 0;

@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.wsdl.BindingParam;
  * @see org.teiid.designer.metamodels.wsdl.soap.SoapPackage#getSoapBody()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface SoapBody extends EObject {
 

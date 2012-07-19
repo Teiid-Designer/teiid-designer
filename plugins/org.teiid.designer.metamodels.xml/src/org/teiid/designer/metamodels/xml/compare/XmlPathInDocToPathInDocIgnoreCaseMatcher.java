@@ -16,6 +16,8 @@ import org.teiid.designer.metamodels.xml.XmlDocumentEntity;
 
 /** 
  * XmlPathInDocToPathInDocIgnoreCaseMatcher
+ *
+ * @since 8.0
  */
 public class XmlPathInDocToPathInDocIgnoreCaseMatcher extends AbstractEObjectNameMatcher {
 

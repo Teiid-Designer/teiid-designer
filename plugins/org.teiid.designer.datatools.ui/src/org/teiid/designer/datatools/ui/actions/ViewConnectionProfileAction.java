@@ -24,6 +24,9 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class ViewConnectionProfileAction extends SortableSelectionAction  {
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ViewConnectionProfileAction.class);
     private static final String TITLE = getString("title"); //$NON-NLS-1$

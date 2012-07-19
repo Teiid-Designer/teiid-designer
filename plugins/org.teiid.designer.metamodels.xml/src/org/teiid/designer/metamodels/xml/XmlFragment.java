@@ -24,6 +24,8 @@ package org.teiid.designer.metamodels.xml;
  * @see org.teiid.designer.metamodels.xml.XmlDocumentPackage#getXmlFragment()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface XmlFragment extends XmlDocumentEntity, XmlCommentHolder, ProcessingInstructionHolder{
     /**

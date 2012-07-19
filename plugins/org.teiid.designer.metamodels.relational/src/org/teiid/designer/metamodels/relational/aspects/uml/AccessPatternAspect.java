@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 
 /**
  * AccessPatternAspect
+ *
+ * @since 8.0
  */
 public class AccessPatternAspect extends RelationalEntityAspect implements UmlAssociation {
 

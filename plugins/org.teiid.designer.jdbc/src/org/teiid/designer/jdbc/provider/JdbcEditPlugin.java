@@ -15,6 +15,8 @@ import org.teiid.designer.jdbc.JdbcPlugin;
  * This is the central singleton for the Jdbc edit plugin. <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public final class JdbcEditPlugin extends EMFPlugin {
     /**

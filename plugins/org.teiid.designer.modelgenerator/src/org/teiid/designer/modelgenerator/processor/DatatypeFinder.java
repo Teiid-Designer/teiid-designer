@@ -17,6 +17,8 @@ import org.eclipse.emf.ecore.EObject;
  * Different implementations might locate them from the workspace, from a working set,
  * from a list of models, from a single model, etc.  Each implementation is also responsible
  * for handling any ambiguities
+ *
+ * @since 8.0
  */
 public interface DatatypeFinder {
     

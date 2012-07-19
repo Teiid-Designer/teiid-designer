@@ -31,6 +31,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.diagram.DiagramPackage#getDiagram()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Diagram extends PresentationEntity{
 

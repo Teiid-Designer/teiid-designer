@@ -18,6 +18,9 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class ShowModelStatisticsAction extends Action implements ISelectionListener, Comparable, ISelectionAction {
 	 private IFile selectedModel;
 	 

@@ -26,6 +26,8 @@ import org.teiid.designer.core.workspace.ModelUtil;
 
 /**
  * ModelFileExtensionRule
+ *
+ * @since 8.0
  */
 public class ModelFileExtensionRule implements ResourceValidationRule {
 

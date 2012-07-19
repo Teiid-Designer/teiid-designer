@@ -9,6 +9,9 @@ package org.teiid.designer.relational.ui.edit;
 
 import org.eclipse.core.runtime.IStatus;
 
+/**
+ * @since 8.0
+ */
 public interface IDialogStatusListener {
 	
 	void notifyStatusChanged(IStatus status);

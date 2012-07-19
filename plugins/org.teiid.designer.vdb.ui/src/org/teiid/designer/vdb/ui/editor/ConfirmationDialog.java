@@ -8,6 +8,8 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class ConfirmationDialog extends MessageDialog {
 

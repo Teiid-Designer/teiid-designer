@@ -17,6 +17,8 @@ import org.teiid.query.sql.symbol.Expression;
 /**
  * The <code>DisplayNode</code> class is the base class used by <code>QueryDisplayComponent</code> to represent all types of
  * Display Nodes.
+ *
+ * @since 8.0
  */
 public class DisplayNode implements DisplayNodeConstants {
 

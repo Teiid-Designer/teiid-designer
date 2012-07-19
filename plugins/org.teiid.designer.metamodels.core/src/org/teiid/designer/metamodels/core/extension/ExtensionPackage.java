@@ -25,6 +25,8 @@ import org.eclipse.emf.ecore.EcorePackage;
  * @see org.teiid.designer.metamodels.core.extension.ExtensionFactory
  * @model kind="package"
  * @generated
+ *
+ * @since 8.0
  */
 public interface ExtensionPackage extends EPackage {
     /**

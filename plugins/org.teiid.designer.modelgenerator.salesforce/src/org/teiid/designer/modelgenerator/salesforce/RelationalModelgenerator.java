@@ -56,6 +56,9 @@ import org.teiid.designer.modelgenerator.salesforce.util.NameUtil;
 
 import com.sforce.soap.partner.QueryResult;
 
+/**
+ * @since 8.0
+ */
 public class RelationalModelgenerator {
 
     private IProgressMonitor monitor;

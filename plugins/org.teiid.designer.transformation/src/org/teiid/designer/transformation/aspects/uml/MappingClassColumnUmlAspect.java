@@ -26,6 +26,8 @@ import org.teiid.designer.transformation.TransformationPlugin;
 
 /**
  * MappingClassColumnUmlAspect
+ *
+ * @since 8.0
  */
 public class MappingClassColumnUmlAspect extends AbstractTransformationUmlAspect implements UmlProperty {
     

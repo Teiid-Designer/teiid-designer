@@ -32,6 +32,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
  * AddToSqlSelectAction This action adds the selected SqlColumn fullnames to the SQL SELECT clause. The action is currently
  * contributed by the TransformationObjectEditorPage, so that it only appears when the editor is displayed. The elements are added
  * to the editor at the current cursor location, or at the end of the SELECT clause if the cursor is not within the SELECT clause.
+ *
+ * @since 8.0
  */
 public class AddToSqlSelectAction extends TransformationAction {
 

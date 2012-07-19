@@ -10,6 +10,9 @@ package org.teiid.designer.schema.tools.model.schema.impl;
 import org.teiid.designer.schema.tools.model.schema.RootElement;
 import org.teiid.designer.schema.tools.model.schema.SchemaObjectKey;
 
+/**
+ * @since 8.0
+ */
 public class RootElementImpl implements RootElement {
 
     private SchemaObjectKey key;

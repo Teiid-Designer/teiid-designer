@@ -186,6 +186,8 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * This is a an example of a xsd model editor.
+ *
+ * @since 8.0
  */
 public class XsdEditor extends MultiPageEditorPart
     implements IEditingDomainProvider, ISelectionProvider, IMenuListener, IGotoMarker {

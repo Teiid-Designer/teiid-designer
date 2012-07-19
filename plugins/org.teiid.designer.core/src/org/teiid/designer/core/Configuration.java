@@ -13,6 +13,8 @@ import java.util.List;
 /**
  * This Configuration class represents the runtime configuration of this plugin.  When run within
  * Eclipse, this class is populated by the descriptor information.
+ *
+ * @since 8.0
  */
 public class Configuration {
     

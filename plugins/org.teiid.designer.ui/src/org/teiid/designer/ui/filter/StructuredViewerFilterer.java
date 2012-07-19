@@ -25,6 +25,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+/**
+ * @since 8.0
+ */
 public abstract class StructuredViewerFilterer {
 
     public static final int DEFAULT_FILTER_DELAY_TIME = 400;

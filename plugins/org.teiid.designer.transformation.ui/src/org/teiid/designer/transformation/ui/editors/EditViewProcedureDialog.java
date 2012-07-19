@@ -23,6 +23,9 @@ import org.teiid.designer.transformation.model.RelationalViewProcedure;
 import org.teiid.designer.transformation.ui.Messages;
 
 
+/**
+ * @since 8.0
+ */
 public class EditViewProcedureDialog extends TitleAreaDialog implements IDialogStatusListener {
 
     private final String TITLE = Messages.createRelationalViewProcedureTitle;

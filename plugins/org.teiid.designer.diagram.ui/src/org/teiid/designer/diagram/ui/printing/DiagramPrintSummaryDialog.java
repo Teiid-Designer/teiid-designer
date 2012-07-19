@@ -35,6 +35,9 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Dialog;
 
 
+/**
+ * @since 8.0
+ */
 public class DiagramPrintSummaryDialog extends Dialog implements DiagramUiConstants {
 
     // TEST STUFF

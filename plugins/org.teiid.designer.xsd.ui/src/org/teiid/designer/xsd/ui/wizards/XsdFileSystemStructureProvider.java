@@ -22,6 +22,8 @@ import org.teiid.designer.xsd.ui.PluginConstants;
  * This class provides information regarding the structure and
  * content of specified file system XSD File objects.
  * This class was basically copied from FileSystemStructureProvider and adjusted to filter all files except XSD file extensions
+ *
+ * @since 8.0
  */
 
 public class XsdFileSystemStructureProvider implements IImportStructureProvider {

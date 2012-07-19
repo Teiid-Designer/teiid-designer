@@ -15,6 +15,8 @@ import org.teiid.query.sql.symbol.Expression;
 
 /**
  * IPredicateCriteriaTypeEditor
+ *
+ * @since 8.0
  */
 public interface IPredicateCriteriaTypeEditor extends ILanguageObjectEditor {
 	String[] getOperators();

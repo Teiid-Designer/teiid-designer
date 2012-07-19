@@ -24,6 +24,9 @@ import org.teiid.designer.schema.tools.model.schema.Relationship;
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 import org.teiid.designer.schema.tools.processing.RelationshipProcessor;
 
+/**
+ * @since 8.0
+ */
 public abstract class BaseSchemaObject implements SchemaObject {
 
     protected boolean doesNotHaveUniqueName;

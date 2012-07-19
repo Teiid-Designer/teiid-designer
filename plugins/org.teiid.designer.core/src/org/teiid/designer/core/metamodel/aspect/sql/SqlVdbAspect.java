@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * SqlVdbAspect is used to get the different properties on a VDB archive for runtime metadata.
+ *
+ * @since 8.0
  */
 public interface SqlVdbAspect extends SqlAspect {
     

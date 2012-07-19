@@ -27,6 +27,8 @@ import org.teiid.designer.ui.common.graphics.GlobalUiFontManager;
 
 /**
  * MappingExtentFigure
+ *
+ * @since 8.0
  */
 public class MappingExtentFigure extends AbstractDiagramFigure {
 

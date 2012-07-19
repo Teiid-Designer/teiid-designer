@@ -18,6 +18,9 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelImport;
 
 
+/**
+ * @since 8.0
+ */
 public class DeletedXmlRelationalImportRule implements ResourceValidationRule {
 
 	@Override

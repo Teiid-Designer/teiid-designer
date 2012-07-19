@@ -9,6 +9,9 @@ import javax.naming.ldap.InitialLdapContext;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.drivers.jdbc.JDBCConnection;
 
+/**
+ * @since 8.0
+ */
 public class LDAPConnection extends JDBCConnection {
 
     private InitialLdapContext initCtx;

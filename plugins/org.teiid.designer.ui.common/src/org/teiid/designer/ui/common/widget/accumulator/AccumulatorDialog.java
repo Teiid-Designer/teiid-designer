@@ -18,6 +18,8 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * AccumulatorDialog
+ *
+ * @since 8.0
  */
 public class AccumulatorDialog extends Dialog {
 	//=============================================================

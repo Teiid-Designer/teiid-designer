@@ -31,6 +31,8 @@ import org.teiid.designer.ui.common.widget.accumulator.AccumulatorPanel;
  * collation, in the desired order.  "Sorting" two items then merely reflects their positions in
  * this list.  See examples in {@link org.teiid.designer.ui.common.widget.accumulator.AccumulatorPanel}.  
  * If setStringsOrder() is called with a null list, alphabetic sorting is reinstated.
+ *
+ * @since 8.0
  */
 public class OrderableViewerSorter extends ViewerSorter {
 	//==================================================

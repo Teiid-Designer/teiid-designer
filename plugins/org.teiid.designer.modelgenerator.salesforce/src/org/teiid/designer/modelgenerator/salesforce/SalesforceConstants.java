@@ -11,6 +11,8 @@ import org.teiid.designer.extension.properties.NamespaceProvider;
 
 /**
  * Various SalesForce constants
+ *
+ * @since 8.0
  */
 public interface SalesforceConstants {
 

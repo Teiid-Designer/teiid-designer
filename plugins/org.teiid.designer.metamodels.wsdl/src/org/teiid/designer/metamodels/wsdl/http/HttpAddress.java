@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.wsdl.Port;
  * @see org.teiid.designer.metamodels.wsdl.http.HttpPackage#getHttpAddress()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface HttpAddress extends EObject {
 

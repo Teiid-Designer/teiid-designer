@@ -39,6 +39,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 /**
  * @author mdrilling Model Node for UML Classifier.
+ *
+ * @since 8.0
  */
 public class UmlClassifierNode extends UmlModelNode implements ExpandableNode {
 

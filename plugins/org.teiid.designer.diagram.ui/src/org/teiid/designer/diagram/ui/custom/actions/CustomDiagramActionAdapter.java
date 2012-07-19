@@ -43,6 +43,8 @@ import org.teiid.designer.ui.editors.ModelEditorPage;
 
 /**
  * CustomDiagramActionAdapter
+ *
+ * @since 8.0
  */
 public class CustomDiagramActionAdapter
      extends DiagramActionAdapter

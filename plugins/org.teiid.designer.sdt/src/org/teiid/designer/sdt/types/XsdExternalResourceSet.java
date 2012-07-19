@@ -15,6 +15,8 @@ import org.teiid.designer.core.ModelerCore;
 
 /**
  * XsdExternalResourceSet
+ *
+ * @since 8.0
  */
 public class XsdExternalResourceSet implements ExternalResourceSet {
     

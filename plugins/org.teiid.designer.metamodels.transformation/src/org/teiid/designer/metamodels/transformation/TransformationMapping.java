@@ -15,6 +15,8 @@ import org.eclipse.emf.mapping.Mapping;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getTransformationMapping()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface TransformationMapping extends Mapping {
 

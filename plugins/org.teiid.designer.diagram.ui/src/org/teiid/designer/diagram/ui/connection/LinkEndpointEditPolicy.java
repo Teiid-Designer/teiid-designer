@@ -7,14 +7,15 @@
  */
 package org.teiid.designer.diagram.ui.connection;
 
-/**
- * ConnectionEndpointEditPolicy
- */
-
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
 import org.teiid.designer.diagram.ui.figure.DiagramPolylineConnection;
 
+/**
+ * LinkEndpointEditPolicy
+ *
+ * @since 8.0
+ */
 public class LinkEndpointEditPolicy extends ConnectionEndpointEditPolicy {
 
     @Override

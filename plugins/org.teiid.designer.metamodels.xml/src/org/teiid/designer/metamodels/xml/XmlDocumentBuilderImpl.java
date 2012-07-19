@@ -49,6 +49,8 @@ import org.teiid.designer.metamodels.xml.util.XmlDocumentUtil;
 
 /**
  * XmlDocumentBuilderImpl
+ *
+ * @since 8.0
  */
 public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
     // private static final int MONITOR_MOD_COUNT = 100;

@@ -52,6 +52,8 @@ import org.teiid.designer.metamodels.relational.UniqueKey;
 
 /**
  * IntermediateFormat
+ *
+ * @since 8.0
  */
 public class IntermediateFormat {
 

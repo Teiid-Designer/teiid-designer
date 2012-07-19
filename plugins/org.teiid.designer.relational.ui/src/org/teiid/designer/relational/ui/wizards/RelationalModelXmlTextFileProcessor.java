@@ -53,6 +53,8 @@ import org.xml.sax.SAXException;
  * Creates relational model contents based on an input <code>RelationalModel</code> and a target <code>ModelResource</code>
  * 
  * 
+ *
+ * @since 8.0
  */
 public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor implements RelationalConstants {
     //============================================================================================================================

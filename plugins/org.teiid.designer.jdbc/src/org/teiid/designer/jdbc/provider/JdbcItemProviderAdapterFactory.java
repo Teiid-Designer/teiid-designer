@@ -32,6 +32,8 @@ import org.teiid.designer.jdbc.util.JdbcAdapterFactory;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class JdbcItemProviderAdapterFactory extends JdbcAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier {
     /**

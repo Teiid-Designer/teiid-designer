@@ -24,6 +24,8 @@ import org.teiid.designer.metamodels.diagram.DiagramEntity;
  * @author blafond
  *
  * interface for all Diagram Model Nodes.
+ *
+ * @since 8.0
  */
 public interface DiagramModelNode {
     

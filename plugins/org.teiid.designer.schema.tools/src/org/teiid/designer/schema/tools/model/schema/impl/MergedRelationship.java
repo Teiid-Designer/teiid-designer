@@ -10,6 +10,9 @@ package org.teiid.designer.schema.tools.model.schema.impl;
 import org.teiid.designer.schema.tools.model.schema.Relationship;
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 
+/**
+ * @since 8.0
+ */
 public class MergedRelationship extends BaseRelationship {
     // Note: MergedTableRelationships may be nested (i.e. recursive)
     private Relationship parent; // the relationship between the grandparent

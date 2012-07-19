@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.xml.XmlNamespace;
  * end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlNamespaceItemProvider extends XmlDocumentEntityItemProvider {
     /**

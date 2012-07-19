@@ -13,6 +13,8 @@ import org.teiid.query.sql.LanguageObject;
  * The <code>ILanguageObjectEditorModel</code> interface represents a model of an
  * ILanguageObjectEditor's state. It holds a saved value and a current
  * value.
+ *
+ * @since 8.0
  */
 public interface ILanguageObjectEditorModel {
     

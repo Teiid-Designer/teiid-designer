@@ -22,6 +22,9 @@ import org.teiid.designer.transformation.util.SqlConstants;
 
 
 
+/**
+ * @since 8.0
+ */
 public abstract class ProcedureInfo implements SqlConstants {
 
     public static final String SQL_BEGIN = "CREATE VIRTUAL PROCEDURE\nBEGIN\n"; //$NON-NLS-1$

@@ -9,6 +9,8 @@ package org.teiid.designer.ui.refactor;
 
 /**
  * RefactorUndoListener is an interface for events that occur in the RefactorUndoManager.
+ *
+ * @since 8.0
  */
 public interface RefactorUndoListener {
 

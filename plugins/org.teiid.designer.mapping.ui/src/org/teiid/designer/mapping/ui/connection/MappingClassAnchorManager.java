@@ -27,6 +27,8 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 
 /**
  * AnchorManager
+ *
+ * @since 8.0
  */
 public class MappingClassAnchorManager implements AnchorManager {
     private List eastAnchors;

@@ -25,6 +25,8 @@ import org.teiid.query.ui.builder.util.BuilderUtils;
 
 /**
  * FunctionEditorModel
+ *
+ * @since 8.0
  */
 public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
 

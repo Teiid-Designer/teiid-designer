@@ -21,6 +21,8 @@ import org.eclipse.emf.ecore.resource.Resource;
  * <p>
  * This interface may be implemented by clients.
  * </p>
+ *
+ * @since 8.0
  */
 public interface ModelBuffer {
     

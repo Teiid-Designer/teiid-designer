@@ -33,6 +33,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.relational.RelationalPackage#getProcedureParameter()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface ProcedureParameter extends RelationalEntity{
     /**

@@ -24,6 +24,9 @@ package org.teiid.core.id;
 
 
 
+/**
+ * @since 8.0
+ */
 public interface ObjectID extends Comparable {
 
     char DELIMITER = ':';

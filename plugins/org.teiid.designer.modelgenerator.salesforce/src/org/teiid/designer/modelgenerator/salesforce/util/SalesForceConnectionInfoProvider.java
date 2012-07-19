@@ -20,6 +20,8 @@ import org.teiid.designer.datatools.salesforce.ISalesForceProfileConstants;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class SalesForceConnectionInfoProvider extends ConnectionInfoHelper implements IConnectionInfoProvider {
 

@@ -26,6 +26,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * PasteAction
+ *
+ * @since 8.0
  */
 public class PasteAction 
      extends TransformationAction

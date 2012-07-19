@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.xml.XmlDocumentPlugin;
 
 /**
  * XmlUmlAspectFactoryImpl
+ *
+ * @since 8.0
  */
 public class XmlUmlAspectFactoryImpl implements MetamodelAspectFactory {
     @Override

@@ -34,6 +34,9 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class FlatFileRelationalModelFactory implements UiConstants {
     public static final String RELATIONAL_PACKAGE_URI	= RelationalPackage.eNS_URI;
     public static final RelationalFactory factory = RelationalFactory.eINSTANCE;

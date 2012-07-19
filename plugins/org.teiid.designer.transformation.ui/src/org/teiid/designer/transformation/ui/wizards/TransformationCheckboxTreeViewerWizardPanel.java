@@ -36,6 +36,8 @@ import org.teiid.designer.ui.wizards.StructuralCopyModelFeaturePopulator;
 
 /**
  * TransformationCheckboxTreeViewerWizardPanel
+ *
+ * @since 8.0
  */
 public class TransformationCheckboxTreeViewerWizardPanel extends CheckboxTreeViewerWizardPanel implements ICheckableController {
 

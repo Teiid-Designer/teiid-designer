@@ -23,8 +23,10 @@ import org.teiid.designer.transformation.model.RelationalViewTable;
 import org.teiid.designer.transformation.ui.Messages;
 
 
-/*
+/**
  * EditViewTableDialog - dialog for creation of ViewTalbes
+ *
+ * @since 8.0
  */
 public class EditViewTableDialog extends TitleAreaDialog implements IDialogStatusListener {
 

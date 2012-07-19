@@ -14,6 +14,8 @@ import org.teiid.designer.metamodels.diagram.Diagram;
 
 /**
  * IPackageDiagramManager
+ *
+ * @since 8.0
  */
 public interface IPackageDiagramProvider {
 

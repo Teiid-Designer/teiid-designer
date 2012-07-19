@@ -50,6 +50,8 @@ import org.teiid.designer.metamodels.core.ModelType;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class ModelImportImpl extends EObjectImpl implements ModelImport {
 

@@ -25,6 +25,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * MappingLabelProvider is a specialization of LabelProvider.
+ *
+ * @since 8.0
  */
 public class MappingLabelProvider extends LabelProvider 
     implements PluginConstants {

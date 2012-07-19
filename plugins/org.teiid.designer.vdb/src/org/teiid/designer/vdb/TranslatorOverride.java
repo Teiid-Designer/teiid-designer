@@ -27,6 +27,8 @@ import org.teiid.designer.vdb.manifest.TranslatorElement;
 
 /**
  * A VDB translator override.
+ *
+ * @since 8.0
  */
 public class TranslatorOverride implements Comparable<TranslatorOverride>, PropertyChangeListener {
 

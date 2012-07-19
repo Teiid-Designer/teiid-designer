@@ -9,6 +9,9 @@ package org.teiid.designer.diagram.ui.util;
 
 import org.eclipse.gef.Request;
 
+/**
+ * @since 8.0
+ */
 public class NativeDropRequest extends Request {
 
     private Object data;

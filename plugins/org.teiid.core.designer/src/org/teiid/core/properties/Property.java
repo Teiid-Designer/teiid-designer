@@ -9,6 +9,8 @@ package org.teiid.core.properties;
 
 /**
  * The <code>Property</code> class includes a property definition and a value.
+ *
+ * @since 8.0
  */
 public interface Property {
 

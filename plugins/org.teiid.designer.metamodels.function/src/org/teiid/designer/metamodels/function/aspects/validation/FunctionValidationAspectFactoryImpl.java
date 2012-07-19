@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.function.FunctionPlugin;
 
 /**
  * FunctionValidationAspectFactoryImpl
+ *
+ * @since 8.0
  */
 public class FunctionValidationAspectFactoryImpl implements MetamodelAspectFactory {
 

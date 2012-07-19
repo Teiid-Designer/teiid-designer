@@ -36,6 +36,8 @@ import org.teiid.designer.metamodels.webservice.WebServicePackage;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class OperationImpl extends WebServiceComponentImpl implements Operation {
 

@@ -13,6 +13,8 @@ import org.teiid.designer.core.validation.ValidationRuleSet;
 
 /**
  * XmlNamespaceAspect
+ *
+ * @since 8.0
  */
 public class XmlNamespaceAspect extends AbstractXmlAspect {
 

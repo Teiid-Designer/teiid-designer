@@ -23,6 +23,8 @@ import org.eclipse.core.runtime.IPath;
  * The current policy is that all database objects (regardless type) have to be uniquely identifiable by a (short or
  * fully-qualified) name.
  * </p>
+ *
+ * @since 8.0
  */
 public class QualifiedNameRequirementVisitor implements JdbcNodeVisitor {
 

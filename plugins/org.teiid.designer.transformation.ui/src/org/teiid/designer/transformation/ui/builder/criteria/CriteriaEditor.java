@@ -36,6 +36,8 @@ import org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent;
 
 /**
  * CriteriaEditor
+ *
+ * @since 8.0
  */
 public class CriteriaEditor extends AbstractCompositeLanguageObjectEditor {
 

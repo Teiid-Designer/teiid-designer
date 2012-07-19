@@ -21,6 +21,9 @@ import org.eclipse.datatools.connectivity.sqm.loader.Messages;
 import org.eclipse.datatools.modelbase.sql.schema.Schema;
 import org.teiid.datatools.models.teiidsqlmodel.Document;
 
+/**
+ * @since 8.0
+ */
 public class TeiidDocumentLoader extends JDBCBaseLoader {
 
 	private static final String DOCUMENT_NAME = "TABLE_NAME"; //$NON-NLS-1$

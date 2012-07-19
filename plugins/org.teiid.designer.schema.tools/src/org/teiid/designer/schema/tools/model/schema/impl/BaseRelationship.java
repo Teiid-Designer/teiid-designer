@@ -10,6 +10,9 @@ package org.teiid.designer.schema.tools.model.schema.impl;
 import org.teiid.designer.schema.tools.model.schema.Relationship;
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 
+/**
+ * @since 8.0
+ */
 public abstract class BaseRelationship implements Relationship {
 
 	private int relationshipType;

@@ -17,6 +17,8 @@ package org.teiid.designer.core.index;
  * an inMemoryIndex. It keeps track of the document being indexed and add the
  * word references to this document (so you do not need to precise the document
  * each time you add a word).
+ *
+ * @since 8.0
  */
 
 public class IndexerOutput implements IIndexerOutput {

@@ -13,6 +13,8 @@ import org.teiid.designer.core.ModelerCore;
 /**
  * ModelObjectPathLabelProvider is a specialization of ModelObjectPathLabelProvider
  * that adds the full path to the object's text label.
+ *
+ * @since 8.0
  */
 public class ModelObjectPathLabelProvider extends ModelObjectLabelProvider {
 

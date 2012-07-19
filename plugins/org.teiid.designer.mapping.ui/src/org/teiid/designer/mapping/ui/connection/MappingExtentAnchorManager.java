@@ -13,6 +13,8 @@ import org.teiid.designer.transformation.ui.connection.TransformationAnchorManag
 
 /**
  * AnchorManager
+ *
+ * @since 8.0
  */
 public class MappingExtentAnchorManager extends TransformationAnchorManager {
     

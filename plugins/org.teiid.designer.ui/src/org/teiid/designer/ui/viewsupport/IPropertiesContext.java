@@ -19,6 +19,8 @@ import java.util.Properties;
  * Example would be a cheat sheet step of "Create Teiid Model Project" followed by a "Import from JDBC". The assumption here would be
  * that a user expected the new project be pre-selected in import wizard.
  * 
+ *
+ * @since 8.0
  */
 public interface IPropertiesContext {
 	public static final String KEY_PROJECT_NAME = "projectName"; //$NON-NLS-1$

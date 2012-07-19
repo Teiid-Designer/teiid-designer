@@ -48,6 +48,9 @@ import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public abstract class XSDElementProcedureBaseAction extends
 		SortableSelectionAction implements IObjectActionDelegate,
 		IEditorActionDelegate, IViewActionDelegate {

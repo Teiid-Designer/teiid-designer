@@ -22,6 +22,8 @@ import org.teiid.core.util.HashCodeUtil;
 import org.teiid.designer.core.util.StringUtilities;
 
 /**
+ *
+ * @since 8.0
  */
 public class TeiidTranslator implements Comparable<TeiidTranslator> {
 

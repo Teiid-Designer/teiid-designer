@@ -35,6 +35,9 @@ import org.teiid.designer.modelgenerator.xml.XmlImporterUiPlugin;
 import org.teiid.designer.modelgenerator.xml.modelextension.ExtensionManager;
 
 
+/**
+ * @since 8.0
+ */
 public abstract class ExtensionManagerImpl implements ExtensionManager {
 
     private XPackage thePackage;

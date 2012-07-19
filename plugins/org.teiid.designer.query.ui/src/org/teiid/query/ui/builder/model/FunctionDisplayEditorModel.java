@@ -13,6 +13,8 @@ import org.teiid.query.sql.symbol.Function;
 /**
  * The <code>FunctionDisplayEditorModel</code> class is used as a model for the
  *  org.teiid.designer.transformation.ui.builder.expression.FunctionDisplayEditor.
+ *
+ * @since 8.0
  */
 public class FunctionDisplayEditorModel extends AbstractLanguageObjectEditorModel {
 

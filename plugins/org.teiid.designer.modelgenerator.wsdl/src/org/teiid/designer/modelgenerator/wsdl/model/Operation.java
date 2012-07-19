@@ -12,6 +12,8 @@ import org.teiid.designer.modelgenerator.wsdl.SoapBindingInfo;
 /**
  * This class represents an Operation as defined in the WSDL It does not contain any information about the messages that are used
  * by the operation as they are of no interest until it is time to actually create an MM model
+ *
+ * @since 8.0
  */
 public interface Operation extends WSDLElement {
 

@@ -17,6 +17,8 @@ package org.teiid.designer.metamodels.relational;
  * @see org.teiid.designer.metamodels.relational.RelationalPackage#getRelationship()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface Relationship extends RelationalEntity{
 } // Relationship

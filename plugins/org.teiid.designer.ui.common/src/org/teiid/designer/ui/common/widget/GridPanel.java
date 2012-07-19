@@ -16,6 +16,8 @@ import org.teiid.core.util.CoreArgCheck;
 /**
  * The <code>GridPanel</code> is a panel that only uses {@link org.eclipse.swt.layout.GridLayout}. It is initially set to have no
  * margins.
+ *
+ * @since 8.0
  */
 public class GridPanel extends Composite {
 

@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
  * This is the central singleton for the Relational edit plugin. <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public final class RelationalEditPlugin extends EMFPlugin {
     /**

@@ -17,6 +17,8 @@ import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 /**
  * The <code>ExecutionConfigurationEvent</code> class is the event that is broadcast from the {@link ServerManager server manager}
  * when a server or connector is added, removed, or changed, or when a server is refreshed.
+ *
+ * @since 8.0
  */
 public final class ExecutionConfigurationEvent {
 

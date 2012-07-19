@@ -77,6 +77,8 @@ import org.teiid.designer.metamodels.relational.util.RelationalTypeMappingImpl;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class DdlImporter {
 

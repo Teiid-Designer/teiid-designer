@@ -35,6 +35,8 @@ import org.teiid.designer.common.util.I18nUtil;
  * <p>
  * Finally, several key methods that are very commonly used and that will not be overridden in subclasses are marked as
  * <code>final</code> as an inlining hint to the compiler.
+ *
+ * @since 8.0
  */
 public abstract class BaseID implements Cloneable, Comparable, Serializable {
     /**

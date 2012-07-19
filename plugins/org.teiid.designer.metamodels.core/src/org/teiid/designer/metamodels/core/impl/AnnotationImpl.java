@@ -43,6 +43,8 @@ import org.teiid.designer.metamodels.core.CorePackage;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class AnnotationImpl extends EObjectImpl implements Annotation {
 

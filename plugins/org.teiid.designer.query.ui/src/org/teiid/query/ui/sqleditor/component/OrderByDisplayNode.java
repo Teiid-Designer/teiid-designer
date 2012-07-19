@@ -11,6 +11,8 @@ import org.teiid.query.sql.lang.OrderBy;
 
 /**
  * The <code>OrderByDisplayNode</code> class is used to represent a Query's ORDERBY clause.
+ *
+ * @since 8.0
  */
 public class OrderByDisplayNode extends DisplayNode {
 

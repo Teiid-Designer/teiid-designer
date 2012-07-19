@@ -12,6 +12,8 @@ import org.teiid.designer.metamodels.core.Annotation;
 
 /**
  * InternalAnnotationContainer
+ *
+ * @since 8.0
  */
 public interface InternalAnnotationContainer {
 

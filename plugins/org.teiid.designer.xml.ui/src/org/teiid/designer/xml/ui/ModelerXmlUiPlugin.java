@@ -19,6 +19,8 @@ import org.teiid.designer.xml.ui.actions.ModelerXmlActionService;
 
 /**
  * ModelerXmlUiPlugin is the plugin class for MetaBase Modeler's xml document technology.
+ *
+ * @since 8.0
  */
 public class ModelerXmlUiPlugin extends AbstractUiPlugin implements Debug, ModelerXmlUiConstants {
 

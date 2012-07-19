@@ -18,6 +18,9 @@ import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.resource.EmfResourceSet;
 
 
+/**
+ * @since 8.0
+ */
 public class CrossContainerFinder
 {
     //

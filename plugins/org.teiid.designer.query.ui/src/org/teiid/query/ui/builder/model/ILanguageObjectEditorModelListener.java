@@ -11,6 +11,8 @@ package org.teiid.query.ui.builder.model;
 /**
  * The <code>ILanguageObjectEditorModelListener</code> class process changes to
  * {@link org.teiid.query.ui.builder.model.ILanguageObjectEditorModel}s.
+ *
+ * @since 8.0
  */
 public interface ILanguageObjectEditorModelListener {
     

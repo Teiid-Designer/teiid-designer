@@ -52,6 +52,8 @@ import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 
 /**
  * TransformationDiagramEditPart
+ *
+ * @since 8.0
  */
 
 public class MappingDiagramEditPart extends AbstractDiagramEditPart implements ExpandableDiagram, IDiagramTypeEditPart {

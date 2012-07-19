@@ -1,5 +1,8 @@
 package org.teiid.designer.modelgenerator.xsd.procedures;
 
+/**
+ * @since 8.0
+ */
 public interface IBuilderConstants {
 	
 	static final Object V_FUNC_SPACE = " "; //$NON-NLS-1$

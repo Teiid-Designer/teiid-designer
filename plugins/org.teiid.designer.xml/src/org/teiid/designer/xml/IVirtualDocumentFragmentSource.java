@@ -14,6 +14,8 @@ import org.teiid.designer.metamodels.xml.XmlFragment;
 
 /**
  * @author PForhan
+ *
+ * @since 8.0
  */
 public interface IVirtualDocumentFragmentSource {
     /** Get the fragments this source has to offer.

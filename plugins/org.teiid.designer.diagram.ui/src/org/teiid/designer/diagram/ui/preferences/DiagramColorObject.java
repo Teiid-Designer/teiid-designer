@@ -17,6 +17,8 @@ import org.teiid.designer.diagram.ui.DiagramUiPlugin;
  * 
  * Data class to encapsulate a String display name and a String preference key which 
  * corresponds to a preference whose value is an RGB.
+ *
+ * @since 8.0
  */
 public class DiagramColorObject {
 	private String displayName;

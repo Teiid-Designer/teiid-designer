@@ -17,6 +17,8 @@ import org.teiid.core.util.CoreArgCheck;
 
 /**
  * StyleFromResource
+ *
+ * @since 8.0
  */
 public class StyleFromResource implements Style {
 

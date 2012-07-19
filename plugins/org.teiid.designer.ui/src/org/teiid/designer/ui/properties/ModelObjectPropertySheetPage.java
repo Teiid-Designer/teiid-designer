@@ -59,6 +59,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  * of the PropertySheetPage when a notification occurs on the displayed object.  It also adds an
  * Action to the toolbar that can display the metamodel extension properties of a selected
  * model object.
+ *
+ * @since 8.0
  */
 public class ModelObjectPropertySheetPage 
         extends PropertySheetPage 

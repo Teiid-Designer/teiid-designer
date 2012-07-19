@@ -39,6 +39,8 @@ import org.teiid.designer.ui.common.widget.MessageLabel;
  * column is displayed through an interface so that a List, Table, or Tree can be accomodated. The righthand, or "selected" column
  * is displayed by this panel through a one-column Table. The buttons are move-right, move-all-right, move-left, and
  * move-all-left. In addition up and down buttons apply to the contents of the right side table.
+ *
+ * @since 8.0
  */
 public class AccumulatorPanel extends Composite implements InternalUiConstants {
     // ============================================================

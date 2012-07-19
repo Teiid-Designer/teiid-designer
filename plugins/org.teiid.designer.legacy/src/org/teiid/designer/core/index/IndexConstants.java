@@ -10,6 +10,8 @@ package org.teiid.designer.core.index;
 
 /**
  * IndexConstants
+ *
+ * @since 8.0
  */
 public class IndexConstants {
 

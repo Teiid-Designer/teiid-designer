@@ -15,6 +15,8 @@ import org.teiid.designer.diagram.ui.figure.DiagramFigureFactory;
  * AbstractDiagramEditPart provides a base class for all EditParts. These classes are specialized to provide a standard set of
  * methods coordinated with DiagramFigure and DiagramModelNode interface methods to simplify coordinate of selection, resizing,
  * updates and other control-type functions.
+ *
+ * @since 8.0
  */
 public abstract class AbstractDiagramEditPart extends AbstractDefaultEditPart {
     private boolean supportsExpanding = false;

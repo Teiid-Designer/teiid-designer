@@ -8,6 +8,9 @@
 package org.teiid.designer.modelgenerator.salesforce.model;
 
 
+/**
+ * @since 8.0
+ */
 public interface Relationship {
 
 	void setParentTable(String name);

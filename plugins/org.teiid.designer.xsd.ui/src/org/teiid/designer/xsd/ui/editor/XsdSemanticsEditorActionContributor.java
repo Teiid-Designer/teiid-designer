@@ -16,6 +16,8 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 
 /**
  * XsdSemanticsEditorActionContributor
+ *
+ * @since 8.0
  */
 public class XsdSemanticsEditorActionContributor extends AbstractModelEditorPageActionBarContributor
                                                implements IModelerActionConstants,

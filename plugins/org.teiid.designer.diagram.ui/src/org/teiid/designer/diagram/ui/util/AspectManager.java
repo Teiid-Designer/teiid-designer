@@ -30,6 +30,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * AspectManager
+ *
+ * @since 8.0
  */
 public class AspectManager {
     

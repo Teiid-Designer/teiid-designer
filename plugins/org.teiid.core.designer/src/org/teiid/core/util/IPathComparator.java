@@ -12,6 +12,8 @@ import org.eclipse.core.runtime.IPath;
 
 /**
  * IPathComparator
+ *
+ * @since 8.0
  */
 public class IPathComparator implements Comparator {
 

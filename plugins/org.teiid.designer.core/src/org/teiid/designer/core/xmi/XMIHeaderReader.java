@@ -23,6 +23,9 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.TeiidException;
 
+/**
+ * @since 8.0
+ */
 public class XMIHeaderReader {
 
     private static final String XML_DECLARATION_PREFIX_STRING = "<?xml version="; //$NON-NLS-1$

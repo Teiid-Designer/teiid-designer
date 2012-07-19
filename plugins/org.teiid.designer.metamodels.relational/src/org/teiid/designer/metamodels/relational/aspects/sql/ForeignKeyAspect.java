@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.relational.ForeignKey;
 
 /**
  * ForeignKeyAspect
+ *
+ * @since 8.0
  */
 public class ForeignKeyAspect extends RelationalEntityAspect implements SqlForeignKeyAspect {
 

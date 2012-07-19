@@ -19,6 +19,8 @@ import org.teiid.designer.transformation.validation.TransformationValidator;
 
 /**
  * SqlConverter
+ *
+ * @since 8.0
  */
 public class SqlConverter {
 

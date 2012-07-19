@@ -53,6 +53,8 @@ import org.teiid.designer.jdbc.SourceNames;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSettings {
     /**

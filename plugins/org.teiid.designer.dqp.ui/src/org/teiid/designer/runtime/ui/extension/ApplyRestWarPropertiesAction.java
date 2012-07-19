@@ -22,6 +22,8 @@ import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants;
 
 /**
  * Action to apply REST WAR generation extension properties to virtual procedures.
+ *
+ * @since 8.0
  */
 public class ApplyRestWarPropertiesAction extends RestWarPropertiesAction {
 

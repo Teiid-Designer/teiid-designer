@@ -16,6 +16,8 @@ import org.teiid.designer.diagram.ui.PluginConstants;
 
 /**
  * ScaledFontManager
+ *
+ * @since 8.0
  */
 public class ScaledFontManager {
     

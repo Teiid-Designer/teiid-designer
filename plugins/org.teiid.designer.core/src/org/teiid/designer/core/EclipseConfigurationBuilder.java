@@ -33,6 +33,8 @@ import org.teiid.designer.core.metamodel.MetamodelRootClassDescriptorImpl;
 
 /**
  * EclipseConfigurationBuilder
+ *
+ * @since 8.0
  */
 public class EclipseConfigurationBuilder {
 

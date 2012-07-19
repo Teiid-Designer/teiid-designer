@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.xsd.ui.editor;
 
+/**
+ * @since 8.0
+ */
 public class InclusiveInteger implements Cloneable {
     public boolean isInclusive;
     public int     value;

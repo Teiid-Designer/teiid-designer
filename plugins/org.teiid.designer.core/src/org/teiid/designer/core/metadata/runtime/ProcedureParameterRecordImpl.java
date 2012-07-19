@@ -14,6 +14,8 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect;
 
 /**
  * ProcedureParameterRecordImpl
+ *
+ * @since 8.0
  */
 public class ProcedureParameterRecordImpl extends org.teiid.designer.metadata.runtime.impl.ProcedureParameterRecordImpl {
 

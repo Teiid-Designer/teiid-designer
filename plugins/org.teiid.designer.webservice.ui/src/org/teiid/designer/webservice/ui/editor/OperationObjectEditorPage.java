@@ -87,6 +87,8 @@ import org.teiid.query.ui.sqleditor.component.QueryDisplayComponent;
 
 /**
  * OperationObjectEditorPage is the class for editing Transformation Objects.
+ *
+ * @since 8.0
  */
 public class OperationObjectEditorPage extends TransformationObjectEditorPage
     implements ArrayUtil.Constants, IInternalUiConstants, IInternalUiConstants.Images, CoreStringUtil.Constants {

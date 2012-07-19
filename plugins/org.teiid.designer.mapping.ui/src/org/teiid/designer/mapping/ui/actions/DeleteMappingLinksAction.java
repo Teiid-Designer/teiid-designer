@@ -26,6 +26,8 @@ import org.teiid.designer.ui.undo.ModelerUndoManager;
 
 /**
  * DeleteMappingLinksAction
+ *
+ * @since 8.0
  */
 public class DeleteMappingLinksAction extends MappingAction {
     private static final String ACTION_DESCRIPTION = "Delete Mapping Links"; //$NON-NLS-1$

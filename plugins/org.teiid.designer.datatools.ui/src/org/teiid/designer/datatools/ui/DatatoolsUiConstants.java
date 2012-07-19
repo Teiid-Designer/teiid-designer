@@ -8,6 +8,9 @@ import org.teiid.core.util.PluginUtilImpl;
 
 
 
+/**
+ * @since 8.0
+ */
 public interface DatatoolsUiConstants {    
 
 	// The plug-in ID

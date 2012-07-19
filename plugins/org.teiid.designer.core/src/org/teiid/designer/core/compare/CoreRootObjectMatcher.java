@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.diagram.DiagramContainer;
 
 /**
  * CoreModelImportMatcher
+ *
+ * @since 8.0
  */
 public class CoreRootObjectMatcher extends AbstractEObjectMatcher {
 

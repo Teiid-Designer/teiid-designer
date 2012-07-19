@@ -33,6 +33,8 @@ import org.teiid.designer.jdbc.JdbcPackage;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class JdbcImportOptionsImpl extends EObjectImpl implements JdbcImportOptions {
     /**

@@ -14,6 +14,9 @@ import java.util.Vector;
 import org.teiid.designer.diagram.ui.connection.NodeConnectionModel;
 import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 
+/**
+ * @since 8.0
+ */
 public class MmTreeLayout extends DiagramLayout {
 
     static final String CLASS_NAME = "MmTreeLayout"; //$NON-NLS-1$

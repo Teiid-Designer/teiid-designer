@@ -13,6 +13,8 @@ import org.teiid.designer.extension.Messages;
 
 /**
  * A validation status that has a severity and a message.
+ *
+ * @since 8.0
  */
 public final class ValidationStatus implements Comparable<ValidationStatus> {
 

@@ -14,6 +14,8 @@ import org.eclipse.jface.viewers.ISelection;
 
 /**
  * IModelObjectActionContributor
+ *
+ * @since 8.0
  */
 public interface IModelObjectActionContributor {
     

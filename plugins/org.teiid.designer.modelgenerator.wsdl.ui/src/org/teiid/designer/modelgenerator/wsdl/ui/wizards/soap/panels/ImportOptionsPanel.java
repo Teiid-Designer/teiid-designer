@@ -47,6 +47,9 @@ import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
+/**
+ * @since 8.0
+ */
 public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUiConstants {
 	// Source Model Definition
 	private Text sourceModelFileText;

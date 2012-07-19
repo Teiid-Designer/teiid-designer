@@ -56,6 +56,9 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class JdbcCostAnalysisAction extends Action implements ISelectionListener, Comparable, ISelectionAction {
     private IFile selectedModel;
 

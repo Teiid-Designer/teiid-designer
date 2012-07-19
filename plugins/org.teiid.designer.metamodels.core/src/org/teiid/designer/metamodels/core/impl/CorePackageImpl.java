@@ -34,6 +34,8 @@ import org.teiid.designer.metamodels.core.extension.impl.ExtensionPackageImpl;
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class CorePackageImpl extends EPackageImpl implements CorePackage {
 

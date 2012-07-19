@@ -20,6 +20,9 @@ import org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener;
 import org.teiid.query.ui.builder.model.IsNullCriteriaEditorModel;
 import org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent;
 
+/**
+ * @since 8.0
+ */
 public class IsNullCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     private final static String PREFIX = I18nUtil.getPropertyPrefix(IsNullCriteriaEditor.class);
 

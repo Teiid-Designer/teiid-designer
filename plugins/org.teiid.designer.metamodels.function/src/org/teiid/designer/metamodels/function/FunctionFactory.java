@@ -16,6 +16,8 @@ import org.teiid.designer.metamodels.function.impl.FunctionFactoryImpl;
  * 
  * @see org.teiid.designer.metamodels.function.FunctionPackage
  * @generated
+ *
+ * @since 8.0
  */
 public interface FunctionFactory extends EFactory {
     /**

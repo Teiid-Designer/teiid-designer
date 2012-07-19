@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.wsdl.mime.MimePart;
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class MimeFactoryImpl extends EFactoryImpl implements MimeFactory {
 

@@ -28,6 +28,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * ModelPropertySource
+ *
+ * @since 8.0
  */
 public class ModelPropertySource implements IPropertySource {
 

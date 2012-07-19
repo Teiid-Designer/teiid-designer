@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * SqlProcedureParameterAspect
+ *
+ * @since 8.0
  */
 public interface SqlProcedureParameterAspect extends SqlAspect, SqlDatatypeCheckerAspect {
 

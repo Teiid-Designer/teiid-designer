@@ -54,6 +54,8 @@ import org.teiid.designer.ui.UiConstants;
  * <p>
  * This class may be instantiated; it is not intended to be subclassed. (Ha!)
  * </p>
+ *
+ * @since 8.0
  */
 public class CopyFilesAndFoldersOperation implements UiConstants {
 

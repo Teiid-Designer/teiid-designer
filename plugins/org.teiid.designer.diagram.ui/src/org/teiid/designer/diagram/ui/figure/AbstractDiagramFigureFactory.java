@@ -12,6 +12,8 @@ import org.eclipse.draw2d.Figure;
 /**
  * AbstractDiagramFigureFactory provides a base class for all Diagram Figure Factories This class handles the create figure
  * methods defined in the DiagramFigureFactory interface.
+ *
+ * @since 8.0
  */
 
 public abstract class AbstractDiagramFigureFactory implements DiagramFigureFactory {

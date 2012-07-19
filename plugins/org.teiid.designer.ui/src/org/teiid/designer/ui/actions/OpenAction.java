@@ -19,6 +19,8 @@ import org.teiid.designer.ui.views.DatatypeHierarchyView;
 
 /**
  * OpenAction
+ *
+ * @since 8.0
  */
 public class OpenAction extends AbstractAction {
 

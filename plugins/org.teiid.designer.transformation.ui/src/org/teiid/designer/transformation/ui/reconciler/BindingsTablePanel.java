@@ -51,6 +51,8 @@ import org.teiid.query.sql.symbol.SingleElementSymbol;
 
 /**
  * BindingsTable
+ *
+ * @since 8.0
  */
 public class BindingsTablePanel extends Composite {
 

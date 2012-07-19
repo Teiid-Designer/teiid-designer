@@ -14,6 +14,8 @@ import org.teiid.designer.metamodels.xml.XmlNamespace;
 
 /**
  * XmlNamespaceComparator
+ *
+ * @since 8.0
  */
 public class XmlNamespaceComparator implements Comparator {
 

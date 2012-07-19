@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.diagram.PresentationEntity;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public abstract class PresentationEntityImpl extends EObjectImpl implements PresentationEntity {
 

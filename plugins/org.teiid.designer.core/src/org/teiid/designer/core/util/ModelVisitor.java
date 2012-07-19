@@ -61,6 +61,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceItem;
  * are only called for {@link Resource EMF Resource} and {@link EObject} instances.
  * </p>
  * @see ModelVisitorProcessor
+ *
+ * @since 8.0
  */
 public interface ModelVisitor {
 

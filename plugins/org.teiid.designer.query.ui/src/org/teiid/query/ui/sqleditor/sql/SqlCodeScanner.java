@@ -29,6 +29,8 @@ import org.teiid.designer.ui.common.graphics.ColorManager;
  * keywords, as the user edits the document. It is "programmed" with a sequence
  * of rules that evaluates and returns the offset and the length of the last
  * found token.
+ *
+ * @since 8.0
  */
 public class SqlCodeScanner extends RuleBasedScanner {
 

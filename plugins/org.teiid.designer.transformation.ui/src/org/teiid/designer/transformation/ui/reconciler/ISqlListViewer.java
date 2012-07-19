@@ -9,6 +9,9 @@ package org.teiid.designer.transformation.ui.reconciler;
 
 import org.teiid.query.sql.symbol.SingleElementSymbol;
 
+/**
+ * @since 8.0
+ */
 public interface ISqlListViewer {
     
     /**

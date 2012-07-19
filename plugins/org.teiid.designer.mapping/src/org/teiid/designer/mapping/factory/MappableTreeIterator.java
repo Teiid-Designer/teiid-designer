@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * MappableTreeIterator is an extension of AbstractTreeIterator that works with IMappableTree.
+ *
+ * @since 8.0
  */
 public class MappableTreeIterator extends AbstractTreeIterator {
 

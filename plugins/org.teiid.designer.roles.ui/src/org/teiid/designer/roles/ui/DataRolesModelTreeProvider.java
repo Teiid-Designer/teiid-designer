@@ -45,6 +45,9 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableLabelProvider {
     private static final Object[] NO_CHILDREN = new Object[0];
     private ITreeContentProvider modelProvider = ModelUtilities.getModelContentProvider();

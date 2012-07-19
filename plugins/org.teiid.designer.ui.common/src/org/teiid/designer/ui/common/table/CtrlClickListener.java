@@ -21,6 +21,8 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
  * CtrlClickListener is a hack to allow single-selection TableViewers to clear their selection upon Ctrl-click. It currently has a
  * bug: if you Ctrl-click on an un-selected row, it will clear the active selection and swallow the new selection. That needs to
  * get fixed.
+ *
+ * @since 8.0
  */
 public class CtrlClickListener extends MouseAdapter implements SelectionListener {
 

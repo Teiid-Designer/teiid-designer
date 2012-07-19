@@ -29,6 +29,8 @@ import org.teiid.designer.metamodels.webservice.aspects.validation.WebServiceCom
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public abstract class WebServiceComponentImpl extends EObjectImpl implements WebServiceComponent {
 

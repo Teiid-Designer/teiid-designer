@@ -16,6 +16,9 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public final class DesignerUiPropertyTester extends PropertyTester {
 
     /**

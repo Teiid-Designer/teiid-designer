@@ -11,6 +11,8 @@ import org.teiid.designer.ui.actions.IModelerActionConstants;
 
 /**
  * ITransformationDiagramActionConstants
+ *
+ * @since 8.0
  */
 public interface ITransformationDiagramActionConstants {
     interface DiagramActions {

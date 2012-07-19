@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * RelationshipRoleAspect
+ *
+ * @since 8.0
  */
 public interface RelationshipRoleAspect extends RelationshipMetamodelAspect {
 

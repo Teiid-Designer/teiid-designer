@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * NullSimpleDatatypeUtil
+ *
+ * @since 8.0
  */
 public class NullSimpleDatatypeUtil implements SimpleDatatypeUtil{
 

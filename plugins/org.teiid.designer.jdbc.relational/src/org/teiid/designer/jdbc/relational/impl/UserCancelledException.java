@@ -11,6 +11,8 @@ import org.teiid.core.TeiidRuntimeException;
 
 /**
  * UserCancelledException
+ *
+ * @since 8.0
  */
 public class UserCancelledException extends TeiidRuntimeException {
 

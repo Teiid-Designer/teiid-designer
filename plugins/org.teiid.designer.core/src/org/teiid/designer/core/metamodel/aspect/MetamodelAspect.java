@@ -9,6 +9,8 @@ package org.teiid.designer.core.metamodel.aspect;
 
 /**
  * MetamodelAspect
+ *
+ * @since 8.0
  */
 public interface MetamodelAspect {
     /**

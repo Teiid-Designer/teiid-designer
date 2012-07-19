@@ -41,6 +41,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * DiagramViewer
+ *
+ * @since 8.0
  */
 public class DiagramViewer extends ScrollingGraphicalViewer {
     private PackageDiagramContentProvider packageDiagramProvider;

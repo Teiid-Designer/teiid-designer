@@ -16,7 +16,7 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect;
 
 
 /**
- * @
+ * @since 8.0
  */
 public class ColumnNameFinder extends AbstractNameFinder {
 

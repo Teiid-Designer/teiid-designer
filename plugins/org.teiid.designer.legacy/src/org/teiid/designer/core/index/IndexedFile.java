@@ -15,6 +15,8 @@ package org.teiid.designer.core.index;
 /**
  * An indexedFile associates a number to a document path, and document properties. 
  * It is what we add into an index, and the result of a query.
+ *
+ * @since 8.0
  */
 
 public class IndexedFile implements IQueryResult, Comparable<IndexedFile> {

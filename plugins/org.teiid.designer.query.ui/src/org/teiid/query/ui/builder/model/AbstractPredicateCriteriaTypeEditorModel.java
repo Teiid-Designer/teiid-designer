@@ -11,6 +11,8 @@ import org.teiid.query.sql.symbol.Expression;
 
 /**
  * AbstractPredicateCriteriaTypeEditorModel
+ *
+ * @since 8.0
  */
 public abstract class AbstractPredicateCriteriaTypeEditorModel extends AbstractLanguageObjectEditorModel {
 	public AbstractPredicateCriteriaTypeEditorModel(Class theType) {

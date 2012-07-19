@@ -46,6 +46,8 @@ import org.teiid.designer.xml.PluginConstants;
 
 /**
  * VirtualDocumentModelPopulator
+ *
+ * @since 8.0
  */
 public class VirtualDocumentModelPopulator implements IDocumentsAndFragmentsPopulator, PluginConstants {
 

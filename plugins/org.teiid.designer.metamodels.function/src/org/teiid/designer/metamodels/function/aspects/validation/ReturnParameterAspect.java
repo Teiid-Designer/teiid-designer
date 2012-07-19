@@ -11,6 +11,8 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 
 /**
  * ReturnParameterAspect
+ *
+ * @since 8.0
  */
 public class ReturnParameterAspect extends FunctionEntityAspect {
 

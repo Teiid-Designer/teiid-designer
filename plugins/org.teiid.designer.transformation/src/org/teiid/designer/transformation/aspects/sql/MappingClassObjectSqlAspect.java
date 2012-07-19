@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.transformation.MappingClassObject;
 
 /**
  * MappingClassObjectSqlAspect
+ *
+ * @since 8.0
  */
 public abstract class MappingClassObjectSqlAspect extends AbstractTransformationSqlAspect {
 

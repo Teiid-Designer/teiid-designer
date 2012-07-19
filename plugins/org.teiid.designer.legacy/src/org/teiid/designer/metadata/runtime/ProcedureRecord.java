@@ -12,6 +12,8 @@ import java.util.List;
 
 /**
  * ProcedureRecord
+ *
+ * @since 8.0
  */
 public interface ProcedureRecord extends MetadataRecord {
 

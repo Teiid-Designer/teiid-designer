@@ -22,6 +22,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 /**
  * GenerateMappingClassesAction
+ *
+ * @since 8.0
  */
 public class GenerateMappingClassesAction extends MappingAction {
     private static final String ACTION_DESCRIPTION = "Generate Mapping Classes"; //$NON-NLS-1$

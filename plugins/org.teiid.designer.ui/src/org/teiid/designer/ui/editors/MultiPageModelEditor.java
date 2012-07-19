@@ -59,6 +59,8 @@ import org.teiid.designer.ui.undo.IUndoManager;
  * MultiPageModelEditor is a specialization of EditorPart that contains a TabFolder for multiple editor pages, plus a splitter for
  * showing and hiding panels beneath the editor pages. This class encapsulates the creation of these components from the
  * ModelEditor, which manages the content of the tabs.
+ *
+ * @since 8.0
  */
 public abstract class MultiPageModelEditor extends EditorPart implements IGotoMarker {
 

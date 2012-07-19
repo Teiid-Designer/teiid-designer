@@ -23,6 +23,9 @@ import org.teiid.designer.ui.util.ModelObjectNotificationHelper;
 import org.teiid.designer.ui.util.ModelObjectTreeViewerNotificationHandler;
 
 
+/**
+ * @since 8.0
+ */
 public class ModelOutlineNotificationHandler extends ModelObjectTreeViewerNotificationHandler {
 
     private ModelOutlineTreeViewer viewer;

@@ -50,6 +50,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * PackageDiagramModelFactory
+ *
+ * @since 8.0
  */
 public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implements DiagramUiConstants {
     private String sNotationId;

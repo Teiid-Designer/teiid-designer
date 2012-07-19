@@ -40,6 +40,8 @@ import org.teiid.designer.metamodels.xml.XmlEntityHolder;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlChoiceImpl extends XmlContainerNodeImpl implements XmlChoice {
     /**

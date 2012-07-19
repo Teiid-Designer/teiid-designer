@@ -24,6 +24,8 @@ import org.teiid.designer.jdbc.JdbcUtil;
 /**
  * A class into which results from JDBC methods can be placed.  This class is not
  * thread-safe, so it must not be used simultaneously from multiple threads.
+ *
+ * @since 8.0
  */
 public class Response {
     

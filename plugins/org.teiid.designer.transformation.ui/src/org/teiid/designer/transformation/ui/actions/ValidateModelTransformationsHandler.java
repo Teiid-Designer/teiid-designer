@@ -44,6 +44,9 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public final class ValidateModelTransformationsHandler extends AbstractHandler {
 
     private void clearUUIDSqlString( SqlTransformationMappingRoot mappingRoot ) {

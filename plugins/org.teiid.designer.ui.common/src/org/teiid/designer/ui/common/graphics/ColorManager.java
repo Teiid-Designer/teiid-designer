@@ -12,6 +12,8 @@ import org.eclipse.swt.graphics.RGB;
 
 /**
  * Colors used in the SQL editor
+ *
+ * @since 8.0
  */
 public class ColorManager {
 

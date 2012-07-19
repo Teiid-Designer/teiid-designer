@@ -25,6 +25,8 @@ import org.eclipse.draw2d.geometry.Rectangle;
 /**
  * Provides a customized {@link Connection} with an orthogonal route between the connection's source and target anchors. This
  * class provides means to pad the offset of the routed lines outside of
+ *
+ * @since 8.0
  */
 public final class BlockConnectionRouter extends AbstractRouter {
 

@@ -23,6 +23,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
  * MappingGlobalActionsManager is a class of static utility methods that can: Determine if objects support the standard global
  * edit actions: delete, cut, copy, paste, and clone. Execute these actions on the selected object(s). It is intended to work with
  * diagrams of type Mapping or Mapping Transformation.
+ *
+ * @since 8.0
  */
 public class MappingGlobalActionsManager {
 

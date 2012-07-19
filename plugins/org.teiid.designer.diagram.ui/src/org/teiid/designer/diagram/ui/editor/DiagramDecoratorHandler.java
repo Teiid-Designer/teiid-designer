@@ -28,6 +28,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  * This class provides the DiagramEditor a way to maintain a map of applicable IMarkers (errors and warnings)
  * for the current diagram.  This is needed because when IMarkers go away (errors and warnings are fixed),
  * there is no easy way to tell which ones were fixed.
+ *
+ * @since 8.0
  */
 public class DiagramDecoratorHandler {
     private DiagramEditor dEditor;

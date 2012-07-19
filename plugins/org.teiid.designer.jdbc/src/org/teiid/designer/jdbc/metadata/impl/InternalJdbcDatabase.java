@@ -9,6 +9,8 @@ package org.teiid.designer.jdbc.metadata.impl;
 
 /**
  * InternalJdbcDatabase
+ *
+ * @since 8.0
  */
 public interface InternalJdbcDatabase {
 

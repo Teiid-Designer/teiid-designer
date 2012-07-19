@@ -14,6 +14,9 @@ package org.teiid.designer.core.index;
 import java.util.Arrays;
 
 
+/**
+ * @since 8.0
+ */
 public class WordEntry implements Comparable<WordEntry> {
 	protected char[] fWord;
 	protected int fNumRefs;

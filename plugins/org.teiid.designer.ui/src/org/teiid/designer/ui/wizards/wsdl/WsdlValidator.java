@@ -16,7 +16,9 @@ import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.webservice.WebServicePlugin;
 
 
-/** Validator that makes sure the selection contains all WSDL files. */
+ /**
+ * @since 8.0
+ */
 public class WsdlValidator implements ISelectionStatusValidator, UiConstants {
 
     /** Used as a prefix to properties file keys. */

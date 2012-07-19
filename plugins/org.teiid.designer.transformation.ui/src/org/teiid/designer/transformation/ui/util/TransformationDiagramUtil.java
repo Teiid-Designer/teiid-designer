@@ -27,6 +27,8 @@ import org.teiid.query.ui.UiPlugin;
 
 /**
  * TransformationDiagramUtil
+ *
+ * @since 8.0
  */
 public class TransformationDiagramUtil {
 

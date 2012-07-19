@@ -14,6 +14,8 @@ import org.eclipse.emf.ecore.EObject;
  * The <code>SqlTransformationStatusChangeEvent</code> class is the event that the
  * is fired to SqlMappingRootCache listeners whenever the state of a transformation
  * has changed.
+ *
+ * @since 8.0
  */
 public class SqlTransformationStatusChangeEvent extends EventObject {
 

@@ -9,6 +9,9 @@ package org.teiid.designer.modelgenerator.wsdl.validation;
 
 import org.eclipse.core.runtime.IStatus;
 
+/**
+ * @since 8.0
+ */
 public class WSDLValidationMessage implements IStatus {
 
     private String m_message;

@@ -7,6 +7,9 @@
  */
 package org.teiid.datatools.connectivity.ui;
 
+/**
+ * @since 8.0
+ */
 public interface IHelpContextsTeiidProfile {
 
     public static final String TEIID_PROFILE_WIZARD_PAGE = "TEIID_PROFILE_WIZARD_PAGE"; //$NON-NLS-1$

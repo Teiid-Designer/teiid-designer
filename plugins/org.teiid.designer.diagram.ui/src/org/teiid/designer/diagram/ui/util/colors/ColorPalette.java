@@ -11,6 +11,8 @@ import org.eclipse.swt.graphics.Color;
 
 /**
  * ColorPalette
+ *
+ * @since 8.0
  */
 public interface ColorPalette {
     public static final int PRIMARY_BKGD_COLOR_ID   = 0;

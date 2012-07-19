@@ -18,6 +18,8 @@ import org.teiid.designer.core.util.StringUtilities;
 
 /**
  * A translator property that may or may not have an overridden value.
+ *
+ * @since 8.0
  */
 public class TranslatorOverrideProperty {
 

@@ -27,6 +27,8 @@ import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 
 /**
  * RefactorUndoManager is the manager of all ModelRefactorCommands created in a session.
+ *
+ * @since 8.0
  */
 public class RefactorUndoManager {
 

@@ -26,6 +26,8 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class SetDefaultServerAction extends BaseSelectionListenerAction {
 

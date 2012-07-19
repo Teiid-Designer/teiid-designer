@@ -32,6 +32,8 @@ import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 
 /**
  * ModelWorkspaceDialog is a dialog that displays the workspace tree and allows selection
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
 

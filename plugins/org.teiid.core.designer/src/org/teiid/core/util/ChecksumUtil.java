@@ -15,6 +15,8 @@ import java.util.zip.Checksum;
 
 /**
  * This utility class provides mechanisms for computing the checksum.
+ *
+ * @since 8.0
  */
 public class ChecksumUtil {
 

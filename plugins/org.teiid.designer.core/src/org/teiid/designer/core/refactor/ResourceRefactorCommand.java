@@ -55,6 +55,8 @@ import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
  * ResourceRefactorCommand is an abstract base class for RefactorCommands that need to operate on <code>IResource</code> objects.
  * It accomplishes many tasks common to most RefactorCommand implementations, such as finding dependent models, checking for
  * read-only resources that must be modified, and rebuilding the list of model imports.
+ *
+ * @since 8.0
  */
 public abstract class ResourceRefactorCommand implements RefactorCommand {
 

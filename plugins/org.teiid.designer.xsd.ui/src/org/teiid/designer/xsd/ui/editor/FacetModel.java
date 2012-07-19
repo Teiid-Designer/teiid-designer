@@ -51,6 +51,8 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 
 /**
  * The FacetModel is an insulating layer above metadata, and serves as the underlying model for the SDE View.
+ *
+ * @since 8.0
  */
 public class FacetModel implements ComponentSetMonitor{
 

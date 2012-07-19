@@ -14,6 +14,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * MappingClassGenerationVisitor
+ *
+ * @since 8.0
  */
 public class MappingClassGenerationVisitor {
     

@@ -22,6 +22,8 @@ import org.teiid.query.sql.symbol.SingleElementSymbol;
  * Class that plays the role of the domain model in the TableViewerExample
  * In real life, this class would access a persistent store of some kind.
  * 
+ *
+ * @since 8.0
  */
 
 public class SqlList {

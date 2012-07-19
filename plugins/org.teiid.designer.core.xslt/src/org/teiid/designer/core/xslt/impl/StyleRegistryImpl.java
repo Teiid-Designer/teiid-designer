@@ -17,6 +17,8 @@ import org.teiid.designer.core.xslt.StyleRegistry;
 
 /**
  * StyleRegistry
+ *
+ * @since 8.0
  */
 public class StyleRegistryImpl implements StyleRegistry {
 

@@ -34,6 +34,9 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class ExtensionPropertySource implements IPropertySource {
 
     public static final AdapterFactoryContentProvider extensionPropertySourceProvider = ModelUtilities.getEmfAdapterFactoryContentProvider();
@@ -290,6 +293,9 @@ public class ExtensionPropertySource implements IPropertySource {
         return canConvert;
     }
 
+/**
+ * @since 8.0
+ */
     public class ModelAnnotationExtensionDescriptor extends ExtensionPropertyDescriptor {
         public ModelAnnotationExtensionDescriptor( EObject extensionObject,
                                                    IPropertyDescriptor delegate ) {

@@ -39,6 +39,8 @@ import org.teiid.designer.ui.common.tree.TreeNodeMap;
 /**
  * MappingAdapterFilter is a specialization for working on an XmlMapping through a TreeViewer, such that the only objects found
  * are those that are visible in the tree.
+ *
+ * @since 8.0
  */
 public class MappingAdapterFilter {
 

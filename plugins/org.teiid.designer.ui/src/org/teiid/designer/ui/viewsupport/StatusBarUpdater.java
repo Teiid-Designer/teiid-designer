@@ -24,6 +24,8 @@ import org.teiid.designer.ui.UiConstants;
 
 /**
  * StatusBarUpdater
+ *
+ * @since 8.0
  */
 public class StatusBarUpdater
 implements ISelectionChangedListener, UiConstants {

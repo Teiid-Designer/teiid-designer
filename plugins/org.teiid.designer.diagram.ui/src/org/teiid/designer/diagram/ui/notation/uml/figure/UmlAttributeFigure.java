@@ -25,6 +25,8 @@ import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
 
 /**
  * UmlAttributeFigure
+ *
+ * @since 8.0
  */
 public class UmlAttributeFigure extends LabeledRectangleFigure implements DirectEditFigure {
     private ImageFigure errorIcon;

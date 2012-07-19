@@ -18,6 +18,8 @@ import org.teiid.designer.metamodels.transformation.MappingClassSet;
 
 /**
  * ModelMappingClassSetsImpl
+ *
+ * @since 8.0
  */
 public class ModelMappingClassSetsImpl extends NonOpenableModelWorkspaceItemImpl implements ModelMappingClassSets {
 

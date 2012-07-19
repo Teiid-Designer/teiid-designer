@@ -17,6 +17,8 @@ import java.util.List;
  * Keeps track of all TempDirectories created so that they can be removed.
  * This class exists so that when test suites are run there is a simple way to cleanup.
  * Ideally the application and tests will clean up after themselves without the need for this class.
+ *
+ * @since 8.0
  */
 public class TempDirectoryMonitor {
     private static List instances = new ArrayList();

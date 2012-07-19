@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.relational.UniqueConstraint;
  * begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class UniqueConstraintItemProvider extends UniqueKeyItemProvider {
     /**

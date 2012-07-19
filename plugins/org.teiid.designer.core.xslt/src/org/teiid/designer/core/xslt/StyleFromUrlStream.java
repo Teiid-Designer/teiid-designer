@@ -17,6 +17,8 @@ import org.teiid.core.util.CoreArgCheck;
 
 /**
  * StyleFromUrlStream is a style that loads the XSLT via the {@link java.net.URL#openStream()}.
+ *
+ * @since 8.0
  */
 public class StyleFromUrlStream implements Style {
 

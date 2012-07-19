@@ -21,6 +21,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.ui.UiConstants;
 
+/**
+ * @since 8.0
+ */
 public class DeselectDescendantsDialog extends Dialog implements UiConstants {
     Button alwaysUseResponseButton;
     boolean yesPressed = false;

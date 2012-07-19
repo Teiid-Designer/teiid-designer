@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.jdbc.JdbcPackage#getJdbcImportOptions()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface JdbcImportOptions extends EObject{
     /**

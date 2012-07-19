@@ -56,6 +56,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * AnalyzeCostAction
+ *
+ * @since 8.0
  */
 public class CostAnalysisAction extends ActionDelegate implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
 

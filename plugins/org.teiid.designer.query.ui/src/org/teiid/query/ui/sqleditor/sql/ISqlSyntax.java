@@ -11,6 +11,8 @@ package org.teiid.query.ui.sqleditor.sql;
 
 /**
  * SQL Syntax words (upper and lower cases).
+ *
+ * @since 8.0
  */
 public interface ISqlSyntax {
 	public static final String[] reservedwords =

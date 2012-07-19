@@ -17,6 +17,8 @@ import org.teiid.designer.ui.common.widget.ButtonProvider;
 
 /**
  * @param <T>
+ *
+ * @since 8.0
  */
 public abstract class CheckBoxColumnProvider<T> extends DefaultColumnProvider<T, Boolean> {
 

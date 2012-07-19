@@ -22,6 +22,8 @@ import org.teiid.designer.ui.undo.ModelerUndoManager;
 
 /**
  * NewMappingLinkAction
+ *
+ * @since 8.0
  */
 public class NewMappingLinkAction extends MappingAction {
     private static final String ACTION_DESCRIPTION = "New Mapping Link"; //$NON-NLS-1$

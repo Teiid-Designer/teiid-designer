@@ -26,6 +26,8 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
  * @see org.teiid.designer.metamodels.webservice.WebServicePackage#getMessage()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface Message extends WebServiceComponent {
 

@@ -25,6 +25,9 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiPlugin;
 import org.teiid.designer.xsd.ui.wizards.CreateVirtualModelFromSchemaWizard;
 
 
+/**
+ * @since 8.0
+ */
 public class CreateVirtualModelFromSchemaAction extends Action implements ISelectionListener, Comparable, ISelectionAction{
 
     private ISelection selection;

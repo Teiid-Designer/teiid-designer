@@ -14,6 +14,8 @@ import org.teiid.designer.metadata.runtime.VdbRecord;
 
 /**
  * ModelRecordImpl
+ *
+ * @since 8.0
  */
 public class VdbRecordImpl extends AbstractMetadataRecord implements VdbRecord {
 

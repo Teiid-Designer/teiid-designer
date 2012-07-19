@@ -29,6 +29,8 @@ import org.teiid.designer.core.search.runtime.SearchRuntimeAdapter;
 
 /**
  * FindRelationshipsCommandImpl.java
+ *
+ * @since 8.0
  */
 public class FindTypedObjectCommandImpl implements FindTypedObjectCommand {
 

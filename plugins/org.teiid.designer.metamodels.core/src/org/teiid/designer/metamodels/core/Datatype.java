@@ -13,6 +13,8 @@ package org.teiid.designer.metamodels.core;
  * @see org.teiid.designer.metamodels.core.CorePackage#getDatatype()
  * @model interface="true" abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface Datatype extends Identifiable {
 

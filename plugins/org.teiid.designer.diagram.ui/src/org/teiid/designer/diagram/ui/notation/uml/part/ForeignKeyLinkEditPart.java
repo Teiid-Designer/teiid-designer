@@ -17,6 +17,8 @@ import org.teiid.designer.diagram.ui.figure.DiagramPolylineConnection;
 
 /**
  * ForeignKeyLinkEditPart
+ *
+ * @since 8.0
  */
 public class ForeignKeyLinkEditPart extends NodeConnectionEditPart {
     

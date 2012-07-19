@@ -15,6 +15,8 @@ import java.util.List;
  * <p>Instances of this interface 
  * represent Groups in a Model.  The values of a
  *  Group are analogous to a Table in a database.</p>
+ *
+ * @since 8.0
  */
 public interface Group extends MetadataObject {
 

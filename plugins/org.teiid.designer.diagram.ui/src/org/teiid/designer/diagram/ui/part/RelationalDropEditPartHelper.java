@@ -11,6 +11,9 @@ import java.util.List;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Point;
 
+/**
+ * @since 8.0
+ */
 public class RelationalDropEditPartHelper extends DropEditPartHelper {
 	private DiagramEditPart editPart;
 	private boolean hilited = false;

@@ -13,7 +13,9 @@ import org.eclipse.swt.widgets.Shell;
   *  interface to multiple dialogs as well as delayed construction.
   *  
   * @author PForhan
-  */
+ *
+ * @since 8.0
+ */
 public interface DialogProvider {
     public void showDialog(Shell shell, Object initialValue);
     public boolean wasCancelled();

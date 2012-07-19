@@ -5,6 +5,9 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * @since 8.0
+ */
 public final class PasteSpecialHandler extends AbstractHandler {
 
     /**

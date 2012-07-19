@@ -39,6 +39,9 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 import org.teiid.designer.xsd.ui.ModelerXsdUiPlugin;
 
 
+/**
+ * @since 8.0
+ */
 public class GUIFacetHelper extends FacetHelper {
 
     public static final String CATEGORY_NONE = "NONE"; //$NON-NLS-1$

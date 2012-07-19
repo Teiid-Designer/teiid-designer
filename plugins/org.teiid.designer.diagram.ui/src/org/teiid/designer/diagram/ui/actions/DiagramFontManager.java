@@ -21,6 +21,8 @@ import org.teiid.designer.ui.common.util.UiUtil;
 
 /**
  * DiagramFontManager
+ *
+ * @since 8.0
  */
 public class DiagramFontManager implements ScaledFont {
     private DiagramViewer viewer;

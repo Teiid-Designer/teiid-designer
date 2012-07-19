@@ -14,6 +14,8 @@ import org.eclipse.draw2d.geometry.Rectangle;
 
 /**
  * NodeConnectionAnchor
+ *
+ * @since 8.0
  */
 public class NodeConnectionAnchor extends AbstractConnectionAnchor {
     public static final boolean IS_SOURCE = true;

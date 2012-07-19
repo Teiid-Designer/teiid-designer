@@ -48,6 +48,8 @@ import org.teiid.query.ui.builder.util.ElementViewerFactory;
 
 /**
  * SqlEditorPanel
+ *
+ * @since 8.0
  */
 public class ReconcilerPanel extends SashForm implements ISelectionChangedListener, SelectionListener {
 

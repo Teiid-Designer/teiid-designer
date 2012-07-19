@@ -17,6 +17,8 @@ import org.eclipse.jface.text.rules.WordRule;
  * @author SDelap
  * Extends Word Rule by upper case-ing the token before attempting to get it from the map
  * thus returning tokens for all cases
+ *
+ * @since 8.0
  */
 public class CaseInsensitiveWordRule extends WordRule {
 	/**

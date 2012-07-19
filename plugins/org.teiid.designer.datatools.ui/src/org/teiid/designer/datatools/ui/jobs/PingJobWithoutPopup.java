@@ -21,6 +21,8 @@ import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class PingJobWithoutPopup extends Job {
 

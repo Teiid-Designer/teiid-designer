@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.diagram.DiagramEntity;
  * DiagramEntityAdapter
  * This class provides transaction-based access to diagram entities for any "write" access methods,
  * as well as read access methods.
+ *
+ * @since 8.0
  */
 public class DiagramEntityAdapter {
 //    private static final int MAX_POS_INT = 99999;

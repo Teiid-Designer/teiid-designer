@@ -15,6 +15,8 @@ import java.io.UTFDataFormatException;
 
 /**
  * Uses prefix coding on words, and gamma coding of document numbers differences.
+ *
+ * @since 8.0
  */
 public class GammaCompressedIndexBlock extends IndexBlock {
 	CodeByteStream writeCodeStream= new CodeByteStream();

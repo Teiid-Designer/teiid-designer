@@ -19,6 +19,8 @@ import org.teiid.designer.jdbc.JdbcPlugin;
 
 /**
  * ResultsImpl
+ *
+ * @since 8.0
  */
 public class ResultsImpl implements Results {
 

@@ -12,6 +12,8 @@ import org.teiid.designer.metamodels.function.FunctionPackage;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class SourceFunctionExtendableClassnameProvider extends AbstractMetaclassNameProvider {
 

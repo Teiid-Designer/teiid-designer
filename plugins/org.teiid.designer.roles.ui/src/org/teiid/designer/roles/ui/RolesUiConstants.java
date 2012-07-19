@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.roles.ui;
 
+/**
+ * @since 8.0
+ */
 public interface RolesUiConstants {
 	String PACKAGE_ID = RolesUiConstants.class.getPackage().getName();
 	

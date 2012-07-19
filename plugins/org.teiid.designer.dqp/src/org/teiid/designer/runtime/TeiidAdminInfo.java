@@ -5,6 +5,8 @@ import static org.teiid.designer.runtime.DqpPlugin.Util;
 
 /**
  * The <code>TeiidAdminInfo</code> defines the properties needed to make a Teiid Admin connection.
+ *
+ * @since 8.0
  */
 public class TeiidAdminInfo extends TeiidConnectionInfo {
 

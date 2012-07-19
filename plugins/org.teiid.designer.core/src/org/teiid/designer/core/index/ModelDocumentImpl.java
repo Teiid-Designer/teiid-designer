@@ -16,6 +16,8 @@ import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 
 /**
  * ModelDocumentImpl
+ *
+ * @since 8.0
  */
 public class ModelDocumentImpl extends ResourceDocumentImpl implements ModelDocument {
     

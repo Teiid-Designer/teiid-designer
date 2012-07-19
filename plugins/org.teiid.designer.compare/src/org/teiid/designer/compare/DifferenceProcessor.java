@@ -15,6 +15,8 @@ import org.teiid.designer.core.compare.EObjectMatcherFactory;
 
 /**
  * DifferenceProcessor
+ *
+ * @since 8.0
  */
 public interface DifferenceProcessor {
     

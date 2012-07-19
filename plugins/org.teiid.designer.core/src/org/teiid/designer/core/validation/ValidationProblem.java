@@ -11,6 +11,8 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * ValidationProblem
+ *
+ * @since 8.0
  */
 public interface ValidationProblem {
     /**

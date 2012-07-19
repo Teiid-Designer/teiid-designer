@@ -19,6 +19,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
  * @author mdrilling
  *
  * Model Node for UML Attribute.
+ *
+ * @since 8.0
  */
 public class UmlAttributeNode extends UmlModelNode {
 

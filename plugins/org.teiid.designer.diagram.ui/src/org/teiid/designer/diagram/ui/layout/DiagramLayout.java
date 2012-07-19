@@ -15,6 +15,8 @@ import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 
 /**
  * DiagramLayout
+ *
+ * @since 8.0
  */
 public class DiagramLayout {
     public static final int SUCCESSFUL = 0;

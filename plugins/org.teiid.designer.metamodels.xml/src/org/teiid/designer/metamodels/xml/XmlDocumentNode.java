@@ -29,6 +29,8 @@ import org.eclipse.xsd.XSDComponent;
  * @see org.teiid.designer.metamodels.xml.XmlDocumentPackage#getXmlDocumentNode()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface XmlDocumentNode extends XmlDocumentEntity, XmlBuildable{
     /**

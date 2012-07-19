@@ -14,6 +14,8 @@ import org.teiid.designer.core.validation.ValidationContext;
 
 /**
  * OutputDocumentValidationRule
+ *
+ * @since 8.0
  */
 public class OutputDocumentValidationRule implements StructuralFeatureValidationRule {
 

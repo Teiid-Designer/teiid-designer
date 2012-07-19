@@ -13,6 +13,8 @@ import org.eclipse.swt.widgets.Button;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public interface ButtonProvider {
     

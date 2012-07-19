@@ -13,6 +13,8 @@ import org.teiid.designer.core.validation.ValidationRuleSet;
 
 /**
  * AccessPatternAspect
+ *
+ * @since 8.0
  */
 public class AccessPatternAspect extends RelationalEntityAspect {
     

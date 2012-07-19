@@ -30,6 +30,8 @@ import org.teiid.designer.vdb.Vdb;
 /**
  * The <code>CreatePreviewVdbJob</code> creates a Preview VDB in the Eclipse workspace if it doesn't already exist. The Preview
  * VDB is associated to exactly one model in the workspace.
+ *
+ * @since 8.0
  */
 public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
 

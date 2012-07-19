@@ -36,6 +36,9 @@ import org.teiid.designer.runtime.ui.actions.DeployVdbAction;
 import org.teiid.designer.runtime.ui.actions.OpenScrapbookEditorAction;
 
 
+/**
+ * @since 8.0
+ */
 public class ExecuteVdbWorker implements VdbConstants {
 	protected static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ExecuteVdbWorker.class);
 	

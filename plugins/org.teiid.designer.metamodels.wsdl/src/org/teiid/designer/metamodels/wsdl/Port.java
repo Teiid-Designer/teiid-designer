@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.wsdl.soap.SoapAddress;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getPort()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Port extends WsdlNameRequiredEntity, ExtensibleDocumented {
 

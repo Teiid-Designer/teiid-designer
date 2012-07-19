@@ -18,6 +18,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.dependency.DependencyPackage#getDependencyInfo()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface DependencyInfo extends EObject{
 } // DependencyInfo

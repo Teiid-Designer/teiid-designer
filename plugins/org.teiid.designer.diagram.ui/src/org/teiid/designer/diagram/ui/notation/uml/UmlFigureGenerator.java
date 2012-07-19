@@ -35,6 +35,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * UmlFigureGenerator
+ *
+ * @since 8.0
  */
 public class UmlFigureGenerator implements NotationFigureGenerator {
     private static final int UML_CLASS = 1;

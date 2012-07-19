@@ -51,6 +51,9 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 
 
+/**
+ * @since 8.0
+ */
 public class AddToNewCustomDiagramAction extends DiagramAction implements DiagramUiConstants {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(AddToNewCustomDiagramAction.class);

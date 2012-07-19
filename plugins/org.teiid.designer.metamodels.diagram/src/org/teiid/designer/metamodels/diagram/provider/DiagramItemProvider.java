@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.diagram.DiagramPackage;
  * end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class DiagramItemProvider extends PresentationEntityItemProvider {
 

@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.wsdl.soap.impl.SoapPackageImpl;
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class HttpPackageImpl extends EPackageImpl implements HttpPackage {
 

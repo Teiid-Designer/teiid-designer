@@ -25,6 +25,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.relational.RelationalPackage#getAccessPattern()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface AccessPattern extends RelationalEntity{
     /**

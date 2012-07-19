@@ -70,6 +70,8 @@ import org.teiid.designer.xml.ui.ModelerXmlUiPlugin;
 
 /**
  * @author PForhan
+ *
+ * @since 8.0
  */
 public class EditVirtualDocumentsPanel extends Composite implements IVirtualDocumentFragmentSource {
 

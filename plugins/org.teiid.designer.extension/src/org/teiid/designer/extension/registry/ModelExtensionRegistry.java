@@ -35,6 +35,8 @@ import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public final class ModelExtensionRegistry {
     /**

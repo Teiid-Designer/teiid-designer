@@ -10,6 +10,8 @@ package org.teiid.designer.core.validation;
 
 /**
  * ValidationResult
+ *
+ * @since 8.0
  */
 public interface ValidationResult {
 

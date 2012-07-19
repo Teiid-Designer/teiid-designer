@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.transformation.TreeMappingRoot;
 /**
  * A ModelTransformations represents the set of transformations available in the model.
  * One {@link ModelResource} has a single ModelTransformations object.
+ *
+ * @since 8.0
  */
 public interface ModelTransformations extends ModelWorkspaceItem {
 

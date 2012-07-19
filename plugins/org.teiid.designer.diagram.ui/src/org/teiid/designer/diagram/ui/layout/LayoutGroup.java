@@ -18,6 +18,8 @@ import org.teiid.designer.diagram.ui.model.DiagramModelNode;
  * LayoutGroup
  * This class represents a group of layout nodes that are either totally connected or totally disconnected.
  * This class will provide the hooks to identify the type of connections (if any) i.e. tree, circular links, etc..
+ *
+ * @since 8.0
  */
 public class LayoutGroup implements LayoutNode {
     private double thisX;

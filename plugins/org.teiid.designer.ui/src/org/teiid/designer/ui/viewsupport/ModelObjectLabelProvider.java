@@ -45,6 +45,8 @@ import org.teiid.designer.ui.common.util.UiUtil;
 /**
  * ModelObjectLabelProvider is a wrapper around EMF's ILabelProvider that colors EObject icons with virtual or physical colors. It
  * also supplies a specialized icon for Built-in Datatypes.
+ *
+ * @since 8.0
  */
 public class ModelObjectLabelProvider extends LabelProvider
     implements ILightweightLabelDecorator, UiConstants, PluginConstants.Images {

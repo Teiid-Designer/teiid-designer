@@ -33,6 +33,8 @@ import org.teiid.designer.metamodels.wsdl.mime.MimePackage;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class MimeContentImpl extends EObjectImpl implements MimeContent {
 

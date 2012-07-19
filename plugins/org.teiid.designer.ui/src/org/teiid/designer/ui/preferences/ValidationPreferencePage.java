@@ -45,6 +45,8 @@ import org.teiid.designer.ui.UiPlugin;
 
 /**
  * This class represents the preference page for setting the Modeler Validation Preferences.
+ *
+ * @since 8.0
  */
 public class ValidationPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, UiConstants {
 	/////////////////////////////////////////////////////////////////////////////////////////////

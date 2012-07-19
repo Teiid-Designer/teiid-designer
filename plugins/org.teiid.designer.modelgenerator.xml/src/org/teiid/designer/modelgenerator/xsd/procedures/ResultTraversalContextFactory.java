@@ -5,6 +5,9 @@ import javax.xml.namespace.QName;
 import org.teiid.core.util.CoreArgCheck;
 
 
+/**
+ * @since 8.0
+ */
 public class ResultTraversalContextFactory implements ITraversalCtxFactory {
 	
 	/* (non-Javadoc)

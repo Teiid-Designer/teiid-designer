@@ -10,6 +10,8 @@ package org.teiid.designer.ui.common.text;
 
 /**
  * ScaledFont
+ *
+ * @since 8.0
  */
 public interface ScaledFont {
        

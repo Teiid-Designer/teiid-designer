@@ -13,6 +13,8 @@ import org.teiid.designer.diagram.ui.util.colors.ColorPalette;
 
 /**
  * AssociationLabelFigure
+ *
+ * @since 8.0
  */
 public class AssociationLabelFigure extends LabeledRectangleFigure {
 

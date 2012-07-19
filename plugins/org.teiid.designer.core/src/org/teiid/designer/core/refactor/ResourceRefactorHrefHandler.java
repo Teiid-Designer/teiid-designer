@@ -24,6 +24,8 @@ import java.util.Map;
  * 
  * This method allows re-setting these HREF values
  *
+ *
+ * @since 8.0
  */
 public class ResourceRefactorHrefHandler  {
 

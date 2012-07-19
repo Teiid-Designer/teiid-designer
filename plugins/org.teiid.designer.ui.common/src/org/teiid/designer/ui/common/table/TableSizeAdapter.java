@@ -21,6 +21,8 @@ import org.eclipse.swt.widgets.TableColumn;
  * space to the right of the table columns, which therefore looks like an extra column.  This
  * class currently supports tables containing EXACTLY 2 columns, and will throw a RuntimeException
  * if the column count is not == 2.
+ *
+ * @since 8.0
  */
 public class TableSizeAdapter extends ControlAdapter {
 

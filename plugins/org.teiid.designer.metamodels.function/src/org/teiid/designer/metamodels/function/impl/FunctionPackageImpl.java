@@ -26,6 +26,8 @@ import org.teiid.designer.metamodels.function.ScalarFunction;
  * An implementation of the model <b>Package</b>.
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage {
     /**

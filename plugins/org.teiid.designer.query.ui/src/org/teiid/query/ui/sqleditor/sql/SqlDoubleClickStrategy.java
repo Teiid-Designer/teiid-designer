@@ -16,6 +16,8 @@ import org.eclipse.jface.text.ITextViewer;
 
 /**
  * Process double clicks in the SQL content.
+ *
+ * @since 8.0
  */
 public class SqlDoubleClickStrategy implements ITextDoubleClickStrategy {
 	protected ITextViewer fText;

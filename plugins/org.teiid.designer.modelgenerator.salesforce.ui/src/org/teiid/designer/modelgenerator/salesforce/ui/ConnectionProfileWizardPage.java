@@ -12,6 +12,8 @@ import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizardP
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class ConnectionProfileWizardPage extends NewConnectionProfileWizardPage {
 

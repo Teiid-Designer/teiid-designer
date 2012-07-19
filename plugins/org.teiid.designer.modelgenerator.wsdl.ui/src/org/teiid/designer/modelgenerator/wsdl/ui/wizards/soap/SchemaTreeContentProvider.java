@@ -18,6 +18,9 @@ import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDParticle;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
 
+/**
+ * @since 8.0
+ */
 public class SchemaTreeContentProvider extends AdapterFactoryContentProvider {
 	
 	@SuppressWarnings("unused")

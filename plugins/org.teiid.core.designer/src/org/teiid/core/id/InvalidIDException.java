@@ -29,6 +29,8 @@ import org.teiid.core.TeiidException;
  * Exception which occurs if an error occurs within the server that is not
  * business-related.  For instance, if a service or bean is not available
  * or communication fails.
+ *
+ * @since 8.0
  */
 public class InvalidIDException extends TeiidException {
     private static final String INVALID_ID_MESSAGE = CorePlugin.Util.getString("InvalidIDException.Invalid_ID_1"); //$NON-NLS-1$

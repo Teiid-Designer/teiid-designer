@@ -11,6 +11,8 @@ import org.teiid.designer.jdbc.JdbcException;
 
 /**
  * JdbcConversionException
+ *
+ * @since 8.0
  */
 public class JdbcConversionException extends JdbcException {
 

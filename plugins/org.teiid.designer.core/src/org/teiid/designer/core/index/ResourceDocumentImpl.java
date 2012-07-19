@@ -15,6 +15,8 @@ import org.teiid.designer.core.index.FileDocument;
 
 /**
  * ResourceDocumentImpl
+ *
+ * @since 8.0
  */
 public class ResourceDocumentImpl extends FileDocument implements ResourceDocument {
 

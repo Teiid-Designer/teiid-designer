@@ -16,6 +16,8 @@ import org.teiid.designer.ui.actions.IModelObjectActionContributor;
 
 /**
  * PackageDiagramPermanentActionContributor
+ *
+ * @since 8.0
  */
 public class PackageDiagramPermanentActionContributor implements IModelObjectActionContributor {
     

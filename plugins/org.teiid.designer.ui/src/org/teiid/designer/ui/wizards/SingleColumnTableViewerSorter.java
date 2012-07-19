@@ -15,6 +15,9 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 
+/**
+ * @since 8.0
+ */
 public class SingleColumnTableViewerSorter extends ViewerSorter {
 
 	public SingleColumnTableViewerSorter() {

@@ -20,6 +20,9 @@ import org.jdom.Document;
 import org.teiid.core.TeiidException;
 import org.teiid.core.util.CoreArgCheck;
 
+/**
+ * @since 8.0
+ */
 public class XsltTransform {
 
 	private final Style style;

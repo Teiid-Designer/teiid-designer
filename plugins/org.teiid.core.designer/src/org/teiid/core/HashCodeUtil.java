@@ -28,6 +28,8 @@ import java.util.RandomAccess;
  *     return hc;
  * }
  * </PRE>
+ *
+ * @since 8.0
  */
 public final class HashCodeUtil {
 

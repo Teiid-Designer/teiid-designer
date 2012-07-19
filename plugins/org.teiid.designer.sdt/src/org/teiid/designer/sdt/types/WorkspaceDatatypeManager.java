@@ -41,6 +41,8 @@ import org.teiid.designer.sdt.ModelerSdtPlugin;
 
 /**
  * WorkspaceDatatypeManager
+ *
+ * @since 8.0
  */
 public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
 

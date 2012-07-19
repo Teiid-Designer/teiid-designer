@@ -17,6 +17,8 @@ import org.eclipse.jface.viewers.ISelection;
  * to model views' context menus. This interface is used by the <code>ModelerActionService</code> when
  * creating context menus. When a model view context menu is being created, if the current editor
  * implements this interface, it will be asked to contribute to the context menu.
+ *
+ * @since 8.0
  */
 public interface IEditorActionExporter {
 

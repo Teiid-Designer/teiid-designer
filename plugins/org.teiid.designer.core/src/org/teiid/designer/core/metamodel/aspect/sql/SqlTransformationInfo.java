@@ -12,6 +12,8 @@ import java.util.List;
 
 /**
  * SqlTransformationInfo
+ *
+ * @since 8.0
  */
 public class SqlTransformationInfo {
 

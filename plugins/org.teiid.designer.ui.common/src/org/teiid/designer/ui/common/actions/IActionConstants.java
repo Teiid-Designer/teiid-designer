@@ -13,6 +13,8 @@ import org.eclipse.ui.ide.IDEActionFactory;
 /**
  * The <code>IModelerActionConstants</code> interface defines the constants used for the
  * action identifiers for global actions and actions groups used in the modeler.
+ *
+ * @since 8.0
  */
 public interface IActionConstants {
 

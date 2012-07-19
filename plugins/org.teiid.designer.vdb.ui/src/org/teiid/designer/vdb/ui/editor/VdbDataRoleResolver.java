@@ -48,6 +48,8 @@ import org.teiid.designer.vdb.VdbModelEntry;
  * Models that have been synchronized from workspace may have changed to the point of making Permissions obsolete.
  * 
  *
+ *
+ * @since 8.0
  */
 public class VdbDataRoleResolver {
 	static final String WEB_SERVICES_VIEW_MODEL_URI = "http://www.metamatrix.com/metamodels/WebService"; //$NON-NLS-1$

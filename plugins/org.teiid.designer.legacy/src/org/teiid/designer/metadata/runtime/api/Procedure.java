@@ -12,6 +12,8 @@ import java.util.List;
 
 /**
  * <p>Instances of this interface represent Procedures in a Model.  The values of a Procedure are analogous to a Stored Procedure or Function in a database.</p> 
+ *
+ * @since 8.0
  */
 public interface Procedure extends MetadataObject {
 /**

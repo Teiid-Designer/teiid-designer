@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.relational.Table;
 
 /**
  * ForeignKeyAssociationDescriptor
+ *
+ * @since 8.0
  */
 public class ForeignKeyAssociationDescriptor extends AbstractAssociationDescriptor {
 

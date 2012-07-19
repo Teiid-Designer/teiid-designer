@@ -15,6 +15,8 @@ import org.teiid.core.util.PluginUtilImpl;
 
 /**
  * ModelerXmlUiConstants
+ *
+ * @since 8.0
  */
 public interface ModelerXmlUiConstants {
 

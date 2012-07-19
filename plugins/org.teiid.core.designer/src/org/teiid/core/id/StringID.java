@@ -27,6 +27,9 @@ import java.io.Serializable;
 import org.teiid.core.util.Assertion;
 
 
+/**
+ * @since 8.0
+ */
 public class StringID implements ObjectID, Serializable {
     public static final String PROTOCOL = "strid"; //$NON-NLS-1$
 

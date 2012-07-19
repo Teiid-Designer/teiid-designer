@@ -21,6 +21,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * ModelStatisticsAction
+ *
+ * @since 8.0
  */
 public class ModelStatisticsAction extends ActionDelegate implements IWorkbenchWindowActionDelegate,
                                                                     IViewActionDelegate {

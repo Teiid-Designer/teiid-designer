@@ -18,6 +18,8 @@ import org.teiid.designer.core.validation.ValidationContext;
 
 /**
  * ResourceValidator
+ *
+ * @since 8.0
  */
 public interface ResourceValidator {
 

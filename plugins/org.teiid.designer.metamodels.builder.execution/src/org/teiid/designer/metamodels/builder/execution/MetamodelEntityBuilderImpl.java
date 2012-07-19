@@ -43,6 +43,8 @@ import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 
 /**
  * Implementation of the MetamodelEntityBuilder - creates EObjects given a MetamodelEntityRecord or List of records.
+ *
+ * @since 8.0
  */
 public class MetamodelEntityBuilderImpl implements MetamodelEntityBuilder, MetamodelBuilderConstants {
 

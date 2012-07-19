@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.EReference;
  * 
  * @see org.teiid.designer.metamodels.xml.XmlDocumentFactory
  * @generated
+ *
+ * @since 8.0
  */
 public interface XmlDocumentPackage extends EPackage {
     /**

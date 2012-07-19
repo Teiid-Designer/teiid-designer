@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.wsdl.http.HttpPackage;
  * 
  * @see org.teiid.designer.metamodels.wsdl.http.HttpPackage
  * @generated
+ *
+ * @since 8.0
  */
 public class HttpSwitch { // NO_UCD
 

@@ -25,6 +25,8 @@ import org.teiid.designer.core.ModelerCore;
 
 /**
  * ModelStatistics
+ *
+ * @since 8.0
  */
 public class ModelStatistics {
 

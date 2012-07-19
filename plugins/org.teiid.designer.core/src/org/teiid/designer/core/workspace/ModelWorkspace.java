@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.resource.Resource;
  * <p>
  * This interface is not intended to be implemented by clients.
  * </p>
+ *
+ * @since 8.0
  */
 public interface ModelWorkspace extends ModelWorkspaceItem, Openable {
 

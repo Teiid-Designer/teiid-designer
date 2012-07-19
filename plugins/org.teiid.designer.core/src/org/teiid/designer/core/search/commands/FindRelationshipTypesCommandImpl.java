@@ -26,6 +26,8 @@ import org.teiid.designer.core.search.runtime.SearchRuntimeAdapter;
 
 /**
  * FindRelationshipTypesCommandImpl.java
+ *
+ * @since 8.0
  */
 public class FindRelationshipTypesCommandImpl implements FindRelationshipTypesCommand {
 

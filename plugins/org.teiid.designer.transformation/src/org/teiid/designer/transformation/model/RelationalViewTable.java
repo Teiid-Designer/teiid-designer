@@ -11,6 +11,8 @@ import org.teiid.designer.relational.model.RelationalTable;
 
 /**
  * Virtual version of the RelationalTable, also includes transformation SQL
+ *
+ * @since 8.0
  */
 public class RelationalViewTable extends RelationalTable {
 

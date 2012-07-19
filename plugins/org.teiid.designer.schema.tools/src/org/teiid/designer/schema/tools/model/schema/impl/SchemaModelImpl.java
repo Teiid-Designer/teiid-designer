@@ -28,6 +28,9 @@ import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 import org.teiid.designer.schema.tools.model.schema.SchemaObjectKey;
 import org.teiid.designer.schema.tools.processing.SchemaProcessingException;
 
+/**
+ * @since 8.0
+ */
 public class SchemaModelImpl implements SchemaModel {
 
     private List elements;

@@ -28,6 +28,9 @@ import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.undo.ModelerUndoManager;
 
 
+/**
+ * @since 8.0
+ */
 public class MergeMappingClassesAction extends MappingAction {
     private static final String ACTION_DESCRIPTION = "Merge Mapping Classes"; //$NON-NLS-1$
     private static final String MERGE_MAPPING_CLASSES_ERROR = "MergeMappingClassesAction: Error merging mapping classes. Object = "; //$NON-NLS-1$

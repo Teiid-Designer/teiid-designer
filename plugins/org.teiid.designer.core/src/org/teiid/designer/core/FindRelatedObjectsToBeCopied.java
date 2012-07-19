@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.transformation.MappingClassSet;
 
 /**
  * FindRelatedObjectsToBeCopied
+ *
+ * @since 8.0
  */
 public class FindRelatedObjectsToBeCopied implements ModelVisitor {
 

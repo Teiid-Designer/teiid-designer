@@ -31,6 +31,8 @@ import org.teiid.designer.metamodels.diagram.DiagramPackage;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public abstract class AbstractDiagramEntityImpl extends PresentationEntityImpl implements AbstractDiagramEntity {
 

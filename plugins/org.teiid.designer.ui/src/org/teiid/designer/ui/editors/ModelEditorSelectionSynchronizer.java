@@ -57,6 +57,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  * Every ModelEditor has a SelecitonSynchronizer, and synchronization is performed only by the instance whose ModelEditor contains
  * the appropriate model.
  * </p>
+ *
+ * @since 8.0
  */
 public class ModelEditorSelectionSynchronizer implements
                                              IPartListener,

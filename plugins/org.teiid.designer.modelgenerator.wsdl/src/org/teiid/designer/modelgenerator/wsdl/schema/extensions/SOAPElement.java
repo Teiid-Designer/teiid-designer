@@ -15,6 +15,9 @@ import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 import org.teiid.designer.schema.tools.model.schema.impl.ElementImpl;
 
 
+/**
+ * @since 8.0
+ */
 public class SOAPElement extends ElementImpl {
 
     public SOAPElement( XSDElementDeclaration elem,

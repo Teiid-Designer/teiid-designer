@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.webservice.Operation;
 
 /** 
  * OperationAspect
+ *
+ * @since 8.0
  */
 public class OperationAspect extends WebServiceComponentAspect implements SqlProcedureAspect {
 

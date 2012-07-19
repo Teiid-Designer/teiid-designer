@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.function.ScalarFunction;
 
 /**
  * ScalarFunctionAspect
+ *
+ * @since 8.0
  */
 public class ScalarFunctionAspect extends AbstractFunctionAspect implements UmlClassifier {
     /**

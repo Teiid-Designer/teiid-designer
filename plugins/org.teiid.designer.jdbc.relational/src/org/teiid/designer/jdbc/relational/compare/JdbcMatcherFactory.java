@@ -19,6 +19,8 @@ import org.teiid.designer.jdbc.JdbcPackage;
 
 /**
  * UuidMatcherFactory
+ *
+ * @since 8.0
  */
 public class JdbcMatcherFactory implements EObjectMatcherFactory {
 

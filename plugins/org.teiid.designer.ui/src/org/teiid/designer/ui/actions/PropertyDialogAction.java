@@ -18,6 +18,8 @@ import org.teiid.designer.ui.UiConstants;
 
 /**
  * PropertyDialogAction
+ *
+ * @since 8.0
  */
 public class PropertyDialogAction extends org.eclipse.ui.dialogs.PropertyDialogAction
                                   implements UiConstants {

@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.function.ReturnParameter;
  * --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class ReturnParameterItemProvider extends ItemProviderAdapter
     implements IEditingDomainItemProvider, ITreeItemContentProvider, IItemLabelProvider,

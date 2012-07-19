@@ -14,6 +14,8 @@ import org.eclipse.swt.widgets.TableItem;
  * This class implements an ICellModifier
  * An ICellModifier is called when the user modifes a cell in the 
  * tableViewer
+ *
+ * @since 8.0
  */
 
 public class BindingCellModifier implements ICellModifier {

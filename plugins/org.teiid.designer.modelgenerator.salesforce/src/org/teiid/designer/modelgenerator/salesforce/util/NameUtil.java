@@ -10,6 +10,9 @@ package org.teiid.designer.modelgenerator.salesforce.util;
 import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.ProcedureReservedWords;
 
+/**
+ * @since 8.0
+ */
 public class NameUtil {
 
     public static String normalizeName( String nameIn ) {

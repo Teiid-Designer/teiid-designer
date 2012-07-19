@@ -13,6 +13,8 @@ import org.teiid.designer.webservice.WebServicePlugin;
 
 /**
  *
+ *
+ * @since 8.0
  */
 public abstract class WsdlFileExtensions implements FileUtils.Constants {
 

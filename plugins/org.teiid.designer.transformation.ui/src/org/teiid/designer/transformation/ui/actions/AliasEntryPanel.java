@@ -26,6 +26,8 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
  * AliasEntryPanel
+ *
+ * @since 8.0
  */
 public class AliasEntryPanel extends Composite implements ModifyListener {
 

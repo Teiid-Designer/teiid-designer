@@ -15,6 +15,8 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect;
 
 /**
  * ProcedureRecordImpl
+ *
+ * @since 8.0
  */
 public class ProcedureRecordImpl extends org.teiid.designer.metadata.runtime.impl.ProcedureRecordImpl {
     

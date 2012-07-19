@@ -13,6 +13,8 @@ import org.teiid.query.sql.symbol.ElementSymbol;
 /**
  * The <code>ElementEditorModel</code> class is used as a model for the
  * org.teiid.designer.transformation.ui.builder.expression.ElementEditor.
+ *
+ * @since 8.0
  */
 public class ElementEditorModel extends AbstractLanguageObjectEditorModel {
     // /////////////////////////////////////////////////////////////////////////////////////////////

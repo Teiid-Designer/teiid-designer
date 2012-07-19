@@ -15,6 +15,8 @@ import org.teiid.designer.metadata.runtime.exception.VirtualDatabaseDoesNotExist
 
 /**
  * The DataAccessAPI is the common interface to access runtime metadata.
+ *
+ * @since 8.0
  */
 public interface MetadataSourceAPI {
 

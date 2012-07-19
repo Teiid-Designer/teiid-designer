@@ -12,6 +12,8 @@ import java.util.List;
 
 /**
  * UniqueKeyRecord
+ *
+ * @since 8.0
  */
 public interface UniqueKeyRecord extends ColumnSetRecord {
 

@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.core.extension.XPackage;
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class ExtensionPackageImpl extends EPackageImpl implements ExtensionPackage {
 

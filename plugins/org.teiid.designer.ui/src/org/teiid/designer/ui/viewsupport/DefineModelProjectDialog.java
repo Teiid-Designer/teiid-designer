@@ -48,6 +48,8 @@ import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
  * This dialog allows users to either SELECT or CREATE NEW Designer model
  * project
  * 
+ *
+ * @since 8.0
  */
 public class DefineModelProjectDialog extends TitleAreaDialog implements
 		IChangeListener, UiConstants {

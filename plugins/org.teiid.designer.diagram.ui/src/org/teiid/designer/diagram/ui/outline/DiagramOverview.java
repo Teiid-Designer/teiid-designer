@@ -32,6 +32,8 @@ import org.teiid.designer.ui.editors.ModelEditorPageOutline;
 
 /**
  * DiagramOverview is the ModelEditorPageOutline for the DiagramEditor.
+ *
+ * @since 8.0
  */
 public class DiagramOverview implements IAdaptable, ModelEditorPageOutline {
 

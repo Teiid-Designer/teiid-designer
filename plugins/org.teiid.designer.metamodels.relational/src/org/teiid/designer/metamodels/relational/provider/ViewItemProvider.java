@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.relational.View;
  * end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class ViewItemProvider extends TableItemProvider {
     /**

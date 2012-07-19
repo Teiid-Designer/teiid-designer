@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.webservice.Output;
 
 /**
  * WebServiceUtil
+ *
+ * @since 8.0
  */
 public class WebServiceUtil {
 

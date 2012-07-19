@@ -51,6 +51,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * TransformModelFactory
+ *
+ * @since 8.0
  */
 public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl implements UiConstants {
     private static final String KEY_TRANSFORMATION_DIAGRAM_NAME = "DiagramNames.transformationDiagram"; //$NON-NLS-1$

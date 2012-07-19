@@ -14,6 +14,8 @@ import java.util.List;
 /**
  * A VirtualDatabaseMetadata represent a virtual database in the repository. It provides a set of methods to retrive the
  * information in the virtual database.
+ *
+ * @since 8.0
  */
 public interface VirtualDatabaseMetadata {
 

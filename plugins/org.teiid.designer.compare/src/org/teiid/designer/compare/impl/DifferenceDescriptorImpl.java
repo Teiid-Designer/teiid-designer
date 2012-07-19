@@ -39,6 +39,8 @@ import org.teiid.designer.compare.PropertyDifference;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class DifferenceDescriptorImpl extends MappingHelperImpl implements DifferenceDescriptor {
     /**

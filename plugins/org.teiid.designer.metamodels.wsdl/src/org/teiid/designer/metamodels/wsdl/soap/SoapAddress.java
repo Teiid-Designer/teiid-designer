@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.wsdl.Port;
  * @see org.teiid.designer.metamodels.wsdl.soap.SoapPackage#getSoapAddress()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface SoapAddress extends EObject {
 

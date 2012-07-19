@@ -20,6 +20,8 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * A label and icon widget for displaying an IStatus.
+ *
+ * @since 8.0
  */
 public class MessageLabel extends CLabel {
 

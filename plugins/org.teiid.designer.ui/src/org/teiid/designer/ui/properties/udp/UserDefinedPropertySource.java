@@ -21,6 +21,8 @@ import org.teiid.designer.ui.properties.ModelObjectPropertySource;
 
 /**
  * UserDefinedPropertySource is the property source for user-defined properties on EObjects.
+ *
+ * @since 8.0
  */
 public class UserDefinedPropertySource implements IPropertySource {
 

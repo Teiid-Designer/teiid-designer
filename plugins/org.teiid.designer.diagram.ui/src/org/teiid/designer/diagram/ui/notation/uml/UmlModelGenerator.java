@@ -32,6 +32,8 @@ import org.teiid.designer.metamodels.diagram.Diagram;
 /**
  * @author mdrilling Factory for creating UML Model Nodes Responsibility for creating and managing the diagram is at the
  *         DiagramModelFactory level.
+ *
+ * @since 8.0
  */
 public class UmlModelGenerator implements NotationModelGenerator {
     // private final static int SOURCE = 0;

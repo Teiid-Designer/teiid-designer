@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.core.extension.provider.ExtensionEditPlugin
  * This is the central singleton for the Core edit plugin. <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public final class CoreEditPlugin extends EMFPlugin {
 

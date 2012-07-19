@@ -22,6 +22,8 @@ import org.teiid.query.ui.UiPlugin;
  *   incremental changes (one keystroke at a time), and is quite inefficient.  This class will apply the 
  *   formatting rules efficiently to a whole string. (jh)
  *   
+ *
+ * @since 8.0
  */
 
 public class SqlFormattingStrategy

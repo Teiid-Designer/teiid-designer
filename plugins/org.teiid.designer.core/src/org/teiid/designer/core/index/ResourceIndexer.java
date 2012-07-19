@@ -15,6 +15,8 @@ import org.teiid.designer.core.index.IIndexer;
 
 /**
  * ResourceIndexer
+ *
+ * @since 8.0
  */
 public interface ResourceIndexer extends IIndexer {
 

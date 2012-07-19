@@ -8,6 +8,9 @@
 package org.teiid.designer.xsd.ui.editor;
 
 
+/**
+ * @since 8.0
+ */
 public interface MultiFacetSet extends FacetSet {
     //
     // Class Constants:

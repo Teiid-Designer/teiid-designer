@@ -12,6 +12,8 @@ import org.teiid.designer.metamodels.diagram.Diagram;
 
 /**
  * DefaultClassContentAdapter
+ *
+ * @since 8.0
  */
 public class DefaultClassContentAdapter implements IClassifierContentAdapter {
 

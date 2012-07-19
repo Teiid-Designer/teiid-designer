@@ -11,6 +11,8 @@ import org.teiid.core.TeiidException;
 
 /**
  * AnnotationHelperExceptoin
+ *
+ * @since 8.0
  */
 public class AnnotationHelperException extends TeiidException {
 

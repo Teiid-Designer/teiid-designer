@@ -17,6 +17,9 @@ import org.teiid.designer.ui.forms.DialogProvider;
 import org.teiid.designer.ui.forms.FormTextObjectEditor;
 import org.teiid.designer.ui.forms.FormUtil;
 
+/**
+ * @since 8.0
+ */
 public class FormTextFacetSet extends AbstractFacetSet {
 
     FormTextObjectEditor fText;

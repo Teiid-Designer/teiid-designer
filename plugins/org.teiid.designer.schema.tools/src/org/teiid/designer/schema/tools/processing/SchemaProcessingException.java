@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.schema.tools.processing;
 
+/**
+ * @since 8.0
+ */
 public class SchemaProcessingException extends Exception {
 
 	/**

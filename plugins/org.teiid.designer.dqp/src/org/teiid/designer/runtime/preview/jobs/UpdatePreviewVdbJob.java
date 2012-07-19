@@ -25,6 +25,8 @@ import org.teiid.designer.vdb.Vdb;
 
 /**
  * The <code>UpdatePreviewVdbJob</code> synchronizes the Preview VDB with the workspace.
+ *
+ * @since 8.0
  */
 public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
 

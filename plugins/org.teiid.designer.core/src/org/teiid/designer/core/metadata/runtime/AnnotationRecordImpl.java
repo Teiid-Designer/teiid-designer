@@ -14,6 +14,8 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlAnnotationAspect;
 
 /**
  * AnnotationRecordImpl
+ *
+ * @since 8.0
  */
 public class AnnotationRecordImpl extends org.teiid.designer.metadata.runtime.impl.AnnotationRecordImpl {
 

@@ -12,6 +12,9 @@ import java.util.List;
 
 import org.teiid.designer.tools.textimport.ui.wizards.AbstractRowObject;
 
+/**
+ * @since 8.0
+ */
 public class CatalogRowObject extends AbstractRowObject {
 	
     private boolean valid;

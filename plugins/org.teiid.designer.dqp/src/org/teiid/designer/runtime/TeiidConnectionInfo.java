@@ -19,6 +19,8 @@ import org.teiid.designer.core.util.StringUtilities;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public abstract class TeiidConnectionInfo {
 

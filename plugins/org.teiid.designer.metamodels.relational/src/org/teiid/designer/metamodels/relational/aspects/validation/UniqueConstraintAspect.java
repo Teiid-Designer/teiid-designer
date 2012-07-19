@@ -11,6 +11,8 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 
 /**
  * UniqueConstraintAspect
+ *
+ * @since 8.0
  */
 public class UniqueConstraintAspect extends UniqueKeyAspect {
     

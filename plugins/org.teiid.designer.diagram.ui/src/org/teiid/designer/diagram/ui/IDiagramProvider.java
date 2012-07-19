@@ -13,6 +13,8 @@ import org.teiid.designer.metamodels.diagram.Diagram;
  * IDiagramProvider
  * This class provides an interface which can be generically called by the modeler to see if any if a selected
  * generic Diagram type can be deleted. It is intended to be implemented by the diagram content providers...
+ *
+ * @since 8.0
  */
 public interface IDiagramProvider {
 

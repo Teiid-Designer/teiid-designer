@@ -23,6 +23,8 @@ package org.teiid.designer.metamodels.relational;
  * @see org.teiid.designer.metamodels.relational.RelationalPackage#getUniqueConstraint()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface UniqueConstraint extends UniqueKey{
     /**

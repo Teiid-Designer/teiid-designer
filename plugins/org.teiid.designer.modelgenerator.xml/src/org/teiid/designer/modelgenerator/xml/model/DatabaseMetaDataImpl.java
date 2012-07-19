@@ -37,6 +37,9 @@ import org.teiid.designer.schema.tools.model.schema.impl.SchemaModelImpl;
 import org.teiid.designer.schema.tools.processing.SchemaUtil;
 
 
+/**
+ * @since 8.0
+ */
 public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
     private static final String ELEMENT_TABLETYPE = "ELEMENT"; //$NON-NLS-1$
     private static final String RELATIONSHIP_TABLETYPE = "RELATIONSHIP"; //$NON-NLS-1$

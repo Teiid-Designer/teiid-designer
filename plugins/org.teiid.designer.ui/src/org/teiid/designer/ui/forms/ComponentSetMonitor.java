@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.ui.forms;
 
+/**
+ * @since 8.0
+ */
 public interface ComponentSetMonitor {
     public void update(ComponentSetEvent event);
 }

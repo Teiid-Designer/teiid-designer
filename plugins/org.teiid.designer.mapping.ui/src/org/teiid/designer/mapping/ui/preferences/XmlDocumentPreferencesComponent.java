@@ -33,6 +33,8 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
  * EditorPreferencePage
+ *
+ * @since 8.0
  */
 public class XmlDocumentPreferencesComponent implements IEditorPreferencesComponent, UiConstants, PluginConstants {
 

@@ -19,6 +19,8 @@ import org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect;
 
 /**
  * This class looks up aspects and caches them.
+ *
+ * @since 8.0
  */
 public class AspectManager { 
 

@@ -16,6 +16,8 @@ package org.teiid.designer.core.index;
  * An <code>IDocument</code> represent a data source, e.g.&nbsp;a <code>File</code> (<code>FileDocument</code>), 
  * an <code>IFile</code> (<code>IFileDocument</code>), 
  * or other kinds of data sources (URL, ...). An <code>IIndexer</code> indexes an<code>IDocument</code>.
+ *
+ * @since 8.0
  */
 
 public interface IDocument {

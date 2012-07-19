@@ -41,6 +41,8 @@ import org.teiid.designer.metadata.runtime.VdbRecord;
 
 /**
  * RuntimeAdapter
+ *
+ * @since 8.0
  */
 public class RecordFactory {
     

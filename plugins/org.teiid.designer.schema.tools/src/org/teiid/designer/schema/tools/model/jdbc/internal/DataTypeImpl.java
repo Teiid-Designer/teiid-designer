@@ -9,6 +9,9 @@ package org.teiid.designer.schema.tools.model.jdbc.internal;
 
 import org.teiid.designer.schema.tools.model.jdbc.DataType;
 
+/**
+ * @since 8.0
+ */
 public class DataTypeImpl implements DataType {
 
 	private String m_type;

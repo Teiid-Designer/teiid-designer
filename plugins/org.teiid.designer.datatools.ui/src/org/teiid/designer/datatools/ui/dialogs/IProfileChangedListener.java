@@ -11,6 +11,8 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public interface IProfileChangedListener {
 

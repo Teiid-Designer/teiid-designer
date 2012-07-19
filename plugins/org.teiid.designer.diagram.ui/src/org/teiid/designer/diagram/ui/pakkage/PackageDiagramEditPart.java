@@ -47,6 +47,8 @@ import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 
 /**
  * UmlPackageDiagramEditPart
+ *
+ * @since 8.0
  */
 public class PackageDiagramEditPart extends AbstractDiagramEditPart implements DiagramUiConstants, IDiagramTypeEditPart {
 

@@ -18,6 +18,8 @@ import java.util.Hashtable;
 /**
  * The properties of a document are stored into a hashtable.
  * @see IDocument
+ *
+ * @since 8.0
  */
 
 public abstract class PropertyDocument implements IDocument {

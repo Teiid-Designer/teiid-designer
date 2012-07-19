@@ -28,6 +28,8 @@ import org.teiid.designer.metamodels.core.util.CoreUtil;
  * <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XClassItemProvider extends EClassItemProvider {
 

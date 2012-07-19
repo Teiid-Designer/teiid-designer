@@ -23,6 +23,8 @@ import org.teiid.designer.vdb.connections.VdbSourceConnection;
 
 /**
  * The binding between a model and one or more translators.
+ *
+ * @since 8.0
  */
 public class SourceConnectionBinding {
 

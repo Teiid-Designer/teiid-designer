@@ -15,6 +15,8 @@ import org.eclipse.jface.text.formatter.IFormattingStrategy;
 
 /**
  * The formatting strategy that transforms SQL keywords to upper case
+ *
+ * @since 8.0
  */
 public class SqlWordStrategy implements IFormattingStrategy {
 

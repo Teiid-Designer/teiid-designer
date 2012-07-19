@@ -21,6 +21,9 @@ import org.teiid.designer.roles.Crud.Type;
 import org.teiid.designer.roles.Permission;
 import org.teiid.designer.transformation.util.TransformationHelper;
 
+/**
+ * @since 8.0
+ */
 public class PermissionHandler {
 
     private DataRolesModelTreeProvider tree;

@@ -20,6 +20,9 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class MappingTransformationDropEditPartHelper extends
 		TransformationDropEditPartHelper {
 

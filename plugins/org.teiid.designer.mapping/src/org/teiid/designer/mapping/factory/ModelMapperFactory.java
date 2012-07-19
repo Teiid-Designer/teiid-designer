@@ -28,6 +28,8 @@ import org.teiid.designer.metamodels.core.ModelAnnotation;
 
 /**
  * ModelMapperFactory
+ *
+ * @since 8.0
  */
 public class ModelMapperFactory implements PluginConstants, PluginConstants.ExtensionPoints.ModelMapper {
 

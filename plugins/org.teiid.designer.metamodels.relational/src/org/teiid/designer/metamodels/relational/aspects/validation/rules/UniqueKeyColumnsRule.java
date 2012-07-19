@@ -29,6 +29,8 @@ import org.teiid.designer.metamodels.relational.UniqueKey;
 /**
  * UniqueKeyColumnsRule. 1) Warning if a primary key references a nullable coulmn. 2) Error if unique key references columns from
  * differrent tables.
+ *
+ * @since 8.0
  */
 public class UniqueKeyColumnsRule implements ObjectValidationRule {
 

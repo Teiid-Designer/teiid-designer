@@ -26,6 +26,9 @@ import java.io.Serializable;
 
 import org.teiid.core.CorePlugin;
 
+/**
+ * @since 8.0
+ */
 public class IntegerIDFactory implements ObjectIDFactory, Serializable {
     private int lastID = 0;
     public IntegerIDFactory() {

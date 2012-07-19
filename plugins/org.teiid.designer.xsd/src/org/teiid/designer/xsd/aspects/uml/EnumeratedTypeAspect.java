@@ -29,6 +29,8 @@ import org.teiid.designer.xsd.util.ModelerXsdUtils;
 
 /**
  * ViewAspect
+ *
+ * @since 8.0
  */
 public class EnumeratedTypeAspect extends AbstractXsdEntityAspect
                                   implements PluginConstants,

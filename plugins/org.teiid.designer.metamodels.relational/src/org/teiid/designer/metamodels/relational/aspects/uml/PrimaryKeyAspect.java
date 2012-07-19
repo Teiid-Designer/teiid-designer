@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 
 /**
  * PrimaryKeyAspect
+ *
+ * @since 8.0
  */
 public class PrimaryKeyAspect extends UniqueKeyAspect {
     /**

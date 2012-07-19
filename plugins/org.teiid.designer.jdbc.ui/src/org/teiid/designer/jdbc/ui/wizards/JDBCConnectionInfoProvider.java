@@ -31,6 +31,8 @@ import org.teiid.designer.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements IConnectionInfoProvider {
 

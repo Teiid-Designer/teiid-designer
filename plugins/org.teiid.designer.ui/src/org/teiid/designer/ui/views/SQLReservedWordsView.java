@@ -24,6 +24,8 @@ import org.teiid.language.SQLConstants;
 
 /**
  * SQLReservedWordsView is the View to display all available SQL ReservedWords in Designer.
+ *
+ * @since 8.0
  */
 public class SQLReservedWordsView extends ModelerView {
 

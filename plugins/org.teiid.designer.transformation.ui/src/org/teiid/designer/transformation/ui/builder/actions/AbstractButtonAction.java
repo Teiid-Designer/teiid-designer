@@ -23,6 +23,8 @@ import org.teiid.designer.ui.common.actions.AbstractAction;
  * The <code>AbstractButtonAction</code> class creates a {@link org.eclipse.swt.widgets.Button} and
  * associates it's selection with a <code>Runnable</code>. The button's text and tooltip are set
  * via the plugin's properties file.
+ *
+ * @since 8.0
  */
 public abstract class AbstractButtonAction extends AbstractAction
                                            implements UiConstants {

@@ -17,6 +17,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.teiid.datatools.models.teiidsqlmodel.Document;
 
+/**
+ * @since 8.0
+ */
 public class TeiidDocumentContainmentProvider extends AbstractContainmentProvider {
 
 	

@@ -14,6 +14,9 @@ package org.teiid.designer.core.index;
 import java.util.ArrayList;
 
 
+/**
+ * @since 8.0
+ */
 public final class IndexedFileHashedArray {
 
 private IndexedFile elements[];

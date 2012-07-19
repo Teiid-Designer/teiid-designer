@@ -32,6 +32,8 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 /**
  * DiagramTypeManager - instantiates and provides access to the extensions that control Diagram Types Each must supply an
  * EditPartFactory, DiagramModelFactory and FigureFactory.
+ *
+ * @since 8.0
  */
 public class DiagramTypeManager implements PluginConstants, DiagramUiConstants, DiagramUiConstants.ExtensionPoints {
 

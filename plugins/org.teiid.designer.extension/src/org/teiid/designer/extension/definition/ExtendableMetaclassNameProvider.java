@@ -11,6 +11,8 @@ package org.teiid.designer.extension.definition;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public interface ExtendableMetaclassNameProvider {
 

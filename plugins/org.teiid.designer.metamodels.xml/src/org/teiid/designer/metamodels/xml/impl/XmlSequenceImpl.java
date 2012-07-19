@@ -26,6 +26,8 @@ import org.teiid.designer.metamodels.xml.XmlSequence;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlSequenceImpl extends XmlContainerNodeImpl implements XmlSequence {
     /**

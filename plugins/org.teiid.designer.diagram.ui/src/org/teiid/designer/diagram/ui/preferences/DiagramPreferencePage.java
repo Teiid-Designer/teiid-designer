@@ -33,6 +33,8 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
  * This class represents the preference page for setting the Modeler Diagram Preferences.
+ *
+ * @since 8.0
  */
 public class DiagramPreferencePage extends PreferencePage
     implements DiagramUiConstants, PluginConstants, IWorkbenchPreferencePage {

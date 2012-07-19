@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.diagram.Diagram;
  * @author mdrilling
  *
  * Model Node for UML Classifier.
+ *
+ * @since 8.0
  */
 abstract public class UmlModelNode extends AbstractDiagramModelNode {
 

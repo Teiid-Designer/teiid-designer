@@ -9,6 +9,8 @@ package org.teiid.designer.transformation.util;
 
 /**
  * SQL String utility methods.
+ *
+ * @since 8.0
  */
 public final class SqlStringUtil implements SqlConstants {
 

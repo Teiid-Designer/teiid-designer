@@ -12,6 +12,8 @@ import org.teiid.designer.core.index.Index;
 
 /**
  * NullIndexSelector returns an emtpy list for
+ *
+ * @since 8.0
  */
 public class NullIndexSelector extends AbstractIndexSelector {
 

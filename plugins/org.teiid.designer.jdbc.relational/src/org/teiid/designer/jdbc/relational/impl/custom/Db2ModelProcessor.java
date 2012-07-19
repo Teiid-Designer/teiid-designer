@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.relational.util.RelationalTypeMapping;
 
 /**
  * SqlServerModelProcessor
+ *
+ * @since 8.0
  */
 public class Db2ModelProcessor extends RelationalModelProcessorImpl {
 

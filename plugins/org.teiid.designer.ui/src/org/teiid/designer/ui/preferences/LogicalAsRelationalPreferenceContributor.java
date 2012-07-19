@@ -22,6 +22,8 @@ import org.teiid.designer.ui.UiPlugin;
 /**
  * This general preference controls whether an the logical model gets created as Relational (default)
  * or as UML whem importing via MetaIntegration importers 
+ *
+ * @since 8.0
  */
 public class LogicalAsRelationalPreferenceContributor implements IGeneralPreferencePageContributor,
                                                             UiConstants {

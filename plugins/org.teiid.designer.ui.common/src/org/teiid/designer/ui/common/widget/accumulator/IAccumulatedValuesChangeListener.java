@@ -9,6 +9,8 @@ package org.teiid.designer.ui.common.widget.accumulator;
 
 /**
  * IAccumulatedValuesChangeListener
+ *
+ * @since 8.0
  */
 public interface IAccumulatedValuesChangeListener {
 	void accumulatedValuesChanged(AccumulatorPanel source);

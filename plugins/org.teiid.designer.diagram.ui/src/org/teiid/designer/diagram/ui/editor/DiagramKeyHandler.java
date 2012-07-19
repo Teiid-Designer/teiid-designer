@@ -23,6 +23,8 @@ import org.eclipse.swt.events.KeyEvent;
  * Unlike {@link GraphicalViewerKeyHandler}, this tries to keep the scrolling
  * key bindings simple with a key press incrementing the scroll location rather
  * than navigate the figures on the canvas.
+ *
+ * @since 8.0
  */
 public class DiagramKeyHandler extends KeyHandler {
 

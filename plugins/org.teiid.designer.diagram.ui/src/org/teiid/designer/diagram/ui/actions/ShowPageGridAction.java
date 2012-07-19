@@ -24,6 +24,8 @@ import org.teiid.designer.diagram.ui.printing.DiagramPrintingAnalyzer;
 
 /**
  * DiagramPageSetupAction
+ *
+ * @since 8.0
  */
 public class ShowPageGridAction extends DiagramAction 
                              implements DiagramUiConstants {

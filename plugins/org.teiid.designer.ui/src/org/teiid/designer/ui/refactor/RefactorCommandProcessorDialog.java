@@ -47,6 +47,8 @@ import org.teiid.designer.ui.UiPlugin;
  * ffmdDialog.setValidator( new RelationshipTypeSelectionValidator() ); ffmdDialog.setResource( xxx); ffmdDialog.setCommand( xxx
  * ); ffmdDialog.open(); if ( ffmdDialog.getReturnCode() == FileFolderMoveDialog.OK ) { Object[] oSelectedObjects =
  * ffmdDialog.getResult(); ... } }
+ *
+ * @since 8.0
  */
 public class RefactorCommandProcessorDialog extends SelectionDialog implements PluginConstants {
 

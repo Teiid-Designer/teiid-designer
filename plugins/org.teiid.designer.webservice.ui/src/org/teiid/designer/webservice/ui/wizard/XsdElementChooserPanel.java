@@ -49,6 +49,8 @@ import org.teiid.designer.webservice.ui.IInternalUiConstants;
 
 /**
  * XsdElement ChooserPanel
+ *
+ * @since 8.0
  */
 public class XsdElementChooserPanel extends Composite implements IInternalUiConstants {
 

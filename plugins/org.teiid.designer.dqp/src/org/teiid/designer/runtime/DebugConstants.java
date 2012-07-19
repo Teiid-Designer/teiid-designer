@@ -12,6 +12,8 @@ import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 
 /**
  *
+ *
+ * @since 8.0
  */
 public interface DebugConstants {
 

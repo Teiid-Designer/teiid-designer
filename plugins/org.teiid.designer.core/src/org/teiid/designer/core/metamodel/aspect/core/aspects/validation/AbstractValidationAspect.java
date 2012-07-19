@@ -23,6 +23,8 @@ import org.teiid.designer.core.validation.ValidationRuleSetImpl;
 
 /**
  * AbstractValidationAspect.java
+ *
+ * @since 8.0
  */
 public abstract class AbstractValidationAspect extends AbstractMetamodelAspect implements ValidationAspect {
 

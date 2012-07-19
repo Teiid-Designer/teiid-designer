@@ -30,6 +30,8 @@ import org.teiid.designer.diagram.ui.util.ToolTipUtil;
 
 /**
  * Connection based on polyline. The layout of the connection is handled by routers.
+ *
+ * @since 8.0
  */
 public class DiagramPolylineConnection extends Polyline implements Connection, AnchorListener {
 	

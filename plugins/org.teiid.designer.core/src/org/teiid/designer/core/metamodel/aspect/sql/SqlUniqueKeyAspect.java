@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * SqlUniqueKeyAspect
+ *
+ * @since 8.0
  */
 public interface SqlUniqueKeyAspect extends SqlColumnSetAspect {
 

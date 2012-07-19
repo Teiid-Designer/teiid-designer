@@ -21,6 +21,8 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 
 /**
  * Get SQL Execution Plan Action
+ *
+ * @since 8.0
  */
 public class GetExecutionPlanContextAction extends SortableSelectionAction {
 	public static final String THIS_CLASS = I18nUtil.getPropertyPrefix(GetExecutionPlanContextAction.class);

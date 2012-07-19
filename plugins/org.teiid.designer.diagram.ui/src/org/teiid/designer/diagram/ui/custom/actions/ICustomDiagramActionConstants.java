@@ -11,6 +11,8 @@ import org.teiid.designer.ui.actions.IModelerActionConstants;
 
 /**
  * ICustomDiagramActionConstants
+ *
+ * @since 8.0
  */
 
 public interface ICustomDiagramActionConstants {

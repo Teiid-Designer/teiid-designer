@@ -15,6 +15,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * IndexingContext.
+ *
+ * @since 8.0
  */
 public class IndexingContext {
 

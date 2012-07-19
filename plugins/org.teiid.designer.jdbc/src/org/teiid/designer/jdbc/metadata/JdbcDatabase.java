@@ -14,6 +14,8 @@ import org.teiid.designer.jdbc.JdbcException;
 
 /**
  * JdbcDatabase
+ *
+ * @since 8.0
  */
 public interface JdbcDatabase extends JdbcNode {
     

@@ -9,6 +9,8 @@ package org.teiid.designer.core.util;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public final class ModelType {
 

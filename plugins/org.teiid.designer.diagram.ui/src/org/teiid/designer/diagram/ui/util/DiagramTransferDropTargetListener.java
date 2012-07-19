@@ -7,15 +7,15 @@
  */
 package org.teiid.designer.diagram.ui.util;
 
-/**
- *  DiagramTransferDropTargetListener
- */
-
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.dnd.AbstractTransferDropTargetListener;
 
-
+/**
+ *  DiagramTransferDropTargetListener
+ *
+ * @since 8.0
+ */
 public class DiagramTransferDropTargetListener extends AbstractTransferDropTargetListener {
 
     public DiagramTransferDropTargetListener(EditPartViewer viewer) {

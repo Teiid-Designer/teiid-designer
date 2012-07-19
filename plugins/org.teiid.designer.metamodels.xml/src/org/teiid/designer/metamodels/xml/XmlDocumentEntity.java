@@ -15,6 +15,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.xml.XmlDocumentPackage#getXmlDocumentEntity()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface XmlDocumentEntity extends EObject {
 

@@ -12,6 +12,8 @@ import org.osgi.framework.Bundle;
 
 /**
  * ExternalResourceSetDescriptorImpl
+ *
+ * @since 8.0
  */
 public class ExternalResourceSetDescriptorImpl extends ExtensionDescriptorImpl implements ExternalResourceSetDescriptor {
 

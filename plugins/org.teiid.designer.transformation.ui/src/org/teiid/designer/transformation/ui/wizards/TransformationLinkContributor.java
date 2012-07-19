@@ -28,6 +28,8 @@ import org.teiid.designer.ui.wizards.IStructuralCopyTreePopulator;
 /**
  * TransformationLinkContributor is the NewModelWizard builder contributor for generating
  * a virtual model that is transformed from an existing model.
+ *
+ * @since 8.0
  */
 public class TransformationLinkContributor implements INewModelWizardContributor, UiConstants {
     //

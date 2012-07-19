@@ -30,6 +30,8 @@ import org.teiid.designer.ui.common.InternalUiConstants;
 /**
  * TablePrinter
  * (jh)
+ *
+ * @since 8.0
  */
 public class TablePrinter {
 

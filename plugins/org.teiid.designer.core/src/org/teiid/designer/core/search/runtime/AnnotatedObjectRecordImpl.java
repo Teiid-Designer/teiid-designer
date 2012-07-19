@@ -15,6 +15,8 @@ import org.teiid.designer.core.index.IndexConstants;
 /**
  * AnnotatedObjectRecordImpl
  * recordType|objectID|name|fullname|uri|tags|description|modelPath|metaclassURI|
+ *
+ * @since 8.0
  */
 public class AnnotatedObjectRecordImpl extends ResourceObjectRecordImpl implements AnnotatedObjectRecord {
     

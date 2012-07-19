@@ -13,6 +13,8 @@ package org.teiid.designer.metamodels.transformation;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getGroupingNode()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface GroupingNode extends OperationNode {
 

@@ -10,6 +10,8 @@ package org.teiid.designer.runtime.ui.wizards.webservices.util;
 /**
  * Domain class that defines a procedure to be exposed RESTFully. This class is used to generate the REST resource class in the
  * generated REST war.
+ *
+ * @since 8.0
  */
 public class RestProcedure {
 

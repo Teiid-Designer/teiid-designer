@@ -14,6 +14,8 @@ import org.eclipse.core.resources.IResource;
 
 /**
  * NavigationMarker Instances of this class contain details necessary to restore a location in the navigation scheme.
+ *
+ * @since 8.0
  */
 public class NavigationMarker implements IMarker {
 

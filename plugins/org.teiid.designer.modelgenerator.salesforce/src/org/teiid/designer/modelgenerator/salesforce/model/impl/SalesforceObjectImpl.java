@@ -19,6 +19,9 @@ import com.sforce.soap.partner.ChildRelationship;
 import com.sforce.soap.partner.DescribeSObjectResult;
 import com.sforce.soap.partner.Field;
 
+/**
+ * @since 8.0
+ */
 public class SalesforceObjectImpl implements SalesforceObject {
 
     public static final String FIELD_LABEL = "label"; //$NON-NLS-1$

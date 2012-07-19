@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
 
 /** 
  * XmlMatcherFactory
+ *
+ * @since 8.0
  */
 public class XmlMatcherFactory implements EObjectMatcherFactory {
 

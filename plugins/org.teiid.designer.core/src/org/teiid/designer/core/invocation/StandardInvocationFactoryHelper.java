@@ -14,6 +14,8 @@ import org.teiid.designer.core.util.InvocationFactoryHelper;
 /**
  * The StandardInvocationFactoryHelper basically knows about typical method forms of most Java classes,
  * such as getters and setters (as defined by JavaBeans) and the methods on {@link Object}.
+ *
+ * @since 8.0
  */
 public class StandardInvocationFactoryHelper implements InvocationFactoryHelper {
     

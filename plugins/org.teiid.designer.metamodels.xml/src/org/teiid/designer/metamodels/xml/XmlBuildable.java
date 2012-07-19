@@ -24,6 +24,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.xml.XmlDocumentPackage#getXmlBuildable()
  * @model interface="true" abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface XmlBuildable extends EObject {
     /**

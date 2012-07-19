@@ -17,6 +17,8 @@ import org.teiid.query.ui.builder.model.ExpressionEditorModel;
 
 /**
  * ExpressionBuilder
+ *
+ * @since 8.0
  */
 public final class ExpressionBuilder extends AbstractLanguageObjectBuilder {
 

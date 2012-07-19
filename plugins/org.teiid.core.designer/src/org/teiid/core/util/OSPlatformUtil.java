@@ -14,6 +14,8 @@ import java.util.Properties;
 
 /**
  * PlatformAwareFileSystemView
+ *
+ * @since 8.0
  */
 public class OSPlatformUtil {
     public static String OS_PROPERTY_NAME = "os.name"; //$NON-NLS-1$

@@ -11,6 +11,8 @@ import org.eclipse.draw2d.Label;
 
 /**
  * DirectEditFigure
+ *
+ * @since 8.0
  */
 public interface DirectEditFigure {
     public Label getLabelFigure();

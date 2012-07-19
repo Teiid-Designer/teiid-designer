@@ -14,6 +14,8 @@ import org.teiid.designer.core.index.IndexSelector;
 
 /**
  * This interface is used to find typed objects based on datatype criteria.
+ *
+ * @since 8.0
  */
 public interface FindTypedObjectCommand	extends SearchCommand {
 

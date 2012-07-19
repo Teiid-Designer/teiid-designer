@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.jdbc.JdbcPackage#getJdbcSourceProperty()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface JdbcSourceProperty extends EObject{
     /**

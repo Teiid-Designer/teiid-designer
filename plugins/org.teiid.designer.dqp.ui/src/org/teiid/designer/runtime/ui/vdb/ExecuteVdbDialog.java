@@ -41,6 +41,9 @@ import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
 
+/**
+ * @since 8.0
+ */
 public class ExecuteVdbDialog extends TitleAreaDialog implements
 		DqpUiConstants, VdbConstants, IChangeListener {
 

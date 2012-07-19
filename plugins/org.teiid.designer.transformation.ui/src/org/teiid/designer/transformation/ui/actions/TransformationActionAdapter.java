@@ -62,6 +62,8 @@ import org.teiid.designer.ui.editors.ModelEditorSite;
 
 /**
  * TransformationActionAdapter
+ *
+ * @since 8.0
  */
 public class TransformationActionAdapter extends DiagramActionAdapter
     implements UiConstants, ITransformationDiagramActionConstants {

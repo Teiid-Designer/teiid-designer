@@ -18,6 +18,9 @@ import org.teiid.designer.modelgenerator.wsdl.model.Operation;
 import org.teiid.designer.modelgenerator.wsdl.model.WSDLElement;
 
 
+/**
+ * @since 8.0
+ */
 public class OperationImpl extends WSDLElementImpl implements Operation {
 
     private Binding m_binding;

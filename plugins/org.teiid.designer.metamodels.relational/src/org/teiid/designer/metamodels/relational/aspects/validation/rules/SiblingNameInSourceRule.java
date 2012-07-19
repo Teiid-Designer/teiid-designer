@@ -39,6 +39,8 @@ import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 
 /**
  * SiblingNameInSourceRule
+ *
+ * @since 8.0
  */
 public class SiblingNameInSourceRule implements ObjectValidationRule {
 

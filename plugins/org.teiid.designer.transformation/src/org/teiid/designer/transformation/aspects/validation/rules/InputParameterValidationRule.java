@@ -31,6 +31,8 @@ import org.teiid.designer.transformation.TransformationPlugin;
 
 /**
  * InputParameterValidationRule
+ *
+ * @since 8.0
  */
 public class InputParameterValidationRule implements ObjectValidationRule {
 

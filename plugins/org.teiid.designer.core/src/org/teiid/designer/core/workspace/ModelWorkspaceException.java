@@ -24,6 +24,8 @@ import org.teiid.designer.core.ModelerCoreException;
  *
  * @see ModelStatus
  * @see ModelStatusConstants
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceException extends ModelerCoreException {
 

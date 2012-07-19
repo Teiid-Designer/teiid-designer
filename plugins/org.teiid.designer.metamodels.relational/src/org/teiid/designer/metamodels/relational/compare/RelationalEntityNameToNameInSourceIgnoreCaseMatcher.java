@@ -14,6 +14,8 @@ import org.teiid.designer.metamodels.relational.RelationalEntity;
 
 /**
  * RelationalEntityNameToNameInSourceIgnoreCaseMatcher
+ *
+ * @since 8.0
  */
 public class RelationalEntityNameToNameInSourceIgnoreCaseMatcher extends AbstractEObjectNameMatcher {
 

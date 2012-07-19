@@ -12,6 +12,8 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * MergeProcessor
+ *
+ * @since 8.0
  */
 public interface MergeProcessor {
 

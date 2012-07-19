@@ -12,6 +12,8 @@ import java.util.List;
 
 /**
  * <p>Instances of this interface represent Keys for a Group.  The values of a Key are analogous to a Primary Key, Unique Key or Foreign Key in a database.</p> 
+ *
+ * @since 8.0
  */
 public interface Key extends MetadataObject {
 /**

@@ -23,6 +23,8 @@ import org.eclipse.emf.ecore.EPackage;
  * <!-- end-user-doc -->
  * @see org.teiid.designer.metamodels.dependency.DependencyFactory
  * @generated
+ *
+ * @since 8.0
  */
 public interface DependencyPackage extends EPackage {
     /**

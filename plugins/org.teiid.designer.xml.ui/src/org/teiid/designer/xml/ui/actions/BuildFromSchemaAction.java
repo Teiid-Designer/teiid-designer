@@ -22,6 +22,8 @@ import org.teiid.designer.xml.ui.wizards.NumberOfLevelsWizard;
 
 /**
  * BuildFromSchemaAction
+ *
+ * @since 8.0
  */
 public class BuildFromSchemaAction extends Action implements INewChildAction,
 		ModelerXmlUiConstants {

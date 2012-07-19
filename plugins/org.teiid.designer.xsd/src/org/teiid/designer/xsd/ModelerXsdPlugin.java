@@ -11,6 +11,9 @@ import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.util.PluginUtilImpl;
 
+/**
+ * @since 8.0
+ */
 public class ModelerXsdPlugin extends Plugin implements PluginConstants {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

@@ -11,6 +11,8 @@ import org.eclipse.core.resources.IResource;
 
 /** A simple interface to filter out resources.
  * @author PForhan
+ *
+ * @since 8.0
  */
 public interface ResourceFilter {
     public boolean accept(IResource res);

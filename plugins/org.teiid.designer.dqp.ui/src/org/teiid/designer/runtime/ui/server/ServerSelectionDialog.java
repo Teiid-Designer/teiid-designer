@@ -29,6 +29,9 @@ import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 
+/**
+ * @since 8.0
+ */
 public class ServerSelectionDialog extends TitleAreaDialog implements
 		DqpUiConstants, IChangeListener {
 

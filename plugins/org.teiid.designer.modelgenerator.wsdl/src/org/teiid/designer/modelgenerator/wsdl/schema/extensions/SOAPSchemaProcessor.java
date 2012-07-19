@@ -27,6 +27,9 @@ import org.teiid.designer.schema.tools.processing.internal.ElementContentTravers
 import org.teiid.designer.schema.tools.processing.internal.SchemaProcessorImpl;
 
 
+/**
+ * @since 8.0
+ */
 public class SOAPSchemaProcessor extends SchemaProcessorImpl {
 
     public SOAPSchemaProcessor( String separator ) {

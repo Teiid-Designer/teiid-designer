@@ -93,6 +93,9 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.webservice.util.WebServiceUtil;
 
 
+/**
+ * @since 8.0
+ */
 public class PreviewDataWorker {
 	public static final String THIS_CLASS = I18nUtil.getPropertyPrefix(PreviewDataWorker.class);
 	

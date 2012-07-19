@@ -24,6 +24,9 @@ import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.ui.wizards.INewModelWizardContributor;
 
 
+/**
+ * @since 8.0
+ */
 public class WebServiceRelationalModelContributor implements INewModelWizardContributor {
 
 

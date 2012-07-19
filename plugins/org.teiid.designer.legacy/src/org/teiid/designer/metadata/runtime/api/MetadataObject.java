@@ -13,6 +13,9 @@ import java.util.Properties;
 import org.teiid.query.mapping.xml.MappingNodeConstants.Defaults;
 
 
+/**
+ * @since 8.0
+ */
 public interface MetadataObject extends java.io.Serializable{
 
    /**

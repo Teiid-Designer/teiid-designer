@@ -24,6 +24,9 @@ import org.teiid.designer.modelgenerator.wsdl.model.Port;
 import org.teiid.designer.modelgenerator.wsdl.model.Service;
 
 
+/**
+ * @since 8.0
+ */
 public class ModelImpl implements Model {
 
     private Service[] m_services;

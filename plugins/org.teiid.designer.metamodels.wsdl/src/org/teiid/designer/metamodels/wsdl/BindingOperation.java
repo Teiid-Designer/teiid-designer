@@ -28,6 +28,8 @@ import org.teiid.designer.metamodels.wsdl.soap.SoapOperation;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getBindingOperation()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface BindingOperation extends ExtensibleDocumented, WsdlNameRequiredEntity {
 

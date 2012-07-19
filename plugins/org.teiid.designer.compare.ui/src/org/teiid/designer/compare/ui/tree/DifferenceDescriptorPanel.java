@@ -43,6 +43,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * DifferenceDescriptorPanel.
+ *
+ * @since 8.0
  */
 public class DifferenceDescriptorPanel extends Composite implements UiConstants, CoreStringUtil.Constants {
 

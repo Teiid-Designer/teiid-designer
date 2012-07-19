@@ -74,6 +74,9 @@ import org.teiid.designer.ui.event.IRevealHideListener;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class MappingDiagramController
     implements DiagramController, ISelectionChangedListener, ControlListener, IRevealHideListener, UiConstants {
 

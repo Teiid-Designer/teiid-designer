@@ -25,6 +25,8 @@ import org.teiid.query.ui.UiConstants;
  * This class provides static Lists of SQL syntax words. RESERVED_WORDS contains reserved SQL words, FUNCTION_NAMES contains
  * system and user defined function names, DATATYPE_NAMES contains datatypes, and ALL_WORDS is a combination of all. All lists are
  * sorted alphabetically.
+ *
+ * @since 8.0
  */
 public class SqlSyntax {
     // Word Lists

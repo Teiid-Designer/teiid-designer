@@ -11,6 +11,8 @@ package org.teiid.designer.diagram.ui.preferences;
  * NotationIDAndName
  * 
  * Data class to encompass a String ID and a String name in displayable form.
+ *
+ * @since 8.0
  */
 public class NotationIDAndName {
 	private String id;

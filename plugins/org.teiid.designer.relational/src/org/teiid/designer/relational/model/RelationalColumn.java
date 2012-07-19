@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStr
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class RelationalColumn extends RelationalReference {
     public static final String KEY_DISTINCT_VALUE_COUNT = "DISTINCTVALUECOUNT"; //$NON-NLS-1$

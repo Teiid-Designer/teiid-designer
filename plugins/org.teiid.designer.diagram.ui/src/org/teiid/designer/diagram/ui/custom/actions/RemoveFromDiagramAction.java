@@ -32,6 +32,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * RemoveTransformationSource
+ *
+ * @since 8.0
  */
 public class RemoveFromDiagramAction extends DiagramAction {
     private static final String THIS_CLASS = "RemoveFromDiagramAction"; //$NON-NLS-1$

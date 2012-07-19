@@ -9,6 +9,8 @@ package org.teiid.designer.runtime;
 
 /**
  * The <code>IExecutionConfigurationListener</code> interface defines the API for a server registry listener.
+ *
+ * @since 8.0
  */
 public interface IExecutionConfigurationListener {
 

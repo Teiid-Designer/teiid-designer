@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.transformation.XQueryTransformationMappingR
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XQueryTransformationMappingRootImpl extends TransformationMappingRootImpl implements XQueryTransformationMappingRoot {
 

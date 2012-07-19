@@ -12,6 +12,8 @@ import org.teiid.designer.schema.tools.model.schema.SchemaModel;
  *Determines the relationships between SchemaObjects based upon an instance
  *of the RelationshipRules Interface and performs the folding of the children
  *into parents as needed.
+ *
+ * @since 8.0
  */
 public interface RelationshipProcessor {
 

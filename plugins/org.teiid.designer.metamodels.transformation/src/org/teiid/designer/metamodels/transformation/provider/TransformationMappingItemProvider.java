@@ -21,6 +21,8 @@ import org.teiid.designer.metamodels.transformation.TransformationFactory;
  * begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class TransformationMappingItemProvider extends MappingItemProvider {
 

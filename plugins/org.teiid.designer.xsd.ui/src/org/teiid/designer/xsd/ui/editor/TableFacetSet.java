@@ -46,6 +46,9 @@ import org.teiid.designer.ui.forms.DialogProvider;
 import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 
 
+/**
+ * @since 8.0
+ */
 public class TableFacetSet extends AbstractFacetSet implements MultiFacetSet {
 
     private static final String COL_SEP = "\t"; //$NON-NLS-1$

@@ -18,6 +18,8 @@ import org.teiid.designer.metamodels.xml.XmlNamespace;
 
 /**
  * NamespaceContext
+ *
+ * @since 8.0
  */
 public class NamespaceContext {
     

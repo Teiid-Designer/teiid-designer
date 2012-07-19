@@ -38,6 +38,8 @@ import org.teiid.designer.metamodels.wsdl.soap.SoapUseType;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class SoapBodyImpl extends EObjectImpl implements SoapBody {
 

@@ -25,6 +25,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getAttribute()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Attribute extends EObject {
 

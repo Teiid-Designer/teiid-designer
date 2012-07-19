@@ -54,6 +54,9 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiPlugin;
 import org.teiid.designer.xsd.ui.PluginConstants;
 
 
+/**
+ * @since 8.0
+ */
 public class XsdSemanticsEditorPage implements ModelEditorPage, ISelectionChangedListener, IGotoMarker {
 
     private static final String NAME = ModelerXsdUiConstants.Util.getString("xsdSemanticsEditor.name"); //$NON-NLS-1$

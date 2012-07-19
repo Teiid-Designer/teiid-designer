@@ -21,6 +21,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getAttributeOwner()
  * @model interface="true" abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface AttributeOwner extends NamespaceDeclarationOwner {
 

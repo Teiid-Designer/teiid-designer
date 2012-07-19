@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.builder.MetamodelBuilderPlugin;
 
 /**
  * This is a helper class to encapsulate reusable methods developed for the MetamodelsBuilder plugin
+ *
+ * @since 8.0
  */
 public class BuilderUtil {
     final static String pluginID = MetamodelBuilderPlugin.PLUGIN_ID;

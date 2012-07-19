@@ -22,6 +22,9 @@ import com.sforce.soap.partner.DescribeSObjectResult;
 import com.sforce.soap.partner.Soap;
 import com.sforce.soap.partner.UnexpectedErrorFault;
 
+/**
+ * @since 8.0
+ */
 public class DataModelImpl implements DataModel {
 
     Integer maxBatchSize;

@@ -13,6 +13,8 @@ import org.eclipse.emf.mapping.MappingFactory;
 
 /**
  * AbstractEObjectMatcher
+ *
+ * @since 8.0
  */
 public abstract class AbstractEObjectMatcher implements EObjectMatcher {
 

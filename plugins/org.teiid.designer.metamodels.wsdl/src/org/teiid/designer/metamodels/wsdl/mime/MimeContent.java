@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.wsdl.MessagePart;
  * @see org.teiid.designer.metamodels.wsdl.mime.MimePackage#getMimeContent()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface MimeContent extends MimeElement {
 

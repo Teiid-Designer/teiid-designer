@@ -18,6 +18,8 @@ import org.teiid.core.util.CoreArgCheck;
 
 /**
  * Finds all the model objects whose class name matches one of the specified ones.
+ *
+ * @since 8.0
  */
 public class ModelObjectClassNameVisitor implements ModelVisitor {
 

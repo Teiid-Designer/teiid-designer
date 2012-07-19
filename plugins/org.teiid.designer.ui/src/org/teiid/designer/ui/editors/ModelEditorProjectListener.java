@@ -23,6 +23,8 @@ import org.teiid.designer.ui.common.util.UiUtil;
  * this easy - uninitialized editor tabs are difficult to close or even find out what resource they
  * are placeholders for.  I have a nagging feeling that there must be a better way to do this, but I
  * haven't found it.
+ *
+ * @since 8.0
  */
 public class ModelEditorProjectListener implements IResourceChangeListener {
 

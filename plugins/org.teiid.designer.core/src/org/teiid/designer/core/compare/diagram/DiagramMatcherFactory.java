@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.diagram.DiagramPackage;
 
 /** 
  * DiagramMatcherFactory
+ *
+ * @since 8.0
  */
 public class DiagramMatcherFactory implements EObjectMatcherFactory {
 

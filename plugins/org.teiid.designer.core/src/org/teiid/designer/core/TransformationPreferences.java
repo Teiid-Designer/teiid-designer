@@ -9,6 +9,8 @@ package org.teiid.designer.core;
 
 /**
  * TransformationPreferences
+ *
+ * @since 8.0
  */
 public interface TransformationPreferences {
 

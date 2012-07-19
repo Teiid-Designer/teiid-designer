@@ -40,6 +40,8 @@ import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 
 /**
  * ModelIndexBuilder
+ *
+ * @since 8.0
  */
 public class ModelBuilder extends IncrementalProjectBuilder implements IgnorableNotificationSource {
 

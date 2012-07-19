@@ -35,6 +35,8 @@ import org.teiid.designer.ui.wizards.TreeViewerWizardPanel;
 
 /**
  * TransformationTreeViewerWizardPanel
+ *
+ * @since 8.0
  */
 public class TransformationTreeViewerWizardPanel extends TreeViewerWizardPanel implements ICheckableController {
 

@@ -33,6 +33,8 @@ import org.teiid.designer.metamodels.transformation.XQueryTransformation;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XQueryTransformationImpl extends MappingHelperImpl implements XQueryTransformation {
 

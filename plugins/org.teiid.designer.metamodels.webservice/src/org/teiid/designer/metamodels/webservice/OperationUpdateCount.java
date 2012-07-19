@@ -19,6 +19,8 @@ import org.eclipse.emf.common.util.AbstractEnumerator;
  * 
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public final class OperationUpdateCount extends AbstractEnumerator {
     /**

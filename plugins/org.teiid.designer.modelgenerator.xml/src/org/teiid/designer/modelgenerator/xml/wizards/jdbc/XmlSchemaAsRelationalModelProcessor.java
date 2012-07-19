@@ -40,6 +40,9 @@ import org.teiid.designer.schema.tools.model.schema.QName;
 import org.teiid.designer.schema.tools.processing.SchemaUtil;
 
 
+/**
+ * @since 8.0
+ */
 public class XmlSchemaAsRelationalModelProcessor extends RelationalModelProcessorImpl {
 
     BaseXMLRelationalExtensionManager extensions;

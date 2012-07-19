@@ -48,6 +48,8 @@ import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
     }
 
 
+ *
+ * @since 8.0
  */
 public class FileFolderMoveDialog extends ElementTreeSelectionDialog {
 

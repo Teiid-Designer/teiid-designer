@@ -16,6 +16,8 @@ import java.util.List;
 
 /**
  * IndexSelector
+ *
+ * @since 8.0
  */
 public interface IndexSelector {
 

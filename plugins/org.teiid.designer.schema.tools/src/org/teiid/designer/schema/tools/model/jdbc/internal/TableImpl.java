@@ -18,6 +18,9 @@ import org.teiid.designer.schema.tools.model.schema.SchemaModel;
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 import org.teiid.designer.schema.tools.model.schema.impl.SchemaModelImpl;
 
+/**
+ * @since 8.0
+ */
 public class TableImpl extends DatabaseElementImpl implements Table {
 
     private String m_catalog;

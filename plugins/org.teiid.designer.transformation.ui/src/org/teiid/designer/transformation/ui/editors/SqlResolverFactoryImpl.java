@@ -15,6 +15,8 @@ import org.teiid.query.metadata.QueryMetadataInterface;
 
 /**
  * SqlResolverFactoryImpl
+ *
+ * @since 8.0
  */
 public class SqlResolverFactoryImpl implements SqlResolverFactory {
     

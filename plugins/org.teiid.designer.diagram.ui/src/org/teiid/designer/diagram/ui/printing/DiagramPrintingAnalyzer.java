@@ -20,6 +20,9 @@ import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.printing.PrinterData;
 
 
+/**
+ * @since 8.0
+ */
 public class DiagramPrintingAnalyzer extends DiagramPrintingOperation {
 
     public static PrinterData printerData;

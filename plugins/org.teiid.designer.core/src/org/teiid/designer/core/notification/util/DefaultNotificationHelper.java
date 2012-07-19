@@ -11,6 +11,8 @@ import org.eclipse.emf.common.notify.Notification;
 
 /**
  * DefaultNotificationHelper
+ *
+ * @since 8.0
  */
 public class DefaultNotificationHelper implements INotificationHelper {
 

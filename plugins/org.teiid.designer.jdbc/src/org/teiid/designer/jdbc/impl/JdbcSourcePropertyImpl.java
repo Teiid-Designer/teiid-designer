@@ -33,6 +33,8 @@ import org.teiid.designer.jdbc.JdbcSourceProperty;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class JdbcSourcePropertyImpl extends EObjectImpl implements JdbcSourceProperty {
     /**

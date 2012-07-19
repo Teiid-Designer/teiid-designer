@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.diagram.DiagramEntity;
 
 /**
  * The ExternalReferenceVisitor walks a model (or part of a model) and records the references to external resources.
+ *
+ * @since 8.0
  */
 public class ExternalReferenceVisitor implements ModelVisitor {
 

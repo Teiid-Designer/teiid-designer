@@ -13,6 +13,8 @@ import org.eclipse.ui.views.properties.IPropertySourceProvider;
 
 /**
  * UserDefinedPropertySourceProvider
+ *
+ * @since 8.0
  */
 public class UserDefinedPropertySourceProvider implements IPropertySourceProvider {
 

@@ -44,6 +44,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  * colors. It also supplies a specialized icon for Built-in Datatypes. jh Lyra enh: Creating this new subclass of
  * ModelObjectLabelProvider so that we can add custom behavior for the Xml Document Tree. Basically, we need to make this provider
  * aware of the details of the doc model so we can annotate certain nodes, for example anchor points.
+ *
+ * @since 8.0
  */
 public class XmlDocumentModelObjectLabelProvider extends ModelExplorerLabelProvider {
 

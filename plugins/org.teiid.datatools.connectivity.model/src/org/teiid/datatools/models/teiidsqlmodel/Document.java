@@ -25,6 +25,8 @@ import org.eclipse.datatools.modelbase.sql.tables.ViewTable;
  * @see org.teiid.datatools.models.teiidsqlmodel.TeiidsqlmodelPackage#getDocument()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Document extends ViewTable {
 	/**

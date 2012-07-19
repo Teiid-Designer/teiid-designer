@@ -35,6 +35,8 @@ import org.teiid.designer.core.util.ModelContents;
 
 /**
  * ContainerEditingDomain
+ *
+ * @since 8.0
  */
 public class ContainerEditingDomain extends AdapterFactoryEditingDomain implements MappingDomain {
 

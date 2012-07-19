@@ -12,6 +12,8 @@ package org.teiid.designer.core.workspace;
  * <p>
  * This interface may be implemented by clients.
  * </p>
+ *
+ * @since 8.0
  */
 public interface ModelBufferFactory {
 

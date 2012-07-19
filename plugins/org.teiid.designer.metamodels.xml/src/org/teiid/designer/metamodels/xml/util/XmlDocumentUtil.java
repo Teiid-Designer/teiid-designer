@@ -37,6 +37,8 @@ import org.teiid.designer.metamodels.xml.XmlSequence;
 
 /**
  * XmlDocumentUtil
+ *
+ * @since 8.0
  */
 public class XmlDocumentUtil {
     

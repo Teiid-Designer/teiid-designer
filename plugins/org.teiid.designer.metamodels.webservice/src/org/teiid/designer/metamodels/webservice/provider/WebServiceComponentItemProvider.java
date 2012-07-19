@@ -29,6 +29,8 @@ import org.teiid.designer.metamodels.webservice.WebServicePackage;
  * begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class WebServiceComponentItemProvider extends ItemProviderAdapter
     implements IEditingDomainItemProvider, ITreeItemContentProvider, IItemLabelProvider,

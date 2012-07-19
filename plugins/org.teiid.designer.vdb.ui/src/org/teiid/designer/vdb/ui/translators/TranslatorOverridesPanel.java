@@ -67,6 +67,8 @@ import org.teiid.designer.vdb.ui.VdbUiPlugin;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public final class TranslatorOverridesPanel extends Composite {
 

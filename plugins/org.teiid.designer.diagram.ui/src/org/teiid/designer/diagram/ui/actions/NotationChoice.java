@@ -13,7 +13,9 @@ import org.teiid.designer.diagram.ui.NotationChangeListener;
      * NotationChoice
      *  - One instance of this action will be created dynamically to represent each Notation extension
      *     found at init time.
-     */
+ *
+ * @since 8.0
+ */
     public class NotationChoice extends DiagramAction  {
 
         private String sNotationExtensionId;

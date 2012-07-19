@@ -14,6 +14,8 @@ import org.teiid.designer.core.notification.util.INotificationHelper;
 
 /**
  * ModelerNotificationHelper
+ *
+ * @since 8.0
  */
 public class ModelerNotificationHelper implements INotificationHelper {
 

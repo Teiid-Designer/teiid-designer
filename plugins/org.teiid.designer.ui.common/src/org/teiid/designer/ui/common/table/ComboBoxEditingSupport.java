@@ -10,6 +10,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Composite;
 
+/**
+ * @since 8.0
+ */
 public abstract class ComboBoxEditingSupport extends EditingSupport {
 
     /**

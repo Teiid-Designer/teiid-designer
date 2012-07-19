@@ -18,6 +18,8 @@ import org.teiid.designer.core.validation.ValidationRuleSet;
 
 /**
  * ProcedureAspect
+ *
+ * @since 8.0
  */
 public class ProcedureAspect extends RelationalEntityAspect {
 

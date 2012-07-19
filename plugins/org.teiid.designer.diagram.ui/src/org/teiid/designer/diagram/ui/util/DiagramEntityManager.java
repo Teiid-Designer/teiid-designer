@@ -34,6 +34,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
  *
  * This class contains static utility methods which cashe the diagramEntity-eObject maps and
  * allow quick access to find DE's, instead of interating through the lists.
+ *
+ * @since 8.0
  */
 public class DiagramEntityManager  {
 	private static HashMap diagramMap;

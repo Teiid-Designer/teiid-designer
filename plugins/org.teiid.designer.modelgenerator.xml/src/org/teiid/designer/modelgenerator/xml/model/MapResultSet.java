@@ -44,6 +44,9 @@ import java.util.Map;
 
 import org.teiid.designer.modelgenerator.xml.XmlImporterUiPlugin;
 
+/**
+ * @since 8.0
+ */
 public class MapResultSet implements ResultSet {
 
     List values; // a list of lists

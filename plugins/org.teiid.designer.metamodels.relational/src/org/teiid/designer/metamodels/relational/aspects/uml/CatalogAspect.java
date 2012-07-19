@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 
 /**
  * SchemaAspect
+ *
+ * @since 8.0
  */
 public class CatalogAspect extends RelationalEntityAspect implements UmlPackage {
     /**

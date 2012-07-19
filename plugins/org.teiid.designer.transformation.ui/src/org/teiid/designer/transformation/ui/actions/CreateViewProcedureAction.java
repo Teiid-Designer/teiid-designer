@@ -47,6 +47,9 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public class CreateViewProcedureAction  extends Action implements INewChildAction, INewSiblingAction {
 	private IFile selectedModel;
     public static final String TITLE = Messages.createRelationalViewProcedureActionText;

@@ -9,6 +9,9 @@ package org.teiid.designer.modelgenerator.salesforce.ui.wizards;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+/**
+ * @since 8.0
+ */
 public class SalesforceUIPlugin extends AbstractUIPlugin {
 
     private static SalesforceUIPlugin plugin;

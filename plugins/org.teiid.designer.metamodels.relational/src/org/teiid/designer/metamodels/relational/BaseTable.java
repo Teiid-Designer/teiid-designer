@@ -26,6 +26,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.relational.RelationalPackage#getBaseTable()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface BaseTable extends Table{
     /**

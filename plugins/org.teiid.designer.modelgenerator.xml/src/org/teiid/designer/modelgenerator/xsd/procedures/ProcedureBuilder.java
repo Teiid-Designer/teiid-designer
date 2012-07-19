@@ -30,6 +30,9 @@ import org.teiid.designer.schema.tools.model.schema.impl.ElementImpl;
 import org.teiid.designer.schema.tools.model.schema.impl.TypeDefinition;
 
 
+/**
+ * @since 8.0
+ */
 public class ProcedureBuilder {
 
 	RelationalFactory factory = org.teiid.designer.metamodels.relational.RelationalPackage.eINSTANCE

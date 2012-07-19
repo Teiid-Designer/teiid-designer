@@ -32,6 +32,9 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
+/**
+ * @since 8.0
+ */
 public class CreateMaterializedViewsAction extends SortableSelectionAction {
 	
     public static final String OPEN_EDITOR_TITLE = UiConstants.Util.getString("CreateMaterializedViewsAction.openModelEditorTitle"); //$NON-NLS-1$

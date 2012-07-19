@@ -29,6 +29,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 /**
  * TransformationDiagramSelectionHandler
+ *
+ * @since 8.0
  */
 public class TransformationDiagramSelectionHandler extends DiagramSelectionHandler {
 

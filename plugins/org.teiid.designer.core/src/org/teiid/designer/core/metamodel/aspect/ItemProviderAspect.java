@@ -9,6 +9,8 @@ package org.teiid.designer.core.metamodel.aspect;
 
 /**
  * ItemProviderAspect
+ *
+ * @since 8.0
  */
 public interface ItemProviderAspect extends MetamodelAspect {
 

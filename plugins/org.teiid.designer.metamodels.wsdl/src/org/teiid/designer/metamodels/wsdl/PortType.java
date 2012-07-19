@@ -22,6 +22,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.wsdl.WsdlPackage#getPortType()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface PortType extends WsdlNameRequiredEntity, ExtensibleAttributesDocumented {
 

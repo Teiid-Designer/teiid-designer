@@ -49,6 +49,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * MappingDiagramSelectionHandler
+ *
+ * @since 8.0
  */
 public class MappingDiagramSelectionHandler extends DiagramSelectionHandler {
     private MappingObjectEditHelper editHelper;

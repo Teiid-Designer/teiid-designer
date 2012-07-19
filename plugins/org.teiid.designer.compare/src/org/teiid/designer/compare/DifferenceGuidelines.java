@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * DifferenceGuidelines
+ *
+ * @since 8.0
  */
 public interface DifferenceGuidelines {
 

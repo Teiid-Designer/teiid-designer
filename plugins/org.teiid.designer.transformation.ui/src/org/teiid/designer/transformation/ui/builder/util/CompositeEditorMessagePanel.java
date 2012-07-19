@@ -35,6 +35,8 @@ import org.teiid.query.ui.builder.util.BuilderUtils;
 
 /**
  * CompositeEditorMessagePanel
+ *
+ * @since 8.0
  */
 public class CompositeEditorMessagePanel extends Composite implements UiConstants {
 

@@ -12,6 +12,8 @@ import org.teiid.designer.metadata.runtime.ForeignKeyRecord;
 
 /**
  * ForeignKeyRecordImpl
+ *
+ * @since 8.0
  */
 public class ForeignKeyRecordImpl extends ColumnSetRecordImpl implements ForeignKeyRecord {
 

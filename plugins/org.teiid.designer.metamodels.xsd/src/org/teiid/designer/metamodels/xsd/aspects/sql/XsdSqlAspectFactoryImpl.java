@@ -15,6 +15,8 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 
 /**
  * RelationalSqlAspectFactoryImpl
+ *
+ * @since 8.0
  */
 public class XsdSqlAspectFactoryImpl implements MetamodelAspectFactory {
     

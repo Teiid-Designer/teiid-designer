@@ -29,6 +29,8 @@ import org.teiid.designer.metamodels.transformation.TransformationPackage;
  * --> <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class ExpressionItemProvider extends ItemProviderAdapter
     implements IEditingDomainItemProvider, ITreeItemContentProvider, IItemLabelProvider,

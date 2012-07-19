@@ -26,6 +26,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  *  objects inside ModelResources.</p>
  * <p>TransformationDiagramContentProvider implements ITreeContentProvider because this interface has the right
  * methods for the functionality this class provides.</p>
+ *
+ * @since 8.0
  */
 final public class MappingDiagramContentProvider implements ITreeContentProvider, IDiagramProvider, UiConstants {
 

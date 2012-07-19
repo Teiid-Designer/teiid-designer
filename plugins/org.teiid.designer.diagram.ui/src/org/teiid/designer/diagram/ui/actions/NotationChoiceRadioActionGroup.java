@@ -17,6 +17,8 @@ import org.teiid.designer.diagram.ui.NotationChangeListener;
 
 /**
  * NotationChoiceRadioActionGroup
+ *
+ * @since 8.0
  */
 public class NotationChoiceRadioActionGroup extends MenuManager 
                                          implements NotationChangeListener,

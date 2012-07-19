@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.diagram.PresentationEntity;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class PresentationEntityItemProvider
     extends ItemProviderAdapter

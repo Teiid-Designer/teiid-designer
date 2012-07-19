@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.wsdl.soap.SoapUseType;
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class SoapFactoryImpl extends EFactoryImpl implements SoapFactory {
 

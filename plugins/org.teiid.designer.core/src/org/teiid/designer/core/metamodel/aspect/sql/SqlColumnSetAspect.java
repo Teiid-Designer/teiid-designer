@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * This aspect represents all metamodelentities that reference columns, i.e: UniqueKeys,
  * ForeignKeys, Indexes, AccessPatterns, Procedures.
+ *
+ * @since 8.0
  */
 public interface SqlColumnSetAspect extends SqlAspect {
     

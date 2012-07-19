@@ -42,6 +42,8 @@ import org.teiid.designer.ui.editors.ModelEditorPage;
 
 /**
  * TransformationActionAdapter
+ *
+ * @since 8.0
  */
 public class PackageDiagramActionAdapter
      extends DiagramActionAdapter

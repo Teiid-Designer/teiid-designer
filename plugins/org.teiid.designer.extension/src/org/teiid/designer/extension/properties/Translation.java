@@ -19,6 +19,8 @@ import org.teiid.designer.extension.Messages;
 
 /**
  * A translation related to a specific {@link Locale}.
+ *
+ * @since 8.0
  */
 public class Translation implements Comparable<Translation>, Cloneable {
 

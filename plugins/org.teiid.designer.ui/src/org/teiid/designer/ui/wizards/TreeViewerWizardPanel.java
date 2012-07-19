@@ -40,6 +40,8 @@ import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
  * Extension to Composite containing an InheritanceCheckboxTreeViewer, and intended only for the case where the Composite is the
  * only thing appearing on a WizardPage. The WizardPage is passed in as a constructor argument and two of its methods are called:
  * setErrorMessage(), and setPageComplete(). The wizard page is set to complete iff. at least one item in the tree is checked.
+ *
+ * @since 8.0
  */
 public class TreeViewerWizardPanel extends Composite implements UiConstants {
     private final static String BROWSE_SHORTHAND = "..."; //$NON-NLS-1$

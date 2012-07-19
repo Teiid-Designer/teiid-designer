@@ -29,6 +29,8 @@ import org.teiid.designer.core.util.DateUtil;
 
 /**
  * @author dfuglsang
+ *
+ * @since 8.0
  */
 public class XmiStreamReader implements StreamReader {
 

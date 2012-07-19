@@ -11,6 +11,8 @@ import org.teiid.query.sql.lang.SetCriteria;
 
 /**
  * The <code>SetCriteriaDisplayNode</code> class is used to represent a Set Criteria.
+ *
+ * @since 8.0
  */
 public class SetCriteriaDisplayNode extends DisplayNode {
 

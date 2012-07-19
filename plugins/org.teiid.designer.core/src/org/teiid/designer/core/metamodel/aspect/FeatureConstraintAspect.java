@@ -11,6 +11,8 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * FeatureConstraintAspect
+ *
+ * @since 8.0
  */
 public interface FeatureConstraintAspect extends MetamodelAspect {
     /**

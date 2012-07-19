@@ -36,6 +36,8 @@ import org.teiid.designer.metamodels.xml.XmlSequence;
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlDocumentFactoryImpl extends EFactoryImpl implements XmlDocumentFactory {
     /**

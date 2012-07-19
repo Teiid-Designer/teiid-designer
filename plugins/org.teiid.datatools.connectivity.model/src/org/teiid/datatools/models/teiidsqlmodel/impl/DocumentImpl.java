@@ -29,6 +29,8 @@ import org.teiid.datatools.models.teiidsqlmodel.TeiidsqlmodelPackage;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class DocumentImpl extends ViewTableImpl implements Document {
 	/**

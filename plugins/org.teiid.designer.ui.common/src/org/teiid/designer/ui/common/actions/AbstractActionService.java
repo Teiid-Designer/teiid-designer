@@ -34,6 +34,8 @@ import org.teiid.designer.ui.common.InternalUiConstants;
 
 /**
  * The <code>AbstractActionService</code> class is a base implementation of the <code>ActionService</code> interface.
+ *
+ * @since 8.0
  */
 public abstract class AbstractActionService implements ActionService, InternalUiConstants {
 

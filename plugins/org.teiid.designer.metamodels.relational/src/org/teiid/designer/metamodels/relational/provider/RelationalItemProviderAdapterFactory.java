@@ -33,6 +33,8 @@ import org.teiid.designer.metamodels.relational.util.RelationalAdapterFactory;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class RelationalItemProviderAdapterFactory extends RelationalAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
     /**

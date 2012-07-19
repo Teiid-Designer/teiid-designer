@@ -14,6 +14,8 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect;
 
 /**
  * ModelRecordImpl
+ *
+ * @since 8.0
  */
 public class ModelRecordImpl extends org.teiid.designer.metadata.runtime.impl.ModelRecordImpl {
 

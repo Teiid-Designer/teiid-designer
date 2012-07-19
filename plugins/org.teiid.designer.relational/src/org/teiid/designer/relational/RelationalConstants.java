@@ -9,6 +9,8 @@ package org.teiid.designer.relational;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public interface RelationalConstants {
     final static String XMI_EXT = ".xmi"; //$NON-NLS-1$

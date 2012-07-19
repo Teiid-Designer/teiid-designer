@@ -16,6 +16,8 @@ import org.teiid.designer.core.workspace.ModelUtil;
 /**
  * ResourceStatus is a specialization of Status that can access a resource.  This is useful for
  * error messages 
+ *
+ * @since 8.0
  */
 public class ResourceStatus extends Status {
 

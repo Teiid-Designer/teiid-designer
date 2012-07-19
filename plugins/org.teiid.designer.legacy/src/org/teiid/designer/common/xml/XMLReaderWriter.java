@@ -19,7 +19,9 @@ import org.jdom.JDOMException;
 
 /** 
 * This interface is used to read and write JDOM compliant XML files.
-*/
+ *
+ * @since 8.0
+ */
 public interface XMLReaderWriter {
 
     /**

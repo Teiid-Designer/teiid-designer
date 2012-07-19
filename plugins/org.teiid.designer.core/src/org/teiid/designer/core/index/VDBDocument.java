@@ -15,6 +15,8 @@ import org.teiid.designer.core.index.IDocument;
  * VDBDocument contains references to a collection of resources that need to be indexed
  * It contains path to a dummy resource file for which these indexes built. We need a dummy
  * resource because JDT index framework needs an index to be associated with an resource file. 
+ *
+ * @since 8.0
  */
 public interface VDBDocument extends IDocument {
 

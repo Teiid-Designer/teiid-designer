@@ -21,6 +21,8 @@ import org.teiid.designer.core.search.runtime.ResourceImportRecord;
 
 /**
  * ResourceStatusList is a reusable component that builds a list of resource
+ *
+ * @since 8.0
  */
 public class ResourceStatusList {
 

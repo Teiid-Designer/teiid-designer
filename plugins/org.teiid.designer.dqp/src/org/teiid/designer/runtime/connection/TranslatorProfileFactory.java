@@ -7,6 +7,9 @@ import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 
 
+/**
+ * @since 8.0
+ */
 public class TranslatorProfileFactory {
 	
 	public TranslatorProfileFactory() {

@@ -38,6 +38,8 @@ import org.teiid.designer.xml.PluginConstants;
 
 /**
  * XmlMappableTree
+ *
+ * @since 8.0
  */
 public class XmlMappableTree extends DefaultMappableTree implements PluginConstants.PreferenceKeys {
 

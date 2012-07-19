@@ -12,6 +12,8 @@ package org.teiid.designer.core.workspace;
  * a {@link ModelWorkspaceSelections} to determine whether the selection state 
  * of an object can be explicitly set, or whether the selection state of an object
  * is determined from other objects.
+ *
+ * @since 8.0
  */
 public interface ModelWorkspaceSelectionFilter {
     

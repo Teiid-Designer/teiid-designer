@@ -31,6 +31,8 @@ import org.teiid.designer.jdbc.metadata.JdbcSchema;
  * branches were not navigated to yet, the act of visiting will cause the loading of those nodes. However, because they are
  * selected (or partially selected), those nodes will have to be loaded anyway to get the metadata to be imported.
  * </p>
+ *
+ * @since 8.0
  */
 public class ImportSettingsSelectionVisitor implements JdbcNodeVisitor {
 

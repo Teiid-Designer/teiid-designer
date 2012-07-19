@@ -9,6 +9,9 @@ package org.teiid.designer.modelgenerator.salesforce.model;
 
 import java.util.List;
 
+/**
+ * @since 8.0
+ */
 public interface SalesforceObject {
 
     public abstract boolean isQueryable();

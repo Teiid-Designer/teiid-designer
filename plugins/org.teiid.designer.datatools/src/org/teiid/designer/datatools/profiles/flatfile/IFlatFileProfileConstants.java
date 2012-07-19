@@ -1,5 +1,8 @@
 package org.teiid.designer.datatools.profiles.flatfile;
 
+/**
+ * @since 8.0
+ */
 public interface IFlatFileProfileConstants {
 	// ODA Flat File plugin.properties values
 	/*

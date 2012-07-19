@@ -23,6 +23,8 @@ import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;
 
 /**
  * DatatypeConstants
+ *
+ * @since 8.0
  */
 public class DatatypeConstants {
 

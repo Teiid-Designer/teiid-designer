@@ -21,6 +21,8 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 
 /**
  * The <code>SystemClipboardUtilities</code> class manages data on the system clipboard.
+ *
+ * @since 8.0
  */
 public class SystemClipboardUtilities {
 

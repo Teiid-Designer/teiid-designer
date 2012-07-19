@@ -25,6 +25,8 @@ import org.teiid.core.util.PluginUtilImpl;
 
 /**
  * CoreMetamodelPlugin
+ *
+ * @since 8.0
  */
 public class CoreMetamodelPlugin extends Plugin {
 

@@ -26,6 +26,8 @@ import org.teiid.core.util.PluginUtilImpl;
 
 /**
  * DiagramPlugin
+ *
+ * @since 8.0
  */
 public class DiagramPlugin extends Plugin {
 

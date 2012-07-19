@@ -19,6 +19,8 @@ import org.teiid.logging.Logger;
 
 /**
  * DdlWriter
+ *
+ * @since 8.0
  */
 public interface DdlWriter {
 

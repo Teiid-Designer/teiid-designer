@@ -16,6 +16,8 @@ import org.teiid.core.properties.PropertyDefinition;
  * org.teiid.designer.vdb plugin. This keeps the VDB plugin a design-time plugin and the DQP a run-time plugin.
  * 
  * All the VDB needs is source connection "names" and not concrete connection objects, so the only interface method is findConnectioName()
+ *
+ * @since 8.0
  */
 public interface SourceHandler {
 

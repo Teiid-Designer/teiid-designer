@@ -21,6 +21,8 @@ import org.teiid.designer.core.workspace.ModelUtil;
 
 /**
  * ModelResourceCollectorVisitor is a collector visitor for finding ModelResource instances in the workspace.
+ *
+ * @since 8.0
  */
 public class ModelResourceCollectorVisitor implements IResourceVisitor {
 

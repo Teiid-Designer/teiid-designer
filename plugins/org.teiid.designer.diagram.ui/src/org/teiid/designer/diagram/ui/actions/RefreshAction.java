@@ -21,6 +21,8 @@ import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 
 /**
  * RefreshAction
+ *
+ * @since 8.0
  */
 public class RefreshAction extends DiagramEditorAction {
     /**

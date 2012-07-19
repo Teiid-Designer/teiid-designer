@@ -32,6 +32,8 @@ import org.teiid.designer.jdbc.JdbcSourceContainer;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class JdbcSourceContainerImpl extends EObjectImpl implements JdbcSourceContainer {
     /**

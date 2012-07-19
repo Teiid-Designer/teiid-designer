@@ -11,6 +11,9 @@ import org.teiid.designer.schema.tools.model.jdbc.internal.ColumnImpl;
 import org.teiid.designer.schema.tools.model.schema.Column;
 import org.teiid.designer.schema.tools.model.schema.Relationship;
 
+/**
+ * @since 8.0
+ */
 public class MergedColumn extends BaseColumn {
     private Column childCol;
 

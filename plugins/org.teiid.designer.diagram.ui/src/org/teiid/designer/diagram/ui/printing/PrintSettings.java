@@ -14,6 +14,9 @@ import org.teiid.designer.diagram.ui.PluginConstants;
 import org.teiid.designer.diagram.ui.preferences.DiagramPrintPreferencePage;
 
 
+/**
+ * @since 8.0
+ */
 public class PrintSettings implements
                           DiagramUiConstants,
                           PluginConstants {

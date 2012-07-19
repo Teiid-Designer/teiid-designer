@@ -23,6 +23,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.webservice.WebServicePackage#getSampleFile()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface SampleFile extends EObject {
 

@@ -11,6 +11,8 @@ package org.teiid.designer.metadata.runtime.api;
 import org.teiid.core.TeiidProcessingException;
 /**
  * The base exception from which all Runtime Metadata Exceptions extend.
+ *
+ * @since 8.0
  */
 public class VirtualDatabaseException extends TeiidProcessingException {
 

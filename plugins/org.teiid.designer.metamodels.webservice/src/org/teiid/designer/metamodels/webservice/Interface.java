@@ -24,6 +24,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.webservice.WebServicePackage#getInterface()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Interface extends WebServiceComponent{
     /**

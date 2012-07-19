@@ -7,6 +7,9 @@
 */
 package org.teiid.designer.runtime.ui.vdb;
 
+/**
+ * @since 8.0
+ */
 public interface VdbConstants {
 	final String VDB_EXTENSION = "vdb"; //$NON-NLS-1$
     final String DEFAULT_USERNAME = "admin"; //$NON-NLS-1$

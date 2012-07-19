@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.transformation.MappingClass;
 
 /**
  * MappingClassSplitterVisitor
+ *
+ * @since 8.0
  */
 public class MappingClassSplitterVisitor extends MappingClassGenerationVisitor {
 

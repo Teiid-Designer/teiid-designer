@@ -16,6 +16,8 @@ import org.teiid.designer.jdbc.JdbcPackage;
 
 /**
  * RelationalSqlAspectFactoryImpl
+ *
+ * @since 8.0
  */
 public class JdbcSqlAspectFactoryImpl implements MetamodelAspectFactory {
     

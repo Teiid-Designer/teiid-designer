@@ -16,8 +16,14 @@ import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.common.xmi.XMIHeaderReader;
 import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;
 
+/**
+ * @since 8.0
+ */
 public class ModelFileUtil {
 
+/**
+ * @since 8.0
+ */
     public interface XmiHeaderCache {
         XMIHeader getCachedXmiHeader( File resource );
 

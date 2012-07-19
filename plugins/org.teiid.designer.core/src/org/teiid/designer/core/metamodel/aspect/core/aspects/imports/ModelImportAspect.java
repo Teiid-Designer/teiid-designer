@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.core.ModelImport;
 
 /**
  * ModelAnnotationAspect
+ *
+ * @since 8.0
  */
 public class ModelImportAspect extends AbstractMetamodelAspect implements ImportsAspect {
 

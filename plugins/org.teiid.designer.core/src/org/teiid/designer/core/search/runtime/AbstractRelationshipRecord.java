@@ -9,6 +9,8 @@ package org.teiid.designer.core.search.runtime;
 
 /**
  * AbstractRelationshipSearchRecord
+ *
+ * @since 8.0
  */
 public abstract class AbstractRelationshipRecord extends AbstractSearchRecord {
 

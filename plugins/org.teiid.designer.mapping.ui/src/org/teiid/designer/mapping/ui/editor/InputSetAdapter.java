@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.transformation.MappingClass;
 
 /**
  * InputSet Business Object that the InputSet Panel works with
+ *
+ * @since 8.0
  */
 public class InputSetAdapter {
 

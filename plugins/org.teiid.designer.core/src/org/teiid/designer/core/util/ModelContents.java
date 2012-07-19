@@ -61,6 +61,8 @@ import org.teiid.designer.metamodels.transformation.TreeMappingRoot;
  * The ModelContents provides access to a few of the large and distinct categories of the objects within a model, such as
  * diagrams, transformation, and annotations. It is used by constructing an instance and supplying the
  * {@link org.eclipse.emf.ecore.resource.Resource EMF Resource} for the model.
+ *
+ * @since 8.0
  */
 public class ModelContents {
 

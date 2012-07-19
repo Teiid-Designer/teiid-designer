@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.function.FunctionPackage#getFunction()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface Function extends EObject{
     /**

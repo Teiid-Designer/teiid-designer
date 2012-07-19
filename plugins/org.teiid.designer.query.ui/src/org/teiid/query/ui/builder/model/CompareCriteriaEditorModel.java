@@ -15,6 +15,8 @@ import org.teiid.query.ui.sqleditor.component.DisplayNodeConstants;
 
 /**
  * CompareCriteriaEditorModel
+ *
+ * @since 8.0
  */
 public class CompareCriteriaEditorModel extends AbstractPredicateCriteriaTypeEditorModel
     implements ILanguageObjectEditorModelListener {

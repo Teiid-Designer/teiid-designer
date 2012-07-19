@@ -14,6 +14,8 @@ import org.teiid.designer.transformation.ui.UiConstants;
 
 /**
  * QueryEditorStatusEvent is fired each time a the status of the Query being edited changes
+ *
+ * @since 8.0
  */
 public class QueryEditorStatusEvent extends EventObject 
 		implements UiConstants {

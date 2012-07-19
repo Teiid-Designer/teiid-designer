@@ -9,6 +9,9 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * @since 8.0
+ */
 public class OpenTransformationSearchPageHandler extends AbstractHandler {
 
     /**

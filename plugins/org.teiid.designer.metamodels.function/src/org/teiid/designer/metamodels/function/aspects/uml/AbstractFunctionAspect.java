@@ -18,6 +18,8 @@ import org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect;
 
 /**
  * AbstractFunctionAspect
+ *
+ * @since 8.0
  */
 public abstract class AbstractFunctionAspect extends AbstractMetamodelAspect implements UmlDiagramAspect {
     public static final String ASPECT_ID = ModelerCore.EXTENSION_POINT.UML_DIAGRAM_ASPECT.ID;

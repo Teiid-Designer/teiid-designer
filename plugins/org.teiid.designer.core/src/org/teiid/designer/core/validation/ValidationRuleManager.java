@@ -30,6 +30,8 @@ import org.teiid.designer.core.validation.rules.TargetTransformationRule;
 
 /**
  * ValidationRuleManager
+ *
+ * @since 8.0
  */
 public class ValidationRuleManager {
 

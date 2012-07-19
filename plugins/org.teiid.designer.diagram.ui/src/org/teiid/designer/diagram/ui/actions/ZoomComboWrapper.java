@@ -12,6 +12,8 @@ import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * ZoomInWrapper
+ *
+ * @since 8.0
  */
 public class ZoomComboWrapper
     extends DiagramAction {

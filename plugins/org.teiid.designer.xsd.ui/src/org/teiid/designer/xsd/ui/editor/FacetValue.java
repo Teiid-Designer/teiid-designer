@@ -12,6 +12,9 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.teiid.designer.ui.forms.FormUtil;
 
 
+/**
+ * @since 8.0
+ */
 public class FacetValue implements Cloneable {
     public boolean isFixedLocal;
     public Object  value;

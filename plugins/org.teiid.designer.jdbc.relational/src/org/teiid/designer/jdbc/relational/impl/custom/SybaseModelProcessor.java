@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.relational.util.RelationalTypeMapping;
 
 /**
  * SybaseModelProcessor
+ *
+ * @since 8.0
  */
 public class SybaseModelProcessor extends RelationalModelProcessorImpl {
     private static final String TEXT_TYPE_NAME = "TEXT"; //$NON-NLS-1$

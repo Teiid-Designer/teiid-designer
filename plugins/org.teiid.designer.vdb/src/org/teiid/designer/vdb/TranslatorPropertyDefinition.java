@@ -19,6 +19,8 @@ import org.teiid.designer.core.util.StringUtilities;
  * A property definition that either represents one that exists on the current Teiid default server or one that does not. If it does
  * not exist on the current server, or a current server does not exist, this definition will either be one that the user created or
  * one that was initially found on a server.
+ *
+ * @since 8.0
  */
 public class TranslatorPropertyDefinition implements PropertyDefinition {
 

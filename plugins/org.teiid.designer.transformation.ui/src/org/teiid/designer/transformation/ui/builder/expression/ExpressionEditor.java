@@ -19,6 +19,8 @@ import org.teiid.query.ui.builder.model.ExpressionEditorModel;
 
 /**
  * ExpressionEditor
+ *
+ * @since 8.0
  */
 public class ExpressionEditor extends AbstractCompositeExpressionEditor {
 

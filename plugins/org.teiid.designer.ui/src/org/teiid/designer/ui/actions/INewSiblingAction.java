@@ -12,6 +12,8 @@ import org.eclipse.jface.action.IAction;
 
 /**
  * INewSiblingAction is an interface for extensions of the New Sibling Action extension point.
+ *
+ * @since 8.0
  */
 public interface INewSiblingAction extends IAction {
 

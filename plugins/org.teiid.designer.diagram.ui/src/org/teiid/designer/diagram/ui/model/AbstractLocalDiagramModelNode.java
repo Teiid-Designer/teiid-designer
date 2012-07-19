@@ -30,6 +30,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 /**
  * @author blafond AbstractLocalDiagramModelNode
+ *
+ * @since 8.0
  */
 abstract public class AbstractLocalDiagramModelNode implements DiagramModelNode, DiagramUiConstants {
 

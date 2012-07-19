@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.relational.Table;
 
 /**
  * TableChildrenUpdatabilityRule
+ *
+ * @since 8.0
  */
 public class TableChildrenUpdatabilityRule implements ObjectValidationRule {
 

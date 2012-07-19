@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 
 /**
  * ProcedureParametersRule
+ *
+ * @since 8.0
  */
 public class ProcedureParametersRule implements ObjectValidationRule {
 

@@ -21,6 +21,8 @@ import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
 /**
  * The <code>ServerWizard</code> is the wizard used to create and edit servers.
+ *
+ * @since 8.0
  */
 public final class ServerWizard extends Wizard {
 

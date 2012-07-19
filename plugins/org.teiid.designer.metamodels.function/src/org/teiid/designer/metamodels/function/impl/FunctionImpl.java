@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.function.PushDownType;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public abstract class FunctionImpl extends EObjectImpl implements Function {
     /**

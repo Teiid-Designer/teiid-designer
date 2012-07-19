@@ -13,6 +13,8 @@ import org.teiid.designer.core.validation.ValidationRuleSet;
 
 /**
  * IndexAspect
+ *
+ * @since 8.0
  */
 public class IndexAspect extends RelationalEntityAspect {
     

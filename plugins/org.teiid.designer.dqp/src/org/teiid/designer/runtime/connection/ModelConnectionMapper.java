@@ -20,6 +20,8 @@ import org.teiid.designer.vdb.connections.VdbSourceConnection;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class ModelConnectionMapper {
 

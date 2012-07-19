@@ -15,6 +15,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
+/**
+ * @since 8.0
+ */
 public class MultiComponentSet extends SimpleComponentSet {
     //
     // Instance variables:

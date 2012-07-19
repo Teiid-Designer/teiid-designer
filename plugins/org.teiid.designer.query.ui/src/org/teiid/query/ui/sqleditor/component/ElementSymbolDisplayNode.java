@@ -11,6 +11,8 @@ import org.teiid.query.sql.symbol.ElementSymbol;
 
 /**
  * The <code>ElementSymbolDisplayNode</code> class is used to represent an ElemenSymbol.
+ *
+ * @since 8.0
  */
 public class ElementSymbolDisplayNode extends DisplayNode {
 

@@ -27,6 +27,8 @@ package org.teiid.designer.core.workspace;
  * </p>
  *
  * @see ModelWorkspaceItem#accept
+ *
+ * @since 8.0
  */
 public interface ModelWorkspaceVisitor {
 

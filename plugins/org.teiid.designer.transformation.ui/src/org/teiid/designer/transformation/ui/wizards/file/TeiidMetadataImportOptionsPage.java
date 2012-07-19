@@ -57,6 +57,9 @@ import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 
+/**
+ * @since 8.0
+ */
 public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implements UiConstants {
 	// ===========================================================================================================================
 	// Constants

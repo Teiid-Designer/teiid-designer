@@ -37,6 +37,8 @@ import org.teiid.query.ui.builder.util.ElementViewerFactory;
  * BuilderTreeProvider is the modeler's content and label provider for the Criteria and
  * Expression builder dialogs in query.iu.  Creating this object will cause it to be
  * hooked up properly to the ElementViewerFactory.
+ *
+ * @since 8.0
  */
 public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider {
 

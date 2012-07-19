@@ -21,6 +21,9 @@ import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 import org.teiid.designer.schema.tools.processing.RelationshipProcessor;
 import org.teiid.designer.schema.tools.processing.RelationshipRules;
 
+/**
+ * @since 8.0
+ */
 public abstract class BaseRelationshipProcessor implements RelationshipProcessor {
 	
 	RelationshipRules rules;

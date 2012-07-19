@@ -13,6 +13,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 
+/**
+ * @since 8.0
+ */
 public class ModelObjectTableModelFactory implements UiConstants {
     private ModelObjectTableModelFactory() {        
     }

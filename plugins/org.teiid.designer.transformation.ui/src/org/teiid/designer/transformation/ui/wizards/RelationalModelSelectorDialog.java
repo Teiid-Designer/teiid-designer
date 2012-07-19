@@ -54,6 +54,9 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
 
 
+/**
+ * @since 8.0
+ */
 public class RelationalModelSelectorDialog extends ModelWorkspaceDialog implements UiConstants {
     private Label lblRelationalModelName;
     private Text txtRelationalModelName;

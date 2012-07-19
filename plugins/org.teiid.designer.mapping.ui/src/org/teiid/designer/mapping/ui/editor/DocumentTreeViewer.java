@@ -48,6 +48,8 @@ import org.teiid.designer.ui.common.actions.ActionService;
 
 /**
  * The TreeViewer for the DocumentTreeEditor. It is the JFace version of DocumentJTree from Modeler 3.0
+ *
+ * @since 8.0
  */
 public final class DocumentTreeViewer extends TreeViewer implements UiConstants {
 

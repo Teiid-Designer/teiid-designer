@@ -16,6 +16,8 @@ import org.teiid.query.sql.LanguageObject;
  * input to the <code>TreeViewer</code> cannot be the root of the tree. If the input is the root, the entire
  * tree is refreshed. This interface was created in order to allow the input to the viewer to not be the 
  * root of the tree (which is the LanguageObject).
+ *
+ * @since 8.0
  */
 public interface ILanguageObjectInputProvider {
 

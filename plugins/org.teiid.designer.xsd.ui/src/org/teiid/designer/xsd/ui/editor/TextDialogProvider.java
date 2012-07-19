@@ -18,6 +18,9 @@ import org.teiid.designer.ui.forms.DialogProvider;
 import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 
 
+/**
+ * @since 8.0
+ */
 public class TextDialogProvider implements DialogProvider {
 
     private final String buttonText;

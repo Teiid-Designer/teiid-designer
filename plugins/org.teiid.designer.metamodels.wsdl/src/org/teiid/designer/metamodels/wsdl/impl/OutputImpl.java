@@ -45,6 +45,8 @@ import org.teiid.designer.metamodels.wsdl.WsdlPackage;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class OutputImpl extends EObjectImpl implements Output {
 

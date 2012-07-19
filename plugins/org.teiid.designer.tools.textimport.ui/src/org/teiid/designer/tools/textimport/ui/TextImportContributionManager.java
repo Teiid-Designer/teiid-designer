@@ -16,6 +16,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.teiid.designer.tools.textimport.ui.wizards.ITextImportMainPage;
 
+/**
+ * @since 8.0
+ */
 public abstract class TextImportContributionManager {
     private static final String ID              = "textImportContributor"; //$NON-NLS-1$
     private static final String CLASS           = "class"; //$NON-NLS-1$

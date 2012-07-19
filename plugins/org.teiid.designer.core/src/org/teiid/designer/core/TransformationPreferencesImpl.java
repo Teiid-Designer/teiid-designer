@@ -12,6 +12,8 @@ import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * ValidationPreferencesImpl
+ *
+ * @since 8.0
  */
 public class TransformationPreferencesImpl implements TransformationPreferences {
 

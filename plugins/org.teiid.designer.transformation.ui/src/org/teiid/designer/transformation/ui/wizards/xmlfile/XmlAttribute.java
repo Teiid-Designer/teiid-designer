@@ -7,6 +7,9 @@
 */
 package org.teiid.designer.transformation.ui.wizards.xmlfile;
 
+/**
+ * @since 8.0
+ */
 public class XmlAttribute {
 	private String name;
 	private String value;

@@ -11,6 +11,8 @@ import org.eclipse.emf.common.util.URI;
 
 /**
  * EmfUriFinder
+ *
+ * @since 8.0
  */
 public interface UriPathConverter {
     

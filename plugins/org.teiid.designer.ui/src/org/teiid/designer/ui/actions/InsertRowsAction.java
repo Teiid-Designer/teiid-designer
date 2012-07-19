@@ -21,6 +21,8 @@ import org.teiid.designer.ui.table.ModelTableEditor;
 
 /**
  * InsertRowsAction
+ *
+ * @since 8.0
  */
 public class InsertRowsAction extends AbstractModelerAction {
 

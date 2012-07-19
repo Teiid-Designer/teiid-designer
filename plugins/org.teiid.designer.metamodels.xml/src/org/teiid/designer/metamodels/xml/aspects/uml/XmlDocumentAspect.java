@@ -26,6 +26,8 @@ import org.teiid.designer.metamodels.xml.XmlDocumentPlugin;
 
 /**
  * SchemaAspect
+ *
+ * @since 8.0
  */
 public class XmlDocumentAspect extends AbstractMetamodelAspect implements UmlPackage {
 

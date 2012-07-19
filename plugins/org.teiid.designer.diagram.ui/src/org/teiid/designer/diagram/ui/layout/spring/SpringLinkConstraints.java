@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.diagram.ui.layout.spring;
 
+/**
+ * @since 8.0
+ */
 public class SpringLinkConstraints {
     private double _weight;
 

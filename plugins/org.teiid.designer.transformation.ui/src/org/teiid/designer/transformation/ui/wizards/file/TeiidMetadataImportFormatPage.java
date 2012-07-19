@@ -36,6 +36,8 @@ import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 /**
  * Page allows user to select Delimited or Fixed Width column formatted flat file
+ *
+ * @since 8.0
  */
 public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements UiConstants {
 	// ===========================================================================================================================

@@ -12,6 +12,8 @@ import org.eclipse.swt.graphics.Color;
 
 /**
  * FigureColorPalettte
+ *
+ * @since 8.0
  */
 public class FigureColorPalette implements ColorPalette {
     public Color primaryBkgdColor       = ColorConstants.white;

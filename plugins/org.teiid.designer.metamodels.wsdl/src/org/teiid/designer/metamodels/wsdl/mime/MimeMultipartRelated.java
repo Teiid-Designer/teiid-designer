@@ -21,6 +21,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.wsdl.mime.MimePackage#getMimeMultipartRelated()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface MimeMultipartRelated extends MimeElement {
 

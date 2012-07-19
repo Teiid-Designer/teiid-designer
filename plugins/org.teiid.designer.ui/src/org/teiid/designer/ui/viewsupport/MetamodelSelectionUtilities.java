@@ -21,6 +21,9 @@ import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 
 
+/**
+ * @since 8.0
+ */
 public class MetamodelSelectionUtilities {
 
 	/**

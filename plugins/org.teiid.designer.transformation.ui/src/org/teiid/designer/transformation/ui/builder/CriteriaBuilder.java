@@ -27,6 +27,8 @@ import org.teiid.query.ui.builder.model.CriteriaEditorModel;
 
 /**
  * CriteriaBuilder
+ *
+ * @since 8.0
  */
 public class CriteriaBuilder extends AbstractLanguageObjectBuilder {
 

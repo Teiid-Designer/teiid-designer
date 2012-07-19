@@ -15,6 +15,8 @@ import java.io.File;
 
 /**
  * A <code>FileDocument</code> represents a java.io.File.
+ *
+ * @since 8.0
  */
 
 public class FileDocument extends PropertyDocument {

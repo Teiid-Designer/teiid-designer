@@ -44,6 +44,8 @@ import org.teiid.designer.metamodels.core.util.ModelImportComparator;
 
 /**
  * OrganizeImportCommand
+ *
+ * @since 8.0
  */
 public class OrganizeImportCommandHelperNonXsd extends OrganizeImportCommandHelper {
 

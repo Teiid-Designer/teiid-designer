@@ -20,6 +20,8 @@ import org.teiid.designer.datatools.DatatoolsPlugin;
 
 /**
  * Create instances of <code>IConnectionInfoProvider</code>.
+ *
+ * @since 8.0
  */
 public class ConnectionInfoProviderFactory {
 

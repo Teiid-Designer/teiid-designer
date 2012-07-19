@@ -81,6 +81,8 @@ import org.teiid.designer.webservice.util.WebServiceUtil;
 
 /**
  * The <code>InterfaceDefinitionPage</code> allows the user to edit Webservice models and their interfaces and operations.
+ *
+ * @since 8.0
  */
 public class InterfaceDefinitionPage extends WizardPage
     implements EventObjectListener, IInternalUiConstants, IInternalUiConstants.HelpContexts {

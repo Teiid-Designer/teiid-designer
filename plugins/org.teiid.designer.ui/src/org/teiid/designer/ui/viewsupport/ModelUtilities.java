@@ -71,6 +71,8 @@ import org.teiid.designer.ui.util.DiagramProxy;
 /**
  * ModelUtilities is a collection of static methods that isolate our connection to ModelerCore and generic model/metamodel
  * functionality.
+ *
+ * @since 8.0
  */
 public abstract class ModelUtilities implements UiConstants {
 

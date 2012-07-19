@@ -39,6 +39,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * RebuildImportsAction
+ *
+ * @since 8.0
  */
 public class BuildImportsAction extends ActionDelegate implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
 

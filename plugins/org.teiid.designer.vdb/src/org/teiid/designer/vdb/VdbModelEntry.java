@@ -60,6 +60,8 @@ import org.teiid.designer.vdb.manifest.SourceElement;
 
 /**
  *
+ *
+ * @since 8.0
  */
 @ThreadSafe
 public final class VdbModelEntry extends VdbEntry {

@@ -33,6 +33,8 @@ import org.teiid.designer.ui.wizards.StructuralCopyModelFeaturePopulator;
 
 /**
  * TransformationCopyModelFeaturePopulator
+ *
+ * @since 8.0
  */
 public class TransformationCopyModelFeaturePopulator 
         extends StructuralCopyModelFeaturePopulator implements UiConstants {

@@ -33,6 +33,8 @@ import org.teiid.designer.metamodels.function.ScalarFunction;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class FunctionParameterImpl extends EObjectImpl implements FunctionParameter {
     /**

@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.wsdl.soap.SoapPackage;
  * 
  * @see org.teiid.designer.metamodels.wsdl.soap.SoapPackage
  * @generated
+ *
+ * @since 8.0
  */
 public class SoapSwitch { // NO_UCD
 

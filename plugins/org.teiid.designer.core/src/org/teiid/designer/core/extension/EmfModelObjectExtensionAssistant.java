@@ -39,6 +39,8 @@ import org.teiid.designer.metamodels.core.Annotation;
 
 /**
  * The <code>EmfModelObjectExtensionAssistant</code> is a model extension assistant that knows how to work with {@link EObject}s.
+ *
+ * @since 8.0
  */
 public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssistant {
 

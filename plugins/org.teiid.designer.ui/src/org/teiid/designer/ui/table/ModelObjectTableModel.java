@@ -38,6 +38,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * ModelObjectTableModel
+ *
+ * @since 8.0
  */
 public class ModelObjectTableModel implements UiConstants, EObjectPropertiesOrderPreferencesListener, DisposeListener {
 

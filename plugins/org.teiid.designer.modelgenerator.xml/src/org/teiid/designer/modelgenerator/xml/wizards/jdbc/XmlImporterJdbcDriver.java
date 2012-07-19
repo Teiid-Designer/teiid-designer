@@ -21,6 +21,9 @@ import org.teiid.core.id.ObjectID;
 import org.teiid.designer.jdbc.JdbcDriver;
 import org.teiid.designer.jdbc.JdbcDriverContainer;
 
+/**
+ * @since 8.0
+ */
 public class XmlImporterJdbcDriver implements JdbcDriver {
 
 	/**

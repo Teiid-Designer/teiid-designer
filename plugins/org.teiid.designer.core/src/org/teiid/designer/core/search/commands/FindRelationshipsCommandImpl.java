@@ -30,6 +30,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 
 /**
  * FindRelationshipsCommandImpl.java
+ *
+ * @since 8.0
  */
 public class FindRelationshipsCommandImpl implements FindRelationshipsCommand {
 

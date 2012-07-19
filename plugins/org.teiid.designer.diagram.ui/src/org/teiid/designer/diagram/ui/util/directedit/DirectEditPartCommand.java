@@ -14,6 +14,8 @@ import org.teiid.designer.diagram.ui.DiagramUiConstants;
 
 /**
  * EditAttributeCommand
+ *
+ * @since 8.0
  */
 public class DirectEditPartCommand extends Command {
 

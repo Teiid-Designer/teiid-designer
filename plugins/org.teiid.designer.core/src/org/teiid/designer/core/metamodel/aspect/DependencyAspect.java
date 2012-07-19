@@ -11,6 +11,8 @@ import java.util.Collection;
 
 /**
  * DependencyAspect
+ *
+ * @since 8.0
  */
 public interface DependencyAspect extends MetamodelAspect {
     /** 

@@ -16,6 +16,9 @@ import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizardP
 import org.eclipse.datatools.help.HelpUtil;
 import org.eclipse.swt.widgets.Composite;
 
+/**
+ * @since 8.0
+ */
 public class ConnectionProfileWizard extends
 NewConnectionProfileWizard {
 

@@ -11,6 +11,8 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 
 /**
  * PrimaryKeyAspect
+ *
+ * @since 8.0
  */
 public class PrimaryKeyAspect extends UniqueKeyAspect {
     

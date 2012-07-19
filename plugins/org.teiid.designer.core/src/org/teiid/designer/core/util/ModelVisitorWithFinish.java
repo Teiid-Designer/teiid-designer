@@ -12,6 +12,8 @@ import org.teiid.designer.core.ModelerCoreException;
 
 /**
  * ModelVisitorWithFinish
+ *
+ * @since 8.0
  */
 public interface ModelVisitorWithFinish extends ModelVisitor {
     

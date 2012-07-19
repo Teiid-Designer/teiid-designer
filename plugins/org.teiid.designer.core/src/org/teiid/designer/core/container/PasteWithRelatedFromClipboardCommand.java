@@ -58,6 +58,8 @@ import org.teiid.designer.metamodels.transformation.TransformationPackage;
  * extend {@link org.eclipse.emf.common.command.CompoundCommand} rather than
  * {@link org.eclipse.emf.edit.command.PasteFromClipboardCommand}.
  * </p>
+ *
+ * @since 8.0
  */
 public class PasteWithRelatedFromClipboardCommand extends CompoundCommand {
     

@@ -12,6 +12,9 @@ import org.teiid.designer.modelgenerator.wsdl.model.Operation;
 import org.teiid.designer.modelgenerator.wsdl.model.Port;
 import org.teiid.designer.modelgenerator.wsdl.model.WSDLElement;
 
+/**
+ * @since 8.0
+ */
 public class BindingImpl extends org.teiid.designer.modelgenerator.wsdl.model.impl.WSDLElementImpl implements Binding {
 
 	private Port m_port;

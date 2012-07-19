@@ -17,6 +17,8 @@ import org.teiid.designer.common.vdb.ModelInfo;
 /**
  * <p>Instances of this interface represent Models in a Virtual Database.   
  * The values of a Model are analogous to a DataSource or a Virtual DataSource.</p>
+ *
+ * @since 8.0
  */
 public interface Model extends MetadataObject {
     public final static short PRIVATE = ModelInfo.PRIVATE;

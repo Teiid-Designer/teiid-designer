@@ -25,6 +25,8 @@ import org.teiid.designer.diagram.ui.util.DiagramNodeSelectionEditPolicy;
 
 /**
  * ForeignKeyLinkEditPart
+ *
+ * @since 8.0
  */
 public class UmlGeneralizationLinkEditPart extends NodeConnectionEditPart {
 	private DragTracker dragTracker = null;

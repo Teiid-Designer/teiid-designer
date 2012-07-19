@@ -16,6 +16,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
  * The <code>CompositeSelectionChangedListener</code> class contains a collection of
  * <code>ISelectionChangedListener</code>s. This collection of listeners is notified by this class
  * every time it receives a {@link org.eclipse.jface.viewers.SelectionChangedEvent}.
+ *
+ * @since 8.0
  */
 public class CompositeSelectionChangedListener implements ISelectionChangedListener {
 

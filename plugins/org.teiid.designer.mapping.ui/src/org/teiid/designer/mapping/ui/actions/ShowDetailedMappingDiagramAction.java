@@ -37,6 +37,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * ShowDetailedMappingDiagramAction
+ *
+ * @since 8.0
  */
 public class ShowDetailedMappingDiagramAction extends MappingAction {
 

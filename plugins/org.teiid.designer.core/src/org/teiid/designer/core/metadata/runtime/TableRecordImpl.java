@@ -15,6 +15,8 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect;
 
 /**
  * TableRecordImpl
+ *
+ * @since 8.0
  */
 public class TableRecordImpl extends org.teiid.designer.metadata.runtime.impl.TableRecordImpl {
 

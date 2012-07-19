@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.core.extension.XClass;
 
 /**
  * TableAspect
+ *
+ * @since 8.0
  */
 public class XClassUmlAspect extends AbstractExtensionUmlAspect implements UmlClassifier {
     /**

@@ -17,6 +17,8 @@ import org.teiid.designer.metadata.runtime.MetadataConstants;
 
 /**
  * ColumnRecordImpl
+ *
+ * @since 8.0
  */
 public class DatatypeRecordImpl extends AbstractMetadataRecord implements DatatypeRecord {
 

@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see org.teiid.designer.metamodels.function.FunctionFactory
  * @generated
+ *
+ * @since 8.0
  */
 public interface FunctionPackage extends EPackage{
     /**

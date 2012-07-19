@@ -9,6 +9,9 @@ import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.vdb.Vdb;
 
 
+/**
+ * @since 8.0
+ */
 public class ModelConnectionMatcher {
 
     public Collection<TeiidDataSource> findTeiidDataSources( Collection<String> names,

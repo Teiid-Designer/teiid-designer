@@ -33,6 +33,8 @@ import org.teiid.designer.metamodels.relational.aspects.validation.rules.UniqueK
 
 /**
  * RelationalEntityAspect
+ *
+ * @since 8.0
  */
 public abstract class RelationalEntityAspect extends AbstractValidationAspect {
 	

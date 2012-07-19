@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.core.Annotation;
 /**
  * The <code>SourcedNotificationUtil</code> class contains utility methods for use with
  * {@link org.teiid.designer.core.transaction.SourcedNotification} objects.
+ *
+ * @since 8.0
  */
 public class SourcedNotificationUtilities {
 

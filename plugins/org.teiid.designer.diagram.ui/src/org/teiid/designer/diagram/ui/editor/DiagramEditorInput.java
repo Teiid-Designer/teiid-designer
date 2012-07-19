@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.diagram.Diagram;
  * PackageDiagramResource is a temporary interface for experimenting with
  * launching the GEF editor from a diagram object in a tree.  This interface
  * will be deleted as soon as the diagram metamodel is available.
+ *
+ * @since 8.0
  */
 public class DiagramEditorInput implements IEditorInput, DiagramUiConstants {
     private Diagram diagram;

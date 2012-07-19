@@ -27,6 +27,8 @@ import org.teiid.query.ui.builder.util.ICriteriaStrategy;
 
 /**
  * SetCriteriaEditorModel
+ *
+ * @since 8.0
  */
 public class SetCriteriaEditorModel extends AbstractPredicateCriteriaTypeEditorModel
     implements ILanguageObjectEditorModelListener {

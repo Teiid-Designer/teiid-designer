@@ -18,6 +18,9 @@ import java.util.Set;
 import org.teiid.core.CorePlugin;
 import org.teiid.core.util.CoreArgCheck;
 
+/**
+ * @since 8.0
+ */
 abstract public class AbstractEventSource implements EventSource {
 
     private static final String LISTENER_MAY_NOT_BE_NULL = CorePlugin.Util.getString("AbstractEventSource.The_event_listener_may_not_be_null"); //$NON-NLS-1$

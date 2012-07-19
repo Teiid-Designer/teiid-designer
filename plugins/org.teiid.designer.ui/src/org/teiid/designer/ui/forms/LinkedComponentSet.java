@@ -14,7 +14,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
   *  work on the same data value to be linked.
   * A ComponentCategory groups multiple LinkedComponentSets together.
   * @author PForhan
-  */
+ *
+ * @since 8.0
+ */
 public interface LinkedComponentSet extends Cloneable {
     /** Get the ID of this LCS.  Not user-visible. */
     public String getID();

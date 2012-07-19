@@ -20,6 +20,8 @@ import org.teiid.designer.core.workspace.ModelResource;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class VdbRefactorHandler implements IRefactorNonModelResourceHandler {
 

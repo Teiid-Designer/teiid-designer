@@ -23,6 +23,8 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getMappingClassSetContainer()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface MappingClassSetContainer extends EObject {
 

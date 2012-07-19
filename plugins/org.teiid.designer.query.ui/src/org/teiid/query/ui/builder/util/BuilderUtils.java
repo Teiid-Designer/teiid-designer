@@ -27,6 +27,8 @@ import org.teiid.query.ui.UiConstants;
 
 /**
  * BuilderUtils
+ *
+ * @since 8.0
  */
 public final class BuilderUtils implements UiConstants {
 

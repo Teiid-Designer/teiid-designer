@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * RelationshipTypeAspect
+ *
+ * @since 8.0
  */
 public interface RelationshipTypeAspect extends RelationshipEntityAspect {
 

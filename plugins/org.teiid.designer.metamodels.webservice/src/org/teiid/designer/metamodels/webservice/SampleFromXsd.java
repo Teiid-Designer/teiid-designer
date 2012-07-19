@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.xml.XmlElement;
  * @see org.teiid.designer.metamodels.webservice.WebServicePackage#getSampleFromXsd()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface SampleFromXsd extends EObject {
 

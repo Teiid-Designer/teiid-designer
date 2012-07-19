@@ -17,6 +17,8 @@ import org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect;
 
 /**
  * RelationalEntityAspect
+ *
+ * @since 8.0
  */
 public abstract class RelationalEntityAspect extends AbstractMetamodelAspect implements UmlDiagramAspect {
     public static final String ASPECT_ID = ModelerCore.EXTENSION_POINT.UML_DIAGRAM_ASPECT.ID;

@@ -19,6 +19,8 @@ package org.teiid.designer.metamodels.wsdl.mime;
  * @see org.teiid.designer.metamodels.wsdl.mime.MimePackage#getMimePart()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface MimePart extends MimeElementOwner {
 

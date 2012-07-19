@@ -37,6 +37,8 @@ import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
  * In particular, a Rename of an XML Document model could result in mis-named models in Choice Criteria.
  * 
  *
+ *
+ * @since 8.0
  */
 public class MappingRefactorModelHandler implements IRefactorModelHandler {
 

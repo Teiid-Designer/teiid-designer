@@ -31,6 +31,8 @@ import org.teiid.core.designer.CoreModelerPlugin;
  * Plug-ins that wish to utilize Eclipse's {@link NLS} i18n framework can instantiate this class instead of a
  * {@link PluginUtilImpl}
  *
+ *
+ * @since 8.0
  */
 public class LoggingUtil implements PluginUtil {
 

@@ -16,6 +16,8 @@ import org.teiid.designer.metamodels.diagram.Diagram;
  * This interface provides diagram plugin implementations to play in the global editor
  * action service.  Since some diagrams may be canned, some custom, this class is required to 
  * make this work.
+ *
+ * @since 8.0
  */
 public interface IDiagramHelper {
 	/**

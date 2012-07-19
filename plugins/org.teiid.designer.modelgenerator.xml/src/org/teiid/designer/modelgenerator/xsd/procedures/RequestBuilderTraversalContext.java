@@ -30,6 +30,9 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.util.TransformationMappingHelper;
 
 
+/**
+ * @since 8.0
+ */
 public class RequestBuilderTraversalContext extends BaseTraversalContext
 		implements TraversalContext {
 

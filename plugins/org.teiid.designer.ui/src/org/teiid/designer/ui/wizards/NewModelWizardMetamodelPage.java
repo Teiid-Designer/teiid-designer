@@ -72,6 +72,8 @@ import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 /**
  * The "New" wizard page allows setting the container for the new file as well as the file name. The page will only accept file
  * name without the extension OR with the extension that matches the expected one (xml).
+ *
+ * @since 8.0
  */
 
 public class NewModelWizardMetamodelPage extends WizardPage

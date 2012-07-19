@@ -9,6 +9,9 @@ package org.teiid.designer.datatools.profiles.ws;
 
 import org.teiid.designer.ui.common.ICredentialsCommon;
 
+/**
+ * @since 8.0
+ */
 public interface IWSProfileConstants extends ICredentialsCommon {
 
 	String TEIID_WS_CONNECTION_PROFILE_ID = "org.teiid.designer.datatools.profiles.ws.WSConnectionProfile";  //$NON-NLS-1$

@@ -65,6 +65,8 @@ import org.teiid.query.sql.lang.SPParameter;
 /**
  * Modelers implementation of QueryMetadataInterface that reads columns, groups, models etc. index files for various metadata
  * properties.
+ *
+ * @since 8.0
  */
 public abstract class TransformationMetadata extends BasicQueryMetadata {
 

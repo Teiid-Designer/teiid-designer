@@ -27,6 +27,8 @@ import org.teiid.designer.ui.undo.ModelerUndoManager;
 
 /**
  * ClearTransformation
+ *
+ * @since 8.0
  */
 public class ClearTransformationAction extends TransformationAction implements EventObjectListener,UiConstants {
     private static final String ACTION_DESCRIPTION = "Clear Transformation"; //$NON-NLS-1$

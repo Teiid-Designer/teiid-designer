@@ -9,6 +9,9 @@ package org.teiid.designer.schema.tools.model.schema.impl;
 
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 
+/**
+ * @since 8.0
+ */
 public class SimpleRelationship extends BaseRelationship {
     private SchemaObject parent; // a parent of null means the child can be
     // global

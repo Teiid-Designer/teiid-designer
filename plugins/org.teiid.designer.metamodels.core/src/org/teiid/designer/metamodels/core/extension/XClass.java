@@ -21,6 +21,8 @@ import org.eclipse.emf.ecore.EClass;
  * @see org.teiid.designer.metamodels.core.extension.ExtensionPackage#getXClass()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface XClass extends EClass {
 

@@ -11,6 +11,8 @@ import org.eclipse.draw2d.Figure;
 
 /**
  * FigureFactory
+ *
+ * @since 8.0
  */
 public interface DiagramFigureFactory {
     

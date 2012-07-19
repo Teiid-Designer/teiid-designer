@@ -14,6 +14,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * DiagramModelFactory
+ *
+ * @since 8.0
  */
 public interface DiagramModelFactory {
     /**

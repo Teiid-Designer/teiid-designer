@@ -17,6 +17,9 @@ import org.teiid.designer.metamodels.relational.RelationalEntity;
 import org.teiid.designer.modelgenerator.xml.modelextension.BaseXMLRelationalExtensionManager;
 
 
+/**
+ * @since 8.0
+ */
 public abstract class BaseXMLRelationalExtensionManagerImpl extends ExtensionManagerImpl
     implements BaseXMLRelationalExtensionManager {
 

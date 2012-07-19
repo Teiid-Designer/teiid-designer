@@ -22,6 +22,9 @@ import com.sforce.soap.partner.SforceService;
 import com.sforce.soap.partner.Soap;
 import com.sforce.soap.partner.UnexpectedErrorFault;
 
+/**
+ * @since 8.0
+ */
 public class Connection implements SalesforceConnection {
 
     private SforceService sfService;

@@ -23,6 +23,8 @@ import org.teiid.designer.diagram.ui.model.DiagramModelNode;
  * DiagramEditPart provides an interface for all EditParts. This interface is specialized to provide a standard set of methods
  * coordinated with DiagramFigure and DiagramModelNode interface methods to simplify coordinate of selection, resizing, updates
  * and other control-type functions.
+ *
+ * @since 8.0
  */
 public interface DiagramEditPart extends NodeEditPart {
     static final boolean LAYOUT_CHILDREN = true;

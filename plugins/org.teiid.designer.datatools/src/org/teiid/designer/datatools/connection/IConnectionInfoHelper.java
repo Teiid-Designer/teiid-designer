@@ -19,6 +19,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 /**
  * Provides generic capabilities to insert and extract <code>IConnectionProfile</code> information into a
  * <code>ModelResource</code>.
+ *
+ * @since 8.0
  */
 public interface IConnectionInfoHelper {
 

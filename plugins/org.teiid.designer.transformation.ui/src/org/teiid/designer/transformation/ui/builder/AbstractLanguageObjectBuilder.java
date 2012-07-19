@@ -50,6 +50,8 @@ import org.teiid.query.ui.builder.util.BuilderUtils;
 
 /**
  * AbstractLanguageObjectBuilder
+ *
+ * @since 8.0
  */
 public abstract class AbstractLanguageObjectBuilder extends Dialog implements UiConstants {
 

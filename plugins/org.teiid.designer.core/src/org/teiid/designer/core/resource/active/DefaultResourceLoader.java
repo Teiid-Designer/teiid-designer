@@ -14,6 +14,8 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * This implementation of {@link EmfResourceLoader}
  * does nothing.
+ *
+ * @since 8.0
  */
 public class DefaultResourceLoader implements EmfResourceLoader {
 

@@ -19,6 +19,9 @@ import org.teiid.designer.schema.tools.ToolsPlugin;
 import org.teiid.designer.schema.tools.model.schema.ISchemaModelCopyTraversalContext;
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 
+/**
+ * @since 8.0
+ */
 public class SchemaModelCopyTraversalContext implements ISchemaModelCopyTraversalContext {
 
     // The running list of resultElements that have been copied.

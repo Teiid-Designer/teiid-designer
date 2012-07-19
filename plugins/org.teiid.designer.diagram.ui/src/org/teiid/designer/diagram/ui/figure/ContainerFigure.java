@@ -15,6 +15,8 @@ import org.eclipse.draw2d.IFigure;
  * This interface class is designed to provide a generic interface between an container type 
  * edit part and it's content pane.  The ClassifierContainer needs to act like a "canvas" and thus
  * provide it's own content pane to the gef world.
+ *
+ * @since 8.0
  */
 public interface ContainerFigure {
     

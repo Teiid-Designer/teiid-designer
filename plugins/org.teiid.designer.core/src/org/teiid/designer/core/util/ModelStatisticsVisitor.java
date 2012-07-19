@@ -21,6 +21,8 @@ import org.eclipse.emf.ecore.resource.Resource;
  * <p>
  * For usage information, see {@link ModelVisitor}
  * </p>
+ *
+ * @since 8.0
  */
 public class ModelStatisticsVisitor implements ModelVisitor {
 

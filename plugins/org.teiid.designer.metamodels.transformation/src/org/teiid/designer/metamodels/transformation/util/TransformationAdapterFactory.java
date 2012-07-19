@@ -59,6 +59,8 @@ import org.teiid.designer.metamodels.transformation.XQueryTransformationMappingR
  * 
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage
  * @generated
+ *
+ * @since 8.0
  */
 public class TransformationAdapterFactory extends AdapterFactoryImpl {
 

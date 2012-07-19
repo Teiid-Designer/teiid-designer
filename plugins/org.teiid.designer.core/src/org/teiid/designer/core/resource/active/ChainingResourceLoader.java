@@ -15,6 +15,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * DefaultResourceLoader
+ *
+ * @since 8.0
  */
 public class ChainingResourceLoader implements EmfResourceLoader {
     

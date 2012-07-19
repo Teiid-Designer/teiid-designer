@@ -12,6 +12,8 @@ import java.util.Properties;
 /**
  * AnnotatedObjectRecord
  * recordType|objectID|name|fullname|uri|tags|description|modelPath|metaclassURI|
+ *
+ * @since 8.0
  */
 
 public interface AnnotatedObjectRecord extends ResourceObjectRecord {

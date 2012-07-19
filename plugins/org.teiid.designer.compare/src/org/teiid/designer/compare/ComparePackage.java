@@ -28,6 +28,8 @@ import org.eclipse.emf.mapping.MappingPackage;
  * <!-- end-user-doc -->
  * @see org.teiid.designer.compare.CompareFactory
  * @generated
+ *
+ * @since 8.0
  */
 public interface ComparePackage extends EPackage{
     /**

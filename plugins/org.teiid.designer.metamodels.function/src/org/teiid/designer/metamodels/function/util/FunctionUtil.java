@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.function.ScalarFunction;
 
 /**
  * FunctionUtil
+ *
+ * @since 8.0
  */
 public class FunctionUtil {
 

@@ -27,6 +27,8 @@ import org.teiid.designer.metamodels.core.ModelAnnotation;
  * <p>
  * For usage information, see {@link ModelVisitor}
  * </p>
+ *
+ * @since 8.0
  */
 public class PrimaryMetamodelStatisticsVisitor extends ModelStatisticsVisitor {
 

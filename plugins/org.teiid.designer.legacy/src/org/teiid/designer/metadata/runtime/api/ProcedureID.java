@@ -12,6 +12,8 @@ package org.teiid.designer.metadata.runtime.api;
 
 /**
  * The ProcedureID is the unique identifier for a Procedure. 
+ *
+ * @since 8.0
  */
 public interface ProcedureID extends MetadataID {
 /**

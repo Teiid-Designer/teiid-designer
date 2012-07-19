@@ -22,6 +22,8 @@ import org.teiid.datatools.models.teiidsqlmodel.TeiidsqlmodelPackage;
  * An implementation of the model <b>Factory</b>.
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class TeiidsqlmodelFactoryImpl extends EFactoryImpl implements TeiidsqlmodelFactory {
 	/**

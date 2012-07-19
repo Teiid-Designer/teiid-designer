@@ -38,6 +38,8 @@ import org.teiid.designer.metamodels.core.CorePackage;
 
 /**
  * CoreEntityAspect
+ *
+ * @since 8.0
  */
 public abstract class CoreEntityAspect extends AbstractValidationAspect {
 

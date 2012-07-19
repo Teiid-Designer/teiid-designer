@@ -21,6 +21,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.ui.forms.DialogProvider;
 
+/**
+ * @since 8.0
+ */
 public class FacetValueEditorDialog implements DialogProvider {
 
     private static final String EMPTY_STRING = ""; //$NON-NLS-1$

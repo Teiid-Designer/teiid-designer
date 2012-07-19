@@ -28,6 +28,8 @@ import org.teiid.jdbc.TeiidDriver;
 
 /**
  *
+ *
+ * @since 8.0
  */
 public class Server implements HostProvider {
 

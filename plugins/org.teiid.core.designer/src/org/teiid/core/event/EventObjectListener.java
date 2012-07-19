@@ -11,6 +11,9 @@ package org.teiid.core.event;
 import java.util.EventListener;
 import java.util.EventObject;
 
+/**
+ * @since 8.0
+ */
 public interface EventObjectListener extends EventListener {
     void processEvent( EventObject obj );
 }

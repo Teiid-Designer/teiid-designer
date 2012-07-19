@@ -42,6 +42,8 @@ import org.teiid.designer.metamodels.relational.UniqueKey;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class ForeignKeyImpl extends RelationshipImpl implements ForeignKey {
 

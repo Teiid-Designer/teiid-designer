@@ -72,6 +72,9 @@ import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
 
+/**
+ * @since 8.0
+ */
 public abstract class XsdSelectionPage extends AbstractWizardPage {
     /** Used as a prefix to properties file keys. */
     String prefix;

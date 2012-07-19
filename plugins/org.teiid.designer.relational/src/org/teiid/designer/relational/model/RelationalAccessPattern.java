@@ -17,6 +17,8 @@ import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStr
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class RelationalAccessPattern extends RelationalReference {
     private Collection<RelationalColumn> columns;

@@ -38,6 +38,8 @@ import org.teiid.query.ui.sqleditor.sql.SqlWordStrategy;
 /**
  * This class defines the editor add-ons; content assist, content formatter, highlighting, auto-indent strategy, double click
  * strategy.
+ *
+ * @since 8.0
  */
 public class CriteriaSourceViewerConfiguration extends SourceViewerConfiguration {
 

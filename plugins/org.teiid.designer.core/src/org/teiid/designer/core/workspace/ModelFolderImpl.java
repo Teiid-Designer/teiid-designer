@@ -24,6 +24,8 @@ import org.teiid.designer.core.workspace.ModelFileUtil;
 
 /**
  * ModelFolderImpl
+ *
+ * @since 8.0
  */
 public class ModelFolderImpl extends OpenableImpl implements ModelFolder {
 

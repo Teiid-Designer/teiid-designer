@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * SqlTableAspect
+ *
+ * @since 8.0
  */
 public interface SqlTableAspect extends SqlColumnSetAspect {
 

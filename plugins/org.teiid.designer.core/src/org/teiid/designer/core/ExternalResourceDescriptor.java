@@ -12,6 +12,8 @@ import java.util.Properties;
 
 /**
  * MappingAdapterDescriptor
+ *
+ * @since 8.0
  */
 public interface ExternalResourceDescriptor {
     

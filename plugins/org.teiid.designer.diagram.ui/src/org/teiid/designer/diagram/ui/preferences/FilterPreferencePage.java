@@ -29,6 +29,8 @@ import org.teiid.designer.diagram.ui.DiagramUiConstants;
 
 /**
  * This class represents the preference page for setting the Diagram Filter Preferences.
+ *
+ * @since 8.0
  */
 public class FilterPreferencePage extends PreferencePage implements DiagramUiConstants, IWorkbenchPreferencePage {
 

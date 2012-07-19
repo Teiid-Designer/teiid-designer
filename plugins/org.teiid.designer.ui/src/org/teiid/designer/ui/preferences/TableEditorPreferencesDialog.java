@@ -27,6 +27,8 @@ import org.teiid.designer.ui.common.widget.Dialog;
 /**
  * @author SDelap
  * Wraps the TableEditorPreferencesComponent in a dialog for popup use.
+ *
+ * @since 8.0
  */
 public class TableEditorPreferencesDialog extends Dialog implements IEditorPreferencesValidationListener {
     

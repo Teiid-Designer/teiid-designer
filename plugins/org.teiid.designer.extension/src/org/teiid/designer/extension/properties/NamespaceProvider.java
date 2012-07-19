@@ -9,6 +9,8 @@ package org.teiid.designer.extension.properties;
 
 /**
  * The <code>NamespaceProvider</code> provides a namespace prefix for those classes needing one.
+ *
+ * @since 8.0
  */
 public interface NamespaceProvider {
 

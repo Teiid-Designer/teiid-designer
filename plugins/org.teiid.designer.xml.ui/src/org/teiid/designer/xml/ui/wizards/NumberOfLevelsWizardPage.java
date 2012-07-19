@@ -21,6 +21,8 @@ import org.teiid.designer.xml.ui.ModelerXmlUiConstants;
 
 /**
  * NumberOfLevelsWizardPage
+ *
+ * @since 8.0
  */
 public class NumberOfLevelsWizardPage extends WizardPage implements ModelerXmlUiConstants {
     public static final int MIN_LEVELS = 1;

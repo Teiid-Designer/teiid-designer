@@ -10,6 +10,8 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * Adds the connection profile properties to the Dialog so that they
  * can be inserted into the TeiidDriverUIContributor later
+ *
+ * @since 8.0
  */
 public class TeiidCPWizardDialog extends WizardDialog implements
 		IDriverUIContributorInformation {

@@ -15,6 +15,8 @@ import org.eclipse.emf.ecore.EFactory;
  * 
  * @see org.teiid.designer.metamodels.wsdl.mime.MimePackage
  * @generated
+ *
+ * @since 8.0
  */
 public interface MimeFactory extends EFactory {
 

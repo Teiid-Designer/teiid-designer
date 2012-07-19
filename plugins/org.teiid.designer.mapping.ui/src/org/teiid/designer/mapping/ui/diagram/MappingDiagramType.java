@@ -43,6 +43,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * MappingDiagramType
+ *
+ * @since 8.0
  */
 public class MappingDiagramType extends AbstractDiagramType {
     // ============================================================================================================================

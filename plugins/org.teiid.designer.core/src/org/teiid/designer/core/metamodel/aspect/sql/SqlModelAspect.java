@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * SqlModelAspect is used to get the differrent properties on a model for runtime metadata.
+ *
+ * @since 8.0
  */
 public interface SqlModelAspect extends SqlAspect {
     

@@ -12,6 +12,8 @@ import org.teiid.designer.metadata.runtime.ColumnRecord;
 
 /**
  * ColumnRecordImpl
+ *
+ * @since 8.0
  */
 public class ColumnRecordImpl extends AbstractMetadataRecord implements ColumnRecord {
 

@@ -24,6 +24,8 @@ import org.teiid.designer.metamodels.relational.util.RelationalTypeMapping;
 
 /**
  * OracleModelProcessor
+ *
+ * @since 8.0
  */
 public class OracleModelProcessor extends RelationalModelProcessorImpl {
 

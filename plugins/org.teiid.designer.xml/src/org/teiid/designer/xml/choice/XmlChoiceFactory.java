@@ -15,6 +15,8 @@ import org.teiid.designer.metamodels.xml.XmlChoice;
 
 /**
  * XmlChoiceFactory  
+ *
+ * @since 8.0
  */
 public class XmlChoiceFactory implements IChoiceFactory {
 

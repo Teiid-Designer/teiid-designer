@@ -11,6 +11,9 @@ import java.io.StringWriter;
 import org.teiid.core.TeiidRuntimeException;
 import org.teiid.core.util.StringUtil;
 
+/**
+ * @since 8.0
+ */
 public class FileUtil {
     private File file;
     

@@ -31,6 +31,8 @@ import org.eclipse.emf.common.util.EList;
  * @see org.teiid.designer.metamodels.relational.RelationalPackage#getTable()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface Table extends ColumnSet{
     /**

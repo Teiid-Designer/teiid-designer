@@ -45,6 +45,8 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
  * 
+ *
+ * @since 8.0
  */
 public class SalesForceProfileDetailsWizardPage extends ConnectionProfileDetailsPage
     implements Listener, ModelGeneratorSalesforceUiConstants {

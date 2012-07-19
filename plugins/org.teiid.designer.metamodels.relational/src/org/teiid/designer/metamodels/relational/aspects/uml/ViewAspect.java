@@ -16,6 +16,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 
 /**
  * ViewAspect
+ *
+ * @since 8.0
  */
 public class ViewAspect extends TableAspect {
     /**

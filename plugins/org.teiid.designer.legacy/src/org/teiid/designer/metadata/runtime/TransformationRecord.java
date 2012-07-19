@@ -12,6 +12,8 @@ import java.util.List;
 
 /**
  * TransformationRecord
+ *
+ * @since 8.0
  */
 public interface TransformationRecord extends MetadataRecord {
 	

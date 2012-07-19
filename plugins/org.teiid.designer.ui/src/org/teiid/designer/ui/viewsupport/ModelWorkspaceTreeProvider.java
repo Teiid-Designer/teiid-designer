@@ -23,6 +23,8 @@ import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
  * ModelWorkspaceTreeProvider is a basic ITreeContentProvider and ILabelProvider ModelWorkspace.
  * It does not allow navigation into a model and works only with IProject and IResource objects.
  * This class does not perform any filtering of the workspace; use a ViewFilter if you wish to do that.
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceTreeProvider extends ModelExplorerLabelProvider implements ITreeContentProvider {
 

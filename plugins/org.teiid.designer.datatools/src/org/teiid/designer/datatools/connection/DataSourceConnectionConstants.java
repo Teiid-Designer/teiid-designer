@@ -1,5 +1,8 @@
 package org.teiid.designer.datatools.connection;
 
+/**
+ * @since 8.0
+ */
 public interface DataSourceConnectionConstants {
 
     interface Translators {
@@ -36,6 +39,9 @@ public interface DataSourceConnectionConstants {
 
     }
 
+/**
+ * @since 8.0
+ */
     public interface DataSource {
         /*
          *  [connector-jdbc-xa, connector-file, connector-ldap, connector-salesforce, connector-jdbc]

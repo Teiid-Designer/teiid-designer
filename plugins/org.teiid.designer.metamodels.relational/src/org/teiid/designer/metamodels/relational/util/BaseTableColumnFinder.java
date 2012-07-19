@@ -16,6 +16,8 @@ import org.teiid.designer.metamodels.relational.Schema;
 
 /**
  * TableFinder
+ *
+ * @since 8.0
  */
 public class BaseTableColumnFinder extends RelationalEntityFinder {
 

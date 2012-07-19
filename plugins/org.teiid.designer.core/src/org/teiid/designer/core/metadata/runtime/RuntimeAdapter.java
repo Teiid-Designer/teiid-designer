@@ -58,6 +58,8 @@ import org.teiid.designer.metamodels.core.Annotation;
 
 /**
  * RuntimeAdapter
+ *
+ * @since 8.0
  */
 public class RuntimeAdapter extends RecordFactory {
 

@@ -18,6 +18,8 @@ import org.teiid.designer.metamodels.core.extension.XEnumLiteral;
  * </p>
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class XEnumLiteralImpl extends EEnumLiteralImpl implements XEnumLiteral {
 

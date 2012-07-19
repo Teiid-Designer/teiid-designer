@@ -22,6 +22,8 @@ import org.teiid.core.util.CoreArgCheck;
 
 /**
  * The <code>TableColumnSelectionHelper</code> class can be used to keep track of the selected row and selected column of a table.
+ *
+ * @since 8.0
  */
 public class TableColumnSelectionHelper {
 

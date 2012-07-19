@@ -17,6 +17,9 @@ import org.eclipse.datatools.modelbase.sql.schema.Schema;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
+/**
+ * @since 8.0
+ */
 public class TeiidSchemaContainmentProvider extends AbstractContainmentProvider {
 
 	/*

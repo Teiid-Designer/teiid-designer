@@ -25,6 +25,8 @@ import org.teiid.designer.ui.viewsupport.ModelObjectEditHelper;
  * @author jhelbling
  *
  * 
+ *
+ * @since 8.0
  */
 public class RelationalObjectEditHelper extends ModelObjectEditHelper {
 

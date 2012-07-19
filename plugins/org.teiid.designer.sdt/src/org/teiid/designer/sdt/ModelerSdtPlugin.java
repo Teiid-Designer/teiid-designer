@@ -37,6 +37,8 @@ import org.teiid.designer.metamodels.xsd.XsdResourceFactory;
 
 /**
  * ModelerSdtPlugin
+ *
+ * @since 8.0
  */
 public class ModelerSdtPlugin extends Plugin {
 

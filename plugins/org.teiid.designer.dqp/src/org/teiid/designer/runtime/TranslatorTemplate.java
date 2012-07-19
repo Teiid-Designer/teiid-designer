@@ -17,6 +17,8 @@ import org.teiid.adminapi.PropertyDefinition;
 
 /**
  * The <code>TranslatorTemplate</code> class is an implementation of {@link TeiidTranslator} that does not communicate with a Teiid
+ *
+ * @since 8.0
  */
 public class TranslatorTemplate extends TeiidTranslator {
 

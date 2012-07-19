@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.core.extension.XEnumLiteral;
 
 /**
  * ColumnAspect
+ *
+ * @since 8.0
  */
 public class XEnumLiteralUmlAspect extends AbstractExtensionUmlAspect implements UmlProperty {
     /**

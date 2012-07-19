@@ -25,6 +25,8 @@ import org.teiid.designer.ui.common.util.UiUtil;
 
 /**
  * NavigableEditor
+ *
+ * @since 8.0
  */
 public class NavigableEditor extends EditorPart implements INavigationLocationProvider, IGotoMarker {
 

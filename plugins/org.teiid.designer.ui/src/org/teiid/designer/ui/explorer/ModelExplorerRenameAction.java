@@ -40,6 +40,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  * ModelExplorerRenameAction is a specialization of ResourceNavigatorRenameAction that also
  * handles in-line renaming of EObjects.  In addition, it prevents renaming of ModelResources
  * that are open in a ModelEditor.
+ *
+ * @since 8.0
  */
 public class ModelExplorerRenameAction extends ResourceNavigatorRenameAction implements ISelectionProvider,
                                                                                         UiConstants {

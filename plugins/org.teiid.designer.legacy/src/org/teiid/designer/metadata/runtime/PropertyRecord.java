@@ -10,6 +10,8 @@ package org.teiid.designer.metadata.runtime;
 
 /**
  * PropertyRecord
+ *
+ * @since 8.0
  */
 public interface PropertyRecord extends MetadataRecord {
 

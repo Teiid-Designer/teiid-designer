@@ -31,6 +31,8 @@ import org.teiid.designer.metamodels.relational.SearchabilityType;
 
 /**
  * This class provides a mapping between the built-in types and the JDBC types.
+ *
+ * @since 8.0
  */
 public class RelationalTypeMappingImpl implements RelationalTypeMapping {
 

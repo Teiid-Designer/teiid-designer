@@ -43,6 +43,8 @@ import org.teiid.designer.metamodels.core.ModelImport;
 
 /**
  * SearchRuntimeAdapter
+ *
+ * @since 8.0
  */
 public class SearchRuntimeAdapter extends RuntimeAdapter {
 

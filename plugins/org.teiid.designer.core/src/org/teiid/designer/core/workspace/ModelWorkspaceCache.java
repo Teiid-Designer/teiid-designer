@@ -16,6 +16,8 @@ import org.teiid.designer.core.util.OverflowingLRUCache;
 
 /**
  * The cache of model elements to their respective info.
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceCache {
 //    public static final int PKG_CACHE_SIZE = 500;

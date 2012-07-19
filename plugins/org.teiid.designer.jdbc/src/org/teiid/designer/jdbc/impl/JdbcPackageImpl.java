@@ -30,6 +30,8 @@ import org.teiid.designer.jdbc.SourceNames;
  * An implementation of the model <b>Package</b>.
  * <!-- end-user-doc -->
  * @generated
+ *
+ * @since 8.0
  */
 public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
     /**

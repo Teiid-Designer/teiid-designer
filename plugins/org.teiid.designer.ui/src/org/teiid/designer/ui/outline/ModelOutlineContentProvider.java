@@ -14,6 +14,8 @@ import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 /**
  * ModelOutlineContentProvider extends the ModelExplorerContentProvider to provide
  * additional content to the Outline view.
+ *
+ * @since 8.0
  */
 public class ModelOutlineContentProvider extends ModelExplorerContentProvider {
 

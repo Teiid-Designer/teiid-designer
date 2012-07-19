@@ -23,6 +23,9 @@ import org.teiid.designer.diagram.ui.preferences.DiagramPrintPreferencePage;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
+/**
+ * @since 8.0
+ */
 public class DiagramPageSetupDialog extends SelectionStatusDialog implements DiagramUiConstants {
 
     private static final String TITLE = Util.getString("DiagramPageSetupDialog.title"); //$NON-NLS-1$

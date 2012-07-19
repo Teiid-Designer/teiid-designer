@@ -49,6 +49,8 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
 
 /**
  * This is a helper class to encapsulate reusable methods developed for the Metamodel Entity builder framework.
+ *
+ * @since 8.0
  */
 public class MetamodelBuilderUtil implements MetamodelBuilderConstants {
     // Cache of all datatypes already looked up.

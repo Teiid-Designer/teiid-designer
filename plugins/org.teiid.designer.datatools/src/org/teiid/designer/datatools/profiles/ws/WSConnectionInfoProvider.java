@@ -10,6 +10,9 @@ import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 
+/**
+ * @since 8.0
+ */
 public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
 		IConnectionInfoProvider {
 

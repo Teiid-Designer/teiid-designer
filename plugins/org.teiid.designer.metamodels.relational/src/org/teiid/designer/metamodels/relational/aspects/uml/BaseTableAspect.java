@@ -29,6 +29,8 @@ import org.teiid.designer.metamodels.relational.Table;
 
 /**
  * TableAspect
+ *
+ * @since 8.0
  */
 public class BaseTableAspect extends RelationalEntityAspect implements UmlClassifier {
     /**

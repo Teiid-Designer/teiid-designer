@@ -27,6 +27,8 @@ package org.teiid.designer.metamodels.diagram;
  * @see org.teiid.designer.metamodels.diagram.DiagramPackage#getDiagramEntity()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface DiagramEntity extends AbstractDiagramEntity{
 

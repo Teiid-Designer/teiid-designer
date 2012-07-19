@@ -16,6 +16,8 @@ import org.eclipse.emf.ecore.EReference;
 
 /**
  * MetamodelEntity
+ *
+ * @since 8.0
  */
 public interface MetamodelEntity {
     /**

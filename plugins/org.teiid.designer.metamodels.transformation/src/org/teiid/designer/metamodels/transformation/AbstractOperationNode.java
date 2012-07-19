@@ -19,6 +19,8 @@ package org.teiid.designer.metamodels.transformation;
  * @see org.teiid.designer.metamodels.transformation.TransformationPackage#getAbstractOperationNode()
  * @model abstract="true"
  * @generated
+ *
+ * @since 8.0
  */
 public interface AbstractOperationNode extends DataFlowNode, ExpressionOwner {
 

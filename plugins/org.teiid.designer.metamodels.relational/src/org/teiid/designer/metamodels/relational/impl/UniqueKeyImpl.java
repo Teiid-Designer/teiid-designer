@@ -34,6 +34,8 @@ import org.teiid.designer.metamodels.relational.UniqueKey;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public abstract class UniqueKeyImpl extends RelationalEntityImpl implements UniqueKey {
     /**

@@ -25,6 +25,8 @@ import org.teiid.designer.ui.common.UiPlugin;
 
 /**
  * EditorPreferencePage
+ *
+ * @since 8.0
  */
 public class EditorPreferencePage extends PreferencePage implements IEditorPreferencesValidationListener, IWorkbenchPreferencePage {
 

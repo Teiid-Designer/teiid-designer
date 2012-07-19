@@ -15,6 +15,8 @@ import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 
 /**
  * TransformationDiagramNode
+ *
+ * @since 8.0
  */
 public class TransformationDiagramNode extends AbstractLocalDiagramModelNode {
 

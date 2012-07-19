@@ -9,6 +9,8 @@ package org.teiid.designer.ui.table;
 
 /**
  * The <code>ITablePasteValidator</code> class validates table data.
+ *
+ * @since 8.0
  */
 public interface ITablePasteValidator {
     

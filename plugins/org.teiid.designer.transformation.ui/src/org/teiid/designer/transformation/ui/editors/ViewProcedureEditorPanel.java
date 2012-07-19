@@ -66,6 +66,9 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 
 
+/**
+ * @since 8.0
+ */
 public class ViewProcedureEditorPanel  implements RelationalConstants {
     private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 

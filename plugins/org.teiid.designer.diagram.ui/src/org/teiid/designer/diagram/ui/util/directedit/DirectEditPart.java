@@ -11,6 +11,8 @@ import org.teiid.designer.diagram.ui.part.EditableEditPart;
 
 /**
  * DirectEditPart
+ *
+ * @since 8.0
  */
 public interface DirectEditPart extends EditableEditPart {
     String getText();

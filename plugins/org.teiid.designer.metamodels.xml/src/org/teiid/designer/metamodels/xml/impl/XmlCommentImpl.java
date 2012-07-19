@@ -31,6 +31,8 @@ import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
  * </p>
  *
  * @generated
+ *
+ * @since 8.0
  */
 public class XmlCommentImpl extends XmlDocumentEntityImpl implements XmlComment {
     /**

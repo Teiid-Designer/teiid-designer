@@ -13,6 +13,8 @@ import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 
 /**
  * Colors used in the Reconciler
+ *
+ * @since 8.0
  */
 public class ColorManager {
 

@@ -31,6 +31,8 @@ import org.teiid.designer.metamodels.core.util.CoreAdapterFactory;
  * -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class AnnotationItemProviderAdapterFactory extends CoreAdapterFactory
     implements ComposeableAdapterFactory, IChangeNotifier { // NO_UCD

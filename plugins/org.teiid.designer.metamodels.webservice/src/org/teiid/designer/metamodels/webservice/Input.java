@@ -19,6 +19,8 @@ package org.teiid.designer.metamodels.webservice;
  * @see org.teiid.designer.metamodels.webservice.WebServicePackage#getInput()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Input extends Message {
 

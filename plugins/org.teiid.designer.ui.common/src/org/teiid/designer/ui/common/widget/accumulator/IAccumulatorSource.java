@@ -17,6 +17,8 @@ import org.eclipse.swt.widgets.Control;
 
 /**
  * IAccumulatorSource
+ *
+ * @since 8.0
  */
 public interface IAccumulatorSource {
 	//=======================================================

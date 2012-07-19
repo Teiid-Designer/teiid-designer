@@ -34,6 +34,8 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
  * This class represents the preference page for setting general preferences.
+ *
+ * @since 8.0
  */
 public final class GeneralPreferencePage extends PreferencePage
     implements IWorkbenchPreferencePage, UiConstants, UiConstants.ExtensionPoints {

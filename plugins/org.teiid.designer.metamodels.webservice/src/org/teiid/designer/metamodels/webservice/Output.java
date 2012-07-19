@@ -22,6 +22,8 @@ import org.teiid.designer.metamodels.xml.XmlDocument;
  * @see org.teiid.designer.metamodels.webservice.WebServicePackage#getOutput()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface Output extends Message {
 

@@ -28,6 +28,8 @@ import org.teiid.designer.metamodels.core.ModelImport;
  * 
  * @see org.teiid.designer.metamodels.core.CorePackage
  * @generated
+ *
+ * @since 8.0
  */
 public class CoreSwitch {
 

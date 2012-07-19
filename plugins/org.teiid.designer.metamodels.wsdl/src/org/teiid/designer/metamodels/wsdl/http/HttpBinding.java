@@ -23,6 +23,8 @@ import org.teiid.designer.metamodels.wsdl.Binding;
  * @see org.teiid.designer.metamodels.wsdl.http.HttpPackage#getHttpBinding()
  * @model
  * @generated
+ *
+ * @since 8.0
  */
 public interface HttpBinding extends EObject {
 

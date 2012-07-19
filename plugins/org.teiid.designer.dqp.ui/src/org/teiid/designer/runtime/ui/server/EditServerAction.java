@@ -25,6 +25,8 @@ import org.teiid.designer.ui.common.util.UiUtil;
 
 /**
  * The <code>EditServerAction</code> runs a UI that allows {@link Server server} properties to be changed.
+ *
+ * @since 8.0
  */
 public final class EditServerAction extends BaseSelectionListenerAction {
 

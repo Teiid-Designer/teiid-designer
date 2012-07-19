@@ -15,6 +15,9 @@ import org.teiid.designer.schema.tools.model.schema.QName;
 import org.teiid.designer.schema.tools.model.schema.Relationship;
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 
+/**
+ * @since 8.0
+ */
 public abstract class BaseColumn implements Column {
 	private SchemaObject table;
 

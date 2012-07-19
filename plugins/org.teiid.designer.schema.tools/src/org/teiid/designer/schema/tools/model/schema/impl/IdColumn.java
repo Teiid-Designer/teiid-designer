@@ -12,6 +12,9 @@ import org.teiid.designer.schema.tools.model.jdbc.internal.ColumnImpl;
 import org.teiid.designer.schema.tools.model.schema.Column;
 import org.teiid.designer.schema.tools.model.schema.Relationship;
 
+/**
+ * @since 8.0
+ */
 public class IdColumn extends BaseColumn {
     public IdColumn( XSDSimpleTypeDefinition type ) {
         super(true, type);

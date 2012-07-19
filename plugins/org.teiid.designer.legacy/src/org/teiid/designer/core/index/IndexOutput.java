@@ -15,6 +15,8 @@ import java.io.IOException;
 
 /**
  * An indexOutput is used to write an index into a different object (a File, ...). 
+ *
+ * @since 8.0
  */
 public abstract class IndexOutput {
 	/**

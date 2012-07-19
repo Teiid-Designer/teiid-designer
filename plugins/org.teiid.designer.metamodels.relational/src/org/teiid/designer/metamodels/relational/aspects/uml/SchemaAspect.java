@@ -20,6 +20,8 @@ import org.teiid.designer.metamodels.relational.Schema;
 
 /**
  * SchemaAspect
+ *
+ * @since 8.0
  */
 public class SchemaAspect extends RelationalEntityAspect implements UmlPackage {
     /**

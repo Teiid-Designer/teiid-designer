@@ -9,8 +9,10 @@ package org.teiid.designer.transformation.ui.editors;
 
 import org.eclipse.core.runtime.IStatus;
 
-/*
+/**
  * IDialogStatusListener interface
+ *
+ * @since 8.0
  */
 public interface IDialogStatusListener {
 	

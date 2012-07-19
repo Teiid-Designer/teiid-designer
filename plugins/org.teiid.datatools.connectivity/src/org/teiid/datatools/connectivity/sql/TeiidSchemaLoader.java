@@ -11,6 +11,9 @@ import org.eclipse.datatools.connectivity.sqm.core.rte.ICatalogObject;
 import org.eclipse.datatools.connectivity.sqm.loader.JDBCSchemaLoader;
 import org.eclipse.datatools.modelbase.sql.schema.Schema;
 
+/**
+ * @since 8.0
+ */
 public class TeiidSchemaLoader extends JDBCSchemaLoader {
 
     public TeiidSchemaLoader() {

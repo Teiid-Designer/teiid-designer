@@ -15,6 +15,8 @@ import org.teiid.designer.ui.common.actions.AbstractAction;
 
 /**
  * SelectAllAction
+ *
+ * @since 8.0
  */
 public class SelectAllAction extends AbstractAction {
 

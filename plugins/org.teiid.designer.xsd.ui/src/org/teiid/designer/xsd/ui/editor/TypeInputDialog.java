@@ -21,6 +21,9 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.DatatypeHierarchyTreeViewer;
 
 
+/**
+ * @since 8.0
+ */
 public class TypeInputDialog extends Dialog {
     //
     // Instance variables:

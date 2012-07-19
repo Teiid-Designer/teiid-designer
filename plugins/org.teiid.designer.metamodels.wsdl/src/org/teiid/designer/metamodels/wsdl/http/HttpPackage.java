@@ -25,6 +25,8 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see org.teiid.designer.metamodels.wsdl.http.HttpFactory
  * @generated
+ *
+ * @since 8.0
  */
 public interface HttpPackage extends EPackage{
     /**

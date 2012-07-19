@@ -24,6 +24,8 @@ import org.teiid.query.ui.builder.util.CriteriaStrategy;
 
 /**
  * ChoiceCriteriaStrategy
+ *
+ * @since 8.0
  */
 public class ChoiceCriteriaStrategy 
      extends CriteriaStrategy

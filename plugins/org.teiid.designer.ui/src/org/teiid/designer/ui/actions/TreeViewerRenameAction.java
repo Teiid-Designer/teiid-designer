@@ -46,6 +46,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * TreeViewerRenameAction is an inline tree editor for any TreeViewer containing EObjects. It cannot be obtained directly from the
  * ActionService by class, since each instance of this action must be provided with a TreeViewer.
+ *
+ * @since 8.0
  */
 public class TreeViewerRenameAction extends RenameAction {
 

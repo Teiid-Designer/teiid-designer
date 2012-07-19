@@ -26,6 +26,9 @@ import org.jdom.output.XMLOutputter;
 import org.teiid.core.CorePlugin;
 import org.teiid.core.util.ArgCheck;
 
+/**
+ * @since 8.0
+ */
 public class JdomHelper {
 
     /** XML Schema namespace and prefix */

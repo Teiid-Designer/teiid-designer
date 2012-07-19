@@ -11,6 +11,8 @@ import org.teiid.query.sql.lang.CompareCriteria;
 
 /**
  * The <code>CompareCriteriaDisplayNode</code> class is used to represent CompareCriteria.
+ *
+ * @since 8.0
  */
 public class CompareCriteriaDisplayNode extends DisplayNode {
 

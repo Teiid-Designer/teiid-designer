@@ -24,6 +24,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 
 /**
  * ForeignKeyAspect
+ *
+ * @since 8.0
  */
 public class LogicalRelationshipAspect extends RelationalEntityAspect implements UmlAssociation {
     /**

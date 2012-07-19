@@ -14,6 +14,8 @@ import org.eclipse.jface.text.ITextViewer;
  
 /**
  * Used to scan and detect for SQL keywords  
+ *
+ * @since 8.0
  */
 public class WordPartDetector {
 	String wordPart = ""; //$NON-NLS-1$

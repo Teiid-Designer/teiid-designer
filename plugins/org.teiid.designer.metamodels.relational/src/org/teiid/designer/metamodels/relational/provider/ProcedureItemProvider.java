@@ -25,6 +25,8 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
  * <!-- end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class ProcedureItemProvider extends RelationalEntityItemProvider {
     /**

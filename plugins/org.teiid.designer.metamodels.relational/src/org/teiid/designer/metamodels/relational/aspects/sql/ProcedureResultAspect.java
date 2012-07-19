@@ -19,6 +19,8 @@ import org.teiid.designer.metamodels.relational.ProcedureResult;
 
 /**
  * ProcedureResultAspect
+ *
+ * @since 8.0
  */
 public class ProcedureResultAspect extends RelationalEntityAspect implements SqlResultSetAspect {
 

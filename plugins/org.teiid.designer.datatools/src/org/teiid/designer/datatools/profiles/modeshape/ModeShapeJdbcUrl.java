@@ -1,5 +1,8 @@
 package org.teiid.designer.datatools.profiles.modeshape;
 // jdbc:jcr:http://localhost:8080/modeshape-rest/repository/
+/**
+ * @since 8.0
+ */
 public class ModeShapeJdbcUrl {
 
     private String host = ""; //$NON-NLS-1$

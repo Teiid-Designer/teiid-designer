@@ -29,6 +29,8 @@ import org.teiid.designer.metamodels.core.Link;
  * end-user-doc -->
  * 
  * @generated
+ *
+ * @since 8.0
  */
 public class LinkItemProvider extends ItemProviderAdapter
     implements IEditingDomainItemProvider, ITreeItemContentProvider, IItemLabelProvider,

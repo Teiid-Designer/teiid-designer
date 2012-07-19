@@ -9,6 +9,8 @@ package org.teiid.designer.diagram.ui.actions;
 
 /**
  * AutoLayoutAction
+ *
+ * @since 8.0
  */
 public class AutoLayoutAction extends DiagramAction {
     private AutoLayout autoLayoutManager;

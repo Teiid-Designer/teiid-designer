@@ -86,6 +86,8 @@ import org.teiid.query.function.FunctionLibrary;
 
 /**
  * Metadata implementation used by model workspace to resolve queries.
+ *
+ * @since 8.0
  */
 public class ModelerMetadata extends TransformationMetadata {
 

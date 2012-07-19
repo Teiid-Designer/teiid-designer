@@ -34,6 +34,8 @@ import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 /**
  * This class is responsible for reading WSDL files from a URI or filesystem validating them and producing an OO representation of
  * the WSDL contents
+ *
+ * @since 8.0
  */
 public class WSDLReader {
 

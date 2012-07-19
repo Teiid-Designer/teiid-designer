@@ -9,6 +9,9 @@ import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
+/**
+ * @since 8.0
+ */
 public final class TransformationUiPropertyTester extends PropertyTester {
 
     private enum Tests {

@@ -27,6 +27,8 @@ import org.teiid.designer.runtime.preview.PreviewContext;
 
 /**
  * The <code>WorkspacePreviewVdbJob</code> are jobs that work with Preview VDBs in the Eclipse workspace.
+ *
+ * @since 8.0
  */
 public abstract class WorkspacePreviewVdbJob extends WorkspaceJob implements PreferenceConstants, PreviewVdbJob {
 

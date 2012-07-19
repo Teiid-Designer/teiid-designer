@@ -30,6 +30,8 @@ import org.teiid.designer.vdb.ui.VdbUiPlugin;
  * be extracted into the workspace.
  * 
  * @author BLaFond
+ *
+ * @since 8.0
  */
 
 public class ImportVdbWizard extends AbstractWizard

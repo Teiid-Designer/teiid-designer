@@ -24,6 +24,8 @@ import org.teiid.designer.core.ModelerCore;
 
 /**
  * ModelWorkspaceSelections
+ *
+ * @since 8.0
  */
 public class ModelWorkspaceSelections implements TreeSelection {
     
