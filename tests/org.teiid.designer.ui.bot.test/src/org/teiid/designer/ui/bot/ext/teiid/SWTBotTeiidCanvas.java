@@ -6,13 +6,18 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Polygon;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefFigureCanvas;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.results.Result;
 import org.eclipse.swtbot.swt.finder.results.VoidResult;
 import org.eclipse.swtbot.swt.finder.widgets.AbstractSWTBotControl;
+import org.jboss.tools.ui.bot.ext.gef.SWTBotGefFigure;
 import org.teiid.designer.diagram.ui.notation.uml.figure.UmlClassifierFigure;
 import org.teiid.designer.diagram.ui.notation.uml.figure.UmlClassifierHeader;
+import org.teiid.designer.mapping.ui.figure.MappingExtentFigure;
 import org.teiid.designer.transformation.ui.figure.TransformationFigure;
 
 
@@ -66,6 +71,40 @@ public class SWTBotTeiidCanvas extends AbstractSWTBotControl<FigureCanvas> {
 		});
 		if(figure != null)
 			return new SWTBotTeiidUmlFigure(figure, widget);
+		else
+			throw new WidgetNotFoundException("Cannot find figure with the name:" + name);
+	}
+
+	public SWTBotTeiidMappingFigure mappingFigure(final String name){
+		
+		MappingExtentFigure figure = UIThreadRunnable.syncExec(new Result<MappingExtentFigure>() {
+
+			@SuppressWarnings("unchecked")
+			private MappingExtentFigure find(List<IFigure> figures){
+				MappingExtentFigure result;
+				
+				for(IFigure f : figures){
+					
+					if(f instanceof MappingExtentFigure){
+							return (MappingExtentFigure) f;
+					}
+					result = find(f.getChildren());
+					
+					if(result != null)
+						return result;
+				}
+				return null;
+			}
+			
+			@SuppressWarnings("unchecked")
+			@Override
+			public MappingExtentFigure run() {
+				return find(widget.getContents().getChildren());
+			}
+			
+		});
+		if(figure != null)
+			return new SWTBotTeiidMappingFigure(figure, widget);
 		else
 			throw new WidgetNotFoundException("Cannot find figure with the name:" + name);
 	}

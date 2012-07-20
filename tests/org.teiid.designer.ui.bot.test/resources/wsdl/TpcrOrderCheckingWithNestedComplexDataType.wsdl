@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://MetaMatrix.com/WebService1/Service1" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:schema1="http://com.metamatrix/TPCRwsdl_VDB" targetNamespace="http://MetaMatrix.com/WebService1/Service1" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://com.metamatrix/TPCRwsdl_VDB">
+	<s:element name="OC_Input">
+		<s:annotation>
+			<s:documentation>Input parameters for checking a series of orders</s:documentation>
+		</s:annotation>
+		<s:complexType>
+			<!-- name="OC_Input_Type"> -->
+			<s:sequence>
+				<s:element name="OrderDate" nillable="false" type="s:date">
+					<s:annotation>
+						<s:documentation>The date the orders in this series were made.</s:documentation>
+					</s:annotation>
+				</s:element>
+				<s:element name="ShipDateRange" nillable="false">
+					<s:complexType>
+						<s:sequence>
+							<s:element name="ShipDateLow" nillable="false" type="s:date">
+								<s:annotation>
+									<s:documentation>The date that represents the low end of the series of shipments.</s:documentation>
+								</s:annotation>
+							</s:element>
+							<s:element name="ShipDateHigh" nillable="false" type="s:date">
+								<s:annotation>
+									<s:documentation>The date that represents the high end of the series of shipments.</s:documentation>
+								</s:annotation>
+							</s:element>
+						</s:sequence>
+					</s:complexType>	
+				</s:element>	
+			</s:sequence>
+		</s:complexType>
+	</s:element>
+	<s:element name="OC_Output">
+		<!-- <s:complexType>
+            <s:sequence>
+                <s:element maxOccurs="unbounded" minOccurs="0" name="OC_Output_Instance" type="OC_Output_Type"/>
+            </s:sequence>
+        </s:complexType> -->
+		<s:complexType>
+			<!-- name="OC_Output_Type" -->
+			<s:sequence>
+				<s:element name="CONTAINER" maxOccurs="unbounded" type="schema1:inner">
+						
+					</s:element>
+			</s:sequence>
+		</s:complexType>
+	</s:element>
+	<s:complexType name="inner">
+		<s:sequence>
+			<s:element name="ORDER_KEY" nillable="false" type="s:string"/>
+			<s:element name="ORDER_DATE" nillable="false" type="s:date"/>
+			<s:element name="CUSTOMER" nillable="true" type="s:string"/>
+			<s:element name="PART_KEY" nillable="false" type="s:string"/>
+			<s:element name="PART_NAME" nillable="true" type="s:string"/>
+			<s:element name="SHIP_DATE" nillable="true" type="s:date"/>
+			<s:element name="ORDER_STATUS" nillable="true" type="s:string"/>
+			<s:element name="PART_COMMENT" nillable="true" type="s:string"/>
+			<s:element name="CUSTOMER_COMMENT" nillable="true" type="s:string"/>
+		</s:sequence>
+	</s:complexType>
+</s:schema>
+
+  </wsdl:types>
+  <wsdl:message name="OCin">
+    <wsdl:part name="parameters" element="schema1:OC_Input" />
+  </wsdl:message>
+  <wsdl:message name="OCout">
+    <wsdl:part name="parameters" element="schema1:OC_Output" />
+  </wsdl:message>
+  <wsdl:portType name="Service1Soap">
+    <wsdl:operation name="CheckOrder">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Return information about a series of orders</documentation>
+      <wsdl:input message="tns:OCin" /> <!-- tns:OCin -->
+      <wsdl:output message="tns:OCout" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Service1Soap" type="tns:Service1Soap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <wsdl:operation name="CheckOrder">
+      <soap:operation soapAction="TPCR_WS.TPCR_CheckOrder.getInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Service1">
+    <documentation xmlns="http://schemas.xmlsoap.org/wsdl/" />
+    <wsdl:port name="TPCR" binding="tns:Service1Soap">
+      <soap:address location="http://vdb.dataservice.metamatrix.com" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -3,6 +3,7 @@ package org.teiid.designer.ui.bot.ext.teiid.editor;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.jboss.tools.ui.bot.ext.Timing;
 import org.jboss.tools.ui.bot.ext.helper.StyledTextHelper;
 import org.teiid.designer.ui.bot.ext.teiid.SWTBotTeiidCanvas;
 import org.teiid.designer.ui.bot.ext.teiid.SWTTeiidBot;
@@ -20,9 +21,17 @@ public class ModelEditor extends Editor {
 	}
 	
 	public void showTransformation(){
+		getBot().sleep(Timing.time1S());
 		SWTTeiidBot teiidBot = new SWTTeiidBot();
 		SWTBotTeiidCanvas canvas = teiidBot.getTeiidCanvas(0);
 		canvas.tFigure().doubleClick();
+	}
+	
+	public void showMappingTransformation(String objectName) {
+		getBot().sleep(Timing.time1S());
+		SWTTeiidBot teiidBot = new SWTTeiidBot();
+		SWTBotTeiidCanvas canvas = teiidBot.getTeiidCanvas(0);	
+		canvas.mappingFigure(objectName).doubleClick();
 	}
 	
 	public CriteriaBuilder criteriaBuilder(){
@@ -51,5 +60,14 @@ public class ModelEditor extends Editor {
 	
 	public void setTransformation(String text){
 		getBot().styledText(0).setText(text);
+	}
+	
+	public void saveAndValidateSql() {
+		clickButtonOnToolbar("Save/Validate SQL");
+	}
+	
+	public void clickButtonOnToolbar(String button) {
+		SWTBot bot = getEditor().bot();
+		bot.toolbarButtonWithTooltip(button).click();
 	}
 }
