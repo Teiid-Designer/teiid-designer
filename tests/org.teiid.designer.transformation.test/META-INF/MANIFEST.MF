@@ -10,6 +10,6 @@ Export-Package: org.teiid.designer.transformation.aspects.validation.rules,
  org.teiid.designer.transformation.metadata,
  org.teiid.designer.transformation.test
 Bundle-Localization: plugin
-Require-Bundle: org.junit4,
- org.teiid.core.designer.test.framework,
- org.teiid.designer.core.test.framework
+Require-Bundle: org.junit4;bundle-version="[4.8.1,5.0.0)",
+ org.teiid.core.designer.test.framework;bundle-version="[8.0.0,9.0.0)",
+ org.teiid.designer.core.test.framework;bundle-version="[8.0.0,9.0.0)"

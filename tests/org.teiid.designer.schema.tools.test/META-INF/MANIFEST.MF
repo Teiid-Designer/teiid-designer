@@ -11,4 +11,4 @@ Export-Package: org.teiid.designer.schema.tools,
  org.teiid.designer.schema.tools.model.jdbc.internal,
  org.teiid.designer.schema.tools.model.schema.impl
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.junit4;bundle-version="[4.8.1,5.0.0)"

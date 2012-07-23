@@ -14,6 +14,6 @@ Export-Package: org.teiid.designer.jdbc,
  org.teiid.designer.jdbc.metadata.impl,
  org.teiid.designer.jdbc.test
 Bundle-Localization: plugin
-Require-Bundle: org.junit4,
- org.teiid.core.designer.test.framework,
- org.teiid.designer.jdbc.test.framework
+Require-Bundle: org.junit4;bundle-version="[4.8.1,5.0.0)",
+ org.teiid.core.designer.test.framework;bundle-version="[8.0.0,9.0.0)",
+ org.teiid.designer.jdbc.test.framework;bundle-version="[8.0.0,9.0.0)"

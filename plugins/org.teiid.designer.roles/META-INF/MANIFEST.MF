@@ -5,9 +5,9 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-SymbolicName: org.teiid.designer.roles
 Bundle-Version: 8.0.0.qualifier
 Bundle-Activator: org.teiid.designer.roles.RolesPlugin
-Require-Bundle: org.eclipse.core.runtime,
- org.teiid.core.designer,
- teiid_embedded_query
+Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.8.0,4.0.0)",
+ org.teiid.core.designer;bundle-version="[8.0.0,9.0.0)",
+ teiid_embedded_query;bundle-version="[8.0.0,9.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.teiid.designer.roles

@@ -5,7 +5,7 @@ Bundle-SymbolicName: techpreview.designer.ui;singleton:=true
 Bundle-Version: 8.0.0.qualifier
 Fragment-Host: org.teiid.designer.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.eclipse.ui.navigator
+Require-Bundle: org.eclipse.ui.navigator;bundle-version="[3.5.200,4.0.0)"
 Bundle-Vendor: %fragmentProvider
 Bundle-Localization: fragment
 Import-Package: org.apache.xerces.parsers

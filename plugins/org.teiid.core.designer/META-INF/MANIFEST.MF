@@ -19,8 +19,8 @@ Export-Package: org.teiid.core,
  org.teiid.core.util,
  org.teiid.core.xml,
  org.teiid.designer.core
-Require-Bundle: org.eclipse.core.runtime,
- teiid_embedded_query,
- net.sf.saxon
+Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.8.0,4.0.0)",
+ teiid_embedded_query;bundle-version="[8.0.0,9.0.0)",
+ net.sf.saxon;bundle-version="[9.2.1,10.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -10,7 +10,7 @@ Export-Package: org.teiid.designer.extension,
  org.teiid.designer.extension.definition,
  org.teiid.designer.extension.properties,
  org.teiid.designer.extension.registry
-Require-Bundle: org.eclipse.core.runtime,
- org.teiid.core.designer
+Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.8.0,4.0.0)",
+ org.teiid.core.designer;bundle-version="[8.0.0,9.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

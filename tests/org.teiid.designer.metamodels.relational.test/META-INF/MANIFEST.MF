@@ -10,5 +10,5 @@ Bundle-Localization: plugin
 Export-Package: org.teiid.designer.metamodels.relational.aspects.validation.rules,
  org.teiid.designer.metamodels.relational.provider,
  org.teiid.designer.metamodels.relational.util
-Require-Bundle: org.junit4,
- org.teiid.designer.core.test.framework
+Require-Bundle: org.junit4;bundle-version="[4.8.1,5.0.0)",
+ org.teiid.designer.core.test.framework;bundle-version="[8.0.0,9.0.0)"

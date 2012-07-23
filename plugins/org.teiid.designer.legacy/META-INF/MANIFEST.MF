@@ -6,10 +6,10 @@ Bundle-SymbolicName: org.teiid.designer.legacy;singleton:=true
 Bundle-Version: 8.0.0.qualifier
 Bundle-Vendor: %pluginProvider
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: teiid_embedded_query,
- org.jdom,
- org.teiid.designer.modeshape,
- org.teiid.core.designer
+Require-Bundle: teiid_embedded_query;bundle-version="[8.0.0,9.0.0)",
+ org.jdom;bundle-version="[1.1.1,2.0.0)",
+ org.teiid.designer.modeshape;bundle-version="[8.0.0,9.0.0)",
+ org.teiid.core.designer;bundle-version="[8.0.0,9.0.0)"
 Export-Package: 
  org.teiid.designer.common.namedobject,
  org.teiid.designer.common.util,
