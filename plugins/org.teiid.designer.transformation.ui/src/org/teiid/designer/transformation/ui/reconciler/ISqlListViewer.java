@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.transformation.ui.reconciler;
 
-import org.teiid.query.sql.symbol.SingleElementSymbol;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  * @since 8.0
@@ -20,7 +20,7 @@ public interface ISqlListViewer {
      * 
      * @param symbol
      */
-    public void addSymbol(SingleElementSymbol symbol);
+    public void addSymbol(Expression symbol);
     
     /**
      * Update the view to reflect the fact that a symbol was added 
@@ -28,7 +28,7 @@ public interface ISqlListViewer {
      * 
      * @param symbol
      */
-    public void insertSymbol(SingleElementSymbol symbol,int index);
+    public void insertSymbol(Expression symbol,int index);
     
     /**
      * Update the view to reflect the fact that symbols were added 
@@ -44,7 +44,7 @@ public interface ISqlListViewer {
      * 
      * @param symbol
      */
-    public void removeSymbol(SingleElementSymbol symbol);
+    public void removeSymbol(Expression symbol);
     
     /**
      * Update the view to reflect the fact that symbols were removed 
@@ -60,7 +60,7 @@ public interface ISqlListViewer {
      * 
      * @param symbol
      */
-    public void updateSymbol(SingleElementSymbol symbol);
+    public void updateSymbol(Expression symbol);
     
     /**
      * Update the view to reflect the fact that one of the symbols

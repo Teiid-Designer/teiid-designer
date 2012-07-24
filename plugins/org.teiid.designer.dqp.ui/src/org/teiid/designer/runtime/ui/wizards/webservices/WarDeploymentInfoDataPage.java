@@ -9,11 +9,13 @@ package org.teiid.designer.runtime.ui.wizards.webservices;
 
 import java.io.File;
 import java.io.IOException;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Composite;
-import org.teiid.core.util.FileUtils;
+import org.teiid.core.CorePlugin;
+import org.teiid.core.TeiidException;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilder;
 import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilderFactory;
@@ -22,7 +24,9 @@ import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilderF
  * @since 8.0
  */
 public class WarDeploymentInfoDataPage extends WarDeploymentInfoPanel {
-
+    private static final String TEMP_FILE = "delete.me"; //$NON-NLS-1$
+    private static final String TEMP_FILE_RENAMED = "delete.me.old"; //$NON-NLS-1$
+    
     private String ERROR_MESSAGE = null;
     private IStatus status;
 
@@ -304,7 +308,7 @@ public class WarDeploymentInfoDataPage extends WarDeploymentInfoPanel {
         if (file.exists()) {
             // Check the directory permissions if it exists
             try {
-                FileUtils.testDirectoryPermissions(text);
+            	WarDeploymentInfoDataPage.testDirectoryPermissions(text);
             } catch (Exception e) {
                 String message = getString("warFileSaveFolderExistsButPermissionProblem.message"); //$NON-NLS-1$
                 createStatus(IStatus.ERROR, message, InternalModelerWarUiConstants.VALIDATEWARFILE);
@@ -340,6 +344,63 @@ public class WarDeploymentInfoDataPage extends WarDeploymentInfoPanel {
         this.settings.put(this.WARFILELOCATION, text);
 
         return true;
+    }
+    
+    /**
+     * Test whether it's possible to read and write files in the specified directory. 
+     * @param dirPath Name of the directory to test
+     * @throws TeiidException
+     * @since 4.3
+     */
+    public static void testDirectoryPermissions(String dirPath) throws TeiidException {
+        
+        //try to create a file
+        File tmpFile = new File(dirPath + File.separatorChar + TEMP_FILE);
+        boolean success = false;
+        try {
+            success = tmpFile.createNewFile();
+        } catch (IOException e) {
+        }
+        if (!success) {
+            final String msg = CorePlugin.Util.getString("FileUtils.Unable_to_create_file_in", dirPath); //$NON-NLS-1$            
+            throw new TeiidException(msg);
+        }
+        
+
+        //test if file can be written to
+        if (!tmpFile.canWrite()) {
+            final String msg = CorePlugin.Util.getString("FileUtils.Unable_to_write_file_in", dirPath); //$NON-NLS-1$            
+            throw new TeiidException(msg);
+        }
+
+        //test if file can be read
+        if (!tmpFile.canRead()) {
+            final String msg = CorePlugin.Util.getString("FileUtils.Unable_to_read_file_in", dirPath); //$NON-NLS-1$            
+            throw new TeiidException(msg);
+        }
+
+        //test if file can be renamed
+        File newFile = new File(dirPath + File.separatorChar + TEMP_FILE_RENAMED);
+        success = false;
+        try {
+            success = tmpFile.renameTo(newFile);
+        } catch (Exception e) {
+        }
+        if (!success) {
+            final String msg = CorePlugin.Util.getString("FileUtils.Unable_to_rename_file_in", dirPath); //$NON-NLS-1$            
+            throw new TeiidException(msg);
+        }
+
+        //test if file can be deleted
+        success = false;
+        try {
+            success = newFile.delete();
+        } catch (Exception e) {
+        }
+        if (!success) {
+            final String msg = CorePlugin.Util.getString("FileUtils.Unable_to_delete_file_in", dirPath); //$NON-NLS-1$            
+            throw new TeiidException(msg);
+        }
     }
 
 }

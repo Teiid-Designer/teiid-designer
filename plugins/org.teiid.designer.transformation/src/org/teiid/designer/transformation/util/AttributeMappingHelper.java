@@ -12,11 +12,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingRoot;
-
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.ModelerCoreException;
@@ -26,7 +26,8 @@ import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.SingleElementSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Symbol;
 import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 
 /**
@@ -101,7 +102,7 @@ public class AttributeMappingHelper {
                         changed = true;
                     }
                     // Find element matching the attribute name (if it exists)
-                    SingleElementSymbol seSymbol = getSymbolWithName(projectedSymbols,colName);
+                    Expression seSymbol = getSymbolWithName(projectedSymbols,colName);
                     if(seSymbol!=null) {
                         // Get the ElementSymbols / corresponding EObjs
                         Collection elemSymbols = ElementCollectorVisitor.getElements(seSymbol,true);
@@ -582,11 +583,11 @@ public class AttributeMappingHelper {
      * @param name the symbol name
      * @return the SingleElementSymbol from the List with the provided name, null if not found.
      */
-    private static SingleElementSymbol getSymbolWithName(List seSymbols, String name) {
-        SingleElementSymbol result = null;
+    private static Expression getSymbolWithName(List seSymbols, String name) {
+    	Expression result = null;
         Iterator iter = seSymbols.iterator();
         while(iter.hasNext()) {
-            SingleElementSymbol seSymbol = (SingleElementSymbol)iter.next();
+        	Expression seSymbol = (Expression)iter.next();
             String symbolName = TransformationSqlHelper.getSingleElementSymbolShortName(seSymbol,false);
             if(symbolName!=null && symbolName.equalsIgnoreCase(name)) {
                 result = seSymbol;
@@ -601,7 +602,7 @@ public class AttributeMappingHelper {
      * actual name.
      * @param symbol 
      */
-    public static String getSymbolShortName(final SingleElementSymbol symbol) {
+    public static String getSymbolShortName(final Expression symbol) {
     	String fullName = getSymbolFullName(symbol);
     	int index = fullName.lastIndexOf("."); //$NON-NLS-1$
     	return fullName.substring(index+1);   
@@ -611,7 +612,7 @@ public class AttributeMappingHelper {
      * The symbol might be a UUID, lookup the MetadataRecord, for the
      * actual name.
      */
-    public static String getSymbolFullName(final SingleElementSymbol symbol) {
+    public static String getSymbolFullName(final Expression symbol) {
         CoreArgCheck.isNotNull(symbol);
         if(symbol instanceof ElementSymbol) {
             Object metadataID = ((ElementSymbol)symbol).getMetadataID();
@@ -625,7 +626,7 @@ public class AttributeMappingHelper {
             }
         }
     
-        return symbol.getName();
+        return Symbol.getName(symbol);
     }
 
 }

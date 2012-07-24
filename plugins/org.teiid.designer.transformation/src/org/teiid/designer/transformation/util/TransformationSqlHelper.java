@@ -74,7 +74,7 @@ import org.teiid.query.sql.lang.SubqueryFromClause;
 import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.CommandStatement;
-import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.proc.CreateProcedureCommand;
 import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.ElementSymbol;
@@ -84,8 +84,7 @@ import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.MultipleElementSymbol;
 import org.teiid.query.sql.symbol.Reference;
-import org.teiid.query.sql.symbol.SelectSymbol;
-import org.teiid.query.sql.symbol.SingleElementSymbol;
+import org.teiid.query.sql.symbol.Symbol;
 import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 import org.teiid.query.sql.visitor.GroupCollectorVisitor;
 import org.teiid.query.sql.visitor.GroupsUsedByElementsVisitor;
@@ -500,7 +499,7 @@ public class TransformationSqlHelper implements SqlConstants {
                         // Create StoredProcedure
                         StoredProcedure proc = createStoredProc(sqlAlias);
                         if (proc != null) {
-                            CreateUpdateProcedureCommand cCommand = createVirtualProcCommmandForCommand(proc);
+                            CreateProcedureCommand cCommand = createVirtualProcCommmandForCommand(proc);
                             // Set the new mappingRoot SQL
                             TransformationHelper.setSelectSqlString(transMappingRoot, cCommand.toString(), false, txnSource);
                         }
@@ -514,7 +513,7 @@ public class TransformationSqlHelper implements SqlConstants {
                                                            QueryValidator.SELECT_TRNS,
                                                            validator);
 
-                        CreateUpdateProcedureCommand cCommand = createVirtualProcCommmandForCommand(qry);
+                        CreateProcedureCommand cCommand = createVirtualProcCommmandForCommand(qry);
                         // Set the new mappingRoot SQL
                         TransformationHelper.setSelectSqlString(transMappingRoot, cCommand.toString(), false, txnSource);
                     }
@@ -528,7 +527,7 @@ public class TransformationSqlHelper implements SqlConstants {
                                                        QueryValidator.SELECT_TRNS,
                                                        validator);
 
-                    CreateUpdateProcedureCommand cCommand = createVirtualProcCommmandForCommand(qry);
+                    CreateProcedureCommand cCommand = createVirtualProcCommmandForCommand(qry);
                     // Set the new mappingRoot SQL
                     TransformationHelper.setSelectSqlString(transMappingRoot, cCommand.toString(), false, txnSource);
                 }
@@ -563,7 +562,7 @@ public class TransformationSqlHelper implements SqlConstants {
      * @param command the Command
      * @return the CreateUpdateProcedureCommand
      */
-    public static CreateUpdateProcedureCommand createVirtualProcCommmandForCommand( Command command ) {
+    public static CreateProcedureCommand createVirtualProcCommmandForCommand( Command command ) {
         Block block = new Block();
 
         CommandStatement cmdStmt = new CommandStatement(command);
@@ -571,9 +570,8 @@ public class TransformationSqlHelper implements SqlConstants {
         block.addStatement(cmdStmt);
 
         // Create the CreateUpdateProcedureCommand
-        CreateUpdateProcedureCommand cCommand = new CreateUpdateProcedureCommand(block);
-        // Virtual procedure
-        cCommand.setUpdateProcedure(false);
+        CreateProcedureCommand cCommand = new CreateProcedureCommand(block);
+
         return cCommand;
     }
 
@@ -965,7 +963,7 @@ public class TransformationSqlHelper implements SqlConstants {
 
             Iterator iter = currentSelectSymbols.iterator();
             while (iter.hasNext()) {
-                SelectSymbol selectSymbol = (SelectSymbol)iter.next();
+            	Expression selectSymbol = (Expression)iter.next();
                 // Get all Groups referenced by symbol
                 Collection symbolGroups = GroupsUsedByElementsVisitor.getGroups(selectSymbol);
                 Iterator symbolGroupIter = symbolGroups.iterator();
@@ -1088,8 +1086,8 @@ public class TransformationSqlHelper implements SqlConstants {
         final Iterator iter = currentSymbols.iterator();
         while (iter.hasNext()) {
             final Object next = iter.next();
-            if (next instanceof SingleElementSymbol) {
-                SingleElementSymbol seSymbol = (SingleElementSymbol)next;
+            if (next instanceof Expression) {
+            	Expression seSymbol = (Expression)next;
                 String symName = TransformationSqlHelper.getSingleElementSymbolShortName(seSymbol, false);
                 if (!symbolNamesToRemove.contains(symName)) {
                     result.add(seSymbol);
@@ -1289,7 +1287,7 @@ public class TransformationSqlHelper implements SqlConstants {
             } else if( addGroupElemsToSelect ) {
             	List currentSelectSymbols = resolvedQuery.getSelect().getSymbols();
                 if (currentSelectSymbols.size() == 1) {
-                    SelectSymbol singleSelectSymbol = (SelectSymbol)currentSelectSymbols.get(0);
+                	Expression singleSelectSymbol = (Expression)currentSelectSymbols.get(0);
                     if (singleSelectSymbol instanceof MultipleElementSymbol) {
                     	List<ElementSymbol> elementSymbols = ((MultipleElementSymbol)singleSelectSymbol).getElementSymbols();
                     	// Reset the Select Symbols
@@ -1348,7 +1346,7 @@ public class TransformationSqlHelper implements SqlConstants {
             // Look for duplicate short names
             Iterator symbolIter = symbols.iterator();
             while (symbolIter.hasNext()) {
-                SingleElementSymbol seSymbol = (SingleElementSymbol)symbolIter.next();
+            	Expression seSymbol = (Expression)symbolIter.next();
                 String name = TransformationSqlHelper.getSingleElementSymbolShortName(seSymbol, false);
                 // Construct unique name using symbol name and previous names
                 String uniqueName = getUniqueName(name, attrNames);
@@ -1382,7 +1380,7 @@ public class TransformationSqlHelper implements SqlConstants {
             // Populate the list with the symbol names
             Iterator symbolIter = projectedSymbols.iterator();
             while (symbolIter.hasNext()) {
-                SingleElementSymbol symbol = (SingleElementSymbol)symbolIter.next();
+            	Expression symbol = (Expression)symbolIter.next();
                 String shortName = getSingleElementSymbolShortName(symbol, false);
                 if (shortName != null) {
                     symbolNames.add(shortName);
@@ -1401,7 +1399,7 @@ public class TransformationSqlHelper implements SqlConstants {
      * @param showExpression flag to determine if full expression text is returned, or default name
      * @return the short name for the supplied symbol
      */
-    public static String getSingleElementSymbolShortName( SingleElementSymbol symbol,
+    public static String getSingleElementSymbolShortName( Expression symbol,
                                                           boolean showExpression ) {
         String symbolName = BLANK;
         if (symbol != null) {
@@ -1419,19 +1417,19 @@ public class TransformationSqlHelper implements SqlConstants {
                             ElementSymbol element = (ElementSymbol)elementSymbols.iterator().next();
                             symbolName = element.getShortName();
                         } else {
-                            symbolName = (showExpression) ? symbol.toString() : symbol.getShortName();
+                            symbolName = (showExpression) ? symbol.toString() : Symbol.getShortName(symbol);
                         }
                         // Not an implicit function
                     } else {
-                        symbolName = (showExpression) ? symbol.toString() : symbol.getShortName();
+                        symbolName = (showExpression) ? symbol.toString() : Symbol.getShortName(symbol);
                     }
                     // Expression not a Function
                 } else {
-                    symbolName = (showExpression) ? symbol.toString() : symbol.getShortName();
+                    symbolName = (showExpression) ? symbol.toString() : Symbol.getShortName(symbol);
                 }
                 // Not expression symbol, use short name
             } else {
-                symbolName = symbol.getShortName();
+                symbolName = Symbol.getShortName(symbol);
             }
         }
         return symbolName;
@@ -1550,7 +1548,7 @@ public class TransformationSqlHelper implements SqlConstants {
             List symbols = command.getProjectedSymbols();
             // Populate the list with the symbol names
             for (Iterator symbolIter = symbols.iterator(); symbolIter.hasNext();) {
-                SingleElementSymbol symbol = (SingleElementSymbol)symbolIter.next();
+            	Expression symbol = (Expression)symbolIter.next();
                 String name = TransformationSqlHelper.getSingleElementSymbolShortName(symbol, false);
 
                 Object typeObj = getElementSymbolType(symbol);
@@ -1610,7 +1608,7 @@ public class TransformationSqlHelper implements SqlConstants {
             // Populate the list with the symbol names
             Iterator symbolIter = symbols.iterator();
             while (symbolIter.hasNext()) {
-                SingleElementSymbol symbol = (SingleElementSymbol)symbolIter.next();
+            	Expression symbol = (Expression)symbolIter.next();
                 String name = TransformationSqlHelper.getSingleElementSymbolShortName(symbol, false);
                 Object eObj = null;
                 if (symbol instanceof ElementSymbol) {
@@ -1680,11 +1678,11 @@ public class TransformationSqlHelper implements SqlConstants {
             // Populate the list with the symbol names
             Iterator symbolIter = symbols.iterator();
             while (symbolIter.hasNext()) {
-                SingleElementSymbol symbol = (SingleElementSymbol)symbolIter.next();
+            	Expression symbol = (Expression)symbolIter.next();
                 String name = TransformationSqlHelper.getSingleElementSymbolShortName(symbol, false);
 
                 Object typeObj = getElementSymbolType(symbol);
-                boolean xmlDocSourceCase = hasXMLDocSource && (command instanceof CreateUpdateProcedureCommand);
+                boolean xmlDocSourceCase = hasXMLDocSource && (command instanceof CreateProcedureCommand);
 
                 // There may be duplicates in the elementMap (self-joins,etc)
                 // If so, the name is made unique first...
@@ -1722,7 +1720,7 @@ public class TransformationSqlHelper implements SqlConstants {
                 String name = symbol.getShortName();
 
                 Object typeObj = getElementSymbolType(symbol);
-                boolean xmlDocSourceCase = hasXMLDocSource && (command instanceof CreateUpdateProcedureCommand);
+                boolean xmlDocSourceCase = hasXMLDocSource && (command instanceof CreateProcedureCommand);
 
                 // Put the type length in the symbolLengthMap
                 updateTypeLengthMap(symbolLengthMap, name, typeObj, symbol, xmlDocSourceCase);
@@ -1742,7 +1740,7 @@ public class TransformationSqlHelper implements SqlConstants {
     private static void updateTypeLengthMap( Map theMap,
                                              String name,
                                              Object typeObj,
-                                             SingleElementSymbol symbol,
+                                             Expression symbol,
                                              boolean xmlDocSourceCase ) {
         // If the type is Datatype and it's a String Datatype, put the length in the map
         // Otherwise put in a -1
@@ -1788,7 +1786,7 @@ public class TransformationSqlHelper implements SqlConstants {
      * @return Function null if not found
      * @since 4.2.2
      */
-    private static Function isStringFunction( SingleElementSymbol symbol ) {
+    private static Function isStringFunction( Expression symbol ) {
         ExpressionSymbol expressionSymbol = null;
         Function function = null;
 
@@ -1909,7 +1907,7 @@ public class TransformationSqlHelper implements SqlConstants {
      * @return int length of concatenated expression
      * @since 4.2.2
      */
-    public static int getSymbolLength( SingleElementSymbol symbol ) {
+    public static int getSymbolLength( Expression symbol ) {
         int stringLength = 0;
 
         Function function = null;
@@ -2028,7 +2026,7 @@ public class TransformationSqlHelper implements SqlConstants {
             List symbols = command.getProjectedSymbols();
             Iterator iter = symbols.iterator();
             while (iter.hasNext()) {
-                SingleElementSymbol symbol = (SingleElementSymbol)iter.next();
+            	Expression symbol = (Expression)iter.next();
                 selectTypes.add(getElementSymbolType(symbol));
             }
         }
@@ -2042,7 +2040,7 @@ public class TransformationSqlHelper implements SqlConstants {
         List seSymbols = new ArrayList();
         Iterator symbolIter = symbols.iterator();
         while (symbolIter.hasNext()) {
-            SelectSymbol sSymbol = (SelectSymbol)symbolIter.next();
+        	Expression sSymbol = (Expression)symbolIter.next();
             if (sSymbol instanceof MultipleElementSymbol) {
                 List meSymbols = ((MultipleElementSymbol)sSymbol).getElementSymbols();
                 if (meSymbols != null) {
@@ -2054,7 +2052,7 @@ public class TransformationSqlHelper implements SqlConstants {
                         }
                     }
                 }
-            } else if (sSymbol instanceof SingleElementSymbol) {
+            } else if (sSymbol instanceof Expression) {
                 seSymbols.add(sSymbol);
             }
         }
@@ -2062,11 +2060,11 @@ public class TransformationSqlHelper implements SqlConstants {
         // Populate the list with the symbol names
         symbolIter = seSymbols.iterator();
         while (symbolIter.hasNext()) {
-            SingleElementSymbol seSymbol = (SingleElementSymbol)symbolIter.next();
+        	Expression seSymbol = (Expression)symbolIter.next();
             String name = TransformationSqlHelper.getSingleElementSymbolShortName(seSymbol, false);
             String uniqueName = name;
 
-            SingleElementSymbol underlyingSymbol = seSymbol;
+            Expression underlyingSymbol = seSymbol;
 
             // If this is an alias, set the symbol to be the underlying object
             if (seSymbol instanceof AliasSymbol) {
@@ -2389,7 +2387,7 @@ public class TransformationSqlHelper implements SqlConstants {
             SqlTableAspect tableAspect = (SqlTableAspect)AspectManager.getSqlAspect(groupEObj);
             List columns = tableAspect.getColumns(groupEObj);
             Iterator columnIter = columns.iterator();
-            SingleElementSymbol seSymbol = null;
+            Expression seSymbol = null;
             while (columnIter.hasNext()) {
                 EObject columnEObj = (EObject)columnIter.next();
                 seSymbol = createElemSymbol(columnEObj, groupSymbol);
@@ -2422,12 +2420,12 @@ public class TransformationSqlHelper implements SqlConstants {
 
                 String paramName = TransformationHelper.getSqlEObjectName(elemEObj);
 
-                ElementSymbol symbol = new ElementSymbol(groupSymbol.getName() + SingleElementSymbol.SEPARATOR + paramName);
+                ElementSymbol symbol = new ElementSymbol(groupSymbol.getName() + Symbol.SEPARATOR + paramName);
                 symbol.setType(clazz);
                 result.add(symbol);
 
                 if (inout.contains(elemEObj)) {
-                    symbol = new ElementSymbol(groupSymbol.getName() + SingleElementSymbol.SEPARATOR + paramName + "_IN"); //$NON-NLS-1$
+                    symbol = new ElementSymbol(groupSymbol.getName() + Symbol.SEPARATOR + paramName + "_IN"); //$NON-NLS-1$
                     symbol.setType(clazz);
                     result.add(symbol);
                 }
@@ -2443,9 +2441,9 @@ public class TransformationSqlHelper implements SqlConstants {
      * @param groupEObj the supplied group EObject
      * @return the corresponding GroupSymbols
      */
-    public static SingleElementSymbol createElemSymbol( EObject elemEObj,
+    public static Expression createElemSymbol( EObject elemEObj,
                                                         GroupSymbol parentGroupSymbol ) {
-        SingleElementSymbol seSymbol = null;
+    	Expression seSymbol = null;
 
         // Get name for the supplied group
         String tableName = parentGroupSymbol.getName();
@@ -2568,7 +2566,7 @@ public class TransformationSqlHelper implements SqlConstants {
             // if they contain a renamed symbol
             // Once a symbol is renamed, the Map entry is removed so duplicates dont get renamed
             for (int i = 0; i < seSymbols.size(); i++) {
-                SelectSymbol currentSelectSymbol = (SelectSymbol)seSymbols.get(i);
+            	Expression currentSelectSymbol = (Expression)seSymbols.get(i);
                 // ---------------------------------------------------------------
                 // Current Symbol is MultiElement - expand it if necessary
                 // ---------------------------------------------------------------
@@ -2582,7 +2580,7 @@ public class TransformationSqlHelper implements SqlConstants {
                         Iterator iter = multiElemSymbols.iterator();
                         // Go thru all SingleElement symbols, and rename if necessary
                         while (iter.hasNext()) {
-                            SingleElementSymbol renamedSymbol = renameSymbolUsingMap((SingleElementSymbol)iter.next(),
+                        	Expression renamedSymbol = renameSymbolUsingMap((Expression)iter.next(),
                                                                                      workingRenSymMap);
                             newSymbols.add(renamedSymbol);
                         }
@@ -2593,8 +2591,8 @@ public class TransformationSqlHelper implements SqlConstants {
                     // ----------------------------------------------------------------
                     // Current Symbol is SingleElementSymbol - rename it if necessary
                     // ----------------------------------------------------------------
-                } else if (currentSelectSymbol instanceof SingleElementSymbol) {
-                    SingleElementSymbol renamedSymbol = renameSymbolUsingMap((SingleElementSymbol)currentSelectSymbol,
+                } else if (currentSelectSymbol instanceof Expression) {
+                	Expression renamedSymbol = renameSymbolUsingMap((Expression)currentSelectSymbol,
                                                                              workingRenSymMap);
                     newSymbols.add(renamedSymbol);
                 }
@@ -2632,17 +2630,17 @@ public class TransformationSqlHelper implements SqlConstants {
     }
 
     /**
-     * method to rename a SingleElementSymbol. The SingleElementSymbol is checked against the renamedSymbolsMap. If the symbol is
+     * method to rename a Expression. The Expression is checked against the renamedSymbolsMap. If the symbol is
      * in the renamedSymbolsMap, set the name to the new value. Otherwise, return the original symbol.
      * 
-     * @param seSymbol the SingleElementSymbol to check.
+     * @param seSymbol the Expression to check.
      * @param renamedSymbolsMap the map of renamed symbols
-     * @return the renamed SingleElementSymbol (renamed only if necessary)
+     * @return the renamed Expression (renamed only if necessary)
      */
-    private static SingleElementSymbol renameSymbolUsingMap( SingleElementSymbol seSymbol,
+    private static Expression renameSymbolUsingMap( Expression seSymbol,
                                                              Map renamedSymbolsMap ) {
         // Default is just going to return what comes in
-        SingleElementSymbol resultSymbol = seSymbol;
+    	Expression resultSymbol = seSymbol;
         if (seSymbol != null) {
             Iterator renamedIter = renamedSymbolsMap.keySet().iterator();
             // Check the Map. If seSymbol is in the Map, rename it to the new name.
@@ -2650,11 +2648,11 @@ public class TransformationSqlHelper implements SqlConstants {
                 // newName key
                 String newName = (String)renamedIter.next();
                 // get corresponding symbol
-                SingleElementSymbol renamedSymbol = (SingleElementSymbol)renamedSymbolsMap.get(newName);
+                Expression renamedSymbol = (Expression)renamedSymbolsMap.get(newName);
                 // If seSymbol is in the Map, rename it and quit.
                 if (renamedSymbol.equals(seSymbol)) {
                     if (seSymbol instanceof AliasSymbol) {
-                        seSymbol.setShortName(newName);
+                        ((AliasSymbol)seSymbol).setShortName(newName);
                         resultSymbol = seSymbol;
                     } else {
                         resultSymbol = new AliasSymbol(newName, seSymbol);
@@ -2764,13 +2762,17 @@ public class TransformationSqlHelper implements SqlConstants {
                                                GroupSymbol gSymbol ) {
         boolean result = false;
         // Get the supplied GroupSymbol name and definition
-        String gSymbName = gSymbol.getCanonicalName();
+//        String gSymbName = gSymbol.getCanonicalName();
+     // TODO: This may not be right
+        String gSymbName = gSymbol.getName();
         String gSymbDefn = gSymbol.getDefinition();
         // Check the list for a matching symbol
         Iterator iter = symbols.iterator();
         while (iter.hasNext()) {
             GroupSymbol listSymbol = (GroupSymbol)iter.next();
-            String lSymbName = listSymbol.getCanonicalName();
+//            String lSymbName = listSymbol.getCanonicalName();
+            // TODO: This may not be right
+            String lSymbName = gSymbol.getName();
             String lSymbDefn = listSymbol.getDefinition();
             // If the symbol definitions are both null, neither are aliased - just compare the canonical names
             if (lSymbDefn == null && gSymbDefn == null) {
@@ -2798,15 +2800,15 @@ public class TransformationSqlHelper implements SqlConstants {
      * @since 5.0
      */
     public static boolean containsElementSymbol( Collection symbols,
-                                                 SingleElementSymbol eSymbol ) {
+    		Expression eSymbol ) {
         EObject referencedColumn = getSingleElementSymbolEObject(eSymbol);
         Iterator iter = symbols.iterator();
         while (iter.hasNext()) {
-            SingleElementSymbol next = (SingleElementSymbol)iter.next();
+        	Expression next = (Expression)iter.next();
             if (eSymbol == next) {
                 return true;
             }
-            if (eSymbol.getName().equalsIgnoreCase(next.getName())) {
+            if (Symbol.getName(eSymbol).equalsIgnoreCase(Symbol.getName(next) )){
                 // If Names are same, do one last check if the EObjects (column refs) are same
                 if (referencedColumn != null) {
                     EObject nextReferencedEObject = getSingleElementSymbolEObject(next);
@@ -2828,10 +2830,10 @@ public class TransformationSqlHelper implements SqlConstants {
      * @return
      * @since 5.0
      */
-    public static EObject getSingleElementSymbolEObject( SingleElementSymbol singleSymbol ) {
+    public static EObject getSingleElementSymbolEObject( Expression singleSymbol ) {
         EObject referencedColumn = null;
         if (singleSymbol instanceof AliasSymbol) {
-            SingleElementSymbol theSymbol = ((AliasSymbol)singleSymbol).getSymbol();
+        	Expression theSymbol = ((AliasSymbol)singleSymbol).getSymbol();
             if (theSymbol instanceof ElementSymbol) {
                 referencedColumn = TransformationSqlHelper.getElementSymbolEObject((ElementSymbol)theSymbol);
             }
@@ -2914,7 +2916,7 @@ public class TransformationSqlHelper implements SqlConstants {
      * @param symbol the SingleElementSymbol
      * @return the symbols type
      */
-    public static Object getElementSymbolType( SingleElementSymbol symbol ) {
+    public static Object getElementSymbolType( Expression symbol ) {
         Object datatype = null;
         // If this is an alias, set the symbol to be the aliased symbol
         if (symbol instanceof AliasSymbol) {
@@ -2958,7 +2960,7 @@ public class TransformationSqlHelper implements SqlConstants {
      * @param symbol the SingleElementSymbol
      * @return the symbols type length
      */
-    public static int getElementSymbolLength( SingleElementSymbol symbol ) {
+    public static int getElementSymbolLength( Expression symbol ) {
         int length = -1;
         // If this is an alias, set the symbol to be the aliased symbol
         if (symbol instanceof AliasSymbol) {
@@ -3144,7 +3146,7 @@ public class TransformationSqlHelper implements SqlConstants {
         boolean result = false;
         List currentSelectSymbols = select.getSymbols();
         if (currentSelectSymbols.size() == 1) {
-            SelectSymbol singleSelectSymbol = (SelectSymbol)currentSelectSymbols.get(0);
+        	Expression singleSelectSymbol = (Expression)currentSelectSymbols.get(0);
             if (singleSelectSymbol instanceof MultipleElementSymbol) {
                 result = true;
             }
@@ -3276,8 +3278,8 @@ public class TransformationSqlHelper implements SqlConstants {
         // Handle case where the Expression is already a Convert Function
         if (isConvertFunction(symbol)) {
             Expression cExpr = getConvertedExpr(symbol);
-            if (cExpr instanceof SingleElementSymbol) {
-                SingleElementSymbol seSymbol = (SingleElementSymbol)cExpr;
+            if (cExpr instanceof Expression) {
+            	Expression seSymbol = (Expression)cExpr;
                 String seSymbolTypeStr = DataTypeManager.getDataTypeName(seSymbol.getType());
                 // Check whether there is a conversion from the underlying symbol to the attribute type
                 boolean isExplicitConv = DataTypeManager.isExplicitConversion(seSymbolTypeStr, targetTypeStr);
@@ -3287,7 +3289,7 @@ public class TransformationSqlHelper implements SqlConstants {
                         return convertExpressionSymbol((ExpressionSymbol)seSymbol, targetTypeStr);
                     } else if (seSymbol instanceof ElementSymbol) {
                         AliasSymbol aSymbol = convertElementSymbol((ElementSymbol)seSymbol, targetTypeStr, null);
-                        SingleElementSymbol aseSymbol = aSymbol.getSymbol();
+                        Expression aseSymbol = aSymbol.getSymbol();
                         if (aseSymbol instanceof ExpressionSymbol) {
                             return (ExpressionSymbol)aseSymbol;
                         }

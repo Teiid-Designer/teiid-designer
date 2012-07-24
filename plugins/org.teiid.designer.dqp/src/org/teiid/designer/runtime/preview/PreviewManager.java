@@ -1250,6 +1250,7 @@ public final class PreviewManager extends JobChangeAdapter
                 String projectPreviewVdbName = getPreviewProjectVdbName(modelToPreview.getProject());
 
                 if (!sourceVdbName.equals(projectPreviewVdbName)) {
+
                     admin.mergeVdbs(sourceVdbName, PreviewManager.getPreviewVdbVersion(pvdbToMerge), projectPreviewVdbName, 1);
                 }
 

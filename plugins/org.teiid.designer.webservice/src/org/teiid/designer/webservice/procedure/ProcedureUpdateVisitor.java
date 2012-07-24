@@ -18,7 +18,7 @@ import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.Block;
-import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.proc.CreateProcedureCommand;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
@@ -107,11 +107,11 @@ public class ProcedureUpdateVisitor extends LanguageVisitor {
     }
 
     /**
-     * @see org.teiid.query.sql.LanguageVisitor#visit(org.teiid.query.sql.proc.CreateUpdateProcedureCommand)
+     * @see org.teiid.query.sql.LanguageVisitor#visit(org.teiid.query.sql.proc.CreateProcedureCommand)
      * @since 4.3
      */
     @Override
-    public void visit(final CreateUpdateProcedureCommand obj) {
+    public void visit(final CreateProcedureCommand obj) {
         super.visit(obj);
     }
 

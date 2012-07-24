@@ -14,10 +14,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.widgets.Shell;
-
 import org.teiid.designer.metamodels.transformation.SqlAlias;
 import org.teiid.designer.metamodels.transformation.TransformationFactory;
 import org.teiid.designer.transformation.ui.UiConstants;
@@ -32,8 +32,8 @@ import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.symbol.SingleElementSymbol;
 import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 
 /**
@@ -126,7 +126,7 @@ public class ReconcilerObject {
             EObject attribute = (EObject)attrIter.next();
             String attrShortName = TransformationHelper.getSqlEObjectName(attribute);
             // If a matching symbol is found, use it in the binding. And remove from working list
-            SingleElementSymbol seSymbol = getSymbolWithShortName(attrShortName, workingSymbolList);
+            Expression seSymbol = getSymbolWithShortName(attrShortName, workingSymbolList);
             if (seSymbol != null) {
                 bindingList.add(new Binding(attribute, seSymbol));
             } else {
@@ -150,12 +150,12 @@ public class ReconcilerObject {
      * @param workingSymbolList the workingList of symbols to search
      * @return the matching symbol from the list, if found. If not found, returns null.
      */
-    private SingleElementSymbol getSymbolWithShortName( String name,
+    private Expression getSymbolWithShortName( String name,
                                                         List workingSymbolList ) {
-        SingleElementSymbol result = null;
+    	Expression result = null;
         Iterator iter = workingSymbolList.iterator();
         while (iter.hasNext()) {
-            SingleElementSymbol seSymbol = (SingleElementSymbol)iter.next();
+        	Expression seSymbol = (Expression)iter.next();
             String symbolName = TransformationSqlHelper.getSingleElementSymbolShortName(seSymbol, false);
             if (symbolName != null && symbolName.equalsIgnoreCase(name)) {
                 result = seSymbol;
@@ -268,7 +268,7 @@ public class ReconcilerObject {
      * 
      * @param symbol the symbol to remove
      */
-    public void removeSymbol( SingleElementSymbol symbol ) {
+    public void removeSymbol( Expression symbol ) {
         sqlList.remove(symbol);
         updateCommandFromBindings();
     }
@@ -353,7 +353,7 @@ public class ReconcilerObject {
         Binding binding = null;
         while (iter.hasNext()) {
             binding = (Binding)iter.next();
-            SingleElementSymbol symbol = binding.getCurrentSymbol();
+            Expression symbol = binding.getCurrentSymbol();
             // Add the current symbol to the list, if not null
             if (symbol != null) {
                 unboundSQL.add(symbol);
@@ -370,11 +370,11 @@ public class ReconcilerObject {
     public void bind( List bindings,
                       List sqlSymbols ) {
         Binding binding = null;
-        SingleElementSymbol sqlSymbol = null;
+        Expression sqlSymbol = null;
         if (bindings.size() == sqlSymbols.size()) {
             for (int i = 0; i < bindings.size(); i++) {
                 binding = (Binding)bindings.get(i);
-                sqlSymbol = (SingleElementSymbol)sqlSymbols.get(i);
+                sqlSymbol = (Expression)sqlSymbols.get(i);
                 if (binding.getCurrentSymbol() == null) {
                     binding.setNewSymbol(sqlSymbol);
                 }
@@ -389,7 +389,7 @@ public class ReconcilerObject {
         if (sqlSymbols == null || !sqlSymbols.isEmpty()) {
             Iterator iter = sqlSymbols.iterator();
             while (iter.hasNext()) {
-                SingleElementSymbol symbol = (SingleElementSymbol)iter.next();
+            	Expression symbol = (Expression)iter.next();
                 String symbolShortName = TransformationSqlHelper.getSingleElementSymbolShortName(symbol, false);
                 if (bindingList.hasRemovedBindingMatch(symbolShortName)) {
                     Binding removedBinding = bindingList.getRemovedBindingMatch(symbolShortName);
@@ -578,7 +578,7 @@ public class ReconcilerObject {
      * @param symbol the ElementSymbol to test.
      * @return 'true' if supplied symbol is InputParameter, 'false' if not.
      */
-    public boolean isInputParameterSymbol( SingleElementSymbol symbol ) {
+    public boolean isInputParameterSymbol( Expression symbol ) {
         boolean isInputParamSymbol = false;
         // See if it's in the InputParameter symbol list.
         if (this.originalInputParamSymbols.contains(symbol)) {
@@ -857,7 +857,7 @@ public class ReconcilerObject {
             // Bound - get the Symbol from the binding
             // --------------------------------------------------------------
             if (binding.isBound() && !binding.isInputParamBinding()) {
-                SingleElementSymbol symbol = binding.createBindingSymbol();
+            	Expression symbol = binding.createBindingSymbol();
                 if (!isInputParameterSymbol(symbol)) {
                     newSymbols.add(binding.createBindingSymbol());
                 }
@@ -868,12 +868,12 @@ public class ReconcilerObject {
                 // current attribute name
                 String attrName = binding.getCurrentAttrName();
                 // See if there is a matching symbol in the unmatched working list
-                SingleElementSymbol seSymbol = getSymbolWithShortName(attrName, unmatchedSymbols);
+                Expression seSymbol = getSymbolWithShortName(attrName, unmatchedSymbols);
                 if (seSymbol != null && !isInputParameterSymbol(seSymbol)) {
                     newSymbols.add(seSymbol);
                 } else {
                     if (!unmatchedSymbols.isEmpty()) {
-                        seSymbol = (SingleElementSymbol)unmatchedSymbols.get(0);
+                        seSymbol = (Expression)unmatchedSymbols.get(0);
                         if (seSymbol != null && !isInputParameterSymbol(seSymbol)) {
                             newSymbols.add(seSymbol);
                         }
@@ -890,7 +890,7 @@ public class ReconcilerObject {
         // If there are unmatched symbols remaining, add them
         iter = unmatchedSymbols.iterator();
         while (iter.hasNext()) {
-            SingleElementSymbol sym = (SingleElementSymbol)iter.next();
+        	Expression sym = (Expression)iter.next();
             if (sym != null && !isInputParameterSymbol(sym)) {
                 newSymbols.add(sym);
             }
@@ -936,9 +936,9 @@ public class ReconcilerObject {
 
         Iterator iter = referencedElementSymbols.iterator();
         while (iter.hasNext()) {
-            SingleElementSymbol nextSymbol = (SingleElementSymbol)iter.next();
+        	Expression nextSymbol = (Expression)iter.next();
             if (nextSymbol instanceof AliasSymbol) {
-                SingleElementSymbol theSymbol = ((AliasSymbol)nextSymbol).getSymbol();
+            	Expression theSymbol = ((AliasSymbol)nextSymbol).getSymbol();
                 if (theSymbol instanceof ElementSymbol) {
                     GroupSymbol nextGS = ((ElementSymbol)theSymbol).getGroupSymbol();
                     if (TransformationSqlHelper.containsGroupSymbol(allGroupSymbols, nextGS)) {
@@ -967,9 +967,9 @@ public class ReconcilerObject {
 
         Iterator iter = originalSymbols.iterator();
         while (iter.hasNext()) {
-            SingleElementSymbol nextSymbol = (SingleElementSymbol)iter.next();
+        	Expression nextSymbol = (Expression)iter.next();
             if (nextSymbol instanceof AliasSymbol) {
-                SingleElementSymbol theSymbol = ((AliasSymbol)nextSymbol).getSymbol();
+            	Expression theSymbol = ((AliasSymbol)nextSymbol).getSymbol();
                 if (theSymbol instanceof ElementSymbol) {
                     GroupSymbol nextGS = ((ElementSymbol)theSymbol).getGroupSymbol();
                     if (!TransformationSqlHelper.containsGroupSymbol(referencedGroupSymbols, nextGS)) {

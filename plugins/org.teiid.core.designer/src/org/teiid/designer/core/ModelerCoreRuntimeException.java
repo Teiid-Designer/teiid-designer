@@ -14,6 +14,8 @@ import org.teiid.core.TeiidRuntimeException;
  * @since 8.0
  */
 public class ModelerCoreRuntimeException extends TeiidRuntimeException {
+	
+	Throwable child = null;
     /**
      */
     private static final long serialVersionUID = 1L;
@@ -67,7 +69,16 @@ public class ModelerCoreRuntimeException extends TeiidRuntimeException {
      * @param message
      */
     public ModelerCoreRuntimeException(Throwable e, int code, String message) {
-        super(e, Integer.toString(code), message);
+        super(Integer.toString(code), message);
+        child = e;
+    }
+    
+    /**
+     * 
+     * @return child Throwable
+     */
+    public Throwable getChild() {
+    	return this.child;
     }
 
 }

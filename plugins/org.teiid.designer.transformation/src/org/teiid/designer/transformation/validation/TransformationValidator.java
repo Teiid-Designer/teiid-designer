@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -63,15 +64,15 @@ import org.teiid.query.resolver.util.ResolverUtil;
 import org.teiid.query.resolver.util.ResolverVisitor;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.DynamicCommand;
-import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.proc.CreateProcedureCommand;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.visitor.ReferenceCollectorVisitor;
 import org.teiid.query.validator.UpdateValidator;
+import org.teiid.query.validator.UpdateValidator.UpdateType;
 import org.teiid.query.validator.Validator;
 import org.teiid.query.validator.ValidatorFailure;
 import org.teiid.query.validator.ValidatorReport;
-import org.teiid.query.validator.UpdateValidator.UpdateType;
 
 /**
  * TransformationValidator Static methods for doing Validation on the transformation.
@@ -435,11 +436,11 @@ public class TransformationValidator implements QueryValidator {
             QueryResolver.resolveCommand(command, gSymbol, getTeiidCommandType(transformType), metadata);
             // If unsuccessful, an exception is thrown
 
-            if (command instanceof CreateUpdateProcedureCommand
-                    && ((CreateUpdateProcedureCommand)command).getResultsCommand() instanceof DynamicCommand
-                    && !((DynamicCommand)((CreateUpdateProcedureCommand)command).getResultsCommand()).isAsClauseSet()) {
+            if (command instanceof CreateProcedureCommand
+                    && ((CreateProcedureCommand)command).getResultsCommand() instanceof DynamicCommand
+                    && !((DynamicCommand)((CreateProcedureCommand)command).getResultsCommand()).isAsClauseSet()) {
                 List<ElementSymbol> projectedSymbols = getProjectedSymbols();
-                ((CreateUpdateProcedureCommand)command).setProjectedSymbols(projectedSymbols);
+                ((CreateProcedureCommand)command).setProjectedSymbols(projectedSymbols);
             }
         } catch (TeiidComponentException e) {
             // create status
@@ -689,7 +690,7 @@ public class TransformationValidator implements QueryValidator {
                         return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, msg, null);
                     }
                 } else if (targetGroup instanceof Procedure) {
-                    if (!(cmdType == Command.TYPE_UPDATE_PROCEDURE && !((CreateUpdateProcedureCommand)command).isUpdateProcedure())) {
+                    if (!(cmdType == Command.TYPE_UPDATE_PROCEDURE )) {
                         // create validation problem and addition to the results
                         String msg = TransformationPlugin.Util.getString("TransformationValidator.Query_defining_a_virtual_procedure_can_only_be_of_type_Virtual_procedure._2"); //$NON-NLS-1$
                         return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, msg, null);
@@ -705,7 +706,7 @@ public class TransformationValidator implements QueryValidator {
             case QueryValidator.INSERT_TRNS:
             case QueryValidator.UPDATE_TRNS:
             case QueryValidator.DELETE_TRNS:
-                if (cmdType != Command.TYPE_TRIGGER_ACTION && !(cmdType == Command.TYPE_UPDATE_PROCEDURE && ((CreateUpdateProcedureCommand)command).isUpdateProcedure())) {
+                if (cmdType != Command.TYPE_TRIGGER_ACTION && !(cmdType == Command.TYPE_UPDATE_PROCEDURE )) {
                     // create validation problem and addition to the results
                     String msg = TransformationPlugin.Util.getString("TransformationValidator.Only_update_procedures_are_allowed_in_the_INSERT/UPDATE/DELETE_tabs._1"); //$NON-NLS-1$
                     return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, msg, null);

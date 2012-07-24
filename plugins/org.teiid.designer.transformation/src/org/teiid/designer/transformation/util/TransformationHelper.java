@@ -33,7 +33,6 @@ import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.ModelerCoreException;
-import org.teiid.designer.metadata.runtime.MetadataConstants;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.metamodel.aspect.MetamodelAspect;
@@ -53,6 +52,7 @@ import org.teiid.designer.core.util.ModelResourceContainerFactory;
 import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.metadata.runtime.MetadataConstants;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.function.FunctionParameter;
 import org.teiid.designer.metamodels.function.ReturnParameter;
@@ -79,9 +79,9 @@ import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.sql.lang.StoredProcedure;
-import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.proc.CreateProcedureCommand;
+import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.symbol.SingleElementSymbol;
 import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 
 
@@ -301,7 +301,7 @@ public class TransformationHelper implements SqlConstants {
                     // Create StoredProcedure
                     StoredProcedure proc = TransformationSqlHelper.createStoredProc(sourceGroup);
                     if (proc != null) {
-                        CreateUpdateProcedureCommand cCommand = TransformationSqlHelper.createVirtualProcCommmandForCommand(proc);
+                        CreateProcedureCommand cCommand = TransformationSqlHelper.createVirtualProcCommmandForCommand(proc);
                         // Set the SQL STring on the transformation ...
                         setSelectSqlString(transMappingRoot, cCommand.toString(), false, txnSource);
                     }
@@ -3017,7 +3017,7 @@ public class TransformationHelper implements SqlConstants {
         if (SqlMappingRootCache.isSelectValid(transMappingRoot)) {
             Command command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
 
-            if (command instanceof CreateUpdateProcedureCommand) {
+            if (command instanceof CreateProcedureCommand) {
                 result = true;
             }
         }
@@ -3472,7 +3472,7 @@ public class TransformationHelper implements SqlConstants {
                     // but there is no gaurentee so check the index in the proj of union to the proj
                     // of qury
                     if (index < projSymbols.size()) {
-                        SingleElementSymbol seSymbol = (SingleElementSymbol)projSymbols.get(index);
+                    	Expression seSymbol = (Expression)projSymbols.get(index);
                         // Get the ElementSymbols / corresponding EObjs
                         Collection elemSymbols = ElementCollectorVisitor.getElements(seSymbol, true);
                         Collection elemEObjs = TransformationSqlHelper.getElementSymbolEObjects(elemSymbols, query);

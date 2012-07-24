@@ -9,13 +9,13 @@ package org.teiid.designer.transformation.ui.util;
 
 import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
-
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect;
@@ -29,8 +29,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.symbol.SingleElementSymbol;
 import org.teiid.query.ui.builder.util.ElementViewerFactory;
 
 /**
@@ -140,7 +140,7 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
                 // always create element symbols for the tree
                 Object[] aliasedElements = new Object[result.length];
                 for ( int i=0 ; i<result.length ; ++i ) {
-                    SingleElementSymbol elementSymbol = TransformationSqlHelper.createElemSymbol((EObject) result[i], (GroupSymbol) parentElement);
+                    Expression elementSymbol = TransformationSqlHelper.createElemSymbol((EObject) result[i], (GroupSymbol) parentElement);
                     aliasedElements[i] = elementSymbol;
                 }
                 result = aliasedElements;                
