@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
@@ -52,7 +53,6 @@ import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.symbol.SingleElementSymbol;
 import org.teiid.query.sql.visitor.FunctionCollectorVisitor;
 
 /**
@@ -304,7 +304,7 @@ public class TransformationMappingHelper implements SqlConstants {
      * @param attribute the EObject attribute
      * @return 'true' if the types match, 'false' if not
      */
-    public static boolean typesMatch( SingleElementSymbol seSymbol,
+    public static boolean typesMatch( Expression seSymbol,
                                        EObject attribute ) {
         boolean typesMatch = false;
         if (seSymbol != null && attribute != null) {
@@ -327,7 +327,7 @@ public class TransformationMappingHelper implements SqlConstants {
                                           List attributeList ) {
         if (symbolList != null && attributeList != null && symbolList.size() == attributeList.size()) {
             for (int i = 0; i < symbolList.size(); i++) {
-                SingleElementSymbol seSymbol = (SingleElementSymbol)symbolList.get(i);
+            	Expression seSymbol = (Expression)symbolList.get(i);
                 EObject attr = (EObject)attributeList.get(i);
                 if (!typesMatch(seSymbol, attr)) {
                     return false;

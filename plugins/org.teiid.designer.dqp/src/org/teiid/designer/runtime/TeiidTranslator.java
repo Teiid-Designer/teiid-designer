@@ -30,9 +30,9 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
     private final Translator translator;
     private final ExecutionAdmin admin;
 
-    private final Collection<PropertyDefinition> propDefs;
+    private final Collection<? extends PropertyDefinition> propDefs;
 
-    TeiidTranslator( Translator translator, Collection<PropertyDefinition> propDefs, ExecutionAdmin admin) {
+    TeiidTranslator( Translator translator, Collection<? extends PropertyDefinition> propDefs, ExecutionAdmin admin) {
         CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(propDefs, "propDefs"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
@@ -305,7 +305,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
      * @return an immutable collection of property definitions (never <code>null</code>);
      * @since 7.0
      */
-    public Collection<PropertyDefinition> getPropertyDefinitions() {
+    public Collection<? extends PropertyDefinition> getPropertyDefinitions() {
         return this.propDefs;
     }
 

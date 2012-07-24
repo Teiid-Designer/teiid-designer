@@ -26,10 +26,12 @@ public abstract class TeiidConnectionInfo {
 
     protected static final String MMS = "mms://"; //$NON-NLS-1$
     protected static final String MM = "mm://"; //$NON-NLS-1$
+    protected static final int DEFAULT_PORT_NUMBER = 0;
 
     private HostProvider hostProvider;
     private String password;
     private String port;
+    private int portNumber = DEFAULT_PORT_NUMBER;
     private boolean secure;
     private String username;
     private boolean persistPassword = false;
@@ -48,6 +50,11 @@ public abstract class TeiidConnectionInfo {
                                    boolean persistPassword,
                                    boolean secure ) {
         this.port = port;
+        try {
+			this.portNumber = Integer.parseInt(port);
+		} catch (NumberFormatException ex) {
+			this.portNumber = DEFAULT_PORT_NUMBER;
+		}
         this.username = username;
         this.password = password;
         this.persistPassword = persistPassword;
@@ -175,6 +182,14 @@ public abstract class TeiidConnectionInfo {
     public String getPort() {
         return this.port;
     }
+    
+    /**
+     * @return the port number
+     */
+    
+    public int getPortNumber() {
+    	return portNumber;
+    }
 
     /**
      * @return the connection type (never <code>null</code>)
@@ -275,6 +290,11 @@ public abstract class TeiidConnectionInfo {
      */
     public void setPort( String port ) {
         this.port = port;
+        try {
+			this.portNumber = Integer.parseInt(port);
+		} catch (NumberFormatException ex) {
+			this.portNumber = DEFAULT_PORT_NUMBER;
+		}
     }
 
     /**

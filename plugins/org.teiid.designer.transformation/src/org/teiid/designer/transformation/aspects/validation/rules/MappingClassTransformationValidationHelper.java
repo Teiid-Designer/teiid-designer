@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDComponent;
@@ -31,7 +32,6 @@ import org.teiid.designer.metamodels.xml.XmlContainerNode;
 import org.teiid.designer.metamodels.xml.XmlElement;
 import org.teiid.designer.metamodels.xml.util.XmlDocumentUtil;
 import org.teiid.designer.transformation.TransformationPlugin;
-import org.teiid.query.sql.ProcedureReservedWords;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.Query;
@@ -128,8 +128,8 @@ public class MappingClassTransformationValidationHelper {
             Criteria criteriaClause = query.getCriteria();
             if (criteriaClause != null) {
                 Set<GroupSymbol> groups = GroupsUsedByElementsVisitor.getGroups(criteriaClause);
-                if (groups.contains(new GroupSymbol(ProcedureReservedWords.INPUT))
-                || groups.contains(new GroupSymbol(ProcedureReservedWords.INPUTS))) {
+                if (groups.contains(new GroupSymbol("INPUT")) //$NON-NLS-1$
+                || groups.contains(new GroupSymbol("INPUTS"))) { //$NON-NLS-1$
                     foundInParam = true;
                        
                 }

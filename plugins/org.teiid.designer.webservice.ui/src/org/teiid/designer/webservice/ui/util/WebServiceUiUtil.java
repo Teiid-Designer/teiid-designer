@@ -55,7 +55,7 @@ import org.teiid.designer.webservice.util.WebServiceUtil;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.CommandStatement;
-import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.proc.CreateProcedureCommand;
 import org.teiid.query.sql.proc.DeclareStatement;
 import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.ElementSymbol;
@@ -413,9 +413,9 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
                                             Object transactionSource,
                                             boolean replace ) {
         SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(operation);
-        CreateUpdateProcedureCommand proc = null;
+        CreateProcedureCommand proc = null;
         if (!TransformationHelper.isEmptySelect(root)) {
-            proc = (CreateUpdateProcedureCommand)TransformationHelper.getCommand(root, QueryValidator.SELECT_TRNS);
+            proc = (CreateProcedureCommand)TransformationHelper.getCommand(root, QueryValidator.SELECT_TRNS);
         }
         boolean initVar = true;
         boolean initSelect = true;
@@ -425,8 +425,7 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
                 initVar = false;
                 initSelect = false;
             } else {
-                proc = new CreateUpdateProcedureCommand(new Block());
-                proc.setUpdateProcedure(false);
+                proc = new CreateProcedureCommand(new Block());
             }
         } else {
             Block block = proc.getBlock();

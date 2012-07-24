@@ -22,7 +22,6 @@ import org.teiid.designer.metamodels.relational.SearchabilityType;
 import org.teiid.designer.metamodels.transformation.InputParameter;
 import org.teiid.designer.metamodels.transformation.TransformationPackage;
 import org.teiid.designer.transformation.TransformationPlugin;
-import org.teiid.query.sql.ProcedureReservedWords;
 
 /**
  * InputParameterSqlAspect
@@ -31,7 +30,7 @@ import org.teiid.query.sql.ProcedureReservedWords;
  */
 public class InputParameterSqlAspect extends AbstractTransformationSqlAspect implements SqlColumnAspect {
     
-    private static final String INPUT_SET_FULL_NAME = ProcedureReservedWords.INPUTS;
+    private static final String INPUT_SET_FULL_NAME = "INPUTS"; //$NON-NLS-1$
 
     /**
      * Construct an instance of InputParameterSqlAspect.

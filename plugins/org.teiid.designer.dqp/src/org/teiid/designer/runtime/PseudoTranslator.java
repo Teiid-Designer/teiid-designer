@@ -114,4 +114,22 @@ public class PseudoTranslator implements Translator {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public String getServerGroup() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getServerName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getHostName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

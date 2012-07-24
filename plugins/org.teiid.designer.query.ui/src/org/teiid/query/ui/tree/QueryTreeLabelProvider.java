@@ -17,9 +17,9 @@ import org.teiid.query.sql.lang.JoinPredicate;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ExpressionSymbol;
 import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.symbol.SingleElementSymbol;
 import org.teiid.query.ui.UiConstants;
 import org.teiid.query.ui.UiPlugin;
 import org.teiid.query.ui.builder.util.ElementViewerFactory;
@@ -104,7 +104,7 @@ public class QueryTreeLabelProvider implements ILabelProvider, UiConstants {
                 return FROM_ICON;
             } else if ( element instanceof JoinPredicate ) {
                 return JOIN_ICON;
-            } else if ( element instanceof SingleElementSymbol ) {
+            } else if ( element instanceof Expression ) {
                 if ( element instanceof ExpressionSymbol) {
                     return EXPRESSION_ICON;
                 }

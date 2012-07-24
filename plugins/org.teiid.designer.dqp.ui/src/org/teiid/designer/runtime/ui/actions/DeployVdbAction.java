@@ -261,7 +261,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 				VDB deployedVdb = deployer.getDeployedVdb();
 				result[0] = deployedVdb;
 
-				if (deployedVdb.getStatus().equals(VDB.Status.INACTIVE)) {
+				if (deployedVdb.getStatus().equals(VDB.Status.REMOVED)) {
 					StringBuilder message = new StringBuilder(UTIL.getString(
 							I18N_PREFIX + "vdbNotActiveMessage", //$NON-NLS-1$
 							deployedVdb.getName()));

@@ -9,6 +9,7 @@ package org.teiid.designer.transformation.ui.reconciler;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -42,7 +43,6 @@ import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ExpressionSymbol;
-import org.teiid.query.sql.symbol.SingleElementSymbol;
 import org.teiid.query.ui.builder.util.ElementViewerFactory;
 
 
@@ -531,7 +531,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
         SqlList sqlList = sqlListPanel.getSqlList();
         int indexOfLast = 0;
         if (sqlList.size() > 0) {
-            SingleElementSymbol symbol = sqlList.getSymbolAt(sqlList.size() - 1);
+        	Expression symbol = sqlList.getSymbolAt(sqlList.size() - 1);
             indexOfLast = sqlList.indexOf(symbol);
         }
         return indexOfLast;
@@ -639,8 +639,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
             List selBindings = bindingsPanel.getSelectedBindings();
             LanguageObject startingLO = null;
             if (selBindings.size() == 1) {
-                SingleElementSymbol expSymbol = null;
-                SingleElementSymbol symbol = ((Binding)selBindings.get(0)).getCurrentSymbol();
+            	Expression expSymbol = null;
+            	Expression symbol = ((Binding)selBindings.get(0)).getCurrentSymbol();
                 if (symbol instanceof AliasSymbol) {
                     expSymbol = ((AliasSymbol)symbol).getSymbol();
                     if (expSymbol instanceof ExpressionSymbol) {
@@ -732,8 +732,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
 		public void removeBinding( Binding binding ) {
             // Put the bound symbol back on the unmatched symbols list
             Object sqlSymbol = binding.getCurrentSymbol();
-            if (sqlSymbol != null && sqlSymbol instanceof SingleElementSymbol) {
-                SingleElementSymbol seSymbol = (SingleElementSymbol)sqlSymbol;
+            if (sqlSymbol != null && sqlSymbol instanceof Expression) {
+            	Expression seSymbol = (Expression)sqlSymbol;
                 sqlListPanel.addSymbol(seSymbol);
             }
             sqlListPanel.selectIndex(0);
@@ -750,8 +750,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
             for (int i = 0; i < bindings.length; i++) {
                 Binding binding = (Binding)bindings[i];
                 Object sqlSymbol = binding.getCurrentSymbol();
-                if (sqlSymbol != null && sqlSymbol instanceof SingleElementSymbol) {
-                    SingleElementSymbol seSymbol = (SingleElementSymbol)sqlSymbol;
+                if (sqlSymbol != null && sqlSymbol instanceof Expression) {
+                	Expression seSymbol = (Expression)sqlSymbol;
                     sqlListPanel.addSymbol(seSymbol);
                 }
             }
@@ -791,7 +791,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * @param symbol
          */
         @Override
-		public void addSymbol( SingleElementSymbol symbol ) {
+        public void addSymbol( Expression symbol ) {
             updateSqlAndMessageDisplay();
         }
 
@@ -801,7 +801,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * @param symbol
          */
         @Override
-		public void insertSymbol( SingleElementSymbol symbol,
+        public void insertSymbol( Expression symbol,
                                   int index ) {
             updateSqlAndMessageDisplay();
         }
@@ -822,7 +822,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * @param symbol
          */
         @Override
-		public void removeSymbol( SingleElementSymbol symbol ) {
+        public void removeSymbol( Expression symbol ) {
             updateSqlAndMessageDisplay();
         }
 
@@ -842,7 +842,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * @param symbol
          */
         @Override
-		public void updateSymbol( SingleElementSymbol symbol ) {
+        public void updateSymbol( Expression symbol ) {
             updateSqlAndMessageDisplay();
         }
 

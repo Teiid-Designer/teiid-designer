@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.teiid.designer.transformation.util.TransformationSqlHelper;
-import org.teiid.query.sql.symbol.SingleElementSymbol;
+import org.teiid.query.sql.symbol.Expression;
 
 
 /**
@@ -55,14 +55,14 @@ public class SqlList {
     /**
      * Add a new task to the collection of tasks
      */
-    public void add(SingleElementSymbol symbol) {
+    public void add(Expression symbol) {
         currentSymbolsList.add(currentSymbolsList.size(), symbol);
         Iterator<ISqlListViewer> iterator = changeListeners.iterator();
         while (iterator.hasNext())
             iterator.next().addSymbol(symbol);
     }
     
-    public boolean containsSymbol(SingleElementSymbol singleSymbol) {
+    public boolean containsSymbol(Expression singleSymbol) {
         return TransformationSqlHelper.containsElementSymbol(getAll(), singleSymbol);
     }
     
@@ -74,7 +74,7 @@ public class SqlList {
         
         Iterator iter = theseSymbols.iterator();
         while(iter.hasNext()) {
-            SingleElementSymbol nextSymbol = (SingleElementSymbol)iter.next();
+        	Expression nextSymbol = (Expression)iter.next();
             if( !containsSymbol(nextSymbol)) {
                 addedSymbols.add(nextSymbol);
             }
@@ -91,7 +91,7 @@ public class SqlList {
     /**
      * Add a new task to the collection of tasks
      */
-    public void insert(SingleElementSymbol symbol,int index) {
+    public void insert(Expression symbol,int index) {
         currentSymbolsList.add(index, symbol);
         Iterator<ISqlListViewer> iterator = changeListeners.iterator();
         while (iterator.hasNext())
@@ -101,7 +101,7 @@ public class SqlList {
     /**
      * @param symbol
      */
-    public void remove(SingleElementSymbol symbol) {
+    public void remove(Expression symbol) {
         currentSymbolsList.remove(symbol);
         Iterator iterator = changeListeners.iterator();
         while (iterator.hasNext())
@@ -124,7 +124,7 @@ public class SqlList {
     /**
      * @param symbol
      */
-    public void symbolChanged(SingleElementSymbol symbol) {
+    public void symbolChanged(Expression symbol) {
         Iterator<ISqlListViewer> iterator = changeListeners.iterator();
         while (iterator.hasNext())
             iterator.next().updateSymbol(symbol);
@@ -142,7 +142,7 @@ public class SqlList {
     /**
      * Get the index of a symbol in the list
      */
-    public int indexOf(SingleElementSymbol symbol) {
+    public int indexOf(Expression symbol) {
         return currentSymbolsList.indexOf(symbol);
     }
     
@@ -150,10 +150,10 @@ public class SqlList {
      * Get the symbol at the supplied index.  If the index doesn't exist, return the 
      * first symbol in the list
      */
-    public SingleElementSymbol getSymbolAt(int index) {
-        SingleElementSymbol result = null;
+    public Expression getSymbolAt(int index) {
+    	Expression result = null;
         if( index>=0 && index<currentSymbolsList.size()) {
-            result = (SingleElementSymbol)currentSymbolsList.get(index);
+            result = (Expression)currentSymbolsList.get(index);
         }
         return result;
     }
@@ -162,10 +162,10 @@ public class SqlList {
      * Get the symbol at the supplied index.  If the index doesn't exist, return the 
      * first symbol in the list
      */
-    public SingleElementSymbol getFirstSymbol() {
-        SingleElementSymbol result = null;
+    public Expression getFirstSymbol() {
+    	Expression result = null;
         if( currentSymbolsList.size()>0 ) {
-            result = (SingleElementSymbol)currentSymbolsList.get(0);
+            result = (Expression)currentSymbolsList.get(0);
         }
         return result;
     }

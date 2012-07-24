@@ -8,6 +8,7 @@
 package org.teiid.designer.transformation.ui.reconciler.datatype;
 
 import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -36,7 +37,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-
 import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect;
 import org.teiid.designer.transformation.ui.PluginConstants;
@@ -62,7 +62,6 @@ import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ExpressionSymbol;
 import org.teiid.query.sql.symbol.Function;
-import org.teiid.query.sql.symbol.SingleElementSymbol;
 
 /**
  * Panel used by the DatatypeReconcilerDialog to assist in displaying and editing/fixing datatype conflicts for mapped or bound
@@ -428,8 +427,8 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
             // Get Name String
             if (object instanceof EObject) {
                 sb.append(getAttributeShortName(object));
-            } else if (object instanceof SingleElementSymbol) {
-                String shortName = TransformationSqlHelper.getSingleElementSymbolShortName((SingleElementSymbol)object, false);
+            } else if (object instanceof Expression) {
+                String shortName = TransformationSqlHelper.getSingleElementSymbolShortName((Expression)object, false);
                 sb.append(shortName);
             } else if (object instanceof Binding) {
                 sb.append(((Binding)object).getCurrentAttrName());
@@ -455,8 +454,8 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         if (object != null) {
             if (object instanceof EObject) {
                 result = ModelUtilities.getEMFLabelProvider().getImage(object);
-            } else if (object instanceof SingleElementSymbol) {
-                result = getImageForSymbol((SingleElementSymbol)object);
+            } else if (object instanceof Expression) {
+                result = getImageForSymbol((Expression)object);
             }
         }
         return result;
@@ -485,7 +484,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
     /**
      * Get the Image for the SingleElementSymbol
      */
-    private Image getImageForSymbol( SingleElementSymbol seSymbol ) {
+    private Image getImageForSymbol( Expression seSymbol ) {
         Image result = null;
 
         // If symbol is AliasSymbol, get underlying symbol
