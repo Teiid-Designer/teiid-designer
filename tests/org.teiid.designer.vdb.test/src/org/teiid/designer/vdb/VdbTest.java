@@ -9,6 +9,7 @@ package org.teiid.designer.vdb;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
@@ -21,6 +22,7 @@ import static org.teiid.designer.vdb.Vdb.Event.DESCRIPTION;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -241,5 +243,21 @@ public class VdbTest {
         final VdbEntry thisEntry = vdb.addEntry(path, null);
         final VdbEntry thatEntry = vdb.addEntry(path, null);
         assertThat(thatEntry, IsSame.sameInstance(thisEntry));
+    }
+    
+    @Test
+    public void testAddingAndRemovingImportVdbEntry() throws Exception {
+    	String entryName = "testImportVdbEntry";
+    	
+    	vdb.addImportVdb(entryName);
+    	
+    	Collection<VdbImportVdbEntry> entries = vdb.getImportVdbEntries();
+    	assertEquals(1, entries.size());
+    	
+    	VdbImportVdbEntry entry = entries.iterator().next();
+		assertEquals(entryName, entry.getName());
+    	
+    	vdb.removeImportVdb(entry, null);
+    	assertEquals(0, vdb.getImportVdbEntries().size());
     }
 }
