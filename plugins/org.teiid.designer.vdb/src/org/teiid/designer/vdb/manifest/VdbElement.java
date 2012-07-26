@@ -10,16 +10,19 @@ package org.teiid.designer.vdb.manifest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbDataRole;
 import org.teiid.designer.vdb.VdbEntry;
+import org.teiid.designer.vdb.VdbImportVdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
 
 /**
@@ -49,6 +52,9 @@ public class VdbElement implements Serializable {
 
     @XmlElement( name = "model", required = true, type = ModelElement.class )
     private List<ModelElement> models;
+    
+    @XmlElement( name = "import-vdb", type = ImportVdbElement.class )
+    private List<ImportVdbElement> importVdbs;
 
     @XmlElement( name = "translator", type = TranslatorElement.class )
     private List<TranslatorElement> translators;
@@ -77,6 +83,8 @@ public class VdbElement implements Serializable {
             getEntries().add(new EntryElement(entry));
         for (final VdbModelEntry modelEntry : vdb.getModelEntries())
             getModels().add(new ModelElement(modelEntry));
+        for (final VdbImportVdbEntry importVdbEntry : vdb.getImportVdbEntries())
+        	getImportVdbEntries().add(new ImportVdbElement(importVdbEntry));
         for (final TranslatorOverride translator : vdb.getTranslators())
             getTranslators().add(new TranslatorElement(translator));
         for (final VdbDataRole dataPolicyEntry : vdb.getDataPolicyEntries())
@@ -118,6 +126,14 @@ public class VdbElement implements Serializable {
     public List<ModelElement> getModels() {
         if (models == null) models = new ArrayList<ModelElement>();
         return models;
+    }
+    
+    /**
+     * @return list of {@link ImportVdbElement}s
+     */
+    public List<ImportVdbElement> getImportVdbEntries() {
+    	if (importVdbs == null) importVdbs = new ArrayList<ImportVdbElement>();
+    	return importVdbs;
     }
 
     /**

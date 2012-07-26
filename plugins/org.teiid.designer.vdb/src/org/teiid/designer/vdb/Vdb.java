@@ -55,6 +55,7 @@ import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.manifest.DataRoleElement;
 import org.teiid.designer.vdb.manifest.EntryElement;
+import org.teiid.designer.vdb.manifest.ImportVdbElement;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.TranslatorElement;
@@ -121,6 +122,7 @@ public final class Vdb {
     final CopyOnWriteArraySet<VdbEntry> entries = new CopyOnWriteArraySet<VdbEntry>();
     final CopyOnWriteArraySet<VdbModelEntry> modelEntries = new CopyOnWriteArraySet<VdbModelEntry>();
     final CopyOnWriteArraySet<VdbDataRole> dataPolicyEntries = new CopyOnWriteArraySet<VdbDataRole>();
+    final CopyOnWriteArraySet<VdbImportVdbEntry> importModelEntries = new CopyOnWriteArraySet<VdbImportVdbEntry>();
     final Set<TranslatorOverride> translatorOverrides = new TreeSet<TranslatorOverride>(new Comparator<TranslatorOverride>() {
         @Override
         public int compare( TranslatorOverride translator1,
@@ -210,7 +212,12 @@ public final class Vdb {
                         // Initialize model entry imports only after all model entries have been created
                         for (final VdbModelEntry entry : modelEntries)
                             entry.initializeImports();
-   
+                        
+                        // Vdb Import entries
+                        for (final ImportVdbElement element : manifest.getImportVdbEntries()) {
+                        	importModelEntries.add(new VdbImportVdbEntry(Vdb.this, element));
+                        }
+                        
                         // load translator overrides
                         for (final TranslatorElement translatorElement : manifest.getTranslators()) {
                             translatorOverrides.add(new TranslatorOverride(Vdb.this, translatorElement));
@@ -315,6 +322,22 @@ public final class Vdb {
 
         return false;
     }
+    
+    /**
+     * Add an import VDB attribute to this VDB.
+     * 
+     * @param importVdbName
+     * 
+     * @return whether the import vdb attribute was successfully added
+     */
+    public final boolean addImportVdb(String importVdbName) {
+    	if (this.importModelEntries.add(new VdbImportVdbEntry(this, importVdbName))) {
+    		setModified(this, Event.IMPORT_VDB_ENTRY_ADDED, null, importVdbName);
+            return true;
+    	}
+    	
+    	return false;
+    }
 
     /**
      * 
@@ -381,6 +404,13 @@ public final class Vdb {
         for (final VdbModelEntry entry : modelEntries)
             if (!entry.isBuiltIn()) entries.add(entry);
         return Collections.unmodifiableSet(entries);
+    }
+    
+    /**
+     * @return the immutable set of import vdb entries within this VDB
+     */
+    public final Collection<VdbImportVdbEntry> getImportVdbEntries() {
+    	 return Collections.unmodifiableSet(importModelEntries);
     }
 
     /**
@@ -516,6 +546,22 @@ public final class Vdb {
         return false;
     }
 
+    /**
+     * Remove the given {@link VdbImportVdbEntry entry} from this VDB
+     * 
+     * @param entry
+     * @param monitor
+     * @return whether the entry was successfully removed
+     */
+    public final boolean removeImportVdb( VdbImportVdbEntry entry, IProgressMonitor monitor ) {
+    	if (this.importModelEntries.remove(entry)) {
+    		setModified(this, Event.IMPORT_VDB_ENTRY_REMOVED, entry, null);
+    		return true;
+    	}
+
+    	return false;
+    }
+    
     /**
      * Must not be called unless this VDB has been {@link #isModified() modified}
      * 
@@ -721,6 +767,31 @@ public final class Vdb {
          */
         public static final String DATA_POLICY_REMOVED = "dataPolicyRemoved"; //$NON-NLS-1$
 
+        /**
+         * The property name sent in events to  {@link #addChangeListener(PropertyChangeListener) change listeners} when VDB
+         * import VDB entry's {@link VdbImportVdbEntry#getVersion version} changes
+         */
+        public static final String IMPORT_VDB_ENTRY_VERSION = "importVdbEntryVersion"; //$NON-NLS-1$
+        
+        /**
+         * The property name sent in events to  {@link #addChangeListener(PropertyChangeListener) change listeners} when VDB
+         * import VDB entry's {@link VdbImportVdbEntry#isImportDataPolicies() data policy flag} changes
+         */
+        public static final String IMPORT_VDB_ENTRY_DATA_POLICY =  "importVdbEntryDataPolicies"; //$NON-NLS-1$
+        
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when an
+         * import VDB entry is added 
+         */
+        public static final String IMPORT_VDB_ENTRY_ADDED = "importVdbEntryAdded"; //$NON-NLS-1$
+        
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when an
+         * import VDB entry is removed.
+         * 
+         */
+        public static final String IMPORT_VDB_ENTRY_REMOVED = "importVdbEntryRemoved"; //$NON-NLS-1$
+        
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB is
          * {@link #close() closed}

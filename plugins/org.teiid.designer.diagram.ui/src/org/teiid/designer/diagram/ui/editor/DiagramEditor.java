@@ -1059,28 +1059,30 @@ public class DiagramEditor extends GraphicalEditor
         boolean modelChanged = false;
         final Object[] elements = event.getElements();
         
-        if (elements == null) {
+        if (elements == null || elements.length <= 1) {
         	return;
         }
 
         for (final Object nextElement : elements) {
-        	if (nextElement instanceof EObject && ModelUtilities.areModelResourcesSame((EObject)nextElement, getDiagram())) {
-        		modelChanged = true;
-        		break;
+        	if (nextElement instanceof EObject) {
+        		if (ModelUtilities.areModelResourcesSame((EObject)nextElement, getDiagram())) {
+        			modelChanged = true;
+        		}
         	} else if (nextElement instanceof IResource && ModelUtilities.isModelFile((IResource)nextElement)) {
         		ModelResource modelResource = null;
         		ModelResource diagramModelResource = null;
         		try {
         			modelResource = ModelUtil.getModelResource((IFile)nextElement, false);
-        			diagramModelResource = ModelUtil.getModel(getDiagram());
+        			if (getDiagram() != null) {
+        				diagramModelResource = ModelUtil.getModel(getDiagram());
+        			}
         		} catch (final ModelWorkspaceException e) {
         			DiagramUiConstants.Util.log(IStatus.ERROR,
         					e,
         					"DiagramEditor.labelProviderChanged()  ERROR finding ModelResource"); //$NON-NLS-1$
         		}
         		
-        		if (modelResource != null && diagramModelResource != null 
-        				&& modelResource.equals(diagramModelResource)) {
+        		if (modelResource != null && diagramModelResource != null && modelResource.equals(diagramModelResource)) {
         			modelChanged = true;
         			break;
         		}
