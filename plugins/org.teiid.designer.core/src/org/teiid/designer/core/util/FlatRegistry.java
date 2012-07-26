@@ -109,8 +109,6 @@ public class FlatRegistry implements RegistrySPI {
 	@Override
 	public Object unregister(String key) {
 		CoreArgCheck.isNotNull(key);
-	
-		System.out.println("Unregistering " + key);
 		
 		Object object = this.entries.remove(key);
 		
