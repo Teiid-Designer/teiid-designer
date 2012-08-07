@@ -1532,24 +1532,30 @@ public abstract class ModelUtilities implements UiConstants {
                 final IMarker[] markers = mrkrs;
 
                 final boolean startedTxn = ModelerCore.startTxn(false, false, null, source);
-
-                for (int ndx = markers.length; --ndx >= 0;) {
-                    final Object attr = MarkerUtilities.getMarkerAttribute(markers[ndx], IMarker.SEVERITY);
-                    if (attr == null) {
-                        continue;
-                    }
-                    // Asserting attr is an Integer...
-                    final int severity = ((Integer)attr).intValue();
-                    if (severity == IMarker.SEVERITY_ERROR) {
-                        foundError = true;
-                        break;
-                    }
+                boolean succeeded = false;
+                
+                try {
+                	for (int ndx = markers.length; --ndx >= 0;) {
+                		final Object attr = MarkerUtilities.getMarkerAttribute(markers[ndx], IMarker.SEVERITY);
+                		if (attr == null) {
+                			continue;
+                		}
+                		// Asserting attr is an Integer...
+                		final int severity = ((Integer)attr).intValue();
+                		if (severity == IMarker.SEVERITY_ERROR) {
+                			foundError = true;
+                			break;
+                		}
+                	}
+                	succeeded = true;
+                } finally {
+                	if (startedTxn) {
+                		if (succeeded)
+                			ModelerCore.commitTxn();
+                		else
+                			ModelerCore.rollbackTxn();
+                	}
                 }
-
-                if (startedTxn) {
-                    ModelerCore.commitTxn();
-                }
-
             }
         }
 
@@ -1568,7 +1574,6 @@ public abstract class ModelUtilities implements UiConstants {
             String message = getString("ModelUtilities.initializeModelContainersError", modelResource.toString()); //$NON-NLS-1$
             UiConstants.Util.log(IStatus.ERROR, err, message);
         } finally {
-
             if (started) {
                 if (succeeded) {
                     ModelerCore.commitTxn();

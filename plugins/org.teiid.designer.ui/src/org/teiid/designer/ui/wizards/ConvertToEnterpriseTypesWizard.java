@@ -97,7 +97,7 @@ public class ConvertToEnterpriseTypesWizard extends AbstractWizard implements Ui
             }
         };
         
-        //Detmine TXN status and start one if required.
+        //Determine TXN status and start one if required.
         //This operation is not undoable OR significant.
         final boolean startedTxn = ModelerCore.startTxn(false,
                                                         false,
@@ -108,7 +108,7 @@ public class ConvertToEnterpriseTypesWizard extends AbstractWizard implements Ui
         } catch (Throwable err) {
             Util.log(IStatus.ERROR, err, err.getMessage() );
         } finally {
-            //This operation is NOT undoable or significant... ALWAYS comit to ensure
+            //This operation is NOT undoable or significant... ALWAYS commit to ensure
             //Nothing is left hanging.
             if(startedTxn) {
                 ModelerCore.commitTxn();                        

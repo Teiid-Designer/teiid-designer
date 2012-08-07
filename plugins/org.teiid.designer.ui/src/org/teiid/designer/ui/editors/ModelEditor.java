@@ -461,7 +461,8 @@ public class ModelEditor extends MultiPageModelEditor
                     @Override
                     protected void execute( IProgressMonitor progressMonitor ) throws CoreException {
                         String undoLabel = UiConstants.Util.getString("ModelEditor.saveAs="); //$NON-NLS-1$
-                        ModelerCore.startTxn(true, false, undoLabel, ModelEditor.this);
+                        final boolean started = ModelerCore.startTxn(true, false, undoLabel, ModelEditor.this);
+                        boolean succeeded = false;
                         try {
                             IStatus status = dialog.getCommand().execute(progressMonitor);
                             if (status != null && !status.isOK()) {
@@ -471,8 +472,15 @@ public class ModelEditor extends MultiPageModelEditor
                                 ModelEditorManager.close((IFile)modelResource.getResource(), false);
                                 ModelEditorManager.activate(dialog.getCommand().getNewIFile(), true);
                             }
+                            succeeded = true;
+                            
                         } finally {
-                            ModelerCore.commitTxn();
+                        	if (started) {
+                        		if (succeeded)
+                        			ModelerCore.commitTxn();
+                        		else
+                        			ModelerCore.rollbackTxn();
+                        	}
                         }
                     }
                 };

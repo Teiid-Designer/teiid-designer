@@ -106,7 +106,7 @@ public class CreateVirtualModelFromSchemaWizard extends AbstractWizard {
         } catch (Throwable err) {
             Util.log(IStatus.ERROR, err, err.getMessage());
         } finally {
-            // This operation is NOT undoable or significant... ALWAYS comit to ensure
+            // This operation is NOT undoable or significant... ALWAYS commit to ensure
             // Nothing is left hanging.
             if (startedTxn) {
                 ModelerCore.commitTxn();

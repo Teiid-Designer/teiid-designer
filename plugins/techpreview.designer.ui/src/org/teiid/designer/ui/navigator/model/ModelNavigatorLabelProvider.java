@@ -232,31 +232,39 @@ public class ModelNavigatorLabelProvider extends LabelProvider implements IDescr
     }
 
     private ImageDescriptor getDecorationIcon( IMarker[] markers ) {
+    	ImageDescriptor icon = null;
+    	
         final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
-        ImageDescriptor icon = null;
+        boolean succeeded = false;
+        try {
+        	for (int ndx = markers.length; --ndx >= 0;) {
+        		final Object attr = MarkerUtilities.getMarkerAttribute(markers[ndx], IMarker.SEVERITY); // markers[ndx].getAttribute(IMarker.SEVERITY);
 
-        for (int ndx = markers.length; --ndx >= 0;) {
-            final Object attr = MarkerUtilities.getMarkerAttribute(markers[ndx], IMarker.SEVERITY); // markers[ndx].getAttribute(IMarker.SEVERITY);
+        		if (attr == null) {
+        			continue;
+        		}
 
-            if (attr == null) {
-                continue;
-            }
+        		// Asserting attr is an Integer...
+        		final int severity = ((Integer)attr).intValue();
 
-            // Asserting attr is an Integer...
-            final int severity = ((Integer)attr).intValue();
+        		if (severity == IMarker.SEVERITY_ERROR) {
+        			icon = UiPlugin.getDefault().getErrorDecoratorImage();
+        			break;
+        		}
 
-            if (severity == IMarker.SEVERITY_ERROR) {
-                icon = UiPlugin.getDefault().getErrorDecoratorImage();
-                break;
-            }
-
-            if ((icon == null) && (severity == IMarker.SEVERITY_WARNING)) {
-                icon = UiPlugin.getDefault().getWarningDecoratorImage();
-            }
-        }
-
-        if (startedTxn) {
-            ModelerCore.commitTxn();
+        		if ((icon == null) && (severity == IMarker.SEVERITY_WARNING)) {
+        			icon = UiPlugin.getDefault().getWarningDecoratorImage();
+        		}
+        	}
+        	
+        	succeeded = true;
+        } finally {
+        	if (startedTxn) {
+        		if (succeeded)
+        			ModelerCore.commitTxn();
+        		else
+        			ModelerCore.rollbackTxn();
+        	}
         }
 
         return icon;
@@ -304,50 +312,55 @@ public class ModelNavigatorLabelProvider extends LabelProvider implements IDescr
      */
     @Override
     public Image getImage( Object element ) {
+    	Image result = null;
+    	
         final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
+        boolean succeeded = false;
 
         try {
 
             if (element instanceof Diagram) {
-                Image result = this.diagramLabelProvider.getImage(element);
+                result = this.diagramLabelProvider.getImage(element);
 
                 if (result == null) {
-                    return UiPlugin.getDefault().getImage("icons/full/obj16/Diagram.gif"); //$NON-NLS-1$
+                    result = UiPlugin.getDefault().getImage("icons/full/obj16/Diagram.gif"); //$NON-NLS-1$
                 }
-
-                return result;
             }
-
-            if (element instanceof ImportContainer) {
-                return UiPlugin.getDefault().getImage(IMPORT_CONTAINER);
+            else if (element instanceof ImportContainer) {
+                result = UiPlugin.getDefault().getImage(IMPORT_CONTAINER);
             }
-
-            if (element instanceof EObject) {
-                if (element instanceof TransformationMappingRoot) {
-                    return UiPlugin.getDefault().getImage("icons/full/obj16/Transform.gif"); //$NON-NLS-1$
-                }
-
-                return ModelUtilities.getEMFLabelProvider().getImage(element);
+            else if (element instanceof EObject) {
+                if (element instanceof TransformationMappingRoot)
+                    result = UiPlugin.getDefault().getImage("icons/full/obj16/Transform.gif"); //$NON-NLS-1$
+                else
+                	result = ModelUtilities.getEMFLabelProvider().getImage(element);
             } else if (element instanceof IFile && ModelUtilities.isModelFile((IFile)element) && ((IFile)element).exists()) {
-                return ModelIdentifier.getModelImage((IResource)element);
+                result = ModelIdentifier.getModelImage((IResource)element);
+            } else {
+            	result = this.extendedModelObjectLabelProvider.getImage(element);
             }
-
-            Image result = this.extendedModelObjectLabelProvider.getImage(element);
-
-            if (result != null) {
-                return result;
+            
+            if (result == null) {
+                result = this.defaultProvider.getImage(element);
             }
-
-            return this.defaultProvider.getImage(element);
+            
+            succeeded = true;
+            
         } catch (final Exception err) {
             Util.log(err);
         } finally {
             if (startedTxn) {
-                ModelerCore.commitTxn();
+            	if (succeeded)
+            		ModelerCore.commitTxn();
+            	else
+            		ModelerCore.rollbackTxn();
             }
         }
 
-        return super.getImage(element);
+        if (result != null)
+        	return result;
+        else
+        	return super.getImage(element);
     }
 
     public IBaseLabelProvider getLabelProviderChangedEventSource() {
@@ -379,44 +392,48 @@ public class ModelNavigatorLabelProvider extends LabelProvider implements IDescr
      */
     @Override
     public String getText( Object element ) {
+    	String result = null;
         final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
-
+        boolean succeeded = false;
+        
         try {
             if (element instanceof Diagram) {
-                String result = this.diagramLabelProvider.getText(element);
+                result = this.diagramLabelProvider.getText(element);
 
                 if (result == null) {
-                    return genericDiagramLabel;
+                    result = genericDiagramLabel;
                 }
-
-                return result;
             }
-
-            if (element instanceof ImportContainer) {
-                return element.toString();
+            else if (element instanceof ImportContainer) {
+                result = element.toString();
             }
-
-            if (element instanceof EObject) {
-                if (element instanceof TransformationMappingRoot) {
-                    return genericTransformationLabel;
+            else if (element instanceof EObject) {
+                
+            	if (element instanceof TransformationMappingRoot) {
+                    result = genericTransformationLabel;
                 }
-
-                ILabelProvider p = ModelUtilities.getEMFLabelProvider();
-                return p.getText(element);
+            	else {
+            		ILabelProvider p = ModelUtilities.getEMFLabelProvider();
+            		result = p.getText(element);
+            	}
+            } else {
+            	result = this.extendedModelObjectLabelProvider.getText(element);
             }
 
-            String result = this.extendedModelObjectLabelProvider.getText(element);
-
-            if (result != null) {
-                return result;
-            }
-
-            return this.defaultProvider.getText(element);
+            if (result == null)
+            	result = this.defaultProvider.getText(element);
+            
+            succeeded = true;
         } finally {
             if (startedTxn) {
-                ModelerCore.commitTxn();
+            	if (succeeded)
+            		ModelerCore.commitTxn();
+            	else
+            		ModelerCore.rollbackTxn();
             }
         }
+        
+        return result;
     }
 
     /**

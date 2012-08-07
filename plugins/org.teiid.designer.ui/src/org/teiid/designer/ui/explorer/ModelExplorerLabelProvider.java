@@ -64,7 +64,8 @@ public class ModelExplorerLabelProvider extends LabelProvider
 
     private static final String DOT_XMI = '.' + ModelUtil.EXTENSION_XMI;
 
-    public static boolean debug = false;
+    @SuppressWarnings("javadoc")
+	public static boolean debug = false;
     private static int instanceCounter = 0;
 
     private ILabelProvider defaultProvider;
@@ -130,11 +131,19 @@ public class ModelExplorerLabelProvider extends LabelProvider
         fireLabelProviderChanged(new LabelProviderChangedEvent(getLabelProviderChangedEventSource(), resourcesToUpdate));
     }
 
+    /**
+     * Set this label provider's event source
+     * 
+     * @param theSource
+     */
     public void setLabelProviderChangedEventSource( IBaseLabelProvider theSource ) {
         this.eventSource = theSource;
     }
 
-    public IBaseLabelProvider getLabelProviderChangedEventSource() {
+    /**
+     * @return this label provider's event source
+     */
+	public IBaseLabelProvider getLabelProviderChangedEventSource() {
         return this.eventSource;
     }
 
@@ -197,43 +206,52 @@ public class ModelExplorerLabelProvider extends LabelProvider
      */
     @Override
     public Image getImage( Object element ) {
+    	Image result = null;
+    	
         final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
+        boolean succeeded = false;
+        
         try {
 
-            if (element instanceof Diagram) {
-                Image result = diagramLabelProvider.getImage(element);
-                if (result == null) {
-                    return UiPlugin.getDefault().getImage("icons/full/obj16/Diagram.gif"); //$NON-NLS-1$
-                }
-                return result;
-            }
+			if (element instanceof Diagram) {
+				result = diagramLabelProvider.getImage(element);
+				if (result == null) {
+					result = UiPlugin.getDefault().getImage("icons/full/obj16/Diagram.gif"); //$NON-NLS-1$
+				}
+			} else if (element instanceof ImportContainer) {
+				result = UiPlugin.getDefault().getImage(IMPORT_CONTAINER);
+			} else if (element instanceof EObject) {
+				if (element instanceof TransformationMappingRoot) {
+					result = UiPlugin.getDefault().getImage("icons/full/obj16/Transform.gif"); //$NON-NLS-1$
+				} else {
+					result = ModelUtilities.getEMFLabelProvider().getImage(
+							element);
+				}
+			} else if (element instanceof IFile && ModelUtilities.isModelFile((IFile) element) && ((IFile) element).exists()) {
+				result = ModelIdentifier.getModelImage((IResource) element);
+			} else {
+				result = extendedModelObjectLabelProvider.getImage(element);
+			}
 
-            if (element instanceof ImportContainer) {
-                return UiPlugin.getDefault().getImage(IMPORT_CONTAINER);
-            }
+			if (result == null) {
+				result = getDefaultProvider().getImage(element);
+			}
 
-            if (element instanceof EObject) {
-                if (element instanceof TransformationMappingRoot) {
-                    return UiPlugin.getDefault().getImage("icons/full/obj16/Transform.gif"); //$NON-NLS-1$
-                }
-                return ModelUtilities.getEMFLabelProvider().getImage(element);
-            } else if (element instanceof IFile && ModelUtilities.isModelFile((IFile)element) && ((IFile)element).exists()) {
-                return ModelIdentifier.getModelImage((IResource)element);
-            }
-            Image result = extendedModelObjectLabelProvider.getImage(element);
-            if (result != null) {
-                return result;
-            }
-
-            return getDefaultProvider().getImage(element);
+			succeeded = true;
         } catch (final Exception err) {
             Util.log(err);
         } finally {
             if (startedTxn) {
-                ModelerCore.commitTxn();
+            	if (succeeded)
+            		ModelerCore.commitTxn();
+            	else
+            		ModelerCore.rollbackTxn();
             }
         }
 
+        if (result != null)
+        	return result;
+        
         return super.getImage(element);
     }
 
@@ -245,52 +263,58 @@ public class ModelExplorerLabelProvider extends LabelProvider
      */
     @Override
     public String getText( Object element ) {
+    	String result = null;
+    	
         final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
+        boolean succeeded = false;
+        
         try {
             if (element instanceof Diagram) {
-                String result = diagramLabelProvider.getText(element);
+                result = diagramLabelProvider.getText(element);
                 if (result == null) {
-                    return UiConstants.Util.getString("ModelExplorerLabelProvider.genericDiagramLabel"); //$NON-NLS-1$
+                    result = UiConstants.Util.getString("ModelExplorerLabelProvider.genericDiagramLabel"); //$NON-NLS-1$
                 }
-                return result;
             }
-
-            if (element instanceof ImportContainer) {
-                return element.toString();
+            else if (element instanceof ImportContainer) {
+                result = element.toString();
             }
-
-            if (element instanceof EObject) {
+            else if (element instanceof EObject) {
                 if (element instanceof TransformationMappingRoot) {
-                    return UiConstants.Util.getString("ModelExplorerLabelProvider.genericTransformationLabel"); //$NON-NLS-1$
+                    result = UiConstants.Util.getString("ModelExplorerLabelProvider.genericTransformationLabel"); //$NON-NLS-1$
+                } else {
+                	ILabelProvider p = ModelUtilities.getEMFLabelProvider();
+                	result = p.getText(element);
                 }
-                ILabelProvider p = ModelUtilities.getEMFLabelProvider();
-                return p.getText(element);
+            } else {
+            	result = extendedModelObjectLabelProvider.getText(element);
+            	
+            	if (result == null) {
+            		// ------------------------------------------------------------
+            		// Defect 22319 - Hide the .xmi file extension in Dimension
+            		// Utilizing the hidden-project centric characteristics
+            		// That way Enterprise doesn't hide the extension
+            		// ------------------------------------------------------------
+            		String defaultText = getDefaultProvider().getText(element);
+            		if (ProductCustomizerMgr.getInstance().getProductCharacteristics().isHiddenProjectCentric()) {
+            			if (defaultText.endsWith(DOT_XMI)) {
+            				int len = defaultText.lastIndexOf(DOT_XMI);
+            				defaultText = defaultText.substring(0, len);
+            			}
+            		}
+            		result = defaultText;
+            	}
             }
-
-            String result = extendedModelObjectLabelProvider.getText(element);
-            if (result != null) {
-                return result;
-            }
-
-            // ------------------------------------------------------------
-            // Defect 22319 - Hide the .xmi file extension in Dimension
-            // Utilizing the hidden-project centric characteristics
-            // That way Enterprise doesn't hide the extension
-            // ------------------------------------------------------------
-            String defaultText = getDefaultProvider().getText(element);
-            if (ProductCustomizerMgr.getInstance().getProductCharacteristics().isHiddenProjectCentric()) {
-                if (defaultText.endsWith(DOT_XMI)) {
-                    int len = defaultText.lastIndexOf(DOT_XMI);
-                    defaultText = defaultText.substring(0, len);
-                }
-            }
-            return defaultText;
+            succeeded = true;
         } finally {
             if (startedTxn) {
-                ModelerCore.commitTxn();
+            	if (succeeded)
+            		ModelerCore.commitTxn();
+            	else
+            		ModelerCore.rollbackTxn();
             }
         }
-
+        
+        return result;
     }
 
     /**

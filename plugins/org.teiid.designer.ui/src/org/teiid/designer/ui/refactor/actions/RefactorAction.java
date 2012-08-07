@@ -143,18 +143,24 @@ public abstract class RefactorAction extends ActionDelegate implements IWorkbenc
         IProgressMonitor monitor = new NullProgressMonitor();
 
         // start the txn
-        ModelerCore.startTxn(true, false, getUndoLabel(), this);
-
+        final boolean started = ModelerCore.startTxn(true, false, getUndoLabel(), this);
+        boolean succeeded = false;
+        
         try {
-            // run the operation
-            operation.run(monitor);
-
+        	// run the operation
+        	operation.run(monitor);
+        	succeeded = true;
         } catch (Exception e) {
-            ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
-
+        	ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
         } finally {
-            // commit the txn
-            ModelerCore.commitTxn();
+        	if (started) {
+        		if (succeeded) {
+        			// commit the txn
+        			ModelerCore.commitTxn();
+        		}
+        		else
+        			ModelerCore.rollbackTxn();
+			 }
         }
 
         return monitor;

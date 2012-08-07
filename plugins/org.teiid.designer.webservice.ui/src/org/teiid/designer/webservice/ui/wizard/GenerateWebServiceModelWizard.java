@@ -102,7 +102,7 @@ public class GenerateWebServiceModelWizard extends AbstractWizard implements INe
         } catch (Throwable err) {
             UTIL.log(IStatus.ERROR, err, err.getMessage());
         } finally {
-            // This operation is NOT undoable or significant... ALWAYS comit to ensure
+            // This operation is NOT undoable or significant... ALWAYS commit to ensure
             // Nothing is left hanging.
             if (startedTxn) {
                 ModelerCore.commitTxn();

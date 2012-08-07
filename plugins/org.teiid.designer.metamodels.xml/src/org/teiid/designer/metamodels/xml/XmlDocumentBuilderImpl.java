@@ -1619,7 +1619,7 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
         final boolean startedTxn = ModelerCore.startTxn(true,
                                                         true,
                                                         XmlDocumentPlugin.Util.getString("XmlDocumentBuilderImpl.Update_XML_Document_from_Schema_6"), this); //$NON-NLS-1$
-        final boolean succeeded = false;
+        boolean succeeded = false;
         try {
             // First do all the deletes - Do deletes first to ensure indexes are correct
             updateFromSchema(root, false);
@@ -1634,12 +1634,17 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
             // Now do the Adds
             updateFromSchema(root, true);
             count = count + newCount + moveCount;
+            succeeded = true;        
         } finally {
             cleanup();
 
             // Commit UoW if we started it.
-            if (startedTxn) if (succeeded) ModelerCore.commitTxn();
-            else ModelerCore.rollbackTxn();
+            if (startedTxn) {
+            	if (succeeded)
+            		ModelerCore.commitTxn();
+            	else
+            		ModelerCore.rollbackTxn();
+            }
         }
 
         return count;
