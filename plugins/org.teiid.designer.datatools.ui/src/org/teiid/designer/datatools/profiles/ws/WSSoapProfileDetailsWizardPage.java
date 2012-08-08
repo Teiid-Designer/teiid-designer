@@ -110,6 +110,7 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         urlText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
         urlText.setEditable(false);
         urlText.setToolTipText(UTIL.getString("Common.URLorFILE.ToolTip")); //$NON-NLS-1$
+        urlText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         gd = new GridData(GridData.FILL_HORIZONTAL);
         urlText.setLayoutData(gd);
 
