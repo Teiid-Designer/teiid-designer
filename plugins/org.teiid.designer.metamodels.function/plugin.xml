@@ -85,13 +85,19 @@
             name="org.teiid.designer.metamodels.function.compare.FunctionMatcherFactory">
       </class>
    </extension>
-   
+   <extension
+         point="org.teiid.designer.extension.modelExtensionProvider">
+      <extensionDefinition
+            className="org.teiid.designer.metamodels.function.extension.FunctionModelExtensionAssistant"
+            path="function.mxd">
+      </extensionDefinition>
+   </extension>
 <!-- Designates valid extensible metamodel -->
    <extension
          point="org.teiid.designer.extension.extensibleMetamodelProvider">
       <definition 
             metamodelUri="http://www.metamatrix.com/metamodels/MetaMatrixFunction"
-            metaclassProviderClass="org.teiid.designer.metamodels.function.extension.SourceFunctionExtendableClassnameProvider">
+            metaclassProviderClass="org.teiid.designer.metamodels.function.extension.FunctionModelExtendableClassnameProvider">
       </definition>
    </extension>
    

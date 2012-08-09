@@ -28,6 +28,7 @@ public class ModelExtensionAssistant implements ExtensionConstants {
 
     /**
      * @param modelType the model type being added (cannot be <code>null</code> or empty)
+     * @return is supported model type
      */
     public boolean addSupportedModelType(String modelType) {
         CoreArgCheck.isNotEmpty(modelType, "modelType is empty"); //$NON-NLS-1$

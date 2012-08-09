@@ -495,6 +495,9 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         return getEditorSite().getShell();
     }
 
+    /**
+     * @return selection synchronizer
+     */
     public MedSelectionSynchronizer getSelectionSynchronizer() {
         return this.selectionSynchronizer;
     }
@@ -506,7 +509,9 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     }
 
     private void hookRefreshListener() {
-        getContainer().addListener(SWT.Activate, this.refreshListener);
+    	if( ! getContainer().isDisposed() ) {
+    		getContainer().addListener(SWT.Activate, this.refreshListener);
+    	}
     }
 
     /**

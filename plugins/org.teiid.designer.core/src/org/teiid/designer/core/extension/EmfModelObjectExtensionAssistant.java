@@ -67,7 +67,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getOverriddenValue(java.lang.Object, java.lang.String)
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getOverriddenValue(java.lang.Object, java.lang.String)
      * @throws IllegalArgumentException if the model object is not an {@link EObject}, if property is from a different namespace, or
      *             if the associated property definition can't be found
      */
@@ -118,7 +118,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getOverriddenValues(java.lang.Object)
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getOverriddenValues(java.lang.Object)
      * @throws IllegalArgumentException if the model object is not an {@link EObject}
      */
     @Override
@@ -173,7 +173,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getExtensionPropertyValue(java.lang.Object,
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getPropertyValue(java.lang.Object,
      *      java.lang.String)
      */
     @Override
@@ -193,7 +193,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getExtensionPropertyValues(java.lang.Object)
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getPropertyValues(java.lang.Object)
      * @throws IllegalArgumentException if the model object is not an {@link EObject}
      */
     @Override
@@ -241,7 +241,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#hasExtensionProperties(java.io.File)
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#hasExtensionProperties(java.io.File)
      */
     @Override
     public boolean hasExtensionProperties( File file ) throws Exception {
@@ -264,7 +264,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#hasExtensionProperties(java.lang.Object)
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#hasExtensionProperties(java.lang.Object)
      */
     @Override
     public boolean hasExtensionProperties( Object modelObject ) throws Exception {
@@ -274,7 +274,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#isModelExtensionDefinitionRelated(java.lang.Object)
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#isModelExtensionDefinitionRelated(java.lang.Object)
      * @throws IllegalArgumentException if the model object is not an {@link EObject}
      */
     @Override
@@ -302,7 +302,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#removeModelExtensionDefinition(java.lang.Object)
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#removeModelExtensionDefinition(java.lang.Object)
      */
     @Override
     public void removeModelExtensionDefinition( Object modelObject ) throws Exception {
@@ -336,7 +336,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#removeProperty(java.lang.Object, java.lang.String)
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#removeProperty(java.lang.Object, java.lang.String)
      */
     @Override
     public void removeProperty( Object modelObject,
@@ -354,7 +354,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#saveModelExtensionDefinition(java.lang.Object)
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#saveModelExtensionDefinition(java.lang.Object)
      */
     @Override
     public void saveModelExtensionDefinition( Object modelObject ) throws Exception {
@@ -389,7 +389,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#setExtensionPropertyValue(java.lang.Object,
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#setPropertyValue(java.lang.Object,
      *      java.lang.String, java.lang.String)
      */
     @Override
@@ -502,7 +502,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#namespaceSupportedBy(java.lang.Object)
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#supportsMyNamespace(java.lang.Object)
      */
     @Override
     public boolean supportsMyNamespace( Object modelObject ) throws Exception {

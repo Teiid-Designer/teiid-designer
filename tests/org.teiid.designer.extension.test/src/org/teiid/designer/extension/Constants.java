@@ -23,9 +23,11 @@ import org.teiid.designer.extension.properties.Translation;
 /**
  * 
  */
+@SuppressWarnings("javadoc")
 public interface Constants {
 
-    String TESTDATA = SmartTestDesignerSuite.getTestDataPath(Constants.class);
+    
+	String TESTDATA = SmartTestDesignerSuite.getTestDataPath(Constants.class);
 
     String FUNCTION_METAMODEL = "http://www.metamatrix.com/metamodels/MetaMatrixFunction"; //$NON-NLS-1$
     String RELATIONAL_METAMODEL = "http://www.metamatrix.com/metamodels/Relational"; //$NON-NLS-1$
@@ -52,11 +54,11 @@ public interface Constants {
     String[] REST_MED_METACLASSES = new String[] { PROCEDURE_METACLASS_NAME };
     String[] REST_METACLASS_0_PROP_IDS = new String[] { "restMethod", "uri" }; //$NON-NLS-1$ //$NON-NLS-2$
 
-    String SOURCE_FUNCTION_MED_FILE_NAME = TESTDATA + File.separatorChar + "relational" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
-    String SOURCE_FUNCTION_MED_PREFIX = "relational"; //$NON-NLS-1$
-    String SOURCE_FUNCTION_MED_URI = "http://www.teiid.org/ext/relational/2012"; //$NON-NLS-1$
-    String[] SOURCE_FUNCTION_MED_METACLASSES = new String[] { PROCEDURE_METACLASS_NAME };
-    String[] SOURCE_FUNCTION_METACLASS_0_PROP_IDS = new String[] { "deterministic" }; //$NON-NLS-1$
+    String RELATIONAL_MED_FILE_NAME = TESTDATA + File.separatorChar + "relational" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+    String RELATIONAL_MED_PREFIX = "relational"; //$NON-NLS-1$
+    String RELATIONAL_MED_URI = "http://www.teiid.org/ext/relational/2012"; //$NON-NLS-1$
+    String[] RELATIONAL_MED_METACLASSES = new String[] { PROCEDURE_METACLASS_NAME };
+    String[] RELATIONAL_METACLASS_0_PROP_IDS = new String[] { "deterministic" }; //$NON-NLS-1$
 
     String DEPRECATED_MED_FILE_NAME = TESTDATA + File.separatorChar + "deprecated" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
     String DEPRECATED_MED_PREFIX = "ext-custom"; //$NON-NLS-1$
@@ -64,11 +66,20 @@ public interface Constants {
     String[] DEPRECATED_MED_METACLASSES = new String[] { PROCEDURE_METACLASS_NAME };
     String[] DEPRECATED_METACLASS_0_PROP_IDS = new String[] { "deterministic", "REST-METHOD", "URI" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    String[] BUILT_IN_MEDS = new String[] { SALESFORCE_MED_FILE_NAME, REST_MED_FILE_NAME, SOURCE_FUNCTION_MED_FILE_NAME,
+    String[] BUILT_IN_MEDS = new String[] {
+    		SALESFORCE_MED_FILE_NAME,
+    		REST_MED_FILE_NAME, 
+    		RELATIONAL_MED_FILE_NAME,
             DEPRECATED_MED_FILE_NAME };
-    String[] BUILT_IN_MEDS_NAMESPACE_PREFIXES = new String[] { SALESFORCE_MED_PREFIX, REST_MED_PREFIX, SOURCE_FUNCTION_MED_PREFIX,
+    String[] BUILT_IN_MEDS_NAMESPACE_PREFIXES = new String[] {
+    		SALESFORCE_MED_PREFIX, 
+    		REST_MED_PREFIX, 
+    		RELATIONAL_MED_PREFIX,
             DEPRECATED_MED_PREFIX };
-    String[] BUILT_IN_MEDS_NAMESPACE_URIS = new String[] { SALESFORCE_MED_URI, REST_MED_URI, SOURCE_FUNCTION_MED_URI,
+    String[] BUILT_IN_MEDS_NAMESPACE_URIS = new String[] {
+    		SALESFORCE_MED_URI, 
+    		REST_MED_URI, 
+    		RELATIONAL_MED_URI,
             DEPRECATED_MED_URI };
     String EMPTY_MED_FILE_NAME = TESTDATA + File.separatorChar + "emptyMed" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
     String MED_WITHOUT_METACLASSES_FILE_NAME = TESTDATA + File.separatorChar

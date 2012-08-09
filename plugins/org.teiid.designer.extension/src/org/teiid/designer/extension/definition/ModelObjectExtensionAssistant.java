@@ -77,7 +77,7 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     public abstract Properties getPropertyValues( Object modelObject ) throws Exception;
 
     /**
-     * @param modelResource the model resource whose supported namespaces are being obtained (cannot be <code>null</code>)
+     * @param modelObject the model object whose model resource's supported namespaces are being obtained (cannot be <code>null</code>)
      * @return the namespace prefixes of all model extension definitions that are persisted in the model resource (never
      *         <code>null</code>)
      * @throws Exception if there is a problem accessing the model resource

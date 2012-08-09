@@ -22,6 +22,7 @@
                         <xs:restriction base="xs:string">
                             <xs:enumeration value="PHYSICAL"/>
                             <xs:enumeration value="VIRTUAL"/>
+                            <xs:enumeration value="FUNCTION"/>
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:element>

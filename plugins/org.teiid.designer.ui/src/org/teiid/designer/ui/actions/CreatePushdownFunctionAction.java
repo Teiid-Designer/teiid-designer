@@ -52,7 +52,7 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metamodels.relational.Procedure;
-import org.teiid.designer.metamodels.relational.extension.SourceFunctionModelExtensionConstants;
+import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionConstants;
 import org.teiid.designer.metamodels.relational.util.ParameterData;
 import org.teiid.designer.metamodels.relational.util.PushdownFunctionData;
 import org.teiid.designer.udf.UdfManager;
@@ -76,7 +76,7 @@ import org.teiid.designer.ui.viewsupport.RelationalObjectFactory;
  *
  * @since 8.0
  */
-public class CreatePushdownFunctionAction extends Action implements INewChildAction, INewSiblingAction, SourceFunctionModelExtensionConstants {
+public class CreatePushdownFunctionAction extends Action implements INewChildAction, INewSiblingAction, RelationalModelExtensionConstants {
 	private IFile selectedModel;
 	public static ModelObjectAnnotationHelper ANNOTATION_HELPER = new ModelObjectAnnotationHelper();
 	public static final String TITLE = UiConstants.Util.getString("CreatePushdownFunctionAction.title"); //$NON-NLS-1$

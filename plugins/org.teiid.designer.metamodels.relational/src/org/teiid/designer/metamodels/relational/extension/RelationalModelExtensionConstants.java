@@ -13,8 +13,11 @@ import org.teiid.designer.extension.properties.NamespaceProvider;
 /**
  * @since 8.0
  */
-public interface SourceFunctionModelExtensionConstants {
+public interface RelationalModelExtensionConstants {
 
+    /**
+     * 
+     */
     NamespaceProvider NAMESPACE_PROVIDER = new NamespaceProvider() {
 
         /**
@@ -24,7 +27,7 @@ public interface SourceFunctionModelExtensionConstants {
          */
         @Override
         public String getNamespacePrefix() {
-            return "relational"; //$NON-NLS-1$
+            return "relationalsource"; //$NON-NLS-1$
         }
 
         /**
@@ -34,7 +37,7 @@ public interface SourceFunctionModelExtensionConstants {
          */
         @Override
         public String getNamespaceUri() {
-            return "http://www.jboss.org/teiiddesigner/ext/rest/2012"; //$NON-NLS-1$
+            return "http://www.jboss.org/teiiddesigner/ext/relational/2012"; //$NON-NLS-1$
         }
     };
 
@@ -47,6 +50,8 @@ public interface SourceFunctionModelExtensionConstants {
          * The property definition identifer for the deterministic boolean property.
          */
         String DETERMINISTIC = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "deterministic"); //$NON-NLS-1$
+        String NATIVE_QUERY = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "native-query"); //$NON-NLS-1$
+        String NON_PREPARED = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "non-prepared"); //$NON-NLS-1$
 
     }
 

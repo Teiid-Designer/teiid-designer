@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="relational" namespaceUri="http://www.teiid.org/ext/relational/2012" version="2" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
-    <p:description>Relational metamodel extension properties</p:description>
-    <p:modelType>PHYSICAL</p:modelType>
-    <p:modelType>VIRTUAL</p:modelType>
-    <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ProcedureImpl">
-        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="deterministic" required="false" type="boolean">
-            <p:description locale="en">Specifies that the source function will always returns the same result for a specific input value</p:description>
-            <p:display locale="en">Deterministic</p:display>
-            <p:allowedValue>true</p:allowedValue>
-            <p:allowedValue>false</p:allowedValue>
-        </p:property>
-        <p:property advanced="false" index="true" masked="false" name="non-prepared" required="false" type="boolean">
-            <p:display locale="en">Non Prepared</p:display>
-            <p:allowedValue>true</p:allowedValue>
-            <p:allowedValue>false</p:allowedValue>
-        </p:property>
+<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/MetaMatrixFunction" namespacePrefix="function" namespaceUri="http://www.teiid.org/ext/function/2012" version="1" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
+    <p:description>This built-in MED provides a mechanism for Teiid function properties new to Teiid 8.0 to be set on a user defined function model's scalar functions.</p:description>
+    <p:modelType>FUNCTION</p:modelType>
+    <p:extendedMetaclass name="org.teiid.designer.metamodels.function.impl.ScalarFunctionImpl">
         <p:property advanced="false" defaultValue="false" index="true" masked="false" name="aggregate" required="true" type="boolean">
             <p:display locale="en">Aggregate</p:display>
             <p:allowedValue>true</p:allowedValue>
@@ -44,11 +32,6 @@
             <p:display locale="en">Decomposable</p:display>
             <p:allowedValue>true</p:allowedValue>
             <p:allowedValue>false</p:allowedValue>
-        </p:property>
-    </p:extendedMetaclass>
-    <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.BaseTableImpl">
-        <p:property advanced="false" index="true" masked="false" name="native-query" required="false" type="string">
-            <p:display locale="en">Native Query</p:display>
         </p:property>
     </p:extendedMetaclass>
 </modelExtension>
