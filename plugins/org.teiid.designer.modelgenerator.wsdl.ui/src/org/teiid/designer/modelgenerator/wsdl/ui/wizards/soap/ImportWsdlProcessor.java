@@ -42,7 +42,7 @@ import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.ProcedureResult;
 import org.teiid.designer.metamodels.relational.RelationalFactory;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
-import org.teiid.designer.modelgenerator.wsdl.SOAPConnectionInfoProvider;
+import org.teiid.designer.modelgenerator.wsdl.WSSoapConnectionInfoProvider;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
 import org.teiid.designer.modelgenerator.wsdl.model.Port;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
@@ -222,26 +222,26 @@ public class ImportWsdlProcessor {
         		String endpoint = this.importManager.getEndPoint();
         		if( endpoint != null ) {
         			Properties props = profile.getBaseProperties();
-        			props.put(SOAPConnectionInfoProvider.WSDL_URI_KEY, endpoint);
+        			props.put(WSSoapConnectionInfoProvider.WSDL_URI_KEY, endpoint);
         			String defaultServiceMode = this.importManager.getTranslatorDefaultServiceMode();
         			if( defaultServiceMode.equalsIgnoreCase(WSDLImportWizardManager.MESSAGE ) ) {
-        				props.put(SOAPConnectionInfoProvider.SOAP_SERVICE_MODE, WSDLImportWizardManager.MESSAGE);
+        				props.put(WSSoapConnectionInfoProvider.SOAP_SERVICE_MODE, WSDLImportWizardManager.MESSAGE);
         			} else {
-        				props.put(SOAPConnectionInfoProvider.SOAP_SERVICE_MODE, WSDLImportWizardManager.PAYLOAD);
+        				props.put(WSSoapConnectionInfoProvider.SOAP_SERVICE_MODE, WSDLImportWizardManager.PAYLOAD);
         			}
         			String defaultBinding = this.importManager.getTranslatorDefaultBinding();
         			if( defaultBinding.equalsIgnoreCase(Port.SOAP12) ) {
-        				props.put(SOAPConnectionInfoProvider.SOAP_BINDING, Port.SOAP12);
+        				props.put(WSSoapConnectionInfoProvider.SOAP_BINDING, Port.SOAP12);
         			} else {
         				// remove MESSAGE property if it exists
-        				String theProp = props.getProperty(SOAPConnectionInfoProvider.SOAP_BINDING);
+        				String theProp = props.getProperty(WSSoapConnectionInfoProvider.SOAP_BINDING);
         				if( theProp != null ) {
-        					props.remove(SOAPConnectionInfoProvider.SOAP_BINDING);
+        					props.remove(WSSoapConnectionInfoProvider.SOAP_BINDING);
         				}
         				
         			}
         			profile.setBaseProperties(props);
-                    IConnectionInfoProvider provider = new SOAPConnectionInfoProvider();
+                    IConnectionInfoProvider provider = new WSSoapConnectionInfoProvider();
                     provider.setConnectionInfo(sourceModel, profile);
         		}
     		
