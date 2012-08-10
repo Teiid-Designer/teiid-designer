@@ -101,7 +101,7 @@ public class RelationalModelBuilder {
 	private RelationalFactory factory;
 	private DatatypeManager datatypeManager = ModelerCore.getBuiltInTypesManager();
 	private List<ProcedureBuilder> builders= new ArrayList<ProcedureBuilder>();
-	private SOAPConnectionInfoProvider connProvider;
+	private WSSoapConnectionInfoProvider connProvider;
 	private IConnectionProfile connectionProfile;
 	private XSDSchema[] schemas;
 	
@@ -116,7 +116,7 @@ public class RelationalModelBuilder {
 		factory = org.teiid.designer.metamodels.relational.RelationalPackage.eINSTANCE
 				.getRelationalFactory();
 		connectionProfile = profile;
-		connProvider = new SOAPConnectionInfoProvider();
+		connProvider = new WSSoapConnectionInfoProvider();
 	}
 
 	public void modelOperations(List<Operation> operations, IContainer container)

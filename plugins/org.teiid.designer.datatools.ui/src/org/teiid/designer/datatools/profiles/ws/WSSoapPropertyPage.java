@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 import org.teiid.designer.ui.common.ICredentialsCommon;
@@ -149,8 +150,9 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
 		IConnectionProfile profile = getConnectionProfile();
 		Properties props = profile.getBaseProperties();
 
-		if (null != props.get(IWSProfileConstants.WSDL_URI_PROP_ID)) {
-			urlText.setText((String) props.get(IWSProfileConstants.WSDL_URI_PROP_ID));
+		String url = ConnectionInfoHelper.readURLProperty(props);
+		if (null != url) {
+			urlText.setText(url);
 		}
 		
  		if (null != props.get(ICredentialsCommon.SECURITY_TYPE_ID)) {
@@ -177,7 +179,7 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
 		if (null == result) {
 			result = new Properties();
 		}
-		result.setProperty(IWSProfileConstants.WSDL_URI_PROP_ID, urlText.getText());
+		result.setProperty(IWSProfileConstants.URL_PROP_ID, urlText.getText());
 		result.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, credentialsComposite.getSecurityOption().name());
 		result.setProperty(ICredentialsCommon.USERNAME_PROP_ID, credentialsComposite.getUserName());
 		result.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, credentialsComposite.getPassword());

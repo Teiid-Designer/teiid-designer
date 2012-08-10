@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -16,6 +17,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ResourceAnnotationHelper;
 import org.teiid.designer.datatools.DatatoolsPlugin;
+import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 
 /**
  * @since 8.0
@@ -401,5 +403,23 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
         getHelper().removeProperties(modelResource, CONNECTION_PROFILE_NAMESPACE);
         getHelper().removeProperties(modelResource, CONNECTION_NAMESPACE);
         getHelper().removeProperties(modelResource, TRANSLATOR_NAMESPACE);
+	}
+	
+	/**
+	 * Utility method for reading the 'endpoint' property from a set of connection profile properties.
+	 * Tries the 'endpoint' property key and then tries the legacy 'wsdlURI' property which was used
+	 * in the wsdl importer during the 7.7.1 release
+	 * 
+	 * @param properties
+	 * @return 'endpoint' property value
+	 */
+	public static String readURLProperty(Properties properties) {
+		String urlPropId = properties.getProperty(IWSProfileConstants.URL_PROP_ID);
+        if (urlPropId == null) {
+        	// Check for the legacy version that was getting used by the WSDL importer in 7.7.1
+        	urlPropId = properties.getProperty(IWSProfileConstants.LEGACY_WSDL_PROP_ID);
+        }
+        
+        return urlPropId;
 	}
 }
