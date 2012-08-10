@@ -1,4 +1,4 @@
-package org.teiid.designer.datatools.salesforce;
+package org.teiid.designer.modelgenerator.salesforce.datatools;
 
 import org.eclipse.datatools.connectivity.PropertiesPersistenceHook;
 

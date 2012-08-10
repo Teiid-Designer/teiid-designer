@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.datatools.salesforce;
+package org.teiid.designer.modelgenerator.salesforce.datatools;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -19,7 +19,7 @@ import org.teiid.designer.modelgenerator.salesforce.connection.impl.Connection;
  *
  * @since 8.0
  */
-public class SalesForceConnection implements IConnection {
+public class SalesforceDatatoolsConnection implements IConnection {
 
     private IConnectionProfile savedProfile;
     private Connection connection;
@@ -29,7 +29,7 @@ public class SalesForceConnection implements IConnection {
     /**
      * @param profile
      */
-    public SalesForceConnection( IConnectionProfile profile ) {
+    public SalesforceDatatoolsConnection( IConnectionProfile profile ) {
         savedProfile = profile;
         if (null == connection) {
             connection = new Connection();
@@ -61,7 +61,7 @@ public class SalesForceConnection implements IConnection {
      * @param uid
      * @param pwd
      */
-    public SalesForceConnection( IConnectionProfile profile,
+    public SalesforceDatatoolsConnection( IConnectionProfile profile,
                                  String uid,
                                  String pwd ) {
         savedProfile = profile;

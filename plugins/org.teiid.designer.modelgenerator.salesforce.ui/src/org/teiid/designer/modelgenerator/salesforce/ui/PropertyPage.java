@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.designer.datatools.salesforce.ISalesForceProfileConstants;
+import org.teiid.designer.modelgenerator.salesforce.datatools.ISalesForceProfileConstants;
 
 /**
  * @since 8.0

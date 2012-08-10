@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.teiid.designer.core.util.StringUtilities;
-import org.teiid.designer.datatools.salesforce.ISalesForceProfileConstants;
+import org.teiid.designer.modelgenerator.salesforce.datatools.ISalesForceProfileConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
