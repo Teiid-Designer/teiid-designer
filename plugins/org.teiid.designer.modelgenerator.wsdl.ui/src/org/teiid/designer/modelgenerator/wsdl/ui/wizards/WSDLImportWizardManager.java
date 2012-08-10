@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.core.event.IChangeListener;
 import org.teiid.core.event.IChangeNotifier;
-import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.modelgenerator.wsdl.WSDLReader;
 import org.teiid.designer.modelgenerator.wsdl.model.Model;
 import org.teiid.designer.modelgenerator.wsdl.model.ModelGenerationException;
@@ -287,7 +287,7 @@ public class WSDLImportWizardManager implements IChangeNotifier {
             String password = props.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
             setWSDLCredentials(securityTypeValue, userName, password);
 
-            String fileUri = props.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID);
+            String fileUri = ConnectionInfoHelper.readURLProperty(props);
             if( fileUri != null ) {
                 setWSDLFileUri(fileUri);
             }

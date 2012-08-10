@@ -208,7 +208,7 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
             Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
             String urlStr = urlText.getText();
             if (urlStr != null) urlStr = urlStr.trim();
-            properties.setProperty(IWSProfileConstants.WSDL_URI_PROP_ID, urlStr);
+            properties.setProperty(IWSProfileConstants.URL_PROP_ID, urlStr);
         }
         updateState();
     }
@@ -262,8 +262,8 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         descriptionText.setText(((NewConnectionProfileWizard)getWizard()).getProfileDescription());
 
         Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
-        if (null == properties.get(IWSProfileConstants.WSDL_URI_PROP_ID)
-                || properties.get(IWSProfileConstants.WSDL_URI_PROP_ID).toString().isEmpty()) {
+        if (null == properties.get(IWSProfileConstants.URL_PROP_ID)
+                || properties.get(IWSProfileConstants.URL_PROP_ID).toString().isEmpty()) {
                 setErrorMessage(UTIL.getString("Common.URL.Error.Message")); //$NON-NLS-1$
                 return;
         }
@@ -272,13 +272,13 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         boolean urlError = true;
         try {
         	@SuppressWarnings("unused")
-			URL url = new URL(properties.get(IWSProfileConstants.WSDL_URI_PROP_ID).toString());
+			URL url = new URL(properties.get(IWSProfileConstants.URL_PROP_ID).toString());
         	urlError = false;
         } catch(MalformedURLException e) {
         	
         }
         if( urlError ) {
-            File file = new File(properties.get(IWSProfileConstants.WSDL_URI_PROP_ID).toString());
+            File file = new File(properties.get(IWSProfileConstants.URL_PROP_ID).toString());
 
             if( !file.exists() && urlError) {
             	setErrorMessage(UTIL.getString("Common.URLorFILE.Invalid.Message")); //$NON-NLS-1$
@@ -312,8 +312,8 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
 		Properties properties = ((NewConnectionProfileWizard) getWizard())
 				.getProfileProperties();
 		if (complete
-				&& (null == properties.get(IWSProfileConstants.WSDL_URI_PROP_ID) || properties
-						.get(IWSProfileConstants.WSDL_URI_PROP_ID).toString()
+				&& (null == properties.get(IWSProfileConstants.URL_PROP_ID) || properties
+						.get(IWSProfileConstants.URL_PROP_ID).toString()
 						.isEmpty())) {
 			complete = false;
 		}
@@ -335,7 +335,7 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
             securityType = SecurityType.None.name();
         }
         
-        result.add(new String[] { UTIL.getString("Common.URL.Label"), properties.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID) }); //$NON-NLS-1$
+        result.add(new String[] { UTIL.getString("Common.URL.Label"), properties.getProperty(IWSProfileConstants.URL_PROP_ID) }); //$NON-NLS-1$
         
         if (! SecurityType.None.name().equals(securityType)) {
             result.add(new String[] { UTIL.getString("Common.SecurityType.Label"), securityType }); //$NON-NLS-1$
@@ -416,7 +416,7 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         }
 
         public Exception testXmlUrlConnection( IConnectionProfile icp ) {
-        	return WSWizardUtils.testURLConnection(icp, IWSProfileConstants.WSDL_URI_PROP_ID);
+        	return WSWizardUtils.testURLConnection(icp, IWSProfileConstants.URL_PROP_ID);
         }
 
         public Throwable getTestConnectionException( IConnection conn ) {

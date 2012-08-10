@@ -36,6 +36,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
@@ -222,21 +223,21 @@ public class ImportWsdlProcessor {
         		String endpoint = this.importManager.getEndPoint();
         		if( endpoint != null ) {
         			Properties props = profile.getBaseProperties();
-        			props.put(WSSoapConnectionInfoProvider.WSDL_URI_KEY, endpoint);
+        			props.put(IWSProfileConstants.URL_PROP_ID, endpoint);
         			String defaultServiceMode = this.importManager.getTranslatorDefaultServiceMode();
         			if( defaultServiceMode.equalsIgnoreCase(WSDLImportWizardManager.MESSAGE ) ) {
-        				props.put(WSSoapConnectionInfoProvider.SOAP_SERVICE_MODE, WSDLImportWizardManager.MESSAGE);
+        				props.put(IWSProfileConstants.SOAP_SERVICE_MODE, WSDLImportWizardManager.MESSAGE);
         			} else {
-        				props.put(WSSoapConnectionInfoProvider.SOAP_SERVICE_MODE, WSDLImportWizardManager.PAYLOAD);
+        				props.put(IWSProfileConstants.SOAP_SERVICE_MODE, WSDLImportWizardManager.PAYLOAD);
         			}
         			String defaultBinding = this.importManager.getTranslatorDefaultBinding();
         			if( defaultBinding.equalsIgnoreCase(Port.SOAP12) ) {
-        				props.put(WSSoapConnectionInfoProvider.SOAP_BINDING, Port.SOAP12);
+        				props.put(IWSProfileConstants.SOAP_BINDING, Port.SOAP12);
         			} else {
         				// remove MESSAGE property if it exists
-        				String theProp = props.getProperty(WSSoapConnectionInfoProvider.SOAP_BINDING);
+        				String theProp = props.getProperty(IWSProfileConstants.SOAP_BINDING);
         				if( theProp != null ) {
-        					props.remove(WSSoapConnectionInfoProvider.SOAP_BINDING);
+        					props.remove(IWSProfileConstants.SOAP_BINDING);
         				}
         				
         			}
