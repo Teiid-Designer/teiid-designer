@@ -7,7 +7,7 @@
 	              xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" 
 	              version="1">
 	<p:description>Duplicate allowed values from different properties</p:description>
-	<p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.ProcedureImpl">
+	<p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ProcedureImpl">
 		<p:property name="restMethod" type="string" defaultValue=" " index="false">
 			<p:description locale="en_US">The REST method to map this procedure to. Supported methods are
 				GET/PUT/POST/DELETE.</p:description>
