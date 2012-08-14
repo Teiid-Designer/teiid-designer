@@ -10,9 +10,7 @@ package org.teiid.designer.metamodels.function.extension;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
-import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.function.ScalarFunction;
 
 /**
@@ -68,27 +66,24 @@ public class FunctionModelExtensionAssistant extends EmfModelObjectExtensionAssi
         // make sure there is a property definition first
         final ModelExtensionPropertyDefinition propDefn = super.getPropertyDefinition(modelObject, propId);
 
-        if (propDefn != null) {
+        if ((propDefn != null) && (modelObject instanceof ScalarFunction)) {
             if (PropertyName.same(PropertyName.ANALYTIC, propId) || PropertyName.same(PropertyName.ALLOWS_ORDER_BY, propId)
                 || PropertyName.same(PropertyName.USES_DISTINCT_ROWS, propId)
                 || PropertyName.same(PropertyName.ALLOWS_DISTINCT, propId)
                 || PropertyName.same(PropertyName.DECOMPOSABLE, propId)) {
-                if ((modelObject instanceof ScalarFunction)
-                    && ModelType.FUNCTION_LITERAL.equals(ModelUtil.getModel(modelObject).getModelType())) {
-                    // aggregate must be true to have rest of the above properties
-                    final String isAggregate = getPropertyValue(modelObject, PropertyName.AGGREGATE.toString());
+                // aggregate must be true to have rest of the above properties
+                final String isAggregate = getPropertyValue(modelObject, PropertyName.AGGREGATE.toString());
 
-                    if (Boolean.parseBoolean(isAggregate)) {
-                        return propDefn;
-                    }
-
-                    // make sure model object does not have these extension properties for when aggregate is false
-                    removeProperty(modelObject, PropertyName.ANALYTIC.toString());
-                    removeProperty(modelObject, PropertyName.ALLOWS_ORDER_BY.toString());
-                    removeProperty(modelObject, PropertyName.USES_DISTINCT_ROWS.toString());
-                    removeProperty(modelObject, PropertyName.DECOMPOSABLE.toString());
-                    removeProperty(modelObject, PropertyName.ALLOWS_DISTINCT.toString());
+                if (Boolean.parseBoolean(isAggregate)) {
+                    return propDefn;
                 }
+
+                // make sure model object does not have these extension properties for when aggregate is false
+                removeProperty(modelObject, PropertyName.ANALYTIC.toString());
+                removeProperty(modelObject, PropertyName.ALLOWS_ORDER_BY.toString());
+                removeProperty(modelObject, PropertyName.USES_DISTINCT_ROWS.toString());
+                removeProperty(modelObject, PropertyName.DECOMPOSABLE.toString());
+                removeProperty(modelObject, PropertyName.ALLOWS_DISTINCT.toString());
 
                 // EObject should not have the requested property definition
                 return null;
