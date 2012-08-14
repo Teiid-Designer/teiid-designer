@@ -7,43 +7,27 @@
         <p:property advanced="false" defaultValue="false" index="true" masked="false" name="deterministic" required="false" type="boolean">
             <p:description locale="en">Specifies that the source function will always returns the same result for a specific input value</p:description>
             <p:display locale="en">Deterministic</p:display>
-            <p:allowedValue>true</p:allowedValue>
-            <p:allowedValue>false</p:allowedValue>
         </p:property>
-        <p:property advanced="false" index="true" masked="false" name="non-prepared" required="false" type="boolean">
-            <p:display locale="en">Non Prepared</p:display>
-            <p:allowedValue>true</p:allowedValue>
-            <p:allowedValue>false</p:allowedValue>
+        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="non-prepared" required="false" type="boolean">
+            <p:display locale="en">Non-Prepared</p:display>
         </p:property>
         <p:property advanced="false" defaultValue="false" index="true" masked="false" name="aggregate" required="true" type="boolean">
             <p:display locale="en">Aggregate</p:display>
-            <p:allowedValue>true</p:allowedValue>
-            <p:allowedValue>false</p:allowedValue>
         </p:property>
         <p:property advanced="false" defaultValue="false" index="true" masked="false" name="analytic" required="false" type="boolean">
             <p:display locale="en">Analytic</p:display>
-            <p:allowedValue>true</p:allowedValue>
-            <p:allowedValue>false</p:allowedValue>
         </p:property>
         <p:property advanced="false" defaultValue="false" index="true" masked="false" name="allows-orderby" required="false" type="boolean">
             <p:display locale="en">Allows Order-by</p:display>
-            <p:allowedValue>true</p:allowedValue>
-            <p:allowedValue>false</p:allowedValue>
         </p:property>
         <p:property advanced="false" defaultValue="false" index="true" masked="false" name="uses-distinct-rows" required="false" type="boolean">
             <p:display locale="en">Uses Distinct Rows</p:display>
-            <p:allowedValue>true</p:allowedValue>
-            <p:allowedValue>false</p:allowedValue>
         </p:property>
         <p:property advanced="false" defaultValue="false" index="true" masked="false" name="allows-distinct" required="false" type="boolean">
             <p:display locale="en">Allows Distinct</p:display>
-            <p:allowedValue>true</p:allowedValue>
-            <p:allowedValue>false</p:allowedValue>
         </p:property>
         <p:property advanced="false" defaultValue="false" index="true" masked="false" name="decomposable" required="false" type="boolean">
             <p:display locale="en">Decomposable</p:display>
-            <p:allowedValue>true</p:allowedValue>
-            <p:allowedValue>false</p:allowedValue>
         </p:property>
     </p:extendedMetaclass>
     <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.BaseTableImpl">

@@ -27,7 +27,7 @@ public interface RelationalModelExtensionConstants {
          */
         @Override
         public String getNamespacePrefix() {
-            return "relationalsource"; //$NON-NLS-1$
+            return "relational"; //$NON-NLS-1$
         }
 
         /**
