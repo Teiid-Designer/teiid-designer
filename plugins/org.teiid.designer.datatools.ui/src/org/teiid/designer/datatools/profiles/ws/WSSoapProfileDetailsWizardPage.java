@@ -109,6 +109,7 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
 
         urlText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
         urlText.setEditable(false);
+        urlText.setEnabled(false);
         urlText.setToolTipText(UTIL.getString("Common.URLorFILE.ToolTip")); //$NON-NLS-1$
         gd = new GridData(GridData.FILL_HORIZONTAL);
         urlText.setLayoutData(gd);
@@ -156,7 +157,6 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
 
         Text descriptionText = new Text(descriptionGroup,  SWT.WRAP | SWT.READ_ONLY);
         gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
-        gd.heightHint = 100;
         gd.widthHint = 500;
         descriptionText.setLayoutData(gd);
         descriptionText.setText(UTIL.getString("WSSoapProfileDetailsWizardPage.descriptionMessage")); //$NON-NLS-1$
