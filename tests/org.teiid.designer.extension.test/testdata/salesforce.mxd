@@ -9,7 +9,7 @@
     <p:description>Salesforce extended relational model properties</p:description>
     <p:modelType>PHYSICAL</p:modelType>
 
-    <p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.BaseTableImpl">
+    <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.BaseTableImpl">
         <p:property name="custom" type="boolean" defaultValue="false">
             <p:display locale="en_US">Custom</p:display>
         </p:property>
@@ -39,7 +39,7 @@
         </p:property>
     </p:extendedMetaclass>
 
-    <p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.ColumnImpl">
+    <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ColumnImpl">
         <p:property name="custom" type="boolean" defaultValue="false">
             <p:display locale="en_US">Custom</p:display>
         </p:property>

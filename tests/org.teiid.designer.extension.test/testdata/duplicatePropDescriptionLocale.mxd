@@ -7,7 +7,7 @@
 	              xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" 
 	              version="1">
 	<p:description>Duplicate property description locales</p:description>
-	<p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.ProcedureImpl">
+	<p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ProcedureImpl">
         <p:property name="propA" type="boolean" defaultValue="false" index="true">
             <p:description locale="en_US">This is propA description.</p:description>
             <p:description locale="en_GB">This is propA description.</p:description>

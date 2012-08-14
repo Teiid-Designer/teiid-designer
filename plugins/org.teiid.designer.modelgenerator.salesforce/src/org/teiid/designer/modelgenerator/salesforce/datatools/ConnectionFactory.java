@@ -1,4 +1,4 @@
-package org.teiid.designer.datatools.salesforce;
+package org.teiid.designer.modelgenerator.salesforce.datatools;
 
 import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionFactory;
@@ -11,7 +11,7 @@ public class ConnectionFactory implements IConnectionFactory {
 
     @Override
     public IConnection createConnection( IConnectionProfile profile ) {
-        SalesForceConnection connection = new SalesForceConnection(profile);
+        SalesforceDatatoolsConnection connection = new SalesforceDatatoolsConnection(profile);
         return connection;
     }
 
@@ -19,7 +19,7 @@ public class ConnectionFactory implements IConnectionFactory {
     public IConnection createConnection( IConnectionProfile profile,
                                          String uid,
                                          String pwd ) {
-        SalesForceConnection connection = new SalesForceConnection(profile, uid, pwd);
+        SalesforceDatatoolsConnection connection = new SalesforceDatatoolsConnection(profile, uid, pwd);
         return connection;
     }
 

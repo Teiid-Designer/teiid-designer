@@ -15,7 +15,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
-import org.teiid.designer.datatools.salesforce.ISalesForceProfileConstants;
+import org.teiid.designer.modelgenerator.salesforce.datatools.ISalesForceProfileConstants;
 
 
 /**

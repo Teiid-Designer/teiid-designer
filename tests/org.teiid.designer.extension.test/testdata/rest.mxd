@@ -9,7 +9,7 @@
     <p:description>REST extended virtual procedure properties</p:description>
     <p:modelType>VIRTUAL</p:modelType>
 
-    <p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.ProcedureImpl">
+    <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ProcedureImpl">
         <p:property name="restMethod" type="string" defaultValue=" " index="false">
             <p:description locale="en_US">The REST method to map this procedure to. Supported methods are
                 GET/PUT/POST/DELETE.</p:description>
