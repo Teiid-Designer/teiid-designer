@@ -10,6 +10,7 @@ package org.teiid.designer.extension.definition;
 import java.io.File;
 import java.util.Collection;
 import java.util.Properties;
+import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
 /**
  * 
@@ -53,6 +54,15 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
      * @throws Exception if there is a problem obtaining the extension properties
      */
     public abstract Properties getOverriddenValues( Object modelObject ) throws Exception;
+
+    /**
+     * @param modelObject the model object whose property definitions are being requested (cannot be <code>null</code>)
+     * @return the property definitions (never <code>null</code>(
+     * @throws Exception if there is a problem obtaining the extension property definitions
+     */
+    public Collection<ModelExtensionPropertyDefinition> getPropertyDefinitions( Object modelObject ) throws Exception {
+        return getModelExtensionDefinition().getPropertyDefinitions(modelObject.getClass().getName());
+    }
 
     /**
      * Obtains from the model object, the property value of the specified property definition identifier. If the current value is

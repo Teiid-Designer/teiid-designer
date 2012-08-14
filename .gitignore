@@ -2,3 +2,14 @@ target
 .settings
 bin
 tmp
+
+# OS X (Mac)
+.DS_Store
+
+# Eclipse
+.metadata
+
+# Designer indexing
+COLUMNS.INDEX
+TABLES.INDEX
+larger_test.index
