@@ -10,6 +10,7 @@ package org.teiid.designer.core.extension;
 import static org.teiid.designer.core.ModelerCore.Util;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -157,9 +158,10 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
      * @param modelObject the model object whose property definition is being requested (cannot be <code>null</code>)
      * @param propId the property identifier whose property definition is being requested (cannot be <code>null</code> or empty)
      * @return the property definition or <code>null</code> if not found
+     * @throws Exception if accessing a property definition or value
      */
     protected ModelExtensionPropertyDefinition getPropertyDefinition( Object modelObject,
-                                                                      String propId ) {
+                                                                      String propId ) throws Exception {
         CoreArgCheck.isNotNull(modelObject, "modelObject is null"); //$NON-NLS-1$
 
         // make sure right namespace
@@ -168,6 +170,29 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
         }
 
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getPropertyDefinitions(java.lang.Object)
+     */
+    @Override
+    public Collection<ModelExtensionPropertyDefinition> getPropertyDefinitions(Object modelObject) throws Exception {
+        String metaclassName = modelObject.getClass().getName();
+        ModelExtensionDefinition med = getModelExtensionDefinition();
+        Collection<ModelExtensionPropertyDefinition> propDefinitions = new ArrayList<ModelExtensionPropertyDefinition>();
+
+        for (ModelExtensionPropertyDefinition potentialPropDefn : med.getPropertyDefinitions(metaclassName)) {
+            // let assistant determine if property definition is valid for model object
+            ModelExtensionPropertyDefinition propDefn = getPropertyDefinition(modelObject, potentialPropDefn.getId());
+
+            if (propDefn != null) {
+                propDefinitions.add(propDefn);
+            }
+        }
+
+        return propDefinitions;
     }
 
     /**
