@@ -414,10 +414,10 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
 	 * @return 'endpoint' property value
 	 */
 	public static String readURLProperty(Properties properties) {
-		String urlPropId = properties.getProperty(IWSProfileConstants.URL_PROP_ID);
+		String urlPropId = properties.getProperty(IWSProfileConstants.END_POINT_URI_PROP_ID);
         if (urlPropId == null) {
         	// Check for the legacy version that was getting used by the WSDL importer in 7.7.1
-        	urlPropId = properties.getProperty(IWSProfileConstants.LEGACY_WSDL_PROP_ID);
+        	urlPropId = properties.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID);
         }
         
         return urlPropId;

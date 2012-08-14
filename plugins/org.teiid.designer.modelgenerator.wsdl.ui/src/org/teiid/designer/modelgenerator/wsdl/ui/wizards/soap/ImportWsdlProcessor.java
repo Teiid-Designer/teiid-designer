@@ -223,7 +223,7 @@ public class ImportWsdlProcessor {
         		String endpoint = this.importManager.getEndPoint();
         		if( endpoint != null ) {
         			Properties props = profile.getBaseProperties();
-        			props.put(IWSProfileConstants.URL_PROP_ID, endpoint);
+        			props.put(IWSProfileConstants.END_POINT_URI_PROP_ID, endpoint);
         			String defaultServiceMode = this.importManager.getTranslatorDefaultServiceMode();
         			if( defaultServiceMode.equalsIgnoreCase(WSDLImportWizardManager.MESSAGE ) ) {
         				props.put(IWSProfileConstants.SOAP_SERVICE_MODE, WSDLImportWizardManager.MESSAGE);

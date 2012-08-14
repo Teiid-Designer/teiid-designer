@@ -45,14 +45,21 @@ public interface IWSProfileConstants extends ICredentialsCommon {
      * The only property that matches up with the teiid-connector-ws.jar definition is the soapEndPoint
      * 
      */
-     String URL_PROP_ID = "EndPoint"; //$NON-NLS-1$
      String SOAP_ENDPOINT_KEY = "soapEndPoint"; //$NON-NLS-1$
      String CONNECTION_CLASS_KEY = "connectionClass"; //$NON-NLS-1$
      String DRIVER_CLASS_PATH_KEY = "driverClassPath"; //$NON-NLS-1$
      
      /**
-      * Used by the WSDL Importer in 7.7.1 for the wsdl URI connection profile property key.
-      * Should only be used for backward compatibilty
+      * Denotes the property key for the end point value(s) in a WSDL. In a connection
+      * profile, only 1 endpoint is selected from the selection available in a WSDL.
       */
-     String LEGACY_WSDL_PROP_ID = "wsdlURI"; //$NON-NLS-1$
+     String END_POINT_URI_PROP_ID = "EndPoint"; //$NON-NLS-1$
+     
+     /**
+      * Denotes the property key for the WSDL URI. This is different to the WSDL endpoint
+      * key in that a number of endpoints can appear in a WSDL accessible from a URI.
+      * 
+      * Also used incorrectly in 7.7.1 for the endpoint property key. 
+      */
+     String WSDL_URI_PROP_ID = "wsdlURI"; //$NON-NLS-1$
 }
