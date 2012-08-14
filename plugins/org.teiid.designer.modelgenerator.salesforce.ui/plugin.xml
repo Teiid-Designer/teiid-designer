@@ -40,7 +40,7 @@
          icon="icons/salesforce_wiz.gif"
          id="org.teiid.designer.modelgenerator.salesforce.ui.ConnectionProfileWizard"
          name="SalesForce"
-         profile="org.teiid.designer.modelgenerator.salesforce.connectionProfile"/>
+         profile="org.teiid.designer.datatools.salesforce.connectionProfile"/>
    </extension>
 
    <extension
@@ -51,7 +51,7 @@
             name="%connectionProperties.name">
          <filter
                name="org.eclipse.datatools.profile.property.id"
-               value="org.teiid.designer.modelgenerator.salesforce.connectionProfile"/>
+               value="org.teiid.designer.datatools.salesforce.connectionProfile"/>
          <enabledWhen>
             <instanceof
                   value="org.eclipse.datatools.connectivity.IConnectionProfile">

@@ -6,5 +6,5 @@
                 namespaceUri="uri" 
                 xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" 
                 version="1">
-    <p:extendedMetaclass name="com.metamatrix.metamodels.xml.impl.XmlDocumentImpl"/>
+    <p:extendedMetaclass name="org.teiid.designer.metamodels.xml.impl.XmlDocumentImpl"/>
 </modelExtension>

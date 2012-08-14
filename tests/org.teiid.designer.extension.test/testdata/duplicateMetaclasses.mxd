@@ -7,12 +7,12 @@
 	              xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" 
 	              version="1">
 	<p:description>Duplicate metaclass names</p:description>
-    <p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.ProcedureImpl">
+    <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ProcedureImpl">
         <p:property name="propA" type="boolean" defaultValue="false" index="true" />
         <p:property name="propB" type="boolean" defaultValue="true" index="false" />
         <p:property name="propC" type="boolean" defaultValue="true" index="false" />
     </p:extendedMetaclass>
-    <p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.ProcedureImpl">
+    <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ProcedureImpl">
         <p:property name="propX" type="boolean" defaultValue="false" index="true" />
         <p:property name="propY" type="boolean" defaultValue="true" index="false" />
         <p:property name="propZ" type="boolean" defaultValue="true" index="false" />

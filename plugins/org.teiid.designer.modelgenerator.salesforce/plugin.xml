@@ -26,10 +26,10 @@
             icon="icons/salesforce_wiz_16.gif"
             id="org.teiid.designer.datatools.salesforce.connectionProfile"
             name="%salesForceConnectionProfileName"
-            pingFactory="org.teiid.designer.datatools.salesforce.ConnectionFactory"
-            propertiesPersistenceHook="org.teiid.designer.datatools.salesforce.PersistanceHook"/>
+            pingFactory="org.teiid.designer.modelgenerator.salesforce.datatools.ConnectionFactory"
+            propertiesPersistenceHook="org.teiid.designer.modelgenerator.salesforce.datatools.PersistanceHook"/>
       <connectionFactory
-            class="org.teiid.designer.datatools.salesforce.ConnectionFactory"
+            class="org.teiid.designer.modelgenerator.salesforce.datatools.ConnectionFactory"
             id="org.teiid.designer.datatools.salesforce.ConnectionFactory"
             name="%salesForceConnectionFactoryName"
             profile="org.teiid.designer.datatools.salesforce.connectionProfile"/>
