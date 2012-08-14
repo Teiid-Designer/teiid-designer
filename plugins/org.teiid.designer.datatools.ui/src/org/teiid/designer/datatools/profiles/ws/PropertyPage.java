@@ -254,7 +254,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         if (null == result) {
             result = new Properties();
         }
-        result.setProperty(IWSProfileConstants.URL_PROP_ID, urlText.getText());
+        result.setProperty(IWSProfileConstants.END_POINT_URI_PROP_ID, urlText.getText());
         result.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, securityText.getText());
         result.setProperty(ICredentialsCommon.USERNAME_PROP_ID, usernameText.getText());
         result.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, passwordText.getText());

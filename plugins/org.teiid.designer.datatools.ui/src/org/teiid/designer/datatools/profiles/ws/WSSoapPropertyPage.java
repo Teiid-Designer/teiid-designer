@@ -179,7 +179,7 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
 		if (null == result) {
 			result = new Properties();
 		}
-		result.setProperty(IWSProfileConstants.URL_PROP_ID, urlText.getText());
+		result.setProperty(IWSProfileConstants.END_POINT_URI_PROP_ID, urlText.getText());
 		result.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, credentialsComposite.getSecurityOption().name());
 		result.setProperty(ICredentialsCommon.USERNAME_PROP_ID, credentialsComposite.getUserName());
 		result.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, credentialsComposite.getPassword());

@@ -26,7 +26,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
 
         String url = readURLProperty(props);
         if (null != url) {
-            connectionProps.setProperty(CONNECTION_NAMESPACE + IWSProfileConstants.URL_PROP_ID, url);
+            connectionProps.setProperty(CONNECTION_NAMESPACE + IWSProfileConstants.END_POINT_URI_PROP_ID, url);
         }
 
         String user = props.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
@@ -80,7 +80,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
         
         String url = readURLProperty(props);
         if (null != url) {
-            connectionProps.setProperty(IWSProfileConstants.URL_PROP_ID, url);
+            connectionProps.setProperty(IWSProfileConstants.END_POINT_URI_PROP_ID, url);
         }
 
         String user = props.getProperty(ICredentialsCommon.USERNAME_PROP_ID);

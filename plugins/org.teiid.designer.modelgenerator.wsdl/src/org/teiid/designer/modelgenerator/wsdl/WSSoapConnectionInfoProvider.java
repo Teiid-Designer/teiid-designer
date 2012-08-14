@@ -46,7 +46,7 @@ public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implemen
         
         String url = readURLProperty(props);
 		if (url != null) {
-            connectionProps.put(CONNECTION_NAMESPACE + URL_PROP_ID, url);
+            connectionProps.put(CONNECTION_NAMESPACE + END_POINT_URI_PROP_ID, url);
         }
 		
         if (props.getProperty(CONNECTION_CLASS_KEY) != null) {
