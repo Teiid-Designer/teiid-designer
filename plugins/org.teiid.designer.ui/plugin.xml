@@ -993,12 +993,7 @@
             id="autoUpdateImportsPreferenceContributor"
             categoryId="modeler.ui.modelCategory"
             class="org.teiid.designer.ui.preferences.AutoUpdateImportsPreferenceContributor">
-      </preference>
-      <preference
-            id="logicalAsRelationalPreferenceContributor"
-            categoryId="modeler.ui.modelCategory"
-            class="org.teiid.designer.ui.preferences.LogicalAsRelationalPreferenceContributor">
-      </preference>      
+      </preference>    
       <preference
             id="autoOpenPerspectiveContributor"
             categoryId="modeler.ui.modelCategory"
