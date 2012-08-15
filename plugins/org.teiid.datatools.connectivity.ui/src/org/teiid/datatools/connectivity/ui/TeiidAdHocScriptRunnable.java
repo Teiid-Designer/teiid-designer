@@ -109,6 +109,7 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
 
             try
             {
+                _startTime = System.currentTimeMillis();
                 _stmt = prepareStatement(connection);
                 
                 //try-catch block is used to catch exception considering some database (avaki) can't use this method.
@@ -214,6 +215,7 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
         }
         finally
         {
+            _endTime = System.currentTimeMillis();
             resultsViewAPI.saveElapseTime(_operationCommand, _endTime - _startTime);
             //save the results and parameters.
             resultsViewAPI.saveDetailResults(_operationCommand);
