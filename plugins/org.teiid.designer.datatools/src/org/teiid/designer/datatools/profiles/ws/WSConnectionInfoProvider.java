@@ -1,7 +1,6 @@
 package org.teiid.designer.datatools.profiles.ws;
 
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -24,7 +23,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
 
         Properties props = connectionProfile.getBaseProperties();
 
-        String url = readURLProperty(props);
+        String url = readEndPointProperty(props);
         if (null != url) {
             connectionProps.setProperty(CONNECTION_NAMESPACE + IWSProfileConstants.END_POINT_URI_PROP_ID, url);
         }
@@ -78,7 +77,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
         	connectionProps.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, password);
         }
         
-        String url = readURLProperty(props);
+        String url = readEndPointProperty(props);
         if (null != url) {
             connectionProps.setProperty(IWSProfileConstants.END_POINT_URI_PROP_ID, url);
         }

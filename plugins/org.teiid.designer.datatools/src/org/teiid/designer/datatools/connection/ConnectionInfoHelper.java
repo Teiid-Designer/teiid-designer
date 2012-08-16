@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -413,13 +412,13 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
 	 * @param properties
 	 * @return 'endpoint' property value
 	 */
-	public static String readURLProperty(Properties properties) {
-		String urlPropId = properties.getProperty(IWSProfileConstants.END_POINT_URI_PROP_ID);
-        if (urlPropId == null) {
-        	// Check for the legacy version that was getting used by the WSDL importer in 7.7.1
-        	urlPropId = properties.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID);
+	public static String readEndPointProperty(Properties properties) {
+		String endPointPropId = properties.getProperty(IWSProfileConstants.END_POINT_URI_PROP_ID);
+        if (endPointPropId == null) {
+        	// Check for the incorrect version that was getting used by the WSDL importer in 7.7.1
+            endPointPropId = properties.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID);
         }
         
-        return urlPropId;
+        return endPointPropId;
 	}
 }
