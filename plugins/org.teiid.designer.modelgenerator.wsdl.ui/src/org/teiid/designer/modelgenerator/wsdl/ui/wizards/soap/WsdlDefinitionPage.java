@@ -11,7 +11,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -458,7 +457,7 @@ public class WsdlDefinitionPage extends WizardPage
 				return;
 			}
 			Properties props = profile.getBaseProperties();
-			wsdlURIText.setText(ConnectionInfoHelper.readURLProperty(props));
+			wsdlURIText.setText(ConnectionInfoHelper.readEndPointProperty(props));
 			updateWidgetEnablements();
 			setErrorMessage(null);
 			setMessage(Messages.WsdlDefinitionPage_select_profile);

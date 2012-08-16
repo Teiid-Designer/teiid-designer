@@ -8,7 +8,6 @@
 package org.teiid.designer.datatools.profiles.ws;
 
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ui.wizards.ProfileDetailsPropertyPage;
 import org.eclipse.datatools.help.ContextProviderDelegate;
@@ -234,7 +233,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         if (null != props.get(ICredentialsCommon.PASSWORD_PROP_ID)) {
             passwordText.setText((String)props.get(ICredentialsCommon.PASSWORD_PROP_ID));
         }
-        String url = ConnectionInfoHelper.readURLProperty(props);
+        String url = ConnectionInfoHelper.readEndPointProperty(props);
         if (null != url) {
             urlText.setText(url);
         }

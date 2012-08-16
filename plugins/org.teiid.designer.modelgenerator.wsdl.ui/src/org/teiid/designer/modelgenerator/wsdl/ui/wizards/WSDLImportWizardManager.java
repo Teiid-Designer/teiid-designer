@@ -287,7 +287,7 @@ public class WSDLImportWizardManager implements IChangeNotifier {
             String password = props.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
             setWSDLCredentials(securityTypeValue, userName, password);
 
-            String fileUri = ConnectionInfoHelper.readURLProperty(props);
+            String fileUri = ConnectionInfoHelper.readEndPointProperty(props);
             if( fileUri != null ) {
                 setWSDLFileUri(fileUri);
             }

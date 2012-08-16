@@ -150,7 +150,7 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
 		IConnectionProfile profile = getConnectionProfile();
 		Properties props = profile.getBaseProperties();
 
-		String url = ConnectionInfoHelper.readURLProperty(props);
+		String url = ConnectionInfoHelper.readEndPointProperty(props);
 		if (null != url) {
 			urlText.setText(url);
 		}
