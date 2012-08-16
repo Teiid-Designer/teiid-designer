@@ -50,8 +50,15 @@ public interface IWSProfileConstants extends ICredentialsCommon {
      String DRIVER_CLASS_PATH_KEY = "driverClassPath"; //$NON-NLS-1$
      
      /**
-      * Denotes the property key for the end point value(s) in a WSDL. In a connection
-      * profile, only 1 endpoint is selected from the selection available in a WSDL.
+      * Denotes the property key for the end point name in a WSDL. The end point
+      * name is selected in the UI wizards and the URI and binding are properties
+      * extracted from the WSDL using this name.
+      */
+     String END_POINT_NAME_PROP_ID = "EndPointName"; //$NON-NLS-1$
+     
+     /**
+      * Denotes the property key for the end point address value(s) in a WSDL. In a connection
+      * profile, only 1 end point is selected from the selection available in a WSDL.
       */
      String END_POINT_URI_PROP_ID = "EndPoint"; //$NON-NLS-1$
      
