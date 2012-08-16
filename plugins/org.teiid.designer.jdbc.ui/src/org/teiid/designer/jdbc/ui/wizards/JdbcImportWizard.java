@@ -122,6 +122,8 @@ public class JdbcImportWizard extends AbstractWizard
     ProcessorPack ppProcessorPack;
     
     private Properties designerProperties;
+    private boolean openProjectExists = true;
+    private IProject newProject;
 
     boolean controlsHaveBeenCreated = false;
     private boolean isVirtual;
@@ -323,7 +325,7 @@ public class JdbcImportWizard extends AbstractWizard
     }
 
     /**
-     * @see org.teiid.designer.jdbc.ui.wizards.IJdbcImportInfoProvider#getDifferenceReport()
+     * @see org.teiid.designer.jdbc.ui.wizards.IJdbcImportInfoProvider#getDifferenceReports()
      * @since 5.0
      */
     @Override
@@ -623,11 +625,15 @@ public class JdbcImportWizard extends AbstractWizard
                 WidgetUtil.showError(err);
             }
         } else {
-            if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
-            	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+        	openProjectExists = ModelerUiViewUtils.workspaceHasOpenModelProjects();
+            if( !openProjectExists ) {
+            	newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
             	
             	if( newProject != null ) {
             		selection = new StructuredSelection(newProject);
+            		openProjectExists = true;
+            	} else {
+            		openProjectExists = false;
             	}
             }
         }
@@ -919,8 +925,17 @@ public class JdbcImportWizard extends AbstractWizard
     			srcPg.selectConnectionProfile(profileName);
     		}
     	}
+    	
+    	if( this.designerProperties != null && !this.openProjectExists) {
+			DesignerPropertiesUtil.setProjectStatus(this.designerProperties, IPropertiesContext.NO_OPEN_PROJECT);
+		}
+    	
     }
 
+    /**
+     * 
+     * @return designer properties
+     */
     public Properties getDesignerProperties() {
         return this.designerProperties;
     }

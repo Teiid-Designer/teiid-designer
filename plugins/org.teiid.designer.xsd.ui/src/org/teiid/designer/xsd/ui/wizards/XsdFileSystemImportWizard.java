@@ -8,6 +8,7 @@
 package org.teiid.designer.xsd.ui.wizards;
 
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -23,6 +24,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
+import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 import org.teiid.designer.xsd.ui.ModelerXsdUiPlugin;
@@ -33,7 +36,7 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiPlugin;
  * 
  * @since 8.0
  */
-public class XsdFileSystemImportWizard extends AbstractWizard implements IImportWizard, ModelerXsdUiConstants {
+public class XsdFileSystemImportWizard extends AbstractWizard implements IImportWizard, ModelerXsdUiConstants, IPropertiesContext {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(XsdFileSystemImportWizard.class);
 
@@ -55,6 +58,12 @@ public class XsdFileSystemImportWizard extends AbstractWizard implements IImport
     private XsdImportMainPage importMainPage;
     private IWorkbench workbench;
     private IStructuredSelection selection;
+    
+    private boolean openProjectExists;
+    
+    private IProject newProject;
+    
+    Properties designerProperties;
 
     /**
      * Creates a wizard for importing resources into the workspace from the file system.
@@ -74,6 +83,8 @@ public class XsdFileSystemImportWizard extends AbstractWizard implements IImport
     public void createPageControls( Composite pageContainer ) {
         if (importLicensed) {
             super.createPageControls(pageContainer);
+            
+            updateForProperties();
         }
     }
 
@@ -92,10 +103,13 @@ public class XsdFileSystemImportWizard extends AbstractWizard implements IImport
         }
         
     	if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
-        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+        	this.newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
         	
-        	if( newProject != null ) {
-        		this.selection = new StructuredSelection(newProject);
+        	if( this.newProject != null ) {
+        		this.selection = new StructuredSelection(this.newProject);
+        		openProjectExists = true;
+        	} else {
+        		openProjectExists = false;
         	}
         }
 
@@ -177,4 +191,24 @@ public class XsdFileSystemImportWizard extends AbstractWizard implements IImport
         }
         return super.getNextPage(page);
     }
+    
+	/**
+	 * 
+	 */
+	@Override
+	public void setProperties(Properties properties) {
+		this.designerProperties = properties;
+	}
+	
+	private void updateForProperties() {
+    	if( this.newProject != null && this.designerProperties != null) {
+            if( this.openProjectExists ) {
+            	DesignerPropertiesUtil.setProjectName(this.designerProperties, this.newProject.getName());
+            }
+            
+		} else if( this.designerProperties != null ) {
+			DesignerPropertiesUtil.setProjectStatus(this.designerProperties, IPropertiesContext.NO_OPEN_PROJECT);
+		}
+		
+	}
 }

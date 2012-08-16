@@ -134,6 +134,9 @@ public final class NewVdbWizard extends AbstractWizard
     List<IResource> modelsForVdb;
     
     Properties designerProperties;
+    private boolean openProjectExists = true;
+    private IProject newProject;
+
     
     final ISelectionStatusValidator validator = new ISelectionStatusValidator() {
         /**
@@ -239,14 +242,18 @@ public final class NewVdbWizard extends AbstractWizard
                       final IStructuredSelection originalSelection ) {
 
     	IStructuredSelection selection = originalSelection;
-    	if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
-        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+    	openProjectExists = ModelerUiViewUtils.workspaceHasOpenModelProjects();
+        if( !openProjectExists ) {
+        	newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
         	
         	if( newProject != null ) {
         		selection = new StructuredSelection(newProject);
+        		openProjectExists = true;
+        	} else {
+        		openProjectExists = false;
         	}
         }
-    	
+        
         if (isAllModelsSelected(selection)) {
             initialSelection = new StructuredSelection(selection.toArray());
         }
@@ -686,6 +693,9 @@ public final class NewVdbWizard extends AbstractWizard
             }
     	}
 		
+    	if( this.designerProperties != null && !this.openProjectExists) {
+			DesignerPropertiesUtil.setProjectStatus(this.designerProperties, IPropertiesContext.NO_OPEN_PROJECT);
+		}
 	}
 
 }

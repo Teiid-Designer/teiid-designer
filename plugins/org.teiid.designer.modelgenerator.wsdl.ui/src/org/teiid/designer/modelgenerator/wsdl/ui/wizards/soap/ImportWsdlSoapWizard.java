@@ -68,6 +68,9 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     private WizardPage modelDefinitionPage;
 
     private IStructuredSelection selection;
+    
+    private boolean openProjectExists = true;
+    private IProject newProject;
 
     /**
      * Creates a wizard for generating relational entities from WSDL source.
@@ -99,11 +102,15 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
             this.selection = new StructuredSelection(selectedResources);
         }
         
-        if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
-        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+    	openProjectExists = ModelerUiViewUtils.workspaceHasOpenModelProjects();
+        if( !openProjectExists ) {
+        	newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
         	
         	if( newProject != null ) {
-        		this.selection = new StructuredSelection(newProject);
+        		selection = new StructuredSelection(newProject);
+        		openProjectExists = true;
+        	} else {
+        		openProjectExists = false;
         	}
         }
 
@@ -240,6 +247,9 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
 		}, false);
     }
     
+    /**
+     * 
+     */
     public void notifyManagerChanged() {
     	// First, check the importManager's doGenerateDefaultProcedures() method.
     	
@@ -294,5 +304,9 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     			selectWsdlPage.selectConnectionProfile(profileName);
     		}
     	}
+    	
+    	if( !this.openProjectExists) {
+			DesignerPropertiesUtil.setProjectStatus(designerProperties, IPropertiesContext.NO_OPEN_PROJECT);
+		}
     }
 }

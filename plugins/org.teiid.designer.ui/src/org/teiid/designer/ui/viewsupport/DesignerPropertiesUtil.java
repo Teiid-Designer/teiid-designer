@@ -34,6 +34,7 @@ import org.teiid.designer.ui.UiPlugin;
  *
  * @since 8.0
  */
+@SuppressWarnings("javadoc")
 public class DesignerPropertiesUtil {
 
     private static final DesignerPropertiesUtil INSTANCE = new DesignerPropertiesUtil();
@@ -50,6 +51,11 @@ public class DesignerPropertiesUtil {
     public static String getProjectName( Properties properties ) {
         return properties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
     }
+    
+    public static String getProjectStatus( Properties properties ) {
+        return properties.getProperty(IPropertiesContext.KEY_PROJECT_STATUS);
+    }
+
 
     public static String getVdbName( Properties properties ) {
         return properties.getProperty(IPropertiesContext.KEY_LAST_VDB_NAME);
@@ -115,6 +121,11 @@ public class DesignerPropertiesUtil {
                                        String projectName ) {
         properties.put(IPropertiesContext.KEY_PROJECT_NAME, projectName);
     }
+    
+    public static void setProjectStatus( Properties properties,
+            String status ) {
+    	properties.put(IPropertiesContext.KEY_PROJECT_STATUS, status);
+	}
 
     public static void setVdbName( Properties properties,
                                    String vdbName ) {

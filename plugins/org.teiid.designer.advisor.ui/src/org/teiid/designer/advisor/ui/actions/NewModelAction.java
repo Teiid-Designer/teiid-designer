@@ -21,6 +21,8 @@ import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
+import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
+import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 import org.teiid.designer.ui.wizards.NewModelWizard;
 import org.teiid.designer.ui.wizards.NewModelWizardInput;
 
@@ -42,9 +44,16 @@ public final class NewModelAction extends Action implements AdvisorUiConstants {
         setText("New Model Action"); //$NON-NLS-1$
         setToolTipText("New Model Action Tooltip"); //$NON-NLS-1$
         setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(Images.NEW_MODEL_ACTION));
-
     }
     
+    /**
+     * Construct an instance of NewModelAction.
+     * 
+     * @param modelType the model type
+     * @param metamodelClass the metamodel class
+     * @param builderType the builder type
+     * @param properties the designer properties
+     */
     public NewModelAction( ModelType modelType,
                            String metamodelClass,
                            String builderType,
@@ -76,18 +85,28 @@ public final class NewModelAction extends Action implements AdvisorUiConstants {
         final IWorkbenchWindow iww = AdvisorUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
         boolean successful = false;
         try {
-
-            NewModelWizard wizard = new NewModelWizard(newModelInput, this.designerProperties);
+        	Properties props = this.designerProperties;
+        	if( props == null ) {
+        		props = new Properties();
+        	}
+            NewModelWizard wizard = new NewModelWizard(newModelInput, props);
 
             String viewId = ProductCustomizerMgr.getInstance().getProductCharacteristics().getPrimaryNavigationViewId();
             ISelection theSelection = iww.getSelectionService().getSelection(viewId);
 
             wizard.init(iww.getWorkbench(), (IStructuredSelection)theSelection);
             WizardDialog dialog = new WizardDialog(iww.getShell(), wizard);
-            int result = dialog.open();
-            if (result == Window.OK) {
-                successful = true;
-            }
+            wizard.updateForProperties();
+            
+    		String openProjectStatus = DesignerPropertiesUtil.getProjectStatus(props);
+    		if( openProjectStatus == null || !IPropertiesContext.NO_OPEN_PROJECT.equalsIgnoreCase(openProjectStatus) ){
+	            int result = dialog.open();
+	            if (result == Window.OK) {
+	                successful = true;
+	            }
+    		} else {
+    			return;
+    		}
         } catch (Exception e) {
             AdvisorUiConstants.UTIL.log(IStatus.ERROR, e, e.getMessage());
             MessageDialog.openError(iww.getShell(), Messages.NewModelWizardErrorTitle, Messages.NewModelWizardErrorMessage);
@@ -98,14 +117,23 @@ public final class NewModelAction extends Action implements AdvisorUiConstants {
 
     }
 
+    /**
+     * @param metamodelClass the metamodel class
+     */
     public void setMetamodelClass( String metamodelClass ) {
         getNewModelInput().setMetamodelClass(metamodelClass);
     }
 
+    /**
+     * @param type the model type
+     */
     public void setModelType( ModelType type ) {
         getNewModelInput().setModelType(type);
     }
 
+    /**
+     * @param type the builder type
+     */
     public void setBuilderType( String type ) {
         getNewModelInput().setBuilderType(type);
     }

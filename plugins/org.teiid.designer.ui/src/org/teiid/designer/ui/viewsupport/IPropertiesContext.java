@@ -37,10 +37,12 @@ public interface IPropertiesContext {
 	public static final String KEY_LAST_SOURCE_MODEL_OBJECT_NAME = "lastSourceModelObjectName"; //$NON-NLS-1$
 	public static final String KEY_LAST_VIEW_MODEL_OBJECT_NAME = "lastViewModelObjectName"; //$NON-NLS-1$
 	public static final String KEY_VDB_DATA_SOURCE_JNDI_NAME = "vdbJndiName"; //$NON-NLS-1$
+	public static final String KEY_PROJECT_STATUS = "projectStatus"; //$NON-NLS-1$
 	
 	public static final String KEY_IMPORT_XML_TYPE = "xmlImportType"; //$NON-NLS-1$
 	public static final String IMPORT_XML_LOCAL = "local"; //$NON-NLS-1$
 	public static final String IMPORT_XML_REMOTE = "remote"; //$NON-NLS-1$
+	public static final String NO_OPEN_PROJECT = "noOpenProject"; //$NON-NLS-1$
 	
 	public static final String KEY_GUIDE_ID = "guideID"; //$NON-NLS-1$
 

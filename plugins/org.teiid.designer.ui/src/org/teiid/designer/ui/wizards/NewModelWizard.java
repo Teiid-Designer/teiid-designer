@@ -59,6 +59,7 @@ import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
+import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 import org.teiid.designer.ui.viewsupport.ModelInitializerSelectionDialog;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
@@ -73,7 +74,7 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
  * @since 8.0
  */
 public class NewModelWizard extends AbstractWizard
-    implements INewWizard, UiConstants, UiConstants.ExtensionPoints.NewModelWizardContributor {
+    implements INewWizard, UiConstants, UiConstants.ExtensionPoints.NewModelWizardContributor, IPropertiesContext {
 
     private static ArrayList contributorList;
 
@@ -85,6 +86,8 @@ public class NewModelWizard extends AbstractWizard
 
     private NewModelWizardInput defaultNewModelInput;
     private Properties designerProperties;
+    private boolean openProjectExists = true;
+    private IProject newProject;
 
     /** key = wizardPageContributor title, value = IWizardPage[] */
     private HashMap contributorPageMap = new HashMap();
@@ -107,6 +110,8 @@ public class NewModelWizard extends AbstractWizard
 
     /**
      * Constructor for NewModelWizard.
+     * @param newModelInput the new model wizard input object
+     * @param properties the designer properties
      */
     public NewModelWizard( NewModelWizardInput newModelInput,
                            Properties properties ) {
@@ -460,16 +465,23 @@ public class NewModelWizard extends AbstractWizard
 	public void init( IWorkbench workbench,
                       IStructuredSelection selection ) {
         this.selection = selection;
-
-    	if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
-        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+        openProjectExists = ModelerUiViewUtils.workspaceHasOpenModelProjects();
+        
+    	if( !openProjectExists ) {
+        	newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
         	
         	if( newProject != null ) {
         		this.selection = new StructuredSelection(newProject);
+        		openProjectExists = true;
+        	} else {
+        		openProjectExists = false;
         	}
         }
     }
 
+    /**
+     * @return the model type
+     */
     public ModelType getModelType() {
         return metamodelSelectionPage.getSelectedModelType();
     }
@@ -484,6 +496,12 @@ public class NewModelWizard extends AbstractWizard
         return metamodelType;
     }
 
+    /**
+     * 
+     * @param descriptor metamodel type descriptor
+     * @param isVirtual boolean
+     * @return list of model builders
+     */
     public static List getModelBuilders( MetamodelDescriptor descriptor,
                                          boolean isVirtual ) {
         ArrayList result = new ArrayList(getContributorList().size());
@@ -531,6 +549,8 @@ public class NewModelWizard extends AbstractWizard
     public void createPageControls( Composite pageContainer ) {
         // this.pageContainer = pageContainer;
         super.createPageControls(pageContainer, false);
+        
+        updateForProperties();
     }
 
     /* (non-Javadoc)
@@ -690,7 +710,31 @@ public class NewModelWizard extends AbstractWizard
             this.wizardPageContributor.doCancel();
         }
 
+
         return super.performCancel();
     }
+    
+	/**
+	 * 
+	 */
+	@Override
+	public void setProperties(Properties properties) {
+		this.designerProperties = properties;
+	}
+	
+	/**
+	 * 
+	 */
+	public void updateForProperties() {
+    	if( this.newProject != null && this.designerProperties != null) {
+            if( this.openProjectExists ) {
+            	DesignerPropertiesUtil.setProjectName(this.designerProperties, this.newProject.getName());
+            }
+            
+		} else if( this.designerProperties != null && !this.openProjectExists ) {
+			DesignerPropertiesUtil.setProjectStatus(this.designerProperties, IPropertiesContext.NO_OPEN_PROJECT);
+		}
+		
+	}
 
 }

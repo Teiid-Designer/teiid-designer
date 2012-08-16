@@ -146,7 +146,7 @@ public class ModelerUiViewUtils {
      * @param selection
      */
 	public static void launchWizard(String id, IStructuredSelection selection, boolean synchronous) {
-		ModelerUiViewUtils.launchWizard(id, selection, null, synchronous);
+		ModelerUiViewUtils.launchWizard(id, selection, new Properties(), synchronous);
 	}
 	
     /**
@@ -239,11 +239,15 @@ public class ModelerUiViewUtils {
 	        		if( properties != null && wizard instanceof IPropertiesContext ) {
 	        			((IPropertiesContext)wizard).setProperties(properties);
 	        		}
-	
+	        		
 	        		WizardDialog wd = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
 	        		wd.create();
-	        		wd.setTitle(wizard.getWindowTitle());
-	        		wd.open();
+	        		String openProjectStatus = DesignerPropertiesUtil.getProjectStatus(properties);
+	        		if( openProjectStatus == null || !IPropertiesContext.NO_OPEN_PROJECT.equalsIgnoreCase(openProjectStatus) ){
+		        		wd.setTitle(wizard.getWindowTitle());
+		        		wd.open();
+	        		}
+
 	            }
 	        });
 		} else  {
@@ -258,8 +262,11 @@ public class ModelerUiViewUtils {
 	
 	        		WizardDialog wd = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
 	        		wd.create();
-	        		wd.setTitle(wizard.getWindowTitle());
-	        		wd.open();
+	        		String openProjectStatus = DesignerPropertiesUtil.getProjectStatus(properties);
+	        		if( openProjectStatus == null || !IPropertiesContext.NO_OPEN_PROJECT.equalsIgnoreCase(openProjectStatus) ){
+		        		wd.setTitle(wizard.getWindowTitle());
+		        		wd.open();
+	        		}
 	            }
 	        });
 		}

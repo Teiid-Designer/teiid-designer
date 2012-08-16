@@ -19,6 +19,7 @@ import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportView
 import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportWizard;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
+import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 
 
 /**
@@ -41,6 +42,9 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
     
     private Properties designerProperties;
     
+	/**
+	 * 
+	 */
 	public TeiidXmlImportWizard() {
         super(UiPlugin.getDefault(), TITLE, IMAGE);
 	}
@@ -87,6 +91,9 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 		return true;
 	}
 	
+	/**
+	 * @param option the file option
+	 */
 	public void setFileOption(int option) {
 		getFileInfo().setFileMode(option);
 	}
@@ -125,5 +132,9 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 		}
 		
 		this.optionsPage.setDesignerProperties(this.designerProperties);
+		
+    	if( !openProjectExists()) {
+			DesignerPropertiesUtil.setProjectStatus(this.designerProperties, IPropertiesContext.NO_OPEN_PROJECT);
+		}
 	}
 }

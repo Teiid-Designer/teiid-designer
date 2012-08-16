@@ -9,14 +9,21 @@ package org.teiid.designer.advisor.ui.actions;
 
 import java.util.Properties;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
+import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
+import org.teiid.designer.ui.viewsupport.IPropertiesContext;
+import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 import org.teiid.designer.vdb.ui.wizards.DefineVdbDialog;
 
 
+/**
+ *
+ */
 public class DefineVdbAction   extends Action implements AdvisorUiConstants {
 
     private Properties designerProperties;
@@ -32,6 +39,9 @@ public class DefineVdbAction   extends Action implements AdvisorUiConstants {
 
     }
     
+    /**
+     * @param properties the designer properties
+     */
     public DefineVdbAction( Properties properties ) {
         this();
         this.designerProperties = properties;
@@ -42,6 +52,16 @@ public class DefineVdbAction   extends Action implements AdvisorUiConstants {
      */
     @Override
 	public void run() {
+        if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
+        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+        	
+        	if( newProject != null ) {
+        		DesignerPropertiesUtil.setProjectName(designerProperties, newProject.getName());
+        	} else {
+        		DesignerPropertiesUtil.setProjectStatus(this.designerProperties, IPropertiesContext.NO_OPEN_PROJECT);
+        		return;
+        	}
+        }
     	final IWorkbenchWindow iww = AdvisorUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
     	
 		DefineVdbDialog sdDialog = new DefineVdbDialog(iww.getShell(), this.designerProperties);

@@ -62,6 +62,8 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
     IContainer folder = null;
     
     private Properties designerProperties;
+    private boolean openProjectExists = true;
+    private IProject newProject;
     
 	/**
 	 * @since 4.0
@@ -70,6 +72,11 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
         super(UiPlugin.getDefault(), TITLE, IMAGE);
 	}
 
+    /**
+     * @param plugin the plugin
+     * @param title the wizard title
+     * @param image the wizard image descriptor
+     */
     public TeiidMetadataImportWizard( final AbstractUIPlugin plugin,
                                       final String title,
                                       final ImageDescriptor image ) {
@@ -81,12 +88,16 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
         
         IStructuredSelection finalSelection = inputSelection;
         // Request User to Create a Model Project - if none open in the workspace.
-        if (!ModelerUiViewUtils.workspaceHasOpenModelProjects()) {
-            IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
-
-            if (newProject != null) {
-                finalSelection = new StructuredSelection(newProject);
-            }
+    	openProjectExists = ModelerUiViewUtils.workspaceHasOpenModelProjects();
+        if( !openProjectExists ) {
+        	newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+        	
+        	if( newProject != null ) {
+        		finalSelection = new StructuredSelection(newProject);
+        		openProjectExists = true;
+        	} else {
+        		openProjectExists = false;
+        	}
         }
 		
         Object seletedObj = finalSelection.getFirstElement();
@@ -175,6 +186,9 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
         return true;
 	}
 
+	/**
+	 * @return the Teiid metadata import info object
+	 */
 	public TeiidMetadataImportInfo getFileInfo() {
 		return this.filesInfo;
 	}
@@ -183,6 +197,10 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
 	public void setProperties(Properties properties) {
     	this.designerProperties = properties;
 		
+	}
+	
+	protected boolean openProjectExists() {
+		return this.openProjectExists;
 	}
 	
     protected void updateForProperties() {
@@ -212,6 +230,10 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
 		if( profileName != null && !profileName.isEmpty() ) {
 			// Select profile
 			sourcePage.selectConnectionProfile(profileName);
+		}
+		
+    	if( !this.openProjectExists) {
+			DesignerPropertiesUtil.setProjectStatus(this.designerProperties, IPropertiesContext.NO_OPEN_PROJECT);
 		}
 	}
 }
