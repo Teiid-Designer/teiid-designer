@@ -33,5 +33,23 @@ public interface ICredentialsCommon {
          * method of the class PropertyPage.
          */
 //        WSSecurity
+        
+        /**
+         * Safely return one of the enum values for the given string.
+         * If the given string is not one of the enums then return
+         * the enum {@link #None}.
+         * 
+         * @param securityType
+         * @return one of the enums, {@link #None} by default.
+         */
+        public static SecurityType retrieveValue(String securityType) {
+            for (SecurityType type : SecurityType.values()) {
+                if (type.name().equals(securityType)) {
+                    return type;
+                }
+            }
+            
+            return SecurityType.None;
+        }
     }
 }

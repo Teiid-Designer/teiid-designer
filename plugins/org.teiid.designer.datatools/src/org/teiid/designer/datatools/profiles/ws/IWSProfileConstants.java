@@ -25,13 +25,12 @@ public interface IWSProfileConstants extends ICredentialsCommon {
      * Currently only EndPoint is the only property provided by Data Tools connection profile that matches up.
      */
      String DS_ENDPOINT = "wsdlURI"; //$NON-NLS-1$
-     String DS_SECURITY_TYPE = "SecurityType"; //$NON-NLS-1$";
+     String DS_SECURITY_TYPE = SECURITY_TYPE_ID;
      String DS_AUTH_USER_NAME = "AuthUserName"; //$NON-NLS-1$
      String DS_AUTH_PASSWORD = "AuthPassword"; //$NON-NLS-1$
      String DS_WS_SECURITY_CONFIG_URL = "WsSecurityConfigURL"; //$NON-NLS-1$
      String DS_WS_SECURITY_CONFIG_NAME = "WsSecurityConfigName"; //$NON-NLS-1$
 
-     String SOURCE_ENDPOINT = "EndPoint"; //$NON-NLS-1$
      String SOAP_SERVICE_MODE = "DefaultServiceMode";  //$NON-NLS-1$
      String SOAP_BINDING = "DefaultBinding";  //$NON-NLS-1$
 
