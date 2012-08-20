@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -34,6 +35,8 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.ViewForm;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
@@ -467,14 +470,41 @@ public final class WidgetFactory implements
                                     final int gridStyle,
                                     final int span,
                                     final int columns) {
+        
         final Group group = new Group(parent, SWT.NONE);
         final GridData gridData = new GridData(gridStyle);
         gridData.horizontalSpan = span;
         group.setLayoutData(gridData);
         group.setLayout(new GridLayout(columns, false));
         if (name != null) {
-            group.setFont(JFaceResources.getBannerFont());
-            group.setText(name);
+            /*
+             * An issue exists in juno that stops Groups rendering correctly with a title
+             * when using group.setText().
+             * 
+             * This works around the issue by adding a title label at the top of the group.
+             * However, some groups have their layouts modified after this method is 
+             * called so the span can be wrong. The paint listener fixes this by detecting
+             * the span at the latest possible point and relaying out the group's children
+             * accordingly.
+             */
+            final Label title = new Label(group, SWT.NONE);
+            title.setFont(JFaceResources.getBannerFont());
+            title.setText(name);
+                
+            group.addPaintListener(new PaintListener() {
+
+                @Override
+                public void paintControl(PaintEvent e) {
+                    GridLayout groupLayout = (GridLayout) group.getLayout();
+                    GridData titleGridData = (GridData) title.getLayoutData();
+                    
+                    if (groupLayout.numColumns == titleGridData.horizontalSpan)
+                        return;
+                    
+                    GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).align(SWT.CENTER, SWT.CENTER).grab(true, false).span(groupLayout.numColumns, 1).applyTo(title);
+                    group.layout();
+                }
+            });
         }
         return group;
     }
