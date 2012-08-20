@@ -143,7 +143,9 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
         MappingClass mappingClass = helpGetRecursiveMappingClass();
         ValidationResult result = new ValidationResultImpl(new Object());
         rule.validate((Query)command, mappingClass, result);
-        assertFalse(result.hasProblems());
+        assertTrue(result.hasProblems());
+        assertEquals(1, result.getProblems().length);
+        assertEquals(IStatus.WARNING, (result.getProblems()[0]).getSeverity());
     }
 
     public void testNoInputUNIONSelectRecursiveMappingClassNoInputCriteria() throws Exception {
@@ -163,7 +165,9 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
         MappingClass mappingClass = helpGetRecursiveMappingClass();
         ValidationResult result = new ValidationResultImpl(new Object());
         rule.validate((SetQuery)command, mappingClass, result);
-        assertFalse(result.hasProblems());
+        assertTrue(result.hasProblems());
+        assertEquals(1, result.getProblems().length);
+        assertEquals(IStatus.WARNING, (result.getProblems()[0]).getSeverity());
     }
     
     public void testInputUNIONSelectRecursiveMappingClassNoCriteria() throws Exception {

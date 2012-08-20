@@ -929,43 +929,43 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testAggregateSymbol1() {
         AggregateSymbol agg = new AggregateSymbol("abc", false, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
         agg.setAggregateFunction(AggregateSymbol.Type.COUNT);
-        helpTest(agg, "COUNT('abc')"); //$NON-NLS-1$
+        helpTest(agg, "abc('abc')"); //$NON-NLS-1$
     }
 
     public void testAggregateSymbol2() {
         AggregateSymbol agg = new AggregateSymbol("abc", true, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
         agg.setAggregateFunction(AggregateSymbol.Type.COUNT);
-        helpTest(agg, "COUNT(DISTINCT 'abc')"); //$NON-NLS-1$
+        helpTest(agg, "abc(DISTINCT 'abc')"); //$NON-NLS-1$
     }
 
     public void testAggregateSymbol3() {
         AggregateSymbol agg = new AggregateSymbol("abc", false, null); //$NON-NLS-1$
         agg.setAggregateFunction(AggregateSymbol.Type.COUNT);
-        helpTest(agg, "COUNT(*)"); //$NON-NLS-1$
+        helpTest(agg, "abc(*)"); //$NON-NLS-1$
     }
 
     public void testAggregateSymbol4() {
         AggregateSymbol agg = new AggregateSymbol("abc", false, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
         agg.setAggregateFunction(AggregateSymbol.Type.AVG);
-        helpTest(agg, "AVG('abc')"); //$NON-NLS-1$
+        helpTest(agg, "abc('abc')"); //$NON-NLS-1$
     }
 
     public void testAggregateSymbol5() {
         AggregateSymbol agg = new AggregateSymbol("abc", false, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
         agg.setAggregateFunction(AggregateSymbol.Type.SUM);
-        helpTest(agg, "SUM('abc')"); //$NON-NLS-1$
+        helpTest(agg, "abc('abc')"); //$NON-NLS-1$
     }
 
     public void testAggregateSymbol6() {
         AggregateSymbol agg = new AggregateSymbol("abc", false, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
         agg.setAggregateFunction(AggregateSymbol.Type.MIN);
-        helpTest(agg, "MIN('abc')"); //$NON-NLS-1$
+        helpTest(agg, "abc('abc')"); //$NON-NLS-1$
     }
 
     public void testAggregateSymbol7() {
         AggregateSymbol agg = new AggregateSymbol("abc", false, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
         agg.setAggregateFunction(AggregateSymbol.Type.MAX);
-        helpTest(agg, "MAX('abc')"); //$NON-NLS-1$
+        helpTest(agg, "abc('abc')"); //$NON-NLS-1$
     }
 
     public void testAliasSymbol1() {
@@ -1369,7 +1369,7 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(assigStmt);
         b.addStatement(errStmt);
         CreateProcedureCommand cup = new CreateProcedureCommand(b);
-        helpTest(cup, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
+        helpTest(cup, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
     }
 
     public void testCreateUpdateProcedure2() {
@@ -1383,7 +1383,7 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(assigStmt);
         b.addStatement(errStmt);
         CreateProcedureCommand cup = new CreateProcedureCommand(b);
-        helpTest(cup, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
+        helpTest(cup, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
     }
 
     public void testCreateUpdateProcedure3() {
@@ -1397,7 +1397,7 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(assigStmt);
         b.addStatement(errStmt);
         CreateProcedureCommand cup = new CreateProcedureCommand(b);
-        helpTest(cup, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
+        helpTest(cup, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
     }
 
     // Test Insert
