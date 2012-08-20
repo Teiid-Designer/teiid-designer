@@ -19,6 +19,7 @@ import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
+import org.teiid.query.sql.symbol.ElementSymbol;
 
 
 /**
@@ -46,7 +47,7 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
     /**
      * The unique column name (never <code>null</code> or empty).
      */
-	private String name;
+	private ElementSymbol nameSymbol;
 	
 	 /**
      * The unique column datatype (never <code>null</code> or empty).
@@ -108,7 +109,7 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
         CoreArgCheck.isNotEmpty(name, "name is null"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(datatype, "datatype is null"); //$NON-NLS-1$
         
-		this.name = name;
+		initNameSymbol(name);
 		this.datatype = datatype;
 		
 		this.attributeInfoList = new ArrayList<AttributeInfo>();
@@ -148,23 +149,49 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
         validate();
 	}
 
-	/**
-	 * 
-	 * @return name the column name
-	 */
-	public String getName() {
-		return this.name;
-	}
+    /** 
+     * Initialise the {@link ElementSymbol} to hold the
+     * name. This validates the symbol's character composition.
+     * 
+     * The '.' character is the only puntuation symbol that will cause
+     * problems for an element symbol so these are replaced these with '_'.
+     */
+    private void initNameSymbol(final String name) {
+        nameSymbol = new ElementSymbol(name.replaceAll("\\.", "_"));  //$NON-NLS-1$//$NON-NLS-2$
+    }
 
-	/**
-	 * 
-	 * @param name the column name (never <code>null</code> or empty).
-	 */
-	public void setName(String name) {
-		CoreArgCheck.isNotNull(name, "name is null"); //$NON-NLS-1$
-		this.name = name;
-		validate();
-	}
+    /**
+     * Get the column name for display in the UI. This removes any quotes for
+     * aesthetic reasons. Use {@link #getSymbolName()} for retrieving the 
+     * fully validated column name.
+     * 
+     * @return the column name sans quotes.
+     */
+    public String getName() {
+        String name = this.nameSymbol.toString();
+        return name.replaceAll("\"", ""); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * Get the fully validated column name. This should be used in SQL string
+     * generation.
+     *
+     * @return name the column name
+     */    
+    public String getSymbolName() {
+        return this.nameSymbol.toString();
+    }
+    
+    /**
+     * 
+     * @param name the column name (never <code>null</code> or empty).
+     */
+    public void setName(String name) {
+        CoreArgCheck.isNotNull(name, "name is null"); //$NON-NLS-1$
+        
+        initNameSymbol(name);
+        validate();
+    }
 
 	/**
 	 * 
@@ -377,12 +404,11 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
 	
 	private void validate() {
 
-		String result = nameValidator.checkValidName(getName());
-		if( result != null ) {
-			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.InvalidColumnName + getName()));
-			return;
-		}
-		
+        /*
+        * No name validation is currently required since the name is automatically
+        * 'fixed' by the teiid element symbol. 
+        */
+
 		// Check Datatypes
 		if( !ImportManagerValidator.isValidDatatype(getDatatype())) {
 			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, 
@@ -404,7 +430,7 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
     public String toString() {
         StringBuilder text = new StringBuilder();
         text.append("Column Info: "); //$NON-NLS-1$
-        text.append("name = ").append(getName()); //$NON-NLS-1$
+        text.append("name = ").append(getSymbolName()); //$NON-NLS-1$
         text.append(", datatype = ").append(getDatatype()); //$NON-NLS-1$
         text.append(", PATH = ").append(getRelativePath()); //$NON-NLS-1$
 

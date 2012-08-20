@@ -8,7 +8,6 @@
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
@@ -273,7 +272,7 @@ public class ProcedureGenerator implements SqlConstants {
     	int nColumns = this.requestInfo.getBodyColumnInfoList().length;
     	int i=0;
     	for( ColumnInfo columnInfo : this.requestInfo.getBodyColumnInfoList()) {
-    		String name = columnInfo.getName();
+    		String name = columnInfo.getSymbolName();
     		sb.append(getParameterFullName(name));
     		
 
@@ -282,7 +281,7 @@ public class ProcedureGenerator implements SqlConstants {
     			int index = 0;
     			sb.append(COMMA).append(SPACE);
     			for( AttributeInfo attrInfo : columnInfo.getAttributeInfoArray() ) {
-        			sb.append(getParameterFullName(attrInfo.getName()));
+        			sb.append(getParameterFullName(attrInfo.getSymbolName()));
     				if( nAttributes > 1 && index < nAttributes - 1) {
     					sb.append(COMMA).append(SPACE);
     				}
@@ -479,7 +478,7 @@ public class ProcedureGenerator implements SqlConstants {
     		int hColumns = getRequestInfo().getHeaderColumnInfoList().length;
     		
     		for ( ColumnInfo columnInfo : getRequestInfo().getHeaderColumnInfoList() ) {
-    			sb.append(TAB4).append(getWrapperProcedureParameterName(convertSqlNameSegment(columnInfo.getName())));
+    			sb.append(TAB4).append(getWrapperProcedureParameterName(convertSqlNameSegment(columnInfo.getSymbolName())));
         		if(i < (hColumns-1)) {
         			sb.append(COMMA).append(SPACE).append(RETURN);
         		}
@@ -491,7 +490,7 @@ public class ProcedureGenerator implements SqlConstants {
     		if (hColumns>0) sb.append(COMMA);
     		for ( ColumnInfo columnInfo : getRequestInfo().getBodyColumnInfoList() ) {
     			int nAttributes = columnInfo.getAttributeInfoArray().length;
-    			sb.append(TAB4).append(getWrapperProcedureParameterName(convertSqlNameSegment(columnInfo.getName())));
+    			sb.append(TAB4).append(getWrapperProcedureParameterName(convertSqlNameSegment(columnInfo.getSymbolName())));
         		if(i < (nColumns-1)) {
         			sb.append(COMMA).append(SPACE).append(RETURN);
         		}
@@ -500,7 +499,7 @@ public class ProcedureGenerator implements SqlConstants {
         			int index = 0;
         			sb.append(COMMA).append(SPACE);
         			for( AttributeInfo attrInfo : columnInfo.getAttributeInfoArray() ) {
-            			sb.append(TAB4).append(getWrapperProcedureParameterName(convertSqlNameSegment(attrInfo.getName())));
+            			sb.append(TAB4).append(getWrapperProcedureParameterName(convertSqlNameSegment(attrInfo.getSymbolName())));
         				if( nAttributes > 1 && index < nAttributes - 1) {
         					sb.append(COMMA).append(SPACE);
         				}
