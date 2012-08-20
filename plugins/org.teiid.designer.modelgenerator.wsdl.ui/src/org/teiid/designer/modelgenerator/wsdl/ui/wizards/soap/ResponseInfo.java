@@ -55,22 +55,6 @@ public class ResponseInfo extends ProcedureInfo {
 			status.merge(nameStatus);
 		}
 
-		// Look at all element names
-		for (ColumnInfo info : getBodyColumnInfoList()) {
-			IStatus colNameStatus = getGenerator().getNameStatus(info.getName());
-			if (colNameStatus.getSeverity() > IStatus.INFO) {
-				status.merge(colNameStatus);
-			}
-		}
-		
-		// Look at all element names
-		for (ColumnInfo info : getHeaderColumnInfoList()) {
-			IStatus colNameStatus = getGenerator().getNameStatus(info.getName());
-			if (colNameStatus.getSeverity() > IStatus.INFO) {
-				status.merge(colNameStatus);
-			}
-		}
-		
 		if( getBodyColumnInfoList().length == 0 ) {
 			status.add(new Status(IStatus.ERROR, ProcedureGenerator.PLUGIN_ID,
 				NLS.bind(Messages.Error_NoColumnsDefinedForResponseProcedureForOperation_0, 
@@ -175,13 +159,13 @@ public class ResponseInfo extends ProcedureInfo {
 
 		for (ColumnInfo columnInfo : getBodyColumnInfoList()) {
 			if (columnInfo.getOrdinality()) {
-				sb.append(columnInfo.getName()).append(SPACE)
+				sb.append(columnInfo.getSymbolName()).append(SPACE)
 						.append(FOR_ORDINALITY);
 			} else {
 				sb.append(TAB)
 						.append(TAB)
 						.append(getGenerator().convertSqlNameSegment(
-								columnInfo.getName())).append(SPACE)
+								columnInfo.getSymbolName())).append(SPACE)
 						.append(columnInfo.getDatatype());
 
 				String defValue = columnInfo.getDefaultValue();
