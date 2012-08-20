@@ -27,7 +27,7 @@ import org.teiid.core.util.SmartTestDesignerSuite;
 public class TestCorePlugin extends TestCase {
 
     public final static String[] REAL_KEYS = new String[] {"stream_closed", //$NON-NLS-1$
-        "invalid_string" //$NON-NLS-1$
+        "TEIID10070" //$NON-NLS-1$
     };
     public final static String[] REAL_VALUES = new String[] {"The stream already closed", //$NON-NLS-1$
         "Value is not valid XML" //$NON-NLS-1$
