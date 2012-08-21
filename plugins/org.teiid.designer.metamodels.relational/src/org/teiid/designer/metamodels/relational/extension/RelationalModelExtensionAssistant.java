@@ -16,6 +16,7 @@ import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.Table;
 
 /**
+ * @since 8.0
  *
  */
 public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAssistant {

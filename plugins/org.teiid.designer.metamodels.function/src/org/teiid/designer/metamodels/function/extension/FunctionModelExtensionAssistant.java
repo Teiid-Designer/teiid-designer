@@ -14,6 +14,7 @@ import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.metamodels.function.ScalarFunction;
 
 /**
+ * @since 8.0
  *
  */
 public class FunctionModelExtensionAssistant extends EmfModelObjectExtensionAssistant {
