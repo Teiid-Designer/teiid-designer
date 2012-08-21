@@ -44,7 +44,7 @@ public class PackageDiagramUtil {
             result.setType(PluginConstants.PACKAGE_DIAGRAM_TYPE_ID);
             succeeded = true;
         } catch (ModelWorkspaceException e) {
-            if ( modelResource == null || !modelResource.hasErrors() ) {
+            if ( !modelResource.hasErrors() ) {
                 // Unexpected ...
                 String message = DiagramUiConstants.Util.getString("PackageDiagramContentProvider.createPackageDiagramError", modelResource.toString());  //$NON-NLS-1$
                 DiagramUiConstants.Util.log(IStatus.ERROR, e, message);

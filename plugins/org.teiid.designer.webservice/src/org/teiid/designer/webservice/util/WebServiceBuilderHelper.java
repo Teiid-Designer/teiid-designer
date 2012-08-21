@@ -665,7 +665,7 @@ public class WebServiceBuilderHelper {
             }
 
             try {
-                ModelBuildUtil.rebuildImports(model.getEmfResource(), false);
+                if(model!=null) ModelBuildUtil.rebuildImports(model.getEmfResource(), false);
             } catch (final ModelWorkspaceException e) {
                 Util.log(e);
             }

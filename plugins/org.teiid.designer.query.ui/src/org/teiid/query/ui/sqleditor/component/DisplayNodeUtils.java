@@ -808,11 +808,13 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
     		}
     	}
     	
-    	for( DisplayNode node : parentNode.getChildren()) {
-    		DisplayNode theNode = getNodeTypeAtIndex(node, index, nodeType);
-    		if( theNode != null ) {
-    			return theNode;
-    		}
+    	if(parentNode!=null) {
+    	    for( DisplayNode node : parentNode.getChildren()) {
+    	        DisplayNode theNode = getNodeTypeAtIndex(node, index, nodeType);
+    	        if( theNode != null ) {
+    	            return theNode;
+    	        }
+    	    }
     	}
     	
     	return null;

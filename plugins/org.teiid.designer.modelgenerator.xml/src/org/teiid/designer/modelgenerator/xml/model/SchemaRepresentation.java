@@ -42,6 +42,7 @@ public class SchemaRepresentation
         m_customCatalogName = null;
         m_namespaces = new HashMap();
         m_defaultNamespaces = new ArrayList();
+        elements = new ArrayList();
     }
 
     //////////////////////////////////////////////

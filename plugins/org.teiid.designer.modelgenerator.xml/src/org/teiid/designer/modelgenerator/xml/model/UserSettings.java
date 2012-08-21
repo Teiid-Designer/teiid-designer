@@ -7,8 +7,8 @@
  */
 package org.teiid.designer.modelgenerator.xml.model;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 
 /**
@@ -17,7 +17,7 @@ import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 public class UserSettings {
     private static final String REQUEST_RESPONSE_TABLE_XPATH = "."; //$NON-NLS-1$
 
-    private List roots; // contains the Elements that the user has
+    private List roots = new ArrayList(); // contains the Elements that the user has
     // chosen to be roots
 
     private boolean useSchemaTypes; // Whether to convert to dates, numbers, etc. or just use strings

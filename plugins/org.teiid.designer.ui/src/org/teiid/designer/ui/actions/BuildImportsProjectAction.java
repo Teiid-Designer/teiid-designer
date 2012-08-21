@@ -103,27 +103,29 @@ public class BuildImportsProjectAction extends ActionDelegate implements IWorkbe
             // first, rebuild the models
             for (final Iterator iter = getModelResourceList().iterator(); iter.hasNext();) {
                 final ModelResource modelResource = (ModelResource)iter.next();
-                if (modelResource != null && !modelResource.isReadOnly()) {
-                    final IFile modelFile = (IFile)modelResource.getResource();
+                if(modelResource!=null) {
+                    if (!modelResource.isReadOnly()) {
+                        final IFile modelFile = (IFile)modelResource.getResource();
 
-                    boolean succeeded = false;
+                        boolean succeeded = false;
 
-                    // Defect 23823 - switched to use a new Modeler Core utility.
-                    try {
-                        succeeded = ModelBuildUtil.rebuildImports(modelResource.getEmfResource(), true);
-                    } catch (final ModelWorkspaceException theException) {
-                        UiConstants.Util.log(IStatus.ERROR, theException, theException.getMessage());
-                    }
-                    if (succeeded) {
-                        eventList.add(modelResource);
+                        // Defect 23823 - switched to use a new Modeler Core utility.
+                        try {
+                            succeeded = ModelBuildUtil.rebuildImports(modelResource.getEmfResource(), true);
+                        } catch (final ModelWorkspaceException theException) {
+                            UiConstants.Util.log(IStatus.ERROR, theException, theException.getMessage());
+                        }
+                        if (succeeded) {
+                            eventList.add(modelResource);
+                        } else {
+                            errorModels.add(modelResource.getPath().makeRelative().toString());
+                        }
+                        if (!ModelEditorManager.isOpen(modelFile)) {
+                            modelsToSave.add(modelResource);
+                        }
                     } else {
-                        errorModels.add(modelResource.getPath().makeRelative().toString());
+                        readOnlyModels.add(modelResource.getPath().makeRelative().toString());
                     }
-                    if (!ModelEditorManager.isOpen(modelFile)) {
-                        modelsToSave.add(modelResource);
-                    }
-                } else if (modelResource.isReadOnly()) {
-                    readOnlyModels.add(modelResource.getPath().makeRelative().toString());
                 }
             }
 

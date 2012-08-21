@@ -478,7 +478,12 @@ public class ModelObjectListDialog extends ListDialog implements IFilter.IConsta
                 } catch (CoreException ce) {
                     ModelerCore.Util.log(ce);
                 }
-                HashSet hsEmfResources = new HashSet(resourcesInModelContainer);
+                HashSet hsEmfResources = null;
+                if(resourcesInModelContainer!=null) {
+                    hsEmfResources = new HashSet(resourcesInModelContainer);
+                } else {
+                    hsEmfResources = new HashSet();
+                }
 
                 ArrayList arylResultElements = new ArrayList(inputElements.length);
 

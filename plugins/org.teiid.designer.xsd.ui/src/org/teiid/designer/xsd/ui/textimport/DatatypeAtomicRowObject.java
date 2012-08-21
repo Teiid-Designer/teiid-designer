@@ -206,16 +206,22 @@ public class DatatypeAtomicRowObject extends AbstractRowObject {
     }
     
     public String getSegmentAfterDescription(String str, char delim) {
+        if(str==null || str.length()==0) return str;
+        
         String restStr = null;
         int index = str.lastIndexOf(delim); 
         if(str.length()>index) {
             restStr = str.substring(index+1).trim();
         }
-        // Trim leading COMMA from the remaining string
-        index = restStr.indexOf(COMMA);
-        if(restStr.length()>index) {
-            restStr = restStr.substring(index+1).trim();
+        
+        if(restStr!=null) {
+            // Trim leading COMMA from the remaining string
+            index = restStr.indexOf(COMMA);
+            if(restStr.length()>index) {
+                restStr = restStr.substring(index+1).trim();
+            }
         }
+        
         return restStr;
     }
     

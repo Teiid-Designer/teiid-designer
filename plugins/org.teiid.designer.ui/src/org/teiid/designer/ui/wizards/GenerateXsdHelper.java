@@ -126,7 +126,7 @@ public class GenerateXsdHelper {
     }
 
     public HashMap execute( final IProgressMonitor monitor ) {
-        this.monitor = monitor == null ? new NullProgressMonitor() : monitor;
+        this.monitor = (monitor == null) ? new NullProgressMonitor() : monitor;
 
         // Don't save if we still have to generate the SQL.
         final boolean genSql = ops.genSql();
@@ -141,7 +141,7 @@ public class GenerateXsdHelper {
         }
 
         // Update the monitor
-        monitor.worked(1);
+        this.monitor.worked(1);
 
         // If the user elected to generate default SQL, generate that SQL for all mapping classes
         if (genSql) {

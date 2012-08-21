@@ -169,7 +169,10 @@ public class ModelObjectStructureViewer extends StructuredViewer /*StructureDiff
             }
         } else {
             // OR, create the processor from a resource and an input stream
-            IProject project = resLeft.getProject();
+            IProject project = null;
+            if(resLeft!=null) {
+                project = resLeft.getProject();
+            }
 
             if ((project != null) && project.isOpen() && ModelerCore.hasModelNature(project)
                 && (resLeft.getType() == IResource.FILE)) {

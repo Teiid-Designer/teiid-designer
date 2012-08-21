@@ -445,20 +445,20 @@ public class ProcedureGenerator implements SqlConstants {
     	*/
 		
 		// Request procedure name may have been overridden
-		String requestProcedureName = properties.getProperty(ProcedureGenerator.KEY_REQUEST_PROCEDURE_NAME);
-		if( requestProcedureName == null ) {
-			requestProcedureName = this.getRequestProcedureName();
-		}
-		// Request procedure name may have been overridden
-		String responseProcedureName = properties.getProperty(ProcedureGenerator.KEY_RESPONSE_PROCEDURE_NAME);
-		if( responseProcedureName == null ) {
-			responseProcedureName = this.getResponseProcedureName();
-		}
-		// Request procedure name may have been overridden
-		String wrapperProcedureName = properties.getProperty(ProcedureGenerator.KEY_WRAPPER_PROCEDURE_NAME);
-		if( wrapperProcedureName == null ) {
-			wrapperProcedureName = this.getRequestProcedureName();
-		}
+//		String requestProcedureName = properties.getProperty(ProcedureGenerator.KEY_REQUEST_PROCEDURE_NAME);
+//		if( requestProcedureName == null ) {
+//			requestProcedureName = this.getRequestProcedureName();
+//		}
+//		// Request procedure name may have been overridden
+//		String responseProcedureName = properties.getProperty(ProcedureGenerator.KEY_RESPONSE_PROCEDURE_NAME);
+//		if( responseProcedureName == null ) {
+//			responseProcedureName = this.getResponseProcedureName();
+//		}
+//		// Request procedure name may have been overridden
+//		String wrapperProcedureName = properties.getProperty(ProcedureGenerator.KEY_WRAPPER_PROCEDURE_NAME);
+//		if( wrapperProcedureName == null ) {
+//			wrapperProcedureName = this.getRequestProcedureName();
+//		}
 		
 		StringBuilder sb = new StringBuilder();
 		

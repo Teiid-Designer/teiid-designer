@@ -97,7 +97,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
 
     public ModelExtensionRegistryView() {
         this.registry = (Platform.isRunning() ? ExtensionPlugin.getInstance().getRegistry() : null);
-        this.registry.addListener(new RegistryListener() {
+        if(this.registry!=null) this.registry.addListener(new RegistryListener() {
 
             /**
              * {@inheritDoc}

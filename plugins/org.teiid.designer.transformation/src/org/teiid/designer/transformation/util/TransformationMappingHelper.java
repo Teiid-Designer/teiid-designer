@@ -1122,13 +1122,15 @@ public class TransformationMappingHelper implements SqlConstants {
                     columns = ((SqlColumnSetAspect)theTargetAspect).getColumns(virtualTarget);
                 }
                 // Add the attributes to the delete list
-                Iterator colIter = columns.iterator();
-                while (colIter.hasNext()) {
-                    EObject attr = (EObject)colIter.next();
-                    SqlAspect theChildAspect = AspectManager.getSqlAspect(attr);
-                    if (theChildAspect instanceof SqlColumnAspect) {
-                        if (containsName(attributes, ((SqlColumnAspect)theChildAspect).getName(attr))) {
-                            deleteList.add(attr);
+                if(columns!=null) {
+                    Iterator colIter = columns.iterator();
+                    while (colIter.hasNext()) {
+                        EObject attr = (EObject)colIter.next();
+                        SqlAspect theChildAspect = AspectManager.getSqlAspect(attr);
+                        if (theChildAspect instanceof SqlColumnAspect) {
+                            if (containsName(attributes, ((SqlColumnAspect)theChildAspect).getName(attr))) {
+                                deleteList.add(attr);
+                            }
                         }
                     }
                 }

@@ -737,13 +737,13 @@ public class Binding {
                                 }
                             }
                         } else {
-                            if (!(oSymbol instanceof AggregateSymbol)) {
+//                            if (!(oSymbol instanceof AggregateSymbol)) {
                                 eSymbol = TransformationSqlHelper.convertExpressionSymbol((ExpressionSymbol)oSymbol,
                                                                                           currentAttrTypeStr);
-                            } else {
-                                sqlConversionText = CONVERT_SQL_TEXT + CR + CANNOT_CONVERT_AGGREGATE_TEXT;
-                                return;
-                            }
+//                            } else {
+//                                sqlConversionText = CONVERT_SQL_TEXT + CR + CANNOT_CONVERT_AGGREGATE_TEXT;
+//                                return;
+//                            }
                         }
                         sqlConversionText = getSQLLabelText(eSymbol, symbolAlias, isExplicit);
                         if (symbolAlias != null) {

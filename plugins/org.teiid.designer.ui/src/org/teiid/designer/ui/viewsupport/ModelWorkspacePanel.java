@@ -57,8 +57,6 @@ public class ModelWorkspacePanel extends Composite implements IFinderPanel, ISel
 
     private IWorkspaceRoot root;
     private String sMessage;
-    private Button btnProperties;
-    private boolean bShowPropertiesButton = true;
     private EObject selectedEObject;
 
     TreeViewer fViewer;
@@ -171,11 +169,6 @@ public class ModelWorkspacePanel extends Composite implements IFinderPanel, ISel
      */
     public void addViewerFilter( ViewerFilter filter ) {
         getTreeViewer().addFilter(filter);
-    }
-
-    public void setShowPropertiesButton( boolean b ) {
-        bShowPropertiesButton = b;
-        btnProperties.setVisible(bShowPropertiesButton);
     }
 
     /* (non-Javadoc)
