@@ -798,13 +798,15 @@ public class ModelObjectSelectionPanel extends Composite implements IFinderPanel
         }
 
         EObject eObj = null;
-        try {
-            URI uri = URI.createURI(rorSelected.getObjectURI());
+        if(rorSelected!=null) {
+            try {
+                URI uri = URI.createURI(rorSelected.getObjectURI());
 
-            eObj = ModelerCore.getModelContainer().getEObject(uri, true);
+                eObj = ModelerCore.getModelContainer().getEObject(uri, true);
 
-        } catch (CoreException ce) {
-            ModelerCore.Util.log(IStatus.ERROR, ce, ce.getMessage());
+            } catch (CoreException ce) {
+                ModelerCore.Util.log(IStatus.ERROR, ce, ce.getMessage());
+            }
         }
 
         return eObj;

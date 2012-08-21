@@ -2502,7 +2502,7 @@ public class TransformationHelper implements SqlConstants {
         if (modelContents != null) {
             allTransforms = modelContents.getTransformations(targetVirtualGroupEObject);
         }
-        if (!allTransforms.isEmpty()) {
+        if (allTransforms!=null && !allTransforms.isEmpty()) {
             // Should only be one....
             Object nextObj = allTransforms.iterator().next();
             if (isSqlTransformationMappingRoot(nextObj)) transformEObject = (EObject)nextObj;
@@ -2552,7 +2552,7 @@ public class TransformationHelper implements SqlConstants {
         if (modelContents != null) {
             allTransforms = modelContents.getTransformations(targetVirtualGroupEObject);
         }
-        if (!allTransforms.isEmpty()) {
+        if (allTransforms!=null && !allTransforms.isEmpty()) {
             // Should only be one....
             Object nextObj = allTransforms.iterator().next();
             if (isSqlTransformationMappingRoot(nextObj)) transformEObject = (EObject)nextObj;
@@ -2603,7 +2603,7 @@ public class TransformationHelper implements SqlConstants {
         if (modelContents != null) {
             allTransforms = modelContents.getTransformations(targetVirtualGroupEObject);
         }
-        if (!allTransforms.isEmpty()) {
+        if (allTransforms!=null && !allTransforms.isEmpty()) {
             return true;
         }
 
@@ -2622,7 +2622,7 @@ public class TransformationHelper implements SqlConstants {
         if (modelContents != null) {
             allTransforms = modelContents.getTransformations(targetVirtualGroupEObject);
         }
-        if (!allTransforms.isEmpty()) {
+        if (allTransforms!=null && !allTransforms.isEmpty()) {
             // Should only be one....
             Object nextObj = allTransforms.iterator().next();
             if (isSqlTransformationMappingRoot(nextObj)) {

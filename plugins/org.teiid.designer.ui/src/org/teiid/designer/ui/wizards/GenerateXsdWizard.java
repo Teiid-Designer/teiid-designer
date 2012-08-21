@@ -151,12 +151,12 @@ public class GenerateXsdWizard extends AbstractWizard implements INewWizard, UiC
         CoreArgCheck.isNotNull(this.ops);
         // Create the XSD BUilder and capture state from the Options
         final XsdSchemaBuilderImpl builder = new XsdSchemaBuilderImpl(this.ops);
-        this.monitor = monitor == null ? new NullProgressMonitor() : monitor;
+        this.monitor = (monitor == null) ? new NullProgressMonitor() : monitor;
         this.result = getResult();
 
         // Initialize the progress monitor
         final String msg = Util.getString("GenerateXsdWizard.begin"); //$NON-NLS-1$
-        monitor.beginTask(msg, 4);
+        this.monitor.beginTask(msg, 4);
 
         // Execute the build of the actual XSD models.
         this.result = builder.buildSchemas(this.monitor, this.result);

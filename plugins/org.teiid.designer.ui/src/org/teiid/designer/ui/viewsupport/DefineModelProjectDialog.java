@@ -255,8 +255,9 @@ public class DefineModelProjectDialog extends TitleAreaDialog implements
 			// projects are different, clear properties
 			this.designerProperties.clear();
 			this.project = selectedProject;
-			this.selectedProjectText.setText(this.project.getName());
-			DesignerPropertiesUtil.setProjectName(this.designerProperties, this.project.getName());
+			String pName = (this.project!=null) ? this.project.getName() : "";  //$NON-NLS-1$
+			this.selectedProjectText.setText(pName);
+			DesignerPropertiesUtil.setProjectName(this.designerProperties, pName);
 			
 			if( this.project != null ) {
 				// Check for source and view folders

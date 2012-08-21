@@ -725,6 +725,8 @@ public final class PreviewManager extends JobChangeAdapter
             this.statusLock.readLock().unlock();
         }
 
+        if(statuses==null) return null;
+        
         for (PreviewVdbStatus status : statuses) {
             if (status.getPath().equals(pvdbPath)) return status;
         }

@@ -121,11 +121,11 @@ public class GenerateWebServiceModelWizard extends AbstractWizard implements INe
     public void doFinish( final IProgressMonitor monitor ) {
         CoreArgCheck.isNotNull(this.webServiceBuilderHelper);
 
-        this.monitor = monitor == null ? new NullProgressMonitor() : monitor;
+        this.monitor = (monitor==null) ? new NullProgressMonitor() : monitor;
 
         // Initialize the progress monitor
         final String msg = getString("begin"); //$NON-NLS-1$
-        monitor.beginTask(msg, 1);
+        this.monitor.beginTask(msg, 1);
 
         this.result = this.webServiceBuilderHelper.createWebService(this.webServiceBuildOptions, false, true, this.monitor);
 

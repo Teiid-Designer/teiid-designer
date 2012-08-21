@@ -48,7 +48,7 @@ public class ForeignKeyLinkEditPart extends NodeConnectionEditPart {
 
         ((DiagramPolylineConnection)connectionFigure).setLineStyle( ((NodeConnectionModel)getModel()).getLineStyle() );
         int iStandardWidth = 1;
-        newDecoration.setLineWidth(iStandardWidth);
+        if(newDecoration!=null) newDecoration.setLineWidth(iStandardWidth);
         ((DiagramPolylineConnection)connectionFigure).setLineWidth( iStandardWidth );
         ((DiagramPolylineConnection)connectionFigure).setForegroundColor(ColorConstants.blue);
         

@@ -901,9 +901,11 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
                 accelerator = SWT.CTRL | 'A';
             }
 
-            setText(tempAction.getText());
-            setImageDescriptor(tempAction.getImageDescriptor());
-            setDisabledImageDescriptor(tempAction.getDisabledImageDescriptor());
+            if(tempAction!=null) {
+                setText(tempAction.getText());
+                setImageDescriptor(tempAction.getImageDescriptor());
+                setDisabledImageDescriptor(tempAction.getDisabledImageDescriptor());
+            }
             setAccelerator(accelerator);
         }
 

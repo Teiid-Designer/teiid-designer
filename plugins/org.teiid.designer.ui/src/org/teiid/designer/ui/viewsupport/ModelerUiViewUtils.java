@@ -242,7 +242,10 @@ public class ModelerUiViewUtils {
 	        		
 	        		WizardDialog wd = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
 	        		wd.create();
-	        		String openProjectStatus = DesignerPropertiesUtil.getProjectStatus(properties);
+	        		String openProjectStatus = null;
+	        		if(properties!=null) {
+	        		    openProjectStatus = DesignerPropertiesUtil.getProjectStatus(properties);
+	        		}
 	        		if( openProjectStatus == null || !IPropertiesContext.NO_OPEN_PROJECT.equalsIgnoreCase(openProjectStatus) ){
 		        		wd.setTitle(wizard.getWindowTitle());
 		        		wd.open();
@@ -262,7 +265,10 @@ public class ModelerUiViewUtils {
 	
 	        		WizardDialog wd = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
 	        		wd.create();
-	        		String openProjectStatus = DesignerPropertiesUtil.getProjectStatus(properties);
+                    String openProjectStatus = null;
+                    if(properties!=null) {
+                        openProjectStatus = DesignerPropertiesUtil.getProjectStatus(properties);
+                    }
 	        		if( openProjectStatus == null || !IPropertiesContext.NO_OPEN_PROJECT.equalsIgnoreCase(openProjectStatus) ){
 		        		wd.setTitle(wizard.getWindowTitle());
 		        		wd.open();

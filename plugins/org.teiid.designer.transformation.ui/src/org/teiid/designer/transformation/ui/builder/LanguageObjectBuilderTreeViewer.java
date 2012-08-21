@@ -92,7 +92,7 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
 
                 if (parent instanceof NotCriteria) {
                     // then NotCriteria's contained criteria must be a CompoundCriteria
-                    criteria = (CompoundCriteria)((NotCriteria)theCriteria).getCriteria();
+                    criteria = (CompoundCriteria)((NotCriteria)parent).getCriteria();
                 } else {
                     criteria = (CompoundCriteria)parent;
                 }

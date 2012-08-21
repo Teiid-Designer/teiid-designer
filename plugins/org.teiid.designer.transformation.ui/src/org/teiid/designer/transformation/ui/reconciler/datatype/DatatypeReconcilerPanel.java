@@ -896,7 +896,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
                     }
                 }
                 // If different datatype was chosen, set it on the binding
-                if (!newDatatype.equals(originalValue)) {
+                if (newDatatype!=null && !newDatatype.equals(originalValue)) {
                     setChooserDatatype(newDatatype);
                     updateAttributeConversionPanelButtons(binding);
                 }

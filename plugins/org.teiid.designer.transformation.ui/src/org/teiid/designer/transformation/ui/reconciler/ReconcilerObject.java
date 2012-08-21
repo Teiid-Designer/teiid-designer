@@ -386,7 +386,7 @@ public class ReconcilerObject {
     }
 
     public void createNewBindings( List sqlSymbols ) {
-        if (sqlSymbols == null || !sqlSymbols.isEmpty()) {
+        if (sqlSymbols!=null && !sqlSymbols.isEmpty()) {
             Iterator iter = sqlSymbols.iterator();
             while (iter.hasNext()) {
             	Expression symbol = (Expression)iter.next();

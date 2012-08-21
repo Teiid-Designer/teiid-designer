@@ -844,7 +844,7 @@ public class EclipseConfigurationBuilder {
                     }
                     if (defaultValue != null) {
                         ModelerCore.Util.log(IStatus.INFO,
-                                             ModelerCore.Util.getString("EclipseConfigurationBuilder.DEBUG.Set_the_DEFAULT_OPTION_to_1") + new Object[] {defaultValue}); //$NON-NLS-1$
+                                             ModelerCore.Util.getString("EclipseConfigurationBuilder.DEBUG.Set_the_DEFAULT_OPTION_to_1", new Object[] {defaultValue})); //$NON-NLS-1$
                     }
                 }
 

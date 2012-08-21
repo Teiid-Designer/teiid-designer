@@ -270,7 +270,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
                 }
 
                 // don't add if it has already been added
-                if (path.equals(newPath)) {
+                if (path!=null && path.equals(newPath)) {
                     okToAdd = false;
 
                     if (problems == null) {

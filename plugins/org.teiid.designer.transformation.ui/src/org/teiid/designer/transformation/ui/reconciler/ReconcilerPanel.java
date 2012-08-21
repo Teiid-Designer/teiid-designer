@@ -173,7 +173,10 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
         // Initialize the Button states
         setButtonStates();
 
-        String sql = reconcilerObject.getModifiedSql();
+        String sql = null;
+        if(reconcilerObject!=null) {
+            sql = reconcilerObject.getModifiedSql();
+        }
         setSqlDisplay(sql);
 
         // Initialize the message area at the top of the dialog

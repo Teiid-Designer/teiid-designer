@@ -285,8 +285,10 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
             targetName = getResourceName(eObj.eResource()) + '/' + ModelerCore.getModelEditor().getModelRelativePath(eObj);
         }
 
-        targetName = targetName.replace(B_SLASH, DELIM);
-
+        if(targetName!=null) {
+            targetName = targetName.replace(B_SLASH, DELIM);
+        }
+        
         return targetName;
     }
 
