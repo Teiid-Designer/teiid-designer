@@ -153,10 +153,12 @@ public class RebuildingBuiltInTypesIndexSelector extends ResourceFileIndexSelect
             ModelerSdtPlugin.Util.log(IStatus.ERROR,
                                       ModelerSdtPlugin.Util.getString("BuiltInTypesIndexSelector.Unable_to_create_absolute_path_to_zip_file_2")); //,DATATYPES_ZIP_FILE_NAME //$NON-NLS-1$
         }
-        final File zipFile = new File(zipFilePath);
-        if (!zipFile.exists()) {
-            ModelerSdtPlugin.Util.log(IStatus.ERROR,
-                                      ModelerSdtPlugin.Util.getString("BuiltInTypesIndexSelector.The_file_cannot_be_found_on_the_file_system_3")); //,zipFilePath //$NON-NLS-1$
+        if(zipFilePath!=null && zipFilePath.trim().length()>0) {
+            final File zipFile = new File(zipFilePath);
+            if (!zipFile.exists()) {
+                ModelerSdtPlugin.Util.log(IStatus.ERROR,
+                                          ModelerSdtPlugin.Util.getString("BuiltInTypesIndexSelector.The_file_cannot_be_found_on_the_file_system_3")); //,zipFilePath //$NON-NLS-1$
+            }
         }
 
         return zipFilePath;

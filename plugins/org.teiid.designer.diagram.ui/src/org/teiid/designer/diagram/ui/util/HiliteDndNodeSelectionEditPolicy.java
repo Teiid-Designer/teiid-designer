@@ -56,11 +56,12 @@ public class HiliteDndNodeSelectionEditPolicy extends DiagramNodeSelectionEditPo
                 final Collection descriptors = ModelerCore.getModelEditor().getNewAssociationDescriptors(selectedEObjects);
                 if (descriptors.size() == 1) {
                     final AssociationDescriptor theDescriptor = (AssociationDescriptor)descriptors.iterator().next();
-                    if (theDescriptor != null) printDescriptor(theDescriptor);
-                    if (theDescriptor.isAmbiguous()) DiagramUiConstants.Util.log(IStatus.INFO,
-                                                                                 "HiliteDndNodeSelectionEditPolicy.canCreateAssociation() The Association Descriptor is AMBIGUOUS"); //$NON-NLS-1$
-
-                    if (theDescriptor.isComplete()) canCreate = true;
+                    if(theDescriptor!=null) {
+                        printDescriptor(theDescriptor);
+                        if (theDescriptor.isAmbiguous()) DiagramUiConstants.Util.log(IStatus.INFO,
+                        "HiliteDndNodeSelectionEditPolicy.canCreateAssociation() The Association Descriptor is AMBIGUOUS"); //$NON-NLS-1$
+                        if (theDescriptor.isComplete()) canCreate = true;
+                    }
                 } else {
                     // System.out.println(" -->> HDndNSP.canCreateAssociation() # Descriptors = " + descriptors.size());
                     final Iterator iter = descriptors.iterator();

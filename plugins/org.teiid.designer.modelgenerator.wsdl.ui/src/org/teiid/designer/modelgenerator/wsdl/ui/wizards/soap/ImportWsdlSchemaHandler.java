@@ -131,109 +131,110 @@ public class ImportWsdlSchemaHandler {
 		}
 
 		List<Object> elementArrayList = new ArrayList<Object>();
+		if(partArray!=null) {
+		    for (Part part : partArray) {
+		        partElementName = getPartElementName(part);
+		        String namespace = part.getElementNamespace();
 
-		for (Part part : partArray) {
-			partElementName = getPartElementName(part);
-			String namespace = part.getElementNamespace();
-			
-			if (type == ProcedureInfo.REQUEST) {
-				this.requestSchemaTreeModel.setDefaultNamespace(namespace);
-			}else{
-				this.responseSchemaTreeModel.setDefaultNamespace(namespace);
-			}
-			
-			boolean foundElement = false;
+		        if (type == ProcedureInfo.REQUEST) {
+		            this.requestSchemaTreeModel.setDefaultNamespace(namespace);
+		        }else{
+		            this.responseSchemaTreeModel.setDefaultNamespace(namespace);
+		        }
 
-			for (XSDSchema schema : schemas) {
-				
-				EList<XSDElementDeclaration> elements = schema
-						.getElementDeclarations();
-				for (XSDElementDeclaration element : elements) {
-					String elementName = element.getName();
-					if (elementName.equals(partElementName)) {
-						if (element.getTypeDefinition() instanceof XSDSimpleTypeDefinition) {
-							elementDeclaration = element;
-						} else {
-							elementDeclaration = element
-									.getTypeDefinition();
-						}
+		        boolean foundElement = false;
 
-						foundElement = true;
-                        try {
-                            if (type == ProcedureInfo.REQUEST) {
-                                this.requestSchemaTreeModel = describe(schema,
-                                        elementName,
-                                        element,
-                                        requestSchemaTreeModel);
-                            }
-                            else {
-                                this.responseSchemaTreeModel = describe(schema,
-                                        elementName,
-                                        element,
-                                        responseSchemaTreeModel);
-                            }
-                        }
-                        catch (ModelerCoreException ex) {
-                            openErrorDialog(ex.getMessage());
-                        }
-                        catch (StackOverflowError e) {
-                            /*
-                             * Can occur if the depth threshold is set too high.
-                             * Current value should be fine for most systems but
-                             * just in case...
-                             * 
-                             * Eclipse will show a nasty dialog and offer to
-                             * close the workbench which is confusing better to
-                             * exit a little more gracefully.
-                             */
-                            String message = NLS
-                                    .bind(Messages.Error_GeneratingSchemaModelCircularReferenceStackOverflow,
-                                            MAX_DEPTH,
-                                            WSDL_SCHEMA_HANDLER_RECURSIVE_DEPTH_PROPERTY);
-                            openErrorDialog(message);
-                            System.exit(1);
-                        }
+		        for (XSDSchema schema : schemas) {
 
-                        elementArrayList.add(elementDeclaration);
-						break;
-					}
-				}
-				
+		            EList<XSDElementDeclaration> elements = schema
+		            .getElementDeclarations();
+		            for (XSDElementDeclaration element : elements) {
+		                String elementName = element.getName();
+		                if (elementName.equals(partElementName)) {
+		                    if (element.getTypeDefinition() instanceof XSDSimpleTypeDefinition) {
+		                        elementDeclaration = element;
+		                    } else {
+		                        elementDeclaration = element
+		                        .getTypeDefinition();
+		                    }
 
-				if (foundElement == true)
-					break;
+		                    foundElement = true;
+		                    try {
+		                        if (type == ProcedureInfo.REQUEST) {
+		                            this.requestSchemaTreeModel = describe(schema,
+		                                                                   elementName,
+		                                                                   element,
+		                                                                   requestSchemaTreeModel);
+		                        }
+		                        else {
+		                            this.responseSchemaTreeModel = describe(schema,
+		                                                                    elementName,
+		                                                                    element,
+		                                                                    responseSchemaTreeModel);
+		                        }
+		                    }
+		                    catch (ModelerCoreException ex) {
+		                        openErrorDialog(ex.getMessage());
+		                    }
+		                    catch (StackOverflowError e) {
+		                        /*
+		                         * Can occur if the depth threshold is set too high.
+		                         * Current value should be fine for most systems but
+		                         * just in case...
+		                         * 
+		                         * Eclipse will show a nasty dialog and offer to
+		                         * close the workbench which is confusing better to
+		                         * exit a little more gracefully.
+		                         */
+		                        String message = NLS
+		                        .bind(Messages.Error_GeneratingSchemaModelCircularReferenceStackOverflow,
+		                              MAX_DEPTH,
+		                              WSDL_SCHEMA_HANDLER_RECURSIVE_DEPTH_PROPERTY);
+		                        openErrorDialog(message);
+		                        System.exit(1);
+		                    }
 
-				if (elementDeclaration == null) {
+		                    elementArrayList.add(elementDeclaration);
+		                    break;
+		                }
+		            }
 
-					EList<XSDTypeDefinition> types = schema.getTypeDefinitions();
-					for (XSDTypeDefinition xsdType : types) {
-						String elementName = xsdType.getName();
-						if (elementName.equals(partElementName)) {
-							elementDeclaration = xsdType;
-							foundElement = true;
-								try {
-									if (type == ProcedureInfo.REQUEST){
-										this.requestSchemaTreeModel = describe(schema, elementName, null, requestSchemaTreeModel);
-									}else{
-										this.responseSchemaTreeModel = describe(schema, elementName, null, responseSchemaTreeModel);
-									}
-								} catch (ModelerCoreException ex) {
-									ErrorDialog.openError(this.operationsDetailsPage.getShell(), Messages.Error_GeneratingSchemaModelDueToCircularReferences_title, null, new Status(IStatus.WARNING, ModelGeneratorWsdlUiConstants.PLUGIN_ID, Messages.Error_GeneratingSchemaModelDueToCircularReferences));
-								}
-							elementArrayList.add(elementDeclaration);
-							break;
-						}
-					}
-				}
 
-				// We already found our element. No need to look through anymore
-				// schemas
-				if (foundElement) {
-					foundElement = false;
-					break;
-				}
-			}
+		            if (foundElement == true)
+		                break;
 
+		            if (elementDeclaration == null) {
+
+		                EList<XSDTypeDefinition> types = schema.getTypeDefinitions();
+		                for (XSDTypeDefinition xsdType : types) {
+		                    String elementName = xsdType.getName();
+		                    if (elementName.equals(partElementName)) {
+		                        elementDeclaration = xsdType;
+		                        foundElement = true;
+		                        try {
+		                            if (type == ProcedureInfo.REQUEST){
+		                                this.requestSchemaTreeModel = describe(schema, elementName, null, requestSchemaTreeModel);
+		                            }else{
+		                                this.responseSchemaTreeModel = describe(schema, elementName, null, responseSchemaTreeModel);
+		                            }
+		                        } catch (ModelerCoreException ex) {
+		                            ErrorDialog.openError(this.operationsDetailsPage.getShell(), Messages.Error_GeneratingSchemaModelDueToCircularReferences_title, null, new Status(IStatus.WARNING, ModelGeneratorWsdlUiConstants.PLUGIN_ID, Messages.Error_GeneratingSchemaModelDueToCircularReferences));
+		                        }
+		                        elementArrayList.add(elementDeclaration);
+		                        break;
+		                    }
+		                }
+		            }
+
+		            // We already found our element. No need to look through anymore
+		            // schemas
+		            if (foundElement) {
+		                foundElement = false;
+		                break;
+		            }
+		        }
+
+		    }
 		}
 
 		Collection<SchemaNode> nodeList = new ArrayList<SchemaNode>();

@@ -344,7 +344,7 @@ public class CapabilitiesImpl implements Capabilities {
      */
     @Override
 	public int getMaxUserNameLength() throws SQLException {
-        return getMaxUserNameLength();
+        return getMetadata().getMaxUserNameLength();
     }
 
     /* (non-Javadoc)
@@ -392,7 +392,7 @@ public class CapabilitiesImpl implements Capabilities {
      */
     @Override
 	public String getStringFunctions() throws SQLException {
-        return getStringFunctions();
+        return getMetadata().getStringFunctions();
     }
 
     /* (non-Javadoc)
@@ -400,7 +400,7 @@ public class CapabilitiesImpl implements Capabilities {
      */
     @Override
 	public String getSystemFunctions() throws SQLException {
-        return getSystemFunctions();
+        return getMetadata().getSystemFunctions();
     }
 
     /* (non-Javadoc)
@@ -408,7 +408,7 @@ public class CapabilitiesImpl implements Capabilities {
      */
     @Override
 	public String getTimeDateFunctions() throws SQLException {
-        return getTimeDateFunctions();
+        return getMetadata().getTimeDateFunctions();
     }
 
     /* (non-Javadoc)
@@ -416,7 +416,7 @@ public class CapabilitiesImpl implements Capabilities {
      */
     @Override
 	public ResultSet getTypeInfo() throws SQLException {
-        return getTypeInfo();
+        return getMetadata().getTypeInfo();
     }
 
     /* (non-Javadoc)

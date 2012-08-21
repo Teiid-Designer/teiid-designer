@@ -137,7 +137,7 @@ public class TableBuilder {
 
                                 if ((root == null && elementNamespace.trim().length() == 0)
                                     || (root != null && root.getNamespace().equalsIgnoreCase(elementNamespace))) {
-                                    if (root.getName().equalsIgnoreCase(elementName)) {
+                                    if (root!=null && root.getName().equalsIgnoreCase(elementName)) {
                                         theElement = root;
                                         break;
                                     }

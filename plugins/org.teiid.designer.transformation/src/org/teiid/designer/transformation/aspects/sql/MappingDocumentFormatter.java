@@ -653,7 +653,7 @@ public class MappingDocumentFormatter {
         final MappingChoiceNode choiceNode = new MappingChoiceNode(choice.getDefaultErrorMode().getValue() == ChoiceErrorMode.THROW);
         choiceNode.setExclude(choice.isExcludeFromDocument());
         choiceNode.setSource(getSource(choice));
-        parent.addChoiceNode(choiceNode);
+        if(parent!=null) parent.addChoiceNode(choiceNode);
 
         choiceNode.addStagingTable(getStagingTable(choice));
         return choiceNode;
@@ -864,10 +864,12 @@ public class MappingDocumentFormatter {
         MappingBaseNode seqNode = null;
         if (compositor instanceof XmlSequence) seqNode = parent.addSequenceNode(new MappingSequenceNode());
         else if (compositor instanceof XmlAll) seqNode = parent.addAllNode(new MappingAllNode());
-        seqNode.setExclude(compositor.isExcludeFromDocument());
-        seqNode.setSource(getSource(compositor));
+        if(seqNode!=null) {
+            seqNode.setExclude(compositor.isExcludeFromDocument());
+            seqNode.setSource(getSource(compositor));
 
-        seqNode.addStagingTable(getStagingTable(compositor));
+            seqNode.addStagingTable(getStagingTable(compositor));
+        }
         return seqNode;
     }
 

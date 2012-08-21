@@ -215,14 +215,15 @@ public class ModelObjectSelectionDialog extends AbstractElementListSelectionDial
     public EObject getEObjectForRecord( ResourceObjectRecord ror ) {
 
         EObject eObj = null;
-        try {
-            URI uri = URI.createURI(ror.getObjectURI());
-            if (uri.fragment() != null) eObj = ModelerCore.getModelContainer().getEObject(uri, true);
+        if(ror!=null) {
+            try {
+                URI uri = URI.createURI(ror.getObjectURI());
+                if (uri.fragment() != null) eObj = ModelerCore.getModelContainer().getEObject(uri, true);
 
-        } catch (CoreException ce) {
-            ModelerCore.Util.log(IStatus.ERROR, ce, ce.getMessage());
+            } catch (CoreException ce) {
+                ModelerCore.Util.log(IStatus.ERROR, ce, ce.getMessage());
+            }
         }
-
         return eObj;
     }
 

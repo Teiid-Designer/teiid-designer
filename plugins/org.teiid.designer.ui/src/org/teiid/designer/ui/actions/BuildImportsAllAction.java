@@ -110,27 +110,29 @@ public class BuildImportsAllAction extends ActionDelegate implements IWorkbenchW
             try {
                 theMonitor.setTaskName(UiConstants.Util.getString("RebuildImportsAllAction.progressMessage", new Object[] {new Integer(count), new Integer(size - 1)}));//$NON-NLS-1$
                 final ModelResource modelResource = (ModelResource)iter.next();
-                if (modelResource != null && !modelResource.isReadOnly()) {
-                    final IFile modelFile = (IFile)modelResource.getResource();
+                if(modelResource!=null) {
+                    if (!modelResource.isReadOnly()) {
+                        final IFile modelFile = (IFile)modelResource.getResource();
 
-                    boolean succeeded = false;
-                    // Defect 23823 - switched to use a new Modeler Core utility.
-                    try {
-                        succeeded = ModelBuildUtil.rebuildImports(modelResource.getEmfResource(), true);
-                    } catch (final ModelWorkspaceException theException) {
-                        UiConstants.Util.log(IStatus.ERROR, theException, theException.getMessage());
-                    }
+                        boolean succeeded = false;
+                        // Defect 23823 - switched to use a new Modeler Core utility.
+                        try {
+                            succeeded = ModelBuildUtil.rebuildImports(modelResource.getEmfResource(), true);
+                        } catch (final ModelWorkspaceException theException) {
+                            UiConstants.Util.log(IStatus.ERROR, theException, theException.getMessage());
+                        }
 
-                    if (succeeded) {
-                        eventList.add(modelResource);
+                        if (succeeded) {
+                            eventList.add(modelResource);
+                        } else {
+                            errorModels.add(modelFile);
+                        }
+                        if (!ModelEditorManager.isOpen(modelFile)) {
+                            modelsToSave.add(modelResource);
+                        }
                     } else {
-                        errorModels.add(modelFile);
+                        readOnlyModels.add(modelResource.getPath().makeRelative().toString());
                     }
-                    if (!ModelEditorManager.isOpen(modelFile)) {
-                        modelsToSave.add(modelResource);
-                    }
-                } else if (modelResource.isReadOnly()) {
-                    readOnlyModels.add(modelResource.getPath().makeRelative().toString());
                 }
             } finally {
                 theMonitor.worked(1);
