@@ -1,4 +1,4 @@
-# The Teiid Desgiern project
+# The Teiid Designer project
 
 ## Summary
 
@@ -8,18 +8,18 @@ Up to our recent 7.8 release this summer (2012) the codebase was housed in our [
 
 Teiid Designer is an open source visual tool that enables rapid, model-driven definition, integration, management and testing of data services without programming using the Teiid runtime framework. With Teiid Designer, not only do you create source data models and map your sources to target formats using a visual tool, but you can also:
 
-	- create a virtual database (or VDB) containing your models which you deploy to Teiid server and then access your data.
-	- resolve semantic differences
-    - create virtual data structures at a physical or logical level
-    - use declarative interfaces to integrate, aggregate, and transform the data on its way from source to a target format which is compatible and optimized for consumption by your applications
+*	create a virtual database (or VDB) containing your models which you deploy to Teiid server and then access your data.
+*	resolve semantic differences
+*	create virtual data structures at a physical or logical level
+*	use declarative interfaces to integrate, aggregate, and transform the data on its way from source to a target format which is compatible and optimized for consumption by your applications
 
 This allows you to abstract the structure of the information you expose to and use in your applications from the underlying physical data structures. With Teiid Designer, data services are defined quickly, the resulting artifacts are easy to maintain and reuse, and all the valuable work and related metadata are saved for later reference.
 
 You can use Teiid Designer to integrate multiple sources, and access them using the common data access standards:
 
-	- Web Services / SOAP / XML
-	- JDBC / SQL
-	- ODBC / SQL
+*	Web Services / SOAP / XML
+*	JDBC / SQL
+*	ODBC / SQL
 
 
 For more information on Teiid Desginer, including getting started guides, reference guides, and downloadable binaries, visit the project's website at [http://www.jboss.org/teiiddesigner/](http://www.jboss.org/teiiddesigner/)
