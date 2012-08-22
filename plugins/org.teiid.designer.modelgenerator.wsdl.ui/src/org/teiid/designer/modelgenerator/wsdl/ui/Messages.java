@@ -116,6 +116,7 @@ public class Messages  extends NLS {
     public static String Status_AllOkClickFinishToGenerateProcedures;
     public static String Status_AllOkClickNextToDefineProcedures;
     public static String Status_SourceModelDoesNotExistAndWillBeCreated;
+    public static String Status_ExistingSourceModelHasNoProfile;
     public static String Status_ExistingSourceModelHasWrongProfile;
     public static String Status_ExistingSourceModelAlreadyContainsInvoke;
     public static String Status_ExistingSourceModelMissingInvoke;
@@ -126,6 +127,7 @@ public class Messages  extends NLS {
     
     public static String Error_Creating_0_Model_1_FromWsdl;
     public static String Error_DeterminingSourceModelHas_0_Procedure;
+    public static String Error_DeterminingSourceModelHasProfile;
     public static String Error_DeterminingSourceModelHasMatchingProfile;
     public static String Error_GeneratingSchemaModelDueToCircularReferences;
     public static String Error_GeneratingSchemaModelCircularReferenceStackOverflow;

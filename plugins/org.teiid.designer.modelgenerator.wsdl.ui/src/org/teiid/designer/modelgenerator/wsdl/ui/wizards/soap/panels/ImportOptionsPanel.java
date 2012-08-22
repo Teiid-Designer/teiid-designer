@@ -8,7 +8,6 @@
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels;
 
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -31,7 +30,6 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
-
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -390,7 +388,9 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 	private void setSourceModelHelpMessage() {
 		String message = NLS.bind(Messages.Status_SourceModelDoesNotExistAndWillBeCreated, this.sourceModelFileText.getText());
 		if (sourceModelExists()) {
-			if( ! sourceModelHasSameConnectionProfile() ) {
+            if (!sourceModelHasConnectionProfile()) {
+                message = NLS.bind(Messages.Status_ExistingSourceModelHasNoProfile, this.sourceModelFileText.getText());
+            } else if (!sourceModelHasSameConnectionProfile()) {
 				message = NLS.bind(Messages.Status_ExistingSourceModelHasWrongProfile, this.sourceModelFileText.getText());
 			} else {
     			if (sourceHasProcedure()) {
@@ -439,7 +439,34 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 		return false;
 	}
 	
-	private boolean sourceModelHasSameConnectionProfile() {
+    /*
+     * Determine if the Source Model has ConnectionProfile set.
+     */
+    private boolean sourceModelHasConnectionProfile() {
+        if (!sourceModelExists()) {
+            return false;
+        }
+
+        try {
+            IResource sourceModel = ModelGeneratorWsdlUiUtil.getModelFile(this.importManager.getSourceModelLocation().getFullPath().toOSString(),
+                                                                          this.sourceModelFileText.getText());
+
+            ModelResource smr = ModelUtilities.getModelResourceForIFile((IFile)sourceModel, false);
+            if (smr != null) {
+                IConnectionProfile profile = connectionInfoHelper.getConnectionProfile(smr);
+                if (profile == null || this.importManager.getConnectionProfile() == null) {
+                    return false;
+                }
+                return true;
+            }
+        } catch (ModelWorkspaceException ex) {
+            ModelGeneratorWsdlUiConstants.UTIL.log(IStatus.ERROR, ex, Messages.Error_DeterminingSourceModelHasProfile);
+        }
+
+        return false;
+    }
+
+    private boolean sourceModelHasSameConnectionProfile() {
 		if ( !sourceModelExists() ) {
 			return false;
 		}

@@ -8,13 +8,11 @@
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
-
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Message;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Part;
@@ -52,22 +50,6 @@ public class RequestInfo extends ProcedureInfo {
 		IStatus nameStatus = getGenerator().getNameStatus(getProcedureName());
 		if( nameStatus.getSeverity() > IStatus.INFO) {
 			status.merge(nameStatus);
-		}
-		
-		// Look at all element names
-		for( ColumnInfo info : getBodyColumnInfoList() ) {
-			IStatus colNameStatus = getGenerator().getNameStatus(info.getName());
-			if( colNameStatus.getSeverity() > IStatus.INFO) {
-				status.merge(colNameStatus);
-			}
-		}
-		
-		// Look at all element names
-		for (ColumnInfo info : getHeaderColumnInfoList()) {
-			IStatus colNameStatus = getGenerator().getNameStatus(info.getName());
-			if (colNameStatus.getSeverity() > IStatus.INFO) {
-				status.merge(colNameStatus);
-			}
 		}
 		
 		if( getBodyColumnInfoList().length == 0 ) {
@@ -158,7 +140,7 @@ public class RequestInfo extends ProcedureInfo {
 	    	// EXAMPLE:       XMLELEMENT(NAME FromCurrency, CurrencyConvertorView.request_ConversionRate.FromCurrency)
 	    	
 	    	for( ColumnInfo columnInfo : getBodyColumnInfoList()) {
-	    		String name = columnInfo.getName();
+                String name = columnInfo.getSymbolName();
 	    		sb.append(TAB).append(TAB).append(TAB).append(XMLELEMENT);
 	    		sb.append(L_PAREN);
 	    		sb.append(NAME).append(SPACE).append(getGenerator().convertSqlNameSegment(name));
@@ -216,8 +198,8 @@ public class RequestInfo extends ProcedureInfo {
 				if( index > 0 ) {
 					sb.append(COMMA).append(SPACE);
 				}
-				sb.append(attrInfo.getName());
-				if( !attrInfo.getName().equalsIgnoreCase(attrInfo.getAlias())) {
+                sb.append(attrInfo.getSymbolName());
+                if (!attrInfo.getSymbolName().equalsIgnoreCase(attrInfo.getAlias())) {
 					sb.append(SPACE).append(AS).append(SPACE);
 					sb.append(attrInfo.getAlias());
 				}
@@ -282,8 +264,9 @@ public class RequestInfo extends ProcedureInfo {
 	    	headerString.append(D_QUOTE).append(HEADER_NAME).append(D_QUOTE);
     	
 	    	for (ColumnInfo columnInfo:this.getHeaderColumnInfoList()){
-	    		headerString.append(COMMA).append(SPACE).append(XMLELEMENT).append(L_PAREN).append(NAME).append(SPACE).append(columnInfo.getName());
-	    		headerString.append(COMMA).append(SPACE).append(getFullParameterName(this.getProcedureName(), columnInfo.getName()));
+                headerString.append(COMMA).append(SPACE).append(XMLELEMENT).append(L_PAREN).append(NAME).append(SPACE).append(columnInfo.getSymbolName());
+                headerString.append(COMMA).append(SPACE).append(getFullParameterName(this.getProcedureName(),
+                                                                                     columnInfo.getSymbolName()));
 	    		headerString.append(R_PAREN);
 	    	}
 	    	

@@ -10,7 +10,7 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
-
+import org.teiid.query.sql.symbol.ElementSymbol;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
@@ -18,11 +18,11 @@ import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstan
 
 public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
 	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false, true);
-	
+
     /**
-     * The unique attribute name (never <code>null</code> or empty).
+     * The unique column name (never <code>null</code> or empty).
      */
-	private String name;
+    private ElementSymbol nameSymbol;
 	
 	/**
      * The unique alias name (never <code>null</code> or empty).
@@ -52,19 +52,39 @@ public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
 	public AttributeInfo(Object xmlElement, String name, ColumnInfo columnInfo) {
 		super();
 		this.xmlElement = xmlElement;
-		this.name = name;
-		this.alias = name;
+        initNameSymbol(name);
+        this.alias = getName();
 		this.columnInfo = columnInfo;
 		validate();
 	}
 
-	/**
-	 * 
-	 * @return name the attribute name
-	 */
-	public String getName() {
-		return this.name;
-	}
+    /**
+     * Initialise the {@link ElementSymbol} to hold the name. This validates the symbol's character composition. The '.' character
+     * is the only puntuation symbol that will cause problems for an element symbol so these are replaced these with '_'.
+     */
+    private void initNameSymbol( final String name ) {
+        nameSymbol = new ElementSymbol(name.replaceAll("\\.", "_")); //$NON-NLS-1$//$NON-NLS-2$
+    }
+
+    /**
+     * Get the column name for display in the UI. This removes any quotes for aesthetic reasons. Use {@link #getSymbolName()} for
+     * retrieving the fully validated column name.
+     * 
+     * @return the column name sans quotes.
+     */
+    public String getName() {
+        String name = this.nameSymbol.toString();
+        return name.replaceAll("\"", ""); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * Get the fully validated column name. This should be used in SQL string generation.
+     * 
+     * @return name the column name
+     */
+    public String getSymbolName() {
+        return this.nameSymbol.toString();
+    }
 
 	/**
 	 * 
@@ -72,7 +92,7 @@ public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
 	 */
 	public void setName(String name) {
 		CoreArgCheck.isNotNull(name, "name is null"); //$NON-NLS-1$
-		this.name = name;
+        initNameSymbol(name);
 		validate();
 	}
 	
@@ -138,13 +158,7 @@ public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
 	
 	public void validate() {
 
-		String result = nameValidator.checkValidName(getName());
-		if( result != null ) {
-			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.InvalidAttributeName + getName()));
-			return;
-		}
-		
-		result = nameValidator.checkValidName(getAlias());
+        String result = nameValidator.checkValidName(getAlias());
 		if( result != null ) {
 			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.InvalidAttributeAliasName + getAlias()));
 			return;
@@ -164,7 +178,7 @@ public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
     public String toString() {
         StringBuilder text = new StringBuilder();
         text.append("AttributeInfo: "); //$NON-NLS-1$
-        text.append("  name =").append(getName()); //$NON-NLS-1$
+        text.append("  name =").append(getSymbolName()); //$NON-NLS-1$
         text.append("  alias =").append(getAlias()); //$NON-NLS-1$
 
         return text.toString();
