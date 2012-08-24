@@ -8,7 +8,6 @@
 package org.teiid.designer.modelgenerator.wsdl;
 
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -16,12 +15,55 @@ import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
+import org.teiid.designer.ui.common.ICredentialsCommon;
 
 
 /**
  * @since 8.0
  */
 public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implements IConnectionInfoProvider, IWSProfileConstants {
+
+    /**
+     * Adds properties relating to the security access of the wsdl from the source set of properties
+     * to the target set of properties.
+     * 
+     * When adding these properties to the resource the namespace is required yet when gathering
+     * the properties for the teiid -ds xml, the namespace is stripped. Thus, a flag is added to handle
+     * the two slightly different property keys
+     * 
+     * @param source
+     * @param target
+     * @param includeNameSpace
+     */
+    private void addSecurityProperties(Properties source, Properties target, boolean includeNameSpace) {
+        String securityTypeId = source.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
+        SecurityType securityType = SecurityType.retrieveValue(securityTypeId);
+        switch (securityType) {
+            case HTTPBasic:
+                String username = source.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
+                if (username == null) {
+                    username = source.getProperty(IWSProfileConstants.DS_AUTH_USER_NAME);
+                }
+                
+                String key = includeNameSpace ? CONNECTION_NAMESPACE + DS_AUTH_USER_NAME : DS_AUTH_USER_NAME; 
+                target.put(key, username);
+                
+                String password = source.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
+                if (password == null) {
+                    password = source.getProperty(IWSProfileConstants.DS_AUTH_PASSWORD);
+                }
+                
+                key = includeNameSpace ? CONNECTION_NAMESPACE + DS_AUTH_PASSWORD : DS_AUTH_PASSWORD;
+                target.put(key, password);
+                break;
+            default:
+                // Do Nothing
+        }
+        
+        /* Add the security type even if none */
+        String key = includeNameSpace ? CONNECTION_NAMESPACE + DS_SECURITY_TYPE : DS_SECURITY_TYPE; 
+        target.put(key, securityType.name());
+    }
 
     /**
      * {@inheritDoc}
@@ -37,16 +79,20 @@ public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implemen
 
         String nameInSource = modelResource.getModelAnnotation().getNameInSource();
         if (nameInSource != null) {
-            connectionProps.put(CONNECTION_NAMESPACE + SOURCE_ENDPOINT, nameInSource);
+            connectionProps.put(CONNECTION_NAMESPACE + END_POINT_URI_PROP_ID, nameInSource);
         }
 
-        if (props.getProperty(SOAP_ENDPOINT_KEY) != null) {
-            connectionProps.put(CONNECTION_NAMESPACE + DS_ENDPOINT, props.getProperty(SOAP_ENDPOINT_KEY));
+        String wsdlURI = props.getProperty(WSDL_URI_PROP_ID);
+        if (wsdlURI != null) {
+            connectionProps.put(CONNECTION_NAMESPACE + DS_ENDPOINT, wsdlURI);
         }
         
-        String url = readURLProperty(props);
-		if (url != null) {
-            connectionProps.put(CONNECTION_NAMESPACE + URL_PROP_ID, url);
+        // Security
+        addSecurityProperties(props, connectionProps, true);
+        
+        String endPointURI = readEndPointProperty(props);
+		if (endPointURI != null) {
+            connectionProps.put(CONNECTION_NAMESPACE + END_POINT_URI_PROP_ID, endPointURI);
         }
 		
         if (props.getProperty(CONNECTION_CLASS_KEY) != null) {
@@ -82,9 +128,16 @@ public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implemen
         Properties rawConnectionProps = removeNamespaces(getHelper().getProperties(modelResource, CONNECTION_NAMESPACE));
         Properties connectionProps = new Properties();
 
-        if (rawConnectionProps.get(SOURCE_ENDPOINT) != null) {
-            connectionProps.put(DS_ENDPOINT, rawConnectionProps.get(SOURCE_ENDPOINT));
+        if (rawConnectionProps.get(WSDL_URI_PROP_ID) != null) {
+            connectionProps.put(DS_ENDPOINT, rawConnectionProps.get(WSDL_URI_PROP_ID));
         }
+        
+        if (rawConnectionProps.get(END_POINT_URI_PROP_ID) != null) {
+            connectionProps.put(END_POINT_URI_PROP_ID, rawConnectionProps.get(END_POINT_URI_PROP_ID));
+        }
+        
+        // Security
+        addSecurityProperties(rawConnectionProps, connectionProps, false);        
 
         return connectionProps;
     }
@@ -97,14 +150,15 @@ public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implemen
     @Override
     public Properties getTeiidRelatedProperties( IConnectionProfile connectionProfile ) {
         Properties connectionProps = new Properties();
-        // connectionProps.put(IConnectionInfoHelper.PROFILE_PROVIDER_ID_KEY, connectionProfile.getProviderId());
-
-        Properties props = connectionProfile.getBaseProperties();
-        if (props.get(DS_ENDPOINT) != null) {
-            connectionProps.put(SOURCE_ENDPOINT, props.get(DS_ENDPOINT));
-        } else if (props.get(SOURCE_ENDPOINT) != null) {
-            connectionProps.put(SOURCE_ENDPOINT, props.get(SOURCE_ENDPOINT));
+        Properties profileProperties = connectionProfile.getBaseProperties();
+        
+        String endPointProperty = ConnectionInfoHelper.readEndPointProperty(profileProperties);
+        if (endPointProperty != null) {
+            connectionProps.put(END_POINT_URI_PROP_ID, endPointProperty);
         }
+        
+        // Security
+        addSecurityProperties(profileProperties, connectionProps, false);        
 
         return connectionProps;
     }

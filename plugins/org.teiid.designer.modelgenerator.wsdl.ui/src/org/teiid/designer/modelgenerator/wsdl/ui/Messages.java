@@ -196,6 +196,10 @@ public class Messages  extends NLS {
     public static String WsdlDefinitionPage_wsdlErrorContinuation_msg;
     public static String WsdlDefinitionPage_notModelProjectMessage;
     public static String WsdlDefinitionPage_select_profile;
+    
+    public static String WsdlDefinitionPage_endPointLabel_text;
+    public static String WsdlDefinitionPage_endPointNameTextField_tooltip;
+    public static String WsdlDefinitionPage_endPointURITextField_tooltip;
 
     public static String WsdlOperationsPage_title;
 

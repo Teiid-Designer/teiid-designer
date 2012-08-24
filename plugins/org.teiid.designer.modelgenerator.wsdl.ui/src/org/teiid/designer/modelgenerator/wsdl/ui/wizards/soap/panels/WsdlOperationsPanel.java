@@ -9,7 +9,7 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.teiid.core.util.CoreStringUtil;
 import org.teiid.core.util.FileUtils;
+import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 import org.teiid.designer.modelgenerator.wsdl.model.Fault;
 import org.teiid.designer.modelgenerator.wsdl.model.Model;
 import org.teiid.designer.modelgenerator.wsdl.model.ModelGenerationException;
@@ -56,12 +57,13 @@ import org.teiid.designer.ui.common.widget.Label;
 
 
 /**
+ * UI panel for selection of a wsdl's operations
+ * 
  * @since 8.0
  */
 public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.Constants,
 	ModelGeneratorWsdlUiConstants, ModelGeneratorWsdlUiConstants.Images {
 	
-	Combo portNameCombo;
 	Text defaultBindingText;
 	Combo defaultServiceModeCombo;
 	
@@ -88,6 +90,13 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 
 	private IStatus panelStatus;
 
+	/**
+	 * Create a new instance
+	 * 
+	 * @param parent
+	 * @param wsdlPage
+	 * @param theImportManager
+	 */
 	public WsdlOperationsPanel(Composite parent, WsdlDefinitionPage wsdlPage,
 		WSDLImportWizardManager theImportManager) {
 		super();
@@ -99,33 +108,9 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		Composite portPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_HORIZONTAL);
 		GridLayout layout = new GridLayout(4, false);
 		portPanel.setLayout(layout);
-		
-		Label label = WidgetFactory.createLabel(portPanel, Messages.SelectPort);
+				
+		Label label = WidgetFactory.createLabel(portPanel, Messages.DefaultBinding);
 		GridData gd = new GridData();
-		gd.verticalAlignment=SWT.CENTER;
-		label.setLayoutData(gd);
-		
-		this.portNameCombo = WidgetFactory.createCombo(portPanel, SWT.READ_ONLY, GridData.FILL_HORIZONTAL, new String[0], true);
-		this.portNameCombo.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-		gd = new GridData(GridData.FILL_BOTH);
-		gd.horizontalSpan=3;
-		this.portNameCombo.setLayoutData(gd);
-		this.portNameCombo.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				handlePortNameSelected();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-
-		this.portNameCombo.setVisibleItemCount(10);
-		
-		label = WidgetFactory.createLabel(portPanel, Messages.DefaultBinding);
-		gd = new GridData();
 		gd.verticalAlignment=SWT.CENTER;
 		label.setLayoutData(gd);
 		label.setToolTipText(Messages.DefaultBinding_tooltip);
@@ -185,6 +170,10 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 	}
 
 	/**
+	 * Create the panel in the given parent
+	 * 
+	 * @param theParent 
+	 * 
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 * @since 4.2
 	 */
@@ -362,28 +351,8 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		}
 	}
 	
-	private void refreshPortNames() {
-		if( this.wsdlModel != null ) {
-			portNameCombo.setItems(this.wsdlModel.getModelablePortNames());
-		} else {
-			portNameCombo.removeAll();
-		}
-	}
-	
 	private void updateImportManager() {
 		this.importManager.setSelectedOperations(getSelectedOperations());
-		
-		// Set the value 
-		if( this.wsdlModel != null ) {
-    		Port port = this.wsdlModel.getPort(this.portNameCombo.getText());
-    		if( port != null ) {
-	    		this.importManager.setTranslatorDefaultBinding(port.getBindingType());
-	    		this.importManager.setEndPoint(port.getLocationURI());
-    		}
-		} else {
-    		this.importManager.setTranslatorDefaultBinding(Port.SOAP11);
-    		this.importManager.setEndPoint(null);
-		}
 	}
 	
 	private List<Operation> getSelectedOperations() {
@@ -397,23 +366,9 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		return ops;
 	}
 	
-	private void handlePortNameSelected() {
-		// TODO: 
-		String portName = portNameCombo.getText();
-		
-		if( this.wsdlModel != null ) {
-    		Operation[] operations = this.wsdlModel.getModelableOperations(portName);
-    		this.operationsViewer.setInput(new OperationsContainer(operations));
-    		this.operationsViewer.refresh(true);
-    		
-    		updateImportManager();
-    		
-    		this.defaultBindingText.setText(importManager.getTranslatorDefaultBinding());
-		} else {
-			this.operationsViewer.getTable().clearAll();
-		}
-	}
-
+	/**
+	 * Populate the UI based on the wsdl in the connection profile
+	 */
 	public void notifyWsdlChanged() {
         /*
          * Depending on the size of the WSDL selected in the connection profile,
@@ -435,17 +390,24 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
                     panelStatus = exStatus;
                     operationsViewer.getTable().clearAll();
                     operationsViewer.setInput(new Object());
-		}
-		
-		// Set Port Combo Items
-		refreshPortNames();
-		// Now set operations contents with First Port name
-		
-		if( portNameCombo.getItemCount() > 0 ) {
-			portNameCombo.select(0);
-			handlePortNameSelected();
-		}
-
+                }
+                
+                // Set the default binding label
+                Properties properties = importManager.getConnectionProfile().getBaseProperties();
+                String binding = properties.getProperty(IWSProfileConstants.SOAP_BINDING);
+                if (binding == null)
+                    binding = Port.SOAP11;
+                
+                defaultBindingText.setText(binding);
+                    
+                // Populate the operations table
+                if( wsdlModel != null ) {
+                    String portName = properties.getProperty(IWSProfileConstants.END_POINT_NAME_PROP_ID);
+                    Operation[] operations = wsdlModel.getModelableOperations(portName);
+                    operationsViewer.setInput(new OperationsContainer(operations));
+                    operationsViewer.refresh(true);
+                }
+                
                 importManager.setSelectedOperations(new ArrayList());
 		setAllNodesSelected(true);
 		updateImportManager();
@@ -464,6 +426,9 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		this.wsdlPage.setPageStatus();
 	}
 
+	/**
+	 * @return the status of the panel
+	 */
 	public IStatus getStatus() {
 		return panelStatus;
 	}

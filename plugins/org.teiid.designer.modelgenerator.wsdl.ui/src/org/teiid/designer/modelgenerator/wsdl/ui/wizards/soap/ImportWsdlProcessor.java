@@ -219,32 +219,26 @@ public class ImportWsdlProcessor {
     	// Inject the connection profile info into the model
     	if (profile != null) {
     		try {
-        		// Need to add the "EndPoint" property to the connection profile from the Import Manager
-        		String endpoint = this.importManager.getEndPoint();
-        		if( endpoint != null ) {
-        			Properties props = profile.getBaseProperties();
-        			props.put(IWSProfileConstants.URL_PROP_ID, endpoint);
-        			String defaultServiceMode = this.importManager.getTranslatorDefaultServiceMode();
-        			if( defaultServiceMode.equalsIgnoreCase(WSDLImportWizardManager.MESSAGE ) ) {
-        				props.put(IWSProfileConstants.SOAP_SERVICE_MODE, WSDLImportWizardManager.MESSAGE);
-        			} else {
-        				props.put(IWSProfileConstants.SOAP_SERVICE_MODE, WSDLImportWizardManager.PAYLOAD);
-        			}
-        			String defaultBinding = this.importManager.getTranslatorDefaultBinding();
-        			if( defaultBinding.equalsIgnoreCase(Port.SOAP12) ) {
-        				props.put(IWSProfileConstants.SOAP_BINDING, Port.SOAP12);
-        			} else {
-        				// remove MESSAGE property if it exists
-        				String theProp = props.getProperty(IWSProfileConstants.SOAP_BINDING);
-        				if( theProp != null ) {
-        					props.remove(IWSProfileConstants.SOAP_BINDING);
-        				}
-        				
-        			}
-        			profile.setBaseProperties(props);
-                    IConnectionInfoProvider provider = new WSSoapConnectionInfoProvider();
-                    provider.setConnectionInfo(sourceModel, profile);
-        		}
+    			Properties props = profile.getBaseProperties();
+    			String defaultServiceMode = this.importManager.getTranslatorDefaultServiceMode();
+    			if( defaultServiceMode.equalsIgnoreCase(WSDLImportWizardManager.MESSAGE ) ) {
+    				props.put(IWSProfileConstants.SOAP_SERVICE_MODE, WSDLImportWizardManager.MESSAGE);
+    			} else {
+    				props.put(IWSProfileConstants.SOAP_SERVICE_MODE, WSDLImportWizardManager.PAYLOAD);
+    			}
+    			String defaultBinding = this.importManager.getTranslatorDefaultBinding();
+    			if( defaultBinding.equalsIgnoreCase(Port.SOAP12) ) {
+    				props.put(IWSProfileConstants.SOAP_BINDING, Port.SOAP12);
+    			} else {
+    				// remove MESSAGE property if it exists
+    				String theProp = props.getProperty(IWSProfileConstants.SOAP_BINDING);
+    				if( theProp != null ) {
+    					props.remove(IWSProfileConstants.SOAP_BINDING);
+    				}
+    			}
+    			profile.setBaseProperties(props);
+    			IConnectionInfoProvider provider = new WSSoapConnectionInfoProvider();
+    			provider.setConnectionInfo(sourceModel, profile);
     		
     		} catch (ModelerCoreException ex) {
     				log(new Status(IStatus.ERROR, ModelGeneratorWsdlUiConstants.PLUGIN_ID, ex.getMessage(), ex));

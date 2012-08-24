@@ -9,9 +9,9 @@ package org.teiid.designer.datatools.profiles.ws;
 
 import java.net.URL;
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.designer.core.util.URLHelper;
+import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 
@@ -59,7 +59,7 @@ public class WSWizardUtils {
             }
 
             if (!resolved) {
-                throw new Exception("Failed to validate connection"); //$NON-NLS-1$
+                throw new Exception(DatatoolsUiConstants.UTIL.getString("WSWizardUtils.connectionFailureMessage")); //$NON-NLS-1$
             }
 
         } catch (Exception ex) {

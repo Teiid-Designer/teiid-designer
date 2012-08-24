@@ -25,13 +25,12 @@ public interface IWSProfileConstants extends ICredentialsCommon {
      * Currently only EndPoint is the only property provided by Data Tools connection profile that matches up.
      */
      String DS_ENDPOINT = "wsdlURI"; //$NON-NLS-1$
-     String DS_SECURITY_TYPE = "SecurityType"; //$NON-NLS-1$";
+     String DS_SECURITY_TYPE = SECURITY_TYPE_ID;
      String DS_AUTH_USER_NAME = "AuthUserName"; //$NON-NLS-1$
      String DS_AUTH_PASSWORD = "AuthPassword"; //$NON-NLS-1$
      String DS_WS_SECURITY_CONFIG_URL = "WsSecurityConfigURL"; //$NON-NLS-1$
      String DS_WS_SECURITY_CONFIG_NAME = "WsSecurityConfigName"; //$NON-NLS-1$
 
-     String SOURCE_ENDPOINT = "EndPoint"; //$NON-NLS-1$
      String SOAP_SERVICE_MODE = "DefaultServiceMode";  //$NON-NLS-1$
      String SOAP_BINDING = "DefaultBinding";  //$NON-NLS-1$
 
@@ -45,14 +44,28 @@ public interface IWSProfileConstants extends ICredentialsCommon {
      * The only property that matches up with the teiid-connector-ws.jar definition is the soapEndPoint
      * 
      */
-     String URL_PROP_ID = "EndPoint"; //$NON-NLS-1$
      String SOAP_ENDPOINT_KEY = "soapEndPoint"; //$NON-NLS-1$
      String CONNECTION_CLASS_KEY = "connectionClass"; //$NON-NLS-1$
      String DRIVER_CLASS_PATH_KEY = "driverClassPath"; //$NON-NLS-1$
      
      /**
-      * Used by the WSDL Importer in 7.7.1 for the wsdl URI connection profile property key.
-      * Should only be used for backward compatibilty
+      * Denotes the property key for the end point name in a WSDL. The end point
+      * name is selected in the UI wizards and the URI and binding are properties
+      * extracted from the WSDL using this name.
       */
-     String LEGACY_WSDL_PROP_ID = "wsdlURI"; //$NON-NLS-1$
+     String END_POINT_NAME_PROP_ID = "EndPointName"; //$NON-NLS-1$
+     
+     /**
+      * Denotes the property key for the end point address value(s) in a WSDL. In a connection
+      * profile, only 1 end point is selected from the selection available in a WSDL.
+      */
+     String END_POINT_URI_PROP_ID = "EndPoint"; //$NON-NLS-1$
+     
+     /**
+      * Denotes the property key for the WSDL URI. This is different to the WSDL endpoint
+      * key in that a number of endpoints can appear in a WSDL accessible from a URI.
+      * 
+      * Also used incorrectly in 7.7.1 for the endpoint property key. 
+      */
+     String WSDL_URI_PROP_ID = "wsdlURI"; //$NON-NLS-1$
 }
