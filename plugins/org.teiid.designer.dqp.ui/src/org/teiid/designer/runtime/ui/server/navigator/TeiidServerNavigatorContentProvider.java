@@ -9,6 +9,9 @@ package org.teiid.designer.runtime.ui.server.navigator;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.wst.server.core.IServer;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ui.views.TeiidViewTreeProvider;
 
 /**
  * Provider ???
@@ -16,6 +19,8 @@ import org.eclipse.jface.viewers.Viewer;
  * @since 8.0
  */
 public class TeiidServerNavigatorContentProvider implements ITreeContentProvider {
+
+    private TeiidViewTreeProvider delegate;
 
     /**
      * 
@@ -36,18 +41,49 @@ public class TeiidServerNavigatorContentProvider implements ITreeContentProvider
 
     @Override
     public Object[] getChildren(Object parentElement) {
-        return new Object[] { "HELLO" };
+        if (parentElement == null)
+            return new Object[0];
+        
+        if (parentElement instanceof IServer) {
+            
+            if (((IServer) parentElement).getServerState() != IServer.STATE_STARTED)
+                return new Object[0];
+            
+            Object teiidServer = ((IServer) parentElement).loadAdapter(TeiidServer.class, null);
+            if (teiidServer != null) {
+                return new Object[] { teiidServer };
+            }
+        }
+        else if (parentElement instanceof TeiidServer) {
+            delegate = new TeiidViewTreeProvider();
+            return delegate.getChildren(parentElement);
+        } else if (delegate != null)
+            return delegate.getChildren(parentElement);
+        
+        return new Object[0];
     }
 
     @Override
     public Object getParent(Object element) {
-        // TODO Auto-generated method stub
+        if (element instanceof IServer)
+            return null;
+        else if (element instanceof TeiidServer)
+            return ((TeiidServer)element).getParent();
+        else if (delegate != null)
+            return delegate.getParent(element);
+        
         return null;
     }
 
     @Override
     public boolean hasChildren(Object element) {
-        // TODO Auto-generated method stub
+        if (element instanceof IServer)
+            return true;
+        else if (element instanceof TeiidServer)
+            return true;
+        else if (delegate != null)
+            return delegate.hasChildren(element);
+        
         return false;
     }
     

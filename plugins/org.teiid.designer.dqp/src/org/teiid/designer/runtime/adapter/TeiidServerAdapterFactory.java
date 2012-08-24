@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.HostProvider;
 import org.teiid.designer.runtime.TeiidAdminInfo;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServer;
@@ -44,12 +45,15 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
      * @param server
      * @return
      */
-    private TeiidServer adaptServer(IServer server) throws Exception {
+    private TeiidServer adaptServer(final IServer server) throws Exception {
         if (server.getServerState() != IServer.STATE_STARTED)
             return null;
 
         JBoss7Server jb7 = (JBoss7Server) server.loadAdapter(JBoss7Server.class, null);
         if (jb7 == null)
+            return null;
+
+        if (! TeiidServerAdapterUtil.isJBossServerConnected(server))
             return null;
         
         if (! TeiidServerAdapterUtil.isTeiidServer(server))
@@ -64,6 +68,20 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
                                                            false,
                                                            false);
         
+        /*
+         * Need to set a temporary host provider for this admin info
+         * as the getUrl() method is dependent upon it, otherwise it
+         * just makes the host 'localhost' so never finds the TeiidServer
+         * in the TeiidServerManager.
+         */
+        teiidAdminInfo.setHostProvider(new HostProvider() {
+            @Override
+            public String getHost() {
+                return server.getHost();
+            }
+        });
+        
+        // See if we already have registered this teiid server
         TeiidServer teiidServer = serverManager.getServer(teiidAdminInfo.getUrl());
         if (teiidServer == null) {
             // No registered teiid server

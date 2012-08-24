@@ -9,7 +9,6 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -27,7 +25,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -638,8 +635,7 @@ public final class TeiidServerManager implements EventManager {
                         // add server to registry
                         TeiidServer teiidServer = new TeiidServer(host, teiidAdminInfo, teiidJdbcInfo, this);
                         teiidServer.setCustomLabel(customLabel);
-                        teiidAdminInfo.setHostProvider(teiidServer);
-                        teiidJdbcInfo.setHostProvider(teiidServer);
+                        
                         addServer(teiidServer);
 
                         if (previewServer) {

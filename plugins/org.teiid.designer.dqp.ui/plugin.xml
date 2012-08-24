@@ -197,4 +197,33 @@
          label="%removeRestWarPropertiesAction.label">
       </specialAction>
    </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerContentBinding
+            viewerId="org.eclipse.wst.server.ui.ServersView">
+         <includes>
+            <contentExtension
+                  isRoot="false"
+                  pattern="org.teiid.designer.ui.server.teiid">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="org.teiid.designer.runtime.ui.server.navigator.TeiidServerNavigatorContentProvider"
+            icon="icons/full/ctool16/teiid-server.png"
+            id="org.teiid.designer.ui.server.teiid"
+            labelProvider="org.teiid.designer.runtime.ui.server.navigator.TeiidServerNavigatorLabelProvider"
+            name="%teiidServer.navigatorContent.name"
+            priority="lowest">
+         <triggerPoints>
+            <instanceof
+                  value="org.eclipse.wst.server.core.IServer">
+            </instanceof>
+         </triggerPoints>
+      </navigatorContent>
+   </extension>
 </plugin>

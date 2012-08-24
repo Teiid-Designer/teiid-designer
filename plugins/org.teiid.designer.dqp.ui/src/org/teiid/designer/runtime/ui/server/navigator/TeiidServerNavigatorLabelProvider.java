@@ -10,6 +10,8 @@ package org.teiid.designer.runtime.ui.server.navigator;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ui.views.TeiidViewTreeProvider;
 
 /**
  *
@@ -17,40 +19,39 @@ import org.eclipse.swt.graphics.Image;
  */
 public class TeiidServerNavigatorLabelProvider implements ILabelProvider {
 
+    private TeiidViewTreeProvider delegate = new TeiidViewTreeProvider();
+
     @Override
     public void addListener(ILabelProviderListener listener) {
-        // TODO Auto-generated method stub
-
+        delegate.addListener(listener);
     }
 
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
-
+        delegate.dispose();
     }
 
     @Override
-    public boolean isLabelProperty(Object element,
-                                   String property) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean isLabelProperty(Object element, String property) {
+        return delegate.isLabelProperty(element, property);
     }
 
     @Override
     public void removeListener(ILabelProviderListener listener) {
-        // TODO Auto-generated method stub
-
+        delegate.removeListener(listener);
     }
 
     @Override
     public Image getImage(Object element) {
-        // TODO Auto-generated method stub
-        return null;
+        return delegate.getImage(element);
     }
 
     @Override
     public String getText(Object element) {
-        return "HELLO";
+        if (element instanceof TeiidServer) {
+            return "Teiid Server"; //$NON-NLS-1$
+        }
+        return delegate.getText(element);
     }
 
 }

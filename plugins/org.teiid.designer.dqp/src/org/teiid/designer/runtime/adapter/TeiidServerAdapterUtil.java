@@ -7,6 +7,7 @@
 */
 package org.teiid.designer.runtime.adapter;
 
+import java.net.ConnectException;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IServer;
@@ -35,6 +36,32 @@ public abstract class TeiidServerAdapterUtil extends ModelDescriptionConstants {
     }
     
     /**
+     * Determine whether the jboss server is contactable by attempting
+     * to talk to its management port
+     * 
+     * @param server
+     * 
+     * @return true is server can be connected
+     */
+    public static boolean isJBossServerConnected(IServer server) {
+        if (server.getServerState() != IServer.STATE_STARTED)
+            return false;
+        
+        // Request that finds the name of the server
+        ModelNode request = new ModelNode();
+        request.get(OP).set(READ_ATTRIBUTE_OPERATION);
+        request.get(NAME).set(NAME);
+        
+        try {
+            executeRequest(server, request);
+            return true;
+        } catch (Exception ex) {
+            // No need to log the exception
+            return false;
+        }
+    }
+    
+    /**
      * Determine whether the given server has teiid support
      * 
      * @param server
@@ -50,13 +77,18 @@ public abstract class TeiidServerAdapterUtil extends ModelDescriptionConstants {
         request.get(OP).set(READ_CHILDREN_NAMES_OPERATION);
         request.get(CHILD_TYPE).set(SUBSYSTEM);
         
-        ModelNode result = executeRequest(server, request);
-     
-        List<ModelNode> subsystems = result.asList();
-        for (ModelNode subsystem : subsystems){
-           if (subsystem.asString().equals("teiid")){ //$NON-NLS-1$
-              return true;
-           }
+        try {
+            ModelNode result = executeRequest(server, request);
+
+            List<ModelNode> subsystems = result.asList();
+            for (ModelNode subsystem : subsystems) {
+                if (subsystem.asString().equals("teiid")) { //$NON-NLS-1$
+                    return true;
+                }
+            }
+        } catch (ConnectException ex) {
+            // Failed to connect to the server
+            DqpPlugin.Util.log(IStatus.WARNING, DqpPlugin.Util.getString("jbossServerConnectionFailureMessage", server)); //$NON-NLS-1$
         }
         
         return false;

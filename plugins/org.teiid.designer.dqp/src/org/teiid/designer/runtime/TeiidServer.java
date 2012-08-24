@@ -9,15 +9,16 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerCore;
+import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.AdminFactory;
@@ -89,6 +90,8 @@ public class TeiidServer implements HostProvider {
      */
     private String host;
 
+    private IServer parentServer;
+
     // ===========================================================================================================================
     // Constructors
     // ===========================================================================================================================
@@ -111,15 +114,43 @@ public class TeiidServer implements HostProvider {
         CoreArgCheck.isNotNull(eventManager, "eventManager"); //$NON-NLS-1$
 
         this.host = host;
+        
         this.teiidAdminInfo = adminInfo;
+        this.teiidAdminInfo.setHostProvider(this);
+        
         this.teiidJdbcInfo = jdbcInfo;
+        this.teiidJdbcInfo.setHostProvider(this);
+        
         this.eventManager = eventManager;
+        
+        initParent();
     }
 
     // ===========================================================================================================================
     // Methods
     // ===========================================================================================================================
 
+    private void initParent() {
+        IServer[] servers = ServerCore.getServers();
+        for (IServer server : servers) {
+            if (! getHost().equals(server.getHost()))
+                continue;
+            
+            JBoss7Server jb7 = (JBoss7Server) server.loadAdapter(JBoss7Server.class, null);
+            if (jb7 == null)
+                continue;
+            
+            if (getTeiidAdminInfo().getPortNumber() != jb7.getManagementPort())
+                continue;
+            
+            // The host and admin port match so must be the same server
+            parentServer = server;
+            return;
+        }
+        
+        DqpPlugin.Util.log(IStatus.WARNING, DqpPlugin.Util.getString("parentServerFailureMessage", this)); //$NON-NLS-1$
+    }
+    
     /**
      * Perform cleanup
      */
@@ -235,6 +266,14 @@ public class TeiidServer implements HostProvider {
 
         return this.host;
     }
+    
+    /**
+     * @return the parentServer
+     */
+    public IServer getParent() {
+        return this.parentServer;
+    }
+
 
     /**
      * {@inheritDoc}
@@ -423,5 +462,4 @@ public class TeiidServer implements HostProvider {
 
         return txt;
     }
-
 }
