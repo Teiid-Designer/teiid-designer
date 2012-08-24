@@ -67,8 +67,17 @@ public class TeiidJDBCConnection extends JDBCConnection {
                 addPairs = addPairs + pairs[i];
             }
         }
-
-        Driver jdbcDriver = (Driver)cl.loadClass(driverClass).newInstance();
+        
+        Driver jdbcDriver = null;
+        try {
+            jdbcDriver = (Driver)cl.loadClass(driverClass).newInstance();
+        }
+        catch (Exception ex) {}
+        
+        if (jdbcDriver == null) {
+            jdbcDriver = (Driver)this.getClass().getClassLoader().loadClass(driverClass).newInstance();
+        }
+        
         return jdbcDriver.connect(connectURL, connectionProps); // return super.createConnection(cl);
     }
 
