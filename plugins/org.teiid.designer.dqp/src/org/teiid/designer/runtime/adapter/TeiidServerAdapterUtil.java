@@ -1,0 +1,93 @@
+/*
+ * JBoss, Home of Professional Open Source.
+*
+* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+*
+* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+*/
+package org.teiid.designer.runtime.adapter;
+
+import java.util.List;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.wst.server.core.IServer;
+import org.jboss.dmr.ModelNode;
+import org.jboss.ide.eclipse.as.core.server.v7.management.AS7ManagementDetails;
+import org.jboss.ide.eclipse.as.management.core.JBoss7ManagerUtil;
+import org.jboss.ide.eclipse.as.management.core.ModelDescriptionConstants;
+import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.TeiidJdbcInfo;
+
+/**
+ *
+ */
+public abstract class TeiidServerAdapterUtil extends ModelDescriptionConstants {
+
+    /**
+     * @param server
+     * @param request
+     * @return
+     */
+    private static ModelNode executeRequest(IServer server, ModelNode request) throws Exception {
+        String requestString = request.toJSONString(true);
+        
+        String resultString = JBoss7ManagerUtil.getService(server).execute(new AS7ManagementDetails(server), requestString);
+        return ModelNode.fromJSONString(resultString);
+    }
+    
+    /**
+     * Determine whether the given server has teiid support
+     * 
+     * @param server
+     * @return true is server has teiid support, false otherwise
+     * 
+     * @throws Exception
+     */
+    public static boolean isTeiidServer(IServer server) throws Exception {
+        if (server.getServerState() != IServer.STATE_STARTED)
+            return false;
+        
+        ModelNode request = new ModelNode();
+        request.get(OP).set(READ_CHILDREN_NAMES_OPERATION);
+        request.get(CHILD_TYPE).set(SUBSYSTEM);
+        
+        ModelNode result = executeRequest(server, request);
+     
+        List<ModelNode> subsystems = result.asList();
+        for (ModelNode subsystem : subsystems){
+           if (subsystem.asString().equals("teiid")){ //$NON-NLS-1$
+              return true;
+           }
+        }
+        
+        return false;
+    }
+
+    /**
+     * Find Teiid's JDBC port, which should be stored in the jboss tree at
+     * /socket-binding-group=standard-sockets/socket-binding=teiid-jdbc
+     * 
+     * @param server
+     * @return the port number as a string
+     */
+    public static String getJdbcPort(IServer server) {
+        if (server.getServerState() != IServer.STATE_STARTED)
+            return TeiidJdbcInfo.DEFAULT_PORT;
+        
+        ModelNode request = new ModelNode();
+        request.get(OP).set(READ_ATTRIBUTE_OPERATION);   
+        
+        ModelNode address = new ModelNode();
+        address.add(SOCKET_BINDING_GROUP, "standard-sockets"); //$NON-NLS-1$
+        address.add(SOCKET_BINDING, "teiid-jdbc"); //$NON-NLS-1$
+        request.get(OP_ADDR).set(address);
+        request.get(NAME).set(PORT);
+        
+        try {
+            ModelNode result = executeRequest(server, request);
+            return result.asString();
+        } catch (Exception ex) {
+            DqpPlugin.Util.log(IStatus.ERROR, ex, "Failed to get teiid jdbc port, defaulting to " + TeiidJdbcInfo.DEFAULT_PORT); //$NON-NLS-1$
+            return TeiidJdbcInfo.DEFAULT_PORT;
+        }
+    }    
+}
