@@ -72,6 +72,7 @@ import com.metamatrix.modeler.compare.processor.DifferenceProcessorImpl;
 import com.metamatrix.modeler.compare.selector.ModelResourceSelector;
 import com.metamatrix.modeler.compare.selector.TransientModelSelector;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
@@ -219,8 +220,8 @@ public class DdlImporter {
             }
         } else if (DdlConstants.FOREIGN_KEY.equals(type)) {
             final ForeignKey key = FACTORY.createForeignKey();
+            initializeFK(table.getForeignKeys(), key, node);
             table.getForeignKeys().add(key);
-            initialize(key, node);
             BaseTable foreignTable = null;
             final Set<Column> foreignColumns = new HashSet<Column>();
             for (final AstNode node1 : node) {
@@ -246,6 +247,7 @@ public class DdlImporter {
             if (foreignTable != null) {
                 final PrimaryKey primaryKey = foreignTable.getPrimaryKey();
                 final List<Column> primaryKeyColumns = primaryKey.getColumns();
+                if (foreignColumns.isEmpty()) key.setUniqueKey(primaryKey);
                 if (primaryKeyColumns.containsAll(foreignColumns) && primaryKeyColumns.size() == foreignColumns.size()) key.setUniqueKey(primaryKey);
                 else for (final Object obj : foreignTable.getUniqueConstraints()) {
                     final UniqueConstraint uniqueKey = (UniqueConstraint)obj;
@@ -449,6 +451,40 @@ public class DdlImporter {
     private void initialize( final RelationalEntity entity,
                              final AstNode node ) {
         initialize(entity, node, node.getName().getLocalName());
+    }
+
+    private void initializeFK( final List<ForeignKey> currentFKs,
+                               final ForeignKey key,
+                               final AstNode node ) {
+        // Get Name from DDL node
+        String fkName = node.getName().getLocalName();
+        // Make sure not to add duplicate FK names
+        String uniqueName = getUniqueFKName(currentFKs, fkName);
+
+        initialize(key, node, uniqueName);
+    }
+
+    /*
+     * Helper method for creating unique FK names
+     * @param currentFKs the List of ForeignKeys currently on the table
+     * @param newFKName the proposed name for the new FK
+     * @return the unique name - generated from the proposed name
+     */
+    private String getUniqueFKName( List<ForeignKey> currentFKs,
+                                    String newFKName ) {
+        // If current list is empty, no need to check names
+        if (currentFKs == null || currentFKs.isEmpty()) return newFKName;
+
+        // Use name validator for unique name generation
+        StringNameValidator nameValidator = new StringNameValidator();
+
+        // Add the current FK names to the validator
+        for (ForeignKey fk : currentFKs) {
+            nameValidator.addExistingName(fk.getName());
+        }
+
+        // Make the proposed name unique
+        return nameValidator.createValidUniqueName(newFKName);
     }
 
     private void initialize( final RelationalEntity entity,
