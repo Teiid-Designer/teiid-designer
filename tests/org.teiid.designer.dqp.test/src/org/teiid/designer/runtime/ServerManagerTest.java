@@ -20,9 +20,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import java.io.File;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +52,7 @@ public class ServerManagerTest {
     @Before
     public void beforeEach() throws Exception {
         MockitoAnnotations.initMocks(this);
-        this.mgr = new TeiidServerManager(null);
+        this.mgr = new TeiidServerManager(null, null);
     }
     
         
@@ -194,7 +192,7 @@ public class ServerManagerTest {
         // setup
         MockObjectFactory.createModelContainer();
 
-        this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()) + File.separator + "oldregistrydata");
+        this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()) + File.separator + "oldregistrydata", null);
         this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(3));
 
@@ -219,7 +217,7 @@ public class ServerManagerTest {
         // setup
         MockObjectFactory.createModelContainer();
 
-        this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()));
+        this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()), null);
         this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(2));
 

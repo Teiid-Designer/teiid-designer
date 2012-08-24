@@ -9,13 +9,11 @@ package org.teiid.designer.runtime.ui.actions;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.PLUGIN_ID;
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -44,6 +42,7 @@ import org.teiid.designer.runtime.ui.vdb.VdbDeployer;
 import org.teiid.designer.runtime.ui.vdb.VdbRequiresSaveChecker;
 import org.teiid.designer.ui.actions.ISelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.vdb.Vdb;
 
 
@@ -197,7 +196,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     }
     
 	public static VDB deployVdb(TeiidServer teiidServer, final Object vdbOrVdbFile, final boolean doCreateDataSource) {
-		Shell shell = DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+		Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
 		VDB[] result = new VDB[1];
 
 		try {

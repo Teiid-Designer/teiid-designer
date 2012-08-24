@@ -9,13 +9,11 @@ package org.teiid.designer.runtime;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -23,6 +21,7 @@ import org.osgi.framework.BundleContext;
 import org.teiid.core.PluginUtil;
 import org.teiid.core.event.IChangeNotifier;
 import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.designer.runtime.connection.IPasswordProvider;
 
 
 /**
@@ -77,6 +76,11 @@ public class DqpPlugin extends Plugin {
     private TeiidServerManager serverMgr;
 
     /**
+     * The password provider to be used in the server manager's preview manager
+     */
+    private IPasswordProvider passwordProvider;
+
+    /**
      * Obtains the current plubin preferences values. <strong>This method should be used instead of
      * {@link Plugin#getPluginPreferences()}.</strong>
      * 
@@ -103,7 +107,32 @@ public class DqpPlugin extends Plugin {
      * @return the server manager
      */
     public TeiidServerManager getServerManager() {
+        
+        if (serverMgr == null) {
+            try {
+                initializeServerRegistry();
+            } catch (final Exception e) {
+                throw new RuntimeException(e.getLocalizedMessage(), e);
+            }
+        }
+        
         return this.serverMgr;
+    }
+    
+    /**
+     * Get the password provider if one has been set
+     * 
+     * @return the password provider
+     */
+    public IPasswordProvider getPasswordProvider() {
+        return passwordProvider;
+    }
+    
+    /**
+     * @param passwordProvider
+     */
+    public void setPasswordProvider(IPasswordProvider passwordProvider) {
+        this.passwordProvider = passwordProvider;
     }
 
     /**
@@ -136,7 +165,8 @@ public class DqpPlugin extends Plugin {
     }
 
     private void initializeServerRegistry() throws CoreException {
-        this.serverMgr = new TeiidServerManager(DqpPlugin.getInstance().getRuntimePath().toFile().getAbsolutePath());
+        String restoreRegistryPath = getRuntimePath().toFile().getAbsolutePath();
+        this.serverMgr = new TeiidServerManager(restoreRegistryPath, passwordProvider);
 
         // restore registry
         final IStatus status = this.serverMgr.restoreState();
@@ -177,16 +207,6 @@ public class DqpPlugin extends Plugin {
 
         // initialize preferences
         initializeDefaultPreferences();
-
-        try {
-            initializeServerRegistry();
-        } catch (final Exception e) {
-            if (e instanceof CoreException) {
-                throw (CoreException)e;
-            }
-
-            throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, e.getLocalizedMessage(), e));
-        }
     }
 
     /**

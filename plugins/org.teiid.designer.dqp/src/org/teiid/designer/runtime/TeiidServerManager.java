@@ -35,6 +35,7 @@ import org.teiid.core.util.Base64;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.net.TeiidURL;
 import org.w3c.dom.Document;
@@ -176,7 +177,7 @@ public final class TeiidServerManager implements EventManager {
     private final List<TeiidServer> teiidServers;
 
     /**
-     * The server registry.
+     * The default server.
      */
     private TeiidServer defaultServer;
 
@@ -198,7 +199,7 @@ public final class TeiidServerManager implements EventManager {
      * @param stateLocationPath the directory where the {@link TeiidServer} registry} is persisted (may be <code>null</code> if
      *        persistence is not desired)
      */
-    public TeiidServerManager( String stateLocationPath ) {
+    public TeiidServerManager( String stateLocationPath, IPasswordProvider passwordProvider ) {
         this.teiidServers = new ArrayList<TeiidServer>();
         this.stateLocationPath = stateLocationPath;
         this.listeners = new CopyOnWriteArrayList<IExecutionConfigurationListener>();
@@ -209,6 +210,7 @@ public final class TeiidServerManager implements EventManager {
         if (stateLocationPath != null) {
             try {
                 tempPreviewManager = new PreviewManager();
+                tempPreviewManager.setPasswordProvider(passwordProvider);
                 ModelerCore.getWorkspace().addResourceChangeListener(tempPreviewManager);
                 addListener(tempPreviewManager);
             } catch (Exception e) {
@@ -767,7 +769,7 @@ public final class TeiidServerManager implements EventManager {
                 }
             }
 
-            // shutdown PreviewManage
+            // shutdown PreviewManager
             if (this.previewManager != null) {
                 ModelerCore.getWorkspace().removeResourceChangeListener(this.previewManager);
 
