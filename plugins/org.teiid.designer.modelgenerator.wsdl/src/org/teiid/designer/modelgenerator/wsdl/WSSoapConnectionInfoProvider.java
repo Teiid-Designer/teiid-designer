@@ -15,43 +15,13 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 
 
 /**
  * @since 8.0
  */
-public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implements IConnectionInfoProvider {
-
-    /*
-     * Teiid Data Source property key.
-     * 
-     * Currently only EndPoint is the only property provided by Data Tools connection profile that matches up.
-     */
-    public static final String DS_ENDPOINT = "wsdlURI"; //$NON-NLS-1$
-    public static final String DS_SECURITY_TYPE = "SecurityType"; //$NON-NLS-1$";
-    public static final String DS_AUTH_USER_NAME = "AuthUserName"; //$NON-NLS-1$
-    public static final String DS_AUTH_PASSWORD = "AuthPassword"; //$NON-NLS-1$
-    public static final String DS_WS_SECURITY_CONFIG_URL = "WsSecurityConfigURL"; //$NON-NLS-1$
-    public static final String DS_WS_SECURITY_CONFIG_NAME = "WsSecurityConfigName"; //$NON-NLS-1$
-
-    public static final String SOURCE_ENDPOINT = "EndPoint"; //$NON-NLS-1$
-    public static final String SOAP_SERVICE_MODE = "DefaultServiceMode";  //$NON-NLS-1$
-    public static final String SOAP_BINDING = "DefaultBinding";  //$NON-NLS-1$
-
-    /*
-     * The Web Services Data Source object contains the following properties
-     * 
-     * connectionClass=org.my.custom.driver.Class
-     * soapEndPoint=http://my.soap.endpoint.url
-     * driverClassPath=org.my.first.jar;org.my.second.jar;
-     * 
-     * The only property that matches up with the teiid-connector-ws.jar definition is the soapEndPoint
-     * 
-     */
-    public static final String SOAP_ENDPOINT_KEY = "soapEndPoint"; //$NON-NLS-1$
-    public static final String WSDL_URI_KEY = "EndPoint"; //$NON-NLS-1$
-    public static final String CONNECTION_CLASS_KEY = "connectionClass"; //$NON-NLS-1$
-    public static final String DRIVER_CLASS_PATH_KEY = "driverClassPath"; //$NON-NLS-1$
+public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implements IConnectionInfoProvider, IWSProfileConstants {
 
     /**
      * {@inheritDoc}
@@ -73,9 +43,12 @@ public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implemen
         if (props.getProperty(SOAP_ENDPOINT_KEY) != null) {
             connectionProps.put(CONNECTION_NAMESPACE + DS_ENDPOINT, props.getProperty(SOAP_ENDPOINT_KEY));
         }
-        if (props.getProperty(WSDL_URI_KEY) != null) {
-            connectionProps.put(CONNECTION_NAMESPACE + WSDL_URI_KEY, props.getProperty(WSDL_URI_KEY));
+        
+        String url = readURLProperty(props);
+		if (url != null) {
+            connectionProps.put(CONNECTION_NAMESPACE + URL_PROP_ID, url);
         }
+		
         if (props.getProperty(CONNECTION_CLASS_KEY) != null) {
             connectionProps.put(CONNECTION_NAMESPACE + CONNECTION_CLASS_KEY, props.getProperty(CONNECTION_CLASS_KEY));
         }

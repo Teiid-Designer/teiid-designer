@@ -50,7 +50,7 @@ import org.teiid.core.event.IChangeListener;
 import org.teiid.core.event.IChangeNotifier;
 import org.teiid.core.util.FileUtils;
 import org.teiid.designer.core.workspace.ModelUtil;
-import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
 import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
@@ -458,7 +458,7 @@ public class WsdlDefinitionPage extends WizardPage
 				return;
 			}
 			Properties props = profile.getBaseProperties();
-			wsdlURIText.setText(props.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID));
+			wsdlURIText.setText(ConnectionInfoHelper.readURLProperty(props));
 			updateWidgetEnablements();
 			setErrorMessage(null);
 			setMessage(Messages.WsdlDefinitionPage_select_profile);

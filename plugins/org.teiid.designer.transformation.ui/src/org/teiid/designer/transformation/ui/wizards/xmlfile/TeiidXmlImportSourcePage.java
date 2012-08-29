@@ -574,7 +574,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	
 	private File getXmlFileFromRestUrl(IConnectionProfile profile) {
 		Properties props = profile.getBaseProperties();
-		String endpoint = (String) props.get(IWSProfileConstants.URL_PROP_ID);
+		String endpoint = ConnectionInfoHelper.readURLProperty(props);
 		String username = (String) props.get(ICredentialsCommon.USERNAME_PROP_ID);
 		String password = (String) props.get(ICredentialsCommon.PASSWORD_PROP_ID);
 		File xmlFile = null;
@@ -720,7 +720,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		if (getConnectionProfile() != null) {
 			Properties props = getConnectionProfile().getBaseProperties();
 			if(isRestConnectionProfile()) {
-				String fileListValue = (String) props.get(IWSProfileConstants.URL_PROP_ID);
+				String fileListValue = ConnectionInfoHelper.readURLProperty(props);
 				if (fileListValue != null) {
 					return fileListValue;
 				}

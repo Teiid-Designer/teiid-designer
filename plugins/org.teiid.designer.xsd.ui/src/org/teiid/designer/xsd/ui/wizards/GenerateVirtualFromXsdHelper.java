@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Stack;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -86,6 +87,7 @@ public class GenerateVirtualFromXsdHelper {
     public void execute(IProgressMonitor monitor) {
 
         boolean requiredStart = ModelerCore.startTxn(false, false, getString("CreateVirtualModelFromSchemaWizard.undoTitle"), this); //$NON-NLS-1$
+        boolean succeeded = false;
         try {
             if( resource != null && !types.isEmpty() ) {
                 int nTables = 0;
@@ -104,14 +106,14 @@ public class GenerateVirtualFromXsdHelper {
                         monitor.subTask( getString("CreateVirtualModelFromSchemaWizard.incrementalProgress", new Object[] {Integer.toString(nTables), sSize, tableName} )); //$NON-NLS-1$
                     }
                 }
-                
             }
+            succeeded = true;
         } catch (ModelerCoreException exc) {
             addStatus(IStatus.ERROR, exc.getMessage(), exc);
         } finally {
             //if we started the txn, commit it.
             if(requiredStart){
-                if(!monitor.isCanceled() ) {
+                if(!monitor.isCanceled() && succeeded) {
                     ModelerCore.commitTxn();
                 } else {
                     ModelerCore.rollbackTxn();

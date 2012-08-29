@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 import org.teiid.designer.ui.common.ICredentialsCommon;
@@ -233,8 +234,9 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         if (null != props.get(ICredentialsCommon.PASSWORD_PROP_ID)) {
             passwordText.setText((String)props.get(ICredentialsCommon.PASSWORD_PROP_ID));
         }
-        if (null != props.get(IWSProfileConstants.URL_PROP_ID)) {
-            urlText.setText((String)props.get(IWSProfileConstants.URL_PROP_ID));
+        String url = ConnectionInfoHelper.readURLProperty(props);
+        if (null != url) {
+            urlText.setText(url);
         }
         if (null != props.get(ICredentialsCommon.SECURITY_TYPE_ID)) {
             securityText.setText((String)props.get(ICredentialsCommon.SECURITY_TYPE_ID));

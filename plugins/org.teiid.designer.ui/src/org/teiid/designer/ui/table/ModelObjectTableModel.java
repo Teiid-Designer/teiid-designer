@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
@@ -266,11 +267,17 @@ public class ModelObjectTableModel implements UiConstants, EObjectPropertiesOrde
             }
 
             boolean startedTxn = ModelerCore.startTxn(false, false, null, null);
+            boolean succeeded = false;
+            
             try {
                 tableViewer.setInput(this);
+                succeeded = true;
             } finally {
                 if ( startedTxn ) {
-                    ModelerCore.commitTxn();
+                	if (succeeded)
+                		ModelerCore.commitTxn();
+                	else
+                		ModelerCore.rollbackTxn();
                 }
             }
         }

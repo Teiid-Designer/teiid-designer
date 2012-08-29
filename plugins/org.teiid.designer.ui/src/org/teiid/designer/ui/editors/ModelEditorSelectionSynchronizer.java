@@ -8,6 +8,7 @@
 package org.teiid.designer.ui.editors;
 
 import java.util.ArrayList;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -308,6 +309,8 @@ public class ModelEditorSelectionSynchronizer implements
 	public void selectionChanged(IWorkbenchPart part,
                                  ISelection selection) {
         final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
+        boolean succeeded = false;
+        
         try {
             // selection changed is only sent to the ModelEditorPage source IWorkbenchPart
             //   the active part in the workbench, and the part is not the ModelEditor itself.
@@ -351,9 +354,13 @@ public class ModelEditorSelectionSynchronizer implements
                     }
                 }
             }
+            succeeded = true;
         } finally {
             if (startedTxn) {
-                ModelerCore.commitTxn();
+            	if (succeeded)
+            		ModelerCore.commitTxn();
+            	else
+            		ModelerCore.rollbackTxn();
             }
         }
 
