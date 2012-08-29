@@ -11,7 +11,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -22,6 +21,8 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -30,7 +31,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -45,12 +45,14 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.core.event.IChangeListener;
 import org.teiid.core.event.IChangeNotifier;
 import org.teiid.core.util.FileUtils;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
 import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
@@ -62,6 +64,7 @@ import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.widget.Label;
 
 
 /**
@@ -89,7 +92,9 @@ public class WsdlDefinitionPage extends WizardPage
 	private Button buttonValidateWSDL;
 
 	/** Source and target text fields */
-	CLabel wsdlURIText;
+	private Text wsdlURIText;
+	private Text endPointNameText;
+	private Text endPointURIText;
 
 	private Button newCPButton;
 	private Button editCPButton;
@@ -117,6 +122,7 @@ public class WsdlDefinitionPage extends WizardPage
 	 * 
 	 * @param theImportManager
 	 *            the import manager object
+	 * @param wizard that this page is displayed on
 	 */
 	public WsdlDefinitionPage(WSDLImportWizardManager theImportManager, ImportWsdlSoapWizard wizard) {
 		super(WsdlDefinitionPage.class.getSimpleName(), Messages.WsdlDefinitionPage_title, null);
@@ -268,18 +274,22 @@ public class WsdlDefinitionPage extends WizardPage
 		});
 
 		// options group
-		Group optionsGroup = WidgetFactory.createGroup(pnl, Messages.WsdlDefinitionPage_wsdlLabel_text, SWT.FILL, 2);
-		optionsGroup.setLayout(new GridLayout(2, false));
-		optionsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		Group wsdlURIGroup = WidgetFactory.createGroup(pnl, Messages.WsdlDefinitionPage_wsdlLabel_text, SWT.FILL, 2);
+		wsdlURIGroup.setLayout(new GridLayout(2, false));
+		wsdlURIGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		// Workspace textfield
-		wsdlURIText = WidgetFactory.createLabel(optionsGroup, GridData.FILL_HORIZONTAL);
+		wsdlURIText = new Text(wsdlURIGroup, SWT.BORDER | SWT.SINGLE);
 		wsdlURIText.setToolTipText(Messages.WsdlDefinitionPage_workspaceTextField_tooltip);
-		wsdlURIText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+		wsdlURIText.setForeground(wsdlURIGroup.getDisplay().getSystemColor(SWT.COLOR_DARK_BLUE));
+		wsdlURIText.setBackground(wsdlURIGroup.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		wsdlURIText.setEditable(false);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(wsdlURIText);
+		
 		// --------------------------------------------
 		// WSDL Validation Button
 		// --------------------------------------------
-		buttonValidateWSDL = WidgetFactory.createButton(optionsGroup,
+		buttonValidateWSDL = WidgetFactory.createButton(wsdlURIGroup,
 			Messages.WsdlDefinitionPage_validateWsdlButton_text, GridData.HORIZONTAL_ALIGN_END, 1);
 		buttonValidateWSDL.setToolTipText(Messages.WsdlDefinitionPage_validateWsdlButton_tooltip);
 
@@ -287,7 +297,33 @@ public class WsdlDefinitionPage extends WizardPage
 		// Add Listener to handle selection events
 		// --------------------------------------------
 		buttonValidateWSDL.addListener(SWT.Selection, this);
-
+		
+		// End point
+		Group endPointGroup = WidgetFactory.createGroup(pnl, Messages.WsdlDefinitionPage_endPointLabel_text, SWT.FILL, 2);
+		GridLayoutFactory.fillDefaults().numColumns(4).applyTo(endPointGroup);
+		endPointGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		Label endPointNameLabel = WidgetFactory.createLabel(endPointGroup, "End Point Name");
+		endPointNameLabel.setToolTipText("End Point blah");
+		GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(endPointNameLabel);
+        
+		endPointNameText = new Text(endPointGroup, SWT.BORDER | SWT.SINGLE);
+		endPointNameText.setToolTipText(Messages.WsdlDefinitionPage_endPointNameTextField_tooltip);
+		endPointNameText.setForeground(endPointGroup.getDisplay().getSystemColor(SWT.COLOR_DARK_BLUE));
+		endPointNameText.setBackground(endPointGroup.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		endPointNameText.setEditable(false);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(endPointNameText);
+		
+		Label endPointURILabel = WidgetFactory.createLabel(endPointGroup, "End Point URI");
+		GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(endPointURILabel);
+        
+		endPointURIText = new Text(endPointGroup, SWT.BORDER | SWT.SINGLE);
+		endPointURIText.setToolTipText(Messages.WsdlDefinitionPage_endPointURITextField_tooltip);
+		endPointURIText.setForeground(endPointGroup.getDisplay().getSystemColor(SWT.COLOR_DARK_BLUE));
+		endPointURIText.setBackground(endPointGroup.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		endPointURIText.setEditable(false);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(endPointURIText);
+        
 		updateWidgetEnablements();
 	}
 
@@ -435,6 +471,8 @@ public class WsdlDefinitionPage extends WizardPage
 				if (profileWorker.getProfiles().isEmpty()) {
 					setErrorMessage(Messages.WsdlDefinitionPage_no_profile_match);
 					wsdlURIText.setText(EMPTY_STR);
+					endPointNameText.setText(EMPTY_STR);
+					endPointURIText.setText(EMPTY_STR);
 					buttonValidateWSDL.setEnabled(false);
 					return;
 				}
@@ -458,7 +496,9 @@ public class WsdlDefinitionPage extends WizardPage
 				return;
 			}
 			Properties props = profile.getBaseProperties();
-			wsdlURIText.setText(ConnectionInfoHelper.readURLProperty(props));
+			wsdlURIText.setText(props.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID));
+			endPointNameText.setText(props.getProperty(IWSProfileConstants.END_POINT_NAME_PROP_ID));
+			endPointURIText.setText(ConnectionInfoHelper.readEndPointProperty(props));
 			updateWidgetEnablements();
 			setErrorMessage(null);
 			setMessage(Messages.WsdlDefinitionPage_select_profile);
@@ -591,6 +631,12 @@ public class WsdlDefinitionPage extends WizardPage
 		}
 	}
 
+	/**
+	 * Select the connection profile with the given name
+	 * 
+	 * @param name
+	 * @return true if successfully selected
+	 */
 	public boolean selectConnectionProfile(String name) {
 		if (name == null) {
 			return false;
@@ -671,7 +717,7 @@ public class WsdlDefinitionPage extends WizardPage
 		setPageStatus();
 	}
 	
-	public void notifyChanged() {
+	private void notifyChanged() {
 	    refreshUiFromManager();
 		this.importManager.notifyChanged();
 	}

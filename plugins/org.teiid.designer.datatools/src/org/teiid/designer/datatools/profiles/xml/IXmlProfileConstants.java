@@ -23,6 +23,6 @@ public interface IXmlProfileConstants extends ICredentialsCommon {
     String LOCAL_FILE_PATH_PROP_ID = "LocalFilePath"; //$NON-NLS-1$
     String TEIID_PARENT_DIRECTORY_KEY = "ParentDirectory"; //$NON-NLS-1$
     
-    String WS_ENDPOINT_KEY = IWSProfileConstants.URL_PROP_ID;
+    String WS_ENDPOINT_KEY = IWSProfileConstants.END_POINT_URI_PROP_ID;
 
 }

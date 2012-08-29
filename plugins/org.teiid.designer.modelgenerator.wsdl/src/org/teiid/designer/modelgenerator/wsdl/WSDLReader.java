@@ -81,6 +81,10 @@ public class WSDLReader {
     }
 
     private Model buildWSDLStructures() throws Exception {
+    	if(wsdlURI == null) {
+    		throw new Exception(getString("WSDLReader.unexpected.parsing.wsdl")); //$NON-NLS-1$
+    	}
+    	
         ModelBuilder builder = new ModelBuilder();
         builder.setAuthentication(securityType, userName, password);
         builder.setWSDL(wsdlURI.replace("%20", " ")); //$NON-NLS-1$//$NON-NLS-2$

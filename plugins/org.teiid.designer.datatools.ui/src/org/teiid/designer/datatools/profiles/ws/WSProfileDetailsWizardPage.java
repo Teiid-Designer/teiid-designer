@@ -159,7 +159,7 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
                 if (urlStr != null) {
                     urlStr = urlStr.trim();
                 }
-                setProperty(IWSProfileConstants.URL_PROP_ID, urlStr);
+                setProperty(IWSProfileConstants.END_POINT_URI_PROP_ID, urlStr);
             }
         });
 
@@ -213,15 +213,15 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         descriptionText.setText(((NewConnectionProfileWizard)getWizard()).getProfileDescription());
 
         Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
-        if (null == properties.get(IWSProfileConstants.URL_PROP_ID)
-                || properties.get(IWSProfileConstants.URL_PROP_ID).toString().isEmpty()) {
+        if (null == properties.get(IWSProfileConstants.END_POINT_URI_PROP_ID)
+                || properties.get(IWSProfileConstants.END_POINT_URI_PROP_ID).toString().isEmpty()) {
                 setErrorMessage(UTIL.getString("Common.URL.Error.Message")); //$NON-NLS-1$
                 return;
         }
         setErrorMessage(null);
         try {
         	@SuppressWarnings("unused")
-			URL url = new URL(properties.get(IWSProfileConstants.URL_PROP_ID).toString());
+			URL url = new URL(properties.get(IWSProfileConstants.END_POINT_URI_PROP_ID).toString());
         } catch(MalformedURLException e) {
         	setErrorMessage(UTIL.getString("Common.URL.Invalid.Message") + e.getMessage()); //$NON-NLS-1$
         	return;
@@ -269,8 +269,8 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
 		Properties properties = ((NewConnectionProfileWizard) getWizard())
 				.getProfileProperties();
 		if (complete
-				&& (null == properties.get(IWSProfileConstants.URL_PROP_ID) || properties
-						.get(IWSProfileConstants.URL_PROP_ID).toString()
+				&& (null == properties.get(IWSProfileConstants.END_POINT_URI_PROP_ID) || properties
+						.get(IWSProfileConstants.END_POINT_URI_PROP_ID).toString()
 						.isEmpty())) {
 			complete = false;
 		}
@@ -374,7 +374,7 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         }
 
         public Exception testXmlUrlConnection( IConnectionProfile icp ) {
-        	return WSWizardUtils.testURLConnection(icp, IWSProfileConstants.URL_PROP_ID);
+        	return WSWizardUtils.testURLConnection(icp, IWSProfileConstants.END_POINT_URI_PROP_ID);
         }
 
         public Throwable getTestConnectionException( IConnection conn ) {
