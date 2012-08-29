@@ -12,6 +12,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.dmr.ModelNode;
+import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.jboss.ide.eclipse.as.core.server.v7.management.AS7ManagementDetails;
 import org.jboss.ide.eclipse.as.management.core.JBoss7ManagerUtil;
 import org.jboss.ide.eclipse.as.management.core.ModelDescriptionConstants;
@@ -19,7 +20,7 @@ import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 
 /**
- *
+ * @since 8.0
  */
 public abstract class TeiidServerAdapterUtil extends ModelDescriptionConstants {
 
@@ -33,6 +34,18 @@ public abstract class TeiidServerAdapterUtil extends ModelDescriptionConstants {
         
         String resultString = JBoss7ManagerUtil.getService(server).execute(new AS7ManagementDetails(server), requestString);
         return ModelNode.fromJSONString(resultString);
+    }
+    
+    /**
+     * Is the given {@link IServer} a jboss server
+     * 
+     * @param server
+     * 
+     * @return true if a jboss server, false otherwise
+     */
+    public static boolean isJBossServer(IServer server) {
+        JBoss7Server jb7 = (JBoss7Server) server.loadAdapter(JBoss7Server.class, null);
+        return jb7 != null;
     }
     
     /**

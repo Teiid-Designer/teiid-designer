@@ -8,17 +8,19 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.runtime.ui.server.editor.TeiidServerEditor;
+import org.teiid.designer.runtime.ui.server.editor.TeiidServerEditorInput;
 import org.teiid.designer.runtime.ui.views.TeiidView;
 import org.teiid.designer.ui.common.util.UiUtil;
 
@@ -91,47 +93,23 @@ public final class EditServerAction extends BaseSelectionListenerAction {
     	}
     	
     	if( this.serverBeingEdited == null ) return;
-    	
-        ServerWizard wizard = new ServerWizard(this.teiidServerManager, this.serverBeingEdited);
-        WizardDialog dialog = new WizardDialog(this.shell, wizard) {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.jface.wizard.WizardDialog#configureShell(org.eclipse.swt.widgets.Shell)
-             */
-            @Override
-            protected void configureShell( Shell newShell ) {
-                super.configureShell(newShell);
-                newShell.setImage(DqpUiPlugin.getDefault().getImage(DqpUiPlugin.Images.EDIT_SERVER_ICON));
-            }
-        };
-
-        int result = dialog.open();
+    	    
+    	IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    	IWorkbenchPage page = workbenchWindow.getActivePage();
         
-        if( result == Window.OK) {
+    	try {
+    	    TeiidServerEditorInput input = new TeiidServerEditorInput(serverBeingEdited.getUrl());
+    	    page.openEditor(input, TeiidServerEditor.EDITOR_ID);
+    	} catch (Exception e) {
+    	    DqpUiConstants.UTIL.log(e);
+    	}
+        
+    	// refresh viewer in Teiid View to display latest label
+    	TeiidView teiidView = (TeiidView)UiUtil.getViewPart(DqpUiConstants.Extensions.CONNECTORS_VIEW_ID);
 	        
-	        if( wizard.shouldAutoConnect() ) {
-	            	try {
-	    				wizard.getServer().getAdmin();
-	    				wizard.getServer().setConnectionError(null);			
-	    			} catch (Exception e) {
-	    				String msg = UTIL.getString("serverWizardEditServerAutoConnectError"); //$NON-NLS-1$
-	    				MessageDialog.openError(this.shell, UTIL.getString("editServerActionAutoConnectProblemTitle"), //$NON-NLS-1$
-	    						msg);
-	    				UTIL.log(e);
-	    				wizard.getServer().setConnectionError(msg);
-	    				wizard.getServer().notifyRefresh();
-	    			}
-
-	        }
-	        
-	        // refresh viewer in Teiid View to display latest label
-	        TeiidView teiidView = (TeiidView)UiUtil.getViewPart(DqpUiConstants.Extensions.CONNECTORS_VIEW_ID);
-	        
-	        if (teiidView != null) {
-	            teiidView.updateLabel(this.serverBeingEdited);
-	        }
-        }
+    	if (teiidView != null) {
+    	    teiidView.updateLabel(this.serverBeingEdited);
+    	}
     }
 
     /**

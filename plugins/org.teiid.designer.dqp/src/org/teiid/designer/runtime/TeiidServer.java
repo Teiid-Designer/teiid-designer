@@ -10,7 +10,6 @@ package org.teiid.designer.runtime;
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -90,6 +89,9 @@ public class TeiidServer implements HostProvider {
      */
     private String host;
 
+    /**
+     * The parent {@link IServer} of this teiid server
+     */
     private IServer parentServer;
 
     // ===========================================================================================================================
@@ -382,20 +384,30 @@ public class TeiidServer implements HostProvider {
         return Status.OK_STATUS;
     }
     
+    /**
+     * Test the jdbc connection
+     * 
+     * @param host
+     * @param port
+     * @param username
+     * @param password
+     * 
+     * @return status as to the ping's success
+     */
     public IStatus testJDBCPing(String host, String port, String username, String password) {
     	Connection teiidJdbcConnection = null;
+    	String url = "jdbc:teiid:ping@mm://"+host+':'+port; //$NON-NLS-1$
+        
 		try {
-			
 			Admin adminApi = getAdmin().getAdminApi();
- 
-			adminApi.deploy("ping-vdb.xml", (InputStream)new ByteArrayInputStream(TeiidServerUtils.TEST_VDB.getBytes())); //$NON-NLS-1$
+			adminApi.deploy("ping-vdb.xml", new ByteArrayInputStream(TeiidServerUtils.TEST_VDB.getBytes())); //$NON-NLS-1$
+			
 			try{
-				String url = "jdbc:teiid:ping@mm://"+host+':'+port+";user="+username+";password="+password+';';  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				
-				teiidJdbcConnection = TeiidDriver.getInstance().connect(url, null);
+				String urlAndCredentials = url + ";user="+username+";password="+password+';';  //$NON-NLS-1$ //$NON-NLS-2$				
+				teiidJdbcConnection = TeiidDriver.getInstance().connect(urlAndCredentials, null);
 			   //pass
 			} catch(SQLException ex){
-				String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc"); //$NON-NLS-1$
+				String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
 	            return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
 			} finally {
 				adminApi.undeploy("ping"); //$NON-NLS-1$
@@ -407,10 +419,10 @@ public class TeiidServer implements HostProvider {
 		        this.admin = null;
 			}
 		} catch (AdminException ex) {
-			String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc"); //$NON-NLS-1$
+			String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
 		} catch (Exception ex) {
-			String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc"); //$NON-NLS-1$
+			String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
 		}
 		

@@ -18,6 +18,11 @@ import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 
+/**
+ * Adapter factory that can adapt an {@link IServer} to a {@link TeiidServer}
+ * 
+ * @since 8.0
+ */
 public class TeiidServerAdapterFactory implements IAdapterFactory {
 
     @Override
@@ -65,7 +70,7 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
         TeiidAdminInfo teiidAdminInfo = new TeiidAdminInfo(new Integer(jb7.getManagementPort()).toString(),
                                                            jb7.getUsername(),
                                                            jb7.getPassword(),
-                                                           false,
+                                                           true,
                                                            false);
         
         /*
@@ -98,7 +103,7 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
         TeiidJdbcInfo teiidJdbcInfo = new TeiidJdbcInfo(jdbcPort,
                                                                                 TeiidJdbcInfo.DEFAULT_JDBC_USERNAME,
                                                                                 TeiidJdbcInfo.DEFAULT_JDBC_PASSWORD,
-                                                                                false,
+                                                                                true,
                                                                                 false);
 
         TeiidServer teiidServer = new TeiidServer(jb7.getHost(), teiidAdminInfo, teiidJdbcInfo, serverManager);

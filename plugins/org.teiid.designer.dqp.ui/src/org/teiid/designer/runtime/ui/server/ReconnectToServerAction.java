@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -73,6 +72,7 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
                     String msg = UTIL.getString("serverReconnectErrorMsg", teiidServer); //$NON-NLS-1$
                     WidgetUtil.showError(msg);
                     teiidServer.setConnectionError(msg);
+                } finally {
                     getViewer().refresh(teiidServer);
                 }
             }

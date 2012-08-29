@@ -19,10 +19,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidDataSource;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
-import org.teiid.designer.runtime.ui.views.TeiidViewTreeProvider;
+import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
+import org.teiid.designer.runtime.ui.views.TeiidServerLabelProvider;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.MessageLabel;
 import org.teiid.designer.vdb.Vdb;
@@ -44,7 +45,7 @@ public class SelectJndiDataSourceDialog extends ElementTreeSelectionDialog imple
     private TeiidDataSource selectedDataSource;
 
     public SelectJndiDataSourceDialog( Shell parent ) {
-        super(parent, new TeiidViewTreeProvider(), new TeiidViewTreeProvider(false, false, true));
+        super(parent, new TeiidServerLabelProvider(), new TeiidServerContentProvider(false, false, true));
         setTitle(DEFAULT_TITLE);
         setMessage(DEFAULT_MESSAGE);
         setInput(DqpPlugin.getInstance().getServerManager());
