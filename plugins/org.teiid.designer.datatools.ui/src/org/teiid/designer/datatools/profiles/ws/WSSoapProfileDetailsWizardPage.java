@@ -12,46 +12,45 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.internal.ui.ConnectivityUIPlugin;
-import org.eclipse.datatools.connectivity.internal.ui.dialogs.ExceptionHandler;
 import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPage;
-import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizard;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.progress.UIJob;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
+import org.teiid.designer.modelgenerator.wsdl.WSDLReader;
 import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.wizards.wsdl.WsdlFileSelectionComposite;
 
-public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPage
-		implements Listener, DatatoolsUiConstants {
+/**
+ * Wizard page for entering the wsdl URL 
+ */
+public class WSSoapProfileDetailsWizardPage extends ConnectionProfileDetailsPage implements DatatoolsUiConstants {
 
-	
+    private IStatus testStatus = Status.OK_STATUS;
+
     private Composite scrolled;
-
     private Label profileLabel;
     private CLabel profileText;
     private Label descriptionLabel;
@@ -59,68 +58,84 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
     private Label urlLabel;
     private Text urlText;
 
+    private Composite parent;
+
+    private WSSoapConnectionProfileWizard wizard;
+    private Properties profileProperties;
+
     /**
-     * @param wizardPageName
+     * @param pageName
      */
-    public WSSoapProfileDetailsWizardPage( String pageName ) {
+    public WSSoapProfileDetailsWizardPage(String pageName) {
         super(pageName, UTIL.getString("WSSoapProfileDetailsWizardPage.Name"), //$NON-NLS-1$
               AbstractUIPlugin.imageDescriptorFromPlugin(DatatoolsUiConstants.PLUGIN_ID, "icons/full/obj16/web-service-cp.png")); //$NON-NLS-1$
     }
 
-	@Override
-	public void createCustomControl(Composite parent) {
-        GridData gd;
+    @Override
+    public void createCustomControl(Composite parent) {
+
+        wizard = (WSSoapConnectionProfileWizard)getWizard();
+        profileProperties = wizard.getProfileProperties();
 
         Group group = new Group(parent, SWT.BORDER);
-        group.setText(UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$
         group.setLayout(new FillLayout());
 
         scrolled = new Composite(group, SWT.NONE);
-        GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 2;
-        scrolled.setLayout(gridLayout);
+        GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).applyTo(scrolled);
+
+        Label title = new Label(scrolled, SWT.NONE);
+        title.setText(UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$
+        title.setFont(JFaceResources.getBannerFont());
+        GridDataFactory.fillDefaults().grab(true, false).span(2, 1).align(SWT.CENTER, SWT.CENTER).applyTo(title);
 
         profileLabel = new Label(scrolled, SWT.NONE);
         profileLabel.setText(UTIL.getString("Common.Profile.Label")); //$NON-NLS-1$
-        
-        profileText = WidgetFactory.createLabel(scrolled, SWT.SINGLE | SWT.BORDER);
-        gd = new GridData();
-        profileText.setLayoutData(gd);
-        profileText.setText(((WSSoapConnectionProfileWizard)getWizard()).getProfileName());
+        GridDataFactory.swtDefaults().applyTo(profileLabel);
+
+        profileText = WidgetFactory.createLabel(scrolled, wizard.getProfileName(), SWT.SINGLE);
+        GridDataFactory.swtDefaults().applyTo(profileText);
 
         descriptionLabel = new Label(scrolled, SWT.NONE);
         descriptionLabel.setText(UTIL.getString("Common.Description.Label")); //$NON-NLS-1$
-        gd = new GridData();
-        descriptionLabel.setLayoutData(gd);
+        GridDataFactory.swtDefaults().applyTo(descriptionLabel);
 
         descriptionText = WidgetFactory.createTextBox(scrolled, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY, GridData.FILL);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.grabExcessHorizontalSpace = true;
-        descriptionText.setLayoutData(gd);
-        String description = ((WSSoapConnectionProfileWizard)getWizard()).getProfileDescription();
-        descriptionText.setText(description);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(descriptionText);
+        descriptionText.setText(wizard.getProfileDescription());
         descriptionText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 
         urlLabel = new Label(scrolled, SWT.NONE);
         urlLabel.setText(UTIL.getString("Common.URLorFILE.Label")); //$NON-NLS-1$
         urlLabel.setToolTipText(UTIL.getString("Common.URLorFILE.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        urlLabel.setLayoutData(gd);
+        GridDataFactory.swtDefaults().applyTo(urlLabel);
 
-        urlText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
+        urlText = new Text(scrolled, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
         urlText.setEditable(false);
         urlText.setToolTipText(UTIL.getString("Common.URLorFILE.ToolTip")); //$NON-NLS-1$
         urlText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        urlText.setLayoutData(gd);
+
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(urlText);
+        urlText.addModifyListener(new ModifyListener() {
+
+            @Override
+            public void modifyText(ModifyEvent e) {
+                String urlStr = urlText.getText();
+                if (urlStr != null) {
+                    urlStr = urlStr.trim();
+                }
+
+                setProperty(IWSProfileConstants.WSDL_URI_PROP_ID, urlStr);
+                updateState();
+            }
+        });
 
         Label spacerLabel = new Label(scrolled, SWT.NONE);
         spacerLabel.setVisible(false);
         GridDataFactory.swtDefaults().grab(false, false).applyTo(spacerLabel);
 
-        WsdlFileSelectionComposite wsdlFileSelectionComposite = new WsdlFileSelectionComposite(
-                scrolled, SWT.NONE);
+        WsdlFileSelectionComposite wsdlFileSelectionComposite = new WsdlFileSelectionComposite(scrolled, SWT.NONE);
         GridDataFactory.fillDefaults().applyTo(wsdlFileSelectionComposite);
+
         WsdlFileSelectionComposite.IFileSelectionCallback fileSelectionCallback = new WsdlFileSelectionComposite.IFileSelectionCallback() {
             @Override
             public void execute(File wsdlFile) {
@@ -141,8 +156,11 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
 
             @Override
             public void execute(URL url, SecurityType securityType, String userName, String password) {
+                setProperty(ICredentialsCommon.SECURITY_TYPE_ID, securityType.name());
+                setProperty(ICredentialsCommon.USERNAME_PROP_ID, userName);
+                setProperty(ICredentialsCommon.PASSWORD_PROP_ID, password);
+
                 urlText.setText(url.toString());
-                setAuthenticationProperties(securityType, userName, password);
             }
 
             @Override
@@ -152,19 +170,22 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         };
         wsdlFileSelectionComposite.setCallbacks(fileSelectionCallback, fileSelectionCallback, urlSelectionCallback);
 
-		// Add widgets to page
-		Group descriptionGroup = WidgetFactory.createGroup(scrolled, UTIL.getString("Common.Description"), GridData.FILL_HORIZONTAL, 3); //$NON-NLS-1$
+        // Add widgets to page
+        Group descriptionGroup = new Group(scrolled, SWT.BORDER);
+        GridLayoutFactory.fillDefaults().applyTo(descriptionGroup);
+        GridDataFactory.fillDefaults().span(2, 1).applyTo(descriptionGroup);
 
-        Text descriptionText = new Text(descriptionGroup,  SWT.WRAP | SWT.READ_ONLY);
-        gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
-        gd.heightHint = 100;
-        gd.widthHint = 500;
-        descriptionText.setLayoutData(gd);
+        Label descTitle = new Label(descriptionGroup, SWT.NONE);
+        descTitle.setText(UTIL.getString("Common.Description")); //$NON-NLS-1$
+        descTitle.setFont(JFaceResources.getBannerFont());
+        GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(descTitle);
+
+        Text descriptionText = new Text(descriptionGroup, SWT.WRAP | SWT.READ_ONLY);
+        GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).hint(500, SWT.DEFAULT).applyTo(descriptionText);
         descriptionText.setText(UTIL.getString("WSSoapProfileDetailsWizardPage.descriptionMessage")); //$NON-NLS-1$
         descriptionText.setBackground(scrolled.getBackground());
         descriptionText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 
-        
         setPingButtonVisible(true);
         setPingButtonEnabled(false);
         setAutoConnectOnFinishDefault(false);
@@ -172,76 +193,17 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         setShowAutoConnect(false);
         setShowAutoConnectOnFinish(false);
         setPageComplete(false);
-        addListeners();
-
-	}
-	
-    /* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
-	 */
-	@Override
-	public void setVisible(boolean visible) {
-		// TODO Auto-generated method stub
-		super.setVisible(visible);
-		
-        String description = ((WSSoapConnectionProfileWizard)getWizard()).getProfileDescription();
-        descriptionText.setText(description);
-        
-        profileText.setText(((WSSoapConnectionProfileWizard)getWizard()).getProfileName());
-	}
-	
-    /**
-     * 
-     */
-    private void addListeners() {
-        urlText.addListener(SWT.Modify, this);
     }
     
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
      */
     @Override
-    public void handleEvent( Event event ) {
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
 
-        if (event.widget == urlText) {
-            Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
-            String urlStr = urlText.getText();
-            if (urlStr != null) urlStr = urlStr.trim();
-            properties.setProperty(IWSProfileConstants.URL_PROP_ID, urlStr);
-        }
-        updateState();
-    }
-    
-    /**
-     * Used in the {@link IURLSelectionCallback} to record the 
-     * authentication details if a remote URL was selected.
-     * 
-     * @param securityType
-     * @param userName
-     * @param password
-     */
-    private void setAuthenticationProperties(SecurityType securityType, String userName, String password) {
-        Properties properties = ((NewConnectionProfileWizard) getWizard())
-                .getProfileProperties();
-        
-        if (securityType != null) {
-            properties.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, securityType.name());
-        }
-        else {
-            properties.setProperty(ICredentialsCommon.SECURITY_TYPE_ID,
-                    SecurityType.None.name());
-        }
-        
-        if (userName != null) {
-            properties.setProperty(ICredentialsCommon.USERNAME_PROP_ID, userName);
-        }
-        
-        if( password != null) {
-            properties.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, password);
-        }
-        
+        profileText.setText(wizard.getProfileName());
+        descriptionText.setText(wizard.getProfileDescription());
     }
 
     /**
@@ -250,77 +212,89 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
      * @see org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public void createControl( Composite parent ) {
+    public void createControl(Composite parent) {
+        this.parent = parent;
         super.createControl(parent);
         updateState();
     }
-    
-    void updateState() {
+
+    private void setProperty(String key,
+                             String value) {
+        if (value != null) {
+            profileProperties.setProperty(key, value);
+        }
+    }
+
+    private void updateState() {
         setPingButtonVisible(true);
         setPingButtonEnabled(false);
 
-        profileText.setText(((NewConnectionProfileWizard)getWizard()).getProfileName());
-        descriptionText.setText(((NewConnectionProfileWizard)getWizard()).getProfileDescription());
-
-        Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
-        if (null == properties.get(IWSProfileConstants.URL_PROP_ID)
-                || properties.get(IWSProfileConstants.URL_PROP_ID).toString().isEmpty()) {
-                setErrorMessage(UTIL.getString("Common.URL.Error.Message")); //$NON-NLS-1$
-                return;
+        String wsdlUrl = profileProperties.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID);
+        if (null == wsdlUrl || wsdlUrl.isEmpty()) {
+            setErrorMessage(UTIL.getString("Common.URL.Error.Message")); //$NON-NLS-1$
+            return;
         }
         setErrorMessage(null);
-        
+
         boolean urlError = true;
         try {
-        	@SuppressWarnings("unused")
-			URL url = new URL(properties.get(IWSProfileConstants.URL_PROP_ID).toString());
-        	urlError = false;
-        } catch(MalformedURLException e) {
-        	
+            new URL(wsdlUrl);
+            urlError = false;
+        } catch (MalformedURLException e) {
+            // Exception not required to be logged
         }
-        if( urlError ) {
-            File file = new File(properties.get(IWSProfileConstants.URL_PROP_ID).toString());
 
-            if( !file.exists() && urlError) {
-            	setErrorMessage(UTIL.getString("Common.URLorFILE.Invalid.Message")); //$NON-NLS-1$
-            	return;
+        if (urlError) {
+            File file = new File(wsdlUrl);
+
+            if (!file.exists()) {
+                setErrorMessage(UTIL.getString("Common.URLorFILE.Invalid.Message")); //$NON-NLS-1$
+                return;
             }
         }
 
         setPingButtonEnabled(true);
-        
+
         setErrorMessage(null);
-        setPageComplete(true);
         setMessage(UTIL.getString("Click.Next.or.Finish")); //$NON-NLS-1$
 
-    }
-    
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
-     */
-    @Override
-    public boolean canFlipToNextPage() {
-        return internalComplete(super.canFlipToNextPage());
+        // Reset the test status
+        testStatus = Status.OK_STATUS;
+
+        setPageComplete(isPageComplete());
     }
 
-	/**
-	 * @param complete
-	 * @return
-	 */
-	private boolean internalComplete(boolean complete) {
-		Properties properties = ((NewConnectionProfileWizard) getWizard())
-				.getProfileProperties();
-		if (complete
-				&& (null == properties.get(IWSProfileConstants.URL_PROP_ID) || properties
-						.get(IWSProfileConstants.URL_PROP_ID).toString()
-						.isEmpty())) {
-			complete = false;
-		}
-		return complete;
-	}
-	
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
+     */
+    @Override
+    public boolean isPageComplete() {
+        WSSoapConnectionProfileWizard wizard = (WSSoapConnectionProfileWizard)getWizard();
+        Properties properties = wizard.getProfileProperties();
+        String wsdlUrl = properties.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID);
+
+        if (null == wsdlUrl || wsdlUrl.toString().isEmpty()) {
+            return false;
+        }
+
+        if (!testStatus.isOK()) return false;
+
+        final WSDLReader wsdlReader = wizard.getWsdlReader();
+
+        String securityTypeValue = properties.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
+        String userName = properties.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
+        String password = properties.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
+
+        if (securityTypeValue != null) {
+            SecurityType securityType = SecurityType.valueOf(securityTypeValue);
+            wsdlReader.setAuthenticationCredentials(securityType, userName, password);
+        }
+
+        wsdlReader.setWSDLUri(wsdlUrl);
+
+        return true;
+    }
+
     /**
      * {@inheritDoc}
      * 
@@ -329,71 +303,101 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
     @Override
     public List getSummaryData() {
         List result = super.getSummaryData();
-    
-        Properties properties = ((NewConnectionProfileWizard) getWizard()).getProfileProperties();
-        String securityType = properties.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
+
+        String securityType = profileProperties.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
         if (securityType == null) {
             securityType = SecurityType.None.name();
         }
-        
-        result.add(new String[] { UTIL.getString("Common.URL.Label"), properties.getProperty(IWSProfileConstants.URL_PROP_ID) }); //$NON-NLS-1$
-        
-        if (! SecurityType.None.name().equals(securityType)) {
-            result.add(new String[] { UTIL.getString("Common.SecurityType.Label"), securityType }); //$NON-NLS-1$
-            result.add(new String[] { UTIL.getString("Common.Username.Label"), properties.getProperty(ICredentialsCommon.USERNAME_PROP_ID) }); //$NON-NLS-1$
+
+        result.add(new String[] {
+            UTIL.getString("Common.URL.Label"), profileProperties.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID)}); //$NON-NLS-1$
+
+        if (!SecurityType.None.name().equals(securityType)) {
+            result.add(new String[] {UTIL.getString("Common.SecurityType.Label"), securityType}); //$NON-NLS-1$
+            result.add(new String[] {
+                UTIL.getString("Common.Username.Label"), profileProperties.getProperty(ICredentialsCommon.USERNAME_PROP_ID)}); //$NON-NLS-1$
 
             // Mask the password
-            String password = properties.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
+            String password = profileProperties.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
             StringBuffer masked = new StringBuffer(password.length());
             for (int i = 0; i < password.length(); ++i) {
                 masked.append("*"); //$NON-NLS-1$
             }
 
-            result.add(new String[] {
-                    UTIL.getString("Common.Password.Label"), masked.toString() }); //$NON-NLS-1$
+            result.add(new String[] {UTIL.getString("Common.Password.Label"), masked.toString()}); //$NON-NLS-1$
         }
-        
+
         return result;
+
     }
-    
+
+    /* (non-Javadoc)
+     * @see org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPage#testConnection()
+     */
     @Override
-    public void testConnection() {
+    protected void testConnection() {
+        /* 
+         * Want it to retest the connection not simply 
+         * print the last error message
+         */
+        setErrorMessage(null);
         super.testConnection();
     }
 
     @Override
-    protected Runnable createTestConnectionRunnable( final IConnectionProfile profile ) {
-        final Job pingJob = new URLPingJob(getShell(), profile);
+    protected Runnable createTestConnectionRunnable(final IConnectionProfile profile) {
+        final URLPingJob pingJob = new URLPingJob(profile);
         pingJob.schedule();
         return new Runnable() {
             @Override
             public void run() {
                 try {
                     pingJob.join();
+                    testStatus = pingJob.getResult();
+
+                    if (!testStatus.isOK()) {
+                        Throwable exception = testStatus.getException();
+                        setErrorMessage(exception.getMessage());
+                    } else {
+
+                        setMessage(UTIL.getString("WSSoapProfileDetailsWizardPage.validatingWsdlMessage")); //$NON-NLS-1$
+                        UiBusyIndicator.showWhile(parent.getDisplay(), new Runnable() {
+
+                            @Override
+                            public void run() {
+                                testStatus = wizard.getWsdlReader().validateWSDL(new NullProgressMonitor());
+                            }
+                        });
+
+                        if (testStatus.isOK()) {
+                            setMessage(UTIL.getString("WSSoapProfileDetailsWizardPage.validationSuccessfulWsdlMessage")); //$NON-NLS-1$
+                        } else {
+                            setErrorMessage(UTIL.getString("WSSoapProfileDetailsWizardPage.validationErrorWsdlMessage")); //$NON-NLS-1$
+                        }
+                    }
+
+                    setPageComplete(isPageComplete());
+
                 } catch (InterruptedException e) {
                 }
             }
         };
     }
-    
+
     /**
      * Executes a ping operation as a background job.
      */
     public class URLPingJob extends Job {
 
         private IConnectionProfile icp;
-        private Shell shell;
 
         /**
-         * @param exceptions
-         * @param name
+         * @param profile
          */
-        public URLPingJob( Shell shell,
-                                  IConnectionProfile profile ) {
+        public URLPingJob(IConnectionProfile profile) {
             super(ConnectivityUIPlugin.getDefault().getResourceString("actions.ping.job")); //$NON-NLS-1$
             setSystem(false);
             setUser(true);
-            this.shell = shell;
             icp = profile;
         }
 
@@ -403,78 +407,17 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
          * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
          */
         @Override
-        protected IStatus run( IProgressMonitor monitor ) {
+        protected IStatus run(IProgressMonitor monitor) {
             monitor.beginTask(ConnectivityUIPlugin.getDefault().getResourceString("actions.ping.title"), //$NON-NLS-1$
                               IProgressMonitor.UNKNOWN);
 
-            Exception exception = testXmlUrlConnection(icp);
+            Exception exception = WSWizardUtils.testURLConnection(icp, IWSProfileConstants.WSDL_URI_PROP_ID);
 
             monitor.done();
 
-            new XmlUrlPingUIJob(shell, exception).schedule();
-
-            return Status.OK_STATUS;
+            if (exception == null) return Status.OK_STATUS;
+            else return new Status(IStatus.ERROR, DatatoolsUiConstants.PLUGIN_ID,
+                                   ConnectivityUIPlugin.getDefault().getResourceString("actions.ping.failure"), exception); //$NON-NLS-1$
         }
-
-        public Exception testXmlUrlConnection( IConnectionProfile icp ) {
-        	return WSWizardUtils.testURLConnection(icp, IWSProfileConstants.URL_PROP_ID);
-        }
-
-        public Throwable getTestConnectionException( IConnection conn ) {
-            return conn != null ? conn.getConnectException() : 
-            	new RuntimeException(ConnectivityUIPlugin.getDefault().getResourceString("actions.ping.failure")); //$NON-NLS-1$
-        }
-
-        public class XmlUrlPingUIJob extends UIJob {
-
-            private Shell shell;
-            private Throwable exception;
-
-            /**
-             * @param name
-             */
-            public XmlUrlPingUIJob( Shell shell,
-                                        Throwable exception ) {
-                super(ConnectivityUIPlugin.getDefault().getResourceString("actions.ping.uijob")); //$NON-NLS-1$
-                setSystem(false);
-                this.exception = exception;
-                this.shell = shell;
-            }
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
-             */
-            @Override
-            public IStatus runInUIThread( IProgressMonitor monitor ) {
-                showTestConnectionMessage(shell, exception);
-                return Status.OK_STATUS;
-            }
-
-            public void showTestConnectionMessage( Shell shell,
-                                                   Throwable exception ) {
-                if (exception == null) {
-                    MessageDialog.openInformation(
-                    	shell,                         
-                    	ConnectivityUIPlugin.getDefault().getResourceString("dialog.title.success"), //$NON-NLS-1$             
-                    	ConnectivityUIPlugin.getDefault().getResourceString("actions.ping.success")); //$NON-NLS-1$
-                    //setValidatedConnection(true);
-                    updateState();
-                } else {
-                    ExceptionHandler.showException(
-                    	shell,
-                        ConnectivityUIPlugin.getDefault().getResourceString("dialog.title.error"), //$NON-NLS-1$
-                        ConnectivityUIPlugin.getDefault().getResourceString("actions.ping.failure"), //$NON-NLS-1$
-                         exception);
-                    //setValidatedConnection(false);
-                    setErrorMessage(exception.getMessage());
-                    updateState();
-
-                }
-            }
-
-        }
-
     }
 }

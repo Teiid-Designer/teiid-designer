@@ -13,14 +13,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.core.event.IChangeListener;
 import org.teiid.core.event.IChangeNotifier;
-import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 import org.teiid.designer.modelgenerator.wsdl.WSDLReader;
 import org.teiid.designer.modelgenerator.wsdl.model.Model;
 import org.teiid.designer.modelgenerator.wsdl.model.ModelGenerationException;
@@ -76,8 +75,6 @@ public class WSDLImportWizardManager implements IChangeNotifier {
     private Map<Operation, ProcedureGenerator> procedureGenerators;
     
     private Model wsdlModel;
-    
-    private String endPoint;
     
     private String translatorDefaultBinding = Port.SOAP11;
     private String translatorDefaultServiceMode = PAYLOAD; 
@@ -149,25 +146,6 @@ public class WSDLImportWizardManager implements IChangeNotifier {
         return this.wsdlReader.getWSDLUri();
     }
     
-    /**
-     * Get the endpoint for the selected port
-     * 
-     * @return
-     */
-    public String getEndPoint() {
-		return endPoint;
-	}
-
-	/**
-	 * Set the endpoint for the selected port
-	 * 
-	 * @param endPoint
-	 */
-	public void setEndPoint(String endPoint) {
-		this.endPoint = endPoint;
-		setChanged(true);
-	}
-
     /**
      * Validate the current WSDL file
      * 
@@ -287,9 +265,16 @@ public class WSDLImportWizardManager implements IChangeNotifier {
             String password = props.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
             setWSDLCredentials(securityTypeValue, userName, password);
 
-            String fileUri = ConnectionInfoHelper.readURLProperty(props);
+            String fileUri = props.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID);
             if( fileUri != null ) {
                 setWSDLFileUri(fileUri);
+            }
+            
+            String binding = props.getProperty(IWSProfileConstants.SOAP_BINDING);
+            if (binding != null) {
+                setTranslatorDefaultBinding(binding);
+            } else {
+                setTranslatorDefaultBinding(Port.SOAP11);
             }
 		}
 		setChanged(true);
