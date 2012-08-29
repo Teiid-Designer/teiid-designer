@@ -348,7 +348,7 @@ public abstract class TeiidConnectionInfo {
     protected IStatus validateUrl() {
         // validate URL (protocol, host, port)
         try {
-            ServerUtils.validateServerUrl(getUrl());
+            TeiidServerUtils.validateServerUrl(getUrl());
         } catch (MalformedURLException e) {
             return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("invalidServerUrl", getType(), e.getMessage()), e); //$NON-NLS-1$
         }

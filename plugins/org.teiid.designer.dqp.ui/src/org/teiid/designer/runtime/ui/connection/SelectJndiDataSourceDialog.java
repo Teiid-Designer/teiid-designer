@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.views.TeiidViewTreeProvider;
@@ -99,7 +99,7 @@ public class SelectJndiDataSourceDialog extends ElementTreeSelectionDialog imple
             public boolean select( Viewer viewer,
                                    Object parentElement,
                                    Object element ) {
-                if (element instanceof Server) {
+                if (element instanceof TeiidServer) {
                     return element.equals(DqpPlugin.getInstance().getServerManager().getDefaultServer());
                 }
 

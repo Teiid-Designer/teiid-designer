@@ -74,7 +74,7 @@ public class DqpPlugin extends Plugin {
     /**
      * The Teiid server registry.
      */
-    private ServerManager serverMgr;
+    private TeiidServerManager serverMgr;
 
     /**
      * Obtains the current plubin preferences values. <strong>This method should be used instead of
@@ -102,7 +102,7 @@ public class DqpPlugin extends Plugin {
     /**
      * @return the server manager
      */
-    public ServerManager getServerManager() {
+    public TeiidServerManager getServerManager() {
         return this.serverMgr;
     }
 
@@ -136,7 +136,7 @@ public class DqpPlugin extends Plugin {
     }
 
     private void initializeServerRegistry() throws CoreException {
-        this.serverMgr = new ServerManager(DqpPlugin.getInstance().getRuntimePath().toFile().getAbsolutePath());
+        this.serverMgr = new TeiidServerManager(DqpPlugin.getInstance().getRuntimePath().toFile().getAbsolutePath());
 
         // restore registry
         final IStatus status = this.serverMgr.restoreState();
@@ -192,7 +192,7 @@ public class DqpPlugin extends Plugin {
     /**
      * {@inheritDoc}
      * <p>
-     * It is recommended for the UI to call {@link ServerManager#shutdown(org.eclipse.core.runtime.IProgressMonitor)} as there are
+     * It is recommended for the UI to call {@link TeiidServerManager#shutdown(org.eclipse.core.runtime.IProgressMonitor)} as there are
      * shutdown tasks that the UI should block on before shutting down.
      * 
      * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)

@@ -39,8 +39,8 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.EventManager;
 import org.teiid.designer.runtime.HostProvider;
-import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.TeiidAdminInfo;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -87,7 +87,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
     /**
      * The server being editor or <code>null</code> if creating a new server.
      */
-    private Server server;
+    private TeiidServer teiidServer;
 
     /**
      * The current validation status.
@@ -202,39 +202,39 @@ public final class ServerPage extends WizardPage implements HostProvider {
                                                this.jdbcURLIsSecure);
         this.localJdbcInfo.setHostProvider(this);
 
-        this.server = new Server(null, this.localAdminInfo, this.localJdbcInfo, EventManager.EVENT_MANAGER_ADAPTER);
+        this.teiidServer = new TeiidServer(null, this.localAdminInfo, this.localJdbcInfo, EventManager.EVENT_MANAGER_ADAPTER);
     }
 
     /**
      * Constructs a wizard page that edits the specified server's properties.
      * 
-     * @param server the server being edited
+     * @param teiidServer the server being edited
      */
-    public ServerPage( Server server ) {
+    public ServerPage( TeiidServer teiidServer ) {
         super(ServerPage.class.getSimpleName());
         setTitle(UTIL.getString("serverPageTitle")); //$NON-NLS-1$
 
-        this.server = server;
-        this.host = server.getHost();
+        this.teiidServer = teiidServer;
+        this.host = teiidServer.getHost();
 
-        this.localAdminInfo = server.getTeiidAdminInfo().clone();
+        this.localAdminInfo = teiidServer.getTeiidAdminInfo().clone();
         this.localAdminInfo.setHostProvider(this);
-        this.localJdbcInfo = server.getTeiidJdbcInfo().clone();
+        this.localJdbcInfo = teiidServer.getTeiidJdbcInfo().clone();
         this.localJdbcInfo.setHostProvider(this);
 
-        this.adminPort = server.getTeiidAdminInfo().getPort();
-        this.adminUsername = server.getTeiidAdminInfo().getUsername();
-        this.adminPassword = server.getTeiidAdminInfo().getPassword();
-        this.adminURLIsSecure = server.getTeiidAdminInfo().isSecure();
-        this.saveAdminPassword = server.getTeiidAdminInfo().isPasswordBeingPersisted();
+        this.adminPort = teiidServer.getTeiidAdminInfo().getPort();
+        this.adminUsername = teiidServer.getTeiidAdminInfo().getUsername();
+        this.adminPassword = teiidServer.getTeiidAdminInfo().getPassword();
+        this.adminURLIsSecure = teiidServer.getTeiidAdminInfo().isSecure();
+        this.saveAdminPassword = teiidServer.getTeiidAdminInfo().isPasswordBeingPersisted();
 
-        this.jdbcPort = server.getTeiidJdbcInfo().getPort();
-        this.jdbcUsername = server.getTeiidJdbcInfo().getUsername();
-        this.jdbcPassword = server.getTeiidJdbcInfo().getPassword();
-        this.jdbcURLIsSecure = server.getTeiidJdbcInfo().isSecure();
-        this.saveJdbcPassword = server.getTeiidJdbcInfo().isPasswordBeingPersisted();
+        this.jdbcPort = teiidServer.getTeiidJdbcInfo().getPort();
+        this.jdbcUsername = teiidServer.getTeiidJdbcInfo().getUsername();
+        this.jdbcPassword = teiidServer.getTeiidJdbcInfo().getPassword();
+        this.jdbcURLIsSecure = teiidServer.getTeiidJdbcInfo().isSecure();
+        this.saveJdbcPassword = teiidServer.getTeiidJdbcInfo().isPasswordBeingPersisted();
 
-        this.displayName = server.getCustomLabel();
+        this.displayName = teiidServer.getCustomLabel();
         this.useDisplayName = !StringUtilities.isEmpty(this.displayName);
 
         this.isEdit = true;
@@ -638,7 +638,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
             String theLabel = UTIL.getString("serverPageSetAsDefaultLabel"); //$NON-NLS-1$
             String theTooltip = UTIL.getString("serverPageSetAsDefaultToolTip"); //$NON-NLS-1$
             if (this.isEdit) {
-                if (this.server.isConnected()) {
+                if (this.teiidServer.isConnected()) {
                     theLabel = UTIL.getString("serverPageReconnectLabel"); //$NON-NLS-1$
                     theTooltip = UTIL.getString("serverPageReconnectToolTip"); //$NON-NLS-1$
                 } else {
@@ -719,9 +719,9 @@ public final class ServerPage extends WizardPage implements HostProvider {
      * @throws RuntimeException if called when all inputs are not valid
      * @see #isPageComplete()
      */
-    public Server getServer() {
+    public TeiidServer getServer() {
         if (this.status.getSeverity() != IStatus.ERROR) {
-            Server newServer = new Server(this.host, this.localAdminInfo, this.localJdbcInfo, getServerManager());
+            TeiidServer newServer = new TeiidServer(this.host, this.localAdminInfo, this.localJdbcInfo, getServerManager());
             newServer.setCustomLabel(this.displayName);
             return newServer;
         }
@@ -735,7 +735,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
     /**
      * @return the server manager obtained from the wizard
      */
-    ServerManager getServerManager() {
+    TeiidServerManager getServerManager() {
         return ((ServerWizard) getWizard()).getServerManager();
     }
 
@@ -853,9 +853,9 @@ public final class ServerPage extends WizardPage implements HostProvider {
      * is guaranteed to fail). On success, only a single dialog is shown
      */
     void handleTestConnection() {
-        final Server server = getServer();
+        final TeiidServer teiidServer = getServer();
 
-        if (server != null) {
+        if (teiidServer != null) {
             final boolean[] success = new boolean[1];
 
             BusyIndicator.showWhile(null, new Runnable() {
@@ -866,7 +866,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
                  */
                 @Override
                 public void run() {
-                    success[0] = server.testPing().isOK();
+                    success[0] = teiidServer.testPing().isOK();
                 }
             });
 
@@ -888,7 +888,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
                  */
                 @Override
                 public void run() {
-                	jdbcSuccess[0] = server.testJDBCPing(host, jdbcPort, jdbcUsername, jdbcPassword).isOK();
+                	jdbcSuccess[0] = teiidServer.testJDBCPing(host, jdbcPort, jdbcUsername, jdbcPassword).isOK();
                 }
             });
 
@@ -1059,10 +1059,10 @@ public final class ServerPage extends WizardPage implements HostProvider {
         }
 
         // now check to see if a server is already registered
-        Server changedServer = getServer();
+        TeiidServer changedServer = getServer();
 
         // don't check if modifying existing server and identifying properties have not changed
-        if (((this.server == null) || !this.server.hasSameKey(changedServer)) && getServerManager().isRegistered(changedServer)) {
+        if (((this.teiidServer == null) || !this.teiidServer.hasSameKey(changedServer)) && getServerManager().isRegistered(changedServer)) {
             this.status = new Status(IStatus.ERROR, PLUGIN_ID, UTIL.getString("serverExistsMsg", changedServer)); //$NON-NLS-1$
 
             if (!this.status.isOK()) {
@@ -1096,9 +1096,9 @@ public final class ServerPage extends WizardPage implements HostProvider {
         getDialogSettings().put(AUTO_CONNECT_KEY, this.autoConnect);
         // If editing, set local server info values to the original server info
         if (this.isEdit) {
-            this.server.getTeiidAdminInfo().setAll(this.localAdminInfo);
-            this.server.getTeiidJdbcInfo().setAll(this.localJdbcInfo);
-            this.server.setCustomLabel(this.displayName);
+            this.teiidServer.getTeiidAdminInfo().setAll(this.localAdminInfo);
+            this.teiidServer.getTeiidJdbcInfo().setAll(this.localJdbcInfo);
+            this.teiidServer.setCustomLabel(this.displayName);
         }
     }
 }

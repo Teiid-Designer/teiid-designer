@@ -46,15 +46,15 @@ public class ServerManagerTest {
 
     private static final String SERVER1_URL = "mm://server:4321";
 
-    private ServerManager mgr;
+    private TeiidServerManager mgr;
 
     @Mock
-    private Server server1;
+    private TeiidServer server1;
 
     @Before
     public void beforeEach() throws Exception {
         MockitoAnnotations.initMocks(this);
-        this.mgr = new ServerManager(null);
+        this.mgr = new TeiidServerManager(null);
     }
     
         
@@ -181,7 +181,7 @@ public class ServerManagerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowNullUpdatedServerForUpdateServer() {
-        this.mgr.updateServer(mock(Server.class), null);
+        this.mgr.updateServer(mock(TeiidServer.class), null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -194,24 +194,24 @@ public class ServerManagerTest {
         // setup
         MockObjectFactory.createModelContainer();
 
-        this.mgr = new ServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()) + File.separator + "oldregistrydata");
+        this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()) + File.separator + "oldregistrydata");
         this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(3));
 
-        Server server = this.mgr.getServer(RESTORED_SERVER1_URL);
-        assertThat(server, notNullValue());
-        assertThat(server.getTeiidAdminInfo().getUsername(), is(RESTORED_SERVER1_USER));
-        assertThat(server, is(not(this.mgr.getDefaultServer())));
+        TeiidServer teiidServer = this.mgr.getServer(RESTORED_SERVER1_URL);
+        assertThat(teiidServer, notNullValue());
+        assertThat(teiidServer.getTeiidAdminInfo().getUsername(), is(RESTORED_SERVER1_USER));
+        assertThat(teiidServer, is(not(this.mgr.getDefaultServer())));
 
-        server = this.mgr.getServer(RESTORED_SERVER2_URL);
-        assertThat(server, notNullValue());
-        assertThat(server.getTeiidAdminInfo().getUsername(), is(RESTORED_SERVER2_USER));
-        assertThat(server, is(sameInstance(this.mgr.getDefaultServer()))); // server was persisted as the default preview server
+        teiidServer = this.mgr.getServer(RESTORED_SERVER2_URL);
+        assertThat(teiidServer, notNullValue());
+        assertThat(teiidServer.getTeiidAdminInfo().getUsername(), is(RESTORED_SERVER2_USER));
+        assertThat(teiidServer, is(sameInstance(this.mgr.getDefaultServer()))); // server was persisted as the default preview server
 
-        server = this.mgr.getServer(RESTORED_SERVER3_URL);
-        assertThat(server, notNullValue());
-        assertThat(server.getTeiidAdminInfo().getUsername(), is(RESTORED_SERVER3_USER));
-        assertThat(server, is(not(this.mgr.getDefaultServer())));
+        teiidServer = this.mgr.getServer(RESTORED_SERVER3_URL);
+        assertThat(teiidServer, notNullValue());
+        assertThat(teiidServer.getTeiidAdminInfo().getUsername(), is(RESTORED_SERVER3_USER));
+        assertThat(teiidServer, is(not(this.mgr.getDefaultServer())));
     }
 
     @Test
@@ -219,7 +219,7 @@ public class ServerManagerTest {
         // setup
         MockObjectFactory.createModelContainer();
 
-        this.mgr = new ServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()));
+        this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()));
         this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(2));
 
@@ -239,25 +239,25 @@ public class ServerManagerTest {
         // construct a server just to get its URL
         TeiidAdminInfo adminInfo = new TeiidAdminInfo(adminPort, adminUser, adminPassword, adminPersistPassword, adminSecure);
         TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, jdbcPassword, jdbcPersistPassword, jdbcSecure);
-        Server testServer = new Server(null, adminInfo, jdbcInfo, eventMgr);
+        TeiidServer testServer = new TeiidServer(null, adminInfo, jdbcInfo, eventMgr);
         adminInfo.setHostProvider(testServer);
         jdbcInfo.setHostProvider(testServer);
 
-        Server server = this.mgr.getServer(testServer.getUrl());
-        assertThat(server, notNullValue());
-        assertThat(server, is(this.mgr.getDefaultServer()));
-        assertThat(server.getCustomLabel(), is(customLabel));
-        assertThat(server.getHost(), is(HostProvider.DEFAULT_HOST));
-        assertThat(server.getTeiidAdminInfo().getPort(), is(adminPort));
-        assertThat(server.getTeiidAdminInfo().getUsername(), is(adminUser));
-        assertThat(server.getTeiidAdminInfo().getPassword(), is(adminPassword));
-        assertThat(server.getTeiidAdminInfo().isPasswordBeingPersisted(), is(adminPersistPassword));
-        assertThat(server.getTeiidAdminInfo().isSecure(), is(adminSecure));
-        assertThat(server.getTeiidJdbcInfo().getPort(), is(jdbcPort));
-        assertThat(server.getTeiidJdbcInfo().getUsername(), is(jdbcUser));
-        assertThat(server.getTeiidJdbcInfo().getPassword(), is(jdbcPassword));
-        assertThat(server.getTeiidJdbcInfo().isPasswordBeingPersisted(), is(jdbcPersistPassword));
-        assertThat(server.getTeiidJdbcInfo().isSecure(), is(jdbcSecure));
+        TeiidServer teiidServer = this.mgr.getServer(testServer.getUrl());
+        assertThat(teiidServer, notNullValue());
+        assertThat(teiidServer, is(this.mgr.getDefaultServer()));
+        assertThat(teiidServer.getCustomLabel(), is(customLabel));
+        assertThat(teiidServer.getHost(), is(HostProvider.DEFAULT_HOST));
+        assertThat(teiidServer.getTeiidAdminInfo().getPort(), is(adminPort));
+        assertThat(teiidServer.getTeiidAdminInfo().getUsername(), is(adminUser));
+        assertThat(teiidServer.getTeiidAdminInfo().getPassword(), is(adminPassword));
+        assertThat(teiidServer.getTeiidAdminInfo().isPasswordBeingPersisted(), is(adminPersistPassword));
+        assertThat(teiidServer.getTeiidAdminInfo().isSecure(), is(adminSecure));
+        assertThat(teiidServer.getTeiidJdbcInfo().getPort(), is(jdbcPort));
+        assertThat(teiidServer.getTeiidJdbcInfo().getUsername(), is(jdbcUser));
+        assertThat(teiidServer.getTeiidJdbcInfo().getPassword(), is(jdbcPassword));
+        assertThat(teiidServer.getTeiidJdbcInfo().isPasswordBeingPersisted(), is(jdbcPersistPassword));
+        assertThat(teiidServer.getTeiidJdbcInfo().isSecure(), is(jdbcSecure));
 
         String host = "myserver.com";
         customLabel = "";
@@ -275,25 +275,25 @@ public class ServerManagerTest {
         // construct a server just to get its URL
         adminInfo = new TeiidAdminInfo(adminPort, adminUser, adminPassword, adminPersistPassword, adminSecure);
         jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, jdbcPassword, jdbcPersistPassword, jdbcSecure);
-        testServer = new Server(host, adminInfo, jdbcInfo, eventMgr);
+        testServer = new TeiidServer(host, adminInfo, jdbcInfo, eventMgr);
         adminInfo.setHostProvider(testServer);
         jdbcInfo.setHostProvider(testServer);
 
-        server = this.mgr.getServer(testServer.getUrl());
-        assertThat(server, notNullValue());
-        assertThat(server, is(not(this.mgr.getDefaultServer())));
-        assertThat(server.getCustomLabel(), nullValue()); // customLabel is empty string but gets set as a null
-        assertThat(server.getHost(), is(host));
-        assertThat(server.getTeiidAdminInfo().getPort(), is(adminPort));
-        assertThat(server.getTeiidAdminInfo().getUsername(), is(adminUser));
-        assertThat(server.getTeiidAdminInfo().getPassword(), is(adminPassword));
-        assertThat(server.getTeiidAdminInfo().isPasswordBeingPersisted(), is(adminPersistPassword));
-        assertThat(server.getTeiidAdminInfo().isSecure(), is(adminSecure));
-        assertThat(server.getTeiidJdbcInfo().getPort(), is(jdbcPort));
-        assertThat(server.getTeiidJdbcInfo().getUsername(), is(jdbcUser));
-        assertThat(server.getTeiidJdbcInfo().getPassword(), is(jdbcPassword));
-        assertThat(server.getTeiidJdbcInfo().isPasswordBeingPersisted(), is(jdbcPersistPassword));
-        assertThat(server.getTeiidJdbcInfo().isSecure(), is(jdbcSecure));
+        teiidServer = this.mgr.getServer(testServer.getUrl());
+        assertThat(teiidServer, notNullValue());
+        assertThat(teiidServer, is(not(this.mgr.getDefaultServer())));
+        assertThat(teiidServer.getCustomLabel(), nullValue()); // customLabel is empty string but gets set as a null
+        assertThat(teiidServer.getHost(), is(host));
+        assertThat(teiidServer.getTeiidAdminInfo().getPort(), is(adminPort));
+        assertThat(teiidServer.getTeiidAdminInfo().getUsername(), is(adminUser));
+        assertThat(teiidServer.getTeiidAdminInfo().getPassword(), is(adminPassword));
+        assertThat(teiidServer.getTeiidAdminInfo().isPasswordBeingPersisted(), is(adminPersistPassword));
+        assertThat(teiidServer.getTeiidAdminInfo().isSecure(), is(adminSecure));
+        assertThat(teiidServer.getTeiidJdbcInfo().getPort(), is(jdbcPort));
+        assertThat(teiidServer.getTeiidJdbcInfo().getUsername(), is(jdbcUser));
+        assertThat(teiidServer.getTeiidJdbcInfo().getPassword(), is(jdbcPassword));
+        assertThat(teiidServer.getTeiidJdbcInfo().isPasswordBeingPersisted(), is(jdbcPersistPassword));
+        assertThat(teiidServer.getTeiidJdbcInfo().isSecure(), is(jdbcSecure));
     }
 
 }

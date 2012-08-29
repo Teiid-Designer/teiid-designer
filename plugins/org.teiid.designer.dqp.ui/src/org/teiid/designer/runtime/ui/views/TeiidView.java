@@ -63,8 +63,8 @@ import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
@@ -349,10 +349,10 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         if (selectedObjs != null && !selectedObjs.isEmpty()) {
             if (selectedObjs.size() == 1) {
                 Object selection = selectedObjs.get(0);
-                if (selection instanceof Server) {
-                	if( ((Server)selection).isConnected() ) {
+                if (selection instanceof TeiidServer) {
+                	if( ((TeiidServer)selection).isConnected() ) {
 	                    try {
-	                        currentSelectedAdmin = ((Server)selection).getAdmin();
+	                        currentSelectedAdmin = ((TeiidServer)selection).getAdmin();
 	                    } catch (Exception e) {
 	                        // DO NOTHING
 	                    }
@@ -451,9 +451,9 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
      * For each connected server, refreshes the Data Sources folder item and its child items.
      */
     void refreshDataSourceFolders() {
-        for (Server server : getServerManager().getServers()) {
-            if (server.isConnected()) {
-                this.viewer.refresh(this.treeProvider.getDataSourceFolder(server));
+        for (TeiidServer teiidServer : getServerManager().getServers()) {
+            if (teiidServer.isConnected()) {
+                this.viewer.refresh(this.treeProvider.getDataSourceFolder(teiidServer));
             }
         }
     }
@@ -462,9 +462,9 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
      * For each connected server, refreshes the Data Sources folder item and its child items.
      */
     void refreshTranslatorFolders() {
-        for (Server server : getServerManager().getServers()) {
-            if (server.isConnected()) {
-                this.viewer.refresh(server);
+        for (TeiidServer teiidServer : getServerManager().getServers()) {
+            if (teiidServer.isConnected()) {
+                this.viewer.refresh(teiidServer);
             }
         }
     }
@@ -473,9 +473,9 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
      * For each connected server, refreshes the VDBs folder item its child items.
      */
     void refreshVdbFolders() {
-        for (Server server : getServerManager().getServers()) {
-            if (server.isConnected()) {
-                this.viewer.refresh(this.treeProvider.getVdbFolder(server));
+        for (TeiidServer teiidServer : getServerManager().getServers()) {
+            if (teiidServer.isConnected()) {
+                this.viewer.refresh(this.treeProvider.getVdbFolder(teiidServer));
             }
         }
     }
@@ -594,7 +594,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     /**
      * @return the server manager being used by this view
      */
-    ServerManager getServerManager() {
+    TeiidServerManager getServerManager() {
         return DqpPlugin.getInstance().getServerManager();
     }
 
@@ -720,11 +720,11 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                                     tooltip = getVDBToolTip((TeiidVdb)data);
                                 } else if (data instanceof TeiidViewTreeProvider.TeiidFolder) {
                                     tooltip = ((TeiidViewTreeProvider.TeiidFolder)data).getName();
-                                } else if( data instanceof Server ) {
-                                	Server server = (Server)data;
-                                	String ttip = server.toString();
-                                	if( server.getConnectionError() != null ) {
-                                		ttip = ttip + "\n\n" + server.getConnectionError(); //$NON-NLS-1$
+                                } else if( data instanceof TeiidServer ) {
+                                	TeiidServer teiidServer = (TeiidServer)data;
+                                	String ttip = teiidServer.toString();
+                                	if( teiidServer.getConnectionError() != null ) {
+                                		ttip = ttip + "\n\n" + teiidServer.getConnectionError(); //$NON-NLS-1$
                                 	}
                                 	tooltip = ttip;
                                 } else {
@@ -1046,8 +1046,8 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         if (selection.size() == 1) {
             Object selectedObject = selection.getFirstElement();
 
-            if (selectedObject instanceof Server) {
-                msg = getString("statusBar.server.label", ((Server)selectedObject).toString()); //$NON-NLS-1$
+            if (selectedObject instanceof TeiidServer) {
+                msg = getString("statusBar.server.label", ((TeiidServer)selectedObject).toString()); //$NON-NLS-1$
             } else if (selectedObject instanceof TeiidTranslator) {
                 msg = getString("statusBar.translator.label", ((TeiidTranslator)selectedObject).getName()); //$NON-NLS-1$
             } else if (selectedObject instanceof TeiidVdb) {

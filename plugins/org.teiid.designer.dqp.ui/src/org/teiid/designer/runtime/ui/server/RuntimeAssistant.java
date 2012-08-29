@@ -16,8 +16,8 @@ import org.osgi.service.prefs.BackingStoreException;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.TeiidServerManager;
 
 
 /**
@@ -118,14 +118,14 @@ public final class RuntimeAssistant {
     /**
      * @return the default Teiid server (can be <code>null</code>)
      */
-    private static Server getServer() {
+    private static TeiidServer getServer() {
         return getServerManager().getDefaultServer();
     }
 
     /**
      * @return the server manager (never <code>null</code>)
      */
-    private static ServerManager getServerManager() {
+    private static TeiidServerManager getServerManager() {
         return DqpPlugin.getInstance().getServerManager();
     }
 

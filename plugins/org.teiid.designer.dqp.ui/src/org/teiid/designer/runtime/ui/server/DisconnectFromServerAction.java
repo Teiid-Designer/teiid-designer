@@ -7,7 +7,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 
 
@@ -46,20 +46,20 @@ public class DisconnectFromServerAction extends BaseSelectionListenerAction {
      */
     @Override
     public void run() {
-        final Server server = (Server)getStructuredSelection().getFirstElement();
+        final TeiidServer teiidServer = (TeiidServer)getStructuredSelection().getFirstElement();
         BusyIndicator.showWhile(getViewer().getControl().getDisplay(), new Runnable() {
 
             @Override
             public void run() {
                 try {
                 	// Call disconnect() first to clear out Server & admin caches
-                	server.disconnect();
+                	teiidServer.disconnect();
                 } catch (Exception e) {
                     UTIL.log(e);
-                    String msg = UTIL.getString("serverReconnectErrorMsg", server); //$NON-NLS-1$
+                    String msg = UTIL.getString("serverReconnectErrorMsg", teiidServer); //$NON-NLS-1$
                     WidgetUtil.showError(msg);
                 } finally {
-                	getViewer().refresh(server);
+                	getViewer().refresh(teiidServer);
                 }
             }
         });
@@ -72,7 +72,7 @@ public class DisconnectFromServerAction extends BaseSelectionListenerAction {
      */
     @Override
     protected boolean updateSelection( IStructuredSelection selection ) {
-        return ((selection.size() == 1) && (selection.getFirstElement() instanceof Server));
+        return ((selection.size() == 1) && (selection.getFirstElement() instanceof TeiidServer));
     }
 
 }

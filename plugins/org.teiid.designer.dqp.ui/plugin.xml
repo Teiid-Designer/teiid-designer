@@ -157,7 +157,7 @@
          </description>
          <enablement>
             <objectClass
-                  name="org.teiid.designer.runtime.Server">
+                  name="org.teiid.designer.runtime.TeiidServer">
             </objectClass>
          </enablement>
       </decorator>
@@ -165,7 +165,7 @@
             lightweight="true"
             location="BOTTOM_RIGHT"
             adaptable="true"
-            label="%previewDecoratorr.label"
+            label="%previewDecorator.label"
             state="true"
             class="org.teiid.designer.runtime.ui.views.PreviewModelObjectLabelProvider"
             id="org.teiid.designer.dqp.ui.previewDecorator">

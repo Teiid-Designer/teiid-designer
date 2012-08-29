@@ -21,12 +21,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.util.CoreArgCheck;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
 
 /**
- * The <code>DeleteServerDialog</code> class provides a UI for deleting a {@link Server server}.
+ * The <code>DeleteServerDialog</code> class provides a UI for deleting a {@link TeiidServer server}.
  *
  * @since 8.0
  */
@@ -39,7 +39,7 @@ public final class DeleteServerDialog extends MessageDialog {
     /**
      * Collection of servers which will be deleted.
      */
-    private final Collection<Server> serversBeingDeleted;
+    private final Collection<TeiidServer> serversBeingDeleted;
 
     // ===========================================================================================================================
     // Constructors
@@ -50,7 +50,7 @@ public final class DeleteServerDialog extends MessageDialog {
      * @param serversBeingDeleted the servers being deleted (never <code>null</code>)
      */
     public DeleteServerDialog( Shell parentShell,
-                               Collection<Server> serversBeingDeleted ) {
+                               Collection<TeiidServer> serversBeingDeleted ) {
         super(parentShell,
               UTIL.getString("deleteServerDialogTitle"), //$NON-NLS-1$
               DqpUiPlugin.getDefault().getImage(DqpUiPlugin.Images.DELETE_SERVER_ICON), null, MessageDialog.QUESTION,
@@ -80,8 +80,8 @@ public final class DeleteServerDialog extends MessageDialog {
         String msg;
 
         if (this.serversBeingDeleted.size() == 1) {
-            Server server = this.serversBeingDeleted.iterator().next();
-            msg = UTIL.getString("deleteServerDialogOneServerMsg", server.getUrl(), server.getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
+            TeiidServer teiidServer = this.serversBeingDeleted.iterator().next();
+            msg = UTIL.getString("deleteServerDialogOneServerMsg", teiidServer.getUrl(), teiidServer.getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
         } else {
             msg = UTIL.getString("deleteServerDialogMultipleServersMsg", this.serversBeingDeleted.size()); //$NON-NLS-1$
         }
@@ -103,8 +103,8 @@ public final class DeleteServerDialog extends MessageDialog {
             gd.horizontalIndent = 40;
             serverList.setLayoutData(gd);
 
-            for (Server server : this.serversBeingDeleted) {
-                serverList.add(server.toString());
+            for (TeiidServer teiidServer : this.serversBeingDeleted) {
+                serverList.add(teiidServer.toString());
             }
         }
 

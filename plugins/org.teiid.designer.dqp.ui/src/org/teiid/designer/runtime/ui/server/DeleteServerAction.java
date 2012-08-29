@@ -18,8 +18,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
-import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
 /**
@@ -36,12 +36,12 @@ public final class DeleteServerAction extends BaseSelectionListenerAction {
     /**
      * The server manager used to delete servers.
      */
-    private final ServerManager serverManager;
+    private final TeiidServerManager teiidServerManager;
 
     /**
      * The servers being deleted (never <code>null</code>).
      */
-    private final List<Server> serversToDelete;
+    private final List<TeiidServer> serversToDelete;
 
     /**
      * The shell used to display the delete confirmation dialog.
@@ -54,18 +54,18 @@ public final class DeleteServerAction extends BaseSelectionListenerAction {
 
     /**
      * @param shell the parent shell used to display the confirmation dialog
-     * @param serverManager the server manager to use when deleting servers
+     * @param teiidServerManager the server manager to use when deleting servers
      */
     public DeleteServerAction( Shell shell,
-                               ServerManager serverManager ) {
+                               TeiidServerManager teiidServerManager ) {
         super(UTIL.getString("deleteServerActionText")); //$NON-NLS-1$
         setToolTipText(UTIL.getString("deleteServerActionToolTip")); //$NON-NLS-1$
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiPlugin.Images.DELETE_SERVER_ICON));
         setEnabled(false);
 
-        this.serversToDelete = new ArrayList<Server>(5);
+        this.serversToDelete = new ArrayList<TeiidServer>(5);
         this.shell = shell;
-        this.serverManager = serverManager;
+        this.teiidServerManager = teiidServerManager;
     }
 
     // ===========================================================================================================================
@@ -84,8 +84,8 @@ public final class DeleteServerAction extends BaseSelectionListenerAction {
         if (dialog.open() == Window.OK) {
             boolean errorsOccurred = false;
 
-            for (Server server : this.serversToDelete) {
-                IStatus status = this.serverManager.removeServer(server);
+            for (TeiidServer teiidServer : this.serversToDelete) {
+                IStatus status = this.teiidServerManager.removeServer(teiidServer);
 
                 if (!status.isOK()) {
                     UTIL.log(status);
@@ -120,8 +120,8 @@ public final class DeleteServerAction extends BaseSelectionListenerAction {
 
         // disable if one non-server is found
         for (Object obj : selection.toArray()) {
-            if (obj instanceof Server) {
-                this.serversToDelete.add((Server)obj);
+            if (obj instanceof TeiidServer) {
+                this.serversToDelete.add((TeiidServer)obj);
             } else {
                 this.serversToDelete.clear();
                 return false;

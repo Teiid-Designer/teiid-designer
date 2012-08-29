@@ -15,8 +15,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
-import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.views.TeiidView;
@@ -24,7 +24,7 @@ import org.teiid.designer.ui.common.util.UiUtil;
 
 
 /**
- * The <code>EditServerAction</code> runs a UI that allows {@link Server server} properties to be changed.
+ * The <code>EditServerAction</code> runs a UI that allows {@link TeiidServer server} properties to be changed.
  *
  * @since 8.0
  */
@@ -37,12 +37,12 @@ public final class EditServerAction extends BaseSelectionListenerAction {
     /**
      * The selected server being edited.
      */
-    private Server serverBeingEdited;
+    private TeiidServer serverBeingEdited;
 
     /**
      * The server manager used to create and edit servers.
      */
-    private final ServerManager serverManager;
+    private final TeiidServerManager teiidServerManager;
 
     /**
      * The shell used to display the dialog that edits and creates servers.
@@ -55,17 +55,17 @@ public final class EditServerAction extends BaseSelectionListenerAction {
 
     /**
      * @param shell the parent shell used to display the dialog
-     * @param serverManager the server manager to use when creating and editing servers
+     * @param teiidServerManager the server manager to use when creating and editing servers
      */
     public EditServerAction( Shell shell,
-                             ServerManager serverManager ) {
+                             TeiidServerManager teiidServerManager ) {
         super(UTIL.getString("editServerActionText")); //$NON-NLS-1$
         setToolTipText(UTIL.getString("editServerActionToolTip")); //$NON-NLS-1$
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiPlugin.Images.EDIT_SERVER_ICON));
         setEnabled(false);
 
         this.shell = shell;
-        this.serverManager = serverManager;
+        this.teiidServerManager = teiidServerManager;
     }
 
     // ===========================================================================================================================
@@ -92,7 +92,7 @@ public final class EditServerAction extends BaseSelectionListenerAction {
     	
     	if( this.serverBeingEdited == null ) return;
     	
-        ServerWizard wizard = new ServerWizard(this.serverManager, this.serverBeingEdited);
+        ServerWizard wizard = new ServerWizard(this.teiidServerManager, this.serverBeingEdited);
         WizardDialog dialog = new WizardDialog(this.shell, wizard) {
             /**
              * {@inheritDoc}
@@ -150,8 +150,8 @@ public final class EditServerAction extends BaseSelectionListenerAction {
         Object obj = selection.getFirstElement();
 
         // enable if server is selected
-        if (obj instanceof Server) {
-            this.serverBeingEdited = (Server)obj;
+        if (obj instanceof TeiidServer) {
+            this.serverBeingEdited = (TeiidServer)obj;
             return true;
         }
 

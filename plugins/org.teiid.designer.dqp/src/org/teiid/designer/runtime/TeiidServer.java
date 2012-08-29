@@ -32,7 +32,7 @@ import org.teiid.jdbc.TeiidDriver;
  *
  * @since 8.0
  */
-public class Server implements HostProvider {
+public class TeiidServer implements HostProvider {
 
     // ===========================================================================================================================
     // Class Methods
@@ -102,7 +102,7 @@ public class Server implements HostProvider {
      * @param eventManager the event manager (never <code>null</code>)
      * @throws IllegalArgumentException if any of the parameters are <code>null</code>
      */
-    public Server( String host,
+    public TeiidServer( String host,
                    TeiidAdminInfo adminInfo,
                    TeiidJdbcInfo jdbcInfo,
                    EventManager eventManager ) {
@@ -162,7 +162,7 @@ public class Server implements HostProvider {
             return false;
         }
 
-        Server otherServer = (Server) obj;
+        TeiidServer otherServer = (TeiidServer) obj;
 
         if (!getTeiidAdminInfo().equals(otherServer.getTeiidAdminInfo())) {
             return false;
@@ -253,7 +253,7 @@ public class Server implements HostProvider {
      * @return <code>true</code> if the servers have the same key
      * @throws IllegalArgumentException if the argument is <code>null</code>
      */
-    public boolean hasSameKey( Server otherServer ) {
+    public boolean hasSameKey( TeiidServer otherServer ) {
         CoreArgCheck.isNotNull(otherServer, "otherServer"); //$NON-NLS-1$
         return (equivalent(getUrl(), otherServer.getUrl()) && equivalent(getTeiidAdminInfo().getUsername(),
                                                                          otherServer.getTeiidAdminInfo().getUsername()));
@@ -349,7 +349,7 @@ public class Server implements HostProvider {
 			
 			Admin adminApi = getAdmin().getAdminApi();
  
-			adminApi.deploy("ping-vdb.xml", (InputStream)new ByteArrayInputStream(ServerUtils.TEST_VDB.getBytes())); //$NON-NLS-1$
+			adminApi.deploy("ping-vdb.xml", (InputStream)new ByteArrayInputStream(TeiidServerUtils.TEST_VDB.getBytes())); //$NON-NLS-1$
 			try{
 				String url = "jdbc:teiid:ping@mm://"+host+':'+port+";user="+username+";password="+password+';';  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				

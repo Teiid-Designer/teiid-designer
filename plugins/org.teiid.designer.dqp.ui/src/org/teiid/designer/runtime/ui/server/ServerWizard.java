@@ -14,8 +14,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
-import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
@@ -33,7 +33,7 @@ public final class ServerWizard extends Wizard {
     /**
      * Non-<code>null</code> if the wizard is editing an existing server.
      */
-    private Server existingServer;
+    private TeiidServer existingServer;
 
     /**
      * The wizard page containing all the controls that allow editing of server properties.
@@ -43,9 +43,9 @@ public final class ServerWizard extends Wizard {
     /**
      * The manager in charge of the server registry.
      */
-    private final ServerManager serverManager;
+    private final TeiidServerManager teiidServerManager;
 
-    private Server resultServer;
+    private TeiidServer resultServer;
 
     // ===========================================================================================================================
     // Constructors
@@ -54,11 +54,11 @@ public final class ServerWizard extends Wizard {
     /**
      * Constructs a wizard that creates a new server.
      * 
-     * @param serverManager the server manager in charge of the server registry (never <code>null</code>)
+     * @param teiidServerManager the server manager in charge of the server registry (never <code>null</code>)
      */
-    public ServerWizard( ServerManager serverManager ) {
+    public ServerWizard( TeiidServerManager teiidServerManager ) {
         this.page = new ServerPage();
-        this.serverManager = serverManager;
+        this.teiidServerManager = teiidServerManager;
 
         setDefaultPageImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SERVER_WIZBAN));
         setWindowTitle(UTIL.getString("serverWizardNewServerTitle")); //$NON-NLS-1$
@@ -67,14 +67,14 @@ public final class ServerWizard extends Wizard {
     /**
      * Constructs a wizard that edits an existing server.
      * 
-     * @param serverManager the server manager in charge of the server registry (never <code>null</code>)
-     * @param server the server whose properties are being edited (never <code>null</code>)
+     * @param teiidServerManager the server manager in charge of the server registry (never <code>null</code>)
+     * @param teiidServer the server whose properties are being edited (never <code>null</code>)
      */
-    public ServerWizard( ServerManager serverManager,
-                         Server server ) {
-        this.page = new ServerPage(server);
-        this.serverManager = serverManager;
-        this.existingServer = server;
+    public ServerWizard( TeiidServerManager teiidServerManager,
+                         TeiidServer teiidServer ) {
+        this.page = new ServerPage(teiidServer);
+        this.teiidServerManager = teiidServerManager;
+        this.existingServer = teiidServer;
         setWindowTitle(UTIL.getString("serverWizardEditServerTitle")); //$NON-NLS-1$
     }
 
@@ -118,8 +118,8 @@ public final class ServerWizard extends Wizard {
     /**
      * @return the server manager (never <code>null</code>)
      */
-    protected ServerManager getServerManager() {
-        return this.serverManager;
+    protected TeiidServerManager getServerManager() {
+        return this.teiidServerManager;
     }
 
     /**
@@ -140,14 +140,14 @@ public final class ServerWizard extends Wizard {
         resultServer = this.page.getServer();
 
         if (this.existingServer == null) {
-            status = this.serverManager.addServer(resultServer);
+            status = this.teiidServerManager.addServer(resultServer);
 
             if (status.getSeverity() == IStatus.ERROR) {
                 MessageDialog.openError(getShell(), UTIL.getString("errorDialogTitle"), //$NON-NLS-1$
                                         UTIL.getString("serverWizardEditServerErrorMsg")); //$NON-NLS-1$
             }
         } else if (!this.existingServer.equals(resultServer)) {
-            status = this.serverManager.updateServer(this.existingServer, resultServer);
+            status = this.teiidServerManager.updateServer(this.existingServer, resultServer);
 
             if (status.getSeverity() == IStatus.ERROR) {
                 MessageDialog.openError(getShell(), UTIL.getString("errorDialogTitle"), //$NON-NLS-1$
@@ -167,7 +167,7 @@ public final class ServerWizard extends Wizard {
         return this.page.shouldAutoConnect();
     }
 
-    public Server getServer() {
+    public TeiidServer getServer() {
         return this.resultServer;
     }
 }

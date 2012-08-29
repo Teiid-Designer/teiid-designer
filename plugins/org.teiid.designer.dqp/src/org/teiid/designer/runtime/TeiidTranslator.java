@@ -64,7 +64,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
         if (obj.getClass() != getClass()) return false;
 
         TeiidTranslator other = (TeiidTranslator)obj;
-        Server otherServer = other.getAdmin().getServer();
+        TeiidServer otherServer = other.getAdmin().getServer();
 
         if (getName().equals(other.getName()) && (getAdmin().getServer() == otherServer || getAdmin().getServer().equals(otherServer)) ) return true;
 

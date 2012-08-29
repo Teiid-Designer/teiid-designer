@@ -30,8 +30,8 @@ import org.teiid.core.util.HashCodeUtil;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ExecutionAdmin;
-import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
@@ -56,7 +56,7 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
     static final String DATA_SOURCES_FOLDER_NAME = DqpUiConstants.UTIL.getString("TeiidViewTreeProvider.dataSourcesFolder.label"); //$NON-NLS-1$
     static final String TRANSLATORS_FOLDER_NAME = DqpUiConstants.UTIL.getString("TeiidViewTreeProvider.translatorsFolder.label"); //$NON-NLS-1$
 
-    private ServerManager serverMgr;
+    private TeiidServerManager serverMgr;
 
     private boolean showVDBs = true;
     private boolean showDataSources = true;
@@ -66,7 +66,7 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
      * Servers that a connection can't be established. Value is the last time establishing a connection was tried.
      */
     @GuardedBy( "offlineServersLock" )
-    private final Map<Server, Long> offlineServerMap = new HashMap<Server, Long>();
+    private final Map<TeiidServer, Long> offlineServerMap = new HashMap<TeiidServer, Long>();
 
     /**
      * Lock used for when accessing the offline server map. The map will be accessed in different threads as the decorator runs in
@@ -95,12 +95,12 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
     }
 
     /**
-     * @param server the server that is offline
+     * @param teiidServer the server that is offline
      */
-    private void addOfflineServer( Server server ) {
+    private void addOfflineServer( TeiidServer teiidServer ) {
         try {
             this.offlineServersLock.writeLock().lock();
-            this.offlineServerMap.put(server, System.currentTimeMillis());
+            this.offlineServerMap.put(teiidServer, System.currentTimeMillis());
         } finally {
             this.offlineServersLock.writeLock().unlock();
         }
@@ -148,13 +148,13 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
         // the decorator framework actually constructs another instance of this provider and the server manager will not be set by
         // the getElements method
         if (getServerManager() != null) {
-            assert (element instanceof Server) : "element is not a server (check plugin.xml enablement)"; //$NON-NLS-1$
-            Server server = (Server)element;
+            assert (element instanceof TeiidServer) : "element is not a server (check plugin.xml enablement)"; //$NON-NLS-1$
+            TeiidServer teiidServer = (TeiidServer)element;
 
-            if (isOkToConnect(server)) {
+            if (isOkToConnect(teiidServer)) {
                 // decorate server if can't connect
-                if (!server.isConnected()) {
-                    addOfflineServer(server);
+                if (!teiidServer.isConnected()) {
+                    addOfflineServer(teiidServer);
                 }
             }
         }
@@ -167,11 +167,11 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
 //    @SuppressWarnings("unused")
     @Override
     public Object[] getChildren( Object parentElement ) {
-        if ((parentElement instanceof Server)) {
+        if ((parentElement instanceof TeiidServer)) {
             Collection<Object> allObjects = new ArrayList<Object>();
-            Server server = (Server)parentElement;
+            TeiidServer teiidServer = (TeiidServer)parentElement;
 
-            if (!server.isConnected()) {
+            if (!teiidServer.isConnected()) {
                 return new Object[0];
             }
 
@@ -181,10 +181,10 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
                     Collection<TeiidDataSource> dataSources;
 
                     if (this.showDataSources) {
-                        dataSources = new ArrayList(server.getAdmin().getDataSources());
+                        dataSources = new ArrayList(teiidServer.getAdmin().getDataSources());
 
                         if (!dataSources.isEmpty()) {
-                            allObjects.add(new DataSourcesFolder(server, dataSources.toArray()));
+                            allObjects.add(new DataSourcesFolder(teiidServer, dataSources.toArray()));
                         }
                     } else {
                         dataSources = Collections.emptyList();
@@ -198,10 +198,10 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
                     Collection<TeiidVdb> vdbs;
 
                     if (this.showVDBs) {
-                        vdbs = new ArrayList<TeiidVdb>(server.getAdmin().getVdbs());
+                        vdbs = new ArrayList<TeiidVdb>(teiidServer.getAdmin().getVdbs());
 
                         if (!vdbs.isEmpty()) {
-                            allObjects.add(new VdbsFolder(server, vdbs.toArray()));
+                            allObjects.add(new VdbsFolder(teiidServer, vdbs.toArray()));
                         }
                     } else {
                         vdbs = Collections.emptyList();
@@ -215,10 +215,10 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
                     Collection<TeiidTranslator> translators;
 
                     if (this.showTranslators) {
-                        translators = server.getAdmin().getTranslators();
+                        translators = teiidServer.getAdmin().getTranslators();
 
                         if (!translators.isEmpty()) {
-                            allObjects.add(new TranslatorsFolder(server, translators.toArray()));
+                            allObjects.add(new TranslatorsFolder(teiidServer, translators.toArray()));
                         }
                     } else {
                         translators = Collections.emptyList();
@@ -249,8 +249,8 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
      */
     @Override
     public Object[] getElements( Object inputElement ) {
-        if (inputElement instanceof ServerManager) {
-            serverMgr = (ServerManager)inputElement;
+        if (inputElement instanceof TeiidServerManager) {
+            serverMgr = (TeiidServerManager)inputElement;
             return serverMgr.getServers().toArray();
         }
 
@@ -263,32 +263,32 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
      */
     @Override
     public Image getImage( Object element ) {
-        if (element instanceof Server) {
-        	Server server = (Server)element;
-        	boolean isOKtoConnect = isOkToConnect(server);
+        if (element instanceof TeiidServer) {
+        	TeiidServer teiidServer = (TeiidServer)element;
+        	boolean isOKtoConnect = isOkToConnect(teiidServer);
         	//System.out.println(" >>>> TVTP.getImage() IS CONNECTED = " + server.isConnected() + " IS OK TO CONNECT = " + isOKtoConnect + "  Server = " + server.getUrl());
         	boolean isError = false;
             if (isOKtoConnect) {
                 // decorate server if can't connect
-                if (!server.isConnected()) {
-                    addOfflineServer(server);
+                if (!teiidServer.isConnected()) {
+                    addOfflineServer(teiidServer);
                     isError = true;
                 }
             } else {
-            	if( !server.isConnected() ) {
+            	if( !teiidServer.isConnected() ) {
                 	isError = true;
             	}
             }
             //isError = false;
             if (getServerManager() != null) {
-                if (this.serverMgr.isDefaultServer((Server)element)) {
+                if (this.serverMgr.isDefaultServer((TeiidServer)element)) {
                 	if( isError )
                 		return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ERROR_ICON);
                     return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ICON);
                 }
             }
             if( isError) {
-            	if( server.getConnectionError() != null )
+            	if( teiidServer.getConnectionError() != null )
             	return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SERVER_ERROR_ICON);
                 return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ERROR_ICON);
             }
@@ -332,7 +332,7 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
     /**
      * @return the server manager (never <code>null</code>)
      */
-    private ServerManager getServerManager() {
+    private TeiidServerManager getServerManager() {
         if (this.serverMgr == null) {
             this.serverMgr = DqpPlugin.getInstance().getServerManager();
         }
@@ -346,14 +346,14 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
      */
     @Override
     public String getText( Object element ) {
-        if (element instanceof Server) {
-            Server server = (Server)element;
+        if (element instanceof TeiidServer) {
+            TeiidServer teiidServer = (TeiidServer)element;
             
-            if (server.getCustomLabel() == null) {
-                return server.getUrl();
+            if (teiidServer.getCustomLabel() == null) {
+                return teiidServer.getUrl();
             }
 
-            return server.getCustomLabel();
+            return teiidServer.getCustomLabel();
         }
 
         if (element instanceof TeiidFolder) {
@@ -455,15 +455,15 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
     /**
      * Determines if a try to connect to a server should be done based on the last time a try was done and failed.
      * 
-     * @param server the server being checked
+     * @param teiidServer the server being checked
      * @return <code>true</code> if it is OK to try and connect
      */
-    private boolean isOkToConnect( Server server ) {
+    private boolean isOkToConnect( TeiidServer teiidServer ) {
         boolean check = false; // check map for time
 
         try {
             this.offlineServersLock.readLock().lock();
-            check = this.offlineServerMap.containsKey(server);
+            check = this.offlineServerMap.containsKey(teiidServer);
         } finally {
             this.offlineServersLock.readLock().unlock();
         }
@@ -472,12 +472,12 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
             try {
                 this.offlineServersLock.writeLock().lock();
 
-                if (this.offlineServerMap.containsKey(server)) {
-                    long checkTime = this.offlineServerMap.get(server);
+                if (this.offlineServerMap.containsKey(teiidServer)) {
+                    long checkTime = this.offlineServerMap.get(teiidServer);
 
                     // OK to try and connect if last failed attempt was too long ago
                     if ((System.currentTimeMillis() - checkTime) > RETRY_DURATION) {
-                        this.offlineServerMap.remove(server);
+                        this.offlineServerMap.remove(teiidServer);
                         return true;
                     }
 
@@ -507,10 +507,10 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
 
     class TeiidFolder {
         Object[] theValues;
-        Server server;
+        TeiidServer teiidServer;
 
-        public TeiidFolder(Server server, Object[] values ) {
-        	this.server = server;
+        public TeiidFolder(TeiidServer teiidServer, Object[] values ) {
+        	this.teiidServer = teiidServer;
             theValues = values;
         }
         
@@ -541,15 +541,15 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
         	ExecutionAdmin admin = null;
         	
         	try {
-				admin = server.getAdmin();
+				admin = teiidServer.getAdmin();
 			} catch (Exception e) {
 				DqpUiConstants.UTIL.log(IStatus.ERROR, e, e.getMessage());
 			}
         	return admin;
         }
         
-        private Server getServer() {
-            return this.server;
+        private TeiidServer getServer() {
+            return this.teiidServer;
         }
         
         /**
@@ -559,13 +559,13 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
          */
         @Override
         public int hashCode() {
-            return HashCodeUtil.hashCode(this.server.hashCode(), getClass().hashCode());
+            return HashCodeUtil.hashCode(this.teiidServer.hashCode(), getClass().hashCode());
         }
     }
 
     class DataSourcesFolder extends TeiidFolder {
-        public DataSourcesFolder(Server server, Object[] values ) {
-            super(server, values);
+        public DataSourcesFolder(TeiidServer teiidServer, Object[] values ) {
+            super(teiidServer, values);
         }
 
         @Override
@@ -575,8 +575,8 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
     }
 
     class VdbsFolder extends TeiidFolder {
-        public VdbsFolder(Server server, Object[] values ) {
-            super(server, values);
+        public VdbsFolder(TeiidServer teiidServer, Object[] values ) {
+            super(teiidServer, values);
         }
 
         @Override
@@ -586,8 +586,8 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
     }
 
     class TranslatorsFolder extends TeiidFolder {
-        public TranslatorsFolder(Server server, Object[] values ) {
-            super(server, values);
+        public TranslatorsFolder(TeiidServer teiidServer, Object[] values ) {
+            super(teiidServer, values);
         }
 
         @Override

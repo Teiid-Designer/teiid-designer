@@ -16,7 +16,7 @@ import org.eclipse.ui.part.PluginDropAdapter;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.actions.DeployVdbAction;
@@ -35,7 +35,7 @@ public class TeiidViewDropAdapter extends PluginDropAdapter {
      */
     private TransferData currentTransfer;
     // private TeiidTranslator theTargetBinding;/
-    private Server theTargetServer;
+    private TeiidServer theTargetServer;
 
     /**
      * @param theViewer
@@ -95,10 +95,10 @@ public class TeiidViewDropAdapter extends PluginDropAdapter {
             // plugin cannot be loaded without the plugin data
             // theTargetBinding = (TeiidTranslator)theTarget;
             return true;
-        } else if (theTarget instanceof Server && currentTransfer != null
+        } else if (theTarget instanceof TeiidServer && currentTransfer != null
                    && ResourceTransfer.getInstance().isSupportedType(currentTransfer)) {
             // plugin cannot be loaded without the plugin data
-            theTargetServer = (Server)theTarget;
+            theTargetServer = (TeiidServer)theTarget;
             return true;
         }
         // theTargetBinding = null;

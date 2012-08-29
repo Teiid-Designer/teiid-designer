@@ -170,7 +170,7 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo {
     @Override
     protected IStatus validateUrl() {
         try {
-            ServerUtils.validPortNumber(getPort());
+            TeiidServerUtils.validPortNumber(getPort());
         } catch (Exception e) {
             return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("invalidServerUrl", getType(), e.getMessage()), e); //$NON-NLS-1$
         }

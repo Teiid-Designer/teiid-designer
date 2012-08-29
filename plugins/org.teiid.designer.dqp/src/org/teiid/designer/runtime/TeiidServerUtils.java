@@ -17,7 +17,7 @@ import org.teiid.net.TeiidURL;
  *
  * @since 8.0
  */
-public class ServerUtils {
+public class TeiidServerUtils {
 
     private static PluginUtil UTIL = DqpPlugin.Util;
     /**
@@ -40,7 +40,7 @@ public class ServerUtils {
 			"</vdb>"; //$NON-NLS-1$ +
 
 
-    public ServerUtils getInstance() {
+    public TeiidServerUtils getInstance() {
         return this;
     }
 
