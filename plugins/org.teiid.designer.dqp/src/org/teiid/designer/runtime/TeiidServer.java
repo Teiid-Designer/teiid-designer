@@ -16,7 +16,9 @@ import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerListener;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.ServerEvent;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.AdminException;
@@ -24,6 +26,7 @@ import org.teiid.adminapi.AdminFactory;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.HashCodeUtil;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.jdbc.TeiidDriver;
 
 
@@ -94,6 +97,38 @@ public class TeiidServer implements HostProvider {
      */
     private IServer parentServer;
 
+    private IServerListener serverListener = new IServerListener() {
+
+        @Override
+        public void serverChanged(ServerEvent event) {
+            if (event == null)
+                return;
+            
+            int eventKind = event.getKind();
+            if ((eventKind & ServerEvent.SERVER_CHANGE) == 0)
+                return;
+            
+            // server change event
+            if ((eventKind & ServerEvent.STATE_CHANGE) == 0)
+                return;
+            
+            int state = event.getState();
+            
+            if (state == IServer.STATE_STOPPING || state == IServer.STATE_STOPPED) {
+                disconnect();
+                notifyRefresh();
+            } else if (state == IServer.STATE_STARTED && TeiidServerAdapterUtil.isJBossServerConnected(event.getServer())) {
+                try {
+                    getAdmin();
+                } catch (Exception ex) {
+                    Util.log(ex);
+                } finally {
+                    notifyRefresh();
+                }
+            }
+        }
+    };
+
     // ===========================================================================================================================
     // Constructors
     // ===========================================================================================================================
@@ -147,6 +182,8 @@ public class TeiidServer implements HostProvider {
             
             // The host and admin port match so must be the same server
             parentServer = server;
+            parentServer.addServerListener(serverListener);
+            
             return;
         }
         
