@@ -33,8 +33,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
@@ -236,6 +241,24 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
                 handleServerComboSelection();
             }
         });
+        
+        Hyperlink openServerViewHyperlink = toolkit.createHyperlink(comboFrame, 
+                                DqpUiConstants.UTIL.getString("TeiidServerOverviewSection.hyperlinkLabel"), SWT.NONE); //$NON-NLS-1$
+        GridDataFactory.swtDefaults().applyTo(openServerViewHyperlink);
+        openServerViewHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+
+            @Override
+            public void linkActivated(HyperlinkEvent e) {
+                //open view
+                IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                try {
+                    window.getActivePage().showView("org.eclipse.wst.server.ui.ServersView");  //$NON-NLS-1$
+                } catch (PartInitException ex) {
+                    DqpUiConstants.UTIL.log(ex);
+                }
+            }
+        });        
+        
         
         super.createPartControl(frame);
         
