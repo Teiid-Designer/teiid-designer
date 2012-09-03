@@ -19,8 +19,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionEvent;
@@ -39,7 +37,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
-import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
@@ -244,8 +241,6 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
         
         viewer = getCommonViewer();
         GridDataFactory.fillDefaults().grab(true, true).applyTo(viewer.getControl());
-        
-//        initDragAndDrop();
 
         hookToolTips();
 
@@ -491,21 +486,6 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
         viewer.getTree().addListener(SWT.KeyDown, treeListener);
         viewer.getTree().addListener(SWT.MouseMove, treeListener);
         viewer.getTree().addListener(SWT.MouseHover, treeListener);
-    }
-
-    /**
-     * @see org.eclipse.ui.views.navigator.ResourceNavigator#initDragAndDrop()
-     */
-    private void initDragAndDrop() {
-        // code copied from superclass. only change is to the drag adapter
-        int ops = DND.DROP_COPY | DND.DROP_MOVE;
-        Transfer[] transfers = new Transfer[] {ResourceTransfer.getInstance()};
-
-        // drop support
-        TeiidViewDropAdapter adapter = new TeiidViewDropAdapter(this.viewer);
-        adapter.setFeedbackEnabled(false);
-
-        viewer.addDropSupport(ops | DND.DROP_DEFAULT, transfers, adapter);
     }
 
     private void initKeyListener() {

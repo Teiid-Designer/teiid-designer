@@ -263,6 +263,11 @@
                   value="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
             </instanceof>
          </triggerPoints>
+         <dropAssistant
+               class="org.teiid.designer.runtime.ui.views.TeiidViewDropAdapterAssistant"
+               id="org.teiid.designer.runtime.ui.views.Teiid.dnd">
+            <possibleDropTargets></possibleDropTargets>
+         </dropAssistant>
       </navigatorContent>
       <actionProvider
             class="org.teiid.designer.runtime.ui.views.TeiidServerActionProvider"
