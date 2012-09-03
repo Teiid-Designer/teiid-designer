@@ -46,6 +46,7 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerLifecycleListener;
 import org.eclipse.wst.server.core.ServerCore;
 import org.teiid.adminapi.Model;
 import org.teiid.core.util.CoreStringUtil;
@@ -167,6 +168,33 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
     };
     
     private KeyInValueHashMap<String, IServer> serverMap = new KeyInValueHashMap<String, IServer>(adapter);
+
+    private IServerLifecycleListener serversListener = new IServerLifecycleListener() {
+        
+        private void refresh() {
+            jbossServerCombo.getDisplay().asyncExec(new Runnable() {
+                @Override
+                public void run() {
+                    populateJBossServerCombo();
+                }
+            });
+        }
+        
+        @Override
+        public void serverAdded(IServer server) {
+            refresh();
+        }
+        
+        @Override
+        public void serverRemoved(IServer server) {
+            refresh();
+        }
+        
+        @Override
+        public void serverChanged(IServer server) {
+            // do nothing
+        }        
+    };
     
     /**
      * The constructor.
@@ -278,6 +306,8 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
 
         initKeyListener();
         
+        ServerCore.addServerLifecycleListener(serversListener);
+        
         // Populate the jboss server combo box which
         // should also populate the viewer as well
         populateJBossServerCombo();
@@ -289,6 +319,7 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
     }
 
     private void populateJBossServerCombo() {
+        serverMap.clear();
 
         IServer[] servers = ServerCore.getServers();
         for (IServer server : servers) {

@@ -125,11 +125,11 @@ public final class EditServerAction extends BaseSelectionListenerAction {
             return false;
         }
 
-        Object obj = selection.getFirstElement();
+        TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
 
         // enable if server is selected
-        if (obj instanceof TeiidServer) {
-            this.serverBeingEdited = (TeiidServer)obj;
+        if (teiidServer != null) {
+            this.serverBeingEdited = teiidServer;
             return true;
         }
 

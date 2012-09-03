@@ -57,7 +57,8 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
      */
     @Override
     public void run() {
-        final TeiidServer teiidServer = (TeiidServer)getStructuredSelection().getFirstElement();
+        IStructuredSelection sselection = getStructuredSelection();
+        final TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(sselection);
         BusyIndicator.showWhile(getViewer().getControl().getDisplay(), new Runnable() {
 
             @Override
@@ -73,7 +74,7 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
                     WidgetUtil.showError(msg);
                     teiidServer.setConnectionError(msg);
                 } finally {
-                    getViewer().refresh(teiidServer);
+                    getViewer().refresh();
                 }
             }
         });
@@ -86,7 +87,14 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
      */
     @Override
     protected boolean updateSelection( IStructuredSelection selection ) {
-        return ((selection.size() == 1) && (selection.getFirstElement() instanceof TeiidServer));
+        if (selection.size() != 1)
+            return false;
+        
+        TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
+        if (teiidServer != null)
+            return true;
+        
+        return false;
     }
 
 }

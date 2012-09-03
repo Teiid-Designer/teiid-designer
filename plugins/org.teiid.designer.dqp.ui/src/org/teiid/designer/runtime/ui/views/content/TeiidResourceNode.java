@@ -124,4 +124,13 @@ public class TeiidResourceNode extends ContentNode<ITypeNode> implements IResour
         }
         return getParent().getAddress() + PATH_SEPARATOR + getContainer().getName() + "=" + getName(); //$NON-NLS-1$
     }
+
+    /**
+     * Does this node have any children
+     * 
+     * @return true if there are children.
+     */
+    public boolean hasChildren() {
+        return children != null && ! children.isEmpty();
+    }
 }

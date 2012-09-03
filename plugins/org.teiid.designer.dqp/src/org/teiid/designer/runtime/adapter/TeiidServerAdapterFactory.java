@@ -38,6 +38,10 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
         if (TeiidServer.class != adapterType)
             return null;
         
+        if (adaptableObject instanceof TeiidServer) {
+            return adaptableObject;
+        }
+        
         try {
             if (adaptableObject instanceof IServer) {
                 return adaptServer((IServer) adaptableObject);

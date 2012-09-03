@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -109,18 +108,17 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
      */
     @Override
     protected boolean updateSelection( IStructuredSelection selection ) {
-        // reset selected server collection
-        this.selectedServer = null;
-
         // disable if empty selection
-        if (selection.isEmpty() && selection.size() != 1) {
+        if (selection.size() != 1) {
             return false;
         }
+        
+        // reset selected server collection
+        TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
 
         // enable only if selected object is server and not same server
-        Object selectedObj = selection.getFirstElement();
-        if (selectedObj instanceof TeiidServer) {
-            this.selectedServer = (TeiidServer)selectedObj;
+        if (teiidServer != null) {
+            this.selectedServer = teiidServer;
             if (this.teiidServerManager.getDefaultServer() != null
                 && !this.selectedServer.equals(this.teiidServerManager.getDefaultServer())) {
                 return true;

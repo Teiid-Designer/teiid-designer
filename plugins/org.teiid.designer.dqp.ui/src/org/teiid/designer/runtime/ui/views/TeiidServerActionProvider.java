@@ -38,18 +38,16 @@ import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
-import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.actions.ExecuteVDBAction;
 import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
-import org.teiid.designer.runtime.ui.server.DeleteServerAction;
 import org.teiid.designer.runtime.ui.server.DisconnectFromServerAction;
 import org.teiid.designer.runtime.ui.server.EditServerAction;
-import org.teiid.designer.runtime.ui.server.NewServerAction;
 import org.teiid.designer.runtime.ui.server.ReconnectToServerAction;
+import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.server.SetDefaultServerAction;
 import org.teiid.designer.runtime.ui.views.content.DataSourcesFolder;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -77,24 +75,18 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     private IAction collapseAllAction;
 
     /**
-     * Deletes a server.
-     */
-    private DeleteServerAction deleteServerAction;
-
-    /**
-     * Creates a new server.
-     */
-    private NewServerAction newServerAction;
-
-    /**
      * Edits a server's properties.
      */
     private EditServerAction editServerAction;
+    
     /**
      * Refreshes the server connections.
      */
     private ReconnectToServerAction reconnectAction;
     
+    /**
+     * Disconnect the server
+     */
     private DisconnectFromServerAction disconnectAction;
 
     /**
@@ -115,8 +107,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     private IAction showPreviewDataSourcesAction;
     
     private IAction showTranslatorsAction;
-    
-    private ExecutionAdmin currentSelectedAdmin;
 
     private ISelectionProvider selectionProvider;
 
@@ -349,27 +339,29 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         this.disconnectAction = new DisconnectFromServerAction(viewer);
         viewer.addSelectionChangedListener(this.disconnectAction);
 
-        // the delete action will delete one or more servers
-        this.deleteServerAction = new DeleteServerAction(shell, getServerManager());
-        viewer.addSelectionChangedListener(this.deleteServerAction);
-
         // the edit action is only enabled when one server is selected
         this.editServerAction = new EditServerAction(shell, getServerManager());
         viewer.addSelectionChangedListener(this.editServerAction);
-
-        // the new server action is always enabled
-        this.newServerAction = new NewServerAction(shell, getServerManager());
 
         this.createDataSourceAction = new Action() {
 
             @Override
             public void run() {
-                if (currentSelectedAdmin != null) {
+                TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
+                
+                if (teiidServer != null && teiidServer.isConnected()) {
+                    ExecutionAdmin admin;
+                    try {
+                        admin = teiidServer.getAdmin();
+                    } catch (Exception ex) {
+                        DqpUiConstants.UTIL.log(ex);
+                        return;
+                    }
+                    
                     CreateDataSourceAction action = new CreateDataSourceAction();
-                    action.setAdmin(currentSelectedAdmin);
-
+                    action.setAdmin(admin);
+                    
                     action.setSelection(new StructuredSelection());
-
                     action.setEnabled(true);
                     action.run();
                 }
@@ -400,7 +392,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     private void fillLocalToolBar( IToolBarManager manager ) {
         manager.removeAll();
         
-        manager.add(this.newServerAction);
         manager.add(this.reconnectAction);
         manager.add(new Separator());
         manager.add(this.collapseAllAction);
@@ -480,110 +471,92 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     public void fillContextMenu(IMenuManager manager) {
         List<Object> selectedObjs = getSelectedObjects();
 
-        if (selectedObjs != null && !selectedObjs.isEmpty()) {
-            if (selectedObjs.size() == 1) {
-                Object selection = selectedObjs.get(0);
-                if (selection instanceof TeiidServer) {
-                    if (((TeiidServer)selection).isConnected()) {
-                        try {
-                            currentSelectedAdmin = ((TeiidServer)selection).getAdmin();
-                        } catch (Exception e) {
-                            // DO NOTHING
-                        }
-                    }
-                    manager.add(this.editServerAction);
-
-                    if (this.setDefaultServerAction.isEnabled()) {
-                        manager.add(this.setDefaultServerAction);
-                    }
-                    if (currentSelectedAdmin != null) {
-                        manager.add(this.disconnectAction);
-                    }
-                    manager.add(this.reconnectAction);
-                    manager.add(new Separator());
-                    manager.add(this.newServerAction);
-                    if (currentSelectedAdmin != null) {
-                        manager.add(this.createDataSourceAction);
-                    }
-                    manager.add(new Separator());
-                    manager.add(this.deleteServerAction);
-
-                } else if (selection instanceof TeiidTranslator) {
-                    currentSelectedAdmin = ((TeiidTranslator)selection).getAdmin();
-                    manager.add(this.newServerAction);
-                    if (currentSelectedAdmin != null) {
-                        manager.add(this.createDataSourceAction);
-                    }
-                } else if (selection instanceof TeiidDataSource) {
+        manager.add(new Separator());
+        
+        if (selectedObjs == null || selectedObjs.isEmpty()) {
+            // Other plug-ins can contribute there actions here
+            manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+            return;
+        }
+        
+        TeiidServer teiidServer = null;
+        
+        if (selectedObjs.size() == 1) {
+            Object selection = selectedObjs.get(0);
+            
+            // This will adapt either the TeiidResourceNode or the
+            // TeiidServerContainerNode to the TeiidServer
+            teiidServer = RuntimeAssistant.adapt(selection, TeiidServer.class);
+            
+            if (teiidServer != null) {
+                boolean teiidServerConnected = teiidServer.isConnected();
+                
+                if (this.setDefaultServerAction.isEnabled()) {
+                    manager.add(this.setDefaultServerAction);
+                }
+            
+                if (teiidServerConnected) {
+                    manager.add(this.disconnectAction);
+                }
+            
+                manager.add(this.reconnectAction);
+                manager.add(new Separator());
+                
+                if (teiidServerConnected) {
                     manager.add(this.createDataSourceAction);
-                    manager.add(new Separator());
-                    manager.add(this.deleteDataSourceAction);
-                    manager.add(new Separator());
-                    manager.add(this.newServerAction);
-                    currentSelectedAdmin = ((TeiidDataSource)selection).getAdmin();
-                } else if (selection instanceof TeiidVdb) {
-                    currentSelectedAdmin = ((TeiidVdb)selection).getAdmin();
-                    this.executeVdbAction.setEnabled(((TeiidVdb)selection).isActive());
-                    manager.add(this.executeVdbAction);
-                    manager.add(new Separator());
-                    manager.add(this.undeployVdbAction);
-                    manager.add(new Separator());
-                    manager.add(this.newServerAction);
-                    manager.add(this.createDataSourceAction);
-                } else if (selection instanceof DataSourcesFolder) {
-                    TeiidServer teiidServer = ((DataSourcesFolder)selection).getTeiidServer();
-                    try {
-                        currentSelectedAdmin = teiidServer.getAdmin();
-                    } catch (Exception ex) {
-                        DqpUiConstants.UTIL.log(ex);
-                    }
-                    if (currentSelectedAdmin != null) {
-                        manager.add(this.createDataSourceAction);
-                    }
                 }
-            } else {
-                boolean allDataSources = true;
-
-                for (Object obj : selectedObjs) {
-                    if (!(obj instanceof TeiidDataSource)) {
-                        allDataSources = false;
-                        break;
-                    }
+                
+                manager.add(new Separator());
+                manager.add(this.editServerAction);
+                manager.add(new Separator());
+                
+            } else if (selection instanceof TeiidDataSource) {
+                manager.add(this.deleteDataSourceAction);                
+                manager.add(new Separator());
+                
+            } else if (selection instanceof TeiidVdb) {
+                this.executeVdbAction.setEnabled(((TeiidVdb)selection).isActive());
+                manager.add(this.executeVdbAction);
+                manager.add(new Separator());
+                manager.add(this.undeployVdbAction);
+                
+            } else if (selection instanceof DataSourcesFolder) {
+                manager.add(this.createDataSourceAction);
+            }
+        } else {
+            // More than 1 selected object
+            
+            boolean allDataSources = true;
+            
+            for (Object obj : selectedObjs) {
+                if (!(obj instanceof TeiidDataSource)) {
+                    allDataSources = false;
+                    break;
                 }
-                if (allDataSources) {
-                    manager.add(this.deleteDataSourceAction);
-                    manager.add(new Separator());
-                    manager.add(this.newServerAction);
-                    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-                    return;
-                }
-
-                boolean allVdbs = true;
-
-                for (Object obj : selectedObjs) {
-                    if (!(obj instanceof TeiidVdb)) {
-                        allVdbs = false;
-                        break;
-                    }
-                }
-                if (allVdbs) {
-                    manager.add(this.undeployVdbAction);
-                    manager.add(new Separator());
-                    manager.add(this.newServerAction);
-                    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-                    return;
-                }
-
-                manager.add(this.newServerAction);
+            }
+            if (allDataSources) {
+                manager.add(this.deleteDataSourceAction);
                 manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+                return;
             }
 
-        } else {
-            manager.add(this.newServerAction);
-        }
+            boolean allVdbs = true;
 
-        // Other plug-ins can contribute there actions here
-        manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+            for (Object obj : selectedObjs) {
+                if (!(obj instanceof TeiidVdb)) {
+                    allVdbs = false;
+                    break;
+                }
+            }
+            if (allVdbs) {
+                manager.add(this.undeployVdbAction);
+                manager.add(new Separator());
+                manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+                return;
+            }
+
+            manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+        }
     }
     
     /* (non-Javadoc)

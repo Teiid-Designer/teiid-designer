@@ -8,9 +8,11 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.prefs.BackingStoreException;
 import org.teiid.core.util.I18nUtil;
@@ -174,6 +176,38 @@ public final class RuntimeAssistant {
         }
 
         return true;
+    }
+    
+    /**
+     * Convenience function for adapting a given object to the given
+     * class-type using eclipse's registered adapters
+     * 
+     * @param adaptableObject
+     * @param klazz
+     * @return adapted object or null
+     */
+    public static <T> T adapt(Object adaptableObject, Class<T> klazz) {
+        return (T) Platform.getAdapterManager().getAdapter(adaptableObject, klazz);
+    }
+    
+    /**
+     * Get a {@link TeiidServer} from the given selection if one can be adapted
+     * 
+     * @param selection
+     * @return server or null
+     */
+    public static TeiidServer getServerFromSelection(ISelection selection) {
+        if (selection == null || ! (selection instanceof StructuredSelection))
+            return null;
+        
+        if (selection.isEmpty()) {
+            return null;
+        }
+        
+        StructuredSelection ss = (StructuredSelection) selection;
+        Object element = ss.getFirstElement();
+        
+        return adapt(element, TeiidServer.class);
     }
 
     /**

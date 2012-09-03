@@ -274,9 +274,20 @@
             id="org.teiid.designer.runtime.ui.views.Teiid.actions"
             priority="highest">
          <enablement>
-            <instanceof
-                  value="org.teiid.designer.runtime.TeiidServer">
-            </instanceof>
+            <or>
+               <instanceof
+                     value="org.teiid.designer.runtime.ui.views.content.TeiidResourceNode">
+               </instanceof>
+               <instanceof
+                     value="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
+               </instanceof>
+               <instanceof
+                     value="org.teiid.designer.runtime.ui.views.content.TeiidFolder">
+               </instanceof>
+               <instanceof
+                     value="org.teiid.designer.runtime.ui.views.content.TeiidErrorNode">
+               </instanceof>
+            </or>
          </enablement>
       </actionProvider>
    </extension>
@@ -293,4 +304,34 @@
   <factory id="org.teiid.designer.runtime.ui.server.editor.input.factory"
     class="org.teiid.designer.runtime.ui.server.editor.TeiidServerEditorInputFactory"/>
 </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode"
+            class="org.teiid.designer.runtime.ui.views.content.adapter.TeiidServerContainerNodeAdapterFactory">
+         <adapter
+               type="org.teiid.designer.runtime.TeiidServer">
+         </adapter>
+         <adapter
+               type="org.teiid.designer.runtime.ui.views.content.TeiidResourceNode">
+         </adapter>
+      </factory>
+      <factory
+            adaptableType="org.teiid.designer.runtime.ui.views.content.TeiidResourceNode"
+            class="org.teiid.designer.runtime.ui.views.content.adapter.TeiidResourceNodeAdapterFactory">
+         <adapter
+               type="org.teiid.designer.runtime.TeiidServer">
+         </adapter>
+         <adapter
+               type="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
+         </adapter>
+      </factory>
+      <factory
+            adaptableType="org.teiid.designer.runtime.ui.views.content.TeiidFolder"
+            class="org.teiid.designer.runtime.ui.views.content.adapter.TeiidFolderAdapterFactory">
+         <adapter
+               type="org.teiid.designer.runtime.TeiidServer">
+         </adapter>
+      </factory>
+   </extension>
 </plugin>
