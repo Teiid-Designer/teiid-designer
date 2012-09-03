@@ -157,7 +157,7 @@
          </description>
          <enablement>
             <objectClass
-                  name="org.teiid.designer.runtime.TeiidServer">
+                  name="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
             </objectClass>
          </enablement>
       </decorator>
@@ -260,7 +260,7 @@
             priority="highest">
          <triggerPoints>
             <instanceof
-                  value="org.teiid.designer.runtime.TeiidServer">
+                  value="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
             </instanceof>
          </triggerPoints>
       </navigatorContent>

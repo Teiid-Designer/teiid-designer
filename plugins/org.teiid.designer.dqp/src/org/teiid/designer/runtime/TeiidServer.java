@@ -182,6 +182,10 @@ public class TeiidServer implements HostProvider {
             
             // The host and admin port match so must be the same server
             parentServer = server;
+            
+            if (parentServer.getServerState() != IServer.STATE_STARTED)
+                disconnect();
+            
             parentServer.addServerListener(serverListener);
             
             return;
@@ -268,6 +272,15 @@ public class TeiidServer implements HostProvider {
 
     public TeiidJdbcInfo getTeiidJdbcInfo() {
         return teiidJdbcInfo;
+    }
+    
+    /**
+     * An appropriate name for this teiid server
+     * 
+     * @return {@link #getCustomLabel()} if available otherwise {@link #getUrl()}
+     */
+    public String getDisplayName() {
+        return getCustomLabel() != null ? getCustomLabel() : getUrl();
     }
 
     /**

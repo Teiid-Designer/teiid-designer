@@ -17,7 +17,9 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.teiid.core.util.I18nUtil;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
+import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContentNode;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServer;
@@ -27,7 +29,10 @@ import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
-import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider.TeiidFolder;
+import org.teiid.designer.runtime.ui.views.content.TeiidErrorNode;
+import org.teiid.designer.runtime.ui.views.content.TeiidFolder;
+import org.teiid.designer.runtime.ui.views.content.TeiidResourceNode;
+import org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode;
 
 /**
  * Class provides content and label information for ConnectorBindings and ModelInfos in ConnectorsView
@@ -84,9 +89,10 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
         // the decorator framework actually constructs another instance of this provider and the server manager will not be set by
         // the getElements method
         if (getServerManager() != null) {
-            assert (element instanceof TeiidServer) : "element is not a server (check plugin.xml enablement)"; //$NON-NLS-1$
-            TeiidServer teiidServer = (TeiidServer)element;
-
+            assert (element instanceof TeiidServerContainerNode) : "element is not a server (check plugin.xml enablement)"; //$NON-NLS-1$
+            TeiidServerContainerNode node = (TeiidServerContainerNode) element;
+            TeiidServer teiidServer = node.getTeiidServer();
+            
             if (isOkToConnect(teiidServer)) {
                 // decorate server if can't connect
                 if (!teiidServer.isConnected()) {
@@ -102,33 +108,11 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
      */
     @Override
     public Image getImage(Object element) {
-        if (element instanceof TeiidServer) {
-            TeiidServer teiidServer = (TeiidServer)element;
-            boolean isOKtoConnect = isOkToConnect(teiidServer);
-            
-            boolean isError = false;
-            if (isOKtoConnect) {
-                // decorate server if can't connect
-                if (!teiidServer.isConnected()) {
-                    addOfflineServer(teiidServer);
-                    isError = true;
-                }
-            } else {
-                if (!teiidServer.isConnected()) {
-                    isError = true;
-                }
-            }
-            
-            if (getServerManager() != null) {
-                if (this.serverMgr.isDefaultServer((TeiidServer)element)) {
-                    if (isError) return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ERROR_ICON);
-                    return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ICON);
-                }
-            }
-            if (isError) {
-                if (teiidServer.getConnectionError() != null) return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SERVER_ERROR_ICON);
-                return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ERROR_ICON);
-            }
+        if (element instanceof TeiidResourceNode) {
+            return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
+        }
+        
+        if (element instanceof TeiidServerContainerNode) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SERVER_ICON);
         }
 
@@ -154,6 +138,16 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
         if (element instanceof SourceConnectionBinding) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SOURCE_CONNECTOR_BINDING_ICON);
         }
+        
+        if (element instanceof TeiidErrorNode) {
+            TeiidServer teiidServer = ((TeiidErrorNode) element).getTeiidServer();
+            
+            if (getServerManager() != null && teiidServer != null && this.serverMgr.isDefaultServer(teiidServer))
+                return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ERROR_ICON);
+            else
+                return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SERVER_ERROR_ICON);
+        }
+        
         return null;
     }
 
@@ -174,35 +168,23 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
      */
     @Override
     public String getText(Object element) {
-        if (element instanceof TeiidServer) {
-            TeiidServer teiidServer = (TeiidServer)element;
-
-            if (teiidServer.getCustomLabel() == null) {
-                return teiidServer.getUrl();
-            }
-
-            return teiidServer.getCustomLabel();
+        if (element instanceof IContentNode) {
+            IContentNode node = (IContentNode) element;
+            return node.getName();
         }
-
-        if (element instanceof TeiidFolder) {
-            return ((TeiidFolder)element).getName();
-        }
-
-        if (element instanceof TeiidTranslator) {
-            return ((TeiidTranslator)element).getName();
-        }
-
+        
         if (element instanceof TeiidDataSource) {
             if (((TeiidDataSource)element).getDisplayName() != null) {
                 return ((TeiidDataSource)element).getDisplayName();
             }
             return ((TeiidDataSource)element).getName();
         }
+        
+        if (element instanceof TeiidTranslator) {
+            return ((TeiidTranslator)element).getName();
+        }
 
         if (element instanceof TeiidVdb) {
-            // if( !((TeiidVdb)element).isActive() ) {
-            // return INACTIVE_VDB_PREFIX + ((TeiidVdb)element).getName();
-            // }
             return ((TeiidVdb)element).getName();
         }
 
@@ -210,11 +192,16 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
             SourceConnectionBinding binding = (SourceConnectionBinding)element;
             return binding.getModelName();
         }
+
         if (element instanceof String) {
             return (String)element;
         }
-        return DqpUiConstants.UTIL.getString(I18nUtil.getPropertyPrefix(TeiidServerLabelProvider.class),
-                                             new Object[] {element.toString(), element.getClass().getName()});
+        
+        if (element == TeiidServerContentProvider.PENDING) {
+            return DqpUiConstants.UTIL.getString(getClass().getSimpleName() + ".loading.label"); //$NON-NLS-1$
+        }
+        
+        return super.getText(element);
     }
 
     /**
@@ -223,7 +210,7 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
      * @param teiidServer the server being checked
      * @return <code>true</code> if it is OK to try and connect
      */
-    private boolean isOkToConnect(TeiidServer teiidServer) {
+    private synchronized boolean isOkToConnect(TeiidServer teiidServer) {
         boolean check = false; // check map for time
 
         try {

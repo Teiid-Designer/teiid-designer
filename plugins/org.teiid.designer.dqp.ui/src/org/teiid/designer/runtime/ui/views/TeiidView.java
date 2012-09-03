@@ -50,7 +50,6 @@ import org.teiid.core.util.CoreStringUtil;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.TeiidDataSource;
@@ -62,11 +61,12 @@ import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.runtime.ui.views.content.TeiidFolder;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.KeyInValueHashMap;
+import org.teiid.designer.ui.common.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
-import org.teiid.designer.ui.common.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
@@ -155,8 +155,6 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
     private KeyAdapter kaKeyAdapter;
 
     private IPropertySourceProvider propertySourceProvider;
-    
-    private ExecutionAdmin currentSelectedAdmin;
 
     private KeyFromValueAdapter adapter = new KeyFromValueAdapter<String, IServer>() {
 
@@ -451,8 +449,8 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
                                     tooltip = getConnectorToolTip((TeiidTranslator)data);
                                 } else if (data instanceof TeiidVdb) {
                                     tooltip = getVDBToolTip((TeiidVdb)data);
-                                } else if (data instanceof TeiidServerContentProvider.TeiidFolder) {
-                                    tooltip = ((TeiidServerContentProvider.TeiidFolder)data).getName();
+                                } else if (data instanceof TeiidFolder) {
+                                    tooltip = ((TeiidFolder)data).getName();
                                 } else if( data instanceof TeiidServer ) {
                                 	TeiidServer teiidServer = (TeiidServer)data;
                                 	String ttip = teiidServer.toString();

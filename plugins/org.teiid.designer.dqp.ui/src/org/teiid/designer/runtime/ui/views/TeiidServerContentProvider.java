@@ -8,25 +8,30 @@
 package org.teiid.designer.runtime.ui.views;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import net.jcip.annotations.GuardedBy;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.server.core.IServer;
-import org.teiid.adminapi.AdminComponentException;
-import org.teiid.core.util.HashCodeUtil;
-import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ExecutionAdmin;
-import org.teiid.designer.runtime.TeiidDataSource;
+import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContainerNode;
+import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContentNode;
 import org.teiid.designer.runtime.TeiidServer;
-import org.teiid.designer.runtime.TeiidTranslator;
-import org.teiid.designer.runtime.TeiidVdb;
-import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.views.content.DataSourcesFolder;
+import org.teiid.designer.runtime.ui.views.content.TeiidFolder;
+import org.teiid.designer.runtime.ui.views.content.TeiidResourceNode;
+import org.teiid.designer.runtime.ui.views.content.TranslatorsFolder;
+import org.teiid.designer.runtime.ui.views.content.VdbsFolder;
 
 
 /**
@@ -36,10 +41,69 @@ import org.teiid.designer.runtime.ui.DqpUiConstants;
  */
 public class TeiidServerContentProvider implements ITreeContentProvider {
 
-    static final String VDBS_FOLDER_NAME = DqpUiConstants.UTIL.getString("TeiidViewTreeProvider.vdbsFolder.label"); //$NON-NLS-1$
-    static final String DATA_SOURCES_FOLDER_NAME = DqpUiConstants.UTIL.getString("TeiidViewTreeProvider.dataSourcesFolder.label"); //$NON-NLS-1$
-    static final String TRANSLATORS_FOLDER_NAME = DqpUiConstants.UTIL.getString("TeiidViewTreeProvider.translatorsFolder.label"); //$NON-NLS-1$
+    /** Represents a pending request in the tree. */
+    static final Object PENDING = new Object();
+    private ConcurrentMap<IContainerNode, Object> pendingUpdates = new ConcurrentHashMap<IContainerNode, Object>();
+    private transient TreeViewer viewer;
+    
+    private static final String LOAD_ELEMENT_JOB = DqpUiConstants.UTIL.getString(TeiidServerContentProvider.class.getSimpleName() + ".jobName"); //$NON-NLS-1$
+    
+    /**
+     * Loads content for specified nodes, then refreshes the content in the
+     * tree.
+     */
+    private Job loadElementJob = new Job(LOAD_ELEMENT_JOB) {
+        
+        @Override
+        public boolean shouldRun() {
+            return pendingUpdates.size() > 0;
+        }
 
+        @Override
+        protected IStatus run(final IProgressMonitor monitor) {
+            monitor.beginTask(LOAD_ELEMENT_JOB, IProgressMonitor.UNKNOWN);
+            try {
+                final List<IContainerNode> updated = new ArrayList<IContainerNode>(pendingUpdates.size());
+                for (IContainerNode node : pendingUpdates.keySet()) {
+                    try {
+                        node.load();
+                        updated.add(node);
+                    } catch (Exception e) {
+                    }
+                    if (monitor.isCanceled()) {
+                        pendingUpdates.keySet().removeAll(updated);
+                        return Status.CANCEL_STATUS;
+                    }
+                }
+                final Viewer viewer = TeiidServerContentProvider.this.viewer;
+                if (viewer == null) {
+                    pendingUpdates.keySet().clear();
+                } else {
+                    
+                    viewer.getControl().getDisplay().asyncExec(new Runnable() {
+                        
+                        @Override
+                        public void run() {
+                            if (viewer.getControl().isDisposed()) {
+                                return;
+                            }
+                            for (Object node : updated) {
+                                pendingUpdates.remove(node);
+                                if (viewer instanceof StructuredViewer)
+                                    ((StructuredViewer) viewer).refresh(node);
+                                else
+                                    viewer.refresh();
+                            }
+                        }
+                    });
+                }
+            } finally {
+                monitor.done();
+            }
+            return Status.OK_STATUS;
+        }
+    };
+    
     private boolean showVDBs = true;
     private boolean showDataSources = true;
     private boolean showTranslators = true;
@@ -75,6 +139,13 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
     }
     
     /**
+     * @return the showDataSources
+     */
+    public boolean isShowDataSources() {
+        return this.showDataSources;
+    }
+    
+    /**
      * Set show data sources flag
      * 
      * @param show
@@ -82,7 +153,14 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
     public void setShowDataSources(boolean show) {
         this.showDataSources = show;
     }
-            
+      
+    /**
+     * @return the showTranslators
+     */
+    public boolean isShowTranslators() {
+        return this.showTranslators;
+    }
+    
     /**
      * Set show translators flag
      * 
@@ -91,7 +169,14 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
     public void setShowTranslators(boolean show) {
         this.showTranslators = show;
     }
-            
+    
+    /**
+     * @return the showVDBs
+     */
+    public boolean isShowVDBs() {
+        return this.showVDBs;
+    }
+    
     /**
      * Set show vdbs flag
      * 
@@ -105,91 +190,29 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      * @since 4.2
      */
-//    @SuppressWarnings("unused")
     @Override
     public Object[] getChildren( Object parentElement ) {
         if (parentElement == null)
             return new Object[0];
         
         if (parentElement instanceof IServer) {
-            Object teiidServer = ((IServer) parentElement).loadAdapter(TeiidServer.class, null);
-            if (teiidServer != null) {
-                return new Object[] { teiidServer };
-            } else {
-                return new String[] { DqpPlugin.Util.getString("jbossServerNotStartedMessage") }; //$NON-NLS-1$
+            return new Object[] {new TeiidResourceNode((IServer) parentElement, this) };
+            
+        } else if (parentElement instanceof IContainerNode) {
+            IContainerNode<?> container = (IContainerNode<?>) parentElement;
+            if (pendingUpdates.containsKey(container)) {
+                return new Object[] { PENDING };
             }
-        }
-        else if ((parentElement instanceof TeiidServer)) {
-            Collection<Object> allObjects = new ArrayList<Object>();
-            TeiidServer teiidServer = (TeiidServer)parentElement;
-
-            if (!teiidServer.isConnected()) {
-                return new Object[0];
+            List<? extends IContentNode<?>> children = container.getChildren();
+            if (children == null) {
+                pendingUpdates.putIfAbsent(container, PENDING);
+                loadElementJob.schedule();
+                return new Object[] { PENDING };
             }
-
-            try {
-                // hide Data Sources related variables from other local variables
-                DATA_SOURCES: {
-                    Collection<TeiidDataSource> dataSources;
-
-                    if (this.showDataSources) {
-                        dataSources = new ArrayList(teiidServer.getAdmin().getDataSources());
-
-                        if (!dataSources.isEmpty()) {
-                            allObjects.add(new DataSourcesFolder(teiidServer, dataSources.toArray()));
-                        }
-                    } else {
-                        dataSources = Collections.emptyList();
-                    }
-                    
-                    break DATA_SOURCES;
-                }
-
-                // hide VDBs related variables from other local variables
-                VDBS: {
-                    Collection<TeiidVdb> vdbs;
-
-                    if (this.showVDBs) {
-                        vdbs = new ArrayList<TeiidVdb>(teiidServer.getAdmin().getVdbs());
-
-                        if (!vdbs.isEmpty()) {
-                            allObjects.add(new VdbsFolder(teiidServer, vdbs.toArray()));
-                        }
-                    } else {
-                        vdbs = Collections.emptyList();
-                    }
-                    
-                    break VDBS;
-                }
-
-                // hide translators related variables from other local variables
-                TRANSLATORS: {
-                    Collection<TeiidTranslator> translators;
-
-                    if (this.showTranslators) {
-                        translators = teiidServer.getAdmin().getTranslators();
-
-                        if (!translators.isEmpty()) {
-                            allObjects.add(new TranslatorsFolder(teiidServer, translators.toArray()));
-                        }
-                    } else {
-                        translators = Collections.emptyList();
-                    }
-                    
-                    break TRANSLATORS;
-                }
-
-                return allObjects.toArray();
-            } catch (AdminComponentException ace) {
-                return new Object[0];
-            } catch (Exception e) {
-                DqpPlugin.Util.log(e);
-                return new Object[0];
-            }
+            return children.toArray();
+            
         } else if (parentElement instanceof TeiidFolder) {
-            return ((TeiidFolder)parentElement).getChildren();
-        } else if (parentElement instanceof SourceConnectionBinding) {
-            return new Object[0];
+            return ((TeiidFolder) parentElement).getChildren();
         }
 
         return new Object[0];
@@ -210,13 +233,13 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
      */
     @Override
     public Object getParent( Object element ) {
-        if (element instanceof IServer)
-            return null;
-        else if (element instanceof TeiidServer)
-            return ((TeiidServer)element).getParent();
-        else if (element instanceof TeiidFolder)
-            return ((TeiidFolder)element).getServer();
-        
+        if (element instanceof IContentNode) {
+            Object parent = ((IContentNode<?>) element).getContainer();
+            if (parent == null) {
+                parent = ((IContentNode<?>) element).getServer();
+            }
+            return parent;
+        }
         return null;
     }
 
@@ -268,13 +291,14 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
      */
     @Override
     public boolean hasChildren( Object element ) {
-        if (element instanceof IServer)
+        if (element instanceof IServer) {
             return true;
-        else if (element instanceof TeiidServer)
-            return ((TeiidServer)element).isConnected();
-        else {
-            return getChildren(element).length > 0;
+        } else if (element instanceof IContainerNode) {
+            return true;
+        } else if (element instanceof TeiidFolder) {
+            return ((TeiidFolder)element).getChildren().length > 0;
         }
+        return false;
     }
 
     /**
@@ -284,103 +308,18 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
      */
     @Override
     public void inputChanged( Viewer viewer, Object oldInput, Object newInput ) {
-        // do nothing
+        if (viewer instanceof TreeViewer) {
+            this.viewer = (TreeViewer) viewer;
+        } else {
+            this.viewer = null;
+        }
     }
     
 
     @Override
     public void dispose() {
-        // nothing to do
-    }
-
-    class TeiidFolder {
-        Object[] theValues;
-        TeiidServer teiidServer;
-
-        public TeiidFolder(TeiidServer teiidServer, Object[] values ) {
-        	this.teiidServer = teiidServer;
-            theValues = values;
-        }
-        
-        /**
-         * {@inheritDoc}
-         *
-         * @see java.lang.Object#equals(java.lang.Object)
-         */
-        @Override
-        public boolean equals( Object obj ) {
-            if (this == obj) return true;
-            if (obj == null) return false;
-            if (!getClass().equals(obj.getClass())) return false;
-
-            TeiidFolder folder = (TeiidFolder)obj;
-            return getServer().equals(folder.getServer());
-        }
-
-        public Object[] getChildren() {
-            return theValues;
-        }
-
-        protected String getName() {
-            return null;
-        }
-        
-        public ExecutionAdmin getAdmin() {
-        	ExecutionAdmin admin = null;
-        	
-        	try {
-				admin = teiidServer.getAdmin();
-			} catch (Exception e) {
-				DqpUiConstants.UTIL.log(IStatus.ERROR, e, e.getMessage());
-			}
-        	return admin;
-        }
-        
-        private TeiidServer getServer() {
-            return this.teiidServer;
-        }
-        
-        /**
-         * {@inheritDoc}
-         *
-         * @see java.lang.Object#hashCode()
-         */
-        @Override
-        public int hashCode() {
-            return HashCodeUtil.hashCode(this.teiidServer.hashCode(), getClass().hashCode());
-        }
-    }
-
-    class DataSourcesFolder extends TeiidFolder {
-        public DataSourcesFolder(TeiidServer teiidServer, Object[] values ) {
-            super(teiidServer, values);
-        }
-
-        @Override
-        protected String getName() {
-            return DATA_SOURCES_FOLDER_NAME;
-        }
-    }
-
-    class VdbsFolder extends TeiidFolder {
-        public VdbsFolder(TeiidServer teiidServer, Object[] values ) {
-            super(teiidServer, values);
-        }
-
-        @Override
-        protected String getName() {
-            return VDBS_FOLDER_NAME;
-        }
-    }
-
-    class TranslatorsFolder extends TeiidFolder {
-        public TranslatorsFolder(TeiidServer teiidServer, Object[] values ) {
-            super(teiidServer, values);
-        }
-
-        @Override
-        protected String getName() {
-            return TRANSLATORS_FOLDER_NAME;
-        }
+        viewer = null;
+        loadElementJob.cancel();
+        pendingUpdates.clear();
     }
 }

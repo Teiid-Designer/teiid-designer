@@ -14,6 +14,7 @@ import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.HostProvider;
 import org.teiid.designer.runtime.TeiidAdminInfo;
+import org.teiid.designer.runtime.TeiidConnectionInfo;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
@@ -25,6 +26,8 @@ import org.teiid.designer.runtime.TeiidServerManager;
  */
 public class TeiidServerAdapterFactory implements IAdapterFactory {
 
+    private Object lock = new Object();
+    
     @Override
     public Class[] getAdapterList() {
         return new Class[] { TeiidServer.class };
@@ -51,21 +54,42 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
      * @return
      */
     private TeiidServer adaptServer(final IServer server) throws Exception {
+        
         if (server.getServerState() != IServer.STATE_STARTED)
             return null;
+        
+        TeiidServerManager serverManager = DqpPlugin.getInstance().getServerManager();
 
+        // Only supports a jboss 7 server
         JBoss7Server jb7 = (JBoss7Server) server.loadAdapter(JBoss7Server.class, null);
         if (jb7 == null)
             return null;
-
-        if (! TeiidServerAdapterUtil.isJBossServerConnected(server))
+        
+        // See if we already have registered this teiid server
+        String serverUrl = TeiidConnectionInfo.MM + server.getHost() + ':' + jb7.getManagementPort();
+        TeiidServer teiidServer = serverManager.getServer(serverUrl);
+        if (teiidServer != null)
+            return teiidServer;
+        
+        synchronized (lock) {
+            // Check again in case the thread had to wait for the lock
+            teiidServer = serverManager.getServer(serverUrl);
+            if (teiidServer == null)
+                teiidServer = createTeiidServer(jb7, serverManager);
+        
+            return teiidServer;
+        }
+    }
+    
+    private TeiidServer createTeiidServer(final JBoss7Server jb7, TeiidServerManager serverManager) throws Exception {
+ 
+        if (! TeiidServerAdapterUtil.isJBossServerConnected(jb7.getServer()))
             return null;
         
-        if (! TeiidServerAdapterUtil.isTeiidServer(server))
+        if (! TeiidServerAdapterUtil.isTeiidServer(jb7.getServer()))
             return null;
-        
-        // Only supports a jboss 7 server
-        TeiidServerManager serverManager = DqpPlugin.getInstance().getServerManager();
+ 
+        String jdbcPort = TeiidServerAdapterUtil.getJdbcPort(jb7.getServer());
         
         TeiidAdminInfo teiidAdminInfo = new TeiidAdminInfo(new Integer(jb7.getManagementPort()).toString(),
                                                            jb7.getUsername(),
@@ -82,23 +106,9 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
         teiidAdminInfo.setHostProvider(new HostProvider() {
             @Override
             public String getHost() {
-                return server.getHost();
+                return jb7.getServer().getHost();
             }
         });
-        
-        // See if we already have registered this teiid server
-        TeiidServer teiidServer = serverManager.getServer(teiidAdminInfo.getUrl());
-        if (teiidServer == null) {
-            // No registered teiid server
-            teiidServer = createTeiidServer(jb7, serverManager, teiidAdminInfo);
-        }
-        
-        return teiidServer;
-    }
-    
-    private TeiidServer createTeiidServer(JBoss7Server jb7, TeiidServerManager serverManager, TeiidAdminInfo teiidAdminInfo) throws Exception {
- 
-        String jdbcPort = TeiidServerAdapterUtil.getJdbcPort(jb7.getServer());
         
         TeiidJdbcInfo teiidJdbcInfo = new TeiidJdbcInfo(jdbcPort,
                                                                                 TeiidJdbcInfo.DEFAULT_JDBC_USERNAME,

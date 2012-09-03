@@ -51,7 +51,7 @@ import org.teiid.designer.runtime.ui.server.EditServerAction;
 import org.teiid.designer.runtime.ui.server.NewServerAction;
 import org.teiid.designer.runtime.ui.server.ReconnectToServerAction;
 import org.teiid.designer.runtime.ui.server.SetDefaultServerAction;
-import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider.DataSourcesFolder;
+import org.teiid.designer.runtime.ui.views.content.DataSourcesFolder;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 
 /**
@@ -531,7 +531,12 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                     manager.add(this.newServerAction);
                     manager.add(this.createDataSourceAction);
                 } else if (selection instanceof DataSourcesFolder) {
-                    currentSelectedAdmin = ((DataSourcesFolder)selection).getAdmin();
+                    TeiidServer teiidServer = ((DataSourcesFolder)selection).getTeiidServer();
+                    try {
+                        currentSelectedAdmin = teiidServer.getAdmin();
+                    } catch (Exception ex) {
+                        DqpUiConstants.UTIL.log(ex);
+                    }
                     if (currentSelectedAdmin != null) {
                         manager.add(this.createDataSourceAction);
                     }
