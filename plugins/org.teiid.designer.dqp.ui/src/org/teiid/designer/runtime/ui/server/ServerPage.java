@@ -9,10 +9,8 @@ package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.PLUGIN_ID;
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -39,10 +37,10 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.EventManager;
 import org.teiid.designer.runtime.HostProvider;
-import org.teiid.designer.runtime.TeiidServer;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.TeiidAdminInfo;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -202,7 +200,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
                                                this.jdbcURLIsSecure);
         this.localJdbcInfo.setHostProvider(this);
 
-        this.teiidServer = new TeiidServer(null, this.localAdminInfo, this.localJdbcInfo, EventManager.EVENT_MANAGER_ADAPTER);
+        this.teiidServer = new TeiidServer(null, this.localAdminInfo, this.localJdbcInfo, EventManager.EVENT_MANAGER_ADAPTER, null);
     }
 
     /**
@@ -721,7 +719,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
      */
     public TeiidServer getServer() {
         if (this.status.getSeverity() != IStatus.ERROR) {
-            TeiidServer newServer = new TeiidServer(this.host, this.localAdminInfo, this.localJdbcInfo, getServerManager());
+            TeiidServer newServer = new TeiidServer(this.host, this.localAdminInfo, this.localJdbcInfo, getServerManager(), null);
             newServer.setCustomLabel(this.displayName);
             return newServer;
         }

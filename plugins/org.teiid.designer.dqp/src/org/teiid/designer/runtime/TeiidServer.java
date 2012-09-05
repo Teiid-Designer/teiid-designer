@@ -17,14 +17,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerListener;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerEvent;
-import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.AdminFactory;
 import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.HashCodeUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.jdbc.TeiidDriver;
@@ -140,15 +137,18 @@ public class TeiidServer implements HostProvider {
      * @param adminInfo the server admin connection properties (never <code>null</code>)
      * @param jdbcInfo the server JDBC connection properties (never <code>null</code>)
      * @param eventManager the event manager (never <code>null</code>)
+     * @param parentServer the parent {@link IServer} (never <code>null</code>)
      * @throws IllegalArgumentException if any of the parameters are <code>null</code>
      */
     public TeiidServer( String host,
                    TeiidAdminInfo adminInfo,
                    TeiidJdbcInfo jdbcInfo,
-                   EventManager eventManager ) {
+                   EventManager eventManager,
+                   IServer parentServer) {
         CoreArgCheck.isNotNull(adminInfo, "adminInfo"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(jdbcInfo, "jdbcInfo"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(eventManager, "eventManager"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(parentServer, "parentServer"); //$NON-NLS-1$
 
         this.host = host;
         
@@ -159,40 +159,17 @@ public class TeiidServer implements HostProvider {
         this.teiidJdbcInfo.setHostProvider(this);
         
         this.eventManager = eventManager;
+        this.parentServer = parentServer;
         
-        initParent();
+        if (parentServer.getServerState() != IServer.STATE_STARTED)
+            disconnect();
+        
+        parentServer.addServerListener(serverListener);
     }
 
     // ===========================================================================================================================
     // Methods
     // ===========================================================================================================================
-
-    private void initParent() {
-        IServer[] servers = ServerCore.getServers();
-        for (IServer server : servers) {
-            if (! getHost().equals(server.getHost()))
-                continue;
-            
-            JBoss7Server jb7 = (JBoss7Server) server.loadAdapter(JBoss7Server.class, null);
-            if (jb7 == null)
-                continue;
-            
-            if (getTeiidAdminInfo().getPortNumber() != jb7.getManagementPort())
-                continue;
-            
-            // The host and admin port match so must be the same server
-            parentServer = server;
-            
-            if (parentServer.getServerState() != IServer.STATE_STARTED)
-                disconnect();
-            
-            parentServer.addServerListener(serverListener);
-            
-            return;
-        }
-        
-        DqpPlugin.Util.log(IStatus.WARNING, DqpPlugin.Util.getString("parentServerFailureMessage", this)); //$NON-NLS-1$
-    }
     
     /**
      * Perform cleanup
@@ -221,34 +198,31 @@ public class TeiidServer implements HostProvider {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
-    public boolean equals( Object obj ) {
-        if (this == obj) {
-            return true;
-        }
-
-        if ((obj == null) || (getClass() != obj.getClass())) {
-            return false;
-        }
-
-        TeiidServer otherServer = (TeiidServer) obj;
-
-        if (!getTeiidAdminInfo().equals(otherServer.getTeiidAdminInfo())) {
-            return false;
-        }
-
-        if (!getTeiidJdbcInfo().equals(otherServer.getTeiidJdbcInfo())) {
-            return false;
-        }
-
-        return equivalent(getHost(), otherServer.getHost()) && equivalent(getCustomLabel(), otherServer.getCustomLabel())
-               && getTeiidAdminInfo().equals(otherServer.getTeiidAdminInfo())
-               && getTeiidJdbcInfo().equals(otherServer.getTeiidJdbcInfo());
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        TeiidServer other = (TeiidServer)obj;
+        if (this.admin == null) {
+            if (other.admin != null) return false;
+        } else if (!this.admin.equals(other.admin)) return false;
+        if (this.eventManager == null) {
+            if (other.eventManager != null) return false;
+        } else if (!this.eventManager.equals(other.eventManager)) return false;
+        if (this.host == null) {
+            if (other.host != null) return false;
+        } else if (!this.host.equals(other.host)) return false;
+        if (this.parentServer == null) {
+            if (other.parentServer != null) return false;
+        } else if (!this.parentServer.equals(other.parentServer)) return false;
+        if (this.teiidAdminInfo == null) {
+            if (other.teiidAdminInfo != null) return false;
+        } else if (!this.teiidAdminInfo.equals(other.teiidAdminInfo)) return false;
+        if (this.teiidJdbcInfo == null) {
+            if (other.teiidJdbcInfo != null) return false;
+        } else if (!this.teiidJdbcInfo.equals(other.teiidJdbcInfo)) return false;
+        return true;
     }
 
     public ExecutionAdmin getAdmin() throws Exception {
@@ -327,14 +301,17 @@ public class TeiidServer implements HostProvider {
     }
 
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
-        return HashCodeUtil.hashCode(0, getHost(), getCustomLabel(), getTeiidAdminInfo(), getTeiidJdbcInfo());
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.admin == null) ? 0 : this.admin.hashCode());
+        result = prime * result + ((this.eventManager == null) ? 0 : this.eventManager.hashCode());
+        result = prime * result + ((this.host == null) ? 0 : this.host.hashCode());
+        result = prime * result + ((this.parentServer == null) ? 0 : this.parentServer.hashCode());
+        result = prime * result + ((this.teiidAdminInfo == null) ? 0 : this.teiidAdminInfo.hashCode());
+        result = prime * result + ((this.teiidJdbcInfo == null) ? 0 : this.teiidJdbcInfo.hashCode());
+        return result;
     }
 
     /**
@@ -397,21 +374,6 @@ public class TeiidServer implements HostProvider {
      */
     public void setCustomLabel( String customLabel ) {
         this.customLabel = StringUtilities.isEmpty(customLabel) ? null : customLabel;
-    }
-
-    /**
-     * @param host the new host value (<code>null</code> if default host should be used)
-     */
-    public void setHost( String host ) {
-        this.host = host;
-    }
-
-    public void setTeiidAdminInfo( TeiidAdminInfo adminInfo ) {
-        this.teiidAdminInfo = adminInfo;
-    }
-
-    public void setTeiidJdbcInfo( TeiidJdbcInfo jdbcInfo ) {
-        this.teiidJdbcInfo = jdbcInfo;
     }
 
     /**

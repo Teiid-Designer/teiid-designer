@@ -21,6 +21,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.io.File;
+import org.eclipse.wst.server.core.IServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -233,11 +234,12 @@ public class ServerManagerTest {
         String jdbcPassword = null;
         boolean jdbcPersistPassword = false;
         EventManager eventMgr = mock(EventManager.class);
+        IServer parentServer = mock(IServer.class);
 
         // construct a server just to get its URL
         TeiidAdminInfo adminInfo = new TeiidAdminInfo(adminPort, adminUser, adminPassword, adminPersistPassword, adminSecure);
         TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, jdbcPassword, jdbcPersistPassword, jdbcSecure);
-        TeiidServer testServer = new TeiidServer(null, adminInfo, jdbcInfo, eventMgr);
+        TeiidServer testServer = new TeiidServer(null, adminInfo, jdbcInfo, eventMgr, parentServer);
         adminInfo.setHostProvider(testServer);
         jdbcInfo.setHostProvider(testServer);
 
@@ -273,7 +275,7 @@ public class ServerManagerTest {
         // construct a server just to get its URL
         adminInfo = new TeiidAdminInfo(adminPort, adminUser, adminPassword, adminPersistPassword, adminSecure);
         jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, jdbcPassword, jdbcPersistPassword, jdbcSecure);
-        testServer = new TeiidServer(host, adminInfo, jdbcInfo, eventMgr);
+        testServer = new TeiidServer(host, adminInfo, jdbcInfo, eventMgr, parentServer);
         adminInfo.setHostProvider(testServer);
         jdbcInfo.setHostProvider(testServer);
 

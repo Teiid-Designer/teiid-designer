@@ -120,7 +120,7 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
                                                                                 true,
                                                                                 false);
 
-        TeiidServer teiidServer = new TeiidServer(jb7.getHost(), teiidAdminInfo, teiidJdbcInfo, serverManager);
+        TeiidServer teiidServer = new TeiidServer(jb7.getHost(), teiidAdminInfo, teiidJdbcInfo, serverManager, jb7.getServer());
         
         // Initialise the ExecutionAdmin component of the teiid server
         teiidServer.getAdmin();

@@ -28,6 +28,9 @@ import javax.xml.transform.stream.StreamResult;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerCore;
+import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.core.util.Base64;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
@@ -633,7 +636,8 @@ public final class TeiidServerManager implements EventManager {
                         }
 
                         // add server to registry
-                        TeiidServer teiidServer = new TeiidServer(host, teiidAdminInfo, teiidJdbcInfo, this);
+                        IServer parentServer = findParentServer(host, teiidAdminInfo);
+                        TeiidServer teiidServer = new TeiidServer(host, teiidAdminInfo, teiidJdbcInfo, this, parentServer);
                         teiidServer.setCustomLabel(customLabel);
                         
                         addServer(teiidServer);
@@ -652,6 +656,26 @@ public final class TeiidServerManager implements EventManager {
 
         // do nothing of there is no save location or state file does not exist
         return Status.OK_STATUS;
+    }
+    
+    private IServer findParentServer(String host, TeiidAdminInfo teiidAdminInfo) throws OrphanedTeiidServerException {
+        IServer[] servers = ServerCore.getServers();
+        for (IServer server : servers) {
+            if (! host.equals(server.getHost()))
+                continue;
+            
+            JBoss7Server jb7 = (JBoss7Server) server.loadAdapter(JBoss7Server.class, null);
+            if (jb7 == null)
+                continue;
+            
+            if (teiidAdminInfo.getPortNumber() != jb7.getManagementPort())
+                continue;
+            
+            // The host and admin port match so must be the same server
+            return server;
+        }
+       
+        throw new OrphanedTeiidServerException(teiidAdminInfo);
     }
 
     /**
