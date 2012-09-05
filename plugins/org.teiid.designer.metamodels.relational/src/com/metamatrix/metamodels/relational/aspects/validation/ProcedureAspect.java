@@ -34,6 +34,7 @@ public class ProcedureAspect extends RelationalEntityAspect {
 	@Override
     public ValidationRuleSet getValidationRules() {
 		addRule(PROC_PARAM_RULE);
+        addRule(SOURCE_PROC_UNIQUENESS_RULE);
 		return super.getValidationRules();		
 	}
 

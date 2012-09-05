@@ -7,13 +7,12 @@
  */
 package com.metamatrix.metamodels.relational.aspects.validation.rules;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import com.metamatrix.metamodels.relational.AccessPattern;
 import com.metamatrix.metamodels.relational.Catalog;
 import com.metamatrix.metamodels.relational.Column;
@@ -146,6 +145,13 @@ public class RelationalStringNameRule extends StringNameRule {
         if (!context.hasRunRule(eObject, getRuleName() + objType)) {
             if (validateUniqueness()) {
                 List siblings = getSiblingsForUniquenessCheck(eObject);
+                // For Source Procedures, duplicates are allowed. Remove duplicates from list
+                // so that they will pass this validation rule
+                if (eObject instanceof Procedure) {
+                    siblings = removeDuplicateSourceProcs(siblings);
+                } else if (eObject instanceof ProcedureParameter) {
+                    siblings = removeDuplicateSourceProcParms(siblings);
+                }
                 // get delegates for proxys for performance
                 // the uniqueness rule should only be run once per container
                 CoreValidationRulesUtil.validateUniqueness(context, siblings, getFeatureID());
@@ -155,6 +161,63 @@ public class RelationalStringNameRule extends StringNameRule {
         }
     }
     
+    /*
+     * Remove duplicate named Source Procedures from the supplied list, if duplicates exist.
+     * This allows the normal relational string name rule to pass for source procedures names.
+     * @param siblings the supplied list of source procedures
+     * @return the 'cleaned' list of source procedures
+     */
+    private List removeDuplicateSourceProcs( List siblings ) {
+        List resultProcs = new ArrayList(); // Result List
+        List<String> sourceProcNames = new ArrayList<String>(); // Track source procedure names already found
+
+        for (Object proc : siblings) {
+            if (proc != null && proc instanceof Procedure) {
+                Procedure theProc = (Procedure)proc;
+                // If not a source function, add it to the results
+                if (!theProc.isFunction()) {
+                    resultProcs.add(theProc);
+                    // Source Function - get its name. Only add first source proc with a given name
+                } else {
+                    final EStructuralFeature eFeature = theProc.eClass().getEStructuralFeature(getFeatureID());
+                    final String nameUpper = ((String)theProc.eGet(eFeature)).toUpperCase();
+                    if (!sourceProcNames.contains(nameUpper)) {
+                        sourceProcNames.add(nameUpper);
+                        resultProcs.add(theProc);
+                    }
+                }
+            }
+        }
+
+        return resultProcs;
+    }
+
+    /*
+     * Remove duplicate named Source Procedure Parameters from the supplied list, if duplicates exist.
+     * This allows the normal relational string name rule to pass for source procedure param names.
+     * @param siblings the supplied list of source procedure parameters
+     * @return the 'cleaned' list of source procedure parameters
+     */
+    private List removeDuplicateSourceProcParms( List siblings ) {
+        List resultProcParams = new ArrayList(); // Result List
+        List<String> sourceProcParamNames = new ArrayList<String>(); // Track source procedure param names already found
+
+        for (Object procParam : siblings) {
+            if (procParam != null && procParam instanceof ProcedureParameter) {
+                ProcedureParameter theProcParam = (ProcedureParameter)procParam;
+                // Source Function - get its name. Only add first source proc with a given name
+                final EStructuralFeature eFeature = theProcParam.eClass().getEStructuralFeature(getFeatureID());
+                final String nameUpper = ((String)theProcParam.eGet(eFeature)).toUpperCase();
+                if (!sourceProcParamNames.contains(nameUpper)) {
+                    sourceProcParamNames.add(nameUpper);
+                    resultProcParams.add(theProcParam);
+                }
+            }
+        }
+
+        return resultProcParams;
+    }
+
     protected int getPreferenceStatus(final ValidationContext context) {
         return context.getPreferenceStatus(ValidationPreferences.RELATIONAL_NAME_CHARACTER_RESTRICTION, IStatus.OK);
     }

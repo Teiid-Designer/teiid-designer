@@ -20,6 +20,7 @@ import com.metamatrix.metamodels.relational.aspects.validation.rules.MissingName
 import com.metamatrix.metamodels.relational.aspects.validation.rules.ProcedureParametersRule;
 import com.metamatrix.metamodels.relational.aspects.validation.rules.RelationalStringNameRule;
 import com.metamatrix.metamodels.relational.aspects.validation.rules.SiblingNameInSourceRule;
+import com.metamatrix.metamodels.relational.aspects.validation.rules.SourceProcedureUniquenessRule;
 import com.metamatrix.metamodels.relational.aspects.validation.rules.TableChildrenUpdatabilityRule;
 import com.metamatrix.metamodels.relational.aspects.validation.rules.TableMaterializedRule;
 import com.metamatrix.metamodels.relational.aspects.validation.rules.TableUniqueKeysRule;
@@ -48,7 +49,8 @@ public abstract class RelationalEntityAspect extends AbstractValidationAspect {
 	public static final ValidationRule TABLE_UNIQUE_KEYS_RULE = new TableUniqueKeysRule();
     public static final ValidationRule COLUMN_DATATYPE_RULE = new ColumnDatatypeRule(RelationalPackage.COLUMN__TYPE);
     public static final ValidationRule TABLE_MATERIALIZED_RULE = new TableMaterializedRule(RelationalPackage.TABLE__MATERIALIZED);
-	public static final ValidationRule PROC_PARAM_RULE = new ProcedureParametersRule();
+    public static final ValidationRule PROC_PARAM_RULE = new ProcedureParametersRule();
+    public static final ValidationRule SOURCE_PROC_UNIQUENESS_RULE = new SourceProcedureUniquenessRule();
     public static final ValidationRule INDEX_REF_MULTIPLE_TABLES = new IndexReferenceOneTableRule();
     public static final ValidationRule EMPTY_COLUMN_NATIVE_TYPE_RULE = new ColumnNativeTypeRule();
     public static final ValidationRule TABLE_MISSING_NAME_IN_SOURCE_RULE = new MissingNameInSourceRule();
