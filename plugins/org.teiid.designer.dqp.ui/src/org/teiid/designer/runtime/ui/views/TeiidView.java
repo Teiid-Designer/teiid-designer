@@ -330,8 +330,11 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
         
         String[] items = serverMap.keySet().toArray(new String[0]);
         jbossServerCombo.setItems(items);
-        jbossServerCombo.setText(items[0]);
-        handleServerComboSelection();
+        
+        if (items.length > 0) {
+            jbossServerCombo.setText(items[0]);
+            handleServerComboSelection();
+        }
     }
 
     /**
