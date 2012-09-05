@@ -51,6 +51,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.vdb.manifest.ImportVdbElement;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
@@ -547,18 +548,35 @@ public final class VdbModelEntry extends VdbEntry {
                     	java.net.URI uri = java.net.URI.create(importedModel.getURI().toString());
                         IFile[] modelFiles = ModelerCore.getWorkspace().getRoot().findFilesForLocationURI(uri);
                         final IPath name = modelFiles[0].getFullPath();
-                        VdbModelEntry importedEntry = null;
-
-                        for (final VdbModelEntry entry : getVdb().getModelEntries()) {
-                            if (name.equals(entry.getName())) {
-                                importedEntry = entry;
-                                break;
-                            }
+                        
+                        // Check Model File to see if it's a physical VDB source model
+                        final String vdbSourceModelName = ModelUtil.getModelAnnotationPropertyValue(modelFiles[0], VdbConstants.VDB_NAME_KEY);
+                        if( vdbSourceModelName != null ) {
+                        	boolean exists = false;
+                        	// Add this source name to import-vdbs IF it doesn't already exist as an import vdb
+                        	for( VdbImportVdbEntry importEntry : getVdb().getImportVdbEntries()) {
+                        		if( vdbSourceModelName.equalsIgnoreCase(importEntry.getName()) ) {
+                        			exists = true;
+                        			break;
+                        		}
+                        	}
+                        	if( !exists ) {
+                        		getVdb().addImportVdb(vdbSourceModelName);
+                        	}
+                        } else {
+	                        VdbModelEntry importedEntry = null;
+	
+	                        for (final VdbModelEntry entry : getVdb().getModelEntries()) {
+	                            if (name.equals(entry.getName())) {
+	                                importedEntry = entry;
+	                                break;
+	                            }
+	                        }
+	
+	                        if (importedEntry == null) importedEntry = getVdb().addModelEntry(name, monitor);
+	                        imports.add(importedEntry);
+	                        importedEntry.importedBy.add(this);
                         }
-
-                        if (importedEntry == null) importedEntry = getVdb().addModelEntry(name, monitor);
-                        imports.add(importedEntry);
-                        importedEntry.importedBy.add(this);
                     }
                 }
             }

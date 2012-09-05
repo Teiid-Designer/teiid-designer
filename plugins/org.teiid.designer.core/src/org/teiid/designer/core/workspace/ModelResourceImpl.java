@@ -323,6 +323,9 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
             // There are never errors if not opened ...
             return true;
         }
+        if( this.isLoaded() && ModelUtil.isVdbSourceObject(this)) {
+        	return true;
+        }
         return ModelUtil.isIResourceReadOnly(getResource());
     }
 

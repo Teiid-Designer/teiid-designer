@@ -33,6 +33,8 @@ import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.xml.util.XmlDocumentUtil;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.ui.PluginConstants;
@@ -94,6 +96,14 @@ public class ModelObjectLabelProvider extends LabelProvider
             EObject eObj = (EObject)theElement;
             Image temp = delegate.getImage(theElement);
 
+            if( ModelObjectUtilities.isVdbSourceModel(eObj) ) {
+            	// get alternate image for table or procedure if VDB source model
+            	if( eObj instanceof Table ) {
+            		temp = UiPlugin.getDefault().getImage(PluginConstants.Images.TABLE_VDB_SOURCE);
+            	} else if( eObj instanceof Procedure ) {
+            		temp = UiPlugin.getDefault().getImage(PluginConstants.Images.PROCEDURE_VDB_SOURCE);
+            	}
+            }
             boolean virtual = ModelObjectUtilities.isVirtual(eObj);
             boolean logical = ModelObjectUtilities.isLogical(eObj);
             boolean extension = ModelObjectUtilities.isExtension(eObj);

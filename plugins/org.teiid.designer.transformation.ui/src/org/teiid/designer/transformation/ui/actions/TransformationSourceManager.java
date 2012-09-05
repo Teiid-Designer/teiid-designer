@@ -74,6 +74,7 @@ public class TransformationSourceManager implements UiConstants {
 
         if (!ModelObjectUtilities.isReadOnly(transformationEObject)
             && transformationEObject instanceof SqlTransformationMappingRoot && sourceEObject != null
+            && ModelObjectUtilities.shareCommonProject(transformationEObject, sourceEObject)
             && !TransformationHelper.isMappingClass(sourceEObject)
             && TransformationHelper.isValidSource(transformationEObject, sourceEObject)
             && !TransformationSourceManager.isInvalidStagingTable(sourceEObject, source)) {
@@ -148,6 +149,7 @@ public class TransformationSourceManager implements UiConstants {
 
         if (!ModelObjectUtilities.isReadOnly(transformationEObject)
             && transformationEObject instanceof SqlTransformationMappingRoot && sourceEObject != null
+            && ModelObjectUtilities.shareCommonProject(transformationEObject, sourceEObject)
             && TransformationHelper.isValidSource(transformationEObject, sourceEObject)
             && !TransformationSourceManager.isInvalidStagingTable(sourceEObject, source)
             && !TransformationHelper.isMappingClass(sourceEObject)) {
@@ -196,6 +198,7 @@ public class TransformationSourceManager implements UiConstants {
             while (iter.hasNext() && !sourceIsTarget && !invalidST && !invalidSource) {
                 EObject sourceEObj = (EObject)iter.next();
                 invalidST = TransformationSourceManager.isInvalidStagingTable(sourceEObj, source)
+                			|| !ModelObjectUtilities.shareCommonProject(transformationEObject, sourceEObj)
                             || TransformationHelper.isMappingClass(sourceEObj)
                             || !TransformationHelper.isValidSource(transformationEObject, sourceEObj);
                 sourceIsTarget = sourceEObj.equals(linkTarget);

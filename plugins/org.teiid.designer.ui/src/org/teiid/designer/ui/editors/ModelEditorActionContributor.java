@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.commands.ActionHandler;
@@ -24,6 +26,9 @@ import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 import org.eclipse.ui.texteditor.StatusLineContributionItem;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.actions.IModelerActionConstants;
@@ -60,6 +65,7 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
     /** Listener to clean up the partContributorMap. */
     private IPartListener partListener;
 
+
     /**
      * Keep track of the global action handlers. When we activate them through the IHandlerService, if their is already a handler
      * for that action, Eclipse logs a warning message but the activation still works. This map is being used so that we can
@@ -71,10 +77,17 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
         defaultActionsMap = new ModelerGlobalActionsMap();
     }
 
+    /**
+     * 
+     */
     public ModelEditorActionContributor() {
         this.actionHandlerMap = new HashMap<String, IHandlerActivation>(ModelerGlobalActionsMap.ALL_GLOBAL_ACTIONS.length);
     }
 
+    /**
+     * @param thePart the editor part
+     * @param theContributor the action bar contributor
+     */
     public void addContributor( IEditorPart thePart,
                                 IEditorActionBarContributor theContributor ) {
         if (partContributorMap == null) {
@@ -237,7 +250,9 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
             // must deactive if already one activated in order to get rid of an Eclipse warning message
             if (this.actionHandlerMap.containsKey(actionId)) {
                 IHandlerActivation activation = this.actionHandlerMap.get(actionId);
-                activation.getHandlerService().deactivateHandler(activation);
+                if( activation.getHandlerService() != null ) {
+                	activation.getHandlerService().deactivateHandler(activation);
+                }
             }
 
             getActionBars().setGlobalActionHandler(actionId, action);
@@ -253,26 +268,29 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
      * Sets the model file being edited by the <code>ModelEditor</code>. Updates the status bar with the readonly state of the
      * file.
      * 
-     * @param theInput the model file
+     * @param theInput the model file 
      */
     public void setEditorInput( IFileEditorInput theInput ) {
         input = theInput;
         setReadOnlyState();
     }
 
-    /** Sets the Readonly/Writable state of the editor resource into the status bar. */
+    /** Sets the Read-only/Writable state of the editor resource into the status bar. */
     public void setReadOnlyState() {
 
         if (input != null && fileStateItem != null) {
             // update status bar file state field
-            fileStateItem.setText(input.getFile().isReadOnly() ? Util.getString("ModelerEditorActionContributor.modelIsReadOnly") //$NON-NLS-1$
+            fileStateItem.setText(getReadOnlyState() ? Util.getString("ModelerEditorActionContributor.modelIsReadOnly") //$NON-NLS-1$
             : Util.getString("ModelerEditorActionContributor.modelIsWritable")); //$NON-NLS-1$
         }
     }
 
+    /**
+     * @return true if model is read-only
+     */
     public boolean getReadOnlyState() {
         if (input != null) {
-            return input.getFile().isReadOnly();
+            return ModelUtil.isIResourceReadOnly(input.getFile());
         }
 
         return true;

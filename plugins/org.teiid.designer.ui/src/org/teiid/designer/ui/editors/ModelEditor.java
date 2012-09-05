@@ -1529,7 +1529,7 @@ public class ModelEditor extends MultiPageModelEditor
                     @Override
 					public IStatus validate( Object[] selection ) {
                         for (int i = 0; i < selection.length; ++i) {
-                            if (((IFile)selection[i]).isReadOnly()) {
+                            if (ModelUtil.isIResourceReadOnly((IFile)selection[i])) {
                                 final String name = ((IFile)selection[i]).getName();
                                 return new StatusInfo(
                                                       UiConstants.PLUGIN_ID,

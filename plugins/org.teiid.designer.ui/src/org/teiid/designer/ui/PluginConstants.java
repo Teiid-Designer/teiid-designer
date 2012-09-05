@@ -84,6 +84,10 @@ public interface PluginConstants {
         String SIMPLE_PROJECT = OBJ16 + "SimpleProject.gif"; //$NON-NLS-1$
 
         String BUILTIN_DATATYPE = OBJ16 + "BuiltinDatatype.gif"; //$NON-NLS-1$
+        
+        String TABLE_VDB_SOURCE = OBJ16 + "table-vdb-source.png"; //$NON-NLS-1$
+        String PROCEDURE_VDB_SOURCE = OBJ16 + "procedure-vdb-source.png"; //$NON-NLS-1$
+        String VDB_SOURCE_MODEL = OBJ16 + "vdb-source-model.png"; //$NON-NLS-1$
 
         String METAMODEL = OBJ16 + "Metamodel.gif"; //$NON-NLS-1$
 

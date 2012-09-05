@@ -27,11 +27,14 @@ import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeManager;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metamodels.diagram.PresentationEntity;
 import org.teiid.designer.metamodels.transformation.SqlAlias;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.properties.extension.ModelExtensionPropertySource;
 import org.teiid.designer.ui.properties.udp.ExtensionPropertySource;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.StatusBarUpdater;
 
 
@@ -86,16 +89,26 @@ public class ModelObjectPropertySource extends PropertySource {
                         || ( object instanceof SqlAlias );
                         
         if (object instanceof EObject ) {
-            final EObject eObject = (EObject)object;
-            final DatatypeManager dtMgr = ModelerCore.getDatatypeManager(eObject,true);
-            if ( dtMgr.isSimpleDatatype(eObject) ) {
-                try {
-                    isReadOnlyType = dtMgr.isBuiltInDatatype(eObject);
-                } catch (Exception e) {
-                    UiConstants.Util.log(IStatus.ERROR, e, e.getClass().getName());
-                    isReadOnlyType = false;
-                } 
-            }
+        	final EObject eObject = (EObject)object;
+        	if( ModelUtil.isVdbSourceObject(eObject) ) {
+        		isReadOnlyType = true;
+        	} else {
+        		// Check for read-only resource
+        		ModelResource mr = ModelUtilities.getModelResource(eObject);
+        		if( mr != null && mr.isReadOnly() ) {
+        			isReadOnlyType = true;
+        		} else {
+		            final DatatypeManager dtMgr = ModelerCore.getDatatypeManager(eObject,true);
+		            if ( dtMgr.isSimpleDatatype(eObject) ) {
+		                try {
+		                    isReadOnlyType = dtMgr.isBuiltInDatatype(eObject);
+		                } catch (Exception e) {
+		                    UiConstants.Util.log(IStatus.ERROR, e, e.getClass().getName());
+		                    isReadOnlyType = false;
+		                } 
+		            }
+        		}
+        	}
 
             this.modelExtensionDelegate = new ModelExtensionPropertySource(eObject);
         }
