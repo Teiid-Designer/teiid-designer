@@ -170,7 +170,7 @@ public class ColumnsInfoPanel {
                                                     name,
                                                     false,
                                                     ColumnInfo.DEFAULT_DATATYPE,
-                                                    null, null);
+                                                    null, null, null);
                                 }
                                 else {
                                     detailsPage
@@ -180,7 +180,7 @@ public class ColumnsInfoPanel {
                                                     name,
                                                     false,
                                                     ColumnInfo.DEFAULT_DATATYPE,
-                                                    null, null);
+                                                    null, null, null);
                                 }
                                 editColumnsPanel.refresh();
                                 notifyColumnDataChanged();
