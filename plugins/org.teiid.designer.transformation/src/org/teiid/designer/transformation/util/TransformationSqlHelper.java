@@ -37,6 +37,7 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.query.SetQueryUtil;
 import org.teiid.designer.core.types.DatatypeConstants;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metadata.runtime.ColumnRecord;
 import org.teiid.designer.metadata.runtime.MetadataConstants;
 import org.teiid.designer.metadata.runtime.MetadataRecord;
@@ -2222,7 +2223,9 @@ public class TransformationSqlHelper implements SqlConstants {
             boolean hasResource = groupEObj.eResource() != null ? true : false;
             String tableFullName = tableAspect.getName(groupEObj);
             if (hasResource) {
-                tableFullName = tableAspect.getFullName(groupEObj);
+            	if( ! TransformationHelper.isVdbSourceModelObject(groupEObj)) {
+            		tableFullName = tableAspect.getFullName(groupEObj);
+            	}
             }
             String tableShortName = tableAspect.getName(groupEObj);
             // Get MetadataID for fullName

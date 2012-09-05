@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
@@ -52,6 +53,7 @@ import org.teiid.designer.core.util.ModelResourceContainerFactory;
 import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metadata.runtime.MetadataConstants;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.function.FunctionParameter;
@@ -4278,5 +4280,9 @@ public class TransformationHelper implements SqlConstants {
         }
 
         return null;
+    }
+    
+    public static boolean isVdbSourceModelObject( final EObject eObj) {
+    	return ModelUtil.isVdbSourceObject(eObj);
     }
 }

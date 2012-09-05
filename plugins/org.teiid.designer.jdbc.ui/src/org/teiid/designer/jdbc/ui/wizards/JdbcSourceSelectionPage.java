@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -119,6 +120,8 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     // Need to cash the profile when connection is selected so we can use it in Finish method to 
     // inject the connection info into model.
     private IConnectionProfile connectionProfile;
+    
+    private boolean isTeiidConnection;
     
     private String initialProfileName;
 
@@ -545,6 +548,16 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         validatePage();
         
         this.editCPButton.setEnabled(this.connectionProfile != null);
+        if( this.connectionProfile != null) {
+        	// Check for Teiid connection
+        	Properties props = connectionProfile.getBaseProperties();
+        	String vendor = props.getProperty("org.eclipse.datatools.connectivity.db.vendor");
+        	if( vendor != null && vendor.equalsIgnoreCase("TEIID") ) {
+        		this.isTeiidConnection = true;
+        	} else {
+        		this.isTeiidConnection = false;
+        	}
+        }
     }
 
     void processorModified() {
@@ -603,6 +616,34 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         for (Object listener : listeners) {
             ((IChangeListener)listener).stateChanged(this);
         }
+    }
+    
+    /**
+     * @return is a a teiid connection
+     */
+    public boolean isTeiidConnection() {
+    	return this.isTeiidConnection;
+    }
+    
+    /**
+     * @return the vdb name if is teiid JDBC connection to vdb
+     */
+    public String getVdbName() {
+        if( this.connectionProfile != null) {
+        	// Check for Teiid connection
+        	Properties props = connectionProfile.getBaseProperties();
+        	String teiidURL = props.getProperty("org.eclipse.datatools.connectivity.db.URL");
+        	// EXAMPLE:  jdbc:teiid:PartsTestVDB@mm://localhost:31000
+        	if( teiidURL != null && teiidURL.startsWith("jdbc:teiid")) {
+        		int atIndex = teiidURL.indexOf('@');
+        		String vdbName = teiidURL.substring(11, atIndex);
+        		if( vdbName != null ) {
+        			return vdbName;
+        		}
+        	}
+        }
+		
+		return null;
     }
 
     public class CPListener implements IProfileListener {

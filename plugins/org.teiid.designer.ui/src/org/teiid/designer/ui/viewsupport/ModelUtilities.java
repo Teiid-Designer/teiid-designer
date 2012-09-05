@@ -51,12 +51,16 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.jdbc.JdbcPackage;
 import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelImport;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
+import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionAssistant;
+import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionConstants;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -1691,5 +1695,55 @@ public abstract class ModelUtilities implements UiConstants {
         public IFile[] getFileResources() {
             return (IFile[])resources.toArray(new IFile[resources.size()]);
         }
+    }
+    
+    public static boolean modelIsLocked(final ModelResource modelResource) throws Exception {
+    	if (modelResource != null ) {
+    		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+			CoreModelExtensionAssistant assistant = 
+					(CoreModelExtensionAssistant)registry.getModelExtensionAssistant(CoreModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix());
+			return assistant.isModelLocked(modelResource);
+    	}
+    	
+    	return false;
+    }
+    
+    public static boolean isVdbSourceModel(final ModelResource modelResource) {
+    	if (modelResource != null ) {
+    		try {
+        		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+    			CoreModelExtensionAssistant assistant = 
+    					(CoreModelExtensionAssistant)registry.getModelExtensionAssistant(CoreModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix());
+    			return assistant.isVdbSourceModel(modelResource);
+			} catch (Exception ex) {
+				UiConstants.Util.log(IStatus.ERROR, ex, ex.getMessage());
+			}
+    	}
+    	
+    	return false;
+    }
+    
+    public static boolean isVdbSourceModel(final IFile modelFile) {
+    	if (modelFile != null ) {
+    		try {
+    			ModelResource mr = getModelResource(modelFile);
+        		return isVdbSourceModel(mr);
+			} catch (Exception ex) {
+				UiConstants.Util.log(IStatus.ERROR, ex, ex.getMessage());
+			}
+    	}
+    	
+    	return false;
+    }
+    
+    public static String getVdbName(final ModelResource modelResource) throws Exception {
+    	if (modelResource != null ) {
+    		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+			CoreModelExtensionAssistant assistant = 
+					(CoreModelExtensionAssistant)registry.getModelExtensionAssistant(CoreModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix());
+			return assistant.getVdbName(modelResource);
+    	}
+    	
+    	return null;
     }
 }

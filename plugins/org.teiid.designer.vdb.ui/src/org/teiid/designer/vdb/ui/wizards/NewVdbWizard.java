@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -108,13 +109,18 @@ public final class NewVdbWizard extends AbstractWizard
 
     private static final String NOT_MODEL_PROJECT_MSG = getString("notModelProjectMessage"); //$NON-NLS-1$
     private static final String SELECT_FOLDER_MESSAGE = getString("selectFolderMessage"); //$NON-NLS-1$
+    
+    static final String ADD_FILE_DIALOG_INVALID_SELECTION_MESSAGE = VdbUiConstants.Util.getString("addFileDialogInvalidSelectionMessage"); //$NON-NLS-1$
+    static final String ADD_FILE_DIALOG_NON_MODEL_SELECTED_MESSAGE = VdbUiConstants.Util.getString("addFileDialogNonModelSelectedMessage"); //$NON-NLS-1$
+    static final String ADD_FILE_DIALOG_VDB_SOURCE_MODEL_SELECTED_MESSAGE = VdbUiConstants.Util.getString("addFileDialogVdbSourceModelSelectedMessage");  //$NON-NLS-1$
+    
     private static final StringNameValidator nameValidator = new StringNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
                                                                                      StringNameValidator.DEFAULT_MAXIMUM_LENGTH);
 
     static String getString( final String id ) {
         return VdbUiConstants.Util.getString(I18N_PREFIX + id);
     }
-
+    
     String name;
     IContainer folder;
 
@@ -146,9 +152,22 @@ public final class NewVdbWizard extends AbstractWizard
          */
         @Override
         public IStatus validate( final Object[] selection ) {
-            for (int ndx = selection.length; --ndx >= 0;)
-                if (selection[ndx] instanceof IContainer) 
-                	return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, getString("invalidModelSelected"), null); //$NON-NLS-1$
+            for (int ndx = selection.length; --ndx >= 0;) {
+            	Object obj = selection[ndx];
+                if (obj instanceof IContainer) {
+                	return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, ADD_FILE_DIALOG_INVALID_SELECTION_MESSAGE, null);
+                } else if( obj instanceof IFile ) {
+                	IFile file = (IFile)obj;
+                
+                	if ( !ModelUtilities.isModelFile(file) && !ModelUtil.isXsdFile(file) ) {
+                		return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, ADD_FILE_DIALOG_NON_MODEL_SELECTED_MESSAGE, null); 
+                	}
+                	if( ModelUtilities.isVdbSourceModel(file) ) {
+                		return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, ADD_FILE_DIALOG_VDB_SOURCE_MODEL_SELECTED_MESSAGE, null);
+                	}
+                }
+            }
+            
             return new Status(IStatus.OK, VdbUiConstants.PLUGIN_ID, 0, EMPTY_STRING, null);
         }
     };
@@ -510,8 +529,9 @@ public final class NewVdbWizard extends AbstractWizard
                 
                 final IFile file = (IFile)element;
                 
-                if (ModelUtilities.isModelFile(file) || ModelUtil.isXsdFile(file)) 
+                if (ModelUtilities.isModelFile(file) || ModelUtil.isXsdFile(file)) { 
                 	return true;
+                }
 
                 return false;
             }

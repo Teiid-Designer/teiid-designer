@@ -50,11 +50,11 @@ public class VdbElement implements Serializable {
     @XmlElement( name = "property", type = PropertyElement.class )
     private List<PropertyElement> properties;
 
-    @XmlElement( name = "model", required = true, type = ModelElement.class )
-    private List<ModelElement> models;
-    
     @XmlElement( name = "import-vdb", type = ImportVdbElement.class )
     private List<ImportVdbElement> importVdbs;
+    
+    @XmlElement( name = "model", required = true, type = ModelElement.class )
+    private List<ModelElement> models;
 
     @XmlElement( name = "translator", type = TranslatorElement.class )
     private List<TranslatorElement> translators;

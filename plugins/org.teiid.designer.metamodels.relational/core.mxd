@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Core" namespacePrefix="core" namespaceUri="http://www.teiid.org/ext/core/2012" version="2" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
+    <p:description>Core metamodel extension properties</p:description>
+    <p:extendedMetaclass name="org.teiid.designer.metamodels.core.impl.ModelAnnotationImpl">
+        <p:property advanced="false" defaultValue="false" index="false" masked="false" name="locked" required="false" type="boolean">
+            <p:description locale="en">Specifies that a model is unmodifiable</p:description>
+            <p:display locale="en">Locked</p:display>
+        </p:property>
+        <p:property advanced="false" index="false" masked="false" name="vdb-name" required="false" type="string">
+            <p:description locale="en">Name of source VDB</p:description>
+            <p:display locale="en">VDB Name</p:display>
+        </p:property>
+        <p:property advanced="false" defaultValue="1" index="false" masked="false" name="vdb-version" required="false" type="integer">
+            <p:description locale="en">Version of source VDB</p:description>
+            <p:display locale="en">VDB Version</p:display>
+        </p:property>
+    </p:extendedMetaclass>
+</modelExtension>

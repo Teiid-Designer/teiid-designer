@@ -35,6 +35,7 @@ import org.teiid.designer.ui.UiPlugin;
  * 
  * @since 8.0
  */
+@SuppressWarnings("javadoc")
 public abstract class ModelIdentifier implements UiConstants {
 
     // UNKNOWN
@@ -89,7 +90,7 @@ public abstract class ModelIdentifier implements UiConstants {
     public static final int XML_VIEW_MODEL_TYPE_ID = ModelType.VIRTUAL;
     public static final ModelType XML_VIEW_MODEL_TYPE = ModelType.VIRTUAL_LITERAL;
     public static final String XML_VIEW_MODEL_URI = "http://www.metamatrix.com/metamodels/XmlDocument"; //$NON-NLS-1$
-    public static final String XML_VIEW_MODEL_STRING = "Xml View"; //$NON-NLS-1$
+	public static final String XML_VIEW_MODEL_STRING = "Xml View"; //$NON-NLS-1$
     public static final String XML_VIEW_MODEL_IMAGE_ID = PluginConstants.Images.XML_VIEW_MODEL;
 
     // Web Service Model Constants
@@ -155,6 +156,10 @@ public abstract class ModelIdentifier implements UiConstants {
     public static final String XML_MESSAGE_STRUCTURE_MODEL_URI = "http://www.metamatrix.com/metamodels/XmlDocument"; //$NON-NLS-1$
     public static final String XML_MESSAGE_STRUCTURE_MODEL_STRING = "Xml Message Structure"; //$NON-NLS-1$
     public static final String XML_MESSAGE_STRUCTURE_MODEL_IMAGE_ID = PluginConstants.Images.XML_MESSAGE_STRUCTURE_MODEL;
+    
+    // VDB Source Model
+    public static final int VDB_SOURCE_MODEL_ID = 14;
+    public static final String VDB_SOURCE_MODEL_IMAGE_ID = PluginConstants.Images.VDB_SOURCE_MODEL;
 
     /**
      * Indicates if the specified <code>IResource</code> is a model with the specified type and metamodel URI.
@@ -1027,6 +1032,11 @@ public abstract class ModelIdentifier implements UiConstants {
                 modelImage = UiPlugin.getDefault().getImage(XML_MESSAGE_STRUCTURE_MODEL_IMAGE_ID);
             }
                 break;
+                
+            case VDB_SOURCE_MODEL_ID: {
+                modelImage = UiPlugin.getDefault().getImage(VDB_SOURCE_MODEL_IMAGE_ID);
+            }
+                break;
 
             default: {
                 modelImage = UiPlugin.getDefault().getImage(RELATIONAL_SOURCE_MODEL_IMAGE_ID);
@@ -1043,6 +1053,10 @@ public abstract class ModelIdentifier implements UiConstants {
                 return XML_SCHEMA_MODEL_ID;
             }
             if (isRelationalSourceModel(theResource)) {
+            	ModelResource mr = ModelUtilities.getModelResourceForIFile((IFile)theResource, true);
+            	if( mr != null && ModelUtilities.isVdbSourceModel(mr) ) {
+            		return VDB_SOURCE_MODEL_ID;
+            	}
                 return RELATIONAL_SOURCE_MODEL_ID;
             }
             if (isExtensionModel(theResource)) {
@@ -1093,6 +1107,9 @@ public abstract class ModelIdentifier implements UiConstants {
                 return XML_SCHEMA_MODEL_ID;
             }
             if (isRelationalSourceModel(modelResource)) {
+            	if( ModelUtilities.isVdbSourceModel(modelResource) ) {
+            		return VDB_SOURCE_MODEL_ID;
+            	}
                 return RELATIONAL_SOURCE_MODEL_ID;
             }
             if (isExtensionModel(modelResource)) {
