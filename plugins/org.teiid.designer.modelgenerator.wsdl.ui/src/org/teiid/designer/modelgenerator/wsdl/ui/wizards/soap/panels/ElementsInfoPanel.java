@@ -96,9 +96,9 @@ public class ElementsInfoPanel {
 					
 					if( ok ) {
 						if( type == ProcedureInfo.TYPE_BODY ) {
-							detailsPage.getProcedureGenerator().getRequestInfo().addBodyColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
+							detailsPage.getProcedureGenerator().getRequestInfo().addBodyColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null, null);
 						} else {
-							detailsPage.getProcedureGenerator().getRequestInfo().addHeaderColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
+							detailsPage.getProcedureGenerator().getRequestInfo().addHeaderColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null, null);
 						}
     					editElementsPanel.refresh();
     					notifyColumnDataChanged();

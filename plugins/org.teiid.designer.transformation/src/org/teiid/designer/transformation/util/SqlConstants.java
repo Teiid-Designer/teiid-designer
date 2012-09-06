@@ -44,6 +44,7 @@ public interface SqlConstants {
     public static final String NAME = "NAME"; //$NON-NLS-1$
     public static final String XMLNAMESPACES = "XMLNAMESPACES"; //$NON-NLS-1$
     public static final String DEFAULT = "DEFAULT"; //$NON-NLS-1$
+    public static final String NO_DEFAULT = "NO DEFAULT"; //$NON-NLS-1$
     public static final String XMLTABLE = "XMLTABLE"; //$NON-NLS-1$
     public static final String TEXTTABLE = "TEXTTABLE"; //$NON-NLS-1$
     public static final String TABLE = "TABLE"; //$NON-NLS-1$
