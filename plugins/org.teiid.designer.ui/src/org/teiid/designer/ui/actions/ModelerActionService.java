@@ -87,6 +87,10 @@ public final class ModelerActionService extends AbstractActionService
 
     /** The logging prefix. */
     private static final String PREFIX = "ModelerActionService."; //$NON-NLS-1$
+    
+    /**
+     * 
+     */
     public static final String MODELING_LABEL = UiConstants.Util.getString("ModelerSpecialActionManager.specialLabel"); //$NON-NLS-1$
 
     /** A list version of <code>IModelerActionConstants.EclipseGlobalActions.ALL_ACTIONS</code>. */
@@ -134,12 +138,17 @@ public final class ModelerActionService extends AbstractActionService
     /**
      * Constructs a <code>ModelerActionService</code> associated with the given <code>IWorkbenchWindow</code>.
      * 
-     * @param theWindow the associated workbench window
+     * @param page the associated workbench page
      */
     public ModelerActionService( IWorkbenchPage page ) {
         this(UiPlugin.getDefault(), UiPlugin.getDefault().getPluginUtil(), page);
     }
 
+    /**
+     * @param plugin the plugin requesting action service
+     * @param utility the plugin logging and i18n utility class
+     * @param page the workbench page
+     */
     public ModelerActionService( AbstractUiPlugin plugin,
                                  PluginUtil utility,
                                  IWorkbenchPage page ) {
@@ -155,7 +164,7 @@ public final class ModelerActionService extends AbstractActionService
      * Adds the given listener to the list receiving workspace container {@link org.eclipse.emf.common.notify.Notification}s. This
      * is a pass-through helper method to the {@link org.teiid.designer.ui.viewsupport.ModelUtilities} method.
      * 
-     * @param listener the listener being added
+     * @param theListener the listener being added
      */
     public void addNotifyChangedListener( INotifyChangedListener theListener ) {
         ModelUtilities.addNotifyChangedListener(theListener);
@@ -543,7 +552,6 @@ public final class ModelerActionService extends AbstractActionService
     /**
      * Gets the default action for the given identifier. The set of default action identifiers can be found by combining
      * {@link org.teiid.designer.ui.actions.IModelerActionConstants.ModelerGlobalActions} and
-     * {@link org.teiid.designer.ui.actions.IModelerActionConstants.EclipseGlobalActions}.
      * 
      * @param theActionId the identifier of the default action being requested
      * @return the default action or <code>null</code> if not found
@@ -597,9 +605,7 @@ public final class ModelerActionService extends AbstractActionService
                             action.selectionChanged(getWorkbenchWindow().getPartService().getActivePart(), theSelection);
 
                             // disable if read-only. obj should be EObject or an IResource.
-                            if (isReadOnly) {
-                                action.setEnabled(false);
-                            }
+                            action.setEnabled(!isReadOnly);
                         }
 
                         // sort the keys of the actionMap to put them in alphabetical order
@@ -616,9 +622,7 @@ public final class ModelerActionService extends AbstractActionService
                             INewChildAction action = getNewChildExtensions()[i];
                             if (action.canCreateChild((EObject)obj)) {
                                 menu.add(action);
-                                if (isReadOnly) {
-                                    action.setEnabled(false);
-                                }
+                                action.setEnabled(!isReadOnly);
                             }
                         }
                     }
@@ -646,9 +650,7 @@ public final class ModelerActionService extends AbstractActionService
 	                                    action.selectionChanged(getWorkbenchWindow().getPartService().getActivePart(), theSelection);
 	
 	                                    // disable if read-only. obj should be EObject or an IResource.
-	                                    if (isReadOnly) {
-	                                        action.setEnabled(false);
-	                                    }
+	                                    action.setEnabled(!isReadOnly);
                                 	}
                                 }
 
@@ -669,9 +671,7 @@ public final class ModelerActionService extends AbstractActionService
                                     }
                                     if (action.canCreateChild((IFile)obj)) {
                                         menu.add(action);
-                                        if (isReadOnly) {
-                                            action.setEnabled(false);
-                                        }
+                                        action.setEnabled(!isReadOnly);
                                     }
                                 }
 
@@ -731,9 +731,7 @@ public final class ModelerActionService extends AbstractActionService
                         actionMap.put(action.getText(), action);
                         action.selectionChanged(getWorkbenchWindow().getPartService().getActivePart(), theSelection);
                         // disable if read-only
-                        if (isReadOnly) {
-                            action.setEnabled(false);
-                        }
+                        action.setEnabled(!isReadOnly);
                     }
 
                     // sort the keys of the actionMap to put them in alphabetical order
@@ -753,9 +751,7 @@ public final class ModelerActionService extends AbstractActionService
                             	menu.add(new Separator());
                             }
                             menu.add(action);
-                            if (isReadOnly) {
-                                action.setEnabled(false);
-                            }
+                            action.setEnabled(!isReadOnly);
                         }
                     }
 
@@ -821,9 +817,7 @@ public final class ModelerActionService extends AbstractActionService
                             IAction action = new NewAssociationAction(ad);
                             menu.add(action);
 
-                            if (isReadOnly) {
-                                action.setEnabled(false);
-                            }
+                            action.setEnabled(!isReadOnly);
 
                         }
 
@@ -874,8 +868,8 @@ public final class ModelerActionService extends AbstractActionService
     /**
      * Allows access to a full modeling action menu based on a supplied selection
      * 
-     * @param theSelection
-     * @return
+     * @param theSelection the selection object
+     * @return the menu manager
      * @since 5.0
      */
     public MenuManager getModelingActionMenu( ISelection theSelection ) {
@@ -1025,6 +1019,7 @@ public final class ModelerActionService extends AbstractActionService
 
     /**
      * Gets the Copy Name menu.
+     * @param selection the selected object
      * 
      * @return the Copy Name submenu
      */
@@ -1135,7 +1130,7 @@ public final class ModelerActionService extends AbstractActionService
     /**
      * Registers the Modeler's default global actions for the given <code>IPageSite</code>'s <code>IActionBars</code>.
      * 
-     * @param thePageSite the site where the global actions are being registered
+     * @param bars the action bars to register global actions
      */
     public void registerDefaultGlobalActions( IActionBars bars ) {
         Iterator itr = defaultActionsMap.entrySet().iterator();
@@ -1150,7 +1145,7 @@ public final class ModelerActionService extends AbstractActionService
      * Removes the given listener from receiving workspace container {@link org.eclipse.emf.common.notify.Notification}s. This is
      * a pass-through helper method to the {@link org.teiid.designer.ui.viewsupport.ModelUtilities} method.
      * 
-     * @param listener the listener being removed
+     * @param theListener the listener being removed
      */
     public void removeNotifyChangedListener( INotifyChangedListener theListener ) {
         ModelUtilities.removeNotifyChangedListener(theListener);
@@ -1258,6 +1253,9 @@ public final class ModelerActionService extends AbstractActionService
         return newSiblingExtensions;
     }
 
+    /**
+     * @return the refactor undo manager
+     */
     public RefactorUndoManager getRefactorUndoManager() {
         if (this.refactorUndoManager == null) {
             this.refactorUndoManager = RefactorUndoManager.getInstance();
