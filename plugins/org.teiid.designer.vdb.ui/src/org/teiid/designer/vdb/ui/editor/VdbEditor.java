@@ -186,6 +186,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     TableAndToolBar<VdbEntry> otherFilesGroup;
     TableAndToolBar<VdbDataRole> dataRolesGroup;
     private Button synchronizeAllButton;
+    private Button showImportVdbsButton;
     private PropertyChangeListener vdbListener;
 
     Action cloneDataRoleAction;
@@ -1366,8 +1367,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             createOtherFilesControl(pnlFiles);
         }
 
+        Composite extraButtonPanel = WidgetFactory.createPanel(pnlTop);
+        extraButtonPanel.setLayout(new GridLayout(2, false));
         { // synchronize button
-            synchronizeAllButton = WidgetFactory.createButton(pnlTop, i18n("synchronizeAllButton"), //$NON-NLS-1$
+        	
+            synchronizeAllButton = WidgetFactory.createButton(extraButtonPanel, i18n("synchronizeAllButton"), //$NON-NLS-1$
                                                               GridData.HORIZONTAL_ALIGN_BEGINNING);
             synchronizeAllButton.setToolTipText(i18n("synchronizeAllButtonToolTip")); //$NON-NLS-1$
             synchronizeAllButton.addSelectionListener(new SelectionAdapter() {
@@ -1452,6 +1456,26 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 }
             });
             synchronizeAllButton.setEnabled(!vdb.isSynchronized());
+        }
+        { // synchronize button
+            showImportVdbsButton = WidgetFactory.createButton(extraButtonPanel, "Show Import VDBs",//i18n("showImportVdbsButton"), //$NON-NLS-1$
+                                                              GridData.HORIZONTAL_ALIGN_BEGINNING);
+            showImportVdbsButton.setToolTipText(i18n("synchronizeAllButtonToolTip")); //$NON-NLS-1$
+            showImportVdbsButton.addSelectionListener(new SelectionAdapter() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( final SelectionEvent event ) {
+                	
+                	ShowImportVdbsDialog dialog = new ShowImportVdbsDialog(Display.getCurrent().getActiveShell(), getVdb());
+                	
+                	dialog.open();
+                };
+            });
+            showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
         }
 
         tabFolder.setSelection(0);
