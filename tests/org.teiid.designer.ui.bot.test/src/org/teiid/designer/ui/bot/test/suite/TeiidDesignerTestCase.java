@@ -16,11 +16,14 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.jboss.tools.ui.bot.ext.SWTTestExt;
 import org.jboss.tools.ui.bot.ext.SWTUtilExt;
+import org.jboss.tools.ui.bot.ext.condition.NonSystemJobRunsCondition;
+import org.jboss.tools.ui.bot.ext.condition.TaskDuration;
 import org.jboss.tools.ui.bot.ext.helper.ContextMenuHelper;
 import org.jboss.tools.ui.bot.ext.helper.DatabaseHelper;
 import org.jboss.tools.ui.bot.ext.types.DriverEntity;
 import org.jboss.tools.ui.bot.ext.types.IDELabel;
 import org.jboss.tools.ui.bot.ext.types.ViewType;
+import org.junit.AfterClass;
 import org.teiid.designer.ui.bot.ext.teiid.wizard.NewTeiidModelProjectWizard;
 import org.teiid.designer.ui.bot.test.Activator;
 
@@ -163,4 +166,12 @@ public class TeiidDesignerTestCase extends SWTTestExt {
     	log.info("Driver " + jar_name + " copied");
 	}
 
+	@AfterClass
+	public static void saveAllFiles() {
+		if(bot.menu("File").menu("Save All").isEnabled()) {
+			bot.menu("File").menu("Save All").click();
+			bot.waitWhile(new NonSystemJobRunsCondition(), TaskDuration.LONG.getTimeout());
+			log.info("All files saved.");
+		}
+	}
 }
