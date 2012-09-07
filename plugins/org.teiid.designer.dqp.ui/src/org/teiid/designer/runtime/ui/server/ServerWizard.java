@@ -8,13 +8,9 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
@@ -31,11 +27,6 @@ public final class ServerWizard extends Wizard {
     // ===========================================================================================================================
 
     /**
-     * Non-<code>null</code> if the wizard is editing an existing server.
-     */
-    private TeiidServer existingServer;
-
-    /**
      * The wizard page containing all the controls that allow editing of server properties.
      */
     private final ServerPage page;
@@ -44,8 +35,6 @@ public final class ServerWizard extends Wizard {
      * The manager in charge of the server registry.
      */
     private final TeiidServerManager teiidServerManager;
-
-    private TeiidServer resultServer;
 
     // ===========================================================================================================================
     // Constructors
@@ -62,20 +51,6 @@ public final class ServerWizard extends Wizard {
 
         setDefaultPageImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SERVER_WIZBAN));
         setWindowTitle(UTIL.getString("serverWizardNewServerTitle")); //$NON-NLS-1$
-    }
-
-    /**
-     * Constructs a wizard that edits an existing server.
-     * 
-     * @param teiidServerManager the server manager in charge of the server registry (never <code>null</code>)
-     * @param teiidServer the server whose properties are being edited (never <code>null</code>)
-     */
-    public ServerWizard( TeiidServerManager teiidServerManager,
-                         TeiidServer teiidServer ) {
-        this.page = new ServerPage(teiidServer);
-        this.teiidServerManager = teiidServerManager;
-        this.existingServer = teiidServer;
-        setWindowTitle(UTIL.getString("serverWizardEditServerTitle")); //$NON-NLS-1$
     }
 
     // ===========================================================================================================================
@@ -134,26 +109,7 @@ public final class ServerWizard extends Wizard {
         }
         
         // first let page know that wizard finished and was not canceled
-        this.page.performFinish();
-
-        IStatus status = Status.OK_STATUS;
-        resultServer = this.page.getServer();
-
-        if (this.existingServer == null) {
-            status = this.teiidServerManager.addServer(resultServer);
-
-            if (status.getSeverity() == IStatus.ERROR) {
-                MessageDialog.openError(getShell(), UTIL.getString("errorDialogTitle"), //$NON-NLS-1$
-                                        UTIL.getString("serverWizardEditServerErrorMsg")); //$NON-NLS-1$
-            }
-        } else if (!this.existingServer.equals(resultServer)) {
-            status = this.teiidServerManager.updateServer(this.existingServer, resultServer);
-
-            if (status.getSeverity() == IStatus.ERROR) {
-                MessageDialog.openError(getShell(), UTIL.getString("errorDialogTitle"), //$NON-NLS-1$
-                                        UTIL.getString("serverWizardNewServerErrorMsg")); //$NON-NLS-1$
-            }
-        }
+        IStatus status = this.page.performFinish();
 
         // log if necessary
         if (!status.isOK()) {
@@ -161,13 +117,5 @@ public final class ServerWizard extends Wizard {
         }
 
         return (status.getSeverity() != IStatus.ERROR);
-    }
-
-    public boolean shouldAutoConnect() {
-        return this.page.shouldAutoConnect();
-    }
-
-    public TeiidServer getServer() {
-        return this.resultServer;
     }
 }

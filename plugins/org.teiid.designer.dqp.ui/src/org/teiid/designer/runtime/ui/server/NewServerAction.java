@@ -8,11 +8,8 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.util.CoreArgCheck;
@@ -38,8 +35,6 @@ public class NewServerAction extends Action {
      * The shell used to display the dialog that edits and creates servers.
      */
     private final Shell shell;
-    
-    private boolean showConnectionFailedDialog = true;
 
     /**
      * @param shell the parent shell used to display the dialog
@@ -82,31 +77,6 @@ public class NewServerAction extends Action {
             }
         };
         
-        if (dialog.open() == Window.OK) {
-            if (wizard.shouldAutoConnect()) {
-                try {
-                    wizard.getServer().getAdmin();
-                    wizard.getServer().setConnectionError(null);
-                    this.teiidServerManager.setDefaultServer(wizard.getServer());
-                } catch (Exception e) {
-                    String msg = UTIL.getString("serverWizardNewServerAutoConnectError"); //$NON-NLS-1$
-
-                    if (this.showConnectionFailedDialog) {
-                        MessageDialog.openError(this.shell, UTIL.getString("newServerActionAutoConnectProblemTitle"), msg); //$NON-NLS-1$
-                    }
-
-                    wizard.getServer().setConnectionError(msg);
-                    wizard.getServer().notifyRefresh();
-                }
-            }
-        }
+        dialog.open();
     }
-
-    /**
-     * @param showConnectionFailedDialog <code>true</code> if an error dialog should be shown when auto-connecting fails
-     */
-    public void setShowConnectionFailedDialog( boolean showConnectionFailedDialog ) {
-        this.showConnectionFailedDialog = showConnectionFailedDialog;
-    }
-
 }

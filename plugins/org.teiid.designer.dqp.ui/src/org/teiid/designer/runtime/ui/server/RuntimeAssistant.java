@@ -150,7 +150,6 @@ public final class RuntimeAssistant {
      */
     public static void runNewServerAction( Shell shell ) {
         NewServerAction action = new NewServerAction(shell, getServerManager());
-        action.setShowConnectionFailedDialog(false);
         action.run();
     }
     

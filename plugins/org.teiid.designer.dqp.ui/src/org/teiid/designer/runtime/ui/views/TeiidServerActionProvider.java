@@ -46,6 +46,7 @@ import org.teiid.designer.runtime.ui.actions.ExecuteVDBAction;
 import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
 import org.teiid.designer.runtime.ui.server.DisconnectFromServerAction;
 import org.teiid.designer.runtime.ui.server.EditServerAction;
+import org.teiid.designer.runtime.ui.server.NewServerAction;
 import org.teiid.designer.runtime.ui.server.ReconnectToServerAction;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.server.SetDefaultServerAction;
@@ -73,6 +74,11 @@ public class TeiidServerActionProvider extends CommonActionProvider {
      * Collapses all tree nodes.
      */
     private IAction collapseAllAction;
+    
+    /**
+     * Add a new jboss / teiid server
+     */
+    private NewServerAction newServerAction;
 
     /**
      * Edits a server's properties.
@@ -343,6 +349,9 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         this.editServerAction = new EditServerAction(shell, getServerManager());
         viewer.addSelectionChangedListener(this.editServerAction);
 
+        // the new server action is always enabled
+        this.newServerAction = new NewServerAction(shell, getServerManager());
+        
         this.createDataSourceAction = new Action() {
 
             @Override
@@ -472,6 +481,8 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     public void fillContextMenu(IMenuManager manager) {
         List<Object> selectedObjs = getSelectedObjects();
 
+        manager.add(new Separator());
+        manager.add(newServerAction);
         manager.add(new Separator());
         
         if (selectedObjs == null || selectedObjs.isEmpty()) {
