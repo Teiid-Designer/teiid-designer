@@ -19,7 +19,7 @@ import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.DebugConstants;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 
@@ -44,7 +44,7 @@ public abstract class TeiidPreviewVdbJob extends Job implements PreferenceConsta
     /**
      * The preview server (may be <code>null</code>).
      */
-    private final Server previewServer;
+    private final TeiidServer previewServer;
 
     /**
      * @param jobName the job name (may not be <code>null</code>)
@@ -53,7 +53,7 @@ public abstract class TeiidPreviewVdbJob extends Job implements PreferenceConsta
      */
     public TeiidPreviewVdbJob( String jobName,
                                PreviewContext context,
-                               Server previewServer ) {
+                               TeiidServer previewServer ) {
         super(jobName);
         assert (context != null);
         this.context = context;
@@ -99,7 +99,7 @@ public abstract class TeiidPreviewVdbJob extends Job implements PreferenceConsta
     /**
      * @return the preview server (may be <code>null</code>)
      */
-    protected final Server getPreviewServer() {
+    protected final TeiidServer getPreviewServer() {
         return this.previewServer;
     }
 

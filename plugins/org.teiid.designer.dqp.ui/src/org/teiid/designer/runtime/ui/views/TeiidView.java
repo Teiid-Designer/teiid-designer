@@ -7,82 +7,72 @@
  */
 package org.teiid.designer.runtime.ui.views;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.ILabelDecorator;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.part.ResourceTransfer;
-import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionContext;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.eclipse.ui.navigator.CommonNavigator;
+import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerLifecycleListener;
+import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 import org.teiid.adminapi.Model;
 import org.teiid.core.util.CoreStringUtil;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
-import org.teiid.designer.runtime.ExecutionAdmin;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
-import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.TeiidDataSource;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
+import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.designer.runtime.connection.SourceConnectionBinding;
-import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
-import org.teiid.designer.runtime.ui.actions.ExecuteVDBAction;
-import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
-import org.teiid.designer.runtime.ui.server.DeleteServerAction;
-import org.teiid.designer.runtime.ui.server.DisconnectFromServerAction;
-import org.teiid.designer.runtime.ui.server.EditServerAction;
-import org.teiid.designer.runtime.ui.server.NewServerAction;
-import org.teiid.designer.runtime.ui.server.ReconnectToServerAction;
-import org.teiid.designer.runtime.ui.server.SetDefaultServerAction;
-import org.teiid.designer.runtime.ui.views.TeiidViewTreeProvider.DataSourcesFolder;
+import org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode;
+import org.teiid.designer.runtime.ui.views.content.TeiidFolder;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.common.util.KeyInValueHashMap;
+import org.teiid.designer.ui.common.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
@@ -93,12 +83,12 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
  *
  * @since 8.0
  */
-public class TeiidView extends ViewPart implements IExecutionConfigurationListener {
+public class TeiidView extends CommonNavigator implements IExecutionConfigurationListener {
     
     /**
      * A <code>ViewerFilter</code> that hides Preview Data Sources.
      */
-    private static final ViewerFilter PREVIEW_DATA_SOURCE_FILTER = new ViewerFilter() {
+    static final ViewerFilter PREVIEW_DATA_SOURCE_FILTER = new ViewerFilter() {
         /**
          * {@inheritDoc}
          *
@@ -121,7 +111,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     /**
      * A <code>ViewerFilter</code> that hides Preview VDBs.
      */
-    private static final ViewerFilter PREVIEW_VDB_FILTER = new ViewerFilter() {
+    static final ViewerFilter PREVIEW_VDB_FILTER = new ViewerFilter() {
         /**
          * {@inheritDoc}
          *
@@ -141,16 +131,13 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         }
     };
 
+    /**
+     * Prefix for language NLS properties
+     */
     static final String PREFIX = I18nUtil.getPropertyPrefix(TeiidView.class);
 
     static final String ACTIVE_VDB = getString("activeVdb"); //$NON-NLS-1$
     static final String INACTIVE_VDB = getString("inactiveVdb"); //$NON-NLS-1$
-    
-    // memento info for saving and restoring menu state from session to session
-    private static final String MENU_MEMENTO = "menu-settings"; //$NON-NLS-1$
-    private static final String SHOW_PREVIEW_VDBS = "show-preview-vdbs"; //$NON-NLS-1$
-    private static final String SHOW_PREVIEW_DATA_SOURCES = "show-preview-data-sources"; //$NON-NLS-1$
-    private static final String SHOW_TRANSLATORS = "show-translators"; //$NON-NLS-1$
     
     /**
      * Used for restoring view state
@@ -166,73 +153,46 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         return DqpUiConstants.UTIL.getString(PREFIX + stringId, param);
     }
 
-    TreeViewer viewer;
-    TeiidViewTreeProvider treeProvider;
+    private Combo jbossServerCombo;
 
-    /**
-     * Collapses all tree nodes.
-     */
-    private IAction collapseAllAction;
-
-    /**
-     * Deletes a server.
-     */
-    private DeleteServerAction deleteServerAction;
-
-    /**
-     * Creates a new server.
-     */
-    private NewServerAction newServerAction;
-
-    /**
-     * Edits a server's properties.
-     */
-    private EditServerAction editServerAction;
-    /**
-     * Refreshes the server connections.
-     */
-    private ReconnectToServerAction reconnectAction;
-    
-    private DisconnectFromServerAction disconnectAction;
-
-    /**
-     * Sets the selected Server as the default server for preview and execution
-     */
-    private SetDefaultServerAction setDefaultServerAction;
-
-    private Action createDataSourceAction;
-
-    private Action deleteDataSourceAction;
-
-    private Action undeployVdbAction;
-
-    private Action executeVdbAction;
+    private CommonViewer viewer;
 
     /** needed for key listening */
     private KeyAdapter kaKeyAdapter;
 
     private IPropertySourceProvider propertySourceProvider;
-    
-    private IAction showPreviewVdbsAction;
-    private IAction showPreviewDataSourcesAction;
-    private IAction showTranslatorsAction;
 
-    ExecutionAdmin currentSelectedAdmin;
+    private KeyFromValueAdapter adapter = new KeyFromValueAdapter<String, IServer>() {
+
+        @Override
+        public String getKey(IServer value) {
+            return value.getName();
+        }
+    };
     
-    /**
-     * <code>true</code> if the viewer should show preview VDBs
-     */
-    private boolean showPreviewVdbs;
-    
-    /**
-     * <code>true</code> if the viewer should show preview data sources
-     */
-    private boolean showPreviewDataSources;
-    
-    /**
-     * <code>true</code> if the viewer should show translators
-     */
-    private boolean showTranslators;
+    private KeyInValueHashMap<String, IServer> serverMap = new KeyInValueHashMap<String, IServer>(adapter);
+
+    private IServerLifecycleListener serversListener = new ServerLifecycleAdapter() {
+        
+        private void refresh() {
+            jbossServerCombo.getDisplay().asyncExec(new Runnable() {
+                @Override
+                public void run() {
+                    populateJBossServerCombo();
+                }
+            });
+        }
+        
+        @Override
+        public void serverAdded(IServer server) {
+            refresh();
+        }
+        
+        @Override
+        public void serverRemoved(IServer server) {
+            refresh();
+        }
+    };
     
     /**
      * The constructor.
@@ -242,7 +202,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         this.setTitleImage(DqpUiPlugin.getDefault().getImage(DqpUiConstants.Images.SOURCE_BINDING_ICON));
         this.setTitleToolTip(getString("title.tooltip")); //$NON-NLS-1$
     }
-
+    
     /**
      * {@inheritDoc}
      * 
@@ -258,19 +218,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
             @Override
             public void run() {
                 if (!viewer.getTree().isDisposed()) {
-                    if ((event.getEventType() == EventType.REFRESH) && (event.getTargetType() == TargetType.SERVER)) {
-                        viewer.refresh(event.getServer());
-                    } else {
-                        TargetType targetType = event.getTargetType();
-
-                        if (targetType == TargetType.VDB) {
-                            refreshVdbFolders();
-                        } else if (targetType ==TargetType.DATA_SOURCE) {
-                            refreshDataSourceFolders();
-                        } else {
-                            viewer.refresh();
-                        }
-                    }
+                    viewer.refresh();
 
                     // Get Selected Index
                     if (viewer.getTree().getSelectionCount() == 1) {
@@ -285,26 +233,63 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         // Refresh the Model Explorer too
         ModelerUiViewUtils.refreshModelExplorerResourceNavigatorTree();
     }
-
-    private void contributeToActionBars() {
-        IActionBars bars = getViewSite().getActionBars();
-        fillLocalPullDown(bars.getMenuManager());
-        fillLocalToolBar(bars.getToolBarManager());
-    }
-
+    
     /**
      * This is a callback that will allow us to create the viewer and initialize it.
      */
     @Override
     public void createPartControl( Composite parent ) {
-        viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+        FormToolkit toolkit = new FormToolkit(parent.getDisplay());
+        
+        Composite frame = toolkit.createComposite(parent, SWT.NONE);
+        GridLayoutFactory.fillDefaults().numColumns(2).applyTo(frame);
+        
+        Composite comboFrame = toolkit.createComposite(frame, SWT.NONE);
+        GridDataFactory.fillDefaults().applyTo(comboFrame);
+        GridLayoutFactory.fillDefaults().margins(5, 20).applyTo(comboFrame);
+        
+        Label jbLabel = WidgetFactory.createLabel(comboFrame, DqpUiConstants.UTIL.getString("TeiidServerOverviewSection.jbLabel")); //$NON-NLS-1$
+        jbLabel.setForeground(comboFrame.getDisplay().getSystemColor(SWT.COLOR_DARK_BLUE));
+        GridDataFactory.swtDefaults().grab(true, false).applyTo(jbLabel);
+        
+        jbossServerCombo = new Combo(comboFrame, SWT.READ_ONLY | SWT.DROP_DOWN);
+        toolkit.adapt(jbossServerCombo);
+        GridDataFactory.swtDefaults().minSize(250, 30).grab(true, false).applyTo(jbossServerCombo);
+        jbossServerCombo.addSelectionListener(new SelectionListener() {
+            
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                handleServerComboSelection();
+            }
+            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                handleServerComboSelection();
+            }
+        });
+        
+        Hyperlink openServerViewHyperlink = toolkit.createHyperlink(comboFrame, 
+                                DqpUiConstants.UTIL.getString("TeiidServerOverviewSection.hyperlinkLabel"), SWT.NONE); //$NON-NLS-1$
+        GridDataFactory.swtDefaults().applyTo(openServerViewHyperlink);
+        openServerViewHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 
-        initDragAndDrop();
-
-        treeProvider = new TeiidViewTreeProvider();
-        viewer.setContentProvider(treeProvider);
-        ILabelDecorator decorator = DqpUiPlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator();
-        viewer.setLabelProvider(new DecoratingLabelProvider(treeProvider, decorator));
+            @Override
+            public void linkActivated(HyperlinkEvent e) {
+                //open view
+                IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                try {
+                    window.getActivePage().showView("org.eclipse.wst.server.ui.ServersView");  //$NON-NLS-1$
+                } catch (PartInitException ex) {
+                    DqpUiConstants.UTIL.log(ex);
+                }
+            }
+        });        
+        
+        
+        super.createPartControl(frame);
+        
+        viewer = getCommonViewer();
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(viewer.getControl());
 
         hookToolTips();
 
@@ -317,244 +302,65 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
             }
         });
 
-        initActions();
-
-        hookContextMenu();
-
-        contributeToActionBars();
-
         initKeyListener();
-
-        // hook up this view's selection provider to this site
-        getViewSite().setSelectionProvider(viewer);
         
-        // populate viewer
-        updateViewerFilters();
-        viewer.setInput(DqpPlugin.getInstance().getServerManager());
+        ServerCore.addServerLifecycleListener(serversListener);
+        
+        // Populate the jboss server combo box which
+        // should also populate the viewer as well
+        populateJBossServerCombo();
+        
         viewer.expandToLevel(2);
 
         // Wire as listener to server manager and to receive configuration changes
         DqpPlugin.getInstance().getServerManager().addListener(this);
     }
 
+    private void populateJBossServerCombo() {
+        serverMap.clear();
+
+        IServer[] servers = ServerCore.getServers();
+        for (IServer server : servers) {
+            if (TeiidServerAdapterUtil.isJBossServer(server)) {
+                serverMap.add(server);
+            }
+        }
+        
+        String[] items = serverMap.keySet().toArray(new String[0]);
+        jbossServerCombo.setItems(items);
+        
+        if (items.length > 0)
+            jbossServerCombo.setText(items[0]);
+        
+        // even if nothing in combo, still want the viewer to refresh
+        handleServerComboSelection();
+    }
+
+    /**
+     * Take the server combo's selection and apply it
+     * to the viewer
+     */
+    private void handleServerComboSelection() {
+        TeiidEmptyNode emptyNode = new TeiidEmptyNode();
+        // populate viewer
+        String serverName = jbossServerCombo.getText();
+        IServer server = serverMap.get(serverName);
+        if (server == null) {
+            viewer.setInput(emptyNode);
+        } else {
+            viewer.setInput(server);
+        }
+        
+        // Ensures that the action provider is properly initialised in this view
+        IStructuredSelection selection = new StructuredSelection(emptyNode);
+        getNavigatorActionService().setContext(new ActionContext(selection));
+        getNavigatorActionService().fillActionBars(getViewSite().getActionBars());
+    }
+
     @Override
     public void dispose() {
         DqpPlugin.getInstance().getServerManager().removeListener(this);
         super.dispose();
-    }
-
-    void fillContextMenu( IMenuManager manager ) {
-        List<Object> selectedObjs = getSelectedObjects();
-
-        if (selectedObjs != null && !selectedObjs.isEmpty()) {
-            if (selectedObjs.size() == 1) {
-                Object selection = selectedObjs.get(0);
-                if (selection instanceof Server) {
-                	if( ((Server)selection).isConnected() ) {
-	                    try {
-	                        currentSelectedAdmin = ((Server)selection).getAdmin();
-	                    } catch (Exception e) {
-	                        // DO NOTHING
-	                    }
-                	}
-                    manager.add(this.editServerAction);
-                    
-                    if (this.setDefaultServerAction.isEnabled()) {
-                        manager.add(this.setDefaultServerAction);
-                    }
-                    if( currentSelectedAdmin != null )  {
-                    	manager.add(this.disconnectAction);
-                    }
-                    manager.add(this.reconnectAction);
-                    manager.add(new Separator());
-                    manager.add(this.newServerAction);
-                    if( currentSelectedAdmin != null ) {
-                    	manager.add(this.createDataSourceAction);
-                    }
-                    manager.add(new Separator());
-                    manager.add(this.deleteServerAction);
-
-                } else if (selection instanceof TeiidTranslator) {
-                	currentSelectedAdmin = ((TeiidTranslator)selection).getAdmin();
-                    manager.add(this.newServerAction);
-                    if( currentSelectedAdmin != null ) {
-                    	manager.add(this.createDataSourceAction);
-                    }
-                } else if (selection instanceof TeiidDataSource) {
-                	manager.add(this.createDataSourceAction);
-                    manager.add(new Separator());
-                    manager.add(this.deleteDataSourceAction);
-                    manager.add(new Separator());
-                    manager.add(this.newServerAction);
-                    currentSelectedAdmin = ((TeiidDataSource)selection).getAdmin();
-                } else if (selection instanceof TeiidVdb) {
-                	currentSelectedAdmin = ((TeiidVdb)selection).getAdmin();
-                    this.executeVdbAction.setEnabled(((TeiidVdb)selection).isActive());
-                    manager.add(this.executeVdbAction);
-                    manager.add(new Separator());
-                    manager.add(this.undeployVdbAction);             
-                    manager.add(new Separator());
-                    manager.add(this.newServerAction);
-                    manager.add(this.createDataSourceAction);
-                } else if( selection instanceof DataSourcesFolder ) {
-                	currentSelectedAdmin = ((DataSourcesFolder)selection).getAdmin();
-                    if( currentSelectedAdmin != null ) {
-                    	manager.add(this.createDataSourceAction);
-                    }
-                }
-            } else {
-                boolean allDataSources = true;
-
-                for (Object obj : selectedObjs) {
-                    if (!(obj instanceof TeiidDataSource)) {
-                        allDataSources = false;
-                        break;
-                    }
-                }
-                if (allDataSources) {
-                    manager.add(this.deleteDataSourceAction);
-                    manager.add(new Separator());
-                    manager.add(this.newServerAction);
-                    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-                    return;
-                }
-
-                boolean allVdbs = true;
-
-                for (Object obj : selectedObjs) {
-                    if (!(obj instanceof TeiidVdb)) {
-                        allVdbs = false;
-                        break;
-                    }
-                }
-                if (allVdbs) {
-                    manager.add(this.undeployVdbAction);
-                    manager.add(new Separator());
-                    manager.add(this.newServerAction);
-                    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-                    return;
-                }
-
-                manager.add(this.newServerAction);
-                manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-            }
-
-        } else {
-            manager.add(this.newServerAction);
-        }
-
-        // Other plug-ins can contribute there actions here
-        manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-    }
-    
-    /**
-     * For each connected server, refreshes the Data Sources folder item and its child items.
-     */
-    void refreshDataSourceFolders() {
-        for (Server server : getServerManager().getServers()) {
-            if (server.isConnected()) {
-                this.viewer.refresh(this.treeProvider.getDataSourceFolder(server));
-            }
-        }
-    }
-    
-    /**
-     * For each connected server, refreshes the Data Sources folder item and its child items.
-     */
-    void refreshTranslatorFolders() {
-        for (Server server : getServerManager().getServers()) {
-            if (server.isConnected()) {
-                this.viewer.refresh(server);
-            }
-        }
-    }
-    
-    /**
-     * For each connected server, refreshes the VDBs folder item its child items.
-     */
-    void refreshVdbFolders() {
-        for (Server server : getServerManager().getServers()) {
-            if (server.isConnected()) {
-                this.viewer.refresh(this.treeProvider.getVdbFolder(server));
-            }
-        }
-    }
-
-    private void fillLocalPullDown( IMenuManager menuMgr ) {
-        // restore settings from last session
-        restoreLocalPullDown();
-
-        // add the show preview VDBs action
-        this.showPreviewVdbsAction = new Action(DqpUiConstants.UTIL.getString(PREFIX + "showPreviewVdbsMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
-            @Override
-            public void run() {
-                toggleShowPreviewVdbs();
-            }
-        };
-
-        // restore state and add to menu
-        this.showPreviewVdbsAction.setChecked(this.showPreviewVdbs);
-        menuMgr.add(this.showPreviewVdbsAction);
-
-        // add the show translators action
-        this.showTranslatorsAction = new Action(DqpUiConstants.UTIL.getString(PREFIX + "showTranslatorsMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
-            @Override
-            public void run() {
-                toggleShowTranslators();
-            }
-        };
-
-        // restore state and add to menu
-        this.showTranslatorsAction.setChecked(this.showTranslators);
-        menuMgr.add(this.showTranslatorsAction);
-
-        // add the show preview data sources action
-        this.showPreviewDataSourcesAction = new Action(
-                                                       DqpUiConstants.UTIL.getString(PREFIX + "showPreviewDataSourcesMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
-            @Override
-            public void run() {
-                toggleShowPreviewDataSources();
-            }
-        };
-
-        // restore state and add to menu
-        this.showPreviewDataSourcesAction.setChecked(this.showPreviewDataSources);
-        menuMgr.add(this.showPreviewDataSourcesAction);
-
-        final IAction enablePreviewAction = new Action(
-                                                       DqpUiConstants.UTIL.getString(PREFIX + "enablePreviewMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.jface.action.Action#setChecked(boolean)
-             */
-            @Override
-            public void setChecked( boolean checked ) {
-                super.setChecked(checked);
-
-                if (checked != isPreviewEnabled()) {
-                    DqpPlugin.getInstance().getPreferences().putBoolean(PreferenceConstants.PREVIEW_ENABLED, checked);
-                }
-            }
-        };
-
-        menuMgr.add(enablePreviewAction);
-
-        // before the menu shows set the state of the enable preview action
-        menuMgr.addMenuListener(new IMenuListener() {
-
-            @Override
-            public void menuAboutToShow( IMenuManager manager ) {
-                enablePreviewAction.setChecked(isPreviewEnabled());
-            }
-        });
-    }
-
-    private void fillLocalToolBar( IToolBarManager manager ) {
-        manager.add(this.newServerAction);
-        manager.add(this.reconnectAction);
-        manager.add(new Separator());
-        manager.add(this.collapseAllAction);
     }
 
     @Override
@@ -594,7 +400,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     /**
      * @return the server manager being used by this view
      */
-    ServerManager getServerManager() {
+    TeiidServerManager getServerManager() {
         return DqpPlugin.getInstance().getServerManager();
     }
 
@@ -632,20 +438,6 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
 
     void handleSelectionChanged( SelectionChangedEvent event ) {
         updateStatusLine((IStructuredSelection)event.getSelection());
-    }
-
-    private void hookContextMenu() {
-        MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-        menuMgr.setRemoveAllWhenShown(true);
-        menuMgr.addMenuListener(new IMenuListener() {
-            @Override
-            public void menuAboutToShow( IMenuManager manager ) {
-                TeiidView.this.fillContextMenu(manager);
-            }
-        });
-        Menu menu = menuMgr.createContextMenu(viewer.getControl());
-        viewer.getControl().setMenu(menu);
-        getSite().registerContextMenu(menuMgr, viewer);
     }
 
     /**
@@ -718,13 +510,13 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                                     tooltip = getConnectorToolTip((TeiidTranslator)data);
                                 } else if (data instanceof TeiidVdb) {
                                     tooltip = getVDBToolTip((TeiidVdb)data);
-                                } else if (data instanceof TeiidViewTreeProvider.TeiidFolder) {
-                                    tooltip = ((TeiidViewTreeProvider.TeiidFolder)data).getName();
-                                } else if( data instanceof Server ) {
-                                	Server server = (Server)data;
-                                	String ttip = server.toString();
-                                	if( server.getConnectionError() != null ) {
-                                		ttip = ttip + "\n\n" + server.getConnectionError(); //$NON-NLS-1$
+                                } else if (data instanceof TeiidFolder) {
+                                    tooltip = ((TeiidFolder)data).getName();
+                                } else if( data instanceof TeiidServer ) {
+                                	TeiidServer teiidServer = (TeiidServer)data;
+                                	String ttip = teiidServer.toString();
+                                	if( teiidServer.getConnectionError() != null ) {
+                                		ttip = ttip + "\n\n" + teiidServer.getConnectionError(); //$NON-NLS-1$
                                 	}
                                 	tooltip = ttip;
                                 } else {
@@ -760,161 +552,6 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         viewer.getTree().addListener(SWT.KeyDown, treeListener);
         viewer.getTree().addListener(SWT.MouseMove, treeListener);
         viewer.getTree().addListener(SWT.MouseHover, treeListener);
-    }
-
-    /*
-     *  Initialize view actions, set icons and action text.
-     */
-    private void initActions() {
-        this.collapseAllAction = new Action() {
-            @Override
-            public void run() {
-                viewer.collapseAll();
-            }
-        };
-
-        this.collapseAllAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.COLLAPSE_ALL_ICON));
-        this.collapseAllAction.setToolTipText(getString("collapseAllAction.tooltip")); //$NON-NLS-1$
-        this.collapseAllAction.setEnabled(true);
-
-        this.deleteDataSourceAction = new Action(getString("deleteTeiidDataSourceAction")) { //$NON-NLS-1$
-            @Override
-            public void run() {
-                List<Object> selectedObjs = getSelectedObjects();
-                for (Object obj : selectedObjs) {
-                    TeiidDataSource tds = (TeiidDataSource)obj;
-                    ExecutionAdmin admin = tds.getAdmin();
-                    if (admin != null) {
-                        try {
-                            admin.deleteDataSource(tds.getName());
-                        } catch (Exception e) {
-                            DqpUiConstants.UTIL.log(IStatus.WARNING,
-                                                    e,
-                                                    DqpUiConstants.UTIL.getString(PREFIX + "errorDeletingDataSource", tds.getDisplayName())); //$NON-NLS-1$
-                        }
-                    }
-                }
-
-            }
-        };
-
-        this.deleteDataSourceAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.DELETE_ICON));
-        this.deleteDataSourceAction.setToolTipText(getString("deleteDataSourceAction.tooltip")); //$NON-NLS-1$
-        this.deleteDataSourceAction.setEnabled(true);
-
-        this.undeployVdbAction = new Action(getString("undeployVdbAction")) { //$NON-NLS-1$
-            @Override
-            public void run() {
-                List<Object> selectedObjs = getSelectedObjects();
-                for (Object obj : selectedObjs) {
-                    TeiidVdb vdb = (TeiidVdb)obj;
-
-                    ExecutionAdmin admin = vdb.getAdmin();
-                    if (admin != null) {
-                        try {
-                            admin.undeployVdb(vdb.getVdb());
-                        } catch (Exception e) {
-                            DqpUiConstants.UTIL.log(IStatus.WARNING,
-                                                    e,
-                                                    DqpUiConstants.UTIL.getString(PREFIX + "errorUndeployingVdb", vdb.getName())); //$NON-NLS-1$
-                        }
-                    }
-                }
-
-            }
-        };
-
-        this.undeployVdbAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.DELETE_ICON));
-        this.undeployVdbAction.setToolTipText(getString("undeployVdbAction.tooltip")); //$NON-NLS-1$
-        this.undeployVdbAction.setEnabled(true);
-
-        this.executeVdbAction = new Action(getString("executeVdbAction")) { //$NON-NLS-1$
-            @Override
-            public void run() {
-                List<Object> selectedObjs = getSelectedObjects();
-                for (Object obj : selectedObjs) {
-                    TeiidVdb vdb = (TeiidVdb)obj;
-
-                    ExecutionAdmin admin = vdb.getAdmin();
-                    if (admin != null) {
-                        try {
-                            // admin.undeployVdb(vdb.getVdb());
-                            ExecuteVDBAction.executeVdb(admin.getServer(), vdb.getVdb().getName());
-                        } catch (Exception e) {
-                            DqpUiConstants.UTIL.log(IStatus.WARNING,
-                                                    e,
-                                                    DqpUiConstants.UTIL.getString("DeployVdbAction.problemDeployingVdbToServer", vdb.getName())); //$NON-NLS-1$
-                        }
-                    }
-                }
-
-            }
-        };
-
-        this.executeVdbAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.EXECUTE_VDB));
-        this.executeVdbAction.setToolTipText(getString("undeployVdbAction.tooltip")); //$NON-NLS-1$
-        this.executeVdbAction.setEnabled(true);
-
-        // the shell used for dialogs that the actions display
-        Shell shell = this.getSite().getShell();
-        // the reconnect action tries to ping a selected server
-        this.reconnectAction = new ReconnectToServerAction(this.viewer);
-        this.viewer.addSelectionChangedListener(this.reconnectAction);
-        
-        // the disconnect action clears the server's object cache, closes connection and null's admin references.
-        this.disconnectAction = new DisconnectFromServerAction(this.viewer);
-        this.viewer.addSelectionChangedListener(this.disconnectAction);
-
-        // the delete action will delete one or more servers
-        this.deleteServerAction = new DeleteServerAction(shell, getServerManager());
-        this.viewer.addSelectionChangedListener(this.deleteServerAction);
-
-        // the edit action is only enabled when one server is selected
-        this.editServerAction = new EditServerAction(shell, getServerManager());
-        this.viewer.addSelectionChangedListener(this.editServerAction);
-
-        // the new server action is always enabled
-        this.newServerAction = new NewServerAction(shell, getServerManager());
-
-        this.createDataSourceAction = new Action() {
-            @Override
-            public void run() {
-                if (currentSelectedAdmin != null) {
-                    CreateDataSourceAction action = new CreateDataSourceAction();
-                    action.setAdmin(currentSelectedAdmin);
-
-                    action.setSelection(new StructuredSelection());
-
-                    action.setEnabled(true);
-                    action.run();
-                }
-            }
-        };
-
-        this.createDataSourceAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SOURCE_BINDING_ICON));
-        this.createDataSourceAction.setText(getString("createDataSourceAction.text")); //$NON-NLS-1$
-        this.createDataSourceAction.setToolTipText(getString("createDataSourceAction.tooltip")); //$NON-NLS-1$
-        this.createDataSourceAction.setEnabled(true);
-
-        // the edit action is only enabled when one server is selected
-        this.setDefaultServerAction = new SetDefaultServerAction(getServerManager());
-        this.viewer.addSelectionChangedListener(this.setDefaultServerAction);
-
-    }
-
-    /**
-     * @see org.eclipse.ui.views.navigator.ResourceNavigator#initDragAndDrop()
-     */
-    private void initDragAndDrop() {
-        // code copied from superclass. only change is to the drag adapter
-        int ops = DND.DROP_COPY | DND.DROP_MOVE;
-        Transfer[] transfers = new Transfer[] {ResourceTransfer.getInstance()};
-
-        // drop support
-        TeiidViewDropAdapter adapter = new TeiidViewDropAdapter(this.viewer);
-        adapter.setFeedbackEnabled(false);
-
-        viewer.addDropSupport(ops | DND.DROP_DEFAULT, transfers, adapter);
     }
 
     private void initKeyListener() {
@@ -958,73 +595,11 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     }
 
     /**
-     * @return <code>true</code> if preview is enabled
-     */
-    boolean isPreviewEnabled() {
-        PreviewManager previewManager = getServerManager().getPreviewManager();
-        return ((previewManager != null) && previewManager.isPreviewEnabled());
-    }
-    
-    private void restoreLocalPullDown() {
-        // need to check for null since first time view is opened in a new workspace there won't be previous state
-        if (viewMemento != null) {
-            IMemento menuMemento = viewMemento.getChild(MENU_MEMENTO);
-            
-            // also need to check for null here if running an existing workspace that didn't have this memento created
-            if (menuMemento != null) {
-                this.showPreviewDataSources = menuMemento.getBoolean(SHOW_PREVIEW_DATA_SOURCES);
-                this.showPreviewVdbs = menuMemento.getBoolean(SHOW_PREVIEW_VDBS);
-                this.showTranslators = menuMemento.getBoolean(SHOW_TRANSLATORS);
-                this.treeProvider.setShowTranslators(this.showTranslators);
-            }
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
-     */
-    @Override
-    public void saveState( IMemento memento ) {
-        IMemento menuMemento = memento.createChild(MENU_MEMENTO);
-        menuMemento.putBoolean(SHOW_PREVIEW_DATA_SOURCES, this.showPreviewDataSourcesAction.isChecked());
-        menuMemento.putBoolean(SHOW_PREVIEW_VDBS, this.showPreviewVdbsAction.isChecked());
-        menuMemento.putBoolean(SHOW_TRANSLATORS, this.showTranslatorsAction.isChecked());
-        super.saveState(memento);
-    }
-
-    /**
      * Passing the focus request to the viewer's control.
      */
     @Override
     public void setFocus() {
         viewer.getControl().setFocus();
-    }
-    
-    /**
-     * Handler for when the show preview data sources menu action is selected
-     */
-    void toggleShowPreviewDataSources() {
-        this.showPreviewDataSources = !this.showPreviewDataSources;
-        updateViewerFilters();
-    }
-    
-    /**
-     * Handler for when the show preview VDBs menu action is selected
-     */
-    void toggleShowPreviewVdbs() {
-        this.showPreviewVdbs = !this.showPreviewVdbs;
-        updateViewerFilters();
-    }
-    
-    /**
-     * Handler for when the show translator menu action is selected
-     */
-    void toggleShowTranslators() {
-        this.showTranslators = !this.showTranslators;
-        this.treeProvider.setShowTranslators(this.showTranslators);
-        refreshTranslatorFolders();
     }
     
     /**
@@ -1046,8 +621,8 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         if (selection.size() == 1) {
             Object selectedObject = selection.getFirstElement();
 
-            if (selectedObject instanceof Server) {
-                msg = getString("statusBar.server.label", ((Server)selectedObject).toString()); //$NON-NLS-1$
+            if (selectedObject instanceof TeiidServer) {
+                msg = getString("statusBar.server.label", ((TeiidServer)selectedObject).toString()); //$NON-NLS-1$
             } else if (selectedObject instanceof TeiidTranslator) {
                 msg = getString("statusBar.translator.label", ((TeiidTranslator)selectedObject).getName()); //$NON-NLS-1$
             } else if (selectedObject instanceof TeiidVdb) {
@@ -1057,24 +632,6 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
             }
         }
         getViewSite().getActionBars().getStatusLineManager().setMessage(msg);
-    }
-    
-    /**
-     * Applies the current viewer filters.
-     */
-    private void updateViewerFilters() {
-        List<ViewerFilter> filters = new ArrayList<ViewerFilter>(3);
-
-        if (!this.showPreviewDataSources) {
-            filters.add(TeiidView.PREVIEW_DATA_SOURCE_FILTER);
-        }
-
-        if (!this.showPreviewVdbs) {
-            filters.add(TeiidView.PREVIEW_VDB_FILTER);
-        }
-
-        // set new content filters
-        this.viewer.setFilters(filters.toArray(new ViewerFilter[filters.size()]));
     }
 
     class NameSorter extends ViewerSorter {

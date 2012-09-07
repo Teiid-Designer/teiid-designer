@@ -10,7 +10,6 @@ package org.teiid.designer.runtime.ui;
 import java.lang.reflect.InvocationTargetException;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -21,16 +20,20 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.PluginUtil;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.core.util.PluginUtilImpl;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
-import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbCleanupJob;
 import org.teiid.designer.runtime.ui.connection.PreviewMissingPasswordDialog;
+import org.teiid.designer.runtime.ui.server.editor.TeiidServerEditor;
+import org.teiid.designer.runtime.ui.server.editor.TeiidServerEditorInput;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
 import org.teiid.designer.ui.common.actions.ActionService;
 import org.teiid.designer.ui.common.util.UiUtil;
@@ -126,14 +129,6 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
         return image;
     }
 
-    /**
-     * @param shell the shell used to display any UI that is needed (can be <code>null</code>)
-     * @return the password provider (never <code>null</code>)
-     */
-    public IPasswordProvider getPasswordProvider(Shell shell) {
-        return new PasswordProvider(shell);
-    }
-
     @Override
     public PluginUtil getPluginUtil() {
         return UTIL;
@@ -155,13 +150,8 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
         super.start(context);
         // Initialize logging/i18n/debugging utility
         ((PluginUtilImpl)UTIL).initializePlatformLogger(this);
-        
-        // set the password provider
-        PreviewManager previewManager = DqpPlugin.getInstance().getServerManager().getPreviewManager();
-        
-        if (previewManager != null) {
-            previewManager.setPasswordProvider(new PasswordProvider(UiUtil.getWorkbenchShellOnlyIfUiThread()));
-        }
+
+        DqpPlugin.getInstance().setPasswordProvider(new PasswordProvider());
     }
 
     @Override
@@ -195,7 +185,7 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
             @Override
             public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException {
                 try {
-                    ServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
+                    TeiidServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
                     serverMgr.shutdown(monitor);
                 } catch (InterruptedException e) {
                     monitor.setCanceled(true);
@@ -218,12 +208,7 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
     }
     
     class PasswordProvider implements IPasswordProvider {
-        final Shell shell;
-
-        public PasswordProvider( Shell shell ) {
-            this.shell = shell;
-        }
-
+       
         /**
          * {@inheritDoc}
          *
@@ -244,7 +229,9 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
                 public void run() {
                     String message = DqpUiConstants.UTIL.getString("PasswordProvider.missingPasswordMessage", //$NON-NLS-1$
                                                                    new Object[] {modelName, profileName});
-                    PreviewMissingPasswordDialog dialog = new PreviewMissingPasswordDialog(getShell(), message);
+                    
+                    Shell workbenchShell = UiUtil.getWorkbenchShellOnlyIfUiThread();
+                    PreviewMissingPasswordDialog dialog = new PreviewMissingPasswordDialog(workbenchShell, message);
 
                     if (dialog.open() == Window.OK) {
                         password[0] = dialog.getPassword();
@@ -254,9 +241,22 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
                                   false);
             return password[0];
         }
+    }
 
-        Shell getShell() {
-            return this.shell;
+    /**
+     * Open the {@link TeiidServerEditor} for the given {@link TeiidServer}
+     * 
+     * @param server 
+     */
+    public static void editTeiidServer(TeiidServer server) {
+        IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        IWorkbenchPage page = workbenchWindow.getActivePage();
+        
+        try {
+            TeiidServerEditorInput input = new TeiidServerEditorInput(server.getUrl());
+            page.openEditor(input, TeiidServerEditor.EDITOR_ID);
+        } catch (Exception e) {
+            DqpUiConstants.UTIL.log(e);
         }
     }
 }

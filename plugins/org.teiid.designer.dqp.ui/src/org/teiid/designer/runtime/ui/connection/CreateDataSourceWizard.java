@@ -53,7 +53,7 @@ import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
 import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import org.teiid.designer.runtime.ExecutionAdmin;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
@@ -171,12 +171,12 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
         mainPanel.setLayout(new GridLayout(2, false));
 
         WidgetFactory.createLabel(mainPanel, getString("teiidServer.label")); //$NON-NLS-1$
-        Server server = admin.getServer();
+        TeiidServer teiidServer = admin.getServer();
 
-        if (StringUtilities.isEmpty(server.getCustomLabel())) {
-            WidgetFactory.createLabel(mainPanel, GridData.FILL_HORIZONTAL, 1, server.getUrl());
+        if (StringUtilities.isEmpty(teiidServer.getCustomLabel())) {
+            WidgetFactory.createLabel(mainPanel, GridData.FILL_HORIZONTAL, 1, teiidServer.getUrl());
         } else {
-            WidgetFactory.createLabel(mainPanel, GridData.FILL_HORIZONTAL, 1, server.getCustomLabel());
+            WidgetFactory.createLabel(mainPanel, GridData.FILL_HORIZONTAL, 1, teiidServer.getCustomLabel());
         }
 
         WidgetFactory.createLabel(mainPanel, getString("name.label")); //$NON-NLS-1$

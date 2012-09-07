@@ -12,7 +12,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.vdb.Vdb;
 
 /**
@@ -28,7 +28,7 @@ public interface PreviewContext {
      * @return a status indicating if the connection information is valid
      */
     IStatus ensureConnectionInfoIsValid( Vdb previewVdb,
-                                         Server previewServer ) throws Exception;
+                                         TeiidServer previewServer ) throws Exception;
 
     /**
      * @param projectOrModel the project or model whose Preview VDB is being requested (may not be <code>null</code>)

@@ -2,7 +2,6 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.util.CoreArgCheck;
@@ -33,6 +32,16 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo {
      * The default Teiid Admin secure protocol flag. Value is {@value} .
      */
     public static final boolean DEFAULT_SECURE = false;
+    
+    /**
+     * The default username for the teiid server
+     */
+    public static final String DEFAULT_JDBC_USERNAME = "user"; //$NON-NLS-1$
+    
+    /**
+     * The default password for the teiid server
+     */
+    public static final String DEFAULT_JDBC_PASSWORD = "user";  //$NON-NLS-1$
 
     /**
      * The name of the VDB that this connection will connect to (never empty or <code>null</code>)
@@ -170,7 +179,7 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo {
     @Override
     protected IStatus validateUrl() {
         try {
-            ServerUtils.validPortNumber(getPort());
+            TeiidServerUtils.validPortNumber(getPort());
         } catch (Exception e) {
             return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("invalidServerUrl", getType(), e.getMessage()), e); //$NON-NLS-1$
         }

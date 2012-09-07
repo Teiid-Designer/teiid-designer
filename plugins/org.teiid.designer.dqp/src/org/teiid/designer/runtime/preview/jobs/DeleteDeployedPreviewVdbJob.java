@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.core.util.StringUtilities;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 
@@ -55,7 +55,7 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
                                         int pvdbVersion,
                                         String jndiName,
                                         PreviewContext context,
-                                        Server previewServer ) {
+                                        TeiidServer previewServer ) {
         super(NLS.bind(Messages.DeleteDeployedPreviewVdbJob, pvdbName), context, previewServer);
 
         assert !StringUtilities.isEmpty(pvdbName) : "Preview VDB name is null or empty"; //$NON-NLS-1$
@@ -77,13 +77,13 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
             return Status.CANCEL_STATUS;
         }
 
-        Server server = getPreviewServer();
+        TeiidServer teiidServer = getPreviewServer();
         int errors = 0;
         IStatus deleteVdbErrorStatus = null;
 
         // delete PVDB from server
         try {
-            server.getAdmin().undeployVdb(this.pvdbName, this.pvdbVersion);
+            teiidServer.getAdmin().undeployVdb(this.pvdbName, this.pvdbVersion);
         } catch (Exception e) {
             ++errors;
             deleteVdbErrorStatus = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.DeleteDeployedPreviewVdbJobError,
@@ -98,7 +98,7 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
         IStatus deleteDataSourceErrorStatus = null;
 
         try {
-            server.getAdmin().deleteDataSource(this.jndiName);
+            teiidServer.getAdmin().deleteDataSource(this.jndiName);
         } catch (Exception e) {
             ++errors;
             deleteDataSourceErrorStatus = new Status(IStatus.ERROR, PLUGIN_ID,

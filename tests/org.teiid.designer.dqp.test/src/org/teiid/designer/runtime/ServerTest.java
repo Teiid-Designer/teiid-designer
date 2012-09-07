@@ -11,7 +11,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-
+import org.eclipse.wst.server.core.IServer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,88 +29,83 @@ public class ServerTest {
     private TeiidAdminInfo adminInfo;
     private TeiidJdbcInfo jdbcInfo;
     private EventManager eventMgr;
-    private Server server;
+    private TeiidServer teiidServer;
+    private IServer parentServer;
 
     @Before
     public void beforeEach() {
         this.adminInfo = mock(TeiidAdminInfo.class);
         this.jdbcInfo = mock(TeiidJdbcInfo.class);
         this.eventMgr = mock(EventManager.class);
-        this.server = new Server(null, adminInfo, jdbcInfo, eventMgr);
+        this.parentServer = mock(IServer.class);
+        
+        this.teiidServer = new TeiidServer(null, adminInfo, jdbcInfo, eventMgr, parentServer);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotCreateServerWithNullAdminInfo() {
-        new Server(null, null, this.jdbcInfo, this.eventMgr);
+        new TeiidServer(null, null, this.jdbcInfo, this.eventMgr, this.parentServer);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotCreateServerWithNullJdbcInfo() {
-        new Server(null, this.adminInfo, null, this.eventMgr);
+        new TeiidServer(null, this.adminInfo, null, this.eventMgr, this.parentServer);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotCreateServerWithNullEventManager() {
-        new Server(null, this.adminInfo, this.jdbcInfo, null);
+        new TeiidServer(null, this.adminInfo, this.jdbcInfo, null, this.parentServer);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldNotCreateServerWithNullParentServer() {
+        new TeiidServer(null, this.adminInfo, this.jdbcInfo, this.eventMgr, null);
     }
 
     @Test
     public void shouldReturnFalseForEqualsWithNull() {
-        assertThat(this.server.equals(null), is(false));
+        assertThat(this.teiidServer.equals(null), is(false));
     }
 
     @Test
     public void shouldReturnTrueForEqualsWithSelf() {
-        assertThat(this.server.equals(this.server), is(true));
+        assertThat(this.teiidServer.equals(this.teiidServer), is(true));
     }
 
     @Test
     public void shouldSetCustomLabelWithNonNullValue() {
         String CUSTOM_LABEL = "customLabel";
-        this.server.setCustomLabel(CUSTOM_LABEL);
-        assertThat(this.server.getCustomLabel(), is(CUSTOM_LABEL));
+        this.teiidServer.setCustomLabel(CUSTOM_LABEL);
+        assertThat(this.teiidServer.getCustomLabel(), is(CUSTOM_LABEL));
     }
 
     @Test
     public void shouldSetCustomLabelWithNullValue() {
-        this.server.setCustomLabel("oldLabel");
-        this.server.setCustomLabel(null);
-        assertThat(this.server.getCustomLabel(), nullValue());
+        this.teiidServer.setCustomLabel("oldLabel");
+        this.teiidServer.setCustomLabel(null);
+        assertThat(this.teiidServer.getCustomLabel(), nullValue());
     }
 
     @Test
     public void shouldVerifyCustomLabelIsNullAfterConstruction() {
-        assertThat(this.server.getCustomLabel(), nullValue());
+        assertThat(this.teiidServer.getCustomLabel(), nullValue());
     }
 
     @Test
     public void shouldVerifyDefaultHostAfterConstruction() {
-        assertThat(this.server.getHost(), is(HostProvider.DEFAULT_HOST));
-    }
-
-    @Test
-    public void shouldSetHost() {
-        String newHost = "newHost";
-        this.server.setHost(newHost);
-        assertThat(this.server.getHost(), is(newHost));
-    }
-
-    @Test
-    public void shouldVerifySettingNullHostSetsToDefaultHost() {
-        this.server.setHost(null);
-        assertThat(this.server.getHost(), is(HostProvider.DEFAULT_HOST));
+        assertThat(this.teiidServer.getHost(), is(HostProvider.DEFAULT_HOST));
     }
 
     @Test
     public void shouldBeEqualsWhenAllPropertiesAreTheSame() {
-        Server server1 = new Server(null,
+        TeiidServer server1 = new TeiidServer(null,
                                     new TeiidAdminInfo(PORT, USER, PSWD, PERSIST, SECURE),
                                     new TeiidJdbcInfo(PORT, USER, PSWD, PERSIST, SECURE),
-                                    this.eventMgr);
-        Server server2 = new Server(null,
+                                    this.eventMgr, this.parentServer);
+        TeiidServer server2 = new TeiidServer(null,
                                     new TeiidAdminInfo(PORT, USER, PSWD, PERSIST, SECURE),
                                     new TeiidJdbcInfo(PORT, USER, PSWD, PERSIST, SECURE),
-                                    this.eventMgr);
+                                    this.eventMgr, this.parentServer);
         assertThat(server1.equals(server2), is(true));
     }
 

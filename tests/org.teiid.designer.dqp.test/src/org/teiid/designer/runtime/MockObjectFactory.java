@@ -88,12 +88,12 @@ public class MockObjectFactory {
     }
 
     public static ExecutionAdmin createExecutionAdmin() {
-        final Server server = mock(Server.class);
+        final TeiidServer teiidServer = mock(TeiidServer.class);
         final Admin adminApi = mock(Admin.class);
         final EventManager eventManager = mock(EventManager.class);
         final ExecutionAdmin admin = mock(ExecutionAdmin.class);
 
-        when(admin.getServer()).thenReturn(server);
+        when(admin.getServer()).thenReturn(teiidServer);
         when(admin.getAdminApi()).thenReturn(adminApi);
         when(admin.getEventManager()).thenReturn(eventManager);
 

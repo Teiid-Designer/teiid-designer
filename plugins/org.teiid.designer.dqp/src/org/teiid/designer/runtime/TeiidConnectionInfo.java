@@ -9,7 +9,6 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-
 import java.net.MalformedURLException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -24,8 +23,16 @@ import org.teiid.designer.core.util.StringUtilities;
  */
 public abstract class TeiidConnectionInfo {
 
-    protected static final String MMS = "mms://"; //$NON-NLS-1$
-    protected static final String MM = "mm://"; //$NON-NLS-1$
+    /**
+     * Protocol address prefix for secure server connections
+     */
+    public static final String MMS = "mms://"; //$NON-NLS-1$
+    
+    /**
+     * Protocol address prefix for server connections
+     */
+    public static final String MM = "mm://"; //$NON-NLS-1$
+    
     protected static final int DEFAULT_PORT_NUMBER = 0;
 
     private HostProvider hostProvider;
@@ -348,7 +355,7 @@ public abstract class TeiidConnectionInfo {
     protected IStatus validateUrl() {
         // validate URL (protocol, host, port)
         try {
-            ServerUtils.validateServerUrl(getUrl());
+            TeiidServerUtils.validateServerUrl(getUrl());
         } catch (MalformedURLException e) {
             return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("invalidServerUrl", getType(), e.getMessage()), e); //$NON-NLS-1$
         }

@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.teiid.adminapi.AdminComponentException;
 import org.teiid.designer.runtime.ExecutionAdmin;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 
@@ -78,9 +78,9 @@ public abstract class RuntimeAction extends Action implements ISelectionChangedL
             for (Object obj : selectedObjects) {
                 if (obj instanceof TeiidTranslator) {
                     tempAdmin = ((TeiidTranslator)obj).getAdmin();
-                } else if (obj instanceof Server) {
+                } else if (obj instanceof TeiidServer) {
                     try {
-                        tempAdmin = ((Server)obj).getAdmin();
+                        tempAdmin = ((TeiidServer)obj).getAdmin();
                     } catch (AdminComponentException ace) {
                         newAdmin = null;
                         break;

@@ -18,7 +18,7 @@ public class TeiidAdminInfo extends TeiidConnectionInfo {
     /**
      * The default Teiid Admin port number. Value is {@value} .
      */
-    public static final String DEFAULT_PORT = "31443"; //$NON-NLS-1$
+    public static final String DEFAULT_PORT = "9999"; //$NON-NLS-1$
 
     /**
      * The default Teiid Admin secure protocol flag. Value is {@value} .

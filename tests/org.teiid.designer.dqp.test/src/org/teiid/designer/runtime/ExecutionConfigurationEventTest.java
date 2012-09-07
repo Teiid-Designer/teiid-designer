@@ -31,7 +31,7 @@ public class ExecutionConfigurationEventTest {
 
     @Test
     public void shouldCreateAddServerEventWithServer() {
-        assertThat(ExecutionConfigurationEvent.createAddServerEvent(mock(Server.class)), notNullValue());
+        assertThat(ExecutionConfigurationEvent.createAddServerEvent(mock(TeiidServer.class)), notNullValue());
     }
 
     @Test( expected = IllegalArgumentException.class )
@@ -41,7 +41,7 @@ public class ExecutionConfigurationEventTest {
 
     @Test
     public void shouldCreateRemoveServerEventWithServer() {
-        assertThat(ExecutionConfigurationEvent.createRemoveServerEvent(mock(Server.class)), notNullValue());
+        assertThat(ExecutionConfigurationEvent.createRemoveServerEvent(mock(TeiidServer.class)), notNullValue());
     }
 
     @Test
@@ -51,12 +51,12 @@ public class ExecutionConfigurationEventTest {
 
     @Test
     public void shouldCreateUpdateServerEventWithNullUpdatedServer() {
-        ExecutionConfigurationEvent.createUpdateServerEvent(mock(Server.class), null);
+        ExecutionConfigurationEvent.createUpdateServerEvent(mock(TeiidServer.class), null);
     }
 
     @Test
     public void shouldCreateUpdateServerEventWithServers() {
-        ExecutionConfigurationEvent.createUpdateServerEvent(mock(Server.class), mock(Server.class));
+        ExecutionConfigurationEvent.createUpdateServerEvent(mock(TeiidServer.class), mock(TeiidServer.class));
     }
 
     @Test( expected = IllegalArgumentException.class )
@@ -91,17 +91,17 @@ public class ExecutionConfigurationEventTest {
 
     @Test( expected = IllegalStateException.class )
     public void shouldNotAllowGetTranslatorWithAddServerEvent() {
-        ExecutionConfigurationEvent.createAddServerEvent(mock(Server.class)).getTranslator();
+        ExecutionConfigurationEvent.createAddServerEvent(mock(TeiidServer.class)).getTranslator();
     }
 
     @Test( expected = IllegalStateException.class )
     public void shouldNotAllowGetTranslatorWithRemoveServerEvent() {
-        ExecutionConfigurationEvent.createRemoveServerEvent(mock(Server.class)).getTranslator();
+        ExecutionConfigurationEvent.createRemoveServerEvent(mock(TeiidServer.class)).getTranslator();
     }
 
     @Test( expected = IllegalStateException.class )
     public void shouldNotAllowGetTranslatorWithUpdateServerEvent() {
-        ExecutionConfigurationEvent.createUpdateServerEvent(mock(Server.class), null).getTranslator();
+        ExecutionConfigurationEvent.createUpdateServerEvent(mock(TeiidServer.class), null).getTranslator();
     }
 
     @Test( expected = IllegalStateException.class )
@@ -136,11 +136,11 @@ public class ExecutionConfigurationEventTest {
 
     @Test
     public void shouldAllowGetTargetTypeWithAddServerEvent() {
-        assertThat(ExecutionConfigurationEvent.createAddServerEvent(mock(Server.class)).getTargetType(), notNullValue());
+        assertThat(ExecutionConfigurationEvent.createAddServerEvent(mock(TeiidServer.class)).getTargetType(), notNullValue());
     }
 
     @Test
     public void shouldAllowGetEventTypeWithAddServerEvent() {
-        assertThat(ExecutionConfigurationEvent.createAddServerEvent(mock(Server.class)).getEventType(), notNullValue());
+        assertThat(ExecutionConfigurationEvent.createAddServerEvent(mock(TeiidServer.class)).getEventType(), notNullValue());
     }
 }

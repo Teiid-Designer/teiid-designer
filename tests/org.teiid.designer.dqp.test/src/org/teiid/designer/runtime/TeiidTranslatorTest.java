@@ -73,9 +73,9 @@ public class TeiidTranslatorTest {
         when(this.translator.getProperties()).thenReturn(PROPERTIES);
         when(this.translator.getType()).thenReturn(TYPE_NAME);
         
-        Server server = mock(Server.class);
+        TeiidServer teiidServer = mock(TeiidServer.class);
         this.commonExecutionAdmin = mock(ExecutionAdmin.class);
-        when(this.commonExecutionAdmin.getServer()).thenReturn(server);
+        when(this.commonExecutionAdmin.getServer()).thenReturn(teiidServer);
         this.teiidTranslator = new TeiidTranslator(this.translator, PROP_DEFS, this.commonExecutionAdmin);
     }
     
