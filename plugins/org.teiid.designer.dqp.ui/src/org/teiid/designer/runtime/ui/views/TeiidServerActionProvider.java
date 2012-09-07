@@ -392,6 +392,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     private void fillLocalToolBar( IToolBarManager manager ) {
         manager.removeAll();
         
+        manager.add(this.newServerAction);
         manager.add(this.reconnectAction);
         manager.add(new Separator());
         manager.add(this.collapseAllAction);

@@ -636,7 +636,14 @@ public final class TeiidServerManager implements EventManager {
                         }
 
                         // add server to registry
-                        IServer parentServer = findParentServer(host, teiidAdminInfo);
+                        IServer parentServer = null;
+                        try {
+                            parentServer = findParentServer(host, teiidAdminInfo);
+                        } catch (OrphanedTeiidServerException ex) {
+                            // Cannot add the teiid server since it has no parent
+                            continue;
+                        }
+                        
                         TeiidServer teiidServer = new TeiidServer(host, teiidAdminInfo, teiidJdbcInfo, this, parentServer);
                         teiidServer.setCustomLabel(customLabel);
                         

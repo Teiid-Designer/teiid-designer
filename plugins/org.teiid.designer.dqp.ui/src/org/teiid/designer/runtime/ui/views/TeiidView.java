@@ -256,7 +256,7 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
         
         jbossServerCombo = new Combo(comboFrame, SWT.READ_ONLY | SWT.DROP_DOWN);
         toolkit.adapt(jbossServerCombo);
-        GridDataFactory.swtDefaults().applyTo(jbossServerCombo);
+        GridDataFactory.swtDefaults().minSize(250, 30).grab(true, false).applyTo(jbossServerCombo);
         jbossServerCombo.addSelectionListener(new SelectionListener() {
             
             @Override
@@ -331,10 +331,11 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
         String[] items = serverMap.keySet().toArray(new String[0]);
         jbossServerCombo.setItems(items);
         
-        if (items.length > 0) {
+        if (items.length > 0)
             jbossServerCombo.setText(items[0]);
-            handleServerComboSelection();
-        }
+        
+        // even if nothing in combo, still want the viewer to refresh
+        handleServerComboSelection();
     }
 
     /**
