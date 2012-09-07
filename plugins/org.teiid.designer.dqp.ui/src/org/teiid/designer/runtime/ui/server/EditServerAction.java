@@ -11,16 +11,11 @@ import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
-import org.teiid.designer.runtime.ui.server.editor.TeiidServerEditor;
-import org.teiid.designer.runtime.ui.server.editor.TeiidServerEditorInput;
 import org.teiid.designer.runtime.ui.views.TeiidView;
 import org.teiid.designer.ui.common.util.UiUtil;
 
@@ -83,7 +78,7 @@ public final class EditServerAction extends BaseSelectionListenerAction {
     public void run() {
     	// if serverBeingEdited == NULL need to query user to select one in order to continue
     	
-    	if( this.serverBeingEdited == null ) {
+    	if( this.serverBeingEdited == null && teiidServerManager.getServers().size() > 0) {
     		ServerSelectionDialog dialog = new ServerSelectionDialog(this.shell);
     		dialog.open();
     		
@@ -94,16 +89,8 @@ public final class EditServerAction extends BaseSelectionListenerAction {
     	
     	if( this.serverBeingEdited == null ) return;
     	    
-    	IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    	IWorkbenchPage page = workbenchWindow.getActivePage();
-        
-    	try {
-    	    TeiidServerEditorInput input = new TeiidServerEditorInput(serverBeingEdited.getUrl());
-    	    page.openEditor(input, TeiidServerEditor.EDITOR_ID);
-    	} catch (Exception e) {
-    	    DqpUiConstants.UTIL.log(e);
-    	}
-        
+    	DqpUiPlugin.editTeiidServer(serverBeingEdited);
+    	
     	// refresh viewer in Teiid View to display latest label
     	TeiidView teiidView = (TeiidView)UiUtil.getViewPart(DqpUiConstants.Extensions.CONNECTORS_VIEW_ID);
 	        

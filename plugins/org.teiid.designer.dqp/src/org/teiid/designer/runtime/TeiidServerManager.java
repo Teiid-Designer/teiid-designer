@@ -29,12 +29,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerLifecycleListener;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.core.util.Base64;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
+import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory.ServerOptions;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.net.TeiidURL;
@@ -190,6 +194,48 @@ public final class TeiidServerManager implements EventManager {
      * The status of this manager.
      */
     private RuntimeState state = RuntimeState.INVALID;
+    
+    /**
+     * Listener for removing teiid servers if there parent server is removed
+     */
+    private IServerLifecycleListener serversListener = new ServerLifecycleAdapter() {
+        
+        @Override
+        public void serverAdded(IServer server) {
+            TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
+            factory.createTeiidServer(server, TeiidServerManager.this, ServerOptions.ADD_TO_REGISTRY);
+        };
+        
+        @Override
+        public void serverChanged(IServer server) {
+            for (TeiidServer teiidServer : getServers()) {
+                if (server.equals(teiidServer.getParent())) {
+                    TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
+                    TeiidServer newTeiidServer = factory.createTeiidServer(server, TeiidServerManager.this);
+                    
+                    // Cannot use updateServer as it replaces rather than modified the existing server
+                    // and references in editor will thus hang on to the old defunct version
+                    teiidServer.getTeiidAdminInfo().setAll(newTeiidServer.getTeiidAdminInfo());
+                    teiidServer.getTeiidJdbcInfo().setAll(newTeiidServer.getTeiidJdbcInfo());
+                    teiidServer.notifyRefresh();
+                    
+                    return;
+                }
+            }
+        };
+        
+        @Override
+        public void serverRemoved(IServer server) {
+            
+            // Tidy up the server manager by removing the related teiid server
+            for (TeiidServer teiidServer : getServers()) {
+                if (server.equals(teiidServer.getParent())) {
+                    removeServer(teiidServer);
+                    break;
+                }
+            }
+        }      
+    };
 
     // ===========================================================================================================================
     // Constructors
@@ -220,12 +266,24 @@ public final class TeiidServerManager implements EventManager {
 
         this.previewManager = tempPreviewManager;
         this.state = RuntimeState.STARTED;
+        
+        ServerCore.addServerLifecycleListener(serversListener);
     }
 
     // ===========================================================================================================================
     // Methods
     // ===========================================================================================================================
 
+    /**
+     * Get the {@link IServerLifecycleListener} referenced by this
+     * manager
+     * 
+     * @return {@link IServerLifecycleListener}
+     */
+    public IServerLifecycleListener getServerLifeCycleListener() {
+        return serversListener;
+    }
+    
     /**
      * {@inheritDoc}
      * 
@@ -712,6 +770,9 @@ public final class TeiidServerManager implements EventManager {
      * @param monitor the progress monitor (may be <code>null</code>)
      */
     public void shutdown( IProgressMonitor monitor ) throws Exception {
+        
+        ServerCore.removeServerLifecycleListener(serversListener);
+        
         // return if already being shutdown
         if ((this.state == RuntimeState.SHUTTING_DOWN) || (this.state == RuntimeState.SHUTDOWN)) return;
 

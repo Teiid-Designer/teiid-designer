@@ -287,6 +287,9 @@
                <instanceof
                      value="org.teiid.designer.runtime.ui.views.content.TeiidErrorNode">
                </instanceof>
+               <instanceof
+                     value="org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode">
+               </instanceof>
             </or>
          </enablement>
       </actionProvider>

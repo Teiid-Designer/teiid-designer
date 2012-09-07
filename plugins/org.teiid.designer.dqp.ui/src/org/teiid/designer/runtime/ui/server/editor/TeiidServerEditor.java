@@ -29,8 +29,12 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
@@ -42,6 +46,8 @@ public class TeiidServerEditor extends EditorPart {
      * Identifier of this editor
      */
     public static final String EDITOR_ID = TeiidServerEditor.class.getCanonicalName();
+
+    private TeiidServerManager serverManager;
     
     private TeiidServer teiidServer;
     
@@ -78,6 +84,17 @@ public class TeiidServerEditor extends EditorPart {
         }
     };
     
+    private IExecutionConfigurationListener excutionConfigListener = new IExecutionConfigurationListener() {
+        
+        @Override
+        public void configurationChanged(ExecutionConfigurationEvent event) {
+            if (teiidServer != event.getServer())
+                return;
+            
+            refreshDisplayValues();
+        }
+    };
+
     @Override
     public void init(IEditorSite site, IEditorInput input) {
         setSite(site);
@@ -85,6 +102,9 @@ public class TeiidServerEditor extends EditorPart {
         if (input instanceof TeiidServerEditorInput) {
             TeiidServerEditorInput tsei = (TeiidServerEditorInput) input;
             teiidServer = tsei.getTeiidServer();
+            serverManager = DqpPlugin.getInstance().getServerManager();
+            
+            serverManager.addListener(excutionConfigListener);
         }
     }
     
@@ -253,6 +273,26 @@ public class TeiidServerEditor extends EditorPart {
         
         toolkit.paintBordersFor(composite);
         section.setClient(composite);
+    }
+    
+    private void refreshDisplayValues() {
+        this.getSite().getShell().getDisplay().asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                customNameText.setText(teiidServer.getCustomLabel() != null ? teiidServer.getCustomLabel() : ""); //$NON-NLS-1$
+                hostNameText.setText(teiidServer.getHost());
+                jbServerNameHyperlink.setText(teiidServer.getParent() != null ? teiidServer.getParent().getName() : ""); //$NON-NLS-1$
+                jdbcUserNameText.setText(teiidServer.getTeiidJdbcInfo().getUsername());
+                jdbcPasswdText.setText(teiidServer.getTeiidJdbcInfo().getPassword());
+                jdbcPort.setText(teiidServer.getTeiidJdbcInfo().getPort());
+            }
+        });
+    }
+    
+    @Override
+    public void dispose() {
+        serverManager.removeListener(excutionConfigListener);
+        super.dispose();
     }
     
     @Override

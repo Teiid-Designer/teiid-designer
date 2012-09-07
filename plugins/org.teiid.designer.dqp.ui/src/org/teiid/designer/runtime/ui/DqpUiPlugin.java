@@ -20,15 +20,20 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.PluginUtil;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.core.util.PluginUtilImpl;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbCleanupJob;
 import org.teiid.designer.runtime.ui.connection.PreviewMissingPasswordDialog;
+import org.teiid.designer.runtime.ui.server.editor.TeiidServerEditor;
+import org.teiid.designer.runtime.ui.server.editor.TeiidServerEditorInput;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
 import org.teiid.designer.ui.common.actions.ActionService;
 import org.teiid.designer.ui.common.util.UiUtil;
@@ -235,6 +240,23 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
             },
                                   false);
             return password[0];
+        }
+    }
+
+    /**
+     * Open the {@link TeiidServerEditor} for the given {@link TeiidServer}
+     * 
+     * @param server 
+     */
+    public static void editTeiidServer(TeiidServer server) {
+        IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        IWorkbenchPage page = workbenchWindow.getActivePage();
+        
+        try {
+            TeiidServerEditorInput input = new TeiidServerEditorInput(server.getUrl());
+            page.openEditor(input, TeiidServerEditor.EDITOR_ID);
+        } catch (Exception e) {
+            DqpUiConstants.UTIL.log(e);
         }
     }
 }

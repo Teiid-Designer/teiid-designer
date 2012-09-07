@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime;
 
 import java.net.MalformedURLException;
-
 import org.teiid.core.PluginUtil;
 import org.teiid.net.TeiidURL;
 
@@ -33,7 +32,7 @@ public class TeiidServerUtils {
     public static final String COMMA = ","; //$NON-NLS-1$
     
     public static final String TEST_VDB = "<vdb name=\"ping\" version=\"1\">" + //$NON-NLS-1$
-			"<model visible=\"true\" name=\"Foo\" type=\"VIRTUAL\" path=\"/dummy/Foo\">" + //$NON-NLS-1$
+			"<model visible=\"true\" name=\"Foo\" type=\"PHYSICAL\" path=\"/dummy/Foo\">" + //$NON-NLS-1$
 			"<source name=\"s\" translator-name=\"loopback\"/>" + //$NON-NLS-1$
 			"<metadata type=\"DDL\"><![CDATA[CREATE FOREIGN TABLE G1 (e1 string, e2 integer);]]> </metadata>" + //$NON-NLS-1$
 			"</model>" + //$NON-NLS-1$

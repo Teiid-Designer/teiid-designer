@@ -115,6 +115,13 @@ public class TeiidServer implements HostProvider {
                 disconnect();
                 notifyRefresh();
             } else if (state == IServer.STATE_STARTED && TeiidServerAdapterUtil.isJBossServerConnected(event.getServer())) {
+                
+                // Ask the jboss server what port we are on as it may
+                // still be set to the default port and this may be different
+                // in the jboss server.
+                String port = TeiidServerAdapterUtil.getJdbcPort(parentServer);
+                teiidJdbcInfo.setPort(port);
+                
                 try {
                     getAdmin();
                 } catch (Exception ex) {
@@ -422,7 +429,7 @@ public class TeiidServer implements HostProvider {
 				String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
 	            return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
 			} finally {
-				adminApi.undeploy("ping"); //$NON-NLS-1$
+				adminApi.undeploy("ping-vdb.xml"); //$NON-NLS-1$
 				
 				if( teiidJdbcConnection != null ) {
 					teiidJdbcConnection.close();

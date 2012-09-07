@@ -36,6 +36,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -48,6 +49,7 @@ import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 import org.teiid.adminapi.Model;
 import org.teiid.core.util.CoreStringUtil;
 import org.teiid.core.util.I18nUtil;
@@ -64,6 +66,7 @@ import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode;
 import org.teiid.designer.runtime.ui.views.content.TeiidFolder;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.KeyInValueHashMap;
@@ -169,7 +172,7 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
     
     private KeyInValueHashMap<String, IServer> serverMap = new KeyInValueHashMap<String, IServer>(adapter);
 
-    private IServerLifecycleListener serversListener = new IServerLifecycleListener() {
+    private IServerLifecycleListener serversListener = new ServerLifecycleAdapter() {
         
         private void refresh() {
             jbossServerCombo.getDisplay().asyncExec(new Runnable() {
@@ -189,11 +192,6 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
         public void serverRemoved(IServer server) {
             refresh();
         }
-        
-        @Override
-        public void serverChanged(IServer server) {
-            // do nothing
-        }        
     };
     
     /**
@@ -343,10 +341,20 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
      * to the viewer
      */
     private void handleServerComboSelection() {
+        TeiidEmptyNode emptyNode = new TeiidEmptyNode();
         // populate viewer
         String serverName = jbossServerCombo.getText();
         IServer server = serverMap.get(serverName);
-        viewer.setInput(server);
+        if (server == null) {
+            viewer.setInput(emptyNode);
+        } else {
+            viewer.setInput(server);
+        }
+        
+        // Ensures that the action provider is properly initialised in this view
+        IStructuredSelection selection = new StructuredSelection(emptyNode);
+        getNavigatorActionService().setContext(new ActionContext(selection));
+        getNavigatorActionService().fillActionBars(getViewSite().getActionBars());
     }
 
     @Override
