@@ -9,7 +9,6 @@
 package org.teiid.designer.runtime.ui.vdb;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -20,8 +19,8 @@ import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ExecutionAdmin;
-import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
@@ -246,7 +245,7 @@ public class VdbDeployer {
                             if (this.admin.getOrCreateDataSource(model,
                                                                  jndiName,
                                                                  false,
-                                                                 DqpUiPlugin.getDefault().getPasswordProvider(this.shell)) == null) {
+                                                                 DqpPlugin.getInstance().getPasswordProvider()) == null) {
                                 this.status = DeployStatus.CREATE_DATA_SOURCE_FAILED;
                                 break; // don't try again to create a DS
                             }

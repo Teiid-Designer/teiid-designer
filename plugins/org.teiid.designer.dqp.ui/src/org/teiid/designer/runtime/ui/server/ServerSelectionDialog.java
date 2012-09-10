@@ -25,7 +25,7 @@ import org.teiid.core.event.IChangeListener;
 import org.teiid.core.event.IChangeNotifier;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 
@@ -37,7 +37,7 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 
 	private static final String PREFIX = I18nUtil.getPropertyPrefix(ServerSelectionDialog.class);
 
-	Server selectedServer;
+	TeiidServer selectedServer;
 	
 	Combo serversCombo;
 
@@ -111,10 +111,10 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 					selectedServer = null;
 					String serverName = serversCombo.getItem(serversCombo.getSelectionIndex());
 					
-					Collection<Server> servers = DqpPlugin.getInstance().getServerManager().getServers();
-					for( Server server : servers ) {
-						if( server.getCustomLabel().equalsIgnoreCase(serverName) ) {
-							selectedServer = server;
+					Collection<TeiidServer> teiidServers = DqpPlugin.getInstance().getServerManager().getServers();
+					for( TeiidServer teiidServer : teiidServers ) {
+						if( teiidServer.getCustomLabel().equalsIgnoreCase(serverName) ) {
+							selectedServer = teiidServer;
 							break;
 						}
 					}
@@ -122,10 +122,10 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 					updateState();
 				}
 			});
-			Collection<Server> servers = DqpPlugin.getInstance().getServerManager().getServers();
+			Collection<TeiidServer> teiidServers = DqpPlugin.getInstance().getServerManager().getServers();
 			List<String> nameList = new ArrayList<String>();
-			for( Server server : servers ) {
-				nameList.add(server.getCustomLabel());
+			for( TeiidServer teiidServer : teiidServers ) {
+				nameList.add(teiidServer.getCustomLabel());
 			}
 			WidgetUtil.setComboItems(serversCombo, nameList, null, true);
 		}
@@ -133,7 +133,7 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 		return panel;
 	}
 
-	public Server getServer() {
+	public TeiidServer getServer() {
 		return this.selectedServer;
 	}
 

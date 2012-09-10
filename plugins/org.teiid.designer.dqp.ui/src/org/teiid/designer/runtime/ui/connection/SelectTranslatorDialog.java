@@ -19,10 +19,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
-import org.teiid.designer.runtime.ui.views.TeiidViewTreeProvider;
+import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
+import org.teiid.designer.runtime.ui.views.TeiidServerLabelProvider;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.MessageLabel;
 
@@ -44,7 +45,7 @@ public class SelectTranslatorDialog extends ElementTreeSelectionDialog implement
     private TeiidTranslator selectedTranslator;
 
     public SelectTranslatorDialog( Shell parent ) {
-        super(parent, new TeiidViewTreeProvider(), new TeiidViewTreeProvider(false, true, false));
+        super(parent, new TeiidServerLabelProvider(), new TeiidServerContentProvider(false, true, false));
         setTitle(DEFAULT_TITLE);
         setMessage(DEFAULT_MESSAGE);
         setInput(DqpPlugin.getInstance().getServerManager());
@@ -99,7 +100,7 @@ public class SelectTranslatorDialog extends ElementTreeSelectionDialog implement
             public boolean select( Viewer viewer,
                                    Object parentElement,
                                    Object element ) {
-                if (element instanceof Server) {
+                if (element instanceof TeiidServer) {
                     return element.equals(DqpPlugin.getInstance().getServerManager().getDefaultServer());
                 }
 

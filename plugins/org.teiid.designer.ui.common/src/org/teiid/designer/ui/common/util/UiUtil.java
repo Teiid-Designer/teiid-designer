@@ -10,7 +10,6 @@ package org.teiid.designer.ui.common.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -364,7 +363,12 @@ public final class UiUtil implements UiConstants {
      * @since 4.0
      */
     public static IWorkbenchWindow getWorkbenchWindowOnlyIfUiThread() {
-        return getWorkbench().getActiveWorkbenchWindow();
+        IWorkbenchWindow activeWorkbenchWindow = getWorkbench().getActiveWorkbenchWindow();
+        if (activeWorkbenchWindow == null) {
+            throw new RuntimeException("Active workbench window being requested but is not available. This is most certainly a programming bug.");
+        }
+        
+        return activeWorkbenchWindow;
     }
     
     /**

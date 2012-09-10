@@ -42,7 +42,7 @@ public class ExecutionAdminTest {
     private Admin admin;
     
     @Mock 
-    private Server server;
+    private TeiidServer teiidServer;
     
     @Mock
     private EventManager eventManager;
@@ -67,7 +67,7 @@ public class ExecutionAdminTest {
     }
 
     private ExecutionAdmin getNewAdmin() throws Exception {
-        return new ExecutionAdmin(admin, server, eventManager);
+        return new ExecutionAdmin(admin, teiidServer, eventManager);
     }
 
     private TeiidTranslator getNewTeiidTranslator() throws Exception {
@@ -86,7 +86,7 @@ public class ExecutionAdminTest {
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowNullEventManager() throws Exception {
-        assertThat(new ExecutionAdmin(mock(Admin.class), mock(Server.class), null), notNullValue());
+        assertThat(new ExecutionAdmin(mock(Admin.class), mock(TeiidServer.class), null), notNullValue());
     }
 
     @Test( expected = IllegalArgumentException.class )

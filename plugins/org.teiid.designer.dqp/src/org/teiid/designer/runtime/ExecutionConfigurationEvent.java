@@ -15,7 +15,7 @@ import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 
 
 /**
- * The <code>ExecutionConfigurationEvent</code> class is the event that is broadcast from the {@link ServerManager server manager}
+ * The <code>ExecutionConfigurationEvent</code> class is the event that is broadcast from the {@link TeiidServerManager server manager}
  * when a server or connector is added, removed, or changed, or when a server is refreshed.
  *
  * @since 8.0
@@ -26,8 +26,8 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(EventType.ADD, TargetType.DATA_SOURCE, dataSource);
     }
 
-    public static ExecutionConfigurationEvent createAddServerEvent( Server server ) {
-        return new ExecutionConfigurationEvent(EventType.ADD, TargetType.SERVER, server);
+    public static ExecutionConfigurationEvent createAddServerEvent( TeiidServer teiidServer ) {
+        return new ExecutionConfigurationEvent(EventType.ADD, TargetType.SERVER, teiidServer);
     }
 
     public static ExecutionConfigurationEvent createDeployVDBEvent( VDB vdb ) {
@@ -38,16 +38,16 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.DATA_SOURCE, dataSource);
     }
 
-    public static ExecutionConfigurationEvent createRemoveServerEvent( Server server ) {
-        return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.SERVER, server);
+    public static ExecutionConfigurationEvent createRemoveServerEvent( TeiidServer teiidServer ) {
+        return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.SERVER, teiidServer);
     }
 
-    public static ExecutionConfigurationEvent createServerRefreshEvent( Server server ) {
-        return new ExecutionConfigurationEvent(EventType.REFRESH, TargetType.SERVER, server);
+    public static ExecutionConfigurationEvent createServerRefreshEvent( TeiidServer teiidServer ) {
+        return new ExecutionConfigurationEvent(EventType.REFRESH, TargetType.SERVER, teiidServer);
     }
 
-    public static ExecutionConfigurationEvent createSetDefaultServerEvent( Server oldDefaultServer,
-                                                                           Server newDefaultServer ) {
+    public static ExecutionConfigurationEvent createSetDefaultServerEvent( TeiidServer oldDefaultServer,
+                                                                           TeiidServer newDefaultServer ) {
         return new ExecutionConfigurationEvent(EventType.DEFAULT, TargetType.SERVER, oldDefaultServer, newDefaultServer);
     }
 
@@ -59,9 +59,9 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(EventType.UPDATE, TargetType.DATA_SOURCE, dataSource);
     }
 
-    public static ExecutionConfigurationEvent createUpdateServerEvent( Server server,
-                                                                       Server updatedServer ) {
-        return new ExecutionConfigurationEvent(EventType.UPDATE, TargetType.SERVER, server, updatedServer);
+    public static ExecutionConfigurationEvent createUpdateServerEvent( TeiidServer teiidServer,
+                                                                       TeiidServer updatedServer ) {
+        return new ExecutionConfigurationEvent(EventType.UPDATE, TargetType.SERVER, teiidServer, updatedServer);
     }
 
     private final EventType eventType;
@@ -127,14 +127,14 @@ public final class ExecutionConfigurationEvent {
      * @return the server involved in the event (may be <code>null</code>)
      * @throws IllegalStateException if method is called for a connector event
      */
-    public Server getServer() {
+    public TeiidServer getServer() {
         if (this.targetType != TargetType.SERVER) {
             throw new IllegalStateException(Util.getString("invalidTargetTypeForGetServerMethod", //$NON-NLS-1$
                                                            this.targetType,
                                                            TargetType.SERVER));
         }
 
-        return (Server)this.target;
+        return (TeiidServer)this.target;
     }
 
     /**
@@ -178,14 +178,14 @@ public final class ExecutionConfigurationEvent {
      * @return the updated server involved in the event (may be <code>null</code>)
      * @throws IllegalStateException if method is called for a connector event
      */
-    public Server getUpdatedServer() {
+    public TeiidServer getUpdatedServer() {
         if (this.targetType != TargetType.SERVER) {
             throw new IllegalStateException(Util.getString("invalidTargetTypeForGetUpdatedServerMethod", //$NON-NLS-1$
                                                            this.targetType,
                                                            TargetType.SERVER));
         }
 
-        return (Server)this.updatedTarget;
+        return (TeiidServer)this.updatedTarget;
     }
 
     public enum EventType {

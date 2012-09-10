@@ -58,7 +58,7 @@ public class ExecutionAdmin {
     protected Map<String, TeiidDataSource> dataSourceByNameMap;
     protected Set<String> dataSourceTypeNames;
     private final EventManager eventManager;
-    private final Server server;
+    private final TeiidServer teiidServer;
     // private Set<VDB> vdbs;
     private Set<TeiidVdb> teiidVdbs;
     private final ModelConnectionMatcher connectionMatcher;
@@ -67,20 +67,20 @@ public class ExecutionAdmin {
 
     /**
      * @param admin the associated Teiid Admin API (never <code>null</code>)
-     * @param server the server this admin belongs to (never <code>null</code>)
+     * @param teiidServer the server this admin belongs to (never <code>null</code>)
      * @param eventManager the event manager used to fire events (never <code>null</code>)
      * @throws Exception if there is a problem connecting the server
      */
     public ExecutionAdmin( Admin admin,
-                           Server server,
+                           TeiidServer teiidServer,
                            EventManager eventManager ) throws Exception {
         CoreArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(server, "server"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(eventManager, "eventManager"); //$NON-NLS-1$
 
         this.admin = admin;
         this.eventManager = eventManager;
-        this.server = server;
+        this.teiidServer = teiidServer;
         this.connectionMatcher = new ModelConnectionMatcher();
 
         init();
@@ -332,8 +332,8 @@ public class ExecutionAdmin {
     /**
      * @return the server who owns this admin object (never <code>null</code>)
      */
-    public Server getServer() {
-        return this.server;
+    public TeiidServer getServer() {
+        return this.teiidServer;
     }
 
     /**
@@ -508,7 +508,7 @@ public class ExecutionAdmin {
         refreshVDBs();
 
         // notify listeners
-        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(this.server));
+        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(this.teiidServer));
     }
 
     protected void refreshDataSourceNames() throws Exception {

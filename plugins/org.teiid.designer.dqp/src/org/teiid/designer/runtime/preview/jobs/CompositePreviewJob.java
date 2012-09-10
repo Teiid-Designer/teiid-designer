@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 
@@ -51,7 +51,7 @@ public class CompositePreviewJob extends Job implements PreviewVdbJob {
     /**
      * The preview server (may be <code>null</code>).
      */
-    private final Server previewServer;
+    private final TeiidServer previewServer;
 
     /**
      * A flag indicating if the jobs should be run in sequence instead of asynchronously. Default value is {@value} .
@@ -67,7 +67,7 @@ public class CompositePreviewJob extends Job implements PreviewVdbJob {
      */
     public CompositePreviewJob( String jobName,
                                 PreviewContext context,
-                                Server previewServer ) {
+                                TeiidServer previewServer ) {
         this(jobName, context, previewServer, false);
     }
 
@@ -79,7 +79,7 @@ public class CompositePreviewJob extends Job implements PreviewVdbJob {
      */
     public CompositePreviewJob( String jobName,
                                 PreviewContext context,
-                                Server previewServer,
+                                TeiidServer previewServer,
                                 boolean runInSequence ) {
         super(jobName);
         assert (context != null);
@@ -160,7 +160,7 @@ public class CompositePreviewJob extends Job implements PreviewVdbJob {
     /**
      * @return the preview server (may be <code>null</code>)
      */
-    public Server getPreviewServer() {
+    public TeiidServer getPreviewServer() {
         return this.previewServer;
     }
 

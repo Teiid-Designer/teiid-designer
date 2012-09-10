@@ -22,7 +22,7 @@
             icon="icons/full/obj16/connectorBinding.gif"
             category="org.teiid.designer.ui"
             class="org.teiid.designer.runtime.ui.views.TeiidView"
-            id="connectorsView">
+            id="org.teiid.designer.runtime.ui.views.Teiid">
       </view>
   </extension>
    <!-- Extension to allow plugins to contribute to the Modeler Perspective. -->
@@ -150,14 +150,14 @@
             adaptable="true"
             label="%decorator.label"
             state="true"
-            class="org.teiid.designer.runtime.ui.views.TeiidViewTreeProvider"
+            class="org.teiid.designer.runtime.ui.views.TeiidServerLabelProvider"
             id="org.teiid.designer.dqp.ui.decorator">
          <description>
             %decorator.description
          </description>
          <enablement>
             <objectClass
-                  name="org.teiid.designer.runtime.Server">
+                  name="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
             </objectClass>
          </enablement>
       </decorator>
@@ -165,7 +165,7 @@
             lightweight="true"
             location="BOTTOM_RIGHT"
             adaptable="true"
-            label="%previewDecoratorr.label"
+            label="%previewDecorator.label"
             state="true"
             class="org.teiid.designer.runtime.ui.views.PreviewModelObjectLabelProvider"
             id="org.teiid.designer.dqp.ui.previewDecorator">
@@ -196,5 +196,145 @@
          name="org.teiid.designer.runtime.ui.extension.RemoveRestWarPropertiesAction"
          label="%removeRestWarPropertiesAction.label">
       </specialAction>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerContentBinding
+            viewerId="org.eclipse.wst.server.ui.ServersView">
+         <includes>
+            <contentExtension
+                  isRoot="false"
+                  pattern="org.teiid.designer.ui.servers.teiid.content">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+      <viewerActionBinding
+            viewerId="org.eclipse.wst.server.ui.ServersView">
+         <includes>
+            <actionExtension
+                  pattern="org.teiid.designer.runtime.ui.views.Teiid.actions">
+            </actionExtension>
+         </includes>
+      </viewerActionBinding>
+      <viewerContentBinding
+            viewerId="org.teiid.designer.runtime.ui.views.Teiid">
+         <includes>
+            <contentExtension
+                  isRoot="true"
+                  pattern="org.teiid.designer.runtime.ui.views.Teiid.content">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+      <viewerActionBinding
+            viewerId="org.teiid.designer.runtime.ui.views.Teiid">
+         <includes>
+            <actionExtension
+                  pattern="org.teiid.designer.runtime.ui.views.Teiid.actions">
+            </actionExtension>
+         </includes>
+      </viewerActionBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="org.teiid.designer.runtime.ui.views.TeiidServerContentProvider"
+            icon="icons/full/ctool16/teiid-server.png"
+            id="org.teiid.designer.ui.servers.teiid.content"
+            labelProvider="org.teiid.designer.runtime.ui.views.TeiidServerLabelProvider"
+            name="%servers.navigatorContent.name"
+            priority="lowest">
+         <triggerPoints>
+            <instanceof
+                  value="org.eclipse.wst.server.core.IServer">
+            </instanceof>
+         </triggerPoints>
+      </navigatorContent>
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="org.teiid.designer.runtime.ui.views.TeiidServerContentProvider"
+            icon="icons/full/ctool16/teiid-server.png"
+            id="org.teiid.designer.runtime.ui.views.Teiid.content"
+            labelProvider="org.teiid.designer.runtime.ui.views.TeiidViewDecoratingLabelProvider"
+            name="%teiidView.navigatorContent.name"
+            priority="highest">
+         <triggerPoints>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
+            </instanceof>
+         </triggerPoints>
+         <dropAssistant
+               class="org.teiid.designer.runtime.ui.views.TeiidViewDropAdapterAssistant"
+               id="org.teiid.designer.runtime.ui.views.Teiid.dnd">
+            <possibleDropTargets></possibleDropTargets>
+         </dropAssistant>
+      </navigatorContent>
+      <actionProvider
+            class="org.teiid.designer.runtime.ui.views.TeiidServerActionProvider"
+            id="org.teiid.designer.runtime.ui.views.Teiid.actions"
+            priority="highest">
+         <enablement>
+            <or>
+               <instanceof
+                     value="org.teiid.designer.runtime.ui.views.content.TeiidResourceNode">
+               </instanceof>
+               <instanceof
+                     value="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
+               </instanceof>
+               <instanceof
+                     value="org.teiid.designer.runtime.ui.views.content.TeiidFolder">
+               </instanceof>
+               <instanceof
+                     value="org.teiid.designer.runtime.ui.views.content.TeiidErrorNode">
+               </instanceof>
+               <instanceof
+                     value="org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode">
+               </instanceof>
+            </or>
+         </enablement>
+      </actionProvider>
+   </extension>
+   <extension point="org.eclipse.ui.editors">
+      <editor
+            class="org.teiid.designer.runtime.ui.server.editor.TeiidServerEditor"
+            default="false"
+            extensions="teiidserver"
+            icon="icons/full/obj16/connectorBinding.gif"
+            id="org.teiid.designer.runtime.ui.server.editor.TeiidServerEditor"
+            name="Teiid Server"/>
+   </extension>
+   <extension point="org.eclipse.ui.elementFactories">
+  <factory id="org.teiid.designer.runtime.ui.server.editor.input.factory"
+    class="org.teiid.designer.runtime.ui.server.editor.TeiidServerEditorInputFactory"/>
+</extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode"
+            class="org.teiid.designer.runtime.ui.views.content.adapter.TeiidServerContainerNodeAdapterFactory">
+         <adapter
+               type="org.teiid.designer.runtime.TeiidServer">
+         </adapter>
+         <adapter
+               type="org.teiid.designer.runtime.ui.views.content.TeiidResourceNode">
+         </adapter>
+      </factory>
+      <factory
+            adaptableType="org.teiid.designer.runtime.ui.views.content.TeiidResourceNode"
+            class="org.teiid.designer.runtime.ui.views.content.adapter.TeiidResourceNodeAdapterFactory">
+         <adapter
+               type="org.teiid.designer.runtime.TeiidServer">
+         </adapter>
+         <adapter
+               type="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
+         </adapter>
+      </factory>
+      <factory
+            adaptableType="org.teiid.designer.runtime.ui.views.content.TeiidFolder"
+            class="org.teiid.designer.runtime.ui.views.content.adapter.TeiidFolderAdapterFactory">
+         <adapter
+               type="org.teiid.designer.runtime.TeiidServer">
+         </adapter>
+      </factory>
    </extension>
 </plugin>

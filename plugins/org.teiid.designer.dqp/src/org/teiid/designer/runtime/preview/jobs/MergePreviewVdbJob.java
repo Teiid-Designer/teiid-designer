@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.ExecutionAdmin;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 
@@ -60,7 +60,7 @@ public final class MergePreviewVdbJob extends TeiidPreviewVdbJob {
                                String targetVdbName,
                                int targetVdbVersion,
                                PreviewContext context,
-                               Server previewServer ) {
+                               TeiidServer previewServer ) {
         super(NLS.bind(Messages.MergePreviewVdbJob, sourceVdbName, targetVdbName), context, previewServer);
 
         assert (sourceVdbName != null && sourceVdbName.length() != 0) : "source VDB is null or empty"; //$NON-NLS-1$

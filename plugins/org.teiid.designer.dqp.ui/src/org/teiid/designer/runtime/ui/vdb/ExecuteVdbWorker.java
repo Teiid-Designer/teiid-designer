@@ -28,7 +28,7 @@ import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.datatools.ui.dialogs.TeiidCPWizardDialog;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ExecutionAdmin;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
@@ -105,18 +105,18 @@ public class ExecuteVdbWorker implements VdbConstants {
 	}
 
 	void internalRun(final IFile selectedVdb) {
-		Server server = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+		TeiidServer teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
 		VDB deployedVDB = null;
 
 		try {
-			if (server != null) {
-				IStatus connectStatus = server.ping();
+			if (teiidServer != null) {
+				IStatus connectStatus = teiidServer.ping();
 				if (connectStatus.isOK()) {
-					ExecutionAdmin admin = server.getAdmin();
+					ExecutionAdmin admin = teiidServer.getAdmin();
 					if (admin != null) {
 						deployedVDB = admin.getVdb(selectedVdb.getName());
 						if (deployedVDB == null) {
-							deployedVDB = DeployVdbAction.deployVdb(server,
+							deployedVDB = DeployVdbAction.deployVdb(teiidServer,
 									selectedVdb);
 						}
 
@@ -155,21 +155,21 @@ public class ExecuteVdbWorker implements VdbConstants {
 		}
 	}
 
-	public void executeVdb(Server server, String vdbName)
+	public void executeVdb(TeiidServer teiidServer, String vdbName)
 			throws CoreException {
-		processForDTP(server, vdbName);
+		processForDTP(teiidServer, vdbName);
 	}
 
-	public void processForDTP(Server server, String vdbName)
+	public void processForDTP(TeiidServer teiidServer, String vdbName)
 			throws CoreException {
 
 		String driverPath = Admin.class.getProtectionDomain().getCodeSource().getLocation().getFile();
 
-		TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName,server.getTeiidJdbcInfo());
+		TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName,teiidServer.getTeiidJdbcInfo());
 
 		String connectionURL = jdbcInfo.getUrl();
 
-		String profileName = getString("profileName", vdbName, server.getHost()); //$NON-NLS-1$
+		String profileName = getString("profileName", vdbName, teiidServer.getHost()); //$NON-NLS-1$
 
 		IConnectionProfile profile = ProfileManager.getInstance().getProfileByName(profileName);
 		if (profile == null) {

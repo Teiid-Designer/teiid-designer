@@ -8,15 +8,12 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
-import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.views.TeiidView;
@@ -24,7 +21,7 @@ import org.teiid.designer.ui.common.util.UiUtil;
 
 
 /**
- * The <code>EditServerAction</code> runs a UI that allows {@link Server server} properties to be changed.
+ * The <code>EditServerAction</code> runs a UI that allows {@link TeiidServer server} properties to be changed.
  *
  * @since 8.0
  */
@@ -37,12 +34,12 @@ public final class EditServerAction extends BaseSelectionListenerAction {
     /**
      * The selected server being edited.
      */
-    private Server serverBeingEdited;
+    private TeiidServer serverBeingEdited;
 
     /**
      * The server manager used to create and edit servers.
      */
-    private final ServerManager serverManager;
+    private final TeiidServerManager teiidServerManager;
 
     /**
      * The shell used to display the dialog that edits and creates servers.
@@ -55,17 +52,17 @@ public final class EditServerAction extends BaseSelectionListenerAction {
 
     /**
      * @param shell the parent shell used to display the dialog
-     * @param serverManager the server manager to use when creating and editing servers
+     * @param teiidServerManager the server manager to use when creating and editing servers
      */
     public EditServerAction( Shell shell,
-                             ServerManager serverManager ) {
+                             TeiidServerManager teiidServerManager ) {
         super(UTIL.getString("editServerActionText")); //$NON-NLS-1$
         setToolTipText(UTIL.getString("editServerActionToolTip")); //$NON-NLS-1$
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiPlugin.Images.EDIT_SERVER_ICON));
         setEnabled(false);
 
         this.shell = shell;
-        this.serverManager = serverManager;
+        this.teiidServerManager = teiidServerManager;
     }
 
     // ===========================================================================================================================
@@ -81,7 +78,7 @@ public final class EditServerAction extends BaseSelectionListenerAction {
     public void run() {
     	// if serverBeingEdited == NULL need to query user to select one in order to continue
     	
-    	if( this.serverBeingEdited == null ) {
+    	if( this.serverBeingEdited == null && teiidServerManager.getServers().size() > 0) {
     		ServerSelectionDialog dialog = new ServerSelectionDialog(this.shell);
     		dialog.open();
     		
@@ -91,47 +88,15 @@ public final class EditServerAction extends BaseSelectionListenerAction {
     	}
     	
     	if( this.serverBeingEdited == null ) return;
+    	    
+    	DqpUiPlugin.editTeiidServer(serverBeingEdited);
     	
-        ServerWizard wizard = new ServerWizard(this.serverManager, this.serverBeingEdited);
-        WizardDialog dialog = new WizardDialog(this.shell, wizard) {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.jface.wizard.WizardDialog#configureShell(org.eclipse.swt.widgets.Shell)
-             */
-            @Override
-            protected void configureShell( Shell newShell ) {
-                super.configureShell(newShell);
-                newShell.setImage(DqpUiPlugin.getDefault().getImage(DqpUiPlugin.Images.EDIT_SERVER_ICON));
-            }
-        };
-
-        int result = dialog.open();
-        
-        if( result == Window.OK) {
+    	// refresh viewer in Teiid View to display latest label
+    	TeiidView teiidView = (TeiidView)UiUtil.getViewPart(DqpUiConstants.Extensions.CONNECTORS_VIEW_ID);
 	        
-	        if( wizard.shouldAutoConnect() ) {
-	            	try {
-	    				wizard.getServer().getAdmin();
-	    				wizard.getServer().setConnectionError(null);			
-	    			} catch (Exception e) {
-	    				String msg = UTIL.getString("serverWizardEditServerAutoConnectError"); //$NON-NLS-1$
-	    				MessageDialog.openError(this.shell, UTIL.getString("editServerActionAutoConnectProblemTitle"), //$NON-NLS-1$
-	    						msg);
-	    				UTIL.log(e);
-	    				wizard.getServer().setConnectionError(msg);
-	    				wizard.getServer().notifyRefresh();
-	    			}
-
-	        }
-	        
-	        // refresh viewer in Teiid View to display latest label
-	        TeiidView teiidView = (TeiidView)UiUtil.getViewPart(DqpUiConstants.Extensions.CONNECTORS_VIEW_ID);
-	        
-	        if (teiidView != null) {
-	            teiidView.updateLabel(this.serverBeingEdited);
-	        }
-        }
+    	if (teiidView != null) {
+    	    teiidView.updateLabel(this.serverBeingEdited);
+    	}
     }
 
     /**
@@ -147,11 +112,11 @@ public final class EditServerAction extends BaseSelectionListenerAction {
             return false;
         }
 
-        Object obj = selection.getFirstElement();
+        TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
 
         // enable if server is selected
-        if (obj instanceof Server) {
-            this.serverBeingEdited = (Server)obj;
+        if (teiidServer != null) {
+            this.serverBeingEdited = teiidServer;
             return true;
         }
 

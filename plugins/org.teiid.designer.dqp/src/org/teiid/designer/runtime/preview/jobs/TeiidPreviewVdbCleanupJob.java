@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.DebugConstants;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 
@@ -37,7 +37,7 @@ public abstract class TeiidPreviewVdbCleanupJob extends TeiidPreviewVdbJob {
      */
     public TeiidPreviewVdbCleanupJob( String name,
                                       PreviewContext context,
-                                      Server previewServer ) {
+                                      TeiidServer previewServer ) {
         super(name, context, previewServer);
     }
 

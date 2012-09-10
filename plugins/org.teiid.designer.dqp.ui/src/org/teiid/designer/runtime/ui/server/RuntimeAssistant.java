@@ -8,16 +8,18 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.prefs.BackingStoreException;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.TeiidServerManager;
 
 
 /**
@@ -118,14 +120,14 @@ public final class RuntimeAssistant {
     /**
      * @return the default Teiid server (can be <code>null</code>)
      */
-    private static Server getServer() {
+    private static TeiidServer getServer() {
         return getServerManager().getDefaultServer();
     }
 
     /**
      * @return the server manager (never <code>null</code>)
      */
-    private static ServerManager getServerManager() {
+    private static TeiidServerManager getServerManager() {
         return DqpPlugin.getInstance().getServerManager();
     }
 
@@ -148,7 +150,6 @@ public final class RuntimeAssistant {
      */
     public static void runNewServerAction( Shell shell ) {
         NewServerAction action = new NewServerAction(shell, getServerManager());
-        action.setShowConnectionFailedDialog(false);
         action.run();
     }
     
@@ -174,6 +175,38 @@ public final class RuntimeAssistant {
         }
 
         return true;
+    }
+    
+    /**
+     * Convenience function for adapting a given object to the given
+     * class-type using eclipse's registered adapters
+     * 
+     * @param adaptableObject
+     * @param klazz
+     * @return adapted object or null
+     */
+    public static <T> T adapt(Object adaptableObject, Class<T> klazz) {
+        return (T) Platform.getAdapterManager().getAdapter(adaptableObject, klazz);
+    }
+    
+    /**
+     * Get a {@link TeiidServer} from the given selection if one can be adapted
+     * 
+     * @param selection
+     * @return server or null
+     */
+    public static TeiidServer getServerFromSelection(ISelection selection) {
+        if (selection == null || ! (selection instanceof StructuredSelection))
+            return null;
+        
+        if (selection.isEmpty()) {
+            return null;
+        }
+        
+        StructuredSelection ss = (StructuredSelection) selection;
+        Object element = ss.getFirstElement();
+        
+        return adapt(element, TeiidServer.class);
     }
 
     /**

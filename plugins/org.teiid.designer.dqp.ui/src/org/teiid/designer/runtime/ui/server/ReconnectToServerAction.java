@@ -8,13 +8,12 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -58,22 +57,24 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
      */
     @Override
     public void run() {
-        final Server server = (Server)getStructuredSelection().getFirstElement();
+        IStructuredSelection sselection = getStructuredSelection();
+        final TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(sselection);
         BusyIndicator.showWhile(getViewer().getControl().getDisplay(), new Runnable() {
 
             @Override
             public void run() {
                 try {
                 	// Call disconnect() first to clear out Server & admin caches
-                	server.disconnect();
-                    server.getAdmin().refresh();
-                    server.setConnectionError(null);
+                	teiidServer.disconnect();
+                    teiidServer.getAdmin().refresh();
+                    teiidServer.setConnectionError(null);
                 } catch (Exception e) {
                     UTIL.log(e);
-                    String msg = UTIL.getString("serverReconnectErrorMsg", server); //$NON-NLS-1$
+                    String msg = UTIL.getString("serverReconnectErrorMsg", teiidServer); //$NON-NLS-1$
                     WidgetUtil.showError(msg);
-                    server.setConnectionError(msg);
-                    getViewer().refresh(server);
+                    teiidServer.setConnectionError(msg);
+                } finally {
+                    getViewer().refresh();
                 }
             }
         });
@@ -86,7 +87,14 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
      */
     @Override
     protected boolean updateSelection( IStructuredSelection selection ) {
-        return ((selection.size() == 1) && (selection.getFirstElement() instanceof Server));
+        if (selection.size() != 1)
+            return false;
+        
+        TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
+        if (teiidServer != null)
+            return true;
+        
+        return false;
     }
 
 }

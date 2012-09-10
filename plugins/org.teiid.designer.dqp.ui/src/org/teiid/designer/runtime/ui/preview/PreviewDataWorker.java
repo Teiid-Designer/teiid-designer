@@ -73,7 +73,7 @@ import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
@@ -500,7 +500,7 @@ public class PreviewDataWorker {
 		return sql;
 	}
 	
-    public ServerManager getServerManager() {
+    public TeiidServerManager getServerManager() {
         return DqpPlugin.getInstance().getServerManager();
     }
     

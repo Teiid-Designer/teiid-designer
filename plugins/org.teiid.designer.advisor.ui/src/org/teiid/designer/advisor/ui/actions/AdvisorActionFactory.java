@@ -43,7 +43,7 @@ import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.actions.DeployVdbAction;
 import org.teiid.designer.runtime.ui.actions.EditVdbAction;
 import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
@@ -592,10 +592,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
             if (RuntimeAssistant.ensureServerConnection(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
             		Messages.CreateDataSource_NoServerMessage)) {
             	try {
-					Server server = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+					TeiidServer teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
 					
 					CreateDataSourceAction action = new CreateDataSourceAction();
-					action.setAdmin(server.getAdmin());
+					action.setAdmin(teiidServer.getAdmin());
 
 					action.setSelection(new StructuredSelection());
 

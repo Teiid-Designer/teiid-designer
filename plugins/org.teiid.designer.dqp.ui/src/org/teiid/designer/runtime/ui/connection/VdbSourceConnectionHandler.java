@@ -29,7 +29,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ExecutionAdmin;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.connection.ModelConnectionMapper;
@@ -90,7 +90,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         if (!initialized) {
             initialize();
         }
-        Server defServer = getDefaultServer();
+        TeiidServer defServer = getDefaultServer();
         if (defServer == null || !defServer.isConnected()) {
             return null;
         }
@@ -146,7 +146,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
                 SelectJndiDataSourceDialog dialog = new SelectJndiDataSourceDialog(Display.getCurrent().getActiveShell());
 
                 TeiidDataSource initialSelection = null;
-                Server defServer = getDefaultServer();
+                TeiidServer defServer = getDefaultServer();
                 if (defServer != null && defServer.isConnected()) {
                     try {
                         initialSelection = defServer.getAdmin().getDataSource(jndiName);
@@ -194,7 +194,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
                 SelectTranslatorDialog dialog = new SelectTranslatorDialog(Display.getCurrent().getActiveShell());
 
                 TeiidTranslator initialSelection = null;
-                Server defServer = getDefaultServer();
+                TeiidServer defServer = getDefaultServer();
                 if (defServer != null && defServer.isConnected()) {
                     try {
                         initialSelection = defServer.getAdmin().getTranslator(transName);
@@ -225,7 +225,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
      */
     @Override
     public String[] getDataSourceNames() {
-        Server defaultServer = getDefaultServer();
+        TeiidServer defaultServer = getDefaultServer();
 
         if ((defaultServer != null) && defaultServer.isConnected()) {
             Collection<TeiidDataSource> dataSources = null;
@@ -254,7 +254,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         return null;
     }
 
-    Server getDefaultServer() {
+    TeiidServer getDefaultServer() {
         return DqpPlugin.getInstance().getServerManager().getDefaultServer();
     }
 
@@ -269,7 +269,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
             throw new IllegalArgumentException();
         }
 
-        Server defaultServer = getDefaultServer();
+        TeiidServer defaultServer = getDefaultServer();
 
         if ((defaultServer != null) && defaultServer.isConnected()) {
             try {
@@ -330,7 +330,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
      */
     @Override
     public String[] getTranslatorTypes() {
-        Server defaultServer = getDefaultServer();
+        TeiidServer defaultServer = getDefaultServer();
 
         if ((defaultServer != null) && defaultServer.isConnected()) {
             Collection<TeiidTranslator> translators = null;

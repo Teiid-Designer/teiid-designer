@@ -7,42 +7,37 @@
  */
 package org.teiid.designer.runtime.ui.server;
 
-import static org.teiid.designer.runtime.ui.DqpUiConstants.PLUGIN_ID;
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerLifecycleListener;
+import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.ui.ServerUIUtil;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.teiid.designer.core.util.StringUtilities;
-import org.teiid.designer.runtime.EventManager;
-import org.teiid.designer.runtime.HostProvider;
-import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerManager;
-import org.teiid.designer.runtime.TeiidAdminInfo;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.TeiidServerManager;
+import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -53,118 +48,54 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
  *
  * @since 8.0
  */
-public final class ServerPage extends WizardPage implements HostProvider {
-
-    /**
-     * The key in the wizard <code>IDialogSettings</code> for the auto-connect flag.
-     */
-    private static final String AUTO_CONNECT_KEY = "autoConnect"; //$NON-NLS-1$
+public final class ServerPage extends WizardPage {
 
     // ===========================================================================================================================
     // Fields
     // ===========================================================================================================================
 
-    private boolean isEdit = false;
-
-    private boolean autoConnect = true;
-
     /**
-     * The button used to test the connection to the server. Should only be enabled when server properties are valid.
+     * parent display of this control
      */
-    private Button btnTestConnection;
-
-    /**
-     * The Check-box to allow auto-connect on Finish
-     */
-    private Button btnAutoConnectOnFinish;
-
-    /**
-     * The label the user wants to identify the Teiid instance with. May not be <code>null</code> or empty. Only used if the host
-     * URL is not being used as a label.
-     */
-    private String displayName;
-
+    private Display display;
+    
     /**
      * The server being editor or <code>null</code> if creating a new server.
      */
-    private Server server;
+    private TeiidServer teiidServer;
 
     /**
      * The current validation status.
      */
     private IStatus status;
 
-    /**
-     * The user needed to login to the teiid server via admin
-     */
-    private String adminUsername;
+    private Text displayNameText;
 
-    /**
-     * The password needed to login to the teiid server via admin
-     */
-    private String adminPassword;
-
-    /**
-     * Indicates if the admin password should be persisted.
-     */
-    private boolean saveAdminPassword;
-
-    /**
-     * The host name needed to login to the teiid server via admin
-     */
-    private String host;
-
-    /**
-     * The port needed to login to the teiid server via admin
-     */
-    private String adminPort;
-
-    /**
-     * The SSL true/false protocol for admin URL
-     */
-    private boolean adminURLIsSecure;
-
-    private Text adminURLText;
-
-    /**
-     * The user needed to login to the teiid server via jdbc
-     */
-    private String jdbcUsername;
-
-    /**
-     * The password needed to login to the teiid server via jdbc
-     */
-    private String jdbcPassword;
-
-    /**
-     * Indicates if the admin password should be persisted.
-     */
-    private boolean saveJdbcPassword;
-
-    /**
-     * The port needed to login to the teiid server via jdbc
-     */
-    private String jdbcPort;
-
-    /**
-     * The SSL true/false protocol for jdbc URL
-     */
-    private boolean jdbcURLIsSecure;
+    private Hyperlink serverHyperlink;
     
-    private Composite pnlMain;
+    private Text jdbcUsernameText;
+
+    private Text jdbcPasswordText;
 
     private Text jdbcURLText;
     
-    private Group teiidJdbcGroup;
-
-    private TeiidAdminInfo localAdminInfo;
-    private TeiidJdbcInfo localJdbcInfo;
-
-    /**
-     * Indicates if custom text, not the URL, should be used to identify the Teiid instance.
-     */
-    private boolean useDisplayName = true;
-
+    private IServerLifecycleListener serverLifecycleListener = new IServerLifecycleListener() {
+        
+        @Override
+        public void serverRemoved(IServer server) {
+        }
+        
+        @Override
+        public void serverChanged(IServer server) {
+        }
+        
+        @Override
+        public void serverAdded(final IServer server) {
+            // This is performed on its own thread
+            createTeiidServer(server);
+        }
+    };
+    
     // ===========================================================================================================================
     // Constructors
     // ===========================================================================================================================
@@ -174,444 +105,148 @@ public final class ServerPage extends WizardPage implements HostProvider {
      */
     public ServerPage() {
         super(ServerPage.class.getSimpleName());
-        setTitle("Enter Teiid Server Connection Information"); //UTIL.getString("serverPageTitle")); //$NON-NLS-1$
-        setPageComplete(false);
-
-        this.host = HostProvider.DEFAULT_HOST;
-        this.adminPort = TeiidAdminInfo.DEFAULT_PORT;
-        this.adminUsername = ""; //$NON-NLS-1$
-        this.adminPassword = ""; //$NON-NLS-1$
-        this.adminURLIsSecure = TeiidAdminInfo.DEFAULT_SECURE;
-        this.saveAdminPassword = TeiidAdminInfo.DEFAULT_PERSIST_PASSWORD;
-        this.localAdminInfo = new TeiidAdminInfo(this.adminPort,
-                                                 this.adminUsername,
-                                                 this.adminPassword,
-                                                 this.saveAdminPassword,
-                                                 this.adminURLIsSecure);
-        this.localAdminInfo.setHostProvider(this);
-
-        this.jdbcPort = TeiidJdbcInfo.DEFAULT_PORT;
-        this.jdbcUsername = ""; //$NON-NLS-1$
-        this.jdbcPassword = ""; //$NON-NLS-1$
-        this.jdbcURLIsSecure = TeiidJdbcInfo.DEFAULT_SECURE;
-        this.saveJdbcPassword = TeiidJdbcInfo.DEFAULT_PERSIST_PASSWORD;
-        this.localJdbcInfo = new TeiidJdbcInfo(this.jdbcPort,
-                                               this.jdbcUsername,
-                                               this.jdbcPassword,
-                                               this.saveJdbcPassword,
-                                               this.jdbcURLIsSecure);
-        this.localJdbcInfo.setHostProvider(this);
-
-        this.server = new Server(null, this.localAdminInfo, this.localJdbcInfo, EventManager.EVENT_MANAGER_ADAPTER);
-    }
-
-    /**
-     * Constructs a wizard page that edits the specified server's properties.
-     * 
-     * @param server the server being edited
-     */
-    public ServerPage( Server server ) {
-        super(ServerPage.class.getSimpleName());
         setTitle(UTIL.getString("serverPageTitle")); //$NON-NLS-1$
-
-        this.server = server;
-        this.host = server.getHost();
-
-        this.localAdminInfo = server.getTeiidAdminInfo().clone();
-        this.localAdminInfo.setHostProvider(this);
-        this.localJdbcInfo = server.getTeiidJdbcInfo().clone();
-        this.localJdbcInfo.setHostProvider(this);
-
-        this.adminPort = server.getTeiidAdminInfo().getPort();
-        this.adminUsername = server.getTeiidAdminInfo().getUsername();
-        this.adminPassword = server.getTeiidAdminInfo().getPassword();
-        this.adminURLIsSecure = server.getTeiidAdminInfo().isSecure();
-        this.saveAdminPassword = server.getTeiidAdminInfo().isPasswordBeingPersisted();
-
-        this.jdbcPort = server.getTeiidJdbcInfo().getPort();
-        this.jdbcUsername = server.getTeiidJdbcInfo().getUsername();
-        this.jdbcPassword = server.getTeiidJdbcInfo().getPassword();
-        this.jdbcURLIsSecure = server.getTeiidJdbcInfo().isSecure();
-        this.saveJdbcPassword = server.getTeiidJdbcInfo().isPasswordBeingPersisted();
-
-        this.displayName = server.getCustomLabel();
-        this.useDisplayName = !StringUtilities.isEmpty(this.displayName);
-
-        this.isEdit = true;
+        
+        setPageComplete(false);
+        
+        ServerCore.addServerLifecycleListener(serverLifecycleListener);
+        status = Status.CANCEL_STATUS;
     }
 
     // ===========================================================================================================================
     // Methods
     // ===========================================================================================================================
-
-    private void constructHostPanel( Composite parent ) {
-    	Group pnlHost = WidgetFactory.createGroup(parent, UTIL.getString("serverPageNameGroup")); //$NON-NLS-1$
-        pnlHost.setLayout(new GridLayout(2, false));
-        pnlHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        ((GridData) pnlHost.getLayoutData()).horizontalSpan = 1;
+    
+    private void constructDisplayNamePanel(Composite pnlMain) {
+        Composite displayNameComposite = new Composite(pnlMain, SWT.NONE);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(displayNameComposite);
+        GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).applyTo(displayNameComposite);
         
-		final Text txtNameLabel = new Text(pnlHost, SWT.BORDER);
-		txtNameLabel.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-		txtNameLabel.setToolTipText(UTIL.getString("serverPageUseCustomTextAsLabel.toolTip")); //$NON-NLS-1$
-		txtNameLabel.setEnabled(true);
-		txtNameLabel.setText((this.displayName == null) ? "" : this.displayName); //$NON-NLS-1$
-
-		txtNameLabel.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				handleDisplayNameModified(((Text) e.widget).getText());
-			}
-
-		});
-    }
-
-    private void constructTeiidAdminConnectionPanel( Composite parent ) {
-        Group pnl = WidgetFactory.createGroup(parent, UTIL.getString("serverPageAdminConnectionInfoLabel")); //$NON-NLS-1$);
-        pnl.setLayout(new GridLayout(3, false));
-        pnl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-
-        {
-        	Text helpText = new Text(pnl, SWT.WRAP | SWT.READ_ONLY);
-        	helpText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-        	helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-        	helpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        	((GridData)helpText.getLayoutData()).horizontalSpan = 3;
-        	helpText.setText(UTIL.getString("serverPageAdminConnectionInfoHelp.txt"));  //$NON-NLS-1$
-        }
+        Label displayNameLabel = new Label(displayNameComposite, SWT.NONE);
+        displayNameLabel.setText(UTIL.getString("serverPageDisplayNameLabel")); //$NON-NLS-1$
+        GridDataFactory.swtDefaults().applyTo(displayNameLabel);
         
-        { // PORT ROW
-            Label label = new Label(pnl, SWT.LEFT);
-            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            label.setText(UTIL.getString("serverPagePortNumberLabel")); //$NON-NLS-1$
-
-            Text text = new Text(pnl, SWT.BORDER);
-            text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-            text.setToolTipText(UTIL.getString("serverPagePortNumberTooltip")); //$NON-NLS-1$
-
-            // set initial value
-            if (this.adminPort != null) {
-                text.setText(this.adminPort);
+        displayNameText = new Text(displayNameComposite, SWT.NONE);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(displayNameText);
+        displayNameText.addFocusListener(new FocusListener() {
+            
+            @Override
+            public void focusLost(FocusEvent e) {
+                handlePropertiesModified();
             }
-
-            text.addFocusListener(new FocusAdapter() {
-                @Override
-                public void focusLost(FocusEvent e) {
-                    handleAdminPortModified(((Text) e.widget).getText());
-                }
-            });
-
-            {
-                Label emptyLabel = new Label(pnl, SWT.LEFT);
-                emptyLabel.setText(" "); //$NON-NLS-1$
-
+            
+            @Override
+            public void focusGained(FocusEvent e) {
+                // do nothing
             }
-        }
-
-        { // user row
-            Label label = new Label(pnl, SWT.LEFT);
-            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            label.setText(UTIL.getString("serverPageUserLabel")); //$NON-NLS-1$
-
-            Text text = new Text(pnl, SWT.BORDER);
-            text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-            text.setToolTipText(UTIL.getString("serverPageUserToolTip")); //$NON-NLS-1$
-
-            // set initial value
-            if (this.adminUsername != null) {
-                text.setText(this.adminUsername);
-            }
-
-            text.addFocusListener(new FocusAdapter() {
-                @Override
-                public void focusLost(FocusEvent e) {
-                    handleAdminUserModified(((Text) e.widget).getText());
-                }
-            });
-
-            {
-                Label emptyLabel = new Label(pnl, SWT.LEFT);
-                emptyLabel.setText(" "); //$NON-NLS-1$
-
-            }
-        }
-
-        { // password row
-            Label label = new Label(pnl, SWT.LEFT);
-            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            label.setText(UTIL.getString("serverPagePasswordLabel")); //$NON-NLS-1$            		
-
-            Text text = new Text(pnl, SWT.BORDER);
-            text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            text.setToolTipText(UTIL.getString("serverPagePasswordToolTip")); //$NON-NLS-1$
-            text.setEchoChar('*');
-
-            // set initial value before hooking up listener
-            if (this.adminPassword != null) {
-                text.setText(this.adminPassword);
-            }
-
-            // listener for when value changes
-            text.addFocusListener(new FocusAdapter() {
-                @Override
-                public void focusLost(FocusEvent e) {
-                    handleAdminPasswordModified(((Text) e.widget).getText());
-                }
-            });
-            { // save button row
-                final Button btn = new Button(pnl, SWT.CHECK | SWT.LEFT);
-                btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-                ((GridData) btn.getLayoutData()).horizontalSpan = 1;
-                btn.setText(UTIL.getString("serverPageSavePassword")); //$NON-NLS-1$
-                btn.setToolTipText(UTIL.getString("serverPageSavePasswordToolTip")); //$NON-NLS-1$
-
-                // set initial value before hooking up listeners
-                if (this.saveAdminPassword) {
-                    btn.setSelection(true);
-                }
-
-                // listener for when value changes
-                btn.addSelectionListener(new SelectionAdapter() {
-                    /**            		
-                     * {@inheritDoc}
-                     * 
-                     * 
-                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected( SelectionEvent e ) {
-                        handleAdminSavePasswordChanged(((Button) e.widget).getSelection());
-                    }
-                });
-            }
-        }
-
-        {
-            Label label = new Label(pnl, SWT.LEFT);
-            label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
-            label.setText(UTIL.getString("serverPageUrlLabel")); //$NON-NLS-1$
-
-            adminURLText = new Text(pnl,  SWT.WRAP | SWT.READ_ONLY);
-            GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
-            gd.heightHint = 30;
-            gd.grabExcessHorizontalSpace = true;
-            adminURLText.setLayoutData(gd);
-            adminURLText.setToolTipText(UTIL.getString("serverPageUrlToolTip")); //$NON-NLS-1$
-            adminURLText.setText(this.localAdminInfo.getUrl());
-            adminURLText.setBackground(pnl.getBackground());
-            adminURLText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-            adminURLText.setFont(JFaceResources.getTextFont());
-
-            { // Secure SSL row
-                final Button btn = new Button(pnl, SWT.CHECK | SWT.LEFT);
-                btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-                ((GridData) btn.getLayoutData()).horizontalSpan = 1;
-                btn.setText(UTIL.getString("serverPageSSLConnectionLabel")); //$NON-NLS-1$
-                btn.setToolTipText(UTIL.getString("serverPageSSLConnectionTooltip")); //$NON-NLS-1$
-
-                // set initial value before hooking up listeners
-                btn.setSelection(this.adminURLIsSecure);
-
-                // listener for when value changes
-                btn.addSelectionListener(new SelectionAdapter() {
-                    /**
-                     * {@inheritDoc}
-                     * 
-                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected( SelectionEvent e ) {
-                        handleAdminSSLChanged(((Button) e.widget).getSelection());
-                    }
-                });
-            }
-
-        }
+        });
     }
-
+    
+    private void constructIServerCreationPanel( Composite parent ) {
+        Group serverGroup = WidgetFactory.createGroup(parent, UTIL.getString("serverPageIServerLabel")); //$NON-NLS-1$);
+        GridDataFactory.fillDefaults().applyTo(serverGroup);
+        GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 10).applyTo(serverGroup);
+        
+        Label serverLabel = new Label(serverGroup, SWT.NONE);
+        serverLabel.setText(UTIL.getString("serverPageIServerLabel")); //$NON-NLS-1$
+        GridDataFactory.swtDefaults().applyTo(serverLabel);
+        
+        serverHyperlink = new Hyperlink(serverGroup, SWT.BORDER);
+        serverHyperlink.setText(""); //$NON-NLS-1$
+        serverHyperlink.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(serverHyperlink);
+        serverHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+            @Override
+            public void linkActivated(HyperlinkEvent e) {
+                if (teiidServer == null || teiidServer.getParent() == null)
+                    return;
+                
+                ServerUIPlugin.editServer(teiidServer.getParent());
+            }
+        });
+        
+        final Hyperlink newServerHyperlink = new Hyperlink(serverGroup, SWT.NONE);
+        newServerHyperlink.setText(UTIL.getString("serverPageIServerNewButton")); //$NON-NLS-1$
+        newServerHyperlink.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        newServerHyperlink.setUnderlined(true);
+        GridDataFactory.swtDefaults().applyTo(newServerHyperlink);
+        newServerHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+            @Override
+            public void linkActivated(HyperlinkEvent e) {
+                // Need to stop the server manager from adding a teiid server
+                // since this page is in charge of that in this case.
+                
+                IServerLifecycleListener serverLifecycleListener = getServerManager().getServerLifeCycleListener();
+                ServerCore.removeServerLifecycleListener(serverLifecycleListener);
+                
+                ServerUIUtil.showNewServerWizard(ServerPage.this.getShell(), null, null, null);
+                
+                ServerCore.addServerLifecycleListener(serverLifecycleListener);
+            }
+        });
+    }
+    
     private void constructTeiidJdbcConnectionPanel( Composite parent ) {
-        teiidJdbcGroup = WidgetFactory.createGroup(parent, UTIL.getString("serverPageJDBCConnectionInfoLabel")); //$NON-NLS-1$);
-        teiidJdbcGroup.setLayout(new GridLayout(3, false));
-        teiidJdbcGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        Group teiidJdbcGroup = WidgetFactory.createGroup(parent, UTIL.getString("serverPageJDBCConnectionInfoLabel")); //$NON-NLS-1$);
+        GridDataFactory.fillDefaults().applyTo(teiidJdbcGroup);
+        GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).applyTo(teiidJdbcGroup);
         
         {
-        	Text helpText = new Text(teiidJdbcGroup, SWT.WRAP | SWT.READ_ONLY);
+        	Text helpText = new Text(teiidJdbcGroup, SWT.WRAP | SWT.READ_ONLY); 
+        	helpText.setText(UTIL.getString("serverPageJDBCConnectionInfoHelp.txt"));  //$NON-NLS-1$
         	helpText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         	helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-        	helpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        	((GridData)helpText.getLayoutData()).horizontalSpan = 3;
-        	helpText.setText(UTIL.getString("serverPageJDBCConnectionInfoHelp.txt"));  //$NON-NLS-1$
-        }
-        
-
-        { // HOST ROW
-
-        	Label label = new Label(teiidJdbcGroup, SWT.LEFT);
-          	label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-          	label.setText("Host: "); //UTIL.getString("serverPageHostNameLabel")); //$NON-NLS-1$
-
-          	Text text = new Text(teiidJdbcGroup, SWT.BORDER);
-          	text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-          	text.setToolTipText(UTIL.getString("serverPageHostNameTooltip")); //$NON-NLS-1$
-          	text.setText(this.host);
-
-          	text.addFocusListener(new FocusAdapter() {
-          	    @Override
-          	    public void focusLost(FocusEvent e) {
-          	        handleHostModified(((Text) e.widget).getText());
-          	    }
-          	});
-            {
-                Label emptyLabel = new Label(teiidJdbcGroup, SWT.LEFT);
-                emptyLabel.setText(" "); //$NON-NLS-1$
-
-            }
-        }
-  
-        { // PORT ROW	
-            Label label = new Label(teiidJdbcGroup, SWT.LEFT);
-            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            label.setText(UTIL.getString("serverPagePortNumberLabel")); //$NON-NLS-1$);
-
-            Text text = new Text(teiidJdbcGroup, SWT.BORDER);
-            text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-            text.setToolTipText(UTIL.getString("serverPagePortNumberTooltip")); //$NON-NLS-1$);
-
-            // set initial value
-            if (this.jdbcPort != null) {
-                text.setText(this.jdbcPort);
-            }
-
-            text.addFocusListener(new FocusAdapter() {
-                @Override
-                public void focusLost(FocusEvent e) {
-                    handleJdbcPortModified(((Text) e.widget).getText());
-                }
-            });
-            {
-                Label emptyLabel = new Label(teiidJdbcGroup, SWT.LEFT);
-                emptyLabel.setText(" "); //$NON-NLS-1$
-
-            }
+        	GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(helpText);
         }
 
         { // user row
-            Label label = new Label(teiidJdbcGroup, SWT.LEFT);
-            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            Label label = new Label(teiidJdbcGroup, SWT.LEFT); 
             label.setText(UTIL.getString("serverPageUserLabel")); //$NON-NLS-1$
+            GridDataFactory.swtDefaults().applyTo(label);
 
-            Text text = new Text(teiidJdbcGroup, SWT.BORDER);
-            text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-            text.setToolTipText(UTIL.getString("serverPageUserToolTip")); //$NON-NLS-1$
-
-            // set initial value
-            if (this.jdbcUsername != null) {
-                text.setText(this.jdbcUsername);
-            }
-
-            text.addFocusListener(new FocusAdapter() {
+            jdbcUsernameText = new Text(teiidJdbcGroup, SWT.BORDER);
+            jdbcUsernameText.setText(TeiidJdbcInfo.DEFAULT_JDBC_USERNAME);
+            GridDataFactory.fillDefaults().applyTo(jdbcUsernameText);
+            jdbcUsernameText.setToolTipText(UTIL.getString("serverPageUserToolTip")); //$NON-NLS-1$
+            jdbcUsernameText.addFocusListener(new FocusAdapter() {
                 @Override
                 public void focusLost(FocusEvent e) {
-                    handleJdbcUserModified(((Text) e.widget).getText());
+                    handlePropertiesModified();
                 }
             });
-
-            {
-                Label emptyLabel = new Label(teiidJdbcGroup, SWT.LEFT);
-                emptyLabel.setText(" "); //$NON-NLS-1$
-
-            }
         }
 
         { // password row
-            Label label = new Label(teiidJdbcGroup, SWT.LEFT);
-            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            Label label = new Label(teiidJdbcGroup, SWT.LEFT); 
             label.setText(UTIL.getString("serverPagePasswordLabel")); //$NON-NLS-1$
+            GridDataFactory.swtDefaults().applyTo(label);
 
-            Text text = new Text(teiidJdbcGroup, SWT.BORDER);
-            text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            text.setToolTipText(UTIL.getString("serverPagePasswordToolTip")); //$NON-NLS-1$
-            text.setEchoChar('*');
-
-            // set initial value before hooking up listener
-            if (this.jdbcPassword != null) {
-                text.setText(this.jdbcPassword);
-            }
+            jdbcPasswordText = new Text(teiidJdbcGroup, SWT.BORDER);
+            jdbcPasswordText.setText(TeiidJdbcInfo.DEFAULT_JDBC_PASSWORD);
+            GridDataFactory.fillDefaults().grab(true, false).applyTo(jdbcPasswordText);
+            jdbcPasswordText.setToolTipText(UTIL.getString("serverPagePasswordToolTip")); //$NON-NLS-1$
+            jdbcPasswordText.setEchoChar('*');
 
             // listener for when value changes
-            text.addFocusListener(new FocusAdapter() {
+            jdbcPasswordText.addFocusListener(new FocusAdapter() {
                 @Override
                 public void focusLost(FocusEvent e) {
-                    handleJdbcPasswordModified(((Text) e.widget).getText());
+                    handlePropertiesModified();
                 }
             });
-            { // save button row
-                final Button btn = new Button(teiidJdbcGroup, SWT.CHECK | SWT.LEFT);
-                btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-                ((GridData) btn.getLayoutData()).horizontalSpan = 1;
-                btn.setText(UTIL.getString("serverPageSavePassword")); //$NON-NLS-1$
-                btn.setToolTipText(UTIL.getString("serverPageSavePasswordToolTip")); //$NON-NLS-1$
-
-                // set initial value before hooking up listeners
-                if (this.saveJdbcPassword) {
-                    btn.setSelection(true);
-                }
-
-                // listener for when value changes
-                btn.addSelectionListener(new SelectionAdapter() {
-                    /**
-                     * {@inheritDoc}
-                     * 
-                     * 
-                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected( SelectionEvent e ) {
-                        handleJdbcSavePasswordChanged(((Button) e.widget).getSelection());
-                    }
-                });
-            }
         }
-
+        
         {
             Label label = new Label(teiidJdbcGroup, SWT.LEFT);
-            label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
             label.setText(UTIL.getString("serverPageJDBCUrlLabel")); //$NON-NLS-1$
+            GridDataFactory.swtDefaults().applyTo(label);
 
-            jdbcURLText = new Text(teiidJdbcGroup, SWT.WRAP | SWT.READ_ONLY);
-            GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
-            gd.heightHint = 30;
-            gd.grabExcessHorizontalSpace = true;
-            jdbcURLText.setLayoutData(gd);
+            jdbcURLText = new Text(teiidJdbcGroup, SWT.WRAP | SWT.READ_ONLY | SWT.BORDER);
+            GridDataFactory.fillDefaults().grab(true, false).applyTo(jdbcURLText);
             jdbcURLText.setToolTipText(UTIL.getString("serverPageJDBCUrlToolTip")); //$NON-NLS-1$
-            jdbcURLText.setText(this.localJdbcInfo.getUrl());
             jdbcURLText.setBackground(teiidJdbcGroup.getBackground());
             jdbcURLText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
             jdbcURLText.setFont(JFaceResources.getTextFont());
-
-            { // Secure SSL row
-                final Button btn = new Button(teiidJdbcGroup, SWT.CHECK | SWT.LEFT);
-                btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-                ((GridData) btn.getLayoutData()).horizontalSpan = 1;
-                btn.setText(UTIL.getString("serverPageSSLConnectionLabel")); //$NON-NLS-1$
-                btn.setToolTipText(UTIL.getString("serverPageSSLConnectionTooltip")); //$NON-NLS-1$
-
-                // set initial value before hooking up listeners
-                btn.setSelection(this.jdbcURLIsSecure);
-
-                // listener for when value changes
-                btn.addSelectionListener(new SelectionAdapter() {
-                    /**
-                     * {@inheritDoc}
-                     * 
-                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected( SelectionEvent e ) {
-                        handleJdbcSSLChanged(((Button) e.widget).getSelection());
-                    }
-                });
-            }
-
         }
 
     }
@@ -623,77 +258,16 @@ public final class ServerPage extends WizardPage implements HostProvider {
      */
     @Override
     public void createControl( Composite parent ) {
-        pnlMain = new Composite(parent, SWT.NONE);
-        pnlMain.setLayout(new GridLayout());
-        pnlMain.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        display = parent.getDisplay();
+        
+        Composite pnlMain = new Composite(parent, SWT.NONE);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(pnlMain);
+        GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(pnlMain);
 
-        constructHostPanel(pnlMain);
-
+        // Add display name component
+        constructDisplayNamePanel(pnlMain);
+        constructIServerCreationPanel(pnlMain);
         constructTeiidJdbcConnectionPanel(pnlMain);
-        
-        constructTeiidAdminConnectionPanel(pnlMain);
-        
-        { // AUTO CONNECT ROW
-            this.btnAutoConnectOnFinish = new Button(pnlMain, SWT.CHECK);
-            String theLabel = UTIL.getString("serverPageSetAsDefaultLabel"); //$NON-NLS-1$
-            String theTooltip = UTIL.getString("serverPageSetAsDefaultToolTip"); //$NON-NLS-1$
-            if (this.isEdit) {
-                if (this.server.isConnected()) {
-                    theLabel = UTIL.getString("serverPageReconnectLabel"); //$NON-NLS-1$
-                    theTooltip = UTIL.getString("serverPageReconnectToolTip"); //$NON-NLS-1$
-                } else {
-                    theLabel = UTIL.getString("serverPageAutoConnectLabel"); //$NON-NLS-1$
-                    theTooltip = UTIL.getString("serverPageAutoConnectToolTip"); //$NON-NLS-1$	
-                }
-            }
-            this.btnAutoConnectOnFinish.setText(theLabel);
-            this.btnAutoConnectOnFinish.setToolTipText(theTooltip);
-            this.btnAutoConnectOnFinish.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-            this.btnAutoConnectOnFinish.setSelection(true);
-
-            // set the auto connect flag based on dialog settings
-            if (getDialogSettings().get(AUTO_CONNECT_KEY) != null) {
-                this.autoConnect = getDialogSettings().getBoolean(AUTO_CONNECT_KEY);
-            }
-
-            this.btnAutoConnectOnFinish.setSelection(this.autoConnect);
-
-            this.btnAutoConnectOnFinish.addSelectionListener(new SelectionAdapter() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                    handleAutoConnect();
-                }
-            });
-        }
-
-        this.btnTestConnection = new Button(pnlMain, SWT.PUSH);
-        this.btnTestConnection.setText(UTIL.getString("serverPageTestConnectionButton")); //$NON-NLS-1$
-        this.btnTestConnection.setToolTipText(UTIL.getString("serverPageTestConnectionButtonToolTip")); //$NON-NLS-1$
-        this.btnTestConnection.setEnabled(false);
-
-        // add margins to the side of the text
-        GridData gd = new GridData(SWT.RIGHT, SWT.CENTER, false, false);
-        int widthHint = convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
-        Point minSize = this.btnTestConnection.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-        gd.widthHint = Math.max(widthHint, minSize.x + 10);
-        this.btnTestConnection.setLayoutData(gd);
-
-        this.btnTestConnection.addSelectionListener(new SelectionAdapter() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
-            @Override
-            public void widgetSelected( SelectionEvent e ) {
-                handleTestConnection();
-            }
-        });
 
         setControl(pnlMain);
 
@@ -705,295 +279,81 @@ public final class ServerPage extends WizardPage implements HostProvider {
     }
 
     /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.runtime.HostProvider#getHost()
-     */
-    @Override
-    public String getHost() {
-        return this.host;
-    }
-
-    /**
-     * @return the server represented by the dialog inputs
-     * @throws RuntimeException if called when all inputs are not valid
-     * @see #isPageComplete()
-     */
-    public Server getServer() {
-        if (this.status.getSeverity() != IStatus.ERROR) {
-            Server newServer = new Server(this.host, this.localAdminInfo, this.localJdbcInfo, getServerManager());
-            newServer.setCustomLabel(this.displayName);
-            return newServer;
-        }
-
-        // should never be called if error status
-        MessageDialog.openError(getShell(), UTIL.getString("serverPageTestConnectionDialogTitle"), //$NON-NLS-1$
-                                UTIL.getString("serverPageInvalidServerProperties")); //$NON-NLS-1$
-        return null;
-    }
-
-    /**
      * @return the server manager obtained from the wizard
      */
-    ServerManager getServerManager() {
+    private TeiidServerManager getServerManager() {
         return ((ServerWizard) getWizard()).getServerManager();
     }
-
-    void handleAutoConnect() {
-        this.autoConnect = this.btnAutoConnectOnFinish.getSelection();
-    }
-
+    
     /**
-     * @param oldValue
-     * @param newValue
-     * @return
-     */
-    private boolean valueChanged(String oldValue, String newValue) {
-    	return oldValue == null || ! oldValue.equals(newValue);
-    }
-
-    /**
-     * Handler for when the password control value is modified
+     * This in internal and should only be called by threads other 
+     * than the UI thread.
      * 
-     * @param newPassword the new password value
+     * @param server
      */
-    void handleAdminPasswordModified( String newPassword ) {
-    	if (! valueChanged(this.adminPassword, newPassword)) {
-    	    return;
-    	}
+    private void createTeiidServer(final IServer server) {
+        if (Thread.currentThread() == display.getThread())
+            throw new RuntimeException("Cannot create the teiid server on the UI thread"); //$NON-NLS-1$
+        
+        TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
+        teiidServer = factory.createTeiidServer(server, getServerManager());
 
-        this.adminPassword = newPassword;
-        this.localAdminInfo.setPassword(newPassword);
-        updateState();
-    }
-
-    /**
-     * @param savePassword <code>true</code> if the password should be persisted on the local file system
-     */
-    void handleAdminSavePasswordChanged( boolean savePassword ) {
-        this.saveAdminPassword = savePassword;
-        this.localAdminInfo.setPersistPassword(savePassword);
-        updateState();
-    }
-
-    /**
-     * @param newPort the new host value
-     */
-    void handleAdminPortModified( String newPort ) {
-    	if (! valueChanged(this.adminPort, newPort)) {
-    		return;
-    	}
-
-        this.adminPort = newPort;
-        this.localAdminInfo.setPort(newPort);
-        updateState();
-    }
-
-    void handleDisplayNameModified( String newCustomLabel ) {
-    	if (! valueChanged(this.displayName, newCustomLabel)) {
-    		return;
-    	}
-
-        this.displayName = newCustomLabel.trim();
-        updateState();
-    }
-
-    /**
-     * @param newHost the new host value
-     */
-    void handleHostModified( String newHost ) {
-    	if (! valueChanged(this.host, newHost)) {
-    		return;
-    	}
-
-        this.host = newHost;
-        updateState();
-    }
-
-    /**
-     * Handler for when the password control value is modified
-     * 
-     * @param newPassword the new password value
-     */
-    void handleJdbcPasswordModified( String newPassword ) {
-    	if (! valueChanged(this.jdbcPassword, newPassword)) {
-    		return;
-    	}
-
-        this.jdbcPassword = newPassword;
-        this.localJdbcInfo.setPassword(newPassword);
-        updateState();
-    }
-
-    /**
-     * @param savePassword <code>true</code> if the password should be persisted on the local file system
-     */
-    void handleJdbcSavePasswordChanged( boolean savePassword ) {
-        this.saveJdbcPassword = savePassword;
-        this.localJdbcInfo.setPersistPassword(savePassword);
-        updateState();
-    }
-
-    /**
-     * @param newPort the new host value
-     */
-    void handleJdbcPortModified( String newPort ) {
-    	if (! valueChanged(this.jdbcPort, newPort)) {
-    		return;
-    	}
-
-        this.jdbcPort = newPort;
-        this.localJdbcInfo.setPort(newPort);
-        updateState();
-    }
-
-    /**
-     * Tests the connection of the server specified by the properties entered on this page. Precondition is that server properties
-     * are valid. If the Admin ping fails, the JDBC test is skipped (the JDBC test gets the Admin api, so if Admin ping fails - it
-     * is guaranteed to fail). On success, only a single dialog is shown
-     */
-    void handleTestConnection() {
-        final Server server = getServer();
-
-        if (server != null) {
-            final boolean[] success = new boolean[1];
-
-            BusyIndicator.showWhile(null, new Runnable() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see java.lang.Runnable#run()
-                 */
-                @Override
-                public void run() {
-                    success[0] = server.testPing().isOK();
-                }
-            });
-
-            // If Admin Connection Fails, show the fail dialog - then return.
-            if (!success[0]) {
-                MessageDialog.openError(getShell(), UTIL.getString("serverPageTestConnectionsDialogTitle"), //$NON-NLS-1$
-                                        UTIL.getString("serverPageTestAdminConnectionDialogFailureMsg")); //$NON-NLS-1$
-                return;
-            }
+        display.asyncExec(new Runnable() {
             
-            // If Admin Connection is Successful, do a JDBC test ping.
-            final boolean[] jdbcSuccess = new boolean[1];
-
-            BusyIndicator.showWhile(null, new Runnable() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see java.lang.Runnable#run()
-                 */
                 @Override
                 public void run() {
-                	jdbcSuccess[0] = server.testJDBCPing(host, jdbcPort, jdbcUsername, jdbcPassword).isOK();
+        
+                    setErrorMessage(null);
+        
+                    if (teiidServer == null) {
+                        String msg = UTIL.getString("serverPageNewServerNotCompatibleWithTeiid"); //$NON-NLS-1$
+                        setErrorMessage(msg);
+                        return;
+                    }
+                    
+                    serverHyperlink.setText(server.getName());
+                    serverHyperlink.setUnderlined(true);
+
+                    TeiidJdbcInfo teiidJdbcInfo = teiidServer.getTeiidJdbcInfo();
+                    
+                    if (TeiidJdbcInfo.DEFAULT_JDBC_USERNAME.equals(jdbcUsernameText.getText()))
+                        jdbcUsernameText.setText(teiidJdbcInfo.getUsername());
+                    
+                    if (TeiidJdbcInfo.DEFAULT_JDBC_PASSWORD.equals(jdbcPasswordText.getText()))
+                        jdbcPasswordText.setText(teiidJdbcInfo.getPassword());
+                   
+                    String displayName = displayNameText.getText();
+                    if (displayName != null && displayName.length() > 0)
+                        teiidServer.setCustomLabel(displayName);
+                    
+                    updateState();
                 }
-            });
+        });
+    }
 
-            if (jdbcSuccess[0]) {
-                MessageDialog.openInformation(getShell(), UTIL.getString("serverPageTestConnectionsDialogTitle"), //$NON-NLS-1$
-                                              UTIL.getString("serverPageTestConnectionsDialogSuccessMsg")); //$NON-NLS-1$
-            } else {
-                MessageDialog.openError(getShell(), UTIL.getString("serverPageTestConnectionsDialogTitle"), //$NON-NLS-1$
-                                        UTIL.getString("serverPageTestJdbcConnectionDialogFailureMsg")); //$NON-NLS-1$
-            }
+    /**
+     * Handler for when the user control value is modified
+     * 
+     * @param newUser the new user value
+     */
+    private void handlePropertiesModified() {
+        if (teiidServer != null) {
+            teiidServer.setCustomLabel(displayNameText.getText());
+        
+            TeiidJdbcInfo teiidJdbcInfo = teiidServer.getTeiidJdbcInfo();        
+            teiidJdbcInfo.setUsername(jdbcUsernameText.getText());
+            teiidJdbcInfo.setPassword(jdbcPasswordText.getText());
+            
+            jdbcURLText.setText(teiidJdbcInfo.getUrl());
         }
-    }
-
-    /**
-     * Handler for when the user control value is modified
-     * 
-     * @param newUser the new user value
-     */
-    void handleAdminUserModified( String newUser ) {
-    	if (! valueChanged(this.adminUsername, newUser)) {
-    		return;
-    	}
-
-        this.adminUsername = newUser;
-        this.localAdminInfo.setUsername(newUser);
+        
         updateState();
-    }
-
-    /**
-     * Handler for when the user control value is modified
-     * 
-     * @param newUser the new user value
-     */
-    void handleAdminSSLChanged( boolean isSecure ) {
-        this.adminURLIsSecure = isSecure;
-        this.localAdminInfo.setSecure(isSecure);
-        updateState();
-    }
-
-    /**
-     * Handler for when the user control value is modified
-     * 
-     * @param newUser the new user value
-     */
-    void handleJdbcUserModified( String newUser ) {
-    	if (! valueChanged(this.jdbcUsername, newUser)) {
-    		return;
-    	}
-
-        this.jdbcUsername = newUser;
-        this.localJdbcInfo.setUsername(newUser);
-        updateState();
-    }
-
-    /**
-     * Handler for when the user control value is modified
-     * 
-     * @param newUser the new user value
-     */
-    void handleJdbcSSLChanged( boolean isSecure ) {
-        this.jdbcURLIsSecure = isSecure;
-        this.localJdbcInfo.setSecure(isSecure);
-        updateState();
-    }
-
-    void setUseCustomLabel( boolean useCustomLabel,
-                            String customLabel ) {
-        this.useDisplayName = useCustomLabel;
-        this.displayName = (this.useDisplayName ? customLabel : null);
-
-        updateState();
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
-     */
-    @Override
-    public void setVisible( boolean visible ) {
-        super.setVisible(visible);
-
-        if (visible) {
-            // set initial state
-            validate();
-
-            // set initial message
-            setMessage("Define the Teiid Server connection properties required to perform both JDBC and Admin tasks."); //UTIL.getString("serverPageOkStatusMsg")); //$NON-NLS-1$
-        }
-    }
-
-    /**
-     * 
-     * @return true if autoconnect is checked
-     */
-    public boolean shouldAutoConnect() {
-        return autoConnect;
     }
 
     /**
      * Updates message, message icon, and OK button enablement based on validation results
      */
     private void updateState() {
-        this.adminURLText.setText(this.localAdminInfo.getUrl());
-        this.jdbcURLText.setText(this.localJdbcInfo.getUrl());
 
         // get the current status
         validate();
@@ -1020,85 +380,79 @@ public final class ServerPage extends WizardPage implements HostProvider {
      */
     private void validate() {
         
-        // Validate that we have a known host
-        try {
-            InetAddress.getByName(this.host);
-        } catch (UnknownHostException ex) {
-            this.status = new Status(IStatus.ERROR,
-                    DqpUiConstants.PLUGIN_ID,
-                    UTIL.getString("serverPageUnknownHost", this.host)); //$NON-NLS-1$
+        if (teiidServer == null)
             return;
-        }
         
-        // validate admin connection info
-        this.status = this.localAdminInfo.validate();
-
-        if (this.status.isOK()) {
-            this.btnTestConnection.setEnabled(true);
-        } else {
-            this.btnTestConnection.setEnabled(false);
-            return;
-        }
-
         // validate JDBC connection info
-        this.status = this.localJdbcInfo.validate();
+        this.status = teiidServer.getTeiidJdbcInfo().validate();
 
         if (!this.status.isOK()) {
             return;
         }
 
-        // validate server is not currently registered
-        if (!this.isEdit && getServerManager().isRegisteredUrl(this.localAdminInfo.getUrl())) {
-            this.status = new Status(IStatus.ERROR,
-                                     DqpUiConstants.PLUGIN_ID,
-                                     UTIL.getString("serverPageExistingServerUrl", this.localAdminInfo.getUrl())); //$NON-NLS-1$
-
-            if (!this.status.isOK()) {
-                return;
-            }
-        }
-
         // now check to see if a server is already registered
-        Server changedServer = getServer();
-
-        // don't check if modifying existing server and identifying properties have not changed
-        if (((this.server == null) || !this.server.hasSameKey(changedServer)) && getServerManager().isRegistered(changedServer)) {
-            this.status = new Status(IStatus.ERROR, PLUGIN_ID, UTIL.getString("serverExistsMsg", changedServer)); //$NON-NLS-1$
-
-            if (!this.status.isOK()) {
-                return;
-            }
+        if (getServerManager().isRegistered(teiidServer)) {
+            status = new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, 
+                                UTIL.getString("serverExistsMsg", teiidServer)); //$NON-NLS-1$
+            return;
         }
 
         // if necessary, check custom label
-        if (this.useDisplayName && StringUtilities.isEmpty(this.displayName)) {
-            this.status = new Status(IStatus.ERROR, PLUGIN_ID, UTIL.getString("serverPageEmptyCustomLabelMsg")); //$NON-NLS-1$
+        if (StringUtilities.isEmpty(teiidServer.getCustomLabel())) {
+            this.status = new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, 
+                                     UTIL.getString("serverPageEmptyCustomLabelMsg")); //$NON-NLS-1$
         }
     }
     
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
-     */
     @Override
     public boolean isPageComplete() {
-        return IStatus.OK == this.status.getSeverity();
+        return teiidServer != null && IStatus.OK == this.status.getSeverity();
+    }
+
+    @Override
+    public void setVisible( boolean visible ) {
+        super.setVisible(visible);
+
+        if (visible) {
+            setDescription(UTIL.getString("serverPageDescription")); //$NON-NLS-1$
+            
+            // set initial state
+            validate();
+        }
+    }
+    
+    @Override
+    public void dispose() {
+        ServerCore.removeServerLifecycleListener(serverLifecycleListener);
+    }
+    
+    boolean shouldAutoConnect() {
+        // TODO fix
+        return true;
     }
 
     /**
-     * Processing done after wizard 'Finish' button is clicked. Wizard was not canceled.
+     * @return the server represented by the dialog inputs
      */
-    void performFinish() {
+    TeiidServer getServer() {
+        return teiidServer;
+    }
+    
+    /**
+     * Processing done after wizard 'Finish' button is clicked. Wizard was not cancelled.
+     */
+    IStatus performFinish() {
         if (! isPageComplete()) {
-            return;
+            return status;
         }
         
-        // update dialog settings
-        getDialogSettings().put(AUTO_CONNECT_KEY, this.autoConnect);
-        // If editing, set local server info values to the original server info
-        if (this.isEdit) {
-            this.server.getTeiidAdminInfo().setAll(this.localAdminInfo);
-            this.server.getTeiidJdbcInfo().setAll(this.localJdbcInfo);
-            this.server.setCustomLabel(this.displayName);
-        }
+        // Add server to the registry
+        status = getServerManager().addServer(teiidServer);
+        
+        // Server has not been started so open the editors for the user to review
+        ServerUIPlugin.editServer(teiidServer.getParent());
+        DqpUiPlugin.editTeiidServer(teiidServer);
+        
+        return status;
     }
 }

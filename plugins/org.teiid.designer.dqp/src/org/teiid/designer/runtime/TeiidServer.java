@@ -9,27 +9,30 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-
 import java.io.ByteArrayInputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerListener;
+import org.eclipse.wst.server.core.ServerEvent;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.AdminFactory;
 import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.HashCodeUtil;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.jdbc.TeiidDriver;
 
 
 /**
  *
+ *
+ * @since 8.0
  */
-public class Server implements HostProvider {
+public class TeiidServer implements HostProvider {
 
     // ===========================================================================================================================
     // Class Methods
@@ -86,6 +89,50 @@ public class Server implements HostProvider {
      */
     private String host;
 
+    /**
+     * The parent {@link IServer} of this teiid server
+     */
+    private IServer parentServer;
+
+    private IServerListener serverListener = new IServerListener() {
+
+        @Override
+        public void serverChanged(ServerEvent event) {
+            if (event == null)
+                return;
+            
+            int eventKind = event.getKind();
+            if ((eventKind & ServerEvent.SERVER_CHANGE) == 0)
+                return;
+            
+            // server change event
+            if ((eventKind & ServerEvent.STATE_CHANGE) == 0)
+                return;
+            
+            int state = event.getState();
+            
+            if (state == IServer.STATE_STOPPING || state == IServer.STATE_STOPPED) {
+                disconnect();
+                notifyRefresh();
+            } else if (state == IServer.STATE_STARTED && TeiidServerAdapterUtil.isJBossServerConnected(event.getServer())) {
+                
+                // Ask the jboss server what port we are on as it may
+                // still be set to the default port and this may be different
+                // in the jboss server.
+                String port = TeiidServerAdapterUtil.getJdbcPort(parentServer);
+                teiidJdbcInfo.setPort(port);
+                
+                try {
+                    getAdmin();
+                } catch (Exception ex) {
+                    Util.log(ex);
+                } finally {
+                    notifyRefresh();
+                }
+            }
+        }
+    };
+
     // ===========================================================================================================================
     // Constructors
     // ===========================================================================================================================
@@ -97,26 +144,40 @@ public class Server implements HostProvider {
      * @param adminInfo the server admin connection properties (never <code>null</code>)
      * @param jdbcInfo the server JDBC connection properties (never <code>null</code>)
      * @param eventManager the event manager (never <code>null</code>)
+     * @param parentServer the parent {@link IServer} (never <code>null</code>)
      * @throws IllegalArgumentException if any of the parameters are <code>null</code>
      */
-    public Server( String host,
+    public TeiidServer( String host,
                    TeiidAdminInfo adminInfo,
                    TeiidJdbcInfo jdbcInfo,
-                   EventManager eventManager ) {
+                   EventManager eventManager,
+                   IServer parentServer) {
         CoreArgCheck.isNotNull(adminInfo, "adminInfo"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(jdbcInfo, "jdbcInfo"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(eventManager, "eventManager"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(parentServer, "parentServer"); //$NON-NLS-1$
 
         this.host = host;
+        
         this.teiidAdminInfo = adminInfo;
+        this.teiidAdminInfo.setHostProvider(this);
+        
         this.teiidJdbcInfo = jdbcInfo;
+        this.teiidJdbcInfo.setHostProvider(this);
+        
         this.eventManager = eventManager;
+        this.parentServer = parentServer;
+        
+        if (parentServer.getServerState() != IServer.STATE_STARTED)
+            disconnect();
+        
+        parentServer.addServerListener(serverListener);
     }
 
     // ===========================================================================================================================
     // Methods
     // ===========================================================================================================================
-
+    
     /**
      * Perform cleanup
      */
@@ -144,34 +205,31 @@ public class Server implements HostProvider {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
-    public boolean equals( Object obj ) {
-        if (this == obj) {
-            return true;
-        }
-
-        if ((obj == null) || (getClass() != obj.getClass())) {
-            return false;
-        }
-
-        Server otherServer = (Server) obj;
-
-        if (!getTeiidAdminInfo().equals(otherServer.getTeiidAdminInfo())) {
-            return false;
-        }
-
-        if (!getTeiidJdbcInfo().equals(otherServer.getTeiidJdbcInfo())) {
-            return false;
-        }
-
-        return equivalent(getHost(), otherServer.getHost()) && equivalent(getCustomLabel(), otherServer.getCustomLabel())
-               && getTeiidAdminInfo().equals(otherServer.getTeiidAdminInfo())
-               && getTeiidJdbcInfo().equals(otherServer.getTeiidJdbcInfo());
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        TeiidServer other = (TeiidServer)obj;
+        if (this.admin == null) {
+            if (other.admin != null) return false;
+        } else if (!this.admin.equals(other.admin)) return false;
+        if (this.eventManager == null) {
+            if (other.eventManager != null) return false;
+        } else if (!this.eventManager.equals(other.eventManager)) return false;
+        if (this.host == null) {
+            if (other.host != null) return false;
+        } else if (!this.host.equals(other.host)) return false;
+        if (this.parentServer == null) {
+            if (other.parentServer != null) return false;
+        } else if (!this.parentServer.equals(other.parentServer)) return false;
+        if (this.teiidAdminInfo == null) {
+            if (other.teiidAdminInfo != null) return false;
+        } else if (!this.teiidAdminInfo.equals(other.teiidAdminInfo)) return false;
+        if (this.teiidJdbcInfo == null) {
+            if (other.teiidJdbcInfo != null) return false;
+        } else if (!this.teiidJdbcInfo.equals(other.teiidJdbcInfo)) return false;
+        return true;
     }
 
     public ExecutionAdmin getAdmin() throws Exception {
@@ -180,8 +238,7 @@ public class Server implements HostProvider {
             if (getTeiidAdminInfo().getPassword() != null) {
                 pwd = getTeiidAdminInfo().getPassword().toCharArray();
             }
-            this.admin = new ExecutionAdmin(AdminFactory.getInstance()
-                                                        .createAdmin(getHost(), getTeiidAdminInfo().getPortNumber(), getTeiidAdminInfo().getUsername(), pwd),
+            this.admin = new ExecutionAdmin(AdminFactory.getInstance().createAdmin(getHost(), getTeiidAdminInfo().getPortNumber(), getTeiidAdminInfo().getUsername(), pwd),
                                             this,
                                             this.eventManager);
             this.admin.load();
@@ -196,6 +253,15 @@ public class Server implements HostProvider {
 
     public TeiidJdbcInfo getTeiidJdbcInfo() {
         return teiidJdbcInfo;
+    }
+    
+    /**
+     * An appropriate name for this teiid server
+     * 
+     * @return {@link #getCustomLabel()} if available otherwise {@link #getUrl()}
+     */
+    public String getDisplayName() {
+        return getCustomLabel() != null ? getCustomLabel() : getUrl();
     }
 
     /**
@@ -233,15 +299,26 @@ public class Server implements HostProvider {
 
         return this.host;
     }
-
+    
     /**
-     * {@inheritDoc}
-     * 
-     * @see java.lang.Object#hashCode()
+     * @return the parentServer
      */
+    public IServer getParent() {
+        return this.parentServer;
+    }
+
+
     @Override
     public int hashCode() {
-        return HashCodeUtil.hashCode(0, getHost(), getCustomLabel(), getTeiidAdminInfo(), getTeiidJdbcInfo());
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.admin == null) ? 0 : this.admin.hashCode());
+        result = prime * result + ((this.eventManager == null) ? 0 : this.eventManager.hashCode());
+        result = prime * result + ((this.host == null) ? 0 : this.host.hashCode());
+        result = prime * result + ((this.parentServer == null) ? 0 : this.parentServer.hashCode());
+        result = prime * result + ((this.teiidAdminInfo == null) ? 0 : this.teiidAdminInfo.hashCode());
+        result = prime * result + ((this.teiidJdbcInfo == null) ? 0 : this.teiidJdbcInfo.hashCode());
+        return result;
     }
 
     /**
@@ -251,7 +328,7 @@ public class Server implements HostProvider {
      * @return <code>true</code> if the servers have the same key
      * @throws IllegalArgumentException if the argument is <code>null</code>
      */
-    public boolean hasSameKey( Server otherServer ) {
+    public boolean hasSameKey( TeiidServer otherServer ) {
         CoreArgCheck.isNotNull(otherServer, "otherServer"); //$NON-NLS-1$
         return (equivalent(getUrl(), otherServer.getUrl()) && equivalent(getTeiidAdminInfo().getUsername(),
                                                                          otherServer.getTeiidAdminInfo().getUsername()));
@@ -307,21 +384,6 @@ public class Server implements HostProvider {
     }
 
     /**
-     * @param host the new host value (<code>null</code> if default host should be used)
-     */
-    public void setHost( String host ) {
-        this.host = host;
-    }
-
-    public void setTeiidAdminInfo( TeiidAdminInfo adminInfo ) {
-        this.teiidAdminInfo = adminInfo;
-    }
-
-    public void setTeiidJdbcInfo( TeiidJdbcInfo jdbcInfo ) {
-        this.teiidJdbcInfo = jdbcInfo;
-    }
-
-    /**
      * Attempts to establish communication with the specified server for testing purposes only.
      * 
      * This results in the connection being closed.
@@ -341,27 +403,33 @@ public class Server implements HostProvider {
         return Status.OK_STATUS;
     }
     
+    /**
+     * Test the jdbc connection
+     * 
+     * @param host
+     * @param port
+     * @param username
+     * @param password
+     * 
+     * @return status as to the ping's success
+     */
     public IStatus testJDBCPing(String host, String port, String username, String password) {
     	Connection teiidJdbcConnection = null;
+    	String url = "jdbc:teiid:ping@mm://"+host+':'+port; //$NON-NLS-1$
+        
 		try {
-			
 			Admin adminApi = getAdmin().getAdminApi();
- 
-<<<<<<< Updated upstream
-			adminApi.deployVDB("ping-vdb.xml", new ByteArrayInputStream(ServerUtils.TEST_VDB.getBytes())); //$NON-NLS-1$
-=======
-			adminApi.deploy("ping-vdb.xml", (InputStream)new ByteArrayInputStream(ServerUtils.TEST_VDB.getBytes())); //$NON-NLS-1$
->>>>>>> Stashed changes
+			adminApi.deploy("ping-vdb.xml", new ByteArrayInputStream(TeiidServerUtils.TEST_VDB.getBytes())); //$NON-NLS-1$
+			
 			try{
-				String url = "jdbc:teiid:ping@mm://"+host+':'+port+";user="+username+";password="+password+';';  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				
-				teiidJdbcConnection = TeiidDriver.getInstance().connect(url, null);
+				String urlAndCredentials = url + ";user="+username+";password="+password+';';  //$NON-NLS-1$ //$NON-NLS-2$				
+				teiidJdbcConnection = TeiidDriver.getInstance().connect(urlAndCredentials, null);
 			   //pass
 			} catch(SQLException ex){
-				String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc"); //$NON-NLS-1$
+				String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
 	            return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
 			} finally {
-				adminApi.undeploy("ping"); //$NON-NLS-1$
+				adminApi.undeploy("ping-vdb.xml"); //$NON-NLS-1$
 				
 				if( teiidJdbcConnection != null ) {
 					teiidJdbcConnection.close();
@@ -370,10 +438,10 @@ public class Server implements HostProvider {
 		        this.admin = null;
 			}
 		} catch (AdminException ex) {
-			String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc"); //$NON-NLS-1$
+			String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
 		} catch (Exception ex) {
-			String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc"); //$NON-NLS-1$
+			String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
 		}
 		
@@ -425,5 +493,4 @@ public class Server implements HostProvider {
 
         return txt;
     }
-
 }

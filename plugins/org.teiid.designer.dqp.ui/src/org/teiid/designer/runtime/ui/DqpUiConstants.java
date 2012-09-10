@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime.ui;
 
 import java.util.ResourceBundle;
-
 import org.teiid.core.PluginUtil;
 import org.teiid.core.util.PluginUtilImpl;
 
@@ -63,7 +62,7 @@ public interface DqpUiConstants {
 
         String SQL_RESULTSET_PROCESSOR = /*EXT_PREFIX + DOT + */"sqlResultSetProcessor"; //$NON-NLS-1$
 
-        String CONNECTORS_VIEW_ID = /*PLUGIN_ID + DOT + */"connectorsView"; //$NON-NLS-1$
+        String CONNECTORS_VIEW_ID = "org.teiid.designer.runtime.ui.views.Teiid"; //$NON-NLS-1$
     }
 
     interface Images {

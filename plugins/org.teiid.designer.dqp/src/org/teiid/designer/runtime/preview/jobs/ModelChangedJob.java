@@ -12,7 +12,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 import org.teiid.designer.runtime.preview.PreviewManager;
@@ -38,7 +38,7 @@ public final class ModelChangedJob extends CompositePreviewJob {
      */
     public ModelChangedJob( IFile changedModel,
                             PreviewContext context,
-                            Server previewServer ) throws Exception {
+                            TeiidServer previewServer ) throws Exception {
         super(NLS.bind(Messages.ModelChangedJob, changedModel), context, previewServer, true); // run jobs in sequence
         assert PreviewManager.isPreviewableResource(changedModel) : "model is not previewable" + changedModel.getFullPath(); //$NON-NLS-1$
         this.changedModel = changedModel;
@@ -61,7 +61,7 @@ public final class ModelChangedJob extends CompositePreviewJob {
      * @param previewServer the server where preview is being done (may be <code>null</code>)
      * @throws Exception if there is a problem with the Preview VDB
      */
-    private void process( Server previewServer ) throws Exception {
+    private void process( TeiidServer previewServer ) throws Exception {
         PreviewContext context = getContext();
 
         try {
