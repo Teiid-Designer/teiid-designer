@@ -11,7 +11,6 @@ import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_SOURCE_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_VISIBLE;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,9 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -543,14 +540,19 @@ public final class VdbModelEntry extends VdbEntry {
                 Resource[] refs = getFinder().findReferencesFrom(model, true, false);
 
                 if (refs != null) {
-                    for (final Resource importedModel : refs) {
-                    	java.net.URI uri = java.net.URI.create(importedModel.getURI().toString());
-                        IFile[] modelFiles = ModelerCore.getWorkspace().getRoot().findFilesForLocationURI(uri);
-                        final IPath name = modelFiles[0].getFullPath();
+                    for (final Resource importedModel : refs) { 
+                        // Coded to getFile method to avoid conversion between java.net.URI and emf URI,
+                        // to avoid issues with UNC path on windows
+                        IFile modelFile = getFile(importedModel);
+                        IPath name = null;
+                        if(modelFile!=null) {
+                            name = modelFile.getFullPath();
+                        }
+                        
                         VdbModelEntry importedEntry = null;
 
                         for (final VdbModelEntry entry : getVdb().getModelEntries()) {
-                            if (name.equals(entry.getName())) {
+                            if (name!=null && name.equals(entry.getName())) {
                                 importedEntry = entry;
                                 break;
                             }
@@ -569,6 +571,23 @@ public final class VdbModelEntry extends VdbEntry {
         } catch (final Exception error) {
             throw CoreModelerPlugin.toRuntimeException(error);
         }
+    }
+
+    /*
+     * Get the IFile for the supplied Resource.  Avoid the conversion between the EMF URI and java.net.URI
+     */
+    private IFile getFile(Resource resource) {
+        IFile resultFile = null;
+        if (resource != null)
+        {
+            URI uri = resource.getURI();
+
+            String fileString = URI.decode(uri.path());
+            
+            resultFile = ModelerCore.getWorkspace().getRoot().getFileForLocation(new Path(fileString));
+
+        }
+        return resultFile;
     }
 
     /**
