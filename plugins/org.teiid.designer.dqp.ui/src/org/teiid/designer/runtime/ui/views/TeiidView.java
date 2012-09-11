@@ -48,7 +48,6 @@ import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 import org.teiid.adminapi.Model;
 import org.teiid.core.util.CoreStringUtil;
@@ -304,7 +303,7 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
 
         initKeyListener();
         
-        ServerCore.addServerLifecycleListener(serversListener);
+        DqpPlugin.getInstance().getServersProvider().addServerLifecycleListener(serversListener);
         
         // Populate the jboss server combo box which
         // should also populate the viewer as well
@@ -319,7 +318,7 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
     private void populateJBossServerCombo() {
         serverMap.clear();
 
-        IServer[] servers = ServerCore.getServers();
+        IServer[] servers = DqpPlugin.getInstance().getServersProvider().getServers();
         for (IServer server : servers) {
             if (TeiidServerAdapterUtil.isJBossServer(server)) {
                 serverMap.add(server);

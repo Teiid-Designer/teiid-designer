@@ -21,7 +21,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerLifecycleListener;
+import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +37,49 @@ import org.teiid.core.util.SmartTestDesignerSuite;
  * 
  */
 public class ServerManagerTest {
+    
+    private class TestServersProvider implements IServersProvider {
+        
+        private final String[] HOSTS = new String[] { "localhost", "myserver.com" };
+        
+        private final int[] PORTS = new int[] { 8080, 8180, 8280, 31443, 31444 };
+        
+        private List<IServer> servers = new ArrayList<IServer>();
+        
+        /**
+         * Create new instance
+         */
+        public TestServersProvider() {
+            
+            for (int port : PORTS) {
+                JBoss7Server mockJBossServer = mock(JBoss7Server.class);
+                when(mockJBossServer.getManagementPort()).thenReturn(port);
+                
+                for (String host : HOSTS) {
+                    IServer mockServer = mock(IServer.class);
+                    when(mockServer.getHost()).thenReturn(host);
+                    when(mockServer.loadAdapter(JBoss7Server.class, null)).thenReturn(mockJBossServer);
+                
+                    servers.add(mockServer);
+                }
+            }
+        }
+        
+        @Override
+        public void removeServerLifecycleListener(IServerLifecycleListener serversListener) {
+            // do nothing
+        }
+        
+        @Override
+        public IServer[] getServers() {
+            return servers.toArray(new IServer[0]);
+        }
+        
+        @Override
+        public void addServerLifecycleListener(IServerLifecycleListener serversListener) {
+            // do nothing
+        }
+    }
 
     private static final String RESTORED_SERVER1_URL = "mm://localhost:8080";
     private static final String RESTORED_SERVER1_USER = "user8080";
@@ -46,6 +93,8 @@ public class ServerManagerTest {
     private static final String SERVER1_URL = "mm://server:4321";
 
     private TeiidServerManager mgr;
+    
+    private IServersProvider serversProvider = new TestServersProvider();
 
     @Mock
     private TeiidServer server1;
@@ -53,7 +102,8 @@ public class ServerManagerTest {
     @Before
     public void beforeEach() throws Exception {
         MockitoAnnotations.initMocks(this);
-        this.mgr = new TeiidServerManager(null, null);
+        this.mgr = new TeiidServerManager(null, null, serversProvider);
+        
     }
     
         
@@ -193,7 +243,7 @@ public class ServerManagerTest {
         // setup
         MockObjectFactory.createModelContainer();
 
-        this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()) + File.separator + "oldregistrydata", null);
+        this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()) + File.separator + "oldregistrydata", null, serversProvider);
         this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(3));
 
@@ -218,7 +268,7 @@ public class ServerManagerTest {
         // setup
         MockObjectFactory.createModelContainer();
 
-        this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()), null);
+        this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()), null, serversProvider);
         this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(2));
 

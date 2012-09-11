@@ -30,7 +30,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.core.util.Base64;
@@ -237,6 +236,12 @@ public final class TeiidServerManager implements EventManager {
         }      
     };
 
+    /**
+     * The provider used for accessing the collection of available {@link IServer}s
+     * rather than relying on {@link parentServersProvider} directly, which makes unit testing difficult
+     */
+    private IServersProvider parentServersProvider;
+
     // ===========================================================================================================================
     // Constructors
     // ===========================================================================================================================
@@ -244,10 +249,13 @@ public final class TeiidServerManager implements EventManager {
     /**
      * @param stateLocationPath the directory where the {@link TeiidServer} registry} is persisted (may be <code>null</code> if
      *        persistence is not desired)
+     * @param passwordProvider 
+     * @param parentServersProvider 
      */
-    public TeiidServerManager( String stateLocationPath, IPasswordProvider passwordProvider ) {
+    public TeiidServerManager( String stateLocationPath, IPasswordProvider passwordProvider, IServersProvider parentServersProvider ) {
         this.teiidServers = new ArrayList<TeiidServer>();
         this.stateLocationPath = stateLocationPath;
+        this.parentServersProvider = parentServersProvider;
         this.listeners = new CopyOnWriteArrayList<IExecutionConfigurationListener>();
 
         // construct Preview VDB Manager
@@ -267,7 +275,7 @@ public final class TeiidServerManager implements EventManager {
         this.previewManager = tempPreviewManager;
         this.state = RuntimeState.STARTED;
         
-        ServerCore.addServerLifecycleListener(serversListener);
+        parentServersProvider.addServerLifecycleListener(serversListener);
     }
 
     // ===========================================================================================================================
@@ -724,7 +732,7 @@ public final class TeiidServerManager implements EventManager {
     }
     
     private IServer findParentServer(String host, TeiidAdminInfo teiidAdminInfo) throws OrphanedTeiidServerException {
-        IServer[] servers = ServerCore.getServers();
+        IServer[] servers = parentServersProvider.getServers();
         for (IServer server : servers) {
             if (! host.equals(server.getHost()))
                 continue;
@@ -771,7 +779,7 @@ public final class TeiidServerManager implements EventManager {
      */
     public void shutdown( IProgressMonitor monitor ) throws Exception {
         
-        ServerCore.removeServerLifecycleListener(serversListener);
+        parentServersProvider.removeServerLifecycleListener(serversListener);
         
         // return if already being shutdown
         if ((this.state == RuntimeState.SHUTTING_DOWN) || (this.state == RuntimeState.SHUTDOWN)) return;

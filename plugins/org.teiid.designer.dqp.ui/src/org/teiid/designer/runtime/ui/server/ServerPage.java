@@ -30,10 +30,10 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
@@ -109,7 +109,7 @@ public final class ServerPage extends WizardPage {
         
         setPageComplete(false);
         
-        ServerCore.addServerLifecycleListener(serverLifecycleListener);
+        DqpPlugin.getInstance().getServersProvider().addServerLifecycleListener(serverLifecycleListener);
         status = Status.CANCEL_STATUS;
     }
 
@@ -177,11 +177,11 @@ public final class ServerPage extends WizardPage {
                 // since this page is in charge of that in this case.
                 
                 IServerLifecycleListener serverLifecycleListener = getServerManager().getServerLifeCycleListener();
-                ServerCore.removeServerLifecycleListener(serverLifecycleListener);
+                DqpPlugin.getInstance().getServersProvider().removeServerLifecycleListener(serverLifecycleListener);
                 
                 ServerUIUtil.showNewServerWizard(ServerPage.this.getShell(), null, null, null);
                 
-                ServerCore.addServerLifecycleListener(serverLifecycleListener);
+                DqpPlugin.getInstance().getServersProvider().addServerLifecycleListener(serverLifecycleListener);
             }
         });
     }
@@ -423,7 +423,7 @@ public final class ServerPage extends WizardPage {
     
     @Override
     public void dispose() {
-        ServerCore.removeServerLifecycleListener(serverLifecycleListener);
+        DqpPlugin.getInstance().getServersProvider().removeServerLifecycleListener(serverLifecycleListener);
     }
     
     boolean shouldAutoConnect() {

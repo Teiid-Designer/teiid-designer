@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.wst.server.core.IServer;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.PluginUtil;
 import org.teiid.core.event.IChangeNotifier;
@@ -76,6 +77,11 @@ public class DqpPlugin extends Plugin {
     private TeiidServerManager serverMgr;
 
     /**
+     * Provider of the {@link IServer}s collection
+     */
+    private IServersProvider serversProvider;
+    
+    /**
      * The password provider to be used in the server manager's preview manager
      */
     private IPasswordProvider passwordProvider;
@@ -134,6 +140,18 @@ public class DqpPlugin extends Plugin {
     public void setPasswordProvider(IPasswordProvider passwordProvider) {
         this.passwordProvider = passwordProvider;
     }
+    
+    /**
+     * Get the provider of the collection of {@link IServer}s
+     * 
+     * @return servers provider
+     */
+    public IServersProvider getServersProvider() {
+        if (serversProvider == null)
+            serversProvider = new DefaultServersProvider();
+        
+        return serversProvider;
+    }
 
     /**
      * Cleans up the map of context helpers.
@@ -163,10 +181,12 @@ public class DqpPlugin extends Plugin {
                          PreferenceConstants.PREVIEW_TEIID_CLEANUP_ENABLED_DEFAULT);
 
     }
+    
+    
 
     private void initializeServerRegistry() throws CoreException {
         String restoreRegistryPath = getRuntimePath().toFile().getAbsolutePath();
-        this.serverMgr = new TeiidServerManager(restoreRegistryPath, passwordProvider);
+        this.serverMgr = new TeiidServerManager(restoreRegistryPath, passwordProvider, getServersProvider());
 
         // restore registry
         final IStatus status = this.serverMgr.restoreState();
@@ -220,7 +240,9 @@ public class DqpPlugin extends Plugin {
     @Override
     public void stop( final BundleContext context ) throws Exception {
         try {
-            this.serverMgr.shutdown(null);
+            if (serverMgr != null) {
+                this.serverMgr.shutdown(null);
+            }
         } finally {
             super.stop(context);
         }
