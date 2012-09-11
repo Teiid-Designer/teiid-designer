@@ -25,7 +25,10 @@ import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
  */
 public class XmlUrlConnectionInfoProvider  extends ConnectionInfoHelper implements IConnectionInfoProvider {
 
-	@Override
+    public final static String WS_CLASSNAME = "class-name"; //$NON-NLS-1$
+    public final static String WS_CONNECTION_FACTORY = "org.teiid.resource.adapter.ws.WSManagedConnectionFactory"; //$NON-NLS-1$
+
+    @Override
 	public String getDataSourcePasswordPropertyKey() {
 		return null;
 	}
@@ -52,6 +55,7 @@ public class XmlUrlConnectionInfoProvider  extends ConnectionInfoHelper implemen
 			String fileURL = fullPath.toString();
         	connectionProps.setProperty(IXmlProfileConstants.WS_ENDPOINT_KEY, fileURL);
         }
+        connectionProps.setProperty(WS_CLASSNAME, WS_CONNECTION_FACTORY);
 
         return connectionProps;
 	}

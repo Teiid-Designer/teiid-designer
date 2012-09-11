@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -40,6 +41,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
 import org.teiid.designer.vdb.Vdb;
@@ -305,6 +307,28 @@ public class ExecutionAdmin {
             }
         }
 
+        // For JDBC types, find the matching installed driver.  This is done currently by matching
+        // the profile driver classname to the installed driver classname
+        if("connector-jdbc".equals(typeName)) {
+            // Get the driver class defined on the connection profile
+            String connProfileDriverClass = properties.getProperty("driver-class");
+            
+            // Get the installed JDBC Driver mappings
+            Map<String,String> dsNameToDriverMap = TeiidServerAdapterUtil.getInstalledJDBCDriverMap(teiidServer.getParent());
+            
+            // Use the first driver name with driver class that matches connection profile
+            Set<String> keySet = dsNameToDriverMap.keySet();
+            String dsNameMatch = null;
+            for(String dsName: keySet) {
+                String dsDriverClass = dsNameToDriverMap.get(dsName);
+                if(connProfileDriverClass.equalsIgnoreCase(dsDriverClass)) {
+                    dsNameMatch=dsName;
+                    break;
+                }
+            }
+            // Change the typeName to the matched driver name
+            if(dsNameMatch!=null) typeName=dsNameMatch;
+        }
         // Verify the "typeName" exists.
         if (!this.dataSourceTypeNames.contains(typeName)) {
             throw new Exception(Util.getString("dataSourceTypeDoesNotExist", typeName, getServer())); //$NON-NLS-1$

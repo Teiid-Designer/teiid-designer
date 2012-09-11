@@ -25,7 +25,10 @@ import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
  */
 public class XmlFileConnectionInfoProvider extends ConnectionInfoHelper implements IConnectionInfoProvider {
 
-	@Override
+    public final static String FILE_CLASSNAME = "class-name"; //$NON-NLS-1$
+    public final static String FILE_CONNECTION_FACTORY = "org.teiid.resource.adapter.file.FileManagedConnectionFactory"; //$NON-NLS-1$
+
+    @Override
 	public String getDataSourcePasswordPropertyKey() {
 		// Flat file connection profile doesn't use password, but need one to prevent NPE
 		return null;
@@ -54,6 +57,7 @@ public class XmlFileConnectionInfoProvider extends ConnectionInfoHelper implemen
 			String directoryUrl = fullPath.removeLastSegments(1).toString();
         	connectionProps.setProperty(IXmlProfileConstants.TEIID_PARENT_DIRECTORY_KEY, directoryUrl);
         }
+        connectionProps.setProperty(FILE_CLASSNAME, FILE_CONNECTION_FACTORY);
 
         return connectionProps;
 	}

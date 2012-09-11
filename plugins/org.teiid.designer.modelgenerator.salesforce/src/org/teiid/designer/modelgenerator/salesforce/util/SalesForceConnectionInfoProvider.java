@@ -31,6 +31,9 @@ public class SalesForceConnectionInfoProvider extends ConnectionInfoHelper imple
     public final static String SALESFORCE_TRANSLATOR_NAME = "salesforce"; //$NON-NLS-1$
     public final static String SALESFORCE_TRANSLATOR_TYPE = "salesforce"; //$NON-NLS-1$
     public final static String SALESFORCE_PASSWORD_KEY = "password"; //$NON-NLS-1$
+    public final static String SALESFORCE_CLASSNAME_KEY = "class-name"; //$NON-NLS-1$
+    public final static String SALESFORCE_CLASSNAME = "class-name"; //$NON-NLS-1$
+    public final static String SALESFORCE_CONNECTION_FACTORY = "org.teiid.resource.adapter.salesforce.SalesForceManagedConnectionFactory"; //$NON-NLS-1$
 
     /**
      * {@inheritDoc}
@@ -87,6 +90,7 @@ public class SalesForceConnectionInfoProvider extends ConnectionInfoHelper imple
         if( password != null ) {
         	connectionProps.setProperty(SALESFORCE_DATASOURCE_PASSWORD, password);
         }
+        connectionProps.setProperty(SALESFORCE_CLASSNAME, SALESFORCE_CONNECTION_FACTORY);
         return connectionProps;
     }
 

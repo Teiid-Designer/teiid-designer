@@ -8,7 +8,9 @@
 package org.teiid.designer.runtime.adapter;
 
 import java.net.ConnectException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.dmr.ModelNode;
@@ -105,6 +107,46 @@ public abstract class TeiidServerAdapterUtil extends ModelDescriptionConstants {
         }
         
         return false;
+    }
+    
+    /**
+     * Get the mapping of Installed JDBC Driver name to Driver Class
+     * 
+     * @param server
+     * @return the Driver Name - Driver Class Map
+     * 
+     * @throws Exception
+     */
+    public static Map<String,String> getInstalledJDBCDriverMap(IServer server) throws Exception {
+        Map<String,String> resultMap = new HashMap<String,String>();
+        
+        if (server.getServerState() != IServer.STATE_STARTED)
+            return resultMap;
+        
+        ModelNode request = new ModelNode();
+        request.get(OP).set("installed-drivers-list");  //$NON-NLS-1$
+                
+        ModelNode address = new ModelNode();
+        address.add(SUBSYSTEM, "datasources"); //$NON-NLS-1$
+        request.get(OP_ADDR).set(address);
+        
+        try {
+            ModelNode operationResult = executeRequest(server, request);
+
+            List<ModelNode> driverList = operationResult.asList();
+                for (ModelNode driver : driverList) {
+                    String driverClassName = driver.get("driver-class-name").asString(); //$NON-NLS-1$
+                    String driverName = driver.get("driver-name").asString(); //$NON-NLS-1$
+                    if(driverName!=null && !driverName.trim().isEmpty()) {
+                        resultMap.put(driverName, driverClassName);
+                    }
+                }
+        } catch (Exception ex) {
+            // Failed to get mapping
+            DqpPlugin.Util.log(IStatus.ERROR, ex, "Failed to get installed driver mappings "); //$NON-NLS-1$
+        }
+        
+        return resultMap;
     }
 
     /**
