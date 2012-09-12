@@ -74,7 +74,7 @@
             configurationClass="org.teiid.datatools.connectivity.ui.TeiidDBUIConfiguration"
             default="false"
             product="Teiid"
-            version="7.x">
+            version="8.x">
       </dbUIConfiguration>
    </extension>
    <extension
@@ -84,7 +84,7 @@
             default="false"
             product="Teiid"
             supportsDebugging="false"
-            version="7.x">
+            version="8.x">
       </dbConfiguration>
    </extension> 
    <extension
