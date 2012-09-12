@@ -142,7 +142,7 @@ public class ExecutionAdmin {
         String vdbName = vdbFile.getFullPath().lastSegment();
         String vdbNameNoExt = vdbFile.getFullPath().removeFileExtension().lastSegment();
 
-        admin.undeploy(vdbName);
+        admin.deploy(vdbName, vdbFile.getContents());
 
         refreshVDBs();
 
@@ -153,7 +153,7 @@ public class ExecutionAdmin {
 
         return vdb;
     }
-
+    
     /**
      * Deploys the input Vdb archive file to the related Teiid server
      * 
