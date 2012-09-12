@@ -5,6 +5,7 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
@@ -15,7 +16,10 @@ import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
 		IConnectionInfoProvider {
 
-	@Override
+    public final static String WS_CLASSNAME = "class-name"; //$NON-NLS-1$
+    public final static String WS_CONNECTION_FACTORY = "org.teiid.resource.adapter.ws.WSManagedConnectionFactory"; //$NON-NLS-1$
+
+    @Override
 	public void setConnectionInfo(ModelResource modelResource,
 			IConnectionProfile connectionProfile)
 			throws ModelWorkspaceException {
@@ -62,7 +66,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
 
 	@Override
 	public String getDataSourceType() {
-		return "connector-ws"; //$NON-NLS-1$
+		return DataSourceConnectionConstants.DataSource.WS;
 	}
 
 	@Override
@@ -96,6 +100,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
                     SecurityType.None.name());
         }
 
+        connectionProps.setProperty(WS_CLASSNAME, WS_CONNECTION_FACTORY);
         return connectionProps;
     }
 

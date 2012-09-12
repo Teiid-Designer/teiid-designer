@@ -48,11 +48,11 @@ public interface DataSourceConnectionConstants {
          */
 
         String JDBC = "connector-jdbc"; //$NON-NLS-1$
-        String SALESFORCE = "connector-salesforce"; //$NON-NLS-1$ 
-        String LDAP = "connector-ldap"; //$NON-NLS-1$ 
-        String FILE = "connector-file"; //$NON-NLS-1$ 
+        String SALESFORCE = "teiid-connector-salesforce.rar"; //$NON-NLS-1$ 
+        String LDAP = "teiid-connector-ldap.rar"; //$NON-NLS-1$ 
+        String FILE = "teiid-connector-file.rar"; //$NON-NLS-1$ 
         String JDBC_XA = "connector-jdbc-xa"; //$NON-NLS-1$
-        String WS = "connector-ws"; //$NON-NLS-1$
+        String WS = "teiid-connector-ws.rar"; //$NON-NLS-1$
         String UNKNOWN = "connector-unknown"; //$NON-NLS-1$
         
 

@@ -158,8 +158,8 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
         } catch (Exception e) {
             if (modelResource != null) {
                 MessageDialog.openError(getShell(),
-                                        getString("errorCreatingDataSource", modelResource.getItemName()), e.getMessage()); //$NON-NLS-1$
-                DqpUiConstants.UTIL.log(IStatus.ERROR, e, getString("errorCreatingDataSource", modelResource.getItemName())); //$NON-NLS-1$
+                                        getString("errorCreatingDataSourceForModel", modelResource.getItemName()), e.getMessage()); //$NON-NLS-1$
+                DqpUiConstants.UTIL.log(IStatus.ERROR, e, getString("errorCreatingDataSourceForModel", modelResource.getItemName())); //$NON-NLS-1$
             } else {
                 MessageDialog.openError(getShell(), getString("errorCreatingDataSource"), e.getMessage()); //$NON-NLS-1$
                 DqpUiConstants.UTIL.log(IStatus.ERROR, e, getString("errorCreatingDataSource")); //$NON-NLS-1$
