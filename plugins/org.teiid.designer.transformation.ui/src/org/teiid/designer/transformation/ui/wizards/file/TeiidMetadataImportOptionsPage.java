@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.CoreStringUtil;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
@@ -124,11 +125,15 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	boolean synchronizing = false;
 
 	/**
+     * @param info the import data (cannot be <code>null</code>)
 	 * @since 4.0
 	 */
 	public TeiidMetadataImportOptionsPage(TeiidMetadataImportInfo info) {
 		super(TeiidMetadataImportOptionsPage.class.getSimpleName(), DELIMITED_TITLE);
-		this.info = info;
+
+        CoreArgCheck.isNotNull(info, "info"); //$NON-NLS-1$
+        this.info = info;
+
 		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(
 				Images.IMPORT_TEIID_METADATA));
 	}
@@ -214,9 +219,24 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		boolean isDelimitedOption = this.dataFileInfo.doUseDelimitedColumns();
     	
     	this.useHeaderForColumnNamesCB.setSelection(this.dataFileInfo.doUseHeaderForColumnNames());
-    	this.headerLineNumberText.setText(Integer.toString(this.dataFileInfo.getHeaderLineNumber()));
-    	this.delimitedFirstDataRowText.setText(Integer.toString(dataFileInfo.getFirstDataRow()));
-    	this.fixedFirstDataRowText.setText(Integer.toString(dataFileInfo.getFirstDataRow()));
+
+        { // header line number
+            final String lineNum = Integer.toString(this.dataFileInfo.getHeaderLineNumber());
+
+            if (!lineNum.equals(this.headerLineNumberText.getText())) {
+                this.headerLineNumberText.setText(lineNum);
+            }
+        }
+
+        { // data row
+            final String dataRow = Integer.toString(dataFileInfo.getFirstDataRow());
+
+            if (!dataRow.equals(this.delimitedFirstDataRowText.getText())) {
+                this.delimitedFirstDataRowText.setText(dataRow);
+            }
+        }
+
+        this.fixedFirstDataRowText.setText(Integer.toString(dataFileInfo.getFirstDataRow()));
     	
     	boolean enable = isDelimitedOption;
     	this.useHeaderForColumnNamesCB.setEnabled(enable);
@@ -1262,10 +1282,6 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     	fixedFileContentsViewer.getDocument().set(sb.toString());
     }
     
-    public TeiidMetadataFileInfo getFileInfo() {
-    	return this.dataFileInfo;
-    }
-    
 	class ColumnDataLabelProvider extends ColumnLabelProvider {
 
 		private final int columnNumber;
@@ -1334,7 +1350,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		/**
 		 * Create a new instance of the receiver.
 		 * 
-		 * @param viewer
+         * @param viewer the viewer where the editing support is being provided (cannot be <code>null</code>)
 		 */
 		public ColumnNameEditingSupport(ColumnViewer viewer) {
 			super(viewer);
@@ -1402,7 +1418,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		/**
 		 * Create a new instance of the receiver.
 		 * 
-		 * @param viewer
+		 * @param viewer the viewer where the editing support is being provided (cannot be <code>null</code>)
 		 */
 		public ColumnWidthEditingSupport(ColumnViewer viewer) {
 			super(viewer);

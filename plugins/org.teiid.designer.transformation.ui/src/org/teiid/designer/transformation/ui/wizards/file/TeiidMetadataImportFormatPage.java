@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.transformation.ui.UiConstants;
@@ -84,11 +85,15 @@ public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements
 	boolean synchronizing = false;
 
 	/**
+     * @param info the import data (cannot be <code>null</code>)
 	 * @since 4.0
 	 */
 	public TeiidMetadataImportFormatPage(TeiidMetadataImportInfo info) {
 		super(TeiidMetadataImportFormatPage.class.getSimpleName(), TITLE);
-		this.info = info;
+
+        CoreArgCheck.isNotNull(info, "info"); //$NON-NLS-1$
+        this.info = info;
+
 		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(
 				Images.IMPORT_TEIID_METADATA));
 	}
@@ -175,9 +180,14 @@ public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements
 		selectedFileText.setText(dataFileInfo.getDataFile().getName());
 
 		boolean isDelimitedOption = this.dataFileInfo.doUseDelimitedColumns();
-		
-    	this.numberPreviewLinesText.setText(Integer.toString(this.dataFileInfo.getNumberOfCachedFileLines()));
-    	
+
+		{ // number of preview lines
+		    final String numLines = Integer.toString(this.dataFileInfo.getNumberOfCachedFileLines());
+
+		    if (!numLines.equals(this.numberPreviewLinesText.getText())) {
+		        this.numberPreviewLinesText.setText(numLines);
+		    }
+		}
     	
     	this.delimitedColumnsRB.setSelection(isDelimitedOption);
     	this.fixedWidthColumnsRB.setSelection(!isDelimitedOption);
@@ -355,10 +365,4 @@ public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements
         	}
         }
     }
-    
-    public TeiidMetadataFileInfo getFileInfo() {
-    	return this.dataFileInfo;
-    }
-
-
 }
