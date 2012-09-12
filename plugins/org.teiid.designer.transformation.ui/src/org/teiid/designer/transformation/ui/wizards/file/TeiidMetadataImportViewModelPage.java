@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.CoreStringUtil;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
@@ -107,11 +108,15 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 	boolean synchronizing = false;
 
 	/**
+     * @param info the import data (cannot be <code>null</code>)
 	 * @since 4.0
 	 */
 	public TeiidMetadataImportViewModelPage(TeiidMetadataImportInfo info) {
 		super(TeiidMetadataImportViewModelPage.class.getSimpleName(), TITLE);
-		this.info = info;
+
+        CoreArgCheck.isNotNull(info, "info"); //$NON-NLS-1$
+        this.info = info;
+
 		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(
 				Images.IMPORT_TEIID_METADATA));
 	}
@@ -510,12 +515,18 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 		} else {
 			this.viewModelFileText.setText(StringUtilities.EMPTY_STRING);
 		}
-		
-		if( this.fileInfo.getViewTableName() != null ) {
-			this.viewTableNameText.setText(this.fileInfo.getViewTableName());
-		} else {
-			this.viewTableNameText.setText(StringUtilities.EMPTY_STRING);
-		}
+
+        { // view table name
+            final String viewTableName = this.fileInfo.getViewTableName();
+
+            if (viewTableName != null) {
+                if (!viewTableName.equals(viewTableName)) {
+                    this.viewTableNameText.setText(viewTableName);
+                }
+            } else {
+                this.viewTableNameText.setText(StringUtilities.EMPTY_STRING);
+            }
+        }
 
 		synchronizing = false;
 	}
@@ -626,10 +637,4 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
     	
     	return false;
 	}
-
-
-	public TeiidFileInfo getFileInfo() {
-		return this.fileInfo;
-	}
-
 }
