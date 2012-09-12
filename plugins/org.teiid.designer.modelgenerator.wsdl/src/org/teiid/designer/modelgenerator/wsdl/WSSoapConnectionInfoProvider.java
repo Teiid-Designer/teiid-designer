@@ -23,6 +23,9 @@ import org.teiid.designer.ui.common.ICredentialsCommon;
  */
 public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implements IConnectionInfoProvider, IWSProfileConstants {
 
+    public final static String WS_CLASSNAME = "class-name"; //$NON-NLS-1$
+    public final static String WS_CONNECTION_FACTORY = "org.teiid.resource.adapter.ws.WSManagedConnectionFactory"; //$NON-NLS-1$
+
     /**
      * Adds properties relating to the security access of the wsdl from the source set of properties
      * to the target set of properties.
@@ -159,6 +162,8 @@ public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implemen
         
         // Security
         addSecurityProperties(profileProperties, connectionProps, false);        
+
+        connectionProps.setProperty(WS_CLASSNAME, WS_CONNECTION_FACTORY);
 
         return connectionProps;
     }

@@ -6,6 +6,7 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 
 
@@ -15,6 +16,8 @@ import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 public class LDAPConnectionInfoProvider extends ConnectionInfoHelper implements IConnectionInfoProvider {
 	public final static String LDAP_DATASOURCE_PASSWORD = "password"; //$NON-NLS-1$
 	public final static String LDAP_DATASOURCE_URL = "url"; //$NON-NLS-1$
+    public final static String LDAP_CLASSNAME = "class-name"; //$NON-NLS-1$
+    public final static String LDAP_CONNECTION_FACTORY = "org.teiid.resource.adapter.ldap.LDAPManagedConnectionFactory"; //$NON-NLS-1$
     /* LDAP Binding Properties and sample values
      * 
      * LdapAdminUserDN
@@ -76,7 +79,7 @@ public class LDAPConnectionInfoProvider extends ConnectionInfoHelper implements 
 
     @Override
     public String getDataSourceType() {
-        return "connector-ldap"; //$NON-NLS-1$
+        return DataSourceConnectionConstants.DataSource.LDAP;
     }
 
     @Override
@@ -104,6 +107,7 @@ public class LDAPConnectionInfoProvider extends ConnectionInfoHelper implements 
         if (null != contextFactory) {
             connectionProps.setProperty(ILdapProfileConstants.CONTEXT_FACTORY, contextFactory);
         }
+        connectionProps.setProperty(LDAP_CLASSNAME, LDAP_CONNECTION_FACTORY);
 
         return connectionProps;
     }
