@@ -88,6 +88,7 @@ import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
@@ -868,6 +869,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     	if( this.sourceModelFileText.getText() != null && this.sourceModelFileText.getText().length() > -1 ) {
     		newName = this.sourceModelFileText.getText();
     		this.info.setSourceModelName(newName);
+    		this.sourceModelFilePath = this.info.getSourceModelLocation();
     		this.info.setSourceModelExists(sourceModelExists());
     		
     	}
@@ -1039,13 +1041,10 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         
         String fileText = sourceModelFileText.getText().trim();
 
-        if (fileText.length() == 0) {
-        	setThisPageComplete(Util.getString(I18N_PREFIX + "sourceFileNameMustBeSpecified"), ERROR); //$NON-NLS-1$
-            return false;
-        }
-        String fileNameMessage = ModelUtilities.validateModelName(fileText, DEFAULT_EXTENSION);
-        if (fileNameMessage != null) {
-        	setThisPageComplete(Util.getString(I18N_PREFIX + "illegalFileName", fileNameMessage), ERROR); //$NON-NLS-1$
+        IStatus status = ModelNameUtil.validate(fileText, ModelerCore.MODEL_FILE_EXTENSION, null,
+        		ModelNameUtil.IGNORE_CASE );
+        if( status.getSeverity() == IStatus.ERROR ) {
+        	setThisPageComplete(status.getMessage(), ERROR);
             return false;
         }
         

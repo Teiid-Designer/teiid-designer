@@ -186,7 +186,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     TableAndToolBar<VdbEntry> otherFilesGroup;
     TableAndToolBar<VdbDataRole> dataRolesGroup;
     private Button synchronizeAllButton;
-    private Button showImportVdbsButton;
+    Button showImportVdbsButton;
     private PropertyChangeListener vdbListener;
 
     Action cloneDataRoleAction;
@@ -412,6 +412,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                         element.synchronize(new NullProgressMonitor());
                         dataRoleResolver.modelSynchronized(element);
                         VdbEditor.this.doSave(new NullProgressMonitor());
+                        showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
                     }
                 });
             }
@@ -1304,6 +1305,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 for (final VdbEntry entry : entries) {
                     getVdb().removeEntry(entry);
                 }
+                showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
             }
         };
 
@@ -1450,6 +1452,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                 pnlTranslatorOverrides.refresh();
                                 dataRoleResolver.allSynchronized();
                                 VdbEditor.this.doSave(new NullProgressMonitor());
+                                showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
                             }
                         });
                     }
@@ -1473,7 +1476,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 	ShowImportVdbsDialog dialog = new ShowImportVdbsDialog(Display.getCurrent().getActiveShell(), getVdb());
                 	
                 	dialog.open();
-                };
+                }
             });
             showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
         }
@@ -1881,6 +1884,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 if (firstTime) {
                     WidgetUtil.pack(modelsGroup.getTable().getViewer());
                 }
+                
+                showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
             }
         };
 
@@ -1977,6 +1982,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 for (final VdbEntry entry : entries) {
                     getVdb().removeEntry(entry);
                 }
+                
+                showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
             }
         };
 

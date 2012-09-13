@@ -57,6 +57,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelResourceImpl;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.OpenableImpl;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
@@ -208,7 +209,9 @@ public class JdbcImportWizard extends AbstractWizard
      * @since 4.3
      */
     protected IWizardPage createMetadataPage() {
-        return new JdbcImportMetadataPage();
+    	JdbcImportMetadataPage page = new JdbcImportMetadataPage();
+    	page.setImporter(this.importer);
+        return page;
     }
 
     /**
@@ -217,7 +220,9 @@ public class JdbcImportWizard extends AbstractWizard
      * @since 4.3
      */
     protected IWizardPage createObjectsPage() {
-        return new JdbcImportObjectsPage();
+    	JdbcImportObjectsPage page = new JdbcImportObjectsPage();
+    	page.setImporter(this.importer);
+        return page;
     }
 
     /**
@@ -226,7 +231,9 @@ public class JdbcImportWizard extends AbstractWizard
      * @since 4.3
      */
     protected JdbcImportOptionsPage createOptionsPage() {
-        return new JdbcImportOptionsPage();
+    	JdbcImportOptionsPage page = new JdbcImportOptionsPage();
+    	page.setImporter(this.importer);
+        return page;
     }
 
     /**
@@ -648,6 +655,7 @@ public class JdbcImportWizard extends AbstractWizard
 
         // Create listener for changes to SQL connection
         this.srcPg = new JdbcSourceSelectionPage(this.importer.getSource());
+        this.srcPg.setImporter(this.importer);
         this.srcPg.addChangeListener(new IChangeListener() {
 
             @Override
@@ -718,7 +726,7 @@ public class JdbcImportWizard extends AbstractWizard
                 ModelType type = ModelType.PHYSICAL_LITERAL;
 
                 this.isVirtual = this.optionsPg.isVirtual();
-                this.isVdbSourceModel= this.optionsPg.isVdbSourceModel(); 
+                this.isVdbSourceModel= this.importer.isVdbSourceModel(); 
 
                 if( this.isVirtual ) {
                 	type = ModelType.VIRTUAL_LITERAL;
@@ -810,7 +818,7 @@ public class JdbcImportWizard extends AbstractWizard
                 }
                 
                 // Auto save the model & refresh
-                ppProcessorPack.getModelResource().save(monitor, true);
+                ((OpenableImpl)ppProcessorPack.getModelResource()).forceSave(monitor);
                 sWatch.stop();
 
                 sWatch.start(true);
@@ -870,10 +878,8 @@ public class JdbcImportWizard extends AbstractWizard
     void sqlConnectionChanged( final JdbcSourceSelectionPage page ) {
         final Connection sqlConnection = page.getConnection();
         this.connectionProfile = page.getConnectionProfile();
-        this.optionsPg.setTeiidConnection(srcPg.isTeiidConnection());
         if (sqlConnection == null) {
             this.importer.setDatabase(null);
-//            this.connectionProfile = null;
         } else {
             try {
                 final JdbcSource src = (JdbcSource)ModelerCore.getModelEditor().copy(page.getSource());

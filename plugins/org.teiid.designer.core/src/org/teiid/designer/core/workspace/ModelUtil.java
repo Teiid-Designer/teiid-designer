@@ -102,6 +102,8 @@ public class ModelUtil {
      */
     private static String VDB_NAME_KEY = "core:vdb-name"; //$NON-NLS-1$
     
+    private static String LOCKED_NAME_KEY = "core:locked"; //$NON-NLS-1$
+    
     private static final String[] EXTENSIONS = new String[] {EXTENSION_XML, EXTENSION_XMI};
 
     private static XmiHeaderCache cache;
@@ -627,7 +629,7 @@ public class ModelUtil {
      * @return true if resource is read-only
      */
     public static boolean isIResourceReadOnly( final IResource iResource ) {
-    	if(ModelUtil.isVdbSourceObject(iResource)) {
+    	if(ModelUtil.isLockedSourceObject(iResource)) {
     		return true;
     	}
         final ResourceAttributes attributes = iResource.getResourceAttributes();
@@ -814,6 +816,37 @@ public class ModelUtil {
     		try {
     			String vdbSourceModelName = ModelUtil.getModelAnnotationPropertyValue((IFile)mr.getUnderlyingResource(), VDB_NAME_KEY);
     			return vdbSourceModelName != null;
+	    	} catch (ModelWorkspaceException ex) {
+				CoreMetamodelPlugin.Util.log(IStatus.ERROR, ex, ex.getMessage());
+			}
+    	}
+
+    	return false;
+    }
+    
+    /**
+     * Returns whether or not 
+     * @param obj the target object
+     * @return true if the source object is within a vdb source model or is a source model
+     */
+    public static boolean isLockedSourceObject( final Object obj) {
+    	ModelResource mr = null;
+    	if( obj instanceof EObject ) {
+    		mr = ModelerCore.getModelEditor().findModelResource((EObject)obj);
+    	} else if( obj instanceof ModelResource ) {
+    		mr = (ModelResource)obj;
+    	} else if( obj instanceof IFile ) {
+    		try {
+    			mr = ModelUtil.getModelResource((IFile)obj, true);
+
+			} catch (ModelWorkspaceException ex) {
+				// Do nothing
+			}
+    	}
+    	if( mr != null && mr.isLoaded()) {
+    		try {
+    			String lockedValue = ModelUtil.getModelAnnotationPropertyValue((IFile)mr.getUnderlyingResource(), LOCKED_NAME_KEY);
+    			return lockedValue != null;
 	    	} catch (ModelWorkspaceException ex) {
 				CoreMetamodelPlugin.Util.log(IStatus.ERROR, ex, ex.getMessage());
 			}

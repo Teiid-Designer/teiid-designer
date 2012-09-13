@@ -2223,9 +2223,7 @@ public class TransformationSqlHelper implements SqlConstants {
             boolean hasResource = groupEObj.eResource() != null ? true : false;
             String tableFullName = tableAspect.getName(groupEObj);
             if (hasResource) {
-            	if( ! TransformationHelper.isVdbSourceModelObject(groupEObj)) {
-            		tableFullName = tableAspect.getFullName(groupEObj);
-            	}
+            	tableFullName = tableAspect.getFullName(groupEObj);
             }
             String tableShortName = tableAspect.getName(groupEObj);
             // Get MetadataID for fullName

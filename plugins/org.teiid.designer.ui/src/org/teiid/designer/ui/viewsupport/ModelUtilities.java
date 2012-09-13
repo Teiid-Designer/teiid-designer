@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -24,6 +25,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -50,6 +52,7 @@ import org.teiid.designer.core.validation.rules.CoreValidationRulesUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
@@ -739,68 +742,68 @@ public abstract class ModelUtilities implements UiConstants {
         return result;
     }
 
-    /**
-     * Determine if the proposed model name is valid, and return an error message if it is not.
-     * 
-     * @param proposedName
-     * @return null if the name is valid, or an error message if it is not.
-     */
-    public static String validateModelName( String proposedName,
-                                            String fileExtension ) {
-        if (proposedName == null || proposedName.equals(PluginConstants.EMPTY_STRING)) {
-            return Util.getString("ModelUtilities.zeroLengthFileMessage"); //$NON-NLS-1$
-        }
-        
-        boolean removedValidExtension = false;
-        if (proposedName.endsWith(fileExtension)) {
-            proposedName = proposedName.substring(0, proposedName.lastIndexOf(fileExtension));
-            removedValidExtension = true;
-        }
-
-        if (proposedName.indexOf('.') != -1) {
-            if (!removedValidExtension) {
-                return Util.getString("ModelUtilities.illegalExtensionMessage", fileExtension); //$NON-NLS-1$
-            }
-        }
-
-        // BML TODO: Add I18n PROPERTY For zeroLengthFileMessage
-        if (proposedName.equals(PluginConstants.EMPTY_STRING)) {
-            return Util.getString("ModelUtilities.zeroLengthFileMessage"); //$NON-NLS-1$
-        }
-
-        final ValidationResultImpl result = new ValidationResultImpl(proposedName);
-        CoreValidationRulesUtil.validateStringNameChars(result, proposedName, null);
-        if (result.hasProblems()) {
-            return result.getProblems()[0].getMessage();
-        }
-
-        if (fileExtension != null) {
-            String reservedError = null;
-            if (fileExtension.equalsIgnoreCase(DOT_MODEL_FILE_EXTENSION) || fileExtension.equalsIgnoreCase(MODEL_FILE_EXTENSION)) {
-                reservedError = modelNameReservedValidation(proposedName);
-
-                if (reservedError != null) {
-                    return reservedError;
-                }
-            } else if (fileExtension.equalsIgnoreCase(DOT_VDB_FILE_EXTENSION)
-                       || fileExtension.equalsIgnoreCase(VDB_FILE_EXTENSION)) {
-                reservedError = vdbNameReservedValidation(proposedName);
-
-                if (reservedError != null) {
-                    return reservedError;
-                }
-            } else if (fileExtension.equalsIgnoreCase(DOT_XSD_FILE_EXTENSION)
-                       || fileExtension.equalsIgnoreCase(XSD_FILE_EXTENSION)) {
-                reservedError = schemaNameReservedValidation(proposedName);
-
-                if (reservedError != null) {
-                    return reservedError;
-                }
-            }
-        }
-
-        return null;
-    }
+//    /**
+//     * Determine if the proposed model name is valid, and return an error message if it is not.
+//     * 
+//     * @param proposedName
+//     * @return null if the name is valid, or an error message if it is not.
+//     */
+//    public static String validateModelName( String proposedName,
+//                                            String fileExtension ) {
+//        if (proposedName == null || proposedName.equals(PluginConstants.EMPTY_STRING)) {
+//            return Util.getString("ModelUtilities.zeroLengthFileMessage"); //$NON-NLS-1$
+//        }
+//        
+//        boolean removedValidExtension = false;
+//        if (proposedName.endsWith(fileExtension)) {
+//            proposedName = proposedName.substring(0, proposedName.lastIndexOf(fileExtension));
+//            removedValidExtension = true;
+//        }
+//
+//        if (proposedName.indexOf('.') != -1) {
+//            if (!removedValidExtension) {
+//                return Util.getString("ModelUtilities.illegalExtensionMessage", fileExtension); //$NON-NLS-1$
+//            }
+//        }
+//
+//        // BML TODO: Add I18n PROPERTY For zeroLengthFileMessage
+//        if (proposedName.equals(PluginConstants.EMPTY_STRING)) {
+//            return Util.getString("ModelUtilities.zeroLengthFileMessage"); //$NON-NLS-1$
+//        }
+//
+//        final ValidationResultImpl result = new ValidationResultImpl(proposedName);
+//        CoreValidationRulesUtil.validateStringNameChars(result, proposedName, null);
+//        if (result.hasProblems()) {
+//            return result.getProblems()[0].getMessage();
+//        }
+//
+//        if (fileExtension != null) {
+//            String reservedError = null;
+//            if (fileExtension.equalsIgnoreCase(DOT_MODEL_FILE_EXTENSION) || fileExtension.equalsIgnoreCase(MODEL_FILE_EXTENSION)) {
+//                reservedError = modelNameReservedValidation(proposedName);
+//
+//                if (reservedError != null) {
+//                    return reservedError;
+//                }
+//            } else if (fileExtension.equalsIgnoreCase(DOT_VDB_FILE_EXTENSION)
+//                       || fileExtension.equalsIgnoreCase(VDB_FILE_EXTENSION)) {
+//                reservedError = vdbNameReservedValidation(proposedName);
+//
+//                if (reservedError != null) {
+//                    return reservedError;
+//                }
+//            } else if (fileExtension.equalsIgnoreCase(DOT_XSD_FILE_EXTENSION)
+//                       || fileExtension.equalsIgnoreCase(XSD_FILE_EXTENSION)) {
+//                reservedError = schemaNameReservedValidation(proposedName);
+//
+//                if (reservedError != null) {
+//                    return reservedError;
+//                }
+//            }
+//        }
+//
+//        return null;
+//    }
 
     /**
      * Determine if the proposed model name is reserved name or not, and return an error message if it IS.
@@ -1745,5 +1748,48 @@ public abstract class ModelUtilities implements UiConstants {
     	}
     	
     	return null;
+    }
+    
+    /**
+     * Method to determine if model name exists in project or not
+     * @param name
+     * @param res
+     * @return
+     * @throws CoreException 
+     */
+    public static IStatus doesModelNameExistInProject(String name, IResource res) {
+    	IStatus status = Status.OK_STATUS;
+    	
+    	
+    	try {
+			IProject proj = res.getProject();
+			
+			for( IResource iRes : proj.members() ) {
+				if( iRes instanceof IContainer ) {
+					if( ModelUtilities.containsModelWithName(name, (IContainer)iRes) ) {
+						return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, Util.getString("modelNameValidation.sameNameModelExistsInProjectMessage", name)); //$NON-NLS-1$
+					}
+				} else {
+					if( iRes.getName().equals(name) ){
+						return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, Util.getString("modelNameValidation.sameNameModelExistsInProjectMessage", name)); //$NON-NLS-1$
+					}
+				}
+			}
+		} catch (CoreException ex) {
+			status = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, Util.getString("sameNameModelExistsInProjectMessage", name)); //$NON-NLS-1$
+			UiConstants.Util.log(IStatus.ERROR, ex, ex.getMessage());
+		}
+
+    	return status;
+    }
+    
+    private static boolean containsModelWithName(String name, IContainer container) throws CoreException {
+    	for (IResource res : container.members() ) {
+    		if( res.getName().equals(name) ){
+    			return true;
+    		}
+    	}
+    	
+    	return false;
     }
 }

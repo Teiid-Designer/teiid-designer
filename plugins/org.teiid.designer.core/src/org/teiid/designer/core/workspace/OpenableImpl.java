@@ -314,6 +314,21 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
             ((ModelBufferImpl)buf).refresh(pm); // refresh and update mod stamp here
         }
     }
+    
+	/**
+	 * Needed an special save method for JDBC Importer in order to create and save a model with the "locked" property in it.
+	 * 
+	 * @param pm the process monitor
+	 * @throws ModelWorkspaceException throws exception
+	 */
+	public void forceSave( IProgressMonitor pm) throws ModelWorkspaceException {
+        ModelBuffer buf = getBuffer();
+        if (buf != null) { // some Openables (like a JavaProject) don't have a buffer
+            buf.save(pm, true); // can't refresh inside this (threading issues)
+            this.makeConsistent(pm); // update the element info of this element
+            ((ModelBufferImpl)buf).refresh(pm); // refresh and update mod stamp here
+        }
+    }
 
     // /**
     // * Find enclosing package fragment root if any

@@ -42,6 +42,7 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 import org.teiid.designer.webservice.IWebServiceModelBuilder;
@@ -493,7 +494,9 @@ public class XmlModelSelectionPage extends AbstractWizardPage
                 }
 
                 // validate characters in the proposed name
-                if (ModelUtilities.validateModelName(this.modelName, ModelUtil.EXTENSION_XMI) == null) {
+                IStatus status = ModelNameUtil.validate(this.modelName, ModelerCore.MODEL_FILE_EXTENSION, null,
+                		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES | ModelNameUtil.NO_EXISTING_MODEL_AT_LOCATION);
+                if (status.getSeverity() != IStatus.ERROR ) {
                     String name = getModelPath(temp, this.modelName);
                     boolean exists = new File(name).exists();
 

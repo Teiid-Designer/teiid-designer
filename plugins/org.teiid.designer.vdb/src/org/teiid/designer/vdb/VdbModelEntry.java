@@ -541,27 +541,17 @@ public final class VdbModelEntry extends VdbEntry {
             // Also add imported models if not a preview
             if (!getVdb().isPreview()) {
                 Resource[] refs = getFinder().findReferencesFrom(model, true, false);
-
+                Set<String> importVdbNames = new HashSet<String>();
                 if (refs != null) {
                     for (final Resource importedModel : refs) {
                     	java.net.URI uri = java.net.URI.create(importedModel.getURI().toString());
                         IFile[] modelFiles = ModelerCore.getWorkspace().getRoot().findFilesForLocationURI(uri);
                         final IPath name = modelFiles[0].getFullPath();
                         
-                        // Check Model File to see if it's a physical VDB source model
-                        final String vdbSourceModelName = ModelUtil.getModelAnnotationPropertyValue(modelFiles[0], VdbConstants.VDB_NAME_KEY);
-                        if( vdbSourceModelName != null ) {
-                        	boolean exists = false;
-                        	// Add this source name to import-vdbs IF it doesn't already exist as an import vdb
-                        	for( VdbImportVdbEntry importEntry : getVdb().getImportVdbEntries()) {
-                        		if( vdbSourceModelName.equalsIgnoreCase(importEntry.getName()) ) {
-                        			exists = true;
-                        			break;
-                        		}
-                        	}
-                        	if( !exists ) {
-                        		getVdb().addImportVdb(vdbSourceModelName);
-                        	}
+                        // Check Model File to see if it contains a vdb name property
+                        final String importVdbName = ModelUtil.getModelAnnotationPropertyValue(modelFiles[0], VdbConstants.VDB_NAME_KEY);
+                        if( importVdbName != null ) {
+                        	importVdbNames.add(importVdbName);
                         } else {
 	                        VdbModelEntry importedEntry = null;
 	
@@ -578,6 +568,10 @@ public final class VdbModelEntry extends VdbEntry {
                         }
                     }
                 }
+                
+                // Process for any import VDBs
+                // if list is empty, then there may be import VDB's that need to get removed from the VDB
+                getVdb().registerImportVdbs(importVdbNames, this.getName().toString(), monitor);
             }
             // Copy snapshot of workspace file index to VDB folder
             // TODO: If index name of workspace file can change (?), we have to delete the old index and update our index name

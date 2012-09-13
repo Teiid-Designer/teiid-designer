@@ -50,6 +50,7 @@ import org.teiid.designer.datatools.ui.actions.EditConnectionProfileAction;
 import org.teiid.designer.jdbc.JdbcException;
 import org.teiid.designer.jdbc.JdbcManager;
 import org.teiid.designer.jdbc.JdbcSource;
+import org.teiid.designer.jdbc.relational.JdbcImporter;
 import org.teiid.designer.jdbc.relational.util.JdbcModelProcessorManager;
 import org.teiid.designer.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 import org.teiid.designer.jdbc.ui.util.JdbcUiUtil;
@@ -74,6 +75,8 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(JdbcSourceSelectionPage.class);
 
     private static final String TITLE = getString("title"); //$NON-NLS-1$
+    
+    private static final String TITLE_WITH_VDB_SOURCE = TITLE + " (VDB source model)"; //$NON-NLS-1$
 
     private static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
 
@@ -85,6 +88,9 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     private static final String EDIT_BUTTON = Util.getString("Widgets.editLabel"); //$NON-NLS-1$
 
     private static final String INVALID_PAGE_MESSAGE = getString("invalidPageMessage"); //$NON-NLS-1$
+    private static final String TEIID_PROFILE_OPTIONS_GROUP_LABEL = getString("teiidProfileOptionsGroupLabel"); //$NON-NLS-1$
+    private static final String IS_VDB_SOURCE_MODEL_CHECKBOX = getString("isVdbSourceModelCheckboxLabel"); //$NON-NLS-1$
+    private static final String IS_VDB_SOURCE_MODEL_CHECKBOX_MESSAGE = getString("isVdbSourceModelCheckboxLabel.message"); //$NON-NLS-1$
 
     // ===========================================================================================================================
     // Static Methods
@@ -109,7 +115,9 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     private ILabelProvider srcLabelProvider;
     private Combo srcCombo;
     private Button editCPButton;
+    private Button isVdbSourceModelCheckBox;
     private Composite editPanel;
+    private Composite teiidProfileGroup;
     private CLabel driverLabel, urlLabel, userNameLabel;
     private Text pwdText;
     private Map enableMap;
@@ -122,9 +130,12 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     private IConnectionProfile connectionProfile;
     
     private boolean isTeiidConnection;
+    private boolean isVdbSourceModel = false;
     
     private String initialProfileName;
 
+    private JdbcImporter importer;
+    
     // ===========================================================================================================================
     // Constructors
 
@@ -179,7 +190,8 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.0
      */
-    @Override
+    @SuppressWarnings("unused")
+	@Override
 	public void createControl( final Composite parent ) {
         // Create page
         final Composite pg = new Composite(parent, SWT.NONE);
@@ -308,6 +320,30 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
             }
         });
         
+        TEIID_PROFILE_GROUP: {
+	        this.teiidProfileGroup = WidgetFactory.createGroup(pg,  TEIID_PROFILE_OPTIONS_GROUP_LABEL,
+	        		GridData.HORIZONTAL_ALIGN_FILL, 1, 1);
+	        
+	        this.isVdbSourceModelCheckBox = WidgetFactory.createCheckBox(teiidProfileGroup, IS_VDB_SOURCE_MODEL_CHECKBOX, 0, 1);
+	        this.isVdbSourceModelCheckBox.setToolTipText(getString("isVdbSourceModelCheckboxTooltip")); //$NON-NLS-1$
+	        this.isVdbSourceModelCheckBox.addSelectionListener(new SelectionAdapter() {
+	
+				@Override
+	            public void widgetSelected(final SelectionEvent event) {
+	            	isVdbSourceModelCheckBoxSelected();
+	            }
+	        });
+	        Text descriptionText = new Text(teiidProfileGroup,  SWT.WRAP | SWT.READ_ONLY);
+	        GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
+	        gd.heightHint = 80;
+	        gd.widthHint = 500;
+	        descriptionText.setLayoutData(gd);
+	        descriptionText.setText(IS_VDB_SOURCE_MODEL_CHECKBOX_MESSAGE);
+	        descriptionText.setBackground(teiidProfileGroup.getBackground());
+	        descriptionText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+
+        }
+        
         sourceModified();
         
         if( this.initialProfileName != null ) {
@@ -317,7 +353,8 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         if (validatePage()) {
             setMessage(INITIAL_MESSAGE);
         }
-
+        
+        updateWidgetsState();
     }
 
     /**
@@ -478,6 +515,8 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
 	    		srcCombo.select(cpIndex);
 	    	}
     	}
+    	
+    	updateWidgetsState();
     }
 
     /**
@@ -551,13 +590,15 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         if( this.connectionProfile != null) {
         	// Check for Teiid connection
         	Properties props = connectionProfile.getBaseProperties();
-        	String vendor = props.getProperty("org.eclipse.datatools.connectivity.db.vendor");
-        	if( vendor != null && vendor.equalsIgnoreCase("TEIID") ) {
+        	String vendor = props.getProperty("org.eclipse.datatools.connectivity.db.vendor"); //$NON-NLS-1$
+        	if( vendor != null && vendor.equalsIgnoreCase("TEIID") ) { //$NON-NLS-1$
         		this.isTeiidConnection = true;
         	} else {
         		this.isTeiidConnection = false;
         	}
         }
+        
+        updateWidgetsState();
     }
 
     void processorModified() {
@@ -577,10 +618,40 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         validatePage();
     }
     
+
+    void isVdbSourceModelCheckBoxSelected() {
+    	this.isVdbSourceModel = this.isVdbSourceModelCheckBox.getSelection();
+    	this.importer.setIsVdbSourceModel(this.isVdbSourceModel);
+    }
+    
+
+    void updateWidgetsState() {
+    	this.teiidProfileGroup.setVisible(isTeiidConnection());
+    	boolean doSetSelected = !this.isVdbSourceModelCheckBox.isVisible();
+    	this.isVdbSourceModelCheckBox.setVisible(isTeiidConnection());
+    	if( doSetSelected ) {
+    		this.isVdbSourceModelCheckBox.setSelection(true);
+    	}
+    	if( !this.isTeiidConnection ) {
+    		this.isVdbSourceModelCheckBox.setSelection(false);
+    	}
+    	isVdbSourceModelCheckBoxSelected();
+    	
+        if( this.importer.isVdbSourceModel() ) {
+        	this.setTitle(TITLE_WITH_VDB_SOURCE);
+        } else {
+        	this.setTitle(TITLE);
+        }
+    }
+    
     /**
      * @since 4.0
      */
     private boolean validatePage() {
+    	// Show isTeiidSourceModelCheckBox or not, select or not and notify checked or not
+    	this.isVdbSourceModelCheckBox.setVisible(isTeiidConnection);
+    	this.isVdbSourceModelCheckBox.setSelection(isTeiidConnection);
+    	
         // Check for at least ONE open non-hidden Model Project
         boolean validProj = false;
         for (IProject proj : ModelerCore.getWorkspace().getRoot().getProjects()) {
@@ -632,9 +703,9 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         if( this.connectionProfile != null) {
         	// Check for Teiid connection
         	Properties props = connectionProfile.getBaseProperties();
-        	String teiidURL = props.getProperty("org.eclipse.datatools.connectivity.db.URL");
+        	String teiidURL = props.getProperty("org.eclipse.datatools.connectivity.db.URL"); //$NON-NLS-1$
         	// EXAMPLE:  jdbc:teiid:PartsTestVDB@mm://localhost:31000
-        	if( teiidURL != null && teiidURL.startsWith("jdbc:teiid")) {
+        	if( teiidURL != null && teiidURL.startsWith("jdbc:teiid")) {  //$NON-NLS-1$
         		int atIndex = teiidURL.indexOf('@');
         		String vdbName = teiidURL.substring(11, atIndex);
         		if( vdbName != null ) {
@@ -645,6 +716,13 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
 		
 		return null;
     }
+
+	/**
+	 * @param importer the importer to set
+	 */
+	public void setImporter(JdbcImporter importer) {
+		this.importer = importer;
+	}
 
     public class CPListener implements IProfileListener {
 
