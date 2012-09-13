@@ -49,7 +49,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.widget.GridPanel;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
-import org.teiid.designer.ui.viewsupport.ModelUtilities;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 import org.teiid.designer.webservice.IWebServiceModelBuilder;
 import org.teiid.designer.webservice.IWebServiceXsdResource;
@@ -703,7 +703,8 @@ public class SchemaLocationEditor extends GridPanel
                 String enteredName = this.txfName.getText();
                 boolean nameValid = false;
                 if (enteredName != null && enteredName.length() > 0) {
-                    nameValid = ModelUtilities.validateModelName(enteredName, ModelerCore.XSD_FILE_EXTENSION) == null;
+                    nameValid = ModelNameUtil.validate(enteredName, ModelerCore.XSD_FILE_EXTENSION, null,
+                    		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES).getSeverity() < IStatus.ERROR;
                 }
 
                 if (!nameValid) {

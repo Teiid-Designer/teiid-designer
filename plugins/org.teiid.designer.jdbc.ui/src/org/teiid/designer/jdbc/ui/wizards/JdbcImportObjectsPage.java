@@ -65,6 +65,8 @@ import org.teiid.designer.jdbc.data.Results;
 import org.teiid.designer.jdbc.data.ResultsMetadata.ColumnMetadata;
 import org.teiid.designer.jdbc.metadata.JdbcDatabase;
 import org.teiid.designer.jdbc.metadata.JdbcNode;
+import org.teiid.designer.jdbc.metadata.JdbcSchema;
+import org.teiid.designer.jdbc.relational.JdbcImporter;
 import org.teiid.designer.jdbc.ui.ModelerJdbcUiConstants;
 import org.teiid.designer.jdbc.ui.ModelerJdbcUiPlugin;
 import org.teiid.designer.jdbc.ui.util.JdbcUiUtil;
@@ -88,6 +90,8 @@ public class JdbcImportObjectsPage extends WizardPage
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(JdbcImportObjectsPage.class);
 
     private static final String TITLE = getString("title"); //$NON-NLS-1$
+    
+    private static final String TITLE_WITH_VDB_SOURCE = TITLE + " (VDB source model)"; //$NON-NLS-1$
 
     private static final int COLUMN_COUNT = 1;
 
@@ -98,6 +102,8 @@ public class JdbcImportObjectsPage extends WizardPage
     private static final String SHOW_SELECTED_SCHEMAS_ID = "showSelectedSchemasValue"; //$NON-NLS-1$
 
     private static final String INVALID_PAGE_MESSAGE = getString("invalidPageMessage"); //$NON-NLS-1$
+    
+    private static final String TOO_MANY_SCHEMA_MESSAGE = getString("tooManySchemaSelectedMessage"); //$NON-NLS-1$
 
     private static final String NO_OBJECTS = getString("noObjects"); //$NON-NLS-1$
 
@@ -138,8 +144,10 @@ public class JdbcImportObjectsPage extends WizardPage
     Button showSelectedSchemasButton;
     private JdbcNode selectedNode;
     private Map counts;
+    
+    private JdbcImporter importer;
 
-    /**
+	/**
      * @param pageName
      * @since 4.0
      */
@@ -315,6 +323,11 @@ public class JdbcImportObjectsPage extends WizardPage
             refresh();
         }
         super.setVisible(visible);
+        if( this.importer.isVdbSourceModel() ) {
+        	this.setTitle(TITLE_WITH_VDB_SOURCE);
+        } else {
+        	this.setTitle(TITLE);
+        }
     }
 
     /**
@@ -622,6 +635,7 @@ public class JdbcImportObjectsPage extends WizardPage
      * @since 4.0
      */
     protected void validatePage( final TreeItem[] items ) {
+    	boolean isOK = true;
         try {
             // Recalculate node type selection counts
             this.counts.clear();
@@ -654,10 +668,34 @@ public class JdbcImportObjectsPage extends WizardPage
             } else {
                 this.statusLabel.setText(getString(STATUS_LABEL_ID, NO_OBJECTS));
                 WizardUtil.setPageComplete(this, INVALID_PAGE_MESSAGE, ERROR);
+                isOK = false;
             }
         } catch (final JdbcException err) {
             JdbcUiUtil.showAccessError(err);
         }
+        
+        // If is a vdb source model, then need to validate to insure that only ONE schema is selected
+		if (isOK && this.importer.isVdbSourceModel()) {
+			JdbcNode[] selectedNodes = getSelectedChildren();
+			if (selectedNodes != null && selectedNodes.length > 0) {
+				int nSchema = 0;
+				String schemaName = null;
+				for (JdbcNode node : selectedNodes) {
+					if (node instanceof JdbcSchema) {
+						nSchema++;
+						schemaName = node.getName();
+					}
+					if (nSchema > 1) {
+						WizardUtil.setPageComplete(this, TOO_MANY_SCHEMA_MESSAGE,ERROR);
+						break;
+					}
+				}
+				if(nSchema == 1 ) {
+					this.importer.setVdbSourceModelName(schemaName);
+				}
+			}
+
+		}
 
         if (getSelectedChildren().length == 0) showSelectedSchemasButton.setEnabled(false);
         else showSelectedSchemasButton.setEnabled(true);
@@ -688,6 +726,13 @@ public class JdbcImportObjectsPage extends WizardPage
         boolean showSelectedSchemas = dlgSettings.getBoolean(SHOW_SELECTED_SCHEMAS_ID);
         showSelectedSchemasButton.setSelection(showSelectedSchemas);
     }
+
+	/**
+	 * @param importer the importer to set
+	 */
+	public void setImporter(JdbcImporter importer) {
+		this.importer = importer;
+	}
 
     /**
      * @return The TreeContentProvider used by this page.

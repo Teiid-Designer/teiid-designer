@@ -96,6 +96,7 @@ import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
@@ -1078,9 +1079,10 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 			setThisPageComplete(getString("sourceFileNameMustBeSpecified"), ERROR); //$NON-NLS-1$
 			return false;
 		}
-		String fileNameMessage = ModelUtilities.validateModelName(fileText,DEFAULT_EXTENSION);
-		if (fileNameMessage != null) {
-			setThisPageComplete(Util.getString(I18N_PREFIX + "illegalFileName", fileNameMessage), ERROR); //$NON-NLS-1$
+        IStatus status = ModelNameUtil.validate(fileText, ModelerCore.MODEL_FILE_EXTENSION, null,
+        		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
+        if( status.getSeverity() == IStatus.ERROR ) {
+			setThisPageComplete(status.getMessage(), ERROR);
 			return false;
 		}
 

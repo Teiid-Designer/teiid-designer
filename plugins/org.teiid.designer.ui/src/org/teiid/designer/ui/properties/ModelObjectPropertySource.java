@@ -90,7 +90,7 @@ public class ModelObjectPropertySource extends PropertySource {
                         
         if (object instanceof EObject ) {
         	final EObject eObject = (EObject)object;
-        	if( ModelUtil.isVdbSourceObject(eObject) ) {
+        	if( ModelUtil.isLockedSourceObject(eObject) ) {
         		isReadOnlyType = true;
         	} else {
         		// Check for read-only resource

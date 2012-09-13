@@ -41,6 +41,7 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
@@ -67,7 +68,6 @@ public class ModelSelectorDialog extends ModelWorkspaceDialog implements UiConst
     private final static int MODEL_NAME_TEXT_WIDTH = (int)(Display.getCurrent().getBounds().width * .25);
 
     private final static String MODEL_CREATE_ERROR_NO_NAME = getString("noName.message"); //$NON-NLS-1$
-    private final static String MODEL_CREATE_ERROR_INVALID_NAME = getString("invalidName.message"); //$NON-NLS-1$
     private final static String MODEL_CREATE_ERROR_ALREADY_EXISTS = getString("alreadyExists.message"); //$NON-NLS-1$
     private final static String MODEL_CREATE_ERROR_SAME_NAME_AS = getString("sameNameAs.message"); //$NON-NLS-1$
     private final static String MODEL_CREATE_ERROR_IS_VALID = getString("isValid.message"); //$NON-NLS-1$
@@ -335,8 +335,9 @@ public class ModelSelectorDialog extends ModelWorkspaceDialog implements UiConst
             return false;
         }
         // Check for valid model name
-        String fileNameMessage = ModelUtilities.validateModelName(sModelName, FILE_EXT);
-        if (fileNameMessage != null) {
+        IStatus status = ModelNameUtil.validate(sModelName, ModelerCore.MODEL_FILE_EXTENSION, newModelParent,
+        		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES | ModelNameUtil.NO_EXISTING_MODEL_AT_LOCATION);
+        if( status.getSeverity() == IStatus.ERROR ) {
             return false;
         }
 
@@ -390,26 +391,11 @@ public class ModelSelectorDialog extends ModelWorkspaceDialog implements UiConst
             return MODEL_CREATE_ERROR_NO_NAME;
             // Check for valid model name
         }
-        String fileNameMessage = ModelUtilities.validateModelName(sModelName, FILE_EXT);
-        if (fileNameMessage != null) {
-            return MODEL_CREATE_ERROR_INVALID_NAME;
-        }
-        // Check if already exists
-        String sFileName = getFileName(sModelName);
-        IPath modelFullPath = null;
-        IPath modelRelativePath = null;
-
-        if (newModelParent != null) {
-            modelFullPath = newModelParent.getFullPath().append(sFileName);
-            modelRelativePath = newModelParent.getProjectRelativePath().append(sFileName);
-        }
-
-        if (newModelParent != null && newModelParent.getProject().exists(modelRelativePath)) {
-            return MODEL_CREATE_ERROR_ALREADY_EXISTS;
-        }
-
-        if (targetFilePath != null && targetFilePath.equals(modelFullPath)) {
-            return MODEL_CREATE_ERROR_SAME_NAME_AS;
+        
+        IStatus status = ModelNameUtil.validate(sModelName, ModelerCore.MODEL_FILE_EXTENSION, newModelParent,
+        		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES | ModelNameUtil.NO_EXISTING_MODEL_AT_LOCATION);
+        if( status.getSeverity() == IStatus.ERROR ) {
+        	return status.getMessage();
         }
 
         // success

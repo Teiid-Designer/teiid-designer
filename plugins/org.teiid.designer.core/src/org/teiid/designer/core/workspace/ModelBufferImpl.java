@@ -468,7 +468,7 @@ public class ModelBufferImpl implements ModelBuffer {
             return;
         }
 
-        if (ModelUtil.isIResourceReadOnly(file)) {
+        if (! ModelUtil.isLockedSourceObject(file) && ModelUtil.isIResourceReadOnly(file)) {
             final String pathInProj = this.file.getProject().getName() + IPath.SEPARATOR + this.file.getProjectRelativePath();
             final Object[] params = new Object[] {pathInProj};
             throw new ModelWorkspaceException(ModelerCore.Util.getString("ModelBufferImpl.Model_is_readonly", params)); //$NON-NLS-1$

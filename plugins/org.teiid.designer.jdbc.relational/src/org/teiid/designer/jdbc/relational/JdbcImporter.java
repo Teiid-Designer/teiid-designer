@@ -44,8 +44,10 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
     private JdbcSource src;
     private JdbcSource updateSrc;
     private JdbcDatabase db;
+    private boolean isVdbSourceModel;
+    private String vdbSourceModelName;
 
-    /**
+	/**
      * @since 4.0
      */
     public JdbcDatabase getDatabase() {
@@ -227,4 +229,33 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
         final IStatus status = processor.execute(this.updatedModel, this.db, this.updateSrc.getImportSettings(), monitor);
         return status;
     }
+    
+    /**
+	 * @return the isVdbSourceModel
+	 */
+	public boolean isVdbSourceModel() {
+		return this.isVdbSourceModel;
+	}
+
+	/**
+	 * @param isVdbSourceModel the isVdbSourceModel to set
+	 */
+	public void setIsVdbSourceModel(boolean isVdbSourceModel) {
+		this.isVdbSourceModel = isVdbSourceModel;
+	}
+	
+	/**
+	 * @return the vdb source model name. may be null
+	 */
+	public String getVdbSourceModelName() {
+		return vdbSourceModelName;
+	}
+	
+	/**
+	 * @param name the vdb source model name
+
+	 */
+	public void setVdbSourceModelName(String name) {
+		this.vdbSourceModelName = name;
+	}
 }

@@ -64,8 +64,8 @@ import org.teiid.designer.ui.common.table.CtrlClickListener;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.product.IModelerProductContexts;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
-import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
 
@@ -106,7 +106,6 @@ public class NewModelWizardMetamodelPage extends WizardPage
 
     private static final int STATUS_OK = 0;
     private static final int STATUS_NO_LOCATION = 1;
-    private static final int STATUS_NO_FILENAME = 2;
     private static final int STATUS_FILE_EXISTS = 3;
     private static final int STATUS_NO_METAMODEL = 4;
     private static final int STATUS_NO_TYPE = 5;
@@ -141,6 +140,8 @@ public class NewModelWizardMetamodelPage extends WizardPage
     private boolean builderAutoSelected = false;
     
     private Properties designerProperties;
+    
+    private IProject project;
 
     /**
      * Constructor for NewModelWizardSpecifyModelPage
@@ -402,6 +403,7 @@ public class NewModelWizardMetamodelPage extends WizardPage
                                                                        new ModelProjectSelectionStatusValidator());
 
         if (folder != null && containerText != null) {
+        	project = folder.getProject();
             containerText.setText(folder.getFullPath().makeRelative().toString());
             if( this.designerProperties != null ) {
             	DesignerPropertiesUtil.setProjectName(this.designerProperties, folder.getProject().getName());
@@ -439,12 +441,8 @@ public class NewModelWizardMetamodelPage extends WizardPage
                 updateStatus(Util.getString("NewModelWizard.notModelProject", getTargetProject().getName())); //$NON-NLS-1$
                 break;
 
-            case (STATUS_NO_FILENAME):
-                updateStatus(Util.getString("NewModelWizard.fileNameMustBeSpecified")); //$NON-NLS-1$
-                break;
-
             case (STATUS_BAD_FILENAME):
-                updateStatus(Util.getString("NewModelWizard.illegalFileName") + ' ' + fileNameMessage); //$NON-NLS-1$
+                updateStatus(fileNameMessage);
                 break;
 
             case (STATUS_FILE_EXISTS):
@@ -500,12 +498,12 @@ public class NewModelWizardMetamodelPage extends WizardPage
         }
 
         String fileText = getFileText();
-        if (fileText.length() == 0) {
-            currentStatus = STATUS_NO_FILENAME;
-            return false;
-        }
-        fileNameMessage = ModelUtilities.validateModelName(fileText, fileExtension);
-        if (fileNameMessage != null) {
+
+        IStatus nameStatus = ModelNameUtil.validate(fileText, fileExtension, project,
+        		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
+
+        if (nameStatus.getSeverity() == IStatus.ERROR) {
+        	fileNameMessage =  nameStatus.getMessage();
             currentStatus = STATUS_BAD_FILENAME;
             return false;
         }
@@ -515,6 +513,7 @@ public class NewModelWizardMetamodelPage extends WizardPage
             currentStatus = STATUS_FILE_EXISTS;
             return false;
         }
+        
         if (metamodelCombo.getSelectionIndex() < 1) {
             currentStatus = STATUS_NO_METAMODEL;
             return false;

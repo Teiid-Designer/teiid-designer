@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -60,6 +61,7 @@ import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.jdbc.SourceNames;
 import org.teiid.designer.jdbc.metadata.JdbcDatabase;
 import org.teiid.designer.jdbc.metadata.JdbcNode;
+import org.teiid.designer.jdbc.relational.JdbcImporter;
 import org.teiid.designer.jdbc.ui.util.JdbcUiUtil;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
@@ -73,9 +75,9 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.wizard.IPersistentWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
-import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
@@ -94,6 +96,8 @@ public class JdbcImportOptionsPage extends WizardPage implements
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(JdbcImportOptionsPage.class);
 
     private static final String TITLE = getString("title"); //$NON-NLS-1$
+    
+    private static final String TITLE_WITH_VDB_SOURCE = TITLE + " (VDB source model)"; //$NON-NLS-1$
 
     private static final int COLUMN_COUNT = 3;
 
@@ -105,9 +109,6 @@ public class JdbcImportOptionsPage extends WizardPage implements
     private static final String FOLDER_LABEL = getString("folderLabel"); //$NON-NLS-1$
     private static final String UPDATE_CHECKBOX = getString("updateCheckBox"); //$NON-NLS-1$
     private static final String VIRTUAL_MODEL_CHECKBOX = getString("makeTargetModelVirtualBox"); //$NON-NLS-1$
-    private static final String IS_VDB_SOURCE_MODEL_CHECKBOX = "Import as VDB source model";
-    private static final String IS_VDB_SOURCE_MODEL_CHECKBOX_TOOLTIP = "JDBC connection to a deployed VDB allows creating a" +
-    		"read-only source model you can use in your view transformations.";
     private static final String MODEL_GROUP = getString("modelGroup"); //$NON-NLS-1$
     private static final String CASE_OPTIONS_GROUP = getString("caseOptionsGroup"); //$NON-NLS-1$
     private static final String CHANGE_CASE_GROUP = getString("changeCaseGroup"); //$NON-NLS-1$
@@ -155,14 +156,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
     private Group changeCaseGroup;
     private Text nameText, folderText;
     private Button updateCheckBox, fullyQualifiedNamesCheckBox, includeCatalogCheckBox, modifyCaseCheckBox,
-    	uppercaseButton, lowercaseButton, virtualModelBox, isVdbSourceModelCheckBox;
+    	uppercaseButton, lowercaseButton, virtualModelBox;
     private boolean initd;
     private IContainer folder;
     private boolean usesHiddenProject = false;
     private IFile selectedModel;
     private boolean isVirtual = false;
     private boolean isVdbSourceModel = false;
-    private boolean isTeiidConnection;
+    
+    private JdbcImporter importer;
 
     // ===========================================================================================================================
     // Constructors
@@ -265,16 +267,6 @@ public class JdbcImportOptionsPage extends WizardPage implements
             @Override
             public void widgetSelected(final SelectionEvent event) {
                 updateCheckBoxSelected();
-            }
-        });
-        
-        this.isVdbSourceModelCheckBox = WidgetFactory.createCheckBox(modelGroup, IS_VDB_SOURCE_MODEL_CHECKBOX, 0, COLUMN_COUNT);
-        this.isVdbSourceModelCheckBox.setToolTipText(IS_VDB_SOURCE_MODEL_CHECKBOX_TOOLTIP);
-        this.isVdbSourceModelCheckBox.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent event) {
-            	isVdbSourceModelCheckBoxSelected();
             }
         });
         
@@ -411,16 +403,65 @@ public class JdbcImportOptionsPage extends WizardPage implements
             }
         }
         super.setVisible(visible);
-    	// Show isTeiidSourceModelCheckBox or not, select or not and notify checked or not
-    	this.isVdbSourceModelCheckBox.setVisible(isTeiidConnection);
-    	this.isVdbSourceModelCheckBox.setSelection(isTeiidConnection);
-    	isVdbSourceModelCheckBoxSelected();
+        
+        if( this.importer.isVdbSourceModel() ) {
+    	// Need to 
+    	// 1) Make the "model name" field non-editable
+        	
+    	// 2) Disable the "make virtual" checkbox
+    	// 3) Diable the "catalog & fully qualified boxes
+        	this.nameText.setEditable(false);
+        	this.nameText.setBackground(nameText.getParent().getBackground());
+        	if( this.importer.getVdbSourceModelName() != null ) {
+        		this.nameText.setText(this.importer.getVdbSourceModelName());
+        	}
+        	this.virtualModelBox.setSelection(false);
+        	this.virtualModelBox.setEnabled(false);
+        	this.updateCheckBox.setSelection(false);
+        	this.updateCheckBox.setEnabled(false);
+           	this.fullyQualifiedNamesCheckBox.setSelection(false);
+           	this.fullyQualifiedNamesCheckBox.setEnabled(false);
+        	this.includeCatalogCheckBox.setSelection(false);
+        	this.includeCatalogCheckBox.setEnabled(false);
+        	this.modifyCaseCheckBox.setSelection(false);
+        	this.modifyCaseCheckBox.setEnabled(false);
+        } else {
+        	this.nameText.setEditable(true);
+        	this.virtualModelBox.setEnabled(true);
+        	this.updateCheckBox.setEnabled(true);
+        	this.fullyQualifiedNamesCheckBox.setEnabled(true);
+        	this.includeCatalogCheckBox.setEnabled(true);
+        	this.modifyCaseCheckBox.setEnabled(true);
+        }
+        
+        fullyQualifiedNamesCheckBoxSelected();
+        includeCatalogCheckBox();
+        modifyCaseSelected();
+        
+        if( this.importer.isVdbSourceModel() ) {
+        	this.setTitle(TITLE_WITH_VDB_SOURCE);
+        } else {
+        	this.setTitle(TITLE);
+        }
+        
+        validatePage(false);
     }
 
     void initializeInTransaction() {
         final JdbcImportWizard wizard = (JdbcImportWizard)getWizard();
         this.db = wizard.getDatabase();
-        final String name = wizard.getModelName();
+        String name = wizard.getModelName();
+        if( this.importer.isVdbSourceModel() ) {
+        	 name = this.importer.getVdbSourceModelName();
+        	 if( name == null ) {
+        		 name = wizard.getModelName();
+        	 }
+             this.nameText.setText(name);
+        } else {
+	        name = wizard.getModelName();
+	        
+        }
+        final String finalName = name;
         this.nameText.setText(name);
         try {
             // Save object selections from previous page
@@ -809,48 +850,6 @@ public class JdbcImportOptionsPage extends WizardPage implements
         }
         validatePage(false);
     }
-    
-    /**
-     * @since 4.0
-     */
-    void isVdbSourceModelCheckBoxSelected() {
-    	this.isVdbSourceModel = this.isVdbSourceModelCheckBox.getSelection();
-        /*
-			Check-box for "Import as VDB Source Model" to Specify Import Options page
-			
-			    Add "description" to note that this is a Teiid VDB import and can be treated in a special way.
-			        Maybe we default the checkbox to CHECKED?
-			    if checked, then disable other options
-			        Make target a view model (DISABLE as UNCHECKED)
-			        Include catalog for Fully Qualified Names (DISABLE as UNCHECKED)
-			        Use Fully Qualified Names (DISABLE as CHECKED)
-			            schema serves as original Model Name and is required for query validation
-			        Change Case for All Characters (DISABLE as UNCHECKED)
-
-         */
-    	
-        if (isVdbSourceModel) {
-        	this.virtualModelBox.setSelection(false);
-        	this.virtualModelBox.setEnabled(false);
-        	this.updateCheckBox.setSelection(false);
-        	this.updateCheckBox.setEnabled(false);
-//        	this.fullyQualifiedNamesCheckBox.setSelection(true);
-//        	this.fullyQualifiedNamesCheckBox.setEnabled(false);
-        	this.includeCatalogCheckBox.setSelection(false);
-        	this.includeCatalogCheckBox.setEnabled(false);
-        	this.modifyCaseCheckBox.setSelection(false);
-        	this.modifyCaseCheckBox.setEnabled(false);
-        } else {
-        	this.virtualModelBox.setEnabled(true);
-        	this.updateCheckBox.setEnabled(true);
-        	this.fullyQualifiedNamesCheckBox.setEnabled(true);
-        	this.includeCatalogCheckBox.setEnabled(true);
-        	this.modifyCaseCheckBox.setEnabled(true);
-        }
-        modifyCaseSelected();
-        
-        validatePage(false);
-    }
 
     /**
      * Get the selected ModelResource.  This method will check the selectedModel field - if it is
@@ -892,14 +891,6 @@ public class JdbcImportOptionsPage extends WizardPage implements
             }
         }
     }
-    
-    /**
-     * 
-     * @param value is Teiid connection
-     */
-    public void setTeiidConnection(boolean value) {
-    	isTeiidConnection = value;
-    }
 
     // ===========================================================================================================================
     // Utility Methods
@@ -923,9 +914,12 @@ public class JdbcImportOptionsPage extends WizardPage implements
             }
             // Check if model name is valid
             String name = this.nameText.getText();
-            String problem = ModelUtilities.validateModelName(name, ModelerCore.MODEL_FILE_EXTENSION);
-            if (problem != null) {
-                WizardUtil.setPageComplete(this, INVALID_FILE_MESSAGE + '\n' + problem, ERROR);
+            
+            IStatus status = ModelNameUtil.validate(name, ModelerCore.MODEL_FILE_EXTENSION, folder,
+            		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
+            
+            if( status.getSeverity() == IStatus.ERROR ) {
+                WizardUtil.setPageComplete(this, status.getMessage(), ERROR);
                 folder = null;
             }
 
@@ -1087,11 +1081,11 @@ public class JdbcImportOptionsPage extends WizardPage implements
     public boolean isVirtual() {
     	return this.isVirtual;
     }
-    
-    /**
-     * @return is VDB source model
-     */
-    public boolean isVdbSourceModel() {
-    	return this.isVdbSourceModel;
-    }
+
+	/**
+	 * @param importer the importer to set
+	 */
+	public void setImporter(JdbcImporter importer) {
+		this.importer = importer;
+	}
 }

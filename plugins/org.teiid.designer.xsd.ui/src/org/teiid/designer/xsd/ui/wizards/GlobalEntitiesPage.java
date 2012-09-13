@@ -55,6 +55,7 @@ import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.ui.common.widget.accumulator.AccumulatorPanel;
 import org.teiid.designer.ui.common.widget.accumulator.IAccumulatedValuesChangeListener;
 import org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
@@ -72,7 +73,7 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
     private static final int STATUS_OK = 0;
     private static final int STATUS_NO_LOCATION = 1;
     private static final int STATUS_NO_FILENAME = 2;
-    private static final int STATUS_FILE_EXISTS = 3;
+    //private static final int STATUS_FILE_EXISTS = 3;
     private static final int STATUS_BAD_FILENAME = 4;
     private static final int STATUS_CLOSED_PROJECT = 5;
     private static final int STATUS_NO_PROJECT_NATURE = 6;
@@ -95,11 +96,13 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
     private TableViewer typeViewer;
     private AccumulatorPanel panel;
     private Collection typesToCreate;
+    
+    private IProject project;
 
     /**
      * Constructor for NewModelWizardSpecifyModelPage
      * 
-     * @param The current ISelection selection
+     * @param rsrc The current ISelection selection
      */
     public GlobalEntitiesPage( Resource rsrc ) {
         super("complexTypesPage"); //$NON-NLS-1$
@@ -134,7 +137,8 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         gd = new GridData(GridData.FILL_HORIZONTAL);
         containerText.setLayoutData(gd);
         containerText.addModifyListener(new ModifyListener() {
-            @Override
+        	@SuppressWarnings("unused") 
+        	@Override
 			public void modifyText( ModifyEvent e ) {
                 checkStatus();
             }
@@ -147,7 +151,8 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         browseButton.setLayoutData(buttonGridData);
         browseButton.setText(UiConstants.Util.getString("NewModelWizard.browse")); //$NON-NLS-1$
         browseButton.addSelectionListener(new SelectionAdapter() {
-            @Override
+        	@SuppressWarnings("unused") 
+        	@Override
             public void widgetSelected( SelectionEvent e ) {
                 handleBrowse();
             }
@@ -160,7 +165,8 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         gd = new GridData(GridData.FILL_HORIZONTAL);
         fileText.setLayoutData(gd);
         fileText.addModifyListener(new ModifyListener() {
-            @Override
+            @SuppressWarnings("unused")
+			@Override
 			public void modifyText( ModifyEvent e ) {
                 checkStatus();
             }
@@ -191,6 +197,9 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         checkStatus();
     }
 
+    /**
+     * @return Collection of types
+     */
     public Collection getTypesToConvert() {
         if (this.typesToCreate == null) {
             return Collections.EMPTY_LIST;
@@ -223,7 +232,7 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
                 if (xsdMR != null) {
                     IContainer parentContainer = (IContainer)xsdMR.getParent().getResource();
                     if (parentContainer != null && parentContainer.getProject() != null) {
-                        final IProject project = parentContainer.getProject();
+                        project = parentContainer.getProject();
                         containerText.setText(project.getName() + File.separator
                                               + parentContainer.getProjectRelativePath().toString());
                     }
@@ -291,17 +300,12 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
             setMessage("No File Name Provided", IMessageProvider.ERROR); //$NON-NLS-1$  
             return;
         }
-        fileNameMessage = ModelUtilities.validateModelName(fileText, fileExtension);
-        if (fileNameMessage != null) {
+        IStatus status = ModelNameUtil.validate(fileText, fileExtension, project,
+        		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES | ModelNameUtil.NO_EXISTING_MODEL_AT_LOCATION );
+        if( status.getSeverity() == IStatus.ERROR ) {
+        	fileNameMessage = status.getMessage();
             currentStatus = STATUS_BAD_FILENAME;
-            setMessage("File name is not valid. " + fileNameMessage, IMessageProvider.ERROR); //$NON-NLS-1$ 
-            return;
-        }
-        String fileName = getFileName();
-        filePath = new Path(container).append(fileName);
-        if (ModelerCore.getWorkspace().getRoot().exists(filePath)) {
-            currentStatus = STATUS_FILE_EXISTS;
-            setMessage("File already exists. Input another valid name.", IMessageProvider.ERROR); //$NON-NLS-1$ 
+            setMessage(fileNameMessage, IMessageProvider.ERROR);
             return;
         }
 
@@ -397,6 +401,9 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         checkStatus();
     }
 
+    /**
+     * @return the target project
+     */
     public IProject getTargetProject() {
         IProject result = null;
         String containerName = getContainerName();
@@ -413,6 +420,9 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         return result;
     }
 
+    /**
+     * @return the target container
+     */
     public IResource getTargetContainer() {
         IResource result = null;
         String containerName = getContainerName();
@@ -429,6 +439,9 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         return result;
     }
 
+    /**
+     * @return the container name
+     */
     public String getContainerName() {
         String result = null;
 
@@ -437,6 +450,9 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         return result;
     }
 
+    /**
+     * @return the file name
+     */
     public String getFileName() {
         String result = fileText.getText().trim();
         if (!result.endsWith(fileExtension)) {
@@ -445,10 +461,16 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         return result;
     }
 
+    /**
+     * @return the file text
+     */
     public String getFileText() {
         return fileText.getText().trim();
     }
 
+    /**
+     * @return the file path
+     */
     public IPath getFilePath() {
         return this.filePath;
     }
@@ -459,7 +481,8 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
 
         TableViewer viewer;
 
-        public GlobalEntitiesAccumulatorSource( GlobalEntitiesPage cllr,
+        @SuppressWarnings("unused")
+		public GlobalEntitiesAccumulatorSource( GlobalEntitiesPage cllr,
                                                 Composite parent ) {
             super();
             this.caller = cllr;
