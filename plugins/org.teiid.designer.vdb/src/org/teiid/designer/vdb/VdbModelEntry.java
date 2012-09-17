@@ -11,13 +11,13 @@ import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_SOURCE_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_VISIBLE;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -25,11 +25,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -45,7 +44,6 @@ import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.Severity;
 import org.teiid.designer.vdb.manifest.SourceElement;
-
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -543,19 +541,24 @@ public final class VdbModelEntry extends VdbEntry {
 
                 if (refs != null) {
                     for (final Resource importedModel : refs) {
-                    	java.net.URI uri = java.net.URI.create(importedModel.getURI().toString());
-                        IFile[] modelFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(uri);
-                        final IPath name = modelFiles[0].getFullPath();
+                        // Coded to getFile method to avoid conversion between java.net.URI and emf URI,
+                        // to avoid issues with UNC path on windows
+                        IFile modelFile = getFile(importedModel);
+                        IPath name = null;
+                        if (modelFile != null) {
+                            name = modelFile.getFullPath();
+                        }
+
                         VdbModelEntry importedEntry = null;
 
                         for (final VdbModelEntry entry : getVdb().getModelEntries()) {
-                            if (name.equals(entry.getName())) {
+                            if (name != null && name.equals(entry.getName())) {
                                 importedEntry = entry;
                                 break;
                             }
                         }
 
-                        if (importedEntry == null) importedEntry = getVdb().addModelEntry(name, monitor);
+                        if (importedEntry == null && name != null) importedEntry = getVdb().addModelEntry(name, monitor);
                         imports.add(importedEntry);
                         importedEntry.importedBy.add(this);
                     }
@@ -568,6 +571,63 @@ public final class VdbModelEntry extends VdbEntry {
         } catch (final Exception error) {
             throw CoreModelerPlugin.toRuntimeException(error);
         }
+    }
+
+    /*
+     * Get the IFile for the supplied Resource.  Avoid the conversion between the EMF URI and java.net.URI
+     */
+    private IFile getFile( Resource resource ) {
+        IFile resultFile = null;
+        if (resource != null) {
+            // Get the list of names of projects in the workspace
+            IProject[] allProj = ModelerCore.getWorkspace().getRoot().getProjects();
+            List<String> projNameList = new ArrayList();
+            for (int i = 0; i < allProj.length; i++) {
+                projNameList.add(allProj[i].getName());
+            }
+
+            // Find the IFile for the supplied Resource
+            URI uri = resource.getURI(); // URI of the resource
+            uri = validateURI(uri, projNameList); // Validate the URI - ensure it starts at the project
+            String fileString = URI.decode(uri.path());
+
+            // Find the IFile resource in the workspace
+            IResource iResc = ModelerCore.getWorkspace().getRoot().findMember(new Path(fileString));
+            if (iResc instanceof IFile) {
+                resultFile = (IFile)iResc;
+            }
+        }
+        return resultFile;
+    }
+
+    /*
+     * Validate method, verifies that the supplied URI starts with the modelProject segment.  If not, the leading
+     * segments are stripped off until it starts with the modelProject.
+     * @param uri the supplied uri
+     * @param projectNames the existing project names in the workspace
+     * @return the rewritten uri
+     */
+    private URI validateURI( URI uri,
+                             List<String> projectNames ) {
+        // Get all URI segments
+        String[] segments = uri.segments();
+        // valid segments should be 2 or more - project plus model
+        if (segments.length < 2) return uri;
+
+        // Create new URI with all segments removed
+        URI newUri = uri.trimSegments(segments.length);
+
+        // start with first segment, looking for project
+        // If the first segment is not a project, strip it
+        if (!projectNames.contains(segments[0])) {
+            for (int i = 1; i < segments.length; i++) {
+                newUri = newUri.appendSegment(segments[i]);
+            }
+            // recursively strips until it gets to the project
+            return validateURI(newUri, projectNames);
+            // If the first segment is a project, URI is valid - return original
+        }
+        return uri;
     }
 
     /**
