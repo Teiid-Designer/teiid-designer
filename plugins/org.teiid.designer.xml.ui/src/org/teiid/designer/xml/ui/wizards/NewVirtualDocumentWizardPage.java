@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -23,6 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.IDialogPage;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -80,6 +80,7 @@ import org.teiid.designer.xml.PluginConstants;
 import org.teiid.designer.xml.factory.IDocumentsAndFragmentsPopulator;
 import org.teiid.designer.xml.factory.VirtualDocumentModelPopulator;
 import org.teiid.designer.xml.ui.ModelerXmlUiConstants;
+import org.teiid.designer.xml.ui.ModelerXmlUiPlugin;
 
 
 /**
@@ -208,6 +209,8 @@ public class NewVirtualDocumentWizardPage extends WizardPage implements ModelerX
 
     @Override
     public void dispose() {
+        if(this.panel!=null) this.panel.saveSettings();
+
         super.dispose();
         Control c = getControl();
         if (c != null) {
@@ -295,6 +298,9 @@ public class NewVirtualDocumentWizardPage extends WizardPage implements ModelerX
 }// end NewVirtualDocumentWizardPage
 
 class NewVirtualDocumentWizardPanel extends ScrolledComposite implements ModelerXmlUiConstants, IAccumulatedValuesChangeListener {
+
+    private static final String BUILD_MAPPING_CLASSES_KEY = "buildMappingClasses"; //$NON-NLS-1$ 
+    private static final String BUILD_ENTIRE_DOCS_KEY = "buildEntireDocs";  //$NON-NLS-1$
 
     static final String NO_SCHEMA_SELECTED = Util.getString("NewVirtualDocumentWizardPage.noSchemaSelected"); //$NON-NLS-1$
     static final String MUST_SELECT_SCHEMA = Util.getString("NewVirtualDocumentWizardPage.mustSelectSchema"); //$NON-NLS-1$
@@ -464,6 +470,9 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
         buildMappingClassesButton.setText(BUILD_MAPPING_CLASSES);
         buildMappingClassesButton.setSelection(true);
 
+        // Restore the buildEntireDocumentsButton and buildMappingClassesButton states
+        restoreSettings();
+        
         Group strategyGroup = new Group(typeGroup, SWT.NONE);
         strategyGroup.setLayout(new GridLayout(1, true));
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -586,7 +595,9 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
                 }
             }
         });
-
+        
+        updateComponentEnabledStates();
+        
         // need to size scroll panel
         Point pt = pnlMain.computeSize(SWT.DEFAULT, SWT.DEFAULT);
         setMinWidth(pt.x);
@@ -1014,6 +1025,44 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
             }
         }
     }
+    
+    /**
+     * Saves dialog settings.
+     */
+    protected void saveSettings() {
+        final IDialogSettings pluginSettings = ModelerXmlUiPlugin.getDefault().getDialogSettings();
+        final String sectionName = NewVirtualDocumentWizardPage.class.getSimpleName();
+        IDialogSettings section = pluginSettings.getSection(sectionName);
+        if (section == null) {
+            section = pluginSettings.addNewSection(sectionName);
+        }
+        
+        boolean buttonMappingClassesState = buildMappingClassesButton.getSelection();
+        section.put(BUILD_MAPPING_CLASSES_KEY, buttonMappingClassesState);
+        boolean buildEntireDocsState = buildEntireDocumentsButton.getSelection();
+        section.put(BUILD_ENTIRE_DOCS_KEY, buildEntireDocsState);
+    }
+        
+    /**
+     * Restores dialog settings from last time wizard ran.
+     * 
+     */
+    private void restoreSettings() {
+        final IDialogSettings pluginSettings = ModelerXmlUiPlugin.getDefault().getDialogSettings();
+        final String sectionName = NewVirtualDocumentWizardPage.class.getSimpleName();
+        IDialogSettings section = pluginSettings.getSection(sectionName);
+        if (section == null) {
+            section = pluginSettings.addNewSection(sectionName);
+            return;
+        } else {
+            Boolean buildMappingClasses = section.getBoolean(BUILD_MAPPING_CLASSES_KEY);
+            buildMappingClassesButton.setSelection(buildMappingClasses.booleanValue());
+            Boolean buildEntireDocs = section.getBoolean(BUILD_ENTIRE_DOCS_KEY);
+            buildEntireDocumentsButton.setSelection(buildEntireDocs.booleanValue());
+            buildGlobalOnlyButton.setSelection(!buildEntireDocs.booleanValue());
+        }
+    }
+
 }// end NewVirtualDocumentWizardPanel
 
 class NewVirtualDocumentAccumulatorSource implements IAccumulatorSource {
