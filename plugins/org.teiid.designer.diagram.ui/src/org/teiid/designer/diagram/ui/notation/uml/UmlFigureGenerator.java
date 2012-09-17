@@ -232,8 +232,7 @@ public class UmlFigureGenerator implements NotationFigureGenerator {
     private Image getImage(DiagramModelNode node ) {
         Image icon = null;
         if( node instanceof UmlModelNode ) {
-            Object imageURL = ((UmlModelNode)node).getUmlAspect().getImage(node.getModelObject());
-            icon = ModelUtilities.getModelObjectLabelProvider().getImage(node.getModelObject(), imageURL);
+            icon = ModelUtilities.getModelObjectLabelProvider().getImage(node.getModelObject());
         }
         if( icon == null )
             icon = DiagramUiPlugin.getDiagramNotationManager().getLabelProvider().getImage(node.getModelObject());

@@ -584,7 +584,7 @@ public class ModelTableEditor extends NavigableEditor
 
     protected boolean isReadOnly() {
         IFileEditorInput input = (IFileEditorInput)getEditorInput();
-        return input.getFile().isReadOnly();
+        return ModelUtil.isIResourceReadOnly(input.getFile());
     }
 
     private TableNotificationHandler getNotificationHandler() {

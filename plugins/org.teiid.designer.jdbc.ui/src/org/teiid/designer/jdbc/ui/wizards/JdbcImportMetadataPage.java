@@ -35,6 +35,7 @@ import org.teiid.designer.jdbc.JdbcImportSettings;
 import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.jdbc.metadata.Includes;
 import org.teiid.designer.jdbc.metadata.JdbcDatabase;
+import org.teiid.designer.jdbc.relational.JdbcImporter;
 import org.teiid.designer.jdbc.ui.util.JdbcUiUtil;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.InternalUiConstants;
@@ -60,6 +61,8 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(JdbcImportMetadataPage.class);
 
     private static final String TITLE = getString("title"); //$NON-NLS-1$
+    
+    private static final String TITLE_WITH_VDB_SOURCE = TITLE + " (VDB source model)"; //$NON-NLS-1$
 
     private static final String APPROXIMATIONS_BUTTON = getString("approximationsButton"); //$NON-NLS-1$
     private static final String FOREIGN_KEYS_BUTTON   = getString("foreignKeysButton"); //$NON-NLS-1$
@@ -107,6 +110,8 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
     private ListPanel listPanel;
     private Map enableMap;
     private boolean initd;
+    
+    private JdbcImporter importer;
 
     //============================================================================================================================
 	// Constructors
@@ -128,6 +133,7 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 * @since 4.0
 	 */
+    @SuppressWarnings("unused")
 	@Override
 	public void createControl(final Composite parent) {
         // Create page
@@ -139,7 +145,7 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
         {
             this.foreignKeysCheckBox = WidgetFactory.createCheckBox(checkBoxPanel);
             this.foreignKeysCheckBox.addSelectionListener(new SelectionAdapter() {
-                @Override
+				@Override
                 public void widgetSelected(final SelectionEvent event) {
                     foreignKeysCheckBoxSelected();
                 }
@@ -252,7 +258,13 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
             }
         }
         setMessage(INITIAL_MESSAGE);
+        if( this.importer.isVdbSourceModel() ) {
+        	this.setTitle(TITLE_WITH_VDB_SOURCE);
+        } else {
+        	this.setTitle(TITLE);
+        }
         super.setVisible(visible);
+
 	}
 
     void initializeInTransaction() {
@@ -543,6 +555,13 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
 
     }
 
+	/**
+	 * @param importer the importer to set
+	 */
+	public void setImporter(JdbcImporter importer) {
+		this.importer = importer;
+	}
+
     //============================================================================================================================
 	// Utility Methods
 
@@ -577,4 +596,6 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
             WizardUtil.setPageComplete(this, INVALID_PAGE_MESSAGE, ERROR);
         }
 	}
+	
+	
 }

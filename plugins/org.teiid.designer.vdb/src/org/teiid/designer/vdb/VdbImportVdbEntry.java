@@ -34,6 +34,8 @@ public class VdbImportVdbEntry {
 	public VdbImportVdbEntry(Vdb vdb, String importVdbName) {
 		this.vdb = vdb;
         this.name = importVdbName;
+        this.version.set(1);
+        this.importDataPolicies.set(false);
 	}
 	
 	/**

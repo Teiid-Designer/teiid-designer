@@ -141,7 +141,7 @@ public class ModelPropertySource implements IPropertySource {
             result[index++] = fileProperties[i];
         }
         // use ReadOnlyPropertyDescriptor if the model is not open in an Editor.
-        boolean readOnly = this.modelFile.isReadOnly();
+        boolean readOnly = ModelUtil.isIResourceReadOnly(this.modelFile);
         boolean editorOpen = ModelEditorManager.isOpen(this.modelFile);
         for ( int i=0 ; i<annotationProperties.length ; ++i ) { 
             if ( readOnly ) {

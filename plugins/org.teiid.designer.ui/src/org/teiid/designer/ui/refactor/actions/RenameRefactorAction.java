@@ -422,10 +422,10 @@ public class RenameRefactorAction extends RefactorAction {
     boolean validateEdit( IFile source,
                           IFile destination,
                           Shell shell ) {
-        if (destination.isReadOnly()) {
+        if (ModelUtil.isIResourceReadOnly(destination)) {
             IWorkspace workspace = ModelerCore.getWorkspace();
             IStatus status;
-            if (source.isReadOnly()) status = workspace.validateEdit(new IFile[] {source, destination}, shell);
+            if (ModelUtil.isIResourceReadOnly(source)) status = workspace.validateEdit(new IFile[] {source, destination}, shell);
             else status = workspace.validateEdit(new IFile[] {destination}, shell);
             return status.isOK();
         }

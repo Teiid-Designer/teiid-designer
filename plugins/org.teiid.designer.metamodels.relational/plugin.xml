@@ -190,6 +190,13 @@
             path="relational.mxd">
       </extensionDefinition>
    </extension>
+   <extension
+         point="org.teiid.designer.extension.modelExtensionProvider">
+      <extensionDefinition
+            className="org.teiid.designer.metamodels.relational.extension.CoreModelExtensionAssistant"
+            path="core.mxd">
+      </extensionDefinition>
+   </extension>
    
 <!-- Designates valid extensible metamodel -->
    <extension
@@ -197,6 +204,13 @@
       <definition 
             metamodelUri="http://www.metamatrix.com/metamodels/Relational"
             metaclassProviderClass="org.teiid.designer.metamodels.relational.extension.RelationalExtendableClassnameProvider">
+      </definition>
+   </extension>
+   <extension
+         point="org.teiid.designer.extension.extensibleMetamodelProvider">
+      <definition 
+            metamodelUri="http://www.metamatrix.com/metamodels/Core"
+            metaclassProviderClass="org.teiid.designer.metamodels.relational.extension.CoreExtendableClassnameProvider">
       </definition>
    </extension>
    

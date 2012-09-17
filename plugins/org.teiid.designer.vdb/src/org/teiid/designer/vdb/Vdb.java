@@ -17,7 +17,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -43,6 +45,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.OperationUtil;
@@ -138,6 +141,7 @@ public final class Vdb {
     private int queryTimeout = DEFAULT_TIMEOUT;
     
     private VdbModelBuilder builder;
+    private Map<String, Set<String>> modelToImportVdbMap = new HashMap<String, Set<String>>();
 
     /**
      * @param file
@@ -437,6 +441,33 @@ public final class Vdb {
     public final IPath getName() {
         return file.getFullPath();
     }
+    
+    /**
+     * @param vdbName the name of the imported vdb
+     * @return the <code>VdbImportVdbEntry</code>
+     */
+    private final VdbImportVdbEntry getImportVdbEntry(String vdbName) {
+    	for( VdbImportVdbEntry entry : getImportVdbEntries()) {
+    		if( entry.getName().equalsIgnoreCase(vdbName)) {
+    			return entry;
+    		}
+    	}
+    	
+    	return null;
+    }
+    
+    private final void handleRemovedVdbModelEntry(String vdbModelEntryName) {
+    	// Clean up import VDBs
+    	// Assume that any registered vdb names for the model entry are stale
+    	Set<String> existingSet = modelToImportVdbMap.get(vdbModelEntryName);
+    	
+    	
+    	// If Set does not exist for modelName, create it
+    	if( existingSet != null ) {
+    		unregisterStaleImportVdbs(existingSet, new NullProgressMonitor());
+    		modelToImportVdbMap.remove(vdbModelEntryName);
+    	}
+    }
 
     /**
      * @return <code>true</code> if this VDB has been modified since its creation of last {@link #save(IProgressMonitor) save}.
@@ -512,15 +543,55 @@ public final class Vdb {
     public final void removeChangeListener( final PropertyChangeListener listener ) {
         listeners.remove(listener);
     }
+    
+    /**
+     * @param importVdbNames the list of imported vdb names
+     * @param modelName the model name (<code>IPath</code>) from the <code>VdbModelEntry</code>
+     * @param monitor the progress monitor
+     */
+    public final void registerImportVdbs(Collection<String> importVdbNames, String modelName, IProgressMonitor monitor) {
+    	Set<String> existingSet = modelToImportVdbMap.get(modelName);
+    	Set<String> staleImportVdbs = new HashSet<String>();
+    	
+    	// If Set does not exist for modelName, create it
+    	if( existingSet == null ) {
+    		existingSet = new HashSet<String>();
+    		modelToImportVdbMap.put(modelName, existingSet);
+    	} else { // If set exists, then need to check collect any potential stale import vdb names
+    		for( String importVdb : existingSet ) {
+    			if( !importVdbNames.contains(importVdb)) {
+    				staleImportVdbs.add(importVdb);
+    			}
+    		}
+    	}
+    	existingSet.addAll(importVdbNames);
+    	
+    	unregisterStaleImportVdbs(staleImportVdbs, monitor);
+    	
+    	// Only add the import if it doesn't already exist
+    	for( String importVdbName : importVdbNames ) {
+	    	if( getImportVdbEntry(importVdbName) == null ) {
+	    		addImportVdb(importVdbName);
+	    	}
+    	}
+    }
+    
+
 
     /**
      * @param entry
      */
     public final void removeEntry( final VdbEntry entry ) {
         entry.dispose();
-        if (entry instanceof VdbModelEntry) modelEntries.remove(entry);
+        if (entry instanceof VdbModelEntry) {
+        	String entryName = entry.getName().toString();
+        	modelEntries.remove(entry);
+        	
+        	handleRemovedVdbModelEntry(entryName);
+        }
         else entries.remove(entry);
         setModified(this, Event.ENTRY_REMOVED, entry, null);
+        
     }
 
     /**
@@ -677,6 +748,32 @@ public final class Vdb {
 
         getBuilder().stop();
     }
+    
+    private final void unregisterStaleImportVdbs(Set<String> proposedStaleImportVdbs, IProgressMonitor monitor) {
+    	Set<String> actualStaleImportVdbs = new HashSet<String>();
+		for( String importVdb : proposedStaleImportVdbs ) {
+			boolean keep = true;
+			for( String modelName : modelToImportVdbMap.keySet() ) {
+				Set<String> importVdbSet = modelToImportVdbMap.get(modelName);
+				if( importVdbSet.contains(importVdb)) {
+					keep = false;
+					break;
+				}
+			}
+			
+			if( !keep ) {
+				actualStaleImportVdbs.add(importVdb);
+			}
+		}
+		
+		for( String staleImportVdb : actualStaleImportVdbs ) {
+			VdbImportVdbEntry entry = getImportVdbEntry(staleImportVdb);
+			if( entry != null ) {
+				removeImportVdb(entry, monitor);
+			}
+		}
+    }
+    
     
     /**
      * @return builder

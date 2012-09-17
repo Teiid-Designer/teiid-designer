@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -65,9 +66,9 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.wizard.IPersistentWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
-import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
 /**
@@ -94,19 +95,14 @@ final class JdbcImportOptionsPage extends WizardPage implements
     private static final String FOLDER_LABEL = getString("folderLabel"); //$NON-NLS-1$
     private static final String UPDATE_CHECKBOX = getString("updateCheckBox"); //$NON-NLS-1$
     private static final String MODEL_OBJECT_NAMES_GROUP = getString("modelObjectNamesGroup"); //$NON-NLS-1$
-//    private static final String SOURCE_OBJECT_NAMES_GROUP = getString("sourceObjectNamesGroup"); //$NON-NLS-1$
     private static final String NONE_BUTTON = getString("noneButton"); //$NON-NLS-1$
     private static final String UPPERCASE_BUTTON = getString("uppercaseButton"); //$NON-NLS-1$
     private static final String LOWERCASE_BUTTON = getString("lowercaseButton"); //$NON-NLS-1$
-//    private static final String EMPTY_BUTTON = getString("emptyButton"); //$NON-NLS-1$
-//    private static final String UNQUALIFIED_BUTTON = getString("unqualifiedSourceNamesButton"); //$NON-NLS-1$
-//    private static final String QUALIFIED_BUTTON = getString("qualifiedSourceNamesButton"); //$NON-NLS-1$
 
 
     
 
     private static final String MODEL_OBJECT_NAMES_DESCRIPTION = getString("modelObjectNamesDescription"); //$NON-NLS-1$
-//    private static final String SOURCE_OBJECT_NAMES_DESCRIPTION = getString("sourceObjectNamesDescription"); //$NON-NLS-1$
 
     private static final String FILE_EXISTS_MESSAGE = getString("fileExistsMessage", UPDATE_CHECKBOX); //$NON-NLS-1$
     private static final String NOT_MODEL_PROJECT_MESSAGE = getString("notModelProjectMessage"); //$NON-NLS-1$
@@ -140,7 +136,6 @@ final class JdbcImportOptionsPage extends WizardPage implements
     private JdbcDatabase db;
     private JdbcImportSettings importSettings;
     private Text nameText, folderText;
-//    private Button emptyButton, unqualifiedButton, qualifiedButton;
     private Button updateCheckBox, schemaCheckBox, noneButton, uppercaseButton, lowercaseButton;
     private boolean initd;
     private IContainer folder;
@@ -227,26 +222,7 @@ final class JdbcImportOptionsPage extends WizardPage implements
                 updateCheckBoxSelected();
             }
         });             
-        /*
-        final Group inclGroup = WidgetFactory.createGroup(pg, INCLUDE_GROUP, GridData.HORIZONTAL_ALIGN_FILL, COLUMN_COUNT);
-        {
-            WidgetFactory.createLabel(inclGroup, GridData.FILL_HORIZONTAL, INCLUDE_DESCRIPTION, SWT.WRAP);
-            this.catalogCheckBox = WidgetFactory.createCheckBox(inclGroup, GridData.FILL_HORIZONTAL);
-            this.catalogCheckBox.addSelectionListener(new SelectionAdapter() {
 
-                public void widgetSelected(final SelectionEvent event) {
-                    catalogCheckBoxSelected();
-                }
-            });
-            this.schemaCheckBox = WidgetFactory.createCheckBox(inclGroup, GridData.FILL_HORIZONTAL);
-            this.schemaCheckBox.addSelectionListener(new SelectionAdapter() {
-
-                public void widgetSelected(final SelectionEvent event) {
-                    schemaCheckBoxSelected();
-                }
-            });
-        }        
-        */                                
         final Group modelObjNamesGroup = WidgetFactory.createGroup(pg,
                                                                    MODEL_OBJECT_NAMES_GROUP,
                                                                    GridData.HORIZONTAL_ALIGN_FILL,
@@ -283,34 +259,6 @@ final class JdbcImportOptionsPage extends WizardPage implements
                 }
             });
         }
-//        final Group srcObjNamesGroup = WidgetFactory.createGroup(pg,
-//                                                                 SOURCE_OBJECT_NAMES_GROUP,
-//                                                                 GridData.HORIZONTAL_ALIGN_FILL,
-//                                                                 COLUMN_COUNT);
-//        {
-//            WidgetFactory.createLabel(srcObjNamesGroup, GridData.FILL_HORIZONTAL, SOURCE_OBJECT_NAMES_DESCRIPTION, SWT.WRAP);
-//            this.emptyButton = WidgetFactory.createRadioButton(srcObjNamesGroup, EMPTY_BUTTON);
-//            this.emptyButton.addSelectionListener(new SelectionAdapter() {
-//
-//                public void widgetSelected(final SelectionEvent event) {
-//                    emptyButtonSelected();
-//                }
-//            });
-//            this.unqualifiedButton = WidgetFactory.createRadioButton(srcObjNamesGroup, UNQUALIFIED_BUTTON);
-//            this.unqualifiedButton.addSelectionListener(new SelectionAdapter() {
-//
-//                public void widgetSelected(final SelectionEvent event) {
-//                    unqualifiedButtonSelected();
-//                }
-//            });
-//            this.qualifiedButton = WidgetFactory.createRadioButton(srcObjNamesGroup, QUALIFIED_BUTTON);
-//            this.qualifiedButton.addSelectionListener(new SelectionAdapter() {
-//
-//                public void widgetSelected(final SelectionEvent event) {
-//                    qualifiedButtonSelected();
-//                }
-//            });
-//        }
     }
 
     /**
@@ -327,14 +275,14 @@ final class JdbcImportOptionsPage extends WizardPage implements
         final JdbcImportSettings importSettings = wizard.getSource().getImportSettings();
         try {
             final DatabaseMetaData metadata = wizard.getDatabase().getDatabaseMetaData();
-            //dlgSettings.put(metadata.getCatalogTerm(), importSettings.isCreateCatalogsInModel());           
+         
             dlgSettings.put(metadata.getSchemaTerm(), importSettings.isCreateSchemasInModel());
         } catch (final Exception err) {
             Util.log(err);
             WidgetUtil.showError(err);
         }
         dlgSettings.put(MODEL_OBJECT_NAMES_GROUP, importSettings.getConvertCaseInModel().getName());
-//        dlgSettings.put(SOURCE_OBJECT_NAMES_GROUP, importSettings.getGenerateSourceNamesInModel().getName());
+
     }
     
     public boolean updateSelected() {
@@ -372,23 +320,14 @@ final class JdbcImportOptionsPage extends WizardPage implements
                     final String catalogTerm = metadata.getCatalogTerm();
                     final String schemaTerm = metadata.getSchemaTerm();
                     if (!((XsdAsRelationalImportWizard)getWizard()).isUpdatedModel() && dlgSettings.get(catalogTerm) != null) {
-                        //this.importSettings.setCreateCatalogsInModel(dlgSettings.getBoolean(catalogTerm));
                         this.importSettings.setCreateSchemasInModel(dlgSettings.getBoolean(schemaTerm));
                         this.importSettings.setConvertCaseInModel(CaseConversion.get(dlgSettings.get(MODEL_OBJECT_NAMES_GROUP)));
-//                        this.importSettings.setGenerateSourceNamesInModel(SourceNames.get(dlgSettings.get(SOURCE_OBJECT_NAMES_GROUP)));
                     }
                     if(wizard.getStateManager().isUsingNoCatalog()) {
                     	importSettings.setCreateCatalogsInModel(false);
                     } else {
                     	importSettings.setCreateCatalogsInModel(true);
                     }
-                    //final Composite parent = this.catalogCheckBox.getParent();
-                    //initializeIncludeCheckBox(this.catalogCheckBox, catalogTerm, this.importSettings.isCreateCatalogsInModel());
-                    //initializeIncludeCheckBox(this.schemaCheckBox, schemaTerm, this.importSettings.isCreateSchemasInModel());
-                    //if (this.catalogCheckBox.isDisposed() && this.schemaCheckBox.isDisposed()) {
-                    //    parent.dispose();
-                    //    ((Composite)getControl()).layout();
-                    //}
                     
                     //This is here because this is where it used to happen
 
@@ -410,23 +349,7 @@ final class JdbcImportOptionsPage extends WizardPage implements
                         break;
                     }
                 }
-//                switch (this.importSettings.getGenerateSourceNamesInModel().getValue()) {
-//                    case SourceNames.NONE:
-//                    {
-//                        this.emptyButton.setSelection(true);
-//                        break;
-//                    }
-//                    case SourceNames.UNQUALIFIED:
-//                    {
-//                        this.unqualifiedButton.setSelection(true);
-//                        break;
-//                    }
-//                    case SourceNames.FULLY_QUALIFIED:
-//                    {
-//                        this.qualifiedButton.setSelection(true);
-//                        break;
-//                    }
-//                }
+
             } catch (final Exception err) {
                 JdbcUiUtil.showAccessError(err);
             }
@@ -559,23 +482,6 @@ final class JdbcImportOptionsPage extends WizardPage implements
         };
         return filter;
     }
-    
-    
-    /**
-     * @since 4.0
-     */
-//    void catalogCheckBoxSelected() {
-//        this.importSettings.setCreateCatalogsInModel(this.catalogCheckBox.getSelection());
-//    }
-
-//    /**
-//     * @since 4.0
-//     */
-//    void emptyButtonSelected() {
-//        if (this.emptyButton.getSelection()) {
-//            this.importSettings.setGenerateSourceNamesInModel(SourceNames.NONE_LITERAL);
-//        }
-//    }
 
     /**
      * @since 4.0
@@ -622,30 +528,12 @@ final class JdbcImportOptionsPage extends WizardPage implements
         }
     }
 
-//    /**
-//     * @since 4.0
-//     */
-//    void qualifiedButtonSelected() {
-//        if (this.qualifiedButton.getSelection()) {
-//            this.importSettings.setGenerateSourceNamesInModel(SourceNames.FULLY_QUALIFIED_LITERAL);
-//        }
-//    }
-
     /**
      * @since 4.0
      */
     void schemaCheckBoxSelected() {
         this.importSettings.setCreateSchemasInModel(this.schemaCheckBox.getSelection());
     }
-
-//    /**
-//     * @since 4.0
-//     */
-//    void unqualifiedButtonSelected() {
-//        if (this.unqualifiedButton.getSelection()) {
-//            this.importSettings.setGenerateSourceNamesInModel(SourceNames.UNQUALIFIED_LITERAL);
-//        }
-//    }
 
     /**
      * @since 4.0
@@ -692,21 +580,6 @@ final class JdbcImportOptionsPage extends WizardPage implements
     /**
      * @since 4.0
      */
-//    private void initializeIncludeCheckBox(final Button checkBox,
-//                                           final String term,
-//                                           final boolean selected) {
-//        if (term.length() == 0) {
-//            checkBox.dispose();
-//            ((Composite)getControl()).layout();
-//        } else {
-//            checkBox.setText(StringUtil.computeDisplayableForm(term));
-//            checkBox.setSelection(selected);
-//        }
-//    }
-
-    /**
-     * @since 4.0
-     */
     private void validatePage() {
         final boolean updating = this.updateCheckBox.getSelection();
         try {
@@ -723,9 +596,10 @@ final class JdbcImportOptionsPage extends WizardPage implements
             }
             // Check if model name is valid
             String name = this.nameText.getText();
-            String problem = ModelUtilities.validateModelName(name, ModelerCore.MODEL_FILE_EXTENSION);
-            if (problem != null) {
-                WizardUtil.setPageComplete(this, INVALID_FILE_MESSAGE + '\n' + problem, ERROR);
+            IStatus status = ModelNameUtil.validate(name, ModelerCore.MODEL_FILE_EXTENSION, folder,
+            		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
+            if( status.getSeverity() == IStatus.ERROR ) {
+                WizardUtil.setPageComplete(this, status.getMessage(), ERROR);
                 folder = null;
             }
 

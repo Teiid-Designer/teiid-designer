@@ -65,9 +65,9 @@ import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
-import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
 /**
@@ -525,10 +525,10 @@ public class ModelSelectionPage extends AbstractWizardPage
         if (CoreStringUtil.isEmpty(fileName)) {
             WizardUtil.setPageComplete(this, getString("missingFileMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
         } else {
-            String problem = ModelUtilities.validateModelName(fileName, ModelerCore.MODEL_FILE_EXTENSION);
-            if (problem != null) {
-                String msg = getString("invalidFileMessage") + '\n' + problem; //$NON-NLS-1$
-                WizardUtil.setPageComplete(this, msg, IMessageProvider.ERROR);
+            IStatus status = ModelNameUtil.validate(fileName, ModelerCore.MODEL_FILE_EXTENSION, targetModelLocation,
+            		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
+            if( status.getSeverity() == IStatus.ERROR ) {
+                WizardUtil.setPageComplete(this, status.getMessage(), ERROR);
                 targetModelLocation = null;
             } else {
                 final String folderName = folderText.getText();

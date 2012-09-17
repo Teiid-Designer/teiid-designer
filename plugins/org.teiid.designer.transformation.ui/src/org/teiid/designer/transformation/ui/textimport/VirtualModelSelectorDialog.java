@@ -52,6 +52,7 @@ import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
 
@@ -77,10 +78,6 @@ public class VirtualModelSelectorDialog extends ModelWorkspaceDialog implements 
     private static final String SEPARATOR = "."; //$NON-NLS-1$
 
     private static final String TITLE = getString("title"); //$NON-NLS-1$
-    private final static String MODEL_CREATE_ERROR_NO_NAME = getString("noName.message"); //$NON-NLS-1$
-    private final static String MODEL_CREATE_ERROR_INVALID_NAME = getString("invalidName.message"); //$NON-NLS-1$
-    private final static String MODEL_CREATE_ERROR_ALREADY_EXISTS = getString("alreadyExists.message"); //$NON-NLS-1$
-    private final static String MODEL_CREATE_ERROR_SAME_NAME_AS_RELATIONAL = getString("sameNameAsVirtual.message"); //$NON-NLS-1$
     private final static String MODEL_CREATE_ERROR_IS_VALID = getString("isValid.message"); //$NON-NLS-1$
     private static String MODEL_CREATE_INSTRUCTION = getString("modelCreateInstruction.message"); //$NON-NLS-1$  
     private static String EXISTING_MODEL_FOLDER_SELECTED = getString("existingModelFolderLocationSelected.message"); //$NON-NLS-1$
@@ -362,31 +359,11 @@ public class VirtualModelSelectorDialog extends ModelWorkspaceDialog implements 
      * @return the status of the supplied model name
      */
     private String getVirtualModelNameStatus( String sModelName ) {
-        // Check for null or zero-length
-        if (sModelName == null || sModelName.length() == 0) {
-            return MODEL_CREATE_ERROR_NO_NAME;
-            // Check for valid model name
-        }
-        String fileNameMessage = ModelUtilities.validateModelName(sModelName, FILE_EXT);
-        if (fileNameMessage != null) {
-            return MODEL_CREATE_ERROR_INVALID_NAME;
-        }
-        // Check if already exists
-        String sFileName = getFileName(sModelName);
-        IPath modelFullPath = null;
-        IPath modelRelativePath = null;
-
-        if (newModelParent != null) {
-            modelFullPath = newModelParent.getFullPath().append(sFileName);
-            modelRelativePath = newModelParent.getProjectRelativePath().append(sFileName);
-        }
-
-        if (newModelParent != null && newModelParent.getProject().exists(modelRelativePath)) {
-            return MODEL_CREATE_ERROR_ALREADY_EXISTS;
-        }
-
-        if (targetVirtualFilePath != null && targetVirtualFilePath.equals(modelFullPath)) {
-            return MODEL_CREATE_ERROR_SAME_NAME_AS_RELATIONAL;
+        
+        IStatus status = ModelNameUtil.validate(sModelName, ModelerCore.MODEL_FILE_EXTENSION, newModelParent,
+        		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES_OTHER_THAN_LOCATION | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
+        if( status.getSeverity() == IStatus.ERROR ) {
+            return status.getMessage();
         }
 
         // success
@@ -400,32 +377,10 @@ public class VirtualModelSelectorDialog extends ModelWorkspaceDialog implements 
      * @return 'true' if the name is valid, 'false' if not.
      */
     private boolean isValidVirtualModelName( String sModelName ) {
-
-        // Check for null or zero-length
-        if (sModelName == null || sModelName.length() == 0) {
-            return false;
-        }
-        // Check for valid model name
-        String fileNameMessage = ModelUtilities.validateModelName(sModelName, FILE_EXT);
-        if (fileNameMessage != null) {
-            return false;
-        }
-
-        // Check if already exists
-        String sFileName = getFileName(sModelName);
-        IPath modelFullPath = null;
-        IPath modelRelativePath = null;
-        if (newModelParent != null) {
-            modelFullPath = newModelParent.getFullPath().append(sFileName);
-            modelRelativePath = newModelParent.getProjectRelativePath().append(sFileName);
-        }
-
-        if (newModelParent != null && newModelParent.getProject().exists(modelRelativePath)) {
-            return false;
-        }
-
-        // Check if it is the same path as the relational model being generated
-        if (targetVirtualFilePath != null && targetVirtualFilePath.equals(modelFullPath)) {
+    	
+        IStatus status = ModelNameUtil.validate(sModelName, ModelerCore.MODEL_FILE_EXTENSION, newModelParent,
+        		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES_OTHER_THAN_LOCATION | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
+        if( status.getSeverity() == IStatus.ERROR ) {
             return false;
         }
 

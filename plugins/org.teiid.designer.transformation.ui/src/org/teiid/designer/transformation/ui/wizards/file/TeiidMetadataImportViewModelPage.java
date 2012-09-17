@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.Viewer;
@@ -54,6 +55,7 @@ import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
@@ -94,8 +96,6 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 	private IPath viewModelFilePath;
 	
 	private Text viewTableNameText;
-	
-	private String fileNameMessage = null;
 
 	private TeiidMetadataImportInfo info;
 
@@ -411,13 +411,11 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 		}
 
 		String fileText = this.viewModelFileText.getText().trim();
-		if (fileText.length() == 0) {
-			setThisPageComplete(getString("viewFileNameMustBeSpecified"), ERROR); //$NON-NLS-1$
-			return false;
-		}
-		fileNameMessage = ModelUtilities.validateModelName(fileText,DEFAULT_EXTENSION);
-		if (fileNameMessage != null) {
-			setThisPageComplete(getString("illegalFileName", fileNameMessage), ERROR); //$NON-NLS-1$
+		
+        IStatus status = ModelNameUtil.validate(fileText, ModelerCore.MODEL_FILE_EXTENSION, null,
+        		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
+        if( status.getSeverity() == IStatus.ERROR ) {
+        	setThisPageComplete(status.getMessage(), ERROR);
 			return false;
 		}
 

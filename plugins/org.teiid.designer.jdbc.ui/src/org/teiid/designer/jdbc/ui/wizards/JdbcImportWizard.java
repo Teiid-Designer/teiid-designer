@@ -57,7 +57,10 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelResourceImpl;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.OpenableImpl;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.jdbc.JdbcException;
 import org.teiid.designer.jdbc.JdbcPlugin;
 import org.teiid.designer.jdbc.JdbcSource;
@@ -73,6 +76,8 @@ import org.teiid.designer.jdbc.ui.util.JdbcUiUtil;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
+import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionAssistant;
+import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -127,12 +132,16 @@ public class JdbcImportWizard extends AbstractWizard
 
     boolean controlsHaveBeenCreated = false;
     private boolean isVirtual;
+    private boolean isVdbSourceModel;
 
     private IJdbcImportPostProcessor[] postProcessors;
 
     // Need to cash the profile when connection is selected so we can use it in Finish method to
     // inject the connection info into model.
     private IConnectionProfile connectionProfile;
+    
+//    private boolean isTeiidJdbcConnection = false;
+//    private String vdbName;
 
     /**
      * @since 4.0
@@ -200,7 +209,9 @@ public class JdbcImportWizard extends AbstractWizard
      * @since 4.3
      */
     protected IWizardPage createMetadataPage() {
-        return new JdbcImportMetadataPage();
+    	JdbcImportMetadataPage page = new JdbcImportMetadataPage();
+    	page.setImporter(this.importer);
+        return page;
     }
 
     /**
@@ -209,7 +220,9 @@ public class JdbcImportWizard extends AbstractWizard
      * @since 4.3
      */
     protected IWizardPage createObjectsPage() {
-        return new JdbcImportObjectsPage();
+    	JdbcImportObjectsPage page = new JdbcImportObjectsPage();
+    	page.setImporter(this.importer);
+        return page;
     }
 
     /**
@@ -218,7 +231,9 @@ public class JdbcImportWizard extends AbstractWizard
      * @since 4.3
      */
     protected JdbcImportOptionsPage createOptionsPage() {
-        return new JdbcImportOptionsPage();
+    	JdbcImportOptionsPage page = new JdbcImportOptionsPage();
+    	page.setImporter(this.importer);
+        return page;
     }
 
     /**
@@ -640,6 +655,7 @@ public class JdbcImportWizard extends AbstractWizard
 
         // Create listener for changes to SQL connection
         this.srcPg = new JdbcSourceSelectionPage(this.importer.getSource());
+        this.srcPg.setImporter(this.importer);
         this.srcPg.addChangeListener(new IChangeListener() {
 
             @Override
@@ -710,6 +726,7 @@ public class JdbcImportWizard extends AbstractWizard
                 ModelType type = ModelType.PHYSICAL_LITERAL;
 
                 this.isVirtual = this.optionsPg.isVirtual();
+                this.isVdbSourceModel= this.importer.isVdbSourceModel(); 
 
                 if( this.isVirtual ) {
                 	type = ModelType.VIRTUAL_LITERAL;
@@ -727,6 +744,17 @@ public class JdbcImportWizard extends AbstractWizard
                 if (this.connectionProfile != null) {
                     IConnectionInfoProvider provider = new JDBCConnectionInfoProvider();
                     provider.setConnectionInfo(resrc, this.connectionProfile);
+                }
+
+                if( this.isVdbSourceModel && srcPg.isTeiidConnection() ) {
+                	// Inject VDB source model properties: locked = TRUE, vdb-name = "xxxx" , vdb-version = "y"
+                	ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+        			CoreModelExtensionAssistant assistant = 
+        					(CoreModelExtensionAssistant)registry.getModelExtensionAssistant(CoreModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix());
+        			
+        			assistant.saveModelExtensionDefinition(resrc);
+        			assistant.setPropertyValue(modelAnnotation, CoreModelExtensionConstants.PropertyIds.LOCKED, Boolean.TRUE.toString());
+        			assistant.setPropertyValue(modelAnnotation, CoreModelExtensionConstants.PropertyIds.VDB_NAME, srcPg.getVdbName());
                 }
                 JdbcImportWizard.this.status = processor.execute(resrc, getDatabase(), src.getImportSettings(), monitor);
 
@@ -790,7 +818,7 @@ public class JdbcImportWizard extends AbstractWizard
                 }
                 
                 // Auto save the model & refresh
-                ppProcessorPack.getModelResource().save(monitor, true);
+                ((OpenableImpl)ppProcessorPack.getModelResource()).forceSave(monitor);
                 sWatch.stop();
 
                 sWatch.start(true);
@@ -849,9 +877,9 @@ public class JdbcImportWizard extends AbstractWizard
      */
     void sqlConnectionChanged( final JdbcSourceSelectionPage page ) {
         final Connection sqlConnection = page.getConnection();
+        this.connectionProfile = page.getConnectionProfile();
         if (sqlConnection == null) {
             this.importer.setDatabase(null);
-            this.connectionProfile = null;
         } else {
             try {
                 final JdbcSource src = (JdbcSource)ModelerCore.getModelEditor().copy(page.getSource());

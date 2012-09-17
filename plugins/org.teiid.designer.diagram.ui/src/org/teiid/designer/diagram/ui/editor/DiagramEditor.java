@@ -1816,7 +1816,7 @@ public class DiagramEditor extends GraphicalEditor
     void updateReadOnlyState() {
         // Check Readonly status
         if (getEditorInput() instanceof IFileEditorInput) {
-            final boolean readOnly = ((IFileEditorInput)getEditorInput()).getFile().isReadOnly();
+            final boolean readOnly = ModelUtil.isIResourceReadOnly(((IFileEditorInput)getEditorInput()).getFile());
             updateReadOnlyState(readOnly);
         }
     }
