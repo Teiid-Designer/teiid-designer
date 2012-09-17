@@ -41,6 +41,10 @@ public class ModelElement extends EntryElement {
     /**
      */
     public static final String IMPORTS = "imports"; //$NON-NLS-1$
+    
+    /**
+     */
+    public static final String IMPORT_VDB_REFERENCE = "import-vdb-reference"; //$NON-NLS-1$
 
     private static final long serialVersionUID = 1L;
 
@@ -89,6 +93,8 @@ public class ModelElement extends EntryElement {
         props.add(new PropertyElement(INDEX_NAME, entry.getIndexName()));
         for (final VdbModelEntry importedEntry : entry.getImports())
             props.add(new PropertyElement(IMPORTS, importedEntry.getName().toString()));
+        for (final String importedVdbName : entry.getImportVdbNames())
+            props.add(new PropertyElement(IMPORT_VDB_REFERENCE, importedVdbName));
     }
 
     /**

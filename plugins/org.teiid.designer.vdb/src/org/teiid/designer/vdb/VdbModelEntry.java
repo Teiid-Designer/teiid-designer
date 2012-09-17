@@ -82,6 +82,7 @@ public final class VdbModelEntry extends VdbEntry {
     private final AtomicBoolean visible = new AtomicBoolean(true);
     private final CopyOnWriteArraySet<VdbModelEntry> imports = new CopyOnWriteArraySet<VdbModelEntry>();
     private final CopyOnWriteArraySet<VdbModelEntry> importedBy = new CopyOnWriteArraySet<VdbModelEntry>();
+    private final CopyOnWriteArraySet<String> importVdbNames = new CopyOnWriteArraySet<String>();
     private final String modelClass;
     private final boolean builtIn;
     private final String type;
@@ -176,10 +177,15 @@ public final class VdbModelEntry extends VdbEntry {
             if (ModelElement.BUILT_IN.equals(name)) builtIn = Boolean.parseBoolean(property.getValue());
             else if (ModelElement.INDEX_NAME.equals(name)) indexName = property.getValue();
             else if (ModelElement.MODEL_CLASS.equals(name)) modelClass = property.getValue();
+            else if (ModelElement.IMPORT_VDB_REFERENCE.equals(name)) {
+            	importVdbNames.add(property.getValue());
+            }
         }
         this.builtIn = builtIn;
         this.indexName = indexName;
         this.modelClass = modelClass;
+        
+        getVdb().registerImportVdbs(importVdbNames, this.getName().toString(), monitor);
     }
 
     private void clean() {
@@ -265,6 +271,14 @@ public final class VdbModelEntry extends VdbEntry {
     public final Set<VdbModelEntry> getImports() {
         return Collections.unmodifiableSet(imports);
     }
+    
+    /**
+     * @return the immutable set of VDB name strings referenced by this model entry
+     */
+    public final Set<String> getImportVdbNames() {
+        return Collections.unmodifiableSet(importVdbNames);
+    }
+
 
     private File getIndexFile() {
         return new File(getVdb().getFolder(), INDEX_FOLDER + indexName);
@@ -540,8 +554,8 @@ public final class VdbModelEntry extends VdbEntry {
             }
             // Also add imported models if not a preview
             if (!getVdb().isPreview()) {
+            	importVdbNames.clear();
                 Resource[] refs = getFinder().findReferencesFrom(model, true, false);
-                Set<String> importVdbNames = new HashSet<String>();
                 if (refs != null) {
                     for (final Resource importedModel : refs) {
                     	java.net.URI uri = java.net.URI.create(importedModel.getURI().toString());

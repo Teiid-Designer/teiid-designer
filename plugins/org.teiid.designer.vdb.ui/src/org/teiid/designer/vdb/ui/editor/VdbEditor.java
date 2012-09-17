@@ -475,6 +475,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         modelsGroup.getTable().getViewer().refresh();
         pnlTranslatorOverrides.refresh();
         packModelsGroup();
+        
+        showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
     }
     
     private void packModelsGroup() {
@@ -1339,6 +1341,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         sash.setWeights(new int[] {50, 50});
 
         ModelerCore.getWorkspace().addResourceChangeListener(this);
+        
+        showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
     }
 
     private void createEditorTop( Composite parent ) {
