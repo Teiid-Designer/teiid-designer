@@ -61,9 +61,13 @@ import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionAssistant;
+import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionConstants;
 import org.teiid.designer.metamodels.xsd.XsdUtil;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.ui.PluginConstants;
@@ -889,5 +893,44 @@ public abstract class ModelObjectUtilities {
         } // endif -- modelResource not null
 
         return false;
+    }
+    
+    /**
+     * 
+     * @param eObject the eObject
+     * @return if eObject is contained in a VDB source model or not
+     */
+    public static boolean isVdbSourceModel(final EObject eObject) {
+    	ModelResource modelResource = ModelUtilities.getModelResource(eObject);
+    	if (modelResource != null ) {
+			return ModelUtilities.isVdbSourceModel(modelResource);
+    	}
+    	
+    	return false;
+    }
+    
+    
+    /**
+     * @param eObj_1 first EObject
+     * @param eObj_2 second EObject
+     * @return true if EObjects contained in same model project
+     */
+    public static boolean shareCommonProject( final EObject eObj_1, final EObject eObj_2) {
+    	ModelResource mr_1 = ModelUtilities.getModelResourceForModelObject(eObj_1);
+    	ModelResource mr_2 = ModelUtilities.getModelResourceForModelObject(eObj_2);
+    	
+    	if( mr_1 != null && mr_2 != null ) {
+    		try {
+				IResource res_1 = mr_1.getCorrespondingResource();
+				IResource res_2 = mr_2.getCorrespondingResource();
+				if( res_1 != null && res_2 != null ) {
+					return res_1.getProject().getName().equals(res_2.getProject().getName());
+				}
+			} catch (ModelWorkspaceException ex) {
+				UiConstants.Util.log(IStatus.ERROR, ex, ex.getMessage());
+			}
+    	}
+    	
+    	return false;
     }
 }

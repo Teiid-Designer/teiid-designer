@@ -47,6 +47,7 @@ import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ui.UiConstants;
 
 /**
@@ -309,7 +310,7 @@ public class CopyFilesAndFoldersOperation implements UiConstants {
                 IFile file = getFile(newDestination);
 
                 if (file != null) {
-                    if (file.isReadOnly()) {
+                    if (ModelUtil.isIResourceReadOnly(file)) {
                         existing.add(file);
                     }
                     if (getValidateConflictSource()) {

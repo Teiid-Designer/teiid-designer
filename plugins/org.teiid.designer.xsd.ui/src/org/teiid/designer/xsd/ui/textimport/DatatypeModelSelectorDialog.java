@@ -49,6 +49,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
 import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
@@ -94,7 +95,7 @@ public class DatatypeModelSelectorDialog extends ModelWorkspaceDialog implements
     /**
      * Construct an instance of ModelWorkspaceDialog. This constructor defaults to the resource root.
      * 
-     * @param parent
+     * @param parent the parent shell
      */
     public DatatypeModelSelectorDialog( Shell parent ) {
         this(parent, new ModelExplorerLabelProvider(), new ModelExplorerContentProvider());
@@ -103,7 +104,7 @@ public class DatatypeModelSelectorDialog extends ModelWorkspaceDialog implements
     /**
      * Construct an instance of ModelWorkspaceDialog. This constructor defaults to the resource root.
      * 
-     * @param parent
+     * @param parent the parent shell
      * @param labelProvider an ILabelProvider for the tree
      * @param contentProvider an ITreeContentProvider for the tree
      */
@@ -157,7 +158,8 @@ public class DatatypeModelSelectorDialog extends ModelWorkspaceDialog implements
 
         // listener for typing changes
         txtDatatypeModelName.addModifyListener(new ModifyListener() {
-            @Override
+            @SuppressWarnings("unused")
+			@Override
 			public void modifyText( final ModifyEvent event ) {
                 handleSetDatatypeModelName();
             }
@@ -207,7 +209,8 @@ public class DatatypeModelSelectorDialog extends ModelWorkspaceDialog implements
         // establish the selection adapter for the OK button
         if (saCreateCbxAdapter == null) {
             saCreateCbxAdapter = new SelectionAdapter() {
-                @Override
+                @SuppressWarnings("unused")
+				@Override
                 public void widgetSelected( final SelectionEvent event ) {
                     if (createNewModel) {
                         // create the new Model
@@ -333,8 +336,8 @@ public class DatatypeModelSelectorDialog extends ModelWorkspaceDialog implements
     /**
      * Create a Model with the supplied name, in the desired project
      * 
-     * @param targetProj the project resource under which to create the model
-     * @param modelName the model name to create
+     * @param targetRes the project resource under which to create the model
+     * @param sModelName the model name to create
      * @return the newly-created ModelResource
      */
     public ModelResource constructModel( IResource targetRes,
@@ -365,8 +368,9 @@ public class DatatypeModelSelectorDialog extends ModelWorkspaceDialog implements
             return MODEL_CREATE_ERROR_NO_NAME;
             // Check for valid model name
         }
-        String fileNameMessage = ModelUtilities.validateModelName(sModelName, FILE_EXT);
-        if (fileNameMessage != null) {
+        IStatus status = ModelNameUtil.validate(sModelName, FILE_EXT, null,
+        		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES );
+        if (status.getSeverity() == IStatus.ERROR) {
             return MODEL_CREATE_ERROR_INVALID_NAME;
         }
         // Check if already exists
@@ -404,8 +408,9 @@ public class DatatypeModelSelectorDialog extends ModelWorkspaceDialog implements
             return false;
         }
         // Check for valid model name
-        String fileNameMessage = ModelUtilities.validateModelName(sModelName, FILE_EXT);
-        if (fileNameMessage != null) {
+        IStatus status = ModelNameUtil.validate(sModelName, FILE_EXT, null,
+        		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES );
+        if (status.getSeverity() == IStatus.ERROR) {
             return false;
         }
 
@@ -517,7 +522,8 @@ public class DatatypeModelSelectorDialog extends ModelWorkspaceDialog implements
 
         // add a filter to remove closed projects
         result.addFilter(new ViewerFilter() {
-            @Override
+            @SuppressWarnings("unused")
+			@Override
             public boolean select( Viewer viewer,
                                    Object parentElement,
                                    Object element ) {

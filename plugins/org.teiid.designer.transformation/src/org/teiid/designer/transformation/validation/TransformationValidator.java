@@ -14,10 +14,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.TeiidComponentException;
@@ -41,7 +44,10 @@ import org.teiid.designer.core.query.QueryValidationResult;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.validation.ValidationContext;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspace;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.Table;
@@ -618,8 +624,15 @@ public class TransformationValidator implements QueryValidator {
                         container = ModelerCore.getModelContainer();
                         // set the resource scope (all model resources in open model projects)
                         try {
-                            ModelWorkspace workspace = ModelerCore.getModelWorkspace();
-                            queryContext.setResources(Arrays.asList(workspace.getEmfResources()));
+                        	ModelResource mr = ModelUtil.getModel(this.mappingRoot);
+                        	IProject proj = mr.getCorrespondingResource().getProject();
+                        	Collection<Resource> projectResources = new ArrayList<Resource>(0);
+                        	ModelUtil.collectResources(proj, projectResources);
+                        	queryContext.setResources(projectResources);
+                        	queryContext.setRestrictedSearch(true);
+
+//                            ModelWorkspace workspace = ModelerCore.getModelWorkspace();
+//                            queryContext.setResources(Arrays.asList(workspace.getEmfResources()));
                         } catch (RuntimeException e) {
                             // If we are running in a non-workspace environement, just use the resource from the given
                             // mappingRoot's resource set

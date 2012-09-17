@@ -24,6 +24,11 @@ public interface VdbConstants {
      * The package id for this plugin
      */
     String PACKAGE_ID = VdbConstants.class.getPackage().getName();
+    
+    /**
+     * The extension property key for vdb-name
+     */
+    String VDB_NAME_KEY = "core:vdb-name"; //$NON-NLS-1$
 	
     /** Constants for the SourceHandler extension point */
     interface SourceHandlerExtension {

@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -61,6 +62,7 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
@@ -96,6 +98,8 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
 
     private Text containerText;
     private ISelection selection;
+    
+    private IContainer folder;
 
     /**
      * Constructor for NewModelWizardSpecifyModelPage
@@ -302,7 +306,7 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
      * Uses the standard container selection dialog to choose the new value for the container field.
      */
     void handleBrowse() {
-        final IContainer folder = WidgetUtil.showFolderSelectionDialog((IContainer)getTargetContainer(),
+        folder = WidgetUtil.showFolderSelectionDialog((IContainer)getTargetContainer(),
                                                                        new ModelingResourceFilter(),
                                                                        new ModelProjectSelectionStatusValidator());
 
@@ -367,6 +371,7 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
                         containerText.setText(container.getFullPath().makeRelative().toString());
                     }
                     setParentPath(container);
+                    folder = container;
                 } else if (sel instanceof RelationalEntity) {
                     ModelResource mr = ModelUtilities.getModelResourceForModelObject((RelationalEntity)sel);
                     if (mr != null) {
@@ -385,6 +390,7 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
                                 containerText.setText(container.getFullPath().makeRelative().toString());
                             }
                             setParentPath(container);
+                            folder = container;
                         }
                     } else {
                         rootName = ((RelationalEntity)sel).getName();
@@ -595,15 +601,11 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
         }
 
         String modelName = outputNameText.getText();
-        if (modelName.trim().length() == 0) {
-            setErrorMessage(Util.getString("GenerateXsdWizard.enterModelFileName")); //$NON-NLS-1$
-            setPageComplete(false);
-            return;
-        }
 
-        String msg = ModelUtilities.validateModelName(modelName, XSD_EXT);
-        if (msg != null) {
-            setErrorMessage(Util.getString("GenerateXsdWizard.invalidModelFileName", msg)); //$NON-NLS-1$
+        IStatus status = ModelNameUtil.validate(modelName, ModelerCore.MODEL_FILE_EXTENSION, folder,
+        		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES | ModelNameUtil.NO_EXISTING_MODEL_AT_LOCATION);
+        if (status.getSeverity() == IStatus.ERROR) {
+            setErrorMessage(status.getMessage());
             setPageComplete(false);
             return;
         }
@@ -618,15 +620,12 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
 
         if (genInputButton.getSelection()) {
             String inputName = inputNameText.getText();
-            if (inputName.trim().length() == 0) {
-                setErrorMessage(Util.getString("GenerateXsdWizard.enterInputFileName")); //$NON-NLS-1$
-                setPageComplete(false);
-                return;
-            }
 
-            msg = ModelUtilities.validateModelName(inputName, XSD_EXT);
-            if (msg != null) {
-                setErrorMessage(Util.getString("GenerateXsdWizard.invalidInputFileName", msg)); //$NON-NLS-1$
+            status = ModelNameUtil.validate(inputName, XSD_EXT, folder,
+            		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES | ModelNameUtil.NO_EXISTING_MODEL_AT_LOCATION);
+            
+            if (status.getSeverity() == IStatus.ERROR) {
+                setErrorMessage(status.getMessage());
                 setPageComplete(false);
                 return;
             }
@@ -641,21 +640,11 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
         }
 
         String wsName = wsNameText.getText();
-        if (wsName.trim().length() == 0) {
-        	setErrorMessage(Util.getString("GenerateXsdWizard.enterWsFileName")); //$NON-NLS-1$
-            setPageComplete(false);
-            return;
-        }
 
-        if (wsName.indexOf(XMI_EXT) > 0) {
-        	setErrorMessage(Util.getString("GenerateXsdWizard.noExtWsFileName")); //$NON-NLS-1$
-            setPageComplete(false);
-            return;
-        }
-
-        msg = ModelUtilities.validateModelName(wsName, XMI_EXT);
-        if (msg != null) {
-        	setErrorMessage(Util.getString("GenerateXsdWizard.invalidWsFileName", msg)); //$NON-NLS-1$
+        status = ModelNameUtil.validate(wsName, XMI_EXT, folder,
+        		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES | ModelNameUtil.NO_EXISTING_MODEL_AT_LOCATION);
+        if (status.getSeverity() == IStatus.ERROR) {
+            setErrorMessage(status.getMessage());
             setPageComplete(false);
             return;
         }

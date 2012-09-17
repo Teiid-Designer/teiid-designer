@@ -160,6 +160,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     static final String ADD_FILE_DIALOG_TITLE = i18n("addFileDialogTitle"); //$NON-NLS-1$
     static final String ADD_FILE_DIALOG_MESSAGE = i18n("addFileDialogMessage"); //$NON-NLS-1$
     static final String ADD_FILE_DIALOG_INVALID_SELECTION_MESSAGE = i18n("addFileDialogInvalidSelectionMessage"); //$NON-NLS-1$
+    static final String ADD_FILE_DIALOG_NON_MODEL_SELECTED_MESSAGE = i18n("addFileDialogNonModelSelectedMessage"); //$NON-NLS-1$
+    static final String ADD_FILE_DIALOG_VDB_SOURCE_MODEL_SELECTED_MESSAGE = i18n("addFileDialogVdbSourceModelSelectedMessage");  //$NON-NLS-1$
 
     static final String CONFIRM_DIRTY_MODELS_DIALOG_TITLE = i18n("confirmDirtyModelsDialogTitle"); //$NON-NLS-1$
     static final String CONFIRM_DIRTY_MODELS_DIALOG_MESSAGE= i18n("confirmDirtyModelsSynchronizeMessage"); //$NON-NLS-1$
@@ -184,6 +186,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     TableAndToolBar<VdbEntry> otherFilesGroup;
     TableAndToolBar<VdbDataRole> dataRolesGroup;
     private Button synchronizeAllButton;
+    Button showImportVdbsButton;
     private PropertyChangeListener vdbListener;
 
     Action cloneDataRoleAction;
@@ -409,6 +412,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                         element.synchronize(new NullProgressMonitor());
                         dataRoleResolver.modelSynchronized(element);
                         VdbEditor.this.doSave(new NullProgressMonitor());
+                        showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
                     }
                 });
             }
@@ -426,6 +430,34 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             for (int ndx = selection.length; --ndx >= 0;)
                 if (selection[ndx] instanceof IContainer) return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0,
                                                                             ADD_FILE_DIALOG_INVALID_SELECTION_MESSAGE, null);
+            return new Status(IStatus.OK, VdbUiConstants.PLUGIN_ID, 0, EMPTY_STRING, null);
+        }
+    };
+    
+    private final ISelectionStatusValidator modelSelectionValidator = new ISelectionStatusValidator() {
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.ui.dialogs.ISelectionStatusValidator#validate(java.lang.Object[])
+         */
+        @Override
+        public IStatus validate( final Object[] selection ) {
+            for (int ndx = selection.length; --ndx >= 0;) {
+            	Object obj = selection[ndx];
+                if (obj instanceof IContainer) {
+                	return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, ADD_FILE_DIALOG_INVALID_SELECTION_MESSAGE, null);
+                } else if( obj instanceof IFile ) {
+                	IFile file = (IFile)obj;
+                
+                	if ( !ModelUtilities.isModelFile(file) && !ModelUtil.isXsdFile(file) ) {
+                		return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, ADD_FILE_DIALOG_NON_MODEL_SELECTED_MESSAGE, null); 
+                	}
+                	if( ModelUtilities.isVdbSourceModel(file) ) {
+                		return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, ADD_FILE_DIALOG_VDB_SOURCE_MODEL_SELECTED_MESSAGE, null);
+                	}
+                }
+            }
+            
             return new Status(IStatus.OK, VdbUiConstants.PLUGIN_ID, 0, EMPTY_STRING, null);
         }
     };
@@ -1273,6 +1305,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 for (final VdbEntry entry : entries) {
                     getVdb().removeEntry(entry);
                 }
+                showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
             }
         };
 
@@ -1336,8 +1369,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             createOtherFilesControl(pnlFiles);
         }
 
+        Composite extraButtonPanel = WidgetFactory.createPanel(pnlTop);
+        extraButtonPanel.setLayout(new GridLayout(2, false));
         { // synchronize button
-            synchronizeAllButton = WidgetFactory.createButton(pnlTop, i18n("synchronizeAllButton"), //$NON-NLS-1$
+        	
+            synchronizeAllButton = WidgetFactory.createButton(extraButtonPanel, i18n("synchronizeAllButton"), //$NON-NLS-1$
                                                               GridData.HORIZONTAL_ALIGN_BEGINNING);
             synchronizeAllButton.setToolTipText(i18n("synchronizeAllButtonToolTip")); //$NON-NLS-1$
             synchronizeAllButton.addSelectionListener(new SelectionAdapter() {
@@ -1416,12 +1452,33 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                 pnlTranslatorOverrides.refresh();
                                 dataRoleResolver.allSynchronized();
                                 VdbEditor.this.doSave(new NullProgressMonitor());
+                                showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
                             }
                         });
                     }
                 }
             });
             synchronizeAllButton.setEnabled(!vdb.isSynchronized());
+        }
+        { // synchronize button
+            showImportVdbsButton = WidgetFactory.createButton(extraButtonPanel, "Show Import VDBs",//i18n("showImportVdbsButton"), //$NON-NLS-1$
+                                                              GridData.HORIZONTAL_ALIGN_BEGINNING);
+            showImportVdbsButton.setToolTipText(i18n("synchronizeAllButtonToolTip")); //$NON-NLS-1$
+            showImportVdbsButton.addSelectionListener(new SelectionAdapter() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( final SelectionEvent event ) {
+                	
+                	ShowImportVdbsDialog dialog = new ShowImportVdbsDialog(Display.getCurrent().getActiveShell(), getVdb());
+                	
+                	dialog.open();
+                }
+            });
+            showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
         }
 
         tabFolder.setSelection(0);
@@ -1786,7 +1843,12 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                            final Object element ) {
                         if (element instanceof IContainer) return true;
                         final IFile file = (IFile)element;
-                        if (!ModelUtilities.isModelFile(file) && !ModelUtil.isXsdFile(file)) return false;
+                        if (!ModelUtilities.isModelFile(file) && !ModelUtil.isXsdFile(file)) {
+                        	return false;
+                        }
+//                        if( ModelUtilities.isVdbSourceModel(file) ) {
+//                        	return false;
+//                        }
                         for (final VdbModelEntry modelEntry : getVdb().getModelEntries())
                             if (file.equals(modelEntry.findFileInWorkspace())) return false;
                         return true;
@@ -1799,7 +1861,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                                                                       true,
                                                                                       null,
                                                                                       wsFilter,
-                                                                                      getValidator(),
+                                                                                      getModelSelectionValidator(),
                                                                                       getModelLabelProvider());
                 if (!getVdb().getDataPolicyEntries().isEmpty()) {
                     MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
@@ -1822,6 +1884,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 if (firstTime) {
                     WidgetUtil.pack(modelsGroup.getTable().getViewer());
                 }
+                
+                showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
             }
         };
 
@@ -1918,6 +1982,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 for (final VdbEntry entry : entries) {
                     getVdb().removeEntry(entry);
                 }
+                
+                showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
             }
         };
 
@@ -2020,6 +2086,10 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
     ISelectionStatusValidator getValidator() {
         return this.validator;
+    }
+    
+    ISelectionStatusValidator getModelSelectionValidator() {
+        return this.modelSelectionValidator;
     }
 
     /**

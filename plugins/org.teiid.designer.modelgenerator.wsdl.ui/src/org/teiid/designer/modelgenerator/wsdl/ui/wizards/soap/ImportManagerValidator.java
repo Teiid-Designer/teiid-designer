@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.osgi.util.NLS;
 import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.ModelerCoreException;
@@ -23,7 +22,7 @@ import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
-import org.teiid.designer.ui.viewsupport.ModelUtilities;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 
 
 /**
@@ -114,12 +113,10 @@ public class ImportManagerValidator {
 			status.add(createStatus(IStatus.ERROR, Messages.Status_SourceModelNameUndefined));
 		}
 		
-		String fileNameMessage = ModelUtilities.validateModelName(this.manager.getSourceModelName(), ".xmi"); //$NON-NLS-1$
-		if (fileNameMessage != null) {
-			String finalMessage = 
-				NLS.bind(Messages.Error_InvalidSourceModelFileName_0_Reason_1, 
-					this.manager.getSourceModelName(), fileNameMessage);
-			status.add(createStatus(IStatus.ERROR, finalMessage));
+
+        IStatus nameStatus = ModelNameUtil.validate(this.manager.getSourceModelName(), ModelerCore.MODEL_FILE_EXTENSION, ModelNameUtil.IGNORE_CASE );
+        if (nameStatus.getSeverity() == IStatus.ERROR) {
+			status.add(nameStatus);
 		}
 		
 		// Validate View location & model name
@@ -131,13 +128,10 @@ public class ImportManagerValidator {
 			status.add(createStatus(IStatus.ERROR, Messages.Status_ViewModelNameUndefined));
 		}
 		
-		fileNameMessage = ModelUtilities.validateModelName(this.manager.getViewModelName(), ".xmi"); //$NON-NLS-1$
-		if (fileNameMessage != null) {
-			String finalMessage = 
-				NLS.bind(Messages.Error_InvalidViewModelFileName_0_Reason_1, 
-					this.manager.getSourceModelName(), fileNameMessage);
-			status.add(createStatus(IStatus.ERROR, finalMessage));
-		}
+		nameStatus = ModelNameUtil.validate(this.manager.getViewModelName(), ModelerCore.MODEL_FILE_EXTENSION, ModelNameUtil.IGNORE_CASE );
+        if (nameStatus.getSeverity() == IStatus.ERROR) {
+			status.add(nameStatus);
+        }
 		
 		if( status.isOK() ) {
 			if( this.manager.doGenerateDefaultProcedures() ) {

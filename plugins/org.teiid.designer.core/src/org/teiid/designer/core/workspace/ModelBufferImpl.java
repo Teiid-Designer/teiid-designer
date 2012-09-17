@@ -159,7 +159,7 @@ public class ModelBufferImpl implements ModelBuffer {
         if (this.file == null) {
             return this.readonly;
         }
-        return this.file.isReadOnly();
+        return ModelUtil.isIResourceReadOnly(this.file);
     }
 
     /**
@@ -468,7 +468,7 @@ public class ModelBufferImpl implements ModelBuffer {
             return;
         }
 
-        if (this.file.isReadOnly()) {
+        if (! ModelUtil.isLockedSourceObject(file) && ModelUtil.isIResourceReadOnly(file)) {
             final String pathInProj = this.file.getProject().getName() + IPath.SEPARATOR + this.file.getProjectRelativePath();
             final Object[] params = new Object[] {pathInProj};
             throw new ModelWorkspaceException(ModelerCore.Util.getString("ModelBufferImpl.Model_is_readonly", params)); //$NON-NLS-1$

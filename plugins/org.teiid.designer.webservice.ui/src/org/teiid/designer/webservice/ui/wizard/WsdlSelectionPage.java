@@ -88,12 +88,12 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.widget.ListMessageDialog;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
-import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 import org.teiid.designer.ui.wizards.wsdl.WsdlFileSelectionComposite;
-import org.teiid.designer.ui.wizards.wsdl.WsdlFilter;
 import org.teiid.designer.ui.wizards.wsdl.WsdlFileSelectionComposite.FileSelectionButtons;
+import org.teiid.designer.ui.wizards.wsdl.WsdlFilter;
 import org.teiid.designer.webservice.IWebServiceModelBuilder;
 import org.teiid.designer.webservice.IWebServiceResource;
 import org.teiid.designer.webservice.WebServicePlugin;
@@ -170,6 +170,9 @@ public final class WsdlSelectionPage extends AbstractWizardPage
 
     /** Project location of the model */
     private Text textFieldTargetProjectLocation;
+    
+    /** Project IContainer location */
+    private IContainer targetModelLocation;
 
     /** Filter for selecting WSDL files and their parent containers. */
     private ViewerFilter wsdlFilter = new WsdlFilter();
@@ -410,15 +413,12 @@ public final class WsdlSelectionPage extends AbstractWizardPage
      */
     private String validateModelName() {
         String name = textName.getText();
-
-        if (name == null || name.length() == 0) {
-            WizardUtil.setPageComplete(this, getString("noModelName"), IMessageProvider.ERROR); //$NON-NLS-1$
-            return null;
-        }
-
-        if (ModelUtilities.validateModelName(name, ModelerCore.MODEL_FILE_EXTENSION) != null) {
-            WizardUtil.setPageComplete(this, getString("invalidModelName"), IMessageProvider.ERROR); //$NON-NLS-1$,
-            return null;
+        
+        IStatus status = ModelNameUtil.validate(name, ModelerCore.MODEL_FILE_EXTENSION, targetModelLocation,
+        		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES | ModelNameUtil.NO_EXISTING_MODEL_AT_LOCATION);
+        if( status.getSeverity() == IStatus.ERROR ) {
+        	WizardUtil.setPageComplete(this, status.getMessage(), IMessageProvider.ERROR);
+        	return null;
         }
 
         WizardUtil.setPageComplete(this);
@@ -1101,7 +1101,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
      * @since 5.0.1
      */
     private boolean validatePage() {
-        IContainer targetModelLocation = validateTargetFolder();
+        targetModelLocation = validateTargetFolder();
         if (targetModelLocation == null) {
             return false;
         }
@@ -1223,6 +1223,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
         IContainer location = (objs.length == 0 ? null : (IContainer)objs[0]);
 
         // Update the controls with the target location selection
+        targetModelLocation = location;
         if (location != null) {
             this.textFieldTargetProjectLocation.setText(location.getFullPath().makeRelative().toString());
         }

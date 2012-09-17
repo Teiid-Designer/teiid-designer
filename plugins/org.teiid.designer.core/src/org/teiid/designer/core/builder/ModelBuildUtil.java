@@ -11,13 +11,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IExtension;
@@ -93,19 +96,42 @@ public class ModelBuildUtil {
         // not modified
         final List modifiedResources = getModifiedResources();
 
-        // collection of models dependent on the models being validated
-        Set<IResource> dependentModels = new HashSet<IResource>();
+        Map<IProject, Collection<IResource>> projToResMap = getProjectToResourcesMap(iResources);
         
-        for (final Iterator rsourceIter = iResources.iterator(); rsourceIter.hasNext();) {
-            IResource resource = (IResource)rsourceIter.next();
-            Collection models = WorkspaceResourceFinderUtil.getResourcesThatUse(resource);
-            models.removeAll(iResources);
-            dependentModels.addAll(models);
-        }
+        // collection of models dependent on the models being validated
+        Set<IResource> indexedResources = new HashSet<IResource>();
 
-        // index all the resources
-        indexResources(monitor, iResources);
-        indexResources(monitor, dependentModels);
+        for( IProject proj : projToResMap.keySet() ) {
+        	Collection<IResource> projectIResources = projToResMap.get(proj);
+            Set<IResource> dependentModels = new HashSet<IResource>();
+            
+            for (final Iterator resourceIter = projectIResources.iterator(); resourceIter.hasNext();) {
+                IResource resource = (IResource)resourceIter.next();
+                Collection models = WorkspaceResourceFinderUtil.getResourcesThatUse(resource);
+                models.removeAll(projectIResources);
+                dependentModels.addAll(models);
+            }
+            
+            // index all the resources
+            // Filter out any IResources that have already been indexed
+            Set<IResource> unIndexedResources = new HashSet<IResource>();
+            for( IResource theRes : projectIResources ) {
+            	if( !indexedResources.contains(theRes) ) {
+            		unIndexedResources.add(theRes);
+            	}
+            }
+            indexResources(monitor, unIndexedResources);
+            indexedResources.addAll(unIndexedResources);
+            
+            unIndexedResources = new HashSet<IResource>();
+            for( IResource theRes : dependentModels ) {
+            	if( !indexedResources.contains(theRes) ) {
+            		unIndexedResources.add(theRes);
+            	}
+            }
+            indexResources(monitor, unIndexedResources);
+            indexedResources.addAll(unIndexedResources);
+        }
 
         // Reset the modified state of all EMF resources to what it was
         // prior to indexing. This needs to be done since indexing may
@@ -113,9 +139,43 @@ public class ModelBuildUtil {
         // to not validate it.
         setModifiedResources(modifiedResources);
 
-        // validate all the resources
-        validateResources(monitor, iResources, container, validateInContext);
-        validateResources(monitor, dependentModels, container, validateInContext);
+        // collection of models dependent on the models being validated
+        Set<IResource> validatedResources = new HashSet<IResource>();
+
+        for( IProject proj : projToResMap.keySet() ) {
+        	Collection<IResource> projectIResources = projToResMap.get(proj);
+            Set<IResource> dependentModels = new HashSet<IResource>();
+            
+            for (final Iterator resourceIter = projectIResources.iterator(); resourceIter.hasNext();) {
+                IResource resource = (IResource)resourceIter.next();
+                Collection models = WorkspaceResourceFinderUtil.getResourcesThatUse(resource);
+                models.removeAll(projectIResources);
+                dependentModels.addAll(models);
+            }
+            
+            // index all the resources
+            // Filter out any IResources that have already been indexed
+            Set<IResource> unValidatedResources = new HashSet<IResource>();
+            for( IResource theRes : projectIResources ) {
+            	if( !validatedResources.contains(theRes) ) {
+            		unValidatedResources.add(theRes);
+            	}
+            }
+
+            validateResources(monitor, unValidatedResources, container, validateInContext);
+            validatedResources.addAll(unValidatedResources);
+            
+            unValidatedResources = new HashSet<IResource>();
+            for( IResource theRes : dependentModels ) {
+            	if( !validatedResources.contains(theRes) ) {
+            		unValidatedResources.add(theRes);
+            	}
+            }
+            
+            validateResources(monitor, unValidatedResources, container, validateInContext);
+            validatedResources.addAll(unValidatedResources);
+        }
+        
 
         // Reset the modified state of all EMF resources to what it was prior to validating
         setModifiedResources(modifiedResources);
@@ -603,6 +663,8 @@ public class ModelBuildUtil {
 
         // set the resource scope (all model resources in open model projects)
         final ModelWorkspace workspace = ModelerCore.getModelWorkspace();
+        
+        // Find project for each IResource
 
         try {
             final Resource[] resourcesInScope = getWorkspaceResourcesInScope(workspace);
@@ -689,5 +751,22 @@ public class ModelBuildUtil {
     // #############################################################################
     // # Protected methods
     // #############################################################################
+    
+    private static Map<IProject, Collection<IResource>> getProjectToResourcesMap(Collection iResources) {
+    	Map<IProject, Collection<IResource>> map = new HashMap<IProject, Collection<IResource>>(10);
+    	
+    	for( Object res : iResources ) {
+    		IResource iResource = (IResource)res;
+    		IProject proj = iResource.getProject();
+    		Collection<IResource> resList = map.get(proj);
+    		if( resList == null ) {
+    			resList = new ArrayList<IResource>(10);
+    		}
+    		resList.add(iResource);
+    		map.put(proj, resList);
+    	}
+    	
+    	return map;
+    }
 
 }
