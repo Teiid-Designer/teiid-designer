@@ -64,6 +64,7 @@ import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
+import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.RelationalObjectFactory;
 
@@ -264,8 +265,10 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
            }
 
            if (assistant.supportsMedOperation(MedOperations.ADD_MED_TO_MODEL, obj)) {
-        	   this.selectedModel = (IFile) obj;
-               result = true;
+        	   if( ModelIdentifier.isRelationalSourceModel( (IFile) obj)) {
+	        	   this.selectedModel = (IFile) obj;
+	               result = true;
+               }
            }
        }
        
