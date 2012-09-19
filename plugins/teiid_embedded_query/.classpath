@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-admin-8.1.0.Beta1.jar" sourcepath="lib/teiid/teiid-8.1.0.Beta1-src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-api-8.1.0.Beta1.jar" sourcepath="lib/teiid/teiid-8.1.0.Beta1-src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-client-8.1.0.Beta1.jar" sourcepath="lib/teiid/teiid-8.1.0.Beta1-src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-common-core-8.1.0.Beta1.jar" sourcepath="lib/teiid/teiid-8.1.0.Beta1-src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-engine-8.1.0.Beta1.jar" sourcepath="lib/teiid/teiid-8.1.0.Beta1-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-admin-8.1.0.Final.jar" sourcepath="lib/teiid/teiid-8.1.0.Final-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-api-8.1.0.Final.jar" sourcepath="lib/teiid/teiid-8.1.0.Final-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-client-8.1.0.Final.jar" sourcepath="lib/teiid/teiid-8.1.0.Final-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-common-core-8.1.0.Final.jar" sourcepath="lib/teiid/teiid-8.1.0.Final-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-engine-8.1.0.Final.jar" sourcepath="lib/teiid/teiid-8.1.0.Final-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/teiid/jta-1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/common/commons-cli-1.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/common/hamcrest-core-1.1.jar"/>
