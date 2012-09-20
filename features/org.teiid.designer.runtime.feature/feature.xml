@@ -126,7 +126,7 @@ Including: Connection management, VDB creation and management and Data Preview/V
       <import plugin="org.eclipse.ui.cheatsheets" version="3.4.200" match="compatible"/>
       <import plugin="org.teiid.designer.dqp.ui" version="8.0.0" match="compatible"/>
       <import plugin="org.eclipse.emf.ecore" version="2.8.0" match="compatible"/>
-      <import plugin="org.jboss.tools.runtime.core" version="2.4.0" match="compatible"/>
+      <import plugin="org.jboss.tools.runtime.core" version="2.0.0" match="compatible"/>
    </requires>
 
    <plugin
