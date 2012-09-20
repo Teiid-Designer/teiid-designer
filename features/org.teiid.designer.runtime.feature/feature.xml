@@ -24,10 +24,6 @@ Including: Connection management, VDB creation and management and Data Preview/V
          version="0.0.0"
          name="Teiid Designer Design-time"/>
 
-   <includes
-         id="org.jboss.ide.eclipse.as.serverAdapter.wtp.feature"
-         version="0.0.0"/>
-
    <requires>
       <import feature="org.eclipse.datatools.common.doc.user" version="1.7.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.datatools.connectivity.doc.user" version="1.7.0" match="greaterOrEqual"/>
@@ -126,7 +122,6 @@ Including: Connection management, VDB creation and management and Data Preview/V
       <import plugin="org.eclipse.ui.cheatsheets" version="3.4.200" match="compatible"/>
       <import plugin="org.teiid.designer.dqp.ui" version="8.0.0" match="compatible"/>
       <import plugin="org.eclipse.emf.ecore" version="2.8.0" match="compatible"/>
-      <import plugin="org.jboss.tools.runtime.core" version="2.0.0" match="compatible"/>
    </requires>
 
    <plugin
