@@ -11,11 +11,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 
 /**
+ * @since 8.0
  *
  */
 public class CoreModelExtensionAssistant  extends EmfModelObjectExtensionAssistant {

@@ -28,6 +28,7 @@ import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
 
 /**
+ * @since 8.0
  *
  */
 public class ShowImportVdbsDialog extends Dialog {

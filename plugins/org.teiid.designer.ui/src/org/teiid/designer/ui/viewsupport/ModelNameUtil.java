@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * Utility class providing model name analysis and validation methods
+ * @since 8.0
  */
 public abstract class ModelNameUtil {
 	/**

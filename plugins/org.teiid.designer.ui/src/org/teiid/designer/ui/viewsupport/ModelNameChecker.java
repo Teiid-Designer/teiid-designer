@@ -19,6 +19,7 @@ import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
 
 /**
+ * @since 8.0
  *
  */
 public class ModelNameChecker extends ModelNameUtil implements UiConstants {

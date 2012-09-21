@@ -11,6 +11,7 @@ import org.teiid.designer.core.extension.AbstractMetaclassNameProvider;
 import org.teiid.designer.metamodels.core.CorePackage;
 
 /**
+ * @since 8.0
  *
  */
 public class CoreExtendableClassnameProvider extends AbstractMetaclassNameProvider {
