@@ -96,6 +96,15 @@ public final class ServerWizard extends Wizard {
     protected TeiidServerManager getServerManager() {
         return this.teiidServerManager;
     }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.wizard.Wizard#performCancel()
+     */
+    @Override
+    public boolean performCancel() {
+        this.page.performCancel();
+        return super.performCancel();
+    }
 
     /**
      * {@inheritDoc}

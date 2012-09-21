@@ -65,6 +65,7 @@ import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.runtime.ui.server.NewServerAction;
 import org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode;
 import org.teiid.designer.runtime.ui.views.content.TeiidFolder;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -82,8 +83,18 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
  *
  * @since 8.0
  */
-public class TeiidView extends CommonNavigator implements IExecutionConfigurationListener {
-    
+public class TeiidView extends CommonNavigator implements DqpUiConstants, IExecutionConfigurationListener {
+
+    /**
+     * Text constant for the server hyperlink label when there are servers available
+     */
+    private static final String NEW_SERVER_LABEL = UTIL.getString("TeiidServerOverviewSection.newHyperlinkLabel"); //$NON-NLS-1$
+
+    /**
+     * Text constant for the server hyperlink label when there are servers available
+     */
+    private static final String EDIT_SERVER_LABEL = UTIL.getString("TeiidServerOverviewSection.editHyperlinkLabel"); //$NON-NLS-1$
+
     /**
      * A <code>ViewerFilter</code> that hides Preview Data Sources.
      */
@@ -144,12 +155,12 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
     private static IMemento viewMemento;
 
     static String getString( final String stringId ) {
-        return DqpUiConstants.UTIL.getString(PREFIX + stringId);
+        return UTIL.getString(PREFIX + stringId);
     }
 
     static String getString( final String stringId,
                              final Object param ) {
-        return DqpUiConstants.UTIL.getString(PREFIX + stringId, param);
+        return UTIL.getString(PREFIX + stringId, param);
     }
 
     private Combo jbossServerCombo;
@@ -193,12 +204,14 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
         }
     };
     
-    /**
+
+
+    private Hyperlink newServerOrOpenServerViewHyperlink;    /**
      * The constructor.
      */
     public TeiidView() {
         this.setPartName(getString("title.text")); //$NON-NLS-1$
-        this.setTitleImage(DqpUiPlugin.getDefault().getImage(DqpUiConstants.Images.SOURCE_BINDING_ICON));
+        this.setTitleImage(DqpUiPlugin.getDefault().getImage(Images.SOURCE_BINDING_ICON));
         this.setTitleToolTip(getString("title.tooltip")); //$NON-NLS-1$
     }
     
@@ -247,7 +260,7 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
         GridDataFactory.fillDefaults().applyTo(comboFrame);
         GridLayoutFactory.fillDefaults().margins(5, 20).applyTo(comboFrame);
         
-        Label jbLabel = WidgetFactory.createLabel(comboFrame, DqpUiConstants.UTIL.getString("TeiidServerOverviewSection.jbLabel")); //$NON-NLS-1$
+        Label jbLabel = WidgetFactory.createLabel(comboFrame, UTIL.getString("TeiidServerOverviewSection.jbLabel")); //$NON-NLS-1$
         jbLabel.setForeground(comboFrame.getDisplay().getSystemColor(SWT.COLOR_DARK_BLUE));
         GridDataFactory.swtDefaults().grab(true, false).applyTo(jbLabel);
         
@@ -267,19 +280,25 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
             }
         });
         
-        Hyperlink openServerViewHyperlink = toolkit.createHyperlink(comboFrame, 
-                                DqpUiConstants.UTIL.getString("TeiidServerOverviewSection.hyperlinkLabel"), SWT.NONE); //$NON-NLS-1$
-        GridDataFactory.swtDefaults().applyTo(openServerViewHyperlink);
-        openServerViewHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+        newServerOrOpenServerViewHyperlink = toolkit.createHyperlink(comboFrame, 
+                                EDIT_SERVER_LABEL, SWT.NONE);
+        GridDataFactory.swtDefaults().applyTo(newServerOrOpenServerViewHyperlink);
+        newServerOrOpenServerViewHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 
             @Override
             public void linkActivated(HyperlinkEvent e) {
-                //open view
-                IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-                try {
-                    window.getActivePage().showView("org.eclipse.wst.server.ui.ServersView");  //$NON-NLS-1$
-                } catch (PartInitException ex) {
-                    DqpUiConstants.UTIL.log(ex);
+                if (serverMap.isEmpty()) {
+                    // There are no servers so open the server wizard
+                    NewServerAction action = new NewServerAction(getViewSite().getShell(), getServerManager());
+                    action.run();
+                } else {
+                    //open the servers view
+                    IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                    try {
+                        window.getActivePage().showView("org.eclipse.wst.server.ui.ServersView");  //$NON-NLS-1$
+                    } catch (PartInitException ex) {
+                        UTIL.log(ex);
+                    }
                 }
             }
         });        
@@ -328,8 +347,12 @@ public class TeiidView extends CommonNavigator implements IExecutionConfiguratio
         String[] items = serverMap.keySet().toArray(new String[0]);
         jbossServerCombo.setItems(items);
         
-        if (items.length > 0)
+        if (items.length == 0) {
+            newServerOrOpenServerViewHyperlink.setText(NEW_SERVER_LABEL);
+        } else {
+            newServerOrOpenServerViewHyperlink.setText(EDIT_SERVER_LABEL);
             jbossServerCombo.setText(items[0]);
+        }      
         
         // even if nothing in combo, still want the viewer to refresh
         handleServerComboSelection();

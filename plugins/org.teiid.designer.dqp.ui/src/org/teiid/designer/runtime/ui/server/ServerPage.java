@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -322,6 +323,8 @@ public final class ServerPage extends WizardPage {
                     if (TeiidJdbcInfo.DEFAULT_JDBC_PASSWORD.equals(jdbcPasswordText.getText()))
                         jdbcPasswordText.setText(teiidJdbcInfo.getPassword());
                    
+                    jdbcURLText.setText(teiidJdbcInfo.getUrl());
+                    
                     String displayName = displayNameText.getText();
                     if (displayName != null && displayName.length() > 0)
                         teiidServer.setCustomLabel(displayName);
@@ -454,5 +457,22 @@ public final class ServerPage extends WizardPage {
         DqpUiPlugin.editTeiidServer(teiidServer);
         
         return status;
+    }
+
+    /**
+     * Processing done after wizard 'Cancel' button is clicked. Wizard was cancelled
+     */
+    public void performCancel() {
+        if (teiidServer == null)
+            return;
+        
+        try {
+            IServer server = teiidServer.getParent();
+            if (server != null)
+                server.delete();
+            
+        } catch (CoreException ex) {
+            UTIL.log(ex);
+        }
     }
 }
