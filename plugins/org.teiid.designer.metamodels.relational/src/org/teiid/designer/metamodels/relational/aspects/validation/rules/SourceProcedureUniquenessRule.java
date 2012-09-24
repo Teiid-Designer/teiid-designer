@@ -28,6 +28,7 @@ import org.teiid.designer.metamodels.relational.util.PushdownFunctionUtil;
 
 /**
  * ScalarFunctionUniquenessRule
+ * @since 8.0
  */
 public class SourceProcedureUniquenessRule implements ObjectValidationRule {
     private final String ruleName;
