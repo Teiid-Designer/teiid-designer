@@ -9,9 +9,16 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.equinox.security.storage.EncodingUtils;
+import org.eclipse.equinox.security.storage.ISecurePreferences;
+import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
+import org.eclipse.equinox.security.storage.StorageException;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.HashCodeUtil;
 import org.teiid.designer.core.util.StringUtilities;
@@ -33,6 +40,11 @@ public abstract class TeiidConnectionInfo {
      */
     public static final String MM = "mm://"; //$NON-NLS-1$
     
+    /**
+     * Base key for the secure storage node used for holding passwords
+     */
+    protected static final String PREFERENCES_BASEKEY = PLUGIN_ID.replace('.', IPath.SEPARATOR);
+    
     protected static final int DEFAULT_PORT_NUMBER = 0;
 
     private HostProvider hostProvider;
@@ -41,7 +53,6 @@ public abstract class TeiidConnectionInfo {
     private int portNumber = DEFAULT_PORT_NUMBER;
     private boolean secure;
     private String username;
-    private boolean persistPassword = false;
 
     /**
      * @param port the connection port (can be <code>null</code> or empty)
@@ -54,7 +65,6 @@ public abstract class TeiidConnectionInfo {
     protected TeiidConnectionInfo( String port,
                                    String username,
                                    String password,
-                                   boolean persistPassword,
                                    boolean secure ) {
         this.port = port;
         try {
@@ -63,10 +73,16 @@ public abstract class TeiidConnectionInfo {
 			this.portNumber = DEFAULT_PORT_NUMBER;
 		}
         this.username = username;
-        this.password = password;
-        this.persistPassword = persistPassword;
+        setPassword(password);
         this.secure = secure;
     }
+    
+    /**
+     * Key that the password is stored against under secure storage
+     * 
+     * @return
+     */
+    protected abstract String getPasswordKey();
 
     /**
      * {@inheritDoc}
@@ -127,11 +143,6 @@ public abstract class TeiidConnectionInfo {
             return false;
         }
 
-        // persist passord
-        if (isPasswordBeingPersisted() != thatInfo.isPasswordBeingPersisted()) {
-            return false;
-        }
-
         // user
         if (getUsername() == null) {
             if (thatInfo.getUsername() != null) {
@@ -180,7 +191,12 @@ public abstract class TeiidConnectionInfo {
      * @return the password (can be <code>null</code> or empty)
      */
     public String getPassword() {
-        return this.password;
+        if (password != null)
+            return password;
+        
+        password = getFromSecureStorage(getPasswordKey());
+        
+        return password;
     }
 
     /**
@@ -235,18 +251,10 @@ public abstract class TeiidConnectionInfo {
                                      getHostProvider().getHost(),
                                      getPort(),
                                      isSecure(),
-                                     isPasswordBeingPersisted(),
                                      getUsername(),
                                      getPassword());
     }
-
-    /**
-     * @return <code>true</code> if the password is being persisted
-     */
-    public boolean isPasswordBeingPersisted() {
-        return this.persistPassword;
-    }
-
+    
     /**
      * @return <code>true</code> if a secure connection protocol is being used
      */
@@ -264,7 +272,6 @@ public abstract class TeiidConnectionInfo {
         setPort(info.getPort());
         setPassword(info.getPassword());
         setUsername(info.getUsername());
-        setPersistPassword(info.isPasswordBeingPersisted());
         setSecure(info.isSecure());
     }
 
@@ -281,14 +288,16 @@ public abstract class TeiidConnectionInfo {
      * @param password the new value for password (can be empty or <code>null</code>)
      */
     public void setPassword( String password ) {
+        if (password != null) {
+            // Only store non-null values
+            try {
+                storeInSecureStorage(getPasswordKey(), password);
+            } catch (Exception e) {
+                DqpPlugin.Util.log(e);
+            }
+        }
+        
         this.password = password;
-    }
-
-    /**
-     * @param persist the new value for if a connection password should be persisted
-     */
-    public void setPersistPassword( boolean persist ) {
-        this.persistPassword = persist;
     }
 
     /**
@@ -332,8 +341,7 @@ public abstract class TeiidConnectionInfo {
                                         getPort(),
                                         getUsername(),
                                         getPassword(),
-                                        isSecure(),
-                                        isPasswordBeingPersisted());
+                                        isSecure());
     }
 
     /**
@@ -373,6 +381,63 @@ public abstract class TeiidConnectionInfo {
         }
 
         return Status.OK_STATUS;
+    }
+    
+    /**
+     * Retrieve the value stored against the given key from 
+     * the secure storage.
+     * 
+     * @param key
+     * @return
+     */
+    protected String getFromSecureStorage(String key) {
+        try {
+            ISecurePreferences node = getNode();
+            String val = node.get(key, null);
+            if (val == null) {
+                return null;
+            }
+            return new String(EncodingUtils.decodeBase64(val));
+        } catch(Exception e) {
+            DqpPlugin.Util.log(e);
+            return null;
+        }
+    }
+    
+    /**
+     * Store the given value against the key in eclipse's secure
+     * storage.
+     * 
+     * @param key
+     * @param value
+     * @throws StorageException
+     * @throws UnsupportedEncodingException
+     */
+    protected void storeInSecureStorage(String key, String value) throws StorageException, UnsupportedEncodingException {
+        ISecurePreferences node = getNode();
+        if( value == null )
+            node.put(key, value, true);
+        else
+            node.put(key, EncodingUtils.encodeBase64(value.getBytes()), true /* encrypt */); 
+    }
+
+    /**
+     * Get the secure preferences node for this connection instance.
+     * The node is keyed to the url of this connection, allowing individual
+     * connection's properties to be separately stored.
+     * 
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    private ISecurePreferences getNode() throws UnsupportedEncodingException {
+        String secureKey = new StringBuilder(PREFERENCES_BASEKEY)
+            .append(getClass().getSimpleName())
+            .append(getUrl())
+            .append(IPath.SEPARATOR).toString();
+
+        ISecurePreferences root = SecurePreferencesFactory.getDefault();
+        String encoded = URLEncoder.encode(secureKey, "UTF-8"); //$NON-NLS-1$
+        return root.node(encoded);
     }
 
 }

@@ -23,7 +23,6 @@ public class ServerTest {
     private static final String PORT = "31000";
     private static final String USER = "user";
     private static final String PSWD = "pswd";
-    private static final boolean PERSIST = true;
     private static final boolean SECURE = true;
 
     private TeiidAdminInfo adminInfo;
@@ -99,12 +98,12 @@ public class ServerTest {
     @Test
     public void shouldBeEqualsWhenAllPropertiesAreTheSame() {
         TeiidServer server1 = new TeiidServer(null,
-                                    new TeiidAdminInfo(PORT, USER, PSWD, PERSIST, SECURE),
-                                    new TeiidJdbcInfo(PORT, USER, PSWD, PERSIST, SECURE),
+                                    new TeiidAdminInfo(PORT, USER, PSWD, SECURE),
+                                    new TeiidJdbcInfo(PORT, USER, PSWD, SECURE),
                                     this.eventMgr, this.parentServer);
         TeiidServer server2 = new TeiidServer(null,
-                                    new TeiidAdminInfo(PORT, USER, PSWD, PERSIST, SECURE),
-                                    new TeiidJdbcInfo(PORT, USER, PSWD, PERSIST, SECURE),
+                                    new TeiidAdminInfo(PORT, USER, PSWD, SECURE),
+                                    new TeiidJdbcInfo(PORT, USER, PSWD, SECURE),
                                     this.eventMgr, this.parentServer);
         assertThat(server1.equals(server2), is(true));
     }

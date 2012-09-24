@@ -26,29 +26,38 @@ public class TeiidAdminInfo extends TeiidConnectionInfo {
     public static final boolean DEFAULT_SECURE = true;
 
     /**
+     * Key to use for storing the password value against in secure storage
+     */
+    private static final String SERVER_PASSWORD_KEY = TeiidAdminInfo.class.getName() + ".password"; //$NON-NLS-1$
+    
+    /** 
      * @param port the connection port (can be <code>null</code> or empty)
      * @param username the connection user name (can be <code>null</code> or empty)
      * @param password the connection password (can be <code>null</code> or empty)
-     * @param persistPassword <code>true</code> if the password should be persisted
      * @param secure <code>true</code> if a secure connection should be used
      * @see #validate()
      */
     public TeiidAdminInfo( String port,
                            String username,
                            String password,
-                           boolean persistPassword,
                            boolean secure ) {
-        super(port, username, password, persistPassword, secure);
+        super(port, username, password, secure);
     }
 
+    @Override
+    protected String getPasswordKey() {
+        return SERVER_PASSWORD_KEY;
+    }
+    
     /**
      * {@inheritDoc}
      * 
      * @see java.lang.Object#clone()
      */
+    @SuppressWarnings( "javadoc" )
     @Override
     public TeiidAdminInfo clone() {
-        TeiidAdminInfo cloned = new TeiidAdminInfo(getPort(), getUsername(), getPassword(), isPasswordBeingPersisted(), isSecure());
+        TeiidAdminInfo cloned = new TeiidAdminInfo(getPort(), getUsername(), getPassword(), isSecure());
         cloned.setHostProvider(getHostProvider());
         return cloned;
     }

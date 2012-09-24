@@ -11,7 +11,8 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
-
+import java.util.HashMap;
+import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,9 +20,9 @@ import org.junit.Test;
 /**
  * 
  */
+@SuppressWarnings( "javadoc" )
 public class TeiidConnectionInfoTest {
 
-    private static final boolean INITIAL_PERSIST_PSWD = true;
     private static final String INITIAL_PORT = "31000";
     private static final String INITIAL_PSWD = "pswd";
     private static final boolean INITIAL_SECURE = true;
@@ -39,12 +40,29 @@ public class TeiidConnectionInfoTest {
     private static final String NEW_USER = "newUser";
 
     class ConnectionInfo extends TeiidConnectionInfo {
+        
+        private Map<String, String> storageMap = new HashMap<String, String>();
+
         public ConnectionInfo( String port,
                                String username,
                                String password,
-                               boolean persistPassword,
                                boolean secure ) {
-            super(port, username, password, persistPassword, secure);
+            super(port, username, password, secure);
+        }
+        
+        @Override
+        protected String getPasswordKey() {
+            return getClass().getName() + ".password";
+        }
+        
+        @Override
+        protected void storeInSecureStorage(String key, String value) {
+            storageMap .put(key, value);
+        }
+        
+        @Override
+        protected String getFromSecureStorage(String key) {
+            return storageMap.get(key);
         }
         
         /**
@@ -63,7 +81,7 @@ public class TeiidConnectionInfoTest {
 
     @Before
     public void beforeEach() {
-        this.connectionInfo = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, INITIAL_PSWD, INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        this.connectionInfo = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, INITIAL_PSWD, INITIAL_SECURE);
     }
 
     @Test
@@ -74,12 +92,12 @@ public class TeiidConnectionInfoTest {
 
     @Test
     public void shouldAllowNullPortAtConstruction() {
-        new ConnectionInfo(null, INITIAL_USER, INITIAL_PSWD, INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        new ConnectionInfo(null, INITIAL_USER, INITIAL_PSWD, INITIAL_SECURE);
     }
 
     @Test
     public void shouldAllowEmptyPortAtConstruction() {
-        new ConnectionInfo("", INITIAL_USER, INITIAL_PSWD, INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        new ConnectionInfo("", INITIAL_USER, INITIAL_PSWD, INITIAL_SECURE);
     }
 
     @Test
@@ -109,14 +127,14 @@ public class TeiidConnectionInfoTest {
     
     @Test
     public void shouldFailValidateAfterConstructingWithNullPort() {
-        this.connectionInfo = new ConnectionInfo(null, INITIAL_USER, INITIAL_PSWD, INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        this.connectionInfo = new ConnectionInfo(null, INITIAL_USER, INITIAL_PSWD, INITIAL_SECURE);
         IStatus status = this.connectionInfo.validate();
         assertThat(status.getSeverity(), is(IStatus.ERROR));
     }
     
     @Test
     public void shouldFailValidateAfterConstructingWithEmptyPort() {
-        this.connectionInfo = new ConnectionInfo("", INITIAL_USER, INITIAL_PSWD, INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        this.connectionInfo = new ConnectionInfo("", INITIAL_USER, INITIAL_PSWD, INITIAL_SECURE);
         IStatus status = this.connectionInfo.validate();
         assertThat(status.getSeverity(), is(IStatus.ERROR));
     }
@@ -137,12 +155,12 @@ public class TeiidConnectionInfoTest {
 
     @Test
     public void shouldAllowNullUserAtConstruction() {
-        new ConnectionInfo(INITIAL_PORT, null, INITIAL_PSWD, INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        new ConnectionInfo(INITIAL_PORT, null, INITIAL_PSWD, INITIAL_SECURE);
     }
 
     @Test
     public void shouldAllowEmptyUserAtConstruction() {
-        new ConnectionInfo(INITIAL_PORT, "", INITIAL_PSWD, INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        new ConnectionInfo(INITIAL_PORT, "", INITIAL_PSWD, INITIAL_SECURE);
     }
 
     @Test
@@ -165,14 +183,14 @@ public class TeiidConnectionInfoTest {
     
     @Test
     public void shouldFailValidateAfterConstructingWithNullUser() {
-        this.connectionInfo = new ConnectionInfo(INITIAL_PORT, null, INITIAL_PSWD, INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        this.connectionInfo = new ConnectionInfo(INITIAL_PORT, null, INITIAL_PSWD, INITIAL_SECURE);
         IStatus status = this.connectionInfo.validate();
         assertThat(status.getSeverity(), is(IStatus.ERROR));
     }
     
     @Test
     public void shouldFailValidateAfterConstructingWithEmptyUser() {
-        this.connectionInfo = new ConnectionInfo(INITIAL_PORT, "", INITIAL_PSWD, INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        this.connectionInfo = new ConnectionInfo(INITIAL_PORT, "", INITIAL_PSWD, INITIAL_SECURE);
         IStatus status = this.connectionInfo.validate();
         assertThat(status.getSeverity(), is(IStatus.ERROR));
     }
@@ -193,12 +211,12 @@ public class TeiidConnectionInfoTest {
 
     @Test
     public void shouldAllowNullPasswordAtConstruction() {
-        new ConnectionInfo(INITIAL_PORT, INITIAL_USER, null, INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        new ConnectionInfo(INITIAL_PORT, INITIAL_USER, null, INITIAL_SECURE);
     }
 
     @Test
     public void shouldAllowEmptyPasswordAtConstruction() {
-        new ConnectionInfo(INITIAL_PORT, INITIAL_USER, "", INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        new ConnectionInfo(INITIAL_PORT, INITIAL_USER, "", INITIAL_SECURE);
     }
 
     @Test
@@ -212,17 +230,6 @@ public class TeiidConnectionInfoTest {
         this.connectionInfo.setPassword(NEW_PSWD);
         IStatus status = this.connectionInfo.validate();
         assertThat(status.getSeverity(), is(IStatus.OK));
-    }
-
-    @Test
-    public void shouldSetPersistPasswordAtConstructon() {
-        assertThat(this.connectionInfo.isPasswordBeingPersisted(), is(INITIAL_PERSIST_PSWD));
-    }
-
-    @Test
-    public void shouldSetPersistPassword() {
-        this.connectionInfo.setPersistPassword(!INITIAL_PERSIST_PSWD);
-        assertThat(this.connectionInfo.isPasswordBeingPersisted(), is(!INITIAL_PERSIST_PSWD));
     }
 
     @Test
@@ -249,7 +256,7 @@ public class TeiidConnectionInfoTest {
 
     @Test
     public void shouldGetCorrectUrlWithNotSecureAfterConstruction() {
-        this.connectionInfo = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, INITIAL_PSWD, INITIAL_PERSIST_PSWD, !INITIAL_SECURE);
+        this.connectionInfo = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, INITIAL_PSWD, !INITIAL_SECURE);
         assertThat(this.connectionInfo.getUrl(), is("mm://" + HostProvider.DEFAULT_HOST + ':' + INITIAL_PORT));
     }
 
@@ -258,7 +265,6 @@ public class TeiidConnectionInfoTest {
         TeiidConnectionInfo anotherConnectionInfo = new ConnectionInfo(NEW_PORT,
                                                                        NEW_USER,
                                                                        NEW_PSWD,
-                                                                       !INITIAL_PERSIST_PSWD,
                                                                        !INITIAL_SECURE);
         anotherConnectionInfo.setHostProvider(NEW_HOST_PROVIDER);
 
@@ -267,50 +273,49 @@ public class TeiidConnectionInfoTest {
         assertThat(this.connectionInfo.getPort(), is(NEW_PORT));
         assertThat(this.connectionInfo.getUsername(), is(NEW_USER));
         assertThat(this.connectionInfo.getPassword(), is(NEW_PSWD));
-        assertThat(this.connectionInfo.isPasswordBeingPersisted(), is(!INITIAL_PERSIST_PSWD));
         assertThat(this.connectionInfo.isSecure(), is(!INITIAL_SECURE));
     }
 
     @Test
     public void shouldBeEqualIfPropertiesAreTheSame() {
-        ConnectionInfo otherInfo = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, INITIAL_PSWD, INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        ConnectionInfo otherInfo = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, INITIAL_PSWD, INITIAL_SECURE);
         assertThat(this.connectionInfo.equals(otherInfo), is(true));
     }
     
     @Test
     public void shouldNotBeEqualIfPasswordIsNullAndOtherPasswordIsEmpty() {
-        ConnectionInfo info1 = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, "", INITIAL_PERSIST_PSWD, INITIAL_SECURE);
-        ConnectionInfo info2 = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, null, INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        ConnectionInfo info1 = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, "", INITIAL_SECURE);
+        ConnectionInfo info2 = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, null, INITIAL_SECURE);
         assertThat(info1.equals(info2), is(false));
     }
     
     @Test
     public void shouldNotBeEqualIfSecureIsDifferent() {
-        ConnectionInfo otherInfo = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, INITIAL_PSWD, INITIAL_PERSIST_PSWD, !INITIAL_SECURE);
+        ConnectionInfo otherInfo = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, INITIAL_PSWD, !INITIAL_SECURE);
         assertThat(this.connectionInfo.equals(otherInfo), is(false));
     }
     
     @Test
     public void shouldNotBeEqualIfPersistPasswordIsDifferent() {
-        ConnectionInfo otherInfo = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, INITIAL_PSWD, !INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        ConnectionInfo otherInfo = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, INITIAL_PSWD, !INITIAL_SECURE);
         assertThat(this.connectionInfo.equals(otherInfo), is(false));
     }
     
     @Test
     public void shouldNotBeEqualIfPasswordIsDifferent() {
-        ConnectionInfo otherInfo = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, NEW_PSWD, INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        ConnectionInfo otherInfo = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, NEW_PSWD, INITIAL_SECURE);
         assertThat(this.connectionInfo.equals(otherInfo), is(false));
     }
     
     @Test
     public void shouldNotBeEqualIfPortIsDifferent() {
-        ConnectionInfo otherInfo = new ConnectionInfo(NEW_PORT, INITIAL_USER, INITIAL_PSWD, INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        ConnectionInfo otherInfo = new ConnectionInfo(NEW_PORT, INITIAL_USER, INITIAL_PSWD, INITIAL_SECURE);
         assertThat(this.connectionInfo.equals(otherInfo), is(false));
     }
     
     @Test
     public void shouldNotBeEqualIfUsernameIsDifferent() {
-        ConnectionInfo otherInfo = new ConnectionInfo(INITIAL_PORT, NEW_USER, INITIAL_PSWD, INITIAL_PERSIST_PSWD, INITIAL_SECURE);
+        ConnectionInfo otherInfo = new ConnectionInfo(INITIAL_PORT, NEW_USER, INITIAL_PSWD, INITIAL_SECURE);
         assertThat(this.connectionInfo.equals(otherInfo), is(false));
     }
 
