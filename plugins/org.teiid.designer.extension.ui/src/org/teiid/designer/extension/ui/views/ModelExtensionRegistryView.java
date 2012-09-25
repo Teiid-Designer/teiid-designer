@@ -18,10 +18,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
@@ -62,6 +65,7 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.part.ViewPart;
 import org.teiid.core.util.CoreStringUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
@@ -71,10 +75,12 @@ import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.wizards.NewMedWizard;
+import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
 
@@ -466,6 +472,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
         };
         ModelingResourceFilter wsFilter = new ModelingResourceFilter(filter);
         wsFilter.setShowHiddenProjects(false);
+        wsFilter.addFilter(new ModelProjectFilter());
         final Object[] models = WidgetUtil.showWorkspaceObjectSelectionDialog(Messages.selectMedDialogTitle,
                                                                               Messages.selectMedDialogMsg, false, null, wsFilter,
                                                                               medSelectionValidator,
@@ -683,6 +690,35 @@ public final class ModelExtensionRegistryView extends ViewPart {
 
     private static Shell getShell() {
         return UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+    }
+    
+    class ModelProjectFilter extends ViewerFilter {
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+         *      java.lang.Object)
+         */
+        @Override
+        public boolean select( Viewer viewer,
+                               Object parentElement,
+                               Object element ) {
+            if (element instanceof IProject) {
+                boolean result = false;
+
+                try {
+                    result = ((IProject)element).isOpen() && !((IProject)element).hasNature(ModelerCore.HIDDEN_PROJECT_NATURE_ID)
+                    && ((IProject)element).hasNature(ModelerCore.NATURE_ID);
+                } catch (CoreException e) {
+                    UiConstants.Util.log(e);
+                }
+
+                return result;
+            }
+
+            return true;
+        }
     }
 
 }
