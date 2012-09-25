@@ -56,6 +56,7 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
     String URL = "connection-url"; //$NON-NLS-1$
     String USERNAME = "user-name"; //$NON-NLS-1$
     String PASSWORD = "password"; //$NON-NLS-1$
+    String JARLIST = "jarList"; //$NON-NLS-1$
     String UNKNOWN = "unknown"; //$NON-NLS-1$
 
     /**
@@ -166,6 +167,10 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
             connectionProps.put(PASSWORD, baseProps.get(PASSWORD_KEY));
         }
 
+        if (baseProps.get(JARLIST) != null) {
+            connectionProps.put(JARLIST, baseProps.get(JARLIST));
+        }
+        
         return connectionProps;
     }
 

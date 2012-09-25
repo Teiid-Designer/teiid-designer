@@ -62,6 +62,9 @@ public final class Messages extends NLS {
     public static String UpdatePreviewVdbJob;
     public static String UpdatePreviewVdbJobError;
     public static String UpdatePreviewVdbJobSuccessfullyCompleted;
+    public static String JarDeploymentJarNotFound;
+    public static String JarDeploymentFailed;
+    public static String JarDeploymentJarNotReadable;
 
     static {
         NLS.initializeMessages("org.teiid.designer.runtime.preview.messages", Messages.class); //$NON-NLS-1$

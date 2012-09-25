@@ -8,10 +8,11 @@
 package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -19,17 +20,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.adminapi.Admin;
+import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
@@ -44,6 +45,7 @@ import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
+import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.vdb.Vdb;
 
 
@@ -309,29 +311,38 @@ public class ExecutionAdmin {
 
         // For JDBC types, find the matching installed driver.  This is done currently by matching
         // the profile driver classname to the installed driver classname
-        if("connector-jdbc".equals(typeName)) {
-            // Get the driver class defined on the connection profile
-            String connProfileDriverClass = properties.getProperty("driver-class");
+        String connProfileDriverClass = properties.getProperty("driver-class");  //$NON-NLS-1$
+        if("connector-jdbc".equals(typeName)) {  //$NON-NLS-1$
+            // List of driver jars on the connection profile
+            String jarList = properties.getProperty("jarList");  //$NON-NLS-1$
             
-            // Get the installed JDBC Driver mappings
-            Map<String,String> dsNameToDriverMap = TeiidServerAdapterUtil.getInstalledJDBCDriverMap(teiidServer.getParent());
+            // Get first driver name with the driver class that matches the connection profile
+            String dsNameMatch = getDSMatchForDriverClass(teiidServer,connProfileDriverClass);
             
-            // Use the first driver name with driver class that matches connection profile
-            Set<String> keySet = dsNameToDriverMap.keySet();
-            String dsNameMatch = null;
-            for(String dsName: keySet) {
-                String dsDriverClass = dsNameToDriverMap.get(dsName);
-                if(connProfileDriverClass.equalsIgnoreCase(dsDriverClass)) {
-                    dsNameMatch=dsName;
-                    break;
+            // If a matching datasource was found, set typename
+            if(dsNameMatch!=null) {
+                typeName=dsNameMatch;
+            // No matching datasource, attempt to deploy the driver if jarList is populated.
+            } else if(jarList!=null && jarList.trim().length()>0) {
+                // Try to deploy the jars
+                deployJars(this.admin,jarList);
+                
+                refresh();
+                
+                // Retry the name match after deployment.
+                dsNameMatch = getDSMatchForDriverClass(teiidServer,connProfileDriverClass);
+                if(dsNameMatch!=null) {
+                    typeName=dsNameMatch;
                 }
             }
-            // Change the typeName to the matched driver name
-            if(dsNameMatch!=null) typeName=dsNameMatch;
         }
         // Verify the "typeName" exists.
         if (!this.dataSourceTypeNames.contains(typeName)) {
-            throw new Exception(Util.getString("dataSourceTypeDoesNotExist", typeName, getServer())); //$NON-NLS-1$
+            if("connector-jdbc".equals(typeName)) {  //$NON-NLS-1$
+                throw new Exception(Util.getString("jdcbSourceForClassNameNotFound", connProfileDriverClass, getServer()));  //$NON-NLS-1$
+            } else {
+                throw new Exception(Util.getString("dataSourceTypeDoesNotExist", typeName, getServer())); //$NON-NLS-1$
+            }
         }
 
         this.admin.createDataSource(jndiName, typeName, properties);
@@ -353,6 +364,73 @@ public class ExecutionAdmin {
         throw new Exception(Util.getString("errorCreatingDataSource", jndiName, typeName, getServer())); //$NON-NLS-1$
     }
 
+    /*
+     * Look for an installed driver that has the driverClass which matches the supplied driverClass name.
+     * @param teiidServer the TeiidServer instance
+     * @param driverClass the driver class to match
+     * @return the name of the matching driver, null if not found
+     */
+    private String getDSMatchForDriverClass(TeiidServer teiidServer, String driverClass) throws Exception {
+        String dsNameMatch = null;
+        
+        if(teiidServer!=null && driverClass!=null) {
+            // Get the installed JDBC Driver mappings
+            Map<String,String> dsNameToDriverMap = TeiidServerAdapterUtil.getInstalledJDBCDriverMap(teiidServer.getParent());
+
+            // Use the first driver name with driver class that matches connection profile
+            Set<String> keySet = dsNameToDriverMap.keySet();
+            for(String dsName: keySet) {
+                String dsDriverClass = dsNameToDriverMap.get(dsName);
+                if(driverClass.equalsIgnoreCase(dsDriverClass)) {
+                    dsNameMatch=dsName;
+                    break;
+                }
+            }
+        }
+        
+        return dsNameMatch;
+    }
+    
+    /*
+     * Deploy all jars in the supplied jarList
+     * @param admin the Admin instance
+     * @param jarList the colon-separated list of jar path locations
+     */
+    private void deployJars(Admin admin, String jarList) {
+        // Path Entries are colon separated
+        String[] jarPathStrs = jarList.split("[:]");  //$NON-NLS-1$
+
+        // Attempt to deploy each jar
+        for(String jarPathStr: jarPathStrs) {
+            File theFile = new File(jarPathStr);
+            if(theFile.exists()) {
+                if(theFile.canRead()) {
+                    String fileName = theFile.getName();
+                    InputStream iStream = null;
+                    try {
+                        iStream = new FileInputStream(theFile);
+                    } catch (FileNotFoundException ex) {
+                        Util.log(IStatus.ERROR, NLS.bind(Messages.JarDeploymentJarNotFound, theFile.getPath()));
+                        continue;
+                    }
+                    try {
+                        admin.deploy(fileName, iStream);
+                    } catch (AdminException ex) {
+                        // Jar deployment failed
+                        Util.log(IStatus.ERROR, ex, NLS.bind(Messages.JarDeploymentFailed, theFile.getPath()));
+                    }
+                } else {
+                    // Could not read the file
+                    Util.log(IStatus.ERROR, NLS.bind(Messages.JarDeploymentJarNotReadable, theFile.getPath()));
+                }
+            } else {
+                // The file was not found
+                Util.log(IStatus.ERROR, NLS.bind(Messages.JarDeploymentJarNotFound, theFile.getPath()));
+            }
+
+        }
+    }
+    
     /**
      * @return the server who owns this admin object (never <code>null</code>)
      */
