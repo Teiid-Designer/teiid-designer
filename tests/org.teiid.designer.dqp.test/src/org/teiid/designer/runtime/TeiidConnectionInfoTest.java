@@ -11,8 +11,6 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
-import java.util.HashMap;
-import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,29 +38,17 @@ public class TeiidConnectionInfoTest {
     private static final String NEW_USER = "newUser";
 
     class ConnectionInfo extends TeiidConnectionInfo {
-        
-        private Map<String, String> storageMap = new HashMap<String, String>();
 
         public ConnectionInfo( String port,
                                String username,
                                String password,
                                boolean secure ) {
-            super(port, username, password, secure);
+            super(port, username, new DefaultStorageProvider(), password, secure);
         }
         
         @Override
         protected String getPasswordKey() {
             return getClass().getName() + ".password";
-        }
-        
-        @Override
-        protected void storeInSecureStorage(String key, String value) {
-            storageMap .put(key, value);
-        }
-        
-        @Override
-        protected String getFromSecureStorage(String key) {
-            return storageMap.get(key);
         }
         
         /**

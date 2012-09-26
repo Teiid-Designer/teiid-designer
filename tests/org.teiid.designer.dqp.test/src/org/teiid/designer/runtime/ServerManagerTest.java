@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.teiid.core.util.SmartTestDesignerSuite;
+import org.teiid.designer.runtime.security.ISecureStorageProvider;
 
 /**
  * 
@@ -102,7 +103,7 @@ public class ServerManagerTest {
     @Before
     public void beforeEach() throws Exception {
         MockitoAnnotations.initMocks(this);
-        this.mgr = new TeiidServerManager(null, null, serversProvider);
+        this.mgr = new TeiidServerManager(null, null, serversProvider, new DefaultStorageProvider());
         
     }
     
@@ -243,7 +244,8 @@ public class ServerManagerTest {
         // setup
         MockObjectFactory.createModelContainer();
 
-        this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()) + File.separator + "oldregistrydata", null, serversProvider);
+        this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()) + File.separator + "oldregistrydata", 
+                                          null, serversProvider, new DefaultStorageProvider());
         this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(3));
 
@@ -268,7 +270,8 @@ public class ServerManagerTest {
         // setup
         MockObjectFactory.createModelContainer();
 
-        this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()), null, serversProvider);
+        this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()), 
+                                          null, serversProvider, new DefaultStorageProvider());
         this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(2));
 
@@ -283,10 +286,11 @@ public class ServerManagerTest {
         String jdbcPassword = null;
         EventManager eventMgr = mock(EventManager.class);
         IServer parentServer = mock(IServer.class);
+        ISecureStorageProvider secureStorageProvider = new DefaultStorageProvider();
 
         // construct a server just to get its URL
-        TeiidAdminInfo adminInfo = new TeiidAdminInfo(adminPort, adminUser, adminPassword, adminSecure);
-        TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, jdbcPassword, jdbcSecure);
+        TeiidAdminInfo adminInfo = new TeiidAdminInfo(adminPort, adminUser, secureStorageProvider, adminPassword, adminSecure);
+        TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, secureStorageProvider, jdbcPassword, jdbcSecure);
         TeiidServer testServer = new TeiidServer(null, adminInfo, jdbcInfo, eventMgr, parentServer);
         adminInfo.setHostProvider(testServer);
         jdbcInfo.setHostProvider(testServer);
@@ -317,8 +321,8 @@ public class ServerManagerTest {
         jdbcPassword = "teiid";
 
         // construct a server just to get its URL
-        adminInfo = new TeiidAdminInfo(adminPort, adminUser, adminPassword, adminSecure);
-        jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, jdbcPassword, jdbcSecure);
+        adminInfo = new TeiidAdminInfo(adminPort, adminUser, secureStorageProvider, adminPassword, adminSecure);
+        jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, secureStorageProvider, jdbcPassword, jdbcSecure);
         testServer = new TeiidServer(host, adminInfo, jdbcInfo, eventMgr, parentServer);
         adminInfo.setHostProvider(testServer);
         jdbcInfo.setHostProvider(testServer);

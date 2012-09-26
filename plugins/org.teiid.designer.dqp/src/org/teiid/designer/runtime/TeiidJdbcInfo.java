@@ -6,6 +6,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.HashCodeUtil;
+import org.teiid.designer.runtime.security.ISecureStorageProvider;
 
 
 /**
@@ -47,25 +48,28 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo {
      * The name of the VDB that this connection will connect to (never empty or <code>null</code>)
      */
     private String vdbname;
-
+    
     /**
      * @param port the connection port (can be <code>null</code> or empty)
      * @param username the connection user name (can be <code>null</code> or empty)
+     * @param secureStorageProvider provider for storing of the password
      * @param password the connection password (can be <code>null</code> or empty)
      * @param secure <code>true</code> if a secure connection should be used
      * @see #validate()
      */
     public TeiidJdbcInfo( String port,
                           String username,
+                          ISecureStorageProvider secureStorageProvider,
                           String password,
                           boolean secure ) {
-        this(VDB_PLACEHOLDER, port, username, password, secure);
+        this(VDB_PLACEHOLDER, port, username, secureStorageProvider, password, secure);
     }
 
     /**
      * @param vdbname the VDB name (never empty or <code>null</code>)
      * @param port the connection port (can be <code>null</code> or empty)
      * @param username the connection user name (can be <code>null</code> or empty)
+     * @param secureStorageProvider provider for storing the password
      * @param password the connection password (can be <code>null</code> or empty)
      * @param secure <code>true</code> if a secure connection should be used
      * @see #validate()
@@ -73,9 +77,10 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo {
     private TeiidJdbcInfo( String vdbname,
                            String port,
                            String username,
+                           ISecureStorageProvider secureStorageProvider,
                            String password,
                            boolean secure ) {
-        super(port, username, password, secure);
+        super(port, username, secureStorageProvider, password, secure);
         CoreArgCheck.isNotEmpty(vdbname, "vdbname"); //$NON-NLS-1$
         this.vdbname = vdbname;
     }
@@ -88,8 +93,8 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo {
      */
     public TeiidJdbcInfo( String vdbname,
                           TeiidJdbcInfo teiidJdbcInfo ) {
-        this(vdbname, teiidJdbcInfo.getPort(), teiidJdbcInfo.getUsername(), teiidJdbcInfo.getPassword(),
-                teiidJdbcInfo.isSecure());
+        this(vdbname, teiidJdbcInfo.getPort(), teiidJdbcInfo.getUsername(), teiidJdbcInfo.getSecureStorageProvider(), 
+             teiidJdbcInfo.getPassword(), teiidJdbcInfo.isSecure());
         setHostProvider(teiidJdbcInfo.getHostProvider());
     }
     
@@ -106,7 +111,7 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo {
     @SuppressWarnings( "javadoc" )
     @Override
     public TeiidJdbcInfo clone() {
-        TeiidJdbcInfo cloned = new TeiidJdbcInfo(getPort(), getUsername(), getPassword(), isSecure());
+        TeiidJdbcInfo cloned = new TeiidJdbcInfo(getPort(), getUsername(), getSecureStorageProvider(), getPassword(), isSecure());
         cloned.setHostProvider(getHostProvider());
         return cloned;
     }

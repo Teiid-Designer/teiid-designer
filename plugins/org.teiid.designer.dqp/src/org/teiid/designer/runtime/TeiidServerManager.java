@@ -41,6 +41,7 @@ import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory.ServerOptions;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.PreviewManager;
+import org.teiid.designer.runtime.security.ISecureStorageProvider;
 import org.teiid.net.TeiidURL;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -243,6 +244,11 @@ public final class TeiidServerManager implements EventManager {
      */
     private IServersProvider parentServersProvider;
 
+    /**
+     * The provider used for storing passwords
+     */
+    private ISecureStorageProvider secureStorageProvider;
+
     // ===========================================================================================================================
     // Constructors
     // ===========================================================================================================================
@@ -252,11 +258,14 @@ public final class TeiidServerManager implements EventManager {
      *        persistence is not desired)
      * @param passwordProvider 
      * @param parentServersProvider 
+     * @param secureStorageProvider 
      */
-    public TeiidServerManager( String stateLocationPath, IPasswordProvider passwordProvider, IServersProvider parentServersProvider ) {
+    public TeiidServerManager( String stateLocationPath, IPasswordProvider passwordProvider, 
+                               IServersProvider parentServersProvider, ISecureStorageProvider secureStorageProvider ) {
         this.teiidServers = new ArrayList<TeiidServer>();
         this.stateLocationPath = stateLocationPath;
         this.parentServersProvider = parentServersProvider;
+        this.secureStorageProvider = secureStorageProvider;
         this.listeners = new CopyOnWriteArrayList<IExecutionConfigurationListener>();
 
         // construct Preview VDB Manager
@@ -291,6 +300,17 @@ public final class TeiidServerManager implements EventManager {
      */
     public IServerLifecycleListener getServerLifeCycleListener() {
         return serversListener;
+    }
+    
+
+    /**
+     * Get the implementation of the {@link ISecureStorageProvider} used by
+     * this server manager.
+     * 
+     * @return implementation of {@link ISecureStorageProvider}
+     */
+    public ISecureStorageProvider getSecureStorageProvider() {
+        return secureStorageProvider;
     }
     
     /**
@@ -633,6 +653,7 @@ public final class TeiidServerManager implements EventManager {
 
                                         teiidAdminInfo = new TeiidAdminInfo(adminPort,
                                                                             adminUsername,
+                                                                            secureStorageProvider,
                                                                             adminPassword,
                                                                             Boolean.parseBoolean(adminSecureStr));
                                     } else if (connNode.getNodeName().equalsIgnoreCase(JDBC_TAG)) {
@@ -666,6 +687,7 @@ public final class TeiidServerManager implements EventManager {
                                                                                         : jdbcSecureNode.getNodeValue());
                                         teiidJdbcInfo = new TeiidJdbcInfo(jdbcPort,
                                                                           jdbcUsername,
+                                                                          secureStorageProvider,
                                                                           jdbcPassword,
                                                                           Boolean.parseBoolean(jdbcSecureStr));
                                     }
@@ -689,11 +711,13 @@ public final class TeiidServerManager implements EventManager {
                             host = jdbcURL.getHosts();
                             teiidAdminInfo = new TeiidAdminInfo(jdbcURL.getPorts(),
                                                                 userNode.getNodeValue(),
+                                                                secureStorageProvider,
                                                                 pswd,
                                                                 jdbcURL.isUsingSSL());
 
                             teiidJdbcInfo = new TeiidJdbcInfo(teiidAdminInfo.getPort(),
                                                               teiidAdminInfo.getUsername(),
+                                                              secureStorageProvider,
                                                               null,
                                                               TeiidJdbcInfo.DEFAULT_SECURE);
                         }
@@ -944,5 +968,4 @@ public final class TeiidServerManager implements EventManager {
         // unexpected problem removing server from registry
         return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("serverManagerRegistryUpdateRemoveError", status.getMessage())); //$NON-NLS-1$
     }
-
 }

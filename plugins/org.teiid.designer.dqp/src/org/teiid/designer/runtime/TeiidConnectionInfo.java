@@ -9,19 +9,14 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URLEncoder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.equinox.security.storage.EncodingUtils;
-import org.eclipse.equinox.security.storage.ISecurePreferences;
-import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
-import org.eclipse.equinox.security.storage.StorageException;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.HashCodeUtil;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.runtime.security.ISecureStorageProvider;
 
 /**
  * 
@@ -48,6 +43,7 @@ public abstract class TeiidConnectionInfo {
     protected static final int DEFAULT_PORT_NUMBER = 0;
 
     private HostProvider hostProvider;
+    private ISecureStorageProvider secureStorageProvider;
     private String password;
     private String port;
     private int portNumber = DEFAULT_PORT_NUMBER;
@@ -57,15 +53,16 @@ public abstract class TeiidConnectionInfo {
     /**
      * @param port the connection port (can be <code>null</code> or empty)
      * @param username the connection user name (can be <code>null</code> or empty)
+     * @param secureStorageProvider provider for storage of the password
      * @param password the connection password (can be <code>null</code> or empty)
-     * @param persistPassword <code>true</code> if the password should be persisted
      * @param secure <code>true</code> if a secure connection should be used
      * @see #validate()
      */
     protected TeiidConnectionInfo( String port,
                                    String username,
+                                   ISecureStorageProvider secureStorageProvider,
                                    String password,
-                                   boolean secure ) {
+                                   boolean secure) {
         this.port = port;
         try {
 			this.portNumber = Integer.parseInt(port);
@@ -73,6 +70,7 @@ public abstract class TeiidConnectionInfo {
 			this.portNumber = DEFAULT_PORT_NUMBER;
 		}
         this.username = username;
+        this.secureStorageProvider = secureStorageProvider;
         setPassword(password);
         this.secure = secure;
     }
@@ -186,6 +184,13 @@ public abstract class TeiidConnectionInfo {
 
         return this.hostProvider;
     }
+    
+    /**
+     * @return the secureStorageProvider
+     */
+    protected ISecureStorageProvider getSecureStorageProvider() {
+        return this.secureStorageProvider;
+    }
 
     /**
      * @return the password (can be <code>null</code> or empty)
@@ -194,7 +199,7 @@ public abstract class TeiidConnectionInfo {
         if (password != null)
             return password;
         
-        password = getFromSecureStorage(getPasswordKey());
+        password = secureStorageProvider.getFromSecureStorage(getProviderKey(), getPasswordKey());
         
         return password;
     }
@@ -291,7 +296,7 @@ public abstract class TeiidConnectionInfo {
         if (password != null) {
             // Only store non-null values
             try {
-                storeInSecureStorage(getPasswordKey(), password);
+                secureStorageProvider.storeInSecureStorage(getProviderKey(), getPasswordKey(), password);
             } catch (Exception e) {
                 DqpPlugin.Util.log(e);
             }
@@ -384,60 +389,16 @@ public abstract class TeiidConnectionInfo {
     }
     
     /**
-     * Retrieve the value stored against the given key from 
-     * the secure storage.
-     * 
-     * @param key
-     * @return
-     */
-    protected String getFromSecureStorage(String key) {
-        try {
-            ISecurePreferences node = getNode();
-            String val = node.get(key, null);
-            if (val == null) {
-                return null;
-            }
-            return new String(EncodingUtils.decodeBase64(val));
-        } catch(Exception e) {
-            DqpPlugin.Util.log(e);
-            return null;
-        }
-    }
-    
-    /**
-     * Store the given value against the key in eclipse's secure
-     * storage.
-     * 
-     * @param key
-     * @param value
-     * @throws StorageException
-     * @throws UnsupportedEncodingException
-     */
-    protected void storeInSecureStorage(String key, String value) throws StorageException, UnsupportedEncodingException {
-        ISecurePreferences node = getNode();
-        if( value == null )
-            node.put(key, value, true);
-        else
-            node.put(key, EncodingUtils.encodeBase64(value.getBytes()), true /* encrypt */); 
-    }
-
-    /**
-     * Get the secure preferences node for this connection instance.
-     * The node is keyed to the url of this connection, allowing individual
-     * connection's properties to be separately stored.
+     * Get the key to be used for storing properties against for this connection.
      * 
      * @return
-     * @throws UnsupportedEncodingException
      */
-    private ISecurePreferences getNode() throws UnsupportedEncodingException {
+    private String getProviderKey() {
         String secureKey = new StringBuilder(PREFERENCES_BASEKEY)
-            .append(getClass().getSimpleName())
-            .append(getUrl())
-            .append(IPath.SEPARATOR).toString();
-
-        ISecurePreferences root = SecurePreferencesFactory.getDefault();
-        String encoded = URLEncoder.encode(secureKey, "UTF-8"); //$NON-NLS-1$
-        return root.node(encoded);
+        .append(getClass().getSimpleName())
+        .append(getUrl())
+        .append(IPath.SEPARATOR).toString();
+        
+        return secureKey;
     }
-
 }

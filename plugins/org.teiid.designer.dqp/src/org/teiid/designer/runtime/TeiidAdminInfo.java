@@ -1,6 +1,7 @@
 package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
+import org.teiid.designer.runtime.security.ISecureStorageProvider;
 
 
 /**
@@ -33,15 +34,17 @@ public class TeiidAdminInfo extends TeiidConnectionInfo {
     /** 
      * @param port the connection port (can be <code>null</code> or empty)
      * @param username the connection user name (can be <code>null</code> or empty)
+     * @param secureStorageProvider provider used for storing the password
      * @param password the connection password (can be <code>null</code> or empty)
      * @param secure <code>true</code> if a secure connection should be used
      * @see #validate()
      */
     public TeiidAdminInfo( String port,
                            String username,
+                           ISecureStorageProvider secureStorageProvider,
                            String password,
                            boolean secure ) {
-        super(port, username, password, secure);
+        super(port, username, secureStorageProvider, password, secure);
     }
 
     @Override
@@ -57,7 +60,7 @@ public class TeiidAdminInfo extends TeiidConnectionInfo {
     @SuppressWarnings( "javadoc" )
     @Override
     public TeiidAdminInfo clone() {
-        TeiidAdminInfo cloned = new TeiidAdminInfo(getPort(), getUsername(), getPassword(), isSecure());
+        TeiidAdminInfo cloned = new TeiidAdminInfo(getPort(), getUsername(), getSecureStorageProvider(), getPassword(), isSecure());
         cloned.setHostProvider(getHostProvider());
         return cloned;
     }
