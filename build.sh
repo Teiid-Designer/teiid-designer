@@ -1,12 +1,5 @@
 #!/bin/bash
 
-##
-#
-# Default jboss tools branch
-#
-##
-DEFAULT_JBT_BRANCH="trunk"
-
 #################
 #
 # Checkout or update from the given repository
@@ -53,10 +46,9 @@ function checkout {
 #
 #################
 function show_help {
-	echo "Usage: $0 [-b] [-r <jbt repo branch>] [-d] [-h]"
+	echo "Usage: $0 [-b] [-d] [-h]"
 	echo "-b - enable swt bot testing"
 	echo "-d - enable maven debugging"
-	echo "-r - specify a different jboss tools repository branch. By default, $0 uses '${DEFAULT_JBT_BRANCH}'"
   exit 1
 }
 
@@ -97,43 +89,17 @@ SKIP_SWTBOT=1
 DEBUG=0
 
 #
-# jbosstools branch
-#
-JBT_BRANCH="${DEFAULT_JBT_BRANCH}"
-
-#
 # Determine the command line options
 #
-while getopts "bdhr:" opt;
+while getopts "bdh" opt;
 do
 	case $opt in
 	b) SKIP_SWTBOT=0 ;;
 	d) DEBUG=1 ;;
-	r) JBT_BRANCH=${OPTARG} ;;
 	h) show_help ;;
 	*) show_help ;;
 	esac
 done
-
-#
-# The jboss tools repository
-#
-JBT_REPO_URL="http://anonsvn.jboss.org/repos/jbosstools/${JBT_BRANCH}"
-
-#
-# JBT repositories to checkout
-#
-JBT_BUILD_REPO="${JBT_REPO_URL}/build"
-
-#
-# Local target directories for the JBT checkouts
-#
-JBT_BUILD_DIR="${ROOT_DIR}/build"
-
-#
-# Backup directory for any modified files
-#
-BACKUP_DIR="${ROOT_DIR}/backup"
 
 #
 # Source directory containing teiid designer codebase
@@ -177,24 +143,6 @@ if [ "${SKIP_SWTBOT}" == "1" ]; then
   echo -e "###\n#\n# Skipping swt bot tests\n#\n###"
   MVN_FLAGS="${MVN_FLAGS} -Dswtbot.test.skip=true"
 fi
-
-#
-# Create the backup directory
-#
-mkdir -p ${BACKUP_DIR}
-
-echo "==============="
-
-# Checkout the JBT build directory, containing the maven parent pom.xml and profiles
-checkout ${JBT_BUILD_REPO} ${JBT_BUILD_DIR}
-
-echo "==============="
-
-# Install the maven parent pom and profiles
-echo "Install parent pom"
-cd "${JBT_BUILD_DIR}/parent"
-${MVN} ${MVN_FLAGS}
-cd "${SRC_DIR}"
 
 echo "==============="
 
