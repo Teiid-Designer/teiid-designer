@@ -82,7 +82,7 @@ public final class MergePreviewVdbJob extends TeiidPreviewVdbJob {
         ExecutionAdmin admin = getPreviewServer().getAdmin();
 
         try {
-            admin.mergeVdbs(this.sourceVdbName, this.sourceVdbVersion, this.targetVdbName, this.targetVdbVersion);
+      //      admin.mergeVdbs(this.sourceVdbName, this.sourceVdbVersion, this.targetVdbName, this.targetVdbVersion, null);
         } catch (Exception e) {
             throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.MergePreviewVdbJobError,
                                                                                        this.sourceVdbName,

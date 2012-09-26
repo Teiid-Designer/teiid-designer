@@ -42,6 +42,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
@@ -56,6 +57,7 @@ import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.ModelerCoreException;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.util.CoreModelObjectNotificationHelper;
 import org.teiid.designer.core.util.StringUtilities;
@@ -76,6 +78,7 @@ import org.teiid.designer.metamodels.function.FunctionPackage;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.webservice.WebServicePackage;
 import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
+import org.teiid.designer.relational.model.RelationalModelFactory;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
@@ -83,8 +86,8 @@ import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidDataSource;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.jobs.CompositePreviewJob;
@@ -119,7 +122,9 @@ public final class PreviewManager extends JobChangeAdapter
     private static final String PROJECT_VDB_SUFFIX = "_project"; //$NON-NLS-1$
 
     private IPasswordProvider passwordProvider;
-
+    
+    String projectPreviewVdbName = null;
+    
     /**
      * @param modelFile the model whose dependencies are being checked
      * @param pvdbFile the Preview VDB whose model entry is being checked to see if it is a dependency
@@ -129,10 +134,9 @@ public final class PreviewManager extends JobChangeAdapter
                                IFile pvdbFile ) {
         // TODO implement dependsOn
         assert (ModelUtil.isVdbArchiveFile(pvdbFile)) : "IFile is not a VDB"; //$NON-NLS-1$
-
+        
         Vdb pvdb = new Vdb(pvdbFile, null);
         Set<VdbModelEntry> models = pvdb.getModelEntries();
-
         // project PVDB has no entries
         if (!models.isEmpty()) {
             IFile file = models.iterator().next().findFileInWorkspace();
@@ -471,6 +475,7 @@ public final class PreviewManager extends JobChangeAdapter
         }
 
         return ((connectionInfoError == null) ? Status.OK_STATUS : connectionInfoError);
+        
     }
 
     /**
@@ -1010,7 +1015,6 @@ public final class PreviewManager extends JobChangeAdapter
         PreviewVdbStatus status = getStatus(pvdbFile.getFullPath());
         assert (status != null) : "PVDB status not found in status map:" + pvdbFile.getFullPath(); //$NON-NLS-1$
         boolean deploy = status.shouldDeploy();
-
         if (!deploy) {
             // make sure server has a copy of the Preview VDB
             if (getPreviewServer() != null) {
@@ -1084,12 +1088,19 @@ public final class PreviewManager extends JobChangeAdapter
         assert isPreviewEnabled() : "previewSetup should not be called if preview is disabled"; //$NON-NLS-1$
         TeiidServer previewServer = getPreviewServer();
         assert (previewServer != null) : "Should not be called when preview server is null"; //$NON-NLS-1$
-
+        
         ModelResource model = ModelUtil.getModel(objectToPreview);
         IFile modelToPreview = (IFile)model.getCorrespondingResource();
         IFile pvdbFile = this.context.getPreviewVdb(modelToPreview);
         Vdb pvdb = new Vdb(pvdbFile, true, monitor);
+        projectPreviewVdbName = getPreviewProjectVdbName(modelToPreview.getProject());
+       
+        
+        
+        
         List<IFile> projectPvdbsToDeploy = findProjectPvdbs(modelToPreview.getProject(), true);
+       
+        
 
         if (monitor.isCanceled()) {
             throw new InterruptedException();
@@ -1169,19 +1180,26 @@ public final class PreviewManager extends JobChangeAdapter
         // deploy any project PVDBs if necessary
         for (IFile projectPvdbFile : projectPvdbsToDeploy) {
             PROJECT_MODEL_DEPLOY_TASK: {
+        	   
                 if (pvdbFile.equals(projectPvdbFile)) {
                     monitor.worked(1);
                     continue;
                 }
-
+                
                 Vdb projectModelPvdb = new Vdb(projectPvdbFile, true, null);
-
+                
                 // make sure no errors in any models that are dependencies of the model being previewed
                 String name = getResourceNameForPreviewVdb(projectPvdbFile);
                 monitor.subTask(NLS.bind(Messages.PreviewSetupValidationCheckTask, name));
                 IStatus status = checkPreviewVdbForErrors(projectModelPvdb);
                 boolean error = false;
 
+                //Hack to add dummy model since Teiid 8.x won't deploy empty VDB archive. See TEIID-2230.
+                if (isProjectLevelPreviewVdb(projectPvdbFile)) {
+                	IPath path = projectPvdbFile.getProject().getFullPath();
+                	projectModelPvdb.addModelEntry(createDummyModel(path, monitor).getPath(),monitor);
+                }
+                
                 // if the model has an error only throw exception if that model is a dependency
                 if (status.getSeverity() == IStatus.ERROR) {
                     error = true;
@@ -1215,7 +1233,7 @@ public final class PreviewManager extends JobChangeAdapter
 
                     // deploy PVDB
                     monitor.subTask(NLS.bind(Messages.PreviewSetupDeployTask, name));
-
+                    
                     try {
                         admin.deployVdb(projectPvdbFile);
                         setNeedsToBeDeployedStatus(projectPvdbFile, false);
@@ -1241,31 +1259,63 @@ public final class PreviewManager extends JobChangeAdapter
             }
         }
 
+        //Find and set the project level PVDB
+        IFile projectVdbIFile = null;
+        for (IFile projectVdb : pvdbsToMerge){
+        	if (isProjectLevelPreviewVdb(projectVdb)){
+        		projectVdbIFile = projectVdb;
+        		break;
+        	}
+        }
+        
         // merge into project PVDB
-        for (IFile pvdbToMerge : pvdbsToMerge) {
-            MERGE_TASK: {
-                String name = getResourceNameForPreviewVdb(pvdbToMerge);
-                monitor.subTask(NLS.bind(Messages.PreviewSetupMergeTask, name));
+        MERGE_TASK: {
+            monitor.subTask(NLS.bind(Messages.PreviewSetupMergeTask, projectPreviewVdbName));
 
-                // REMOVE the .vdb extension for the source vdb
-                String sourceVdbName = pvdbToMerge.getFullPath().removeFileExtension().lastSegment().toString();
-                String projectPreviewVdbName = getPreviewProjectVdbName(modelToPreview.getProject());
+            if (projectVdbIFile != null) {
 
-                if (!sourceVdbName.equals(projectPreviewVdbName)) {
+                admin.mergeVdbs(pvdbsToMerge,  projectPreviewVdbName, 1, projectVdbIFile);
+            }
 
-                    admin.mergeVdbs(sourceVdbName, PreviewManager.getPreviewVdbVersion(pvdbToMerge), projectPreviewVdbName, 1);
-                }
+            monitor.worked(1);
 
-                monitor.worked(1);
-
-                if (monitor.isCanceled()) {
-                    throw new InterruptedException();
-                }
+            if (monitor.isCanceled()) {
+                throw new InterruptedException();
             }
         }
-
+       
         monitor.done();
     }
+    
+    /**
+     * Need to create a dummy model for the project level VDB since we can't deploy without one.
+     * See TEIID-2230
+     * @param iPath
+     * @param progressMonitor
+     * @return
+     */
+    public ModelResource createDummyModel(IPath iPath, IProgressMonitor progressMonitor) {
+
+    	ModelResource modelResource = null; 
+    	
+        try {
+            RelationalModelFactory builder = new RelationalModelFactory();
+            modelResource = builder.createRelationalModel(iPath, "dummyworkaround.xmi");
+            modelResource.save(new NullProgressMonitor(), true);
+        } catch (ModelerCoreException e) {
+        	Util.log(IStatus.ERROR, e, e.getMessage());
+        }
+        
+        return modelResource;
+    }
+
+	/**
+	 * @param pvdbFile
+	 * @return
+	 */
+	private boolean isProjectLevelPreviewVdb(IFile pvdbFile) {
+		return pvdbFile.getFullPath().toString().contains(projectPreviewVdbName);
+	}
 
     /**
      * Must be called after a Preview VDB is deleted.

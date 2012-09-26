@@ -22,6 +22,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.metamodels.core.ModelImport;
+import org.teiid.designer.metamodels.core.impl.ModelImportImpl;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 import org.teiid.designer.runtime.preview.PreviewManager;
@@ -93,7 +95,7 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
         IResource resource = (project == null) ? this.model : this.project;
         int size = (project == null) ? 4 : 3;
         this.pvdbFile = getContext().getPreviewVdb(resource);
-
+      
         // set job scheduling rule on the PVDB resource, the model, and the build
         ISchedulingRule[] rules = new ISchedulingRule[size];
         rules[0] = getSchedulingRuleFactory().createRule(this.pvdbFile);

@@ -10,16 +10,14 @@ package org.teiid.designer.runtime;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -27,13 +25,14 @@ import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
-import org.teiid.adminapi.impl.VDBImportMetadata;
 import org.teiid.adminapi.impl.VDBMetaData;
 import org.teiid.adminapi.impl.VDBMetadataParser;
 import org.teiid.core.util.CoreArgCheck;
@@ -141,16 +140,16 @@ public class ExecutionAdmin {
 
         String vdbName = vdbFile.getFullPath().lastSegment();
         String vdbNameNoExt = vdbFile.getFullPath().removeFileExtension().lastSegment();
-
+        
         admin.deploy(vdbName, vdbFile.getContents());
-
+      
         refreshVDBs();
 
         // TODO should get version from vdbFile
         VDB vdb = admin.getVDB(vdbNameNoExt, 1);
-
+        
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createDeployVDBEvent(vdb));
-
+        
         return vdb;
     }
     
@@ -433,7 +432,7 @@ public class ExecutionAdmin {
         
         return bas.toString();
     }
-
+    
     private void init() throws Exception {
         this.translatorByNameMap = new HashMap<String, TeiidTranslator>();
         this.dataSourceNames = new ArrayList<String>();
@@ -483,33 +482,30 @@ public class ExecutionAdmin {
      * @param targetVdbVersion the version of the target VDB
      * @throws Exception if there is a problem with the merge
      */
-    public void mergeVdbs( String sourceVdbName,
-                           int sourceVdbVersion,
-                           String targetVdbName,
-                           int targetVdbVersion ) throws Exception {
-    	VDB projectVdb = getVdb(targetVdbName);
-    	if( projectVdb != null ) {
-    		VDBImportMetadata vdbImport = new VDBImportMetadata();
-    		vdbImport.setName(sourceVdbName);
-    		vdbImport.setVersion(sourceVdbVersion);
-
-    		((VDBMetaData)projectVdb).getVDBImports().add(vdbImport);
-    		
-    		String vdbXmlString = getVdbXmlString((VDBMetaData)projectVdb);
-    		if( vdbXmlString != null && vdbXmlString.length() > 0 ) {
-    			String name = projectVdb.getPropertyValue("deployment-name");
-    			this.admin.undeploy(name);
-    			
-    			// TODO: Teiid 8.1 integration
-    			// Replace the actual vdb.xml in the project.vdb file
-    			
-    			// 
-    			///deployVdb(vdb);
-    		}
-    	}
-
-    	// SEE ABOVE ^^^^ 
-        //this.admin.mergeVDBs(sourceVdbName, sourceVdbVersion, targetVdbName, targetVdbVersion);
+    public void mergeVdbs( List<IFile> pvdbsToMerge,
+                           String ptargetVdbName,
+                           int ptargetVdbVersion,
+                           IFile ptargetvdbToMerge) throws Exception {
+    	
+    	VDB projectVdb = getVdb(ptargetVdbName);
+    	String name = projectVdb.getPropertyValue("deployment-name");
+    	Vdb vdb = new Vdb(ptargetvdbToMerge, new NullProgressMonitor()); 
+    
+    	// merge into project PVDB
+        for (IFile pvdbToMerge : pvdbsToMerge) {
+        	if (ptargetvdbToMerge.equals(pvdbToMerge)) continue;
+        	
+        	// REMOVE the .vdb extension for the source vdb
+	        String sourceVdbName = pvdbToMerge.getFullPath().removeFileExtension().lastSegment().toString();
+	        if (!sourceVdbName.contains("dummy")){
+	        	vdb.addImportVdb(sourceVdbName);
+	        }
+	    }
+        
+        this.admin.undeploy(name);
+        vdb.save(null);
+        ptargetvdbToMerge.refreshLocal(IResource.DEPTH_INFINITE, null);
+        deployVdb(vdb.getFile()); 	
     }
 
     public void refresh() throws Exception {
