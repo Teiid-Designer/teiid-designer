@@ -8,21 +8,17 @@
 package org.teiid.designer.ui.properties.extension;
 
 import static org.teiid.designer.ui.UiConstants.Util;
-
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.teiid.core.util.CoreArgCheck;
-import org.teiid.designer.core.extension.deprecated.DeprecatedModelExtensionAssistant;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.ModelExtensionAssistantAggregator;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
 
 /**
@@ -36,6 +32,9 @@ public class ModelExtensionPropertySource implements IPropertySource {
 
     private final EObject eObject;
 
+    /**
+     * @param eObject the object whose property source is being created (cannot be <code>null</code>)
+     */
     public ModelExtensionPropertySource( EObject eObject ) {
         CoreArgCheck.isNotNull(eObject, "eObject is null"); //$NON-NLS-1$
         this.eObject = eObject;
@@ -58,18 +57,12 @@ public class ModelExtensionPropertySource implements IPropertySource {
      */
     @Override
     public IPropertyDescriptor[] getPropertyDescriptors() {
-        ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
         String metaclassName = this.eObject.getClass().getName();
         Collection<ModelExtensionPropertyDefinition> propDefns = new ArrayList<ModelExtensionPropertyDefinition>();
 
         try {
             ModelExtensionAssistantAggregator aggregator = ExtensionPlugin.getInstance().getModelExtensionAssistantAggregator();
             propDefns.addAll(aggregator.getPropertyDefinitions(this.eObject));
-
-            // TODO remove this code when the "ext-custom" prefix is no longer supported
-            // add in these manually as the MED will not have been saved in the model
-            DeprecatedModelExtensionAssistant assistant = (DeprecatedModelExtensionAssistant)registry.getModelExtensionAssistant(DeprecatedModelExtensionAssistant.NAMESPACE_PROVIDER.getNamespacePrefix());
-            propDefns.addAll(assistant.getPropertyDefinitions(this.eObject));
         } catch (Exception e) {
             Util.log(IStatus.ERROR, e, NLS.bind(Messages.errorCreatingPropertyDescriptors, metaclassName));
         }
@@ -105,6 +98,10 @@ public class ModelExtensionPropertySource implements IPropertySource {
         return null;
     }
 
+    /**
+     * @param object the object being checked (cannot be <code>null</code>)
+     * @return <code>true</code> if the parameter is a <code>ModelExtensionPropertyDescriptor</code>
+     */
     public boolean isExtensionProperty( Object object ) {
         CoreArgCheck.isNotNull(object, "object is null"); //$NON-NLS-1$
         return (object instanceof ModelExtensionPropertyDescriptor);

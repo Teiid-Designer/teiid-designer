@@ -162,11 +162,28 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
      */
     protected ModelExtensionPropertyDefinition getPropertyDefinition( Object modelObject,
                                                                       String propId ) throws Exception {
-        CoreArgCheck.isNotNull(modelObject, "modelObject is null"); //$NON-NLS-1$
+        CoreArgCheck.isInstanceOf(EObject.class, modelObject);
 
         // make sure right namespace
         if (ModelExtensionPropertyDefinition.Utils.isExtensionPropertyId(propId, getModelExtensionDefinition())) {
-            return getModelExtensionDefinition().getPropertyDefinition(modelObject.getClass().getName(), propId);
+            final Collection<String> modelTypes = getModelExtensionDefinition().getSupportedModelTypes();
+            boolean modelTypeSupported = false;
+
+            // if supported model types is empty then all model types are supported
+            if (modelTypes.isEmpty()) {
+                modelTypeSupported = true;
+            } else {
+                final ModelResource modelResource = getModelResource(modelObject);
+    
+                if (modelResource != null) {
+                    String modelTypeLiteral = modelResource.getModelType().getLiteral();
+                    modelTypeSupported = modelTypes.contains(modelTypeLiteral);
+                }
+            }
+
+            if (modelTypeSupported) {
+                return getModelExtensionDefinition().getPropertyDefinition(modelObject.getClass().getName(), propId);
+            }
         }
 
         return null;
@@ -179,6 +196,10 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
      */
     @Override
     public Collection<ModelExtensionPropertyDefinition> getPropertyDefinitions(Object modelObject) throws Exception {
+        if (!(modelObject instanceof EObject)) {
+            return Collections.emptyList();
+        }
+
         String metaclassName = modelObject.getClass().getName();
         ModelExtensionDefinition med = getModelExtensionDefinition();
         Collection<ModelExtensionPropertyDefinition> propDefinitions = new ArrayList<ModelExtensionPropertyDefinition>();

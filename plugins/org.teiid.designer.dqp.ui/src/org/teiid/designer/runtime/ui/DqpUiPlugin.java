@@ -185,8 +185,10 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
             @Override
             public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException {
                 try {
-                    TeiidServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
-                    serverMgr.shutdown(monitor);
+                    if (DqpPlugin.getInstance().isServerManagerStarted()) {
+                        TeiidServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
+                        serverMgr.shutdown(monitor);
+                    }
                 } catch (InterruptedException e) {
                     monitor.setCanceled(true);
                     throw e;

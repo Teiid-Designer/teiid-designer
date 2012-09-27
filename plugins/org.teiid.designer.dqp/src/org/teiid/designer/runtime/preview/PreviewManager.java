@@ -570,11 +570,13 @@ public final class PreviewManager extends JobChangeAdapter
      */
     private void findPvdbs( IContainer container,
                             List<IPath> pvdbPaths ) throws Exception {
-        for (IResource resource : container.members(IContainer.INCLUDE_HIDDEN)) {
-            if (resource instanceof IContainer) {
-                findPvdbs((IContainer)resource, pvdbPaths);
-            } else if (isPreviewVdb(resource)) {
-                pvdbPaths.add(resource.getFullPath());
+        if ((container != null) && container.isAccessible()) {
+            for (IResource resource : container.members(IContainer.INCLUDE_HIDDEN)) {
+                if (resource instanceof IContainer) {
+                    findPvdbs((IContainer)resource, pvdbPaths);
+                } else if (isPreviewVdb(resource)) {
+                    pvdbPaths.add(resource.getFullPath());
+                }
             }
         }
     }

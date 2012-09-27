@@ -8,7 +8,13 @@
 package org.teiid.designer.runtime.extension.rest;
 
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
+import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.extension.ExtensionConstants;
+import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.PropertyIds;
 
 /**
  * 
@@ -18,12 +24,38 @@ import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistant {
 
     /**
-     * @param modelObject the model object whose REST extension properties are being removed from (cannot be <code>null</code>)
-     * @throws Exception if there is a problem accessing the model object's model resource
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant#getPropertyDefinition(java.lang.Object, java.lang.String)
      */
-    public void removeRestProperties( EObject modelObject ) throws Exception {
-        removeProperty(modelObject, RestModelExtensionConstants.PropertyIds.REST_METHOD);
-        removeProperty(modelObject, RestModelExtensionConstants.PropertyIds.URI);
+    @Override
+    protected ModelExtensionPropertyDefinition getPropertyDefinition(final Object modelObject,
+                                                                     final String propId) throws Exception {
+        CoreArgCheck.isInstanceOf(EObject.class, modelObject);
+
+        // make sure there is a property definition first
+        final ModelExtensionPropertyDefinition propDefn = super.getPropertyDefinition(modelObject, propId);
+
+        if (propDefn != null) {
+            // must be procedure in a virtual model
+            if ((modelObject instanceof Procedure) && ModelUtil.isVirtual(modelObject)) {
+                if (PropertyIds.REST_METHOD.equals(propId) || PropertyIds.URI.equals(propId)) {
+                    return propDefn;
+                }
+            }
+        }
+
+        return null;
     }
 
+    /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant#supportsMedOperation(java.lang.String, java.lang.Object)
+         */
+        @Override
+        public boolean supportsMedOperation(String proposedOperationName,
+                                            Object context) {
+            return ExtensionConstants.MedOperations.SHOW_IN_REGISTRY.equals(proposedOperationName); // only show in registry
+        }
 }
