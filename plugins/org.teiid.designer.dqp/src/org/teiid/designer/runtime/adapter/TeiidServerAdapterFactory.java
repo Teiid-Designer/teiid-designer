@@ -130,18 +130,18 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
             optionList = Arrays.asList(options);
         
         String jdbcPort = TeiidServerAdapterUtil.getJdbcPort(server);
-        
+       
         TeiidAdminInfo teiidAdminInfo = new TeiidAdminInfo(new Integer(jboss7Server.getManagementPort()).toString(),
                                                            jboss7Server.getUsername(),
+                                                           serverManager.getSecureStorageProvider(),
                                                            jboss7Server.getPassword(),
-                                                           true,
                                                            false);
         
         TeiidJdbcInfo teiidJdbcInfo = new TeiidJdbcInfo(jdbcPort,
-                                                                                TeiidJdbcInfo.DEFAULT_JDBC_USERNAME,
-                                                                                TeiidJdbcInfo.DEFAULT_JDBC_PASSWORD,
-                                                                                true,
-                                                                                false);
+                                                        TeiidJdbcInfo.DEFAULT_JDBC_USERNAME,
+                                                        serverManager.getSecureStorageProvider(),
+                                                        TeiidJdbcInfo.DEFAULT_JDBC_PASSWORD,
+                                                        false);
 
         TeiidServer teiidServer = new TeiidServer(jboss7Server.getHost(), teiidAdminInfo, teiidJdbcInfo, serverManager, server);
         

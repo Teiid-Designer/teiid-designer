@@ -272,6 +272,12 @@
                <instanceof
                      value="org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode">
                </instanceof>
+               <instanceof
+                     value="org.teiid.designer.runtime.TeiidDataSource">
+               </instanceof>
+               <instanceof
+                     value="org.teiid.designer.runtime.TeiidVdb">
+               </instanceof>
             </or>
          </enablement>
       </actionProvider>

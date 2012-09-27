@@ -23,6 +23,7 @@ import org.teiid.core.PluginUtil;
 import org.teiid.core.event.IChangeNotifier;
 import org.teiid.core.util.PluginUtilImpl;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
+import org.teiid.designer.runtime.security.EquinoxSecureStorageProvider;
 
 
 /**
@@ -193,7 +194,8 @@ public class DqpPlugin extends Plugin {
 
     private void initializeServerRegistry() throws CoreException {
         String restoreRegistryPath = getRuntimePath().toFile().getAbsolutePath();
-        this.serverMgr = new TeiidServerManager(restoreRegistryPath, passwordProvider, getServersProvider());
+        this.serverMgr = new TeiidServerManager(restoreRegistryPath, passwordProvider, 
+                                                getServersProvider(), EquinoxSecureStorageProvider.getInstance());
 
         // restore registry
         final IStatus status = this.serverMgr.restoreState();
