@@ -23,6 +23,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,6 +41,7 @@ import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory.ServerOptions;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.PreviewManager;
+import org.teiid.designer.runtime.security.ISecureStorageProvider;
 import org.teiid.net.TeiidURL;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -242,6 +244,11 @@ public final class TeiidServerManager implements EventManager {
      */
     private IServersProvider parentServersProvider;
 
+    /**
+     * The provider used for storing passwords
+     */
+    private ISecureStorageProvider secureStorageProvider;
+
     // ===========================================================================================================================
     // Constructors
     // ===========================================================================================================================
@@ -251,11 +258,14 @@ public final class TeiidServerManager implements EventManager {
      *        persistence is not desired)
      * @param passwordProvider 
      * @param parentServersProvider 
+     * @param secureStorageProvider 
      */
-    public TeiidServerManager( String stateLocationPath, IPasswordProvider passwordProvider, IServersProvider parentServersProvider ) {
+    public TeiidServerManager( String stateLocationPath, IPasswordProvider passwordProvider, 
+                               IServersProvider parentServersProvider, ISecureStorageProvider secureStorageProvider ) {
         this.teiidServers = new ArrayList<TeiidServer>();
         this.stateLocationPath = stateLocationPath;
         this.parentServersProvider = parentServersProvider;
+        this.secureStorageProvider = secureStorageProvider;
         this.listeners = new CopyOnWriteArrayList<IExecutionConfigurationListener>();
 
         // construct Preview VDB Manager
@@ -290,6 +300,17 @@ public final class TeiidServerManager implements EventManager {
      */
     public IServerLifecycleListener getServerLifeCycleListener() {
         return serversListener;
+    }
+    
+
+    /**
+     * Get the implementation of the {@link ISecureStorageProvider} used by
+     * this server manager.
+     * 
+     * @return implementation of {@link ISecureStorageProvider}
+     */
+    public ISecureStorageProvider getSecureStorageProvider() {
+        return secureStorageProvider;
     }
     
     /**
@@ -632,8 +653,8 @@ public final class TeiidServerManager implements EventManager {
 
                                         teiidAdminInfo = new TeiidAdminInfo(adminPort,
                                                                             adminUsername,
+                                                                            secureStorageProvider,
                                                                             adminPassword,
-                                                                            (adminPassword != null),
                                                                             Boolean.parseBoolean(adminSecureStr));
                                     } else if (connNode.getNodeName().equalsIgnoreCase(JDBC_TAG)) {
                                         NamedNodeMap attributeMap = connNode.getAttributes();
@@ -666,8 +687,8 @@ public final class TeiidServerManager implements EventManager {
                                                                                         : jdbcSecureNode.getNodeValue());
                                         teiidJdbcInfo = new TeiidJdbcInfo(jdbcPort,
                                                                           jdbcUsername,
+                                                                          secureStorageProvider,
                                                                           jdbcPassword,
-                                                                          (jdbcPassword != null),
                                                                           Boolean.parseBoolean(jdbcSecureStr));
                                     }
                                 }
@@ -690,14 +711,14 @@ public final class TeiidServerManager implements EventManager {
                             host = jdbcURL.getHosts();
                             teiidAdminInfo = new TeiidAdminInfo(jdbcURL.getPorts(),
                                                                 userNode.getNodeValue(),
+                                                                secureStorageProvider,
                                                                 pswd,
-                                                                (pswd != null),
                                                                 jdbcURL.isUsingSSL());
 
                             teiidJdbcInfo = new TeiidJdbcInfo(teiidAdminInfo.getPort(),
                                                               teiidAdminInfo.getUsername(),
+                                                              secureStorageProvider,
                                                               null,
-                                                              TeiidJdbcInfo.DEFAULT_PERSIST_PASSWORD,
                                                               TeiidJdbcInfo.DEFAULT_SECURE);
                         }
 
@@ -789,81 +810,7 @@ public final class TeiidServerManager implements EventManager {
 
             if (monitor != null) monitor.subTask(Util.getString("serverManagerSavingServerRegistryTask")); //$NON-NLS-1$
 
-            if ((this.stateLocationPath != null) && !getServers().isEmpty()) {
-                try {
-                    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                    DocumentBuilder docBuilder = factory.newDocumentBuilder();
-                    Document doc = docBuilder.newDocument();
-
-                    // create root element
-                    Element root = doc.createElement(SERVERS_TAG);
-                    doc.appendChild(root);
-
-                    for (TeiidServer teiidServer : getServers()) {
-                        Element serverElement = doc.createElement(SERVER_TAG);
-                        root.appendChild(serverElement);
-                        
-                        { // Host
-                            serverElement.setAttribute(HOST_ATTR, teiidServer.getHost());
-                        }
-                        
-                        { // CUSTOM LABEL
-                            if (!StringUtilities.isEmpty(teiidServer.getCustomLabel())) {
-                                serverElement.setAttribute(CUSTOM_LABEL_ATTR, teiidServer.getCustomLabel());
-                            }
-                        }
-                        
-                        { // ADMIN CONNECTION INFO
-	                        Element adminElement = doc.createElement(ADMIN_TAG);
-	                        serverElement.appendChild(adminElement);
-	
-	                        adminElement.setAttribute(PORT_ATTR, teiidServer.getTeiidAdminInfo().getPort());
-	                        adminElement.setAttribute(USER_ATTR, teiidServer.getTeiidAdminInfo().getUsername());
-	                        if( teiidServer.getTeiidAdminInfo().getPassword() != null && teiidServer.getTeiidAdminInfo().isPasswordBeingPersisted()) {
-	                        	adminElement.setAttribute(PASSWORD_ATTR, Base64.encodeBytes(teiidServer.getTeiidAdminInfo().getPassword().getBytes()));
-	                        }
-	                        adminElement.setAttribute(SECURE_ATTR, Boolean.toString(teiidServer.getTeiidAdminInfo().isSecure()));
-                        }
-                        
-                        { // JDBC CONNECTION INFO
-	                        Element jdbcElement = doc.createElement(JDBC_TAG);
-	                        serverElement.appendChild(jdbcElement);
-	
-	                        jdbcElement.setAttribute(JDBC_PORT_ATTR, teiidServer.getTeiidJdbcInfo().getPort());
-	                        jdbcElement.setAttribute(JDBC_USER_ATTR, teiidServer.getTeiidJdbcInfo().getUsername());
-	                        if( teiidServer.getTeiidJdbcInfo().getPassword() != null && teiidServer.getTeiidJdbcInfo().isPasswordBeingPersisted() ) {
-	                        	jdbcElement.setAttribute(JDBC_PASSWORD_ATTR, Base64.encodeBytes(teiidServer.getTeiidJdbcInfo().getPassword().getBytes()));
-	                        }
-	                        jdbcElement.setAttribute(JDBC_SECURE_ATTR, Boolean.toString(teiidServer.getTeiidJdbcInfo().isSecure()));
-                        }
-                        
-                        if ((getDefaultServer() != null) && (getDefaultServer().equals(teiidServer))) {
-                            serverElement.setAttribute(DEFAULT_ATTR, Boolean.toString(true));
-                        }
-                    }
-
-                    DOMSource source = new DOMSource(doc);
-                    StreamResult resultXML = new StreamResult(new FileOutputStream(getStateFileName()));
-                    TransformerFactory transFactory = TransformerFactory.newInstance();
-                    Transformer transformer = transFactory.newTransformer();
-                    transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-                    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2"); //$NON-NLS-1$ //$NON-NLS-2$ 
-                    transformer.transform(source, resultXML);
-                } catch (Exception e) {
-                    IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
-                                                Util.getString("errorSavingServerRegistry", getStateFileName())); //$NON-NLS-1$
-                    Util.log(status);
-                }
-            } else if ((this.stateLocationPath != null) && stateFileExists()) {
-                // delete current registry file since all servers have been deleted
-                try {
-                    new File(getStateFileName()).delete();
-                } catch (Exception e) {
-                    IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
-                                                Util.getString("errorDeletingServerRegistryFile", getStateFileName())); //$NON-NLS-1$
-                    Util.log(status);
-                }
-            }
+            saveState();
 
             // shutdown PreviewManager
             if (this.previewManager != null) {
@@ -878,6 +825,95 @@ public final class TeiidServerManager implements EventManager {
             }
         } finally {
             this.state = RuntimeState.SHUTDOWN;
+        }
+    }
+
+    private void saveState() throws TransformerFactoryConfigurationError {
+        if (this.stateLocationPath == null)
+            return; // no persistence
+        
+        if (!getServers().isEmpty()) {
+            try {
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder docBuilder = factory.newDocumentBuilder();
+                Document doc = docBuilder.newDocument();
+
+                // create root element
+                Element root = doc.createElement(SERVERS_TAG);
+                doc.appendChild(root);
+
+                for (TeiidServer teiidServer : getServers()) {
+                    Element serverElement = doc.createElement(SERVER_TAG);
+                    root.appendChild(serverElement);
+                    
+                    { // Host
+                        serverElement.setAttribute(HOST_ATTR, teiidServer.getHost());
+                    }
+                    
+                    { // CUSTOM LABEL
+                        if (!StringUtilities.isEmpty(teiidServer.getCustomLabel())) {
+                            serverElement.setAttribute(CUSTOM_LABEL_ATTR, teiidServer.getCustomLabel());
+                        }
+                    }
+                    
+                    { // ADMIN CONNECTION INFO
+                        Element adminElement = doc.createElement(ADMIN_TAG);
+                        serverElement.appendChild(adminElement);
+
+                        adminElement.setAttribute(PORT_ATTR, teiidServer.getTeiidAdminInfo().getPort());
+                        adminElement.setAttribute(USER_ATTR, teiidServer.getTeiidAdminInfo().getUsername());
+                        
+                        /* password is saved in the eclipse secure storage */
+                        
+//                        if( teiidServer.getTeiidAdminInfo().getPassword() != null) {
+//                        	adminElement.setAttribute(PASSWORD_ATTR, Base64.encodeBytes(teiidServer.getTeiidAdminInfo().getPassword().getBytes()));
+//                        }
+                        
+                        adminElement.setAttribute(SECURE_ATTR, Boolean.toString(teiidServer.getTeiidAdminInfo().isSecure()));
+                    }
+                    
+                    { // JDBC CONNECTION INFO
+                        Element jdbcElement = doc.createElement(JDBC_TAG);
+                        serverElement.appendChild(jdbcElement);
+
+                        jdbcElement.setAttribute(JDBC_PORT_ATTR, teiidServer.getTeiidJdbcInfo().getPort());
+                        jdbcElement.setAttribute(JDBC_USER_ATTR, teiidServer.getTeiidJdbcInfo().getUsername());
+                        
+                        /* password is saved in the eclipse secure storage */
+                        
+//                        if( teiidServer.getTeiidJdbcInfo().getPassword() != null) {
+//                        	jdbcElement.setAttribute(JDBC_PASSWORD_ATTR, Base64.encodeBytes(teiidServer.getTeiidJdbcInfo().getPassword().getBytes()));
+//                        }
+                        
+                        jdbcElement.setAttribute(JDBC_SECURE_ATTR, Boolean.toString(teiidServer.getTeiidJdbcInfo().isSecure()));
+                    }
+                    
+                    if ((getDefaultServer() != null) && (getDefaultServer().equals(teiidServer))) {
+                        serverElement.setAttribute(DEFAULT_ATTR, Boolean.toString(true));
+                    }
+                }
+
+                DOMSource source = new DOMSource(doc);
+                StreamResult resultXML = new StreamResult(new FileOutputStream(getStateFileName()));
+                TransformerFactory transFactory = TransformerFactory.newInstance();
+                Transformer transformer = transFactory.newTransformer();
+                transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
+                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2"); //$NON-NLS-1$ //$NON-NLS-2$ 
+                transformer.transform(source, resultXML);
+            } catch (Exception e) {
+                IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
+                                            Util.getString("errorSavingServerRegistry", getStateFileName())); //$NON-NLS-1$
+                Util.log(status);
+            }
+        } else if (stateFileExists()) {
+            // delete current registry file since all servers have been deleted
+            try {
+                new File(getStateFileName()).delete();
+            } catch (Exception e) {
+                IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
+                                            Util.getString("errorDeletingServerRegistryFile", getStateFileName())); //$NON-NLS-1$
+                Util.log(status);
+            }
         }
     }
 
@@ -932,5 +968,4 @@ public final class TeiidServerManager implements EventManager {
         // unexpected problem removing server from registry
         return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("serverManagerRegistryUpdateRemoveError", status.getMessage())); //$NON-NLS-1$
     }
-
 }

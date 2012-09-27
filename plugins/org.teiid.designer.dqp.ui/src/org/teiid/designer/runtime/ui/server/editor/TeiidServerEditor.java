@@ -13,11 +13,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -31,6 +34,7 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServer;
@@ -47,6 +51,11 @@ public class TeiidServerEditor extends EditorPart {
      */
     public static final String EDITOR_ID = TeiidServerEditor.class.getCanonicalName();
 
+    /**
+     * Flag indicating editor's dirty status
+     */
+    private boolean dirty = false;
+    
     private TeiidServerManager serverManager;
     
     private TeiidServer teiidServer;
@@ -88,13 +97,20 @@ public class TeiidServerEditor extends EditorPart {
         
         @Override
         public void configurationChanged(ExecutionConfigurationEvent event) {
-            if (teiidServer != event.getServer())
+            if (event.getTargetType() != TargetType.SERVER || teiidServer != event.getServer())
                 return;
             
             refreshDisplayValues();
         }
     };
 
+    private KeyAdapter dirtyKeyListener = new KeyAdapter() {
+        @Override
+        public void keyReleased(KeyEvent e) {
+            TeiidServerEditor.this.setDirty();
+        }
+    };
+    
     @Override
     public void init(IEditorSite site, IEditorInput input) {
         setSite(site);
@@ -166,6 +182,7 @@ public class TeiidServerEditor extends EditorPart {
         
         customNameText = toolkit.createText(composite, teiidServer.getCustomLabel() != null ? teiidServer.getCustomLabel() : ""); //$NON-NLS-1$
         GridDataFactory.fillDefaults().grab(true, false).applyTo(customNameText);
+        customNameText.addKeyListener(dirtyKeyListener);
         
         Label hostLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerOverviewSection.hostLabel")); //$NON-NLS-1$
         blueForeground(hostLabel);
@@ -238,12 +255,14 @@ public class TeiidServerEditor extends EditorPart {
         
         jdbcUserNameText = toolkit.createText(composite, teiidServer.getTeiidJdbcInfo().getUsername());
         GridDataFactory.fillDefaults().grab(true, false).applyTo(jdbcUserNameText);
+        jdbcUserNameText.addKeyListener(dirtyKeyListener);
         
         Label passwdLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerJDBCSection.passwordLabel")); //$NON-NLS-1$
         blueForeground(passwdLabel);
         
         jdbcPasswdText = toolkit.createText(composite, teiidServer.getTeiidJdbcInfo().getPassword(), SWT.PASSWORD);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(jdbcPasswdText);
+        jdbcPasswdText.addKeyListener(dirtyKeyListener);
         
         Label portLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerJDBCSection.portLabel")); //$NON-NLS-1$
         blueForeground(portLabel);
@@ -310,16 +329,24 @@ public class TeiidServerEditor extends EditorPart {
         TeiidJdbcInfo jdbcInfo = teiidServer.getTeiidJdbcInfo();
         jdbcInfo.setUsername(jdbcUserNameText.getText());
         jdbcInfo.setPassword(jdbcPasswdText.getText());
+        
+        dirty = false;
+        firePropertyChange(IEditorPart.PROP_DIRTY);
     }
 
     @Override
     public void doSaveAs() {
         // do nothing
     }
+    
+    private void setDirty() {
+        dirty = true;
+        firePropertyChange(IEditorPart.PROP_DIRTY);
+    }
 
     @Override
     public boolean isDirty() {
-        return false;
+        return dirty;
     }
 
     @Override

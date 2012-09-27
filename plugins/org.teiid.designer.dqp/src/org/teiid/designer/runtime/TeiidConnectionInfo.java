@@ -10,11 +10,13 @@ package org.teiid.designer.runtime;
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 import java.net.MalformedURLException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.HashCodeUtil;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.runtime.security.ISecureStorageProvider;
 
 /**
  * 
@@ -33,29 +35,34 @@ public abstract class TeiidConnectionInfo {
      */
     public static final String MM = "mm://"; //$NON-NLS-1$
     
+    /**
+     * Base key for the secure storage node used for holding passwords
+     */
+    protected static final String PREFERENCES_BASEKEY = PLUGIN_ID.replace('.', IPath.SEPARATOR);
+    
     protected static final int DEFAULT_PORT_NUMBER = 0;
 
     private HostProvider hostProvider;
+    private ISecureStorageProvider secureStorageProvider;
     private String password;
     private String port;
     private int portNumber = DEFAULT_PORT_NUMBER;
     private boolean secure;
     private String username;
-    private boolean persistPassword = false;
 
     /**
      * @param port the connection port (can be <code>null</code> or empty)
      * @param username the connection user name (can be <code>null</code> or empty)
+     * @param secureStorageProvider provider for storage of the password
      * @param password the connection password (can be <code>null</code> or empty)
-     * @param persistPassword <code>true</code> if the password should be persisted
      * @param secure <code>true</code> if a secure connection should be used
      * @see #validate()
      */
     protected TeiidConnectionInfo( String port,
                                    String username,
+                                   ISecureStorageProvider secureStorageProvider,
                                    String password,
-                                   boolean persistPassword,
-                                   boolean secure ) {
+                                   boolean secure) {
         this.port = port;
         try {
 			this.portNumber = Integer.parseInt(port);
@@ -63,10 +70,17 @@ public abstract class TeiidConnectionInfo {
 			this.portNumber = DEFAULT_PORT_NUMBER;
 		}
         this.username = username;
-        this.password = password;
-        this.persistPassword = persistPassword;
+        this.secureStorageProvider = secureStorageProvider;
+        setPassword(password);
         this.secure = secure;
     }
+    
+    /**
+     * Key that the password is stored against under secure storage
+     * 
+     * @return
+     */
+    protected abstract String getPasswordKey();
 
     /**
      * {@inheritDoc}
@@ -127,11 +141,6 @@ public abstract class TeiidConnectionInfo {
             return false;
         }
 
-        // persist passord
-        if (isPasswordBeingPersisted() != thatInfo.isPasswordBeingPersisted()) {
-            return false;
-        }
-
         // user
         if (getUsername() == null) {
             if (thatInfo.getUsername() != null) {
@@ -175,12 +184,24 @@ public abstract class TeiidConnectionInfo {
 
         return this.hostProvider;
     }
+    
+    /**
+     * @return the secureStorageProvider
+     */
+    protected ISecureStorageProvider getSecureStorageProvider() {
+        return this.secureStorageProvider;
+    }
 
     /**
      * @return the password (can be <code>null</code> or empty)
      */
     public String getPassword() {
-        return this.password;
+        if (password != null)
+            return password;
+        
+        password = secureStorageProvider.getFromSecureStorage(getProviderKey(), getPasswordKey());
+        
+        return password;
     }
 
     /**
@@ -235,18 +256,10 @@ public abstract class TeiidConnectionInfo {
                                      getHostProvider().getHost(),
                                      getPort(),
                                      isSecure(),
-                                     isPasswordBeingPersisted(),
                                      getUsername(),
                                      getPassword());
     }
-
-    /**
-     * @return <code>true</code> if the password is being persisted
-     */
-    public boolean isPasswordBeingPersisted() {
-        return this.persistPassword;
-    }
-
+    
     /**
      * @return <code>true</code> if a secure connection protocol is being used
      */
@@ -264,7 +277,6 @@ public abstract class TeiidConnectionInfo {
         setPort(info.getPort());
         setPassword(info.getPassword());
         setUsername(info.getUsername());
-        setPersistPassword(info.isPasswordBeingPersisted());
         setSecure(info.isSecure());
     }
 
@@ -281,14 +293,16 @@ public abstract class TeiidConnectionInfo {
      * @param password the new value for password (can be empty or <code>null</code>)
      */
     public void setPassword( String password ) {
+        if (password != null) {
+            // Only store non-null values
+            try {
+                secureStorageProvider.storeInSecureStorage(getProviderKey(), getPasswordKey(), password);
+            } catch (Exception e) {
+                DqpPlugin.Util.log(e);
+            }
+        }
+        
         this.password = password;
-    }
-
-    /**
-     * @param persist the new value for if a connection password should be persisted
-     */
-    public void setPersistPassword( boolean persist ) {
-        this.persistPassword = persist;
     }
 
     /**
@@ -332,8 +346,7 @@ public abstract class TeiidConnectionInfo {
                                         getPort(),
                                         getUsername(),
                                         getPassword(),
-                                        isSecure(),
-                                        isPasswordBeingPersisted());
+                                        isSecure());
     }
 
     /**
@@ -374,5 +387,18 @@ public abstract class TeiidConnectionInfo {
 
         return Status.OK_STATUS;
     }
-
+    
+    /**
+     * Get the key to be used for storing properties against for this connection.
+     * 
+     * @return
+     */
+    private String getProviderKey() {
+        String secureKey = new StringBuilder(PREFERENCES_BASEKEY)
+        .append(getClass().getSimpleName())
+        .append(getUrl())
+        .append(IPath.SEPARATOR).toString();
+        
+        return secureKey;
+    }
 }
