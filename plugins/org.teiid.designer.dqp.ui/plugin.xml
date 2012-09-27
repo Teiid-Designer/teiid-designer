@@ -180,24 +180,6 @@
       </decorator>
    </extension>
    <extension
-         id="applyRestWarPropertiesAction"
-         name="%applyRestWarPropertiesAction.name"
-         point="org.teiid.designer.ui.modelObjectSpecialAction">
-      <specialAction
-         name="org.teiid.designer.runtime.ui.extension.ApplyRestWarPropertiesAction"
-         label="%applyRestWarPropertiesAction.label">
-      </specialAction>
-   </extension>
-   <extension
-         id="removeRestWarPropertiesAction"
-         name="%removeRestWarPropertiesAction.name"
-         point="org.teiid.designer.ui.modelObjectSpecialAction">
-      <specialAction
-         name="org.teiid.designer.runtime.ui.extension.RemoveRestWarPropertiesAction"
-         label="%removeRestWarPropertiesAction.label">
-      </specialAction>
-   </extension>
-   <extension
          point="org.eclipse.ui.navigator.viewer">
       <viewerContentBinding
             viewerId="org.eclipse.wst.server.ui.ServersView">

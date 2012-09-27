@@ -115,7 +115,6 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_SOURCE));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_VIEW_TABLE));
-		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_VIEW_PROCEDURE));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_VDB));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEPLOY_VDB));

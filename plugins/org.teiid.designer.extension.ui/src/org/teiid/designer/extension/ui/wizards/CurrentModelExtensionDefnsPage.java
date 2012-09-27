@@ -659,12 +659,28 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      * Set the Add/Remove MED buttons states based on the current table selection
      */
     private void setButtonStates() {
-        // Remove Button - only enable if something is selected
-        boolean removeEnabled = (this.selectedMedIndex >= 0) ? true : false;
-        this.removeMedButton.setEnabled(removeEnabled);
+        final boolean selection = (this.selectedMedIndex >= 0);
+
+        // Remove Button - enable if MED is selected and MED supports remove
+        boolean enableRemove = false;
+
+        if (selection) {
+            ModelExtensionDefinitionHeader medHeader = this.editManager.getCurrentHeaders().get(this.selectedMedIndex);
+            ModelExtensionDefinition registryMed = getRegistry().getDefinition(medHeader.getNamespacePrefix());
+
+            if ((registryMed == null)
+                || registryMed.getModelExtensionAssistant().supportsMedOperation(ExtensionConstants.MedOperations.DELETE_MED_FROM_MODEL,
+                                                                                 this.modelResource.getResource())) {
+                enableRemove = true;
+            }
+        }
+
+        if (this.removeMedButton.getEnabled() != enableRemove) {
+            this.removeMedButton.setEnabled(enableRemove);
+        }
 
         // Register Button - enabled if an unregistered MED is selected
-        if (this.selectedMedIndex >= 0) {
+        if (selection) {
             ModelExtensionDefinitionHeader medHeader = this.editManager.getCurrentHeaders().get(this.selectedMedIndex);
             if (!isRegistered(medHeader) || isDifferent(medHeader)) {
                 this.saveMedButton.setEnabled(true);

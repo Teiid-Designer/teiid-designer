@@ -9,8 +9,6 @@ package org.teiid.designer.core.extension.deprecated;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
-
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.CoreStringUtil;
@@ -19,6 +17,7 @@ import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.core.util.ModelObjectClassNameVisitor;
 import org.teiid.designer.core.util.ModelVisitorProcessor;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
@@ -32,6 +31,9 @@ import org.teiid.designer.extension.properties.NamespaceProvider;
  */
 public class DeprecatedModelExtensionAssistant extends EmfModelObjectExtensionAssistant {
 
+    /**
+     * The namespace prefix provider for the deprecated properties.
+     */
     public static final NamespaceProvider NAMESPACE_PROVIDER;
 
     private static final String REST_NAMESPACE_PREFIX = "rest"; //$NON-NLS-1$
@@ -134,30 +136,21 @@ public class DeprecatedModelExtensionAssistant extends EmfModelObjectExtensionAs
     }
 
     /**
-     * @param modelObject the model object whose extension property property definitions for this namespace is being requested
-     *            (never <code>null</code>)
-     * @return the property definitions (never <code>null</code> but can be empty)
-     * @throws Exception if there is a problem accessing the model resource
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant#getPropertyDefinition(java.lang.Object, java.lang.String)
      */
-    public Collection<ModelExtensionPropertyDefinition> getPropertyDefinitions( EObject modelObject ) throws Exception {
-        CoreArgCheck.isNotNull(modelObject, "modelObject"); //$NON-NLS-1$
-        String metaclassName = modelObject.getClass().getName();
-        Collection<ModelExtensionPropertyDefinition> propDefns = getModelExtensionDefinition().getPropertyDefinitions(metaclassName);
+    @Override
+    protected ModelExtensionPropertyDefinition getPropertyDefinition(Object modelObject,
+                                                                     String propId) throws Exception {
+        ModelExtensionPropertyDefinition propDefn = super.getPropertyDefinition(modelObject, propId);
 
-        if (propDefns.isEmpty()) {
-            return Collections.emptyList();
+        if (propDefn == null) {
+            return null;
         }
 
-        for (Iterator<ModelExtensionPropertyDefinition> itr = propDefns.iterator(); itr.hasNext();) {
-            ModelExtensionPropertyDefinition propDefn = itr.next();
-            String value = getOverriddenValue(modelObject, propDefn.getId());
-
-            if (CoreStringUtil.isEmpty(value)) {
-                itr.remove();
-            }
-        }
-
-        return propDefns;
+        String value = getOverriddenValue(modelObject, propDefn.getId());
+        return (CoreStringUtil.isEmpty(value) ? null : propDefn);
     }
 
     private ModelObjectExtensionAssistant getRestAssistant() {
@@ -294,7 +287,6 @@ public class DeprecatedModelExtensionAssistant extends EmfModelObjectExtensionAs
     @Override
     public boolean supportsMedOperation( String proposedOperationName,
                                          Object context ) {
-        return false;
+        return ExtensionConstants.MedOperations.SHOW_IN_REGISTRY.equals(proposedOperationName); // only show in registry
     }
-
 }

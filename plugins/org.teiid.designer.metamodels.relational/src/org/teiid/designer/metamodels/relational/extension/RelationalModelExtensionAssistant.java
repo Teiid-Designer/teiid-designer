@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.Table;
@@ -85,10 +86,23 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
             }
 
             // must be a procedure in a physical model to have these properties
-            if (PropertyName.same(PropertyName.NON_PREPARED, propId) || PropertyName.same(PropertyName.DETERMINISTIC, propId)) {
+            if (PropertyName.same(PropertyName.NON_PREPARED, propId)) {
                 if ((modelObject instanceof Procedure) && ModelUtil.isPhysical(modelObject)) {
                     return propDefn;
                 }
+
+                // EObject should not have these property definitions
+                return null;
+            }
+
+            // must be a procedure in a physical model and have function property set to true to have these properties
+            if (PropertyName.same(PropertyName.DETERMINISTIC, propId)) {
+                if ((modelObject instanceof Procedure) && ModelUtil.isPhysical(modelObject) && ((Procedure)modelObject).isFunction()) {
+                    return propDefn;
+                }
+
+                // make sure model object does not have this extension property for when function is false
+                removeProperty(modelObject, PropertyName.DETERMINISTIC.toString());
 
                 // EObject should not have these property definitions
                 return null;
@@ -164,5 +178,17 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
             removeProperty(modelObject, PropertyName.ALLOWS_DISTINCT.toString());
             removeProperty(modelObject, PropertyName.DECOMPOSABLE.toString());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant#supportsMedOperation(java.lang.String, java.lang.Object)
+     */
+    @Override
+    public boolean supportsMedOperation(String proposedOperationName,
+                                        Object context) {
+        CoreArgCheck.isNotEmpty(proposedOperationName, "proposedOperationName is empty"); //$NON-NLS-1$
+        return ExtensionConstants.MedOperations.SHOW_IN_REGISTRY.equals(proposedOperationName); // only show in registry
     }
 }

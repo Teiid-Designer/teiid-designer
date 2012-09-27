@@ -124,7 +124,14 @@ public class DqpPlugin extends Plugin {
         
         return this.serverMgr;
     }
-    
+
+    /**
+     * @return <code>true</code> if the server manager has been started
+     */
+    public boolean isServerManagerStarted() {
+        return (this.serverMgr != null);
+    }
+
     /**
      * Get the password provider if one has been set
      * 

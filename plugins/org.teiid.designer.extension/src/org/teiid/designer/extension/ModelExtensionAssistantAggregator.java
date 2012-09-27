@@ -72,25 +72,20 @@ public class ModelExtensionAssistantAggregator {
      * @throws Exception if there is a problem obtaining the property definitions
      */
     public Collection<ModelExtensionPropertyDefinition> getPropertyDefinitions( Object modelObject ) throws Exception {
-        Collection<String> supportedNamespacePrefixes = getSupportedNamespacePrefixes(modelObject);
+        final String metaclassName = modelObject.getClass().getName();
+        final Collection<ModelExtensionAssistant> assistants = this.registry.getModelExtensionAssistants(metaclassName);
 
-        if (supportedNamespacePrefixes.isEmpty()) {
+        if (assistants.isEmpty()) {
             return Collections.emptyList();
         }
 
-        Collection<ModelExtensionPropertyDefinition> propDefns = new ArrayList<ModelExtensionPropertyDefinition>();
-        String metaclassName = modelObject.getClass().getName();
+        final Collection<ModelExtensionPropertyDefinition> propDefns = new ArrayList<ModelExtensionPropertyDefinition>();
 
-        // only return properties that have namespace that is both supported by model and registered in the registry
-        for (String namespacePrefix : supportedNamespacePrefixes) {
-            ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
-
-            if (assistant != null) {
-                if (assistant instanceof ModelObjectExtensionAssistant) {
-                    propDefns.addAll(((ModelObjectExtensionAssistant)assistant).getPropertyDefinitions(modelObject));
-                } else {
-                    propDefns.addAll(assistant.getModelExtensionDefinition().getPropertyDefinitions(metaclassName));
-                }
+        for (ModelExtensionAssistant assistant : assistants) {
+            if (assistant instanceof ModelObjectExtensionAssistant) {
+                propDefns.addAll(((ModelObjectExtensionAssistant)assistant).getPropertyDefinitions(modelObject));
+            } else {
+                propDefns.addAll(assistant.getModelExtensionDefinition().getPropertyDefinitions(metaclassName));
             }
         }
 

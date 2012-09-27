@@ -595,7 +595,7 @@ class ModelExtensionUtils {
         CoreArgCheck.isNotNull(modelObject, "modelObject is null"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(propId, "id is empty"); //$NON-NLS-1$
 
-        Annotation annotation = getModelObjectAnnotation(modelObject, deleteModelObjectAnnotation);
+        Annotation annotation = getModelObjectAnnotation(modelObject, false);
 
         if (annotation != null) {
             annotation.getTags().remove(propId);
