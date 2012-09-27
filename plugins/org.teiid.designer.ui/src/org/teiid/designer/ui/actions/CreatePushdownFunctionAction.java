@@ -118,6 +118,7 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
 	public boolean canCreateChild(IFile modelFile) {
     	return isApplicable(new StructuredSelection(modelFile));
     }
+
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.actions.INewSiblingAction#canCreateChild(org.eclipse.emf.ecore.EObject)
      */
@@ -254,26 +255,37 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
 //	}
 	
 	
-	public boolean isApplicable(ISelection selection) {
-       boolean result = false;
-       if ( ! SelectionUtilities.isMultiSelection(selection) ) {
-           Object obj = SelectionUtilities.getSelectedObject(selection);
-           ModelExtensionAssistant assistant = getAssistant();
+    /**
+     * @param selection the selection being checked (can be <code>null</code>)
+     * @return <code>true</code> if the selected object is applicable for this action to be enabled
+     */
+    private boolean isApplicable(ISelection selection) {
+        boolean result = false;
+        if (!SelectionUtilities.isMultiSelection(selection)) {
+            Object obj = SelectionUtilities.getSelectedObject(selection);
+            ModelExtensionAssistant assistant = getAssistant();
 
-           if ((assistant == null) || (obj == null)) {
-               return false;
-           }
+            if ((assistant == null) || (obj == null) || !(assistant instanceof ModelObjectExtensionAssistant)) {
+                return false;
+            }
 
-           if (assistant.supportsMedOperation(MedOperations.ADD_MED_TO_MODEL, obj)) {
-        	   if( ModelIdentifier.isRelationalSourceModel( (IFile) obj)) {
-	        	   this.selectedModel = (IFile) obj;
-	               result = true;
-               }
-           }
-       }
-       
-       return result;
-	}
+            ModelObjectExtensionAssistant moAssistant = (ModelObjectExtensionAssistant) assistant;
+
+            try {
+                if (moAssistant.supportsMyNamespace(obj)) {
+                    this.selectedModel = (IFile) obj;
+                    result = true;
+                } else if (assistant.supportsMedOperation(MedOperations.ADD_MED_TO_MODEL, obj)) {
+                    this.selectedModel = (IFile) obj;
+                    result = true;
+                }
+            } catch (Exception ex) {
+                UiConstants.Util.log(ex);
+            }
+        }
+
+        return result;
+    }
 
 	class PushdownFunctionInputDialog extends TitleAreaDialog {
 

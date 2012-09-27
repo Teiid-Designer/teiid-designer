@@ -10,6 +10,7 @@ package org.teiid.designer.metamodels.function.extension;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
+import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.metamodels.function.ScalarFunction;
 
@@ -116,5 +117,17 @@ public class FunctionModelExtensionAssistant extends EmfModelObjectExtensionAssi
             removeProperty(modelObject, PropertyName.ALLOWS_DISTINCT.toString());
             removeProperty(modelObject, PropertyName.DECOMPOSABLE.toString());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant#supportsMedOperation(java.lang.String, java.lang.Object)
+     */
+    @Override
+    public boolean supportsMedOperation(String proposedOperationName,
+                                        Object context) {
+        CoreArgCheck.isNotEmpty(proposedOperationName, "proposedOperationName is empty"); //$NON-NLS-1$
+        return ExtensionConstants.MedOperations.SHOW_IN_REGISTRY.equals(proposedOperationName); // only show in registry
     }
 }

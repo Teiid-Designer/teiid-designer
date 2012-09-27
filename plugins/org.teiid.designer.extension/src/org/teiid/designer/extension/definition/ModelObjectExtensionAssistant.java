@@ -57,7 +57,7 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
 
     /**
      * @param modelObject the model object whose property definitions are being requested (cannot be <code>null</code>)
-     * @return the property definitions (never <code>null</code>(
+     * @return the property definitions (never <code>null</code>)
      * @throws Exception if there is a problem obtaining the extension property definitions
      */
     public Collection<ModelExtensionPropertyDefinition> getPropertyDefinitions( Object modelObject ) throws Exception {
