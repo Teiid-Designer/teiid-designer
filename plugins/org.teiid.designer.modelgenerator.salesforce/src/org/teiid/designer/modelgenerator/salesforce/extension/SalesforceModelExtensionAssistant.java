@@ -10,7 +10,8 @@ package org.teiid.designer.modelgenerator.salesforce.extension;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
+import org.eclipse.emf.ecore.EObject;
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
@@ -76,6 +77,23 @@ public final class SalesforceModelExtensionAssistant extends EmfModelObjectExten
 
         return super.createPropertyDefinition(id, type, required, defaultValue, fixedValue, advanced, masked, index, allowedValues,
                                               descriptions, displayNames);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant#getPropertyDefinition(java.lang.Object, java.lang.String)
+     */
+    @Override
+    protected ModelExtensionPropertyDefinition getPropertyDefinition(final Object modelObject,
+                                                                     final String propId) throws Exception {
+        CoreArgCheck.isInstanceOf(EObject.class, modelObject);
+
+        if(supportsMyNamespace(modelObject)) {
+            return super.getPropertyDefinition(modelObject, propId);
+        }
+        
+        return null;
     }
 
 }
