@@ -10,11 +10,11 @@ package org.teiid.designer.runtime;
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 import java.net.MalformedURLException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.HashCodeUtil;
+import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
 import org.teiid.designer.core.util.StringUtilities;
 
@@ -34,11 +34,6 @@ public abstract class TeiidConnectionInfo {
      * Protocol address prefix for server connections
      */
     public static final String MM = "mm://"; //$NON-NLS-1$
-    
-    /**
-     * Base key for the secure storage node used for holding passwords
-     */
-    protected static final String PREFERENCES_BASEKEY = PLUGIN_ID.replace('.', IPath.SEPARATOR);
     
     protected static final int DEFAULT_PORT_NUMBER = 0;
 
@@ -399,11 +394,6 @@ public abstract class TeiidConnectionInfo {
      * @return
      */
     private String getProviderKey() {
-        String secureKey = new StringBuilder(PREFERENCES_BASEKEY)
-        .append(getClass().getSimpleName())
-        .append(getUrl())
-        .append(IPath.SEPARATOR).toString();
-        
-        return secureKey;
+        return ConnectivityUtil.buildSecureStorageKey(getClass(), getUrl());
     }
 }

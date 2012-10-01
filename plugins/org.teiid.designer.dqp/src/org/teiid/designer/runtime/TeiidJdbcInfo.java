@@ -6,6 +6,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.HashCodeUtil;
+import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
 
 
@@ -39,11 +40,6 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo {
      */
     public static final String DEFAULT_JDBC_PASSWORD = "user";  //$NON-NLS-1$
 
-    /**
-     * Key to use for storing the password value against in secure storage
-     */
-    private static final String SERVER_PASSWORD_KEY = TeiidJdbcInfo.class.getName() + ".password"; //$NON-NLS-1$
-    
     /**
      * The name of the VDB that this connection will connect to (never empty or <code>null</code>)
      */
@@ -100,7 +96,7 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo {
     
     @Override
     protected String getPasswordKey() {
-        return SERVER_PASSWORD_KEY;
+        return ConnectivityUtil.JDBC_PASSWORD;
     }
 
     /**

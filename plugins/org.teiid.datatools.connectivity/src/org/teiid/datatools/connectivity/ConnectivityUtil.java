@@ -10,6 +10,7 @@ package org.teiid.datatools.connectivity;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.ConnectionProfileException;
@@ -46,6 +47,21 @@ public class ConnectivityUtil {
 	public static final String TEIID_DATABASE_VERSION = "8.x"; //$NON-NLS-1$
 	public static final String TEIID_DRIVER_DEFINITION_ID_BASE = "DriverDefn.org.teiid.datatools.connectivity.driver.serverDriverTemplate."; //$NON-NLS-1$
 
+	/**
+     * Base key for the secure storage node used for holding passwords
+     */
+    public static final String SECURE_STORAGE_BASEKEY = Activator.PLUGIN_ID.replace('.', IPath.SEPARATOR);
+    
+    /**
+     * Secure storage sub-node for the Admin password property
+     */
+    public static final String ADMIN_PASSWORD = "admin_password"; //$NON-NLS-1$
+    
+    /**
+     * Secure storage sub-node for the JDBC password property
+     */
+    public static final String JDBC_PASSWORD = "jdbc_password"; //$NON-NLS-1$
+    
     public static Properties createDriverProps( String jarList,
                                                 String driverURL,
                                                 String username,
@@ -219,6 +235,26 @@ public class ConnectivityUtil {
     		Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, "error getting profile", e); //$NON-NLS-1$
     		throw new CoreException(status);
     	}
+    }
+    
+    /**
+     * Assemble the secure storage node key based 
+     * upon the given class and connection url
+     * 
+     * @param klazz
+     * @param connectURL
+     * 
+     * @return fully qualified key used in secure storage
+     */
+    public static String buildSecureStorageKey(Class<?> klazz, String connectURL) {
+        String secureKey = new StringBuilder(SECURE_STORAGE_BASEKEY)
+        .append(IPath.SEPARATOR)
+        .append(klazz.getSimpleName())
+        .append(IPath.SEPARATOR)
+        .append(connectURL)
+        .append(IPath.SEPARATOR).toString();
+        
+        return secureKey;
     }
 
     /**
