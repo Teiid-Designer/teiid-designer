@@ -6,7 +6,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.HashCodeUtil;
-import org.teiid.designer.runtime.security.ISecureStorageProvider;
+import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
 
 
 /**

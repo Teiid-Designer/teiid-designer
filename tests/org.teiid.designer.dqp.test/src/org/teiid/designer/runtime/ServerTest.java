@@ -14,7 +14,7 @@ import static org.mockito.Mockito.mock;
 import org.eclipse.wst.server.core.IServer;
 import org.junit.Before;
 import org.junit.Test;
-import org.teiid.designer.runtime.security.ISecureStorageProvider;
+import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
 
 /**
  * 

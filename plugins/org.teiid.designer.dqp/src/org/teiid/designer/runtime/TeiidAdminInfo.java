@@ -1,7 +1,8 @@
 package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-import org.teiid.designer.runtime.security.ISecureStorageProvider;
+import org.teiid.datatools.connectivity.ConnectivityUtil;
+import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
 
 
 /**

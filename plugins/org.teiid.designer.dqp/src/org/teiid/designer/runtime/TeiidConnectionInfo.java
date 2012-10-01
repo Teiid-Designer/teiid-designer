@@ -15,8 +15,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.HashCodeUtil;
+import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
 import org.teiid.designer.core.util.StringUtilities;
-import org.teiid.designer.runtime.security.ISecureStorageProvider;
 
 /**
  * 
@@ -199,7 +199,12 @@ public abstract class TeiidConnectionInfo {
         if (password != null)
             return password;
         
-        password = secureStorageProvider.getFromSecureStorage(getProviderKey(), getPasswordKey());
+        try {
+            password = secureStorageProvider.getFromSecureStorage(getProviderKey(), getPasswordKey());
+        } catch (Exception ex) {
+            DqpPlugin.Util.log(ex);
+            password = null;
+        }
         
         return password;
     }

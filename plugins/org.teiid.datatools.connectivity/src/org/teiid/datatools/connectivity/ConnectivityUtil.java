@@ -22,6 +22,8 @@ import org.eclipse.datatools.connectivity.drivers.IPropertySet;
 import org.eclipse.datatools.connectivity.drivers.PropertySetImpl;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
+import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
+import org.teiid.datatools.connectivity.security.impl.EquinoxSecureStorageProvider;
 
 /**
  * 
@@ -217,5 +219,14 @@ public class ConnectivityUtil {
     		Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, "error getting profile", e); //$NON-NLS-1$
     		throw new CoreException(status);
     	}
+    }
+
+    /**
+     * Get the Eclipse implementation of the {@link ISecureStorageProvider} interface
+     * 
+     * @return
+     */
+    public static ISecureStorageProvider getSecureStorageProvider() {
+        return EquinoxSecureStorageProvider.getInstance();
     }
 }

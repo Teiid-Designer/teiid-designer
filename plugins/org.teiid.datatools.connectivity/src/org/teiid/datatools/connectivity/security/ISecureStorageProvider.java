@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.designer.runtime.security;
+package org.teiid.datatools.connectivity.security;
 
 
 
@@ -24,8 +24,9 @@ public interface ISecureStorageProvider {
      * @param nodeKey 
      * @param key
      * @return value stored against key
+     * @throws Exception 
      */
-    String getFromSecureStorage(String nodeKey, String key);
+    String getFromSecureStorage(String nodeKey, String key) throws Exception;
     
     /**
      * Store the given value against the key in eclipse's secure
