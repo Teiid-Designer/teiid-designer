@@ -10,7 +10,6 @@ package org.teiid.datatools.connectivity.ui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.ConnectionProfileConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
@@ -32,6 +31,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.datatools.connectivity.ConnectivityUtil;
+import org.teiid.datatools.connectivity.TeiidJDBCConnection;
 import org.teiid.datatools.connectivity.TeiidServerJDBCURL;
 
 /**
@@ -260,10 +261,25 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
 
     public void setConnectionInformation() {
         properties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_NAME_PROP_ID, this.databaseText.getText().trim());
-        properties.setProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID, this.passwordText.getText());
 
         properties.setProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID, this.usernameText.getText());
-        properties.setProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID, this.urlText.getText().trim());
+        
+        String url = this.urlText.getText().trim();
+        properties.setProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID, url);
+        
+        /* 
+         * Avoid placing the password into properties that are persisted in the clear
+         * by securely storing the password against the connection's url 
+         */
+        String urlStorageKey = ConnectivityUtil.buildSecureStorageKey(TeiidJDBCConnection.class, url);
+        try {
+            ConnectivityUtil.getSecureStorageProvider().storeInSecureStorage(
+                                                                             urlStorageKey, 
+                                                                             ConnectivityUtil.JDBC_PASSWORD, 
+                                                                             this.passwordText.getText());
+        } catch (Exception ex) {
+            Activator.log(ex);
+        }
 
         properties.setProperty(IJDBCConnectionProfileConstants.SAVE_PASSWORD_PROP_ID,
                                String.valueOf(savePasswordButton.getSelection()));
@@ -381,10 +397,7 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
         if (username != null) {
             usernameText.setText(username);
         }
-        String password = this.properties.getProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID);
-        if (password != null) {
-            passwordText.setText(password);
-        }
+        
         if (url.isSecureProtocol()) {
             protocolCheck.setSelection(true);
         } else {
@@ -399,6 +412,24 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
         optionalPropsComposite.loadProperties();
 
         updateURL();
+        
+        String urlString = urlText.getText().trim();
+        String urlStorageKey = ConnectivityUtil.buildSecureStorageKey(TeiidJDBCConnection.class, urlString);
+        String password = null;
+        
+        /* Retrieve the password from the secure storage */
+        try {
+            password = ConnectivityUtil.getSecureStorageProvider().getFromSecureStorage(
+                                                                                               urlStorageKey,
+                                                                                               ConnectivityUtil.JDBC_PASSWORD);
+        } catch (Exception ex) {
+            Activator.log(ex);
+        }
+        
+        if (password != null) {
+            passwordText.setText(password);
+        }
+        
         addListeners();
         setConnectionInformation();
     }

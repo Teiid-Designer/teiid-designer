@@ -5,14 +5,14 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.designer.runtime.security;
+package org.teiid.datatools.connectivity.security.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import org.eclipse.equinox.security.storage.EncodingUtils;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
-import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
 
 /**
  * Implementation of {@link ISecureStorageProvider} which uses Eclipse's Equinox
@@ -41,18 +41,13 @@ public class EquinoxSecureStorageProvider implements ISecureStorageProvider {
     }
     
     @Override
-    public String getFromSecureStorage(String nodeKey, String key) {
-        try {
-            ISecurePreferences node = getNode(nodeKey);
-            String val = node.get(key, null);
-            if (val == null) {
-                return null;
-            }
-            return new String(EncodingUtils.decodeBase64(val));
-        } catch (Exception e) {
-            DqpPlugin.Util.log(e);
+    public String getFromSecureStorage(String nodeKey, String key) throws Exception {
+        ISecurePreferences node = getNode(nodeKey);
+        String val = node.get(key, null);
+        if (val == null) {
             return null;
         }
+        return new String(EncodingUtils.decodeBase64(val));
     }
 
     @Override

@@ -32,7 +32,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.teiid.core.util.SmartTestDesignerSuite;
-import org.teiid.designer.runtime.security.ISecureStorageProvider;
+import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
 
 /**
  * 

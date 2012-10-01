@@ -44,13 +44,18 @@ public class TeiidJDBCConnection extends JDBCConnection {
 
         String connectURL = props.getProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID);
         String uid = props.getProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID);
-        String pwd = props.getProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID);
+
+        String urlStorageKey = ConnectivityUtil.buildSecureStorageKey(getClass(), connectURL);
+        String pwd = ConnectivityUtil.getSecureStorageProvider()
+                                    .getFromSecureStorage(urlStorageKey, ConnectivityUtil.JDBC_PASSWORD);
+
         String nameValuePairs = props.getProperty(IJDBCConnectionProfileConstants.CONNECTION_PROPERTIES_PROP_ID);
         String propDelim = ",";//$NON-NLS-1$
 
         if (uid != null) {
             connectionProps.setProperty("user", uid); //$NON-NLS-1$
         }
+        
         if (pwd != null) {
             connectionProps.setProperty("password", pwd); //$NON-NLS-1$
         }
