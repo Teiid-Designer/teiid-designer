@@ -1,7 +1,8 @@
 package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-import org.teiid.designer.runtime.security.ISecureStorageProvider;
+import org.teiid.datatools.connectivity.ConnectivityUtil;
+import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
 
 
 /**
@@ -26,11 +27,6 @@ public class TeiidAdminInfo extends TeiidConnectionInfo {
      */
     public static final boolean DEFAULT_SECURE = true;
 
-    /**
-     * Key to use for storing the password value against in secure storage
-     */
-    private static final String SERVER_PASSWORD_KEY = TeiidAdminInfo.class.getName() + ".password"; //$NON-NLS-1$
-    
     /** 
      * @param port the connection port (can be <code>null</code> or empty)
      * @param username the connection user name (can be <code>null</code> or empty)
@@ -46,10 +42,10 @@ public class TeiidAdminInfo extends TeiidConnectionInfo {
                            boolean secure ) {
         super(port, username, secureStorageProvider, password, secure);
     }
-
+    
     @Override
     protected String getPasswordKey() {
-        return SERVER_PASSWORD_KEY;
+        return ConnectivityUtil.ADMIN_PASSWORD;
     }
     
     /**

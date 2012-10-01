@@ -8,10 +8,11 @@
 package org.teiid.datatools.connectivity.ui;
 
 import java.net.URL;
-
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -76,6 +77,22 @@ public class Activator extends AbstractUIPlugin {
         ImageDescriptor desc = ImageDescriptor.createFromURL(url);
         registry.put(CLOSED_FOLDER_ID, desc);
      }
+    
+
+    /**
+     * Log the given exception 
+     * 
+     * @param exception
+     */
+    public static void log(Exception exception) {
+        IStatus status = new Status(
+                                    IStatus.ERROR, 
+                                    PLUGIN_ID,
+                                    PLUGIN_ID,
+                                    exception);
+        
+        plugin.getLog().log(status);
+    }
 
 
 }

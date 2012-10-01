@@ -9,7 +9,7 @@ package org.teiid.designer.runtime;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.teiid.designer.runtime.security.ISecureStorageProvider;
+import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
 
 /**
  * Implementation of {@link ISecureStorageProvider} that uses a simple

@@ -7,6 +7,8 @@
  */
 package org.teiid.datatools.connectivity;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -56,6 +58,21 @@ public class Activator extends AbstractUIPlugin {
      */
     public static Activator getDefault() {
         return plugin;
+    }
+
+    /**
+     * Log the given exception 
+     * 
+     * @param exception
+     */
+    public static void log(Exception exception) {
+        IStatus status = new Status(
+                                    IStatus.ERROR, 
+                                    PLUGIN_ID,
+                                    PLUGIN_ID,
+                                    exception);
+        
+        plugin.getLog().log(status);
     }
 
 }
