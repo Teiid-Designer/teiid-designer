@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.teiid.datatools.connectivity.ui;singleton:=true
-Bundle-Version: 7.8.0.qualifier
+Bundle-Version: 7.9.0.qualifier
 Bundle-Activator: org.teiid.datatools.connectivity.ui.Activator
 Bundle-Vendor: %pluginProvider
 Require-Bundle: org.eclipse.ui,

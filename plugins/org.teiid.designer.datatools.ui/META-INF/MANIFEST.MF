@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.datatools.ui;singleton:=true
-Bundle-Version: 7.8.0.qualifier
+Bundle-Version: 7.9.0.qualifier
 Bundle-Activator: org.teiid.designer.datatools.ui.DatatoolsUiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
