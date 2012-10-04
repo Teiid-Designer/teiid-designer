@@ -34,9 +34,9 @@ function checkout {
 #
 #################
 function show_help {
-	echo "Usage: $0 [-b] [-r <jbt repo branch>] [-h]"
+	echo "Usage: $0 [-b] [-d] [-h]"
 	echo "-b - enable swt bot testing"
-	echo "-r - specify a different jboss tools repository branch. By default, $0 uses 'branches/soatools-3.3.0.Beta1'"
+	echo "-d - enable maven debugging"
   exit 1
 }
 
@@ -59,46 +59,22 @@ fi
 SKIP_SWTBOT=1
 
 #
-# Default jbosstools branch
+# By default debug is turned off
 #
-JBT_BRANCH="branches/soatools-3.3.0.Beta1"
+DEBUG=0
 
 #
 # Determine the command line options
 #
-while getopts "b:r:h:" opt;
+while getopts "bdh" opt;
 do
 	case $opt in
 	b) SKIP_SWTBOT=0 ;;
-	r) JBT_BRANCH=${OPTARG} ;;
+	d) DEBUG=1 ;;
 	h) show_help ;;
 	*) show_help ;;
 	esac
 done
-
-#
-# The jboss tools repository
-#
-JBT_REPO_URL="http://anonsvn.jboss.org/repos/jbosstools/${JBT_BRANCH}"
-
-#
-# JBT repositories to checkout
-#
-JBT_BUILD_REPO="${JBT_REPO_URL}/build"
-JBT_REQ_REPO="${JBT_REPO_URL}/requirements"
-JBT_TESTS_REPO="${JBT_REPO_URL}/tests"
-
-#
-# Local target directories for the JBT checkouts
-#
-JBT_BUILD_DIR="${ROOT_DIR}/build"
-JBT_REQ_DIR="${ROOT_DIR}/requirements"
-JBT_TESTS_DIR="${ROOT_DIR}/jbosstools-tests"
-
-#
-# Backup directory for any modified files
-#
-BACKUP_DIR="${ROOT_DIR}/backup"
 
 #
 # Source directory containing teiid designer codebase
@@ -135,55 +111,6 @@ if [ "${SKIP_SWTBOT}" == "1" ]; then
   echo -e "###\n#\n# Skipping swt bot tests\n#\n###"
 	MVN_FLAGS="${MVN_FLAGS} -Dswtbot.test.skip=true"
 fi
-
-#
-# Create the backup directory
-#
-mkdir -p ${BACKUP_DIR}
-
-echo "==============="
-
-# Checkout the JBT build directory, containing the maven parent pom.xml and profiles
-checkout ${JBT_BUILD_REPO} ${JBT_BUILD_DIR}
-
-echo "==============="
-
-# Fix a current bug in the unified target that includes several features that are
-# currenlty invalid
-
-echo "Backup up unified target"
-cp ${JBT_BUILD_DIR}/target-platform/unified.target ${BACKUP_DIR}/
-
-echo "Removing invalid feature bundles from unified target ..."
-cat ${JBT_BUILD_DIR}/target-platform/unified.target | sed '/org\.drools/d; /org\.mozilla/d; /org\.guvnor/d' > ${JBT_BUILD_DIR}/target-platform/unified.target.new
-mv ${JBT_BUILD_DIR}/target-platform/unified.target.new ${JBT_BUILD_DIR}/target-platform/unified.target
-
-echo "=============="
-
-# Checkout the JBT requirements directory. This used quietly by the swt.bot compilation
-#
-# Note. The swt.bot compilation tests can be skipped but the compilation MUST occur for
-#       the build to complete successfully.
-checkout ${JBT_REQ_REPO} ${JBT_REQ_DIR}
-
-echo "==============="
-
-# Checkout the JBT tests directory, containing the org.jboss.tools.ui.ext.bot plugin
-checkout ${JBT_TESTS_REPO} ${JBT_TESTS_DIR}
-
-echo "==============="
-
-# Install the maven parent pom and profiles
-echo "Install parent pom"
-cd "${JBT_BUILD_DIR}/parent"
-${MVN} ${MAVEN_FLAGS}
-
-echo "==============="
-
-# Install the org.jboss.tools.ui.ext.bot plugin
-echo "Build and install the jboss tools swt bot plugin (Required for successful compilation)"
-cd "${JBT_TESTS_REPO}/tests/org.jboss.tools.ui.bot.ext.test"
-${MVN} ${MAVEN_FLAGS}
 
 echo "==============="
 
