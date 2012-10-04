@@ -1,7 +1,6 @@
 package org.teiid.designer.ui.bot.ext.teiid;
 
 import java.util.List;
-
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Polygon;
@@ -9,8 +8,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefFigureCanvas;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.results.VoidResult;
-
-import com.metamatrix.modeler.mapping.ui.figure.MappingExtentFigure;
+import org.teiid.designer.mapping.ui.figure.MappingExtentFigure;
 
 public class SWTBotTeiidMappingFigure extends SWTBotTeiidFigure {
 
