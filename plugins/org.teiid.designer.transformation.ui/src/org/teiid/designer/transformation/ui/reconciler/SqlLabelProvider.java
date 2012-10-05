@@ -10,6 +10,8 @@ package org.teiid.designer.transformation.ui.reconciler;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+
+
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.util.TransformationSqlHelper;
@@ -20,6 +22,7 @@ import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ExpressionSymbol;
 import org.teiid.query.sql.symbol.Function;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 
 /**
  * Label provider for the SqlSymbolList - the provided Objects are SingleElementSymbols.
@@ -44,12 +47,12 @@ public class SqlLabelProvider
                 // Alias Symbol
                 if(element instanceof AliasSymbol) {
                     AliasSymbol aSymbol = (AliasSymbol)element;
-                    Expression uSymbol = aSymbol.getSymbol();
+                    SingleElementSymbol uSymbol = aSymbol.getSymbol();
                     String symName = TransformationSqlHelper.getSingleElementSymbolShortName(uSymbol,true);
-                    result = symName + " AS " + aSymbol.getShortName(); //$NON-NLS-1$
+                    result = symName + " AS "+aSymbol.getShortName(); //$NON-NLS-1$
                 // SingleElementSymbol
-                } else if(element instanceof Expression) {
-                    result = TransformationSqlHelper.getSingleElementSymbolShortName((Expression)element,true);
+                } else if(element instanceof SingleElementSymbol) {
+                    result = TransformationSqlHelper.getSingleElementSymbolShortName((SingleElementSymbol)element,true);
                 }
             }
         }
@@ -65,10 +68,10 @@ public class SqlLabelProvider
         if(columnIndex==0) {
             if(element instanceof ExpressionSymbol) {
                 image = UiPlugin.getDefault().getImage(FUNCTION_ICON);
-            } else if(element instanceof Expression) {
+            } else if(element instanceof SingleElementSymbol) {
                 // Defect 23945 - added private method to get image for multiple types
                 // of SQL symbols
-                image = getImageForSymbol((Expression)element);
+                image = getImageForSymbol((SingleElementSymbol)element);
             }
         }
 		return image;
@@ -77,7 +80,7 @@ public class SqlLabelProvider
     /**
      *  Get the Image for the SingleElementSymbol
      */
-    private Image getImageForSymbol(Expression seSymbol) {
+    private Image getImageForSymbol(SingleElementSymbol seSymbol) {
         Image result = null;
         
         // If symbol is AliasSymbol, get underlying symbol

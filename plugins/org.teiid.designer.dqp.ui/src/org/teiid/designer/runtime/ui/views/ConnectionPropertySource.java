@@ -75,7 +75,7 @@ public class ConnectionPropertySource implements IPropertySource {
     @Override
 	public IPropertyDescriptor[] getPropertyDescriptors() {
         IPropertyDescriptor[] result = new IPropertyDescriptor[0];
-        Collection<? extends PropertyDefinition> typeDefs = this.translator.getPropertyDefinitions();
+        Collection<PropertyDefinition> typeDefs = this.translator.getPropertyDefinitions();
         boolean showExpertProps = this.provider.isShowingExpertProperties();
         Collection<PropertyDescriptor> temp = new ArrayList<PropertyDescriptor>(typeDefs.size());
 

@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -32,9 +31,9 @@ import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.proc.Block;
-import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.MultipleElementSymbol;
+import org.teiid.query.sql.symbol.SelectSymbol;
 import org.teiid.query.sql.symbol.Symbol;
 import org.teiid.query.ui.UiConstants;
 
@@ -535,7 +534,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
                 StringBuffer selectStr = new StringBuffer(SELECT_STR+SPACE);
                 for(int i=0; i<symbols.size(); i++) {
                     if(i!=0) selectStr.append(COMMA+SPACE);
-                    String symbolName = ((Expression)symbols.get(i)).toString();
+                    String symbolName = ((SelectSymbol)symbols.get(i)).toString();
                     selectStr.append(symbolName);
                 }
                 if(symbols.size()>0) selectStr.append(SPACE+CR);
@@ -583,7 +582,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
             StringBuffer selectStr = new StringBuffer(SPACE);
             for(int i=0; i<symbols.size(); i++) {
                 if(i!=0) selectStr.append(COMMA+SPACE);
-                String symbolName = ((Expression)symbols.get(i)).toString();
+                String symbolName = ((SelectSymbol)symbols.get(i)).toString();
                 selectStr.append(symbolName);
             }
             if(symbols.size()>0) selectStr.append(SPACE+CR);

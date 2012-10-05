@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.Delete;
@@ -30,7 +29,8 @@ import org.teiid.query.sql.lang.SubqueryFromClause;
 import org.teiid.query.sql.lang.SubquerySetCriteria;
 import org.teiid.query.sql.lang.Update;
 import org.teiid.query.sql.proc.CommandStatement;
-import org.teiid.query.sql.proc.CreateProcedureCommand;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.proc.HasCriteria;
 import org.teiid.query.sql.symbol.ScalarSubquery;
 import org.teiid.query.sql.visitor.CommandCollectorVisitor;
 
@@ -296,8 +296,10 @@ public class SqlIndexLocator {
             return DELETE;
         } else if (node.languageObject instanceof StoredProcedure) {
             return STORED_PROCEDURE;
-        } else if (node.languageObject instanceof CreateProcedureCommand) {
+        } else if (node.languageObject instanceof CreateUpdateProcedureCommand) {
             return CREATE_UPDATE_PROCEDURE;
+        } else if (node.languageObject instanceof HasCriteria) {
+            return HAS_CRITERIA;
         } else if (node.languageObject instanceof ExistsCriteria) {
             return EXISTS_CRITERIA;
         } else if (node.languageObject instanceof SubqueryFromClause) {

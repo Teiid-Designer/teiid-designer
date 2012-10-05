@@ -11,7 +11,6 @@ import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -183,7 +182,8 @@ public class Server implements HostProvider {
             if (getTeiidAdminInfo().getPassword() != null) {
                 pwd = getTeiidAdminInfo().getPassword().toCharArray();
             }
-            this.admin = new ExecutionAdmin(AdminFactory.getInstance().createAdmin(getHost(), getTeiidAdminInfo().getPortNumber(), getTeiidAdminInfo().getUsername(), pwd),
+            this.admin = new ExecutionAdmin(AdminFactory.getInstance()
+                                                        .createAdmin(getTeiidAdminInfo().getUsername(), pwd, getUrl()),
                                             this,
                                             this.eventManager);
             this.admin.load();
@@ -349,7 +349,7 @@ public class Server implements HostProvider {
 			
 			Admin adminApi = getAdmin().getAdminApi();
  
-			adminApi.deploy("ping-vdb.xml", (InputStream)new ByteArrayInputStream(ServerUtils.TEST_VDB.getBytes())); //$NON-NLS-1$
+			adminApi.deployVDB("ping-vdb.xml", new ByteArrayInputStream(ServerUtils.TEST_VDB.getBytes())); //$NON-NLS-1$
 			try{
 				String url = "jdbc:teiid:ping@mm://"+host+':'+port+";user="+username+";password="+password+';';  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				
@@ -359,7 +359,7 @@ public class Server implements HostProvider {
 				String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc"); //$NON-NLS-1$
 	            return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
 			} finally {
-				adminApi.undeploy("ping"); //$NON-NLS-1$
+				adminApi.deleteVDB("ping", 1); //$NON-NLS-1$
 				
 				if( teiidJdbcConnection != null ) {
 					teiidJdbcConnection.close();

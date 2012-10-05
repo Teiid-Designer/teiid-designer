@@ -9,7 +9,6 @@ package org.teiid.designer.transformation.ui.reconciler;
 
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -32,6 +31,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.transformation.ui.UiConstants;
@@ -41,8 +41,7 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.table.TableSizeAdapter;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.query.sql.symbol.AliasSymbol;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.Symbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 
 /**
  * Panel used by AddSqlSymbolsDialog Contains a table viewer with two columns. One for Symbol Name and one for Location.
@@ -188,8 +187,8 @@ public class AddSqlSymbolsPanel extends Composite {
                             label.setData("_TABLEITEM", item); //$NON-NLS-1$
                             Object data = item.getData();
                             String tipText = null;
-                            if (data != null && data instanceof Expression) {
-                                tipText = Symbol.getName((Expression)data);
+                            if (data != null && data instanceof SingleElementSymbol) {
+                                tipText = ((SingleElementSymbol)data).getName();
                             }
                             if (tipText != null) {
                                 label.setText(tipText);
@@ -269,7 +268,7 @@ public class AddSqlSymbolsPanel extends Composite {
                         // Alias Symbol
                         if (theElement instanceof AliasSymbol) {
                             AliasSymbol aSymbol = (AliasSymbol)theElement;
-                            Expression uSymbol = aSymbol.getSymbol();
+                            SingleElementSymbol uSymbol = aSymbol.getSymbol();
                             if (uSymbol != null) {
                                 EObject singleElementEObject = TransformationSqlHelper.getSingleElementSymbolEObject(uSymbol);
                                 if (singleElementEObject != null) {
@@ -277,8 +276,8 @@ public class AddSqlSymbolsPanel extends Composite {
                                 }
                             }
                             // SingleElementSymbol
-                        } else if (theElement instanceof Expression) {
-                            EObject singleElementEObject = TransformationSqlHelper.getSingleElementSymbolEObject((Expression)theElement);
+                        } else if (theElement instanceof SingleElementSymbol) {
+                            EObject singleElementEObject = TransformationSqlHelper.getSingleElementSymbolEObject((SingleElementSymbol)theElement);
                             if (singleElementEObject != null) {
                                 columnText = getAppendedPath(singleElementEObject);
                             }

@@ -8,7 +8,6 @@
 
 package org.teiid.designer.metadata.runtime.api;
 
-import org.teiid.core.BundleUtil;
 import org.teiid.core.TeiidProcessingException;
 /**
  * The base exception from which all Runtime Metadata Exceptions extend.
@@ -46,7 +45,7 @@ public class VirtualDatabaseException extends TeiidProcessingException {
      * @param message A message describing the exception
      * @param code The error code
      */
-    public VirtualDatabaseException( BundleUtil.Event code, String message ) {
+    public VirtualDatabaseException( String code, String message ) {
         super( code, message );
     }
 
@@ -76,8 +75,8 @@ public class VirtualDatabaseException extends TeiidProcessingException {
      * @param message A message describing the exception
      * @param code A code denoting the exception
      */
-    public VirtualDatabaseException( BundleUtil.Event code, Exception e, String message ) {
-        super(code, e, message);
+    public VirtualDatabaseException( Exception e, String code, String message ) {
+        super( e, code, message );
     }
 }
 

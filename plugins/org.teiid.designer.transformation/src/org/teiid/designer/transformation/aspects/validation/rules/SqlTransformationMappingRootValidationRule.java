@@ -24,6 +24,8 @@ import org.eclipse.emf.mapping.MappingRoot;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.CoreStringUtil;
+import org.teiid.designer.metadata.runtime.MetadataRecord;
+import org.teiid.designer.metadata.runtime.TableRecord;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.ValidationPreferences;
 import org.teiid.designer.core.container.Container;
@@ -41,8 +43,6 @@ import org.teiid.designer.core.validation.ValidationProblem;
 import org.teiid.designer.core.validation.ValidationProblemImpl;
 import org.teiid.designer.core.validation.ValidationResult;
 import org.teiid.designer.core.validation.ValidationResultImpl;
-import org.teiid.designer.metadata.runtime.MetadataRecord;
-import org.teiid.designer.metadata.runtime.TableRecord;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.function.ScalarFunction;
@@ -76,6 +76,9 @@ import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.Option;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.proc.HasCriteria;
+import org.teiid.query.sql.proc.TranslateCriteria;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
@@ -422,6 +425,15 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                                                                 0,
                                                                 IStatus.ERROR,
                                                                 TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.The_insert_procedure_for_the_virtualGroup_{0},_is_trying_to_execute_an_insert_against_itself._1", TransformationHelper.getSqlEObjectName(target))); //$NON-NLS-1$
+                    } else {
+                        // if insert procedure has translate/has criteria, warn
+                        if (hasTranslateCriteria(subCommand)) {
+                            // create validation problem and addition to the results
+                            typeProblem = new ValidationProblemImpl(
+                                                                    0,
+                                                                    IStatus.WARNING,
+                                                                    TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.Translate/Has_Criteria_on_an_insert_procedure_would_always_evaluate_to_false._3")); //$NON-NLS-1$
+                        }
                     }
                     break;
                 case Command.TYPE_UPDATE:
@@ -505,6 +517,19 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         return false;
     }
 
+    /*
+     * Check if any of the command has a translate/has criteria defined.
+     */
+    private boolean hasTranslateCriteria( final Command command ) {
+        // collect predicate one of which may be translate criteria
+        for (final Iterator predIter = PredicateCollectorVisitor.getPredicates(command).iterator(); predIter.hasNext();) {
+            Object criteria = predIter.next();
+            if (criteria instanceof TranslateCriteria || criteria instanceof HasCriteria) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Validate parameters, resultSet and the sql that defines a virtual procedure. 1) Error -> If Procedure does not return a
@@ -586,7 +611,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         }
 
         // if the command cannot be an UpdateProcedure, it can be a VirtualProcedure
-        if (cmdType == Command.TYPE_UPDATE_PROCEDURE ) {
+        if (cmdType == Command.TYPE_UPDATE_PROCEDURE && ((CreateUpdateProcedureCommand)command).isUpdateProcedure()) {
             // create validation problem and additional to the results
             ValidationProblem typeProblem = new ValidationProblemImpl(
                                                                       0,

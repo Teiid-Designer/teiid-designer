@@ -11,13 +11,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.teiid.client.metadata.ParameterInfo;
 import org.teiid.core.types.DataTypeManager;
+import org.teiid.language.SQLConstants;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.sql.lang.AbstractCompareCriteria;
@@ -55,9 +54,13 @@ import org.teiid.query.sql.lang.Update;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.CommandStatement;
-import org.teiid.query.sql.proc.CreateProcedureCommand;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.proc.CriteriaSelector;
 import org.teiid.query.sql.proc.DeclareStatement;
+import org.teiid.query.sql.proc.HasCriteria;
+import org.teiid.query.sql.proc.IfStatement;
 import org.teiid.query.sql.proc.RaiseErrorStatement;
+import org.teiid.query.sql.proc.TranslateCriteria;
 import org.teiid.query.sql.symbol.AggregateSymbol;
 import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.symbol.Constant;
@@ -69,6 +72,8 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.MultipleElementSymbol;
 import org.teiid.query.sql.symbol.Reference;
 import org.teiid.query.sql.symbol.ScalarSubquery;
+import org.teiid.query.ui.sqleditor.component.DisplayNode;
+import org.teiid.query.ui.sqleditor.component.DisplayNodeFactory;
 
 
 public class TestDisplayNodeFactory extends TestCase {
@@ -927,44 +932,37 @@ public class TestDisplayNodeFactory extends TestCase {
     }
 
     public void testAggregateSymbol1() {
-        AggregateSymbol agg = new AggregateSymbol("abc", false, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
-        agg.setAggregateFunction(AggregateSymbol.Type.COUNT);
+        AggregateSymbol agg = new AggregateSymbol("abc", SQLConstants.NonReserved.COUNT, false, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
         helpTest(agg, "COUNT('abc')"); //$NON-NLS-1$
     }
 
     public void testAggregateSymbol2() {
-        AggregateSymbol agg = new AggregateSymbol("abc", true, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
-        agg.setAggregateFunction(AggregateSymbol.Type.COUNT);
+        AggregateSymbol agg = new AggregateSymbol("abc", SQLConstants.NonReserved.COUNT, true, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
         helpTest(agg, "COUNT(DISTINCT 'abc')"); //$NON-NLS-1$
     }
 
     public void testAggregateSymbol3() {
-        AggregateSymbol agg = new AggregateSymbol("abc", false, null); //$NON-NLS-1$
-        agg.setAggregateFunction(AggregateSymbol.Type.COUNT);
+        AggregateSymbol agg = new AggregateSymbol("abc", SQLConstants.NonReserved.COUNT, false, null); //$NON-NLS-1$
         helpTest(agg, "COUNT(*)"); //$NON-NLS-1$
     }
 
     public void testAggregateSymbol4() {
-        AggregateSymbol agg = new AggregateSymbol("abc", false, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
-        agg.setAggregateFunction(AggregateSymbol.Type.AVG);
+        AggregateSymbol agg = new AggregateSymbol("abc", SQLConstants.NonReserved.AVG, false, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
         helpTest(agg, "AVG('abc')"); //$NON-NLS-1$
     }
 
     public void testAggregateSymbol5() {
-        AggregateSymbol agg = new AggregateSymbol("abc", false, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
-        agg.setAggregateFunction(AggregateSymbol.Type.SUM);
+        AggregateSymbol agg = new AggregateSymbol("abc", SQLConstants.NonReserved.SUM, false, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
         helpTest(agg, "SUM('abc')"); //$NON-NLS-1$
     }
 
     public void testAggregateSymbol6() {
-        AggregateSymbol agg = new AggregateSymbol("abc", false, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
-        agg.setAggregateFunction(AggregateSymbol.Type.MIN);
+        AggregateSymbol agg = new AggregateSymbol("abc", SQLConstants.NonReserved.MIN, false, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
         helpTest(agg, "MIN('abc')"); //$NON-NLS-1$
     }
 
     public void testAggregateSymbol7() {
-        AggregateSymbol agg = new AggregateSymbol("abc", false, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
-        agg.setAggregateFunction(AggregateSymbol.Type.MAX);
+        AggregateSymbol agg = new AggregateSymbol("abc", SQLConstants.NonReserved.MAX, false, new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
         helpTest(agg, "MAX('abc')"); //$NON-NLS-1$
     }
 
@@ -1324,7 +1322,78 @@ public class TestDisplayNodeFactory extends TestCase {
         helpTest(assigStmt, "a = SELECT x FROM g;"); //$NON-NLS-1$
     }
 
- 
+    public void testCriteriaSelector1() {
+        ElementSymbol sy1 = new ElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol sy2 = new ElementSymbol("b"); //$NON-NLS-1$
+        ElementSymbol sy3 = new ElementSymbol("c"); //$NON-NLS-1$
+        List elmnts = new ArrayList(3);
+        elmnts.add(sy1);
+        elmnts.add(sy2);
+        elmnts.add(sy3);
+        CriteriaSelector cs = new CriteriaSelector(CriteriaSelector.COMPARE_EQ, elmnts);
+        helpTest(cs, "= CRITERIA ON (a, b, c)"); //$NON-NLS-1$
+    }
+
+    public void testCriteriaSelector2() {
+        ElementSymbol sy1 = new ElementSymbol("x"); //$NON-NLS-1$
+        ElementSymbol sy2 = new ElementSymbol("y"); //$NON-NLS-1$
+        ElementSymbol sy3 = new ElementSymbol("z"); //$NON-NLS-1$
+        List elmnts = new ArrayList(3);
+        elmnts.add(sy1);
+        elmnts.add(sy2);
+        elmnts.add(sy3);
+        CriteriaSelector cs = new CriteriaSelector(CriteriaSelector.LIKE, elmnts);
+        helpTest(cs, "LIKE CRITERIA ON (x, y, z)"); //$NON-NLS-1$
+    }
+
+    public void testCriteriaSelector3() {
+        ElementSymbol sy1 = new ElementSymbol("x"); //$NON-NLS-1$
+        ElementSymbol sy2 = new ElementSymbol("y"); //$NON-NLS-1$
+        ElementSymbol sy3 = new ElementSymbol("z"); //$NON-NLS-1$
+        List elmnts = new ArrayList(3);
+        elmnts.add(sy1);
+        elmnts.add(sy2);
+        elmnts.add(sy3);
+        CriteriaSelector cs = new CriteriaSelector(CriteriaSelector.BETWEEN, elmnts);
+        helpTest(cs, "BETWEEN CRITERIA ON (x, y, z)"); //$NON-NLS-1$
+    }
+
+    public void testHasCriteria1() {
+        ElementSymbol sy1 = new ElementSymbol("x"); //$NON-NLS-1$
+        ElementSymbol sy2 = new ElementSymbol("y"); //$NON-NLS-1$
+        ElementSymbol sy3 = new ElementSymbol("z"); //$NON-NLS-1$
+        List elmnts = new ArrayList(3);
+        elmnts.add(sy1);
+        elmnts.add(sy2);
+        elmnts.add(sy3);
+        CriteriaSelector cs = new CriteriaSelector(CriteriaSelector.LIKE, elmnts);
+        helpTest(new HasCriteria(cs), "HAS LIKE CRITERIA ON (x, y, z)"); //$NON-NLS-1$
+    }
+
+    public void testHasCriteria2() {
+        ElementSymbol sy1 = new ElementSymbol("x"); //$NON-NLS-1$
+        ElementSymbol sy2 = new ElementSymbol("y"); //$NON-NLS-1$
+        ElementSymbol sy3 = new ElementSymbol("z"); //$NON-NLS-1$
+        List elmnts = new ArrayList(3);
+        elmnts.add(sy1);
+        elmnts.add(sy2);
+        elmnts.add(sy3);
+        CriteriaSelector cs = new CriteriaSelector(CriteriaSelector.LIKE, elmnts);
+        helpTest(new HasCriteria(cs), "HAS LIKE CRITERIA ON (x, y, z)"); //$NON-NLS-1$
+    }
+
+    public void testHasCriteria3() {
+        ElementSymbol sy1 = new ElementSymbol("x"); //$NON-NLS-1$
+        ElementSymbol sy2 = new ElementSymbol("y"); //$NON-NLS-1$
+        ElementSymbol sy3 = new ElementSymbol("z"); //$NON-NLS-1$
+        List elmnts = new ArrayList(3);
+        elmnts.add(sy1);
+        elmnts.add(sy2);
+        elmnts.add(sy3);
+        CriteriaSelector cs = new CriteriaSelector(CriteriaSelector.BETWEEN, elmnts);
+        helpTest(new HasCriteria(cs), "HAS BETWEEN CRITERIA ON (x, y, z)"); //$NON-NLS-1$
+    }
+
     public void testCommandStatement1() {
         Query q1 = new Query();
         Select select = new Select();
@@ -1358,6 +1427,100 @@ public class TestDisplayNodeFactory extends TestCase {
         helpTest(b, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
     }
 
+    public void testBlock2() {
+        // construct If statement
+
+        Delete d1 = new Delete();
+        d1.setGroup(new GroupSymbol("g")); //$NON-NLS-1$
+        CommandStatement cmdStmt = new CommandStatement(d1);
+        Block ifblock = new Block(cmdStmt);
+        // construct If criteria
+        ElementSymbol sy1 = new ElementSymbol("x"); //$NON-NLS-1$
+        List elmnts = new ArrayList(1);
+        elmnts.add(sy1);
+        CriteriaSelector cs = new CriteriaSelector(CriteriaSelector.LIKE, elmnts);
+        Criteria crit = new HasCriteria(cs);
+        IfStatement ifStmt = new IfStatement(crit, ifblock);
+
+        // other statements
+        RaiseErrorStatement errStmt = new RaiseErrorStatement(new Constant("My Error")); //$NON-NLS-1$
+        Block b = new Block();
+        b.addStatement(cmdStmt);
+        b.addStatement(ifStmt);
+        b.addStatement(errStmt);
+
+        helpTest(b,
+                 "BEGIN\n\tDELETE FROM g;\n\tIF(HAS LIKE CRITERIA ON (x))\n\tBEGIN\n\t\tDELETE FROM g;\n\tEND\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
+    }
+
+    public void testIfStatement1() {
+        // construct If block
+        Delete d1 = new Delete();
+        d1.setGroup(new GroupSymbol("g")); //$NON-NLS-1$
+        CommandStatement cmdStmt = new CommandStatement(d1);
+        AssignmentStatement assigStmt = new AssignmentStatement(new ElementSymbol("a"), new Constant(new Integer(1))); //$NON-NLS-1$
+        RaiseErrorStatement errStmt = new RaiseErrorStatement(new Constant("My Error")); //$NON-NLS-1$
+        Block ifblock = new Block();
+        ifblock.addStatement(cmdStmt);
+        ifblock.addStatement(assigStmt);
+        ifblock.addStatement(errStmt);
+
+        // construct If criteria
+        ElementSymbol sy1 = new ElementSymbol("x"); //$NON-NLS-1$
+        List elmnts = new ArrayList(1);
+        elmnts.add(sy1);
+        CriteriaSelector cs = new CriteriaSelector(CriteriaSelector.LIKE, elmnts);
+        Criteria crit = new HasCriteria(cs);
+
+        IfStatement ifStmt = new IfStatement(crit, ifblock);
+        helpTest(ifStmt, "IF(HAS LIKE CRITERIA ON (x))\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
+    }
+
+    public void testIfStatement2() {
+        // construct If block
+        Delete d1 = new Delete();
+        d1.setGroup(new GroupSymbol("g")); //$NON-NLS-1$
+        CommandStatement cmdStmt = new CommandStatement(d1);
+        Block ifblock = new Block(cmdStmt);
+
+        // construct If criteria
+        ElementSymbol sy1 = new ElementSymbol("x"); //$NON-NLS-1$
+        List elmnts = new ArrayList(1);
+        elmnts.add(sy1);
+        CriteriaSelector cs = new CriteriaSelector(CriteriaSelector.LIKE, elmnts);
+        Criteria crit = new HasCriteria(cs);
+
+        IfStatement ifStmt = new IfStatement(crit, ifblock);
+        helpTest(ifStmt, "IF(HAS LIKE CRITERIA ON (x))\nBEGIN\n\tDELETE FROM g;\nEND"); //$NON-NLS-1$
+    }
+
+    public void testIfStatement3() {
+        // construct If block
+        Delete d1 = new Delete();
+        d1.setGroup(new GroupSymbol("g")); //$NON-NLS-1$
+        CommandStatement cmdStmt = new CommandStatement(d1);
+        AssignmentStatement assigStmt = new AssignmentStatement(new ElementSymbol("a"), new Constant(new Integer(1))); //$NON-NLS-1$
+        RaiseErrorStatement errStmt = new RaiseErrorStatement(new Constant("My Error")); //$NON-NLS-1$
+        Block ifblock = new Block();
+        ifblock.addStatement(cmdStmt);
+        ifblock.addStatement(assigStmt);
+        ifblock.addStatement(errStmt);
+
+        // construct If criteria
+        ElementSymbol sy1 = new ElementSymbol("x"); //$NON-NLS-1$
+        List elmnts = new ArrayList(1);
+        elmnts.add(sy1);
+        CriteriaSelector cs = new CriteriaSelector(CriteriaSelector.LIKE, elmnts);
+        Criteria crit = new HasCriteria(cs);
+
+        Block elseblock = new Block();
+        elseblock.addStatement(cmdStmt);
+
+        IfStatement ifStmt = new IfStatement(crit, ifblock, elseblock);
+        helpTest(ifStmt,
+                 "IF(HAS LIKE CRITERIA ON (x))\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND\nELSE\nBEGIN\n\tDELETE FROM g;\nEND"); //$NON-NLS-1$
+    }
+
     public void testCreateUpdateProcedure1() {
         Delete d1 = new Delete();
         d1.setGroup(new GroupSymbol("g")); //$NON-NLS-1$
@@ -1368,7 +1531,7 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(cmdStmt);
         b.addStatement(assigStmt);
         b.addStatement(errStmt);
-        CreateProcedureCommand cup = new CreateProcedureCommand(b);
+        CreateUpdateProcedureCommand cup = new CreateUpdateProcedureCommand(b);
         helpTest(cup, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
     }
 
@@ -1382,7 +1545,7 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(cmdStmt);
         b.addStatement(assigStmt);
         b.addStatement(errStmt);
-        CreateProcedureCommand cup = new CreateProcedureCommand(b);
+        CreateUpdateProcedureCommand cup = new CreateUpdateProcedureCommand(b);
         helpTest(cup, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
     }
 
@@ -1396,8 +1559,39 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(cmdStmt);
         b.addStatement(assigStmt);
         b.addStatement(errStmt);
-        CreateProcedureCommand cup = new CreateProcedureCommand(b);
+        CreateUpdateProcedureCommand cup = new CreateUpdateProcedureCommand(b);
         helpTest(cup, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
+    }
+
+    // Test Delete
+    public void FAILINGtestCreateUpdateProcedure4() {
+        // TODO fix this test
+        Delete d1 = new Delete();
+        d1.setGroup(new GroupSymbol("g")); //$NON-NLS-1$
+        TranslateCriteria tCrit = new TranslateCriteria(new CriteriaSelector());
+        d1.setCriteria(tCrit);
+        AssignmentStatement assigStmt = new AssignmentStatement(new ElementSymbol("VARIABLES.ROWS_UPDATED"), d1); //$NON-NLS-1$
+        Block b = new Block();
+        b.addStatement(assigStmt);
+        CreateUpdateProcedureCommand cup = new CreateUpdateProcedureCommand(b);
+        helpTest(cup, "CREATE PROCEDURE\nBEGIN\n\tVARIABLES.ROWS_UPDATED = DELETE FROM g WHERE TRANSLATE CRITERIA;\nEND"); //$NON-NLS-1$
+    }
+
+    // Test Update
+    public void FAILINGtestCreateUpdateProcedure5() {
+        // TODO fix this test
+        Update update = new Update();
+        update.setGroup(new GroupSymbol("m.g1")); //$NON-NLS-1$
+        update.addChange(new ElementSymbol("e1"), new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
+        update.addChange(new ElementSymbol("e2"), new Constant("def")); //$NON-NLS-1$ //$NON-NLS-2$
+        TranslateCriteria tCrit = new TranslateCriteria(new CriteriaSelector());
+        update.setCriteria(tCrit);
+        AssignmentStatement assigStmt = new AssignmentStatement(new ElementSymbol("VARIABLES.ROWS_UPDATED"), update); //$NON-NLS-1$
+        Block b = new Block();
+        b.addStatement(assigStmt);
+        CreateUpdateProcedureCommand cup = new CreateUpdateProcedureCommand(b);
+        helpTest(cup,
+                 "CREATE PROCEDURE\nBEGIN\n\tVARIABLES.ROWS_UPDATED = UPDATE m.g1 SET e1 = 'abc', e2 = 'def' WHERE TRANSLATE CRITERIA;\nEND"); //$NON-NLS-1$
     }
 
     // Test Insert
@@ -1417,7 +1611,7 @@ public class TestDisplayNodeFactory extends TestCase {
         AssignmentStatement assigStmt = new AssignmentStatement(new ElementSymbol("VARIABLES.ROWS_UPDATED"), insert); //$NON-NLS-1$
         Block b = new Block();
         b.addStatement(assigStmt);
-        CreateProcedureCommand cup = new CreateProcedureCommand(b);
+        CreateUpdateProcedureCommand cup = new CreateUpdateProcedureCommand(b);
         helpTest(cup,
                  "CREATE PROCEDURE\nBEGIN\n\tVARIABLES.ROWS_UPDATED = INSERT INTO m.g1 (e1, e2) VALUES (5, 'abc');\nEND"); //$NON-NLS-1$
     }

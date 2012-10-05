@@ -9,11 +9,6 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,8 +18,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.xml.stream.XMLStreamException;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
@@ -32,9 +25,6 @@ import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
-import org.teiid.adminapi.impl.VDBImportMetadata;
-import org.teiid.adminapi.impl.VDBMetaData;
-import org.teiid.adminapi.impl.VDBMetadataParser;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -140,7 +130,7 @@ public class ExecutionAdmin {
         String vdbName = vdbFile.getFullPath().lastSegment();
         String vdbNameNoExt = vdbFile.getFullPath().removeFileExtension().lastSegment();
 
-        admin.undeploy(vdbName);
+        admin.deployVDB(vdbName, vdbFile.getContents());
 
         refreshVDBs();
 
@@ -372,43 +362,6 @@ public class ExecutionAdmin {
     public Set<TeiidVdb> getVdbs() {
         return this.teiidVdbs;
     }
-    
-    /**
-     * 
-     * @param vdbName
-     * @return the vdb.xml string may be null
-     */
-    public final String getVdbXmlString(String vdbName) {
-    	CoreArgCheck.isNotEmpty(vdbName, "vdbName"); //$NON-NLS-1$
-    	VDB theVdb = getVdb(vdbName);
-    	if( theVdb != null ) {
-    		return getVdbXmlString((VDBMetaData)theVdb);
-    	}
-    	return null;
-    }
-    
-    private final String getVdbXmlString(VDBMetaData vdbMetadata) {
-        // Create a StringBuffer into which the WSDL can be written ...
-        final ByteArrayOutputStream bas = new ByteArrayOutputStream();
-        final BufferedOutputStream stream = new BufferedOutputStream(bas);
-        try {
-        	VDBMetadataParser.marshell(vdbMetadata, stream);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        } catch (XMLStreamException e) {
-        	throw new RuntimeException(e.getMessage());
-		} finally {
-            if ( stream != null ) {
-                try {
-					stream.close();
-				} catch (IOException e) {
-					throw new RuntimeException(e.getMessage());
-				}
-            }
-        }
-        
-        return bas.toString();
-    }
 
     private void init() throws Exception {
         this.translatorByNameMap = new HashMap<String, TeiidTranslator>();
@@ -463,29 +416,7 @@ public class ExecutionAdmin {
                            int sourceVdbVersion,
                            String targetVdbName,
                            int targetVdbVersion ) throws Exception {
-    	VDB projectVdb = getVdb(targetVdbName);
-    	if( projectVdb != null ) {
-    		VDBImportMetadata vdbImport = new VDBImportMetadata();
-    		vdbImport.setName(sourceVdbName);
-    		vdbImport.setVersion(sourceVdbVersion);
-
-    		((VDBMetaData)projectVdb).getVDBImports().add(vdbImport);
-    		
-    		String vdbXmlString = getVdbXmlString((VDBMetaData)projectVdb);
-    		if( vdbXmlString != null && vdbXmlString.length() > 0 ) {
-    			String name = projectVdb.getPropertyValue("deployment-name");
-    			this.admin.undeploy(name);
-    			
-    			// TODO: Teiid 8.1 integration
-    			// Replace the actual vdb.xml in the project.vdb file
-    			
-    			// 
-    			///deployVdb(vdb);
-    		}
-    	}
-
-    	// SEE ABOVE ^^^^ 
-        //this.admin.mergeVDBs(sourceVdbName, sourceVdbVersion, targetVdbName, targetVdbVersion);
+        this.admin.mergeVDBs(sourceVdbName, sourceVdbVersion, targetVdbName, targetVdbVersion);
     }
 
     public void refresh() throws Exception {
@@ -522,17 +453,17 @@ public class ExecutionAdmin {
      * @param translators
      * @throws Exception
      */
-    protected void refreshTranslators( Collection<? extends Translator> translators ) throws Exception {
+    protected void refreshTranslators( Collection<Translator> translators ) throws Exception {
         for (Translator translator : translators) {
             if (translator.getName() != null) {
-                Collection<? extends PropertyDefinition> propDefs = this.admin.getTemplatePropertyDefinitions(translator.getName());
+                Collection<PropertyDefinition> propDefs = this.admin.getTemplatePropertyDefinitions(translator.getName());
                 this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, this));
             }
         }
     }
 
     protected void refreshVDBs() throws Exception {
-        Collection<? extends VDB> vdbs = Collections.unmodifiableCollection(this.admin.getVDBs());
+        Set<VDB> vdbs = Collections.unmodifiableSet(this.admin.getVDBs());
         Set<TeiidVdb> tmpVdbs = new HashSet();
 
         for (VDB vdb : vdbs) {
@@ -584,7 +515,7 @@ public class ExecutionAdmin {
 
     public void undeployVdb( String vdbName,
                              int vdbVersion ) throws Exception {
-        this.admin.undeploy(vdbName);
+        this.admin.deleteVDB(vdbName, vdbVersion);
         VDB vdb = getVdb(vdbName);
 
         refreshVDBs();
@@ -603,7 +534,7 @@ public class ExecutionAdmin {
     public void undeployVdb( VDB vdb ) throws Exception {
         CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
 
-        admin.undeploy(vdb.getName());
+        admin.deleteVDB(vdb.getName(), vdb.getVersion());
 
         refreshVDBs();
 

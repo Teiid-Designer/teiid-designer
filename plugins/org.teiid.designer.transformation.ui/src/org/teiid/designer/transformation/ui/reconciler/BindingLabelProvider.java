@@ -10,6 +10,7 @@ package org.teiid.designer.transformation.ui.reconciler;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
+
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
@@ -20,6 +21,7 @@ import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ExpressionSymbol;
 import org.teiid.query.sql.symbol.Function;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 
 /**
  * ModelOutlineLabelProvider is a specialization of ModelExplorerLabelProvider
@@ -76,10 +78,10 @@ public class BindingLabelProvider extends ModelExplorerLabelProvider
                 break;
             case 1 : // SQL Symbol Column
                 Object sqlSymbol = binding.getCurrentSymbol();
-                if(sqlSymbol!=null && sqlSymbol instanceof Expression) {
+                if(sqlSymbol!=null && sqlSymbol instanceof SingleElementSymbol) {
                     // Defect 23945 - added private method to get image for multiple types
                     // of SQL symbols
-                    image = getImageForSymbol((Expression)sqlSymbol);
+                    image = getImageForSymbol((SingleElementSymbol)sqlSymbol);
                 }
                 break;
             default :
@@ -91,7 +93,7 @@ public class BindingLabelProvider extends ModelExplorerLabelProvider
     /**
      *  Get the Image for the SingleElementSymbol
      */
-    private Image getImageForSymbol(Expression seSymbol) {
+    private Image getImageForSymbol(SingleElementSymbol seSymbol) {
         Image result = null;
         
         // If symbol is AliasSymbol, get underlying symbol

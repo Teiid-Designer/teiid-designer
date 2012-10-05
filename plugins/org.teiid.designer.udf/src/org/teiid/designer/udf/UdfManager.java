@@ -364,38 +364,18 @@ public final class UdfManager implements IResourceChangeListener {
         			String returnParamName = ModelerCore.getModelEditor().getName(function.getReturnParameter());
         			FunctionParameter outputParam = new FunctionParameter(returnParamName, function.getReturnParameter().getType()); 
         			
-        			/**
-        			 * 
-        			     public FunctionMethod(String name,
-                          String description,
-                          String category,
-                          PushDown pushdown,
-                          String invocationClass,
-                          String invocationMethod,
-                          List<FunctionParameter> inputParams,
-                          FunctionParameter outputParam,
-                          boolean nullOnNull,
-                          Determinism deterministic)
-                          
-                          public FunctionMethod(
-                          	String name, 
-                          	String description, 
-                          	String category, 
-        					String invocationClass, 
-        					String invocationMethod, 
-        					FunctionParameter[] inputParams, 
-        					FunctionParameter outputParam)
-        			 */
-        			
         			FunctionMethod fMethod = 
         				new FunctionMethod(
         						function.getName(), 
         						description, 
         						function.getCategory(), 
+        						null, 
         						function.getInvocationClass(), 
         						function.getInvocationMethod(),
         						fParams.toArray(new FunctionParameter[0]),
-        						outputParam
+        						outputParam,
+        					    false,
+        						null
         						);
         			fMethod.setPushDown(function.getPushDown().getLiteral());
         			if( function.isDeterministic() ) {
@@ -404,7 +384,7 @@ public final class UdfManager implements IResourceChangeListener {
         				fMethod.setDeterminism(Determinism.NONDETERMINISTIC);
         			}
         			
-        			FunctionDescriptor fd = tree.addFunction(schema, null, fMethod, false);
+        			FunctionDescriptor fd = tree.addFunction(schema, null, fMethod);
         			fd.setMetadataID(function);
         		}
         		functionTrees.add(tree);
@@ -471,9 +451,12 @@ public final class UdfManager implements IResourceChangeListener {
     						description, 
     						category, 
     						null, 
+    						null, 
     						null,
     						fParams.toArray(new FunctionParameter[0]),
-    						outputParam
+    						outputParam,
+    					    false,
+    						null
     						);
     			fMethod.setPushDown(Boolean.toString(true));
     			if( wrappedProcedure.isDeterministic() ) {
@@ -482,7 +465,7 @@ public final class UdfManager implements IResourceChangeListener {
     				fMethod.setDeterminism(Determinism.NONDETERMINISTIC);
     			}
     			
-    			FunctionDescriptor fd = tree.addFunction(schema, null, fMethod, false);
+    			FunctionDescriptor fd = tree.addFunction(schema, null, fMethod);
     			fd.setMetadataID(procedure);
     		}
     		functionTrees.add(tree);

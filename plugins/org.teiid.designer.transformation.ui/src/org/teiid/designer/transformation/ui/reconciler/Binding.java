@@ -23,7 +23,7 @@ import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ExpressionSymbol;
-import org.teiid.query.sql.symbol.Symbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 
 /**
  * Binding Business Object A Binding has the following properties: (1) Virtual Attribute - can be MetaObject or String(if creating
@@ -60,9 +60,9 @@ public class Binding {
     private EObject newAttrDatatype;
     private String newAttrName;
 
-    private Expression originalSymbol;
-    private Expression newSymbol;
-    private Expression availableSymbolConversion;
+    private SingleElementSymbol originalSymbol;
+    private SingleElementSymbol newSymbol;
+    private SingleElementSymbol availableSymbolConversion;
 
     // private boolean canConvertSql = false;
     private boolean sqlWasConverted = false;
@@ -85,7 +85,7 @@ public class Binding {
      * @param symbol the symbol to be bound to the attribute
      */
     public Binding( Object attribute,
-    		Expression symbol ) {
+                    SingleElementSymbol symbol ) {
         setAttribute(attribute);
         setOriginalSymbol(symbol);
     }
@@ -133,7 +133,7 @@ public class Binding {
     /**
      * @return SQL Symbol binding
      */
-    public Expression getOriginalSymbol() {
+    public SingleElementSymbol getOriginalSymbol() {
         return originalSymbol;
     }
 
@@ -143,8 +143,8 @@ public class Binding {
      * 
      * @return SQL Symbol binding
      */
-    public Expression getCurrentSymbol() {
-    	Expression result = originalSymbol;
+    public SingleElementSymbol getCurrentSymbol() {
+        SingleElementSymbol result = originalSymbol;
         if (newSymbol != null) {
             result = newSymbol;
         }
@@ -158,7 +158,7 @@ public class Binding {
      */
     public String getCurrentSymbolRuntimeType() {
         String runtimeType = null;
-        Expression currentSymbol = getCurrentSymbol();
+        SingleElementSymbol currentSymbol = getCurrentSymbol();
         if (currentSymbol != null) {
             runtimeType = RuntimeTypeConverter.getRuntimeType(currentSymbol);
         }
@@ -172,7 +172,7 @@ public class Binding {
      */
     public int getCurrentSymbolLength() {
         int length = 0;
-        Expression currentSymbol = getCurrentSymbol();
+        SingleElementSymbol currentSymbol = getCurrentSymbol();
         if (currentSymbol != null) {
             length = TransformationSqlHelper.getElementSymbolLength(currentSymbol);
         }
@@ -196,7 +196,7 @@ public class Binding {
      * 
      * @param the SQL Symbol
      */
-    public void setOriginalSymbol( Expression seSymbol ) {
+    public void setOriginalSymbol( SingleElementSymbol seSymbol ) {
         this.originalSymbol = seSymbol;
         this.newSymbol = null;
         // Update SQL Conversion Data - based on symbol and attr type
@@ -222,7 +222,7 @@ public class Binding {
      * 
      * @param the SQL Symbol
      */
-    public void setNewSymbol( Expression seSymbol ) {
+    public void setNewSymbol( SingleElementSymbol seSymbol ) {
         if (this.originalSymbol == null) {
             this.originalSymbol = seSymbol;
             this.newSymbol = seSymbol;
@@ -464,12 +464,12 @@ public class Binding {
             if (sqlSymbol instanceof AliasSymbol) {
                 sqlSymbol = ((AliasSymbol)sqlSymbol).getSymbol();
             }
-            if (sqlSymbol != null && sqlSymbol instanceof Expression) {
-                String symbolName = TransformationSqlHelper.getSingleElementSymbolShortName((Expression)sqlSymbol, true);
+            if (sqlSymbol != null && sqlSymbol instanceof SingleElementSymbol) {
+                String symbolName = TransformationSqlHelper.getSingleElementSymbolShortName((SingleElementSymbol)sqlSymbol, true);
                 // show aliased if necessary
                 if (!isInputParamBinding()) {
                     String attrName = getCurrentAttrName();
-                    String symShortName = TransformationSqlHelper.getSingleElementSymbolShortName((Expression)sqlSymbol,
+                    String symShortName = TransformationSqlHelper.getSingleElementSymbolShortName((SingleElementSymbol)sqlSymbol,
                                                                                                   false);
                     // If symbol and attribute shortNames are different, show as aliased
                     if (!attrName.equalsIgnoreCase(symShortName)) {
@@ -483,14 +483,14 @@ public class Binding {
                     sb = new StringBuffer(symbolName);
                 }
                 if (showType) {
-                    sb.append(" : " + getSymbolDatatype((Expression)sqlSymbol)); //$NON-NLS-1$
+                    sb.append(" : " + getSymbolDatatype((SingleElementSymbol)sqlSymbol)); //$NON-NLS-1$
                 }
             }
         }
         return sb.toString();
     }
 
-    private String getSymbolDatatype( Expression seSymbol ) {
+    private String getSymbolDatatype( SingleElementSymbol seSymbol ) {
         String typeName;
         Class objClass = seSymbol.getType();
         if (objClass == null) {
@@ -507,17 +507,17 @@ public class Binding {
      * 
      * @return the SingleElementSymbol for the current state of the binding
      */
-    public Expression createBindingSymbol() {
-    	Expression result = null;
+    public SingleElementSymbol createBindingSymbol() {
+        SingleElementSymbol result = null;
         if (isBound()) {
-        	Expression currentSymbol = getCurrentSymbol();
+            SingleElementSymbol currentSymbol = getCurrentSymbol();
             String currentAttrName = getCurrentAttrName();
             String symbolShortName = TransformationSqlHelper.getSingleElementSymbolShortName(currentSymbol, false);
             // -----------------------------------------------------------------
             // Name of current Symbol matches the target Attribute
             // -----------------------------------------------------------------
             if (symbolShortName != null && symbolShortName.equalsIgnoreCase(currentAttrName)) {
-                result = (Expression)currentSymbol.clone();
+                result = (SingleElementSymbol)currentSymbol.clone();
                 // If this is an alias, get the underlying symbol and drop alias
                 // if(currentSymbol instanceof AliasSymbol) {
                 // SingleElementSymbol uSymbol = ((AliasSymbol)currentSymbol).getSymbol();
@@ -543,10 +543,10 @@ public class Binding {
             } else {
                 // If this is already an alias, rename it
                 if (currentSymbol instanceof AliasSymbol) {
-                	Expression uSymbol = ((AliasSymbol)currentSymbol).getSymbol();
+                    SingleElementSymbol uSymbol = ((AliasSymbol)currentSymbol).getSymbol();
                     // If underlying symbol matches, drop the alias
-                    if (Symbol.getShortName(uSymbol).equalsIgnoreCase(currentAttrName)) {
-                        result = (Expression)uSymbol.clone();
+                    if (uSymbol.getShortName().equalsIgnoreCase(currentAttrName)) {
+                        result = (SingleElementSymbol)uSymbol.clone();
                     } else {
                         AliasSymbol aSym = (AliasSymbol)currentSymbol.clone();
                         aSym.setShortName(currentAttrName);
@@ -668,7 +668,7 @@ public class Binding {
 
         Object sqlSymbol = getCurrentSymbol();
         String sqlSymbolTypeStr = RuntimeTypeConverter.getRuntimeType(sqlSymbol);
-        Expression oSymbol = originalSymbol;
+        SingleElementSymbol oSymbol = originalSymbol;
 
         // -------------------------------------------------------
         // DataTypes not equal, update the SQL to do the CONVERT
@@ -707,8 +707,8 @@ public class Binding {
                         // Symbol type matches the desired type.
                         if (TransformationSqlHelper.isConvertFunction(eSymbol)) {
                             Expression cExpr = TransformationSqlHelper.getConvertedExpr(eSymbol);
-                            if (cExpr instanceof Expression) {
-                            	Expression seSymbol = (Expression)cExpr;
+                            if (cExpr instanceof SingleElementSymbol) {
+                                SingleElementSymbol seSymbol = (SingleElementSymbol)cExpr;
                                 String seSymbolTypeStr = DataTypeManager.getDataTypeName(seSymbol.getType());
                                 if (seSymbolTypeStr != null && seSymbolTypeStr.equalsIgnoreCase(currentAttrTypeStr)) {
                                     availableSymbolConversion = seSymbol;
@@ -769,7 +769,7 @@ public class Binding {
         return;
     }
 
-    private String getSQLLabelText( Expression seSymbol,
+    private String getSQLLabelText( SingleElementSymbol seSymbol,
                                     String symbolAlias,
                                     boolean isExplicit ) {
         StringBuffer sb = new StringBuffer();

@@ -33,7 +33,7 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.validation.TransformationValidator;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 
 
 /**
@@ -167,7 +167,7 @@ public class ProjectSymbolsValidationHelper {
             boolean foundMatch = false;
             EObject outputColumn = (EObject)colIter.next();
             String outputColumnName = TransformationHelper.getSqlColumnName(outputColumn);
-            Expression singleElementSymbol = (Expression)projIter.next();
+            SingleElementSymbol singleElementSymbol = (SingleElementSymbol)projIter.next();
             String symbolName = AttributeMappingHelper.getSymbolShortName(singleElementSymbol);
             if (outputColumnName.equalsIgnoreCase(symbolName)) {
                 foundMatch = true;

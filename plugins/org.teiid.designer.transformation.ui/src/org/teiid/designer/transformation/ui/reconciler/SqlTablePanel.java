@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -42,14 +41,15 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+
+
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.util.TransformationMappingHelper;
 import org.teiid.designer.transformation.util.TransformationSqlHelper;
 import org.teiid.designer.ui.common.table.TableSizeAdapter;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Label;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.Symbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 
 /**
  * BindingsTable
@@ -280,8 +280,8 @@ public class SqlTablePanel extends Composite {
                             label.setData("_TABLEITEM", item); //$NON-NLS-1$
                             Object data = item.getData();
                             String tipText = null;
-                            if (data != null && data instanceof Expression) {
-                                tipText = Symbol.getName(((Expression)data));
+                            if (data != null && data instanceof SingleElementSymbol) {
+                                tipText = ((SingleElementSymbol)data).getName();
                             }
                             if (tipText != null) {
                                 label.setText(tipText);
@@ -462,7 +462,7 @@ public class SqlTablePanel extends Composite {
         // Builder originalSymbols list
         originalSymbolNames = new ArrayList(list.size());
         for (int i = 0; i < list.size(); i++) {
-        	Expression sym = list.getSymbolAt(i);
+            SingleElementSymbol sym = list.getSymbolAt(i);
             String shortName = TransformationSqlHelper.getSingleElementSymbolShortName(sym, false);
             originalSymbolNames.add(shortName);
         }
@@ -488,7 +488,7 @@ public class SqlTablePanel extends Composite {
     /**
      * add a Symbol to the list
      */
-    public void addSymbol( Expression seSymbol ) {
+    public void addSymbol( SingleElementSymbol seSymbol ) {
         if (!sqlList.containsSymbol(seSymbol)) {
             // If symbol is in the original list, add it in the right place
             int index = getInsertIndex(seSymbol);
@@ -502,13 +502,13 @@ public class SqlTablePanel extends Composite {
      * @param string the SQL element name
      * @return the index location to insert
      */
-    private int getInsertIndex( Expression seSymbol ) {
+    private int getInsertIndex( SingleElementSymbol seSymbol ) {
         int index = sqlList.size();
-        String suppliedName = Symbol.getShortName(seSymbol);
+        String suppliedName = seSymbol.getShortName();
         int nSymbols = sqlList.size();
         for (int i = 0; i < nSymbols; i++) {
-        	Expression currentSymbol = sqlList.getSymbolAt(i);
-            String symbolName = Symbol.getShortName(currentSymbol);
+            SingleElementSymbol currentSymbol = sqlList.getSymbolAt(i);
+            String symbolName = currentSymbol.getShortName();
             if (isStringBefore(suppliedName, symbolName, originalSymbolNames)) {
                 index = i;
                 break;
@@ -583,7 +583,7 @@ public class SqlTablePanel extends Composite {
      * @param index the index to select
      */
     public void selectIndex( int index ) {
-    	Expression nextSelection = sqlList.getSymbolAt(index);
+        SingleElementSymbol nextSelection = sqlList.getSymbolAt(index);
         // If the index returned null, get the first symbol
         if (nextSelection == null) {
             nextSelection = sqlList.getFirstSymbol();
@@ -624,7 +624,7 @@ public class SqlTablePanel extends Composite {
          * @see IBindingListViewer#addSymbol(SingleElementSymbol)
          */
         @Override
-        public void addSymbol( Expression symbol ) {
+		public void addSymbol( SingleElementSymbol symbol ) {
             if (sqlList.containsSymbol(symbol)) tableViewer.add(symbol);
         }
 
@@ -632,7 +632,7 @@ public class SqlTablePanel extends Composite {
          * @see IBindingListViewer#addSymbol(SingleElementSymbol)
          */
         @Override
-        public void insertSymbol( Expression symbol,
+		public void insertSymbol( SingleElementSymbol symbol,
                                   int index ) {
             if (sqlList.containsSymbol(symbol)) tableViewer.insert(symbol, index);
         }
@@ -643,7 +643,7 @@ public class SqlTablePanel extends Composite {
         @Override
 		public void addSymbols( Object[] symbols ) {
             for (int i = 0; i < symbols.length; i++) {
-                addSymbol((Expression)symbols[i]);
+                addSymbol((SingleElementSymbol)symbols[i]);
             }
         }
 
@@ -651,7 +651,7 @@ public class SqlTablePanel extends Composite {
          * @see IBindingListViewer#removeSymbol(SingleElementSymbol)
          */
         @Override
-        public void removeSymbol( Expression symbol ) {
+		public void removeSymbol( SingleElementSymbol symbol ) {
             tableViewer.remove(symbol);
         }
 
@@ -667,7 +667,7 @@ public class SqlTablePanel extends Composite {
          * @see IBindingListViewer#updateSymbols(SingleElementSymbol)
          */
         @Override
-        public void updateSymbol( Expression symbol ) {
+		public void updateSymbol( SingleElementSymbol symbol ) {
             tableViewer.update(symbol, null);
         }
 

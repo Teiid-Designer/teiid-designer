@@ -10,7 +10,6 @@ package org.teiid.designer.transformation.util;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.id.ObjectID;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
@@ -18,7 +17,7 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;
 import org.teiid.query.sql.LanguageVisitor;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.symbol.Symbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 
 
 /**
@@ -50,13 +49,13 @@ public class UpdateLanguageObjectNameVisitor extends LanguageVisitor {
     public void visit(ElementSymbol obj) {
         String fullName = obj.getShortName();
         if (obj.getGroupSymbol() != null) {
-            fullName = obj.getGroupSymbol().getDefinition() + Symbol.SEPARATOR + fullName;
+            fullName = obj.getGroupSymbol().getDefinition() + SingleElementSymbol.SEPARATOR + fullName;
             visit(obj.getGroupSymbol());
         } 
         
         String newName = getNewName(fullName);
         if(newName != null) {
-            obj.setShortName(Symbol.getShortName(newName));
+            obj.setShortName(SingleElementSymbol.getShortName(newName));
         }
     }
     

@@ -10,7 +10,6 @@ package org.teiid.designer.transformation.ui.reconciler;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelection;
@@ -48,8 +47,7 @@ import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.reconciler.datatype.DatatypeReconcilerDialog;
 import org.teiid.designer.ui.common.table.TableSizeAdapter;
 import org.teiid.designer.ui.common.util.WidgetFactory;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.Symbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 
 /**
  * BindingsTable
@@ -412,9 +410,9 @@ public class BindingsTablePanel extends Composite {
                                             tipText = ((Binding)data).getAttributeFullName();
                                             // Second Column - get the symbol name
                                         } else if (iCol == 1) {
-                                        	Expression symbol = ((Binding)data).getCurrentSymbol();
+                                            SingleElementSymbol symbol = ((Binding)data).getCurrentSymbol();
                                             if (symbol != null) {
-                                                tipText = Symbol.getName(symbol);
+                                                tipText = symbol.getName();
                                             }
                                         }
                                     }
