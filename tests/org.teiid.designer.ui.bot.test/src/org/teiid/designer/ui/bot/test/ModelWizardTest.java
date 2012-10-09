@@ -3,7 +3,6 @@ package org.teiid.designer.ui.bot.test;
 import org.jboss.tools.ui.bot.ext.config.Annotations.Require;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.teiid.designer.ui.bot.ext.teiid.editor.ModelEditor;
 import org.teiid.designer.ui.bot.ext.teiid.wizard.CreateMetadataModel;
 import org.teiid.designer.ui.bot.test.suite.TeiidDesignerTestCase;
 
@@ -51,7 +50,7 @@ public class ModelWizardTest extends TeiidDesignerTestCase{
 		assertTrue(projectExplorer.existsResource(PROJECT_NAME, 
 				RELATIONAL_SOURCE_MODEL_NAME + ".xmi"));
 
-		assertTrue(ModelEditor.getInstance(RELATIONAL_SOURCE_MODEL_NAME + ".xmi").isActive());
+		assertTrue(modelEditor(RELATIONAL_SOURCE_MODEL_NAME + ".xmi").isActive());
 	}
 
 	@Test
@@ -66,7 +65,7 @@ public class ModelWizardTest extends TeiidDesignerTestCase{
 		assertTrue(projectExplorer.existsResource(PROJECT_NAME, 
 				RELATIONAL_VIEW_MODEL_NAME + ".xmi"));
 
-		assertTrue(ModelEditor.getInstance(RELATIONAL_SOURCE_MODEL_NAME + ".xmi").isActive());
+		assertTrue(modelEditor(RELATIONAL_SOURCE_MODEL_NAME + ".xmi").isActive());
 	}
 
 	@Test
@@ -81,7 +80,7 @@ public class ModelWizardTest extends TeiidDesignerTestCase{
 		assertTrue(projectExplorer.existsResource(PROJECT_NAME, 
 				XML_VIEW_MODEL_NAME + ".xmi"));
 
-		assertTrue(ModelEditor.getInstance(XML_VIEW_MODEL_NAME + ".xmi").isActive());
+		assertTrue(modelEditor(XML_VIEW_MODEL_NAME + ".xmi").isActive());
 	}
 
 	@Test
@@ -96,7 +95,7 @@ public class ModelWizardTest extends TeiidDesignerTestCase{
 		assertTrue(projectExplorer.existsResource(PROJECT_NAME, 
 				XSD_DATATYPE_MODEL_NAME + ".xsd"));
 
-		assertTrue(ModelEditor.getInstance(XSD_DATATYPE_MODEL_NAME + ".xsd").isActive());
+		assertTrue(modelEditor(XSD_DATATYPE_MODEL_NAME + ".xsd").isActive());
 	}
 
 	@Test
@@ -112,7 +111,7 @@ public class ModelWizardTest extends TeiidDesignerTestCase{
 		assertTrue(projectExplorer.existsResource(PROJECT_NAME, 
 				WEBSERVICE_MODEL_NAME + ".xmi"));
 
-		assertTrue(ModelEditor.getInstance(WEBSERVICE_MODEL_NAME + ".xmi").isActive());
+		assertTrue(modelEditor(WEBSERVICE_MODEL_NAME + ".xmi").isActive());
 	}
 
 	@Test
@@ -127,7 +126,7 @@ public class ModelWizardTest extends TeiidDesignerTestCase{
 		assertTrue(projectExplorer.existsResource(PROJECT_NAME, 
 				MODELEXT_MODEL_NAME + ".xmi"));
 
-		assertTrue(ModelEditor.getInstance(MODELEXT_MODEL_NAME + ".xmi").isActive());
+		assertTrue(modelEditor(MODELEXT_MODEL_NAME + ".xmi").isActive());
 	}
 
 
@@ -143,6 +142,6 @@ public class ModelWizardTest extends TeiidDesignerTestCase{
 		assertTrue(projectExplorer.existsResource(PROJECT_NAME, 
 				FUNCTION_MODEL_NAME + ".xmi"));
 
-		assertTrue(ModelEditor.getInstance(FUNCTION_MODEL_NAME + ".xmi").isActive());
+		assertTrue(modelEditor(FUNCTION_MODEL_NAME + ".xmi").isActive());
 	}
 }
