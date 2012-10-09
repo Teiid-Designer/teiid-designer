@@ -171,7 +171,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTestCase {
 		modelView.addTransformationSource(PROJECT_NAME, ORACLE_MODEL_NAME, "SUPPLIER");
 		modelView.addTransformationSource(PROJECT_NAME, SQLSERVER_MODEL_NAME, "SUPPLIER_PARTS");
 
-		ModelEditor editor = ModelEditor.getInstance(VIRTUAL_MODEL_NAME);
+		ModelEditor editor = modelEditor(VIRTUAL_MODEL_NAME);
 		editor.show();
 		editor.showTransformation();
 
@@ -324,7 +324,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTestCase {
 		procedure.addParameter("qtyIn", "short : xs:int");
 		modelView.openTransformationDiagram(PROJECT_NAME, VIRTUAL_MODEL_NAME, PROCEDURE_NAME);
 		
-		ModelEditor editor = ModelEditor.getInstance(VIRTUAL_MODEL_NAME);
+		ModelEditor editor = modelEditor(VIRTUAL_MODEL_NAME);
 		editor.show();
 		editor.showTransformation();
 		editor.setTransformationProcedureBody("SELECT * FROM PartsVirtual.OnHand;");
@@ -465,7 +465,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTestCase {
 	
 	private static void closeModelEditor(String name) {
 		try {
-			ModelEditor editor = ModelEditor.getInstance(name);
+			ModelEditor editor = modelEditor(name);
 			editor.close();
 		} catch (WidgetNotFoundException e){
 			

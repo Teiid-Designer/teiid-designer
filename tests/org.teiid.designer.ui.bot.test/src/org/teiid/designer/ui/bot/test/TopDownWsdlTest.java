@@ -141,7 +141,7 @@ public class TopDownWsdlTest extends TeiidDesignerTestCase {
 		modelExplorer.open(PROJECT_NAME, WS_NAME + "Responses.xmi",
 				"Service1Soap_CheckOrder_OCout", "Mapping Diagram");
 
-		ModelEditor modelEditor = ModelEditor.getInstance(WS_NAME + "Responses.xmi");
+		ModelEditor modelEditor = modelEditor(WS_NAME + "Responses.xmi");
 		modelEditor.show();
 		modelEditor.showMappingTransformation("CONTAINER");
 
@@ -169,7 +169,7 @@ public class TopDownWsdlTest extends TeiidDesignerTestCase {
 		modelExplorer.open(PROJECT_NAME, WS_NAME + ".xmi", "Service1Soap", "CheckOrder",
 				"Transformation Diagram");
 
-		modelEditor = ModelEditor.getInstance(WS_NAME + ".xmi");
+		modelEditor = modelEditor(WS_NAME + ".xmi");
 		modelEditor.show();
 		modelEditor.showTransformation();
 		modelEditor.setTransformation(procedureSql + selectSql + "\nEND");
