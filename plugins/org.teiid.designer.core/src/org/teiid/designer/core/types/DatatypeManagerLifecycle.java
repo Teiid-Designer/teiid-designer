@@ -8,7 +8,7 @@
 package org.teiid.designer.core.types;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 
 
 /** 

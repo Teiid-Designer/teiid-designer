@@ -13,8 +13,8 @@ import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.teiid.core.PluginUtil;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.PluginUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.modelgenerator.xml.XmlImporterUiPlugin;
 
 

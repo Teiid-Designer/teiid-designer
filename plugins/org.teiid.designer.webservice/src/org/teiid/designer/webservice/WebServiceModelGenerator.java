@@ -10,7 +10,7 @@ package org.teiid.designer.webservice;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.compare.ModelGenerator;
 import org.teiid.designer.compare.ModelProducer;
 import org.teiid.designer.compare.generator.BasicModelGenerator;

@@ -9,7 +9,7 @@ package org.teiid.designer.metamodels.builder.util;
 
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.teiid.core.PluginUtil;
+import org.teiid.core.designer.PluginUtil;
 import org.teiid.designer.metamodels.builder.MetamodelBuilderPlugin;
 
 

@@ -12,8 +12,8 @@ import java.util.ResourceBundle;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-import org.teiid.core.PluginUtil;
-import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.designer.PluginUtil;
+import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.designer.diagram.ui.DiagramUiConstants;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 

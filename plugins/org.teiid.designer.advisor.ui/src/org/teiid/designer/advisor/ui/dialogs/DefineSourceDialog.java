@@ -22,9 +22,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.core.event.IChangeListener;
-import org.teiid.core.event.IChangeNotifier;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.event.IChangeListener;
+import org.teiid.core.designer.event.IChangeNotifier;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.advisor.ui.actions.AdvisorActionFactory;
@@ -178,7 +178,7 @@ public class DefineSourceDialog  extends TitleAreaDialog implements IChangeListe
 	}
 
 	/**
-	 * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
+	 * @see org.teiid.core.designer.event.IChangeListener#stateChanged(org.teiid.core.designer.event.IChangeNotifier)
 	 * @since 5.5.3
 	 */
 	@Override

@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.modelgenerator.xml;
 
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 
 /**
  * The internal UI constants.

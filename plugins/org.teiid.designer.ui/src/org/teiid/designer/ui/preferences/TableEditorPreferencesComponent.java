@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.preferences.IEditorPreferencesComponent;
 import org.teiid.designer.ui.common.preferences.IEditorPreferencesValidationListener;

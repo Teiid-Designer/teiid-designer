@@ -34,7 +34,7 @@ import org.eclipse.xsd.impl.XSDAttributeUseImpl;
 import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
 import org.eclipse.xsd.impl.XSDParticleImpl;
 import org.eclipse.xsd.impl.XSDSimpleTypeDefinitionImpl;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.types.DatatypeConstants.RuntimeTypeNames;
 import org.teiid.designer.modelgenerator.wsdl.ModelGeneratorWsdlPlugin;
 import org.teiid.designer.modelgenerator.wsdl.model.Model;

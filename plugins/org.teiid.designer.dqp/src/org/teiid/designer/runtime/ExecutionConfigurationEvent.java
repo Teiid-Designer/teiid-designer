@@ -10,7 +10,7 @@ package org.teiid.designer.runtime;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 
 import org.teiid.adminapi.VDB;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 
 

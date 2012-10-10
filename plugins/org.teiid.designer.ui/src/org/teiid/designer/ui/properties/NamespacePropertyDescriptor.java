@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.xsd.XSDSchema;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.ui.UiConstants;
 
 

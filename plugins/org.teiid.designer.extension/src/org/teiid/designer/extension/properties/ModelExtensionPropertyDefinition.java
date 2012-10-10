@@ -16,9 +16,9 @@ import java.sql.Timestamp;
 import java.util.Set;
 
 import org.eclipse.osgi.util.NLS;
-import org.teiid.core.properties.PropertyDefinition;
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.properties.PropertyDefinition;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.extension.Messages;
 
 

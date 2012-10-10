@@ -17,9 +17,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.core.event.IChangeListener;
-import org.teiid.core.event.IChangeNotifier;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.event.IChangeListener;
+import org.teiid.core.designer.event.IChangeNotifier;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
@@ -107,7 +107,7 @@ public class ParameterInputDialog extends TitleAreaDialog implements
     }
 
     /**
-     * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
+     * @see org.teiid.core.designer.event.IChangeListener#stateChanged(org.teiid.core.designer.event.IChangeNotifier)
      * @since 5.5.3
      */
     @Override

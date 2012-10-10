@@ -11,7 +11,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.search.runtime.SearchRuntimeAdapter;
 import org.teiid.designer.core.util.ModelVisitor;
 

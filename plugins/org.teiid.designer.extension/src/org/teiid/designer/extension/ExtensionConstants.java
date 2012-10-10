@@ -10,8 +10,8 @@ package org.teiid.designer.extension;
 import java.util.Comparator;
 import java.util.Locale;
 
-import org.teiid.core.PluginUtil;
-import org.teiid.core.util.LoggingUtil;
+import org.teiid.core.designer.PluginUtil;
+import org.teiid.core.designer.util.LoggingUtil;
 
 
 /**

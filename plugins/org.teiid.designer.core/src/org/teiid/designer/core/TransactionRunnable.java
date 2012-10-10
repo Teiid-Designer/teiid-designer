@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.core;
 
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.transaction.UnitOfWork;
 
 /**<p>

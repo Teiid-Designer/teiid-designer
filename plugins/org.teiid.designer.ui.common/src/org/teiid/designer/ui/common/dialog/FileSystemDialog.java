@@ -11,7 +11,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.ui.common.UiConstants;
 import org.teiid.designer.ui.common.viewsupport.FileSystemContentProvider;
 import org.teiid.designer.ui.common.viewsupport.FileSystemLabelProvider;

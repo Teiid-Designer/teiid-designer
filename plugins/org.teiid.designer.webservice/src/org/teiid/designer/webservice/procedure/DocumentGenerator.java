@@ -16,7 +16,7 @@ import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDConstraint;
 import org.eclipse.xsd.XSDFeature;
 import org.eclipse.xsd.XSDModelGroup;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 
 /**
  * @since 8.0

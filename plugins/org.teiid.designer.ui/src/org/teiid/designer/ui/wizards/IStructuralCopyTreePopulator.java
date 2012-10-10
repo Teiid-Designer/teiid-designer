@@ -10,7 +10,7 @@ package org.teiid.designer.ui.wizards;
 import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.ui.common.widget.InheritanceCheckboxTreeViewer;
 

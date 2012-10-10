@@ -8,7 +8,7 @@
 package org.teiid.designer.metamodels.relational.aspects.uml;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 import org.teiid.designer.metamodels.relational.RelationalPlugin;
 

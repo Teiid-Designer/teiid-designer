@@ -9,9 +9,9 @@ package org.teiid.designer.ui.common;
 
 import java.util.ResourceBundle;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.teiid.core.PluginUtil;
-import org.teiid.core.util.I18nUtil;
-import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.designer.PluginUtil;
+import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.PluginUtilImpl;
 
 
 /**

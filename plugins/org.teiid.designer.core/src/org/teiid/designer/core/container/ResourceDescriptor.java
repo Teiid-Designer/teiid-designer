@@ -9,7 +9,7 @@ package org.teiid.designer.core.container;
 
 import java.util.List;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 
 /**
  * ResourceDescriptor

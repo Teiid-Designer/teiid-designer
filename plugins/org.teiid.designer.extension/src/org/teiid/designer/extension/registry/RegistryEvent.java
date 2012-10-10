@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.extension.registry;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 
 

@@ -8,8 +8,8 @@
 package org.teiid.designer.ui.viewsupport;
 
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.ModelerCoreException;
 import org.teiid.designer.core.metamodel.aspect.MetamodelAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect;

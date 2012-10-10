@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.teiid.core.TeiidRuntimeException;
-import org.teiid.designer.core.ModelerCoreRuntimeException;
+import org.teiid.core.designer.ModelerCoreRuntimeException;
 import org.teiid.designer.metamodels.core.CoreMetamodelPlugin;
 import org.teiid.designer.metamodels.core.CorePackage;
 import org.teiid.designer.metamodels.core.ModelAnnotation;

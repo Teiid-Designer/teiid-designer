@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.core.PluginUtil;
+import org.teiid.core.designer.PluginUtil;
 import org.teiid.designer.modelgenerator.xml.IUiConstants;
 import org.teiid.designer.modelgenerator.xml.XmlImporterUiPlugin;
 import org.teiid.designer.modelgenerator.xml.model.UserSettings;

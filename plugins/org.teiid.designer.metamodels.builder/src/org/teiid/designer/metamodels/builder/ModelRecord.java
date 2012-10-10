@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.metamodels.builder;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 
 /**

@@ -8,9 +8,9 @@
 
 package org.teiid.designer.transformation.util;
 
-import org.teiid.core.id.InvalidIDException;
-import org.teiid.core.id.ObjectID;
-import org.teiid.core.id.UUID;
+import org.teiid.core.designer.id.InvalidIDException;
+import org.teiid.core.designer.id.ObjectID;
+import org.teiid.core.designer.id.UUID;
 import org.teiid.designer.core.types.DatatypeConstants;
 
 

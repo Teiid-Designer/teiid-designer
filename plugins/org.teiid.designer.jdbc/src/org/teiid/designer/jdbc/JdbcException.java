@@ -8,7 +8,7 @@
 package org.teiid.designer.jdbc;
 
 import org.eclipse.core.runtime.IStatus;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 
 
 /**

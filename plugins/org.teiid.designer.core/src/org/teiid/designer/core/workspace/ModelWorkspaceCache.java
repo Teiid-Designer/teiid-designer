@@ -10,7 +10,7 @@ package org.teiid.designer.core.workspace;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.OverflowingLRUCache;
 
 

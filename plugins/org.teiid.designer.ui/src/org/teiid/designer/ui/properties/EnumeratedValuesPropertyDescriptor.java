@@ -24,7 +24,7 @@ import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.xsd.XSDEnumerationFacet;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.metamodel.aspect.MetamodelAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect;
 import org.teiid.designer.ui.UiConstants;

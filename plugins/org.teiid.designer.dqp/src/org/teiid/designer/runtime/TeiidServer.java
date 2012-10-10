@@ -21,7 +21,7 @@ import org.eclipse.wst.server.core.ServerEvent;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.AdminFactory;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.jdbc.TeiidDriver;

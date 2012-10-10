@@ -3,7 +3,7 @@ package org.teiid.designer.runtime.connection;
 import java.util.Properties;
 import java.util.Set;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 
 

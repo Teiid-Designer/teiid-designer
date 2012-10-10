@@ -17,7 +17,7 @@ import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.INullSelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
-import org.teiid.core.PluginUtil;
+import org.teiid.core.designer.PluginUtil;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
 import org.teiid.designer.ui.common.InternalUiConstants.Actions;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;

@@ -9,7 +9,7 @@ package org.teiid.designer.jdbc.metadata;
 
 import java.io.PrintStream;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.jdbc.metadata.JdbcNode;
 import org.teiid.designer.jdbc.metadata.JdbcNodeVisitor;
 

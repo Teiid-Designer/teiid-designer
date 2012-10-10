@@ -9,7 +9,7 @@ package org.teiid.designer.core.util;
 
 import java.util.Map;
 
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 
 
 /** This interface provides plugins the capability to contribute to the creation of new objects

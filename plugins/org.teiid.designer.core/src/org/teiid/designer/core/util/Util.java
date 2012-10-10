@@ -12,7 +12,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.core.plugin.PluginUtilities;
+import org.teiid.core.designer.plugin.PluginUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.resource.xmi.MtkXmiResourceImpl;
 import org.teiid.designer.core.workspace.ModelStatusImpl;

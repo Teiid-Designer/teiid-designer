@@ -17,10 +17,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
-import org.teiid.core.PluginUtil;
-import org.teiid.core.event.EventObjectListener;
-import org.teiid.core.event.EventSourceException;
-import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.designer.PluginUtil;
+import org.teiid.core.designer.event.EventObjectListener;
+import org.teiid.core.designer.event.EventSourceException;
+import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.udf.UdfManager;
@@ -92,7 +92,7 @@ public final class UdfUiPlugin extends AbstractUiPlugin implements EventObjectLi
 	}
 
 	/**
-     * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
+     * @see org.teiid.core.designer.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
     @Override

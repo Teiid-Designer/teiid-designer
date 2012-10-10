@@ -9,7 +9,7 @@ package org.teiid.designer.xsd.aspects.uml;
 
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.xsd.XSDPackage;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.metamodel.aspect.MetamodelAspect;
 import org.teiid.designer.core.metamodel.aspect.MetamodelAspectFactory;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;

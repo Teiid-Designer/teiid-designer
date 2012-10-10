@@ -20,7 +20,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.ui.common.preferences.IEditorPreferencesComponent;
 import org.teiid.designer.ui.common.preferences.IEditorPreferencesValidationListener;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;

@@ -17,7 +17,7 @@ import java.util.Map;
 
 import org.eclipse.xsd.XSDSchema;
 import org.jdom.Namespace;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.modelgenerator.wsdl.model.Model;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
 import org.teiid.designer.modelgenerator.wsdl.model.Port;

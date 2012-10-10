@@ -39,8 +39,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.transformation.ui.builder.ExpressionBuilder;
 import org.teiid.designer.transformation.ui.builder.actions.AddSetCriteriaItemAction;
 import org.teiid.designer.transformation.ui.builder.actions.DeleteSetCriteriaItemAction;

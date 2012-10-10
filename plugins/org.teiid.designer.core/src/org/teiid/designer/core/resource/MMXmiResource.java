@@ -11,7 +11,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.core.id.ObjectID;
+import org.teiid.core.designer.id.ObjectID;
 import org.teiid.designer.metamodels.core.Annotation;
 import org.teiid.designer.metamodels.core.AnnotationContainer;
 import org.teiid.designer.metamodels.core.ModelAnnotation;

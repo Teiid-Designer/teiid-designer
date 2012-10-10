@@ -15,7 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.association.AbstractAssociationDescriptor;
 import org.teiid.designer.core.association.AssociationDescriptor;
 import org.teiid.designer.metamodels.relational.BaseTable;

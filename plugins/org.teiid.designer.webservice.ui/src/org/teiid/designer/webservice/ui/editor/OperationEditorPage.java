@@ -405,7 +405,7 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
     /**
      * Does nothing.
      * 
-     * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
+     * @see org.teiid.core.designer.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 5.0.1
      */
     @Override

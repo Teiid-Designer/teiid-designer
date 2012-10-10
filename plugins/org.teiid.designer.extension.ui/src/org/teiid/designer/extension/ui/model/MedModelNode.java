@@ -9,8 +9,8 @@ package org.teiid.designer.extension.ui.model;
 
 import java.util.Collection;
 
-import org.teiid.core.HashCodeUtil;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.HashCodeUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 

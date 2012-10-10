@@ -18,8 +18,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.osgi.util.NLS;
-import org.teiid.core.util.ArrayUtil;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.ArrayUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition.Utils;

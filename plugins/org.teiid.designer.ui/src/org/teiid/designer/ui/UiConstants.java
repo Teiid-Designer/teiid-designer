@@ -10,8 +10,8 @@ package org.teiid.designer.ui;
 import java.util.ResourceBundle;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.IPageLayout;
-import org.teiid.core.PluginUtil;
-import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.designer.PluginUtil;
+import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.designer.ui.actions.IModelerActionConstants;
 
 

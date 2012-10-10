@@ -14,8 +14,8 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.teiid.core.UserCancelledException;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.UserCancelledException;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.compare.ModelGenerator;
 import org.teiid.designer.core.compare.EObjectMatcherFactory;
 

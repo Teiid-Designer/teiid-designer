@@ -10,7 +10,7 @@ package org.teiid.designer.transformation.ui.wizards.file;
 import java.io.File;
 
 import org.eclipse.core.runtime.IStatus;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 
 /**

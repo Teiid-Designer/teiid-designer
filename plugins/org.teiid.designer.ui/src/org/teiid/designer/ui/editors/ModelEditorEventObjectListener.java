@@ -9,7 +9,7 @@ package org.teiid.designer.ui.editors;
 
 import java.util.EventObject;
 import org.eclipse.swt.widgets.Display;
-import org.teiid.core.event.EventObjectListener;
+import org.teiid.core.designer.event.EventObjectListener;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.ui.event.ModelResourceEvent;
 
@@ -30,7 +30,7 @@ public class ModelEditorEventObjectListener implements EventObjectListener {
     }
 
     /**
-     * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
+     * @see org.teiid.core.designer.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
     @Override

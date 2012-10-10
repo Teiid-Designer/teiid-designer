@@ -14,7 +14,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.ui.builder.model.CompositeLanguageObjectEditorModel;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModel;

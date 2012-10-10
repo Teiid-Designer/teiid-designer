@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.teiid.core.id.LongIDFactory;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.id.LongIDFactory;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 
 /**

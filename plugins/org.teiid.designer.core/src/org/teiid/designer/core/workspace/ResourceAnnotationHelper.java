@@ -5,7 +5,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EMap;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.core.util.ModelResourceContainerFactory;

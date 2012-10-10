@@ -31,7 +31,7 @@ import org.eclipse.xsd.XSDTotalDigitsFacet;
 import org.eclipse.xsd.XSDWhiteSpaceFacet;
 import org.eclipse.xsd.impl.XSDFacetImpl;
 import org.teiid.core.TeiidRuntimeException;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.AbstractMetamodelAspect;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;

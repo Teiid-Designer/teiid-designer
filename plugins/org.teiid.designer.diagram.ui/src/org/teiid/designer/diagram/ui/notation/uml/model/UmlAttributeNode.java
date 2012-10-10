@@ -8,7 +8,7 @@
 package org.teiid.designer.diagram.ui.notation.uml.model;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.metamodel.aspect.uml.UmlProperty;
 import org.teiid.designer.diagram.ui.util.DiagramEntityAdapter;
 import org.teiid.designer.ui.viewsupport.DatatypeUtilities;

@@ -17,7 +17,7 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDFeature;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.metamodels.xml.BuildStatus;
 import org.teiid.designer.metamodels.xml.ProcessingInstruction;
 import org.teiid.designer.metamodels.xml.XmlAll;

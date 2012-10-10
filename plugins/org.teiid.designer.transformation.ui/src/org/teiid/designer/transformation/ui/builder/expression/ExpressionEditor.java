@@ -10,7 +10,7 @@ package org.teiid.designer.transformation.ui.builder.expression;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.swt.widgets.Composite;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.transformation.ui.builder.AbstractCompositeExpressionEditor;
 import org.teiid.designer.transformation.ui.builder.ILanguageObjectEditor;
 import org.teiid.designer.ui.common.util.WidgetUtil;

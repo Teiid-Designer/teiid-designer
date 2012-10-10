@@ -38,11 +38,11 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.SAXXMIHandler;
 import org.eclipse.xsd.XSDPackage;
 import org.xml.sax.Attributes;
-import org.teiid.core.id.IDGenerator;
-import org.teiid.core.id.InvalidIDException;
-import org.teiid.core.id.ObjectID;
+import org.teiid.core.designer.id.IDGenerator;
+import org.teiid.core.designer.id.InvalidIDException;
+import org.teiid.core.designer.id.ObjectID;
+import org.teiid.core.designer.util.CoreArgCheck;
 
-import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.ReflectionHelper;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.DateUtil;

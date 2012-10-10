@@ -17,8 +17,8 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.teiid.core.selection.TreeSelection;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.selection.TreeSelection;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 
 

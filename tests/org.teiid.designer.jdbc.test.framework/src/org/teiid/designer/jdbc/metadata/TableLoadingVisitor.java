@@ -9,7 +9,7 @@ package org.teiid.designer.jdbc.metadata;
 
 import java.io.PrintStream;
 
-import org.teiid.core.util.Stopwatch;
+import org.teiid.core.designer.util.Stopwatch;
 import org.teiid.designer.jdbc.JdbcException;
 import org.teiid.designer.jdbc.data.Request;
 import org.teiid.designer.jdbc.data.Results;

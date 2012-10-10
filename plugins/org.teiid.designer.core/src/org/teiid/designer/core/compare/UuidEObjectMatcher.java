@@ -18,9 +18,9 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingFactory;
-import org.teiid.core.id.IDGenerator;
-import org.teiid.core.id.InvalidIDException;
-import org.teiid.core.id.ObjectID;
+import org.teiid.core.designer.id.IDGenerator;
+import org.teiid.core.designer.id.InvalidIDException;
+import org.teiid.core.designer.id.ObjectID;
 import org.teiid.designer.core.ModelerCore;
 
 /**

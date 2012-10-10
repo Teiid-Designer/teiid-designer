@@ -8,8 +8,8 @@
 package org.teiid.designer.metamodels.xml.aspects.validation;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ValidationDescriptor;
 import org.teiid.designer.core.ValidationPreferences;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;

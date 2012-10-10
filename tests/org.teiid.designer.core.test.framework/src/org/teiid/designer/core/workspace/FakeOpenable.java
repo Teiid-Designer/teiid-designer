@@ -8,7 +8,7 @@
 package org.teiid.designer.core.workspace;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 
 /**

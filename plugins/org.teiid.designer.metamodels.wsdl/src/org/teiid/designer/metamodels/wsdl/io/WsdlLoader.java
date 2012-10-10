@@ -32,7 +32,7 @@ import org.jdom.Namespace;
 import org.jdom.adapters.DOMAdapter;
 import org.jdom.adapters.XercesDOMAdapter;
 import org.jdom.input.DOMBuilder;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.common.xml.JdomHelper;
 import org.teiid.designer.metamodels.wsdl.Attribute;
 import org.teiid.designer.metamodels.wsdl.Binding;

@@ -26,10 +26,10 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.osgi.framework.BundleContext;
 
-import org.teiid.core.PluginUtil;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.PluginUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.core.util.FileUtils;
-import org.teiid.core.util.PluginUtilImpl;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metamodels.xsd.XsdResourceFactory;

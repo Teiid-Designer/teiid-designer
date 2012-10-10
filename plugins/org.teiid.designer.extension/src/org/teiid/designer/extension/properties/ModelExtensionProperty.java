@@ -13,10 +13,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.teiid.core.properties.Property;
-import org.teiid.core.properties.PropertyDefinition;
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.properties.Property;
+import org.teiid.core.designer.properties.PropertyDefinition;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 
 
 /**
@@ -114,7 +114,7 @@ public class ModelExtensionProperty implements Property {
      * <p>
      * This returns a {@link ModelExtensionPropertyDefinition}.
      * 
-     * @see org.teiid.core.properties.Property#getPropertyDefinition()
+     * @see org.teiid.core.designer.properties.Property#getPropertyDefinition()
      */
     @Override
     public PropertyDefinition getPropertyDefinition() {
@@ -124,7 +124,7 @@ public class ModelExtensionProperty implements Property {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.core.properties.Property#getValue()
+     * @see org.teiid.core.designer.properties.Property#getValue()
      */
     @Override
     public String getValue() {

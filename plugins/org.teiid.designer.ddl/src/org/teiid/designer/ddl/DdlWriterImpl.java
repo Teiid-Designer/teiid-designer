@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.jdom.Document;
 import org.jdom.output.XMLOutputter;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.common.xml.JdomHelper;
 import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;

@@ -18,7 +18,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.teiid.core.PluginUtil;
+import org.teiid.core.designer.PluginUtil;
 import org.teiid.designer.compare.DifferenceReport;
 import org.teiid.designer.compare.PropertyDifference;
 import org.teiid.designer.compare.ui.tree.DifferenceReportsPanel;
