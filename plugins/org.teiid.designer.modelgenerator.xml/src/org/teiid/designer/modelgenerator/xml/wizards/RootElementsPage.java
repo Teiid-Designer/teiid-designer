@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.teiid.core.PluginUtil;
+import org.teiid.core.designer.PluginUtil;
 import org.teiid.designer.modelgenerator.xml.IUiConstants;
 import org.teiid.designer.modelgenerator.xml.XmlImporterUiPlugin;
 import org.teiid.designer.schema.tools.model.schema.RootElement;

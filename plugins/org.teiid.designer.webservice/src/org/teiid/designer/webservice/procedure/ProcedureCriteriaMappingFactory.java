@@ -9,8 +9,8 @@ package org.teiid.designer.webservice.procedure;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;

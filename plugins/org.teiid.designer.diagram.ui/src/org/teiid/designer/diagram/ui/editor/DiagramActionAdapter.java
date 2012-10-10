@@ -21,7 +21,7 @@ import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.ISelectionListener;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.diagram.ui.DiagramUiConstants;
 import org.teiid.designer.diagram.ui.DiagramUiPlugin;
 import org.teiid.designer.diagram.ui.actions.DiagramActionService;

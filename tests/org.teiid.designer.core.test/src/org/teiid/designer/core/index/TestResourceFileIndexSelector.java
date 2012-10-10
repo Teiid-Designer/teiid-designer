@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.core.ModelerCore;
 

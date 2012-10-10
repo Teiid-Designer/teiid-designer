@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
-import org.teiid.core.plugin.PluginUtilities;
+import org.teiid.core.designer.plugin.PluginUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants;

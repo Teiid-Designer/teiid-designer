@@ -11,7 +11,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 /**
  * The <code>GridPanel</code> is a panel that only uses {@link org.eclipse.swt.layout.GridLayout}. It is initially set to have no

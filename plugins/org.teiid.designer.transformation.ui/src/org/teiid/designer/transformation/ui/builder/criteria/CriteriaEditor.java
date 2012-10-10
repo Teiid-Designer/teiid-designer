@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.transformation.ui.builder.AbstractCompositeLanguageObjectEditor;
 import org.teiid.designer.transformation.ui.builder.ILanguageObjectEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;

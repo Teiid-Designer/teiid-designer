@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.ui.UiConstants;

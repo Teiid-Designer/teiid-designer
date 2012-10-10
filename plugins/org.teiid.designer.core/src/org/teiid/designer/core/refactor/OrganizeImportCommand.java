@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.core.resource.EmfResource;

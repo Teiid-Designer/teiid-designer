@@ -26,7 +26,7 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.modelgenerator.salesforce.SalesforceImportWizardManager;
 import org.teiid.designer.modelgenerator.salesforce.ui.Activator;

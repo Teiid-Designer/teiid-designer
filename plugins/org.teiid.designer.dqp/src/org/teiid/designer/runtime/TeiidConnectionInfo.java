@@ -12,7 +12,7 @@ import static org.teiid.designer.runtime.DqpPlugin.Util;
 import java.net.MalformedURLException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.util.HashCodeUtil;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.datatools.connectivity.security.ISecureStorageProvider;

@@ -11,7 +11,7 @@ import java.util.EventObject;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.core.event.EventObjectListener;
+import org.teiid.core.designer.event.EventObjectListener;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.diagram.ui.util.DiagramEntityManager;
 import org.teiid.designer.metamodels.diagram.Diagram;

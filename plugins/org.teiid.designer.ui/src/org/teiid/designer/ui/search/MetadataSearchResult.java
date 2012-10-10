@@ -18,7 +18,7 @@ import org.eclipse.search.ui.text.Match;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.UiConstants;
 

@@ -9,7 +9,7 @@ package org.teiid.designer.compare.selector;
 
 import java.util.List;
 import org.eclipse.emf.common.util.URI;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelAnnotation;

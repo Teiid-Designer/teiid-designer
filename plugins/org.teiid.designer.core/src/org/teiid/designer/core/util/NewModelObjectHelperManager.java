@@ -17,9 +17,9 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.ModelerCoreException;
 
 
 

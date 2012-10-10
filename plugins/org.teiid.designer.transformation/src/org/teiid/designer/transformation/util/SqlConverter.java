@@ -8,8 +8,8 @@
 package org.teiid.designer.transformation.util;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.query.QueryValidationResult;
 import org.teiid.designer.core.validation.ValidationContext;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;

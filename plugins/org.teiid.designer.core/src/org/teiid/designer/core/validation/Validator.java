@@ -12,7 +12,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.util.ModelObjectCollector;

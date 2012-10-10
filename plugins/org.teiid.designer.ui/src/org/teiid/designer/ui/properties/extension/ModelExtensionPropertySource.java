@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.ModelExtensionAssistantAggregator;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;

@@ -18,10 +18,10 @@ import org.eclipse.core.runtime.Plugin;
 import org.jdom.Document;
 import org.jdom.output.XMLOutputter;
 import org.osgi.framework.BundleContext;
-import org.teiid.core.PluginUtil;
 import org.teiid.core.TeiidException;
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.designer.PluginUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.PluginUtilImpl;
 
 /**
  * CoreXsltPlugin

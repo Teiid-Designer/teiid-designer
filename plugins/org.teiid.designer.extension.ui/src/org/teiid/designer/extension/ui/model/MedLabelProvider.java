@@ -12,7 +12,7 @@ import java.util.Collection;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;

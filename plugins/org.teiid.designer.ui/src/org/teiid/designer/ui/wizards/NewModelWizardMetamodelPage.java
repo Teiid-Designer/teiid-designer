@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.workspace.ModelUtil;

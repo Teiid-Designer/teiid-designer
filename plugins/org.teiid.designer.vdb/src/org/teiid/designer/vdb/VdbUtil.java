@@ -23,9 +23,9 @@ import javax.xml.validation.SchemaFactory;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
-import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.vdb.Vdb.Xml;

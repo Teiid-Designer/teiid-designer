@@ -10,7 +10,7 @@ package org.teiid.designer.modelgenerator.xml.modelextension;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EClassifier;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.metamodels.core.extension.ExtensionFactory;
 import org.teiid.designer.metamodels.core.extension.XAttribute;
 import org.teiid.designer.metamodels.core.extension.XClass;

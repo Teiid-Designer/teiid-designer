@@ -49,7 +49,7 @@ import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;

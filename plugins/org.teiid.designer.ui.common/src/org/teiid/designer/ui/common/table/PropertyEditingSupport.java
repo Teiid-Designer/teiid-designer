@@ -13,7 +13,7 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.core.properties.PropertyDefinition;
+import org.teiid.core.designer.properties.PropertyDefinition;
 
 /**
  * An editing support implementation for a {@link PropertyDefinition}.

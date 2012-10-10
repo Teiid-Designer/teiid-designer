@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.search.ui.text.Match;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.search.runtime.ResourceObjectRecord;
 import org.teiid.designer.core.search.runtime.SearchRecord;

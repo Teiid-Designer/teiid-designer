@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.index.CompositeIndexSelector;
 import org.teiid.designer.core.index.IndexSelector;
 import org.teiid.designer.core.workspace.ModelResource;

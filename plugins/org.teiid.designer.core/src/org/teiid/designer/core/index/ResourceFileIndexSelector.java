@@ -22,10 +22,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.util.FileUtils;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.ModelerCoreException;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.index.AbstractIndexSelector;
 import org.teiid.designer.core.index.Index;

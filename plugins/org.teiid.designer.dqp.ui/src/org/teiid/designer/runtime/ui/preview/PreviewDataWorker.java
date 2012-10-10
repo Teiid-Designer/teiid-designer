@@ -57,7 +57,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.teiid.adminapi.Admin;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.datatools.connectivity.ui.TeiidAdHocScriptRunnable;
 import org.teiid.datatools.views.ExecutionPlanView;

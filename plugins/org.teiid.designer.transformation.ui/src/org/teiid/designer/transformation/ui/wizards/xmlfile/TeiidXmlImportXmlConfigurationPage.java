@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;

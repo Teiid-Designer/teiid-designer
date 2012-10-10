@@ -17,9 +17,9 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.notify.Notification;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.ModelerCoreRuntimeException;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.ModelerCoreRuntimeException;
 
 
 /**

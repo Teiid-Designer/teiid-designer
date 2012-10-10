@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.query.QueryValidationResult;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.query.QueryValidator.ElementSymbolOptimization;

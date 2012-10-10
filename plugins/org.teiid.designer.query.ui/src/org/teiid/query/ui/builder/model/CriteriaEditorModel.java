@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.util.AssertionUtil;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.symbol.Expression;

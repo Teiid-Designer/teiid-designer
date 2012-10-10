@@ -31,7 +31,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.teiid.core.designer.EclipseMock;
-import org.teiid.core.exception.EmptyArgumentException;
+import org.teiid.core.designer.exception.EmptyArgumentException;
 import org.teiid.core.util.SmartTestDesignerSuite;
 
 public class DdlImporterTest {    

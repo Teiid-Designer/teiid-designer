@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Properties;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;

@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPropertyListener;
-import org.teiid.core.event.EventObjectListener;
+import org.teiid.core.designer.event.EventObjectListener;
 import org.teiid.designer.core.notification.util.NotificationUtilities;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.metamodels.transformation.MappingClass;

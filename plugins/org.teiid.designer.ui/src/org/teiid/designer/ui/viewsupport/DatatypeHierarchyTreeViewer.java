@@ -15,8 +15,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.ModelerCoreException;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.ui.UiConstants;
 

@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.index.BlocksIndexInput;
 import org.teiid.designer.core.index.Index;
 import org.teiid.designer.core.index.IndexInput;

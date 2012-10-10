@@ -11,8 +11,8 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.ModelerCoreException;
 import org.teiid.designer.core.util.ModelVisitor;
 import org.teiid.designer.core.util.ModelVisitorProcessor;
 import org.teiid.designer.metamodels.relational.AccessPattern;

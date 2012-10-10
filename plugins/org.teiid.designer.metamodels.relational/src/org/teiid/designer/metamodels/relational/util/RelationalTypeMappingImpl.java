@@ -14,12 +14,12 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreRuntimeException;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.core.types.JDBCSQLTypeInfo;
-import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.ModelerCoreException;
-import org.teiid.designer.core.ModelerCoreRuntimeException;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect;
 import org.teiid.designer.core.types.DatatypeConstants;

@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;

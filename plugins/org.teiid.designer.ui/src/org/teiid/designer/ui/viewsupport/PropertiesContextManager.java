@@ -13,7 +13,7 @@ import java.util.Properties;
 
 import org.eclipse.ui.cheatsheets.CheatSheetListener;
 import org.eclipse.ui.cheatsheets.ICheatSheetEvent;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 
 /**

@@ -25,9 +25,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.CoreStringUtil;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 

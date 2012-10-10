@@ -9,7 +9,7 @@ package org.teiid.designer.runtime.connection;
 
 import java.util.Properties;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;

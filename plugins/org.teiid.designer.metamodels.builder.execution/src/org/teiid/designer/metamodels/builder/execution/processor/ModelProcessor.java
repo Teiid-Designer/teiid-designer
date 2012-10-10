@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.metamodels.builder.ModelBuilder;
 import org.teiid.designer.metamodels.builder.execution.util.MetamodelBuilderUtil;
 import org.teiid.designer.metamodels.builder.translator.RecordGenerator;

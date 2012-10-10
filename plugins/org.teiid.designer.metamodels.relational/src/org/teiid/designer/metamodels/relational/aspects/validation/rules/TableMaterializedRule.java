@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.types.DatatypeManager;

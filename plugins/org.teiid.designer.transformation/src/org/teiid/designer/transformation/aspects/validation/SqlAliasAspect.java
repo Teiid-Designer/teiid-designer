@@ -8,7 +8,7 @@
 package org.teiid.designer.transformation.aspects.validation;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 import org.teiid.designer.core.metamodel.aspect.ValidationAspect;

@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.compare.DifferenceDescriptor;
 import org.teiid.designer.compare.PropertyDifference;
 import org.teiid.designer.compare.ui.UiConstants;

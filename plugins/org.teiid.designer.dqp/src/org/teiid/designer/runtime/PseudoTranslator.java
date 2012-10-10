@@ -11,7 +11,7 @@ package org.teiid.designer.runtime;
 import java.util.Properties;
 
 import org.teiid.adminapi.Translator;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 /**
  * The <code>PseudoTranslator</code> class is an implementation of {@link Translator} that keeps track of the

@@ -2,7 +2,7 @@ package org.teiid.designer.metamodels.relational.aspects.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.ValidationPreferences;
 import org.teiid.designer.core.validation.ObjectValidationRule;

@@ -12,7 +12,7 @@ import java.util.Collection;
 
 import javax.swing.undo.CompoundEdit;
 
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 
 /**
  * Undoable

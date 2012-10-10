@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.spi.RegistrySPI;

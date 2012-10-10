@@ -24,8 +24,8 @@ import org.eclipse.emf.edit.provider.ItemPropertyDescriptor.PropertyValueWrapper
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.ModelerCoreException;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.ui.UiConstants;

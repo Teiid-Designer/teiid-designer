@@ -2,7 +2,7 @@ package org.teiid.designer.modelgenerator.xsd.procedures;
 
 import javax.xml.namespace.QName;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 
 /**

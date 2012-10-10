@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.util.UiUtil;

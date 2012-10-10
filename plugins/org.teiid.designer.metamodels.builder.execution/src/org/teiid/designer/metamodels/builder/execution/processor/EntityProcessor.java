@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.metamodels.builder.MetamodelEntityBuilder;
 import org.teiid.designer.metamodels.builder.MetamodelEntityRecord;
 import org.teiid.designer.metamodels.builder.execution.MetamodelBuilderConstants;

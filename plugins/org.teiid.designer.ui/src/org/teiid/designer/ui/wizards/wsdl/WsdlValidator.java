@@ -10,7 +10,7 @@ package org.teiid.designer.ui.wizards.wsdl;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.webservice.WebServicePlugin;

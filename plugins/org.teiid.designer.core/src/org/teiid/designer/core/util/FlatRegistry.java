@@ -11,7 +11,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.PropertyChangePublisher;
 import org.teiid.designer.core.Registry;
 import org.teiid.designer.core.spi.RegistrySPI;

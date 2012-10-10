@@ -53,7 +53,7 @@ import org.eclipse.ui.forms.HyperlinkSettings;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.widget.DefaultTreeViewerController;
 import org.teiid.designer.ui.common.widget.IListPanelController;

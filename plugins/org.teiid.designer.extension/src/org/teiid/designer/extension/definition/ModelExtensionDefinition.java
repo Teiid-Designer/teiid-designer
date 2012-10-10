@@ -21,9 +21,9 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.osgi.util.NLS;
-import org.teiid.core.HashCodeUtil;
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.HashCodeUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;

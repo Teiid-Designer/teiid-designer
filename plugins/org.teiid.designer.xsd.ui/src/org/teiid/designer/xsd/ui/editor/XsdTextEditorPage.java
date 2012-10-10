@@ -1072,7 +1072,7 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
     }
 
     /**
-     * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
+     * @see org.teiid.core.designer.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
     @Override

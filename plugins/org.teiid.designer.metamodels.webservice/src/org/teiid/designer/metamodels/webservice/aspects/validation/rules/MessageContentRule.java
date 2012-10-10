@@ -12,7 +12,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.validation.ObjectValidationRule;
 import org.teiid.designer.core.validation.ValidationContext;
 import org.teiid.designer.core.validation.ValidationProblem;

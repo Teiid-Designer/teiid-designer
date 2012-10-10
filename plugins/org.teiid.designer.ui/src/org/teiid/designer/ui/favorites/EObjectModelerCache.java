@@ -18,8 +18,8 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.event.EventSourceException;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.event.EventSourceException;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.IModelerCacheListener;
 import org.teiid.designer.ui.ModelerCacheEvent;

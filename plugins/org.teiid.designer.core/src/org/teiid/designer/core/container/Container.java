@@ -13,7 +13,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.PropertyChangePublisher;
 import org.teiid.designer.core.metamodel.MetamodelRegistry;
 import org.teiid.designer.core.transaction.UndoableListener;

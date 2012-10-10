@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;

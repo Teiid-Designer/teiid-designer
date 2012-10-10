@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDTypeDefinition;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.metamodels.transformation.MappingClassColumn;
 import org.teiid.designer.metamodels.transformation.StagingTable;

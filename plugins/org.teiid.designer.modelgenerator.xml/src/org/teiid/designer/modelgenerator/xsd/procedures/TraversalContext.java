@@ -1,7 +1,7 @@
 package org.teiid.designer.modelgenerator.xsd.procedures;
 
 import org.eclipse.xsd.XSDTypeDefinition;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 
 
 /**

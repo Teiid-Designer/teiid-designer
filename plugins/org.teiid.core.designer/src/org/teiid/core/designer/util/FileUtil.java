@@ -9,7 +9,6 @@ package org.teiid.core.designer.util;
 
 import java.io.File;
 
-import org.teiid.core.util.CoreStringUtil;
 import org.teiid.core.util.FileUtils.Constants;
 
 /**

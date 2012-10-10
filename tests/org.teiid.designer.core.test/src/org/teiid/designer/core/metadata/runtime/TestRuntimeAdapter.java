@@ -20,7 +20,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.eclipse.core.runtime.Path;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.index.EntryResult;
 import org.teiid.designer.core.index.IEntryResult;
 import org.teiid.designer.core.index.IndexConstants;

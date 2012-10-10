@@ -20,7 +20,7 @@ import java.util.TreeSet;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.ui.properties.ModelObjectPropertySourceProvider;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 

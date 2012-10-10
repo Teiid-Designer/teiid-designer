@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IExtension;
-import org.teiid.core.plugin.PluginUtilities;
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.core.designer.plugin.PluginUtilities;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.reader.StreamReader;
 import org.teiid.designer.core.writer.StreamWriter;
 

@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.vdb.connections.VdbSourceConnection;

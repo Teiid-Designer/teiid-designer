@@ -41,7 +41,7 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import org.teiid.core.TeiidRuntimeException;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.validation.rules.StringNameValidator;

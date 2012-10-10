@@ -23,7 +23,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.ProfileManager;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.jdbc.JdbcDriver;
 import org.teiid.designer.jdbc.JdbcFactory;

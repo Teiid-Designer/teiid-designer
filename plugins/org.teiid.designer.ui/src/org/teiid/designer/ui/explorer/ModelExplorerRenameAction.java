@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.views.navigator.ResourceNavigatorRenameAction;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;

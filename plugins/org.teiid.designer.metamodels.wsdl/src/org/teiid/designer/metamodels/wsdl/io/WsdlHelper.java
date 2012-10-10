@@ -22,7 +22,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.common.xml.SAXBuilderHelper;
 import org.teiid.designer.core.util.URLHelper;
 import org.teiid.designer.metamodels.wsdl.io.WsdlConstants.Xsd;

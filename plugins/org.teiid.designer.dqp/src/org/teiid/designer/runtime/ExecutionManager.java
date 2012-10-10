@@ -12,7 +12,7 @@ import java.sql.Connection;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 
 
 /**

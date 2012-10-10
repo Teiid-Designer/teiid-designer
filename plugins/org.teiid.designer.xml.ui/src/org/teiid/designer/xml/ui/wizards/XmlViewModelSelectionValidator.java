@@ -12,7 +12,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.workspace.ModelResource;

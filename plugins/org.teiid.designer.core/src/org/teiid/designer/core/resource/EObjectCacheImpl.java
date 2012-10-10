@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.id.ObjectID;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.id.ObjectID;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 
 
@@ -177,7 +177,7 @@ public class EObjectCacheImpl implements EObjectCache {
     }
 
     /**
-     * @see org.teiid.designer.core.resource.EObjectCache#get(org.teiid.core.id.ObjectID)
+     * @see org.teiid.designer.core.resource.EObjectCache#get(org.teiid.core.designer.id.ObjectID)
      * @since 4.3
      */
     @Override

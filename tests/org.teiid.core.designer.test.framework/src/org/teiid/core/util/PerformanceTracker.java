@@ -10,8 +10,8 @@ package org.teiid.core.util;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.teiid.core.util.CoreStringUtil;
-import org.teiid.core.util.Stopwatch;
+import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.Stopwatch;
 
 
 /**

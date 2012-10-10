@@ -9,7 +9,7 @@ package org.teiid.designer.core.transaction;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 
 /**
  * Interface for the UnitOfWork Object for an Emf Container

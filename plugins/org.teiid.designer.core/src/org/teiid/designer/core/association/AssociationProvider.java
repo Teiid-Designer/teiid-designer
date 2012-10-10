@@ -10,7 +10,7 @@ package org.teiid.designer.core.association;
 import java.util.Collection;
 import java.util.List;
 
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 
 /**
  * AssociationProvider

@@ -32,8 +32,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
-import org.teiid.core.event.EventObjectListener;
-import org.teiid.core.event.EventSourceException;
+import org.teiid.core.designer.event.EventObjectListener;
+import org.teiid.core.designer.event.EventSourceException;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.notification.util.NotificationUtilities;
 import org.teiid.designer.core.query.QueryValidationResult;
@@ -2305,7 +2305,7 @@ public class TransformationNotificationListener implements INotifyChangedListene
     }
 
     /**
-     * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
+     * @see org.teiid.core.designer.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
     @Override

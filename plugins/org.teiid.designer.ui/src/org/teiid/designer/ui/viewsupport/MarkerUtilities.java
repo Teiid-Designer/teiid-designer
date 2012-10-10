@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.WorkbenchException;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;

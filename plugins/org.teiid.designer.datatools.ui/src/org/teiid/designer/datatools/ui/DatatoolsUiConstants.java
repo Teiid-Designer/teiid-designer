@@ -2,8 +2,8 @@ package org.teiid.designer.datatools.ui;
 
 import java.util.ResourceBundle;
 
-import org.teiid.core.PluginUtil;
-import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.designer.PluginUtil;
+import org.teiid.core.designer.util.PluginUtilImpl;
 
 
 

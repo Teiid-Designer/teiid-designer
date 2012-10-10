@@ -66,8 +66,8 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
-import org.teiid.core.event.EventObjectListener;
-import org.teiid.core.event.EventSourceException;
+import org.teiid.core.designer.event.EventObjectListener;
+import org.teiid.core.designer.event.EventSourceException;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.ui.PluginConstants;
@@ -861,7 +861,7 @@ public class ModelActionProvider extends CommonActionProvider {
             /**
              * {@inheritDoc}
              * 
-             * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
+             * @see org.teiid.core.designer.event.EventObjectListener#processEvent(java.util.EventObject)
              */
             @Override
             public void processEvent( EventObject obj ) {

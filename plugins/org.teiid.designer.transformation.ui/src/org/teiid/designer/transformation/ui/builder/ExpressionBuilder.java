@@ -10,7 +10,7 @@ package org.teiid.designer.transformation.ui.builder;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.transformation.ui.builder.expression.ExpressionEditor;
 import org.teiid.query.ui.builder.model.ExpressionEditorModel;
 

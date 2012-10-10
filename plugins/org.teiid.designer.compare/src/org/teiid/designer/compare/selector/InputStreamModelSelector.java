@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.resource.RegisteredUriConverter;
 import org.teiid.designer.core.util.ModelContents;

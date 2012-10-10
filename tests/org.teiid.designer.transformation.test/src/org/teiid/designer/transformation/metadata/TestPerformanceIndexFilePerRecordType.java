@@ -19,8 +19,8 @@ import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
+import org.teiid.core.designer.util.Stopwatch;
 import org.teiid.core.util.SmartTestDesignerSuite;
-import org.teiid.core.util.Stopwatch;
 import org.teiid.designer.core.index.AbstractIndexSelector;
 import org.teiid.designer.core.index.FileDocument;
 import org.teiid.designer.core.index.IDocument;

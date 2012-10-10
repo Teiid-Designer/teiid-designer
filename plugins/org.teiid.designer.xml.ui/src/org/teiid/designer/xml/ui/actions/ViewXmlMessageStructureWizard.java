@@ -10,7 +10,7 @@ package org.teiid.designer.xml.ui.actions;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.xsd.XSDElementDeclaration;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.ui.wizards.AbstractNewModelContributorWizard;

@@ -10,8 +10,8 @@ package org.teiid.query.ui.builder.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.query.sql.LanguageObject;
 
 /**

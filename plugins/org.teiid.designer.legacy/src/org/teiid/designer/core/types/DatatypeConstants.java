@@ -14,10 +14,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.teiid.core.TeiidRuntimeException;
-import org.teiid.core.id.InvalidIDException;
-import org.teiid.core.id.UUID;
+import org.teiid.core.designer.id.InvalidIDException;
+import org.teiid.core.designer.id.UUID;
 import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;
 
 

@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.Map;
 import org.eclipse.jface.viewers.TreeViewer;
 
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.sql.lang.AbstractSetCriteria;
 import org.teiid.query.sql.lang.Command;

@@ -11,8 +11,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.eclipse.core.runtime.ListenerList;
-import org.teiid.core.properties.PropertyDefinition;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.properties.PropertyDefinition;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.StringUtilities;
 
 

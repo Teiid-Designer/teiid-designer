@@ -10,9 +10,8 @@ package org.teiid.designer.metadata.runtime.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.teiid.logging.LogManager;
-import org.teiid.core.id.ObjectID;
-import org.teiid.core.id.UUID;
+import org.teiid.core.designer.id.ObjectID;
+import org.teiid.core.designer.id.UUID;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.Assertion;
 import org.teiid.core.util.EquivalenceUtil;
@@ -24,6 +23,7 @@ import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.metadata.runtime.MetadataRecord;
 import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;
+import org.teiid.logging.LogManager;
 
 /**
  * AbstractMetadataRecord

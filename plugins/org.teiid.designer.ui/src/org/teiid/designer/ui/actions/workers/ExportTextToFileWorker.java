@@ -16,8 +16,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.core.util.CoreStringUtil;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 

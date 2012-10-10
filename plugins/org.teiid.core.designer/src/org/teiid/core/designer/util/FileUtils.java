@@ -21,8 +21,6 @@ import java.net.URLDecoder;
 import org.teiid.core.TeiidException;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
-import org.teiid.core.util.ChecksumUtil;
-import org.teiid.core.util.CoreArgCheck;
 
 
 /**

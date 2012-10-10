@@ -18,7 +18,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.jdom.Document;
 import org.teiid.core.TeiidException;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 /**
  * @since 8.0

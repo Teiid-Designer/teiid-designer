@@ -460,7 +460,7 @@ public class XsdSemanticsEditorPage implements ModelEditorPage, ISelectionChange
     }
 
     /**
-     * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
+     * @see org.teiid.core.designer.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
     @Override

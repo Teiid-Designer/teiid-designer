@@ -20,8 +20,8 @@ import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.osgi.framework.BundleContext;
-import org.teiid.core.PluginUtil;
-import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.designer.PluginUtil;
+import org.teiid.core.designer.util.PluginUtilImpl;
 
 
 /**

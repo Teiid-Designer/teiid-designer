@@ -11,8 +11,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.sql.lang.IsNullCriteria;
 import org.teiid.query.sql.symbol.Expression;

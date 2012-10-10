@@ -10,8 +10,8 @@ package org.teiid.designer.mapping.ui.connection;
 import java.util.Collections;
 import java.util.List;
 
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.diagram.ui.DiagramUiConstants;
 import org.teiid.designer.diagram.ui.connection.AbstractNodeConnectionModel;
 import org.teiid.designer.diagram.ui.model.DiagramModelNode;

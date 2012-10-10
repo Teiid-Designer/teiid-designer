@@ -9,7 +9,7 @@ package org.teiid.designer.core.resource;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.teiid.core.id.IDGenerator;
+import org.teiid.core.designer.id.IDGenerator;
 import org.teiid.designer.core.resource.xmi.MtkXmiResourceImpl;
 
 /**

@@ -8,7 +8,7 @@
 package org.teiid.designer.runtime.extension.rest;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.extension.ExtensionConstants;

@@ -16,8 +16,8 @@ import org.eclipse.emf.edit.ui.dnd.EditingDomainViewerDropAdapter;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.ModelerCoreException;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 

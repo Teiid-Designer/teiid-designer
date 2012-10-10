@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.query.sql.LanguageVisitor;
 import org.teiid.query.sql.lang.AbstractCompareCriteria;
 import org.teiid.query.sql.lang.CompareCriteria;

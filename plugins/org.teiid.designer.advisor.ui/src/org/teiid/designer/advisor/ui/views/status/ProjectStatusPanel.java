@@ -20,7 +20,7 @@ import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.actions.AdvisorActionFactory;
 import org.teiid.designer.advisor.ui.core.AdvisorHyperLinkListener;

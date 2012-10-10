@@ -22,8 +22,8 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
-import org.teiid.core.util.CoreStringUtil;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.I18nUtil;
 
 
 /**

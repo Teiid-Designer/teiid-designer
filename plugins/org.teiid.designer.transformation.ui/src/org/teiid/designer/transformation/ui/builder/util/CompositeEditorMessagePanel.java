@@ -18,7 +18,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.builder.ILanguageObjectEditor;
 import org.teiid.designer.transformation.ui.builder.expression.ConstantEditor;

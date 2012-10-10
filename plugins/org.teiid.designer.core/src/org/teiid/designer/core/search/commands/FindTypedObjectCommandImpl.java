@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.index.IEntryResult;
 import org.teiid.designer.core.index.IndexConstants;

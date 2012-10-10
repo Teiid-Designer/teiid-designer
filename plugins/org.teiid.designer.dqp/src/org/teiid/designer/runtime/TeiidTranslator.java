@@ -17,7 +17,7 @@ import java.util.Map.Entry;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.util.HashCodeUtil;
 import org.teiid.designer.core.util.StringUtilities;
 

@@ -47,7 +47,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.eclipse.ui.views.navigator.ResourcePatternFilter;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.util.FileUtils;
 import org.teiid.designer.ui.common.UiConstants;
 import org.teiid.designer.ui.common.UiPlugin;

@@ -26,8 +26,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.model.WorkbenchContentProvider;
-import org.teiid.core.event.EventObjectListener;
-import org.teiid.core.event.EventSourceException;
+import org.teiid.core.designer.event.EventObjectListener;
+import org.teiid.core.designer.event.EventSourceException;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -82,7 +82,7 @@ public class ModelNavigatorContentProvider extends WorkbenchContentProvider impl
             /**
              * {@inheritDoc}
              * 
-             * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
+             * @see org.teiid.core.designer.event.EventObjectListener#processEvent(java.util.EventObject)
              */
             @Override
             public void processEvent( EventObject theEvent ) {

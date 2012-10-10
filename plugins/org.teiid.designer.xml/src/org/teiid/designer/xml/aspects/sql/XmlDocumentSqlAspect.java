@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.common.vdb.SystemVdbUtility;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.index.IndexConstants;

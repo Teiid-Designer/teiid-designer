@@ -22,7 +22,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.notification.util.NotificationUtilities;
 import org.teiid.designer.core.transaction.SourcedNotification;

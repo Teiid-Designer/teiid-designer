@@ -10,9 +10,9 @@ package org.teiid.designer.metamodels.core.util;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.CoreStringUtil;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.metamodels.core.CoreMetamodelPlugin;
 
 

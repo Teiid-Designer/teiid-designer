@@ -12,7 +12,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.index.AbstractIndexSelector;
 import org.teiid.designer.core.index.Index;
 

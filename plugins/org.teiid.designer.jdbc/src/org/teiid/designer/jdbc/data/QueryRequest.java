@@ -15,7 +15,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.jdbc.JdbcPlugin;
 import org.teiid.designer.jdbc.JdbcUtil;
 
