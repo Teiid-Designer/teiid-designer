@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Set;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.jdbc.JdbcImportSettings;
 import org.teiid.designer.jdbc.metadata.JdbcNode;
 

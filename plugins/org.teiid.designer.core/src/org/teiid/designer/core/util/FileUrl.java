@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 
 /**
  * This class allows for the original URL of a URL object that was used to create a File object to be saved. The File object is

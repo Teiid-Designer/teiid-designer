@@ -10,7 +10,7 @@ package org.teiid.designer.core.util;
 import java.util.Arrays;
 
 import org.eclipse.emf.common.util.URI;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 
 /**

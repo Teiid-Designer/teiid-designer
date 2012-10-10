@@ -28,7 +28,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.diagram.ui.DiagramUiConstants;
 import org.teiid.designer.mapping.factory.ITreeToRelationalMapper;
 import org.teiid.designer.mapping.factory.MappingClassFactory;

@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.XmlAttribute;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.XmlElement;

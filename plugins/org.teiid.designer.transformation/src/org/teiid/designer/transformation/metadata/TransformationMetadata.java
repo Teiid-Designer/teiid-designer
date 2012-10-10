@@ -23,7 +23,7 @@ import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.TeiidComponentException;
 import org.teiid.core.TeiidException;
 import org.teiid.core.TeiidRuntimeException;
-import org.teiid.core.id.UUID;
+import org.teiid.core.designer.id.UUID;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.Assertion;

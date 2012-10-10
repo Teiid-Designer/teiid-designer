@@ -12,7 +12,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.ui.common.UiConstants;
 import org.teiid.designer.ui.common.UiPlugin;

@@ -9,7 +9,7 @@ package org.teiid.designer.xml;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
-import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.designer.util.PluginUtilImpl;
 
 /**
  * ModelerXmlPlugin is the plugin class for org.teiid.designer.mapping

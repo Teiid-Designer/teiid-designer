@@ -9,7 +9,7 @@ package org.teiid.designer.metamodels.relational.aspects.sql;
 
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlForeignKeyAspect;

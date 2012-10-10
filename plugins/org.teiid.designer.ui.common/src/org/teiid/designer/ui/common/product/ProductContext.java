@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.ui.common.product;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 
 /**

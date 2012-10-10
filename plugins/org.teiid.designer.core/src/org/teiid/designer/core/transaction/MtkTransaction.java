@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.core.transaction;
 
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 
 /**
  * @author Lance Phillips

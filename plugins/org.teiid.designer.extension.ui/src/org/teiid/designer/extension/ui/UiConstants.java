@@ -10,8 +10,8 @@ package org.teiid.designer.extension.ui;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Section;
-import org.teiid.core.PluginUtil;
-import org.teiid.core.util.LoggingUtil;
+import org.teiid.core.designer.PluginUtil;
+import org.teiid.core.designer.util.LoggingUtil;
 
 
 /**

@@ -19,8 +19,8 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.teiid.core.designer.util.Stopwatch;
 import org.teiid.core.util.SmartTestDesignerSuite;
-import org.teiid.core.util.Stopwatch;
 
 /**
  * TestCreateIndexFile

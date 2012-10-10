@@ -30,7 +30,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.compare.DifferenceProcessor;
 import org.teiid.designer.compare.DifferenceReport;
 import org.teiid.designer.compare.ModelerComparePlugin;

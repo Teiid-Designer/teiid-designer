@@ -8,8 +8,8 @@
 package org.teiid.designer.mapping.ui.editor;
 
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.ModelerCoreException;
 import org.teiid.designer.metamodels.transformation.InputBinding;
 import org.teiid.designer.metamodels.transformation.InputParameter;
 import org.teiid.designer.metamodels.transformation.MappingClassColumn;

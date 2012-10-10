@@ -8,7 +8,7 @@
 package org.teiid.designer.ui.common.widget;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 
 /**
  * @since 8.0

@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.core.id.ObjectID;
+import org.teiid.core.designer.id.ObjectID;
 
 /**
  * FakeEObject

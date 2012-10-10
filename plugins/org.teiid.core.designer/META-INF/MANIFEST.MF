@@ -6,19 +6,16 @@ Bundle-Version: 8.0.0.qualifier
 Bundle-Activator: org.teiid.core.designer.CoreModelerPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: org.teiid.core,
- org.teiid.core.aspects,
- org.teiid.core.designer,
+Export-Package: org.teiid.core.designer,
+ org.teiid.core.designer.aspects,
+ org.teiid.core.designer.event,
+ org.teiid.core.designer.exception,
+ org.teiid.core.designer.id,
+ org.teiid.core.designer.plugin,
+ org.teiid.core.designer.properties,
+ org.teiid.core.designer.selection,
  org.teiid.core.designer.util,
- org.teiid.core.event,
- org.teiid.core.exception,
- org.teiid.core.id,
- org.teiid.core.plugin,
- org.teiid.core.properties,
- org.teiid.core.selection,
- org.teiid.core.util,
- org.teiid.core.xml,
- org.teiid.designer.core
+ org.teiid.core.designer.xml
 Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.8.0,4.0.0)",
  teiid_embedded_query;bundle-version="[8.0.0,9.0.0)",
  net.sf.saxon;bundle-version="[9.2.1,10.0.0)"

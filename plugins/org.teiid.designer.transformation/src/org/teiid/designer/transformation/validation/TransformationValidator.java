@@ -25,8 +25,8 @@ import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.TeiidComponentException;
 import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.types.DataTypeManager;
-import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.index.IndexSelector;
@@ -69,7 +69,6 @@ import org.teiid.query.resolver.QueryResolver;
 import org.teiid.query.resolver.util.ResolverUtil;
 import org.teiid.query.resolver.util.ResolverVisitor;
 import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.DynamicCommand;
 import org.teiid.query.sql.proc.CreateProcedureCommand;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.GroupSymbol;
@@ -442,9 +441,7 @@ public class TransformationValidator implements QueryValidator {
             QueryResolver.resolveCommand(command, gSymbol, getTeiidCommandType(transformType), metadata);
             // If unsuccessful, an exception is thrown
 
-            if (command instanceof CreateProcedureCommand
-                    && ((CreateProcedureCommand)command).getResultsCommand() instanceof DynamicCommand
-                    && !((DynamicCommand)((CreateProcedureCommand)command).getResultsCommand()).isAsClauseSet()) {
+            if (command instanceof CreateProcedureCommand) {
                 List<ElementSymbol> projectedSymbols = getProjectedSymbols();
                 ((CreateProcedureCommand)command).setProjectedSymbols(projectedSymbols);
             }

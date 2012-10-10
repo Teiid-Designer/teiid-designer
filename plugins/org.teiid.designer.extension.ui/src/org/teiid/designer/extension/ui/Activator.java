@@ -17,9 +17,9 @@ import java.util.Set;
 
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
-import org.teiid.core.PluginUtil;
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.LoggingUtil;
+import org.teiid.core.designer.PluginUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.LoggingUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelRegistry;
 import org.teiid.designer.extension.ExtensionPlugin;

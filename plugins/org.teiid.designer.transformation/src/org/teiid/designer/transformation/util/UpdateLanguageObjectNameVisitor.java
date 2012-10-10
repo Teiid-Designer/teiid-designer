@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.id.ObjectID;
+import org.teiid.core.designer.id.ObjectID;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;
 import org.teiid.query.sql.LanguageVisitor;

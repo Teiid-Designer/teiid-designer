@@ -21,9 +21,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
-import org.teiid.core.HashCodeUtil;
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.HashCodeUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.extension.Messages;
 
 
@@ -356,7 +356,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.core.properties.PropertyDefinition#getAllowedValues()
+     * @see org.teiid.core.designer.properties.PropertyDefinition#getAllowedValues()
      */
     @Override
     public String[] getAllowedValues() {
@@ -366,7 +366,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.core.properties.PropertyDefinition#getDefaultValue()
+     * @see org.teiid.core.designer.properties.PropertyDefinition#getDefaultValue()
      */
     @Override
     public String getDefaultValue() {
@@ -378,7 +378,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      * 
      * Obtains the localized description for the current locale.
      * 
-     * @see org.teiid.core.properties.PropertyDefinition#getDescription()
+     * @see org.teiid.core.designer.properties.PropertyDefinition#getDescription()
      */
     @Override
     public String getDescription() {
@@ -401,7 +401,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      * Obtains the localized display name for the current locale. If no translation is available then the property identifier is
      * returned.
      * 
-     * @see org.teiid.core.properties.PropertyDefinition#getDisplayName()
+     * @see org.teiid.core.designer.properties.PropertyDefinition#getDisplayName()
      * @see #getId()
      */
     @Override
@@ -432,7 +432,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.core.properties.PropertyDefinition#getId()
+     * @see org.teiid.core.designer.properties.PropertyDefinition#getId()
      */
     @Override
     public String getId() {
@@ -551,7 +551,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.core.properties.PropertyDefinition#isAdvanced()
+     * @see org.teiid.core.designer.properties.PropertyDefinition#isAdvanced()
      */
     @Override
     public boolean isAdvanced() {
@@ -561,7 +561,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.core.properties.PropertyDefinition#isMasked()
+     * @see org.teiid.core.designer.properties.PropertyDefinition#isMasked()
      */
     @Override
     public boolean isMasked() {
@@ -571,7 +571,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.core.properties.PropertyDefinition#isModifiable()
+     * @see org.teiid.core.designer.properties.PropertyDefinition#isModifiable()
      */
     @Override
     public boolean isModifiable() {
@@ -581,7 +581,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.core.properties.PropertyDefinition#isRequired()
+     * @see org.teiid.core.designer.properties.PropertyDefinition#isRequired()
      */
     @Override
     public boolean isRequired() {
@@ -591,7 +591,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.core.properties.PropertyDefinition#isValidValue(java.lang.String)
+     * @see org.teiid.core.designer.properties.PropertyDefinition#isValidValue(java.lang.String)
      */
     @Override
     public String isValidValue( String proposedValue ) {

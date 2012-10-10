@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.id.UUID;
+import org.teiid.core.designer.id.UUID;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.IPasteContributor;
 

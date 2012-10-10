@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.net.URL;
 import javax.xml.transform.stream.StreamSource;
 import org.teiid.core.TeiidException;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 /**
  * StyleFromResource

@@ -10,7 +10,7 @@ package org.teiid.designer.webservice.util;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.xsd.XSDNamedComponent;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.metamodels.xml.XmlValueHolder;
 
 

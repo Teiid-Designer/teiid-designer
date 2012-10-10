@@ -35,12 +35,12 @@ import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.impl.XSDImportImpl;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import org.teiid.core.id.IDGenerator;
-import org.teiid.core.id.InvalidIDException;
-import org.teiid.core.id.ObjectID;
-import org.teiid.core.id.UUID;
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.id.IDGenerator;
+import org.teiid.core.designer.id.InvalidIDException;
+import org.teiid.core.designer.id.ObjectID;
+import org.teiid.core.designer.id.UUID;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.resource.MMXmiResource;
 import org.teiid.designer.core.util.ModelObjectCollector;
@@ -75,7 +75,7 @@ public class DefaultResourceFinder implements ResourceFinder {
     // ==================================================================================
 
     /**
-     * @see org.teiid.designer.core.container#findByUUID(org.teiid.core.id.ObjectID, boolean)
+     * @see org.teiid.designer.core.container#findByUUID(org.teiid.core.designer.id.ObjectID, boolean)
      * @since 4.3
      */
     @Override
@@ -95,7 +95,7 @@ public class DefaultResourceFinder implements ResourceFinder {
     }
 
     /**
-     * @see org.teiid.designer.core.container#findByUUID(org.teiid.core.id.ObjectID,
+     * @see org.teiid.designer.core.container#findByUUID(org.teiid.core.designer.id.ObjectID,
      *      org.eclipse.emf.ecore.resource.Resource[])
      * @since 4.3
      */

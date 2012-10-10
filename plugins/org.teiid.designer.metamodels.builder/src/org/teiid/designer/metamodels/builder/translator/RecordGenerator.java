@@ -16,7 +16,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.metamodels.builder.MetamodelBuilderPlugin;
 import org.teiid.designer.metamodels.builder.MetamodelEntityRecord;
 import org.teiid.designer.metamodels.builder.ModelRecord;

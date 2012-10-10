@@ -8,7 +8,7 @@
 package org.teiid.designer.compare.selector;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.metamodels.core.Annotation;
 

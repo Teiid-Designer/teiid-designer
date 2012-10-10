@@ -8,7 +8,7 @@
 package org.teiid.designer.modelgenerator.util;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 
 /**
  * EObjectUtil

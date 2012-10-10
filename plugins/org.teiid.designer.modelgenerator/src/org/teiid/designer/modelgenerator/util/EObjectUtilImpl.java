@@ -8,9 +8,9 @@
 package org.teiid.designer.modelgenerator.util;
 
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.ModelerCoreException;
 
 
 /**

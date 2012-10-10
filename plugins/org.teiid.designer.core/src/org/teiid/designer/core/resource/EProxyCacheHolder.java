@@ -8,7 +8,7 @@
 package org.teiid.designer.core.resource;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.id.ObjectID;
+import org.teiid.core.designer.id.ObjectID;
 
 
 /** 

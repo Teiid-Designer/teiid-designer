@@ -9,7 +9,7 @@ package org.teiid.designer.core.index;
 
 import java.io.File;
 import org.eclipse.core.resources.IResource;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.index.FileDocument;
 
 

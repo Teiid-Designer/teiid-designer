@@ -23,8 +23,8 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMISaveImpl;
-import org.teiid.core.id.ObjectID;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.id.ObjectID;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.core.Identifiable;
 

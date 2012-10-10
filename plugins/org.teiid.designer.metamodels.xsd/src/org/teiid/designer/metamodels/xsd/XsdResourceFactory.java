@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.util.XSDResourceFactoryImpl;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import org.teiid.core.id.UUID;
+import org.teiid.core.designer.id.UUID;
 import org.teiid.designer.core.resource.XResource;
 import org.teiid.designer.core.resource.XResourceDelegate;
 

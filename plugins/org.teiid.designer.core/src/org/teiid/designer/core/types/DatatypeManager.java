@@ -12,8 +12,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.teiid.core.id.ObjectID;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.core.designer.id.ObjectID;
 import org.teiid.designer.core.types.EnterpriseDatatypeInfo;
 
 /**

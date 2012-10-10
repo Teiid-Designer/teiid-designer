@@ -7,15 +7,13 @@
  */
 package org.teiid.designer.jdbc.relational.impl;
 
-import org.teiid.core.BundleUtil;
-import org.teiid.core.TeiidRuntimeException;
 
 /**
  * UserCancelledException
  *
  * @since 8.0
  */
-public class UserCancelledException extends TeiidRuntimeException {
+public class UserCancelledException extends RuntimeException {
 
     /**
      */
@@ -40,38 +38,10 @@ public class UserCancelledException extends TeiidRuntimeException {
 
     /**
      * Construct an instance of UserCancelledException.
-     * @param code
-     * @param message
-     */
-    public UserCancelledException(int code, String message) {
-        super(Integer.toString(code), message);
-    }
-
-    /**
-     * Construct an instance of UserCancelledException.
      * @param e
      */
     public UserCancelledException(Throwable e) {
         super(e);
-    }
-
-    /**
-     * Construct an instance of UserCancelledException.
-     * @param e
-     * @param message
-     */
-    public UserCancelledException(Throwable e, String message) {
-        super(e, message);
-    }
-
-    /**
-     * Construct an instance of UserCancelledException.
-     * @param e
-     * @param code
-     * @param message
-     */
-    public UserCancelledException(BundleUtil.Event code, Throwable e, String message) {
-        super(code, e, message);
     }
 
 }

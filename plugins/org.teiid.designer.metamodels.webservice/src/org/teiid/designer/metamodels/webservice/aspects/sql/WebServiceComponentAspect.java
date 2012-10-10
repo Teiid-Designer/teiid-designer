@@ -8,7 +8,7 @@
 package org.teiid.designer.metamodels.webservice.aspects.sql;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.AbstractMetamodelAspect;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;

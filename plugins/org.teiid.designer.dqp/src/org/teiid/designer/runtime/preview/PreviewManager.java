@@ -10,7 +10,6 @@ package org.teiid.designer.runtime.preview;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,10 +23,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -42,7 +39,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
@@ -57,7 +53,6 @@ import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.ModelerCoreException;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.util.CoreModelObjectNotificationHelper;
 import org.teiid.designer.core.util.StringUtilities;
@@ -78,7 +73,6 @@ import org.teiid.designer.metamodels.function.FunctionPackage;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.webservice.WebServicePackage;
 import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
-import org.teiid.designer.relational.model.RelationalModelFactory;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
@@ -1193,12 +1187,6 @@ public final class PreviewManager extends JobChangeAdapter
                 monitor.subTask(NLS.bind(Messages.PreviewSetupValidationCheckTask, name));
                 IStatus status = checkPreviewVdbForErrors(projectModelPvdb);
                 boolean error = false;
-
-                //Hack to add dummy model since Teiid 8.x won't deploy empty VDB archive. See TEIID-2230.
-                if (isProjectLevelPreviewVdb(projectPvdbFile)) {
-                	IPath path = projectPvdbFile.getProject().getFullPath();
-                	projectModelPvdb.addModelEntry(createDummyModel(path, monitor).getPath(),monitor);
-                }
                 
                 // if the model has an error only throw exception if that model is a dependency
                 if (status.getSeverity() == IStatus.ERROR) {
@@ -1287,28 +1275,6 @@ public final class PreviewManager extends JobChangeAdapter
         monitor.done();
     }
     
-    /**
-     * Need to create a dummy model for the project level VDB since we can't deploy without one.
-     * See TEIID-2230
-     * @param iPath
-     * @param progressMonitor
-     * @return
-     */
-    public ModelResource createDummyModel(IPath iPath, IProgressMonitor progressMonitor) {
-
-    	ModelResource modelResource = null; 
-    	
-        try {
-            RelationalModelFactory builder = new RelationalModelFactory();
-            modelResource = builder.createRelationalModel(iPath, "dummyworkaround.xmi");
-            modelResource.save(new NullProgressMonitor(), true);
-        } catch (ModelerCoreException e) {
-        	Util.log(IStatus.ERROR, e, e.getMessage());
-        }
-        
-        return modelResource;
-    }
-
 	/**
 	 * @param pvdbFile
 	 * @return

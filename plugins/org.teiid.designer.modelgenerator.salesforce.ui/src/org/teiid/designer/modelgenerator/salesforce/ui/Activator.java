@@ -9,7 +9,7 @@ package org.teiid.designer.modelgenerator.salesforce.ui;
 
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
-import org.teiid.core.PluginUtil;
+import org.teiid.core.designer.PluginUtil;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
 import org.teiid.designer.ui.common.actions.ActionService;
 

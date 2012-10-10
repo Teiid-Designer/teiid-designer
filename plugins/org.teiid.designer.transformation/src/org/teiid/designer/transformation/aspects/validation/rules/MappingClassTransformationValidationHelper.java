@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDTypeDefinition;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.core.validation.ValidationProblem;

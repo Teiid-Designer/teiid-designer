@@ -25,8 +25,8 @@ import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
-import org.teiid.core.event.EventObjectListener;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.event.EventObjectListener;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.notification.util.NotificationUtilities;
@@ -569,7 +569,7 @@ class ModelerCacheEventManager
     }
 
     /**
-     * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
+     * @see org.teiid.core.designer.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
     @Override

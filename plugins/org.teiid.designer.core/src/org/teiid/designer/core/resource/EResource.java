@@ -11,7 +11,7 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.core.id.ObjectID;
+import org.teiid.core.designer.id.ObjectID;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.metamodels.core.ModelType;
 

@@ -9,7 +9,7 @@ package org.teiid.designer.core.container;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.designer.core.ModelerCoreRuntimeException;
+import org.teiid.core.designer.ModelerCoreRuntimeException;
 
 
 /** 

@@ -9,7 +9,7 @@ package org.teiid.designer.xsd;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
-import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.designer.util.PluginUtilImpl;
 
 /**
  * @since 8.0

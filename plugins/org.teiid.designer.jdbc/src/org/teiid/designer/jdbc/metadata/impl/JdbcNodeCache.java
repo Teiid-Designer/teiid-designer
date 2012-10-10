@@ -10,7 +10,7 @@ package org.teiid.designer.jdbc.metadata.impl;
 import java.util.HashMap;
 import java.util.Map;
 import org.eclipse.core.runtime.IPath;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.jdbc.metadata.JdbcNode;
 
 

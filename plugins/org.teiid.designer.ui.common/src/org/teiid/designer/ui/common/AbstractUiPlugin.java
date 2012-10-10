@@ -30,7 +30,7 @@ import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
-import org.teiid.core.PluginUtil;
+import org.teiid.core.designer.PluginUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.common.actions.ActionService;
 import org.teiid.designer.ui.common.graphics.ImageImageDescriptor;

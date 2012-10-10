@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.association.AssociationDescriptor;
 import org.teiid.designer.core.association.AssociationProvider;
 import org.teiid.designer.metamodels.relational.BaseTable;

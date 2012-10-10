@@ -13,7 +13,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.transformation.ui.builder.actions.AndCriteriaAction;
 import org.teiid.designer.transformation.ui.builder.actions.NotCriteriaAction;
 import org.teiid.designer.transformation.ui.builder.actions.OrCriteriaAction;

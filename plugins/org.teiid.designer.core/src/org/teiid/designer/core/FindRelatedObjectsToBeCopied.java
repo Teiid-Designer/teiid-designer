@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.core.util.ModelVisitor;

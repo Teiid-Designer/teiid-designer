@@ -10,7 +10,7 @@ package org.teiid.designer.jdbc.metadata.impl;
 import java.sql.DatabaseMetaData;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.jdbc.JdbcException;
 import org.teiid.designer.jdbc.JdbcPlugin;
 import org.teiid.designer.jdbc.data.MetadataRequest;

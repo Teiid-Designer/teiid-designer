@@ -9,7 +9,7 @@ package org.teiid.designer.transformation.ui.editors.sqleditor.actions;
 
 import java.util.EventObject;
 
-import org.teiid.core.event.EventObjectListener;
+import org.teiid.core.designer.event.EventObjectListener;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlEditorInternalEvent;

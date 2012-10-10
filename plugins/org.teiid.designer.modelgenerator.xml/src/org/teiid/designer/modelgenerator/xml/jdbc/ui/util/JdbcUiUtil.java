@@ -7,8 +7,8 @@
  */
 package org.teiid.designer.modelgenerator.xml.jdbc.ui.util;
 
-import org.teiid.core.PluginUtil;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.PluginUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.modelgenerator.xml.XmlImporterUiPlugin;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 

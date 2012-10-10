@@ -8,7 +8,7 @@
 package org.teiid.designer.metamodels.builder.execution;
 
 import org.eclipse.emf.ecore.EcorePackage;
-import org.teiid.core.PluginUtil;
+import org.teiid.core.designer.PluginUtil;
 import org.teiid.designer.metamodels.core.extension.ExtensionPackage;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 

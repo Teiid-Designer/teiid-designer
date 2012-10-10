@@ -10,7 +10,7 @@ package org.teiid.designer.jdbc.relational.aspects.sql;
 import java.util.Iterator;
 import java.util.Properties;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.AbstractMetamodelAspect;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;

@@ -9,7 +9,7 @@ package org.teiid.designer.mapping.ui.util;
 
 import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.INewModelObjectHelper;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.mapping.ui.diagram.MappingDiagramProvider;

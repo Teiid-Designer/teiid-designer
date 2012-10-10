@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.diagram.ui.DiagramUiConstants;
 import org.teiid.designer.diagram.ui.DiagramUiPlugin;
 import org.teiid.designer.diagram.ui.actions.ActionWrapper;

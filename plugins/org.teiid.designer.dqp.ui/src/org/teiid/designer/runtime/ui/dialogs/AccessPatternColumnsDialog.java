@@ -29,9 +29,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.teiid.core.event.IChangeListener;
-import org.teiid.core.event.IChangeNotifier;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.event.IChangeListener;
+import org.teiid.core.designer.event.IChangeNotifier;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -233,7 +233,7 @@ public class AccessPatternColumnsDialog extends TitleAreaDialog
     }
 
     /**
-     * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
+     * @see org.teiid.core.designer.event.IChangeListener#stateChanged(org.teiid.core.designer.event.IChangeNotifier)
      * @since 5.5.3
      */
     @Override

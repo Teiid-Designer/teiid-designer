@@ -29,10 +29,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.core.event.IChangeListener;
-import org.teiid.core.event.IChangeNotifier;
-import org.teiid.core.util.CoreStringUtil;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.event.IChangeListener;
+import org.teiid.core.designer.event.IChangeNotifier;
+import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -116,7 +116,7 @@ public class PreviewParameterPanel extends ScrolledComposite implements DqpUiCon
     }
 
     /**
-     * @see org.teiid.core.event.IChangeNotifier#addChangeListener(org.teiid.core.event.IChangeListener)
+     * @see org.teiid.core.designer.event.IChangeNotifier#addChangeListener(org.teiid.core.designer.event.IChangeListener)
      * @since 5.5.3
      */
     @Override
@@ -271,7 +271,7 @@ public class PreviewParameterPanel extends ScrolledComposite implements DqpUiCon
     }
 
     /**
-     * @see org.teiid.core.event.IChangeNotifier#removeChangeListener(org.teiid.core.event.IChangeListener)
+     * @see org.teiid.core.designer.event.IChangeNotifier#removeChangeListener(org.teiid.core.designer.event.IChangeListener)
      * @since 5.5.3
      */
     @Override

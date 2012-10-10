@@ -1,7 +1,7 @@
 package org.teiid.designer.runtime;
 
 import org.teiid.adminapi.VDB;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.vdb.Vdb;
 
 /**

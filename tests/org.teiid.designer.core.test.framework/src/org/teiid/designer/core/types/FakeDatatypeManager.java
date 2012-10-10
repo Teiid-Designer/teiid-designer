@@ -19,9 +19,9 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.teiid.core.id.IDGenerator;
-import org.teiid.core.id.InvalidIDException;
-import org.teiid.core.id.ObjectID;
+import org.teiid.core.designer.id.IDGenerator;
+import org.teiid.core.designer.id.InvalidIDException;
+import org.teiid.core.designer.id.ObjectID;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.types.EnterpriseDatatypeInfo;
 

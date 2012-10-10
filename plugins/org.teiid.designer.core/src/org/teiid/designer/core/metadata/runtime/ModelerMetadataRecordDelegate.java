@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.id.ObjectID;
+import org.teiid.core.designer.id.ObjectID;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;
 import org.teiid.designer.metadata.runtime.impl.MetadataRecordDelegate;
 

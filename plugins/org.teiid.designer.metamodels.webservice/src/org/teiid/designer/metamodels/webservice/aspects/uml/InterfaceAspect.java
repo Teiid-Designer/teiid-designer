@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.metamodels.webservice.aspects.uml;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 import org.teiid.designer.core.metamodel.aspect.uml.UmlPackage;
 import org.teiid.designer.metamodels.webservice.Interface;

@@ -19,9 +19,9 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.wst.server.core.IServer;
 import org.osgi.framework.BundleContext;
-import org.teiid.core.PluginUtil;
-import org.teiid.core.event.IChangeNotifier;
-import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.designer.PluginUtil;
+import org.teiid.core.designer.event.IChangeNotifier;
+import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 

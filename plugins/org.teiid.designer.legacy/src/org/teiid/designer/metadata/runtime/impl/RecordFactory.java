@@ -13,8 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import org.teiid.core.id.UUID;
+import org.teiid.core.designer.id.UUID;
 import org.teiid.core.util.Assertion;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.core.container.EObjectFinder;

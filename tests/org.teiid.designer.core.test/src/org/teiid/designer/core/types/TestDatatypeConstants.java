@@ -11,8 +11,8 @@ import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.teiid.core.id.UUID;
-import org.teiid.core.id.UUIDFactory;
+import org.teiid.core.designer.id.UUID;
+import org.teiid.core.designer.id.UUIDFactory;
 import org.teiid.designer.core.types.DatatypeConstants;
 
 /**

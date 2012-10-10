@@ -28,7 +28,7 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
 import org.jdom.JDOMException;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.core.util.URLHelper;
 import org.teiid.designer.metamodels.wsdl.http.HttpPackage;

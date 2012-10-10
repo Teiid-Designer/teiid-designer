@@ -9,7 +9,7 @@ package org.teiid.designer.metamodels.relational.aspects.uml;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.AbstractMetamodelAspect;
 import org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect;

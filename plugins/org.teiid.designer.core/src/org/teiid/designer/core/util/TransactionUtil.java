@@ -7,11 +7,11 @@
  */
 package org.teiid.designer.core.util;
 
-import org.teiid.core.util.CoreStringUtil;
-import org.teiid.core.util.IOperation;
-import org.teiid.core.util.IReturningOperation;
-import org.teiid.core.util.ISafeOperation;
-import org.teiid.core.util.ISafeReturningOperation;
+import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.IOperation;
+import org.teiid.core.designer.util.IReturningOperation;
+import org.teiid.core.designer.util.ISafeOperation;
+import org.teiid.core.designer.util.ISafeReturningOperation;
 import org.teiid.designer.core.ModelerCore;
 
 

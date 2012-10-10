@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.CoreModelerPlugin;
-import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.designer.ui.common.UiConstants;
 
 public class TestDesignerPlugin extends Plugin {

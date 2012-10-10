@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.modelgenerator.util;
 
-import org.teiid.core.selection.TreeSelection;
+import org.teiid.core.designer.selection.TreeSelection;
 
 /**
  * NullTreeSelection

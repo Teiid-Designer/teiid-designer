@@ -37,9 +37,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
-import org.teiid.core.event.IChangeListener;
-import org.teiid.core.event.IChangeNotifier;
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.event.IChangeListener;
+import org.teiid.core.designer.event.IChangeNotifier;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -270,7 +270,7 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 	}
 
 	/**
-	 * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
+	 * @see org.teiid.core.designer.event.IChangeListener#stateChanged(org.teiid.core.designer.event.IChangeNotifier)
 	 * @since 5.5.3
 	 */
 	@Override

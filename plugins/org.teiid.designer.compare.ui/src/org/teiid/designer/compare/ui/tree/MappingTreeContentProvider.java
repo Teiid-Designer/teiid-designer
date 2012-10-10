@@ -22,7 +22,7 @@ import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.compare.CompareFactory;
 import org.teiid.designer.compare.DifferenceDescriptor;
 import org.teiid.designer.compare.DifferenceReport;

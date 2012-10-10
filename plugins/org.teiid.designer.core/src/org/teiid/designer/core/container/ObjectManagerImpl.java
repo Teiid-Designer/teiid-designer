@@ -10,8 +10,8 @@ package org.teiid.designer.core.container;
 import java.util.Collection;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.core.id.UUID;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.id.UUID;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.resource.XResource;
 import org.teiid.designer.core.resource.xmi.MtkXmiResourceImpl;
 

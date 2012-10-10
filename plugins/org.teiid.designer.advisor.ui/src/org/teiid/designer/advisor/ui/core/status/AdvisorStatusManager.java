@@ -23,10 +23,10 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.swt.widgets.Display;
-import org.teiid.core.event.EventObjectListener;
-import org.teiid.core.event.EventSourceException;
-import org.teiid.core.event.IChangeListener;
-import org.teiid.core.event.IChangeNotifier;
+import org.teiid.core.designer.event.EventObjectListener;
+import org.teiid.core.designer.event.EventSourceException;
+import org.teiid.core.designer.event.IChangeListener;
+import org.teiid.core.designer.event.IChangeNotifier;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.views.status.StatusListener;
 import org.teiid.designer.core.ModelerCore;
@@ -272,7 +272,7 @@ public class AdvisorStatusManager implements IChangeListener, IStatusManager {
     /**
      * Need to be wired up to the current VDB Context.
      * 
-     * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
+     * @see org.teiid.core.designer.event.IChangeListener#stateChanged(org.teiid.core.designer.event.IChangeNotifier)
      * @since 5.0
      */
     @Override

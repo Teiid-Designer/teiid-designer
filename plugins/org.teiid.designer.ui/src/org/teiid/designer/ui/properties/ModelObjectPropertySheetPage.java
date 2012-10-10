@@ -38,8 +38,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.properties.PropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.teiid.core.event.EventObjectListener;
-import org.teiid.core.event.EventSourceException;
+import org.teiid.core.designer.event.EventObjectListener;
+import org.teiid.core.designer.event.EventSourceException;
 import org.teiid.designer.core.notification.util.NotificationUtilities;
 import org.teiid.designer.core.notification.util.SourcedNotificationUtilities;
 import org.teiid.designer.core.transaction.SourcedNotification;
@@ -359,7 +359,7 @@ public class ModelObjectPropertySheetPage
         super.dispose();
     }
     /** 
-     * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
+     * @see org.teiid.core.designer.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
     @Override

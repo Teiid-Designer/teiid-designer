@@ -14,7 +14,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.core.util.URLHelper;
 

@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.jdbc.metadata;
 
-import org.teiid.core.util.Stopwatch;
+import org.teiid.core.designer.util.Stopwatch;
 import org.teiid.designer.jdbc.metadata.Capabilities;
 import org.teiid.designer.jdbc.metadata.DatabaseInfo;
 import org.teiid.designer.jdbc.metadata.JdbcDatabase;

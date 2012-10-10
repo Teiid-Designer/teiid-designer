@@ -10,7 +10,7 @@ package org.teiid.designer.transformation.ui.builder.util;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.builder.ILanguageObjectInputProvider;
 import org.teiid.query.sql.LanguageObject;

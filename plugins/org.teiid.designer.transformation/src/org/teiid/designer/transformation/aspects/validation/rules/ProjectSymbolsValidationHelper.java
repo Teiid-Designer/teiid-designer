@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.id.UUID;
+import org.teiid.core.designer.id.UUID;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;

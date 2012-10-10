@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.teiid.core.event.EventObjectListener;
+import org.teiid.core.designer.event.EventObjectListener;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.transformation.ui.editors.sqleditor.actions.ImportFromFile;
 import org.teiid.designer.transformation.ui.editors.sqleditor.actions.LaunchCriteriaBuilder;

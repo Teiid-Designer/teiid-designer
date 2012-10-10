@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.teiid.core.event.EventObjectListener;
+import org.teiid.core.designer.event.EventObjectListener;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.notification.util.NotificationUtilities;
 import org.teiid.designer.core.query.QueryValidator;

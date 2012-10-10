@@ -14,7 +14,7 @@ import static junit.framework.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.extension.Constants;
 import org.teiid.designer.extension.Factory;
 import org.teiid.designer.extension.Listener;

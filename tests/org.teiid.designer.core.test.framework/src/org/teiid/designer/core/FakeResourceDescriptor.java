@@ -10,7 +10,7 @@ package org.teiid.designer.core;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.emf.ecore.resource.Resource.Factory;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.container.ResourceDescriptorImpl;
 import org.teiid.designer.core.resource.xmi.MtkXmiResourceFactory;
 

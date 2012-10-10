@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.teiid.core.UserCancelledException;
+import org.teiid.core.designer.UserCancelledException;
 import org.teiid.designer.compare.DifferenceReport;
 import org.teiid.designer.compare.ModelGenerator;
 import org.teiid.designer.compare.ModelerComparePlugin;

@@ -10,8 +10,8 @@ package org.teiid.designer.core.util;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.core.util.CoreArgCheck;
-import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 
 /**

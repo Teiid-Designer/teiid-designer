@@ -38,11 +38,11 @@ import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
-import org.teiid.core.id.ObjectID;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.core.designer.id.ObjectID;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.ModelerCoreException;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.metamodels.xml.util.XmlDocumentUtil;
 

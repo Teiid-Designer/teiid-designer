@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.jdbc.metadata.impl;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.jdbc.metadata.Includes;
 import org.teiid.designer.jdbc.metadata.JdbcDatabase;
 

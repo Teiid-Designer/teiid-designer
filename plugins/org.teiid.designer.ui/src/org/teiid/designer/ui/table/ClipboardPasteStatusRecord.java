@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.ui.table;
 
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.ui.UiConstants;
 
 

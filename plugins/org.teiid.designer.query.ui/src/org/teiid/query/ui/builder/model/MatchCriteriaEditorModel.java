@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.builder.model;
 
-import org.teiid.core.util.I18nUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.sql.lang.MatchCriteria;
 import org.teiid.query.sql.symbol.Expression;

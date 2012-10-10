@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiConstants;

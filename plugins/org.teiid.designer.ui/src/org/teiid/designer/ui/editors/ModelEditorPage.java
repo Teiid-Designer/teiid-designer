@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.teiid.core.event.EventObjectListener;
+import org.teiid.core.designer.event.EventObjectListener;
 
 /**
  * ModelEditorPage is the interface that all Contributors to the multi-page ModelEditor must implement. The interface defines the

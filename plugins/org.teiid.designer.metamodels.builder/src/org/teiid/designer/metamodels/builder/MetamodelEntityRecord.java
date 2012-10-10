@@ -9,7 +9,7 @@ package org.teiid.designer.metamodels.builder;
 
 import java.util.Map;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.metamodels.builder.util.MetaClassUriHelper;
 
 

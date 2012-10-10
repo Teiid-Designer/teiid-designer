@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.jdbc.relational;
 
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.jdbc.relational.JdbcImporter;
 

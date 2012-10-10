@@ -20,9 +20,9 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingFactory;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.ModelerCoreException;
 import org.teiid.designer.core.util.ModelVisitor;
 import org.teiid.designer.core.util.ModelVisitorProcessor;
 

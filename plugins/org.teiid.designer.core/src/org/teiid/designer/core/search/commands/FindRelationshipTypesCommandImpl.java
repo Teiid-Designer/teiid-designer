@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.index.IEntryResult;
 import org.teiid.designer.core.index.IndexConstants;

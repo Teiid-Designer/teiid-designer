@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.jdbc.metadata.JdbcCatalog;
 import org.teiid.designer.jdbc.metadata.JdbcNode;
 import org.teiid.designer.jdbc.metadata.JdbcProcedure;

@@ -11,11 +11,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.teiid.client.metadata.ParameterInfo;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.query.parser.QueryParser;
@@ -57,7 +55,7 @@ import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.CommandStatement;
 import org.teiid.query.sql.proc.CreateProcedureCommand;
 import org.teiid.query.sql.proc.DeclareStatement;
-import org.teiid.query.sql.proc.RaiseErrorStatement;
+import org.teiid.query.sql.proc.RaiseStatement;
 import org.teiid.query.sql.symbol.AggregateSymbol;
 import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.symbol.Constant;
@@ -1295,13 +1293,13 @@ public class TestDisplayNodeFactory extends TestCase {
         helpTest(dclStmt, "DECLARE String a;"); //$NON-NLS-1$
     }
 
-    public void testRaiseErrorStatement() {
-        RaiseErrorStatement errStmt = new RaiseErrorStatement(new Constant("My Error")); //$NON-NLS-1$
+    public void testRaiseStatement() {
+        RaiseStatement errStmt = new RaiseStatement(new Constant("My Error")); //$NON-NLS-1$
         helpTest(errStmt, "ERROR 'My Error';"); //$NON-NLS-1$
     }
 
-    public void testRaiseErrorStatementWithExpression() {
-        RaiseErrorStatement errStmt = new RaiseErrorStatement(new ElementSymbol("a")); //$NON-NLS-1$
+    public void testRaiseStatementWithExpression() {
+        RaiseStatement errStmt = new RaiseStatement(new ElementSymbol("a")); //$NON-NLS-1$
         helpTest(errStmt, "ERROR a;"); //$NON-NLS-1$
     }
 
@@ -1350,7 +1348,7 @@ public class TestDisplayNodeFactory extends TestCase {
         d1.setGroup(new GroupSymbol("g")); //$NON-NLS-1$
         CommandStatement cmdStmt = new CommandStatement(d1);
         AssignmentStatement assigStmt = new AssignmentStatement(new ElementSymbol("a"), new Constant(new Integer(1))); //$NON-NLS-1$
-        RaiseErrorStatement errStmt = new RaiseErrorStatement(new Constant("My Error")); //$NON-NLS-1$
+        RaiseStatement errStmt = new RaiseStatement(new Constant("My Error")); //$NON-NLS-1$
         Block b = new Block();
         b.addStatement(cmdStmt);
         b.addStatement(assigStmt);
@@ -1363,7 +1361,7 @@ public class TestDisplayNodeFactory extends TestCase {
         d1.setGroup(new GroupSymbol("g")); //$NON-NLS-1$
         CommandStatement cmdStmt = new CommandStatement(d1);
         AssignmentStatement assigStmt = new AssignmentStatement(new ElementSymbol("a"), new Constant(new Integer(1))); //$NON-NLS-1$
-        RaiseErrorStatement errStmt = new RaiseErrorStatement(new Constant("My Error")); //$NON-NLS-1$
+        RaiseStatement errStmt = new RaiseStatement(new Constant("My Error")); //$NON-NLS-1$
         Block b = new Block();
         b.addStatement(cmdStmt);
         b.addStatement(assigStmt);
@@ -1377,7 +1375,7 @@ public class TestDisplayNodeFactory extends TestCase {
         d1.setGroup(new GroupSymbol("g")); //$NON-NLS-1$
         CommandStatement cmdStmt = new CommandStatement(d1);
         AssignmentStatement assigStmt = new AssignmentStatement(new ElementSymbol("a"), new Constant(new Integer(1))); //$NON-NLS-1$
-        RaiseErrorStatement errStmt = new RaiseErrorStatement(new Constant("My Error")); //$NON-NLS-1$
+        RaiseStatement errStmt = new RaiseStatement(new Constant("My Error")); //$NON-NLS-1$
         Block b = new Block();
         b.addStatement(cmdStmt);
         b.addStatement(assigStmt);
@@ -1391,7 +1389,7 @@ public class TestDisplayNodeFactory extends TestCase {
         d1.setGroup(new GroupSymbol("g")); //$NON-NLS-1$
         CommandStatement cmdStmt = new CommandStatement(d1);
         AssignmentStatement assigStmt = new AssignmentStatement(new ElementSymbol("a"), new Constant(new Integer(1))); //$NON-NLS-1$
-        RaiseErrorStatement errStmt = new RaiseErrorStatement(new Constant("My Error")); //$NON-NLS-1$
+        RaiseStatement errStmt = new RaiseStatement(new Constant("My Error")); //$NON-NLS-1$
         Block b = new Block();
         b.addStatement(cmdStmt);
         b.addStatement(assigStmt);

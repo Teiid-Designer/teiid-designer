@@ -20,7 +20,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.transformation.ui.builder.util.CompositeEditorMessagePanel;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.query.sql.LanguageObject;

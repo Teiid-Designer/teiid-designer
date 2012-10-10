@@ -16,8 +16,8 @@ import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.events.TreeListener;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.teiid.core.event.IChangeListener;
-import org.teiid.core.event.IChangeNotifier;
+import org.teiid.core.designer.event.IChangeListener;
+import org.teiid.core.designer.event.IChangeNotifier;
 
 /**
  * TreeExpansionMonitor is a utility class that monitors the expanding & collapsing of

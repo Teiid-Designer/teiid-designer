@@ -9,8 +9,8 @@ package org.teiid.designer.core.util;
 
 import java.io.File;
 import org.eclipse.emf.common.util.URI;
-import org.teiid.core.id.UUID;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.id.UUID;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 
 /** 

@@ -9,7 +9,7 @@ package org.teiid.designer.transformation.ui.editors.sqleditor.actions;
 
 import java.util.EventObject;
 
-import org.teiid.core.event.EventObjectListener;
+import org.teiid.core.designer.event.EventObjectListener;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlEditorInternalEvent;
@@ -51,7 +51,7 @@ public class Validate extends AbstractAction implements EventObjectListener {
     
     /**
      * handle events from the SqlEditorPanel - allows action to enable/disable on changes in readonly state 
-     * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
+     * @see org.teiid.core.designer.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
     @Override

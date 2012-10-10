@@ -13,7 +13,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.jdbc.JdbcPlugin;
 
 

@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.TeiidRuntimeException;
-import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.metamodels.core.ModelType;
