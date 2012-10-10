@@ -7,15 +7,18 @@
  */
 package org.teiid.designer.core;
 
-import org.teiid.core.TeiidRuntimeException;
 
 /**
  *
  * @since 8.0
  */
-public class ModelerCoreRuntimeException extends TeiidRuntimeException {
+public class ModelerCoreRuntimeException extends RuntimeException {
 	
 	Throwable child = null;
+	
+	/** An error code. */
+    private String code;
+    
     /**
      */
     private static final long serialVersionUID = 1L;
@@ -42,7 +45,8 @@ public class ModelerCoreRuntimeException extends TeiidRuntimeException {
      * @param message
      */
     public ModelerCoreRuntimeException(int code, String message) {
-        super(Integer.toString(code), message);
+        super(message);
+        setCode(Integer.toString(code));
     }
 
     /**
@@ -59,7 +63,7 @@ public class ModelerCoreRuntimeException extends TeiidRuntimeException {
      * @param message
      */
     public ModelerCoreRuntimeException(Throwable e, String message) {
-        super(e, message);
+        super(message, e);
     }
 
     /**
@@ -69,7 +73,7 @@ public class ModelerCoreRuntimeException extends TeiidRuntimeException {
      * @param message
      */
     public ModelerCoreRuntimeException(Throwable e, int code, String message) {
-        super(Integer.toString(code), message);
+        this(code, message);
         child = e;
     }
     
@@ -80,5 +84,27 @@ public class ModelerCoreRuntimeException extends TeiidRuntimeException {
     public Throwable getChild() {
     	return this.child;
     }
+    
+    /**
+     * Get the error code.
+     *
+     * @return The error code 
+     */
+    public String getCode() {
+        return this.code;
+    }
+    
+    private void setCode( String code ) {
+        this.code = code;
+    }
+
+    @Override
+    public String getMessage() {
+        String message = super.getMessage();
+        if (code == null || code.length() == 0 || message.startsWith(code)) {
+            return message;
+        }
+        return code + " " + message; //$NON-NLS-1$
+    } 
 
 }
