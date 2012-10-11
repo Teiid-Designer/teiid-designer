@@ -78,13 +78,18 @@ public final class EditServerAction extends BaseSelectionListenerAction {
     public void run() {
     	// if serverBeingEdited == NULL need to query user to select one in order to continue
     	
-    	if( this.serverBeingEdited == null && teiidServerManager.getServers().size() > 0) {
-    		ServerSelectionDialog dialog = new ServerSelectionDialog(this.shell);
-    		dialog.open();
+    	if( this.serverBeingEdited == null) {
+    	    if (teiidServerManager.getServers().size() == 1) {
+    	        this.serverBeingEdited = teiidServerManager.getServers().iterator().next();
+    	    }
+    	    else if (teiidServerManager.getServers().size() > 1) {
+    	        ServerSelectionDialog dialog = new ServerSelectionDialog(this.shell);
+    	        dialog.open();
     		
-    		if (dialog.getReturnCode() == Window.OK) {
-    			this.serverBeingEdited = dialog.getServer();
-    		}
+    	        if (dialog.getReturnCode() == Window.OK) {
+    	            this.serverBeingEdited = dialog.getServer();
+    	        }
+    	    }
     	}
     	
     	if( this.serverBeingEdited == null ) return;

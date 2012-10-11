@@ -26,8 +26,8 @@ import java.util.Properties;
 import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
@@ -40,6 +40,7 @@ import org.teiid.adminapi.VDB;
 import org.teiid.adminapi.impl.VDBMetaData;
 import org.teiid.adminapi.impl.VDBMetadataParser;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
@@ -583,7 +584,7 @@ public class ExecutionAdmin {
 	        }
 	    }
         
-        this.admin.undeploy(name);
+        this.admin.undeploy(name + ModelerCore.VDB_FILE_EXTENSION);
         vdb.save(null);
         ptargetvdbToMerge.refreshLocal(IResource.DEPTH_INFINITE, null);
         deployVdb(vdb.getFile()); 	
@@ -685,7 +686,7 @@ public class ExecutionAdmin {
 
     public void undeployVdb( String vdbName,
                              int vdbVersion ) throws Exception {
-        this.admin.undeploy(vdbName);
+        this.admin.undeploy(vdbName + ModelerCore.VDB_FILE_EXTENSION);
         VDB vdb = getVdb(vdbName);
 
         refreshVDBs();
@@ -704,7 +705,8 @@ public class ExecutionAdmin {
     public void undeployVdb( VDB vdb ) throws Exception {
         CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
 
-        admin.undeploy(vdb.getName());
+        /* Seems that full name of vdb is actually the name.vdb */
+        admin.undeploy(vdb.getName() + ModelerCore.VDB_FILE_EXTENSION);
 
         refreshVDBs();
 
