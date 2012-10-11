@@ -16,6 +16,8 @@ use strict;
 use Getopt::Long; 
 use LWP::Simple;
 
+my $line;
+
 #################
 #
 # Show help and exit
@@ -29,16 +31,10 @@ sub usage {
 }
 
 # jboss tools branch to download target file from
-my $jbt_branch = "tags/jbosstools-4.0.0.Alpha1";
+my $jbt_branch = "tags/jbosstools-4.0.0.Alpha2";
 
 # jboss tools target file
 my $jbt_target_file = "multiple.target";
-
-# jboss tools features required by teiid designer
-my %jbt_required_features = (
-	'org.jboss.ide.eclipse.as.serverAdapter.wtp.feature.source.feature.group' => '2.4.0.Alpha1-v20120910-1745-H33',
-	'org.jboss.ide.eclipse.as.serverAdapter.wtp.feature.feature.group' => '2.4.0.Alpha1-v20120910-1745-H33'
-);
 
 my $help;
 usage() if ( ! GetOptions('help|?' => \$help, 'b=s' => \$jbt_branch, 't=s' => \$jbt_target_file)
@@ -65,10 +61,26 @@ if (length($base_target) == 0) {
 my $jbt_repo_snippet = "\n\n<!-- Extra repository for jboss tools --> \
 <location includeAllPlatforms=\"false\" includeConfigurePhase=\"false\" includeMode=\"slicer\" includeSource=\"true\" type=\"InstallableUnit\">\n";
 
-my $plugin;
-my $version;
-while (($plugin, $version) = each(%jbt_required_features)) {
-  $jbt_repo_snippet .= "\t<unit id=\"$plugin\" version=\"$version\"/>\n"; 
+my @feature;
+
+open(PROPERTIES, "<jboss.feature.properties") or die "Cannot open $!";
+my @features = (<PROPERTIES>);
+close(PROPERTIES);
+
+foreach $line (@features) {
+
+	if ($line =~ m/^#/) {
+		next;
+	}
+
+	@feature = split(/=/, $line);
+
+  my $name = $feature[0];
+	my $version = $feature[1];
+
+	if (defined $name && length($name) > 0 && defined $version && length($version)) {
+		$jbt_repo_snippet .= "\t<unit id=\"$name\" version=\"$version\"/>\n"; 
+	}
 }
 
 $jbt_repo_snippet .= "\t<repository location=\"http://download.jboss.org/jbosstools/updates/development/juno\"/>\n";
@@ -79,7 +91,6 @@ $jbt_repo_snippet .= "</location>\n\n\n";
 # name and appending the jboss tools location
 #
 my $td_contents;
-my $line;
 foreach $line (split /^/ , $base_target) {
 	
 	# Update the name
