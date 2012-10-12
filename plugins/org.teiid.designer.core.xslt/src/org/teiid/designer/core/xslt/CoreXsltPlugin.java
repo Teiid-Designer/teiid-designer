@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.jdom.Document;
 import org.jdom.output.XMLOutputter;
 import org.osgi.framework.BundleContext;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.PluginUtilImpl;
@@ -77,7 +77,7 @@ public class CoreXsltPlugin extends Plugin {
      * as the root of the fragment to be transformed; may be null if the whole document is to be transformed.
      * @param output the stream to which the transformed
      */
-    public static Source createSource(final Document sourceDoc) throws TeiidException {
+    public static Source createSource(final Document sourceDoc) throws TeiidDesignerException {
         CoreArgCheck.isNotNull(sourceDoc);
 
         /*
@@ -103,7 +103,7 @@ public class CoreXsltPlugin extends Plugin {
             return new StreamSource(transformSource);
         } catch ( Throwable e ) {
             final String msg = CoreXsltPlugin.Util.getString("CoreXsltPlugin.Error_loading_the_XSLT_transform"); //$NON-NLS-1$
-            throw new TeiidException(e,msg);
+            throw new TeiidDesignerException(e,msg);
         }
     }
 

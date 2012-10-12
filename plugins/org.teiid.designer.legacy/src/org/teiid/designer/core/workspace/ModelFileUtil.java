@@ -10,7 +10,7 @@ package org.teiid.designer.core.workspace;
 import java.io.File;
 import java.io.InputStream;
 import org.teiid.logging.LogManager;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.util.FileUtils;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.common.xmi.XMIHeaderReader;
@@ -213,7 +213,7 @@ public class ModelFileUtil {
                     CACHE.setXmiHeaderToCache(resource, header);
                 }
                 return header;
-            } catch (TeiidException e) {
+            } catch (TeiidDesignerException e) {
                 LogManager.logWarning(RuntimeMetadataPlugin.PLUGIN_ID, e, e.getMessage());
             } catch (IllegalArgumentException iae) {
                 // Swallowing this exception because we're doing all three checks that would produce it.
@@ -236,7 +236,7 @@ public class ModelFileUtil {
         if (resourceStream != null) {
             try {
                 return XMIHeaderReader.readHeader(resourceStream);
-            } catch (TeiidException e) {
+            } catch (TeiidDesignerException e) {
                 LogManager.logWarning(RuntimeMetadataPlugin.PLUGIN_ID, e, e.getMessage());
             }
         }

@@ -41,7 +41,7 @@ import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.eclipse.xsd.XSDImport;
 import org.eclipse.xsd.XSDSchema;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.designer.common.xsd.XsdHeader;
 import org.teiid.designer.common.xsd.XsdHeaderReader;
 import org.teiid.designer.core.ModelerCore;
@@ -193,7 +193,7 @@ public class XsdFileSystemImportUtil {
 
         try {
             header = XsdHeaderReader.readHeader(xsdFile);
-        } catch (TeiidException theException) {
+        } catch (TeiidDesignerException theException) {
             ModelerXsdUiConstants.Util.log(theException);
         }
 

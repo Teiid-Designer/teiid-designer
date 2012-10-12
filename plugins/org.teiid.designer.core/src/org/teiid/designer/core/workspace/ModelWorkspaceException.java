@@ -113,7 +113,7 @@ public class ModelWorkspaceException extends ModelerCoreException {
             return new ModelStatusImpl((CoreException)nestedException);
         }
         // should never really get here, as the only nested exceptions of a 
-        // TeiidException must be CoreException
+        // TeiidDesignerException must be CoreException
         return null;
     }
     /**

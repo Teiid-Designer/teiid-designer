@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.FileUtils;
 import org.teiid.core.util.StringUtil;
@@ -74,9 +74,9 @@ public class SimpleIndexUtil {
      * @param pattern
      * @param fieldDelimiter
      * @return results
-     * @throws TeiidException
+     * @throws TeiidDesignerException
      */
-    public static IEntryResult[] queryIndex(final Index[] indexes, final char[] pattern, final char fieldDelimiter) throws TeiidException {
+    public static IEntryResult[] queryIndex(final Index[] indexes, final char[] pattern, final char fieldDelimiter) throws TeiidDesignerException {
         final boolean isCaseSensitive  = false;
         final List<IEntryResult> queryResult = new ArrayList<IEntryResult>();
 
@@ -97,7 +97,7 @@ public class SimpleIndexUtil {
                 }
             }
         } catch(IOException e) {
-            throw new TeiidException(e); 
+            throw new TeiidDesignerException(e); 
         }
         
         // Remove any results that do not match after tokenizing the record
@@ -155,9 +155,9 @@ public class SimpleIndexUtil {
      * @param indexes the array of MtkIndex instances to query
      * @param pattern
      * @return results
-     * @throws TeiidException
+     * @throws TeiidDesignerException
      */
-    public static IEntryResult[] queryIndex(final Index[] indexes, final char[] pattern, final boolean isPrefix, final boolean returnFirstMatch) throws TeiidException {
+    public static IEntryResult[] queryIndex(final Index[] indexes, final char[] pattern, final boolean isPrefix, final boolean returnFirstMatch) throws TeiidDesignerException {
         return queryIndex(null, indexes, pattern, isPrefix, true, returnFirstMatch);
     }
     
@@ -172,9 +172,9 @@ public class SimpleIndexUtil {
      * @param indexes the array of MtkIndex instances to query
      * @param pattern
      * @return results
-     * @throws TeiidException
+     * @throws TeiidDesignerException
      */
-    public static IEntryResult[] queryIndex(ProgressMonitor monitor, final Index[] indexes, final char[] pattern, final boolean isPrefix, final boolean returnFirstMatch) throws TeiidException {
+    public static IEntryResult[] queryIndex(ProgressMonitor monitor, final Index[] indexes, final char[] pattern, final boolean isPrefix, final boolean returnFirstMatch) throws TeiidDesignerException {
         return queryIndex(monitor, indexes, pattern, isPrefix, true, returnFirstMatch);        
     }
     
@@ -189,9 +189,9 @@ public class SimpleIndexUtil {
      * @param indexes the array of MtkIndex instances to query
      * @param pattern
      * @return results
-     * @throws TeiidException
+     * @throws TeiidDesignerException
      */
-    public static IEntryResult[] queryIndex(ProgressMonitor monitor, final Index[] indexes, final char[] pattern, final boolean isPrefix, final boolean isCaseSensitive, final boolean returnFirstMatch) throws TeiidException {
+    public static IEntryResult[] queryIndex(ProgressMonitor monitor, final Index[] indexes, final char[] pattern, final boolean isPrefix, final boolean isCaseSensitive, final boolean returnFirstMatch) throws TeiidDesignerException {
         final List<IEntryResult> queryResult = new ArrayList<IEntryResult>();
         if ( monitor != null ) {
             monitor.beginTask( null, indexes.length );        
@@ -242,7 +242,7 @@ public class SimpleIndexUtil {
                 }                
             }
         } catch(IOException e) {
-            throw new TeiidException(e);
+            throw new TeiidDesignerException(e);
         }
 
         return queryResult.toArray(new IEntryResult[queryResult.size()]);
@@ -259,9 +259,9 @@ public class SimpleIndexUtil {
      * @param indexes the array of MtkIndex instances to query
      * @param pattern
      * @return results
-     * @throws TeiidException
+     * @throws TeiidDesignerException
      */
-    public static IEntryResult[] queryIndex(ProgressMonitor monitor, final Index[] indexes, final Collection patterns, final boolean isPrefix, final boolean isCaseSensitive, final boolean returnFirstMatch) throws TeiidException {
+    public static IEntryResult[] queryIndex(ProgressMonitor monitor, final Index[] indexes, final Collection patterns, final boolean isPrefix, final boolean isCaseSensitive, final boolean returnFirstMatch) throws TeiidDesignerException {
         final List<IEntryResult> queryResult = new ArrayList<IEntryResult>();
         if ( monitor != null ) {
             monitor.beginTask( null, indexes.length );        
@@ -332,7 +332,7 @@ public class SimpleIndexUtil {
                 }
             }
         } catch(IOException e) {
-            throw new TeiidException(e);
+            throw new TeiidDesignerException(e);
         } finally {
             // close file input
             try {
@@ -449,10 +449,10 @@ public class SimpleIndexUtil {
 	 * @param indexName The shortName of the index file
 	 * @param selector The indexSelector to lookup indexes
 	 * @return An array of indexes, may be duplicates depending on index selector.
-	 * @throws TeiidException If there is an error looking up indexes
+	 * @throws TeiidDesignerException If there is an error looking up indexes
 	 * @since 4.2
 	 */
-    public static Index[] getIndexes(final String indexName, final IndexSelector selector) throws TeiidException {
+    public static Index[] getIndexes(final String indexName, final IndexSelector selector) throws TeiidDesignerException {
 		ArgCheck.isNotEmpty(indexName);
         // The the index file name for the record type
         try {
@@ -469,7 +469,7 @@ public class SimpleIndexUtil {
             }
             return tmp.toArray(new Index[tmp.size()]);
         } catch(IOException e) {
-            throw new TeiidException(e);
+            throw new TeiidDesignerException(e);
         }
     }
 

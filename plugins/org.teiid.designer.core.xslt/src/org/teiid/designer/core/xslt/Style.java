@@ -10,7 +10,7 @@ package org.teiid.designer.core.xslt;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.xml.transform.stream.StreamSource;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 
 /**
  * Style
@@ -23,7 +23,7 @@ public interface Style {
     
     public String getDescription();
 
-    public InputStream getInputStream() throws IOException, TeiidException;
+    public InputStream getInputStream() throws IOException, TeiidDesignerException;
 
-    public StreamSource getStreamSource() throws IOException, TeiidException;
+    public StreamSource getStreamSource() throws IOException, TeiidDesignerException;
 }

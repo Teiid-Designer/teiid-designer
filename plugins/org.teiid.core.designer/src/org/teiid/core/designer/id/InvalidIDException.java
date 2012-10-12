@@ -23,7 +23,7 @@
 package org.teiid.core.designer.id;
 
 import org.teiid.core.CorePlugin;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 
 /**
  * Exception which occurs if an error occurs within the server that is not
@@ -32,7 +32,7 @@ import org.teiid.core.TeiidException;
  *
  * @since 8.0
  */
-public class InvalidIDException extends TeiidException {
+public class InvalidIDException extends TeiidDesignerException {
     private static final String INVALID_ID_MESSAGE = CorePlugin.Util.getString("InvalidIDException.Invalid_ID_1"); //$NON-NLS-1$
 
     /**

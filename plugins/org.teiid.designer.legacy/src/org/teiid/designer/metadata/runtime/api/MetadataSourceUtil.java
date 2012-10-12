@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.core.util.StringUtil;
@@ -18,7 +18,7 @@ import org.teiid.designer.core.util.AssertionUtil;
 public class MetadataSourceUtil {
 
     public static String getFileContentAsString( String path,
-                                                 MetadataSource iss ) throws TeiidException {
+                                                 MetadataSource iss ) throws TeiidDesignerException {
         File f = iss.getFile(path);
         if (f == null) {
             return null;
@@ -26,12 +26,12 @@ public class MetadataSourceUtil {
         try {
             return ObjectConverterUtil.convertFileToString(f);
         } catch (IOException e) {
-            throw new TeiidException(e, "MetadataSourceUtil.ioExceptionConvertingFileToString");
+            throw new TeiidDesignerException(e, "MetadataSourceUtil.ioExceptionConvertingFileToString");
         }
     }
 
     /**
-     * @throws TeiidException
+     * @throws TeiidDesignerException
      * @see org.teiid.designer.core.index.IndexSelector#getFileContent(java.lang.String, java.lang.String[],
      *      java.lang.String[])
      * @since 4.2
@@ -39,7 +39,7 @@ public class MetadataSourceUtil {
     public static InputStream getFileContent( final String path,
                                               MetadataSource iss,
                                               final String[] tokens,
-                                              final String[] tokenReplacements ) throws TeiidException {
+                                              final String[] tokenReplacements ) throws TeiidDesignerException {
         ArgCheck.isNotNull(tokens);
         ArgCheck.isNotNull(tokenReplacements);
         AssertionUtil.isEqual(tokens.length, tokenReplacements.length);

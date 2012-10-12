@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Properties;
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.TeiidComponentException;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.TeiidRuntimeException;
 import org.teiid.core.designer.id.UUID;
 import org.teiid.core.types.DataTypeManager;
@@ -1878,7 +1878,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                                          boolean returnFirstMatch ) throws TeiidComponentException {
         try {
             return SimpleIndexUtil.queryIndex(indexes, pattern, isPrefix, returnFirstMatch);
-        } catch (TeiidException e) {
+        } catch (TeiidDesignerException e) {
             throw new TeiidComponentException(e, e.getMessage());
         }
     }
@@ -1898,7 +1898,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                                          boolean returnFirstMatch ) throws TeiidComponentException {
         try {
             return SimpleIndexUtil.queryIndex(null, indexes, pattern, isPrefix, isCaseSensitive, returnFirstMatch);
-        } catch (TeiidException e) {
+        } catch (TeiidDesignerException e) {
             throw new TeiidComponentException(e, e.getMessage());
         }
     }

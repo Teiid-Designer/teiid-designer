@@ -17,7 +17,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.jdom.Document;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.util.CoreArgCheck;
 
 /**
@@ -40,7 +40,7 @@ public class XsltTransform {
 		this.style = style;
 	}
     
-    protected static Templates getTemplates( final Style style ) throws IOException, TeiidException,
+    protected static Templates getTemplates( final Style style ) throws IOException, TeiidDesignerException,
                                                                         TransformerConfigurationException {
         CoreArgCheck.isNotNull(style);
         // Create a source for the stylesheet ...
@@ -62,7 +62,7 @@ public class XsltTransform {
      * as the root of the fragment to be transformed; may be null if the whole document is to be transformed.
      * @param output the stream to which the transformed 
      */
-    protected Transformer createTransformer() throws TeiidException, TransformerConfigurationException, IOException  {
+    protected Transformer createTransformer() throws TeiidDesignerException, TransformerConfigurationException, IOException  {
 
         // Obtain the Templates object (precompiled stylesheet)
         final Templates templates = getTemplates(this.style);   // may throw exception
@@ -79,7 +79,7 @@ public class XsltTransform {
      * @param output the OutputStream to which the transformed content is to be written
      */
     public void transform(final Document sourceDoc, final OutputStream output) throws IOException, 
-    TeiidException,
+    TeiidDesignerException,
                                                             TransformerException,
                                                             TransformerConfigurationException {
     	CoreArgCheck.isNotNull(sourceDoc);
@@ -94,7 +94,7 @@ public class XsltTransform {
             transformer.transform(source, result);
         } catch ( Throwable e ) {
             final String msg = CoreXsltPlugin.Util.getString("XsltTransform.Error_applying_the_XSLT_transform"); //$NON-NLS-1$
-            throw new TeiidException(e,msg);
+            throw new TeiidDesignerException(e,msg);
         }
     }
 

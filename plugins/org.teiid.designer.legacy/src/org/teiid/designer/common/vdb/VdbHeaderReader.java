@@ -23,7 +23,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.TeiidRuntimeException;
 import org.teiid.core.util.ArgCheck;
 
@@ -41,7 +41,7 @@ public class VdbHeaderReader {
     // P U B L I C M E T H O D S
     // ==================================================================================
 
-    public static VdbHeader readHeader( final File file ) throws TeiidException {
+    public static VdbHeader readHeader( final File file ) throws TeiidDesignerException {
         if (file != null && file.isFile() && file.exists() && file.length() > 0) {
             final String lowerCaseFileName = file.getName().toLowerCase();
 
@@ -97,9 +97,9 @@ public class VdbHeaderReader {
      * 
      * @param istream the InputStream from which we read the header
      * @return the VdbHeader object representing the contents of this section
-     * @throws TeiidException if there is an error reading from the stream
+     * @throws TeiidDesignerException if there is an error reading from the stream
      */
-    private VdbHeader read( InputStream istream ) throws TeiidException {
+    private VdbHeader read( InputStream istream ) throws TeiidDesignerException {
         if (istream == null) {
             // TODO: ADD I18n ??
             final String msg = "VdbHeaderReader.The_InputStream_reference_may_not_be_null._1"; //$NON-NLS-1$
@@ -126,7 +126,7 @@ public class VdbHeaderReader {
         } catch (Throwable e) {
             // TODO: ADD I18n ??
             final String msg = "VdbHeaderReader.Error_in_parsing_file_1"; //$NON-NLS-1$
-            throw new TeiidException(e, msg);
+            throw new TeiidDesignerException(e, msg);
         }
         return ((TerminatingVdbHeaderContentHandler)handler).getVdbHeader();
     }
@@ -136,9 +136,9 @@ public class VdbHeaderReader {
      * 
      * @param file the File from which we read the header
      * @return the VdbHeader object representing the contents of this section
-     * @throws TeiidException if there is an error reading the file
+     * @throws TeiidDesignerException if there is an error reading the file
      */
-    public VdbHeader read( File file ) throws TeiidException {
+    public VdbHeader read( File file ) throws TeiidDesignerException {
         if (file == null) {
             //// TODO: ADD I18n ??
             final String msg = "VdbHeaderReader.The_file_reference_may_not_be_null_2"; //$NON-NLS-1$
@@ -172,7 +172,7 @@ public class VdbHeaderReader {
         } catch (FileNotFoundException e) {
             // TODO: ADD I18n ??
             final String msg = "VdbHeaderReader.Error_in_parsing_file_1"; //$NON-NLS-1$
-            throw new TeiidException(e, msg);
+            throw new TeiidDesignerException(e, msg);
         } finally {
             if (bis != null) {
                 try {

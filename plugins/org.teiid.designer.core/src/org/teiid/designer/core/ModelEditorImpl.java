@@ -82,7 +82,7 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.TeiidRuntimeException;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
@@ -3905,7 +3905,7 @@ public class ModelEditorImpl implements ModelEditor {
             if (resourceFile.exists()) {
                 try {
                     header = XMIHeaderReader.readHeader(resourceFile);
-                } catch (TeiidException e) {
+                } catch (TeiidDesignerException e) {
                     ModelerCore.Util.log(IStatus.ERROR, e, e.getLocalizedMessage());
                 }
             }

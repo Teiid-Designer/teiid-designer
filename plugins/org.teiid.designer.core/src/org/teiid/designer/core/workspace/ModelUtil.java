@@ -33,7 +33,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileSeparatorUtil;
@@ -488,7 +488,7 @@ public class ModelUtil {
     public static VdbHeader getVdbHeader( final File resource ) {
         if (resource != null && resource.isFile() && resource.exists()) if (ModelFileUtil.isVdbArchiveFile(resource)) try {
             return VdbHeaderReader.readHeader(resource);
-        } catch (final TeiidException e) {
+        } catch (final TeiidDesignerException e) {
             ModelerCore.Util.log(e);
         }
         return null;
@@ -556,7 +556,7 @@ public class ModelUtil {
                 // add to cache
                 if (cache != null) cache.setXmiHeaderToCache(resource, header);
                 return header;
-            } catch (final TeiidException e) {
+            } catch (final TeiidDesignerException e) {
                 LogManager.logWarning(RuntimeMetadataPlugin.PLUGIN_ID, e, e.getMessage());
             } catch (final IllegalArgumentException iae) {
                 // Swallowing this exception because we're doing all three checks that would produce it.
@@ -592,7 +592,7 @@ public class ModelUtil {
     public static XsdHeader getXsdHeader( final File resource ) {
         if (resource != null && resource.isFile() && resource.exists()) if (ModelFileUtil.isXsdFile(resource)) try {
             return XsdHeaderReader.readHeader(resource);
-        } catch (final TeiidException e) {
+        } catch (final TeiidDesignerException e) {
             ModelerCore.Util.log(e);
         }
         return null;

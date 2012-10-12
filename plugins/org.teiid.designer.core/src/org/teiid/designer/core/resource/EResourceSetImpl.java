@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.IChangeNotifier;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.TeiidRuntimeException;
 import org.teiid.core.designer.id.IDGenerator;
 import org.teiid.core.designer.id.InvalidIDException;
@@ -424,7 +424,7 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
             if (f.isFile() && f.exists()) {
                 try {
                     return XMIHeaderReader.readHeader(f);
-                } catch (TeiidException e) {
+                } catch (TeiidDesignerException e) {
                     ModelerCore.Util.log(e);
                 }
             }
