@@ -9,7 +9,6 @@ package org.teiid.designer.xml.ui;
 
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
-import org.teiid.core.CoreConstants.Debug;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
@@ -22,7 +21,7 @@ import org.teiid.designer.xml.ui.actions.ModelerXmlActionService;
  *
  * @since 8.0
  */
-public class ModelerXmlUiPlugin extends AbstractUiPlugin implements Debug, ModelerXmlUiConstants {
+public class ModelerXmlUiPlugin extends AbstractUiPlugin implements ModelerXmlUiConstants {
 
     // The shared instance.
     private static ModelerXmlUiPlugin plugin;
