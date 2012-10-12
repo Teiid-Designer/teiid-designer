@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
@@ -56,8 +55,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.teiid.api.exception.query.QueryParserException;
-import org.teiid.api.exception.query.QueryResolverException;
-import org.teiid.core.TeiidComponentException;
 import org.teiid.designer.mapping.choice.IChoiceObject;
 import org.teiid.designer.mapping.factory.IMappableTree;
 import org.teiid.designer.mapping.factory.TreeMappingAdapter;
@@ -989,9 +986,7 @@ public class ChoicePanel extends SashForm
 
         try {
             ResolverVisitor.resolveLanguageObject(crit, metadata);
-        } catch (QueryResolverException err) {
-            // ignore
-        } catch (TeiidComponentException err) {
+        } catch (Exception err) {
             // ignore
         }
 

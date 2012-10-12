@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import org.teiid.api.exception.query.QueryMetadataException;
-import org.teiid.core.TeiidComponentException;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.Assertion;
 import org.teiid.core.util.LRUCache;
@@ -24,12 +23,12 @@ import org.teiid.core.util.StringUtil;
 import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.core.util.AssertionUtil;
 import org.teiid.designer.metadata.runtime.ColumnRecord;
-import org.teiid.designer.metadata.runtime.MetadataRecord;
-import org.teiid.designer.metadata.runtime.TableRecord;
 import org.teiid.designer.metadata.runtime.ColumnSetRecord.ColumnSetRecordProperties;
 import org.teiid.designer.metadata.runtime.ForeignKeyRecord.ForeignKeyRecordProperties;
+import org.teiid.designer.metadata.runtime.MetadataRecord;
 import org.teiid.designer.metadata.runtime.MetadataRecord.MetadataRecordProperties;
 import org.teiid.designer.metadata.runtime.ProcedureRecord.ProcedureRecordProperties;
+import org.teiid.designer.metadata.runtime.TableRecord;
 import org.teiid.designer.metadata.runtime.TableRecord.TableRecordProperties;
 import org.teiid.query.mapping.relational.QueryNode;
 import org.teiid.query.mapping.xml.MappingDocument;
@@ -89,7 +88,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getElementID(java.lang.String)
      */
     @Override
-	public Object getElementID( final String elementName ) throws TeiidComponentException, QueryMetadataException {
+	public Object getElementID( final String elementName ) throws QueryMetadataException {
         // Check the cache first ...
         MetadataRecord record = getRecordByName(elementName, IndexConstants.RECORD_TYPE.COLUMN);
 
@@ -109,7 +108,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getGroupID(java.lang.String)
      */
     @Override
-	public Object getGroupID( final String groupName ) throws TeiidComponentException, QueryMetadataException {
+	public Object getGroupID( final String groupName ) throws QueryMetadataException {
         // Check the cache first ...
         MetadataRecord record = getRecordByName(groupName, IndexConstants.RECORD_TYPE.TABLE);
 
@@ -130,7 +129,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public Collection getGroupsForPartialName( final String partialGroupName )
-        throws TeiidComponentException, QueryMetadataException {
+        throws QueryMetadataException {
         // Check the cache first ...
         String fullName = getFullNameByPartialName(partialGroupName, IndexConstants.RECORD_TYPE.TABLE);
 
@@ -162,7 +161,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getModelID(java.lang.Object)
      */
     @Override
-	public Object getModelID( final Object groupOrElementID ) throws TeiidComponentException, QueryMetadataException {
+	public Object getModelID( final Object groupOrElementID ) throws QueryMetadataException {
         ArgCheck.isInstanceOf(MetadataRecord.class, groupOrElementID);
 
         MetadataRecord record = (MetadataRecord)groupOrElementID;
@@ -187,7 +186,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getElementIDsInGroupID(java.lang.Object)
      */
     @Override
-	public List getElementIDsInGroupID( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+	public List getElementIDsInGroupID( final Object groupID ) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -225,7 +224,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getGroupIDForElementID(java.lang.Object)
      */
     @Override
-	public Object getGroupIDForElementID( final Object elementID ) throws TeiidComponentException, QueryMetadataException {
+	public Object getGroupIDForElementID( final Object elementID ) throws QueryMetadataException {
         ArgCheck.isInstanceOf(ColumnRecord.class, elementID);
         ColumnRecord columnRecord = (ColumnRecord)elementID;
 
@@ -251,7 +250,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public StoredProcedureInfo getStoredProcedureInfoForProcedure( final String fullyQualifiedProcedureName )
-        throws TeiidComponentException, QueryMetadataException {
+        throws QueryMetadataException {
 
         StoredProcedureInfo procInfo = null;
 
@@ -291,7 +290,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getVirtualPlan(java.lang.Object)
      */
     @Override
-	public QueryNode getVirtualPlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+	public QueryNode getVirtualPlan( final Object groupID ) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -316,7 +315,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getInsertPlan(java.lang.Object)
      */
     @Override
-	public String getInsertPlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+	public String getInsertPlan( final Object groupID ) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -340,7 +339,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getUpdatePlan(java.lang.Object)
      */
     @Override
-	public String getUpdatePlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+	public String getUpdatePlan( final Object groupID ) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -364,7 +363,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getDeletePlan(java.lang.Object)
      */
     @Override
-	public String getDeletePlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+	public String getDeletePlan( final Object groupID ) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -391,7 +390,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getIndexesInGroup(java.lang.Object)
      */
     @Override
-	public Collection getIndexesInGroup( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+	public Collection getIndexesInGroup( final Object groupID ) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -415,7 +414,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getUniqueKeysInGroup(java.lang.Object)
      */
     @Override
-	public Collection getUniqueKeysInGroup( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+	public Collection getUniqueKeysInGroup( final Object groupID ) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -439,7 +438,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getForeignKeysInGroup(java.lang.Object)
      */
     @Override
-	public Collection getForeignKeysInGroup( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+	public Collection getForeignKeysInGroup( final Object groupID ) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -464,7 +463,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public Object getPrimaryKeyIDForForeignKeyID( final Object foreignKeyID )
-        throws TeiidComponentException, QueryMetadataException {
+        throws QueryMetadataException {
         ArgCheck.isInstanceOf(MetadataRecord.class, foreignKeyID);
 
         MetadataRecord keyRecord = (MetadataRecord)foreignKeyID;
@@ -489,7 +488,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public Collection getAccessPatternsInGroup( final Object groupID )
-        throws TeiidComponentException, QueryMetadataException {
+        throws QueryMetadataException {
         ArgCheck.isInstanceOf(MetadataRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -513,7 +512,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getElementIDsInIndex(java.lang.Object)
      */
     @Override
-	public List getElementIDsInIndex( final Object index ) throws TeiidComponentException, QueryMetadataException {
+	public List getElementIDsInIndex( final Object index ) throws QueryMetadataException {
         ArgCheck.isInstanceOf(MetadataRecord.class, index);
 
         MetadataRecord record = (MetadataRecord)index;
@@ -550,7 +549,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getElementIDsInKey(java.lang.Object)
      */
     @Override
-	public List getElementIDsInKey( final Object key ) throws TeiidComponentException, QueryMetadataException {
+	public List getElementIDsInKey( final Object key ) throws QueryMetadataException {
         ArgCheck.isInstanceOf(MetadataRecord.class, key);
 
         MetadataRecord record = (MetadataRecord)key;
@@ -588,7 +587,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public List getElementIDsInAccessPattern( final Object accessPattern )
-        throws TeiidComponentException, QueryMetadataException {
+        throws QueryMetadataException {
         ArgCheck.isInstanceOf(MetadataRecord.class, accessPattern);
 
         MetadataRecord record = (MetadataRecord)accessPattern;
@@ -625,7 +624,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getMappingNode(java.lang.Object)
      */
     @Override
-	public MappingNode getMappingNode( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+	public MappingNode getMappingNode( final Object groupID ) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -651,7 +650,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getXMLTempGroups(java.lang.Object)
      */
     @Override
-	public Collection getXMLTempGroups( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+	public Collection getXMLTempGroups( final Object groupID ) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -673,7 +672,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
     }
 
     @Override
-	public List getXMLSchemas( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+	public List getXMLSchemas( final Object groupID ) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -700,7 +699,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public Properties getExtensionProperties( final Object metadataID )
-        throws TeiidComponentException, QueryMetadataException {
+        throws QueryMetadataException {
 
         ArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
 

@@ -100,7 +100,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * 
      * @param context Object containing the info needed to lookup metadta.
      */
-    protected TransformationMetadata( final QueryMetadataContext context ) {
+    protected TransformationMetadata(final QueryMetadataContext context) {
         ArgCheck.isNotNull(context);
         this.context = context;
     }
@@ -113,7 +113,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getElementID(java.lang.String)
      */
     @Override
-    public Object getElementID( final String elementName ) throws TeiidComponentException, QueryMetadataException {
+    public Object getElementID(final String elementName) throws QueryMetadataException {
         ArgCheck.isNotEmpty(elementName);
 
         // elementfull names always contain atlest 3 segments(modelname.groupName.elementName)
@@ -129,7 +129,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getGroupID(java.lang.String)
      */
     @Override
-    public Object getGroupID( final String groupName ) throws TeiidComponentException, QueryMetadataException {
+    public Object getGroupID(final String groupName) throws QueryMetadataException {
         ArgCheck.isNotEmpty(groupName);
 
         // groupfull names always contain atlest 2 segments(modelname.groupName)
@@ -145,8 +145,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getGroupsForPartialName(java.lang.String)
      */
     @Override
-    public Collection getGroupsForPartialName( final String partialGroupName )
-        throws TeiidComponentException, QueryMetadataException {
+    public Collection getGroupsForPartialName(final String partialGroupName) throws QueryMetadataException {
         ArgCheck.isNotEmpty(partialGroupName);
 
         Collection tableRecords = null;
@@ -175,7 +174,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getModelID(java.lang.Object)
      */
     @Override
-    public Object getModelID( final Object groupOrElementID ) throws TeiidComponentException, QueryMetadataException {
+    public Object getModelID(final Object groupOrElementID) throws QueryMetadataException {
         ArgCheck.isInstanceOf(MetadataRecord.class, groupOrElementID);
         MetadataRecord metadataRecord = (MetadataRecord)groupOrElementID;
 
@@ -190,16 +189,16 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getFullName(java.lang.Object)
      */
     @Override
-    public String getFullName( final Object metadataID ) {
+    public String getFullName(final Object metadataID) {
         ArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
         MetadataRecord metadataRecord = (MetadataRecord)metadataID;
         return metadataRecord.getFullName();
     }
-    
+
     /* (non-Javadoc)
      * @see org.teiid.query.metadata.QueryMetadataInterface#getShortElementName(java.lang.String)
      */
-    public String getShortElementName( final String fullElementName ) {
+    public String getShortElementName(final String fullElementName) {
         ArgCheck.isNotEmpty(fullElementName);
         if (UuidUtil.isStringifiedUUID(fullElementName)) {
             return UuidUtil.stripPrefixFromUUID(fullElementName);
@@ -215,7 +214,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getElementIDsInGroupID(java.lang.Object)
      */
     @Override
-    public List getElementIDsInGroupID( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    public List getElementIDsInGroupID(final Object groupID) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
@@ -240,7 +239,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getGroupIDForElementID(java.lang.Object)
      */
     @Override
-    public Object getGroupIDForElementID( final Object elementID ) throws TeiidComponentException, QueryMetadataException {
+    public Object getGroupIDForElementID(final Object elementID) throws QueryMetadataException {
         if (elementID instanceof ColumnRecord) {
             ColumnRecord columnRecord = (ColumnRecord)elementID;
             String tableUUID = columnRecord.getParentUUID();
@@ -258,22 +257,22 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getStoredProcedureInfoForProcedure(java.lang.String)
      */
     @Override
-    public StoredProcedureInfo getStoredProcedureInfoForProcedure( final String procedureName )
-        throws TeiidComponentException, QueryMetadataException {
+    public StoredProcedureInfo getStoredProcedureInfoForProcedure(final String procedureName)
+        throws QueryMetadataException {
         StoredProcedureInfo result = getStoredProcInfoDirect(procedureName);
         if (result == null) {
             throw new QueryMetadataException(procedureName + NOT_EXISTS_MESSAGE);
         }
         return result;
     }
-    
-    public StoredProcedureInfo getStoredProcInfoDirect( final String procedureName )
-        throws TeiidComponentException, QueryMetadataException {
+
+    public StoredProcedureInfo getStoredProcInfoDirect(final String procedureName)
+        throws QueryMetadataException {
 
         ArgCheck.isNotEmpty(procedureName);
 
         ProcedureRecord procRecord = null;
-        
+
         // procedure full names always contain atlest 2 segments(modelname.procedureName)
         if (StringUtil.startsWithIgnoreCase(procedureName, UUID.PROTOCOL)
             || StringUtil.getTokens(procedureName, DELIMITER_STRING).size() >= 2) {
@@ -293,13 +292,13 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                 throw new QueryMetadataException(TransformationPlugin.Util.getString("TransformationMetadata.0", procedureName)); //$NON-NLS-1$
             }
         }
-        
+
         if (procRecord == null) {
-        
+
             String partialName = DELIMITER_CHAR + procedureName;
-    
+
             final Collection results = findMetadataRecords(IndexConstants.RECORD_TYPE.CALLABLE, partialName, true);
-            
+
             int resultSize = results.size();
             if (resultSize == 1) {
                 // get the columnset record for this result
@@ -388,7 +387,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param parameterType
      * @return
      */
-    private int convertParamRecordTypeToStoredProcedureType( final int parameterType ) {
+    private int convertParamRecordTypeToStoredProcedureType(final int parameterType) {
         switch (parameterType) {
             case MetadataConstants.PARAMETER_TYPES.IN_PARM:
                 return SPParameter.IN;
@@ -409,7 +408,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getElementType(java.lang.Object)
      */
     @Override
-    public String getElementType( final Object elementID ) {
+    public String getElementType(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getRuntimeType();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -423,7 +422,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getDefaultValue(java.lang.String)
      */
     @Override
-    public Object getDefaultValue( final Object elementID ) {
+    public Object getDefaultValue(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getDefaultValue();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -434,7 +433,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     }
 
     @Override
-    public Object getMinimumValue( final Object elementID ) {
+    public Object getMinimumValue(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getMinValue();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -445,7 +444,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     }
 
     @Override
-    public Object getMaximumValue( final Object elementID ) {
+    public Object getMaximumValue(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getMaxValue();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -459,7 +458,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#isVirtualGroup(java.lang.Object)
      */
     @Override
-    public boolean isVirtualGroup( final Object groupID ) {
+    public boolean isVirtualGroup(final Object groupID) {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         return ((TableRecord)groupID).isVirtual();
     }
@@ -469,7 +468,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 4.2
      */
     @Override
-    public boolean isProcedure( final Object groupID ) {
+    public boolean isProcedure(final Object groupID) {
         if (groupID instanceof ProcedureRecord) {
             return true;
         }
@@ -480,7 +479,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     }
 
     @Override
-    public boolean isVirtualModel( final Object modelID ) {
+    public boolean isVirtualModel(final Object modelID) {
         ArgCheck.isInstanceOf(ModelRecord.class, modelID);
         ModelRecord modelRecord = (ModelRecord)modelID;
         return (modelRecord.getModelType() == ModelType.VIRTUAL);
@@ -490,7 +489,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getVirtualPlan(java.lang.Object)
      */
     @Override
-    public QueryNode getVirtualPlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    public QueryNode getVirtualPlan(final Object groupID) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -526,8 +525,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             }
             // there should be only one result entry for a fully qualified name
             if (resultSize > 1) {
-                throw new TeiidComponentException(
-                                                       TransformationPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_virtual_plans_available_for_this_groupID__1") + groupName); //$NON-NLS-1$
+                throw new QueryMetadataException(
+                                                          TransformationPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_virtual_plans_available_for_this_groupID__1") + groupName); //$NON-NLS-1$
             }
         }
         throw new QueryMetadataException(
@@ -538,7 +537,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getInsertPlan(java.lang.Object)
      */
     @Override
-    public String getInsertPlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    public String getInsertPlan(final Object groupID) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -558,8 +557,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             }
             // there should be only one result entry for a fully qualified name
             if (resultSize > 1) {
-                throw new TeiidComponentException(
-                                                       TransformationPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_insert_plans_available_for_this_groupID__2") + groupName); //$NON-NLS-1$
+                throw new QueryMetadataException(
+                                                          TransformationPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_insert_plans_available_for_this_groupID__2") + groupName); //$NON-NLS-1$
             }
         }
         throw new QueryMetadataException(
@@ -570,7 +569,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getUpdatePlan(java.lang.Object)
      */
     @Override
-    public String getUpdatePlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    public String getUpdatePlan(final Object groupID) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -590,8 +589,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             }
             // there should be only one result entry for a fully qualified name
             if (resultSize > 1) {
-                throw new TeiidComponentException(
-                                                       TransformationPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_update_plans_available_for_this_groupID__3") + groupName); //$NON-NLS-1$
+                throw new QueryMetadataException(
+                                                          TransformationPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_update_plans_available_for_this_groupID__3") + groupName); //$NON-NLS-1$
             }
         }
 
@@ -603,7 +602,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getDeletePlan(java.lang.Object)
      */
     @Override
-    public String getDeletePlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    public String getDeletePlan(final Object groupID) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -623,8 +622,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             }
             // there should be only one result entry for a fully qualified name
             if (resultSize > 1) {
-                throw new TeiidComponentException(
-                                                       TransformationPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_delete_plans_available_for_this_groupID__4") + groupName); //$NON-NLS-1$
+                throw new QueryMetadataException(
+                                                          TransformationPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_delete_plans_available_for_this_groupID__4") + groupName); //$NON-NLS-1$
             }
         }
         throw new QueryMetadataException(
@@ -635,8 +634,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#modelSupports(java.lang.Object, int)
      */
     @Override
-    public boolean modelSupports( final Object modelID,
-                                  final int modelConstant ) {
+    public boolean modelSupports(final Object modelID,
+                                 final int modelConstant) {
         ArgCheck.isInstanceOf(ModelRecord.class, modelID);
 
         switch (modelConstant) {
@@ -650,8 +649,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#groupSupports(java.lang.Object, int)
      */
     @Override
-    public boolean groupSupports( final Object groupID,
-                                  final int groupConstant ) {
+    public boolean groupSupports(final Object groupID,
+                                 final int groupConstant) {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
@@ -668,8 +667,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#elementSupports(java.lang.Object, int)
      */
     @Override
-    public boolean elementSupports( final Object elementID,
-                                    final int elementConstant ) {
+    public boolean elementSupports(final Object elementID,
+                                   final int elementConstant) {
 
         if (elementID instanceof ColumnRecord) {
             ColumnRecord columnRecord = (ColumnRecord)elementID;
@@ -749,16 +748,16 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         }
     }
 
-    private IllegalArgumentException createInvalidRecordTypeException( Object elementID ) {
+    private IllegalArgumentException createInvalidRecordTypeException(Object elementID) {
         return new IllegalArgumentException(
-        		TransformationPlugin.Util.getString("TransformationMetadata.Invalid_type", elementID.getClass().getName())); //$NON-NLS-1$
+                                            TransformationPlugin.Util.getString("TransformationMetadata.Invalid_type", elementID.getClass().getName())); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
      * @see org.teiid.query.metadata.QueryMetadataInterface#getMaxSetSize(java.lang.Object)
      */
     @Override
-    public int getMaxSetSize( final Object modelID ) {
+    public int getMaxSetSize(final Object modelID) {
         ArgCheck.isInstanceOf(ModelRecord.class, modelID);
         return ((ModelRecord)modelID).getMaxSetSize();
     }
@@ -767,7 +766,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getIndexesInGroup(java.lang.Object)
      */
     @Override
-    public Collection getIndexesInGroup( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    public Collection getIndexesInGroup(final Object groupID) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
@@ -800,7 +799,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getUniqueKeysInGroup(java.lang.Object)
      */
     @Override
-    public Collection getUniqueKeysInGroup( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    public Collection getUniqueKeysInGroup(final Object groupID) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
@@ -815,7 +814,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getForeignKeysInGroup(java.lang.Object)
      */
     @Override
-    public Collection getForeignKeysInGroup( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    public Collection getForeignKeysInGroup(final Object groupID) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
@@ -830,8 +829,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getPrimaryKeyIDForForeignKeyID(java.lang.Object)
      */
     @Override
-    public Object getPrimaryKeyIDForForeignKeyID( final Object foreignKeyID )
-        throws TeiidComponentException, QueryMetadataException {
+    public Object getPrimaryKeyIDForForeignKeyID(final Object foreignKeyID)
+        throws QueryMetadataException {
         ArgCheck.isInstanceOf(ForeignKeyRecord.class, foreignKeyID);
         ForeignKeyRecord fkRecord = (ForeignKeyRecord)foreignKeyID;
 
@@ -843,8 +842,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getAccessPatternsInGroup(java.lang.Object)
      */
     @Override
-    public Collection getAccessPatternsInGroup( final Object groupID )
-        throws TeiidComponentException, QueryMetadataException {
+    public Collection getAccessPatternsInGroup(final Object groupID)
+        throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
@@ -858,7 +857,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getElementIDsInIndex(java.lang.Object)
      */
     @Override
-    public List getElementIDsInIndex( final Object index ) throws TeiidComponentException, QueryMetadataException {
+    public List getElementIDsInIndex(final Object index) throws QueryMetadataException {
         ArgCheck.isInstanceOf(ColumnSetRecord.class, index);
         ColumnSetRecord indexRecord = (ColumnSetRecord)index;
 
@@ -884,7 +883,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getElementIDsInKey(java.lang.Object)
      */
     @Override
-    public List getElementIDsInKey( final Object key ) throws TeiidComponentException, QueryMetadataException {
+    public List getElementIDsInKey(final Object key) throws QueryMetadataException {
         ArgCheck.isInstanceOf(ColumnSetRecord.class, key);
         ColumnSetRecord keyRecord = (ColumnSetRecord)key;
 
@@ -915,8 +914,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getElementIDsInAccessPattern(java.lang.Object)
      */
     @Override
-    public List getElementIDsInAccessPattern( final Object accessPattern )
-        throws TeiidComponentException, QueryMetadataException {
+    public List getElementIDsInAccessPattern(final Object accessPattern)
+        throws QueryMetadataException {
         ArgCheck.isInstanceOf(ColumnSetRecord.class, accessPattern);
         ColumnSetRecord accessRecord = (ColumnSetRecord)accessPattern;
 
@@ -946,7 +945,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#isXMLGroup(java.lang.Object)
      */
     @Override
-    public boolean isXMLGroup( final Object groupID ) {
+    public boolean isXMLGroup(final Object groupID) {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -959,7 +958,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     /* (non-Javadoc)
      * @see org.teiid.query.metadata.QueryMetadataInterface#isTemporaryGroup(java.lang.Object)
      */
-    public boolean isTemporaryGroup( final Object groupID ) {
+    public boolean isTemporaryGroup(final Object groupID) {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -974,7 +973,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 4.2
      */
     @Override
-    public boolean hasMaterialization( final Object groupID ) {
+    public boolean hasMaterialization(final Object groupID) {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
         return tableRecord.isMaterialized();
@@ -985,7 +984,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 4.2
      */
     @Override
-    public Object getMaterialization( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    public Object getMaterialization(final Object groupID) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
         if (tableRecord.isMaterialized()) {
@@ -1000,7 +999,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 4.2
      */
     @Override
-    public Object getMaterializationStage( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    public Object getMaterializationStage(final Object groupID) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
         if (tableRecord.isMaterialized()) {
@@ -1014,7 +1013,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getMappingNode(java.lang.Object)
      */
     @Override
-    public MappingNode getMappingNode( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    public MappingNode getMappingNode(final Object groupID) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -1035,8 +1034,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                 }
                 // there should be only one for a fully qualified elementName
                 if (resultSize > 1) {
-                    throw new TeiidComponentException(
-                                                           TransformationPlugin.Util.getString("TransformationMetadata.Multiple_transformation_records_found_for_the_group___1") + groupName); //$NON-NLS-1$
+                    throw new QueryMetadataException(
+                                                              TransformationPlugin.Util.getString("TransformationMetadata.Multiple_transformation_records_found_for_the_group___1") + groupName); //$NON-NLS-1$
                 }
             }
             // get mappin transform
@@ -1048,9 +1047,9 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                 mappingDoc = reader.loadDocument(inputStream);
                 mappingDoc.setName(groupName);
             } catch (Exception e) {
-                throw new TeiidComponentException(
-                                                       e,
-                                                       TransformationPlugin.Util.getString("TransformationMetadata.Error_trying_to_read_virtual_document_{0},_with_body__n{1}_1", groupName, mappingDoc)); //$NON-NLS-1$
+                throw new QueryMetadataException(
+                                                          e,
+                                                          TransformationPlugin.Util.getString("TransformationMetadata.Error_trying_to_read_virtual_document_{0},_with_body__n{1}_1", groupName, mappingDoc)); //$NON-NLS-1$
             } finally {
                 try {
                     inputStream.close();
@@ -1067,7 +1066,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getVirtualDatabaseName()
      */
     @Override
-    public String getVirtualDatabaseName() throws TeiidComponentException, QueryMetadataException {
+    public String getVirtualDatabaseName() {
         // Query the index files
         try {
             final VdbRecord vdbRecord = (VdbRecord)this.getRecordByType(null, IndexConstants.RECORD_TYPE.VDB_ARCHIVE);
@@ -1081,7 +1080,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getXMLTempGroups(java.lang.Object)
      */
     @Override
-    public Collection getXMLTempGroups( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    public Collection getXMLTempGroups(final Object groupID) throws QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
@@ -1107,7 +1106,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getCardinality(java.lang.Object)
      */
     @Override
-    public int getCardinality( final Object groupID ) {
+    public int getCardinality(final Object groupID) {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         return ((TableRecord)groupID).getCardinality();
     }
@@ -1116,7 +1115,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getXMLSchemas(java.lang.Object)
      */
     @Override
-    public List getXMLSchemas( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    public List getXMLSchemas(final Object groupID) throws QueryMetadataException {
 
         if (!(getIndexSelector() instanceof CompositeIndexSelector || getIndexSelector() instanceof RuntimeIndexSelector)) {
             return Collections.EMPTY_LIST;
@@ -1141,8 +1140,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             }
             // there should be only one for a fully qualified elementName
             if (resultSize > 1) {
-                throw new TeiidComponentException(
-                                                       TransformationPlugin.Util.getString("TransformationMetadata.Multiple_transformation_records_found_for_the_group___1") + groupName); //$NON-NLS-1$
+                throw new QueryMetadataException(
+                                                          TransformationPlugin.Util.getString("TransformationMetadata.Multiple_transformation_records_found_for_the_group___1") + groupName); //$NON-NLS-1$
             }
         }
 
@@ -1160,8 +1159,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         if (schemas == null || schemas.isEmpty()) {
             schemas = getIndexSelector().getFileContentsAsString(schemaPaths);
             if (schemas == null || schemas.isEmpty()) {
-                throw new TeiidComponentException(
-                                                       TransformationPlugin.Util.getString("TransformationMetadata.Error_trying_to_read_schemas_for_the_document/table____1") + groupName); //$NON-NLS-1$
+                throw new QueryMetadataException(
+                                                          TransformationPlugin.Util.getString("TransformationMetadata.Error_trying_to_read_schemas_for_the_document/table____1") + groupName); //$NON-NLS-1$
             }
         }
 
@@ -1169,13 +1168,13 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     }
 
     @Override
-    public String getNameInSource( final Object metadataID ) {
+    public String getNameInSource(final Object metadataID) {
         ArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
         return ((MetadataRecord)metadataID).getNameInSource();
     }
 
     @Override
-    public int getElementLength( final Object elementID ) {
+    public int getElementLength(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getLength();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -1186,7 +1185,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     }
 
     @Override
-    public int getPosition( final Object elementID ) {
+    public int getPosition(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getPosition();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -1197,7 +1196,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     }
 
     @Override
-    public int getPrecision( final Object elementID ) {
+    public int getPrecision(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getPrecision();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -1208,7 +1207,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     }
 
     @Override
-    public int getRadix( final Object elementID ) {
+    public int getRadix(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getRadix();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -1219,7 +1218,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     }
 
     @Override
-    public String getFormat( Object elementID ) {
+    public String getFormat(Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getFormat();
         }
@@ -1227,7 +1226,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     }
 
     @Override
-    public int getScale( final Object elementID ) {
+    public int getScale(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getScale();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -1238,7 +1237,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     }
 
     @Override
-    public int getDistinctValues( final Object elementID ) {
+    public int getDistinctValues(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getDistinctValues();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -1249,7 +1248,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     }
 
     @Override
-    public int getNullValues( final Object elementID ) {
+    public int getNullValues(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getNullValues();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -1260,7 +1259,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     }
 
     @Override
-    public String getNativeType( final Object elementID ) {
+    public String getNativeType(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getNativeType();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -1274,8 +1273,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getExtensionProperties(java.lang.Object)
      */
     @Override
-    public Properties getExtensionProperties( final Object metadataID )
-        throws TeiidComponentException, QueryMetadataException {
+    public Properties getExtensionProperties(final Object metadataID)
+        throws QueryMetadataException {
         ArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
         MetadataRecord metadataRecord = (MetadataRecord)metadataID;
 
@@ -1308,7 +1307,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 4.3
      */
     @Override
-    public byte[] getBinaryVDBResource( String resourcePath ) throws TeiidComponentException, QueryMetadataException {
+    public byte[] getBinaryVDBResource(String resourcePath) throws QueryMetadataException {
         String content = this.getCharacterVDBResource(resourcePath);
         if (content != null) {
             return content.getBytes();
@@ -1321,7 +1320,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 4.3
      */
     @Override
-    public String getCharacterVDBResource( String resourcePath ) throws TeiidComponentException, QueryMetadataException {
+    public String getCharacterVDBResource(String resourcePath) throws QueryMetadataException {
         IndexSelector selector = this.getIndexSelector();
         // make sure the selector is initialized
         try {
@@ -1349,7 +1348,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 4.3
      */
     @Override
-    public String[] getVDBResourcePaths() throws TeiidComponentException, QueryMetadataException {
+    public String[] getVDBResourcePaths() throws QueryMetadataException {
         IndexSelector selector = this.getIndexSelector();
         // make sure the selector is initialized
         try {
@@ -1378,7 +1377,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 5.0
      */
     @Override
-    public String getModeledType( final Object elementID ) throws TeiidComponentException, QueryMetadataException {
+    public String getModeledType(final Object elementID) throws QueryMetadataException {
         DatatypeRecord record = getDatatypeRecord(elementID);
         if (record != null) {
             return record.getDatatypeID();
@@ -1391,7 +1390,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 5.0
      */
     @Override
-    public String getModeledBaseType( final Object elementID ) throws TeiidComponentException, QueryMetadataException {
+    public String getModeledBaseType(final Object elementID) throws QueryMetadataException {
         DatatypeRecord record = getDatatypeRecord(elementID);
         if (record != null) {
             return record.getBasetypeID();
@@ -1404,7 +1403,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 5.0
      */
     @Override
-    public String getModeledPrimitiveType( final Object elementID ) throws TeiidComponentException, QueryMetadataException {
+    public String getModeledPrimitiveType(final Object elementID) throws QueryMetadataException {
         DatatypeRecord record = getDatatypeRecord(elementID);
         if (record != null) {
             return record.getPrimitiveTypeID();
@@ -1416,8 +1415,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     // P R O T E C T E D M E T H O D S
     // ==================================================================================
 
-    protected DatatypeRecord getDatatypeRecord( final Object elementID )
-        throws TeiidComponentException, QueryMetadataException {
+    protected DatatypeRecord getDatatypeRecord(final Object elementID)
+        throws QueryMetadataException {
         if (elementID instanceof ColumnRecord) {
             String uuid = ((ColumnRecord)elementID).getDatatypeUUID();
             if (!StringUtil.isEmpty(uuid)) {
@@ -1464,16 +1463,16 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * 
      * @param selector
      * @return
-     * @throws QueryMetadataException
+     * @throws TeiidComponentException
      */
-    protected Index[] getIndexes( final char recordType,
-                                  final IndexSelector selector ) throws TeiidComponentException {
+    protected Index[] getIndexes(final char recordType,
+                                 final IndexSelector selector) throws QueryMetadataException {
         try {
             return selector.getIndexes();
         } catch (IOException e) {
-            throw new TeiidComponentException(
-                                                   e,
-                                                   TransformationPlugin.Util.getString("TransformationMetadata.Error_trying_to_obtain_index_file_using_IndexSelector_1", selector)); //$NON-NLS-1$
+            throw new QueryMetadataException(
+                                             e,
+                                             TransformationPlugin.Util.getString("TransformationMetadata.Error_trying_to_obtain_index_file_using_IndexSelector_1", selector)); //$NON-NLS-1$
         }
     }
 
@@ -1484,7 +1483,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param uuid The UUID for which the pattern match string is to be constructed.
      * @return The pattern match string of the form: recordType|*|*|*|uuid|*
      */
-    protected String getDatatypeUUIDMatchPattern( final String uuid ) {
+    protected String getDatatypeUUIDMatchPattern(final String uuid) {
         ArgCheck.isNotNull(uuid);
         String uuidString = uuid;
         if (StringUtil.startsWithIgnoreCase(uuid, UUID.PROTOCOL)) {
@@ -1508,8 +1507,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param uuid The UUID for which the pattern match string is to be constructed.
      * @return The pattern match string of the form: recordType|*|uuid|*
      */
-    protected String getUUIDMatchPattern( final char recordType,
-                                          final String uuid ) {
+    protected String getUUIDMatchPattern(final char recordType,
+                                         final String uuid) {
         ArgCheck.isNotNull(uuid);
         String uuidString = uuid;
         if (StringUtil.startsWithIgnoreCase(uuid, UUID.PROTOCOL)) {
@@ -1534,8 +1533,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param name The partially/fully qualified name for which the pattern match string is to be constructed.
      * @return The pattern match string of the form: recordType|*name|*
      */
-    protected String getMatchPattern( final char recordType,
-                                      final String name ) {
+    protected String getMatchPattern(final char recordType,
+                                     final String name) {
         ArgCheck.isNotNull(name);
 
         // construct the pattern string
@@ -1557,8 +1556,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param name The fully qualified name for which the prefix match string is to be constructed.
      * @return The pattern match string of the form: recordType|name|
      */
-    protected String getPrefixPattern( final char recordType,
-                                       final String name ) {
+    protected String getPrefixPattern(final char recordType,
+                                      final String name) {
 
         // construct the pattern string
         String patternStr = "" //$NON-NLS-1$
@@ -1576,8 +1575,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param uuid The uuid for which the prefix match string is to be constructed.
      * @return The pattern match string of the form: recordType|uuid|
      */
-    protected String getUUIDPrefixPattern( final char recordType,
-                                           final String uuid ) {
+    protected String getUUIDPrefixPattern(final char recordType,
+                                          final String uuid) {
 
         // construct the pattern string
         String patternStr = "" //$NON-NLS-1$
@@ -1596,8 +1595,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param name The fully qualified name for which the prefix match string is to be constructed.
      * @return The pattern match string of the form: recordType|name|
      */
-    protected String getParentPrefixPattern( final char recordType,
-                                             final String name ) {
+    protected String getParentPrefixPattern(final char recordType,
+                                            final String name) {
 
         // construct the pattern string
         String patternStr = "" //$NON-NLS-1$
@@ -1615,15 +1614,13 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param entityName String representing an entity, may be null(vdbs)
      * @param recordType The record type for the entity
      * @return A MetadataRecord object for a given entityName/UUID
-     * @throws TeiidComponentException
      * @throws QueryMetadataException
      */
-    protected MetadataRecord getRecordByType( final String entityName,
-                                              final char recordType ) throws TeiidComponentException, QueryMetadataException {
+    protected MetadataRecord getRecordByType(final String entityName,
+                                             final char recordType) throws QueryMetadataException {
 
         // Query the index files
-        final Collection results = findMetadataRecords(recordType, entityName, false);
-
+        Collection results = findMetadataRecords(recordType, entityName, false);
         int resultSize = results.size();
         if (resultSize == 1) {
             // get the columnset record for this result
@@ -1646,8 +1643,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param records
      * @since 4.2
      */
-    protected void filterMetadataRecordForUUID( final String uuid,
-                                                Collection records ) {
+    protected void filterMetadataRecordForUUID(final String uuid,
+                                               Collection records) {
         if (uuid != null && records != null) {
             for (final Iterator iter = records.iterator(); iter.hasNext();) {
                 final MetadataRecord record = (MetadataRecord)iter.next();
@@ -1683,10 +1680,10 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param childRecordType the type of the child to seek uuids
      * @param uuids to filter just the objects we want
      * @return columnRecords
-     * @throws TeiidComponentException
+     * @throws QueryMetadataException
      */
-    protected Collection findChildRecords( final MetadataRecord parentRecord,
-                                           final char childRecordType ) throws TeiidComponentException {
+    protected Collection findChildRecords(final MetadataRecord parentRecord,
+                                          final char childRecordType) throws QueryMetadataException {
         IEntryResult[] results = queryIndexByParentPath(childRecordType, parentRecord.getFullName());
         Collection records = findMetadataRecords(results);
 
@@ -1725,11 +1722,11 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param childRecordType the type of the child to seek uuids
      * @param uuids to filter just the objects we want
      * @return columnRecords
-     * @throws TeiidComponentException
+     * @throws QueryMetadataException
      */
-    protected Collection findChildRecordsForColumns( final MetadataRecord parentRecord,
-                                                     final char childRecordType,
-                                                     final List uuids ) throws TeiidComponentException {
+    protected Collection findChildRecordsForColumns(final MetadataRecord parentRecord,
+                                                    final char childRecordType,
+                                                    final List uuids) throws QueryMetadataException {
         IEntryResult[] results = queryIndexByParentPath(childRecordType, parentRecord.getFullName());
         Collection records = findMetadataRecords(results);
 
@@ -1760,10 +1757,10 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param parentRecord
      * @param childRecordType the type of the child to seek
      * @return records
-     * @throws TeiidComponentException
+     * @throws QueryMetadataException
      */
-    protected Collection findChildRecordsWithoutFiltering( final MetadataRecord parentRecord,
-                                                           final char childRecordType ) throws TeiidComponentException {
+    protected Collection findChildRecordsWithoutFiltering(final MetadataRecord parentRecord,
+                                                          final char childRecordType) throws QueryMetadataException {
         IEntryResult[] results = queryIndexByParentPath(childRecordType, parentRecord.getFullName());
         Collection records = findMetadataRecords(results);
 
@@ -1787,11 +1784,11 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @return results
      * @throws QueryMetadataException
      */
-    protected Collection findMetadataRecords( final IEntryResult[] results ) {
+    protected Collection findMetadataRecords(final IEntryResult[] results) {
         return RecordFactory.getMetadataRecord(results, null);
     }
 
-    protected MetadataRecord findMetadataRecord( final IEntryResult result ) {
+    protected MetadataRecord findMetadataRecord(final IEntryResult result) {
         return RecordFactory.getMetadataRecord(result, null);
     }
 
@@ -1802,11 +1799,11 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param entityName the name to match
      * @param isPartialName true if the entity name is a partially qualified
      * @return results
-     * @throws QueryMetadataException
+     * @throws QueryMetadataException 
      */
-    protected Collection findMetadataRecords( final char recordType,
-                                              final String entityName,
-                                              final boolean isPartialName ) throws TeiidComponentException {
+    protected Collection findMetadataRecords(final char recordType,
+                                             final String entityName,
+                                             final boolean isPartialName) throws QueryMetadataException {
 
         IEntryResult[] results = queryIndex(recordType, entityName, isPartialName);
         Collection records = findMetadataRecords(results);
@@ -1831,9 +1828,9 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @return results
      * @throws QueryMetadataException
      */
-    protected IEntryResult[] queryIndex( final char recordType,
-                                         final String entityName,
-                                         final boolean isPartialName ) throws TeiidComponentException {
+    protected IEntryResult[] queryIndex(final char recordType,
+                                        final String entityName,
+                                        final boolean isPartialName) throws QueryMetadataException {
 
         IEntryResult[] results = null;
         Index[] indexes = getIndexes(recordType, getIndexSelector());
@@ -1872,14 +1869,14 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @return results
      * @throws QueryMetadataException
      */
-    protected IEntryResult[] queryIndex( final Index[] indexes,
-                                         final char[] pattern,
-                                         boolean isPrefix,
-                                         boolean returnFirstMatch ) throws TeiidComponentException {
+    protected IEntryResult[] queryIndex(final Index[] indexes,
+                                        final char[] pattern,
+                                        boolean isPrefix,
+                                        boolean returnFirstMatch) throws QueryMetadataException {
         try {
             return SimpleIndexUtil.queryIndex(indexes, pattern, isPrefix, returnFirstMatch);
         } catch (TeiidDesignerException e) {
-            throw new TeiidComponentException(e, e.getMessage());
+            throw new QueryMetadataException(e, e.getMessage());
         }
     }
 
@@ -1891,15 +1888,15 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @return results
      * @throws QueryMetadataException
      */
-    protected IEntryResult[] queryIndex( final Index[] indexes,
-                                         final char[] pattern,
-                                         boolean isPrefix,
-                                         boolean isCaseSensitive,
-                                         boolean returnFirstMatch ) throws TeiidComponentException {
+    protected IEntryResult[] queryIndex(final Index[] indexes,
+                                        final char[] pattern,
+                                        boolean isPrefix,
+                                        boolean isCaseSensitive,
+                                        boolean returnFirstMatch) throws QueryMetadataException {
         try {
             return SimpleIndexUtil.queryIndex(null, indexes, pattern, isPrefix, isCaseSensitive, returnFirstMatch);
         } catch (TeiidDesignerException e) {
-            throw new TeiidComponentException(e, e.getMessage());
+            throw new QueryMetadataException(e, e.getMessage());
         }
     }
 
@@ -1914,7 +1911,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     /**
      * Looks up procedure plan in the transformations index for a given procedure.
      */
-    private String getProcedurePlan( final String procedureName ) throws TeiidComponentException, QueryMetadataException {
+    private String getProcedurePlan(final String procedureName) throws QueryMetadataException {
         ArgCheck.isNotEmpty(procedureName);
 
         // Query the index files
@@ -1927,8 +1924,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         }
         // there should be only one result entry for a fully qualified name
         if (resultSize > 1) {
-            throw new TeiidComponentException(
-                                                   TransformationPlugin.Util.getString("TransformationMetadata.Procedure_ambiguous_there_are_multiple_procedure_plans_available_for_this_name___4") + procedureName); //$NON-NLS-1$
+            throw new QueryMetadataException(
+                                                      TransformationPlugin.Util.getString("TransformationMetadata.Procedure_ambiguous_there_are_multiple_procedure_plans_available_for_this_name___4") + procedureName); //$NON-NLS-1$
         }
 
         // no transfomation available, this may not be a virtual procedure
@@ -1938,8 +1935,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     /**
      * Helper method to get back an array of ColumnRecords given a list of UUIDs.
      */
-    private ColumnRecord[] getColumnRecordsForUUIDs( final List uuids )
-        throws TeiidComponentException, QueryMetadataException {
+    private ColumnRecord[] getColumnRecordsForUUIDs(final List uuids)
+        throws QueryMetadataException {
 
         ColumnRecord[] columnRecords = new ColumnRecord[uuids.size()];
 
@@ -1960,8 +1957,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @return results
      * @throws QueryMetadataException
      */
-    private IEntryResult[] queryIndexByParentPath( final char recordType,
-                                                   final String parentFullName ) throws TeiidComponentException {
+    private IEntryResult[] queryIndexByParentPath(final char recordType,
+                                                  final String parentFullName) throws QueryMetadataException {
 
         // Query based on fully qualified name
         String prefixString = getParentPrefixPattern(recordType, parentFullName);
@@ -1972,14 +1969,14 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
 
         return results;
     }
-    
+
     /**
      * {@inheritDoc}
      *
      * @see org.teiid.query.metadata.BasicQueryMetadata#getPrimaryKey(java.lang.Object)
      */
     @Override
-    public Object getPrimaryKey( Object metadataID ) {
+    public Object getPrimaryKey(Object metadataID) {
         ArgCheck.isInstanceOf(TableRecord.class, metadataID);
         TableRecord tableRecord = (TableRecord)metadataID;
 
@@ -1989,7 +1986,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         Collection pk;
         try {
             pk = findChildRecords(tableRecord, IndexConstants.RECORD_TYPE.PRIMARY_KEY);
-        } catch (TeiidComponentException e) {
+        } catch (QueryMetadataException e) {
             throw new TeiidDesignerRuntimeException(e);
         }
         if (pk.size() > 1) {
@@ -1997,26 +1994,26 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         }
         return pk.iterator().next();
     }
-    
+
     /**
      * {@inheritDoc}
      *
      * @see org.teiid.query.metadata.BasicQueryMetadata#getName(java.lang.Object)
      */
     @Override
-    public String getName( Object metadataID ) {
+    public String getName(Object metadataID) {
         ArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
         MetadataRecord metadataRecord = (MetadataRecord)metadataID;
-        return metadataRecord.getName(); 
+        return metadataRecord.getName();
     }
-    
+
     /**
      * {@inheritDoc}
      *
      * @see org.teiid.query.metadata.BasicQueryMetadata#hasProcedure(java.lang.String)
      */
     @Override
-    public boolean hasProcedure( String name ) throws TeiidComponentException {
+    public boolean hasProcedure(String name) {
         try {
             return getStoredProcInfoDirect(name) != null;
         } catch (QueryMetadataException e) {
