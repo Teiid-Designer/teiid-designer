@@ -256,7 +256,7 @@ public class WSSoapProfileDetailsWizardPage extends ConnectionProfileDetailsPage
         setPingButtonEnabled(true);
 
         setErrorMessage(null);
-        setMessage(UTIL.getString("Click.Next.or.Finish")); //$NON-NLS-1$
+        setMessage(UTIL.getString("Click.Next")); //$NON-NLS-1$
 
         // Reset the test status
         testStatus = Status.OK_STATUS;
