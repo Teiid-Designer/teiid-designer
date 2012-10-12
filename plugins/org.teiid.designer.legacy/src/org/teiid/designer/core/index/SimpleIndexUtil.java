@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.util.FileUtils;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.core.util.CharOperation;
 import org.teiid.designer.metadata.runtime.impl.RecordFactory;

@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.util.FileUtils;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.metamodels.wsdl.Definitions;
 import org.teiid.designer.metamodels.wsdl.Operation;
 import org.teiid.designer.metamodels.wsdl.PortType;

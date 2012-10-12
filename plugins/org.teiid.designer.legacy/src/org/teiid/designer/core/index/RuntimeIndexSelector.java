@@ -25,7 +25,7 @@ import java.util.zip.ZipFile;
 
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.util.Assertion;
-import org.teiid.core.util.FileUtils;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.core.util.AssertionUtil;
 import org.teiid.designer.core.util.FileUtil;

@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.InputStream;
 import org.teiid.logging.LogManager;
 import org.teiid.core.designer.TeiidDesignerException;
-import org.teiid.core.util.FileUtils;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.common.xmi.XMIHeaderReader;
 import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;

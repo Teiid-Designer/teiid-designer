@@ -10,7 +10,7 @@ package org.teiid.designer.modelgenerator.salesforce.ui.wizards;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
-import org.teiid.core.util.FileUtils;
+import org.teiid.core.designer.util.FileUtils;
 
 /**
  * @since 8.0
