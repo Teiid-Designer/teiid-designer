@@ -8,7 +8,6 @@
 
 package org.teiid.designer.metadata.runtime.exception;
 
-import org.teiid.core.BundleUtil;
 import org.teiid.designer.metadata.runtime.api.VirtualDatabaseException;
 
 /**
@@ -39,17 +38,6 @@ public class VirtualDatabaseDoesNotExistException extends VirtualDatabaseExcepti
     }
 
     /**
-     * Construct an instance with the message and error code specified.
-     * 
-     * @param message A message describing the exception
-     * @param code The error code
-     */
-    public VirtualDatabaseDoesNotExistException( BundleUtil.Event code,
-                                                 String message ) {
-        super(code, message);
-    }
-
-    /**
      * Construct an instance from a message and an exception to chain to this one.
      * 
      * @param code A code denoting the exception
@@ -58,18 +46,5 @@ public class VirtualDatabaseDoesNotExistException extends VirtualDatabaseExcepti
     public VirtualDatabaseDoesNotExistException( Exception e,
                                                  String message ) {
         super(e, message);
-    }
-
-    /**
-     * Construct an instance from a message and a code and an exception to chain to this one.
-     * 
-     * @param e An exception to nest within this one
-     * @param message A message describing the exception
-     * @param code A code denoting the exception
-     */
-    public VirtualDatabaseDoesNotExistException( BundleUtil.Event code,
-    											 Exception e,
-                                                 String message ) {
-        super(code, e, message);
     }
 }
