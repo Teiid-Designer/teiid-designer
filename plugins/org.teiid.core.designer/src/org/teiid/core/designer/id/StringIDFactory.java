@@ -22,7 +22,7 @@
 
 package org.teiid.core.designer.id;
 
-import org.teiid.core.CorePlugin;
+import org.teiid.core.designer.CoreModelerPlugin;
 
 
 
@@ -40,7 +40,7 @@ public class StringIDFactory implements ObjectIDFactory {
      */
     @Override
 	public String getDescription() {
-        return CorePlugin.Util.getString("StringIDFactory.Description"); //$NON-NLS-1$
+        return CoreModelerPlugin.Util.getString("StringIDFactory.Description"); //$NON-NLS-1$
     }
 
     protected long getNextValue() {
@@ -89,7 +89,7 @@ public class StringIDFactory implements ObjectIDFactory {
         try {
             return new StringID( value );
         } catch ( NumberFormatException e ) {
-            throw new InvalidIDException(CorePlugin.Util.getString("StringIDFactory.The_specified_ID_value_is_invalid",value,getProtocol())); //$NON-NLS-1$
+            throw new InvalidIDException(CoreModelerPlugin.Util.getString("StringIDFactory.The_specified_ID_value_is_invalid",value,getProtocol())); //$NON-NLS-1$
         }
     }
 
@@ -108,7 +108,7 @@ public class StringIDFactory implements ObjectIDFactory {
         try {
             return new StringID( parsedID.getRemainder() );
         } catch ( NumberFormatException e ) {
-            throw new InvalidIDException(CorePlugin.Util.getString("StringIDFactory.The_specified_ID_value_is_invalid",value,getProtocol())); //$NON-NLS-1$
+            throw new InvalidIDException(CoreModelerPlugin.Util.getString("StringIDFactory.The_specified_ID_value_is_invalid",value,getProtocol())); //$NON-NLS-1$
         }
     }
 

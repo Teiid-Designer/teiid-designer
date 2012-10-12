@@ -1269,7 +1269,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
     // final IStatus embeddedStatus2 = new Status(embeddedSeverity2,pluginID,code,embeddedMessage2,t);
     // final IStatus[] embedded = new IStatus[]{embeddedStatus1,embeddedStatus2};
     // final IStatus status = new MultiStatus(pluginID,code,embedded,message,t);
-    // CorePlugin.Util.log(status);
+    // CoreModelerPlugin.Util.log(status);
     // }
 
     // #############################################################################

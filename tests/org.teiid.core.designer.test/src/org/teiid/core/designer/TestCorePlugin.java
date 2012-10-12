@@ -82,7 +82,7 @@ public class TestCorePlugin extends TestCase {
                                    final String expectedValue ) {
         final String actualValue = CoreModelerPlugin.Util.getString(key); // may throw exception
         if (actualValue == null) {
-            fail("CorePlugin.Util.getString(\"" + key + //$NON-NLS-1$
+            fail("CoreModelerPlugin.Util.getString(\"" + key + //$NON-NLS-1$
                  "\") should not return null"); //$NON-NLS-1$
         }
         if (!actualValue.equals(expectedValue)) {

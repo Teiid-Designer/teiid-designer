@@ -23,7 +23,7 @@ import org.jdom.Text;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.teiid.core.CorePlugin;
+import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.util.CoreArgCheck;
 
 /**
@@ -102,11 +102,11 @@ public class JdomHelper {
      */
     public static Document buildDocument( String saxDriverClass, String filename, boolean validateXML) throws IOException, JDOMException {
         if(filename == null){
-            CoreArgCheck.isNotNull(filename,CorePlugin.Util.getString("JdomHelper.The_file_name_may_not_be_null_3")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(filename,CoreModelerPlugin.Util.getString("JdomHelper.The_file_name_may_not_be_null_3")); //$NON-NLS-1$
         }
         
         if(filename.length() == 0){
-            CoreArgCheck.isNotZeroLength(filename,CorePlugin.Util.getString("JdomHelper.The_file_name_may_not_be_zero-length_4")); //$NON-NLS-1$
+            CoreArgCheck.isNotZeroLength(filename,CoreModelerPlugin.Util.getString("JdomHelper.The_file_name_may_not_be_zero-length_4")); //$NON-NLS-1$
         }
         
         SAXBuilder builder = SAXBuilderHelper.createSAXBuilder( saxDriverClass, validateXML );
@@ -174,7 +174,7 @@ public class JdomHelper {
      */
     public static Document buildDocument( String saxDriverClass, InputStream stream, boolean validateXML) throws IOException, JDOMException {
         if(stream == null){
-            CoreArgCheck.isNotNull(stream,CorePlugin.Util.getString("JdomHelper.The_InputStream_may_not_be_null_7")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(stream,CoreModelerPlugin.Util.getString("JdomHelper.The_InputStream_may_not_be_null_7")); //$NON-NLS-1$
         }
         
         SAXBuilder builder = SAXBuilderHelper.createSAXBuilder( saxDriverClass, validateXML );
@@ -223,7 +223,7 @@ public class JdomHelper {
      */
     public static Document buildDocument( String saxDriverClass, java.io.Reader stream, boolean validateXML) throws IOException, JDOMException {
         if(stream == null){
-            CoreArgCheck.isNotNull(stream,CorePlugin.Util.getString("JdomHelper.The_InputStream_may_not_be_null_10")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(stream,CoreModelerPlugin.Util.getString("JdomHelper.The_InputStream_may_not_be_null_10")); //$NON-NLS-1$
         }
         
         SAXBuilder builder = SAXBuilderHelper.createSAXBuilder( saxDriverClass, validateXML );
@@ -239,11 +239,11 @@ public class JdomHelper {
      */
     public static Document createNewDocument( String rootTag ) {
         if(rootTag == null){
-            CoreArgCheck.isNotNull(rootTag,CorePlugin.Util.getString("JdomHelper.The_root_tag_name_may_not_be_null_11")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(rootTag,CoreModelerPlugin.Util.getString("JdomHelper.The_root_tag_name_may_not_be_null_11")); //$NON-NLS-1$
         }
         
         if(rootTag.length() == 0){
-            CoreArgCheck.isNotZeroLength(rootTag,CorePlugin.Util.getString("JdomHelper.The_root_tag_name_may_not_be_zero-length_12")); //$NON-NLS-1$
+            CoreArgCheck.isNotZeroLength(rootTag,CoreModelerPlugin.Util.getString("JdomHelper.The_root_tag_name_may_not_be_zero-length_12")); //$NON-NLS-1$
         }
         
         Element root = new Element( rootTag );
@@ -266,10 +266,10 @@ public class JdomHelper {
      */
     public static List getDescendents( int traversalMethod, Element parent, final Namespace ns ) {
         if(parent == null){
-            CoreArgCheck.isNotNull(parent,CorePlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_13")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(parent,CoreModelerPlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_13")); //$NON-NLS-1$
         }
         if(ns == null){
-            CoreArgCheck.isNotNull(ns,CorePlugin.Util.getString("JdomHelper.The_Namespace_reference_may_not_be_null_14")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(ns,CoreModelerPlugin.Util.getString("JdomHelper.The_Namespace_reference_may_not_be_null_14")); //$NON-NLS-1$
         }
 
         final List results = new LinkedList();
@@ -328,7 +328,7 @@ public class JdomHelper {
      */
     public static List getDescendents( Element parent ) {
         if(parent == null){
-            CoreArgCheck.isNotNull(parent,CorePlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_15")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(parent,CoreModelerPlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_15")); //$NON-NLS-1$
         }
 
         final List results = new LinkedList();
@@ -358,15 +358,15 @@ public class JdomHelper {
      */
     public static List getDescendents( Element parent, final String name ) {
         if(parent == null){
-            CoreArgCheck.isNotNull(parent,CorePlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_16")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(parent,CoreModelerPlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_16")); //$NON-NLS-1$
         }
         
         if(name == null){
-            CoreArgCheck.isNotNull(name,CorePlugin.Util.getString("JdomHelper.The_name_may_not_be_null_17")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(name,CoreModelerPlugin.Util.getString("JdomHelper.The_name_may_not_be_null_17")); //$NON-NLS-1$
         }
         
         if(name.length() == 0){
-            CoreArgCheck.isNotZeroLength(name,CorePlugin.Util.getString("JdomHelper.The_name_may_not_be_zero-length_18")); //$NON-NLS-1$
+            CoreArgCheck.isNotZeroLength(name,CoreModelerPlugin.Util.getString("JdomHelper.The_name_may_not_be_zero-length_18")); //$NON-NLS-1$
         }
 
         final List results = new LinkedList();
@@ -397,10 +397,10 @@ public class JdomHelper {
      */
     public static List getDescendents( Element parent, final Namespace ns ) {
         if(parent == null){
-            CoreArgCheck.isNotNull(parent,CorePlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_19")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(parent,CoreModelerPlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_19")); //$NON-NLS-1$
         }
         if(ns == null){
-            CoreArgCheck.isNotNull(ns,CorePlugin.Util.getString("JdomHelper.The_Namespace_may_not_be_null_20")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(ns,CoreModelerPlugin.Util.getString("JdomHelper.The_Namespace_may_not_be_null_20")); //$NON-NLS-1$
         }
 
         final List results = new LinkedList();
@@ -433,15 +433,15 @@ public class JdomHelper {
      */
     public static List getDescendents( Element parent, final String name, final Namespace ns ) {
         if(parent == null){
-            CoreArgCheck.isNotNull(parent,CorePlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_21")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(parent,CoreModelerPlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_21")); //$NON-NLS-1$
         }
         
         if(name == null){
-            CoreArgCheck.isNotNull(name,CorePlugin.Util.getString("JdomHelper.The_name_may_not_be_null_22")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(name,CoreModelerPlugin.Util.getString("JdomHelper.The_name_may_not_be_null_22")); //$NON-NLS-1$
         }
         
         if(name.length() == 0){
-            CoreArgCheck.isNotZeroLength(name,CorePlugin.Util.getString("JdomHelper.The_name_may_not_be_zero-length_23")); //$NON-NLS-1$
+            CoreArgCheck.isNotZeroLength(name,CoreModelerPlugin.Util.getString("JdomHelper.The_name_may_not_be_zero-length_23")); //$NON-NLS-1$
         }
 
         final List results = new LinkedList();
@@ -468,7 +468,7 @@ public class JdomHelper {
      */
     public static int getDescendentCount( Element parent ) {
         if(parent == null){
-            CoreArgCheck.isNotNull(parent,CorePlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_24")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(parent,CoreModelerPlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_24")); //$NON-NLS-1$
         }
 
         XMLVisitor visitor = new XMLVisitor() {
@@ -493,7 +493,7 @@ public class JdomHelper {
      */
     public static int getDescendentCount( Element parent, final Namespace ns ) {
         if(parent == null){
-            CoreArgCheck.isNotNull(parent,CorePlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_25")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(parent,CoreModelerPlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_25")); //$NON-NLS-1$
         }
 
         XMLVisitor visitor = new XMLVisitor() {
@@ -519,15 +519,15 @@ public class JdomHelper {
      */
     public static int getDescendentCount( Element parent, final String name ) {
         if(parent == null){
-            CoreArgCheck.isNotNull(parent,CorePlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_26")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(parent,CoreModelerPlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_26")); //$NON-NLS-1$
         }
         
         if(name == null){
-            CoreArgCheck.isNotNull(name,CorePlugin.Util.getString("JdomHelper.The_name_may_not_be_null_27")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(name,CoreModelerPlugin.Util.getString("JdomHelper.The_name_may_not_be_null_27")); //$NON-NLS-1$
         }
         
         if(name.length() == 0){
-            CoreArgCheck.isNotZeroLength(name,CorePlugin.Util.getString("JdomHelper.The_name_may_not_be_zero-length_28")); //$NON-NLS-1$
+            CoreArgCheck.isNotZeroLength(name,CoreModelerPlugin.Util.getString("JdomHelper.The_name_may_not_be_zero-length_28")); //$NON-NLS-1$
         }
 
         XMLVisitor visitor = new XMLVisitor() {
@@ -555,15 +555,15 @@ public class JdomHelper {
      */
     public static Element findElement( Element parent, final String name ) {
         if(parent == null){
-            CoreArgCheck.isNotNull(parent,CorePlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_29")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(parent,CoreModelerPlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_29")); //$NON-NLS-1$
         }
         
         if(name == null){
-            CoreArgCheck.isNotNull(name,CorePlugin.Util.getString("JdomHelper.The_name_may_not_be_null_30")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(name,CoreModelerPlugin.Util.getString("JdomHelper.The_name_may_not_be_null_30")); //$NON-NLS-1$
         }
         
         if(name.length() == 0){
-            CoreArgCheck.isNotZeroLength(name,CorePlugin.Util.getString("JdomHelper.The_name_may_not_be_zero-length_31")); //$NON-NLS-1$
+            CoreArgCheck.isNotZeroLength(name,CoreModelerPlugin.Util.getString("JdomHelper.The_name_may_not_be_zero-length_31")); //$NON-NLS-1$
         }
 
         XMLVisitor visitor = new XMLVisitor() {
@@ -593,19 +593,19 @@ public class JdomHelper {
      */
     public static Element findElement( Element parent, final String name, final Namespace ns ) {
         if(parent == null){
-            CoreArgCheck.isNotNull(parent,CorePlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_32")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(parent,CoreModelerPlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_32")); //$NON-NLS-1$
         }
         
         if(name == null){
-            CoreArgCheck.isNotNull(name,CorePlugin.Util.getString("JdomHelper.The_name_may_not_be_null_33")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(name,CoreModelerPlugin.Util.getString("JdomHelper.The_name_may_not_be_null_33")); //$NON-NLS-1$
         }
         
         if(name.length() == 0){
-            CoreArgCheck.isNotZeroLength(name,CorePlugin.Util.getString("JdomHelper.The_name_may_not_be_zero-length_34")); //$NON-NLS-1$
+            CoreArgCheck.isNotZeroLength(name,CoreModelerPlugin.Util.getString("JdomHelper.The_name_may_not_be_zero-length_34")); //$NON-NLS-1$
         }
         
         if(ns == null){
-            CoreArgCheck.isNotNull(ns,CorePlugin.Util.getString("JdomHelper.The_Namespace_reference_may_not_be_null_35")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(ns,CoreModelerPlugin.Util.getString("JdomHelper.The_Namespace_reference_may_not_be_null_35")); //$NON-NLS-1$
         }
 
         XMLVisitor visitor = new XMLVisitor() {
@@ -637,10 +637,10 @@ public class JdomHelper {
      */
     public static void levelOrderTraversal( Element parent, XMLVisitor v ) {
         if(parent == null){
-            CoreArgCheck.isNotNull(parent,CorePlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_36")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(parent,CoreModelerPlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_36")); //$NON-NLS-1$
         }
         if(v == null){
-            CoreArgCheck.isNotNull(v,CorePlugin.Util.getString("JdomHelper.The_XMLVisitor_reference_may_not_be_null_37")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(v,CoreModelerPlugin.Util.getString("JdomHelper.The_XMLVisitor_reference_may_not_be_null_37")); //$NON-NLS-1$
         }
 
         LinkedList queue = new LinkedList( parent.getChildren() );
@@ -665,10 +665,10 @@ public class JdomHelper {
      */
     public static void preOrderTraversal( Element parent, XMLVisitor v ) {
         if(parent == null){
-            CoreArgCheck.isNotNull(parent,CorePlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_38")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(parent,CoreModelerPlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_38")); //$NON-NLS-1$
         }
         if(v == null){
-            CoreArgCheck.isNotNull(v,CorePlugin.Util.getString("JdomHelper.The_XMLVisitor_reference_may_not_be_null_39")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(v,CoreModelerPlugin.Util.getString("JdomHelper.The_XMLVisitor_reference_may_not_be_null_39")); //$NON-NLS-1$
         }
 
         List children = parent.getChildren();
@@ -692,10 +692,10 @@ public class JdomHelper {
      */
     public static void postOrderTraversal( Element parent, XMLVisitor v ) {
         if(parent == null){
-            CoreArgCheck.isNotNull(parent,CorePlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_40")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(parent,CoreModelerPlugin.Util.getString("JdomHelper.The_JDOM_Element_reference_may_not_be_null_40")); //$NON-NLS-1$
         }
         if(v == null){
-            CoreArgCheck.isNotNull(v,CorePlugin.Util.getString("JdomHelper.The_XMLVisitor_reference_may_not_be_null_41")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(v,CoreModelerPlugin.Util.getString("JdomHelper.The_XMLVisitor_reference_may_not_be_null_41")); //$NON-NLS-1$
         }
 
         List children = parent.getChildren();
@@ -730,11 +730,11 @@ public class JdomHelper {
      * @throws IOException if there are problems writing to the file.
      */
     public static void write( Document doc , String filename, String indent, boolean newlines ) throws IOException {
-        CoreArgCheck.isNotNull(doc,CorePlugin.Util.getString("JdomHelper.The_Document_reference_may_not_be_null_42")); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(filename,CorePlugin.Util.getString("JdomHelper.The_filename_may_not_be_null_43")); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(doc,CoreModelerPlugin.Util.getString("JdomHelper.The_Document_reference_may_not_be_null_42")); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(filename,CoreModelerPlugin.Util.getString("JdomHelper.The_filename_may_not_be_null_43")); //$NON-NLS-1$
         
         if(filename.length() == 0){
-            CoreArgCheck.isNotZeroLength(filename,CorePlugin.Util.getString("JdomHelper.The_filename_may_not_be_zero-length_44")); //$NON-NLS-1$
+            CoreArgCheck.isNotZeroLength(filename,CoreModelerPlugin.Util.getString("JdomHelper.The_filename_may_not_be_zero-length_44")); //$NON-NLS-1$
         }
         
         FileOutputStream out = new FileOutputStream( filename );
@@ -797,10 +797,10 @@ public class JdomHelper {
      */
     public static void write( Document doc , OutputStream stream, String indent, boolean newlines ) throws IOException {
         if(doc == null){
-            CoreArgCheck.isNotNull(doc,CorePlugin.Util.getString("JdomHelper.The_Document_reference_may_not_be_null_45")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(doc,CoreModelerPlugin.Util.getString("JdomHelper.The_Document_reference_may_not_be_null_45")); //$NON-NLS-1$
         }
         if(stream == null){
-            CoreArgCheck.isNotNull(stream,CorePlugin.Util.getString("JdomHelper.The_OutputStream_reference_may_not_be_null_46")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(stream,CoreModelerPlugin.Util.getString("JdomHelper.The_OutputStream_reference_may_not_be_null_46")); //$NON-NLS-1$
         }
         XMLOutputter outputter = new XMLOutputter(getFormat(indent, newlines));
         outputter.output( doc, stream );
@@ -832,10 +832,10 @@ public class JdomHelper {
      */
     public static void write( Document doc , Writer writer, String indent, boolean newlines ) throws IOException {
         if(doc == null){
-            CoreArgCheck.isNotNull(doc,CorePlugin.Util.getString("JdomHelper.The_Document_reference_may_not_be_null_47")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(doc,CoreModelerPlugin.Util.getString("JdomHelper.The_Document_reference_may_not_be_null_47")); //$NON-NLS-1$
         }
         if(writer == null){
-            CoreArgCheck.isNotNull(writer,CorePlugin.Util.getString("JdomHelper.The_Writer_reference_may_not_be_null_48")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(writer,CoreModelerPlugin.Util.getString("JdomHelper.The_Writer_reference_may_not_be_null_48")); //$NON-NLS-1$
         }
         XMLOutputter outputter = new XMLOutputter(getFormat(indent, newlines));
         outputter.output( doc, writer );
@@ -866,7 +866,7 @@ public class JdomHelper {
      */
     public static String write( Document doc , String indent, boolean newlines ) throws IOException {
         if(doc == null){
-            CoreArgCheck.isNotNull(doc,CorePlugin.Util.getString("JdomHelper.The_Document_reference_may_not_be_null_49")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(doc,CoreModelerPlugin.Util.getString("JdomHelper.The_Document_reference_may_not_be_null_49")); //$NON-NLS-1$
         }
         XMLOutputter outputter = new XMLOutputter(getFormat(indent, newlines));
         StringWriter writer = new StringWriter();
@@ -877,18 +877,18 @@ public class JdomHelper {
 
     public static void print( PrintStream stream, Document doc ) {
         if(stream == null){
-            CoreArgCheck.isNotNull(stream,CorePlugin.Util.getString("JdomHelper.The_stream_reference_may_not_be_null_50")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(stream,CoreModelerPlugin.Util.getString("JdomHelper.The_stream_reference_may_not_be_null_50")); //$NON-NLS-1$
         }
-        stream.println(CorePlugin.Util.getString("JdomHelper.JDOM_Document_tree_51")); //$NON-NLS-1$
+        stream.println(CoreModelerPlugin.Util.getString("JdomHelper.JDOM_Document_tree_51")); //$NON-NLS-1$
         Element root = doc.getRootElement();
-        print(root,stream,CorePlugin.Util.getString("JdomHelper.___52")); //$NON-NLS-1$
+        print(root,stream,CoreModelerPlugin.Util.getString("JdomHelper.___52")); //$NON-NLS-1$
     }
 
     private static void print( Element elm, PrintStream stream, String leadingString ) {
         stream.println(leadingString + elm.getName() );
         Iterator itr = elm.getChildren().iterator();
         while ( itr.hasNext() ) {
-            print((Element)itr.next(),stream,leadingString + CorePlugin.Util.getString("JdomHelper.___53")); //$NON-NLS-1$
+            print((Element)itr.next(),stream,leadingString + CoreModelerPlugin.Util.getString("JdomHelper.___53")); //$NON-NLS-1$
         }
     }
     

@@ -15,7 +15,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Composite;
-import org.teiid.core.CorePlugin;
+import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilder;
@@ -200,20 +200,20 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
         } catch (IOException e) {
         }
         if (!success) {
-            final String msg = CorePlugin.Util.getString("FileUtils.Unable_to_create_file_in", dirPath); //$NON-NLS-1$            
+            final String msg = CoreModelerPlugin.Util.getString("FileUtils.Unable_to_create_file_in", dirPath); //$NON-NLS-1$            
             throw new TeiidDesignerException(msg);
         }
         
 
         //test if file can be written to
         if (!tmpFile.canWrite()) {
-            final String msg = CorePlugin.Util.getString("FileUtils.Unable_to_write_file_in", dirPath); //$NON-NLS-1$            
+            final String msg = CoreModelerPlugin.Util.getString("FileUtils.Unable_to_write_file_in", dirPath); //$NON-NLS-1$            
             throw new TeiidDesignerException(msg);
         }
 
         //test if file can be read
         if (!tmpFile.canRead()) {
-            final String msg = CorePlugin.Util.getString("FileUtils.Unable_to_read_file_in", dirPath); //$NON-NLS-1$            
+            final String msg = CoreModelerPlugin.Util.getString("FileUtils.Unable_to_read_file_in", dirPath); //$NON-NLS-1$            
             throw new TeiidDesignerException(msg);
         }
 
@@ -225,7 +225,7 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
         } catch (Exception e) {
         }
         if (!success) {
-            final String msg = CorePlugin.Util.getString("FileUtils.Unable_to_rename_file_in", dirPath); //$NON-NLS-1$            
+            final String msg = CoreModelerPlugin.Util.getString("FileUtils.Unable_to_rename_file_in", dirPath); //$NON-NLS-1$            
             throw new TeiidDesignerException(msg);
         }
 
@@ -236,7 +236,7 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
         } catch (Exception e) {
         }
         if (!success) {
-            final String msg = CorePlugin.Util.getString("FileUtils.Unable_to_delete_file_in", dirPath); //$NON-NLS-1$            
+            final String msg = CoreModelerPlugin.Util.getString("FileUtils.Unable_to_delete_file_in", dirPath); //$NON-NLS-1$            
             throw new TeiidDesignerException(msg);
         }
     }

@@ -10,7 +10,7 @@ package org.teiid.core.designer.util;
 import java.util.Collection;
 import java.util.Properties;
 
-import org.teiid.core.CorePlugin;
+import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.CoreModelerPlugin;
 
 /**
@@ -303,7 +303,7 @@ public class CoreArgCheck {
                                       boolean value2,
                                       String message ) {
         if (value1 != value2) {
-            final String msg = message != null ? message : CorePlugin.Util.getString("Assertion.isEqual", new Object[] {new Boolean(value1), new Boolean(value2)}); //$NON-NLS-1$
+            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("Assertion.isEqual", new Object[] {new Boolean(value1), new Boolean(value2)}); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
     }
@@ -332,7 +332,7 @@ public class CoreArgCheck {
                                          boolean value2,
                                          String message ) {
         if (value1 == value2) {
-            final String msg = message != null ? message : CorePlugin.Util.getString("Assertion.isNotEqual", new Object[] {new Boolean(value1), new Boolean(value2)}); //$NON-NLS-1$
+            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("Assertion.isNotEqual", new Object[] {new Boolean(value1), new Boolean(value2)}); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
     }
@@ -361,7 +361,7 @@ public class CoreArgCheck {
                                       int value2,
                                       String message ) {
         if (value1 != value2) {
-            final String msg = message != null ? message : CorePlugin.Util.getString("Assertion.isEqual", new Object[] {new Integer(value1), new Integer(value2)}); //$NON-NLS-1$
+            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("Assertion.isEqual", new Object[] {new Integer(value1), new Integer(value2)}); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
     }
@@ -390,7 +390,7 @@ public class CoreArgCheck {
                                          int value2,
                                          String message ) {
         if (value1 == value2) {
-            final String msg = message != null ? message : CorePlugin.Util.getString("Assertion.isNotEqual", new Object[] {new Integer(value1), new Integer(value2)}); //$NON-NLS-1$
+            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("Assertion.isNotEqual", new Object[] {new Integer(value1), new Integer(value2)}); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
     }
@@ -420,18 +420,18 @@ public class CoreArgCheck {
                                       String message ) {
         if (object1 == null) {
             if (object2 != null) {
-                final String msg = message != null ? message : CorePlugin.Util.getString("Assertion.isEqual", new Object[] {object1, object2}); //$NON-NLS-1$
+                final String msg = message != null ? message : CoreModelerPlugin.Util.getString("Assertion.isEqual", new Object[] {object1, object2}); //$NON-NLS-1$
                 throw new IllegalArgumentException(msg);
             }
             // else both are null
         } else {
             if (object2 == null) {
-                final String msg = message != null ? message : CorePlugin.Util.getString("Assertion.isEqual", new Object[] {object1, object2}); //$NON-NLS-1$
+                final String msg = message != null ? message : CoreModelerPlugin.Util.getString("Assertion.isEqual", new Object[] {object1, object2}); //$NON-NLS-1$
                 throw new IllegalArgumentException(msg);
             }
             // else both are not null
             if (!object1.equals(object2)) {
-                final String msg = message != null ? message : CorePlugin.Util.getString("Assertion.isEqual", new Object[] {object1, object2}); //$NON-NLS-1$
+                final String msg = message != null ? message : CoreModelerPlugin.Util.getString("Assertion.isEqual", new Object[] {object1, object2}); //$NON-NLS-1$
                 throw new IllegalArgumentException(msg);
             }
         }

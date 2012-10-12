@@ -22,8 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
-
-import org.teiid.core.CorePlugin;
+import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
 
 /**
@@ -540,7 +539,7 @@ public final class CoreStringUtil {
                         // ... and this is not the 'M' of 'MetaMatrix' ...
                         if (currentChar != 'M'
                             || i < 4
-                            || (!newName.substring(i - 4).startsWith(CorePlugin.Util.getString("StringUtil.Displayable.MetaMatrix")))) { //$NON-NLS-1$
+                            || (!newName.substring(i - 4).startsWith(CoreModelerPlugin.Util.getString("StringUtil.Displayable")))) { //$NON-NLS-1$
                             newName.insert(i, ' ');
                             ++i; // skip, since we just move the character back one position
                         }

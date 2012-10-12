@@ -9,7 +9,7 @@
 package org.teiid.core.designer.util;
 
 import java.io.Serializable;
-import org.teiid.core.CorePlugin;
+import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.logging.MessageLevel;
 
@@ -24,8 +24,8 @@ public class Stopwatch implements Serializable {
     private Statistics stats = new Statistics();
     private boolean active = true;
 
-    private static final String SECONDS = CorePlugin.Util.getString("Stopwatch.seconds"); //$NON-NLS-1$
-    private static final String MILLISECONDS = CorePlugin.Util.getString("Stopwatch.milliseconds"); //$NON-NLS-1$
+    private static final String SECONDS = CoreModelerPlugin.Util.getString("Stopwatch.seconds"); //$NON-NLS-1$
+    private static final String MILLISECONDS = CoreModelerPlugin.Util.getString("Stopwatch.milliseconds"); //$NON-NLS-1$
     private static final int VALUE_LENGTH = 10;
 
     /**

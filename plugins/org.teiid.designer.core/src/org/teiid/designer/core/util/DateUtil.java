@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import org.teiid.core.CorePlugin;
+import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.util.CoreArgCheck;
 
 /**
@@ -109,11 +109,11 @@ public final class DateUtil {
         } catch (IndexOutOfBoundsException ioobe) {
             final Object[] params = new Object[] {dateString, COMPLETE_FORMAT};
             throw new ParseException(
-                                     CorePlugin.Util.getString("DateUtil.The_string_is_not_of_the_expected_format_1", params), badIndex); //$NON-NLS-1$
+                                     CoreModelerPlugin.Util.getString("DateUtil.The_string_is_not_of_the_expected_format_1", params), badIndex); //$NON-NLS-1$
         } catch (NumberFormatException nfe) {
             final Object[] params = new Object[] {dateString, COMPLETE_FORMAT};
             throw new ParseException(
-                                     CorePlugin.Util.getString("DateUtil.The_string_is_not_of_the_expected_format_2", params), badIndex); //$NON-NLS-1$
+                                     CoreModelerPlugin.Util.getString("DateUtil.The_string_is_not_of_the_expected_format_2", params), badIndex); //$NON-NLS-1$
         }
     }
 
