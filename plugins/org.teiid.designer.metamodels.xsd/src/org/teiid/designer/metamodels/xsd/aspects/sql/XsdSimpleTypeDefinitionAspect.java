@@ -708,7 +708,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     @Override
 	public boolean isEnterpriseDataType( final EObject type ) {
         CoreArgCheck.isNotNull(type);
-        argCheckIsResolved(type);
+        CoreArgCheckIsResolved(type);
         boolean success = false;
         if (type instanceof XSDSimpleTypeDefinition) {
             Map enterpriseAttributes = getEnterpriseAttributes((XSDSimpleTypeDefinition)type);
@@ -740,7 +740,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
 	public void setEnterpriseDataAttributes( final XSDSimpleTypeDefinition type,
                                              final EnterpriseDatatypeInfo edtInfo ) {
         CoreArgCheck.isNotNull(type);
-        argCheckIsResolved(type);
+        CoreArgCheckIsResolved(type);
 
         if (edtInfo.isValid()) {
             XsdUtil.setAsEnterpriseSchema(type.getSchema());
@@ -791,7 +791,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     @Override
 	public void unSetEnterpriseDataAttributes( final XSDSimpleTypeDefinition type ) {
         CoreArgCheck.isNotNull(type);
-        argCheckIsResolved(type);
+        CoreArgCheckIsResolved(type);
 
         final Element element = type.getElement();
         element.removeAttributeNS(XsdConstants.SCHEMA_FOR_ENTERPRISE_DATATYPES_URI_2005,
@@ -816,7 +816,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     @Override
 	public EnterpriseDatatypeInfo getEnterpriseDatatypeInfo( final XSDSimpleTypeDefinition type ) {
         CoreArgCheck.isNotNull(type);
-        argCheckIsResolved(type);
+        CoreArgCheckIsResolved(type);
 
         XsdUtil.checkForEnterpriseConversion(type);
         EnterpriseDatatypeInfo edtInfo = new EnterpriseDatatypeInfo();
@@ -838,7 +838,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      */
     public void convertEnterpriseDatatype( final XSDSimpleTypeDefinition type ) {
         CoreArgCheck.isNotNull(type);
-        argCheckIsResolved(type);
+        CoreArgCheckIsResolved(type);
 
         if (!isEnterpriseDataType(type)) {
             EnterpriseDatatypeInfo edtInfo = getEnterpriseAttributesFromAppInfo(type);
@@ -860,8 +860,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
                              final XSDSimpleTypeDefinition baseType ) {
         CoreArgCheck.isNotNull(simpleType);
         CoreArgCheck.isNotNull(baseType);
-        argCheckIsResolved(simpleType);
-        argCheckIsResolved(baseType);
+        CoreArgCheckIsResolved(simpleType);
+        CoreArgCheckIsResolved(baseType);
 
         final XSDSchema schema = simpleType.getSchema();
         if (simpleType.eResource() != baseType.eResource()) {
@@ -887,7 +887,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
         }
     }
 
-    private void argCheckIsResolved( EObject e ) {
+    private void CoreArgCheckIsResolved( EObject e ) {
         if (e.eIsProxy()) {
             throw new IllegalArgumentException(
                                                XsdPlugin.Util.getString("XsdSimpleTypeDefinitionAspect.Error_EObject_can_not_be_a_proxy", e.toString())); //$NON-NLS-1$

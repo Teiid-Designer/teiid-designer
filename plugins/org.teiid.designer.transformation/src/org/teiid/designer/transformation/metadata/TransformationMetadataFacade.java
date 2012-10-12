@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import org.teiid.api.exception.query.QueryMetadataException;
-import org.teiid.core.util.ArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.util.Assertion;
 import org.teiid.core.util.LRUCache;
 import org.teiid.core.util.StringUtil;
@@ -72,7 +72,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
     public TransformationMetadataFacade( final TransformationMetadata delegate,
                                          int cacheSize ) {
     	super(delegate);
-        ArgCheck.isNotNull(delegate);
+        CoreArgCheck.isNotNull(delegate);
         this.metadata = delegate;
         this.nameToIdCache = Collections.synchronizedMap(new LRUCache<String, Object>(cacheSize));
         this.idToRecordCache = Collections.synchronizedMap(new LRUCache<Object, MetadataRecord>(cacheSize));
@@ -162,7 +162,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public Object getModelID( final Object groupOrElementID ) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(MetadataRecord.class, groupOrElementID);
+        CoreArgCheck.isInstanceOf(MetadataRecord.class, groupOrElementID);
 
         MetadataRecord record = (MetadataRecord)groupOrElementID;
 
@@ -187,7 +187,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public List getElementIDsInGroupID( final Object groupID ) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
 
@@ -225,7 +225,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public Object getGroupIDForElementID( final Object elementID ) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(ColumnRecord.class, elementID);
+        CoreArgCheck.isInstanceOf(ColumnRecord.class, elementID);
         ColumnRecord columnRecord = (ColumnRecord)elementID;
 
         String tableUUID = columnRecord.getParentUUID();
@@ -291,7 +291,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public QueryNode getVirtualPlan( final Object groupID ) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
 
@@ -316,7 +316,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public String getInsertPlan( final Object groupID ) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
         String insertPlan = (String)tableRecord.getPropertyValue(TableRecordProperties.INSERT_PLAN);
@@ -340,7 +340,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public String getUpdatePlan( final Object groupID ) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
         String updatePlan = (String)tableRecord.getPropertyValue(TableRecordProperties.UPDATE_PLAN);
@@ -364,7 +364,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public String getDeletePlan( final Object groupID ) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
         String deletePlan = (String)tableRecord.getPropertyValue(TableRecordProperties.DELETE_PLAN);
@@ -391,7 +391,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public Collection getIndexesInGroup( final Object groupID ) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
         Collection indexes = (Collection)record.getPropertyValue(TableRecordProperties.INDEXES_IN_GROUP);
@@ -415,7 +415,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public Collection getUniqueKeysInGroup( final Object groupID ) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
         Collection uks = (Collection)record.getPropertyValue(TableRecordProperties.UNIQUEKEYS_IN_GROUP);
@@ -439,7 +439,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public Collection getForeignKeysInGroup( final Object groupID ) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
         Collection fks = (Collection)record.getPropertyValue(TableRecordProperties.FOREIGNKEYS_IN_GROUP);
@@ -464,7 +464,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
     @Override
 	public Object getPrimaryKeyIDForForeignKeyID( final Object foreignKeyID )
         throws QueryMetadataException {
-        ArgCheck.isInstanceOf(MetadataRecord.class, foreignKeyID);
+        CoreArgCheck.isInstanceOf(MetadataRecord.class, foreignKeyID);
 
         MetadataRecord keyRecord = (MetadataRecord)foreignKeyID;
         Object primaryKey = keyRecord.getPropertyValue(ForeignKeyRecordProperties.PRIMARY_KEY_FOR_FK);
@@ -489,7 +489,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
     @Override
 	public Collection getAccessPatternsInGroup( final Object groupID )
         throws QueryMetadataException {
-        ArgCheck.isInstanceOf(MetadataRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(MetadataRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
         Collection accPatterns = (Collection)record.getPropertyValue(TableRecordProperties.ACCESS_PTTRNS_IN_GROUP);
@@ -513,7 +513,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public List getElementIDsInIndex( final Object index ) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(MetadataRecord.class, index);
+        CoreArgCheck.isInstanceOf(MetadataRecord.class, index);
 
         MetadataRecord record = (MetadataRecord)index;
 
@@ -550,7 +550,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public List getElementIDsInKey( final Object key ) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(MetadataRecord.class, key);
+        CoreArgCheck.isInstanceOf(MetadataRecord.class, key);
 
         MetadataRecord record = (MetadataRecord)key;
 
@@ -588,7 +588,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
     @Override
 	public List getElementIDsInAccessPattern( final Object accessPattern )
         throws QueryMetadataException {
-        ArgCheck.isInstanceOf(MetadataRecord.class, accessPattern);
+        CoreArgCheck.isInstanceOf(MetadataRecord.class, accessPattern);
 
         MetadataRecord record = (MetadataRecord)accessPattern;
 
@@ -625,7 +625,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public MappingNode getMappingNode( final Object groupID ) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
 
@@ -651,7 +651,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      */
     @Override
 	public Collection getXMLTempGroups( final Object groupID ) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
 
@@ -673,7 +673,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
 
     @Override
 	public List getXMLSchemas( final Object groupID ) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
 
@@ -701,7 +701,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
 	public Properties getExtensionProperties( final Object metadataID )
         throws QueryMetadataException {
 
-        ArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
+        CoreArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
 
         MetadataRecord record = (MetadataRecord)metadataID;
 
@@ -800,7 +800,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
     public Object addToMetadataCache( Object metadataID,
                                       String key,
                                       Object value ) {
-        ArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
+        CoreArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
         if (key.startsWith(GroupInfo.CACHE_PREFIX)) {
             return this.groupInfoCache.put(metadataID + "/" + key, value); //$NON-NLS-1$
         }
@@ -815,7 +815,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
     @Override
     public Object getFromMetadataCache( Object metadataID,
                                         String key ) {
-        ArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
+        CoreArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
         if (key.startsWith(GroupInfo.CACHE_PREFIX)) {
             return this.groupInfoCache.get(metadataID + "/" + key); //$NON-NLS-1$
         }

@@ -14,7 +14,7 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.teiid.core.designer.EclipseMock;
-import org.teiid.core.util.ArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.container.ResourceFinder;
 import org.teiid.designer.core.spi.RegistrySPI;
@@ -38,7 +38,7 @@ public final class ModelWorkspaceMock {
      * Mocks core modelling classes used when running Designer.
      */
     public ModelWorkspaceMock( final EclipseMock mock ) {
-        ArgCheck.isNotNull(mock, "mock"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(mock, "mock"); //$NON-NLS-1$
         eclipseMock = mock;
 
         // ModelerCore

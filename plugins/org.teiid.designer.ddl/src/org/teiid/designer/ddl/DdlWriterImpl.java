@@ -115,7 +115,7 @@ public class DdlWriterImpl implements DdlWriter {
     // * @see DdlWriter#setOptions(DdlOptions)
     // */
     // public void setOptions(final DdlOptions options) {
-    // ArgCheck.isNotNull(options);
+    // CoreArgCheck.isNotNull(options);
     // this.options = options;
     // }
 

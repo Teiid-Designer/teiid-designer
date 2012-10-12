@@ -25,7 +25,7 @@ import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.id.UUID;
 import org.teiid.core.types.DataTypeManager;
-import org.teiid.core.util.ArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.util.Assertion;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.core.index.CompositeIndexSelector;
@@ -101,7 +101,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param context Object containing the info needed to lookup metadta.
      */
     protected TransformationMetadata(final QueryMetadataContext context) {
-        ArgCheck.isNotNull(context);
+        CoreArgCheck.isNotNull(context);
         this.context = context;
     }
 
@@ -114,7 +114,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public Object getElementID(final String elementName) throws QueryMetadataException {
-        ArgCheck.isNotEmpty(elementName);
+        CoreArgCheck.isNotEmpty(elementName);
 
         // elementfull names always contain atlest 3 segments(modelname.groupName.elementName)
         if (StringUtil.startsWithIgnoreCase(elementName, UUID.PROTOCOL)
@@ -130,7 +130,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public Object getGroupID(final String groupName) throws QueryMetadataException {
-        ArgCheck.isNotEmpty(groupName);
+        CoreArgCheck.isNotEmpty(groupName);
 
         // groupfull names always contain atlest 2 segments(modelname.groupName)
         if (StringUtil.startsWithIgnoreCase(groupName, UUID.PROTOCOL)
@@ -146,7 +146,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public Collection getGroupsForPartialName(final String partialGroupName) throws QueryMetadataException {
-        ArgCheck.isNotEmpty(partialGroupName);
+        CoreArgCheck.isNotEmpty(partialGroupName);
 
         Collection tableRecords = null;
 
@@ -175,7 +175,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public Object getModelID(final Object groupOrElementID) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(MetadataRecord.class, groupOrElementID);
+        CoreArgCheck.isInstanceOf(MetadataRecord.class, groupOrElementID);
         MetadataRecord metadataRecord = (MetadataRecord)groupOrElementID;
 
         // get modelName
@@ -190,7 +190,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public String getFullName(final Object metadataID) {
-        ArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
+        CoreArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
         MetadataRecord metadataRecord = (MetadataRecord)metadataID;
         return metadataRecord.getFullName();
     }
@@ -199,7 +199,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getShortElementName(java.lang.String)
      */
     public String getShortElementName(final String fullElementName) {
-        ArgCheck.isNotEmpty(fullElementName);
+        CoreArgCheck.isNotEmpty(fullElementName);
         if (UuidUtil.isStringifiedUUID(fullElementName)) {
             return UuidUtil.stripPrefixFromUUID(fullElementName);
         }
@@ -215,7 +215,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public List getElementIDsInGroupID(final Object groupID) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
         // Query the index files
@@ -269,7 +269,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     public StoredProcedureInfo getStoredProcInfoDirect(final String procedureName)
         throws QueryMetadataException {
 
-        ArgCheck.isNotEmpty(procedureName);
+        CoreArgCheck.isNotEmpty(procedureName);
 
         ProcedureRecord procRecord = null;
 
@@ -459,7 +459,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public boolean isVirtualGroup(final Object groupID) {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
         return ((TableRecord)groupID).isVirtual();
     }
 
@@ -480,7 +480,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
 
     @Override
     public boolean isVirtualModel(final Object modelID) {
-        ArgCheck.isInstanceOf(ModelRecord.class, modelID);
+        CoreArgCheck.isInstanceOf(ModelRecord.class, modelID);
         ModelRecord modelRecord = (ModelRecord)modelID;
         return (modelRecord.getModelType() == ModelType.VIRTUAL);
     }
@@ -490,7 +490,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public QueryNode getVirtualPlan(final Object groupID) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
         final String groupName = tableRecord.getFullName();
@@ -538,7 +538,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public String getInsertPlan(final Object groupID) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
         final String groupName = tableRecord.getFullName();
@@ -570,7 +570,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public String getUpdatePlan(final Object groupID) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
         final String groupName = tableRecord.getFullName();
@@ -603,7 +603,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public String getDeletePlan(final Object groupID) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
         final String groupName = tableRecord.getFullName();
@@ -636,7 +636,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     @Override
     public boolean modelSupports(final Object modelID,
                                  final int modelConstant) {
-        ArgCheck.isInstanceOf(ModelRecord.class, modelID);
+        CoreArgCheck.isInstanceOf(ModelRecord.class, modelID);
 
         switch (modelConstant) {
             default:
@@ -651,7 +651,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     @Override
     public boolean groupSupports(final Object groupID,
                                  final int groupConstant) {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
         switch (groupConstant) {
@@ -758,7 +758,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public int getMaxSetSize(final Object modelID) {
-        ArgCheck.isInstanceOf(ModelRecord.class, modelID);
+        CoreArgCheck.isInstanceOf(ModelRecord.class, modelID);
         return ((ModelRecord)modelID).getMaxSetSize();
     }
 
@@ -767,7 +767,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public Collection getIndexesInGroup(final Object groupID) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
         final String groupUUID = tableRecord.getUUID();
@@ -800,7 +800,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public Collection getUniqueKeysInGroup(final Object groupID) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
         final String groupUUID = tableRecord.getUUID();
@@ -815,7 +815,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public Collection getForeignKeysInGroup(final Object groupID) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
         // Query the index files
@@ -831,7 +831,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     @Override
     public Object getPrimaryKeyIDForForeignKeyID(final Object foreignKeyID)
         throws QueryMetadataException {
-        ArgCheck.isInstanceOf(ForeignKeyRecord.class, foreignKeyID);
+        CoreArgCheck.isInstanceOf(ForeignKeyRecord.class, foreignKeyID);
         ForeignKeyRecord fkRecord = (ForeignKeyRecord)foreignKeyID;
 
         String uuid = (String)fkRecord.getUniqueKeyID();
@@ -844,7 +844,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     @Override
     public Collection getAccessPatternsInGroup(final Object groupID)
         throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
         // Query the index files
@@ -858,7 +858,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public List getElementIDsInIndex(final Object index) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(ColumnSetRecord.class, index);
+        CoreArgCheck.isInstanceOf(ColumnSetRecord.class, index);
         ColumnSetRecord indexRecord = (ColumnSetRecord)index;
 
         boolean recordMatch = (indexRecord.getRecordType() == IndexConstants.RECORD_TYPE.INDEX);
@@ -884,7 +884,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public List getElementIDsInKey(final Object key) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(ColumnSetRecord.class, key);
+        CoreArgCheck.isInstanceOf(ColumnSetRecord.class, key);
         ColumnSetRecord keyRecord = (ColumnSetRecord)key;
 
         boolean recordMatch = (keyRecord.getRecordType() == IndexConstants.RECORD_TYPE.FOREIGN_KEY
@@ -916,7 +916,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     @Override
     public List getElementIDsInAccessPattern(final Object accessPattern)
         throws QueryMetadataException {
-        ArgCheck.isInstanceOf(ColumnSetRecord.class, accessPattern);
+        CoreArgCheck.isInstanceOf(ColumnSetRecord.class, accessPattern);
         ColumnSetRecord accessRecord = (ColumnSetRecord)accessPattern;
 
         boolean recordMatch = (accessRecord.getRecordType() == IndexConstants.RECORD_TYPE.ACCESS_PATTERN);
@@ -946,7 +946,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public boolean isXMLGroup(final Object groupID) {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
         if (tableRecord.getTableType() == MetadataConstants.TABLE_TYPES.DOCUMENT_TYPE) {
@@ -959,7 +959,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see org.teiid.query.metadata.QueryMetadataInterface#isTemporaryGroup(java.lang.Object)
      */
     public boolean isTemporaryGroup(final Object groupID) {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
         if (tableRecord.getTableType() == MetadataConstants.TABLE_TYPES.XML_STAGING_TABLE_TYPE) {
@@ -974,7 +974,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public boolean hasMaterialization(final Object groupID) {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
         return tableRecord.isMaterialized();
     }
@@ -985,7 +985,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public Object getMaterialization(final Object groupID) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
         if (tableRecord.isMaterialized()) {
             String uuid = (String)tableRecord.getMaterializedTableID();
@@ -1000,7 +1000,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public Object getMaterializationStage(final Object groupID) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
         if (tableRecord.isMaterialized()) {
             String uuid = (String)tableRecord.getMaterializedStageTableID();
@@ -1014,7 +1014,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public MappingNode getMappingNode(final Object groupID) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
         final String groupName = tableRecord.getFullName();
@@ -1081,7 +1081,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public Collection getXMLTempGroups(final Object groupID) throws QueryMetadataException {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
         int tableType = tableRecord.getTableType();
@@ -1107,7 +1107,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public int getCardinality(final Object groupID) {
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
         return ((TableRecord)groupID).getCardinality();
     }
 
@@ -1120,7 +1120,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         if (!(getIndexSelector() instanceof CompositeIndexSelector || getIndexSelector() instanceof RuntimeIndexSelector)) {
             return Collections.EMPTY_LIST;
         }
-        ArgCheck.isInstanceOf(TableRecord.class, groupID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
         // lookup transformation record for the group
@@ -1169,7 +1169,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
 
     @Override
     public String getNameInSource(final Object metadataID) {
-        ArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
+        CoreArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
         return ((MetadataRecord)metadataID).getNameInSource();
     }
 
@@ -1275,7 +1275,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     @Override
     public Properties getExtensionProperties(final Object metadataID)
         throws QueryMetadataException {
-        ArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
+        CoreArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
         MetadataRecord metadataRecord = (MetadataRecord)metadataID;
 
         Properties extProps = new Properties();
@@ -1484,7 +1484,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @return The pattern match string of the form: recordType|*|*|*|uuid|*
      */
     protected String getDatatypeUUIDMatchPattern(final String uuid) {
-        ArgCheck.isNotNull(uuid);
+        CoreArgCheck.isNotNull(uuid);
         String uuidString = uuid;
         if (StringUtil.startsWithIgnoreCase(uuid, UUID.PROTOCOL)) {
             uuidString = uuid.toLowerCase();
@@ -1509,7 +1509,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     protected String getUUIDMatchPattern(final char recordType,
                                          final String uuid) {
-        ArgCheck.isNotNull(uuid);
+        CoreArgCheck.isNotNull(uuid);
         String uuidString = uuid;
         if (StringUtil.startsWithIgnoreCase(uuid, UUID.PROTOCOL)) {
             uuidString = uuid.toLowerCase();
@@ -1535,7 +1535,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     protected String getMatchPattern(final char recordType,
                                      final String name) {
-        ArgCheck.isNotNull(name);
+        CoreArgCheck.isNotNull(name);
 
         // construct the pattern string
         String patternStr = "" //$NON-NLS-1$
@@ -1912,7 +1912,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * Looks up procedure plan in the transformations index for a given procedure.
      */
     private String getProcedurePlan(final String procedureName) throws QueryMetadataException {
-        ArgCheck.isNotEmpty(procedureName);
+        CoreArgCheck.isNotEmpty(procedureName);
 
         // Query the index files
         Collection results = findMetadataRecords(IndexConstants.RECORD_TYPE.PROC_TRANSFORM, procedureName, false);
@@ -1977,7 +1977,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public Object getPrimaryKey(Object metadataID) {
-        ArgCheck.isInstanceOf(TableRecord.class, metadataID);
+        CoreArgCheck.isInstanceOf(TableRecord.class, metadataID);
         TableRecord tableRecord = (TableRecord)metadataID;
 
         final String groupUUID = tableRecord.getUUID();
@@ -2002,7 +2002,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public String getName(Object metadataID) {
-        ArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
+        CoreArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
         MetadataRecord metadataRecord = (MetadataRecord)metadataID;
         return metadataRecord.getName();
     }

@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.teiid.core.designer.TeiidDesignerException;
-import org.teiid.core.util.ArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.util.FileUtils;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.core.util.CharOperation;
@@ -453,7 +453,7 @@ public class SimpleIndexUtil {
 	 * @since 4.2
 	 */
     public static Index[] getIndexes(final String indexName, final IndexSelector selector) throws TeiidDesignerException {
-		ArgCheck.isNotEmpty(indexName);
+		CoreArgCheck.isNotEmpty(indexName);
         // The the index file name for the record type
         try {
             final Index[] indexes = selector.getIndexes();

@@ -25,7 +25,7 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
-import org.teiid.core.util.ArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 /**
  * @since 8.0
@@ -238,8 +238,8 @@ public class VdbHeaderReader {
      */
     private static InputStream getEntryStreamFromArchive( final ZipFile zipFile,
                                                           final String zipEntryName ) {
-        ArgCheck.isNotNull(zipFile);
-        ArgCheck.isNotEmpty(zipEntryName);
+        CoreArgCheck.isNotNull(zipFile);
+        CoreArgCheck.isNotEmpty(zipEntryName);
 
         // the zip file that would be initialized if the file being read is an archive
         try {

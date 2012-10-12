@@ -23,7 +23,7 @@ import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.teiid.core.util.ArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.util.Assertion;
 import org.teiid.core.util.FileUtils;
 import org.teiid.core.util.StringUtil;
@@ -80,7 +80,7 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
      * @param filePath The location where the archive/index files are.
      */
     public RuntimeIndexSelector( final String filePath ) {
-        ArgCheck.isNotNull(filePath);
+        CoreArgCheck.isNotNull(filePath);
         this.vdbFile = new File(filePath);
         Assertion.assertTrue(this.vdbFile.exists(), "No file/directory exists at the given location " + filePath); //$NON-NLS-1$
         checkForValidFile();
@@ -98,8 +98,8 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
      */
     public RuntimeIndexSelector( final String vdbName,
                                  byte[] contents ) throws IOException {
-        ArgCheck.isNotNull(vdbName);
-        ArgCheck.isNotNull(contents);
+        CoreArgCheck.isNotNull(vdbName);
+        CoreArgCheck.isNotNull(contents);
         try {
             save(vdbName, contents);
             checkForValidFile();
@@ -118,8 +118,8 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
 
     public RuntimeIndexSelector( final String vdbName,
                                  InputStream contents ) throws IOException {
-        ArgCheck.isNotNull(vdbName);
-        ArgCheck.isNotNull(contents);
+        CoreArgCheck.isNotNull(vdbName);
+        CoreArgCheck.isNotNull(contents);
         try {
             save(vdbName, contents);
             checkForValidFile();
@@ -135,7 +135,7 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
      * @param vdbUrl The location where the archive/index files are.
      */
     public RuntimeIndexSelector( final URL vdbUrl ) throws IOException {
-        ArgCheck.isNotNull(vdbUrl);
+        CoreArgCheck.isNotNull(vdbUrl);
         try {
             save(vdbUrl);
             checkForValidFile();
@@ -425,7 +425,7 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
      */
     @Override
     public List getFileContentsAsString( List paths ) {
-        ArgCheck.isNotEmpty(paths);
+        CoreArgCheck.isNotEmpty(paths);
         List contents = new ArrayList(paths.size());
         for (final Iterator pathIter = paths.iterator(); pathIter.hasNext();) {
             String relativePath = (String)pathIter.next();
@@ -443,7 +443,7 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
      */
     @Override
     public InputStream getFileContent( String path ) {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         File file = new File(getIndexDirectoryPath(), path);
         if (file.exists()) {
             this.fileSize = file.length();
@@ -463,7 +463,7 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
      */
     @Override
     public File getFile( String path ) {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         File file = new File(getIndexDirectoryPath(), path);
         if (file.exists()) {
             return file;
@@ -477,7 +477,7 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
      */
     @Override
     public String getFileContentAsString( String path ) {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         File file = new File(getIndexDirectoryPath(), path);
         if (file.exists()) {
             // Read the contents of a file into a string
@@ -502,8 +502,8 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
     public InputStream getFileContent( final String path,
                                        final String[] tokens,
                                        final String[] tokenReplacements ) {
-        ArgCheck.isNotNull(tokens);
-        ArgCheck.isNotNull(tokenReplacements);
+        CoreArgCheck.isNotNull(tokens);
+        CoreArgCheck.isNotNull(tokenReplacements);
         AssertionUtil.isEqual(tokens.length, tokenReplacements.length);
         String fileContents = getFileContentAsString(path);
         if (fileContents != null) {

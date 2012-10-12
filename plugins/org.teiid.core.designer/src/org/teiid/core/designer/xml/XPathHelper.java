@@ -19,7 +19,7 @@ import net.sf.saxon.sxpath.XPathEvaluator;
 import net.sf.saxon.sxpath.XPathExpression;
 import net.sf.saxon.trans.XPathException;
 
-import org.teiid.core.util.ArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 
 /** 
@@ -68,8 +68,8 @@ public class XPathHelper {
      * @since 4.2
      */
     public static Object getSingleMatch(Reader documentReader, String xpath) throws XPathException, IOException {
-        ArgCheck.isNotNull(documentReader);
-        ArgCheck.isNotNull(xpath);
+        CoreArgCheck.isNotNull(documentReader);
+        CoreArgCheck.isNotNull(xpath);
 
         try {
             Source s = new StreamSource(documentReader);

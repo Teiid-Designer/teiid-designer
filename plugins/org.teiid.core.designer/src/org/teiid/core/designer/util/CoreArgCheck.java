@@ -62,7 +62,7 @@ public class CoreArgCheck {
     public static final void isNonNegative( int value,
                                             String message ) {
         if (value < 0) {
-            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("ArgCheck.isNonNegativeInt"); //$NON-NLS-1$
+            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("CoreArgCheck.isNonNegativeInt"); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
     }
@@ -87,7 +87,7 @@ public class CoreArgCheck {
     public static final void isPositive( int value,
                                          String message ) {
         if (value <= 0) {
-            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("ArgCheck.isPositiveInt"); //$NON-NLS-1$
+            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("CoreArgCheck.isPositiveInt"); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
     }
@@ -113,7 +113,7 @@ public class CoreArgCheck {
                                               String message ) {
         isNotNull(value);
         if (value.length() <= 0) {
-            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("ArgCheck.isStringNonZeroLength"); //$NON-NLS-1$
+            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("CoreArgCheck.isStringNonZeroLength"); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
     }
@@ -138,7 +138,7 @@ public class CoreArgCheck {
     public static final void isNotNull( Object value,
                                         String message ) {
         if (value == null) {
-            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("ArgCheck.isNonNull"); //$NON-NLS-1$
+            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("CoreArgCheck.isNonNull"); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
     }
@@ -168,7 +168,7 @@ public class CoreArgCheck {
                                            String message ) {
         isNotNull(value);
         if (!theClass.isInstance(value)) {
-            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("ArgCheck.isInstanceOf", theClass.getName(), value.getClass().getName()); //$NON-NLS-1$
+            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("CoreArgCheck.isInstanceOf", theClass.getName(), value.getClass().getName()); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
     }
@@ -194,7 +194,7 @@ public class CoreArgCheck {
                                          String message ) {
         isNotNull(collection);
         if (collection.isEmpty()) {
-            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("ArgCheck.isCollectionNotEmpty"); //$NON-NLS-1$
+            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("CoreArgCheck.isCollectionNotEmpty"); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
     }
@@ -220,7 +220,7 @@ public class CoreArgCheck {
                                          String message ) {
         isNotNull(properties);
         if (properties.isEmpty()) {
-            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("ArgCheck.isPropertiesNotEmpty"); //$NON-NLS-1$
+            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("CoreArgCheck.isPropertiesNotEmpty"); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
     }
@@ -274,7 +274,7 @@ public class CoreArgCheck {
                                        String message ) {
         isNotNull(collection);
         if (!collection.contains(value)) {
-            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("ArgCheck.contains"); //$NON-NLS-1$
+            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("CoreArgCheck.contains"); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
     }

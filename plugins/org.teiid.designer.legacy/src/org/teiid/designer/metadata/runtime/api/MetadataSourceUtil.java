@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.teiid.core.designer.TeiidDesignerException;
-import org.teiid.core.util.ArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.core.util.AssertionUtil;
@@ -40,8 +40,8 @@ public class MetadataSourceUtil {
                                               MetadataSource iss,
                                               final String[] tokens,
                                               final String[] tokenReplacements ) throws TeiidDesignerException {
-        ArgCheck.isNotNull(tokens);
-        ArgCheck.isNotNull(tokenReplacements);
+        CoreArgCheck.isNotNull(tokens);
+        CoreArgCheck.isNotNull(tokenReplacements);
         AssertionUtil.isEqual(tokens.length, tokenReplacements.length);
         String fileContents = getFileContentAsString(path, iss);
         if (fileContents != null) {

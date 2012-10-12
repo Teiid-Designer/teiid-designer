@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.teiid.core.designer.id.ObjectID;
 import org.teiid.core.designer.id.UUID;
-import org.teiid.core.util.ArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.util.Assertion;
 import org.teiid.core.util.EquivalenceUtil;
 import org.teiid.core.util.FileUtils;
@@ -279,7 +279,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
      */
     @Override
 	public Object getPropertyValue( String propertyName ) {
-        ArgCheck.isNotNull(propertyName);
+        CoreArgCheck.isNotNull(propertyName);
         if (propValues != null) {
             return propValues.get(propertyName);
         }

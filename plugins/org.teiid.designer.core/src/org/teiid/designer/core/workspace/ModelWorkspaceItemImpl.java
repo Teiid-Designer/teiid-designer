@@ -75,8 +75,8 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
             throw new IllegalArgumentException(ModelerCore.Util.getString("element.invalidType")); //$NON-NLS-1$
         }
 
-        // ArgCheck.isNotNull(name); // Should be done in subclasses, not here
-        // ArgCheck.isNotZeroLength(name); // Should be done in subclasses, not here
+        // CoreArgCheck.isNotNull(name); // Should be done in subclasses, not here
+        // CoreArgCheck.isNotZeroLength(name); // Should be done in subclasses, not here
         fType = type;
         fParent = (ModelWorkspaceItemImpl)parent;
         fName = name;

@@ -96,8 +96,8 @@ public class ModelImportAspect extends AbstractMetamodelAspect implements Import
 //	 * @See org.teiid.designer.core.metamodel.aspect.ImportsAspect#setModelPath(org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IPath)
 //	 */
 //	public void setModelPath(EObject eObject, IPath modelPath) {
-//		ArgCheck.isInstanceOf(ModelImport.class, eObject);
-//		ArgCheck.isNotNull(modelPath);
+//		CoreArgCheck.isInstanceOf(ModelImport.class, eObject);
+//		CoreArgCheck.isNotNull(modelPath);
 //		// the modelImport object
 //		ModelImport modelImport = (ModelImport) eObject;
 //		modelImport.setPath(modelPath.toString());

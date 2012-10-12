@@ -8,7 +8,7 @@
 
 package org.teiid.designer.transformation.metadata;
 
-import org.teiid.core.util.ArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.index.IndexSelector;
 import org.teiid.query.metadata.QueryMetadataInterface;
 
@@ -45,7 +45,7 @@ public class ServerMetadataFactory {
      * @return the QueryMetadataInterface implementation; never null
      */
     QueryMetadataInterface getServerMetadata(final QueryMetadataContext context) {
-        ArgCheck.isNotNull(context);
+        CoreArgCheck.isNotNull(context);
         // Create the QueryMetadataInterface implementation to use
         // for query validation and resolution
         return new ServerRuntimeMetadata(context);

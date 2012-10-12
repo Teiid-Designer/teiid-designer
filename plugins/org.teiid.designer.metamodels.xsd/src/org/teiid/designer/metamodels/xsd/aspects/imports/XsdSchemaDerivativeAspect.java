@@ -199,8 +199,8 @@ public class XsdSchemaDerivativeAspect extends AbstractMetamodelAspect implement
 //     */
 //    public void setModelPath(final EObject eObject,
 //                             IPath modelPath) {
-//        ArgCheck.isInstanceOf(XSDSchemaDirective.class, eObject);
-//        ArgCheck.isNotNull(modelPath);
+//        CoreArgCheck.isInstanceOf(XSDSchemaDirective.class, eObject);
+//        CoreArgCheck.isNotNull(modelPath);
 //
 //        final XSDSchemaDirective derivative = (XSDSchemaDirective)eObject;
 //        final ModelResource model = ModelerCore.getModelWorkspace().
