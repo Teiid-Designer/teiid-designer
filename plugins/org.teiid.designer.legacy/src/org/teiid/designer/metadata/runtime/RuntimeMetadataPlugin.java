@@ -9,7 +9,7 @@
 package org.teiid.designer.metadata.runtime;
 
 import java.util.ResourceBundle;
-import org.teiid.core.BundleUtil;
+import org.teiid.core.designer.BundleUtil;
 
 /**
  * CommonPlugin
