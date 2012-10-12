@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 import org.teiid.core.designer.TeiidDesignerException;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.util.ArgCheck;
 
 /**
@@ -61,7 +61,7 @@ public class VdbHeaderReader {
                     VdbHeaderReader reader = new VdbHeaderReader();
                     header = reader.read(iStream);
                 } catch (IOException e) {
-                    throw new TeiidRuntimeException(e);
+                    throw new TeiidDesignerRuntimeException(e);
                 } finally {
                     if (iStream != null) {
                         try {
@@ -256,7 +256,7 @@ public class VdbHeaderReader {
                 }
             }
         } catch (IOException e) {
-            throw new TeiidRuntimeException(e);
+            throw new TeiidDesignerRuntimeException(e);
         }
         return null;
     }

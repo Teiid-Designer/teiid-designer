@@ -9,7 +9,7 @@ package org.teiid.designer.metamodels.relational.aspects.uml;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.metamodel.aspect.uml.UmlAssociation;
@@ -124,7 +124,7 @@ public abstract class UniqueKeyAspect extends RelationalEntityAspect implements 
                 result.append( super.getArrayAsString(getProperties(key, 0)) );
                 break;
             default :
-                throw new TeiidRuntimeException(RelationalPlugin.Util.getString("Aspect.invalidShowMask", showMask)); //$NON-NLS-1$
+                throw new TeiidDesignerRuntimeException(RelationalPlugin.Util.getString("Aspect.invalidShowMask", showMask)); //$NON-NLS-1$
         }
         return result.toString();
     }

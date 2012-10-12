@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.TeiidComponentException;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.core.ModelerCore;
@@ -653,7 +653,7 @@ public class TransformationValidator implements QueryValidator {
                         // make sure the type is what we think it should be.
                         if (!(this.metadata instanceof VdbMetadata)
                             && ((this.metadata instanceof TransformationMetadataFacade) && !(((TransformationMetadataFacade)this.metadata).getDelegate() instanceof VdbMetadata))) {
-                            throw new TeiidRuntimeException(
+                            throw new TeiidDesignerRuntimeException(
                                                             TransformationPlugin.Util.getString("TransformationValidator.QMI_of_unexpected_type")); //$NON-NLS-1$
                         }
                     } else {

@@ -22,7 +22,7 @@ import java.util.Properties;
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.TeiidComponentException;
 import org.teiid.core.designer.TeiidDesignerException;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.id.UUID;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.core.util.ArgCheck;
@@ -1990,10 +1990,10 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         try {
             pk = findChildRecords(tableRecord, IndexConstants.RECORD_TYPE.PRIMARY_KEY);
         } catch (TeiidComponentException e) {
-            throw new TeiidRuntimeException(e);
+            throw new TeiidDesignerRuntimeException(e);
         }
         if (pk.size() > 1) {
-            throw new TeiidRuntimeException("Multiple primary keys for table"); //$NON-NLS-1$
+            throw new TeiidDesignerRuntimeException("Multiple primary keys for table"); //$NON-NLS-1$
         }
         return pk.iterator().next();
     }

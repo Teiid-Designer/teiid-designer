@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.id.InvalidIDException;
 import org.teiid.core.designer.id.UUID;
 import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;
@@ -105,7 +105,7 @@ public class DatatypeConstants {
         try {
             BUILTIN_DATATYPES_MODEL_UUID = DatatypeConstants.stringToObject("6b862080-3019-1e20-921b-eeee28353879"); //$NON-NLS-1$
         } catch (InvalidIDException e) {
-            throw new TeiidRuntimeException(e);
+            throw new TeiidDesignerRuntimeException(e);
         }
         try {
             XML_SCHEMA_UUID_1999             = DatatypeConstants.stringToObject("1da96d2e-fc8c-1f0b-aa25-a4ec5e156765"); //$NON-NLS-1$
@@ -118,7 +118,7 @@ public class DatatypeConstants {
             XML_MAGIC_SCHEMA_UUID_2001       = DatatypeConstants.stringToObject("a8a3ee88-fc82-1f0b-9301-8cc12cf53072"); //$NON-NLS-1$
             XML_SCHEMA_INSTANCE_UUID_2001    = DatatypeConstants.stringToObject("ac653e49-fc82-1f0b-9301-8cc12cf53072"); //$NON-NLS-1$
         } catch (InvalidIDException e) {
-        	throw new TeiidRuntimeException(e);
+        	throw new TeiidDesignerRuntimeException(e);
         }
     }
 

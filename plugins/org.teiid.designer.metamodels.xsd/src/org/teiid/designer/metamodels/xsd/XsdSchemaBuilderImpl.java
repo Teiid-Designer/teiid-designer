@@ -40,7 +40,7 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
@@ -926,7 +926,7 @@ public class XsdSchemaBuilderImpl {
             final Object next = rootIT.next();
             if (!(next instanceof View) && !(next instanceof BaseTable) && !(next instanceof ProcedureResult) && !(next instanceof Procedure)) {
                 final String invalidRoot = XsdPlugin.Util.getString("XsdSchemaBuilderImpl.invalidRoot", next.getClass().getName()); //$NON-NLS-1$
-                throw new TeiidRuntimeException(invalidRoot);
+                throw new TeiidDesignerRuntimeException(invalidRoot);
             }
         }
     }

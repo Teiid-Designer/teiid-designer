@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.metamodels.webservice.aspects.uml;
 
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 import org.teiid.designer.core.metamodel.aspect.uml.UmlProperty;
@@ -182,7 +182,7 @@ public class InputAspect extends WebServiceComponentAspect implements
                 //Properties
                 return (""); //$NON-NLS-1$
             default :
-                throw new TeiidRuntimeException(WebServiceMetamodelPlugin.Util.getString("InputAspect.1") + showMask ); //$NON-NLS-1$
+                throw new TeiidDesignerRuntimeException(WebServiceMetamodelPlugin.Util.getString("InputAspect.1") + showMask ); //$NON-NLS-1$
         }
         return result.toString();
     }

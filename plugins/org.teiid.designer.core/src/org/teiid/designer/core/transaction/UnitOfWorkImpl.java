@@ -30,7 +30,7 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -97,7 +97,7 @@ public class UnitOfWorkImpl implements UnitOfWork {
             try {
                 this.container = ModelerCore.getModelContainer();
             } catch (CoreException err) {
-                throw new TeiidRuntimeException(err);
+                throw new TeiidDesignerRuntimeException(err);
             }
         }
         this.filter = new TxnNotificationFilter(resources);

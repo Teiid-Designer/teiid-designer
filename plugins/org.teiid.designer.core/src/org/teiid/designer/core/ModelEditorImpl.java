@@ -83,7 +83,7 @@ import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import org.teiid.core.designer.TeiidDesignerException;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
 import org.teiid.core.designer.id.IDGenerator;
@@ -5121,7 +5121,7 @@ public class ModelEditorImpl implements ModelEditor {
         if (e.eIsProxy()) {
             resolvedEObject = EcoreUtil.resolve(e, getContainer());
             if (resolvedEObject.eIsProxy()) {
-                throw new TeiidRuntimeException(
+                throw new TeiidDesignerRuntimeException(
                                                 ModelerCore.Util.getString("ModelEditorImpl.Error_EObject_can_not_be_a_proxy", resolvedEObject.toString())); //$NON-NLS-1$
             }
         }

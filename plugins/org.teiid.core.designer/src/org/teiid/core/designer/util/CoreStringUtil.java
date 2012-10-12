@@ -24,7 +24,7 @@ import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import org.teiid.core.CorePlugin;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 
 /**
  * This is a common place to put String utility methods.
@@ -1068,7 +1068,7 @@ public final class CoreStringUtil {
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            throw new TeiidRuntimeException(e);
+            throw new TeiidDesignerRuntimeException(e);
         }
         return (String[])result.toArray(new String[result.size()]);
     }

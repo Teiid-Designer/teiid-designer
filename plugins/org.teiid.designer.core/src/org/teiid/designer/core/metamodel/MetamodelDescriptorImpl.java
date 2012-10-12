@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EPackage;
 import org.osgi.framework.Bundle;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelInitializer;
@@ -555,7 +555,7 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
                         Field field = javaClass.getField("eINSTANCE"); //$NON-NLS-1$
                         ePackage = (EPackage)field.get(null);
                     } catch (Exception e) {
-                        throw new TeiidRuntimeException(e);
+                        throw new TeiidDesignerRuntimeException(e);
                     }
                 } else {
                     try {
@@ -565,7 +565,7 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
                             ePackage = (EPackage)field.get(null);
                         }
                     } catch (Exception e) {
-                        throw new TeiidRuntimeException(e);
+                        throw new TeiidDesignerRuntimeException(e);
                     }
                 }
 
