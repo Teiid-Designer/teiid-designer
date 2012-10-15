@@ -22,11 +22,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.util.Assertion;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
-import org.teiid.core.util.StringUtil;
+import org.teiid.core.util.Assertion;
 import org.teiid.designer.core.util.AssertionUtil;
 import org.teiid.designer.core.util.FileUtil;
 import org.teiid.designer.core.util.TempDirectory;
@@ -510,7 +509,7 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
             for (int i = 0; i < tokens.length; i++) {
                 final String token = tokens[i];
                 final String tokenReplacement = tokenReplacements[i];
-                fileContents = StringUtil.replaceAll(fileContents, token, tokenReplacement);
+                fileContents = CoreStringUtil.replaceAll(fileContents, token, tokenReplacement);
             }
             this.fileSize = fileContents.length();
             return new ByteArrayInputStream(fileContents.getBytes());

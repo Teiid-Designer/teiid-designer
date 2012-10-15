@@ -15,11 +15,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
-import org.teiid.core.util.StringUtil;
 import org.teiid.designer.core.util.CharOperation;
 import org.teiid.designer.metadata.runtime.impl.RecordFactory;
 
@@ -129,8 +128,8 @@ public class SimpleIndexUtil {
             return true; // null pattern is equivalent to '*'
             
         String delimiter = String.valueOf(fieldDelimiter);
-        List recordTokens  = StringUtil.split(new String(record),delimiter);
-        List patternTokens = StringUtil.split(new String(pattern),delimiter);
+        List recordTokens  = CoreStringUtil.split(new String(record),delimiter);
+        List patternTokens = CoreStringUtil.split(new String(pattern),delimiter);
         if (patternTokens.size() > recordTokens.size()) {
             return false;
         }
@@ -422,7 +421,7 @@ public class SimpleIndexUtil {
      * on the file system otherwise return false.
      */
     public static boolean isIndexFile(final String indexFileName) {
-		if (!StringUtil.isEmpty(indexFileName)) {
+		if (!CoreStringUtil.isEmpty(indexFileName)) {
 		    String extension = FileUtils.getExtension(indexFileName);
 			if(extension != null ) {
 				if( extension.equals(IndexConstants.INDEX_EXT) || extension.equals(IndexConstants.SEARCH_INDEX_EXT)) {
@@ -549,7 +548,7 @@ public class SimpleIndexUtil {
         } else {
             return null;
         }
-        return StringUtil.Constants.EMPTY_STRING + recordType;
+        return CoreStringUtil.Constants.EMPTY_STRING + recordType;
     }    
     
 
@@ -568,7 +567,7 @@ public class SimpleIndexUtil {
 		String patternStr = "" //$NON-NLS-1$
 						  + recordType
 						  + IndexConstants.RECORD_STRING.RECORD_DELIMITER;
-		if(uuid != null && !uuid.equals(StringUtil.Constants.EMPTY_STRING)) {                          
+		if(uuid != null && !uuid.equals(CoreStringUtil.Constants.EMPTY_STRING)) {                          
 			patternStr = patternStr + uuid.trim() + IndexConstants.RECORD_STRING.RECORD_DELIMITER;
 		}                    
 

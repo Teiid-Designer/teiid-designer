@@ -24,14 +24,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -47,8 +45,8 @@ import org.eclipse.xsd.XSDImport;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaContent;
 import org.eclipse.xsd.util.XSDParser;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
-import org.teiid.core.util.StringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.util.TempDirectory;
@@ -70,7 +68,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
     private IPath webServicePluginPath = null;
     private List<String> ports = new ArrayList<String>();
     private Map<String, String> operationToProcedureMap = new HashMap<String, String>();
-    private String wsdlFilename = StringUtil.Constants.EMPTY_STRING;
+    private String wsdlFilename = CoreStringUtil.Constants.EMPTY_STRING;
     private static final String JNDI_PREFIX = "java:"; //$NON-NLS-1$
 
     // =============================================================
@@ -131,14 +129,14 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
             // Check for invalid characters
             String[] invalidChars = new String[] {"/" //$NON-NLS-1$
                 , "\\" //$NON-NLS-1$
-                , StringUtil.Constants.SPACE};
+                , CoreStringUtil.Constants.SPACE};
             final String invalidChar = validateInvalidCharactersInContextName(contextName, invalidChars);
 
             // Perform validation
             if (invalidChar != null) {
 
                 String msg = null;
-                if (StringUtil.Constants.SPACE.equals(invalidChar)) {
+                if (CoreStringUtil.Constants.SPACE.equals(invalidChar)) {
                     msg = getString("ContextNameValidationFailed_InvalidSpace"); //$NON-NLS-1$
                 } else {
                     final Object[] params = new Object[] {invalidChar};
@@ -147,7 +145,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 
                 return new Status(IStatus.ERROR, WebServicePlugin.PLUGIN_ID,
                                   WebArchiveBuilderConstants.STATUS_CODE_CONTEXT_NAME_VALIDATION_FAILED, msg, null);
-            } else if (StringUtil.Constants.EMPTY_STRING.equals(contextName)) {
+            } else if (CoreStringUtil.Constants.EMPTY_STRING.equals(contextName)) {
 
                 final String msg = getString("ContextNameValidationFailed_Empty"); //$NON-NLS-1$        
                 return new Status(IStatus.ERROR, WebServicePlugin.PLUGIN_ID,
@@ -428,7 +426,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
             AntTasks.replace(webXmlFile, "${roleName}", role); //$NON-NLS-1$
             AntTasks.replace(webXmlFile, "</login-config>-->", "</login-config>"); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
-            AntTasks.replace(webXmlFile, "<!--${basic_auth}-->", StringUtil.Constants.EMPTY_STRING); //$NON-NLS-1$
+            AntTasks.replace(webXmlFile, "<!--${basic_auth}-->", CoreStringUtil.Constants.EMPTY_STRING); //$NON-NLS-1$
         }
 
         AntTasks.replace(webXmlFile, "${warname}", contextName); //$NON-NLS-1$
@@ -725,8 +723,8 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         
         wsdlGenerator.setName(webServiceName);
         wsdlGenerator.setTargetNamespace(tns);
-        wsdlGenerator.setUrlRootForReferences(StringUtil.Constants.EMPTY_STRING);
-        wsdlGenerator.setUrlSuffixForReferences(StringUtil.Constants.EMPTY_STRING);
+        wsdlGenerator.setUrlRootForReferences(CoreStringUtil.Constants.EMPTY_STRING);
+        wsdlGenerator.setUrlSuffixForReferences(CoreStringUtil.Constants.EMPTY_STRING);
         wsdlGenerator.setUrlForWsdlService("http://" + host + ":" + port + "/" + contextName + "/"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         final IStatus status = wsdlGenerator.generate(new NullProgressMonitor());
 

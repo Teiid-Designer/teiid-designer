@@ -24,10 +24,10 @@ import org.teiid.core.TeiidComponentException;
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.id.UUID;
-import org.teiid.core.types.DataTypeManager;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.types.DataTypeManager;
 import org.teiid.core.util.Assertion;
-import org.teiid.core.util.StringUtil;
 import org.teiid.designer.core.index.CompositeIndexSelector;
 import org.teiid.designer.core.index.IEntryResult;
 import org.teiid.designer.core.index.Index;
@@ -80,12 +80,12 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
 
     /** Delimiter character used when specifying fully qualified entity names */
     public static final char DELIMITER_CHAR = IndexConstants.NAME_DELIM_CHAR;
-    public static final String DELIMITER_STRING = StringUtil.Constants.EMPTY_STRING + IndexConstants.NAME_DELIM_CHAR;
+    public static final String DELIMITER_STRING = CoreStringUtil.Constants.EMPTY_STRING + IndexConstants.NAME_DELIM_CHAR;
 
     public static ColumnRecordComparator columnComparator = new ColumnRecordComparator();
 
     // error message cached to avaid i18n lookup each time
-    public static String NOT_EXISTS_MESSAGE = StringUtil.Constants.SPACE
+    public static String NOT_EXISTS_MESSAGE = CoreStringUtil.Constants.SPACE
                                               + TransformationPlugin.Util.getString("TransformationMetadata.does_not_exist._1"); //$NON-NLS-1$
 
     // context object all the info needed for metadata lookup
@@ -117,8 +117,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         CoreArgCheck.isNotEmpty(elementName);
 
         // elementfull names always contain atlest 3 segments(modelname.groupName.elementName)
-        if (StringUtil.startsWithIgnoreCase(elementName, UUID.PROTOCOL)
-            || StringUtil.getTokens(elementName, DELIMITER_STRING).size() >= 3) {
+        if (CoreStringUtil.startsWithIgnoreCase(elementName, UUID.PROTOCOL)
+            || CoreStringUtil.getTokens(elementName, DELIMITER_STRING).size() >= 3) {
             // Query the index files
             return getRecordByType(elementName, IndexConstants.RECORD_TYPE.COLUMN);
         }
@@ -133,8 +133,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         CoreArgCheck.isNotEmpty(groupName);
 
         // groupfull names always contain atlest 2 segments(modelname.groupName)
-        if (StringUtil.startsWithIgnoreCase(groupName, UUID.PROTOCOL)
-            || StringUtil.getTokens(groupName, DELIMITER_STRING).size() >= 2) {
+        if (CoreStringUtil.startsWithIgnoreCase(groupName, UUID.PROTOCOL)
+            || CoreStringUtil.getTokens(groupName, DELIMITER_STRING).size() >= 2) {
             // Query the index files
             return getRecordByType(groupName, IndexConstants.RECORD_TYPE.TABLE);
         }
@@ -152,7 +152,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
 
         String partialName = partialGroupName;
         // if it the group is a UUID
-        if (!StringUtil.startsWithIgnoreCase(partialGroupName, UUID.PROTOCOL)) {
+        if (!CoreStringUtil.startsWithIgnoreCase(partialGroupName, UUID.PROTOCOL)) {
             // Prepend a "." so only match full part names
             partialName = DELIMITER_CHAR + partialGroupName;
         }
@@ -274,8 +274,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         ProcedureRecord procRecord = null;
 
         // procedure full names always contain atlest 2 segments(modelname.procedureName)
-        if (StringUtil.startsWithIgnoreCase(procedureName, UUID.PROTOCOL)
-            || StringUtil.getTokens(procedureName, DELIMITER_STRING).size() >= 2) {
+        if (CoreStringUtil.startsWithIgnoreCase(procedureName, UUID.PROTOCOL)
+            || CoreStringUtil.getTokens(procedureName, DELIMITER_STRING).size() >= 2) {
 
             final Collection results = findMetadataRecords(IndexConstants.RECORD_TYPE.CALLABLE, procedureName, false);
 
@@ -284,7 +284,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                 // get the columnset record for this result
                 procRecord = (ProcedureRecord)results.iterator().next();
             } else if (resultSize == 0) {
-                if (StringUtil.startsWithIgnoreCase(procedureName, UUID.PROTOCOL)) {
+                if (CoreStringUtil.startsWithIgnoreCase(procedureName, UUID.PROTOCOL)) {
                     return null;
                 }
             } else {
@@ -1419,7 +1419,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         throws QueryMetadataException {
         if (elementID instanceof ColumnRecord) {
             String uuid = ((ColumnRecord)elementID).getDatatypeUUID();
-            if (!StringUtil.isEmpty(uuid)) {
+            if (!CoreStringUtil.isEmpty(uuid)) {
                 // Query the index files
                 Collection results = findMetadataRecords(IndexConstants.RECORD_TYPE.DATATYPE, uuid, false);
                 int resultSize = results.size();
@@ -1437,7 +1437,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             return null;
         } else if (elementID instanceof ProcedureParameterRecord) {
             String uuid = ((ProcedureParameterRecord)elementID).getDatatypeUUID();
-            if (!StringUtil.isEmpty(uuid)) {
+            if (!CoreStringUtil.isEmpty(uuid)) {
                 // Query the index files
                 Collection results = findMetadataRecords(IndexConstants.RECORD_TYPE.DATATYPE, uuid, false);
                 int resultSize = results.size();
@@ -1486,7 +1486,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     protected String getDatatypeUUIDMatchPattern(final String uuid) {
         CoreArgCheck.isNotNull(uuid);
         String uuidString = uuid;
-        if (StringUtil.startsWithIgnoreCase(uuid, UUID.PROTOCOL)) {
+        if (CoreStringUtil.startsWithIgnoreCase(uuid, UUID.PROTOCOL)) {
             uuidString = uuid.toLowerCase();
         }
         // construct the pattern string
@@ -1511,7 +1511,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                                          final String uuid) {
         CoreArgCheck.isNotNull(uuid);
         String uuidString = uuid;
-        if (StringUtil.startsWithIgnoreCase(uuid, UUID.PROTOCOL)) {
+        if (CoreStringUtil.startsWithIgnoreCase(uuid, UUID.PROTOCOL)) {
             uuidString = uuid.toLowerCase();
         }
         // construct the pattern string
@@ -1808,7 +1808,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         IEntryResult[] results = queryIndex(recordType, entityName, isPartialName);
         Collection records = findMetadataRecords(results);
 
-        if (StringUtil.startsWithIgnoreCase(entityName, UUID.PROTOCOL)) {
+        if (CoreStringUtil.startsWithIgnoreCase(entityName, UUID.PROTOCOL)) {
             // Filter out ColumnRecord instances that do not match the specified uuid.
             // Due to the pattern matching used to query index files if an index record
             // matched the specified uuid string anywhere in that record it would be returned
@@ -1836,7 +1836,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         Index[] indexes = getIndexes(recordType, getIndexSelector());
 
         // Query based on UUID
-        if (StringUtil.startsWithIgnoreCase(entityName, UUID.PROTOCOL)) {
+        if (CoreStringUtil.startsWithIgnoreCase(entityName, UUID.PROTOCOL)) {
             String patternString = null;
             if (recordType == IndexConstants.RECORD_TYPE.DATATYPE) {
                 patternString = getDatatypeUUIDMatchPattern(entityName);

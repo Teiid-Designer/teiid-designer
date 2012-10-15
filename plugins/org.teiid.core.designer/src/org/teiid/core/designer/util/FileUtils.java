@@ -24,7 +24,6 @@ import org.teiid.core.CorePlugin;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
-import org.teiid.core.util.StringUtil;
 
 /**
  * @since 8.0
@@ -140,7 +139,7 @@ public class FileUtils {
      * @return
      */
     public static String getBaseFileNameWithoutExtension(String path) {
-        return StringUtil.getFirstToken(StringUtil.getLastToken(path, "/"), "."); //$NON-NLS-1$ //$NON-NLS-2$
+        return CoreStringUtil.getFirstToken(CoreStringUtil.getLastToken(path, "/"), "."); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

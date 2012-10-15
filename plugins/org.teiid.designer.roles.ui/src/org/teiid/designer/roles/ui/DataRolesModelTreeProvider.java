@@ -22,7 +22,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 import org.teiid.core.designer.ModelerCoreException;
-import org.teiid.core.util.StringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.ContainerImpl;
 import org.teiid.designer.core.util.StringUtilities;
@@ -51,7 +51,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableLabelProvider {
     private static final Object[] NO_CHILDREN = new Object[0];
     private ITreeContentProvider modelProvider = ModelUtilities.getModelContentProvider();
-    private static final char DELIM = StringUtil.Constants.DOT_CHAR;
+    private static final char DELIM = CoreStringUtil.Constants.DOT_CHAR;
     private static final char B_SLASH = '/';
 
     private static final Image CHECKED_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.CHECKED_BOX_ICON);

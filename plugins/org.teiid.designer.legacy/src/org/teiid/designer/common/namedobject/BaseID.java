@@ -11,8 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.teiid.core.util.StringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.common.util.ErrorMessageKeys;
 import org.teiid.designer.common.util.I18nUtil;
 
@@ -133,7 +132,7 @@ public abstract class BaseID implements Cloneable, Comparable, Serializable {
     public List getNameComponents() {
         if (this.atomicNames == null) {
             if (this.fullName.indexOf(IDVerifier.DELIMITER_CHARACTER) != -1) {
-                this.atomicNames = StringUtil.split(this.fullName, DELIMITER);
+                this.atomicNames = CoreStringUtil.split(this.fullName, DELIMITER);
             } else {
                 this.atomicNames = new ArrayList(1);
                 this.atomicNames.add(this.fullName);

@@ -13,11 +13,11 @@ import java.util.Map;
 import org.teiid.core.designer.id.ObjectID;
 import org.teiid.core.designer.id.UUID;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.util.Assertion;
 import org.teiid.core.util.EquivalenceUtil;
-import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.util.HashCodeUtil;
-import org.teiid.core.util.StringUtil;
 import org.teiid.designer.core.container.EObjectFinder;
 import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.core.types.DatatypeConstants;
@@ -145,7 +145,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     public String getParentFullName() {
         int prntIdx = getFullName() != null ? getFullName().lastIndexOf(IndexConstants.NAME_DELIM_CHAR + getName()) : -1;
         if (prntIdx <= 0) {
-            return StringUtil.Constants.EMPTY_STRING;
+            return CoreStringUtil.Constants.EMPTY_STRING;
         }
         return getFullName().substring(0, prntIdx);
     }

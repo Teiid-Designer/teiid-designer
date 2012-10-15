@@ -7,9 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
-
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
-import org.teiid.core.util.StringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 
 /**
  * @since 8.0
@@ -52,7 +51,7 @@ public class FileUtil {
             while (bufferedReader.ready()) {
                 String line = bufferedReader.readLine();     
                 writer.write(line);  
-                writer.write(StringUtil.LINE_SEPARATOR);
+                writer.write(CoreStringUtil.LINE_SEPARATOR);
             }
         } catch (IOException e) {
             throw new TeiidDesignerRuntimeException(e);

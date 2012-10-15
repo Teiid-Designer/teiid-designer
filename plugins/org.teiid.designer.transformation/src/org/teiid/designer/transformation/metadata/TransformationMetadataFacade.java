@@ -17,9 +17,9 @@ import java.util.Map;
 import java.util.Properties;
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.util.Assertion;
 import org.teiid.core.util.LRUCache;
-import org.teiid.core.util.StringUtil;
 import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.core.util.AssertionUtil;
 import org.teiid.designer.metadata.runtime.ColumnRecord;
@@ -771,7 +771,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
     private void updateNameToIdCache( final String fullName,
                                       final char recordType,
                                       final Object id ) {
-        if (!StringUtil.isEmpty(fullName) && id != null) {
+        if (!CoreStringUtil.isEmpty(fullName) && id != null) {
             this.nameToIdCache.put(getLookupKey(fullName, recordType), id);
         }
     }
@@ -786,7 +786,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
     private void updatePartialNameToFullName( final String partialName,
                                               final String fullName,
                                               final char recordType ) {
-        if (!StringUtil.isEmpty(partialName) && !StringUtil.isEmpty(fullName)) {
+        if (!CoreStringUtil.isEmpty(partialName) && !CoreStringUtil.isEmpty(fullName)) {
             this.partialNameToFullNameCache.put(getLookupKey(partialName, recordType), fullName);
         }
     }

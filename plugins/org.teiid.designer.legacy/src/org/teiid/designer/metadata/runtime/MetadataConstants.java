@@ -8,7 +8,7 @@
 
 package org.teiid.designer.metadata.runtime;
 
-import org.teiid.core.util.StringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 
 /**
  * MetadataConstants are all the constant values used to identify all the valid values for a multi-value attribute.
@@ -26,7 +26,7 @@ public final class MetadataConstants {
 	/**  Definition of not defined short type. */
     public static final short NOT_DEFINED_SHORT = Short.MIN_VALUE;
 
-    public final static String BLANK = StringUtil.Constants.EMPTY_STRING;
+    public final static String BLANK = CoreStringUtil.Constants.EMPTY_STRING;
         
     //properties
     public static final String VERSION_DATE = "versionDate"; //$NON-NLS-1$

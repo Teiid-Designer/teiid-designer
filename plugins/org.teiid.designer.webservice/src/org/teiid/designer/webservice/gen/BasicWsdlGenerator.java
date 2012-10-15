@@ -20,7 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -45,7 +44,7 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.util.StringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.types.DatatypeConstants;
@@ -1069,7 +1068,7 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
 
             // Add the SOAP operation information ...
             final SoapOperation soapOp = this.soapFactory.createSoapOperation();
-            final String action = StringUtil.Constants.EMPTY_STRING;
+            final String action = CoreStringUtil.Constants.EMPTY_STRING;
             soapOp.setAction(action);
             addToOperationToProcedureMap(object);
             soapOp.setStyle(SoapStyleType.DOCUMENT_LITERAL);

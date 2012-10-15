@@ -4,11 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.util.ObjectConverterUtil;
-import org.teiid.core.util.StringUtil;
 import org.teiid.designer.core.util.AssertionUtil;
 
 
@@ -48,7 +47,7 @@ public class MetadataSourceUtil {
             for (int i = 0; i < tokens.length; i++) {
                 final String token = tokens[i];
                 final String tokenReplacement = tokenReplacements[i];
-                fileContents = StringUtil.replaceAll(fileContents, token, tokenReplacement);
+                fileContents = CoreStringUtil.replaceAll(fileContents, token, tokenReplacement);
             }
             return new ByteArrayInputStream(fileContents.getBytes());
         }
