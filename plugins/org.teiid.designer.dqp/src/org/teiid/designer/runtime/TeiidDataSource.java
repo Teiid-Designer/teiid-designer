@@ -3,7 +3,7 @@ package org.teiid.designer.runtime;
 import java.util.Properties;
 
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.util.HashCodeUtil;
+import org.teiid.core.designer.HashCodeUtil;
 
 /**
  * @since 8.0

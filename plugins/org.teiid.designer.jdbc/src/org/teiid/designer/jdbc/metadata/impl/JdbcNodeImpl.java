@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.IPathComparator;
-import org.teiid.core.util.HashCodeUtil;
+import org.teiid.core.designer.HashCodeUtil;
 import org.teiid.designer.jdbc.JdbcException;
 import org.teiid.designer.jdbc.JdbcPlugin;
 import org.teiid.designer.jdbc.data.Request;

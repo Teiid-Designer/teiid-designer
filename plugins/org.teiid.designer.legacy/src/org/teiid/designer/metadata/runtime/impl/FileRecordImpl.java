@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.InputStream;
 import org.teiid.core.util.EquivalenceUtil;
 import org.teiid.core.designer.util.FileUtils;
-import org.teiid.core.util.HashCodeUtil;
+import org.teiid.core.designer.HashCodeUtil;
 import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.core.index.IndexSelector;
 import org.teiid.designer.core.workspace.ModelFileUtil;

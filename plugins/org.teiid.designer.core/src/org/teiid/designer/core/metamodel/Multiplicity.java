@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.util.HashCodeUtil;
+import org.teiid.core.designer.HashCodeUtil;
 import org.teiid.designer.core.ModelerCore;
 
 /**

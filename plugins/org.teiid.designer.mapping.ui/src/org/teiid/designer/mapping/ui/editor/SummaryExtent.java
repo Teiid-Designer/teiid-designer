@@ -10,7 +10,7 @@ package org.teiid.designer.mapping.ui.editor;
 import java.util.HashMap;
 import java.util.Iterator;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.HashCodeUtil;
+import org.teiid.core.designer.HashCodeUtil;
 
 /**
  * The <code>SummaryExtent</code> class provides information about one or more XML document mapping references some of whose

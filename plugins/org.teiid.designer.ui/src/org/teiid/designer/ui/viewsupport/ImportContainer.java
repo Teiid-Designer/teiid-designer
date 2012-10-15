@@ -9,7 +9,7 @@ package org.teiid.designer.ui.viewsupport;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.core.util.HashCodeUtil;
+import org.teiid.core.designer.HashCodeUtil;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.ui.UiConstants;
 
