@@ -88,7 +88,6 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
     Text containerText;
     Resource xsdRsrc;
     Text fileText;
-    private IPath filePath;
     protected int currentStatus = STATUS_OK;
     private String fileNameMessage = null;
     private String fileExtension = ".xmi"; //$NON-NLS-1$
@@ -137,7 +136,6 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         gd = new GridData(GridData.FILL_HORIZONTAL);
         containerText.setLayoutData(gd);
         containerText.addModifyListener(new ModifyListener() {
-        	@SuppressWarnings("unused") 
         	@Override
 			public void modifyText( ModifyEvent e ) {
                 checkStatus();
@@ -151,7 +149,6 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         browseButton.setLayoutData(buttonGridData);
         browseButton.setText(UiConstants.Util.getString("NewModelWizard.browse")); //$NON-NLS-1$
         browseButton.addSelectionListener(new SelectionAdapter() {
-        	@SuppressWarnings("unused") 
         	@Override
             public void widgetSelected( SelectionEvent e ) {
                 handleBrowse();
@@ -165,8 +162,7 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         gd = new GridData(GridData.FILL_HORIZONTAL);
         fileText.setLayoutData(gd);
         fileText.addModifyListener(new ModifyListener() {
-            @SuppressWarnings("unused")
-			@Override
+            @Override
 			public void modifyText( ModifyEvent e ) {
                 checkStatus();
             }
@@ -472,7 +468,7 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
      * @return the file path
      */
     public IPath getFilePath() {
-        return this.filePath;
+        return getTargetProject().getFullPath().append(getFileText() + ModelerCore.MODEL_FILE_EXTENSION);
     }
 
     class GlobalEntitiesAccumulatorSource implements IAccumulatorSource {
@@ -481,8 +477,7 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
 
         TableViewer viewer;
 
-        @SuppressWarnings("unused")
-		public GlobalEntitiesAccumulatorSource( GlobalEntitiesPage cllr,
+        public GlobalEntitiesAccumulatorSource( GlobalEntitiesPage cllr,
                                                 Composite parent ) {
             super();
             this.caller = cllr;

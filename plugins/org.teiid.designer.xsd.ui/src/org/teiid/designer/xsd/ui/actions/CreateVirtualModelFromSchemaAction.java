@@ -72,9 +72,9 @@ public class CreateVirtualModelFromSchemaAction extends Action implements ISelec
                     break;
                 }
             }
+            
+            ModelerXsdUiConstants.Util.log(result);
         }
-        
-        ModelerXsdUiConstants.Util.log(result);
     }
 
     /* (non-Javadoc)
