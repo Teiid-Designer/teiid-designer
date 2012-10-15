@@ -585,17 +585,17 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             validationResult.addProblem(typeProblem);
         }
 
-        // if the command cannot be an UpdateProcedure, it can be a VirtualProcedure
-        if (cmdType == Command.TYPE_UPDATE_PROCEDURE ) {
-            // create validation problem and additional to the results
-            ValidationProblem typeProblem = new ValidationProblemImpl(
-                                                                      0,
-                                                                      IStatus.ERROR,
-                                                                      TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.Virtual_stored_procedures_transformation_definition_cannot_be_an_updateProcedure._3")); //$NON-NLS-1$
-            validationResult.addProblem(typeProblem);
-            return;
+//        // if the command cannot be an UpdateProcedure, it can be a VirtualProcedure
+//        if (cmdType == Command.TYPE_UPDATE_PROCEDURE ) {
+//            // create validation problem and additional to the results
+//            ValidationProblem typeProblem = new ValidationProblemImpl(
+//                                                                      0,
+//                                                                      IStatus.ERROR,
+//                                                                      TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.Virtual_stored_procedures_transformation_definition_cannot_be_an_updateProcedure._3")); //$NON-NLS-1$
+//            validationResult.addProblem(typeProblem);
+//            return;
             // If it is update command then result should have one column of type 'int'
-        } else if (cmdType == Command.TYPE_INSERT || cmdType == Command.TYPE_UPDATE || cmdType == Command.TYPE_DELETE) {
+        if (cmdType == Command.TYPE_INSERT || cmdType == Command.TYPE_UPDATE || cmdType == Command.TYPE_DELETE) {
             Collection columns = procResult.getColumns();
             String typeName = null;
             if (columns.size() == 1) {
