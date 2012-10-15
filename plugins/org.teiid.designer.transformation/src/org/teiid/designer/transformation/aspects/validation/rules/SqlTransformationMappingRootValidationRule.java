@@ -179,6 +179,8 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
     /**
      * Check if the target of a mapping root can accept the sources on the sql transformation and also if the sources on the
      * transformation can be added to for the given target.
+     * @param transRoot the mapping root (cannot be <code>null</code>)
+     * @param validationResult the result to add any validation errors to (cannot be <code>null</code>)
      * 
      * @since 4.3
      */
@@ -585,16 +587,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             validationResult.addProblem(typeProblem);
         }
 
-//        // if the command cannot be an UpdateProcedure, it can be a VirtualProcedure
-//        if (cmdType == Command.TYPE_UPDATE_PROCEDURE ) {
-//            // create validation problem and additional to the results
-//            ValidationProblem typeProblem = new ValidationProblemImpl(
-//                                                                      0,
-//                                                                      IStatus.ERROR,
-//                                                                      TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.Virtual_stored_procedures_transformation_definition_cannot_be_an_updateProcedure._3")); //$NON-NLS-1$
-//            validationResult.addProblem(typeProblem);
-//            return;
-            // If it is update command then result should have one column of type 'int'
+        // If it is update command then result should have one column of type 'int'
         if (cmdType == Command.TYPE_INSERT || cmdType == Command.TYPE_UPDATE || cmdType == Command.TYPE_DELETE) {
             Collection columns = procResult.getColumns();
             String typeName = null;
