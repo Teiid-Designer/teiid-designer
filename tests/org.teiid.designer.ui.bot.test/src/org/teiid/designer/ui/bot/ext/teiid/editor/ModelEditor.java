@@ -14,6 +14,8 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefFigureCanvas;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.ui.IEditorReference;
 import org.hamcrest.Matcher;
@@ -86,8 +88,27 @@ public class ModelEditor extends SWTBotEditor {
 
 	public void editFigure(SWTBotGefFigure figureBot) {
 		Rectangle rectangle = figureBot.getAbsoluteBounds();
-		canvas.mouseMoveLeftClick(rectangle.x, rectangle.y);
+		canvas.mouseMoveLeftClick(rectangle.x + 1, rectangle.y + 1);
 		canvas.contextMenu("Edit").click();
+		bot().waitUntil(new DefaultCondition() {
+
+			@Override
+			public boolean test() throws Exception {
+				try {
+					bot.styledText();
+					log.info("APLog: OK ");
+					return true;
+				} catch (WidgetNotFoundException wnfe) {
+					return false;
+				}
+			}
+
+			@Override
+			public String getFailureMessage() {
+				return "Process wasn't completed";
+			}
+		});
+		bot().styledText();
 	}
 
 	public SWTBotGefFigure figureWithLabel(String label) {
@@ -106,8 +127,6 @@ public class ModelEditor extends SWTBotEditor {
 
 	public IFigure figure(Matcher matcher, int index) {
 		WaitForFigure waitForFigure = new WaitForFigure(matcher, (FigureCanvas) canvas.widget);
-		// TimeoutException, maybe you should catch it and throw something like
-		// FigureNotFoundException
 		bot().waitUntil(waitForFigure);
 		return waitForFigure.get(index);
 	}

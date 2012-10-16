@@ -30,7 +30,7 @@
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="org.teiid.designer.ui.bot.test"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dswtbot.test.properties.file=org.teiid.designer.ui.bot.test.properties -Xms256m -Xmx512m -XX:PermSize=256m -XX:MaxPermSize=384m"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dswtbot.test.properties.file=swtbot.properties -Xms256m -Xmx512m -XX:PermSize=256m -XX:MaxPermSize=384m"/>
 <stringAttribute key="pde.version" value="3.3"/>
 <stringAttribute key="product" value="com.jboss.jbds.product.product"/>
 <booleanAttribute key="show_selected_only" value="false"/>
