@@ -170,20 +170,32 @@ public class InMemoryIndex {
      */
 
     protected void save( IndexOutput output ) throws IOException {
-        boolean ok = false;
+        boolean outputOpened = false;
+        
         try {
-            output.open();
             IndexedFile[] indexedFiles = files.asArray();
+            
+            // init the slot
+            getSortedWordEntries();
+            
+            if (indexedFiles.length > 0 || sortedWordEntries.length > 0) {
+                output.open();
+                outputOpened = true;
+            }
+            
             for (int i = 0, length = indexedFiles.length; i < length; ++i)
                 output.addFile(indexedFiles[i]); // written out in order BUT not alphabetical
-            getSortedWordEntries(); // init the slot
+            
             for (int i = 0, numWords = sortedWordEntries.length; i < numWords; ++i)
                 output.addWord(sortedWordEntries[i]);
-            output.flush();
-            output.close();
-            ok = true;
+        
+            if (outputOpened)
+                output.flush();
+            
         } finally {
-            if (!ok && output != null) output.close();
+            if (output != null) {
+                output.close();
+            }
         }
     }
 }
