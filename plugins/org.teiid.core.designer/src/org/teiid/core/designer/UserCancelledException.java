@@ -7,7 +7,7 @@
  */
 package org.teiid.core.designer;
 
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 
 
 /**
@@ -15,7 +15,7 @@ import org.teiid.core.TeiidRuntimeException;
  *
  * @since 8.0
  */
-public class UserCancelledException extends TeiidRuntimeException {
+public class UserCancelledException extends TeiidDesignerRuntimeException {
 
     /**
      */

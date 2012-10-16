@@ -14,8 +14,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.teiid.core.designer.id.UUID;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.util.Assertion;
-import org.teiid.core.util.StringUtil;
 import org.teiid.designer.core.container.EObjectFinder;
 import org.teiid.designer.core.index.EntryResult;
 import org.teiid.designer.core.index.IEntryResult;
@@ -347,7 +347,7 @@ public class RecordFactory {
      */
     public static ModelRecord createModelRecord(final char[] record) {
         final String str = new String(record);
-        final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         final ModelRecordImpl model = new ModelRecordImpl();
 
         // Extract the index version information from the record 
@@ -389,7 +389,7 @@ public class RecordFactory {
      */
     public static VdbRecord createVdbRecord(final char[] record) {
         final String str = new String(record);
-        final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         final VdbRecordImpl vdb = new VdbRecordImpl();
 
         // Extract the index version information from the record 
@@ -442,7 +442,7 @@ public class RecordFactory {
      */
     public static TransformationRecord createTransformationRecord(final char[] record) {
         final String str = new String(record);
-        final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         final TransformationRecordImpl transform = new TransformationRecordImpl();
 
         // Extract the index version information from the record 
@@ -489,7 +489,7 @@ public class RecordFactory {
      */
     public static TableRecord createTableRecord(final char[] record) {
         final String str = new String(record);
-        final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         final TableRecordImpl table = new TableRecordImpl();
 
         // Extract the index version information from the record 
@@ -558,7 +558,7 @@ public class RecordFactory {
      */
     public static ColumnRecord createColumnRecord(final char[] record) {
         final String str = new String(record);
-        final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         final ColumnRecordImpl column = new ColumnRecordImpl();
 
         // Extract the index version information from the record 
@@ -649,7 +649,7 @@ public class RecordFactory {
      */
     public static ColumnSetRecord createColumnSetRecord(final char[] record) {
         final String str = new String(record);
-        final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         final ColumnSetRecordImpl columnSet = new ColumnSetRecordImpl();
 
         // Extract the index version information from the record 
@@ -677,7 +677,7 @@ public class RecordFactory {
      */
     public static ForeignKeyRecord createForeignKeyRecord(final char[] record) {
         final String str = new String(record);
-        final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         final ForeignKeyRecordImpl fkRecord = new ForeignKeyRecordImpl();
 
         // Extract the index version information from the record 
@@ -708,7 +708,7 @@ public class RecordFactory {
      */
     public static UniqueKeyRecord createUniqueKeyRecord(final char[] record) {
         final String str = new String(record);
-        final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         final UniqueKeyRecordImpl ukRecord = new UniqueKeyRecordImpl();
 
         // Extract the index version information from the record 
@@ -740,7 +740,7 @@ public class RecordFactory {
      */
     public static DatatypeRecord createDatatypeRecord(final char[] record) {
         final String str = new String(record);
-        final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         final DatatypeRecordImpl dt = new DatatypeRecordImpl();
 
         // Extract the index version information from the record 
@@ -816,7 +816,7 @@ public class RecordFactory {
     public static ProcedureRecord createProcedureRecord(final char[] record) {
 
         final String str = new String(record);
-        final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         final ProcedureRecordImpl procRd = new ProcedureRecordImpl();
 
         // Extract the index version information from the record 
@@ -862,7 +862,7 @@ public class RecordFactory {
     public static ProcedureParameterRecord createProcedureParameterRecord(final char[] record) {
 
         final String str = new String(record);
-        final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         final ProcedureParameterRecordImpl paramRd = new ProcedureParameterRecordImpl();
 
         // Extract the index version information from the record 
@@ -922,7 +922,7 @@ public class RecordFactory {
      */
     public static AnnotationRecord createAnnotationRecord(final char[] record) {
         final String str = new String(record);
-        final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         final AnnotationRecordImpl annotation = new AnnotationRecordImpl();
 
         // Extract the index version information from the record 
@@ -954,7 +954,7 @@ public class RecordFactory {
      */
     public static PropertyRecord createPropertyRecord(final char[] record) {
         final String str = new String(record);
-        final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         final PropertyRecordImpl property = new PropertyRecordImpl();
 
         // Extract the index version information from the record 
@@ -996,7 +996,7 @@ public class RecordFactory {
      */
     public static FileRecord createFileRecord(final char[] record) {
         final String str = new String(record);
-        final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         final FileRecordImpl file = new FileRecordImpl();
 
         // Extract the index version information from the record 
@@ -1055,14 +1055,14 @@ public class RecordFactory {
     }
 
     public static List getIDs(final String values, final int indexVersionNumber) {
-        if (StringUtil.isEmpty(values)) {
+        if (CoreStringUtil.isEmpty(values)) {
             return Collections.EMPTY_LIST;
         }
         if (values.length() == 1 && values.charAt(0) == IndexConstants.RECORD_STRING.SPACE) {
             return Collections.EMPTY_LIST;
         } 
         final char listDelimiter = getListDelimiter(indexVersionNumber);
-        final List tokens = StringUtil.split(values,String.valueOf(listDelimiter));
+        final List tokens = CoreStringUtil.split(values,String.valueOf(listDelimiter));
         final List result = new ArrayList(tokens.size());
         for (Iterator iter = tokens.iterator(); iter.hasNext();) {
             String token = getObjectValue((String)iter.next());
@@ -1074,14 +1074,14 @@ public class RecordFactory {
     }
 
     public static List getStrings(final String values, final int indexVersionNumber) {
-        if (StringUtil.isEmpty(values)) {
+        if (CoreStringUtil.isEmpty(values)) {
             return Collections.EMPTY_LIST;
         }
         if (values.length() == 1 && values.charAt(0) == IndexConstants.RECORD_STRING.SPACE) {
             return Collections.EMPTY_LIST;
         } 
         final char listDelimiter = getListDelimiter(indexVersionNumber);
-        final List tokens = StringUtil.split(values,String.valueOf(listDelimiter));
+        final List tokens = CoreStringUtil.split(values,String.valueOf(listDelimiter));
         final List result = new ArrayList(tokens.size());
         for (Iterator iter = tokens.iterator(); iter.hasNext();) {
             String token = (String)iter.next();

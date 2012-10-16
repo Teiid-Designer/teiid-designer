@@ -23,7 +23,7 @@
 package org.teiid.core.designer.id;
 
 import java.io.Serializable;
-import org.teiid.core.CorePlugin;
+import org.teiid.core.designer.CoreModelerPlugin;
 
 /**
  * @since 8.0
@@ -39,7 +39,7 @@ public class IntegerIDFactory implements ObjectIDFactory, Serializable {
      */
     @Override
 	public String getDescription() {
-        return CorePlugin.Util.getString("IntegerIDFactory.Description"); //$NON-NLS-1$
+        return CoreModelerPlugin.Util.getString("IntegerIDFactory.Description"); //$NON-NLS-1$
     }
 
     protected int getNextValue() {
@@ -85,7 +85,7 @@ public class IntegerIDFactory implements ObjectIDFactory, Serializable {
         try {
 	        return new IntegerID( Integer.parseInt(parsedID.getRemainder()) );
         } catch ( NumberFormatException e ) {
-            throw new InvalidIDException(CorePlugin.Util.getString("IntegerIDFactory.The_specified_ID_value_is_invalid",value,getProtocol())); //$NON-NLS-1$
+            throw new InvalidIDException(CoreModelerPlugin.Util.getString("IntegerIDFactory.The_specified_ID_value_is_invalid",value,getProtocol())); //$NON-NLS-1$
         }
     }
 
@@ -107,7 +107,7 @@ public class IntegerIDFactory implements ObjectIDFactory, Serializable {
         try {
             return new IntegerID( Integer.parseInt(value) );
         } catch ( NumberFormatException e ) {
-            throw new InvalidIDException(CorePlugin.Util.getString("IntegerIDFactory.The_specified_ID_value_is_invalid",value,getProtocol())); //$NON-NLS-1$
+            throw new InvalidIDException(CoreModelerPlugin.Util.getString("IntegerIDFactory.The_specified_ID_value_is_invalid",value,getProtocol())); //$NON-NLS-1$
         }
     }
 

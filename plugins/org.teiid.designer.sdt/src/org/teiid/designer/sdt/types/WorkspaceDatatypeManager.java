@@ -23,7 +23,7 @@ import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.id.IDGenerator;
 import org.teiid.core.designer.id.InvalidIDException;
@@ -785,7 +785,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
         if (e.eIsProxy()) {
             resolvedEObject = EcoreUtil.resolve(e, getContainer());
             if (resolvedEObject.eIsProxy()) {
-                throw new TeiidRuntimeException(
+                throw new TeiidDesignerRuntimeException(
                                                      ModelerSdtPlugin.Util.getString("WorkspaceDatatypeManager.Error_EObject_can_not_be_a_proxy", resolvedEObject.toString())); //$NON-NLS-1$
             }
         }

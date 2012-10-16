@@ -16,12 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.teiid.api.exception.query.QueryMetadataException;
-import org.teiid.core.TeiidComponentException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.core.ModelerCore;
@@ -37,7 +34,6 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.query.SetQueryUtil;
 import org.teiid.designer.core.types.DatatypeConstants;
-import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metadata.runtime.ColumnRecord;
 import org.teiid.designer.metadata.runtime.MetadataConstants;
 import org.teiid.designer.metadata.runtime.MetadataRecord;
@@ -2339,11 +2335,7 @@ public class TransformationSqlHelper implements SqlConstants {
         try {
             QueryMetadataInterface resolver = TransformationMetadataFactory.getInstance().getModelerMetadata(procObj);
             procInfo = resolver.getStoredProcedureInfoForProcedure(procFullName);
-        } catch (QueryMetadataException e) {
-            String message = TransformationPlugin.Util.getString("TransformationSqlHelper.groupIDNotFoundError", //$NON-NLS-1$
-                                                                 procFullName);
-            TransformationPlugin.Util.log(IStatus.WARNING, e, message);
-        } catch (TeiidComponentException e) {
+        } catch (Exception e) {
             String message = TransformationPlugin.Util.getString("TransformationSqlHelper.groupIDNotFoundError", //$NON-NLS-1$
                                                                  procFullName);
             TransformationPlugin.Util.log(IStatus.WARNING, e, message);

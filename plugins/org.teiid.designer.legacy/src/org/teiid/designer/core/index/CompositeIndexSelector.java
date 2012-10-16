@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import org.teiid.core.util.ArgCheck;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 /**
  * CompositeIndexSelector, this selector returns indexes if aggrgates from all the 
@@ -74,7 +74,7 @@ public class CompositeIndexSelector extends AbstractIndexSelector {
      */
     @Override
     public List getFileContentsAsString(List paths) {
-        ArgCheck.isNotEmpty(paths);
+        CoreArgCheck.isNotEmpty(paths);
         for(final Iterator indexIter = this.indexSelectors.iterator();indexIter.hasNext();) {
             IndexSelector selector = (IndexSelector) indexIter.next();
             if(selector instanceof RuntimeIndexSelector) {
@@ -95,7 +95,7 @@ public class CompositeIndexSelector extends AbstractIndexSelector {
      */
     @Override
     public InputStream getFileContent(String path) {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         for(final Iterator indexIter = this.indexSelectors.iterator();indexIter.hasNext();) {
             IndexSelector selector = (IndexSelector) indexIter.next();
             if(selector instanceof RuntimeIndexSelector) {
@@ -115,7 +115,7 @@ public class CompositeIndexSelector extends AbstractIndexSelector {
      */
     @Override
     public File getFile(String path) {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         for(final Iterator indexIter = this.indexSelectors.iterator();indexIter.hasNext();) {
             IndexSelector selector = (IndexSelector) indexIter.next();
             if(selector instanceof RuntimeIndexSelector) {
@@ -135,7 +135,7 @@ public class CompositeIndexSelector extends AbstractIndexSelector {
      */
     @Override
     public String getFileContentAsString(String path) {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         for(final Iterator indexIter = this.indexSelectors.iterator();indexIter.hasNext();) {
             IndexSelector selector = (IndexSelector) indexIter.next();
             if(selector instanceof RuntimeIndexSelector) {
@@ -155,7 +155,7 @@ public class CompositeIndexSelector extends AbstractIndexSelector {
      */
     @Override
     public long getFileSize(String path) {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         for(final Iterator indexIter = this.indexSelectors.iterator();indexIter.hasNext();) {
             IndexSelector selector = (IndexSelector) indexIter.next();
             if(selector instanceof RuntimeIndexSelector) {
@@ -175,7 +175,7 @@ public class CompositeIndexSelector extends AbstractIndexSelector {
      */
     @Override
     public InputStream getFileContent(final String path, final String[] tokens, final String[] tokenReplacements) {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         for(final Iterator indexIter = this.indexSelectors.iterator();indexIter.hasNext();) {
             IndexSelector selector = (IndexSelector) indexIter.next();
             if(selector instanceof RuntimeIndexSelector) {

@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
-import org.teiid.core.util.FileUtils;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.compare.ModelGenerator;
 import org.teiid.designer.compare.selector.ModelResourceSelector;
 import org.teiid.designer.compare.selector.ModelSelector;

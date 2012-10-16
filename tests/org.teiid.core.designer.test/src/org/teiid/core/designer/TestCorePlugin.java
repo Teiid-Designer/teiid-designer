@@ -7,6 +7,9 @@
  */
 package org.teiid.core.designer;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Date;
 import junit.extensions.TestSetup;
 import junit.framework.Test;
@@ -15,7 +18,6 @@ import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.core.util.SmartTestDesignerSuite;
 
@@ -23,13 +25,6 @@ import org.teiid.core.util.SmartTestDesignerSuite;
  * TestCorePlugin
  */
 public class TestCorePlugin extends TestCase {
-
-    public final static String[] REAL_KEYS = new String[] {"stream_closed", //$NON-NLS-1$
-        "TEIID10070" //$NON-NLS-1$
-    };
-    public final static String[] REAL_VALUES = new String[] {"The stream already closed", //$NON-NLS-1$
-        "Value is not valid XML" //$NON-NLS-1$
-    };
 
     /**
      * Constructor for TestCorePlugin.Util.
@@ -82,7 +77,7 @@ public class TestCorePlugin extends TestCase {
                                    final String expectedValue ) {
         final String actualValue = CoreModelerPlugin.Util.getString(key); // may throw exception
         if (actualValue == null) {
-            fail("CorePlugin.Util.getString(\"" + key + //$NON-NLS-1$
+            fail("CoreModelerPlugin.Util.getString(\"" + key + //$NON-NLS-1$
                  "\") should not return null"); //$NON-NLS-1$
         }
         if (!actualValue.equals(expectedValue)) {
@@ -105,11 +100,40 @@ public class TestCorePlugin extends TestCase {
         helpTestGetString(key, expectedValue);
     }
 
-    public void testNonPlatformGetStringThatShouldBeFound() {
-        for (int i = 0; i != REAL_KEYS.length; ++i) {
-            final String key = REAL_KEYS[i];
-            final String expectedValue = REAL_VALUES[i];
-            helpTestGetString(key, expectedValue);
+    public void testNonPlatformGetStringThatShouldBeFound() throws Exception {
+        
+        String pkgName = CoreModelerPlugin.class.getPackage().getName().replaceAll("\\.", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+        InputStream propStream = CoreModelerPlugin.class.getClassLoader()
+                                                        .getResourceAsStream(pkgName + "/i18n.properties"); //$NON-NLS-1$
+        
+        BufferedReader reader = null;
+        
+        try {
+            reader = new BufferedReader(new InputStreamReader(propStream));
+            String line = null;
+            
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("#")) //$NON-NLS-1$
+                    continue;
+                
+                String[] entry = line.split("="); //$NON-NLS-1$
+                if (entry.length != 2)
+                    continue;
+                
+                // May skip properties using "=" in the value but enough for a sample
+                final String key = entry[0];
+                final String expectedValue = entry[1]
+                                                                .replaceAll("\\\\", ""); //$NON-NLS-1$ //$NON-NLS-2$
+                
+                
+                helpTestGetString(key, expectedValue);
+            }        
+        }
+        finally {
+            if (reader != null) 
+                reader.close();
+            else if (propStream != null)
+                propStream.close();
         }
     }
 

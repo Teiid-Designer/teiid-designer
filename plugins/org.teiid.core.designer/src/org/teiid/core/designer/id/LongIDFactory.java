@@ -23,7 +23,7 @@
 package org.teiid.core.designer.id;
 
 import java.io.Serializable;
-import org.teiid.core.CorePlugin;
+import org.teiid.core.designer.CoreModelerPlugin;
 
 
 /**
@@ -40,7 +40,7 @@ public class LongIDFactory implements ObjectIDFactory, Serializable {
      */
     @Override
 	public String getDescription() {
-        return CorePlugin.Util.getString("LongIDFactory.Description"); //$NON-NLS-1$
+        return CoreModelerPlugin.Util.getString("LongIDFactory.Description"); //$NON-NLS-1$
     }
 
     protected long getNextValue() {
@@ -89,7 +89,7 @@ public class LongIDFactory implements ObjectIDFactory, Serializable {
         try {
 	        return new LongID( Long.parseLong(value) );
         } catch ( NumberFormatException e ) {
-            throw new InvalidIDException(CorePlugin.Util.getString("LongIDFactory.The_specified_ID_value_is_invalid",value,getProtocol())); //$NON-NLS-1$
+            throw new InvalidIDException(CoreModelerPlugin.Util.getString("LongIDFactory.The_specified_ID_value_is_invalid",value,getProtocol())); //$NON-NLS-1$
         }
     }
 
@@ -108,7 +108,7 @@ public class LongIDFactory implements ObjectIDFactory, Serializable {
         try {
             return new LongID( Long.parseLong(parsedID.getRemainder()) );
         } catch ( NumberFormatException e ) {
-            throw new InvalidIDException(CorePlugin.Util.getString("LongIDFactory.The_specified_ID_value_is_invalid",value,getProtocol())); //$NON-NLS-1$
+            throw new InvalidIDException(CoreModelerPlugin.Util.getString("LongIDFactory.The_specified_ID_value_is_invalid",value,getProtocol())); //$NON-NLS-1$
         }
     }
 

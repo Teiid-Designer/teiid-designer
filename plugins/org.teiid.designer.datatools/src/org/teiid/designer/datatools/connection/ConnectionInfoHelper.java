@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.internal.ConnectionProfile;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.util.StringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -236,7 +236,7 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
     @Override
     public String getTranslatorName( ModelResource modelResource ) {
         if( modelResource == null ) {
-        	return StringUtil.Constants.EMPTY_STRING;
+        	return CoreStringUtil.Constants.EMPTY_STRING;
         }
 
         Properties props = null;
@@ -250,7 +250,7 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
                                                                     modelResource.getItemName()));
         }
 
-        return props.getProperty(TRANSLATOR_NAMESPACE + TRANSLATOR_NAME_KEY, StringUtil.Constants.EMPTY_STRING);
+        return props.getProperty(TRANSLATOR_NAMESPACE + TRANSLATOR_NAME_KEY, CoreStringUtil.Constants.EMPTY_STRING);
     }
     
     public void setTranslatorName( ModelResource modelResource, String translatorName ) {

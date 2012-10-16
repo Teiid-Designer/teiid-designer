@@ -24,7 +24,7 @@ package org.teiid.core.designer.id;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.teiid.core.CorePlugin;
+import org.teiid.core.designer.CoreModelerPlugin;
 
 
 /**
@@ -58,7 +58,7 @@ public class ParsedObjectID {
                 return new ParsedObjectID(protocol,id.substring(protocol.length()+DELIMITER_LENGTH));
             }
         }
-        throw new InvalidIDException(CorePlugin.Util.getString("ParsedObjectID.The_stringified_ObjectID_does_not_have_a_protocol")); //$NON-NLS-1$
+        throw new InvalidIDException(CoreModelerPlugin.Util.getString("ParsedObjectID.The_stringified_ObjectID_does_not_have_a_protocol")); //$NON-NLS-1$
     }
 
     public static ParsedObjectID parsedStringifiedObjectID( final String id ) throws InvalidIDException {
@@ -72,7 +72,7 @@ public class ParsedObjectID {
             index = id.indexOf(delim);
         }
         if ( index == -1 ) {
-            throw new InvalidIDException(CorePlugin.Util.getString("ParsedObjectID.The_stringified_ObjectID_does_not_have_a_protocol")); //$NON-NLS-1$
+            throw new InvalidIDException(CoreModelerPlugin.Util.getString("ParsedObjectID.The_stringified_ObjectID_does_not_have_a_protocol")); //$NON-NLS-1$
         }
         return new ParsedObjectID(id.substring(0,index),id.substring(index+DELIMITER_LENGTH));
     }
@@ -84,7 +84,7 @@ public class ParsedObjectID {
         if ( id.startsWith(expectedProtocol) ) {
             return new ParsedObjectID(expectedProtocol,id.substring(expectedProtocol.length()+DELIMITER_LENGTH));
         }
-        throw new InvalidIDException(CorePlugin.Util.getString("ParsedObjectID.The_stringified_ObjectID_does_not_have_the_required_protocol_{0}",expectedProtocol)); //$NON-NLS-1$
+        throw new InvalidIDException(CoreModelerPlugin.Util.getString("ParsedObjectID.The_stringified_ObjectID_does_not_have_the_required_protocol_{0}",expectedProtocol)); //$NON-NLS-1$
     }
 
 }

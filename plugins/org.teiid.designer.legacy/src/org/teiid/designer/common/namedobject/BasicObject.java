@@ -10,7 +10,7 @@ package org.teiid.designer.common.namedobject;
 
 import java.io.Serializable;
 
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.designer.common.util.ErrorMessageKeys;
 import org.teiid.designer.common.util.I18nUtil;
 
@@ -199,7 +199,7 @@ public abstract class BasicObject implements BaseObject, Serializable {
         try {
             return super.clone();
         } catch (CloneNotSupportedException e) {
-            throw new TeiidRuntimeException(e);
+            throw new TeiidDesignerRuntimeException(e);
         }
     }
 

@@ -13,18 +13,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.api.exception.query.QueryMetadataException;
-import org.teiid.api.exception.query.QueryResolverException;
-import org.teiid.core.TeiidComponentException;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.core.ModelerCore;
@@ -46,8 +41,6 @@ import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.validation.ValidationContext;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
-import org.teiid.designer.core.workspace.ModelWorkspace;
-import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.Table;
@@ -445,10 +438,7 @@ public class TransformationValidator implements QueryValidator {
                 List<ElementSymbol> projectedSymbols = getProjectedSymbols();
                 ((CreateProcedureCommand)command).setProjectedSymbols(projectedSymbols);
             }
-        } catch (TeiidComponentException e) {
-            // create status
-            status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
-        } catch (QueryResolverException e) {
+        } catch (Exception e) {
             // create status
             status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
         } finally {
@@ -511,7 +501,7 @@ public class TransformationValidator implements QueryValidator {
                 statusList = createStatusList(report);
             }
             // handle exception
-        } catch (TeiidComponentException e) {
+        } catch (Exception e) {
             // Add exception to the problems list
             statusList = new ArrayList<IStatus>(1);
             statusList.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e));
@@ -557,7 +547,7 @@ public class TransformationValidator implements QueryValidator {
 	        		if( !elemSymbols.isEmpty() && elemSymbols.size() == command.getProjectedSymbols().size() ) {
 	        			updateValidator.validate(command, elemSymbols);
 	        		}
-	        	} catch (TeiidComponentException e) {
+	        	} catch (Exception e) {
 	                // Add exception to the problems list
 	        		updateStatusList = new ArrayList<IStatus>(1);
 	                updateStatusList.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e));
@@ -653,7 +643,7 @@ public class TransformationValidator implements QueryValidator {
                         // make sure the type is what we think it should be.
                         if (!(this.metadata instanceof VdbMetadata)
                             && ((this.metadata instanceof TransformationMetadataFacade) && !(((TransformationMetadataFacade)this.metadata).getDelegate() instanceof VdbMetadata))) {
-                            throw new TeiidRuntimeException(
+                            throw new TeiidDesignerRuntimeException(
                                                             TransformationPlugin.Util.getString("TransformationValidator.QMI_of_unexpected_type")); //$NON-NLS-1$
                         }
                     } else {
@@ -781,7 +771,7 @@ public class TransformationValidator implements QueryValidator {
         return outputColumns;
     }
     
-    private List<ElementSymbol> getProjectedSymbols() throws QueryMetadataException, TeiidComponentException {
+    private List<ElementSymbol> getProjectedSymbols() throws Exception {
         List<EObject> outputColumns = getOutputColumns(this.mappingRoot);
         List<ElementSymbol> projectedSymbols = new ArrayList<ElementSymbol>(outputColumns.size());
         for (EObject outputColumn : outputColumns) {

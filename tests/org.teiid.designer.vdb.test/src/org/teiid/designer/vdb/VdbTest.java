@@ -36,7 +36,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.teiid.core.designer.EclipseMock;
-import org.teiid.core.util.FileUtils;
+import org.teiid.core.designer.util.FileUtils;
 
 /**
  * 

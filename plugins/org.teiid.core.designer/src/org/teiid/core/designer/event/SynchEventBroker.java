@@ -8,14 +8,14 @@
 package org.teiid.core.designer.event;
 
 import java.util.EventObject;
-import org.teiid.core.CorePlugin;
+import org.teiid.core.designer.CoreModelerPlugin;
 
 /**
  * @since 8.0
  */
 public class SynchEventBroker extends AbstractEventBroker {
 
-    private static final String DEFAULT_NAME = CorePlugin.Util.getString("SynchEventBroker.DefaultName"); //$NON-NLS-1$
+    private static final String DEFAULT_NAME = CoreModelerPlugin.Util.getString("SynchEventBroker.DefaultName"); //$NON-NLS-1$
 
     public SynchEventBroker() {
         this(null);

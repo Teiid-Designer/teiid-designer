@@ -1130,7 +1130,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     // * @return the Container in which the model object is loaded, or null if the model object is not loaded in a Container.
     // */
     // public static Container getContainer(final EObject modelObject) {
-    // ArgCheck.isNotNull(modelObject);
+    // CoreArgCheck.isNotNull(modelObject);
     // final Resource rsrc = modelObject.eResource();
     // if(rsrc )
     // return ProxyUtilities.getContainer(modelObject);

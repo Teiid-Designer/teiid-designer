@@ -20,7 +20,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 
 /**
  * @since 8.0
@@ -40,12 +40,12 @@ public class XsdHeaderReader {
     // P U B L I C M E T H O D S
     // ==================================================================================
 
-    public static XsdHeader readHeader( InputStream istream ) throws TeiidException {
+    public static XsdHeader readHeader( InputStream istream ) throws TeiidDesignerException {
         XsdHeaderReader reader = new XsdHeaderReader();
         return reader.read(istream);
     }
 
-    public static XsdHeader readHeader( File file ) throws TeiidException {
+    public static XsdHeader readHeader( File file ) throws TeiidDesignerException {
         XsdHeaderReader reader = new XsdHeaderReader();
         return reader.read(file);
     }
@@ -55,9 +55,9 @@ public class XsdHeaderReader {
      * 
      * @param istream the InputStream from which we read the header
      * @return the XMIHeader object representing the contents of this section
-     * @throws TeiidException if there is an error reading from the stream
+     * @throws TeiidDesignerException if there is an error reading from the stream
      */
-    public XsdHeader read( InputStream istream ) throws TeiidException {
+    public XsdHeader read( InputStream istream ) throws TeiidDesignerException {
         if (istream == null) {
             // TODO: ADD I18n ??
             final String msg = "XsdHeaderReader.The_InputStream_reference_may_not_be_null._1"; //$NON-NLS-1$
@@ -86,7 +86,7 @@ public class XsdHeaderReader {
         } catch (Throwable e) {
             // TODO: ADD I18n ??
             final String msg = "XsdHeaderReader.Error_in_parsing_file_1"; //$NON-NLS-1$
-            throw new TeiidException(e, msg);
+            throw new TeiidDesignerException(e, msg);
         }
         return ((TerminatingXsdHeaderContentHandler)handler).getXsdHeader();
     }
@@ -96,9 +96,9 @@ public class XsdHeaderReader {
      * 
      * @param file the File from which we read the header
      * @return the XMIHeader object representing the contents of this section
-     * @throws TeiidException if there is an error reading the file
+     * @throws TeiidDesignerException if there is an error reading the file
      */
-    public XsdHeader read( File file ) throws TeiidException {
+    public XsdHeader read( File file ) throws TeiidDesignerException {
         if (file == null) {
             // TODO: ADD I18n ??
             final String msg = "XsdHeaderReader.The_file_reference_may_not_be_null_2"; //$NON-NLS-1$
@@ -132,7 +132,7 @@ public class XsdHeaderReader {
         } catch (FileNotFoundException e) {
             // TODO: ADD I18n ??
             final String msg = "XsdHeaderReader.Error_in_parsing_file_1"; //$NON-NLS-1$
-            throw new TeiidException(e, msg);
+            throw new TeiidDesignerException(e, msg);
         } finally {
             if (bis != null) {
                 try {

@@ -8,7 +8,7 @@
 
 package org.teiid.designer.transformation.metadata;
 
-import org.teiid.core.TeiidComponentException;
+import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.designer.core.index.IEntryResult;
 import org.teiid.designer.core.index.Index;
 import org.teiid.designer.core.index.IndexSelector;
@@ -48,13 +48,13 @@ public class ServerRuntimeMetadata extends TransformationMetadata {
      * @throws QueryMetadataException
      */
     @Override
-    protected Index[] getIndexes(final char recordType, final IndexSelector selector) throws TeiidComponentException {
+    protected Index[] getIndexes(final char recordType, final IndexSelector selector) throws QueryMetadataException {
         // The the index file name for the record type
         try {
             final String indexName = SimpleIndexUtil.getIndexFileNameForRecordType(recordType);
             return SimpleIndexUtil.getIndexes(indexName, selector);            
         } catch(Exception e) {
-            throw new TeiidComponentException(e, TransformationPlugin.Util.getString("TransformationMetadata.Error_trying_to_obtain_index_file_using_IndexSelector_1",selector)); //$NON-NLS-1$
+            throw new QueryMetadataException(e, TransformationPlugin.Util.getString("TransformationMetadata.Error_trying_to_obtain_index_file_using_IndexSelector_1",selector)); //$NON-NLS-1$
         }
     }
 
@@ -66,12 +66,12 @@ public class ServerRuntimeMetadata extends TransformationMetadata {
     protected IEntryResult[] queryIndex(final Index[] indexes,
                                         char[] pattern,
                                         boolean isPrefix,
-                                        boolean returnFirstMatch) throws TeiidComponentException {
+                                        boolean returnFirstMatch) throws QueryMetadataException {
         try {
             return super.queryIndex(indexes, pattern, isPrefix, returnFirstMatch);
-        } catch(TeiidComponentException e) {
+        } catch(QueryMetadataException e) {
             if(!this.getIndexSelector().isValid()) {
-                throw new TeiidComponentException(TransformationPlugin.Util.getString("ServerRuntimeMetadata.invalid_selector")); //$NON-NLS-1$
+                throw new QueryMetadataException(TransformationPlugin.Util.getString("ServerRuntimeMetadata.invalid_selector")); //$NON-NLS-1$
             }
             throw e;
         }

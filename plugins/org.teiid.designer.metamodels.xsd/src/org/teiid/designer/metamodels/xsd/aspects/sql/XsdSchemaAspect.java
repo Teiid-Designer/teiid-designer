@@ -220,7 +220,7 @@ public class XsdSchemaAspect extends AbstractMetamodelAspect implements SqlModel
     }
     
 //    private String getURI(final XSDSchema xsdSchema) {
-//        ArgCheck.isNotNull(xsdSchema); 
+//        CoreArgCheck.isNotNull(xsdSchema); 
 //        String theTargetNamespace = xsdSchema.getTargetNamespace();
 //        if (theTargetNamespace == null) {
 //            theTargetNamespace = StringUtil.Constants.EMPTY_STRING;

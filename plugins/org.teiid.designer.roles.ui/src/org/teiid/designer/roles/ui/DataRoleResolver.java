@@ -2,12 +2,11 @@ package org.teiid.designer.roles.ui;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.StringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
@@ -17,7 +16,7 @@ import org.teiid.designer.roles.Permission;
  * @since 8.0
  */
 public class DataRoleResolver {
-	private static final char DELIM = StringUtil.Constants.DOT_CHAR;
+	private static final char DELIM = CoreStringUtil.Constants.DOT_CHAR;
 	private static final char B_SLASH = '/';
     private static final String SYS_TABLE_TARGET = "sys"; //$NON-NLS-1$
     private static final String PG_CATALOG_TARGET = "pg_catalog"; //$NON-NLS-1$

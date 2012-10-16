@@ -24,8 +24,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.util.StringUtil;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.DqpUiStringUtil;
@@ -490,13 +490,13 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
         this.basicSecurityButton.setSelection(false);
         this.wsSecurityButton.setSelection(false);
         this.mtomButton.setSelection(false);
-        this.txfSecurityRealm.setText(StringUtil.Constants.EMPTY_STRING);
+        this.txfSecurityRealm.setText(CoreStringUtil.Constants.EMPTY_STRING);
         this.txfSecurityRealm.setEnabled(false);
-        this.txfSecurityRole.setText(StringUtil.Constants.EMPTY_STRING);
+        this.txfSecurityRole.setText(CoreStringUtil.Constants.EMPTY_STRING);
         this.txfSecurityRole.setEnabled(false);
-        this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
+        this.txfSecurityUsername.setText(CoreStringUtil.Constants.EMPTY_STRING);
         this.txfSecurityUsername.setEnabled(false);
-        this.txfSecurityPassword.setText(StringUtil.Constants.EMPTY_STRING);
+        this.txfSecurityPassword.setText(CoreStringUtil.Constants.EMPTY_STRING);
         this.txfSecurityPassword.setEnabled(false);
     }
 
@@ -527,13 +527,13 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
     void noSecurityButtonSelected() {
         if (this.noSecurityButton.getSelection()) {
             WarDataserviceModel.getInstance().setSecurityTypeDefault(NOSECURITY);
-            this.txfSecurityRealm.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityRealm.setText(CoreStringUtil.Constants.EMPTY_STRING);
             this.txfSecurityRealm.setEnabled(false);
-            this.txfSecurityRole.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityRole.setText(CoreStringUtil.Constants.EMPTY_STRING);
             this.txfSecurityRole.setEnabled(false);
-            this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityUsername.setText(CoreStringUtil.Constants.EMPTY_STRING);
             this.txfSecurityUsername.setEnabled(false);
-            this.txfSecurityPassword.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityPassword.setText(CoreStringUtil.Constants.EMPTY_STRING);
             this.txfSecurityPassword.setEnabled(false);
         }
     }
@@ -550,9 +550,9 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
             this.txfSecurityRole.setText("MyRole"); //$NON-NLS-1$
             WarDataserviceModel.getInstance().setSecurityRoleDefault("MyRole"); //$NON-NLS-1$
             this.txfSecurityRole.setEnabled(true);
-            this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityUsername.setText(CoreStringUtil.Constants.EMPTY_STRING);
             this.txfSecurityUsername.setEnabled(false);
-            this.txfSecurityPassword.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityPassword.setText(CoreStringUtil.Constants.EMPTY_STRING);
             this.txfSecurityPassword.setEnabled(false);
         }
     }
@@ -563,13 +563,13 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
     void wsSecurityButtonSelected() {
         if (this.wsSecurityButton.getSelection()) {
             WarDataserviceModel.getInstance().setSecurityTypeDefault(WSSE);
-            this.txfSecurityRealm.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityRealm.setText(CoreStringUtil.Constants.EMPTY_STRING);
             this.txfSecurityRealm.setEnabled(false);
-            this.txfSecurityRole.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityRole.setText(CoreStringUtil.Constants.EMPTY_STRING);
             this.txfSecurityRole.setEnabled(false);
-            this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityUsername.setText(CoreStringUtil.Constants.EMPTY_STRING);
             this.txfSecurityUsername.setEnabled(true);
-            this.txfSecurityPassword.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityPassword.setText(CoreStringUtil.Constants.EMPTY_STRING);
             this.txfSecurityPassword.setEnabled(true);
         }
     }

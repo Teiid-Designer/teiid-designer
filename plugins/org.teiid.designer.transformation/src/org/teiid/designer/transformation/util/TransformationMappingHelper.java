@@ -13,12 +13,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.api.exception.query.QueryMetadataException;
-import org.teiid.core.TeiidComponentException;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.core.ModelerCore;
@@ -538,11 +535,7 @@ public class TransformationMappingHelper implements SqlConstants {
                         if (!TransformationSqlHelper.containsGroupSymbol(sqlGroupSymbols, symbol)) {
                         	sqlGroupSymbols.add(symbol);
                         }
-                    } catch (QueryMetadataException e) {
-                        String message = TransformationPlugin.Util.getString("TransformationSqlHelper.groupIDNotFoundError", //$NON-NLS-1$
-                                                                             groupName);
-                        TransformationPlugin.Util.log(IStatus.WARNING, e, message);
-                    } catch (TeiidComponentException e) {
+                    } catch (Exception e) {
                         String message = TransformationPlugin.Util.getString("TransformationSqlHelper.groupIDNotFoundError", //$NON-NLS-1$
                                                                              groupName);
                         TransformationPlugin.Util.log(IStatus.WARNING, e, message);

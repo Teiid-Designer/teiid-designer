@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingFactory;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.util.HashCodeUtil;
+import org.teiid.core.designer.HashCodeUtil;
 import org.teiid.designer.core.compare.AbstractEObjectMatcher;
 import org.teiid.designer.core.compare.TwoPhaseEObjectMatcher;
 import org.teiid.designer.metamodels.transformation.SqlTransformation;

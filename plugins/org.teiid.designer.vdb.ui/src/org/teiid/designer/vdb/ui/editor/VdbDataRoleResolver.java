@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -21,7 +20,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.core.util.StringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelEditorImpl;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.ContainerImpl;
@@ -53,7 +52,7 @@ import org.teiid.designer.vdb.VdbModelEntry;
  */
 public class VdbDataRoleResolver {
 	static final String WEB_SERVICES_VIEW_MODEL_URI = "http://www.metamatrix.com/metamodels/WebService"; //$NON-NLS-1$
-	private static final char DELIM = StringUtil.Constants.DOT_CHAR;
+	private static final char DELIM = CoreStringUtil.Constants.DOT_CHAR;
 	private static final char B_SLASH = '/';
 	
 	private Vdb vdb;

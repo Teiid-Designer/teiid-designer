@@ -8,7 +8,7 @@
 package org.teiid.designer.mapping.ui.editor;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.util.HashCodeUtil;
+import org.teiid.core.designer.HashCodeUtil;
 
 /**
  * The <code>MappingExtent</code> class provides information about one XML document mapping reference. The mapping reference will

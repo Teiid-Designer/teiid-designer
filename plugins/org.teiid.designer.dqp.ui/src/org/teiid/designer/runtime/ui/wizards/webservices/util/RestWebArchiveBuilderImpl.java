@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.DiagnosticCollector;
@@ -34,15 +33,14 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
-
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
-import org.teiid.core.util.StringUtil;
 import org.teiid.designer.core.util.TempDirectory;
 import org.teiid.designer.webservice.WebServicePlugin;
 import org.teiid.designer.webservice.util.AntTasks;
@@ -104,14 +102,14 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             // Check for invalid characters
             String[] invalidChars = new String[] {"/" //$NON-NLS-1$
                 , "\\" //$NON-NLS-1$
-                , StringUtil.Constants.SPACE};
+                , CoreStringUtil.Constants.SPACE};
             final String invalidChar = validateInvalidCharactersInContextName(contextName, invalidChars);
 
             // Perform validation
             if (invalidChar != null) {
 
                 String msg = null;
-                if (StringUtil.Constants.SPACE.equals(invalidChar)) {
+                if (CoreStringUtil.Constants.SPACE.equals(invalidChar)) {
                     msg = getString("ContextNameValidationFailed_InvalidSpace"); //$NON-NLS-1$
                 } else {
                     final Object[] params = new Object[] {invalidChar};
@@ -120,7 +118,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
 
                 return new Status(IStatus.ERROR, WebServicePlugin.PLUGIN_ID,
                                   WebArchiveBuilderConstants.STATUS_CODE_CONTEXT_NAME_VALIDATION_FAILED, msg, null);
-            } else if (StringUtil.Constants.EMPTY_STRING.equals(contextName)) {
+            } else if (CoreStringUtil.Constants.EMPTY_STRING.equals(contextName)) {
 
                 final String msg = getString("ContextNameValidationFailed_Empty"); //$NON-NLS-1$        
                 return new Status(IStatus.ERROR, WebServicePlugin.PLUGIN_ID,

@@ -10,7 +10,7 @@ package org.teiid.designer.common.xmi;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.teiid.core.util.StringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 
 //We also need to bring back our SAX handler "header reader" 
 //that reads a stream and extracts the model information 
@@ -110,7 +110,7 @@ public final class XMIHeader {
     }
 
     public void addNamespaceURI( final String uri ) {
-        if (!StringUtil.isEmpty(uri) && !this.namespaceURIs.contains(uri)) {
+        if (!CoreStringUtil.isEmpty(uri) && !this.namespaceURIs.contains(uri)) {
             this.namespaceURIs.add(uri);
         }
     }

@@ -33,7 +33,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.util.ChecksumUtil;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
@@ -889,7 +889,7 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
                 if (modelFile.exists()) {
                     this.xmiHeader = XMIHeaderReader.readHeader(modelFile);
                 }
-            } catch (TeiidException e) {
+            } catch (TeiidDesignerException e) {
                 // do nothing
             } catch (Throwable e) {
                 throw new ModelWorkspaceException(
@@ -908,7 +908,7 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
                 if (modelFile.exists() && ModelFileUtil.isXsdFile(modelFile)) {
                     this.xsdHeader = XsdHeaderReader.readHeader(modelFile);
                 }
-            } catch (TeiidException e) {
+            } catch (TeiidDesignerException e) {
                 // do nothing
             } catch (Throwable e) {
                 throw new ModelWorkspaceException(

@@ -15,7 +15,7 @@ import org.teiid.core.designer.id.IDGenerator;
 import org.teiid.core.designer.util.PluginUtilImpl;
 
 /**
- * CorePlugin
+ * CoreModelerPlugin
  *
  * @since 8.0
  */

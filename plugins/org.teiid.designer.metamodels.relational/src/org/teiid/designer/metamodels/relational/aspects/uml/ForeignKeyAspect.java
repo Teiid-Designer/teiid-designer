@@ -10,7 +10,7 @@ package org.teiid.designer.metamodels.relational.aspects.uml;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
@@ -149,7 +149,7 @@ public class ForeignKeyAspect extends RelationalEntityAspect implements UmlAssoc
                 result.append( super.getArrayAsString(getProperties(key, 0)) );
                 break;
             default :
-                throw new TeiidRuntimeException(RelationalPlugin.Util.getString("Aspect.invalidShowMask", showMask)); //$NON-NLS-1$
+                throw new TeiidDesignerRuntimeException(RelationalPlugin.Util.getString("Aspect.invalidShowMask", showMask)); //$NON-NLS-1$
         }
         return result.toString();
     }

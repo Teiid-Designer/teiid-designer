@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 
 /**
  * The StreamPipe class provides the ability for an information consumer to read via an
@@ -47,7 +47,7 @@ public class StreamPipe {
         try {
 			this.ostream = new PipedOutputStream(istream);
 		} catch (IOException e) {
-			throw new TeiidRuntimeException(e);
+			throw new TeiidDesignerRuntimeException(e);
 		}
     }
     

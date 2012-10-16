@@ -113,6 +113,16 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     private IAction showPreviewDataSourcesAction;
     
     private IAction showTranslatorsAction;
+    
+    private IAction enablePreviewAction;
+    
+    private IMenuListener enablePreviewActionListener = new IMenuListener() {
+
+        @Override
+        public void menuAboutToShow( IMenuManager manager ) {
+            enablePreviewAction.setChecked(isPreviewEnabled());
+        }
+    };
 
     private ISelectionProvider selectionProvider;
 
@@ -408,70 +418,65 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     }
     
     private void fillLocalPullDown( IMenuManager menuMgr ) {
+        menuMgr.removeAll();
+        menuMgr.removeMenuListener(enablePreviewActionListener);
+        
         // add the show preview VDBs action
-        this.showPreviewVdbsAction = new Action(getString("showPreviewVdbsMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
-            @Override
-            public void run() {
-                toggleShowPreviewVdbs();
-            }
-        };
-
-        // restore state and add to menu
-        this.showPreviewVdbsAction.setChecked(this.showPreviewVdbs);
-        menuMgr.add(this.showPreviewVdbsAction);
+        if (showPreviewVdbsAction == null) {
+            showPreviewVdbsAction = new Action(getString("showPreviewVdbsMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
+                @Override
+                public void run() {
+                    toggleShowPreviewVdbs();
+                }
+            };
+        }
 
         // add the show translators action
-        this.showTranslatorsAction = new Action(getString("showTranslatorsMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
-            @Override
-            public void run() {
-                toggleShowTranslators();
-            }
-        };
-
-        // restore state and add to menu
-        this.showTranslatorsAction.setChecked(this.showTranslators);
-        menuMgr.add(this.showTranslatorsAction);
-
-        // add the show preview data sources action
-        this.showPreviewDataSourcesAction = new Action(
-                                                       getString("showPreviewDataSourcesMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
-            @Override
-            public void run() {
-                toggleShowPreviewDataSources();
-            }
-        };
-
-        // restore state and add to menu
-        this.showPreviewDataSourcesAction.setChecked(this.showPreviewDataSources);
-        menuMgr.add(this.showPreviewDataSourcesAction);
-
-        final IAction enablePreviewAction = new Action(
-                                                       getString("enablePreviewMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.jface.action.Action#setChecked(boolean)
-             */
-            @Override
-            public void setChecked( boolean checked ) {
-                super.setChecked(checked);
-
-                if (checked != isPreviewEnabled()) {
-                    DqpPlugin.getInstance().getPreferences().putBoolean(PreferenceConstants.PREVIEW_ENABLED, checked);
+        if (showTranslatorsAction == null) {
+            showTranslatorsAction = new Action(getString("showTranslatorsMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
+                @Override
+                public void run() {
+                    toggleShowTranslators();
                 }
-            }
-        };
+            };
+        }
+        
+        // add the show preview data sources action
+        if (showPreviewDataSourcesAction == null) {
+            showPreviewDataSourcesAction = new Action(
+                                                       getString("showPreviewDataSourcesMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
+                @Override
+                public void run() {
+                    toggleShowPreviewDataSources();
+                }
+            };
+        }
 
-        menuMgr.add(enablePreviewAction);
+        showPreviewVdbsAction.setChecked(this.showPreviewVdbs);
+        showTranslatorsAction.setChecked(this.showTranslators);
+        showPreviewDataSourcesAction.setChecked(this.showPreviewDataSources);
 
+        if (enablePreviewAction == null) {
+            enablePreviewAction = new Action(
+                                             getString("enablePreviewMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
+                @Override
+                public void setChecked( boolean checked ) {
+                    super.setChecked(checked);
+
+                    if (checked != isPreviewEnabled()) {
+                        DqpPlugin.getInstance().getPreferences().putBoolean(PreferenceConstants.PREVIEW_ENABLED, checked);
+                    }
+                }
+            };
+        }
+        
         // before the menu shows set the state of the enable preview action
-        menuMgr.addMenuListener(new IMenuListener() {
+        menuMgr.addMenuListener(enablePreviewActionListener);
 
-            @Override
-            public void menuAboutToShow( IMenuManager manager ) {
-                enablePreviewAction.setChecked(isPreviewEnabled());
-            }
-        });
+        menuMgr.add(showPreviewVdbsAction);
+        menuMgr.add(showTranslatorsAction);
+        menuMgr.add(showPreviewDataSourcesAction);
+        menuMgr.add(enablePreviewAction);
     }
     
     /* (non-Javadoc)

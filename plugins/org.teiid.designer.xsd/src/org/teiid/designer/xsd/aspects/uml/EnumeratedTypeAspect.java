@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDLengthFacet;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
@@ -115,7 +115,7 @@ public class EnumeratedTypeAspect extends AbstractXsdEntityAspect
                 break;
             } default: {
                 String msg = Util.getString(I18nUtil.getPropertyPrefix(EnumeratedTypeAspect.class) + "invalidShowMask", new Integer(theShowMask)); //$NON-NLS-1$
-                throw new TeiidRuntimeException(msg);
+                throw new TeiidDesignerRuntimeException(msg);
             }
         }
 

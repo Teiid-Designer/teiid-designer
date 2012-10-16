@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.TeiidComponentException;
+import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.designer.id.UUID;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
@@ -24,7 +24,6 @@ import org.teiid.designer.core.index.IndexSelector;
 import org.teiid.designer.core.index.IndexUtil;
 import org.teiid.designer.metadata.runtime.MetadataRecord;
 import org.teiid.designer.transformation.TransformationPlugin;
-import org.teiid.designer.transformation.metadata.QueryMetadataContext;
 
 
 /**
@@ -55,12 +54,11 @@ public class VdbMetadata extends ModelerMetadata {
      * @param entityName the name to match
      * @param isPartialName true if the entity name is a partially qualified
      * @throws QueryMetadataException
-     * @throws MetaMatrixComponentException
      */
     @Override
     protected Collection findMetadataRecords( final char recordType,
                                               final String entityName,
-                                              final boolean isPartialName ) throws TeiidComponentException {
+                                              final boolean isPartialName ) throws QueryMetadataException {
 
         Collection eObjects = new LinkedList();
 
@@ -151,13 +149,13 @@ public class VdbMetadata extends ModelerMetadata {
      */
     @Override
     protected Index[] getIndexes( final char recordType,
-                                  final IndexSelector selector ) throws TeiidComponentException {
+                                  final IndexSelector selector ) throws QueryMetadataException {
         // The the index file name for the record type
         try {
             final String indexName = IndexUtil.getIndexFileNameForRecordType(recordType);
             return IndexUtil.getIndexes(indexName, selector);
         } catch (Exception e) {
-            throw new TeiidComponentException(
+            throw new QueryMetadataException(
                                                    e,
                                                    TransformationPlugin.Util.getString("TransformationMetadata.Error_trying_to_obtain_index_file_using_IndexSelector_1", selector)); //$NON-NLS-1$
         }

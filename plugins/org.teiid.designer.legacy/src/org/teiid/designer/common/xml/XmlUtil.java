@@ -9,8 +9,7 @@
 package org.teiid.designer.common.xml;
 
 import org.jdom.Verifier;
-
-import org.teiid.core.util.StringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 
 /**
  * Utility class for XML documents and related items.
@@ -83,12 +82,12 @@ public class XmlUtil {
         /*
          * We must do this one first so as not to disturb the other &s in the escaped string.
          */
-        String escaped = StringUtil.replace(text, "&", "&amp;"); //$NON-NLS-1$ //$NON-NLS-2$
+        String escaped = CoreStringUtil.replace(text, "&", "&amp;"); //$NON-NLS-1$ //$NON-NLS-2$
         
-        escaped = StringUtil.replace(escaped, ">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$
-        escaped = StringUtil.replace(escaped, "<", "&lt;"); //$NON-NLS-1$ //$NON-NLS-2$
-        escaped = StringUtil.replace(escaped, "\"", "&quot;"); //$NON-NLS-1$ //$NON-NLS-2$
-        escaped = StringUtil.replace(escaped, "'", "&apos;"); //$NON-NLS-1$ //$NON-NLS-2$
+        escaped = CoreStringUtil.replace(escaped, ">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$
+        escaped = CoreStringUtil.replace(escaped, "<", "&lt;"); //$NON-NLS-1$ //$NON-NLS-2$
+        escaped = CoreStringUtil.replace(escaped, "\"", "&quot;"); //$NON-NLS-1$ //$NON-NLS-2$
+        escaped = CoreStringUtil.replace(escaped, "'", "&apos;"); //$NON-NLS-1$ //$NON-NLS-2$
         
         return escaped;
     }

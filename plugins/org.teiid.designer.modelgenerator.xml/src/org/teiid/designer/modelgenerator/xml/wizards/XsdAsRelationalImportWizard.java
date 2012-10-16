@@ -35,7 +35,7 @@ import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.util.FileUtils;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.compare.DifferenceReport;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.validation.rules.CoreValidationRulesUtil;

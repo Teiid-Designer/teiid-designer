@@ -15,8 +15,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Composite;
-import org.teiid.core.CorePlugin;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.CoreModelerPlugin;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilder;
 import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilderFactory;
@@ -187,10 +187,10 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
     /**
      * Test whether it's possible to read and write files in the specified directory. 
      * @param dirPath Name of the directory to test
-     * @throws TeiidException
+     * @throws TeiidDesignerException
      * @since 4.3
      */
-    public static void testDirectoryPermissions(String dirPath) throws TeiidException {
+    public static void testDirectoryPermissions(String dirPath) throws TeiidDesignerException {
         
         //try to create a file
         File tmpFile = new File(dirPath + File.separatorChar + TEMP_FILE);
@@ -200,21 +200,21 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
         } catch (IOException e) {
         }
         if (!success) {
-            final String msg = CorePlugin.Util.getString("FileUtils.Unable_to_create_file_in", dirPath); //$NON-NLS-1$            
-            throw new TeiidException(msg);
+            final String msg = CoreModelerPlugin.Util.getString("FileUtils.Unable_to_create_file_in", dirPath); //$NON-NLS-1$            
+            throw new TeiidDesignerException(msg);
         }
         
 
         //test if file can be written to
         if (!tmpFile.canWrite()) {
-            final String msg = CorePlugin.Util.getString("FileUtils.Unable_to_write_file_in", dirPath); //$NON-NLS-1$            
-            throw new TeiidException(msg);
+            final String msg = CoreModelerPlugin.Util.getString("FileUtils.Unable_to_write_file_in", dirPath); //$NON-NLS-1$            
+            throw new TeiidDesignerException(msg);
         }
 
         //test if file can be read
         if (!tmpFile.canRead()) {
-            final String msg = CorePlugin.Util.getString("FileUtils.Unable_to_read_file_in", dirPath); //$NON-NLS-1$            
-            throw new TeiidException(msg);
+            final String msg = CoreModelerPlugin.Util.getString("FileUtils.Unable_to_read_file_in", dirPath); //$NON-NLS-1$            
+            throw new TeiidDesignerException(msg);
         }
 
         //test if file can be renamed
@@ -225,8 +225,8 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
         } catch (Exception e) {
         }
         if (!success) {
-            final String msg = CorePlugin.Util.getString("FileUtils.Unable_to_rename_file_in", dirPath); //$NON-NLS-1$            
-            throw new TeiidException(msg);
+            final String msg = CoreModelerPlugin.Util.getString("FileUtils.Unable_to_rename_file_in", dirPath); //$NON-NLS-1$            
+            throw new TeiidDesignerException(msg);
         }
 
         //test if file can be deleted
@@ -236,8 +236,8 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
         } catch (Exception e) {
         }
         if (!success) {
-            final String msg = CorePlugin.Util.getString("FileUtils.Unable_to_delete_file_in", dirPath); //$NON-NLS-1$            
-            throw new TeiidException(msg);
+            final String msg = CoreModelerPlugin.Util.getString("FileUtils.Unable_to_delete_file_in", dirPath); //$NON-NLS-1$            
+            throw new TeiidDesignerException(msg);
         }
     }
 
