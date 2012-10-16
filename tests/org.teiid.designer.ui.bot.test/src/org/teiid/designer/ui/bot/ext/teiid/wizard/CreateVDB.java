@@ -8,23 +8,21 @@ import org.jboss.tools.ui.bot.ext.wizards.SWTBotNewObjectWizard;
  * @author Lucia Jelinkova
  *
  */
-public class CreateVDB {
+public class CreateVDB extends SWTBotNewObjectWizard {
 
-	private SWTBotNewObjectWizard wizard = new SWTBotNewObjectWizard();
-	
 	private String folder;
 	
 	private String name;
 	
 	public void execute(){
-		wizard.open("Teiid VDB", "Teiid Designer");
+		open("Teiid VDB", "Teiid Designer");
 		fillFirstPage();
-		wizard.finishWithWait();
+		finishWithWait();
 	}
 
 	private void fillFirstPage() {
-		wizard.bot().textWithLabel("In Folder:").setText(folder);
-		wizard.bot().textWithLabel("VDB Name:").setText(name);		
+		bot().textWithLabel("In Folder:").setText(folder);
+		bot().textWithLabel("VDB Name:").setText(name);		
 	}
 	
 	public void setName(String name) {
