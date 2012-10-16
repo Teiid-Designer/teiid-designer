@@ -32,7 +32,7 @@ public class TeiidPerspective extends Perspective {
 		if (teiidInstanceView == null){
 			teiidInstanceView = new TeiidInstanceView();
 		}
-		teiidInstanceView.activate();
+		teiidInstanceView.show();
 		return teiidInstanceView;
 	}
 	

@@ -1,12 +1,17 @@
 package org.teiid.designer.ui.bot.ext.teiid.view;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.jboss.tools.ui.bot.ext.SWTBotFactory;
 import org.jboss.tools.ui.bot.ext.SWTEclipseExt;
+import org.jboss.tools.ui.bot.ext.gen.IView;
 import org.jboss.tools.ui.bot.ext.helper.ContextMenuHelper;
+import org.jboss.tools.ui.bot.ext.view.ViewBase;
 import org.teiid.designer.ui.bot.ext.teiid.instance.TeiidInstanceDialog;
 
 /**
@@ -15,30 +20,38 @@ import org.teiid.designer.ui.bot.ext.teiid.instance.TeiidInstanceDialog;
  * @author Lucia Jelinkova
  *
  */
-public class TeiidInstanceView extends View {
+public class TeiidInstanceView extends ViewBase {
 
+	public static final String TOOLBAR_CREATE_TEIID = "Create a new Teiid instance";
+	public static final String TOOLBAR_RECONNECT_TEIID = "Reconnect to the selected Teiid Instance";
+	
 	public TeiidInstanceView() {
-		super("Teiid");
+		viewObject = new IView() {
+			public String getName() {
+				return "Teiid";
+			}
+
+			public List<String> getGroupPath() {
+				List<String> list = new Vector<String>();
+				list.add("Teiid Designer");
+				return list;
+			}
+		};
 	}
 
 	public TeiidInstanceDialog newTeiidInstance(){
-		SWTBot bot = SWTBotFactory.getBot();
-		bot.toolbarButtonWithTooltip("Create a new Teiid instance").click();
+		getToolbarButtonWitTooltip(TOOLBAR_CREATE_TEIID).click();
 		SWTBotShell shell = bot.shell("New Teiid Instance").activate();
 		return new TeiidInstanceDialog(shell);
 	}
 	
 	public void reconnect(String teiidInstance){
-		SWTBot bot = SWTBotFactory.getBot();
-
-		SWTBotTreeItem node = SWTEclipseExt.selectTreeLocation(bot, teiidInstance);
-
-		ContextMenuHelper.prepareTreeItemForContextMenu(bot.tree(), node);
-		ContextMenuHelper.clickContextMenu(bot.tree(), "Reconnect");
+		bot().tree().getTreeItem(teiidInstance).select();
+		getToolbarButtonWitTooltip(TOOLBAR_RECONNECT_TEIID).click();
 	}
 
 	public void deleteDataSource(String teiidInstance, String dataSource){
-		SWTBot bot = SWTBotFactory.getBot();
+		SWTBot bot = bot();
 
 		SWTBotTreeItem node = SWTEclipseExt.selectTreeLocation(bot, teiidInstance, "Data Sources", dataSource);
 
@@ -47,7 +60,7 @@ public class TeiidInstanceView extends View {
 	}
 
 	public void undeployVDB(String teiidInstance, String vdb){
-		SWTBot bot = SWTBotFactory.getBot();
+		SWTBot bot = bot();
 
 		SWTBotTreeItem node = SWTEclipseExt.selectTreeLocation(bot, teiidInstance, "VDBs", vdb);
 
@@ -56,7 +69,7 @@ public class TeiidInstanceView extends View {
 	}
 
 	public boolean containsDataSource(String teiidInstance, String datasource){
-		SWTBot bot = SWTBotFactory.getBot();
+		SWTBot bot = bot();
 		try {
 			SWTBotTreeItem item = bot.tree().expandNode(teiidInstance, "Data Sources");
 			item.getNode(datasource);
@@ -67,7 +80,7 @@ public class TeiidInstanceView extends View {
 	}
 	
 	public boolean containsVDB(String teiidInstance, String vdb){
-		SWTBot bot = SWTBotFactory.getBot();
+		SWTBot bot = bot();
 		try {
 			SWTBotTreeItem item = bot.tree().expandNode(teiidInstance, "VDBs");
 			item.getNode(vdb);
@@ -78,8 +91,7 @@ public class TeiidInstanceView extends View {
 	}
 	
 	public boolean containsTeiidInstance(String name){
-		SWTBot bot = SWTBotFactory.getBot();
-		
+		SWTBot bot = bot();
 		try {
 			bot.tree().getTreeItem(name);
 			return true;
