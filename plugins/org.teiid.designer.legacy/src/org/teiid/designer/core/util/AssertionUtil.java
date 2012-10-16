@@ -10,7 +10,7 @@ package org.teiid.designer.core.util;
 import java.util.Collection;
 import java.util.Map;
 
-import org.teiid.core.CorePlugin;
+import org.teiid.core.designer.CoreModelerPlugin;
 
 
 /**
@@ -54,7 +54,7 @@ public final class AssertionUtil {
         if(! condition) {
             final String msg = msgKey != null ?
                                msgKey :
-                               CorePlugin.Util.getString("Assertion.Assertion_failed"); //$NON-NLS-1$ 
+                               CoreModelerPlugin.Util.getString("Assertion.Assertion_failed"); //$NON-NLS-1$ 
             failed(msg);
         }   
     }
@@ -73,7 +73,7 @@ public final class AssertionUtil {
         if ( value1 != value2 ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isEqual",new Object[]{new Boolean(value1),new Boolean(value2)}); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isEqual",new Object[]{new Boolean(value1),new Boolean(value2)}); //$NON-NLS-1$
             failed(msg);
         }
 	}
@@ -86,7 +86,7 @@ public final class AssertionUtil {
         if ( value1 == value2 ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isNotEqual",new Object[]{new Boolean(value1),new Boolean(value2)}); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isNotEqual",new Object[]{new Boolean(value1),new Boolean(value2)}); //$NON-NLS-1$
             failed(msg);
         }
 	}
@@ -101,7 +101,7 @@ public final class AssertionUtil {
         if ( value1 != value2 ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isEqual",new Object[]{new Integer(value1),new Integer(value2)}); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isEqual",new Object[]{new Integer(value1),new Integer(value2)}); //$NON-NLS-1$
             failed(msg);
         }
 	}
@@ -114,7 +114,7 @@ public final class AssertionUtil {
         if ( value1 == value2 ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isNotEqual",new Object[]{new Integer(value1),new Integer(value2)}); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isNotEqual",new Object[]{new Integer(value1),new Integer(value2)}); //$NON-NLS-1$
             failed(msg);
         }
 	}
@@ -127,7 +127,7 @@ public final class AssertionUtil {
         if ( value < 0 ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isNonNegative",new Object[]{new Integer(value)}); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isNonNegative",new Object[]{new Integer(value)}); //$NON-NLS-1$
             failed(msg);
         }
 	}
@@ -140,7 +140,7 @@ public final class AssertionUtil {
         if ( value > 0 ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isNonPositive",new Object[]{new Integer(value)}); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isNonPositive",new Object[]{new Integer(value)}); //$NON-NLS-1$
             failed(msg);
         }
 	}
@@ -153,7 +153,7 @@ public final class AssertionUtil {
         if ( value >= 0 ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isNegative",new Object[]{new Integer(value)}); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isNegative",new Object[]{new Integer(value)}); //$NON-NLS-1$
             failed(msg);
         }
 	}
@@ -166,7 +166,7 @@ public final class AssertionUtil {
         if ( value <= 0 ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isPositive",new Object[]{new Integer(value)}); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isPositive",new Object[]{new Integer(value)}); //$NON-NLS-1$
             failed(msg);
         }
 	}
@@ -181,7 +181,7 @@ public final class AssertionUtil {
         if ( value1 != value2 ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isEqual",new Object[]{new Long(value1),new Long(value2)}); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isEqual",new Object[]{new Long(value1),new Long(value2)}); //$NON-NLS-1$
             failed(msg);
         }
     }
@@ -194,7 +194,7 @@ public final class AssertionUtil {
         if ( value1 == value2 ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isNotEqual",new Object[]{new Long(value1),new Long(value2)}); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isNotEqual",new Object[]{new Long(value1),new Long(value2)}); //$NON-NLS-1$
             failed(msg);
         }
     }
@@ -207,7 +207,7 @@ public final class AssertionUtil {
         if ( value < 0 ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isNonNegative",new Object[]{new Long(value)}); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isNonNegative",new Object[]{new Long(value)}); //$NON-NLS-1$
             failed(msg);
         }
     }
@@ -220,7 +220,7 @@ public final class AssertionUtil {
         if ( value > 0 ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isNonPositive",new Object[]{new Long(value)}); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isNonPositive",new Object[]{new Long(value)}); //$NON-NLS-1$
             failed(msg);
         }
     }
@@ -233,7 +233,7 @@ public final class AssertionUtil {
         if ( value >= 0 ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isNegative",new Object[]{new Long(value)}); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isNegative",new Object[]{new Long(value)}); //$NON-NLS-1$
             failed(msg);
         }
     }
@@ -246,7 +246,7 @@ public final class AssertionUtil {
         if ( value <= 0 ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isPositive",new Object[]{new Long(value)}); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isPositive",new Object[]{new Long(value)}); //$NON-NLS-1$
             failed(msg);
         }
     }
@@ -262,7 +262,7 @@ public final class AssertionUtil {
         if ( value.length() == 0 ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isNotZeroLength"); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isNotZeroLength"); //$NON-NLS-1$
             failed(msg);
         }
 	}
@@ -277,7 +277,7 @@ public final class AssertionUtil {
         if ( value != null ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isNull"); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isNull"); //$NON-NLS-1$
             failed(msg);
         }
 	}
@@ -290,7 +290,7 @@ public final class AssertionUtil {
         if ( value == null ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isNotNull"); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isNotNull"); //$NON-NLS-1$
             failed(msg);
         }
 	}
@@ -309,7 +309,7 @@ public final class AssertionUtil {
         if ( object1 != object2 ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isIdentical",new Object[]{object1,object2}); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isIdentical",new Object[]{object1,object2}); //$NON-NLS-1$
             failed(msg);
         }
 	}
@@ -329,7 +329,7 @@ public final class AssertionUtil {
             if ( object2 != null ) {
                 final String msg = message != null ?
                                    message :
-                                   CorePlugin.Util.getString("Assertion.isEqual",new Object[]{object1,object2}); //$NON-NLS-1$
+                                   CoreModelerPlugin.Util.getString("Assertion.isEqual",new Object[]{object1,object2}); //$NON-NLS-1$
                 failed(msg);
             }
             // else both are null
@@ -337,14 +337,14 @@ public final class AssertionUtil {
             if ( object2 == null ) {
                 final String msg = message != null ?
                                    message :
-                                   CorePlugin.Util.getString("Assertion.isEqual",new Object[]{object1,object2}); //$NON-NLS-1$
+                                   CoreModelerPlugin.Util.getString("Assertion.isEqual",new Object[]{object1,object2}); //$NON-NLS-1$
                 failed(msg);
             }
             // else both are not null
             if ( !object1.equals(object2) ) {
                 final String msg = message != null ?
                                    message :
-                                   CorePlugin.Util.getString("Assertion.isEqual",new Object[]{object1,object2}); //$NON-NLS-1$
+                                   CoreModelerPlugin.Util.getString("Assertion.isEqual",new Object[]{object1,object2}); //$NON-NLS-1$
                 failed(msg);
             }
 		}
@@ -365,7 +365,7 @@ public final class AssertionUtil {
         final Class objClass = object.getClass();
         if (!expectedClass.isAssignableFrom(objClass)) {
             final Object[] params = new Object[]{name, expectedClass, objClass.getName()};
-            final String msg = CorePlugin.Util.getString("Assertion.invalidClassMessage",params); //$NON-NLS-1$
+            final String msg = CoreModelerPlugin.Util.getString("Assertion.invalidClassMessage",params); //$NON-NLS-1$
             throw new ClassCastException(msg);
         }
         return object;
@@ -382,7 +382,7 @@ public final class AssertionUtil {
         if ( collection.isEmpty() ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isNotEmpty_Collection"); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isNotEmpty_Collection"); //$NON-NLS-1$
             failed(msg);
         }
     }
@@ -396,7 +396,7 @@ public final class AssertionUtil {
         if ( map.isEmpty() ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.isNotEmpty_Map"); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.isNotEmpty_Map"); //$NON-NLS-1$
             failed(msg);
         }
     }
@@ -410,7 +410,7 @@ public final class AssertionUtil {
         if ( !collection.contains(value) ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.contains_Collection"); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.contains_Collection"); //$NON-NLS-1$
             failed(msg);
         }
 	}
@@ -424,7 +424,7 @@ public final class AssertionUtil {
         if ( !map.containsKey(key) ) {
             final String msg = message != null ?
                                message :
-                               CorePlugin.Util.getString("Assertion.contains_Map"); //$NON-NLS-1$
+                               CoreModelerPlugin.Util.getString("Assertion.contains_Map"); //$NON-NLS-1$
             failed(msg);
         }
 	}

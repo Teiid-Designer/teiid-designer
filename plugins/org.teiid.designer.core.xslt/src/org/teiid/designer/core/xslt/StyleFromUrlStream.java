@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import javax.xml.transform.stream.StreamSource;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.util.CoreArgCheck;
 
 /**
@@ -78,7 +78,7 @@ public class StyleFromUrlStream implements Style {
      * @see Style#getInputStream()
      */
     @Override
-	public InputStream getInputStream() throws IOException, TeiidException {
+	public InputStream getInputStream() throws IOException, TeiidDesignerException {
         // first, try to load them out of a jar
         final String xsltURL = getXsltUrl();
         final URL url = new URL(this.xsltUrl);
@@ -92,7 +92,7 @@ public class StyleFromUrlStream implements Style {
         if (stylesheetStream.available() == 0) {
             final Object[] params = new Object[] {xsltURL};
             final String msg = CoreXsltPlugin.Util.getString("StyleFromUrlStream.empty_xslt", params); //$NON-NLS-1$
-            throw new TeiidException(msg);
+            throw new TeiidDesignerException(msg);
         }
 
         return stylesheetStream;
@@ -102,7 +102,7 @@ public class StyleFromUrlStream implements Style {
      * @see Style#getStreamSource()
      */
     @Override
-	public StreamSource getStreamSource() throws IOException, TeiidException {
+	public StreamSource getStreamSource() throws IOException, TeiidDesignerException {
         final InputStream stream = getInputStream();
         return new StreamSource(stream);
     }

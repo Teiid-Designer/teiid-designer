@@ -8,7 +8,6 @@
 package org.teiid.designer.ui;
 
 import static org.teiid.designer.ui.UiConstants.TableEditorAttributes.COLUMN_ORDER;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -27,7 +26,6 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.osgi.framework.BundleContext;
-import org.teiid.core.CoreConstants.Debug;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.event.EventBroker;
 import org.teiid.core.designer.event.SynchEventBroker;
@@ -58,7 +56,7 @@ import org.teiid.designer.ui.viewsupport.ModelerNotificationHelper;
  * 
  * @since 8.0
  */
-public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginConstants, UiConstants, IModelerProductContexts {
+public final class UiPlugin extends AbstractUiPlugin implements PluginConstants, UiConstants, IModelerProductContexts {
 
     // The shared instance.
     private static UiPlugin plugin;

@@ -16,7 +16,6 @@ import java.io.StringReader;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -28,10 +27,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.teiid.core.util.StringUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -216,7 +214,7 @@ public class ModelerZipExporter {
 		public InputSource resolveEntity(String publicId, String systemId)
 				throws SAXException, IOException {
 			return new InputSource(new StringReader(
-					StringUtil.Constants.EMPTY_STRING));
+					CoreStringUtil.Constants.EMPTY_STRING));
 		}
 	}
 }

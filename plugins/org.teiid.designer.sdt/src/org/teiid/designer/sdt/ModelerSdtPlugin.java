@@ -29,7 +29,7 @@ import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.PluginUtilImpl;
-import org.teiid.core.util.FileUtils;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metamodels.xsd.XsdResourceFactory;

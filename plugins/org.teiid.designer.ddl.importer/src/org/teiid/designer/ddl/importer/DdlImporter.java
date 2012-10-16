@@ -44,7 +44,7 @@ import org.teiid.core.designer.I18n;
 import org.teiid.core.designer.exception.EmptyArgumentException;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
-import org.teiid.core.util.FileUtils;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.compare.DifferenceReport;
 import org.teiid.designer.compare.MergeProcessor;
 import org.teiid.designer.compare.ModelerComparePlugin;

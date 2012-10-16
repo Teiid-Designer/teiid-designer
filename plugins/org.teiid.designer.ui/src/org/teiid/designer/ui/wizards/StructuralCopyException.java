@@ -7,14 +7,14 @@
  */
 package org.teiid.designer.ui.wizards;
 
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 
 /**
  * StructuralCopyException
  *
  * @since 8.0
  */
-public class StructuralCopyException extends TeiidException {
+public class StructuralCopyException extends TeiidDesignerException {
 
     private static final long serialVersionUID = 1L;
 

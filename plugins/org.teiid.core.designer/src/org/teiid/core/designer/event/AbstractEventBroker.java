@@ -12,7 +12,7 @@ import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
-import org.teiid.core.CorePlugin;
+import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.util.CoreArgCheck;
 
@@ -21,7 +21,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
  * @since 8.0
  */
 abstract public class AbstractEventBroker extends AbstractEventSource implements EventBroker {
-    private static final String CANNOT_ADD_SELF_AS_LISTENER_MESSAGE = CorePlugin.Util.getString("AbstractEventBroker.CannotAddSelfAsListener"); //$NON-NLS-1$
+    private static final String CANNOT_ADD_SELF_AS_LISTENER_MESSAGE = CoreModelerPlugin.Util.getString("AbstractEventBroker.CannotAddSelfAsListener"); //$NON-NLS-1$
     private boolean shutdownRequested = false;
     private boolean shutdownComplete = false;
     private String name = ""; //$NON-NLS-1$
@@ -59,11 +59,11 @@ abstract public class AbstractEventBroker extends AbstractEventSource implements
     protected void setName( String name ) {
         if (name == null) {
             CoreArgCheck.isNotNull(name,
-                                   CorePlugin.Util.getString("AbstractEventBroker.The_name_of_the_event_broker_may_not_be_null")); //$NON-NLS-1$
+                                   CoreModelerPlugin.Util.getString("AbstractEventBroker.The_name_of_the_event_broker_may_not_be_null")); //$NON-NLS-1$
         }
         if (name.length() == 0) {
             CoreArgCheck.isNotZeroLength(name,
-                                         CorePlugin.Util.getString("AbstractEventBroker.The_name_of_the_event_broker_may_not_be_zero-length")); //$NON-NLS-1$
+                                         CoreModelerPlugin.Util.getString("AbstractEventBroker.The_name_of_the_event_broker_may_not_be_zero-length")); //$NON-NLS-1$
         }
         this.name = name;
     }
@@ -146,7 +146,7 @@ abstract public class AbstractEventBroker extends AbstractEventSource implements
 
                             if (totalTime >= EVENT_FLOOR) {
                                 final Object[] params = new Object[] {new Double(totalTime), getShortClassName(listener)};
-                                eventPerfMsg.append(CorePlugin.Util.getString("AbstractEventBroker.eventFloorExceeded", params)); //$NON-NLS-1$
+                                eventPerfMsg.append(CoreModelerPlugin.Util.getString("AbstractEventBroker.eventFloorExceeded", params)); //$NON-NLS-1$
                             }
                         } else {
                             listener.processEvent(obj);
@@ -154,7 +154,7 @@ abstract public class AbstractEventBroker extends AbstractEventSource implements
                     } catch (Throwable t) {
                         CoreModelerPlugin.Util.log(IStatus.ERROR,
                                                    t,
-                                                   CorePlugin.Util.getString("AbstractEventBroker.Error_during_event_processing", this.getName())); //$NON-NLS-1$
+                                                   CoreModelerPlugin.Util.getString("AbstractEventBroker.Error_during_event_processing", this.getName())); //$NON-NLS-1$
                     }
                 }
                 // RMH: }
@@ -163,7 +163,7 @@ abstract public class AbstractEventBroker extends AbstractEventSource implements
             if (EVENT_PERF && (eventTime >= EVENT_FLOOR)) {
                 final Object[] params = new Object[] {new Double(eventTime), new Integer(count), getShortClassName(obj),
                     getShortClassName(obj.getSource())};
-                eventPerfMsg.append(CorePlugin.Util.getString("AbstractEventBroker.basePerformanceMessage", params)); //$NON-NLS-1$
+                eventPerfMsg.append(CoreModelerPlugin.Util.getString("AbstractEventBroker.basePerformanceMessage", params)); //$NON-NLS-1$
 
                 eventPerfMsg.append('\n');
 
@@ -176,7 +176,7 @@ abstract public class AbstractEventBroker extends AbstractEventSource implements
     protected void assertReady() {
         if (this.shutdownRequested || this.shutdownComplete) {
             throw new IllegalStateException(
-                                            CorePlugin.Util.getString("AbstractEventBroker.No_events_can_be_processed_EventBroker_is_shutdown", this.getName())); //$NON-NLS-1$
+                                            CoreModelerPlugin.Util.getString("AbstractEventBroker.No_events_can_be_processed_EventBroker_is_shutdown", this.getName())); //$NON-NLS-1$
         }
     }
 

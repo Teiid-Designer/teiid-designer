@@ -7,14 +7,14 @@
  */
 package org.teiid.designer.ddl;
 
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 
 /**
  * DdlException
  *
  * @since 8.0
  */
-public class DdlException extends TeiidException {
+public class DdlException extends TeiidDesignerException {
 
     /**
      */

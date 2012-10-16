@@ -8,7 +8,7 @@
 
 package org.teiid.core.designer.event;
 
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 
 /**
  * Subclasses of this exception typically only need to implement whatever constructors they need.
@@ -16,7 +16,7 @@ import org.teiid.core.TeiidException;
  *
  * @since 8.0
  */
-public class EventSourceException extends TeiidException {
+public class EventSourceException extends TeiidDesignerException {
 
     /**
      */

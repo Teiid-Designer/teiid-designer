@@ -7,7 +7,7 @@
  */
 package org.teiid.core.designer.util;
 
-import org.teiid.core.CorePlugin;
+import org.teiid.core.designer.CoreModelerPlugin;
 
 /**
  * This class records the state for a component that can be started and stopped.
@@ -77,7 +77,7 @@ public class RunnableState {
             case FAILED:
                 return FAILED_LITERAL;
         }
-        throw new IllegalArgumentException(CorePlugin.Util.getString("RunnableState.Unknown_state_value___7") + value ); //$NON-NLS-1$
+        throw new IllegalArgumentException(CoreModelerPlugin.Util.getString("RunnableState.Unknown_state_value___7") + value ); //$NON-NLS-1$
     }
 
 
@@ -111,13 +111,13 @@ public class RunnableState {
                 if ( this.state == UNSTARTED ) {
                     break;  // no change!
                 }
-                throw new IllegalStateException(CorePlugin.Util.getString("RunnableState.Unable_to_change_the_state_to__8") + UNSTARTED_LITERAL); //$NON-NLS-1$
+                throw new IllegalStateException(CoreModelerPlugin.Util.getString("RunnableState.Unable_to_change_the_state_to__8") + UNSTARTED_LITERAL); //$NON-NLS-1$
             case STARTING:
                 if ( this.state == STARTING ) {
                     break;  // no change!
                 }
                 if ( this.state == STARTED || this.state == STOPPING ) {
-                    throw new IllegalStateException(CorePlugin.Util.getString("RunnableState.Unable_to_change_the_state_from__9") + getLiteralForState(this.state) + CorePlugin.Util.getString("RunnableState._to__10") + STARTING_LITERAL); //$NON-NLS-1$ //$NON-NLS-2$
+                    throw new IllegalStateException(CoreModelerPlugin.Util.getString("RunnableState.Unable_to_change_the_state_from__9") + getLiteralForState(this.state) + CoreModelerPlugin.Util.getString("RunnableState._to__10") + STARTING_LITERAL); //$NON-NLS-1$ //$NON-NLS-2$
                 }
                 this.state = newState;
                 break;
@@ -129,7 +129,7 @@ public class RunnableState {
                     this.state = newState;
                     break;
                 }
-                throw new IllegalStateException(CorePlugin.Util.getString("RunnableState.Unable_to_change_the_state_from__11") + getLiteralForState(this.state) + CorePlugin.Util.getString("RunnableState._to__12") + STARTED_LITERAL); //$NON-NLS-1$ //$NON-NLS-2$
+                throw new IllegalStateException(CoreModelerPlugin.Util.getString("RunnableState.Unable_to_change_the_state_from__11") + getLiteralForState(this.state) + CoreModelerPlugin.Util.getString("RunnableState._to__12") + STARTED_LITERAL); //$NON-NLS-1$ //$NON-NLS-2$
             case STOPPING:
                 if ( this.state == STOPPING ) {
                     break;  // no change!
@@ -138,7 +138,7 @@ public class RunnableState {
                     this.state = newState;
                     break;
                 }
-                throw new IllegalStateException(CorePlugin.Util.getString("RunnableState.Unable_to_change_the_state_from__13") + getLiteralForState(this.state) + CorePlugin.Util.getString("RunnableState._to__14") + STOPPING_LITERAL); //$NON-NLS-1$ //$NON-NLS-2$
+                throw new IllegalStateException(CoreModelerPlugin.Util.getString("RunnableState.Unable_to_change_the_state_from__13") + getLiteralForState(this.state) + CoreModelerPlugin.Util.getString("RunnableState._to__14") + STOPPING_LITERAL); //$NON-NLS-1$ //$NON-NLS-2$
             case STOPPED:
                 if ( this.state == STOPPED ) {
                     break;  // no change!
@@ -147,7 +147,7 @@ public class RunnableState {
                     this.state = newState;
                     break;
                 }
-                throw new IllegalStateException(CorePlugin.Util.getString("RunnableState.Unable_to_change_the_state_from__15") + getLiteralForState(this.state) + CorePlugin.Util.getString("RunnableState._to__16") + STOPPED_LITERAL); //$NON-NLS-1$ //$NON-NLS-2$
+                throw new IllegalStateException(CoreModelerPlugin.Util.getString("RunnableState.Unable_to_change_the_state_from__15") + getLiteralForState(this.state) + CoreModelerPlugin.Util.getString("RunnableState._to__16") + STOPPED_LITERAL); //$NON-NLS-1$ //$NON-NLS-2$
             case FAILED:
                 if ( this.state == FAILED ) {
                     break;  // no change!
@@ -156,9 +156,9 @@ public class RunnableState {
                     this.state = newState;
                     break;
                 }
-                throw new IllegalStateException(CorePlugin.Util.getString("RunnableState.Unable_to_change_the_state_from__17") + getLiteralForState(this.state) + CorePlugin.Util.getString("RunnableState._to__18") + FAILED_LITERAL); //$NON-NLS-1$ //$NON-NLS-2$
+                throw new IllegalStateException(CoreModelerPlugin.Util.getString("RunnableState.Unable_to_change_the_state_from__17") + getLiteralForState(this.state) + CoreModelerPlugin.Util.getString("RunnableState._to__18") + FAILED_LITERAL); //$NON-NLS-1$ //$NON-NLS-2$
             default:
-                throw new IllegalArgumentException(CorePlugin.Util.getString("RunnableState.Unknown_state_value___19") + newState ); //$NON-NLS-1$
+                throw new IllegalArgumentException(CoreModelerPlugin.Util.getString("RunnableState.Unknown_state_value___19") + newState ); //$NON-NLS-1$
         }
     }
     

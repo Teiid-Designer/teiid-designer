@@ -14,8 +14,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
@@ -29,7 +27,6 @@ import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.emf.mapping.MappingRoot;
 import org.teiid.api.exception.query.QueryMetadataException;
-import org.teiid.core.TeiidComponentException;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.common.xmi.XMIHeader;
@@ -53,7 +50,6 @@ import org.teiid.designer.core.util.ModelResourceContainerFactory;
 import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
-import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metadata.runtime.MetadataConstants;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.function.FunctionParameter;
@@ -2679,14 +2675,21 @@ public class TransformationHelper implements SqlConstants {
     }
 
     public static GroupSymbol getTargetGroupSymbol(final Table targetGroup,
-                              final QueryMetadataInterface metadata) throws QueryMetadataException, TeiidComponentException {
+                              final QueryMetadataInterface metadata) throws QueryMetadataException {
         if (targetGroup == null) {
             return null;
         }
         String targetGroupFullName = TransformationHelper.getSqlEObjectFullName(targetGroup);
         String targetGroupUUID = TransformationHelper.getSqlEObjectUUID(targetGroup);
         GroupSymbol gSymbol = new GroupSymbol(targetGroupFullName);
-        Object groupID = metadata.getGroupID(targetGroupUUID);
+        Object groupID;
+        
+        try {
+            groupID = metadata.getGroupID(targetGroupUUID);
+        } catch (Exception ex) {
+            throw new QueryMetadataException(ex.getMessage());
+        }
+        
         if (groupID != null) {
             gSymbol.setMetadataID(groupID);
             return gSymbol;
@@ -3347,7 +3350,7 @@ public class TransformationHelper implements SqlConstants {
 //                                                                                 virtualTargetFullName,
 //                                                                                 selectCommand,
 //                                                                                 resolver);
-//                    } catch (TeiidComponentException e) {
+//                    } catch (TeiidDesignerComponentException e) {
 //                        // Exception leaves generatedProc null
 //                        String message = "[TransformationHelper.getGeneratedProcedure()] INFO:  Couldnt generate procedure\n"; //$NON-NLS-1$
 //                        TransformationPlugin.Util.log(IStatus.INFO, message + e.getMessage());

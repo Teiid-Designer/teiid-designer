@@ -15,7 +15,7 @@ import java.io.Serializable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.util.EquivalenceUtil;
 import org.teiid.core.util.ExternalizeUtil;
 
@@ -274,7 +274,7 @@ public class ModelerCoreException extends CoreException implements Externalizabl
      */
     public static void writeThrowable( ObjectOutput out,
                                        Throwable t ) throws IOException {
-        if (t == null || !(t instanceof CoreException) || (t instanceof TeiidException)) {
+        if (t == null || !(t instanceof CoreException) || (t instanceof TeiidDesignerException)) {
             out.writeBoolean(false);
             out.writeObject(t);
         } else {
@@ -319,7 +319,7 @@ public class ModelerCoreException extends CoreException implements Externalizabl
     }
 
     /**
-     * Serializable implementation of IStatus used to serialize instances of CoreException and TeiidException
+     * Serializable implementation of IStatus used to serialize instances of CoreException and TeiidDesignerException
      */
     public static class StatusImpl implements IStatus, Externalizable {
         public static final long serialVersionUID = 0;

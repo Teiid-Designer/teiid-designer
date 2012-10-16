@@ -9,7 +9,6 @@ package org.teiid.designer.xsd.ui;
 
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
-import org.teiid.core.CoreConstants.Debug;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
@@ -21,7 +20,7 @@ import org.teiid.designer.ui.common.actions.ActionService;
  *
  * @since 8.0
  */
-public class ModelerXsdUiPlugin extends AbstractUiPlugin implements Debug, ModelerXsdUiConstants {
+public class ModelerXsdUiPlugin extends AbstractUiPlugin implements ModelerXsdUiConstants {
 
     // The shared instance.
     private static ModelerXsdUiPlugin plugin;

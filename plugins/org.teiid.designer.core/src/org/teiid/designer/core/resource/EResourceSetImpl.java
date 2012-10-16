@@ -28,8 +28,8 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.IChangeNotifier;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
-import org.teiid.core.TeiidException;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.id.IDGenerator;
 import org.teiid.core.designer.id.InvalidIDException;
 import org.teiid.core.designer.id.ObjectID;
@@ -386,7 +386,7 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
 
     /**
      * Check if the XMI version corresponding to the specified resource URI represents an older 1.x version of the XMI
-     * specification. If it does a TeiidRuntimeException is thrown indicating that the resource must be converted to an
+     * specification. If it does a TeiidDesignerRuntimeException is thrown indicating that the resource must be converted to an
      * xmi:version="2.0" file
      * 
      * @param uri
@@ -397,7 +397,7 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
         if (header != null && header.getXmiVersion() != null && header.getXmiVersion().startsWith("1.")) { //$NON-NLS-1$
             Object[] params = new Object[] {uri};
             String msg = ModelerCore.Util.getString("EResourceSetImpl.Old_model_format_encountered", params); //$NON-NLS-1$
-            throw new TeiidRuntimeException(msg);
+            throw new TeiidDesignerRuntimeException(msg);
         }
     }
 
@@ -424,7 +424,7 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
             if (f.isFile() && f.exists()) {
                 try {
                     return XMIHeaderReader.readHeader(f);
-                } catch (TeiidException e) {
+                } catch (TeiidDesignerException e) {
                     ModelerCore.Util.log(e);
                 }
             }

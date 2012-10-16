@@ -11,7 +11,7 @@ package org.teiid.designer.core.util;
 import java.io.File;
 import java.util.Random;
 
-import org.teiid.core.util.FileUtils;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.common.util.LogConstants;
 import org.teiid.logging.LogManager;
 

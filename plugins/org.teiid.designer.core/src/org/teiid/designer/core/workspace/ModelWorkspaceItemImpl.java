@@ -13,7 +13,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.util.HashCodeUtil;
+import org.teiid.core.designer.HashCodeUtil;
 import org.teiid.designer.core.ModelerCore;
 
 
@@ -75,8 +75,8 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
             throw new IllegalArgumentException(ModelerCore.Util.getString("element.invalidType")); //$NON-NLS-1$
         }
 
-        // ArgCheck.isNotNull(name); // Should be done in subclasses, not here
-        // ArgCheck.isNotZeroLength(name); // Should be done in subclasses, not here
+        // CoreArgCheck.isNotNull(name); // Should be done in subclasses, not here
+        // CoreArgCheck.isNotZeroLength(name); // Should be done in subclasses, not here
         fType = type;
         fParent = (ModelWorkspaceItemImpl)parent;
         fName = name;

@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
@@ -244,7 +244,7 @@ public class IndexUtil {
                                              final char fieldDelimiter ) throws ModelerCoreException {
         try {
             return SimpleIndexUtil.queryIndex(indexes, pattern, fieldDelimiter);
-        } catch (TeiidException e) {
+        } catch (TeiidDesignerException e) {
             throw new ModelerCoreException(e);
         }
     }
@@ -266,7 +266,7 @@ public class IndexUtil {
                                              final boolean returnFirstMatch ) throws ModelerCoreException {
         try {
             return SimpleIndexUtil.queryIndex(indexes, pattern, isPrefix, returnFirstMatch);
-        } catch (TeiidException e) {
+        } catch (TeiidDesignerException e) {
             throw new ModelerCoreException(e);
         }
     }
@@ -294,7 +294,7 @@ public class IndexUtil {
                                               pattern,
                                               isPrefix,
                                               returnFirstMatch);
-        } catch (TeiidException e) {
+        } catch (TeiidDesignerException e) {
             throw new ModelerCoreException(e);
         }
     }
@@ -324,7 +324,7 @@ public class IndexUtil {
                                               isPrefix,
                                               isCaseSensitive,
                                               returnFirstMatch);
-        } catch (TeiidException e) {
+        } catch (TeiidDesignerException e) {
             throw new ModelerCoreException(e);
         }
     }
@@ -439,7 +439,7 @@ public class IndexUtil {
                                       final IndexSelector selector ) throws ModelerCoreException {
         try {
             return SimpleIndexUtil.getIndexes(indexName, selector);
-        } catch (TeiidException e) {
+        } catch (TeiidDesignerException e) {
             throw new ModelerCoreException(e);
         }
     }

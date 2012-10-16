@@ -9,7 +9,7 @@ package org.teiid.designer.core.metamodel.aspect.core.aspects.uml;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
@@ -168,7 +168,7 @@ public class XEnumLiteralUmlAspect extends AbstractExtensionUmlAspect implements
                 //Properties
                 return (""); //$NON-NLS-1$
             default :
-                throw new TeiidRuntimeException(ModelerCore.Util.getString("XEnumLiteralUmlAspect.Invalid_showMask_for_getSignature") + showMask ); //$NON-NLS-1$
+                throw new TeiidDesignerRuntimeException(ModelerCore.Util.getString("XEnumLiteralUmlAspect.Invalid_showMask_for_getSignature") + showMask ); //$NON-NLS-1$
         }
         return result.toString();
     }

@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
 import org.teiid.designer.metamodels.core.CoreMetamodelPlugin;
 import org.teiid.designer.metamodels.core.CorePackage;
@@ -701,7 +701,7 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
             IStatus status = UriValidator.validate(theNewNamespaceUri);
 
             if (status.getSeverity() == IStatus.ERROR) {
-                throw new TeiidRuntimeException(status.getMessage());
+                throw new TeiidDesignerRuntimeException(status.getMessage());
             }
         } catch (RuntimeException theException) {
             String msg = CoreMetamodelPlugin.Util.getString("ModelAnnotationImpl.invalidNamespaceUriMsg", //$NON-NLS-1$

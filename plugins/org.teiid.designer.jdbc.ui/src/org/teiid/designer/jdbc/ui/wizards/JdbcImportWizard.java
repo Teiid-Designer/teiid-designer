@@ -46,7 +46,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.Stopwatch;
-import org.teiid.core.util.FileUtils;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.compare.DifferenceReport;
 import org.teiid.designer.compare.ui.wizard.IDifferencingWizard;
 import org.teiid.designer.compare.ui.wizard.ShowDifferencesPage;

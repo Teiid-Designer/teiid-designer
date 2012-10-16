@@ -18,7 +18,7 @@ import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.util.FileUtils;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.AbstractMetamodelAspect;
 import org.teiid.designer.core.metamodel.aspect.ImportsAspect;
@@ -199,8 +199,8 @@ public class XsdSchemaDerivativeAspect extends AbstractMetamodelAspect implement
 //     */
 //    public void setModelPath(final EObject eObject,
 //                             IPath modelPath) {
-//        ArgCheck.isInstanceOf(XSDSchemaDirective.class, eObject);
-//        ArgCheck.isNotNull(modelPath);
+//        CoreArgCheck.isInstanceOf(XSDSchemaDirective.class, eObject);
+//        CoreArgCheck.isNotNull(modelPath);
 //
 //        final XSDSchemaDirective derivative = (XSDSchemaDirective)eObject;
 //        final ModelResource model = ModelerCore.getModelWorkspace().

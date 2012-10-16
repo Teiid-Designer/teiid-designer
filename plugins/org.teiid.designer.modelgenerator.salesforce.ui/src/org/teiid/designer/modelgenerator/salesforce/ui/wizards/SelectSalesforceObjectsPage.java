@@ -49,7 +49,7 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.util.FileUtils;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.modelgenerator.salesforce.SalesforceImportWizardManager;
 import org.teiid.designer.modelgenerator.salesforce.model.DataModel;
 import org.teiid.designer.modelgenerator.salesforce.model.SalesforceField;

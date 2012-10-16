@@ -7,14 +7,14 @@
  */
 package org.teiid.designer.modelgenerator.util;
 
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 
 /**
  * AnnotationHelperExceptoin
  *
  * @since 8.0
  */
-public class AnnotationHelperException extends TeiidException {
+public class AnnotationHelperException extends TeiidDesignerException {
 
     /**
      */

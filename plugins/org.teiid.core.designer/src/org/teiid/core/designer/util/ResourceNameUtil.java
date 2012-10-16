@@ -8,7 +8,7 @@
 
 package org.teiid.core.designer.util;
 
-import org.teiid.core.CorePlugin;
+import org.teiid.core.designer.CoreModelerPlugin;
 
 /**
  * Utility class used for determining if proposed resource names are reserved names or not. This applies for *.vdb, *.xmi and
@@ -97,7 +97,7 @@ public abstract class ResourceNameUtil {
         if (proposedName.indexOf('.') != -1) {
             // Check ends with
             if (!proposedName.endsWith(DOT_VDB_FILE_EXTENSION)) {
-                throw new IllegalArgumentException(CorePlugin.Util.getString(INVALID_EXTENSION_ERROR_ID,
+                throw new IllegalArgumentException(CoreModelerPlugin.Util.getString(INVALID_EXTENSION_ERROR_ID,
                                                                              proposedName,
                                                                              VDB_FILE_EXTENSION));
             }
@@ -140,7 +140,7 @@ public abstract class ResourceNameUtil {
         if (proposedName.indexOf('.') != -1) {
             // Check ends with
             if (!proposedName.endsWith(DOT_XMI_FILE_EXTENSION)) {
-                throw new IllegalArgumentException(CorePlugin.Util.getString(INVALID_EXTENSION_ERROR_ID,
+                throw new IllegalArgumentException(CoreModelerPlugin.Util.getString(INVALID_EXTENSION_ERROR_ID,
                                                                              proposedName,
                                                                              XMI_FILE_EXTENSION));
             }
@@ -183,7 +183,7 @@ public abstract class ResourceNameUtil {
         if (proposedName.indexOf('.') != -1) {
             // Check ends with
             if (!proposedName.endsWith(DOT_XSD_FILE_EXTENSION)) {
-                throw new IllegalArgumentException(CorePlugin.Util.getString(INVALID_EXTENSION_ERROR_ID,
+                throw new IllegalArgumentException(CoreModelerPlugin.Util.getString(INVALID_EXTENSION_ERROR_ID,
                                                                              proposedName,
                                                                              XSD_FILE_EXTENSION));
             }

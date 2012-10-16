@@ -32,7 +32,7 @@ import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLLoad;
 import org.eclipse.emf.ecore.xmi.XMLSave;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.id.IDGenerator;
 import org.teiid.core.designer.id.InvalidIDException;
 import org.teiid.core.designer.id.ObjectID;
@@ -566,7 +566,7 @@ public class EResourceImpl extends XMIResourceImpl
             if (f.isFile() && f.exists()) {
                 try {
                     header = XMIHeaderReader.readHeader(f);
-                } catch (TeiidException e) {
+                } catch (TeiidDesignerException e) {
                     ModelerCore.Util.log(e);
                 }
             }

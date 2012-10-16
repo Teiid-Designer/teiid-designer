@@ -7,7 +7,7 @@
 */
 package org.teiid.designer.ui.wizards.wsdl;
 
-import org.teiid.core.util.FileUtils;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.webservice.WebServicePlugin;
 
 

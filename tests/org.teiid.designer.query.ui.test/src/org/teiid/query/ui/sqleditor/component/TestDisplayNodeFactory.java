@@ -1295,12 +1295,12 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testRaiseStatement() {
         RaiseStatement errStmt = new RaiseStatement(new Constant("My Error")); //$NON-NLS-1$
-        helpTest(errStmt, "ERROR 'My Error';"); //$NON-NLS-1$
+        helpTest(errStmt, "RAISE 'My Error';"); //$NON-NLS-1$
     }
 
     public void testRaiseStatementWithExpression() {
         RaiseStatement errStmt = new RaiseStatement(new ElementSymbol("a")); //$NON-NLS-1$
-        helpTest(errStmt, "ERROR a;"); //$NON-NLS-1$
+        helpTest(errStmt, "RAISE a;"); //$NON-NLS-1$
     }
 
     public void testAssignmentStatement1() {
@@ -1353,7 +1353,7 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(cmdStmt);
         b.addStatement(assigStmt);
         b.addStatement(errStmt);
-        helpTest(b, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
+        helpTest(b, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$
     }
 
     public void testCreateUpdateProcedure1() {
@@ -1367,7 +1367,7 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(assigStmt);
         b.addStatement(errStmt);
         CreateProcedureCommand cup = new CreateProcedureCommand(b);
-        helpTest(cup, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
+        helpTest(cup, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$
     }
 
     public void testCreateUpdateProcedure2() {
@@ -1381,7 +1381,7 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(assigStmt);
         b.addStatement(errStmt);
         CreateProcedureCommand cup = new CreateProcedureCommand(b);
-        helpTest(cup, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
+        helpTest(cup, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$
     }
 
     public void testCreateUpdateProcedure3() {
@@ -1395,7 +1395,7 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(assigStmt);
         b.addStatement(errStmt);
         CreateProcedureCommand cup = new CreateProcedureCommand(b);
-        helpTest(cup, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
+        helpTest(cup, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$
     }
 
     // Test Insert

@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.AbstractMetamodelAspect;
@@ -85,7 +85,7 @@ public class XmlFragmentAspect extends AbstractMetamodelAspect implements UmlPac
                 result.append(xmlFrag.getName() );   
                 break;
             default :
-                throw new TeiidRuntimeException(XmlDocumentPlugin.Util.getString("XmlFragmentAspect.Invalid_showMask_for_getSignature__2",showMask)); //$NON-NLS-1$
+                throw new TeiidDesignerRuntimeException(XmlDocumentPlugin.Util.getString("XmlFragmentAspect.Invalid_showMask_for_getSignature__2",showMask)); //$NON-NLS-1$
         }
         return result.toString();
     }

@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.core.TeiidException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.common.xsd.XsdHeader;
 import org.teiid.designer.common.xsd.XsdHeaderReader;
@@ -381,7 +381,7 @@ public class VdbResourceFinder {
             if (file.exists()) try {
                 final XsdHeader header = XsdHeaderReader.readHeader(file);
                 if (header != null) return header.getTargetNamespaceURI();
-            } catch (final TeiidException e) {
+            } catch (final TeiidDesignerException e) {
                 ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
             }
         }

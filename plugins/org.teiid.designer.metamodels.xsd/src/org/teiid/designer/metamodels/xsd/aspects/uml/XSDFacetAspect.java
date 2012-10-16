@@ -30,7 +30,7 @@ import org.eclipse.xsd.XSDPatternFacet;
 import org.eclipse.xsd.XSDTotalDigitsFacet;
 import org.eclipse.xsd.XSDWhiteSpaceFacet;
 import org.eclipse.xsd.impl.XSDFacetImpl;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.AbstractMetamodelAspect;
@@ -263,7 +263,7 @@ public class XSDFacetAspect extends AbstractMetamodelAspect implements UmlProper
                 //Properties
                 return (""); //$NON-NLS-1$
             default :
-                throw new TeiidRuntimeException(RelationalPlugin.Util.getString("Aspect.invalidShowMask", showMask)); //$NON-NLS-1$
+                throw new TeiidDesignerRuntimeException(RelationalPlugin.Util.getString("Aspect.invalidShowMask", showMask)); //$NON-NLS-1$
         }
         return result.toString();
     }

@@ -10,7 +10,7 @@ package org.teiid.designer.transformation.aspects.uml;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
@@ -229,7 +229,7 @@ public class InputParameterUmlAspect extends AbstractTransformationUmlAspect imp
                 //Properties
                 return (""); //$NON-NLS-1$
             default :
-                throw new TeiidRuntimeException(TransformationPlugin.Util.getString("InputParameterUmlAspect.Invalid_show_mask_for_getSignature") + showMask); //$NON-NLS-1$
+                throw new TeiidDesignerRuntimeException(TransformationPlugin.Util.getString("InputParameterUmlAspect.Invalid_show_mask_for_getSignature") + showMask); //$NON-NLS-1$
         }
         return result.toString();
     }

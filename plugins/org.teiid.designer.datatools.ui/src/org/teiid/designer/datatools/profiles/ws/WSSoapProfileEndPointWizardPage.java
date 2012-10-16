@@ -137,9 +137,6 @@ public class WSSoapProfileEndPointWizardPage extends ConnectionProfileDetailsPag
 		endPointCombo.setVisibleItemCount(10);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
-	 */
 	@Override
 	public void setVisible(boolean visible) {
 	    if (visible == true && endPointCombo != null) {
@@ -169,6 +166,26 @@ public class WSSoapProfileEndPointWizardPage extends ConnectionProfileDetailsPag
 	    descriptionText.setText(wizard.getProfileDescription());
         
 	    super.setVisible(visible);
+	}
+	
+	@Override
+	public boolean isPageComplete() {
+        String endPointName = profileProperties.getProperty(IWSProfileConstants.END_POINT_NAME_PROP_ID);
+        if (null == endPointName || endPointName.isEmpty()) {
+            return false;
+        }
+        
+        String portURI = profileProperties.getProperty(IWSProfileConstants.END_POINT_URI_PROP_ID);
+        if (null == portURI || portURI.isEmpty()) {
+            return false;
+        }
+        
+        String soapBinding = profileProperties.getProperty(IWSProfileConstants.SOAP_BINDING);
+        if (null == soapBinding || soapBinding.isEmpty()) {
+            return false;
+        }
+        
+        return true;
 	}
 	
 	private  void updateState() {

@@ -225,7 +225,7 @@ public class XsdUtil {
     public static void removeNamespaceRef( final XSDSchema schema,
                                            final String namespace ) {
         CoreArgCheck.isNotNull(schema);
-        XsdUtil.argCheckIsResolved(schema);
+        XsdUtil.CoreArgCheckIsResolved(schema);
         CoreArgCheck.isNotNull(namespace);
 
         final Map map = schema.getQNamePrefixToNamespaceMap();
@@ -246,7 +246,7 @@ public class XsdUtil {
     public static void removeImport( final XSDSchema schema,
                                      final String namespace ) {
         CoreArgCheck.isNotNull(schema);
-        XsdUtil.argCheckIsResolved(schema);
+        XsdUtil.CoreArgCheckIsResolved(schema);
         CoreArgCheck.isNotNull(namespace);
 
         for (final Iterator it = new ArrayList(schema.getContents()).iterator(); it.hasNext();) {
@@ -265,9 +265,9 @@ public class XsdUtil {
     public static void addImport( final XSDSimpleTypeDefinition simpleType,
                                   final XSDSimpleTypeDefinition baseType ) {
         CoreArgCheck.isNotNull(simpleType);
-        XsdUtil.argCheckIsResolved(simpleType);
+        XsdUtil.CoreArgCheckIsResolved(simpleType);
         CoreArgCheck.isNotNull(baseType);
-        XsdUtil.argCheckIsResolved(baseType);
+        XsdUtil.CoreArgCheckIsResolved(baseType);
 
         final XSDSchema schema = simpleType.getSchema();
         final String referencedNamespace = baseType.getTargetNamespace();
@@ -295,7 +295,7 @@ public class XsdUtil {
     public static void addNamespaceRef( final XSDSchema schema,
                                         final String namespace ) {
         CoreArgCheck.isNotNull(schema);
-        XsdUtil.argCheckIsResolved(schema);
+        XsdUtil.CoreArgCheckIsResolved(schema);
         CoreArgCheck.isNotNull(namespace);
 
         final String prefix = XsdUtil.getUniqueQNamePrefix(schema);
@@ -306,7 +306,7 @@ public class XsdUtil {
                                         final String prefix,
                                         final String namespace ) {
         CoreArgCheck.isNotNull(schema);
-        XsdUtil.argCheckIsResolved(schema);
+        XsdUtil.CoreArgCheckIsResolved(schema);
         CoreArgCheck.isNotNull(namespace);
 
         final Map map = schema.getQNamePrefixToNamespaceMap();
@@ -385,7 +385,7 @@ public class XsdUtil {
     public static void setTargetNamespace( final XSDSchema schema,
                                            String namespace ) {
         CoreArgCheck.isNotNull(schema);
-        XsdUtil.argCheckIsResolved(schema);
+        XsdUtil.CoreArgCheckIsResolved(schema);
         CoreArgCheck.isNotNull(namespace);
 
         String defaultNamespaceReference = schema.getQNamePrefixToNamespaceMap().get(null);
@@ -401,7 +401,7 @@ public class XsdUtil {
 
     public static void setAsEnterpriseSchema( final XSDSchema schema ) {
         CoreArgCheck.isNotNull(schema);
-        XsdUtil.argCheckIsResolved(schema);
+        XsdUtil.CoreArgCheckIsResolved(schema);
 
         addNamespaceRef(schema,
                         XsdConstants.PREFIX_FOR_ENTERPRISE_DATATYPES_URI_2005,
@@ -411,7 +411,7 @@ public class XsdUtil {
 
     public static void unsetAsEnterpriseSchema( final XSDSchema schema ) {
         CoreArgCheck.isNotNull(schema);
-        XsdUtil.argCheckIsResolved(schema);
+        XsdUtil.CoreArgCheckIsResolved(schema);
 
         schema.getQNamePrefixToNamespaceMap().remove(XsdConstants.PREFIX_FOR_ENTERPRISE_DATATYPES_URI_2005);
         schema.eResource().setModified(true);
@@ -1987,7 +1987,7 @@ public class XsdUtil {
         }
     }
 
-    private static void argCheckIsResolved( EObject e ) {
+    private static void CoreArgCheckIsResolved( EObject e ) {
         if (e.eIsProxy()) {
             throw new IllegalArgumentException(
                                                XsdPlugin.Util.getString("XsdSimpleTypeDefinitionAspect.Error_EObject_can_not_be_a_proxy", e.toString())); //$NON-NLS-1$

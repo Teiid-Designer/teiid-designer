@@ -10,7 +10,6 @@ package org.teiid.query.ui;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
-import org.teiid.core.CoreConstants.Debug;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
@@ -24,7 +23,7 @@ import org.teiid.query.ui.actions.QueryActionService;
  * 
  * @since 8.0
  */
-public final class UiPlugin extends AbstractUiPlugin implements Debug, UiConstants {
+public final class UiPlugin extends AbstractUiPlugin implements UiConstants {
 
     // The shared instance.
     private static UiPlugin plugin;

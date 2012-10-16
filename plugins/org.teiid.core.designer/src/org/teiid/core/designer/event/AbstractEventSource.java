@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.teiid.core.CorePlugin;
+import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.util.CoreArgCheck;
 
 /**
@@ -23,8 +23,8 @@ import org.teiid.core.designer.util.CoreArgCheck;
  */
 abstract public class AbstractEventSource implements EventSource {
 
-    private static final String LISTENER_MAY_NOT_BE_NULL = CorePlugin.Util.getString("AbstractEventSource.The_event_listener_may_not_be_null"); //$NON-NLS-1$
-    private static final String EVENT_CLASS_MAY_NOT_BE_NULL = CorePlugin.Util.getString("AbstractEventSource.The_event_class_may_not_be_null"); //$NON-NLS-1$
+    private static final String LISTENER_MAY_NOT_BE_NULL = CoreModelerPlugin.Util.getString("AbstractEventSource.The_event_listener_may_not_be_null"); //$NON-NLS-1$
+    private static final String EVENT_CLASS_MAY_NOT_BE_NULL = CoreModelerPlugin.Util.getString("AbstractEventSource.The_event_class_may_not_be_null"); //$NON-NLS-1$
 
     Map eventClassListeners = new HashMap(5);
     List eventListeners = new ArrayList(5);

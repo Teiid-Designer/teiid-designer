@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 import org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier;
@@ -93,7 +93,7 @@ public class ScalarFunctionAspect extends AbstractFunctionAspect implements UmlC
                 result.append(sf.getName() );        
                 break;
             default :
-                throw new TeiidRuntimeException(FunctionPlugin.Util.getString("AbstractUmlClassifier.Invalid_showMask_for_getSignature____1",showMask) ); //$NON-NLS-1$
+                throw new TeiidDesignerRuntimeException(FunctionPlugin.Util.getString("AbstractUmlClassifier.Invalid_showMask_for_getSignature____1",showMask) ); //$NON-NLS-1$
         }
         return result.toString();
     }
