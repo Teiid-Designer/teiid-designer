@@ -10,14 +10,11 @@ package org.teiid.core.designer.util;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import org.teiid.core.designer.CoreModelerPlugin;
-import org.teiid.core.designer.util.PluginUtilImpl;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.teiid.core.designer.CoreModelerPlugin;
 
 
 /**
@@ -26,7 +23,7 @@ import junit.framework.TestSuite;
 public class TestPluginUtilImpl extends TestCase {
 
     public static final String PLUGIN_ID = CoreModelerPlugin.PLUGIN_ID;
-    public static final String I18N_NAME = "org.teiid.core.util.testResourceBundleUtil"; //$NON-NLS-1$
+    public static final String I18N_NAME = TestPluginUtilImpl.class.getPackage().getName() + ".testResourceBundleUtil"; //$NON-NLS-1$
 
     public static String KEY1 = "key1"; //$NON-NLS-1$
     public static String KEY2 = "key2"; //$NON-NLS-1$
