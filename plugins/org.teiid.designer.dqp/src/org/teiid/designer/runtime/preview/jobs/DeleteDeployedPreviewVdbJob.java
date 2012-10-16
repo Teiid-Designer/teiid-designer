@@ -83,7 +83,9 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
 
         // delete PVDB from server
         try {
-            teiidServer.getAdmin().undeployVdb(this.pvdbName, this.pvdbVersion);
+            if (teiidServer.getAdmin().getVdb(this.pvdbName) != null) {
+                teiidServer.getAdmin().undeployVdb(this.pvdbName, this.pvdbVersion);
+            }
         } catch (Exception e) {
             ++errors;
             deleteVdbErrorStatus = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.DeleteDeployedPreviewVdbJobError,
@@ -98,7 +100,9 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
         IStatus deleteDataSourceErrorStatus = null;
 
         try {
-            teiidServer.getAdmin().deleteDataSource(this.jndiName);
+            if (teiidServer.getAdmin().dataSourceExists(this.jndiName)) {
+                teiidServer.getAdmin().deleteDataSource(this.jndiName);
+            }
         } catch (Exception e) {
             ++errors;
             deleteDataSourceErrorStatus = new Status(IStatus.ERROR, PLUGIN_ID,
