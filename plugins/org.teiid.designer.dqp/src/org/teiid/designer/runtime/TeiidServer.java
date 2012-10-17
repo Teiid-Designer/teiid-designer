@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
 import org.teiid.adminapi.Admin;
-import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.AdminFactory;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.StringUtilities;
@@ -454,9 +453,6 @@ public class TeiidServer implements HostProvider {
 		        adminApi.close();
 		        this.admin = null;
 			}
-		} catch (AdminException ex) {
-			String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
-            return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
 		} catch (Exception ex) {
 			String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);

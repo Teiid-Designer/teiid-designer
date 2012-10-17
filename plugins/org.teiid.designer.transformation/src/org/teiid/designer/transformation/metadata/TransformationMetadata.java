@@ -20,7 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import org.teiid.api.exception.query.QueryMetadataException;
-import org.teiid.core.TeiidComponentException;
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.id.UUID;
@@ -28,7 +27,6 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.ModelType;
 import org.teiid.core.types.DataTypeManager;
-
 import org.teiid.designer.core.index.CompositeIndexSelector;
 import org.teiid.designer.core.index.IEntryResult;
 import org.teiid.designer.core.index.Index;

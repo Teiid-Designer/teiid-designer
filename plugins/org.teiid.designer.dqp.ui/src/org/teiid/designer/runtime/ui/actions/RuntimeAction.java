@@ -8,14 +8,11 @@
 package org.teiid.designer.runtime.ui.actions;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import java.util.List;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.teiid.adminapi.AdminComponentException;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidTranslator;
@@ -81,9 +78,6 @@ public abstract class RuntimeAction extends Action implements ISelectionChangedL
                 } else if (obj instanceof TeiidServer) {
                     try {
                         tempAdmin = ((TeiidServer)obj).getAdmin();
-                    } catch (AdminComponentException ace) {
-                        newAdmin = null;
-                        break;
                     } catch (Exception e) {
                         UTIL.log(e);
                         newAdmin = null;

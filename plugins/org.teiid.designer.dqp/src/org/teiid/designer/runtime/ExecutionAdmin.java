@@ -29,7 +29,6 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.adminapi.Admin;
-import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
@@ -424,7 +423,7 @@ public class ExecutionAdmin {
                     }
                     try {
                         admin.deploy(fileName, iStream);
-                    } catch (AdminException ex) {
+                    } catch (Exception ex) {
                         // Jar deployment failed
                         Util.log(IStatus.ERROR, ex, NLS.bind(Messages.JarDeploymentFailed, theFile.getPath()));
                     }
