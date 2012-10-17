@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -18,7 +19,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -64,8 +64,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.INewWizard;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.util.Base64;
-import org.teiid.core.util.ObjectConverterUtil;
+import org.teiid.core.designer.util.Base64;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.util.URLHelper;
@@ -143,6 +142,8 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	
 	//private static final String CONTENT_TYPE_XML = "application/xml"; //$NON-NLS-1$
 
+	private static final int DEFAULT_READING_SIZE = 8192;
+	
 	private static String getString(final String id) {
 		return Util.getString(I18N_PREFIX + id);
 	}
@@ -573,6 +574,27 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		}
 	}
 	
+	private int write(final OutputStream out, final InputStream is) throws IOException {
+	    byte[] l_buffer = new byte[DEFAULT_READING_SIZE];
+	    int writen = 0;
+        try {
+            int l_nbytes = 0;  // Number of bytes read
+            int readLength = l_buffer.length;
+            
+            while ((l_nbytes = is.read(l_buffer, 0, readLength)) != -1) {
+                out.write(l_buffer,0,l_nbytes); 
+                writen += l_nbytes;
+            }
+            return writen;
+        } finally {
+            try {
+                is.close();
+            } finally {
+                out.close();
+            }
+        }
+    }
+	
 	private File getXmlFileFromRestUrl(IConnectionProfile profile) {
 		Properties props = profile.getBaseProperties();
 		String endpoint = ConnectionInfoHelper.readEndPointProperty(props);
@@ -600,7 +622,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 			InputStream is = httpConn.getInputStream();
 			xmlFile = File.createTempFile(CoreStringUtil.createFileName(filePath),DOT_XML_LOWER);
 			FileOutputStream os = new FileOutputStream(xmlFile);
-			ObjectConverterUtil.write(os, is, -1);
+			write(os, is);
 			
 		} catch (MalformedURLException ex) {
 			throw new RuntimeException(ex);

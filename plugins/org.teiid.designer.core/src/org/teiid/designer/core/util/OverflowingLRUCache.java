@@ -10,7 +10,7 @@ package org.teiid.designer.core.util;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.teiid.core.util.LRUCache;
+import org.teiid.core.designer.util.LRUCache;
 
 /**
  *  The <code>OverflowingLRUCache</code> is an LRUCache which attempts

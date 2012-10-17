@@ -18,7 +18,7 @@ import java.util.Properties;
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.util.LRUCache;
+import org.teiid.core.designer.util.LRUCache;
 import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.metadata.runtime.ColumnRecord;
 import org.teiid.designer.metadata.runtime.ColumnSetRecord.ColumnSetRecordProperties;

@@ -7,7 +7,7 @@ import java.io.InputStream;
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.util.ObjectConverterUtil;
+import org.teiid.core.designer.util.FileUtil;
 
 
 /**
@@ -22,7 +22,7 @@ public class MetadataSourceUtil {
             return null;
         }
         try {
-            return ObjectConverterUtil.convertFileToString(f);
+            return FileUtil.readSafe(f);
         } catch (IOException e) {
             throw new TeiidDesignerException(e, "MetadataSourceUtil.ioExceptionConvertingFileToString");
         }

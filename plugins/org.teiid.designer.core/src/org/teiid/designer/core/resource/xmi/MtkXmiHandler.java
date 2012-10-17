@@ -45,7 +45,7 @@ import org.eclipse.xsd.XSDPackage;
 import org.teiid.core.designer.id.IDGenerator;
 import org.teiid.core.designer.id.InvalidIDException;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.util.ReflectionHelper;
+import org.teiid.core.designer.util.ReflectionHelper;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.container.ResourceFinder;

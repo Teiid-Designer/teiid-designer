@@ -36,7 +36,7 @@ import org.eclipse.wst.server.core.ServerEvent;
 import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.util.Base64;
+import org.teiid.core.designer.util.Base64;
 import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
