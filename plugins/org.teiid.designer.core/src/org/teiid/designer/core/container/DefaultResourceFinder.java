@@ -1105,8 +1105,8 @@ public class DefaultResourceFinder implements ResourceFinder {
     }
 
     // protected URI getAbsoluteLocation(final URI baseLocationUri, final String location) {
-    // Assertion.isNotNull(baseLocationUri);
-    // Assertion.isNotNull(location);
+    // CoreArgCheck.isNotNull(baseLocationUri);
+    // CoreArgCheck.isNotNull(location);
     //        
     // // If the base resource URI was created as a file URI then it's path is encoded so before we
     // // resolve the referenced resource we need to encode it's relative path
@@ -1115,8 +1115,8 @@ public class DefaultResourceFinder implements ResourceFinder {
     // }
     //   
     // protected URI getAbsoluteLocation(final URI baseLocationUri, final URI relativeLocationUri) {
-    // Assertion.isNotNull(baseLocationUri);
-    // Assertion.isNotNull(relativeLocationUri);
+    // CoreArgCheck.isNotNull(baseLocationUri);
+    // CoreArgCheck.isNotNull(relativeLocationUri);
     //        
     // URI locationUri = relativeLocationUri;
     // if (baseLocationUri.isHierarchical() && !baseLocationUri.isRelative() && locationUri.isRelative()) {

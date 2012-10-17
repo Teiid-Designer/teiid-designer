@@ -192,7 +192,7 @@ public abstract class CompositeLanguageObjectEditorModel extends AbstractLanguag
             if (newModel == null) {
                 // TODO: WE don't have a mode editor for some types like Scalar SubQuery, but we don't want to
                 // Throw up too many problem dialogs....
-                //                Assertion.isNotNull(newModel, Util.getString(PREFIX + "noModelFoundForLangObj", //$NON-NLS-1$
+                //                CoreArgCheck.isNotNull(newModel, Util.getString(PREFIX + "noModelFoundForLangObj", //$NON-NLS-1$
                 // new Object[] {langObj.getClass().getName()}));
                 return;
             }

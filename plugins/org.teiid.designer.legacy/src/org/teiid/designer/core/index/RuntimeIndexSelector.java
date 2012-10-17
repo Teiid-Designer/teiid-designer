@@ -25,8 +25,6 @@ import java.util.zip.ZipFile;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
-import org.teiid.core.util.Assertion;
-import org.teiid.designer.core.util.AssertionUtil;
 import org.teiid.designer.core.util.FileUtil;
 import org.teiid.designer.core.util.TempDirectory;
 import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;
@@ -81,7 +79,8 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
     public RuntimeIndexSelector( final String filePath ) {
         CoreArgCheck.isNotNull(filePath);
         this.vdbFile = new File(filePath);
-        Assertion.assertTrue(this.vdbFile.exists(), "No file/directory exists at the given location " + filePath); //$NON-NLS-1$
+        
+        CoreArgCheck.isTrue(this.vdbFile.exists(), "No file/directory exists at the given location " + filePath); //$NON-NLS-1$
         checkForValidFile();
     }
 
@@ -110,7 +109,7 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
 
     private void checkForValidFile() {
         if (this.vdbFile.isFile()) {
-            Assertion.assertTrue(checkValidType(this.vdbFile),
+            CoreArgCheck.isTrue(checkValidType(this.vdbFile),
                                  "Invalid file type, expected an archive file or an index file " + vdbFile); //$NON-NLS-1$
         }
     }
@@ -503,7 +502,7 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
                                        final String[] tokenReplacements ) {
         CoreArgCheck.isNotNull(tokens);
         CoreArgCheck.isNotNull(tokenReplacements);
-        AssertionUtil.isEqual(tokens.length, tokenReplacements.length);
+        CoreArgCheck.isEqual(tokens.length, tokenReplacements.length);
         String fileContents = getFileContentAsString(path);
         if (fileContents != null) {
             for (int i = 0; i < tokens.length; i++) {

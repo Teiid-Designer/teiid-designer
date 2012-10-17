@@ -24,7 +24,7 @@ package org.teiid.core.designer.id;
 
 import java.io.Serializable;
 import org.teiid.core.designer.CoreModelerPlugin;
-import org.teiid.core.util.Assertion;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 
 /**
@@ -82,8 +82,8 @@ public class UUID implements ObjectID, Serializable {
      * @return first part of the UUID as a long
      */
     public static long getPart1(ObjectID id) {
-    	Assertion.assertTrue((id instanceof UUID), UNPARSABLE_MESSAGE);
-    	
+        CoreArgCheck.isInstanceOf(UUID.class, id, UNPARSABLE_MESSAGE);
+
     	UUID uuid = (UUID)id;
 	    return uuid.uuid.getMostSignificantBits();
     }
@@ -93,22 +93,22 @@ public class UUID implements ObjectID, Serializable {
      * @return first part of the UUID as a long
      */
     public static long getPart2(ObjectID id) {
-    	Assertion.assertTrue((id instanceof UUID), UNPARSABLE_MESSAGE);
+        CoreArgCheck.isInstanceOf(UUID.class, id, UNPARSABLE_MESSAGE);
     	
     	UUID uuid = (UUID)id;
     	return uuid.uuid.getLeastSignificantBits();
     }
     
     public static int getVariant(ObjectID id ) {
-        Assertion.assertTrue((id instanceof UUID), NOT_UUID_MESSAGE);
-        
+        CoreArgCheck.isInstanceOf(UUID.class, id, NOT_UUID_MESSAGE);
+
         UUID uuid = (UUID)id;
         return uuid.uuid.variant();
     }
 
     public static int getVersion(ObjectID id ) {
-        Assertion.assertTrue((id instanceof UUID), NOT_UUID_MESSAGE);
-        
+        CoreArgCheck.isInstanceOf(UUID.class, id, NOT_UUID_MESSAGE);
+
         UUID uuid = (UUID)id;
         return uuid.uuid.version();
     }

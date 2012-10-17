@@ -18,10 +18,8 @@ import java.util.Properties;
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.util.Assertion;
 import org.teiid.core.util.LRUCache;
 import org.teiid.designer.core.index.IndexConstants;
-import org.teiid.designer.core.util.AssertionUtil;
 import org.teiid.designer.metadata.runtime.ColumnRecord;
 import org.teiid.designer.metadata.runtime.ColumnSetRecord.ColumnSetRecordProperties;
 import org.teiid.designer.metadata.runtime.ForeignKeyRecord.ForeignKeyRecordProperties;
@@ -743,7 +741,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
 
     private MetadataRecord getRecordByName( final String fullname,
                                             final char recordType ) {
-        AssertionUtil.isNotZeroLength(fullname);
+        CoreArgCheck.isNotZeroLength(fullname);
 
         // Check the cache for the identifier corresponding to this name ...
         Object id = this.nameToIdCache.get(getLookupKey(fullname, recordType));
@@ -757,14 +755,14 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
 
     private String getFullNameByPartialName( final String partialName,
                                              final char recordType ) {
-        AssertionUtil.isNotZeroLength(partialName);
+        CoreArgCheck.isNotZeroLength(partialName);
 
         // Check the cache for the identifier corresponding to this partialname ...
         return this.partialNameToFullNameCache.get(getLookupKey(partialName, recordType));
     }
 
     private MetadataRecord getRecordByID( final Object id ) {
-        Assertion.isNotNull(id);
+        CoreArgCheck.isNotNull(id);
         return this.idToRecordCache.get(id);
     }
 

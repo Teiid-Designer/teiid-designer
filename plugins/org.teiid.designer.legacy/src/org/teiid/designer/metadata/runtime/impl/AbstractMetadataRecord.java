@@ -15,7 +15,7 @@ import org.teiid.core.designer.id.UUID;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
-import org.teiid.core.util.Assertion;
+
 import org.teiid.core.util.EquivalenceUtil;
 import org.teiid.core.designer.HashCodeUtil;
 import org.teiid.designer.core.container.EObjectFinder;
@@ -238,7 +238,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
         if (eObject != null) {
             return eObject;
         }
-        Assertion.isNotNull(this.finder);
+        CoreArgCheck.isNotNull(this.finder);
         try {
             // get the Object ID given a UUID
             String uuid = getUUID();

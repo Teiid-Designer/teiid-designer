@@ -23,8 +23,7 @@
 package org.teiid.core.designer.id;
 
 import java.io.Serializable;
-
-import org.teiid.core.util.Assertion;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 
 /**
@@ -90,7 +89,7 @@ public class IntegerID implements ObjectID, Serializable {
     @Override
 	public int compareTo(Object obj) {
         IntegerID that = (IntegerID) obj;     // May throw ClassCastException
-        Assertion.isNotNull(obj);
+        CoreArgCheck.isNotNull(obj);
 
         long diff = this.id - that.id;
         if ( diff < 0 ) {

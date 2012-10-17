@@ -23,8 +23,7 @@
 package org.teiid.core.designer.id;
 
 import java.io.Serializable;
-
-import org.teiid.core.util.Assertion;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 
 /**
@@ -93,7 +92,8 @@ public class StringID implements ObjectID, Serializable {
     @Override
 	public int compareTo(Object obj) {
         StringID that = (StringID) obj;     // May throw ClassCastException
-        Assertion.isNotNull(obj);
+        CoreArgCheck.isNotNull(obj);
+        
         return this.id.compareTo(that.id);
     }
 

@@ -885,7 +885,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             // // if ( parentNode != null ) {
             // // // Find the existing(!) model object that corresponds to the parent
             // // parent = (RelationalEntity)nodesToModelObjects.get(parentNode);
-            // // Assertion.isNotNull(parent);
+            // // CoreArgCheck.isNotNull(parent);
             // // }
             // //
             // // // Create the real object ...

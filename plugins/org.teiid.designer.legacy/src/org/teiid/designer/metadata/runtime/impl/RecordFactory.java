@@ -14,8 +14,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.teiid.core.designer.id.UUID;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.util.Assertion;
 import org.teiid.designer.core.container.EObjectFinder;
 import org.teiid.designer.core.index.EntryResult;
 import org.teiid.designer.core.index.IEntryResult;
@@ -240,7 +240,7 @@ public class RecordFactory {
     public static IEntryResult joinEntryResults(final IEntryResult result, 
                                                 final IEntryResult[] continuationResults, 
                                                 final int blockSize) {
-        Assertion.isNotNull(result);
+        CoreArgCheck.isNotNull(result);
 
         // If the IEntryResult is not continued on another record, return the original
         char[] baseResult = result.getWord();
@@ -321,20 +321,20 @@ public class RecordFactory {
      * @param result
      */
     public static String extractUUIDString(final IEntryResult result) {
-        Assertion.isNotNull(result);
+        CoreArgCheck.isNotNull(result);
         
         char[] word = result.getWord();
         String baseStr = new String(word);
         int beginIndex = baseStr.indexOf(UUID.PROTOCOL);
         int endIndex   = word.length;
-        Assertion.assertTrue(beginIndex != -1);
+        CoreArgCheck.isNonNegative(beginIndex);
         for (int i = beginIndex; i < word.length; i++) {
             if (word[i] == IndexConstants.RECORD_STRING.RECORD_DELIMITER) {
                 endIndex = i;
                 break;
             }
         }
-        Assertion.assertTrue(beginIndex < endIndex);
+        CoreArgCheck.isTrue(beginIndex < endIndex, "begin index should be less than end index");
         return baseStr.substring(beginIndex,endIndex);
     }
 
@@ -1024,7 +1024,7 @@ public class RecordFactory {
      * @since 4.2
      */
     public static int getIndexVersion(final char[] record) {
-        Assertion.isNotNull(record);
+        CoreArgCheck.isNotNull(record);
         int endIndex   = record.length;
         int beginIndex = (endIndex - 6 > 0 ? endIndex - 6 : 1);
         int version    = NONVERSIONED_RECORD_INDEX_VERSION;

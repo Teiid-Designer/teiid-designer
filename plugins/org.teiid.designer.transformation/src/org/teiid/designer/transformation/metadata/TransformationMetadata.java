@@ -27,7 +27,6 @@ import org.teiid.core.designer.id.UUID;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.types.DataTypeManager;
-import org.teiid.core.util.Assertion;
 import org.teiid.designer.core.index.CompositeIndexSelector;
 import org.teiid.designer.core.index.IEntryResult;
 import org.teiid.designer.core.index.Index;
@@ -221,7 +220,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         // Query the index files
         final String groupName = tableRecord.getFullName();
         final String groupUUID = tableRecord.getUUID();
-        Assertion.isNotNull(groupUUID);
+        CoreArgCheck.isNotNull(groupUUID);
         final Collection results = findChildRecords(tableRecord, IndexConstants.RECORD_TYPE.COLUMN);
         if (results.isEmpty()) {
             throw new QueryMetadataException(
@@ -771,7 +770,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         TableRecord tableRecord = (TableRecord)groupID;
 
         final String groupUUID = tableRecord.getUUID();
-        Assertion.isNotNull(groupUUID);
+        CoreArgCheck.isNotNull(groupUUID);
 
         // get the indexIDs
         Collection indexIDs = tableRecord.getIndexIDs();
@@ -804,7 +803,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         TableRecord tableRecord = (TableRecord)groupID;
 
         final String groupUUID = tableRecord.getUUID();
-        Assertion.isNotNull(groupUUID);
+        CoreArgCheck.isNotNull(groupUUID);
         // Query the index files
         // find all unique keys
         return findChildRecords(tableRecord, IndexConstants.RECORD_TYPE.UNIQUE_KEY);
@@ -820,7 +819,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
 
         // Query the index files
         final String groupUUID = tableRecord.getUUID();
-        Assertion.isNotNull(groupUUID);
+        CoreArgCheck.isNotNull(groupUUID);
 
         return findChildRecords(tableRecord, IndexConstants.RECORD_TYPE.FOREIGN_KEY);
     }
@@ -849,7 +848,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
 
         // Query the index files
         final String groupUUID = tableRecord.getUUID();
-        Assertion.isNotNull(groupUUID);
+        CoreArgCheck.isNotNull(groupUUID);
         return findChildRecords(tableRecord, IndexConstants.RECORD_TYPE.ACCESS_PATTERN);
     }
 
@@ -898,7 +897,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
 
         // Get the table record for this key
         final String groupUUID = keyRecord.getParentUUID();
-        Assertion.isNotNull(groupUUID);
+        CoreArgCheck.isNotNull(groupUUID);
         final TableRecord tableRecord = (TableRecord)this.getGroupID(groupUUID);
 
         // Query the index files
@@ -929,7 +928,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
 
         // Get the table record for this key
         final String groupUUID = accessRecord.getParentUUID();
-        Assertion.isNotNull(groupUUID);
+        CoreArgCheck.isNotNull(groupUUID);
         final TableRecord tableRecord = (TableRecord)this.getGroupID(groupUUID);
 
         // Query the index files
@@ -1981,7 +1980,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         TableRecord tableRecord = (TableRecord)metadataID;
 
         final String groupUUID = tableRecord.getUUID();
-        Assertion.isNotNull(groupUUID);
+        CoreArgCheck.isNotNull(groupUUID);
 
         Collection pk;
         try {
