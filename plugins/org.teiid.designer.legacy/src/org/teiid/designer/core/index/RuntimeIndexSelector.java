@@ -22,12 +22,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.TempDirectory;
-import org.teiid.logging.LogManager;
 
 
 /**
@@ -411,7 +411,7 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
             // get an array of paths from the collection
             return (String[])filePaths.toArray(new String[filePaths.size()]);
         } catch (IOException e) {
-            LogManager.logWarning(RuntimeMetadataPlugin.PLUGIN_ID, e, e.getMessage());
+            CoreModelerPlugin.Util.log(e);
         }
         return super.getFilePaths();
     }
@@ -448,7 +448,7 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
                 // return contents of the file as inputstream
                 return new FileInputStream(file);
             } catch (IOException e) {
-                LogManager.logWarning(RuntimeMetadataPlugin.PLUGIN_ID, e, e.getMessage());
+                CoreModelerPlugin.Util.log(e);
             }
         }
         return null;

@@ -8,14 +8,12 @@
 package org.teiid.designer.ddl;
 
 import java.io.OutputStream;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspace;
 import org.teiid.designer.core.workspace.ModelWorkspaceSelections;
-import org.teiid.logging.Logger;
 
 /**
  * DdlWriter
@@ -23,21 +21,6 @@ import org.teiid.logging.Logger;
  * @since 8.0
  */
 public interface DdlWriter {
-
-    /**
-     * Get the logger that this writer is using.
-     * 
-     * @return the logger; never null, but may be a {@link org.teiid.designer.core.log.NullLogger NullLogger} if there is no logging.
-     */
-    public Logger getLogger();
-
-    /**
-     * Set the logger that this writer should use.
-     * 
-     * @param logger the new logger; may be null or a {@link org.teiid.designer.core.log.NullLogger NullLogger} if there is to be no
-     *        logging.
-     */
-    public void setLogger( Logger logger );
 
     /**
      * Get the options that this writer is currently using

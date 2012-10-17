@@ -13,10 +13,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -30,7 +28,6 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.common.xml.JdomHelper;
 import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.log.NullLogger;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -38,7 +35,6 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceSelections;
 import org.teiid.designer.core.xslt.Style;
 import org.teiid.designer.core.xslt.XsltTransform;
-import org.teiid.logging.Logger;
 
 
 /**
@@ -60,9 +56,6 @@ public class DdlWriterImpl implements DdlWriter {
     public static final int TRANSFORMER_CONFIGURATION_EXCEPTION = 4010;
     public static final int ERROR_COMPUTING_RESOURCES_TO_BE_EXPORTED = 4011;
 
-    /** The logger; never null */
-    private Logger logger;
-
     /** The options; never null */
     private final DdlOptions options;
 
@@ -71,31 +64,7 @@ public class DdlWriterImpl implements DdlWriter {
      */
     public DdlWriterImpl() {
         super();
-        this.logger = new NullLogger();
         this.options = new DdlOptionsImpl();
-    }
-
-    /**
-     * Get the logger that this writer is using.
-     * 
-     * @return the logger; never null, but may be a {@link org.teiid.designer.core.log.NullLogger NullLogger} if there is no logging.
-     * @see DdlWriter#getLogger()
-     */
-    @Override
-	public Logger getLogger() {
-        return logger;
-    }
-
-    /**
-     * Set the logger that this writer should use.
-     * 
-     * @param logger the new logger; may be null or a {@link org.teiid.designer.core.log.NullLogger NullLogger} if there is to be no
-     *        logging.
-     * @see DdlWriter#setLogger(Logger)
-     */
-    @Override
-	public void setLogger( final Logger logger ) {
-        this.logger = logger != null ? logger : new NullLogger();
     }
 
     /**

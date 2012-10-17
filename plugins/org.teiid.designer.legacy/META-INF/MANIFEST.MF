@@ -9,7 +9,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: teiid_embedded_query;bundle-version="[8.0.0,9.0.0)",
  org.jdom;bundle-version="[1.1.1,2.0.0)",
  org.teiid.designer.modeshape;bundle-version="[8.0.0,9.0.0)",
- org.teiid.core.designer;bundle-version="[8.0.0,9.0.0)"
+ org.teiid.core.designer;bundle-version="[8.0.0,9.0.0)",
+ org.eclipse.core.runtime;bundle-version="3.8.0"
 Export-Package: 
  org.teiid.designer.common.namedobject,
  org.teiid.designer.common.util,
@@ -19,7 +20,6 @@ Export-Package:
  org.teiid.designer.common.xsd,
  org.teiid.designer.core.container,
  org.teiid.designer.core.index,
- org.teiid.designer.core.log,
  org.teiid.designer.core.types,
  org.teiid.designer.core.workspace,
  org.teiid.designer.metadata.runtime,

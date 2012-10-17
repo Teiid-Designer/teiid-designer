@@ -10,20 +10,18 @@ package org.teiid.designer.metadata.runtime.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.teiid.core.designer.CoreModelerPlugin;
+import org.teiid.core.designer.HashCodeUtil;
 import org.teiid.core.designer.id.ObjectID;
 import org.teiid.core.designer.id.UUID;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.designer.util.FileUtils;
-
 import org.teiid.core.designer.util.EquivalenceUtil;
-import org.teiid.core.designer.HashCodeUtil;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.core.container.EObjectFinder;
 import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.metadata.runtime.MetadataRecord;
-import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;
-import org.teiid.logging.LogManager;
 
 /**
  * AbstractMetadataRecord
@@ -247,7 +245,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
             // Return the EObject instance found in the ModelContainer ...
             return this.finder.find(objID);
         } catch (Exception e) {
-            LogManager.logWarning(RuntimeMetadataPlugin.PLUGIN_ID, e, e.getMessage());
+            CoreModelerPlugin.Util.log(e);
         }
         return null;
     }

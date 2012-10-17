@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -34,6 +33,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.util.XSDResourceImpl;
+import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
@@ -59,7 +59,6 @@ import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;
 import org.teiid.designer.metamodels.core.CoreMetamodelPlugin;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.core.extension.ExtensionPackage;
-import org.teiid.logging.LogManager;
 
 
 /**
@@ -580,7 +579,7 @@ public class ModelUtil {
                 if (cache != null) cache.setXmiHeaderToCache(resource, header);
                 return header;
             } catch (final TeiidDesignerException e) {
-                LogManager.logWarning(RuntimeMetadataPlugin.PLUGIN_ID, e, e.getMessage());
+                CoreModelerPlugin.Util.log(e);
             } catch (final IllegalArgumentException iae) {
                 // Swallowing this exception because we're doing all three checks that would produce it.
                 // If this exception is caught, it's because the files really were closed/deleted in another thread and this

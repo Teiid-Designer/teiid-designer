@@ -9,10 +9,8 @@ package org.teiid.designer.modelgenerator.salesforce.connection.impl;
 
 import java.net.URL;
 import javax.xml.ws.BindingProvider;
-
+import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.designer.modelgenerator.salesforce.connection.SalesforceConnection;
-import org.teiid.logging.LogConstants;
-import org.teiid.logging.LogManager;
 import com.sforce.soap.partner.CallOptions;
 import com.sforce.soap.partner.InvalidIdFault;
 import com.sforce.soap.partner.LoginFault;
@@ -85,7 +83,6 @@ public class Connection implements SalesforceConnection {
             } catch (com.sforce.soap.partner.UnexpectedErrorFault e) {
                 throw new Exception(e);
             }
-            LogManager.logTrace(LogConstants.CTX_CONNECTOR, "Login was successful for username " + username); //$NON-NLS-1$
 
             // Reset the SOAP endpoint to the returned server URL
             ((BindingProvider)sfSoap).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
@@ -112,7 +109,7 @@ public class Connection implements SalesforceConnection {
             try {
                 sfSoap.getServerTimestamp();
             } catch (Throwable t) {
-                LogManager.logTrace(LogConstants.CTX_CONNECTOR, "Caught Throwable in isAlive", t); //$NON-NLS-1$
+                CoreModelerPlugin.Util.log(t);
                 result = false;
             }
         }

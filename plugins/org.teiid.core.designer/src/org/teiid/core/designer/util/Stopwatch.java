@@ -9,9 +9,8 @@
 package org.teiid.core.designer.util;
 
 import java.io.Serializable;
+import org.eclipse.core.runtime.IStatus;
 import org.teiid.core.designer.CoreModelerPlugin;
-import org.teiid.core.designer.CoreModelerPlugin;
-import org.teiid.logging.MessageLevel;
 
 /**
  * @since 8.0
@@ -229,7 +228,7 @@ public class Stopwatch implements Serializable {
      */
     public static void logTimedMessage( String message,
                                         long time ) {
-        CoreModelerPlugin.Util.log(MessageLevel.INFO, getTimeString(time) + message);
+        CoreModelerPlugin.Util.log(IStatus.INFO, getTimeString(time) + message);
     }
 
     /**
