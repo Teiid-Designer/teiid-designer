@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import org.teiid.core.CorePlugin;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
@@ -99,11 +98,11 @@ public class FileUtils {
                                                  final String extension,
                                                  final boolean force) {
         if (name == null) {
-            final String msg = CorePlugin.Util.getString("FileUtils.The_name_of_the_file_may_not_be_null"); //$NON-NLS-1$
+            final String msg = CoreModelerPlugin.Util.getString("FileUtils.The_name_of_the_file_may_not_be_null"); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
         if (extension == null) {
-            final String msg = CorePlugin.Util.getString("FileUtils.The_file_extension_may_not_be_null"); //$NON-NLS-1$
+            final String msg = CoreModelerPlugin.Util.getString("FileUtils.The_file_extension_may_not_be_null"); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
         if (name.endsWith(extension)) {
