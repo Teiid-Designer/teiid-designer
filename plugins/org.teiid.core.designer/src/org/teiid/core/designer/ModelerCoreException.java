@@ -15,9 +15,8 @@ import java.io.Serializable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.teiid.core.designer.TeiidDesignerException;
-import org.teiid.core.util.EquivalenceUtil;
-import org.teiid.core.util.ExternalizeUtil;
+import org.teiid.core.designer.util.EquivalenceUtil;
+import org.teiid.core.designer.util.ExternalizeUtil;
 
 /**
  * @since 8.0

@@ -13,7 +13,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.teiid.core.util.EquivalenceUtil;
+import org.teiid.core.designer.util.EquivalenceUtil;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.ui.common.dialog.FileUiUtils;
 
