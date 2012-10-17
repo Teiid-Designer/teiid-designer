@@ -8,7 +8,7 @@
 
 package org.teiid.designer.metadata.runtime.impl;
 
-import org.teiid.designer.core.util.ModelType;
+import org.teiid.core.designer.util.ModelType;
 import org.teiid.designer.metadata.runtime.ModelRecord;
 
 /**

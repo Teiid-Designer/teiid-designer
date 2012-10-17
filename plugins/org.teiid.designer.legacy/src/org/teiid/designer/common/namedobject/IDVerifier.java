@@ -10,9 +10,7 @@ package org.teiid.designer.common.namedobject;
 
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
-
 import org.teiid.designer.common.util.ErrorMessageKeys;
-import org.teiid.designer.common.util.I18nUtil;
 
 /**
  * This class contains several helper methods that check the validity of BaseID instances.
@@ -81,7 +79,7 @@ public class IDVerifier {
      */
     public static boolean isValid( BaseID id ) {
         if (id == null) {
-            throw new IllegalArgumentException(I18nUtil.getString(ErrorMessageKeys.NAMEDOBJECT_ERR_0006));
+            throw new IllegalArgumentException(ErrorMessageKeys.NAMEDOBJECT_ERR_0006);
         }
         return IDVerifier.performCheck(id.getFullName()) == NONE;
     }
@@ -98,7 +96,7 @@ public class IDVerifier {
      */
     public static int performCheck( BaseID id ) {
         if (id == null) {
-            throw new IllegalArgumentException(I18nUtil.getString(ErrorMessageKeys.NAMEDOBJECT_ERR_0007));
+            throw new IllegalArgumentException(ErrorMessageKeys.NAMEDOBJECT_ERR_0007);
         }
         return IDVerifier.performCheck(id.getFullName());
     }

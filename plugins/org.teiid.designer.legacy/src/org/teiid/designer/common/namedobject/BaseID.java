@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.List;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.common.util.ErrorMessageKeys;
-import org.teiid.designer.common.util.I18nUtil;
 
 /**
  * The BaseID class serves as the abstract base class for identifiers of objects. This class provides the method signatures common
@@ -80,10 +79,10 @@ public abstract class BaseID implements Cloneable, Comparable, Serializable {
     protected BaseID( String fullName,
                       int checkLevel ) {
         if (fullName == null) {
-            throw new IllegalArgumentException(I18nUtil.getString(ErrorMessageKeys.NAMEDOBJECT_ERR_0001));
+            throw new IllegalArgumentException(ErrorMessageKeys.NAMEDOBJECT_ERR_0001);
         }
         if (fullName.trim().length() == 0) {
-            throw new IllegalArgumentException(I18nUtil.getString(ErrorMessageKeys.NAMEDOBJECT_ERR_0002));
+            throw new IllegalArgumentException(ErrorMessageKeys.NAMEDOBJECT_ERR_0002);
         }
         this.fullName = fullName;
         this.updateHashCode();
@@ -210,7 +209,7 @@ public abstract class BaseID implements Cloneable, Comparable, Serializable {
 	public int compareTo( Object obj ) {
         BaseID that = (BaseID)obj; // May throw ClassCastException
         if (obj == null) {
-            throw new IllegalArgumentException(I18nUtil.getString(ErrorMessageKeys.NAMEDOBJECT_ERR_0003));
+            throw new IllegalArgumentException(ErrorMessageKeys.NAMEDOBJECT_ERR_0003);
         }
 
         int diff = this.hashCode() - that.hashCode();

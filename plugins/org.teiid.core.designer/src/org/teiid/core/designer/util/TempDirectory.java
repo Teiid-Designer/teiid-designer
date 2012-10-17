@@ -6,14 +6,12 @@
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
 
-package org.teiid.designer.core.util;
+package org.teiid.core.designer.util;
 
 import java.io.File;
 import java.util.Random;
-
-import org.teiid.core.designer.util.FileUtils;
-import org.teiid.designer.common.util.LogConstants;
-import org.teiid.logging.LogManager;
+import org.eclipse.core.runtime.IStatus;
+import org.teiid.core.designer.CoreModelerPlugin;
 
 /**
  * Creates and deletes temporary directories.
@@ -97,7 +95,7 @@ public class TempDirectory {
 
         TempDirectory tempDirectory = new TempDirectory(absolutePath, System.currentTimeMillis(), RANDOM.nextLong());
         while (new File(tempDirectory.getPath()).exists()) {
-            LogManager.logInfo(LogConstants.CTX_CONFIG,
+            CoreModelerPlugin.Util.log(IStatus.INFO,
                                "Temporary Folder " + tempDirectory.getPath() + " already exists; Creating new folder..."); //$NON-NLS-1$ //$NON-NLS-2$
             try {
                 Thread.sleep(10);

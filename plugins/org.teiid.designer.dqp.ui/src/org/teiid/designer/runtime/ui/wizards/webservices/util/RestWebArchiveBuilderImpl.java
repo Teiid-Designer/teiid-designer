@@ -41,7 +41,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
-import org.teiid.designer.core.util.TempDirectory;
+import org.teiid.core.designer.util.TempDirectory;
 import org.teiid.designer.webservice.WebServicePlugin;
 import org.teiid.designer.webservice.util.AntTasks;
 

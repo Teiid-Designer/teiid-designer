@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
-import org.teiid.designer.core.util.CharOperation;
+import org.teiid.core.designer.util.CharOperation;
 
 
 /**

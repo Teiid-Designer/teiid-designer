@@ -10,7 +10,7 @@
  *     MetaMatrix, Inc - repackaging and updates for use as a metadata store
  *******************************************************************************/
 
-package org.teiid.designer.core.util;
+package org.teiid.core.designer.util;
 
 /**
  * This class is a collection of helper methods to manipulate char arrays.

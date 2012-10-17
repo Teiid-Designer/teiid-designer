@@ -53,8 +53,8 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.I18n;
 import org.teiid.core.designer.exception.EmptyArgumentException;
+import org.teiid.core.designer.util.FileUtil;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.util.FileUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -416,7 +416,8 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                 generateModelName = true;
             }
             try {
-                ddlFileContentsBox.setText(new FileUtil(ddlFileName).readSafe());
+                File ddlFile = new File(ddlFileName);
+                ddlFileContentsBox.setText(FileUtil.readSafe(ddlFile));
             } catch (final IOException error) {
                 throw CoreModelerPlugin.toRuntimeException(error);
             }

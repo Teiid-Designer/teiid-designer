@@ -24,10 +24,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.FileUtil;
 import org.teiid.core.designer.util.FileUtils;
-import org.teiid.designer.core.util.FileUtil;
-import org.teiid.designer.core.util.TempDirectory;
-import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;
+import org.teiid.core.designer.util.TempDirectory;
 import org.teiid.logging.LogManager;
 
 
@@ -479,9 +478,8 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
         File file = new File(getIndexDirectoryPath(), path);
         if (file.exists()) {
             // Read the contents of a file into a string
-            FileUtil fileUtil = new FileUtil(file.getPath());
             try {
-                String fileContent = fileUtil.readSafe();
+                String fileContent = FileUtil.readSafe(file);
                 this.fileSize = fileContent.length();
                 return fileContent;
             } catch (Exception e) {

@@ -6,7 +6,7 @@
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
 
-package org.teiid.designer.core.util;
+package org.teiid.core.designer.util;
 
 import java.util.ArrayList;
 import java.util.Iterator;

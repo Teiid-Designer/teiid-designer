@@ -7,9 +7,15 @@
  */
 package org.teiid.core.designer.util;
 
+import java.io.BufferedReader;
 import java.io.File;
-
-import org.teiid.core.util.FileUtils.Constants;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringWriter;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
+import org.teiid.core.designer.util.FileUtils.Constants;
 
 /**
  * @since 8.0
@@ -103,6 +109,64 @@ public final class FileUtil {
         }
 
         return result;
+    }
+    
+    /**
+     * Read a file, extract its contents, ensuring the file reader is closed.
+     *
+     * @param file 
+     * 
+     * @return contents of file as a {@link String}
+     * 
+     * @throws FileNotFoundException
+     */
+    public static String readSafe(File file) throws FileNotFoundException {
+        String result;
+        FileReader reader = null;
+        try {
+            reader = new FileReader(file);
+            result = read(reader);
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (Exception e) {                
+                }
+            }
+        }
+                
+        return result;
+    }
+    
+    /**
+     * Read the given {@link Reader} and return its contents
+     * as a {@link String}
+     * 
+     * @param reader
+     * 
+     * @return contents as a {@link String}
+     */
+    public static String read(Reader reader) {
+        StringWriter writer = new StringWriter();
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(reader);
+            while (bufferedReader.ready()) {
+                String line = bufferedReader.readLine();
+                writer.write(line);
+                writer.write(CoreStringUtil.LINE_SEPARATOR);
+            }
+        } catch (IOException e) {
+            throw new TeiidDesignerRuntimeException(e);
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (Exception e) {
+                }
+            }
+        }
+        return writer.toString();
     }
 
     /**

@@ -21,7 +21,6 @@ Export-Package:
  org.teiid.designer.core.index,
  org.teiid.designer.core.log,
  org.teiid.designer.core.types,
- org.teiid.designer.core.util,
  org.teiid.designer.core.workspace,
  org.teiid.designer.metadata.runtime,
  org.teiid.designer.metadata.runtime.api,

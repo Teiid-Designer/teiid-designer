@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import org.teiid.designer.metadata.runtime.ColumnRecord;
-import org.teiid.designer.core.util.ColumnRecordComparator;
+import org.teiid.designer.metadata.runtime.ColumnRecordComparator;
 import org.teiid.designer.metadata.runtime.impl.ColumnRecordImpl;
 
 import junit.extensions.TestSetup;

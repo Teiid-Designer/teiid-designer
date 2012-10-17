@@ -9,10 +9,8 @@
 package org.teiid.designer.common.namedobject;
 
 import java.io.Serializable;
-
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.designer.common.util.ErrorMessageKeys;
-import org.teiid.designer.common.util.I18nUtil;
 
 /**
  * This class represents the basic implementation of MetadataObject, which is the foundation for all classes that are used to
@@ -63,7 +61,7 @@ public abstract class BasicObject implements BaseObject, Serializable {
      */
     protected BasicObject( BaseID id ) {
         if (id == null) {
-            throw new IllegalArgumentException(I18nUtil.getString(ErrorMessageKeys.NAMEDOBJECT_ERR_0004));
+            throw new IllegalArgumentException(ErrorMessageKeys.NAMEDOBJECT_ERR_0004);
         }
         this.id = id;
     }
@@ -181,7 +179,7 @@ public abstract class BasicObject implements BaseObject, Serializable {
         }
 
         // Otherwise not comparable ...
-        throw new ClassCastException(I18nUtil.getString(ErrorMessageKeys.NAMEDOBJECT_ERR_0005, obj.getClass(), this.getClass()));
+        throw new ClassCastException(ErrorMessageKeys.NAMEDOBJECT_ERR_0005);
     }
 
     /**

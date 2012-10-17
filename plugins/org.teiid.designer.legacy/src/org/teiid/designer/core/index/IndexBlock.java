@@ -13,7 +13,7 @@ package org.teiid.designer.core.index;
 
 import java.util.Arrays;
 
-import org.teiid.designer.core.util.CharOperation;
+import org.teiid.core.designer.util.CharOperation;
 
 /**
  * An indexBlock stores wordEntries.

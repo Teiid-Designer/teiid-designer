@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.teiid.core.designer.util.CharOperation;
 import org.teiid.core.util.LRUCache;
-import org.teiid.designer.core.util.CharOperation;
 
 /**
  * This input is used for reading indexes saved using a BlocksIndexOutput.

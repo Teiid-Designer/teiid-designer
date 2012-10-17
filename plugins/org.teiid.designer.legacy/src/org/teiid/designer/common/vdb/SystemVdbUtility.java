@@ -8,7 +8,7 @@
 
 package org.teiid.designer.common.vdb;
 
-import org.teiid.designer.core.util.ResourceNameUtil;
+import org.teiid.core.designer.util.ResourceNameUtil;
 
 
 

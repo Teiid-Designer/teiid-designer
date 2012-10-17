@@ -6,12 +6,11 @@
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
 
-package org.teiid.designer.core.util;
+package org.teiid.designer.metadata.runtime;
 
 import java.io.Serializable;
 import java.util.Comparator;
 
-import org.teiid.designer.metadata.runtime.ColumnRecord;
 
 /**
  *
