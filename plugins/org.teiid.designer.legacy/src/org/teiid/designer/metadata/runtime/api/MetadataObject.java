@@ -10,8 +10,6 @@ package org.teiid.designer.metadata.runtime.api;
 
 import java.util.Properties;
 
-import org.teiid.query.mapping.xml.MappingNodeConstants.Defaults;
-
 
 /**
  * @since 8.0
@@ -77,8 +75,7 @@ public interface MetadataObject extends java.io.Serializable{
      * Return a deep cloned instance of this object.  Subclasses must override
      * this method.
      * @return the object that is the clone of this instance.
-     * @throws CloneNotSupportedException if this object cannot be cloned (i.e., only objects in
-     * {@link Defaults Defaults} cannot be cloned).
+     * @throws CloneNotSupportedException if this object cannot be cloned
      */
     public Object clone() throws CloneNotSupportedException;
 
