@@ -35,8 +35,8 @@ import org.eclipse.wst.server.core.IServerListener;
 import org.eclipse.wst.server.core.ServerEvent;
 import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
-import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.Base64;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
@@ -44,7 +44,6 @@ import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory.ServerOptions;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.PreviewManager;
-import org.teiid.net.TeiidURL;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -785,6 +784,7 @@ public final class TeiidServerManager implements EventManager {
                             }
 
                             TeiidURL jdbcURL = new TeiidURL(urlNode.getNodeValue());
+                            
                             Node userNode = serverAttributeMap.getNamedItem(USER_ATTR);
                             Node passwordNode = serverAttributeMap.getNamedItem(PASSWORD_ATTR);
                             String pswd = ((passwordNode == null) ? null : new String(Base64.decode(passwordNode.getNodeValue()),
