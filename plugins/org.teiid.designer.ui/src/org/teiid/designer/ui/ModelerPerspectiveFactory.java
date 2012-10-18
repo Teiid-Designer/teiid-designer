@@ -20,8 +20,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.teiid.designer.ui.UiConstants.Extensions;
+import org.eclipse.ui.navigator.resources.ProjectExplorer;
 import org.teiid.designer.ui.UiConstants.ExtensionPoints.ModelerPerspectiveContributorExtension;
+import org.teiid.designer.ui.UiConstants.Extensions;
 import org.teiid.designer.ui.util.IModelerPerspectiveContributor;
 import org.teiid.designer.ui.util.PerspectiveObject;
 
@@ -73,7 +74,7 @@ implements Extensions, IPerspectiveFactory, ModelerPerspectiveContributorExtensi
     @Override
 	public void createInitialLayout(IPageLayout theLayout) {
         theLayout.addPerspectiveShortcut(PERSPECTIVE);
-
+        
         String editorArea = theLayout.getEditorArea();
 
         //
@@ -85,6 +86,8 @@ implements Extensions, IPerspectiveFactory, ModelerPerspectiveContributorExtensi
                                                          editorArea);
         addView(Explorer.VIEW, topLeftFolder, theLayout);
         addView(OUTLINE_VIEW, topLeftFolder, theLayout);
+        addView(ProjectExplorer.VIEW_ID, topLeftFolder, theLayout);
+        
         topLeftFolder.addPlaceholder(DATATYPE_HIERARCHY_VIEW);
         topLeftFolder.addPlaceholder(METAMODELS_VIEW);
 

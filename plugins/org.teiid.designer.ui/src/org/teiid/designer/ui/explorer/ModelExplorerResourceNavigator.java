@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
@@ -66,6 +65,7 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -1158,7 +1158,26 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
      */
     @Override
     protected void updateActionBars( IStructuredSelection selection ) {
+        /* 
+         * Workaround that addresses a problem with the parent navigator's paste action
+         * which calls the system clipboard.
+         * 
+         * Only update selection if we have a visible workbench window as only then will
+         * the system clipboard be ready.
+         */
+        IWorkbench workbench = PlatformUI.getWorkbench();
+        if (workbench == null)
+            return;
+        
+        IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+        if (workbenchWindow == null)
+            return;
+        
+        if (workbenchWindow.getShell() == null || ! workbenchWindow.getShell().isVisible())
+            return;
+        
         super.updateActionBars(selection);
+        
         if (renameAction != null) {
             renameAction.selectionChanged(selection);
         }

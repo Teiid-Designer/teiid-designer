@@ -20,7 +20,10 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.CopyProjectOperation;
 import org.eclipse.ui.actions.SelectionListenerAction;
 import org.eclipse.ui.part.ResourceTransfer;
@@ -382,8 +385,29 @@ public class PasteInResourceAction extends ModelObjectAction implements UiConsta
          */
         @Override
         protected boolean updateSelection( IStructuredSelection selection ) {
-            if (!super.updateSelection(selection)) return false;
-
+            
+            /* 
+             * Only update selection if we have a visible workbench window as only then will
+             * the system clipboard be ready.
+             */
+            IWorkbench workbench = PlatformUI.getWorkbench();
+            if (workbench == null)
+                return false;
+            
+            IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+            if (workbenchWindow == null)
+                return false;
+            
+            if (workbenchWindow.getShell() == null || ! workbenchWindow.getShell().isVisible())
+                return false;
+            
+            /*
+             * If selection is empty then bale out since the paste has nothing to
+             * aim at anyway
+             */
+            if (selection == null || selection.isEmpty())
+                return false;
+            
             try {
                 // clipboard must have resources or files
                 ResourceTransfer resTransfer = ResourceTransfer.getInstance();
