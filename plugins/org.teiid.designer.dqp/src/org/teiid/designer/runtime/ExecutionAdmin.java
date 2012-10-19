@@ -40,7 +40,6 @@ import org.teiid.adminapi.VDB;
 import org.teiid.adminapi.impl.VDBMetaData;
 import org.teiid.adminapi.impl.VDBMetadataParser;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
@@ -584,7 +583,7 @@ public class ExecutionAdmin {
 	        }
 	    }
         
-        this.admin.undeploy(name + ModelerCore.VDB_FILE_EXTENSION);
+        this.admin.undeploy(appendVdbExtension(name));
         vdb.save(null);
         ptargetvdbToMerge.refreshLocal(IResource.DEPTH_INFINITE, null);
         deployVdb(vdb.getFile()); 	
@@ -686,7 +685,7 @@ public class ExecutionAdmin {
 
     public void undeployVdb( String vdbName,
                              int vdbVersion ) throws Exception {
-        this.admin.undeploy(vdbName + ModelerCore.VDB_FILE_EXTENSION);
+        this.admin.undeploy(appendVdbExtension(vdbName));
         VDB vdb = getVdb(vdbName);
 
         refreshVDBs();
@@ -706,11 +705,25 @@ public class ExecutionAdmin {
         CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
 
         /* Seems that full name of vdb is actually the name.vdb */
-        admin.undeploy(vdb.getName() + ModelerCore.VDB_FILE_EXTENSION);
+        admin.undeploy(appendVdbExtension(vdb.getName()));
 
         refreshVDBs();
 
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUnDeployVDBEvent(vdb));
+    }
+    
+    /**
+     * Append the vdb file extension to the vdb name 
+     * if not already appended.
+     * 
+     * @param vdbName
+     * @return
+     */
+    private String appendVdbExtension(String vdbName) {
+        if (vdbName.endsWith(Vdb.FILE_EXTENSION))
+            return vdbName;
+        
+        return vdbName + Vdb.FILE_EXTENSION;
     }
 
 }
