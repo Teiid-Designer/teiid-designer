@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ListenerList;
@@ -626,6 +625,9 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     
 
     void updateWidgetsState() {
+        if (getControl() == null)
+            return;
+        
     	this.teiidProfileGroup.setVisible(isTeiidConnection());
     	boolean doSetSelected = !this.isVdbSourceModelCheckBox.isVisible();
     	this.isVdbSourceModelCheckBox.setVisible(isTeiidConnection());
