@@ -232,6 +232,7 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants, IExecu
                 if (!viewer.getTree().isDisposed()) {
                     
                     viewer.refresh();
+                    viewer.expandToLevel(3);
 
                     // Get Selected Index
                     if (viewer.getTree().getSelectionCount() == 1) {

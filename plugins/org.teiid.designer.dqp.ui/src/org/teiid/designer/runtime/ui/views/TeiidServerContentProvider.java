@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContainerNode;
 import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContentNode;
@@ -88,8 +89,12 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
                             }
                             for (Object node : updated) {
                                 pendingUpdates.remove(node);
-                                if (viewer instanceof StructuredViewer)
+                                if (viewer instanceof StructuredViewer) {
                                     ((StructuredViewer) viewer).refresh(node);
+                                    if (node instanceof TeiidResourceNode && viewer instanceof CommonViewer) {
+                                        ((CommonViewer) viewer).expandToLevel(node, 3);
+                                    }
+                                }
                                 else
                                     viewer.refresh();
                             }

@@ -203,6 +203,8 @@ public class TeiidServer implements HostProvider {
             this.admin.disconnect();
             this.admin = null;
         }
+        
+        notifyRefresh();
     }
 
     @Override

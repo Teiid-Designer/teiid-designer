@@ -2,9 +2,8 @@ package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -17,28 +16,18 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
  */
 public class DisconnectFromServerAction extends BaseSelectionListenerAction {
 
-    /**
-     * The server view tree viewer.
-     */
-    private final TreeViewer viewer;
+    private final Display display;
 
     /**
-     * @param viewer the server view tree viewer
+     * @param display 
      */
-    public DisconnectFromServerAction( TreeViewer viewer ) {
+    public DisconnectFromServerAction( Display display ) {
         super(UTIL.getString("serverDisconnectActionText")); //$NON-NLS-1$
         setToolTipText(UTIL.getString("serverDisconnectActionToolTip")); //$NON-NLS-1$
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SERVER_ERROR_ICON));
         setEnabled(false);
 
-        this.viewer = viewer;
-    }
-
-    /**
-     * @return the view's tree viewer
-     */
-    StructuredViewer getViewer() {
-        return this.viewer;
+        this.display = display;
     }
 
     /**
@@ -50,7 +39,7 @@ public class DisconnectFromServerAction extends BaseSelectionListenerAction {
     public void run() {
         IStructuredSelection sselection = getStructuredSelection();
         final TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(sselection);
-        BusyIndicator.showWhile(getViewer().getControl().getDisplay(), new Runnable() {
+        BusyIndicator.showWhile(display, new Runnable() {
 
             @Override
             public void run() {
@@ -61,8 +50,6 @@ public class DisconnectFromServerAction extends BaseSelectionListenerAction {
                     UTIL.log(e);
                     String msg = UTIL.getString("serverReconnectErrorMsg", teiidServer); //$NON-NLS-1$
                     WidgetUtil.showError(msg);
-                } finally {
-                	getViewer().refresh();
                 }
             }
         });
