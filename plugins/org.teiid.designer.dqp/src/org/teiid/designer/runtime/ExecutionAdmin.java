@@ -319,7 +319,7 @@ public class ExecutionAdmin {
             String jarList = properties.getProperty("jarList");  //$NON-NLS-1$
             
             // Get first driver name with the driver class that matches the connection profile
-            String dsNameMatch = getDSMatchForDriverClass(teiidServer,connProfileDriverClass);
+            String dsNameMatch = getDSMatchForDriverClass(connProfileDriverClass);
             
             // If a matching datasource was found, set typename
             if(dsNameMatch!=null) {
@@ -332,7 +332,7 @@ public class ExecutionAdmin {
                 refresh();
                 
                 // Retry the name match after deployment.
-                dsNameMatch = getDSMatchForDriverClass(teiidServer,connProfileDriverClass);
+                dsNameMatch = getDSMatchForDriverClass(connProfileDriverClass);
                 if(dsNameMatch!=null) {
                     typeName=dsNameMatch;
                 }
@@ -368,29 +368,16 @@ public class ExecutionAdmin {
 
     /*
      * Look for an installed driver that has the driverClass which matches the supplied driverClass name.
-     * @param teiidServer the TeiidServer instance
+     * 
      * @param driverClass the driver class to match
      * @return the name of the matching driver, null if not found
      */
-    private String getDSMatchForDriverClass(TeiidServer teiidServer, String driverClass) throws Exception {
-        String dsNameMatch = null;
+    private String getDSMatchForDriverClass(String driverClass) throws Exception {
+        if (driverClass == null)
+            return null;
         
-        if(teiidServer!=null && driverClass!=null) {
-            // Get the installed JDBC Driver mappings
-            Map<String,String> dsNameToDriverMap = TeiidServerAdapterUtil.getInstalledJDBCDriverMap(teiidServer.getParent());
-
-            // Use the first driver name with driver class that matches connection profile
-            Set<String> keySet = dsNameToDriverMap.keySet();
-            for(String dsName: keySet) {
-                String dsDriverClass = dsNameToDriverMap.get(dsName);
-                if(driverClass.equalsIgnoreCase(dsDriverClass)) {
-                    dsNameMatch=dsName;
-                    break;
-                }
-            }
-        }
-        
-        return dsNameMatch;
+        // Get the installed JDBC Driver mappings
+        return TeiidServerAdapterUtil.getJDBCDriver(teiidServer.getParent(), driverClass);
     }
     
     /*

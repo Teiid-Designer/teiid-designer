@@ -8,9 +8,7 @@
 package org.teiid.designer.runtime.adapter;
 
 import java.net.ConnectException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.dmr.ModelNode;
@@ -18,6 +16,7 @@ import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.jboss.ide.eclipse.as.core.server.v7.management.AS7ManagementDetails;
 import org.jboss.ide.eclipse.as.management.core.JBoss7ManagerUtil;
 import org.jboss.ide.eclipse.as.management.core.ModelDescriptionConstants;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 
@@ -110,18 +109,22 @@ public abstract class TeiidServerAdapterUtil extends ModelDescriptionConstants {
     }
     
     /**
-     * Get the mapping of Installed JDBC Driver name to Driver Class
+     * Queries the jboss server's JDBC drivers for the given driver class. If installed,
+     * the jboss name of the driver is returned.
      * 
      * @param server
-     * @return the Driver Name - Driver Class Map
+     * @param requestDriverClass class name of driver
+     * @return the driver name of the driver class being requested or null if
+     *                  no driver was found
      * 
      * @throws Exception
      */
-    public static Map<String,String> getInstalledJDBCDriverMap(IServer server) throws Exception {
-        Map<String,String> resultMap = new HashMap<String,String>();
+    public static String getJDBCDriver(IServer server, String requestDriverClass) throws Exception {
+        CoreArgCheck.isNotNull(server);
+        CoreArgCheck.isNotNull(requestDriverClass);
         
         if (server.getServerState() != IServer.STATE_STARTED)
-            return resultMap;
+            return null;
         
         ModelNode request = new ModelNode();
         request.get(OP).set("installed-drivers-list");  //$NON-NLS-1$
@@ -134,19 +137,20 @@ public abstract class TeiidServerAdapterUtil extends ModelDescriptionConstants {
             ModelNode operationResult = executeRequest(server, request);
 
             List<ModelNode> driverList = operationResult.asList();
-                for (ModelNode driver : driverList) {
-                    String driverClassName = driver.get("driver-class-name").asString(); //$NON-NLS-1$
-                    String driverName = driver.get("driver-name").asString(); //$NON-NLS-1$
-                    if(driverName!=null && !driverName.trim().isEmpty()) {
-                        resultMap.put(driverName, driverClassName);
-                    }
-                }
+            for (ModelNode driver : driverList) {
+                String driverClassName = driver.get("driver-class-name").asString(); //$NON-NLS-1$
+                String driverName = driver.get("driver-name").asString(); //$NON-NLS-1$
+                
+                if (requestDriverClass.equalsIgnoreCase(driverClassName))
+                    return driverName;
+            }
+            
         } catch (Exception ex) {
             // Failed to get mapping
             DqpPlugin.Util.log(IStatus.ERROR, ex, "Failed to get installed driver mappings "); //$NON-NLS-1$
         }
         
-        return resultMap;
+        return null;
     }
 
     /**
