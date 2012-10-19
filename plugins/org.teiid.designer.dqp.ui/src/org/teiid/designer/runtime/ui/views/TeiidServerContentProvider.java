@@ -28,7 +28,6 @@ import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContentNode;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.views.content.DataSourcesFolder;
-import org.teiid.designer.runtime.ui.views.content.TeiidFolder;
 import org.teiid.designer.runtime.ui.views.content.TeiidResourceNode;
 import org.teiid.designer.runtime.ui.views.content.TranslatorsFolder;
 import org.teiid.designer.runtime.ui.views.content.VdbsFolder;
@@ -210,9 +209,6 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
                 return new Object[] { PENDING };
             }
             return children.toArray();
-            
-        } else if (parentElement instanceof TeiidFolder) {
-            return ((TeiidFolder) parentElement).getChildren();
         }
 
         return new Object[0];
@@ -295,9 +291,8 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
             return true;
         } else if (element instanceof IContainerNode) {
             return true;
-        } else if (element instanceof TeiidFolder) {
-            return ((TeiidFolder)element).getChildren().length > 0;
         }
+        
         return false;
     }
 

@@ -7,12 +7,14 @@
 */
 package org.teiid.designer.runtime.ui.views.content;
 
+import java.util.Collection;
+import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 
 /**
  * @since 8.0
  */
-public class TranslatorsFolder extends TeiidFolder {
+public class TranslatorsFolder extends AbstractTeiidFolder<TeiidTranslator> {
 
     private static final String TRANSLATORS_FOLDER_NAME = DqpUiConstants.UTIL.getString(TranslatorsFolder.class.getSimpleName() + ".label"); //$NON-NLS-1$
 
@@ -22,7 +24,7 @@ public class TranslatorsFolder extends TeiidFolder {
      * @param parentNode
      * @param values
      */
-    public TranslatorsFolder(TeiidServerContainerNode parentNode, Object[] values) {
+    public TranslatorsFolder(TeiidServerContainerNode parentNode, Collection<TeiidTranslator> values) {
         super(parentNode, values);
     }
 

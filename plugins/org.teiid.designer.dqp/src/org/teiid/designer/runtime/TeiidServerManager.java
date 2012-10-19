@@ -738,7 +738,6 @@ public final class TeiidServerManager implements EventManager {
 
                         if (previewServer) {
                             setDefaultServer(teiidServer);
-                            teiidServer.ping();
                         }
                     }
                 } catch (Exception e) {

@@ -26,7 +26,7 @@ import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
  */
 public class TeiidServerContainerNode extends ContainerNode<TeiidResourceNode> {
 
-    private ArrayList<IContentNode<? extends IContainerNode<?>>> children;
+    private List<IContentNode<? extends IContainerNode<?>>> children;
     private TeiidServer teiidServer;
     private TeiidServerContentProvider provider;
     
@@ -81,7 +81,7 @@ public class TeiidServerContainerNode extends ContainerNode<TeiidResourceNode> {
                     dataSources = new ArrayList(teiidServer.getAdmin().getDataSources());
 
                     if (!dataSources.isEmpty()) {
-                        children.add(new DataSourcesFolder(this, dataSources.toArray()));
+                        children.add(new DataSourcesFolder(this, dataSources));
                     }
                 } else {
                     dataSources = Collections.emptyList();
@@ -98,7 +98,7 @@ public class TeiidServerContainerNode extends ContainerNode<TeiidResourceNode> {
                     vdbs = new ArrayList<TeiidVdb>(teiidServer.getAdmin().getVdbs());
 
                     if (!vdbs.isEmpty()) {
-                        children.add(new VdbsFolder(this, vdbs.toArray()));
+                        children.add(new VdbsFolder(this, vdbs));
                     }
                 } else {
                     vdbs = Collections.emptyList();
@@ -115,7 +115,7 @@ public class TeiidServerContainerNode extends ContainerNode<TeiidResourceNode> {
                     translators = teiidServer.getAdmin().getTranslators();
 
                     if (!translators.isEmpty()) {
-                        children.add(new TranslatorsFolder(this, translators.toArray()));
+                        children.add(new TranslatorsFolder(this, translators));
                     }
                 } else {
                     translators = Collections.emptyList();
@@ -139,5 +139,4 @@ public class TeiidServerContainerNode extends ContainerNode<TeiidResourceNode> {
     public TeiidServer getTeiidServer() {
         return teiidServer;
     }
-    
 }

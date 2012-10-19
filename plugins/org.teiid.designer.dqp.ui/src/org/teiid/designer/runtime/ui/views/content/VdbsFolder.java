@@ -7,12 +7,14 @@
 */
 package org.teiid.designer.runtime.ui.views.content;
 
+import java.util.Collection;
+import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 
 /**
  *
  */
-public class VdbsFolder extends TeiidFolder {
+public class VdbsFolder extends AbstractTeiidFolder<TeiidVdb> {
 
     private static final String VDBS_FOLDER_NAME = DqpUiConstants.UTIL.getString(VdbsFolder.class.getSimpleName() + ".label"); //$NON-NLS-1$
     
@@ -20,10 +22,10 @@ public class VdbsFolder extends TeiidFolder {
      * Create new instance
      * 
      * @param parentNode
-     * @param values
+     * @param vdbs
      */
-    public VdbsFolder(TeiidServerContainerNode parentNode, Object[] values ) {
-        super(parentNode, values);
+    public VdbsFolder(TeiidServerContainerNode parentNode, Collection<TeiidVdb> vdbs) {
+        super(parentNode, vdbs);
     }
 
     @Override

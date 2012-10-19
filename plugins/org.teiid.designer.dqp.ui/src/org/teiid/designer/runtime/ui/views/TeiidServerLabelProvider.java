@@ -21,16 +21,13 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContentNode;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
-import org.teiid.designer.runtime.TeiidTranslator;
-import org.teiid.designer.runtime.TeiidVdb;
-import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder;
+import org.teiid.designer.runtime.ui.views.content.TeiidDataNode;
 import org.teiid.designer.runtime.ui.views.content.TeiidErrorNode;
-import org.teiid.designer.runtime.ui.views.content.TeiidFolder;
 import org.teiid.designer.runtime.ui.views.content.TeiidResourceNode;
 import org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode;
 
@@ -116,29 +113,14 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SERVER_ICON);
         }
 
-        if (element instanceof TeiidFolder) {
+        if (element instanceof AbstractTeiidFolder) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.FOLDER_OBJ);
         }
-
-        if (element instanceof TeiidTranslator) {
-            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_BINDING_ICON);
-        }
-
-        if (element instanceof TeiidDataSource) {
-            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTION_SOURCE_ICON);
-        }
-
-        if (element instanceof TeiidVdb) {
-            if (((TeiidVdb)element).isActive()) {
-                return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.DEPLOY_VDB);
-            }
-            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.INACTIVE_DEPLOYED_VDB);
-        }
-
-        if (element instanceof SourceConnectionBinding) {
-            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SOURCE_CONNECTOR_BINDING_ICON);
-        }
         
+        if (element instanceof TeiidDataNode) {
+            return ((TeiidDataNode) element).getImage();
+        }
+ 
         if (element instanceof TeiidErrorNode) {
             TeiidServer teiidServer = ((TeiidErrorNode) element).getTeiidServer();
             
@@ -171,26 +153,6 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
         if (element instanceof IContentNode) {
             IContentNode node = (IContentNode) element;
             return node.getName();
-        }
-        
-        if (element instanceof TeiidDataSource) {
-            if (((TeiidDataSource)element).getDisplayName() != null) {
-                return ((TeiidDataSource)element).getDisplayName();
-            }
-            return ((TeiidDataSource)element).getName();
-        }
-        
-        if (element instanceof TeiidTranslator) {
-            return ((TeiidTranslator)element).getName();
-        }
-
-        if (element instanceof TeiidVdb) {
-            return ((TeiidVdb)element).getName();
-        }
-
-        if (element instanceof SourceConnectionBinding) {
-            SourceConnectionBinding binding = (SourceConnectionBinding)element;
-            return binding.getModelName();
         }
 
         if (element instanceof String) {

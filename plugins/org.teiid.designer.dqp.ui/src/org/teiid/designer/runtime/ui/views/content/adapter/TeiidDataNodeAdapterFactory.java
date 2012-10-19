@@ -8,31 +8,33 @@
 package org.teiid.designer.runtime.ui.views.content.adapter;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.teiid.designer.runtime.TeiidServer;
-import org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder;
+import org.teiid.designer.runtime.TeiidDataSource;
+import org.teiid.designer.runtime.TeiidTranslator;
+import org.teiid.designer.runtime.TeiidVdb;
+import org.teiid.designer.runtime.ui.views.content.TeiidDataNode;
 import org.teiid.designer.runtime.ui.views.content.TeiidResourceNode;
 
 /**
  * Adapt a {@link TeiidResourceNode}
  */
-public class TeiidFolderAdapterFactory implements IAdapterFactory {
+public class TeiidDataNodeAdapterFactory implements IAdapterFactory {
 
     @Override
     public Object getAdapter(Object adaptableObject, Class adapterType) {
-        if (adaptableObject instanceof TeiidServer) {
-            return adaptableObject;
-        }
+        if (! (adaptableObject instanceof TeiidDataNode))
+            return null;
         
-        if (adaptableObject instanceof AbstractTeiidFolder) {
-            return ((AbstractTeiidFolder) adaptableObject).getTeiidServer();
-        }
+        Object value = ((TeiidDataNode) adaptableObject).getValue();
+        
+        if (adapterType.isInstance(value))
+            return value;
         
         return null;
     }
-    
+
     @Override
     public Class[] getAdapterList() {
-        return new Class[] { TeiidServer.class };
+        return new Class[] { TeiidDataSource.class, TeiidTranslator.class, TeiidVdb.class };
     }
 
 }

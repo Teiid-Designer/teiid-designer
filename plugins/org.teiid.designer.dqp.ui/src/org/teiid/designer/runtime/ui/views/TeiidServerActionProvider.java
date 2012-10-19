@@ -272,7 +272,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             public void run() {
                 List<Object> selectedObjs = getSelectedObjects();
                 for (Object obj : selectedObjs) {
-                    TeiidDataSource tds = (TeiidDataSource)obj;
+                    TeiidDataSource tds = RuntimeAssistant.adapt(obj, TeiidDataSource.class);
                     ExecutionAdmin admin = tds.getAdmin();
                     if (admin != null) {
                         try {
@@ -297,7 +297,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             public void run() {
                 List<Object> selectedObjs = getSelectedObjects();
                 for (Object obj : selectedObjs) {
-                    TeiidVdb vdb = (TeiidVdb)obj;
+                    TeiidVdb vdb = RuntimeAssistant.adapt(obj, TeiidVdb.class);
 
                     ExecutionAdmin admin = vdb.getAdmin();
                     if (admin != null) {
@@ -323,7 +323,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             public void run() {
                 List<Object> selectedObjs = getSelectedObjects();
                 for (Object obj : selectedObjs) {
-                    TeiidVdb vdb = (TeiidVdb)obj;
+                    TeiidVdb vdb = RuntimeAssistant.adapt(obj, TeiidVdb.class);
 
                     ExecutionAdmin admin = vdb.getAdmin();
                     if (admin != null) {
@@ -348,11 +348,11 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         // the shell used for dialogs that the actions display
         Shell shell = this.actionSite.getViewSite().getShell();
         // the reconnect action tries to ping a selected server
-        this.reconnectAction = new ReconnectToServerAction(viewer);
+        this.reconnectAction = new ReconnectToServerAction(shell.getDisplay());
         viewer.addSelectionChangedListener(this.reconnectAction);
         
         // the disconnect action clears the server's object cache, closes connection and null's admin references.
-        this.disconnectAction = new DisconnectFromServerAction(viewer);
+        this.disconnectAction = new DisconnectFromServerAction(shell.getDisplay());
         viewer.addSelectionChangedListener(this.disconnectAction);
 
         // the edit action is only enabled when one server is selected
@@ -527,12 +527,13 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 manager.add(this.editServerAction);
                 manager.add(new Separator());
                 
-            } else if (selection instanceof TeiidDataSource) {
+            } else if (RuntimeAssistant.adapt(selection, TeiidDataSource.class) != null) {
                 manager.add(this.deleteDataSourceAction);                
                 manager.add(new Separator());
                 
-            } else if (selection instanceof TeiidVdb) {
-                this.executeVdbAction.setEnabled(((TeiidVdb)selection).isActive());
+            } else if (RuntimeAssistant.adapt(selection, TeiidVdb.class) != null) {
+                TeiidVdb teiidVdb = RuntimeAssistant.adapt(selection, TeiidVdb.class);
+                this.executeVdbAction.setEnabled(teiidVdb.isActive());
                 manager.add(this.executeVdbAction);
                 manager.add(new Separator());
                 manager.add(this.undeployVdbAction);
@@ -546,7 +547,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             boolean allDataSources = true;
             
             for (Object obj : selectedObjs) {
-                if (!(obj instanceof TeiidDataSource)) {
+                if (RuntimeAssistant.adapt(obj, TeiidDataSource.class) != null) {
                     allDataSources = false;
                     break;
                 }
@@ -560,7 +561,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             boolean allVdbs = true;
 
             for (Object obj : selectedObjs) {
-                if (!(obj instanceof TeiidVdb)) {
+                if (RuntimeAssistant.adapt(obj, TeiidVdb.class) != null) {
                     allVdbs = false;
                     break;
                 }

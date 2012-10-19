@@ -264,19 +264,16 @@
                      value="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
                </instanceof>
                <instanceof
-                     value="org.teiid.designer.runtime.ui.views.content.TeiidFolder">
+                     value="org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder">
+               </instanceof>
+               <instanceof
+                     value="org.teiid.designer.runtime.ui.views.content.TeiidDataNode">
                </instanceof>
                <instanceof
                      value="org.teiid.designer.runtime.ui.views.content.TeiidErrorNode">
                </instanceof>
                <instanceof
                      value="org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode">
-               </instanceof>
-               <instanceof
-                     value="org.teiid.designer.runtime.TeiidDataSource">
-               </instanceof>
-               <instanceof
-                     value="org.teiid.designer.runtime.TeiidVdb">
                </instanceof>
             </or>
          </enablement>
@@ -318,10 +315,23 @@
          </adapter>
       </factory>
       <factory
-            adaptableType="org.teiid.designer.runtime.ui.views.content.TeiidFolder"
+            adaptableType="org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder"
             class="org.teiid.designer.runtime.ui.views.content.adapter.TeiidFolderAdapterFactory">
          <adapter
                type="org.teiid.designer.runtime.TeiidServer">
+         </adapter>
+      </factory>
+      <factory
+            adaptableType="org.teiid.designer.runtime.ui.views.content.TeiidDataNode"
+            class="org.teiid.designer.runtime.ui.views.content.adapter.TeiidDataNodeAdapterFactory">
+         <adapter
+               type="org.teiid.designer.runtime.TeiidDataSource">
+         </adapter>
+         <adapter
+               type="org.teiid.designer.runtime.TeiidTranslator">
+         </adapter>
+         <adapter
+               type="org.teiid.designer.runtime.TeiidVdb">
          </adapter>
       </factory>
    </extension>

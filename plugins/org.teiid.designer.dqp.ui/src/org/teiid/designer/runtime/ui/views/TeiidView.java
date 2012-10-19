@@ -66,8 +66,8 @@ import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.server.NewServerAction;
+import org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder;
 import org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode;
-import org.teiid.designer.runtime.ui.views.content.TeiidFolder;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.KeyInValueHashMap;
 import org.teiid.designer.ui.common.util.KeyInValueHashMap.KeyFromValueAdapter;
@@ -230,6 +230,7 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants, IExecu
             @Override
             public void run() {
                 if (!viewer.getTree().isDisposed()) {
+                    
                     viewer.refresh();
 
                     // Get Selected Index
@@ -328,7 +329,7 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants, IExecu
         // should also populate the viewer as well
         populateJBossServerCombo();
         
-        viewer.expandToLevel(2);
+        viewer.expandToLevel(3);
 
         // Wire as listener to server manager and to receive configuration changes
         DqpPlugin.getInstance().getServerManager().addListener(this);
@@ -532,8 +533,8 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants, IExecu
                                     tooltip = getConnectorToolTip((TeiidTranslator)data);
                                 } else if (data instanceof TeiidVdb) {
                                     tooltip = getVDBToolTip((TeiidVdb)data);
-                                } else if (data instanceof TeiidFolder) {
-                                    tooltip = ((TeiidFolder)data).getName();
+                                } else if (data instanceof AbstractTeiidFolder) {
+                                    tooltip = ((AbstractTeiidFolder)data).getName();
                                 } else if( data instanceof TeiidServer ) {
                                 	TeiidServer teiidServer = (TeiidServer)data;
                                 	String ttip = teiidServer.toString();
