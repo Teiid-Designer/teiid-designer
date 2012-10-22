@@ -92,7 +92,7 @@ public class QueryTreeContentProvider implements ITreeContentProvider {
                 return new Object[] { };
             }            
         } else if ( obj instanceof Criteria ) {
-            List<SubqueryContainer> containers = ValueIteratorProviderCollectorVisitor.getValueIteratorProviders((Criteria)obj);
+            List<SubqueryContainer<?>> containers = ValueIteratorProviderCollectorVisitor.getValueIteratorProviders((Criteria)obj);
             List<Command> commands = new ArrayList<Command>();
             
             for (SubqueryContainer container : containers) {

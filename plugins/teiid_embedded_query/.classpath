@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-admin-8.2.0.Beta2-SNAPSHOT-10-19-2012.jar" sourcepath="lib/teiid/teiid-8.2.0.Beta2-SNAPSHOT-10-19-2012-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-api-8.2.0.Beta2-SNAPSHOT-10-19-2012.jar" sourcepath="lib/teiid/teiid-8.2.0.Beta2-SNAPSHOT-10-19-2012-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-client-8.2.0.Beta2-SNAPSHOT-10-19-2012.jar" sourcepath="lib/teiid/teiid-8.2.0.Beta2-SNAPSHOT-10-19-2012-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-common-core-8.2.0.Beta2-SNAPSHOT-10-19-2012.jar" sourcepath="lib/teiid/teiid-8.2.0.Beta2-SNAPSHOT-10-19-2012-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-engine-8.2.0.Beta2-SNAPSHOT-10-19-2012.jar" sourcepath="lib/teiid/teiid-8.2.0.Beta2-SNAPSHOT-10-19-2012-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/common/xnio-api-3.0.3.GA.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/common/xnio-nio-3.0.3.GA.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/common/connector-api-1.5.jar"/>
@@ -20,11 +25,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/jboss/jboss-remoting-3.2.3.GA.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jboss/jboss-sasl-1.0.0.Final.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jboss/jboss-threads-2.0.0.GA.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-admin-8.2.0.Alpha2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-api-8.2.0.Alpha2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-client-8.2.0.Alpha2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-common-core-8.2.0.Alpha2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-engine-8.2.0.Alpha2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="bin"/>
