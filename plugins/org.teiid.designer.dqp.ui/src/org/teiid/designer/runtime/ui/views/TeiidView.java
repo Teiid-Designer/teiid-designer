@@ -10,7 +10,6 @@ package org.teiid.designer.runtime.ui.views;
 import java.util.List;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -54,8 +53,6 @@ import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent;
-import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
@@ -71,10 +68,8 @@ import org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.KeyInValueHashMap;
 import org.teiid.designer.ui.common.util.KeyInValueHashMap.KeyFromValueAdapter;
-import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Label;
-import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 
 /**
@@ -83,7 +78,7 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
  *
  * @since 8.0
  */
-public class TeiidView extends CommonNavigator implements DqpUiConstants, IExecutionConfigurationListener {
+public class TeiidView extends CommonNavigator implements DqpUiConstants {
 
     /**
      * Text constant for the server hyperlink label when there are servers available
@@ -216,39 +211,6 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants, IExecu
     }
     
     /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.runtime.IExecutionConfigurationListener#configurationChanged(org.teiid.designer.runtime.ExecutionConfigurationEvent)
-     */
-    @Override
-    public void configurationChanged( final ExecutionConfigurationEvent event ) {
-        if (viewer.getTree().isDisposed()) {
-            return;
-        }
-
-        UiUtil.runInSwtThread(new Runnable() {
-            @Override
-            public void run() {
-                if (!viewer.getTree().isDisposed()) {
-                    
-                    viewer.refresh();
-                    viewer.expandToLevel(3);
-
-                    // Get Selected Index
-                    if (viewer.getTree().getSelectionCount() == 1) {
-                        ISelection currentSelection = viewer.getSelection();
-                        viewer.setSelection(new StructuredSelection());
-                        viewer.setSelection(currentSelection);
-                    }
-                }
-            }
-        }, false);
-
-        // Refresh the Model Explorer too
-        ModelerUiViewUtils.refreshModelExplorerResourceNavigatorTree();
-    }
-    
-    /**
      * This is a callback that will allow us to create the viewer and initialize it.
      */
     @Override
@@ -331,9 +293,6 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants, IExecu
         populateJBossServerCombo();
         
         viewer.expandToLevel(3);
-
-        // Wire as listener to server manager and to receive configuration changes
-        DqpPlugin.getInstance().getServerManager().addListener(this);
     }
 
     private void populateJBossServerCombo() {
@@ -383,7 +342,6 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants, IExecu
 
     @Override
     public void dispose() {
-        DqpPlugin.getInstance().getServerManager().removeListener(this);
         super.dispose();
     }
 

@@ -18,20 +18,29 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContainerNode;
 import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContentNode;
+import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.views.content.DataSourcesFolder;
 import org.teiid.designer.runtime.ui.views.content.TeiidResourceNode;
 import org.teiid.designer.runtime.ui.views.content.TranslatorsFolder;
 import org.teiid.designer.runtime.ui.views.content.VdbsFolder;
+import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 
 /**
@@ -92,7 +101,8 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
                                 if (viewer instanceof StructuredViewer) {
                                     ((StructuredViewer) viewer).refresh(node);
                                     if (node instanceof TeiidResourceNode && viewer instanceof CommonViewer) {
-                                        ((CommonViewer) viewer).expandToLevel(node, 3);
+                                        ((CommonViewer) viewer).setExpandedState(node, true);
+                                        ((CommonViewer) viewer).expandToLevel(node, 2);
                                     }
                                 }
                                 else
@@ -118,12 +128,89 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
     @GuardedBy( "offlineServersLock" )
     private final Map<TeiidServer, Long> offlineServerMap = new HashMap<TeiidServer, Long>();
 
+    private IExecutionConfigurationListener configListener = new IExecutionConfigurationListener() {
+        
+        @Override
+        public void configurationChanged( final ExecutionConfigurationEvent event ) {
+            UiUtil.runInSwtThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (viewer.getTree().isDisposed())
+                        return;
+                    
+                    Tree tree = viewer.getTree();
+                    TeiidResourceNode trn = null;
+                    
+                    // Preserve the selection
+                    int selectionCount = tree.getSelectionCount();
+                    ISelection currentSelection = viewer.getSelection();
+                    
+                    // Refresh the viewer
+                    viewer.refresh();
+                    
+                    /*
+                     * If the TeiidResourceNode is expanded then we will need to
+                     * re-expand it since it has now been refreshed.
+                     *
+                     * If not found, then the node was never expanded so nothing
+                     * need be done
+                     */
+                    TreePath[] expandedElements = viewer.getExpandedTreePaths();
+                    for (TreePath o : expandedElements) {
+                        Object element = o.getLastSegment();
+                        
+                        if (isTeiidResourceNode(element)) {
+                            trn = (TeiidResourceNode) element;
+                            break;
+                        }
+                        
+                        Object[] children = TeiidServerContentProvider.this.getChildren(element);
+                        for (Object child : children) {
+                            if (isTeiidResourceNode(child)) {
+                                trn = (TeiidResourceNode) child;
+                                break;
+                            }
+                        }
+                    
+                        if (isTeiidResourceNode(trn)) {
+                            break;
+                        }
+                    }
+                    
+                    // Re-expand the TeiidResourceNode if
+                    // it was expanded previously
+                    if (trn != null) {
+                        viewer.setExpandedState(trn, true);
+                        viewer.expandToLevel(trn, 2);
+                    }
+
+                    // Try and reset the selection
+                    if (selectionCount == 1) {
+                        viewer.setSelection(new StructuredSelection());
+                        viewer.setSelection(currentSelection);
+                    }
+                        
+                    // Refresh the Model Explorer too
+                    ModelerUiViewUtils.refreshModelExplorerResourceNavigatorTree();    
+                }
+                
+                private boolean isTeiidResourceNode(Object o) {
+                    return o instanceof TeiidResourceNode;
+                }
+                
+            }, false);
+        }
+    };
+    
     /**
      * Content will include VDBs, translators, and data sources.
      * @since 5.0
      */
     public TeiidServerContentProvider() {
         super();
+        
+        // Wire as listener to server manager and to receive configuration changes
+        DqpPlugin.getInstance().getServerManager().addListener(configListener);
     }
 
     /**
@@ -136,7 +223,7 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
     public TeiidServerContentProvider( boolean showVDBs,
                                   boolean showTranslators,
                                   boolean showDataSources ) {
-        super();
+        this();
         this.showVDBs = showVDBs;
         this.showTranslators = showTranslators;
         this.showDataSources = showDataSources;
@@ -200,7 +287,8 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
             return new Object[0];
         
         if (parentElement instanceof IServer) {
-            return new Object[] {new TeiidResourceNode((IServer) parentElement, this) };
+            TeiidResourceNode node = TeiidResourceNode.getInstance((IServer) parentElement, this);
+            return new Object[] { node };
             
         } else if (parentElement instanceof IContainerNode) {
             IContainerNode<?> container = (IContainerNode<?>) parentElement;
@@ -321,5 +409,7 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
         viewer = null;
         loadElementJob.cancel();
         pendingUpdates.clear();
+        
+        DqpPlugin.getInstance().getServerManager().removeListener(configListener);
     }
 }
