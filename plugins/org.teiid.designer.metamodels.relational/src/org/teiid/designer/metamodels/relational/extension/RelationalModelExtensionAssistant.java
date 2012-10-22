@@ -7,13 +7,18 @@
  */
 package org.teiid.designer.metamodels.relational.extension;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.relational.Table;
 
 /**
@@ -58,6 +63,24 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
         @Override
         public String toString() {
             return this.propName;
+        }
+    }
+
+    /**
+     * Saves the relational MED to a model if necessary.
+     * @param model the model being checked (can be <code>null</code>)
+     * @throws Exception if there is an error applying MED
+     */
+    public void applyMedIfNecessary(final IResource model) throws Exception {
+        if (model != null) {
+            final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(model);
+
+            if (modelResource != null) {
+                if ((ModelType.PHYSICAL_LITERAL == modelResource.getModelType())
+                    && RelationalPackage.eNS_URI.equals(modelResource.getPrimaryMetamodelUri()) && !supportsMyNamespace(model)) {
+                    saveModelExtensionDefinition(model);
+                }
+            }
         }
     }
 

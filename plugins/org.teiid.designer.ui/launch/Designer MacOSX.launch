@@ -29,6 +29,7 @@
 <booleanAttribute key="show_selected_only" value="false"/>
 <stringAttribute key="timestamp" value="1271966793673"/>
 <booleanAttribute key="tracing" value="false"/>
+<booleanAttribute key="useCustomFeatures" value="false"/>
 <booleanAttribute key="useDefaultConfig" value="true"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
 <booleanAttribute key="useProduct" value="false"/>

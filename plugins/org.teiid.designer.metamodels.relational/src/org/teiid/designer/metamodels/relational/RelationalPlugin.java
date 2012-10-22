@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.emf.common.CommonPlugin;
@@ -22,6 +23,13 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
+import org.teiid.designer.core.workspace.ModelWorkspaceNotification;
+import org.teiid.designer.core.workspace.ModelWorkspaceNotificationAdapter;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionAssistant;
+import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionConstants;
 
 
 /**
@@ -31,14 +39,24 @@ import org.teiid.core.designer.util.PluginUtilImpl;
  */
 public class RelationalPlugin extends Plugin {
 
+    /**
+     * The unique plug-in identifier (never <code>null</code>).
+     */
     public static final String PLUGIN_ID = "org.teiid.designer.metamodels.relational"; //$NON-NLS-1$
 
+    /**
+     * The java package name (never <code>null</code>).
+     */
     public static final String PACKAGE_ID = RelationalPlugin.class.getPackage().getName();
 
     /**
      * Provides access to the plugin's log and to it's resources.
      */
     private static final String I18N_NAME = PACKAGE_ID + ".i18n"; //$NON-NLS-1$
+
+    /**
+     * The plug-in logger and i18n message provider (never <code>null</code>).
+     */
     public static final PluginUtil Util = new PluginUtilImpl(PLUGIN_ID, I18N_NAME, ResourceBundle.getBundle(I18N_NAME));
 
     private static final ResourceLocator RESOURCE_LOCATOR = new ResourceLocator() {
@@ -114,6 +132,8 @@ public class RelationalPlugin extends Plugin {
 
     static RelationalPlugin INSTANCE = null;
 
+    private ModelWorkspaceNotificationAdapter workspaceListener = null;
+
     /**
      * Construct an instance of MetaMatrixPlugin.
      */
@@ -129,6 +149,66 @@ public class RelationalPlugin extends Plugin {
         super.start(context);
         RelationalPlugin.INSTANCE = this;
         ((PluginUtilImpl)Util).initializePlatformLogger(this); // This must be called to initialize the platform logger!
+
+        // register to receive workspace model events
+        this.workspaceListener = new ModelWorkspaceNotificationAdapter() {
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.core.workspace.ModelWorkspaceNotificationAdapter#notifyReloaded(org.teiid.designer.core.workspace.ModelWorkspaceNotification)
+             */
+            @Override
+            public void notifyReloaded(ModelWorkspaceNotification notification) {
+                handleNewModelEvent(notification);
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.core.workspace.ModelWorkspaceNotificationAdapter#notifyAdd(org.teiid.designer.core.workspace.ModelWorkspaceNotification)
+             */
+            @Override
+            public void notifyAdd(ModelWorkspaceNotification notification) {
+                handleNewModelEvent(notification);
+            }
+        };
+        ModelWorkspaceManager.getModelWorkspaceManager().addNotificationListener(this.workspaceListener);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+     */
+    @Override
+    public void stop(BundleContext context) throws Exception {
+        // unregister workspace listener
+        if (this.workspaceListener != null) {
+            ModelWorkspaceManager.getModelWorkspaceManager().removeNotificationListener(this.workspaceListener);
+        }
+
+        super.stop(context);
+    }
+    
+    /**
+     * @param notification the notification being handled (never <code>null</code>)
+     */
+    void handleNewModelEvent(final ModelWorkspaceNotification notification) {
+        if (notification.isPostChange()) {
+            final IResource model = (IResource)notification.getNotifier();
+
+            if (model != null) {
+                final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+                final String prefix = RelationalModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
+                final RelationalModelExtensionAssistant assistant = (RelationalModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
+
+                try {
+                    assistant.applyMedIfNecessary(model);
+                } catch (Exception e) {
+                    Util.log(e);
+                }
+            }
+        }
+    }
 }
