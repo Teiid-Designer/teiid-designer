@@ -12,4 +12,7 @@ tmp
 # Designer indexing
 COLUMNS.INDEX
 TABLES.INDEX
-larger_test.index
+tests/org.teiid.designer.core.test/testdata/larger_test.index
+
+plugins/org.teiid.designer.legacy/System.vdb
+plugins/teiid_embedded_query/System.vdb
