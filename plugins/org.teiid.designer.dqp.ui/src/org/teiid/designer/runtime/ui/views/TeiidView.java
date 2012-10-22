@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
@@ -217,16 +218,46 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
     public void createPartControl( Composite parent ) {
         FormToolkit toolkit = new FormToolkit(parent.getDisplay());
         
-        Composite frame = toolkit.createComposite(parent, SWT.NONE);
+        Composite frame = toolkit.createComposite(parent, SWT.BORDER);
         GridLayoutFactory.fillDefaults().numColumns(2).applyTo(frame);
         
-        Composite comboFrame = toolkit.createComposite(frame, SWT.NONE);
-        GridDataFactory.fillDefaults().applyTo(comboFrame);
-        GridLayoutFactory.fillDefaults().margins(5, 20).applyTo(comboFrame);
+        Composite comboDescFrame = toolkit.createComposite(frame, SWT.NONE);
+        GridDataFactory.fillDefaults().applyTo(comboDescFrame);
+        GridLayoutFactory.fillDefaults().margins(5, 20).spacing(SWT.DEFAULT, 25).applyTo(comboDescFrame);
         
-        Label jbLabel = WidgetFactory.createLabel(comboFrame, UTIL.getString("TeiidServerOverviewSection.jbLabel")); //$NON-NLS-1$
-        jbLabel.setForeground(comboFrame.getDisplay().getSystemColor(SWT.COLOR_DARK_BLUE));
-        GridDataFactory.swtDefaults().grab(true, false).applyTo(jbLabel);
+        Composite comboFrame = toolkit.createComposite(comboDescFrame, SWT.NONE);
+        GridDataFactory.fillDefaults().applyTo(comboFrame);
+        GridLayoutFactory.fillDefaults().applyTo(comboFrame);
+        
+        Composite labelFrame = toolkit.createComposite(comboFrame, SWT.NONE);
+        GridDataFactory.fillDefaults().applyTo(labelFrame);
+        GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).applyTo(labelFrame);
+        
+        Label jbLabel = WidgetFactory.createLabel(labelFrame, UTIL.getString("TeiidServerOverviewSection.jbLabel")); //$NON-NLS-1$
+        jbLabel.setForeground(labelFrame.getDisplay().getSystemColor(SWT.COLOR_DARK_BLUE));
+        GridDataFactory.swtDefaults().grab(false, false).applyTo(jbLabel);
+        
+        newServerOrOpenServerViewHyperlink = toolkit.createHyperlink(labelFrame, EDIT_SERVER_LABEL, SWT.NONE);
+        GridDataFactory.swtDefaults().applyTo(newServerOrOpenServerViewHyperlink);
+        newServerOrOpenServerViewHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+
+            @Override
+            public void linkActivated(HyperlinkEvent e) {
+                if (serverMap.isEmpty()) {
+                    // There are no servers so open the server wizard
+                    NewServerAction action = new NewServerAction(getViewSite().getShell(), getServerManager());
+                    action.run();
+                } else {
+                    //open the servers view
+                    IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                    try {
+                        window.getActivePage().showView("org.eclipse.wst.server.ui.ServersView"); //$NON-NLS-1$
+                    } catch (PartInitException ex) {
+                        UTIL.log(ex);
+                    }
+                }
+            }
+        });
         
         jbossServerCombo = new Combo(comboFrame, SWT.READ_ONLY | SWT.DROP_DOWN);
         toolkit.adapt(jbossServerCombo);
@@ -244,29 +275,11 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
             }
         });
         
-        newServerOrOpenServerViewHyperlink = toolkit.createHyperlink(comboFrame, 
-                                EDIT_SERVER_LABEL, SWT.NONE);
-        GridDataFactory.swtDefaults().applyTo(newServerOrOpenServerViewHyperlink);
-        newServerOrOpenServerViewHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-
-            @Override
-            public void linkActivated(HyperlinkEvent e) {
-                if (serverMap.isEmpty()) {
-                    // There are no servers so open the server wizard
-                    NewServerAction action = new NewServerAction(getViewSite().getShell(), getServerManager());
-                    action.run();
-                } else {
-                    //open the servers view
-                    IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-                    try {
-                        window.getActivePage().showView("org.eclipse.wst.server.ui.ServersView");  //$NON-NLS-1$
-                    } catch (PartInitException ex) {
-                        UTIL.log(ex);
-                    }
-                }
-            }
-        });        
-        
+        Text descriptionText = toolkit.createText(comboDescFrame,
+                                                  UTIL.getString("TeiidServerOverviewSection.description"), //$NON-NLS-1$
+                                                  SWT.MULTI | SWT.WRAP);
+        descriptionText.setForeground(comboDescFrame.getDisplay().getSystemColor(SWT.COLOR_DARK_BLUE));
+        GridDataFactory.fillDefaults().grab(false, true).hint(100, SWT.DEFAULT).applyTo(descriptionText);
         
         super.createPartControl(frame);
         
