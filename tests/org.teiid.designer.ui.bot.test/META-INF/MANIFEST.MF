@@ -16,5 +16,6 @@ Require-Bundle: org.eclipse.swtbot.go,
  org.eclipse.swtbot.eclipse.gef.finder,
  org.hamcrest,
  org.eclipse.ui,
+ org.eclipse.gef,
  org.jboss.tools.ui.bot.ext;bundle-version="3.4.0"
 Eclipse-RegisterBuddy: org.apache.log4j
