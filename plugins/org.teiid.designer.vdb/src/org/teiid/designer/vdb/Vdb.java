@@ -634,6 +634,21 @@ public final class Vdb {
     }
     
     /**
+     * Remove the given {@link VdbImportVdbEntry entry} from this VDB
+     * 
+     * @param entry
+     * @param monitor
+     */
+    public final void removeAllImportVdbs() {
+    	Collection<VdbImportVdbEntry> entries = new ArrayList(this.importModelEntries);
+    	for( VdbImportVdbEntry entry : entries ) {
+	    	if (this.importModelEntries.remove(entry)) {
+	    		setModified(this, Event.IMPORT_VDB_ENTRY_REMOVED, entry, null);
+	    	}
+    	}
+    }
+    
+    /**
      * Must not be called unless this VDB has been {@link #isModified() modified}
      * 
      * @param monitor

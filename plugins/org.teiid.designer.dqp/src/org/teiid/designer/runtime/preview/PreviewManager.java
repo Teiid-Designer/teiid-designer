@@ -1168,8 +1168,7 @@ public final class PreviewManager extends JobChangeAdapter
         }
 
         // collection for PVDBs that will be deployed and merged into the project PVDB
-        List<IFile> pvdbsToMerge = new ArrayList<IFile>(projectPvdbsToDeploy.size());
-        pvdbsToMerge.add(pvdbFile); // add in model being previewed
+        List<IFile> pvdbsToRemove = new ArrayList<IFile>(projectPvdbsToDeploy.size());
 
         // deploy any project PVDBs if necessary
         for (IFile projectPvdbFile : projectPvdbsToDeploy) {
@@ -1195,9 +1194,9 @@ public final class PreviewManager extends JobChangeAdapter
                     if (dependsOn(modelToPreview, projectPvdbFile)) {
                         throw new CoreException(status);
                     }
-                } else {
-                    pvdbsToMerge.add(projectPvdbFile);
-                }
+                    
+                    pvdbsToRemove.add(projectPvdbFile);
+                } 
 
                 if (!error) {
                     monitor.subTask(NLS.bind(Messages.PreviewSetupConnectionInfoTask, name));
@@ -1235,7 +1234,7 @@ public final class PreviewManager extends JobChangeAdapter
                         }
 
                         // make sure this PVDB does not get merged since it didn't get deployed
-                        pvdbsToMerge.remove(projectPvdbFile);
+                        pvdbsToRemove.remove(projectPvdbFile);
                     }
 
                     if (monitor.isCanceled()) {
@@ -1249,12 +1248,15 @@ public final class PreviewManager extends JobChangeAdapter
 
         //Find and set the project level PVDB
         IFile projectVdbIFile = null;
-        for (IFile projectVdb : pvdbsToMerge){
+        List<IFile> projectPvdbsToMerge = findProjectPvdbs(modelToPreview.getProject(), false);
+        for (IFile projectVdb : projectPvdbsToMerge){
         	if (isProjectLevelPreviewVdb(projectVdb)){
         		projectVdbIFile = projectVdb;
         		break;
         	}
         }
+        
+        projectPvdbsToMerge.removeAll(pvdbsToRemove);
         
         // merge into project PVDB
         MERGE_TASK: {
@@ -1262,7 +1264,7 @@ public final class PreviewManager extends JobChangeAdapter
 
             if (projectVdbIFile != null) {
 
-                admin.mergeVdbs(pvdbsToMerge,  projectPreviewVdbName, 1, projectVdbIFile);
+                admin.mergeVdbs(projectPvdbsToMerge,  projectPreviewVdbName, 1, projectVdbIFile);
             }
 
             monitor.worked(1);

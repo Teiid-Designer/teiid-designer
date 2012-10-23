@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
+
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -24,7 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import javax.xml.stream.XMLStreamException;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -557,7 +560,8 @@ public class ExecutionAdmin {
     	
     	VDB projectVdb = getVdb(ptargetVdbName);
     	String name = projectVdb.getPropertyValue("deployment-name");
-    	Vdb vdb = new Vdb(ptargetvdbToMerge, new NullProgressMonitor()); 
+    	Vdb vdb = new Vdb(ptargetvdbToMerge, new NullProgressMonitor());
+    	vdb.removeAllImportVdbs();
     
     	// merge into project PVDB
         for (IFile pvdbToMerge : pvdbsToMerge) {
@@ -565,9 +569,7 @@ public class ExecutionAdmin {
         	
         	// REMOVE the .vdb extension for the source vdb
 	        String sourceVdbName = pvdbToMerge.getFullPath().removeFileExtension().lastSegment().toString();
-	        if (!sourceVdbName.contains("dummy")){
-	        	vdb.addImportVdb(sourceVdbName);
-	        }
+	        vdb.addImportVdb(sourceVdbName);
 	    }
         
         this.admin.undeploy(appendVdbExtension(name));
