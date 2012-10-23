@@ -108,6 +108,12 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
 //            if (baseProps.get(PASSWORD_KEY) != null) {
 //                connectionProps.put(CONNECTION_NAMESPACE + PASSWORD, baseProps.get(PASSWORD_KEY));
 //            }
+            
+            if (baseProps.get(JARLIST) != null) {
+                connectionProps.put(CONNECTION_NAMESPACE + JARLIST, baseProps.get(JARLIST));
+            } else {
+                enoughProps = false;
+            }
 
             if (!enoughProps) {
                 throw new ModelWorkspaceException(
