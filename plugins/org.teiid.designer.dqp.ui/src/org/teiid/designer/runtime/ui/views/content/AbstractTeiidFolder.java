@@ -43,7 +43,7 @@ public abstract class AbstractTeiidFolder<V> implements IContainerNode<TeiidServ
     
     @Override
     public IServer getServer() {
-       return teiidServer.getParent();
+       return teiidServer != null ? teiidServer.getParent() : null;
     }
     
     /**
@@ -57,7 +57,7 @@ public abstract class AbstractTeiidFolder<V> implements IContainerNode<TeiidServ
 
     @Override
     public IResourceNode getParent() {
-        return parentNode.getParent();
+        return parentNode != null ? parentNode.getParent() : null;
     }
 
     @Override
@@ -67,12 +67,15 @@ public abstract class AbstractTeiidFolder<V> implements IContainerNode<TeiidServ
 
     @Override
     public String getAddress() {
+        if (getParent() == null)
+            return null;
+        
         return getParent().getAddress() + PATH_SEPARATOR + getName();
     }
     
     @Override
     public void load() {
-        if (!getTeiidServer().isConnected()) {
+        if (getTeiidServer() == null || !getTeiidServer().isConnected()) {
             return;
         }
         
