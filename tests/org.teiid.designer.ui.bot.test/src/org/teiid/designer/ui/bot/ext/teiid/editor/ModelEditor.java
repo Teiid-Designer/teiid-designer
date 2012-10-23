@@ -1,5 +1,6 @@
 package org.teiid.designer.ui.bot.ext.teiid.editor;
 
+import static org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable.syncExec;
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
@@ -10,22 +11,39 @@ import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefFigureCanvas;
+import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefViewer;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.results.Result;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCTabItem;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.ui.IEditorReference;
 import org.hamcrest.Matcher;
 import org.jboss.tools.ui.bot.ext.gef.SWTBotGefFigure;
 import org.jboss.tools.ui.bot.ext.helper.StyledTextHelper;
+import org.teiid.designer.ui.bot.ext.teiid.matcher.IsTransformation;
 import org.teiid.designer.ui.bot.ext.teiid.matcher.WaitForFigure;
 
+/**
+ * This class represents Model Editor in Teiid Designer perspective.
+ * 
+ * @author apodhrad
+ *
+ */
 public class ModelEditor extends SWTBotEditor {
 
+	public static final String TRANSFORMATION_DIAGRAM = "Transformation Diagram";
+	public static final String MAPPING_DIAGRAM = "Mapping Diagram";
+	public static final String TABLE_EDITOR = "Table Editor";
+
 	private SWTBotGefFigureCanvas canvas;
+	private SWTBotGefViewer viewer;
 
 	public ModelEditor(SWTBotEditor editor, SWTWorkbenchBot bot) {
 		this(editor.getReference(), bot);
@@ -35,16 +53,59 @@ public class ModelEditor extends SWTBotEditor {
 		super(editorReference, bot);
 		Matcher matcher = widgetOfType(FigureCanvas.class);
 		canvas = new SWTBotGefFigureCanvas((FigureCanvas) bot.widget(matcher, 0));
+
+	}
+	
+	private GraphicalEditor getGraphicalEditor(String tabLabel) {
+		final SWTBotCTabItem tabItem = showTab(tabLabel);
+		GraphicalEditor graphicalEditor = syncExec(new Result<GraphicalEditor>() {
+
+			@Override
+			public GraphicalEditor run() {
+				Object obj = tabItem.widget.getData();
+				if (obj instanceof GraphicalEditor) {
+					return (GraphicalEditor) obj;
+				}
+				return null;
+			}
+		});
+		return graphicalEditor;
+	}
+	
+	public SWTBotGefViewer getGraphicalViewer(String tabLabel) {
+		final GraphicalEditor graphicalEditor = getGraphicalEditor(tabLabel);
+		GraphicalViewer graphicalViewer = syncExec(new Result<GraphicalViewer>() {
+
+			@Override
+			public GraphicalViewer run() {
+				Object obj = graphicalEditor.getAdapter(GraphicalViewer.class);
+				if (obj instanceof GraphicalViewer) {
+					return (GraphicalViewer) obj;
+				}
+				return null;
+			}
+		});
+
+		return new SWTBotGefViewer(graphicalViewer);
+	}
+
+	public SWTBotCTabItem showTab(String label) {
+		SWTBotCTabItem tabItem = bot.cTabItem(label);
+		tabItem.activate();
+		tabItem.show();
+		return tabItem;
 	}
 
 	public void showTransformation() {
-		SWTBotGefFigure figureBot = tFigure();
-		editFigure(figureBot);
+		viewer = getGraphicalViewer(TRANSFORMATION_DIAGRAM);
+		viewer.editParts(IsTransformation.isTransformation()).get(0).select();
+		viewer.clickContextMenu("Edit");
 	}
 
 	public void showMappingTransformation(String label) {
-		SWTBotGefFigure figureBot = figureWithLabel(label);
-		editFigure(figureBot);
+		viewer = getGraphicalViewer(MAPPING_DIAGRAM);
+		viewer.getEditPart(label).select();
+		viewer.clickContextMenu("Edit");
 	}
 
 	public CriteriaBuilder criteriaBuilder() {
