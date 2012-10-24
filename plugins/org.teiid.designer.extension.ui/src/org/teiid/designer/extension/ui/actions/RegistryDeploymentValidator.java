@@ -9,9 +9,7 @@ package org.teiid.designer.extension.ui.actions;
 
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.ui.UiConstants.Util;
-
 import java.io.InputStream;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -20,7 +18,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
@@ -37,6 +34,7 @@ import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
+import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
 
 /**
@@ -287,7 +285,7 @@ public class RegistryDeploymentValidator {
                 // No conflicts - add it to the registry
                 if (!nsPrefixConflict && !nsUriConflict) {
                     // Add the selected Med
-                    BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+                    UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
                         @Override
                         public void run() {
                             internalRun(medToDeploy, false);
@@ -309,7 +307,7 @@ public class RegistryDeploymentValidator {
                         boolean doUpdate = RegistryDeploymentValidator.showMedNSPrefixAlreadyRegisteredDoUpdateDialog();
                         if (doUpdate) {
                             // Add the selected Med
-                            BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+                            UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
                                 @Override
                                 public void run() {
                                     internalRun(medToDeploy, true);

@@ -13,9 +13,9 @@ import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Tree;
 import org.teiid.designer.ui.common.tree.TreeViewerUtil;
+import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
 /**
  * Extension to CheckboxTreeViewer in which: A checkmark at a node automatically places a checkmark at all descendant nodes.
@@ -227,7 +227,7 @@ public class InheritanceCheckboxTreeViewer extends CheckboxTreeViewer implements
                     }
                 }
             };
-            BusyIndicator.showWhile(null, runnable);
+            UiBusyIndicator.showWhile(null, runnable);
             // restore enabled state:
             listenerEnabled = true;
         }

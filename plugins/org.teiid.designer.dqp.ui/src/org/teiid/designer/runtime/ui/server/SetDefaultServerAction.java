@@ -11,7 +11,6 @@ import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
@@ -21,6 +20,7 @@ import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
 
 /**
@@ -84,7 +84,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
         this.teiidServerManager.setDefaultServer(this.selectedServer);
         if( !this.selectedServer.isConnected() ) {
         	final TeiidServer theNewDefaultServer = this.selectedServer;
-            BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+            UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
 
                 @Override
 				public void run() {

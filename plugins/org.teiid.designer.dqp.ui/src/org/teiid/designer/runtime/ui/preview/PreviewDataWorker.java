@@ -20,7 +20,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.datatools.connectivity.IConnection;
@@ -41,7 +40,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -49,6 +47,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -73,8 +72,8 @@ import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.preview.PreviewManager;
@@ -97,7 +96,7 @@ import org.teiid.designer.webservice.util.WebServiceUtil;
  * @since 8.0
  */
 public class PreviewDataWorker {
-	public static final String THIS_CLASS = I18nUtil.getPropertyPrefix(PreviewDataWorker.class);
+	private static final String THIS_CLASS = I18nUtil.getPropertyPrefix(PreviewDataWorker.class);
 	
     static String getString( String key ) {
         return DqpUiConstants.UTIL.getString(THIS_CLASS + key);
@@ -113,6 +112,7 @@ public class PreviewDataWorker {
     
     /**
      * Valid selections include Relational Tables, Procedures.
+     * @param eObject 
      * 
      * @return is previeable or not
      */
@@ -129,10 +129,15 @@ public class PreviewDataWorker {
 
     }
     
-    public Shell getShell() {
-    	return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+    private Shell getShell() {
+        return UiUtil.getWorkbenchShellOnlyIfUiThread();
     }
     
+    /**
+     * Has preview been enabled
+     * 
+     * @return true if preview is possible. False otherwise
+     */
     public boolean isPreviewPossible() {
     	if( !ModelEditorManager.getDirtyResources().isEmpty() ) {
     		boolean doContinue = MessageDialog.openQuestion(getShell(), 
@@ -152,12 +157,12 @@ public class PreviewDataWorker {
     }
     
     /**
+     * @param eObject 
+     * @param planOnly 
      * @see org.eclipse.jface.action.IAction#run()
      * @since 5.0
      */
-
-    public void run( final EObject eObject,
-                     final boolean planOnly ) {
+    public void run( final EObject eObject, final boolean planOnly ) {
 
     	// if we get here we know preview is enabled and a server exists and can be connected to
     	
@@ -362,118 +367,194 @@ public class PreviewDataWorker {
     		sql = insertParameterValuesSQL(sql, paramValues);
     	}
 
-
-
-    	if (sql != null) {
-    		// use the Admin API to get the location of the client jar
-    		String driverPath = Admin.class.getProtectionDomain().getCodeSource().getLocation().getFile();
-    		try {
-
-    			// TODO: All of these values should be taken from the deployed
-    			// pvdb. I have hardcoded them here so that I can test with
-    			// a fully depolyed VDB, see the Teiid download for this VDB.
-//    			String username = "admin"; //$NON-NLS-1$
-//    			String password = "teiid"; //$NON-NLS-1$
-    			String vdbName = PreviewManager.getPreviewProjectVdbName(project);
-    			if (vdbName.endsWith(TeiidVdb.VDB_DOT_EXTENSION)) {
-    				vdbName = vdbName.substring(0, vdbName.length() - 4);
-    			}
-//    			String currentDefaultServerURL = DqpPlugin.getInstance().getServerManager().getDefaultServer().getUrl();
-    			TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName, getServerManager().getDefaultServer().getTeiidJdbcInfo());
-    			
-//    			String connectionURL = jdbcInfo.getURL(); //"jdbc:teiid:" + vdbName + "@" + currentDefaultServerURL; //$NON-NLS-1$ //$NON-NLS-2$
-
-    			// Note that this is a Transient profile, it is not visible in
-    			// the
-    			// UI and goes away when it is garbage collected.
-    			IConnectionProfile profile = ConnectivityUtil.createTransientTeiidProfile(driverPath,
-    					jdbcInfo.getUrl(),
-    					jdbcInfo.getUsername(),
-    					jdbcInfo.getPassword(),
-    					vdbName);
-
-    			final Connection sqlConnection;
-    			IConnection connection = getSqlConnection(profile);
-    			sqlConnection = (Connection) connection.getRawConnection();
-    			if (null == sqlConnection || sqlConnection.isClosed()) {
-    				final Throwable e = connection.getConnectException();
-    				if(null != e) {
-    					DqpUiConstants.UTIL.log(e);
-    				} else {
-    					DqpUiConstants.UTIL.log("Unspecified connection error"); //$NON-NLS-1$
-    				}
-  					MessageDialog.openError(getShell(),
-							getString("error_getting_connection.title"), //$NON-NLS-1$
-							getString("error_getting_connection.message")); //$NON-NLS-1$
-  					return;
-    			}
-
-    			DatabaseIdentifier ID = new DatabaseIdentifier(profile.getName(), vdbName);
-    			ILaunchConfigurationWorkingCopy config = creatLaunchConfig(sql, ID);
-
-    			// This runnable executes the SQL and displays the results
-				// in the DTP 'SQL Results' view.
-				SimpleSQLResultRunnable runnable = null;
-
-                if (planOnly) {
-                    String planStr = getExecutionPlan(sqlConnection, sql);
-                    IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-                    IViewPart viewPart = null;
-                    try {
-                        if (window != null) {
-                            viewPart = window.getActivePage().showView(ExecutionPlanView.VIEW_ID);
-                            if (viewPart instanceof ExecutionPlanView) {
-                                String labelStr = getString("planOnlyFetchFor.label") + " " + ModelerCore.getModelEditor().getName(eObject); //$NON-NLS-1$ //$NON-NLS-2$                               
-                                ((ExecutionPlanView)viewPart).updateContents(labelStr, sql, planStr);
-                            }
-                        }
-                    } catch (PartInitException e) {
-                        DqpUiConstants.UTIL.log(e);
-                        WidgetUtil.showError(e.getLocalizedMessage());
-                    }
-                } else if (isXML) {
-                    String labelStr = getString("previewWithPlanFor.label") + " " + ModelerCore.getModelEditor().getName(eObject); //$NON-NLS-1$ //$NON-NLS-2$                               
-                    runnable = new TeiidAdHocScriptRunnable(sqlConnection, labelStr, sql, true, null, new NullProgressMonitor(),
-                                                            ID, config);
-                    BusyIndicator.showWhile(null, runnable);
-                } else {
-                    String labelStr = getString("previewWithPlanFor.label") + " " + ModelerCore.getModelEditor().getName(eObject); //$NON-NLS-1$ //$NON-NLS-2$                               
-                    runnable = new TeiidAdHocScriptRunnable(sqlConnection, labelStr, sql, true, null, new NullProgressMonitor(),
-                                                            ID, config);
-                    // runnable = new SimpleSQLResultRunnable(sqlConnection, sql, true, null, new NullProgressMonitor(), ID,
-                    // config);
-                    BusyIndicator.showWhile(null, runnable);
-                }
-
-				sqlConnection.close();
-				ConnectivityUtil.deleteTransientTeiidProfile(profile);
-    		} catch (CoreException e) {
-    			DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
-    		} catch (SQLException e) {
-    			DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
-    		}
-    	} else {
-    		DqpUiConstants.UTIL.log(new Status(IStatus.WARNING, DqpUiConstants.PLUGIN_ID, IStatus.OK,
-    				"failed to produce valid SQL to execute", null)); //$NON-NLS-1$
+    	if (sql == null) {
+    	    DqpUiConstants.UTIL.log(new Status(IStatus.WARNING, DqpUiConstants.PLUGIN_ID, IStatus.OK,
+    	                                       "failed to produce valid SQL to execute", null)); //$NON-NLS-1$
+    	    return;
     	}
+    	
+        // use the Admin API to get the location of the client jar
+        String driverPath = Admin.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+        try {
+
+            String vdbName = PreviewManager.getPreviewProjectVdbName(project);
+            if (vdbName.endsWith(TeiidVdb.VDB_DOT_EXTENSION)) {
+                vdbName = vdbName.substring(0, vdbName.length() - 4);
+            }
+   
+            TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName, getServerManager().getDefaultServer().getTeiidJdbcInfo());
+
+            // Note that this is a Transient profile, it is not visible in
+            // the UI and goes away when it is garbage collected.
+            IConnectionProfile profile = ConnectivityUtil.createTransientTeiidProfile(driverPath,
+                                                                                      jdbcInfo.getUrl(),
+                                                                                      jdbcInfo.getUsername(),
+                                                                                      jdbcInfo.getPassword(),
+                                                                                      vdbName);
+            
+            final Connection sqlConnection;
+            IConnection connection = getSqlConnection(profile);
+            sqlConnection = (Connection)connection.getRawConnection();
+            if (null == sqlConnection || sqlConnection.isClosed()) {
+                final Throwable e = connection.getConnectException();
+                if (null != e) {
+                    DqpUiConstants.UTIL.log(e);
+                } else {
+                    DqpUiConstants.UTIL.log("Unspecified connection error"); //$NON-NLS-1$
+                }
+                MessageDialog.openError(getShell(), getString("error_getting_connection.title"), //$NON-NLS-1$
+                                        getString("error_getting_connection.message")); //$NON-NLS-1$
+                return;
+            }
+
+            DatabaseIdentifier ID = new DatabaseIdentifier(profile.getName(), vdbName);
+            ILaunchConfigurationWorkingCopy config = creatLaunchConfig(sql, ID);
+
+            if (planOnly) {                
+                executePlan(sqlConnection, sql, eObject, profile);
+                return;
+            }
+            
+            String labelStr = null;
+            if (isXML) {
+                labelStr = getString("previewWithPlanFor.label") + " " + ModelerCore.getModelEditor().getName(eObject); //$NON-NLS-1$ //$NON-NLS-2$                               
+            } else {
+                labelStr = getString("previewWithPlanFor.label") + " " + ModelerCore.getModelEditor().getName(eObject); //$NON-NLS-1$ //$NON-NLS-2$                               
+            }
+
+            // This runnable executes the SQL and displays the results
+            // in the DTP 'SQL Results' view.
+            executeSQLResultRunnable(sqlConnection, labelStr, sql, ID, config, profile);
+        } catch (CoreException e) {
+            DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
+        } catch (SQLException e) {
+            DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
+        }
     }
     
-    private String getExecutionPlan( Connection sqlConnection,
-                                     String sql ) {
+    /**
+     * Execute the preview.
+     * 
+     * This is performed in a {@link Job} to ensure that the 
+     * UI remains unblocked.
+     * 
+     * @param sqlConnection
+     * @param labelStr
+     * @param sql
+     * @param iD
+     * @param config
+     * @param profile 
+     */
+    private void executeSQLResultRunnable(final Connection sqlConnection, 
+                                                                      final String labelStr, 
+                                                                      final String sql, 
+                                                                      final DatabaseIdentifier ID, 
+                                                                      final ILaunchConfigurationWorkingCopy config,
+                                                                      final IConnectionProfile profile) {
+        Job job = new Job(labelStr + " ...") { //$NON-NLS-1$
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                try {
+                    SimpleSQLResultRunnable runnable = new TeiidAdHocScriptRunnable(
+                                                                                    sqlConnection, labelStr, sql, true, null,
+                                                                                    monitor, ID, config);
+                    runnable.run();
+                } finally {
+                    try {
+                        sqlConnection.close();
+                    } catch (Exception ex) {
+                    }
+
+                    ConnectivityUtil.deleteTransientTeiidProfile(profile);
+                }
+
+                return Status.OK_STATUS;
+            }
+        };
+        
+        job.setPriority(Job.LONG);
+        job.setUser(true);
+        job.schedule();
+    }
+
+    /**
+     * Retrieve the execution plan. This is performed by a {@link Job}
+     * to ensure that the UI does not freeze.
+     * 
+     * @param sqlConnection
+     * @param sql
+     * @param eObject
+     * @param profile
+     */
+    private void executePlan(   final Connection sqlConnection, 
+                                                 final String sql, 
+                                                 final EObject eObject, 
+                                                 final IConnectionProfile profile) {
+        
+        Job job = new Job(DqpUiConstants.UTIL.getString(THIS_CLASS + "RetrieveExecutionPlanJob")) { //$NON-NLS-1$
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                try {
+                    final String planStr = getExecutionPlan(sqlConnection, sql);
+
+                    Display.getDefault().asyncExec(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                            IViewPart viewPart = null;
+                            try {
+                                if (window != null) {
+                                    viewPart = window.getActivePage().showView(ExecutionPlanView.VIEW_ID);
+                                    if (viewPart instanceof ExecutionPlanView) {
+                                        String labelStr = getString("planOnlyFetchFor.label") + " " + ModelerCore.getModelEditor().getName(eObject); //$NON-NLS-1$ //$NON-NLS-2$                               
+                                        ((ExecutionPlanView)viewPart).updateContents(labelStr, sql, planStr);
+                                    }
+                                }
+                            } catch (PartInitException e) {
+                                DqpUiConstants.UTIL.log(e);
+                                WidgetUtil.showError(e.getLocalizedMessage());
+                            }
+                        }
+                    });
+                } catch (final SQLException ex) {
+                    Display.getDefault().asyncExec(new Runnable() {
+                        @Override
+                        public void run() {
+                    
+                            // Error Generating the plan. Log the error and display dialog.
+                            DqpUiConstants.UTIL.log(ex);
+                            MessageDialog.openError(getShell(), getString("errorGeneratingExecutionPlan.title"), //$NON-NLS-1$
+                                            getString("errorGeneratingExecutionPlan.message")); //$NON-NLS-1$
+                        }
+                    });
+                } finally {
+                    try {
+                        sqlConnection.close();
+                    } catch (Exception ex) {
+                    }
+
+                    ConnectivityUtil.deleteTransientTeiidProfile(profile);
+                }
+                
+                return Status.OK_STATUS;
+            }
+        };
+        
+        job.setPriority(Job.LONG);
+        job.setUser(true);
+        job.schedule();
+    }
+    
+    private String getExecutionPlan( Connection sqlConnection, String sql ) throws SQLException {
         String executionPlan = null;
-        try {
-            Statement stmt = sqlConnection.createStatement();
-            stmt.execute("SET SHOWPLAN DEBUG"); //$NON-NLS-1$
-            stmt.executeQuery(sql);
-            ResultSet planRs = stmt.executeQuery("SHOW PLAN"); //$NON-NLS-1$
-            planRs.next();
-            executionPlan = planRs.getString("PLAN_XML"); //$NON-NLS-1$
-        } catch (SQLException e) {
-            // Error Generating the plan. Log the error and display dialog.
-            DqpUiConstants.UTIL.log(e);
-            MessageDialog.openError(getShell(), getString("errorGeneratingExecutionPlan.title"), //$NON-NLS-1$
-                                    getString("errorGeneratingExecutionPlan.message")); //$NON-NLS-1$
-        }
+        Statement stmt = sqlConnection.createStatement();
+        stmt.execute("SET SHOWPLAN DEBUG"); //$NON-NLS-1$
+        stmt.executeQuery(sql);
+        ResultSet planRs = stmt.executeQuery("SHOW PLAN"); //$NON-NLS-1$
+        planRs.next();
+        executionPlan = planRs.getString("PLAN_XML"); //$NON-NLS-1$
+        
         return executionPlan;
     }
 
@@ -500,7 +581,7 @@ public class PreviewDataWorker {
 		return sql;
 	}
 	
-    public TeiidServerManager getServerManager() {
+    private TeiidServerManager getServerManager() {
         return DqpPlugin.getInstance().getServerManager();
     }
     

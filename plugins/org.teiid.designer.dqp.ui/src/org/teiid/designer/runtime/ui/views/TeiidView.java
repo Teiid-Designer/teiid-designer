@@ -64,6 +64,7 @@ import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.server.NewServerAction;
+import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder;
 import org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -92,6 +93,25 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
     private static final String EDIT_SERVER_LABEL = UTIL.getString("TeiidServerOverviewSection.editHyperlinkLabel"); //$NON-NLS-1$
 
     /**
+     * A <code>ViewerFilter</code> that hides the translators.
+     */
+    static final ViewerFilter TRANSLATORS_FILTER = new ViewerFilter() {
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+         */
+        @Override
+        public boolean select( Viewer viewer, Object parentElement, Object element ) {
+            TeiidTranslator teiidTranslator = RuntimeAssistant.adapt(element, TeiidTranslator.class);
+            if (teiidTranslator != null)
+                return false;
+
+            return true;
+        }
+    };
+    
+    /**
      * A <code>ViewerFilter</code> that hides Preview Data Sources.
      */
     static final ViewerFilter PREVIEW_DATA_SOURCE_FILTER = new ViewerFilter() {
@@ -101,14 +121,10 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
          * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
          */
         @Override
-        public boolean select( Viewer viewer,
-                               Object parentElement,
-                               Object element ) {
-            if (element instanceof TeiidDataSource) {
-                if (((TeiidDataSource)element).isPreview()) {
-                    return false;
-                }
-            }
+        public boolean select( Viewer viewer, Object parentElement, Object element ) {
+            TeiidDataSource dataSource = RuntimeAssistant.adapt(element, TeiidDataSource.class);
+            if (dataSource != null && dataSource.isPreview())
+                return false;
 
             return true;
         }
@@ -124,14 +140,10 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
          * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
          */
         @Override
-        public boolean select( Viewer viewer,
-                               Object parentElement,
-                               Object element ) {
-            if (element instanceof TeiidVdb) {
-                if (((TeiidVdb)element).isPreviewVdb()) {
-                    return false;
-                }
-            }
+        public boolean select( Viewer viewer, Object parentElement, Object element ) {
+            TeiidVdb vdb = RuntimeAssistant.adapt(element, TeiidVdb.class);
+            if (vdb != null && vdb.isPreviewVdb())
+                return false;
 
             return true;
         }
