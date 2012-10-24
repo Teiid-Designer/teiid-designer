@@ -45,7 +45,6 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -84,6 +83,7 @@ import org.teiid.designer.ui.common.table.DoubleClickTableViewer;
 import org.teiid.designer.ui.common.table.TableColumnSelectionHelper;
 import org.teiid.designer.ui.common.util.SystemClipboardUtilities;
 import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.editors.AbstractModelEditorPageActionBarContributor;
 import org.teiid.designer.ui.editors.IInlineRenameable;
 import org.teiid.designer.ui.editors.INavigationSupported;
@@ -572,7 +572,7 @@ public class ModelTableEditor extends NavigableEditor
     protected void pageChange( int newPageIndex ) {
         // each page's table columns are created only after their associated tab in the tabfolder
         // has been selected. make sure the colums have been built.
-        BusyIndicator.showWhile(null, new Runnable() {
+        UiBusyIndicator.showWhile(null, new Runnable() {
             @Override
 			public void run() {
                 if (getCurrentModel() != null) {

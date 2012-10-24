@@ -13,7 +13,6 @@ import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.preferences.VdbPreferenceConstants.SYNCHRONIZE_WITHOUT_WARNING;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -63,7 +62,6 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
@@ -113,6 +111,7 @@ import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.common.widget.ButtonProvider;
 import org.teiid.designer.ui.common.widget.DefaultContentProvider;
 import org.teiid.designer.ui.editors.ModelEditorManager;
@@ -129,8 +128,8 @@ import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
-import org.teiid.designer.vdb.ui.VdbUiPlugin;
 import org.teiid.designer.vdb.ui.VdbUiConstants.Images;
+import org.teiid.designer.vdb.ui.VdbUiPlugin;
 import org.teiid.designer.vdb.ui.translators.TranslatorOverridesPanel;
 
 
@@ -401,7 +400,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             }
 
             if (okIfModelsDirty && synchronize) {
-                BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
+                UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
                     /**
                      * {@inheritDoc}
                      * 
@@ -1442,7 +1441,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                     }
 
                     if (okIfModelsDirty && synchronize) {
-                        BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
+                        UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
                             /**
                              * {@inheritDoc}
                              * 

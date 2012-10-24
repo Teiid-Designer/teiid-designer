@@ -9,13 +9,11 @@ package org.teiid.designer.modelgenerator.salesforce.ui.wizards;
 
 import java.util.ArrayList;
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -43,6 +41,7 @@ import org.teiid.designer.modelgenerator.salesforce.ui.ModelGeneratorSalesforceU
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 
@@ -285,7 +284,7 @@ public class CredentialsPage extends AbstractWizardPage
                 }
             };
 
-            BusyIndicator.showWhile(getShell().getDisplay(), op);
+            UiBusyIndicator.showWhile(getShell().getDisplay(), op);
 
             if (pingJob.getResult().isOK()) {
                 importManager.setConnectionProfile(selectedConnectionProfile);

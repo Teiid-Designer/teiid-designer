@@ -13,15 +13,16 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.INullSelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
 import org.teiid.designer.ui.common.InternalUiConstants.Actions;
+import org.teiid.designer.ui.common.UiConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.graphics.ImageImageDescriptor;
+import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
 
 /**
@@ -543,7 +544,7 @@ implements INullSelectionListener, ISelectionChangedListener {
                         doRun();
                     }
                 };
-                BusyIndicator.showWhile(null, runnable);
+                UiBusyIndicator.showWhile(null, runnable);
             } else {
                 doRun();
             }

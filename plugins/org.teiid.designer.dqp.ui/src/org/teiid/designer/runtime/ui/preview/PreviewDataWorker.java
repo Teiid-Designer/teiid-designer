@@ -41,7 +41,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -73,8 +72,8 @@ import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.preview.PreviewManager;
@@ -86,6 +85,7 @@ import org.teiid.designer.runtime.ui.dialogs.ParameterInputDialog;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
@@ -435,14 +435,14 @@ public class PreviewDataWorker {
                     String labelStr = getString("previewWithPlanFor.label") + " " + ModelerCore.getModelEditor().getName(eObject); //$NON-NLS-1$ //$NON-NLS-2$                               
                     runnable = new TeiidAdHocScriptRunnable(sqlConnection, labelStr, sql, true, null, new NullProgressMonitor(),
                                                             ID, config);
-                    BusyIndicator.showWhile(null, runnable);
+                    UiBusyIndicator.showWhile(null, runnable);
                 } else {
                     String labelStr = getString("previewWithPlanFor.label") + " " + ModelerCore.getModelEditor().getName(eObject); //$NON-NLS-1$ //$NON-NLS-2$                               
                     runnable = new TeiidAdHocScriptRunnable(sqlConnection, labelStr, sql, true, null, new NullProgressMonitor(),
                                                             ID, config);
                     // runnable = new SimpleSQLResultRunnable(sqlConnection, sql, true, null, new NullProgressMonitor(), ID,
                     // config);
-                    BusyIndicator.showWhile(null, runnable);
+                    UiBusyIndicator.showWhile(null, runnable);
                 }
 
 				sqlConnection.close();

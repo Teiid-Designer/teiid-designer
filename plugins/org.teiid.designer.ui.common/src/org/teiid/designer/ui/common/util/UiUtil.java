@@ -23,7 +23,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -51,6 +50,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.ui.common.UiConstants;
 import org.teiid.designer.ui.common.UiPlugin;
+import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
 
 /**
@@ -419,7 +419,7 @@ public final class UiUtil implements UiConstants {
     private static boolean openSystemEditor( final String theFileName ) {
         final boolean result[] = {false};
 
-        BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+        UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
 
             /**
              * {@inheritDoc}
