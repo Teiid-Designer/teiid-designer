@@ -213,6 +213,10 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         if (!this.showPreviewVdbs) {
             filters.add(TeiidView.PREVIEW_VDB_FILTER);
         }
+        
+        if (!this.showTranslators) {
+            filters.add(TeiidView.TRANSLATORS_FILTER);
+        }
 
         // set new content filters
         this.viewer.setFilters(filters.toArray(new ViewerFilter[filters.size()]));
@@ -239,16 +243,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
      */
     private void toggleShowTranslators() {
         this.showTranslators = !this.showTranslators;
-//        this.treeProvider.setShowTranslators(this.showTranslators);
-        refreshViewer();
-    }
-    
-    private void refreshViewer() {
-        for (TeiidServer teiidServer : getServerManager().getServers()) {
-            if (teiidServer.isConnected()) {
-                this.viewer.refresh(teiidServer);
-            }
-        }
+        updateViewerFilters();
     }
     
     /*
@@ -547,30 +542,24 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             boolean allDataSources = true;
             
             for (Object obj : selectedObjs) {
-                if (RuntimeAssistant.adapt(obj, TeiidDataSource.class) != null) {
+                if (RuntimeAssistant.adapt(obj, TeiidDataSource.class) == null) {
                     allDataSources = false;
                     break;
                 }
             }
             if (allDataSources) {
                 manager.add(this.deleteDataSourceAction);
-                manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-                return;
             }
 
             boolean allVdbs = true;
-
             for (Object obj : selectedObjs) {
-                if (RuntimeAssistant.adapt(obj, TeiidVdb.class) != null) {
+                if (RuntimeAssistant.adapt(obj, TeiidVdb.class) == null) {
                     allVdbs = false;
                     break;
                 }
             }
             if (allVdbs) {
                 manager.add(this.undeployVdbAction);
-                manager.add(new Separator());
-                manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-                return;
             }
 
             manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
