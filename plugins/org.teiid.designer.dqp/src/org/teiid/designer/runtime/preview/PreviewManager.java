@@ -10,6 +10,7 @@ package org.teiid.designer.runtime.preview;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,8 +24,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -39,6 +42,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
@@ -51,6 +55,7 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.adminapi.VDB;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
@@ -60,6 +65,7 @@ import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.core.workspace.ResourceChangeUtilities;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.datatools.JdbcTranslatorHelper;
@@ -118,6 +124,43 @@ public final class PreviewManager extends JobChangeAdapter
     private IPasswordProvider passwordProvider;
     
     String projectPreviewVdbName = null;
+    
+    
+    /**
+     * @param targetVdb the version of the source VDB
+     * @param modelPreviewVdbs list of preview vdbs for models in the project
+     * @throws Exception if there is a problem with the merge
+     */
+    public void addPreviewVdbImports( Vdb targetVdb, List<IFile> modelPreviewVdbs) throws Exception {
+    
+    	// merge into project PVDB
+        for (IFile previewVdbFile : modelPreviewVdbs) {
+        	if (targetVdb.getFile().equals(previewVdbFile)) continue;
+        	
+        	// REMOVE the .vdb extension for the source vdb
+	        String modelPreviewVdbName = previewVdbFile.getFullPath().removeFileExtension().lastSegment().toString();
+	        targetVdb.addImportVdb(modelPreviewVdbName);
+	    }	
+    }
+    
+    /**
+     * @param vdb targetVdb the version of the source VDB
+     * @param currentModelProject the version of the target VDB
+     * @throws Exception if there is a problem with the merge
+     */
+    public void addPreviewSourceVdbImports( Vdb vdb, IProject currentModelProject ) throws Exception {
+    
+    	// merge into project PVDB
+    	List<IResource> filesInProject = getVdbSourceResourcesForProject(currentModelProject);
+        for (IResource fileInProject : filesInProject) {
+        	ModelResource mr = ModelUtil.getModelResource((IFile)fileInProject, true);
+        	if ( mr != null && ModelUtil.isVdbSourceObject(fileInProject) ) {
+	        	String vdbName = getVdbSourceModelVdbName(mr);
+	        	vdb.addImportVdb(vdbName);
+        	}
+	    }	
+    }
+    
     
     /**
      * @param modelFile the model whose dependencies are being checked
@@ -585,6 +628,15 @@ public final class PreviewManager extends JobChangeAdapter
     private IFile getFile( IPath path ) {
         return ModelerCore.getWorkspace().getRoot().getFile(path);
     }
+    
+    private String getFullDeployedVdbName(VDB deployedVdb) { 
+        String fullVdbName = deployedVdb.getPropertyValue("deployment-name");;
+        if (!fullVdbName.endsWith(Vdb.FILE_EXTENSION)) {
+            fullVdbName = fullVdbName + Vdb.FILE_EXTENSION;
+        }
+        return fullVdbName;
+    	
+    }
 
     public TeiidDataSource getOrCreateDataSource( ExecutionAdmin admin,
                                                   IFile model,
@@ -708,6 +760,21 @@ public final class PreviewManager extends JobChangeAdapter
     private IPath getProjectPath( IPath pvdbPath ) {
         return pvdbPath.uptoSegment(1);
     }
+    
+    private List<IResource> getVdbSourceResourcesForProject(IProject project) throws Exception {
+        ModelResource[] mrs = ModelWorkspaceManager.getModelWorkspaceManager().getModelWorkspace().getModelResources();
+        List<IResource> resources = new ArrayList<IResource>();
+
+        for (ModelResource mr : mrs) {
+            if (mr.getModelProject().getProject().equals(project)) {
+            	if( ModelUtil.isVdbSourceObject(mr) ) {
+            		resources.add(mr.getCorrespondingResource());
+            	}
+            }
+        }
+        
+        return resources;
+    }
 
     private PreviewVdbStatus getStatus( IPath pvdbPath ) {
         Collection<PreviewVdbStatus> statuses = null;
@@ -733,6 +800,14 @@ public final class PreviewManager extends JobChangeAdapter
         return null;
     }
 
+    private String getVdbSourceModelVdbName(ModelResource modelResource) throws Exception {
+    	if( modelResource.getModelAnnotation() != null) {
+    		return ModelUtil.getVdbName(modelResource);
+    	}
+    	
+    	return null;
+    }
+    
     /**
      * Handles the file resource changes.
      * 
@@ -853,7 +928,9 @@ public final class PreviewManager extends JobChangeAdapter
      */
     private void handlePreviewVdbCreated( CreatePreviewVdbJob job ) {
         IFile pvdb = job.getPreviewVdb();
-        addWorkspacePvdb(pvdb);
+        if( pvdb != null ) {
+        	addWorkspacePvdb(pvdb);
+        }
     }
 
     /**
@@ -1008,6 +1085,9 @@ public final class PreviewManager extends JobChangeAdapter
     boolean needsToBeDeployed( IFile pvdbFile ) {
         PreviewVdbStatus status = getStatus(pvdbFile.getFullPath());
         assert (status != null) : "PVDB status not found in status map:" + pvdbFile.getFullPath(); //$NON-NLS-1$
+        if( status == null ) {
+        	return false;
+        }
         boolean deploy = status.shouldDeploy();
         if (!deploy) {
             // make sure server has a copy of the Preview VDB
@@ -1085,16 +1165,12 @@ public final class PreviewManager extends JobChangeAdapter
         
         ModelResource model = ModelUtil.getModel(objectToPreview);
         IFile modelToPreview = (IFile)model.getCorrespondingResource();
+        IProject currentModelProject = modelToPreview.getProject();
         IFile pvdbFile = this.context.getPreviewVdb(modelToPreview);
         Vdb pvdb = new Vdb(pvdbFile, true, monitor);
-        projectPreviewVdbName = getPreviewProjectVdbName(modelToPreview.getProject());
-       
-        
-        
-        
-        List<IFile> projectPvdbsToDeploy = findProjectPvdbs(modelToPreview.getProject(), true);
-       
-        
+        projectPreviewVdbName = getPreviewProjectVdbName(currentModelProject);
+
+        List<IFile> projectPvdbsToDeploy = findProjectPvdbs(currentModelProject, true);
 
         if (monitor.isCanceled()) {
             throw new InterruptedException();
@@ -1248,23 +1324,34 @@ public final class PreviewManager extends JobChangeAdapter
 
         //Find and set the project level PVDB
         IFile projectVdbIFile = null;
-        List<IFile> projectPvdbsToMerge = findProjectPvdbs(modelToPreview.getProject(), false);
-        for (IFile projectVdb : projectPvdbsToMerge){
+        List<IFile> localPreviewVdbs = findProjectPvdbs(currentModelProject, false);
+        for (IFile projectVdb : localPreviewVdbs){
         	if (isProjectLevelPreviewVdb(projectVdb)){
         		projectVdbIFile = projectVdb;
         		break;
         	}
         }
         
-        projectPvdbsToMerge.removeAll(pvdbsToRemove);
+        localPreviewVdbs.removeAll(pvdbsToRemove);
         
         // merge into project PVDB
         MERGE_TASK: {
             monitor.subTask(NLS.bind(Messages.PreviewSetupMergeTask, projectPreviewVdbName));
 
             if (projectVdbIFile != null) {
-
-                admin.mergeVdbs(projectPvdbsToMerge,  projectPreviewVdbName, 1, projectVdbIFile);
+            	VDB deployedProjectVdb = admin.getVdb(projectPreviewVdbName);
+            	Vdb localProjectVdb = new Vdb(projectVdbIFile, new NullProgressMonitor());
+            	localProjectVdb.removeAllImportVdbs();
+            	// Add imports for all preview vdbs under project
+                addPreviewVdbImports(localProjectVdb, localPreviewVdbs);
+                // Add imports for all VDB source models within this project
+                addPreviewSourceVdbImports(localProjectVdb, currentModelProject);
+                
+                String fullProjectVdbName = getFullDeployedVdbName(deployedProjectVdb);
+                admin.getAdminApi().undeploy(fullProjectVdbName);
+                localProjectVdb.save(null);
+                localProjectVdb.getFile().refreshLocal(IResource.DEPTH_INFINITE, null);
+                admin.deployVdb(localProjectVdb.getFile()); 
             }
 
             monitor.worked(1);
@@ -1388,7 +1475,9 @@ public final class PreviewManager extends JobChangeAdapter
     private void setNeedsToBeDeployedStatus( IPath pvdbPath,
                                              boolean deploy ) {
         PreviewVdbStatus status = getStatus(pvdbPath);
-        status.setDeploy(deploy);
+        if( status != null ) {
+        	status.setDeploy(deploy);
+        }
     }
 
     public void setPasswordProvider( IPasswordProvider passwordProvider ) {

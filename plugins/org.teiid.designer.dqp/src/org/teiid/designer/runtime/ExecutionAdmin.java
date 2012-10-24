@@ -9,29 +9,21 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.xml.stream.XMLStreamException;
-
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.osgi.util.NLS;
@@ -40,8 +32,6 @@ import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
-import org.teiid.adminapi.impl.VDBMetaData;
-import org.teiid.adminapi.impl.VDBMetadataParser;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -93,15 +83,13 @@ public class ExecutionAdmin {
         this.connectionMatcher = new ModelConnectionMatcher();
 
         init();
-        // refresh();
     }
 
     /**
-     * @param name
+     * @param name the name of the data source
      * @return true if data source exists with the provided name. else false.
-     * @throws Exception
      */
-    public boolean dataSourceExists( String name ) throws Exception {
+    public boolean dataSourceExists( String name ) {
         // Check if exists, return false
         if (this.dataSourceNames.contains(name)) {
             return true;
@@ -113,8 +101,8 @@ public class ExecutionAdmin {
     /**
      * Removes the data source from the teiid server (if exists)
      * 
-     * @param jndiName
-     * @throws Exception
+     * @param jndiName the source jndi name
+     * @throws Exception if failer in deleting data source on server
      */
     public void deleteDataSource( String jndiName ) throws Exception {
         // Check if exists, return false
@@ -140,8 +128,9 @@ public class ExecutionAdmin {
     /**
      * Deploys the VDB (IFile) to the related Teiid server
      * 
-     * @param vdb
-     * @return
+     * @param vdbFile the vdb file
+     * @return the deployed VDB
+     * @throws Exception if deployment fails
      */
     public VDB deployVdb( IFile vdbFile ) throws Exception {
         CoreArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
@@ -164,8 +153,9 @@ public class ExecutionAdmin {
     /**
      * Deploys the input Vdb archive file to the related Teiid server
      * 
-     * @param vdb
-     * @return
+     * @param vdb the local Vdb to deploy
+     * @return the deployed VDB
+     * @throws Exception if deployment fails
      */
     public VDB deployVdb( Vdb vdb ) throws Exception {
         CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
@@ -185,30 +175,28 @@ public class ExecutionAdmin {
         this.teiidVdbs = Collections.emptySet();
     }
     
-    public Admin getAdminApi() {
+    @SuppressWarnings("javadoc")
+	public Admin getAdminApi() {
         return this.admin;
     }
 
     /**
      * Returns a teiid data source object if it exists in this server
      * 
-     * @param name
+     * @param name the data source name
      * @return the teiid data source object (can be <code>null</code>)
      */
     public TeiidDataSource getDataSource(String name) {
         return this.dataSourceByNameMap.get(name);
     }
     
-    /**
-     * REturns a list of
-     * 
-     * @return
-     */
-    public Collection<TeiidDataSource> getDataSources() {
+    @SuppressWarnings("javadoc")
+	public Collection<TeiidDataSource> getDataSources() {
         return this.dataSourceByNameMap.values();
     }
 
-    public Set<String> getDataSourceTypeNames() {
+    @SuppressWarnings("javadoc")
+	public Set<String> getDataSourceTypeNames() {
         return this.dataSourceTypeNames;
     }
 
@@ -219,6 +207,14 @@ public class ExecutionAdmin {
         return this.eventManager;
     }
 
+    /**
+     * @param model the model containing source info
+     * @param jndiName the JNDI name
+     * @param previewVdb the model's preview vdb
+     * @param passwordProvider the password provider
+     * @return Teiid data source object
+     * @throws Exception if data source creation fails
+     */
     public TeiidDataSource getOrCreateDataSource( IFile model,
                                                   String jndiName,
                                                   boolean previewVdb,
@@ -291,11 +287,12 @@ public class ExecutionAdmin {
     }
 
     /**
-     * @param name
-     * @param typeName
-     * @param properties
+     * @param displayName the JNDI display name
+     * @param jndiName the JNDI name
+     * @param typeName the translator type name
+     * @param properties the list of teiid-related connection properties
      * @return true if data source is created. false if it already exists
-     * @throws Exception
+     * @throws Exception if data source creation fails
      */
     public TeiidDataSource getOrCreateDataSource( String displayName,
                                                   String jndiName,
@@ -432,8 +429,7 @@ public class ExecutionAdmin {
 
     /**
      * @param name the translator name (never <code>null</code> or empty)
-     * @return
-     * @throws Exception
+     * @return a TeiidTranslator
      * @since 7.0
      */
     public TeiidTranslator getTranslator( String name ) {
@@ -441,6 +437,10 @@ public class ExecutionAdmin {
         return this.translatorByNameMap.get(name);
     }
 
+    /**
+     * 
+     * @return collection of Teiid translators
+     */
     public Collection<TeiidTranslator> getTranslators() {
         return this.translatorByNameMap.values();
     }
@@ -465,43 +465,6 @@ public class ExecutionAdmin {
      */
     public Set<TeiidVdb> getVdbs() {
         return this.teiidVdbs;
-    }
-    
-    /**
-     * 
-     * @param vdbName
-     * @return the vdb.xml string may be null
-     */
-    public final String getVdbXmlString(String vdbName) {
-    	CoreArgCheck.isNotEmpty(vdbName, "vdbName"); //$NON-NLS-1$
-    	VDB theVdb = getVdb(vdbName);
-    	if( theVdb != null ) {
-    		return getVdbXmlString((VDBMetaData)theVdb);
-    	}
-    	return null;
-    }
-    
-    private final String getVdbXmlString(VDBMetaData vdbMetadata) {
-        // Create a StringBuffer into which the WSDL can be written ...
-        final ByteArrayOutputStream bas = new ByteArrayOutputStream();
-        final BufferedOutputStream stream = new BufferedOutputStream(bas);
-        try {
-        	VDBMetadataParser.marshell(vdbMetadata, stream);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        } catch (XMLStreamException e) {
-        	throw new RuntimeException(e.getMessage());
-		} finally {
-            if ( stream != null ) {
-                try {
-					stream.close();
-				} catch (IOException e) {
-					throw new RuntimeException(e.getMessage());
-				}
-            }
-        }
-        
-        return bas.toString();
     }
     
     private void init() throws Exception {
@@ -537,7 +500,7 @@ public class ExecutionAdmin {
     }
 
     /**
-     * @throws Exception
+     * @throws Exception if refreshing admin connection fails
      */
     public void load() throws Exception {
         if (!this.loaded) {
@@ -547,37 +510,9 @@ public class ExecutionAdmin {
     }
 
     /**
-     * @param sourceVdbName (excluding .vdb extension) the name of the VDB being merged into the target VDB
-     * @param sourceVdbVersion the version of the source VDB
-     * @param targetVdbName (excluding .vdb extension) the name of the VDB being merged into
-     * @param targetVdbVersion the version of the target VDB
-     * @throws Exception if there is a problem with the merge
+     * Refreshes the cached lists and maps of current Teiid objects
+     * @throws Exception if refreshing admin connection fails
      */
-    public void mergeVdbs( List<IFile> pvdbsToMerge,
-                           String ptargetVdbName,
-                           int ptargetVdbVersion,
-                           IFile ptargetvdbToMerge) throws Exception {
-    	
-    	VDB projectVdb = getVdb(ptargetVdbName);
-    	String name = projectVdb.getPropertyValue("deployment-name");
-    	Vdb vdb = new Vdb(ptargetvdbToMerge, new NullProgressMonitor());
-    	vdb.removeAllImportVdbs();
-    
-    	// merge into project PVDB
-        for (IFile pvdbToMerge : pvdbsToMerge) {
-        	if (ptargetvdbToMerge.equals(pvdbToMerge)) continue;
-        	
-        	// REMOVE the .vdb extension for the source vdb
-	        String sourceVdbName = pvdbToMerge.getFullPath().removeFileExtension().lastSegment().toString();
-	        vdb.addImportVdb(sourceVdbName);
-	    }
-        
-        this.admin.undeploy(appendVdbExtension(name));
-        vdb.save(null);
-        ptargetvdbToMerge.refreshLocal(IResource.DEPTH_INFINITE, null);
-        deployVdb(vdb.getFile()); 	
-    }
-
     public void refresh() throws Exception {
         // populate translator map
         refreshTranslators(this.admin.getTranslators());
@@ -672,6 +607,12 @@ public class ExecutionAdmin {
         internalSetPropertyValue(translator, propName, value, true);
     }
 
+    /**
+     * 
+     * @param vdbName the vdb name
+     * @param vdbVersion the vdb version
+     * @throws Exception if undeploying vdb fails
+     */
     public void undeployVdb( String vdbName,
                              int vdbVersion ) throws Exception {
         this.admin.undeploy(appendVdbExtension(vdbName));
@@ -687,8 +628,8 @@ public class ExecutionAdmin {
     }
 
     /**
-     * @param vdb
-     * @return
+     * @param vdb the vdb to undeploy
+     * @throws Exception if undeploying vdb fails
      */
     public void undeployVdb( VDB vdb ) throws Exception {
         CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$

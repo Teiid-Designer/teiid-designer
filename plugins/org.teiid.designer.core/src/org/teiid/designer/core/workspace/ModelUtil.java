@@ -46,11 +46,14 @@ import org.teiid.designer.common.xsd.XsdHeader;
 import org.teiid.designer.common.xsd.XsdHeaderReader;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.ResourceFinder;
+import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.core.index.IndexUtil;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.resource.MMXmiResource;
 import org.teiid.designer.core.xmi.XMIHeader;
 import org.teiid.designer.core.xmi.XMIHeaderReader;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;
 import org.teiid.designer.metamodels.core.CoreMetamodelPlugin;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -536,6 +539,22 @@ public class ModelUtil {
             return finalPath;
         }
         return null;
+    }
+    
+    /**
+     * 
+     * @param modelResource the target model resource
+     * @return the vdb name
+     * @throws Exception 
+     */
+    public static String getVdbName(final ModelResource modelResource) throws Exception {
+    	if (modelResource != null ) {
+    		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+			EmfModelObjectExtensionAssistant assistant = (EmfModelObjectExtensionAssistant)registry.getModelExtensionAssistant("core"); //$NON-NLS-1$
+			return assistant.getPropertyValue(modelResource.getModelAnnotation(), "core:vdb-name"); //$NON-NLS-1$
+    	}
+    	
+    	return null;
     }
 
     /**

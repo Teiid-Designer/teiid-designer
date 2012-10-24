@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 import org.teiid.designer.runtime.preview.PreviewManager;
@@ -49,6 +50,8 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
      * The Preview VDB or <code>null</code> if job did not complete successfully.
      */
     private IFile pvdbFile;
+    
+    private boolean ignorableJob = false;
 
     /**
      * @param model the model whose Preview VDB is being created (may not be <code>null</code>)
@@ -92,6 +95,13 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
         // set the PVDB
         IResource resource = (project == null) ? this.model : this.project;
         int size = (project == null) ? 4 : 3;
+        
+        if( !resource.exists() || ModelUtil.isVdbSourceObject(this.model) ) {
+        	cancel();
+        	ignorableJob = true;
+        	return;
+        }
+        
         this.pvdbFile = getContext().getPreviewVdb(resource);
 
         // set job scheduling rule on the PVDB resource, the model, and the build
@@ -115,47 +125,49 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
      */
     @Override
     protected IStatus runImpl( IProgressMonitor monitor ) throws Exception {
+    	if( ignorableJob) {
+    		cancel();
+    		return new Status(IStatus.OK, PLUGIN_ID, NLS.bind(Messages.CreatePreviewVdbJobSuccessfullyCompleted,
+    				this.model.getFullPath()));
+    	}
+    	
         try {
             IResource resource = ((this.project == null) ? this.model : this.project);
 
-            if (resource.exists()) {
-                if (resource instanceof IFile) {
-                    if (!this.model.isSynchronized(IResource.DEPTH_INFINITE)) {
-                        this.model.refreshLocal(IResource.DEPTH_INFINITE, null);
-                    }
+            if (resource instanceof IFile) {
+                if (!this.model.isSynchronized(IResource.DEPTH_INFINITE)) {
+                    this.model.refreshLocal(IResource.DEPTH_INFINITE, null);
                 }
+            }
 
-                // if the file was deleted from outside Eclipse, Eclipse will think it still exists
-                if (this.pvdbFile.exists() && !this.pvdbFile.getLocation().toFile().exists()) {
-                    this.pvdbFile.delete(true, monitor);
+            // if the file was deleted from outside Eclipse, Eclipse will think it still exists
+            if (this.pvdbFile.exists() && !this.pvdbFile.getLocation().toFile().exists()) {
+                this.pvdbFile.delete(true, monitor);
+            }
+
+            boolean isNew = false;
+            // create if necessary
+            if (!this.pvdbFile.exists()) {
+                isNew = true;
+                this.pvdbFile.create(new ByteArrayInputStream(new byte[0]), false, null);
+            }
+
+            // make sure the file is hidden
+            this.pvdbFile.setHidden(true);
+
+            Vdb pvdb = new Vdb(this.pvdbFile, true, monitor);
+
+            // don't do if a project PVDB
+            if (resource instanceof IFile) {
+                // don't add if already in the PVDB (only one model per PVDB)
+                if (pvdb.getModelEntries().isEmpty()) {
+                    pvdb.addModelEntry(this.model.getFullPath(), monitor);
                 }
+            }
 
-                boolean isNew = false;
-                // create if necessary
-                if (!this.pvdbFile.exists()) {
-                    isNew = true;
-                    this.pvdbFile.create(new ByteArrayInputStream(new byte[0]), false, null);
-                }
-
-                // make sure the file is hidden
-                this.pvdbFile.setHidden(true);
-
-                Vdb pvdb = new Vdb(this.pvdbFile, true, monitor);
-
-                // don't do if a project PVDB
-                if (resource instanceof IFile) {
-                    // don't add if already in the PVDB (only one model per PVDB)
-                    if (pvdb.getModelEntries().isEmpty()) {
-                        pvdb.addModelEntry(this.model.getFullPath(), monitor);
-                    }
-                }
-
-                // this will trigger an resource change event which will eventually get an update job to run
-                if (isNew || pvdb.isModified()) {
-                    pvdb.save(monitor);
-                }
-            } else {
-                cancel();
+            // this will trigger an resource change event which will eventually get an update job to run
+            if (isNew || pvdb.isModified()) {
+                pvdb.save(monitor);
             }
         } catch (Exception e) {
             IProject proj = ((this.project == null) ? this.model.getProject() : this.project);
