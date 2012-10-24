@@ -8,13 +8,14 @@
 package org.teiid.designer.runtime.ui.preview;
 
 import java.util.Properties;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.ui.common.util.UiUtil;
 
 
 /**
@@ -48,7 +49,8 @@ public class PreviewDataAction extends Action {
 			return;
 		}
 
-		PreviewDataDialog dialog = new PreviewDataDialog(worker.getShell(), designerProperties);
+		Shell shell = UiUtil.getWorkbenchWindowOnlyIfUiThread().getShell();
+		PreviewDataDialog dialog = new PreviewDataDialog(shell, designerProperties);
 
 		dialog.open();
 

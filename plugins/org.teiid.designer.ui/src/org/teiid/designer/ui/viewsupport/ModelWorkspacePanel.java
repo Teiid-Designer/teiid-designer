@@ -27,7 +27,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
+import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -314,7 +314,7 @@ public class ModelWorkspacePanel extends Composite implements IFinderPanel, ISel
      * @see Window#create()
      */
     public void create() {
-        BusyIndicator.showWhile(null, new Runnable() {
+        UiBusyIndicator.showWhile(null, new Runnable() {
             @Override
 			public void run() {
                 fViewer.setSelection(new StructuredSelection(getInitialElementSelections()), true);

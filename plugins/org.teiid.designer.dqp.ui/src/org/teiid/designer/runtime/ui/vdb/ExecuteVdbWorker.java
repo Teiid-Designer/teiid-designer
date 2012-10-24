@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime.ui.vdb;
 
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -16,7 +15,6 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -28,12 +26,13 @@ import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.datatools.ui.dialogs.TeiidCPWizardDialog;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ExecutionAdmin;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.actions.DeployVdbAction;
 import org.teiid.designer.runtime.ui.actions.OpenScrapbookEditorAction;
+import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
 
 /**
@@ -94,7 +93,7 @@ public class ExecuteVdbWorker implements VdbConstants {
 			return;
 		}
 
-		BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+		UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
 
 			@Override
 			public void run() {

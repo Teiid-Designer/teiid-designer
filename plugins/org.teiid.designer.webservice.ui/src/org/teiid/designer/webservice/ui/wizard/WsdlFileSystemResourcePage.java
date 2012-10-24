@@ -28,7 +28,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
@@ -58,6 +57,7 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.IImportStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
+import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
 /**
  * @since 8.0
@@ -617,7 +617,7 @@ public class WsdlFileSystemResourcePage extends WizardResourceImportPage {
 
         final MinimizedFileSystemElement[] results = new MinimizedFileSystemElement[1];
 
-        BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
+        UiBusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
             @Override
 			public void run() {
                 // Create the root element from the supplied file system object
