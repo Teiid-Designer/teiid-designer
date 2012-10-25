@@ -135,24 +135,6 @@ public class DeprecatedModelExtensionAssistant extends EmfModelObjectExtensionAs
         getRestAssistant().setPropertyValue(modelObject, NEW_URI, uriValue);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant#getPropertyDefinition(java.lang.Object, java.lang.String)
-     */
-    @Override
-    protected ModelExtensionPropertyDefinition getPropertyDefinition(Object modelObject,
-                                                                     String propId) throws Exception {
-        ModelExtensionPropertyDefinition propDefn = super.getPropertyDefinition(modelObject, propId);
-
-        if (propDefn == null) {
-            return null;
-        }
-
-        String value = getOverriddenValue(modelObject, propDefn.getId());
-        return (CoreStringUtil.isEmpty(value) ? null : propDefn);
-    }
-
     private ModelObjectExtensionAssistant getRestAssistant() {
         if (this.restAssistant == null) {
             this.restAssistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()

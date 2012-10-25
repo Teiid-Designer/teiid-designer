@@ -21,14 +21,29 @@ import org.teiid.core.designer.util.LoggingUtil;
  */
 public interface ExtensionConstants {
 
+    /**
+     * The plugin identifier. Value is {@value}.
+     */
     String PLUGIN_ID = ExtensionConstants.class.getPackage().getName();
 
+    /**
+     * The bundles logging and i18n utilities.
+     */
     PluginUtil UTIL = new LoggingUtil(PLUGIN_ID);
 
+    /**
+     * The model extension definition schema file name. Value is {@value}.
+     */
     String SCHEMA_FILENAME = "modelExtension.xsd"; //$NON-NLS-1$
 
+    /**
+     * The model extension definition file extension. Value is {@value}.
+     */
     String MED_EXTENSION = "mxd"; //$NON-NLS-1$
 
+    /**
+     * The model extension definition file extension prefixed with a dot.
+     */
     String DOT_MED_EXTENSION = '.' + MED_EXTENSION;
 
     /**
@@ -55,6 +70,9 @@ public interface ExtensionConstants {
         String VERSION = "version"; //$NON-NLS-1$
     }
 
+    /**
+     * Namespace-related names found in the model extension definition schema.
+     */
     interface Namespaces {
         String NS_XSI = "xsi"; //$NON-NLS-1$
         String NS_MED = "p"; //$NON-NLS-1$
@@ -78,6 +96,9 @@ public interface ExtensionConstants {
         String PROPERTY = "property"; //$NON-NLS-1$
     }
 
+    /**
+     * Compares {@link Locale}s based on display language.
+     */
     Comparator LOCALE_COMPARATOR = new Comparator<Locale>() {
 
         /**
@@ -109,6 +130,11 @@ public interface ExtensionConstants {
 
         String CHANGE_HEADER_INFO = "CHANGE_HEADER_INFO"; //$NON-NLS-1$
         
+        /**
+         * An operation that would indicate a MED has been saved to a model.
+         */
+        String SHOW_CONTAINED_IN_MODEL = "SHOW_CONTAINED_IN_MODEL"; //$NON-NLS-1$
+
         String SHOW_IN_REGISTRY = "SHOW_IN_REGISTRY"; //$NON-NLS-1$
     }
 

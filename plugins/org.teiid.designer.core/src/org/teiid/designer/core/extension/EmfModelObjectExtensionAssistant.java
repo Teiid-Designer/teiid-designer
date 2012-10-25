@@ -196,7 +196,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
      */
     @Override
     public Collection<ModelExtensionPropertyDefinition> getPropertyDefinitions(Object modelObject) throws Exception {
-        if (!(modelObject instanceof EObject)) {
+        if (!(modelObject instanceof EObject) || !supportsMyNamespace(modelObject)) {
             return Collections.emptyList();
         }
 

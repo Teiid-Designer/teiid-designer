@@ -134,7 +134,7 @@ public class ModelExplorerLabelProvider extends LabelProvider
     /**
      * Set this label provider's event source
      * 
-     * @param theSource
+     * @param theSource the source of the event (can be <code>null</code>)
      */
     public void setLabelProviderChangedEventSource( IBaseLabelProvider theSource ) {
         this.eventSource = theSource;
@@ -368,7 +368,7 @@ public class ModelExplorerLabelProvider extends LabelProvider
         
         // Lastly, decorate with Extension if applicable
         
-        if( element instanceof IFile ) {
+        if( element instanceof IFile && ModelUtilities.isModelFile((IFile)element)) {
             File file = ((IFile)element).getLocation().toFile();
             ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
 
@@ -376,8 +376,9 @@ public class ModelExplorerLabelProvider extends LabelProvider
                 for (String namespacePrefix : registry.getAllNamespacePrefixes()) {
                     ModelExtensionAssistant assistant = registry.getModelExtensionAssistant(namespacePrefix);
 
-                    if ((assistant instanceof ModelObjectExtensionAssistant)
-                            && ((ModelObjectExtensionAssistant)assistant).hasExtensionProperties(file)) {
+                    if (!assistant.getModelExtensionDefinition().isBuiltIn()
+                        && (assistant instanceof ModelObjectExtensionAssistant)
+                        && ((ModelObjectExtensionAssistant)assistant).supportsMyNamespace(element)) {
                         decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
                         break;
                     }

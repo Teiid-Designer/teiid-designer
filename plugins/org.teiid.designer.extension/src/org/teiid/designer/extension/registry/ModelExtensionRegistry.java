@@ -190,7 +190,7 @@ public final class ModelExtensionRegistry {
      * @return a collection of all the model extension definitions (never <code>null</code>)
      */
     public Collection<ModelExtensionDefinition> getAllDefinitions() {
-        return this.definitions.values();
+        return Collections.unmodifiableCollection(this.definitions.values());
     }
 
     /**
@@ -222,7 +222,8 @@ public final class ModelExtensionRegistry {
     /**
      * Restore the persisted user-defined MEDs from the file system (at the specified path location) into the registry.
      * 
-     * @param userDefinitionsPath
+     * @param userDefinitionsPath the directory path where the MEDs are persisted (can be <code>null</code> ore empty if MEDs are 
+     * not being restored)
      * @return IStatus indicating successful loading.
      */
     public IStatus restoreUserDefinitions( String userDefinitionsPath ) {
@@ -251,8 +252,8 @@ public final class ModelExtensionRegistry {
      * Save all user-defined MEDs that are currently in the registry to the file system (at the specified path location). Any user
      * meds that have been previously saved at the specified location will be overwritten.
      * 
-     * @param userDefinitionsPath
-     * @return IStatus indicating successful loading.
+     * @param userDefinitionsPath the directory path where the MEDs are persisted (can be <code>null</code> ore empty if MEDs are 
+     * not being saved)
      */
     public void saveUserDefinitions( String userDefinitionsPath ) {
         UserExtensionDefinitionsManager mgr = new UserExtensionDefinitionsManager(userDefinitionsPath);
@@ -383,7 +384,7 @@ public final class ModelExtensionRegistry {
     }
 
     /**
-     * @param metamodelURI the metamodel URI being checked (cannot be <code>null</code> or empty)
+     * @param metamodelUri the metamodel URI being checked (cannot be <code>null</code> or empty)
      * @return <code>true</code> if the provided URI is included in the list of extendable metamodel URIs
      */
     public boolean isExtendable( String metamodelUri ) {
