@@ -119,6 +119,7 @@ public class ExecutionAdminTest {
     	
     	VDB vdb = mock(VDB.class);
     	when(admin.getVDB("MyVdb", 1)).thenReturn(vdb);
+    	when(vdb.getStatus()).thenReturn(VDB.Status.ACTIVE);
     	
         getNewAdmin().deployVdb(vdbFile);
     }
