@@ -65,11 +65,13 @@ public class ModelExtensionAssistant implements ExtensionConstants {
                                                                     Set<String> modelTypes,
                                                                     String description,
                                                                     String version ) {
-        this.definition = new ModelExtensionDefinition(this, namespacePrefix, namespaceUri, metamodelUri, description, version);
+        if ((this.definition == null) || !this.definition.isBuiltIn()) {
+            this.definition = new ModelExtensionDefinition(this, namespacePrefix, namespaceUri, metamodelUri, description, version);
 
-        if ((modelTypes != null) && !modelTypes.isEmpty()) {
-            for (String modelType : modelTypes) {
-                addSupportedModelType(modelType);
+            if ((modelTypes != null) && !modelTypes.isEmpty()) {
+                for (String modelType : modelTypes) {
+                    addSupportedModelType(modelType);
+                }
             }
         }
 
@@ -82,15 +84,14 @@ public class ModelExtensionAssistant implements ExtensionConstants {
      * @param medHeader the ModelExtensionDefinitionHeader (cannot be <code>null</code>)
      * @return the new model extension definition (never <code>null</code>)
      */
-    public ModelExtensionDefinition createModelExtensionDefinition( ModelExtensionDefinitionHeader medHeader ) {
+    public ModelExtensionDefinition createModelExtensionDefinition(ModelExtensionDefinitionHeader medHeader) {
         CoreArgCheck.isNotNull(medHeader, "ModelExtensionDefinitionHeader is null"); //$NON-NLS-1$
-        ModelExtensionDefinition med = createModelExtensionDefinition(medHeader.getNamespacePrefix(), medHeader.getNamespaceUri(),
-                                                                      medHeader.getMetamodelUri(),
-                                                                      medHeader.getSupportedModelTypes(),
-                                                                      medHeader.getDescription(),
-                                                                      String.valueOf(medHeader.getVersion()));
-
-        return med;
+        return createModelExtensionDefinition(medHeader.getNamespacePrefix(),
+                                              medHeader.getNamespaceUri(),
+                                              medHeader.getMetamodelUri(),
+                                              medHeader.getSupportedModelTypes(),
+                                              medHeader.getDescription(),
+                                              String.valueOf(medHeader.getVersion()));
     }
 
     /**
