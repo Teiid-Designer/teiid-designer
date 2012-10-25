@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,9 +20,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.osgi.util.NLS;
@@ -139,12 +140,25 @@ public class ExecutionAdmin {
         String vdbNameNoExt = vdbFile.getFullPath().removeFileExtension().lastSegment();
         
         admin.deploy(vdbName, vdbFile.getContents());
-      
+              
+        // Give a 3 sec pause for the VDB to load metadata.
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+        }
+        
+        // Refresh VDBs list
         refreshVDBs();
 
         // TODO should get version from vdbFile
         VDB vdb = admin.getVDB(vdbNameNoExt, 1);
-        
+
+        // If the VDB is still loading, start a job which will refresh VDBs once loading is complete.
+        if(vdb.getStatus().equals(VDB.Status.LOADING) && vdb.getValidityErrors().isEmpty()) {
+            final Job refreshVDBsJob = new RefreshVDBsJob(vdbNameNoExt);
+            refreshVDBsJob.schedule();
+        }
+
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createDeployVDBEvent(vdb));
         
         return vdb;
@@ -654,6 +668,96 @@ public class ExecutionAdmin {
             return vdbName;
         
         return vdbName + Vdb.FILE_EXTENSION;
+    }
+    
+    /**
+     * Executes VDB refresh when a VDB is loading - as a background job.
+     */
+    class RefreshVDBsJob extends Job {
+
+        String vdbName;
+        
+        /**
+         * @param vdbName
+         */
+        public RefreshVDBsJob(String vdbName ) {
+            super("VDB Refresh"); //$NON-NLS-1$
+            this.vdbName = vdbName;
+            
+            setSystem(false);
+            setUser(true);
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
+         */
+        @Override
+        protected IStatus run( IProgressMonitor monitor ) {
+            monitor.beginTask("VDB Refresh", //$NON-NLS-1$
+                              IProgressMonitor.UNKNOWN);
+
+            try {
+                waitForVDBLoad(this.vdbName);
+            } catch (Exception ex) {
+            }
+
+            monitor.done();
+
+            return Status.OK_STATUS;
+        }
+        
+        /*
+         * Wait for the VDB to finish loading.  Will check status every 5 secs and return when the VDB is loaded.
+         * If not loaded within 30sec, it will timeout
+         * @param vdbName the name of the VDB
+         */
+        
+        private void waitForVDBLoad(String vdbName) throws Exception {
+            int timeoutInSecs = 30;  // time out after 30secs
+            
+            long waitUntil = System.currentTimeMillis() + timeoutInSecs*1000;
+            if (timeoutInSecs < 0) {
+                waitUntil = Long.MAX_VALUE;
+            }
+            boolean first = true;
+            do {
+                // Pause 5 sec before subsequent attempts
+                if (!first) {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        break;
+                    }
+                } else {
+                    first = false;
+                }
+                // Get the VDB using admin API
+                VDB vdb = getVdb(vdbName);
+                // Determine if VDB is loading, or whether to wait
+                if(vdb!=null) {
+                    VDB.Status vdbStatus = vdb.getStatus();
+                    // return if no models in VDB, or VDB has errors (done loading)
+                    if(vdb.getModels().isEmpty() || vdbStatus.equals(VDB.Status.FAILED) || 
+                       vdbStatus.equals(VDB.Status.REMOVED) || vdbStatus.equals(VDB.Status.ACTIVE)) {
+                        refresh();
+                        return;
+                    }
+                    // If the VDB Status is LOADING, but a validity error was found - return
+                    if(vdbStatus.equals(VDB.Status.LOADING) && !vdb.getValidityErrors().isEmpty()) {
+                        refresh();
+                        return;
+                    }
+                } else {
+                    refresh();
+                    return;
+                }
+            } while (System.currentTimeMillis() < waitUntil);
+            refresh();
+            return;
+        }
+
     }
 
 }
