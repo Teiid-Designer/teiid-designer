@@ -10,7 +10,10 @@ package org.teiid.designer.runtime.ui.vdb;
 import java.util.Properties;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -113,15 +116,20 @@ public class ExecuteVdbWorker implements VdbConstants {
 				if (connectStatus.isOK()) {
 					ExecutionAdmin admin = teiidServer.getAdmin();
 					if (admin != null) {
-						deployedVDB = admin.getVdb(selectedVdb.getName());
+						deployedVDB = admin.getVdb(selectedVdb.getFullPath().removeFileExtension().lastSegment());
 						if (deployedVDB == null) {
-							deployedVDB = DeployVdbAction.deployVdb(teiidServer,
-									selectedVdb);
-						}
-
+							deployedVDB = DeployVdbAction.deployVdb(teiidServer,selectedVdb);
+						} 
+						
 						if (deployedVDB != null && deployedVDB.getStatus().equals(VDB.Status.ACTIVE)) {
 							executeVdb(DqpPlugin.getInstance().getServerManager().getDefaultServer(),
 									selectedVdb.getFullPath().removeFileExtension().lastSegment());
+						} else if(deployedVDB !=null && deployedVDB.getStatus().equals(VDB.Status.LOADING)) {
+						    StringBuilder message = new StringBuilder(
+						        getString("vdbLoadingMessage", selectedVdb.getName())); //$NON-NLS-1$
+						    MessageDialog
+						    .openWarning(getShell(),getString("vdbLoadingTitle"), //$NON-NLS-1$
+						                 message.toString());
 						} else {
 							StringBuilder message = new StringBuilder(
 									getString("vdbNotActiveMessage", selectedVdb.getName())); //$NON-NLS-1$
@@ -153,6 +161,7 @@ public class ExecuteVdbWorker implements VdbConstants {
 							selectedVdb.getName()));
 		}
 	}
+	
 
 	public void executeVdb(TeiidServer teiidServer, String vdbName)
 			throws CoreException {
@@ -215,4 +224,5 @@ public class ExecuteVdbWorker implements VdbConstants {
 			sbAction.run(profile, vdbName);
 		}
 	}
+		
 }
