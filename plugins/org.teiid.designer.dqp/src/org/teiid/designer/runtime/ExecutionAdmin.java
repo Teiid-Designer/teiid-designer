@@ -141,22 +141,28 @@ public class ExecutionAdmin {
         
         admin.deploy(vdbName, vdbFile.getContents());
               
-        // Give a 3 sec pause for the VDB to load metadata.
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-        }
-        
         // Refresh VDBs list
         refreshVDBs();
 
         // TODO should get version from vdbFile
         VDB vdb = admin.getVDB(vdbNameNoExt, 1);
 
-        // If the VDB is still loading, start a job which will refresh VDBs once loading is complete.
+        // If the VDB is still loading, refresh again and potentially start refresh job
         if(vdb.getStatus().equals(VDB.Status.LOADING) && vdb.getValidityErrors().isEmpty()) {
-            final Job refreshVDBsJob = new RefreshVDBsJob(vdbNameNoExt);
-            refreshVDBsJob.schedule();
+            // Give a 0.5 sec pause for the VDB to finish loading metadata.
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+            }   
+            // Refresh again to update vdb states
+            refreshVDBs();
+            vdb = admin.getVDB(vdbNameNoExt, 1);
+            // Determine if still loading, if so start refresh job.  User will get dialog that the
+            // vdb is still loading - and try again in a few seconds
+            if(vdb.getStatus().equals(VDB.Status.LOADING) && vdb.getValidityErrors().isEmpty()) {
+                final Job refreshVDBsJob = new RefreshVDBsJob(vdbNameNoExt);
+                refreshVDBsJob.schedule();
+            }
         }
 
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createDeployVDBEvent(vdb));
