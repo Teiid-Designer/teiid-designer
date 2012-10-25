@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
@@ -70,6 +71,9 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 
+/**
+ * A wizard page that shows a models currently saved MEDs and provides a way to add and remove MEDs.
+ */
 public class CurrentModelExtensionDefnsPage extends WizardPage implements InternalUiConstants.Widgets {
 
     private final ModelExtensionRegistry registry;
@@ -87,7 +91,6 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     private MedHeadersEditManager editManager;
     private Collection<ModelExtensionDefinition> modelMeds;
 
-    private int selectedMedIndex = -1; // Index of the current Med Selection
     private Button addMedButton, removeMedButton, saveMedButton, updateMedButton; // Buttons for adding/removing/saving/updating MED
 
     protected int currentStatus = STATUS_OK; // Current status of wizard
@@ -117,22 +120,30 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      * @return the list of current ModelExtensionDefinitionHeaders for the supplied ModelResource
      */
     private List<ModelExtensionDefinitionHeader> getModelExtensionDefnHeaders( ModelResource modelResource ) {
-        List<ModelExtensionDefinitionHeader> headers = new ArrayList<ModelExtensionDefinitionHeader>();
-        ExtensionPlugin extPlugin = ExtensionPlugin.getInstance();
+        final List<ModelExtensionDefinitionHeader> headers = new ArrayList<ModelExtensionDefinitionHeader>();
 
         try {
             // Get the namespaces which are currently persisted on the model
-            ModelExtensionAssistantAggregator aggregator = extPlugin.getModelExtensionAssistantAggregator();
-            Collection<String> supportedNamespaces = aggregator.getSupportedNamespacePrefixes(modelResource);
+            final ModelExtensionAssistantAggregator aggregator = ExtensionPlugin.getInstance().getModelExtensionAssistantAggregator();
+            final Collection<String> supportedNamespaces = aggregator.getSupportedNamespacePrefixes(modelResource);
             this.modelMeds = new ArrayList<ModelExtensionDefinition>(supportedNamespaces.size());
 
             // Get the associated Headers
             for (String namespacePrefix : supportedNamespaces) {
-                ModelObjectExtensionAssistant assistant = ExtensionPlugin.getInstance()
-                                                                         .createDefaultModelObjectExtensionAssistant(namespacePrefix);
-                ModelExtensionDefinition med = assistant.getModelExtensionDefinition(this.modelResource);
-                this.modelMeds.add(med);
-                headers.add(med.getHeader());
+                final ModelObjectExtensionAssistant modelAssistant = ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant(namespacePrefix);
+                final ModelExtensionAssistant registryAssistant = getRegistry().getModelExtensionAssistant(namespacePrefix);
+                boolean addMed = true;
+
+                if ((registryAssistant != null) && (registryAssistant instanceof ModelObjectExtensionAssistant)) {
+                    addMed = ((ModelObjectExtensionAssistant)registryAssistant).supportsMedOperation(ExtensionConstants.MedOperations.SHOW_CONTAINED_IN_MODEL, modelResource);
+                }
+
+                if (addMed) {
+                    final ModelExtensionDefinition med = modelAssistant.getModelExtensionDefinition(this.modelResource);
+                    this.modelMeds.add(med);
+                    headers.add(med.getHeader());
+                }
+
             }
         } catch (Exception e) {
             ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
@@ -148,15 +159,17 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         return this.editManager.getCurrentHeaders();
     }
 
-    /*
+    /**
      * Get the list of ModelExtensionDefinitions to add.
+     * @return the collection of MEDs being added to the model
      */
     public List<ModelExtensionDefinition> getModelExtensionDefnsToAdd() {
         return this.editManager.getModelExtensionDefnsToAdd();
     }
 
-    /*
+    /**
      * Get the list of Namespaces to remove.
+     * @return the collection of namespace being removed from the model
      */
     public List<String> getNamespacesToRemove() {
         return this.editManager.getNamespacesToRemove();
@@ -169,8 +182,8 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         return this.editManager.getNamespacesToUpdate();
     }
 
-    /*
-     * Get the selected ModelResource
+    /**
+     * @return the selected model resource
      */
     public ModelResource getSelectedModelResource() {
         return this.modelResource;
@@ -339,16 +352,18 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         return false;
     }
 
-    /*
+    /**
      * Get the ModelLocation string from the locationText widget
+     * @return the workspace parent path of the model (never <code>null</code>)
      */
     public String getModelLocation() {
         String result = locationText.getText().trim();
         return result;
     }
 
-    /*
+    /**
      * Get the ModelName string from the modelNameText widget
+     * @return the model name (never <code>null</code> but can be empty)
      */
     public String getModelName() {
         String result = modelNameText.getText().trim();
@@ -451,14 +466,6 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     }
 
     void handleMedSelectionChanged() {
-        // Update the selected Med
-        int[] selectedMeds = this.tableViewer.getTable().getSelectionIndices();
-        if (selectedMeds.length > 0) {
-            this.selectedMedIndex = selectedMeds[0];
-        } else {
-            this.selectedMedIndex = -1;
-        }
-        // Update the button states
         setButtonStates();
     }
 
@@ -659,19 +666,27 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      * Set the Add/Remove MED buttons states based on the current table selection
      */
     private void setButtonStates() {
-        final boolean selection = (this.selectedMedIndex >= 0);
-
-        // Remove Button - enable if MED is selected and MED supports remove
+        final IStructuredSelection selection = (IStructuredSelection)this.tableViewer.getSelection();
+        final boolean medSelected = !selection.isEmpty();
         boolean enableRemove = false;
+        boolean enableSave = false;
+        boolean enableUpdate = false;
 
-        if (selection) {
-            ModelExtensionDefinitionHeader medHeader = this.editManager.getCurrentHeaders().get(this.selectedMedIndex);
+        if (medSelected) {
+            final ModelExtensionDefinitionHeader medHeader = (ModelExtensionDefinitionHeader)selection.getFirstElement();
             ModelExtensionDefinition registryMed = getRegistry().getDefinition(medHeader.getNamespacePrefix());
 
+            // remove if MED allows
             if ((registryMed == null)
                 || registryMed.getModelExtensionAssistant().supportsMedOperation(ExtensionConstants.MedOperations.DELETE_MED_FROM_MODEL,
                                                                                  this.modelResource.getResource())) {
                 enableRemove = true;
+            }
+
+            // save and update if MED is unregistered or different than one in registry
+            if (!isRegistered(medHeader) || isDifferent(medHeader)) {
+                enableSave = true;
+                enableUpdate = true;
             }
         }
 
@@ -679,22 +694,13 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             this.removeMedButton.setEnabled(enableRemove);
         }
 
-        // Register Button - enabled if an unregistered MED is selected
-        if (selection) {
-            ModelExtensionDefinitionHeader medHeader = this.editManager.getCurrentHeaders().get(this.selectedMedIndex);
-            if (!isRegistered(medHeader) || isDifferent(medHeader)) {
-                this.saveMedButton.setEnabled(true);
-                this.updateMedButton.setEnabled(true);
-            } else {
-                this.saveMedButton.setEnabled(false);
-                this.updateMedButton.setEnabled(false);
-            }
-        } else {
-            this.saveMedButton.setEnabled(false);
+        if (this.saveMedButton.getEnabled() != enableSave) {
+            this.saveMedButton.setEnabled(enableSave);
         }
 
-        // Add Button - always enabled
-        this.addMedButton.setEnabled(true);
+        if (this.updateMedButton.getEnabled() != enableUpdate) {
+            this.updateMedButton.setEnabled(enableUpdate);
+        }
     }
 
     ModelExtensionDefinition getModelMed(String namespacePrefix) {
@@ -772,6 +778,8 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      * handler for Remove Med Button
      */
     void handleRemoveMed() {
+        assert !this.tableViewer.getSelection().isEmpty() : "remove MED handler called when no MED is selected"; //$NON-NLS-1$
+
         // Warn user that removal will remove all properties
         boolean confirmed = MessageDialog.openConfirm(getShell(),
                                                       Messages.currentMedsPageRemoveDialogTitle,
@@ -780,7 +788,9 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         // If user confirms, proceed
         if (confirmed) {
             // put selected prefix in the remove list
-            String namespacePrefix = this.editManager.getCurrentHeaders().get(this.selectedMedIndex).getNamespacePrefix();
+            final IStructuredSelection selection = (IStructuredSelection)this.tableViewer.getSelection();
+            final ModelExtensionDefinitionHeader medHeader = (ModelExtensionDefinitionHeader)selection.getFirstElement();
+            String namespacePrefix = medHeader.getNamespacePrefix();
             this.editManager.removeModelExtensionDefinition(namespacePrefix);
             this.tableViewer.refresh();
         }
@@ -791,12 +801,14 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      * needs to be saved.
      */
     void handleSaveMed() {
+        assert !this.tableViewer.getSelection().isEmpty() : "save MED handler called when no MED is selected"; //$NON-NLS-1$
+
         // Get the selected Med Header
-        ModelExtensionDefinitionHeader medHeader = this.editManager.getCurrentHeaders().get(this.selectedMedIndex);
+        final IStructuredSelection selection = (IStructuredSelection)this.tableViewer.getSelection();
+        final ModelExtensionDefinitionHeader medHeader = (ModelExtensionDefinitionHeader)selection.getFirstElement();
 
         // Create DefaultMedAssistant
-        ModelObjectExtensionAssistant defaultAssistant = ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant();
-        defaultAssistant.createModelExtensionDefinition(medHeader);
+        ModelObjectExtensionAssistant defaultAssistant = ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant(medHeader.getNamespacePrefix());
 
         // Get unregistered MED contents from the Model
         ModelExtensionDefinition unregisteredMed = null;
@@ -824,13 +836,17 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     }
 
     void handleUpdateMed() {
+        assert !this.tableViewer.getSelection().isEmpty() : "update MED handler called when no MED is selected"; //$NON-NLS-1$
+
         // get confirmation from user
         boolean confirmed = MessageDialog.openConfirm(getShell(),
                                                       Messages.currentMedsPageUpdateMedDialogTitle,
                                                       Messages.currentMedsPageUpdateMedDialogMsg);
 
         if (confirmed) {
-            String namespacePrefix = this.editManager.getCurrentHeaders().get(this.selectedMedIndex).getNamespacePrefix();
+            final IStructuredSelection selection = (IStructuredSelection)this.tableViewer.getSelection();
+            final ModelExtensionDefinitionHeader medHeader = (ModelExtensionDefinitionHeader)selection.getFirstElement();
+            String namespacePrefix = medHeader.getNamespacePrefix();
             this.editManager.updateModelExtensionDefinition(this.registry.getDefinition(namespacePrefix));
             this.tableViewer.refresh();
         }

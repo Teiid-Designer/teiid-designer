@@ -68,6 +68,9 @@ public class ModelObjectLabelProvider extends LabelProvider
 
     private ILabelProvider delegate = null;
 
+    /**
+     * Construct a label provider for model objects.
+     */
     public ModelObjectLabelProvider() {
         super();
         delegate = ModelUtilities.getAdapterFactoryLabelProvider();
@@ -137,9 +140,9 @@ public class ModelObjectLabelProvider extends LabelProvider
      * Overloaded getImage necessary for finding icons for EObjects that are not inside a Model. Specifically, this method was
      * written for the New Child/Sibling menu items.
      * 
-     * @param theElement
-     * @param modelType
-     * @return
+     * @param theElement the model object (cannot be <code>null</code>)
+     * @param isVirtual indicates if the model object is from a virtual model
+     * @return the requested image or <code>null</code>
      * @since 4.2
      */
     public Image getImage( final EObject theElement,
@@ -241,8 +244,9 @@ public class ModelObjectLabelProvider extends LabelProvider
 
             try {
                 for (ModelExtensionAssistant assistant : registry.getModelExtensionAssistants(element.getClass().getName())) {
-                    if ((assistant instanceof ModelObjectExtensionAssistant)
-                            && ((ModelObjectExtensionAssistant)assistant).hasExtensionProperties(element)) {
+                    if (!assistant.getModelExtensionDefinition().isBuiltIn()
+                        && (assistant instanceof ModelObjectExtensionAssistant)
+                        && !((ModelObjectExtensionAssistant)assistant).getPropertyDefinitions(element).isEmpty()) {
                         decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
                         break;
                     }
@@ -328,38 +332,5 @@ public class ModelObjectLabelProvider extends LabelProvider
             return ir;
         }
         return null;
-    }
-
-    /**
-     * Method to provide a way to get an image with the URL instead of EObject and to colorize it based on virtual vs physical.
-     * 
-     * @param theElement
-     * @param url
-     * @return
-     * @since 4.2
-     */
-    public Image getImage( EObject eObj,
-                           Object url ) {
-        Image result = null;
-
-        Image temp = ModelObjectUtilities.getImageFromObject(url);
-        if (temp != null) {
-            ModelResource modelResource = ModelUtilities.getModelResourceForModelObject(eObj);
-            boolean virtual = (ModelUtilities.isVirtual(modelResource));
-
-            String prefix = (virtual) ? "virtual." : "physical."; //$NON-NLS-1$ //$NON-NLS-2$
-            // image registry uses the base image hashCode as key
-            String imageId = prefix + temp.hashCode();
-
-            UiPlugin plugin = UiPlugin.getDefault();
-            if (plugin.isImageRegistered(imageId)) {
-                result = plugin.getImage(imageId);
-            } else {
-                result = UiUtil.createImage(temp, TEMP_COLOR, (virtual) ? VIRTUAL_COLOR : PHYSICAL_COLOR);
-                plugin.registerPluginImage(imageId, result);
-            }
-        }
-
-        return result;
     }
 }

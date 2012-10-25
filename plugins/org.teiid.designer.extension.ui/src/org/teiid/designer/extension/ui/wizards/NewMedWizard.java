@@ -10,7 +10,6 @@ package org.teiid.designer.extension.ui.wizards;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -56,7 +55,7 @@ public final class NewMedWizard extends AbstractWizard
 
     private NewMedMainPage newMedMainPage;
     private NewMedDetailsPage newMedDetailsPage;
-    private ModelExtensionDefinition initialMed;
+    private final ModelExtensionDefinition medBeingCopied;
 
     /**
      * @since 7.6
@@ -66,19 +65,14 @@ public final class NewMedWizard extends AbstractWizard
     }
 
     /**
-     * @since 7.6
-     */
-    public NewMedWizard( ModelExtensionDefinition med ) {
-        this(Messages.newMedWizardTitle, med);
-    }
-
-    /**
+     * @param wizardTitle the window title (should not be <code>null</code> or empty)
+     * @param medBeingCopied the MED being copied (can be <code>null</code>)
      * @since 7.6
      */
     public NewMedWizard( String wizardTitle,
-                         ModelExtensionDefinition med ) {
+                         ModelExtensionDefinition medBeingCopied ) {
         super(UiPlugin.getDefault(), wizardTitle, null);
-        this.initialMed = med;
+        this.medBeingCopied = medBeingCopied;
     }
 
     /**
@@ -108,37 +102,24 @@ public final class NewMedWizard extends AbstractWizard
 
                     ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
                     InputStream medInputStream = null;
+                    ModelExtensionDefinition med = createDefaultMed();
 
-                    // if no Med was supplied, Create a default Med and set options from second page.
-                    if (NewMedWizard.this.initialMed == null) {
-                        ModelExtensionDefinition med = createDefaultMed();
+                    String namespacePrefix = NewMedWizard.this.newMedDetailsPage.getNamespacePrefix();
+                    String namespaceUri = NewMedWizard.this.newMedDetailsPage.getNamespaceUri();
+                    String metamodelUri = NewMedWizard.this.newMedDetailsPage.getMetamodelUri();
+                    int versionInt = NewMedWizard.this.newMedDetailsPage.getVersionInt();
+                    String description = NewMedWizard.this.newMedDetailsPage.getDescription();
+                    Collection<String> supportedModelTypes = NewMedWizard.this.newMedDetailsPage.getSupportedModelTypes();
 
-                        String namespacePrefix = NewMedWizard.this.newMedDetailsPage.getNamespacePrefix();
-                        String namespaceUri = NewMedWizard.this.newMedDetailsPage.getNamespaceUri();
-                        String metamodelUri = NewMedWizard.this.newMedDetailsPage.getMetamodelUri();
-                        int versionInt = NewMedWizard.this.newMedDetailsPage.getVersionInt();
-                        String description = NewMedWizard.this.newMedDetailsPage.getDescription();
-                        Collection<String> supportedModelTypes = NewMedWizard.this.newMedDetailsPage.getSupportedModelTypes();
-
-                        med.setNamespacePrefix(namespacePrefix);
-                        med.setNamespaceUri(namespaceUri);
-                        med.setMetamodelUri(metamodelUri);
-                        med.setVersion(versionInt);
-                        med.setDescription(description);
-                        for (String modelType : supportedModelTypes) {
-                            med.addModelType(modelType);
-                        }
-                        medInputStream = medWriter.writeAsStream(med);
-                        // If MED was supplied, use it - setting the modifiable values
-                    } else {
-                        String namespacePrefix = NewMedWizard.this.newMedDetailsPage.getNamespacePrefix();
-                        String namespaceUri = NewMedWizard.this.newMedDetailsPage.getNamespaceUri();
-                        String description = NewMedWizard.this.newMedDetailsPage.getDescription();
-                        NewMedWizard.this.initialMed.setNamespacePrefix(namespacePrefix);
-                        NewMedWizard.this.initialMed.setNamespaceUri(namespaceUri);
-                        NewMedWizard.this.initialMed.setDescription(description);
-                        medInputStream = medWriter.writeAsStream(NewMedWizard.this.initialMed);
+                    med.setNamespacePrefix(namespacePrefix);
+                    med.setNamespaceUri(namespaceUri);
+                    med.setMetamodelUri(metamodelUri);
+                    med.setVersion(versionInt);
+                    med.setDescription(description);
+                    for (String modelType : supportedModelTypes) {
+                        med.addModelType(modelType);
                     }
+                    medInputStream = medWriter.writeAsStream(med);
 
                     createdMedFile.create(medInputStream, false, monitor);
                     folderLoc.refreshLocal(IResource.DEPTH_INFINITE, monitor);
@@ -216,20 +197,12 @@ public final class NewMedWizard extends AbstractWizard
             page.setPageComplete(false);
             addPage(page);
         } else {
-            newMedMainPage = createNewMedMainPage(folderLocation);
-            newMedDetailsPage = createNewMedDetailsPage();
+            newMedMainPage = new NewMedMainPage(folderLocation);
+            newMedDetailsPage = new NewMedDetailsPage(this.medBeingCopied);
             addPage(newMedMainPage);
             addPage(newMedDetailsPage);
         }
 
-    }
-
-    protected NewMedMainPage createNewMedMainPage( final IContainer folderLocation ) {
-        return new NewMedMainPage(folderLocation);
-    }
-
-    protected NewMedDetailsPage createNewMedDetailsPage() {
-        return new NewMedDetailsPage(this.initialMed);
     }
 
     /*
@@ -253,10 +226,6 @@ public final class NewMedWizard extends AbstractWizard
         return openProj;
     }
 
-    public IFile getCreatedMedFile() {
-        return this.createdMedFile;
-    }
-
     private boolean folderInModelProject( IContainer folderLoc ) {
         boolean result = false;
 
@@ -272,15 +241,6 @@ public final class NewMedWizard extends AbstractWizard
         }
 
         return result;
-    }
-
-    /**
-     * @see org.eclipse.jface.wizard.IWizard#canFinish()
-     * @since 7.6
-     */
-    @Override
-    public boolean canFinish() {
-        return super.canFinish();
     }
 
     Composite createEmptyPageControl( final Composite parent ) {
