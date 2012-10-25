@@ -46,8 +46,7 @@ function checkout {
 #
 #################
 function show_help {
-	echo "Usage: $0 [-b] [-d] [-h]"
-	echo "-b - enable swt bot testing"
+	echo "Usage: $0 [-d] [-h]"
 	echo "-d - enable maven debugging"
   exit 1
 }
@@ -79,11 +78,6 @@ echo "Script directory = $SCRIPT_DIR"
 ROOT_DIR="$SCRIPT_DIR/.."
 
 #
-# By default skip swt bot tests
-#
-SKIP_SWTBOT=1
-
-#
 # By default debug is turned off
 #
 DEBUG=0
@@ -94,7 +88,6 @@ DEBUG=0
 while getopts "bdh" opt;
 do
 	case $opt in
-	b) SKIP_SWTBOT=0 ;;
 	d) DEBUG=1 ;;
 	h) show_help ;;
 	*) show_help ;;
@@ -132,17 +125,6 @@ fi
 # -D maven.repo.local : Assign the $LOCAL_REPO as the target repository
 #
 MVN_FLAGS="${MVN_FLAGS} -P default,jbosstools-staging-aggregate -Dmaven.repo.local=${LOCAL_REPO}"
-
-#
-# Determine whether to skip swt bot tests
-# By default, the tests will be skipped.
-#
-# Use -b switch to enable to perform these tests
-#
-if [ "${SKIP_SWTBOT}" == "1" ]; then
-  echo -e "###\n#\n# Skipping swt bot tests\n#\n###"
-  MVN_FLAGS="${MVN_FLAGS} -Dswtbot.test.skip=true"
-fi
 
 echo "==============="
 

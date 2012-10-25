@@ -59,7 +59,11 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
      */
 	private int width = DEFAULT_WIDTH;
 	
-	
+	 /**
+     * The column element namespace. This is used for request columns.
+     */
+	private String namespace;
+		
 	 /**
      * The unique column datatype (never <code>null</code> or empty).
      */
@@ -133,19 +137,26 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
 	 * @param name the column name (never <code>null</code> or empty).
 	 * @param datatype the column datatype (never <code>null</code> or empty).
 	 */
-	public ColumnInfo(String name, boolean ordinality, String datatype, String defaultValue, String fullXmlPath ) {
+	public ColumnInfo(String name, boolean ordinality, String datatype, String defaultValue, String fullXmlPath, String namespace ) {
 		this(name, datatype);
         this.forOrdinality = ordinality;
+        
         if( defaultValue == null ) {
         	this.defaultValue = StringUtilities.EMPTY_STRING;
         } else {
         	this.defaultValue = defaultValue;
         }
+        
         if( fullXmlPath == null ) {
         	this.fullXmlPath = EMPTY_PATH;
         } else {
         	this.fullXmlPath = new SchemaPath(fullXmlPath);
         }
+       
+        if( namespace != null ) {
+        	this.namespace = namespace;
+        }
+        
         validate();
 	}
 
@@ -350,6 +361,14 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
 	 */
 	public boolean getOrdinality() {
 		return this.forOrdinality;
+	}
+
+	public String getNamespace() {
+		return namespace;
+	}
+
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
 	}
 
 	/**

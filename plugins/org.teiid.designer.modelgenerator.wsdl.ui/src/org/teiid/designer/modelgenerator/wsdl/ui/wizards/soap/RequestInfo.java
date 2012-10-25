@@ -144,12 +144,17 @@ public class RequestInfo extends ProcedureInfo {
 	    	}
 	    	sb.append(SPACE).append(RETURN);
 	    	// EXAMPLE:       XMLELEMENT(NAME FromCurrency, CurrencyConvertorView.request_ConversionRate.FromCurrency)
+	    	// SELECT XMLELEMENT(NAME GetStateInfo, XMLNAMESPACES(DEFAULT 'http://www.teiid.org/stateService/'), 
+	    	//        XMLELEMENT(NAME stateCode, XMLNAMESPACES(NO DEFAULT), stateServiceView.GetStateInfo_request.stateCode)) AS xml_out;
 	    	
 	    	for( ColumnInfo columnInfo : getBodyColumnInfoList()) {
 	    		String name = columnInfo.getSymbolName();
 	    		sb.append(TAB).append(TAB).append(TAB).append(XMLELEMENT);
 	    		sb.append(L_PAREN);
 	    		sb.append(NAME).append(SPACE).append(getGenerator().convertSqlNameSegment(name));
+	    		if (columnInfo.getNamespace()==null){
+	    			sb.append(COMMA).append(SPACE).append(XMLNAMESPACES).append(L_PAREN).append(NO_DEFAULT).append(R_PAREN);	
+	    		}
 	    		if( columnInfo.getAttributeInfoArray().length == 0 ) {
 	    			sb.append(COMMA).append(SPACE).append(getFullParameterName(requestProcedureName, name));
 	    		}

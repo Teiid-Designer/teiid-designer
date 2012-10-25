@@ -305,11 +305,11 @@ public class ImportWsdlSchemaHandler {
 			if (type == ProcedureInfo.TYPE_BODY) {
 				requestInfo.addBodyColumn(
 						requestInfo.getUniqueBodyColumnName(name), false,
-						RuntimeTypeNames.STRING, null, ns);
+						RuntimeTypeNames.STRING, null, null, ns);
 			} else {
 				requestInfo.addHeaderColumn(
 						requestInfo.getUniqueHeaderColumnName(name), false,
-						RuntimeTypeNames.STRING, null, ns);
+						RuntimeTypeNames.STRING, null, null, ns);
 			}
 			operationsDetailsPage.notifyColumnDataChanged();
 			return null;
@@ -320,11 +320,11 @@ public class ImportWsdlSchemaHandler {
 			if (type == ProcedureInfo.TYPE_BODY) {
 				requestInfo.addBodyColumn(
 						requestInfo.getUniqueBodyColumnName(name), false,
-						RuntimeTypeNames.STRING, null, ns);
+						RuntimeTypeNames.STRING, null, null, ns);
 			} else {
 				requestInfo.addHeaderColumn(
 						requestInfo.getUniqueHeaderColumnName(name), false,
-						RuntimeTypeNames.STRING, null, ns);
+						RuntimeTypeNames.STRING, null, null, ns);
 			}
 			operationsDetailsPage.notifyColumnDataChanged();
 			return null;
@@ -376,12 +376,12 @@ public class ImportWsdlSchemaHandler {
 				if (type == ProcedureInfo.TYPE_BODY) {
 					newInfo = requestInfo.addBodyColumn(
 							requestInfo.getUniqueBodyColumnName(name), false,
-							RuntimeTypeNames.STRING, null, ns);
+							RuntimeTypeNames.STRING, null, null, ns);
 					newInfo.setXmlElement(parentElement);
 				} else {
 					newInfo = requestInfo.addHeaderColumn(
 							requestInfo.getUniqueHeaderColumnName(name), false,
-							RuntimeTypeNames.STRING, null, ns);
+							RuntimeTypeNames.STRING, null, null, ns);
 					newInfo.setXmlElement(parentElement);
 				}		
 				operationsDetailsPage.notifyColumnDataChanged();
@@ -392,12 +392,12 @@ public class ImportWsdlSchemaHandler {
 				if (type == ProcedureInfo.TYPE_BODY) {
 					newInfo = requestInfo.addBodyColumn(
 							requestInfo.getUniqueBodyColumnName(name), false,
-							RuntimeTypeNames.STRING, null, ns);
+							RuntimeTypeNames.STRING, null, null, ns);
 					newInfo.setXmlElement(parentElement);
 				} else {
 					newInfo = requestInfo.addHeaderColumn(
 							requestInfo.getUniqueHeaderColumnName(name), false,
-							RuntimeTypeNames.STRING, null, ns);
+							RuntimeTypeNames.STRING, null, null, ns);
 					newInfo.setXmlElement(parentElement);
 				}
 				operationsDetailsPage.notifyColumnDataChanged();
@@ -566,7 +566,7 @@ public class ImportWsdlSchemaHandler {
 				responseInfo.addBodyColumn(
 						responseInfo.getUniqueBodyColumnName(name), false,
 						theType, null, pathPrefix
-								+ xpath.toString());
+								+ xpath.toString(), null);
 			} else {
 				String pathPrefix = ""; //$NON-NLS-1$
 				if (importManager.isMessageServiceMode()) {
@@ -575,7 +575,7 @@ public class ImportWsdlSchemaHandler {
 				responseInfo.addHeaderColumn(
 						responseInfo.getUniqueHeaderColumnName(name), false,
 						RuntimeTypeNames.STRING, null, pathPrefix
-								+ xpath.toString());
+								+ xpath.toString(), null);
 			}
 			operationsDetailsPage.notifyColumnDataChanged();
 			return null;
@@ -693,7 +693,7 @@ public class ImportWsdlSchemaHandler {
 				responseInfo.addBodyColumn(
 						responseInfo.getUniqueBodyColumnName(name), false,
 						dTypeString, null, pathPrefix
-								+ xpath.toString());
+								+ xpath.toString(), null);
 			} else {
 				String pathPrefix = ""; //$NON-NLS-1$
 				if (importManager.isMessageServiceMode()) {
@@ -702,7 +702,7 @@ public class ImportWsdlSchemaHandler {
 				responseInfo.addHeaderColumn(
 						responseInfo.getUniqueHeaderColumnName(name), false,
 						RuntimeTypeNames.STRING, null, pathPrefix
-								+ xpath.toString());
+								+ xpath.toString(), null);
 			}
 			operationsDetailsPage.notifyColumnDataChanged();
 			return null;
