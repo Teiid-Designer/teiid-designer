@@ -477,34 +477,8 @@ public final class WidgetFactory implements
         group.setLayoutData(gridData);
         group.setLayout(new GridLayout(columns, false));
         if (name != null) {
-            /*
-             * An issue exists in juno that stops Groups rendering correctly with a title
-             * when using group.setText().
-             * 
-             * This works around the issue by adding a title label at the top of the group.
-             * However, some groups have their layouts modified after this method is 
-             * called so the span can be wrong. The paint listener fixes this by detecting
-             * the span at the latest possible point and relaying out the group's children
-             * accordingly.
-             */
-            final Label title = new Label(group, SWT.NONE);
-            title.setFont(JFaceResources.getBannerFont());
-            title.setText(name);
-                
-            group.addPaintListener(new PaintListener() {
-
-                @Override
-                public void paintControl(PaintEvent e) {
-                    GridLayout groupLayout = (GridLayout) group.getLayout();
-                    GridData titleGridData = (GridData) title.getLayoutData();
-                    
-                    if (groupLayout.numColumns == titleGridData.horizontalSpan)
-                        return;
-                    
-                    GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).align(SWT.CENTER, SWT.CENTER).grab(true, false).span(groupLayout.numColumns, 1).applyTo(title);
-                    group.layout();
-                }
-            });
+            group.setFont(JFaceResources.getBannerFont());
+            group.setText(name);
         }
         return group;
     }
