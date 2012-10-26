@@ -110,6 +110,7 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
 	
 	private void addInvokeProcedure(ModelResource mr) throws ModelerCoreException {
 		EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
+		EObject booleanType = datatypeManager.findDatatype("boolean"); //$NON-NLS-1$
 		EObject xmlLiteralType = datatypeManager.findDatatype("XMLLiteral"); //$NON-NLS-1$
 		
     	Procedure proc = factory.createProcedure();
@@ -146,6 +147,15 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     		param.setType(stringType);
     	}
     	
+     	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("stream"); //$NON-NLS-1$
+    	param.setDirection(DirectionKind.IN_LITERAL);
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
+    	if( booleanType != null) {
+    		param.setType(booleanType);
+    	}
+    	
     	param = factory.createProcedureParameter();
     	param.setProcedure(proc);
     	param.setName("result"); //$NON-NLS-1$
@@ -162,6 +172,7 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
 	private void addInvokeHttpProcedure(ModelResource mr) throws ModelerCoreException {
 		EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
 		EObject blobType = datatypeManager.findDatatype("blob"); //$NON-NLS-1$
+		EObject booleanType = datatypeManager.findDatatype("boolean"); //$NON-NLS-1$
 		EObject objectType = datatypeManager.findDatatype("object"); //$NON-NLS-1$
 		
     	Procedure proc = factory.createProcedure();
@@ -189,6 +200,15 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( objectType != null) {
     		param.setType(stringType);
+    	}
+   
+     	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("stream"); //$NON-NLS-1$
+    	param.setDirection(DirectionKind.IN_LITERAL);
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
+    	if( booleanType != null) {
+    		param.setType(booleanType);
     	}
     	
     	param = factory.createProcedureParameter();

@@ -255,6 +255,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
 	private void addInvokeHttpProcedure(ModelResource mr) throws ModelerCoreException {
 		EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
 		EObject blobType = datatypeManager.findDatatype("blob"); //$NON-NLS-1$
+		EObject booleanType = datatypeManager.findDatatype("boolean"); //$NON-NLS-1$
 		EObject objectType = datatypeManager.findDatatype("object"); //$NON-NLS-1$
 		
     	Procedure proc = factory.createProcedure();
@@ -288,11 +289,18 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	
     	param = factory.createProcedureParameter();
     	param.setProcedure(proc);
+    	param.setName("stream"); //$NON-NLS-1$
+    	param.setProcedure(proc);
+    	param.setDirection(DirectionKind.IN_LITERAL);
+    	param.setType(blobType);
+    	
+    	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
     	param.setName("result"); //$NON-NLS-1$
     	param.setProcedure(proc);
     	param.setDirection(DirectionKind.OUT_LITERAL);
-    	if( blobType != null) {
-    		param.setType(blobType);
+    	if( booleanType != null) {
+    		param.setType(booleanType);
     	}
     	
     	param = factory.createProcedureParameter();
@@ -311,6 +319,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
 	private void addInvokeProcedure(ModelResource mr) throws ModelerCoreException {
 		EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
 		EObject xmlLiteralType = datatypeManager.findDatatype("XMLLiteral"); //$NON-NLS-1$
+		EObject booleanType = datatypeManager.findDatatype("boolean"); //$NON-NLS-1$
 		
     	Procedure proc = factory.createProcedure();
     	proc.setName("invoke"); //$NON-NLS-1$
@@ -346,6 +355,15 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	if( stringType != null) {
     		param.setType(stringType);
     		param.setLength(DEFAULT_STRING_LENGTH);
+    	}
+    	
+    	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("stream"); //$NON-NLS-1$
+    	param.setDirection(DirectionKind.IN_LITERAL);
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
+    	if( booleanType != null) {
+    		param.setType(booleanType);
     	}
     	
     	param = factory.createProcedureParameter();
