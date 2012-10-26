@@ -20,6 +20,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -74,6 +77,8 @@ public final class ServerPage extends WizardPage {
 
     private Hyperlink serverHyperlink;
     
+    private Text jbossServerNameText;
+    
     private Text jdbcUsernameText;
 
     private Text jdbcPasswordText;
@@ -121,13 +126,13 @@ public final class ServerPage extends WizardPage {
     private void constructDisplayNamePanel(Composite pnlMain) {
         Composite displayNameComposite = new Composite(pnlMain, SWT.NONE);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(displayNameComposite);
-        GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).applyTo(displayNameComposite);
+        GridLayoutFactory.fillDefaults().numColumns(2).applyTo(displayNameComposite);
         
         Label displayNameLabel = new Label(displayNameComposite, SWT.NONE);
         displayNameLabel.setText(UTIL.getString("serverPageDisplayNameLabel")); //$NON-NLS-1$
         GridDataFactory.swtDefaults().applyTo(displayNameLabel);
         
-        displayNameText = new Text(displayNameComposite, SWT.NONE);
+        displayNameText = new Text(displayNameComposite, SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(displayNameText);
         displayNameText.addFocusListener(new FocusListener() {
             
@@ -146,25 +151,16 @@ public final class ServerPage extends WizardPage {
     private void constructIServerCreationPanel( Composite parent ) {
         Group serverGroup = WidgetFactory.createGroup(parent, UTIL.getString("serverPageIServerLabel")); //$NON-NLS-1$);
         GridDataFactory.fillDefaults().applyTo(serverGroup);
-        GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 10).applyTo(serverGroup);
+        GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 5).applyTo(serverGroup);
         
         Label serverLabel = new Label(serverGroup, SWT.NONE);
         serverLabel.setText(UTIL.getString("serverPageIServerLabel")); //$NON-NLS-1$
         GridDataFactory.swtDefaults().applyTo(serverLabel);
         
-        serverHyperlink = new Hyperlink(serverGroup, SWT.BORDER);
-        serverHyperlink.setText(""); //$NON-NLS-1$
-        serverHyperlink.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(serverHyperlink);
-        serverHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-            @Override
-            public void linkActivated(HyperlinkEvent e) {
-                if (teiidServer == null || teiidServer.getParent() == null)
-                    return;
-                
-                ServerUIPlugin.editServer(teiidServer.getParent());
-            }
-        });
+        this.jbossServerNameText = new Text(serverGroup, SWT.BORDER);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(jbossServerNameText);
+        this.jbossServerNameText.setEditable(false);
+		this.jbossServerNameText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         
         final Hyperlink newServerHyperlink = new Hyperlink(serverGroup, SWT.NONE);
         newServerHyperlink.setText(UTIL.getString("serverPageIServerNewButton")); //$NON-NLS-1$
@@ -190,14 +186,20 @@ public final class ServerPage extends WizardPage {
     private void constructTeiidJdbcConnectionPanel( Composite parent ) {
         Group teiidJdbcGroup = WidgetFactory.createGroup(parent, UTIL.getString("serverPageJDBCConnectionInfoLabel")); //$NON-NLS-1$);
         GridDataFactory.fillDefaults().applyTo(teiidJdbcGroup);
-        GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).applyTo(teiidJdbcGroup);
+        GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 5).applyTo(teiidJdbcGroup);
         
         {
         	Text helpText = new Text(teiidJdbcGroup, SWT.WRAP | SWT.READ_ONLY); 
+            GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, true);
+            gd.heightHint = 40;
+            gd.widthHint =  240;
+            gd.horizontalSpan = 2;
+            helpText.setLayoutData(gd);
+        	
         	helpText.setText(UTIL.getString("serverPageJDBCConnectionInfoHelp.txt"));  //$NON-NLS-1$
         	helpText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         	helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-        	GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(helpText);
+        	//GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(helpText);
         }
 
         { // user row
@@ -241,13 +243,13 @@ public final class ServerPage extends WizardPage {
             Label label = new Label(teiidJdbcGroup, SWT.LEFT);
             label.setText(UTIL.getString("serverPageJDBCUrlLabel")); //$NON-NLS-1$
             GridDataFactory.swtDefaults().applyTo(label);
-
-            jdbcURLText = new Text(teiidJdbcGroup, SWT.WRAP | SWT.READ_ONLY | SWT.BORDER);
+            
+            this.jdbcURLText = new Text(teiidJdbcGroup, SWT.BORDER);
             GridDataFactory.fillDefaults().grab(true, false).applyTo(jdbcURLText);
-            jdbcURLText.setToolTipText(UTIL.getString("serverPageJDBCUrlToolTip")); //$NON-NLS-1$
-            jdbcURLText.setBackground(teiidJdbcGroup.getBackground());
-            jdbcURLText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-            jdbcURLText.setFont(JFaceResources.getTextFont());
+            this.jdbcURLText.setEditable(false);
+            this.jdbcURLText.setToolTipText(UTIL.getString("serverPageJDBCUrlToolTip")); //$NON-NLS-1$
+            this.jdbcURLText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+            this.jdbcURLText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
         }
 
     }
@@ -263,7 +265,7 @@ public final class ServerPage extends WizardPage {
         
         Composite pnlMain = new Composite(parent, SWT.NONE);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(pnlMain);
-        GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(pnlMain);
+        GridLayoutFactory.fillDefaults().margins(5, 5).applyTo(pnlMain);
 
         // Add display name component
         constructDisplayNamePanel(pnlMain);
