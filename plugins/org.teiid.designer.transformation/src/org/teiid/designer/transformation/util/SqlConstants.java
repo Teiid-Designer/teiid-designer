@@ -23,6 +23,7 @@ public interface SqlConstants {
     public static final String DBL_SPACE = "  "; //$NON-NLS-1$
     public static final String SPACE = " "; //$NON-NLS-1$
     public static final String COMMA = ","; //$NON-NLS-1$
+    public static final String TRUE = "TRUE"; //$NON-NLS-1$
     public static final String RETURN = "\n"; //$NON-NLS-1$
     public static final String SELECT = "SELECT"; //$NON-NLS-1$
     public static final String FROM = "FROM"; //$NON-NLS-1$
