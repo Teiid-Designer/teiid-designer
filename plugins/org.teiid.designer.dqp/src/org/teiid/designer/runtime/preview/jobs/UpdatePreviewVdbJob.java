@@ -9,7 +9,6 @@
 package org.teiid.designer.runtime.preview.jobs;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -18,6 +17,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
@@ -91,23 +91,40 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
     }
 
     /**
-     * {@inheritDoc}
+     * Perform 2 distinct operations:
+     * 1. Tries to [re]deploy the preview vdb to a connected preview server
+     * 2. Synchronizes the preview vdb with the file on the native filesystem
+     * 
+     * @return
+     *  If both operations succeed then an OK status is returned.
+     *  If 1 operation fails then the ERROR status is normally returned. In the
+     *  case of the preview server not being connected this is not an important
+     *  enough state to justify a dialog displaying 'Server not started' so it is set
+     *  as an INFO status instead.
+     *  
+     *  If both operations fail then an ERROR multi status is returned.
      * 
      * @see org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob#runImpl(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     protected IStatus runImpl( IProgressMonitor monitor ) throws Exception {
-        IStatus error = null;
+        IStatus status = null;
         Vdb pvdb = new Vdb(this.pvdbFile, true, monitor);
 
         // run this only if we have a preview server
-        if (this.previewServer != null) {
+        if (this.previewServer == null || ! previewServer.isConnected()) {
+            status = new Status(IStatus.INFO, PLUGIN_ID, DqpPlugin.Util.getString("jbossServerNotStartedMessage")); //$NON-NLS-1$
+        }
+        
+        if (status == null) {
+            // Only if there is a fully connected preview server do we attempt to
+            // deploy the preview vdb on it.
             try {
                 // update/create connection info
                 getContext().ensureConnectionInfoIsValid(pvdb, this.previewServer);
             } catch (Exception e) {
-                error = new Status(IStatus.ERROR, PLUGIN_ID,
-                                   NLS.bind(Messages.UpdatePreviewVdbJobError, this.model.getFullPath()), e);
+                status = new Status(IStatus.ERROR, PLUGIN_ID,
+                               NLS.bind(Messages.UpdatePreviewVdbJobError, this.model.getFullPath()), e);
             }
         }
 
@@ -122,23 +139,28 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
                 }
             }
 
-            return new Status(IStatus.OK, PLUGIN_ID, NLS.bind(Messages.UpdatePreviewVdbJobSuccessfullyCompleted,
+            if (status == null) {
+                // Only if the preview server update was successful too
+                // can we return an OK status
+                status = new Status(IStatus.OK, PLUGIN_ID, NLS.bind(Messages.UpdatePreviewVdbJobSuccessfullyCompleted,
                                                               this.pvdbFile.getFullPath()));
+            }
+            
         } catch (Exception e) {
-            IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.UpdatePreviewVdbJobError,
+            IStatus syncStatus = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.UpdatePreviewVdbJobError,
                                                                            this.model.getFullPath()), e);
-            if (error == null) {
-                error = status;
+            if (status == null) {
+                status = syncStatus;
             } else {
                 IStatus[] statuses = new IStatus[2];
-                statuses[0] = error;
-                statuses[1] = status;
-                error = new MultiStatus(PLUGIN_ID, IStatus.OK, statuses, NLS.bind(Messages.UpdatePreviewVdbJobError,
+                statuses[0] = status;
+                statuses[1] = syncStatus;
+                status = new MultiStatus(PLUGIN_ID, IStatus.ERROR, statuses, NLS.bind(Messages.UpdatePreviewVdbJobError,
                                                                                   this.model.getFullPath()), null);
             }
         }
 
-        return error;
+        return status;
     }
 
 }

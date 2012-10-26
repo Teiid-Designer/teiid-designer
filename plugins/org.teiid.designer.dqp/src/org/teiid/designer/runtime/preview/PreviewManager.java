@@ -10,7 +10,6 @@ package org.teiid.designer.runtime.preview;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,10 +23,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -301,6 +298,13 @@ public final class PreviewManager extends JobChangeAdapter
     private final ReadWriteLock statusLock = new ReentrantReadWriteLock();
 
     /**
+     * Tracking flag for signalling that the preview manager should try
+     * to update the preview vdbs on the teiid server. Turned on if vdb
+     * update originally fails and the server is not connected.
+     */
+    private boolean retryOnNextRefreshOfServer;
+
+    /**
      * Constructs a <code>PreviewManager</code> using the default {@link PreviewContext}.
      * 
      * @throws Exception if there is a problem initializing the preview feature
@@ -384,6 +388,13 @@ public final class PreviewManager extends JobChangeAdapter
     public void configurationChanged( ExecutionConfigurationEvent event ) {
         if (event.getEventType().equals(EventType.DEFAULT) && event.getTargetType().equals(TargetType.SERVER)) {
             setPreviewServer(event.getUpdatedServer());
+        } else if (event.getEventType().equals(EventType.REFRESH) && retryOnNextRefreshOfServer) {
+            try {
+                startup();
+            } catch (Exception ex) {
+                // Swallow this exception since it should have already been
+                // reported when the application was started.
+            }
         }
     }
 
@@ -909,6 +920,24 @@ public final class PreviewManager extends JobChangeAdapter
                         // Make sure PVDB is synchronized. One way a PVDB won't be synchronized is if the model was dirty when
                         // the project was closed and the user saved the file as part of the project being closed.
                         UpdatePreviewVdbJob updatePvdbJob = new UpdatePreviewVdbJob(modelFile, getPreviewServer(), this.context);
+                        updatePvdbJob.addJobChangeListener(new JobChangeAdapter() {
+                            
+                            @Override
+                            public void done(IJobChangeEvent event) {
+                                /* 
+                                 * If server is not connected then retry when it does. However,
+                                 * when a server connects it only sends out a refresh event so
+                                 * set a tracking flag.
+                                 */
+                                if(! event.getResult().isOK() && ! getPreviewServer().isConnected()) {
+                                    retryOnNextRefreshOfServer = true;
+                                } else {
+                                    retryOnNextRefreshOfServer = false;
+                                }
+                                
+                                event.getJob().removeJobChangeListener(this);
+                            }
+                        });
                         batchJob.add(updatePvdbJob);
                     }
                 }

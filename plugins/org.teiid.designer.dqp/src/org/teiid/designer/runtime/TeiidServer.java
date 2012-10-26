@@ -235,6 +235,10 @@ public class TeiidServer implements HostProvider {
     }
 
     public ExecutionAdmin getAdmin() throws Exception {
+        if (! isParentConnected()) {
+            throw new Exception(DqpPlugin.Util.getString("jbossServerNotStartedMessage")); //$NON-NLS-1$
+        }
+        
         if (this.admin == null) {
             char[] pwd = null;
             if (getTeiidAdminInfo().getPassword() != null) {
@@ -340,22 +344,35 @@ public class TeiidServer implements HostProvider {
      * @return <code>true</code> if a connection to this server exists and is working
      */
     public boolean isConnected() {
-        if (this.admin == null) {
+        if (! isParentConnected() && this.admin == null) {
             return false;
         }
         return ping().isOK();
     }
 
     /**
+     * Return whether parent server is connected.
+     * 
+     * @return true is started, otherwise false
+     */
+    private boolean isParentConnected() {
+        return this.parentServer != null && this.parentServer.getServerState() == IServer.STATE_STARTED;
+    }
+    
+    /**
      * Attempts to establish communication with the specified server.
      * 
      * @return a status if the server connection can be established (never <code>null</code>)
      */
     public IStatus ping() {
+        String msg = Util.getString("cannotConnectToServer", getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
+        
         try {
+            if (! isParentConnected() && this.admin == null)
+                throw new Exception(msg);
+            
             getAdmin().getAdminApi().getSessions();
         } catch (Exception e) {
-            String msg = Util.getString("cannotConnectToServer", getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, e);
         }
 
