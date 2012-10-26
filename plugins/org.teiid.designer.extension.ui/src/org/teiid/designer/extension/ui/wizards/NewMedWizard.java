@@ -10,6 +10,7 @@ package org.teiid.designer.extension.ui.wizards;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.Map.Entry;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -36,6 +37,7 @@ import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
+import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
@@ -50,8 +52,6 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
  */
 public final class NewMedWizard extends AbstractWizard
  implements INewWizard, CoreStringUtil.Constants {
-
-    IFile createdMedFile; // the file that was saved
 
     private NewMedMainPage newMedMainPage;
     private NewMedDetailsPage newMedDetailsPage;
@@ -75,6 +75,10 @@ public final class NewMedWizard extends AbstractWizard
         this.medBeingCopied = medBeingCopied;
     }
 
+    ModelExtensionDefinition accessMed() {
+        return this.medBeingCopied;
+    }
+
     /**
      * @see org.eclipse.jface.wizard.IWizard#performFinish()
      * @since 7.6
@@ -94,22 +98,18 @@ public final class NewMedWizard extends AbstractWizard
 			public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                 try {
                     // Get Folder Location and Name of the file to create
-                    IContainer folderLoc = NewMedWizard.this.newMedMainPage.getFolderLocation();
-                    String medName = NewMedWizard.this.newMedMainPage.getMedName();
+                    final IContainer folderLoc = NewMedWizard.this.newMedMainPage.getFolderLocation();
+                    final String medName = NewMedWizard.this.newMedMainPage.getMedName();
+                    final IFile createdMedFile = folderLoc.getFile(new Path(medName));
+                    final ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
+                    final ModelExtensionDefinition med = createDefaultMed();
 
-                    // Get File
-                    createdMedFile = folderLoc.getFile(new Path(medName));
-
-                    ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
-                    InputStream medInputStream = null;
-                    ModelExtensionDefinition med = createDefaultMed();
-
-                    String namespacePrefix = NewMedWizard.this.newMedDetailsPage.getNamespacePrefix();
-                    String namespaceUri = NewMedWizard.this.newMedDetailsPage.getNamespaceUri();
-                    String metamodelUri = NewMedWizard.this.newMedDetailsPage.getMetamodelUri();
-                    int versionInt = NewMedWizard.this.newMedDetailsPage.getVersionInt();
-                    String description = NewMedWizard.this.newMedDetailsPage.getDescription();
-                    Collection<String> supportedModelTypes = NewMedWizard.this.newMedDetailsPage.getSupportedModelTypes();
+                    final String namespacePrefix = NewMedWizard.this.newMedDetailsPage.getNamespacePrefix();
+                    final String namespaceUri = NewMedWizard.this.newMedDetailsPage.getNamespaceUri();
+                    final String metamodelUri = NewMedWizard.this.newMedDetailsPage.getMetamodelUri();
+                    final int versionInt = NewMedWizard.this.newMedDetailsPage.getVersionInt();
+                    final String description = NewMedWizard.this.newMedDetailsPage.getDescription();
+                    final Collection<String> supportedModelTypes = NewMedWizard.this.newMedDetailsPage.getSupportedModelTypes();
 
                     med.setNamespacePrefix(namespacePrefix);
                     med.setNamespaceUri(namespaceUri);
@@ -119,7 +119,21 @@ public final class NewMedWizard extends AbstractWizard
                     for (String modelType : supportedModelTypes) {
                         med.addModelType(modelType);
                     }
-                    medInputStream = medWriter.writeAsStream(med);
+
+                    // if copying an existing MED copy the properties
+                    if (accessMed() != null) {
+                        final ModelExtensionDefinition medToCopy = accessMed();
+
+                        for (final Entry<String, Collection<ModelExtensionPropertyDefinition>> entry : medToCopy.getPropertyDefinitions().entrySet()) {
+                            final String metaclass = entry.getKey();
+
+                            for (final ModelExtensionPropertyDefinition propDefn : entry.getValue()) {
+                                med.addPropertyDefinition(metaclass, propDefn);
+                            }
+                        }
+                    }
+
+                    final InputStream medInputStream = medWriter.writeAsStream(med);
 
                     createdMedFile.create(medInputStream, false, monitor);
                     folderLoc.refreshLocal(IResource.DEPTH_INFINITE, monitor);
@@ -129,7 +143,6 @@ public final class NewMedWizard extends AbstractWizard
                         IWorkbenchPage page = UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage();
                         IDE.openEditor(page, createdMedFile);
                     }
-
                 } catch (final Exception err) {
                     throw new InvocationTargetException(err);
                 } finally {
@@ -137,6 +150,7 @@ public final class NewMedWizard extends AbstractWizard
                 }
             }
         };
+
         try {
             new ProgressMonitorDialog(getShell()).run(false, true, op);
             return true;
