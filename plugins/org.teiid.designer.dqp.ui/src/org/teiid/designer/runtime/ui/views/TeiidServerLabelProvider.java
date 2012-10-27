@@ -159,7 +159,7 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
             return (String)element;
         }
         
-        if (element == TeiidServerContentProvider.PENDING) {
+        if (element == TeiidServerContentProvider.getPending()) {
             return DqpUiConstants.UTIL.getString(getClass().getSimpleName() + ".loading.label"); //$NON-NLS-1$
         }
         

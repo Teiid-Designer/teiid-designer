@@ -13,20 +13,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.LinkedBlockingQueue;
 import net.jcip.annotations.GuardedBy;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContainerNode;
 import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContentNode;
@@ -51,87 +52,64 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 public class TeiidServerContentProvider implements ITreeContentProvider {
 
     /** Represents a pending request in the tree. */
-    static final Object PENDING = new Object();
+    private static final String LOAD_ELEMENT_JOB = DqpUiConstants.UTIL.getString(TeiidServerContentProvider.class.getSimpleName() + ".jobName"); //$NON-NLS-1$
+    private static final Object PENDING = new Object();
+    
     private ConcurrentMap<IContainerNode, Object> pendingUpdates = new ConcurrentHashMap<IContainerNode, Object>();
     private transient TreeViewer viewer;
-    
-    private static final String LOAD_ELEMENT_JOB = DqpUiConstants.UTIL.getString(TeiidServerContentProvider.class.getSimpleName() + ".jobName"); //$NON-NLS-1$
-    
-    /**
-     * Loads content for specified nodes, then refreshes the content in the
-     * tree.
-     */
-    private Job loadElementJob = new Job(LOAD_ELEMENT_JOB) {
-        
-        @Override
-        public boolean shouldRun() {
-            return pendingUpdates.size() > 0;
-        }
-
-        @Override
-        protected IStatus run(final IProgressMonitor monitor) {
-            monitor.beginTask(LOAD_ELEMENT_JOB, IProgressMonitor.UNKNOWN);
-            try {
-                final List<IContainerNode> updated = new ArrayList<IContainerNode>(pendingUpdates.size());
-                for (IContainerNode node : pendingUpdates.keySet()) {
-                    try {
-                        node.load();
-                        updated.add(node);
-                    } catch (Exception e) {
-                    }
-                    if (monitor.isCanceled()) {
-                        pendingUpdates.keySet().removeAll(updated);
-                        return Status.CANCEL_STATUS;
-                    }
-                }
-                final Viewer viewer = TeiidServerContentProvider.this.viewer;
-                if (viewer == null) {
-                    pendingUpdates.keySet().clear();
-                } else {
-                    
-                    viewer.getControl().getDisplay().asyncExec(new Runnable() {
-                        
-                        @Override
-                        public void run() {
-                            if (viewer.getControl().isDisposed()) {
-                                return;
-                            }
-                            for (Object node : updated) {
-                                pendingUpdates.remove(node);
-                                if (viewer instanceof StructuredViewer) {
-                                    ((StructuredViewer) viewer).refresh(node);
-                                    if (node instanceof TeiidResourceNode && viewer instanceof CommonViewer) {
-                                        ((CommonViewer) viewer).setExpandedState(node, true);
-                                        ((CommonViewer) viewer).expandToLevel(node, 2);
-                                    }
-                                }
-                                else
-                                    viewer.refresh();
-                            }
-                        }
-                    });
-                }
-            } finally {
-                monitor.done();
-            }
-            return Status.OK_STATUS;
-        }
-    };
-    
-    private boolean showVDBs = true;
-    private boolean showDataSources = true;
-    private boolean showTranslators = true;
 
     /**
      * Servers that a connection can't be established. Value is the last time establishing a connection was tried.
      */
     @GuardedBy( "offlineServersLock" )
     private final Map<TeiidServer, Long> offlineServerMap = new HashMap<TeiidServer, Long>();
-
-    private IExecutionConfigurationListener configListener = new IExecutionConfigurationListener() {
+    
+    private boolean showVDBs = true;
+    private boolean showDataSources = true;
+    private boolean showTranslators = true;
+    
+    private class RefreshThread extends Thread {
+        private boolean refreshCompleted = true;
+        
+        private LinkedBlockingQueue<Object> queue = new LinkedBlockingQueue<Object>();
+        
+        public RefreshThread() {
+            super(TeiidServerContentProvider.this + "." + RefreshThread.class.getSimpleName()); //$NON-NLS-1$
+            setDaemon(true);
+            
+            // Tracks loadElementJob to determine when it has finished
+            loadElementJob.addJobChangeListener(new JobChangeAdapter() {
+                @Override
+                public void done(IJobChangeEvent event) {
+                    refreshCompleted = true;
+                }
+            });
+        }
+        
+        public void refresh() {
+            queue.add(new Object());
+        }
         
         @Override
-        public void configurationChanged( final ExecutionConfigurationEvent event ) {
+        public void run() {
+            while (! Thread.currentThread().isInterrupted()) {
+                try {
+                    if (refreshCompleted) {
+                        queue.take();
+                        
+                        // Successfully taken from the queue so do the refresh
+                        refreshCompleted = false;
+                        doRefreshWork();
+                    }
+                    
+                    Thread.yield();
+                } catch (InterruptedException inte) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+        
+        private void doRefreshWork() {
             UiUtil.runInSwtThread(new Runnable() {
                 @Override
                 public void run() {
@@ -200,7 +178,80 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
                 
             }, false);
         }
+    }
+    
+    /**
+     * Loads content for specified nodes, then refreshes the content in the
+     * tree.
+     */
+    private Job loadElementJob = new Job(LOAD_ELEMENT_JOB) {
+        
+        @Override
+        public boolean shouldRun() {
+            return pendingUpdates.size() > 0;
+        }
+
+        @Override
+        protected IStatus run(final IProgressMonitor monitor) {
+            monitor.beginTask(LOAD_ELEMENT_JOB, IProgressMonitor.UNKNOWN);
+            try {
+                final List<IContainerNode> updated = new ArrayList<IContainerNode>(pendingUpdates.size());
+                for (IContainerNode node : pendingUpdates.keySet()) {
+                    try {
+                        node.load();
+                        updated.add(node);
+                    } catch (Exception e) {
+                    }
+                    if (monitor.isCanceled()) {
+                        pendingUpdates.keySet().removeAll(updated);
+                        return Status.CANCEL_STATUS;
+                    }
+                }
+                
+                if (viewer == null) {
+                    pendingUpdates.keySet().clear();
+                } else {
+                    
+                    UiUtil.runInSwtThread(new Runnable() {
+                        
+                        @Override
+                        public void run() {
+                            if (viewer.getControl().isDisposed())
+                                return;
+                            
+                            for (Object node : updated) {
+                                pendingUpdates.remove(node);
+                                viewer.refresh(node);
+                                
+                                if (node instanceof TeiidResourceNode) {
+                                    viewer.setExpandedState(node, true);
+                                    viewer.expandToLevel(node, 2);
+                                }
+                            }
+                        }
+                    }, true);
+                }
+            } finally {
+                monitor.done();
+            }
+            return Status.OK_STATUS;
+        }
     };
+    
+    private IExecutionConfigurationListener configListener = new IExecutionConfigurationListener() {
+        
+        @Override
+        public void configurationChanged( final ExecutionConfigurationEvent event ) {
+            
+            TeiidServer eventServer = event.getServer();
+            if (eventServer == null)
+                return;
+            
+            refreshThread.refresh();
+        }
+    };
+    
+    private RefreshThread refreshThread = new RefreshThread();
     
     /**
      * Content will include VDBs, translators, and data sources.
@@ -208,6 +259,8 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
      */
     public TeiidServerContentProvider() {
         super();
+        
+        refreshThread.start();
         
         // Wire as listener to server manager and to receive configuration changes
         DqpPlugin.getInstance().getServerManager().addListener(configListener);
@@ -373,6 +426,10 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
         
         return null;
     }
+    
+    static Object getPending() {
+        return PENDING;
+    }
 
     /**
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
@@ -403,7 +460,6 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
         }
     }
     
-
     @Override
     public void dispose() {
         viewer = null;

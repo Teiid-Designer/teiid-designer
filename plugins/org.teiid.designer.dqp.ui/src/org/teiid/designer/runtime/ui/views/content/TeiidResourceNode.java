@@ -90,21 +90,24 @@ public class TeiidResourceNode extends ContentNode<ITypeNode> implements IResour
         }
         
         try {
-            children = new ArrayList<IContentNode<? extends IContainerNode<?>>>();
             teiidServer = (TeiidServer) getServer().loadAdapter(TeiidServer.class, null);
-            
+
             if (teiidServer != null) {
-                if (teiidServer.isConnected())
+                if (teiidServer.isConnected()) {
+                    if (children == null)
+                        children = new ArrayList<IContentNode<? extends IContainerNode<?>>>();
+                    
                     children.add(new TeiidServerContainerNode(this, provider));
-                else {
-                    setError(new TeiidErrorNode(this, teiidServer, 
-                                                    DqpUiConstants.UTIL.getString(getClass().getSimpleName() + ".labelNotConnected"))); //$NON-NLS-1$
+                } else {
+                    setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(getClass().getSimpleName() + ".labelNotConnected"))); //$NON-NLS-1$
                     return;
                 }
             }
-            
+
             clearError();
+            
         } catch (Exception e) {
+            DqpUiConstants.UTIL.log(e);
             setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(getClass().getSimpleName() + ".labelRetrievalError"))); //$NON-NLS-1$
         }
     }
@@ -116,6 +119,7 @@ public class TeiidResourceNode extends ContentNode<ITypeNode> implements IResour
             for (IContentNode<? extends IContainerNode<?>> child : children) {
                 child.dispose();
             }
+            
             children.clear();
             children = null;
         }
