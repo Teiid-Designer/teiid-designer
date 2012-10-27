@@ -47,7 +47,7 @@ import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
 import org.teiid.designer.runtime.ui.server.DisconnectFromServerAction;
 import org.teiid.designer.runtime.ui.server.EditServerAction;
 import org.teiid.designer.runtime.ui.server.NewServerAction;
-import org.teiid.designer.runtime.ui.server.ReconnectToServerAction;
+import org.teiid.designer.runtime.ui.server.RefreshServerAction;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.server.SetDefaultServerAction;
 import org.teiid.designer.runtime.ui.views.content.DataSourcesFolder;
@@ -88,7 +88,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     /**
      * Refreshes the server connections.
      */
-    private ReconnectToServerAction reconnectAction;
+    private RefreshServerAction refreshAction;
     
     /**
      * Disconnect the server
@@ -343,8 +343,8 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         // the shell used for dialogs that the actions display
         Shell shell = this.actionSite.getViewSite().getShell();
         // the reconnect action tries to ping a selected server
-        this.reconnectAction = new ReconnectToServerAction(shell.getDisplay());
-        viewer.addSelectionChangedListener(this.reconnectAction);
+        this.refreshAction = new RefreshServerAction(shell.getDisplay());
+        viewer.addSelectionChangedListener(this.refreshAction);
         
         // the disconnect action clears the server's object cache, closes connection and null's admin references.
         this.disconnectAction = new DisconnectFromServerAction(shell.getDisplay());
@@ -407,7 +407,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         manager.removeAll();
         
         manager.add(this.newServerAction);
-        manager.add(this.reconnectAction);
+        manager.add(this.refreshAction);
         manager.add(new Separator());
         manager.add(this.collapseAllAction);
     }
@@ -481,8 +481,11 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     public void fillContextMenu(IMenuManager manager) {
         List<Object> selectedObjs = getSelectedObjects();
 
+        manager.removeAll();
+        
         manager.add(new Separator());
         manager.add(newServerAction);
+        manager.add(refreshAction);
         manager.add(new Separator());
         
         if (selectedObjs == null || selectedObjs.isEmpty()) {
@@ -511,9 +514,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                     manager.add(this.disconnectAction);
                 }
             
-                manager.add(this.reconnectAction);
-                manager.add(new Separator());
-                
                 if (teiidServerConnected) {
                     manager.add(this.createDataSourceAction);
                 }

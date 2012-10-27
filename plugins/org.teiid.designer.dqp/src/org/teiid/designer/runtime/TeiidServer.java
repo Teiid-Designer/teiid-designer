@@ -355,7 +355,7 @@ public class TeiidServer implements HostProvider {
      * 
      * @return true is started, otherwise false
      */
-    private boolean isParentConnected() {
+    public boolean isParentConnected() {
         return this.parentServer != null && this.parentServer.getServerState() == IServer.STATE_STARTED;
     }
     

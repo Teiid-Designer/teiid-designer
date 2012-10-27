@@ -14,28 +14,27 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
-import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.runtime.ui.views.content.TeiidResourceNode;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
 
 /**
- * The <code>ReconnectToServerAction</code> tries to reconnect to a selected server.
+ * The <code>RefreshServerAction</code> tries to refresh a connection to a selected server.
  *
  * @since 8.0
  */
-public final class ReconnectToServerAction extends BaseSelectionListenerAction {
+public final class RefreshServerAction extends BaseSelectionListenerAction {
 
     private Display display;
 
     /**
      * @param display 
      */
-    public ReconnectToServerAction(Display display) {
-        super(UTIL.getString("serverReconnectActionText")); //$NON-NLS-1$
+    public RefreshServerAction(Display display) {
+        super(UTIL.getString("serverRefreshActionText")); //$NON-NLS-1$
         this.display = display;
-        setToolTipText(UTIL.getString("serverReconnectActionToolTip")); //$NON-NLS-1$
+        setToolTipText(UTIL.getString("serverRefreshActionToolTip")); //$NON-NLS-1$
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.REFRESH_ICON));
-        setEnabled(false);
     }
 
     /**
@@ -47,6 +46,9 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
     public void run() {
         IStructuredSelection sselection = getStructuredSelection();
         final TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(sselection);
+        if (teiidServer == null)
+            return;
+        
         UiBusyIndicator.showWhile(display, new Runnable() {
 
             @Override
@@ -55,6 +57,9 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
                 	// Call disconnect() first to clear out Server & admin caches
                 	teiidServer.disconnect();
                 	
+                	if (! teiidServer.isParentConnected())
+                	    return;
+                	
                 	// Refresh is implied in the getting of the admin object since it will
                 	// automatically load and refresh.
                     teiidServer.getAdmin();
@@ -62,7 +67,6 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
                 } catch (Exception e) {
                     UTIL.log(e);
                     String msg = UTIL.getString("serverReconnectErrorMsg", teiidServer); //$NON-NLS-1$
-                    WidgetUtil.showError(msg);
                     teiidServer.setConnectionError(msg);
                 }
             }
@@ -76,11 +80,16 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
      */
     @Override
     protected boolean updateSelection( IStructuredSelection selection ) {
+        
         if (selection.size() != 1)
             return false;
         
         TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
-        if (teiidServer != null)
+        if (teiidServer != null && teiidServer.isParentConnected())
+            return true;
+        
+        Object element = selection.getFirstElement();
+        if (RuntimeAssistant.adapt(element, TeiidResourceNode.class) != null)
             return true;
         
         return false;
