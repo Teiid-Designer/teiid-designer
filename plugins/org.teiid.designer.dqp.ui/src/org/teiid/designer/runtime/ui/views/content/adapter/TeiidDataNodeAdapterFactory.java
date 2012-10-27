@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime.ui.views.content.adapter;
 
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IResourceNode;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
@@ -24,17 +25,42 @@ public class TeiidDataNodeAdapterFactory implements IAdapterFactory {
         if (! (adaptableObject instanceof TeiidDataNode))
             return null;
         
-        Object value = ((TeiidDataNode) adaptableObject).getValue();
+        TeiidDataNode teiidDataNode = (TeiidDataNode) adaptableObject;
         
-        if (adapterType.isInstance(value))
-            return value;
+        if (TeiidResourceNode.class == adapterType)
+            return adaptToTeiidResourceNode(teiidDataNode);
+        
+        if (TeiidDataSource.class == adapterType ||
+            TeiidTranslator.class == adapterType ||
+            TeiidVdb.class == adapterType) {
+        
+            Object value = teiidDataNode.getValue();
+        
+            if (adapterType.isInstance(value))
+                return value;
+        }
         
         return null;
     }
 
+    /**
+     * Try and adapt to a {@link TeiidResourceNode}
+     * 
+     * @param teiidDataNode
+     * @param adapterType
+     * @return
+     */
+    private Object adaptToTeiidResourceNode(TeiidDataNode teiidDataNode) {
+        IResourceNode parent = teiidDataNode.getParent();
+        return parent instanceof TeiidResourceNode ? parent : null;
+    }
+
     @Override
     public Class[] getAdapterList() {
-        return new Class[] { TeiidDataSource.class, TeiidTranslator.class, TeiidVdb.class };
+        return new Class[] { TeiidResourceNode.class, 
+                                           TeiidDataSource.class,
+                                           TeiidTranslator.class,
+                                           TeiidVdb.class };
     }
 
 }

@@ -19,45 +19,37 @@ public class TeiidServerContainerNodeAdapterFactory implements IAdapterFactory {
 
     @Override
     public Object getAdapter(Object adaptableObject, Class adapterType) {
+        if (! (adaptableObject instanceof TeiidServerContainerNode))
+            return null;
+        
+        TeiidServerContainerNode serverContainerNode = (TeiidServerContainerNode) adaptableObject;
+        
         if (TeiidServer.class == adapterType)
-            return adaptToTeiidServer(adaptableObject);
+            return adaptToTeiidServer(serverContainerNode);
         
         if (TeiidResourceNode.class == adapterType)
-            return adaptToTeiidResourceNode(adaptableObject);
+            return adaptToTeiidResourceNode(serverContainerNode);
         
         return null;
     }
 
     /**
-     * @param adaptableObject
+     * Adapt to a {@link TeiidServer}
+     * 
+     * @param serverContainerNode
      */
-    private TeiidServer adaptToTeiidServer(Object adaptableObject) {
-        if (adaptableObject instanceof TeiidServer) {
-            return (TeiidServer) adaptableObject;
-        }
-        
-        if (adaptableObject instanceof TeiidServerContainerNode) {
-            return ((TeiidServerContainerNode)adaptableObject).getTeiidServer();
-        }
-        
-        return null;
+    private TeiidServer adaptToTeiidServer(TeiidServerContainerNode serverContainerNode) {
+        return serverContainerNode.getTeiidServer();
     }
 
-
     /**
-     * @param adaptableObject
+     * Adapt to {@link TeiidResourceNode}
+     * 
+     * @param serverContainerNode
      * @return
      */
-    private TeiidResourceNode adaptToTeiidResourceNode(Object adaptableObject) {
-        if (adaptableObject instanceof TeiidResourceNode) {
-            return (TeiidResourceNode) adaptableObject;
-        }
-        
-        if (adaptableObject instanceof TeiidServerContainerNode) {
-            return ((TeiidServerContainerNode)adaptableObject).getContainer();
-        }
-        
-        return null;
+    private TeiidResourceNode adaptToTeiidResourceNode(TeiidServerContainerNode serverContainerNode) {
+        return serverContainerNode.getContainer();
     }
     
     @Override

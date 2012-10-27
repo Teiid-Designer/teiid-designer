@@ -59,7 +59,7 @@ public class TeiidDataNode<V> implements IContentNode<AbstractTeiidFolder> {
 
     @Override
     public IResourceNode getParent() {
-        return parentNode.getParent();
+        return parentNode != null ? parentNode.getParent() : null;
     }
 
     @Override

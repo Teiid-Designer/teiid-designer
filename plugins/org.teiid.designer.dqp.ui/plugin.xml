@@ -313,10 +313,16 @@
          <adapter
                type="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
          </adapter>
+         <adapter
+               type="org.teiid.designer.runtime.ui.views.content.TeiidResourceNode">
+         </adapter>
       </factory>
       <factory
             adaptableType="org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder"
             class="org.teiid.designer.runtime.ui.views.content.adapter.TeiidFolderAdapterFactory">
+         <adapter
+               type="org.teiid.designer.runtime.ui.views.content.TeiidResourceNode">
+         </adapter>
          <adapter
                type="org.teiid.designer.runtime.TeiidServer">
          </adapter>
@@ -324,6 +330,9 @@
       <factory
             adaptableType="org.teiid.designer.runtime.ui.views.content.TeiidDataNode"
             class="org.teiid.designer.runtime.ui.views.content.adapter.TeiidDataNodeAdapterFactory">
+         <adapter
+               type="org.teiid.designer.runtime.ui.views.content.TeiidResourceNode">
+         </adapter>
          <adapter
                type="org.teiid.designer.runtime.TeiidDataSource">
          </adapter>

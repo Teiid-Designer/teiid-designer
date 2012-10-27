@@ -21,46 +21,43 @@ public class TeiidResourceNodeAdapterFactory implements IAdapterFactory {
 
     @Override
     public Object getAdapter(Object adaptableObject, Class adapterType) {
-        if (TeiidServer.class == adapterType)
-            return adaptToTeiidServer(adaptableObject);
+        if (! (adaptableObject instanceof TeiidResourceNode))
+            return null;
+        
+        TeiidResourceNode teiidResourceNode = (TeiidResourceNode) adaptableObject;
         
         if (TeiidResourceNode.class == adapterType)
-            return adaptToTeiidServerContainerNode(adaptableObject);
+            return teiidResourceNode;
+        
+        if (TeiidServer.class == adapterType)
+            return adaptToTeiidServer(teiidResourceNode);
+        
+        if (TeiidResourceNode.class == adapterType)
+            return adaptToTeiidServerContainerNode(teiidResourceNode);
         
         return null;
     }
 
     /**
+     * Adapt to a {@link TeiidServer}
+     * 
      * @param adaptableObject
      */
-    private TeiidServer adaptToTeiidServer(Object adaptableObject) {
-        if (adaptableObject instanceof TeiidServer) {
-            return (TeiidServer) adaptableObject;
-        }
-        
-        if (adaptableObject instanceof TeiidResourceNode) {
-            return ((TeiidResourceNode)adaptableObject).getTeiidServer();
-        }
-        
-        return null;
+    private TeiidServer adaptToTeiidServer(TeiidResourceNode teiidResourceNode) {
+        return teiidResourceNode.getTeiidServer();
     }
 
 
     /**
+     * Adapt to a {@link TeiidServerContainerNode}
+     * 
      * @param adaptableObject
      * @return
      */
-    private TeiidServerContainerNode adaptToTeiidServerContainerNode(Object adaptableObject) {
-        if (adaptableObject instanceof TeiidServerContainerNode) {
-            return (TeiidServerContainerNode) adaptableObject;
-        }
-        
-        if (adaptableObject instanceof TeiidResourceNode) {
-            TeiidResourceNode node = (TeiidResourceNode) adaptableObject;
-            if (node.hasChildren()) {
-                List<? extends IContentNode<?>> children = node.getChildren();
-                return (TeiidServerContainerNode) children.get(0);
-            }
+    private TeiidServerContainerNode adaptToTeiidServerContainerNode(TeiidResourceNode teiidResourceNode) {
+        if (teiidResourceNode.hasChildren()) {
+            List<? extends IContentNode<?>> children = teiidResourceNode.getChildren();
+            return (TeiidServerContainerNode) children.get(0);
         }
         
         return null;
@@ -68,7 +65,7 @@ public class TeiidResourceNodeAdapterFactory implements IAdapterFactory {
     
     @Override
     public Class[] getAdapterList() {
-        return new Class[] { TeiidServer.class, TeiidServerContainerNode.class };
+        return new Class[] { TeiidServer.class, TeiidResourceNode.class, TeiidServerContainerNode.class };
     }
 
 }
