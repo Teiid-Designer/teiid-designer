@@ -74,8 +74,6 @@ public final class ServerPage extends WizardPage {
     private IStatus status;
 
     private Text displayNameText;
-
-    private Hyperlink serverHyperlink;
     
     private Text jbossServerNameText;
     
@@ -314,8 +312,7 @@ public final class ServerPage extends WizardPage {
                         return;
                     }
                     
-                    serverHyperlink.setText(server.getName());
-                    serverHyperlink.setUnderlined(true);
+                    jbossServerNameText.setText(server.getName());
 
                     TeiidJdbcInfo teiidJdbcInfo = teiidServer.getTeiidJdbcInfo();
                     
