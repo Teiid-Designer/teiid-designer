@@ -69,8 +69,8 @@ public final class NewMedWizard extends AbstractWizard
      * @param medBeingCopied the MED being copied (can be <code>null</code>)
      * @since 7.6
      */
-    public NewMedWizard( String wizardTitle,
-                         ModelExtensionDefinition medBeingCopied ) {
+    public NewMedWizard(String wizardTitle,
+                        ModelExtensionDefinition medBeingCopied) {
         super(UiPlugin.getDefault(), wizardTitle, null);
         this.medBeingCopied = medBeingCopied;
     }
@@ -128,7 +128,9 @@ public final class NewMedWizard extends AbstractWizard
                             final String metaclass = entry.getKey();
 
                             for (final ModelExtensionPropertyDefinition propDefn : entry.getValue()) {
-                                med.addPropertyDefinition(metaclass, propDefn);
+                                ModelExtensionPropertyDefinition copiedProp = (ModelExtensionPropertyDefinition)propDefn.clone();
+                                copiedProp.setNamespaceProvider(med);
+                                med.addPropertyDefinition(metaclass, copiedProp);
                             }
                         }
                     }
@@ -178,8 +180,8 @@ public final class NewMedWizard extends AbstractWizard
      * @since 7.6
      */
     @Override
-    public void init( final IWorkbench workbench,
-                      final IStructuredSelection selection ) {
+    public void init(final IWorkbench workbench,
+                     final IStructuredSelection selection) {
 
         IContainer folderLocation = null;
         // Get folder from selection
@@ -189,21 +191,20 @@ public final class NewMedWizard extends AbstractWizard
         } else {
             folderLocation = getWorkspaceOpenProject();
         }
-        
 
-    	if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
-        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
-        	
-        	if( newProject != null ) {
-        		folderLocation = newProject;
-        	}
+        if (!ModelerUiViewUtils.workspaceHasOpenModelProjects()) {
+            IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+
+            if (newProject != null) {
+                folderLocation = newProject;
+            }
         }
 
         if (folderLocation != null && !folderInModelProject(folderLocation)) {
             // Create empty page
             WizardPage page = new WizardPage(NewMedWizard.class.getSimpleName(), null, null) {
                 @Override
-				public void createControl( final Composite parent ) {
+                public void createControl(final Composite parent) {
                     setControl(createEmptyPageControl(parent));
                 }
             };
@@ -240,7 +241,7 @@ public final class NewMedWizard extends AbstractWizard
         return openProj;
     }
 
-    private boolean folderInModelProject( IContainer folderLoc ) {
+    private boolean folderInModelProject(IContainer folderLoc) {
         boolean result = false;
 
         if (folderLoc != null) {
@@ -257,7 +258,7 @@ public final class NewMedWizard extends AbstractWizard
         return result;
     }
 
-    Composite createEmptyPageControl( final Composite parent ) {
+    Composite createEmptyPageControl(final Composite parent) {
         return new Composite(parent, SWT.NONE);
     }
 
