@@ -929,7 +929,7 @@ public final class PreviewManager extends JobChangeAdapter
                                  * when a server connects it only sends out a refresh event so
                                  * set a tracking flag.
                                  */
-                                if(! event.getResult().isOK() && ! getPreviewServer().isConnected()) {
+                                if( !event.getResult().isOK() && (getPreviewServer()==null || !getPreviewServer().isConnected()) ) {
                                     retryOnNextRefreshOfServer = true;
                                 } else {
                                     retryOnNextRefreshOfServer = false;
