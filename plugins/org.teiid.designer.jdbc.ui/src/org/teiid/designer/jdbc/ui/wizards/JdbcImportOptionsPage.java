@@ -497,7 +497,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
                 	this.importSettings.setCreateCatalogsInModel(false);
                 }
                 
-                fullyQualifiedNamesCheckBox.setSelection(true);
+                fullyQualifiedNamesCheckBox.setSelection(false);
                 this.importSettings.setGenerateSourceNamesInModel(SourceNames.FULLY_QUALIFIED_LITERAL);
                 
 	            switch (this.importSettings.getConvertCaseInModel().getValue()) {
