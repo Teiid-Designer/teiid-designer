@@ -1266,16 +1266,15 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 				Collection<File> goodFilesList = new ArrayList<File>();
 
 				for (File theFile : allFiles) {
-					if (!theFile.isDirectory()) {
-						if (isFlatFileContent) {
-							if (theFile.getName().toUpperCase().endsWith(DOT_CSV)
-									|| theFile.getName().toUpperCase().endsWith(DOT_TXT)) {
-								goodFilesList.add(theFile);
-							}
-						} else if (theFile.getName().toUpperCase().endsWith(DOT_XML)) {
-							goodFilesList.add(theFile);
-						}
-					}
+				    if (!theFile.isDirectory()) {
+				        if (isFlatFileContent) {
+				            if(isValidTextFile(theFile)) {
+				                goodFilesList.add(theFile);
+				            }
+				        } else if (theFile.getName().toUpperCase().endsWith(DOT_XML)) {
+				            goodFilesList.add(theFile);
+				        }
+				    }
 				}
 				return goodFilesList.toArray(new File[0]);
 			} else if (theInput instanceof File) {
@@ -1284,10 +1283,9 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 				File theFile = ((File) theInput);
 				
 				if (isFlatFileContent) {
-					if (theFile.getName().toUpperCase().endsWith(DOT_CSV)
-							|| theFile.getName().toUpperCase().endsWith(DOT_TXT)) {
-						goodFilesList.add(theFile);
-					}
+				    if(isValidTextFile(theFile)) {
+				        goodFilesList.add(theFile);
+				    }
 				} else if (theFile.getName().toUpperCase().endsWith(DOT_XML)) {
 					goodFilesList.add(theFile);
 				}
@@ -1296,6 +1294,20 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 
 			Collection<File> goodFilesList = new ArrayList<File>();
 			return goodFilesList.toArray(new File[0]);
+		}
+		
+		/*
+		 * Determine if the supplied file is considered a valid text file.  Valid text file must end in '.txt', '.csv' or have no extension.
+		 * @param file the supplied File
+		 * @return 'true' if the file is a valid text file, 'false' if not.
+		 */
+		private boolean isValidTextFile(File file) {
+		    boolean isValid = false;
+		    String fileName = file.getName().toUpperCase();
+		    if(fileName.endsWith(DOT_CSV) || fileName.endsWith(DOT_TXT) || fileName.indexOf('.')==-1) {
+		        isValid = true;
+		    }
+		    return isValid;
 		}
 
 		/**
