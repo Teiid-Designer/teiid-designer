@@ -62,8 +62,6 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
      */
     protected final EventManager eventManager;
 
-    private ExecutionManager executionManager;
-
     /**
      * The Teiid JDBC connection info object
      */
@@ -255,14 +253,6 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
      */
     public String getCustomLabel() {
         return this.customLabel;
-    }
-
-    public ExecutionManager getExecutionManager() {
-        if (this.executionManager == null) {
-            this.executionManager = new ExecutionManager();
-        }
-
-        return this.executionManager;
     }
 
     /**
