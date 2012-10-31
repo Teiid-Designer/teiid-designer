@@ -10,11 +10,9 @@ package org.teiid.designer.runtime;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.teiid.adminapi.Admin;
@@ -93,10 +91,10 @@ public class MockObjectFactory {
         final EventManager eventManager = mock(EventManager.class);
         final ExecutionAdmin admin = mock(ExecutionAdmin.class);
 
+        when(teiidServer.getEventManager()).thenReturn(eventManager);
+        
         when(admin.getServer()).thenReturn(teiidServer);
-        when(admin.getAdminApi()).thenReturn(adminApi);
-        when(admin.getEventManager()).thenReturn(eventManager);
-
+        
         return admin;
     }
 

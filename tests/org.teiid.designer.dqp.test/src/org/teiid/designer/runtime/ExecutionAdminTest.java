@@ -11,12 +11,10 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.junit.After;
@@ -53,6 +51,8 @@ public class ExecutionAdminTest {
     public void beforeEach() {
         MockitoAnnotations.initMocks(this);
         
+        when(teiidServer.getEventManager()).thenReturn(eventManager);
+        
     	modelWorkspaceMock = new ModelWorkspaceMock();
         
         PROP_DEFS = new ArrayList<PropertyDefinition>(1);
@@ -67,7 +67,7 @@ public class ExecutionAdminTest {
     }
 
     private ExecutionAdmin getNewAdmin() throws Exception {
-        return new ExecutionAdmin(admin, teiidServer, eventManager);
+        return new ExecutionAdmin(admin, teiidServer);
     }
 
     private TeiidTranslator getNewTeiidTranslator() throws Exception {
@@ -75,18 +75,8 @@ public class ExecutionAdminTest {
     }
 
     @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowNullAdmin() throws Exception {
-        assertThat(new ExecutionAdmin(null, null, null), notNullValue());
-    }
-
-    @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowNullServer() throws Exception {
-        assertThat(new ExecutionAdmin(mock(Admin.class), null, null), notNullValue());
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowNullEventManager() throws Exception {
-        assertThat(new ExecutionAdmin(mock(Admin.class), mock(TeiidServer.class), null), notNullValue());
+        assertThat(new ExecutionAdmin(null), notNullValue());
     }
 
     @Test( expected = IllegalArgumentException.class )
@@ -122,11 +112,6 @@ public class ExecutionAdminTest {
     	when(vdb.getStatus()).thenReturn(VDB.Status.ACTIVE);
     	
         getNewAdmin().deployVdb(vdbFile);
-    }
-
-    @Test
-    public void shouldAllowGetAdminApi() throws Exception {
-        getNewAdmin().getAdminApi();
     }
 
     @Test( expected = IllegalArgumentException.class )

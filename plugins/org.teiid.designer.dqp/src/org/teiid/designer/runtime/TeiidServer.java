@@ -9,18 +9,13 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-import java.io.ByteArrayInputStream;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
-import org.teiid.adminapi.Admin;
-import org.teiid.adminapi.AdminFactory;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.StringUtilities;
-import org.teiid.jdbc.TeiidDriver;
+import org.teiid.designer.runtime.ExecutionAdmin.PingType;
 
 
 /**
@@ -145,13 +140,9 @@ public class TeiidServer implements HostProvider {
      */
     public void close() {
         if (this.admin != null) {
-            Admin adminApi = this.admin.getAdminApi();
-            if (adminApi != null) {
-                adminApi.close();
-            }
+            this.admin.close();
             this.admin = null;
         }
-        // System.out.println(" >>>> Server.close() CLOSED  Server = " + getUrl());
     }
 
     /**
@@ -207,13 +198,8 @@ public class TeiidServer implements HostProvider {
         }
         
         if (this.admin == null) {
-            char[] pwd = null;
-            if (getTeiidAdminInfo().getPassword() != null) {
-                pwd = getTeiidAdminInfo().getPassword().toCharArray();
-            }
-            this.admin = new ExecutionAdmin(AdminFactory.getInstance().createAdmin(getHost(), getTeiidAdminInfo().getPortNumber(), getTeiidAdminInfo().getUsername(), pwd),
-                                            this,
-                                            this.eventManager);
+            
+            this.admin = new ExecutionAdmin(this);
             this.admin.load();
             notifyRefresh();
         }
@@ -253,6 +239,10 @@ public class TeiidServer implements HostProvider {
 
     public TeiidJdbcInfo getTeiidJdbcInfo() {
         return teiidJdbcInfo;
+    }
+    
+    public EventManager getEventManager() {
+        return eventManager;
     }
     
     /**
@@ -365,7 +355,7 @@ public class TeiidServer implements HostProvider {
             if (! isParentConnected() && this.admin == null)
                 throw new Exception(msg);
             
-            getAdmin().getAdminApi().getSessions();
+            admin.ping(PingType.ADMIN);
         } catch (Exception e) {
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, e);
         }
@@ -408,8 +398,9 @@ public class TeiidServer implements HostProvider {
      */
     public IStatus testPing() {
         try {
-            Admin adminApi = getAdmin().getAdminApi();
-            adminApi.close();
+            getAdmin();
+            ping();
+            close();
             this.admin = null;
         } catch (Exception e) {
             String msg = Util.getString("cannotConnectToServer", this); //$NON-NLS-1$
@@ -430,35 +421,16 @@ public class TeiidServer implements HostProvider {
      * @return status as to the ping's success
      */
     public IStatus testJDBCPing(String host, String port, String username, String password) {
-    	Connection teiidJdbcConnection = null;
-    	String url = "jdbc:teiid:ping@mm://"+host+':'+port; //$NON-NLS-1$
-        
-		try {
-			Admin adminApi = getAdmin().getAdminApi();
-			adminApi.deploy("ping-vdb.xml", new ByteArrayInputStream(TeiidServerUtils.TEST_VDB.getBytes())); //$NON-NLS-1$
-			
-			try{
-				String urlAndCredentials = url + ";user="+username+";password="+password+';';  //$NON-NLS-1$ //$NON-NLS-2$				
-				teiidJdbcConnection = TeiidDriver.getInstance().connect(urlAndCredentials, null);
-			   //pass
-			} catch(SQLException ex){
-				String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
-	            return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
-			} finally {
-				adminApi.undeploy("ping-vdb.xml"); //$NON-NLS-1$
-				
-				if( teiidJdbcConnection != null ) {
-					teiidJdbcConnection.close();
-				}
-		        adminApi.close();
-		        this.admin = null;
-			}
-		} catch (Exception ex) {
-			String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
-            return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
-		}
-		
-		return Status.OK_STATUS;
+        try {
+            getAdmin().ping(PingType.JDBC);
+            close();
+            this.admin = null;
+        } catch (Exception e) {
+            String msg = Util.getString("cannotConnectToServer", this); //$NON-NLS-1$
+            return new Status(IStatus.ERROR, PLUGIN_ID, msg, e);
+        }
+
+        return Status.OK_STATUS;
     }
     
     public String getVdbDataSourceConnectionUrl(String vdbName) {

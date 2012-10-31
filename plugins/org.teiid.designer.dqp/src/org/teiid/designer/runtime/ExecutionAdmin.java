@@ -7,11 +7,15 @@
  */
 package org.teiid.designer.runtime;
 
+import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,6 +33,8 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.adminapi.Admin;
+import org.teiid.adminapi.AdminException;
+import org.teiid.adminapi.AdminFactory;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
@@ -42,6 +48,7 @@ import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.jdbc.TeiidDriver;
 
 
 /**
@@ -64,22 +71,54 @@ public class ExecutionAdmin {
 
     private boolean loaded = false;
 
+    public enum PingType {
+        ADMIN, JDBC;
+    }
+    
     /**
+     * Constructor used for testing purposes only. 
+     * 
+     * DO NOT MAKE PUBLIC!!
+     * 
      * @param admin the associated Teiid Admin API (never <code>null</code>)
      * @param teiidServer the server this admin belongs to (never <code>null</code>)
-     * @param eventManager the event manager used to fire events (never <code>null</code>)
      * @throws Exception if there is a problem connecting the server
      */
-    public ExecutionAdmin( Admin admin,
-                           TeiidServer teiidServer,
-                           EventManager eventManager ) throws Exception {
+    protected ExecutionAdmin(Admin admin, TeiidServer teiidServer) throws Exception {
         CoreArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(eventManager, "eventManager"); //$NON-NLS-1$
-
+        
         this.admin = admin;
-        this.eventManager = eventManager;
         this.teiidServer = teiidServer;
+        this.eventManager = teiidServer.getEventManager();
+        this.connectionMatcher = new ModelConnectionMatcher();
+        
+        init();
+    }
+    
+    /**
+     * Default Constructor 
+     * 
+     * @param teiidServer the server this admin belongs to (never <code>null</code>)
+     * 
+     * @throws Exception if there is a problem connecting the server
+     */
+    public ExecutionAdmin(TeiidServer teiidServer) throws Exception {
+        CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
+        
+        TeiidAdminInfo teiidAdminInfo = teiidServer.getTeiidAdminInfo();
+        char[] passwordArray = null;
+        if (teiidAdminInfo.getPassword() != null) {
+            passwordArray = teiidAdminInfo.getPassword().toCharArray();
+        }
+        
+        this.admin = AdminFactory.getInstance().createAdmin( teiidServer.getHost(), 
+                                                                                              teiidAdminInfo.getPortNumber(), 
+                                                                                              teiidAdminInfo.getUsername(),
+                                                                                              passwordArray);
+
+        this.teiidServer = teiidServer;
+        this.eventManager = teiidServer.getEventManager();
         this.connectionMatcher = new ModelConnectionMatcher();
 
         init();
@@ -192,11 +231,6 @@ public class ExecutionAdmin {
         this.dataSourceByNameMap = new HashMap<String, TeiidDataSource>();
         this.dataSourceTypeNames = new HashSet<String>();
         this.teiidVdbs = Collections.emptySet();
-    }
-    
-    @SuppressWarnings("javadoc")
-	public Admin getAdminApi() {
-        return this.admin;
     }
 
     /**
@@ -527,6 +561,10 @@ public class ExecutionAdmin {
             this.loaded = true;
         }
     }
+    
+    public void close() {
+        admin.close();
+    }
 
     /**
      * Refreshes the cached lists and maps of current Teiid objects
@@ -629,11 +667,28 @@ public class ExecutionAdmin {
     /**
      * 
      * @param vdbName the vdb name
+     * @throws Exception if undeploying vdb fails
+     */
+    public void undeployVdb( String vdbName) throws Exception {
+        this.admin.undeploy(appendVdbExtension(vdbName));
+        VDB vdb = getVdb(vdbName);
+
+        refreshVDBs();
+
+        if (vdb == null) {
+
+        } else {
+            this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUnDeployVDBEvent(vdb));
+        }
+    }
+    
+    /**
+     * 
+     * @param vdbName the vdb name
      * @param vdbVersion the vdb version
      * @throws Exception if undeploying vdb fails
      */
-    public void undeployVdb( String vdbName,
-                             int vdbVersion ) throws Exception {
+    public void undeployVdb( String vdbName, int vdbVersion ) throws Exception {
         this.admin.undeploy(appendVdbExtension(vdbName));
         VDB vdb = getVdb(vdbName);
 
@@ -673,6 +728,71 @@ public class ExecutionAdmin {
             return vdbName;
         
         return vdbName + Vdb.FILE_EXTENSION;
+    }
+    
+    /**
+     * Ping the admin client to determine whether if is still connected
+     * 
+     * @return
+     */
+    public IStatus ping(PingType pingType) {
+        String msg = Util.getString("cannotConnectToServer", teiidServer.getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
+        try {
+            if (this.admin == null)
+                throw new Exception(msg);
+            
+            switch(pingType) {
+                case JDBC:
+                    return pingJdbc();
+                case ADMIN:
+                default:
+                    return pingAdmin();
+            }
+        }
+        catch (Exception ex) {
+            return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
+        }
+    }
+    
+    private IStatus pingAdmin() throws Exception {
+        admin.getSessions();
+        return Status.OK_STATUS;
+    }
+    
+    private IStatus pingJdbc() {
+        String host = teiidServer.getHost();
+        TeiidJdbcInfo teiidJdbcInfo = teiidServer.getTeiidJdbcInfo();
+        
+        Connection teiidJdbcConnection = null;
+        String url = "jdbc:teiid:ping@mm://" + host + ':' + teiidJdbcInfo.getPort(); //$NON-NLS-1$
+        
+        try {
+            admin.deploy("ping-vdb.xml", new ByteArrayInputStream(TeiidServerUtils.TEST_VDB.getBytes())); //$NON-NLS-1$
+            
+            try{
+                String urlAndCredentials = url + ";user=" + teiidJdbcInfo.getUsername() + ";password=" + teiidJdbcInfo.getPassword() + ';';  //$NON-NLS-1$ //$NON-NLS-2$              
+                teiidJdbcConnection = TeiidDriver.getInstance().connect(urlAndCredentials, null);
+               //pass
+            } catch(SQLException ex){
+                String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
+                return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
+            } finally {
+                admin.undeploy("ping-vdb.xml"); //$NON-NLS-1$
+                
+                if( teiidJdbcConnection != null ) {
+                    teiidJdbcConnection.close();
+                }
+                admin.close();
+            }
+        } catch (AdminException ex) {
+            String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
+            return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
+        } catch (Exception ex) {
+            String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
+            return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
+        }
+        
+        return Status.OK_STATUS;
     }
     
     /**

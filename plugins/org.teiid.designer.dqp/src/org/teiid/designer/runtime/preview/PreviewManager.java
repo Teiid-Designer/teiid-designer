@@ -1362,7 +1362,7 @@ public final class PreviewManager extends JobChangeAdapter
                 
                 if( deployedProjectVdb != null ) {
 	                String fullProjectVdbName = getFullDeployedVdbName(deployedProjectVdb);
-	                admin.getAdminApi().undeploy(fullProjectVdbName);
+                  admin.undeployVdb(fullProjectVdbName);
                 }
                 localProjectVdb.save(null);
                 localProjectVdb.getFile().refreshLocal(IResource.DEPTH_INFINITE, null);
