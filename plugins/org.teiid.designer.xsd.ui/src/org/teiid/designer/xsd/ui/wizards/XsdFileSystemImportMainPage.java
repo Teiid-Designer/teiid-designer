@@ -12,7 +12,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -24,9 +28,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.dialogs.FileSystemElement;
+import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.internal.wizards.datatransfer.MinimizedFileSystemElement;
 import org.eclipse.ui.internal.wizards.datatransfer.WizardFileSystemResourceImportPage1;
 import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
@@ -48,6 +54,8 @@ public class XsdFileSystemImportMainPage extends WizardFileSystemResourceImportP
     private final static String ADD_DEPENDENT_XSD_FILES_ID = getString("addDependentXsdFilesId");  //$NON-NLS-1$
     private final static String NO_RESOURCES_SELECTED_MESSAGE = getString("noResourcesSelectedMethod"); //$NON-NLS-1$
     private final static boolean allowEditLocation = ProductCustomizerMgr.getInstance().getProductCharacteristics().workspaceLocationExposed();
+
+    private boolean okToOverwriteTarget = false;
     
     /**
      * Value that indicates an Eclipse target platform prior to 3.6.2.
@@ -197,6 +205,11 @@ public class XsdFileSystemImportMainPage extends WizardFileSystemResourceImportP
         //List xsdFiles, boolean addDependentXsds, IPath destinationFullPath, Shell shell, IWizardContainer container, IOverwriteQuery overwriteQuery, boolean createContainerStructure, boolean overwriteExistingResources) {
         boolean createContainer = isPre362() ? isSelected("createContainerStructureButton") //$NON-NLS-1$
                                              : isSelected("createTopLevelFolderCheckbox"); //$NON-NLS-1$
+
+        // Set OK to overwrite flag before doing the import
+        resetOKToOverwriteTarget();
+        
+        // Do the import
         return XsdFileSystemImportUtil.importXsds(fileSystemObjects,
                                                   addDependentXsdsCheckbox.getSelection(),
                                                   getContainerFullPath(),
@@ -205,6 +218,48 @@ public class XsdFileSystemImportMainPage extends WizardFileSystemResourceImportP
                                                   createContainer,
                                                   this.overwriteExistingResourcesCheckbox.getSelection());
     } 
+
+    /*
+     * Set the OK To overwrite status.  This does a check on the target container, to see if it's empty. 
+     * If the target container is empty, the status is set to 'true'.  
+     */
+    private void resetOKToOverwriteTarget() {
+        this.okToOverwriteTarget = false;
+        
+        // User has selected the Overwrite Checkbox...
+        if(this.overwriteExistingResourcesCheckbox.getSelection()) {
+            this.okToOverwriteTarget = true;
+        // Check the target container.  If the container is empty, ok to overwrite...
+        } else {
+            IPath path = getContainerFullPath();
+            IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
+            IResource theResource = root.findMember(path);
+            if(theResource!=null && theResource instanceof IContainer) {
+                IResource[] containedResources = null;
+                try {
+                    containedResources = ((IContainer)theResource).members();
+                } catch (CoreException ex) {
+                    // Error getting the resources - okToOverwrite will be false.
+                }
+                // If no resources in the container, ok to overwrite.
+                if(containedResources!=null && containedResources.length==0) {
+                    this.okToOverwriteTarget = true;
+                }
+            }
+        }
+    }
+    
+    @Override
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.ui.dialogs.WizardDataTransferPage#queryOverwrite(java.lang.String)
+     */
+    public String queryOverwrite(String pathString) {
+        // If container is empty, ok to skip the query dialog
+        if(this.okToOverwriteTarget) return IOverwriteQuery.YES;
+        
+        return super.queryOverwrite(pathString);
+    }
     
     /** 
      * @see org.eclipse.ui.internal.wizards.datatransfer.WizardFileSystemResourceImportPage1#createControl(org.eclipse.swt.widgets.Composite)

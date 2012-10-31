@@ -18,6 +18,8 @@ import java.util.Map;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -60,6 +62,7 @@ import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.wizards.datatransfer.DataTransferMessages;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.URLHelper;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
@@ -85,6 +88,8 @@ public class XsdUrlImportMainPage extends AbstractWizardPage implements IOverwri
     private Text containerNameField;
 
     private IStructuredSelection defaultSelection;
+    
+    private boolean okToOverwriteTarget = false;
 
     public XsdUrlImportMainPage( IWorkbench theWorkbench,
                                  IStructuredSelection theSelection ) {
@@ -136,6 +141,9 @@ public class XsdUrlImportMainPage extends AbstractWizardPage implements IOverwri
             return false;
         }
 
+        // reset overwrite target status for empty target container
+        resetOKToOverwriteTarget();
+        
         // import XSDs
         XsdFileSystemImportUtil.importXsds(xsdFiles,
                                            addDependentXsdsCheckbox.getSelection(),
@@ -149,6 +157,37 @@ public class XsdUrlImportMainPage extends AbstractWizardPage implements IOverwri
         Authenticator.setDefault(null);
         return true;
     }
+
+    /*
+     * Set the OK To overwrite status.  This does a check on the target container, to see if it's empty. 
+     * If the target container is empty, the status is set to 'true'.  
+     */
+    private void resetOKToOverwriteTarget() {
+        this.okToOverwriteTarget = false;
+        
+        // User has selected the Overwrite Checkbox...
+        if(this.overwriteExistingResourcesCheckbox.getSelection()) {
+            this.okToOverwriteTarget = true;
+        // Check the target container.  If the container is empty, it's ok to overwrite...
+        } else {
+            IPath path = getContainerFullPath();
+            IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
+            IResource theResource = root.findMember(path);
+            if(theResource!=null && theResource instanceof IContainer) {
+                IResource[] containedResources = null;
+                try {
+                    containedResources = ((IContainer)theResource).members();
+                } catch (CoreException ex) {
+                    // Error getting the resources - okToOverwrite will be false.
+                }
+                // If no resources in the container, ok to overwrite.
+                if(containedResources!=null && containedResources.length==0) {
+                    this.okToOverwriteTarget = true;
+                }
+            }
+        }
+    }
+    
 
     @Override
     public boolean isPageComplete() {
@@ -473,7 +512,9 @@ public class XsdUrlImportMainPage extends AbstractWizardPage implements IOverwri
 
     @Override
 	public String queryOverwrite( String pathString ) {
-
+        // Check okToOverwrite status - if OK, bypass the dialog.
+        if(okToOverwriteTarget) return YES;
+        
         Path path = new Path(pathString);
 
         String messageString;
