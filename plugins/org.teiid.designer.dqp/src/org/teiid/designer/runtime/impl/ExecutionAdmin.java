@@ -34,7 +34,6 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.adminapi.Admin;
-import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.AdminFactory;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
@@ -417,7 +416,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
                     }
                     try {
                         admin.deploy(fileName, iStream);
-                    } catch (AdminException ex) {
+                    } catch (Exception ex) {
                         // Jar deployment failed
                         Util.log(IStatus.ERROR, ex, NLS.bind(Messages.JarDeploymentFailed, theFile.getPath()));
                     }
@@ -741,9 +740,6 @@ public class ExecutionAdmin implements IExecutionAdmin {
                 }
                 admin.close();
             }
-        } catch (AdminException ex) {
-            String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
-            return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
         } catch (Exception ex) {
             String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
