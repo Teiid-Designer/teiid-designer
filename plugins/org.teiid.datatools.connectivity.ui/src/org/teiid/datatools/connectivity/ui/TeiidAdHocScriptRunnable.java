@@ -330,8 +330,10 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
         if (stmt != null) {
             try {
                 ResultSet planRs = stmt.executeQuery("SHOW PLAN"); //$NON-NLS-1$
-                planRs.next();
-                executionPlan = planRs.getString("PLAN_XML"); //$NON-NLS-1$
+    
+                if( planRs.next() ) {
+                	executionPlan = planRs.getString("PLAN_XML"); //$NON-NLS-1$
+                }
             } catch (SQLException e) {
                 String message = org.teiid.datatools.connectivity.ui.Messages.getString("TeiidAdHocScriptRunnable.getPlanError"); //$NON-NLS-1$
                  IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, message, e);
