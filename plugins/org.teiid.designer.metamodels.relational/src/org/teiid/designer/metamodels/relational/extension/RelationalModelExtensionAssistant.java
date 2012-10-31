@@ -75,7 +75,7 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
         if (model != null) {
             final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(model);
 
-            if (modelResource != null) {
+            if (modelResource != null && !modelResource.isReadOnly()) {
                 if ((ModelType.PHYSICAL_LITERAL == modelResource.getModelType())
                     && RelationalPackage.eNS_URI.equals(modelResource.getPrimaryMetamodelUri()) && !supportsMyNamespace(model)) {
                     saveModelExtensionDefinition(model);
@@ -205,6 +205,7 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
 
     /**
      * {@inheritDoc}
+     * @param context the context of the operation
      *
      * @see org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant#supportsMedOperation(java.lang.String, java.lang.Object)
      */
