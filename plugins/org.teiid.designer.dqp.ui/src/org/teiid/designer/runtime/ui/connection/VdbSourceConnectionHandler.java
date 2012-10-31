@@ -68,7 +68,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
 
         VdbSourceConnection vdbSourceConnection = null;
 
-        ExecutionAdmin defaultAdmin = getDefaultServer().getAdmin();
+        ExecutionAdmin defaultAdmin = getDefaultServer().connect();
 
         String uuid = ModelerCore.workspaceUuid().toString();
 
@@ -149,7 +149,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
                 TeiidServer defServer = getDefaultServer();
                 if (defServer != null && defServer.isConnected()) {
                     try {
-                        initialSelection = defServer.getAdmin().getDataSource(jndiName);
+                        initialSelection = defServer.connect().getDataSource(jndiName);
                     } catch (Exception e) {
                         UTIL.log(IStatus.ERROR,
                                  e,
@@ -197,7 +197,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
                 TeiidServer defServer = getDefaultServer();
                 if (defServer != null && defServer.isConnected()) {
                     try {
-                        initialSelection = defServer.getAdmin().getTranslator(transName);
+                        initialSelection = defServer.connect().getTranslator(transName);
                     } catch (Exception e) {
                         UTIL.log(IStatus.ERROR,
                                  e,
@@ -231,7 +231,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
             Collection<TeiidDataSource> dataSources = null;
 
             try {
-                dataSources = defaultServer.getAdmin().getDataSources();
+                dataSources = defaultServer.connect().getDataSources();
             } catch (Exception e) {
                 UTIL.log(IStatus.ERROR,
                          e,
@@ -273,7 +273,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
 
         if ((defaultServer != null) && defaultServer.isConnected()) {
             try {
-                TeiidTranslator translator = defaultServer.getAdmin().getTranslator(translatorName);
+                TeiidTranslator translator = defaultServer.connect().getTranslator(translatorName);
 
                 if (translator != null) {
                     Collection<PropertyDefinition> props = new ArrayList<PropertyDefinition>();
@@ -336,7 +336,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
             Collection<TeiidTranslator> translators = null;
 
             try {
-                translators = defaultServer.getAdmin().getTranslators();
+                translators = defaultServer.connect().getTranslators();
             } catch (Exception e) {
                 UTIL.log(IStatus.ERROR,
                          e,

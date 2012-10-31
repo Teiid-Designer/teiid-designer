@@ -77,7 +77,7 @@ public abstract class RuntimeAction extends Action implements ISelectionChangedL
                     tempAdmin = ((TeiidTranslator)obj).getAdmin();
                 } else if (obj instanceof TeiidServer) {
                     try {
-                        tempAdmin = ((TeiidServer)obj).getAdmin();
+                        tempAdmin = ((TeiidServer)obj).connect();
                     } catch (Exception e) {
                         UTIL.log(e);
                         newAdmin = null;

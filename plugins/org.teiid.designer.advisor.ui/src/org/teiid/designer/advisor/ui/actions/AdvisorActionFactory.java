@@ -583,7 +583,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 					TeiidServer teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
 					
 					CreateDataSourceAction action = new CreateDataSourceAction();
-					action.setAdmin(teiidServer.getAdmin());
+					action.setAdmin(teiidServer.connect());
 
 					action.setSelection(new StructuredSelection());
 

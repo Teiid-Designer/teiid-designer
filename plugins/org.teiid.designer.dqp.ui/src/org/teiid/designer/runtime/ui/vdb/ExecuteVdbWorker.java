@@ -114,7 +114,7 @@ public class ExecuteVdbWorker implements VdbConstants {
 			if (teiidServer != null) {
 				IStatus connectStatus = teiidServer.ping();
 				if (connectStatus.isOK()) {
-					ExecutionAdmin admin = teiidServer.getAdmin();
+					ExecutionAdmin admin = teiidServer.connect();
 					if (admin != null) {
 						deployedVDB = admin.getVdb(selectedVdb.getFullPath().removeFileExtension().lastSegment());
 						if (deployedVDB == null) {

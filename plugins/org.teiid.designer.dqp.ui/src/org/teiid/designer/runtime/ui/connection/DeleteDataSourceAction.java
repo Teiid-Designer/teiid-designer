@@ -75,7 +75,7 @@ public class DeleteDataSourceAction extends SortableSelectionAction implements D
         Properties properties = getConnectionProperties(modelFile);
 
         if (properties != null && !properties.isEmpty()) {
-            ExecutionAdmin executionAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin();
+            ExecutionAdmin executionAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().connect();
             String name = modelFile.getFullPath().removeFileExtension().lastSegment();
             String jndiName = new ConnectionInfoHelper().generateUniqueConnectionJndiName(name,
                                                                                           modelFile.getFullPath(),

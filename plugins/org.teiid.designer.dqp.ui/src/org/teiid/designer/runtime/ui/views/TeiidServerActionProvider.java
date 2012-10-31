@@ -366,7 +366,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 if (teiidServer != null && teiidServer.isConnected()) {
                     ExecutionAdmin admin;
                     try {
-                        admin = teiidServer.getAdmin();
+                        admin = teiidServer.connect();
                     } catch (Exception ex) {
                         DqpUiConstants.UTIL.log(ex);
                         return;

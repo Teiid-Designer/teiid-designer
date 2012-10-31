@@ -192,7 +192,7 @@ public class TeiidServer implements HostProvider {
      * 
      * @throws Exception
      */
-    public ExecutionAdmin getAdmin() throws Exception {
+    public ExecutionAdmin connect() throws Exception {
         if (! isParentConnected()) {
             throw new Exception(DqpPlugin.Util.getString("jbossServerNotStartedMessage")); //$NON-NLS-1$
         }
@@ -222,7 +222,7 @@ public class TeiidServer implements HostProvider {
             if (isParentConnected()) {
                 // Refresh is implied in the getting of the admin object since it will
                 // automatically load and refresh.
-                getAdmin();
+                connect();
             }
             
             setConnectionError(null);
@@ -398,7 +398,7 @@ public class TeiidServer implements HostProvider {
      */
     public IStatus testPing() {
         try {
-            getAdmin();
+            connect();
             ping();
             close();
             this.admin = null;
@@ -422,7 +422,7 @@ public class TeiidServer implements HostProvider {
      */
     public IStatus testJDBCPing(String host, String port, String username, String password) {
         try {
-            getAdmin().ping(PingType.JDBC);
+            connect().ping(PingType.JDBC);
             close();
             this.admin = null;
         } catch (Exception e) {
@@ -454,7 +454,7 @@ public class TeiidServer implements HostProvider {
 		props.put("connection-url", getVdbDataSourceConnectionUrl(vdbName)); //$NON-NLS-1$
     	
     	try {
-			getAdmin().getOrCreateDataSource(displayName, jndiName, "connector-jdbc", props); //$NON-NLS-1$
+			connect().getOrCreateDataSource(displayName, jndiName, "connector-jdbc", props); //$NON-NLS-1$
 		} catch (Exception ex) {
 			String msg = "Error creating data source for VDB " + vdbName; //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);

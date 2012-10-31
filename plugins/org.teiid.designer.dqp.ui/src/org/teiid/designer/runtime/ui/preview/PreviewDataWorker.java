@@ -201,7 +201,7 @@ public class PreviewDataWorker {
         		TeiidTranslator tt = null; 
         		
         		try {
-					tt = getServerManager().getDefaultServer().getAdmin().getTranslator(translatorName);
+					tt = getServerManager().getDefaultServer().connect().getTranslator(translatorName);
 				} catch (Exception e) {
 					DqpUiConstants.UTIL.log(e);
 				}

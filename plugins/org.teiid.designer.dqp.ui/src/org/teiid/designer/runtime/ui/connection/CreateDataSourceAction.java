@@ -107,7 +107,7 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
                                               getString("noServer.message")); //$NON-NLS-1$
                     return;
                 } else if (DqpPlugin.getInstance().getServerManager().getDefaultServer().isConnected()) {
-                    executionAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin();
+                    executionAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().connect();
                 } else {
                     MessageDialog.openConfirm(iww.getShell(), getString("noServerConnection.title"), //$NON-NLS-1$
                                               getString("noServerConnection.message")); //$NON-NLS-1$

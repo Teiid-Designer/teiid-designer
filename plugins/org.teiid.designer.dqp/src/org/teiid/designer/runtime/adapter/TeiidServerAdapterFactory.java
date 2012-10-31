@@ -147,7 +147,7 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
         
         if (optionList.contains(ServerOptions.CONNECT)) {
             // Initialise the ExecutionAdmin component of the teiid server        
-            teiidServer.getAdmin();
+            teiidServer.connect();
         }
         
         if (optionList.contains(ServerOptions.ADD_TO_REGISTRY)) {

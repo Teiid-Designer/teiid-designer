@@ -494,7 +494,7 @@ public final class PreviewManager extends JobChangeAdapter
 
         if (helper.hasConnectionInfo(modelResource)) {
             String jndiName = this.context.getPreviewVdbJndiName(previewVdb.getFile().getFullPath());
-            ExecutionAdmin execAdmin = previewServer.getAdmin();
+            ExecutionAdmin execAdmin = previewServer.connect();
 
             // create data source on server if we need to
             if (!execAdmin.dataSourceExists(jndiName)) {
@@ -1122,7 +1122,7 @@ public final class PreviewManager extends JobChangeAdapter
             // make sure server has a copy of the Preview VDB
             if (getPreviewServer() != null) {
                 try {
-                    ExecutionAdmin admin = getPreviewServer().getAdmin();
+                    ExecutionAdmin admin = getPreviewServer().connect();
                     deploy = (admin.getVdb(getPreviewVdbDeployedName(pvdbFile)) == null);
 
                     // server does not have a copy. update status map.
@@ -1223,7 +1223,7 @@ public final class PreviewManager extends JobChangeAdapter
             }
         }
 
-        ExecutionAdmin admin = previewServer.getAdmin();
+        ExecutionAdmin admin = previewServer.connect();
 
         // collect all the Preview VDB parent folders so that we can make sure workspace is in sync with file system
         Set<IContainer> parents = new HashSet<IContainer>();
@@ -1600,7 +1600,7 @@ public final class PreviewManager extends JobChangeAdapter
                 && prefs.getBoolean(PreferenceConstants.PREVIEW_TEIID_CLEANUP_ENABLED,
                                     PreferenceConstants.PREVIEW_TEIID_CLEANUP_ENABLED_DEFAULT)) {
 
-                ExecutionAdmin admin = getPreviewServer().getAdmin();
+                ExecutionAdmin admin = getPreviewServer().connect();
                 Collection<Job> jobs = new ArrayList<Job>();
 
                 for (TeiidVdb vdb : admin.getVdbs()) {
