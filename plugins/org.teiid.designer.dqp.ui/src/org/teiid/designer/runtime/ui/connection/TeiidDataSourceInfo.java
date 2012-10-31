@@ -9,7 +9,6 @@ package org.teiid.designer.runtime.ui.connection;
 
 import java.util.Properties;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
-import org.teiid.designer.runtime.ExecutionAdmin;
 
 /**
  * 
@@ -22,7 +21,6 @@ public class TeiidDataSourceInfo {
     private String jndiName;
     private Properties properties;
     private IConnectionInfoProvider connectionInfoProvider;
-    private ExecutionAdmin admin;
 
     public TeiidDataSourceInfo() {
 
@@ -33,19 +31,16 @@ public class TeiidDataSourceInfo {
      * @param jndiName
      * @param properties
      * @param connectionInfoProvider
-     * @param admin
      */
     public TeiidDataSourceInfo( String displayName,
                                 String jndiName,
                                 Properties properties,
-                                IConnectionInfoProvider connectionInfoProvider,
-                                ExecutionAdmin admin ) {
+                                IConnectionInfoProvider connectionInfoProvider) {
         super();
         this.displayName = displayName;
         this.jndiName = jndiName;
         this.properties = properties;
         this.connectionInfoProvider = connectionInfoProvider;
-        this.admin = admin;
     }
 
     /**
@@ -102,20 +97,6 @@ public class TeiidDataSourceInfo {
      */
     public void setConnectionInfoProvider( IConnectionInfoProvider connectionInfoProvider ) {
         this.connectionInfoProvider = connectionInfoProvider;
-    }
-
-    /**
-     * @return admin
-     */
-    public ExecutionAdmin getAdmin() {
-        return admin;
-    }
-
-    /**
-     * @param admin Sets admin to the specified value.
-     */
-    public void setAdmin( ExecutionAdmin admin ) {
-        this.admin = admin;
     }
 
 }

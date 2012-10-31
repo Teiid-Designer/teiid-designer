@@ -2,7 +2,6 @@ package org.teiid.designer.runtime.test;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.teiid.designer.runtime.ExecutionAdminTest;
 import org.teiid.designer.runtime.ExecutionConfigurationEventTest;
 import org.teiid.designer.runtime.ServerManagerTest;
 import org.teiid.designer.runtime.ServerTest;
@@ -11,6 +10,7 @@ import org.teiid.designer.runtime.TeiidTranslatorTest;
 import org.teiid.designer.runtime.connection.ConnectionInfoHelperTest;
 import org.teiid.designer.runtime.connection.ConnectionProfileFactoryTest;
 import org.teiid.designer.runtime.connection.SourceBindingTest;
+import org.teiid.designer.runtime.impl.ExecutionAdminTest;
 
 @RunWith( Suite.class )
 @Suite.SuiteClasses( {ConnectionProfileFactoryTest.class, ConnectionInfoHelperTest.class, TeiidTranslatorTest.class,

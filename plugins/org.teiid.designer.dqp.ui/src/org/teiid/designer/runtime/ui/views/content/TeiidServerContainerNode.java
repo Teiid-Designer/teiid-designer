@@ -108,7 +108,7 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
                 Collection<TeiidDataSource> dataSources;
 
                 if (provider.isShowDataSources()) {
-                    dataSources = new ArrayList(teiidServer.connect().getDataSources());
+                    dataSources = new ArrayList(teiidServer.getDataSources());
 
                     if (!dataSources.isEmpty()) {
                         children.add(new DataSourcesFolder(this, dataSources));
@@ -125,7 +125,7 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
                 Collection<TeiidVdb> vdbs;
 
                 if (provider.isShowVDBs()) {
-                    vdbs = new ArrayList<TeiidVdb>(teiidServer.connect().getVdbs());
+                    vdbs = new ArrayList<TeiidVdb>(teiidServer.getVdbs());
 
                     if (!vdbs.isEmpty()) {
                         children.add(new VdbsFolder(this, vdbs));
@@ -142,7 +142,7 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
                 Collection<TeiidTranslator> translators;
 
                 if (provider.isShowTranslators()) {
-                    translators = teiidServer.connect().getTranslators();
+                    translators = teiidServer.getTranslators();
 
                     if (!translators.isEmpty()) {
                         children.add(new TranslatorsFolder(this, translators));

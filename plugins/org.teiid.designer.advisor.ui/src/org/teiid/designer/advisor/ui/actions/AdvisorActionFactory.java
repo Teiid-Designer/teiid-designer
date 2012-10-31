@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -583,7 +582,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 					TeiidServer teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
 					
 					CreateDataSourceAction action = new CreateDataSourceAction();
-					action.setAdmin(teiidServer.connect());
+					action.setTeiidServer(teiidServer);
 
 					action.setSelection(new StructuredSelection());
 

@@ -11,15 +11,13 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import java.util.HashSet;
 import java.util.Set;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.teiid.designer.runtime.ExecutionAdmin;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidTranslator;
 
 
@@ -32,7 +30,7 @@ public class SourceBindingTest {
     private static final TeiidTranslator NULL_CONNECTOR = null;
 
     @Mock
-    private ExecutionAdmin commonExecutionAdmin;
+    private TeiidServer teiidServer;
 
     private TeiidTranslator commonConnector;
 
@@ -42,14 +40,14 @@ public class SourceBindingTest {
 
         commonConnector = mock(TeiidTranslator.class);
         when(commonConnector.getType()).thenReturn("theType");
-        when(commonConnector.getAdmin()).thenReturn(commonExecutionAdmin);
+        when(commonConnector.getTeiidServer()).thenReturn(teiidServer);
     }
 
     private TeiidTranslator getMockConnector() {
         TeiidTranslator conn = mock(TeiidTranslator.class);
-        ExecutionAdmin admin = mock(ExecutionAdmin.class);
+        TeiidServer newTeiidServer = mock(TeiidServer.class);
         when(conn.getType()).thenReturn("theType");
-        when(conn.getAdmin()).thenReturn(admin);
+        when(conn.getTeiidServer()).thenReturn(newTeiidServer);
 
         return conn;
     }
@@ -57,7 +55,7 @@ public class SourceBindingTest {
     private TeiidTranslator getMockConnectorWithCommonAdmin() {
         TeiidTranslator conn = mock(TeiidTranslator.class);
         when(conn.getType()).thenReturn("theType");
-        when(conn.getAdmin()).thenReturn(commonExecutionAdmin);
+        when(conn.getTeiidServer()).thenReturn(teiidServer);
 
         return conn;
     }

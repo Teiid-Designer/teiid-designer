@@ -8,17 +8,15 @@
 package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
-
-import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.HashCodeUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.StringUtilities;
 
 /**
@@ -28,17 +26,17 @@ import org.teiid.designer.core.util.StringUtilities;
 public class TeiidTranslator implements Comparable<TeiidTranslator> {
 
     private final Translator translator;
-    private final ExecutionAdmin admin;
+    private final TeiidServer teiidServer;
 
     private final Collection<? extends PropertyDefinition> propDefs;
 
-    TeiidTranslator( Translator translator, Collection<? extends PropertyDefinition> propDefs, ExecutionAdmin admin) {
+    public TeiidTranslator( Translator translator, Collection<? extends PropertyDefinition> propDefs, TeiidServer teiidServer) {
         CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(propDefs, "propDefs"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(teiidServer, "teiidServer"); //$NON-NLS-1$
 
         this.translator = translator;
-        this.admin = admin;
+        this.teiidServer = teiidServer;
         this.propDefs = propDefs;
     }
 
@@ -64,9 +62,9 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
         if (obj.getClass() != getClass()) return false;
 
         TeiidTranslator other = (TeiidTranslator)obj;
-        TeiidServer otherServer = other.getAdmin().getServer();
+        TeiidServer otherServer = other.getTeiidServer();
 
-        if (getName().equals(other.getName()) && (getAdmin().getServer() == otherServer || getAdmin().getServer().equals(otherServer)) ) return true;
+        if (getName().equals(other.getName()) && (getTeiidServer() == otherServer || getTeiidServer().equals(otherServer)) ) return true;
 
         return false;
     }
@@ -102,7 +100,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.adminapi.AdminObject#getName()
+     * @see org.teiid.teiidServerapi.AdminObject#getName()
      */
     public String getName() {
         return translator.getName();
@@ -111,7 +109,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.adminapi.AdminObject#getProperties()
+     * @see org.teiid.teiidServerapi.AdminObject#getProperties()
      */
     public Properties getProperties() {
         return translator.getProperties();
@@ -120,7 +118,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.adminapi.AdminObject#getPropertyValue(java.lang.String)
+     * @see org.teiid.teiidServerapi.AdminObject#getPropertyValue(java.lang.String)
      */
     public String getPropertyValue( String name ) {
         return translator.getPropertyValue(name);
@@ -142,14 +140,14 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
     public int hashCode() {
         int result = 0;
         result = HashCodeUtil.hashCode(result, getName());
-        return HashCodeUtil.hashCode(result, getAdmin().getServer().hashCode());
+        return HashCodeUtil.hashCode(result, getTeiidServer().hashCode());
     }
 
     /**
-     * @return the execution admin (never <code>null</code>)
+     * @return the execution teiidServer (never <code>null</code>)
      */
-    public ExecutionAdmin getAdmin() {
-        return this.admin;
+    public TeiidServer getTeiidServer() {
+        return this.teiidServer;
     }
     
     /**
@@ -279,7 +277,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
     public void setPropertyValue( String name,
                                   String value ) throws Exception {
         CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
-        getProperties().setProperty(name, value); // TODO does the admin call do this
+        getProperties().setProperty(name, value); // TODO does the teiidServer call do this
     }
 
     /**
@@ -292,7 +290,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
         Set<Entry<Object, Object>> entrySet = changedProperties.entrySet();
         CoreArgCheck.isNotEmpty(entrySet, "changedProperties"); //$NON-NLS-1$
 
-        // TODO does the admin call do this
+        // TODO does the teiidServer call do this
         Properties props = getProperties();
 
         for (Entry<Object, Object> entry : entrySet) {
@@ -316,7 +314,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
      */
     @Override
     public String toString() {
-        return Util.getString("connectorDetailedName", getName(), getType(), getAdmin().getServer()); //$NON-NLS-1$
+        return Util.getString("connectorDetailedName", getName(), getType(), getTeiidServer()); //$NON-NLS-1$
     }
 
 }

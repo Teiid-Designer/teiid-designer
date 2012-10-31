@@ -1488,7 +1488,7 @@ public class TestRuntimeAdapter extends TestCase {
         try {
             RecordFactory.joinEntryResults(null, new EntryResult[0], 50); 
             fail("Did not throw expected MyExpectedException"); //$NON-NLS-1$
-        } catch (AssertionError e) {
+        } catch (IllegalArgumentException e) {
             // do nothing � this is what was expected
         }
     }

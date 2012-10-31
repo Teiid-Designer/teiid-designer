@@ -9,7 +9,6 @@
 package org.teiid.designer.runtime.preview.jobs;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -83,8 +82,8 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
 
         // delete PVDB from server
         try {
-            if (teiidServer.connect().getVdb(this.pvdbName) != null) {
-                teiidServer.connect().undeployVdb(this.pvdbName, this.pvdbVersion);
+            if (teiidServer.getVdb(this.pvdbName) != null) {
+                teiidServer.undeployVdb(this.pvdbName);
             }
         } catch (Exception e) {
             ++errors;
@@ -100,8 +99,8 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
         IStatus deleteDataSourceErrorStatus = null;
 
         try {
-            if (teiidServer.connect().dataSourceExists(this.jndiName)) {
-                teiidServer.connect().deleteDataSource(this.jndiName);
+            if (teiidServer.dataSourceExists(this.jndiName)) {
+                teiidServer.deleteDataSource(this.jndiName);
             }
         } catch (Exception e) {
             ++errors;

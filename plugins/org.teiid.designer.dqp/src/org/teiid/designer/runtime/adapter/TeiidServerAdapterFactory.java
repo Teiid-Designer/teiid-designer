@@ -146,7 +146,7 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
         TeiidServer teiidServer = new TeiidServer(jboss7Server.getHost(), teiidAdminInfo, teiidJdbcInfo, serverManager, server);
         
         if (optionList.contains(ServerOptions.CONNECT)) {
-            // Initialise the ExecutionAdmin component of the teiid server        
+            // Connect this teiid server        
             teiidServer.connect();
         }
         

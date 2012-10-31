@@ -8,14 +8,13 @@
 package org.teiid.designer.runtime.connection;
 
 import java.util.Properties;
-
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ExecutionAdmin;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.vdb.connections.VdbSourceConnection;
 
 /**
@@ -110,9 +109,9 @@ public class ModelConnectionMapper {
         return connectionInfoProvider;
     }
 
-    public VdbSourceConnection getVdbSourceConnection( ExecutionAdmin executionAdmin,
+    public VdbSourceConnection getVdbSourceConnection( TeiidServer teiidServer,
                                                        String workspaceUuid ) throws Exception {
-        if (executionAdmin == null) {
+        if (teiidServer == null || ! teiidServer.isConnected()) {
             return null;
         }
 
@@ -127,7 +126,7 @@ public class ModelConnectionMapper {
 
         // Insure this name exists as data source on server
         dsTypeName = provider.findMatchingDataSourceTypeName(modelResource);
-        executionAdmin.getOrCreateDataSource(modelResource.getItemName(), jndiName, dsTypeName, sourceProps);
+        teiidServer.getOrCreateDataSource(modelResource.getItemName(), jndiName, dsTypeName, sourceProps);
 
         // Select a translator type;
         translatorName = provider.getTranslatorName(modelResource);

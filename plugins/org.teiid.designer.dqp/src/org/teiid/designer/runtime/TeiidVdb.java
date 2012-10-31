@@ -13,17 +13,17 @@ public class TeiidVdb implements Comparable<TeiidVdb> {
 
     private final VDB vdb;
 
-    private final ExecutionAdmin admin;
+    private final TeiidServer teiidServer;
 
     private final boolean isPreview;
 
     public TeiidVdb( VDB vdb,
-                     ExecutionAdmin admin ) {
+                     TeiidServer teiidServer ) {
         CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(teiidServer, "teiidServer"); //$NON-NLS-1$
 
         this.vdb = vdb;
-        this.admin = admin;
+        this.teiidServer = teiidServer;
         isPreview = Boolean.parseBoolean(vdb.getProperties().getProperty(Vdb.Xml.PREVIEW));
     }
 
@@ -66,10 +66,6 @@ public class TeiidVdb implements Comparable<TeiidVdb> {
         int result = 1;
         result = prime * result + ((this.getName() == null) ? 0 : this.getName().hashCode());
         return result;
-    }
-
-    public ExecutionAdmin getAdmin() {
-        return admin;
     }
 
     public String getName() {

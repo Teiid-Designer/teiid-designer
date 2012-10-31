@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -52,7 +51,6 @@ import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
 import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
-import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
@@ -108,7 +106,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
 
     Map<String, ModelResource> relationalModelsMap;
 
-    private ExecutionAdmin admin;
+    private TeiidServer teiidServer;
     // private JdbcManager jdbcManager;
     private ConnectionInfoProviderFactory providerFactory;
     // private IConnectionProfile selectedProfile;
@@ -124,7 +122,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
     /**
      * @since 4.0
      */
-    public CreateDataSourceWizard( ExecutionAdmin admin,
+    public CreateDataSourceWizard( TeiidServer teiidServer,
                                    Collection<ModelResource> relationalModels,
                                    ModelResource initialSelection ) {
         super(DqpUiPlugin.getDefault(), TITLE, null);
@@ -133,7 +131,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
             this.relationalModelsMap.put(ModelUtil.getName(mr), mr);
         }
         this.hasModelResources = !relationalModelsMap.isEmpty();
-        this.admin = admin;
+        this.teiidServer = teiidServer;
         this.selectedModelResource = initialSelection;
         this.providerFactory = new ConnectionInfoProviderFactory();
         this.teiidDataSourceProperties = new Properties();
@@ -171,7 +169,6 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
         mainPanel.setLayout(new GridLayout(2, false));
 
         WidgetFactory.createLabel(mainPanel, getString("teiidServer.label")); //$NON-NLS-1$
-        TeiidServer teiidServer = admin.getServer();
 
         if (StringUtilities.isEmpty(teiidServer.getCustomLabel())) {
             WidgetFactory.createLabel(mainPanel, GridData.FILL_HORIZONTAL, 1, teiidServer.getUrl());
@@ -485,7 +482,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
 
     public TeiidDataSourceInfo getTeiidDataSourceInfo() {
         TeiidDataSourceInfo info = new TeiidDataSourceInfo(dataSourceName, dataSourceName, teiidDataSourceProperties,
-                                                           currentProvider, admin);
+                                                           currentProvider);
         return info;
     }
 
@@ -583,7 +580,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
 
     private boolean nameExists( String name ) {
         try {
-            if (admin.dataSourceExists(name)) {
+            if (teiidServer.dataSourceExists(name)) {
                 return true;
             }
         } catch (Exception e) {

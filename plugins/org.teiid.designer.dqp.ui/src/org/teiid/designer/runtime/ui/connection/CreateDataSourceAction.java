@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -24,7 +23,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ExecutionAdmin;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
@@ -54,7 +53,7 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
     private String pwd;
     private ConnectionInfoProviderFactory providerFactory;
 
-    private ExecutionAdmin cachedAdmin;
+    private TeiidServer cachedServer;
 
     /**
      * @since 5.0
@@ -65,8 +64,8 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
         providerFactory = new ConnectionInfoProviderFactory();
     }
 
-    public void setAdmin( ExecutionAdmin admin ) {
-        this.cachedAdmin = admin;
+    public void setTeiidServer( TeiidServer teiidServer ) {
+        this.cachedServer = teiidServer;
     }
 
     /**
@@ -100,24 +99,25 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
         }
         try {
 
-            ExecutionAdmin executionAdmin = cachedAdmin;
-            if (executionAdmin == null) {
+            TeiidServer teiidServer = cachedServer;
+            if (teiidServer == null) {
                 if (DqpPlugin.getInstance().getServerManager().getDefaultServer() == null) {
                     MessageDialog.openConfirm(iww.getShell(), getString("noServer.title"), //$NON-NLS-1$
                                               getString("noServer.message")); //$NON-NLS-1$
                     return;
                 } else if (DqpPlugin.getInstance().getServerManager().getDefaultServer().isConnected()) {
-                    executionAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().connect();
+                    teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
                 } else {
                     MessageDialog.openConfirm(iww.getShell(), getString("noServerConnection.title"), //$NON-NLS-1$
                                               getString("noServerConnection.message")); //$NON-NLS-1$
                     return;
                 }
 
+                teiidServer.connect();
             }
 
             Collection<ModelResource> relationalModels = getRelationalModelsWithConnections();
-            final CreateDataSourceWizard wizard = new CreateDataSourceWizard(executionAdmin, relationalModels, modelResource);
+            final CreateDataSourceWizard wizard = new CreateDataSourceWizard(teiidServer, relationalModels, modelResource);
 
             wizard.init(iww.getWorkbench(), new StructuredSelection());
             final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
@@ -147,7 +147,7 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
                 }
 
                 if( !cancelledPassword) {
-	                executionAdmin.getOrCreateDataSource(info.getDisplayName(),
+	                teiidServer.getOrCreateDataSource(info.getDisplayName(),
 	                                                     info.getJndiName(),
 	                                                     provider.getDataSourceType(),
 	                                                     props);

@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.runtime;
+package org.teiid.designer.runtime.impl;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
@@ -43,6 +43,16 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.runtime.EventManager;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.IExecutionAdmin;
+import org.teiid.designer.runtime.TeiidAdminInfo;
+import org.teiid.designer.runtime.TeiidDataSource;
+import org.teiid.designer.runtime.TeiidJdbcInfo;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.TeiidServerUtils;
+import org.teiid.designer.runtime.TeiidTranslator;
+import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
@@ -56,7 +66,7 @@ import org.teiid.jdbc.TeiidDriver;
  *
  * @since 8.0
  */
-public class ExecutionAdmin {
+public class ExecutionAdmin implements IExecutionAdmin {
 
     private final Admin admin;
     protected Map<String, TeiidTranslator> translatorByNameMap;
@@ -65,26 +75,19 @@ public class ExecutionAdmin {
     protected Set<String> dataSourceTypeNames;
     private final EventManager eventManager;
     private final TeiidServer teiidServer;
-    // private Set<VDB> vdbs;
     private Set<TeiidVdb> teiidVdbs;
     private final ModelConnectionMatcher connectionMatcher;
 
     private boolean loaded = false;
 
-    public enum PingType {
-        ADMIN, JDBC;
-    }
-    
     /**
      * Constructor used for testing purposes only. 
-     * 
-     * DO NOT MAKE PUBLIC!!
      * 
      * @param admin the associated Teiid Admin API (never <code>null</code>)
      * @param teiidServer the server this admin belongs to (never <code>null</code>)
      * @throws Exception if there is a problem connecting the server
      */
-    protected ExecutionAdmin(Admin admin, TeiidServer teiidServer) throws Exception {
+    ExecutionAdmin(Admin admin, TeiidServer teiidServer) throws Exception {
         CoreArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
         
@@ -124,10 +127,10 @@ public class ExecutionAdmin {
         init();
     }
 
-    /**
-     * @param name the name of the data source
-     * @return true if data source exists with the provided name. else false.
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.IExecutionAdmin#dataSourceExists(java.lang.String)
      */
+    @Override
     public boolean dataSourceExists( String name ) {
         // Check if exists, return false
         if (this.dataSourceNames.contains(name)) {
@@ -137,12 +140,10 @@ public class ExecutionAdmin {
         return false;
     }
 
-    /**
-     * Removes the data source from the teiid server (if exists)
-     * 
-     * @param jndiName the source jndi name
-     * @throws Exception if failer in deleting data source on server
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.IExecutionAdmin#deleteDataSource(java.lang.String)
      */
+    @Override
     public void deleteDataSource( String jndiName ) throws Exception {
         // Check if exists, return false
         if (this.dataSourceNames.contains(jndiName)) {
@@ -164,13 +165,10 @@ public class ExecutionAdmin {
         // throw new Exception(Util.getString("errorDeletingDataSource", jndiName, getServer().getUrl()));
     }
 
-    /**
-     * Deploys the VDB (IFile) to the related Teiid server
-     * 
-     * @param vdbFile the vdb file
-     * @return the deployed VDB
-     * @throws Exception if deployment fails
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.IExecutionAdmin#deployVdb(org.eclipse.core.resources.IFile)
      */
+    @Override
     public VDB deployVdb( IFile vdbFile ) throws Exception {
         CoreArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
 
@@ -208,13 +206,10 @@ public class ExecutionAdmin {
         return vdb;
     }
     
-    /**
-     * Deploys the input Vdb archive file to the related Teiid server
-     * 
-     * @param vdb the local Vdb to deploy
-     * @return the deployed VDB
-     * @throws Exception if deployment fails
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.IExecutionAdmin#deployVdb(org.teiid.designer.vdb.Vdb)
      */
+    @Override
     public VDB deployVdb( Vdb vdb ) throws Exception {
         CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
         return deployVdb(vdb.getFile());
@@ -233,21 +228,27 @@ public class ExecutionAdmin {
         this.teiidVdbs = Collections.emptySet();
     }
 
-    /**
-     * Returns a teiid data source object if it exists in this server
-     * 
-     * @param name the data source name
-     * @return the teiid data source object (can be <code>null</code>)
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.IExecutionAdmin#getDataSource(java.lang.String)
      */
+    @Override
     public TeiidDataSource getDataSource(String name) {
         return this.dataSourceByNameMap.get(name);
     }
     
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.IExecutionAdmin#getDataSources()
+     */
+    @Override
     @SuppressWarnings("javadoc")
 	public Collection<TeiidDataSource> getDataSources() {
         return this.dataSourceByNameMap.values();
     }
 
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.IExecutionAdmin#getDataSourceTypeNames()
+     */
+    @Override
     @SuppressWarnings("javadoc")
 	public Set<String> getDataSourceTypeNames() {
         return this.dataSourceTypeNames;
@@ -260,14 +261,10 @@ public class ExecutionAdmin {
         return this.eventManager;
     }
 
-    /**
-     * @param model the model containing source info
-     * @param jndiName the JNDI name
-     * @param previewVdb the model's preview vdb
-     * @param passwordProvider the password provider
-     * @return Teiid data source object
-     * @throws Exception if data source creation fails
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.IExecutionAdmin#getOrCreateDataSource(org.eclipse.core.resources.IFile, java.lang.String, boolean, org.teiid.designer.runtime.connection.IPasswordProvider)
      */
+    @Override
     public TeiidDataSource getOrCreateDataSource( IFile model,
                                                   String jndiName,
                                                   boolean previewVdb,
@@ -339,14 +336,10 @@ public class ExecutionAdmin {
         return null;
     }
 
-    /**
-     * @param displayName the JNDI display name
-     * @param jndiName the JNDI name
-     * @param typeName the translator type name
-     * @param properties the list of teiid-related connection properties
-     * @return true if data source is created. false if it already exists
-     * @throws Exception if data source creation fails
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.IExecutionAdmin#getOrCreateDataSource(java.lang.String, java.lang.String, java.lang.String, java.util.Properties)
      */
+    @Override
     public TeiidDataSource getOrCreateDataSource( String displayName,
                                                   String jndiName,
                                                   String typeName,
@@ -407,7 +400,7 @@ public class ExecutionAdmin {
         // Check that local name list contains new jndiName
         if (dataSourceExists(jndiName)) {
             String nullStr = null;
-            TeiidDataSource tds = new TeiidDataSource(nullStr, jndiName, typeName, properties, this);
+            TeiidDataSource tds = new TeiidDataSource(nullStr, jndiName, typeName, properties);
 
             this.dataSourceByNameMap.put(jndiName, tds);
             this.eventManager.notifyListeners(ExecutionConfigurationEvent.createAddDataSourceEvent(tds));
@@ -457,7 +450,7 @@ public class ExecutionAdmin {
                     }
                     try {
                         admin.deploy(fileName, iStream);
-                    } catch (Exception ex) {
+                    } catch (AdminException ex) {
                         // Jar deployment failed
                         Util.log(IStatus.ERROR, ex, NLS.bind(Messages.JarDeploymentFailed, theFile.getPath()));
                     }
@@ -480,29 +473,27 @@ public class ExecutionAdmin {
         return this.teiidServer;
     }
 
-    /**
-     * @param name the translator name (never <code>null</code> or empty)
-     * @return a TeiidTranslator
-     * @since 7.0
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.IExecutionAdmin#getTranslator(java.lang.String)
      */
+    @Override
     public TeiidTranslator getTranslator( String name ) {
         CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
         return this.translatorByNameMap.get(name);
     }
 
-    /**
-     * 
-     * @return collection of Teiid translators
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.IExecutionAdmin#getTranslators()
      */
+    @Override
     public Collection<TeiidTranslator> getTranslators() {
         return this.translatorByNameMap.values();
     }
 
-    /**
-     * @param name the name of the VDB being requested (never <code>null</code> or empty)
-     * @return the VDB or <code>null</code> if not found
-     * @since 7.0
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.IExecutionAdmin#getVdb(java.lang.String)
      */
+    @Override
     public VDB getVdb( String name ) {
         CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
 
@@ -513,9 +504,10 @@ public class ExecutionAdmin {
         return null;
     }
 
-    /**
-     * @return an unmodifiable set of VDBs deployed on the server
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.IExecutionAdmin#getVdbs()
      */
+    @Override
     public Set<TeiidVdb> getVdbs() {
         return this.teiidVdbs;
     }
@@ -555,15 +547,11 @@ public class ExecutionAdmin {
     /**
      * @throws Exception if refreshing admin connection fails
      */
-    public void load() throws Exception {
+    public void connect() throws Exception {
         if (!this.loaded) {
             refresh();
             this.loaded = true;
         }
-    }
-    
-    public void close() {
-        admin.close();
     }
 
     /**
@@ -581,7 +569,7 @@ public class ExecutionAdmin {
         refreshDataSourceNames();
 
         this.dataSourceByNameMap.clear();
-        Collection<TeiidDataSource> tdsList = connectionMatcher.findTeiidDataSources(this.dataSourceNames, this);
+        Collection<TeiidDataSource> tdsList = connectionMatcher.findTeiidDataSources(this.dataSourceNames);
         for (TeiidDataSource ds : tdsList) {
             this.dataSourceByNameMap.put(ds.getName(), ds);
         }
@@ -608,7 +596,7 @@ public class ExecutionAdmin {
         for (Translator translator : translators) {
             if (translator.getName() != null) {
                 Collection<? extends PropertyDefinition> propDefs = this.admin.getTemplatePropertyDefinitions(translator.getName());
-                this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, this));
+                this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, teiidServer));
             }
         }
     }
@@ -618,7 +606,7 @@ public class ExecutionAdmin {
         Set<TeiidVdb> tmpVdbs = new HashSet();
 
         for (VDB vdb : vdbs) {
-            tmpVdbs.add(new TeiidVdb(vdb, this));
+            tmpVdbs.add(new TeiidVdb(vdb, teiidServer));
         }
 
         this.teiidVdbs = Collections.unmodifiableSet(tmpVdbs);
@@ -664,11 +652,10 @@ public class ExecutionAdmin {
         internalSetPropertyValue(translator, propName, value, true);
     }
 
-    /**
-     * 
-     * @param vdbName the vdb name
-     * @throws Exception if undeploying vdb fails
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.IExecutionAdmin#undeployVdb(java.lang.String)
      */
+    @Override
     public void undeployVdb( String vdbName) throws Exception {
         this.admin.undeploy(appendVdbExtension(vdbName));
         VDB vdb = getVdb(vdbName);
@@ -701,10 +688,10 @@ public class ExecutionAdmin {
         }
     }
 
-    /**
-     * @param vdb the vdb to undeploy
-     * @throws Exception if undeploying vdb fails
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.IExecutionAdmin#undeployVdb(org.teiid.adminapi.VDB)
      */
+    @Override
     public void undeployVdb( VDB vdb ) throws Exception {
         CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
 
@@ -730,11 +717,10 @@ public class ExecutionAdmin {
         return vdbName + Vdb.FILE_EXTENSION;
     }
     
-    /**
-     * Ping the admin client to determine whether if is still connected
-     * 
-     * @return
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.IExecutionAdmin#ping(org.teiid.designer.runtime.ExecutionAdmin.PingType)
      */
+    @Override
     public IStatus ping(PingType pingType) {
         String msg = Util.getString("cannotConnectToServer", teiidServer.getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
         try {
@@ -793,6 +779,11 @@ public class ExecutionAdmin {
         }
         
         return Status.OK_STATUS;
+    }
+    
+    @Override
+    public String getAdminDriverPath() {
+        return Admin.class.getProtectionDomain().getCodeSource().getLocation().getFile();
     }
     
     /**

@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.Properties;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
-import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.designer.core.ModelerCore;
@@ -64,7 +63,7 @@ public class MockObjectFactory {
                                                          final String translatorTypeName ) {
         final Translator translator = createTranslator(name, translatorTypeName);
 
-        return new TeiidTranslator(translator, new ArrayList<PropertyDefinition>(), createExecutionAdmin());
+        return new TeiidTranslator(translator, new ArrayList<PropertyDefinition>(), createTeiidServer());
     }
 
     /**
@@ -82,20 +81,14 @@ public class MockObjectFactory {
                                                          final Collection<PropertyDefinition> propertyDefs ) {
         final Translator translator = createTranslator(name, translatorTypeName);
 
-        return new TeiidTranslator(translator, propertyDefs, createExecutionAdmin());
+        return new TeiidTranslator(translator, propertyDefs, createTeiidServer());
     }
 
-    public static ExecutionAdmin createExecutionAdmin() {
-        final TeiidServer teiidServer = mock(TeiidServer.class);
-        final Admin adminApi = mock(Admin.class);
+    private static TeiidServer createTeiidServer() {
         final EventManager eventManager = mock(EventManager.class);
-        final ExecutionAdmin admin = mock(ExecutionAdmin.class);
-
-        when(teiidServer.getEventManager()).thenReturn(eventManager);
+        final TeiidServer teiidServer = mock(TeiidServer.class);
         
-        when(admin.getServer()).thenReturn(teiidServer);
-        
-        return admin;
+        return teiidServer;
     }
 
     /**

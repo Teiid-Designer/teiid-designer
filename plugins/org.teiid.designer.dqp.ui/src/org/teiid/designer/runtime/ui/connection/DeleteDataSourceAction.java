@@ -18,7 +18,7 @@ import org.teiid.designer.core.workspace.ResourceAnnotationHelper;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ExecutionAdmin;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
@@ -75,13 +75,13 @@ public class DeleteDataSourceAction extends SortableSelectionAction implements D
         Properties properties = getConnectionProperties(modelFile);
 
         if (properties != null && !properties.isEmpty()) {
-            ExecutionAdmin executionAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().connect();
+            TeiidServer teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
             String name = modelFile.getFullPath().removeFileExtension().lastSegment();
             String jndiName = new ConnectionInfoHelper().generateUniqueConnectionJndiName(name,
                                                                                           modelFile.getFullPath(),
                                                                                           ModelerCore.workspaceUuid().toString());
 
-            executionAdmin.deleteDataSource(jndiName);
+            teiidServer.deleteDataSource(jndiName);
             return true;
         }
         return false;

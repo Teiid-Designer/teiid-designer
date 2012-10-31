@@ -16,11 +16,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,7 +41,7 @@ public class TeiidTranslatorTest {
     private static Collection<PropertyDefinition> PROP_DEFS;
 
     @Mock
-    private ExecutionAdmin commonExecutionAdmin;
+    private TeiidServer teiidServer;
     @Mock
     private PropertyDefinition propertyDefinition;
     @Mock
@@ -73,10 +71,7 @@ public class TeiidTranslatorTest {
         when(this.translator.getProperties()).thenReturn(PROPERTIES);
         when(this.translator.getType()).thenReturn(TYPE_NAME);
         
-        TeiidServer teiidServer = mock(TeiidServer.class);
-        this.commonExecutionAdmin = mock(ExecutionAdmin.class);
-        when(this.commonExecutionAdmin.getServer()).thenReturn(teiidServer);
-        this.teiidTranslator = new TeiidTranslator(this.translator, PROP_DEFS, this.commonExecutionAdmin);
+        this.teiidTranslator = new TeiidTranslator(this.translator, PROP_DEFS, teiidServer);
     }
     
     @Test( expected = IllegalArgumentException.class )
@@ -352,8 +347,8 @@ public class TeiidTranslatorTest {
     	Translator thisBinding = MockObjectFactory.createTranslator(TRANSLATOR_NAME, TRANSLATOR_TYPE_NAME);
     	Translator thatBinding = MockObjectFactory.createTranslator(TRANSLATOR_NAME, TRANSLATOR_TYPE_NAME);
 
-        TeiidTranslator thisTranslator = new TeiidTranslator(thisBinding, PROP_DEFS, this.commonExecutionAdmin);
-        TeiidTranslator thatTranslator = new TeiidTranslator(thatBinding, PROP_DEFS, this.commonExecutionAdmin);
+        TeiidTranslator thisTranslator = new TeiidTranslator(thisBinding, PROP_DEFS, teiidServer);
+        TeiidTranslator thatTranslator = new TeiidTranslator(thatBinding, PROP_DEFS, teiidServer);
 
         // test
         assertEquals("Translators should be equal if they have the same name and same server", thisTranslator, thatTranslator);
@@ -375,7 +370,7 @@ public class TeiidTranslatorTest {
         // setup
         TeiidTranslator thisTranslator = MockObjectFactory.createTeiidTranslator(TRANSLATOR_NAME, TRANSLATOR_TYPE_NAME, PROP_DEFS);
         Translator thatBinding = MockObjectFactory.createTranslator("differentName", TRANSLATOR_TYPE_NAME);
-        TeiidTranslator thatTranslator = new TeiidTranslator(thatBinding, PROP_DEFS, this.commonExecutionAdmin);
+        TeiidTranslator thatTranslator = new TeiidTranslator(thatBinding, PROP_DEFS, teiidServer);
 
         // test
         assertFalse("Translators should not be equal if they have different names but the same server",
@@ -388,8 +383,8 @@ public class TeiidTranslatorTest {
     	Translator thisBinding = MockObjectFactory.createTranslator(TRANSLATOR_NAME, TRANSLATOR_TYPE_NAME);
     	Translator thatBinding = MockObjectFactory.createTranslator(TRANSLATOR_NAME, TRANSLATOR_TYPE_NAME);
 
-        TeiidTranslator thisTranslator = new TeiidTranslator(thisBinding, PROP_DEFS, this.commonExecutionAdmin);
-        TeiidTranslator thatTranslator = new TeiidTranslator(thatBinding, PROP_DEFS, this.commonExecutionAdmin);
+        TeiidTranslator thisTranslator = new TeiidTranslator(thisBinding, PROP_DEFS, teiidServer);
+        TeiidTranslator thatTranslator = new TeiidTranslator(thatBinding, PROP_DEFS, teiidServer);
 
         // tests
         assertEquals(thisTranslator, thatTranslator);

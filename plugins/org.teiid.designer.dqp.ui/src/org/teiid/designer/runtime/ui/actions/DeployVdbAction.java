@@ -210,7 +210,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 
 			Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new Vdb(
 					(IFile) vdbOrVdbFile, null) : (Vdb) vdbOrVdbFile);
-			final VdbDeployer deployer = new VdbDeployer(shell, vdb, teiidServer.connect(), doCreateDataSource);
+			final VdbDeployer deployer = new VdbDeployer(shell, vdb, teiidServer, doCreateDataSource);
 			ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
 
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {

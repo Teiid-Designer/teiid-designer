@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.runtime;
+package org.teiid.designer.runtime.impl;
 
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -27,6 +27,10 @@ import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
 import org.teiid.designer.core.ModelWorkspaceMock;
+import org.teiid.designer.runtime.EventManager;
+import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.TeiidTranslator;
+import org.teiid.designer.runtime.impl.ExecutionAdmin;
 import org.teiid.designer.vdb.Vdb;
 
 /**
@@ -71,7 +75,7 @@ public class ExecutionAdminTest {
     }
 
     private TeiidTranslator getNewTeiidTranslator() throws Exception {
-        return new TeiidTranslator(mock(Translator.class), PROP_DEFS, getNewAdmin());
+        return new TeiidTranslator(mock(Translator.class), PROP_DEFS, teiidServer);
     }
 
     @Test( expected = IllegalArgumentException.class )

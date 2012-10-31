@@ -9,11 +9,7 @@ package org.teiid.designer.runtime.ui.vdb;
 
 import java.util.Properties;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -21,14 +17,12 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.VDB;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.datatools.ui.dialogs.TeiidCPWizardDialog;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -75,23 +69,6 @@ public class ExecuteVdbWorker implements VdbConstants {
 	}
 
 	public void run(final IFile selectedVdb) {
-
-		/*
-		 * Server server = DqpPlugin.getInstance().getServerManager()
-		 * .getDefaultServer();
-		 * 
-		 * if (server != null) { try { server. ExecutionAdmin admin =
-		 * server.getAdmin(); if (null ==
-		 * server.getAdmin().getVdb(selectedVDB.getName()))
-		 * 
-		 * MessageDialog.openInformation(Display.getCurrent() .getActiveShell(),
-		 * "VDB Deployed", "VDB: " + selectedVDB.getName() +
-		 * " is Deployed on server: " + server.getUrl()); } catch (Exception e)
-		 * { DqpUiConstants.UTIL.log(IStatus.ERROR, e, DqpPlugin.Util
-		 * .getString( "DeployVdbAction.problemDeployingVdbToServer",
-		 * //$NON-NLS-1$ selectedVDB.getName(), server.getUrl())); } }
-		 */
-
 		if (!VdbRequiresSaveChecker.insureOpenVdbSaved(selectedVdb)) {
 			return;
 		}
@@ -114,35 +91,30 @@ public class ExecuteVdbWorker implements VdbConstants {
 			if (teiidServer != null) {
 				IStatus connectStatus = teiidServer.ping();
 				if (connectStatus.isOK()) {
-					ExecutionAdmin admin = teiidServer.connect();
-					if (admin != null) {
-						deployedVDB = admin.getVdb(selectedVdb.getFullPath().removeFileExtension().lastSegment());
-						if (deployedVDB == null) {
-							deployedVDB = DeployVdbAction.deployVdb(teiidServer,selectedVdb);
-						} 
-						
-						if (deployedVDB != null && deployedVDB.getStatus().equals(VDB.Status.ACTIVE)) {
-							executeVdb(DqpPlugin.getInstance().getServerManager().getDefaultServer(),
-									selectedVdb.getFullPath().removeFileExtension().lastSegment());
-						} else if(deployedVDB !=null && deployedVDB.getStatus().equals(VDB.Status.LOADING)) {
-						    StringBuilder message = new StringBuilder(
-						        getString("vdbLoadingMessage", selectedVdb.getName())); //$NON-NLS-1$
-						    MessageDialog
-						    .openWarning(getShell(),getString("vdbLoadingTitle"), //$NON-NLS-1$
-						                 message.toString());
-						} else {
-							StringBuilder message = new StringBuilder(
-									getString("vdbNotActiveMessage", selectedVdb.getName())); //$NON-NLS-1$
-							if (null != deployedVDB) {
-								for (String error : deployedVDB.getValidityErrors()) {
-									message.append("\nERROR:\t").append(error); //$NON-NLS-1$
-								}
-							}
-							MessageDialog
-									.openWarning(getShell(),getString("vdbNotActiveTitle"), //$NON-NLS-1$
-											message.toString());
-						}
-					}
+					
+                    deployedVDB = teiidServer.getVdb(selectedVdb.getFullPath().removeFileExtension().lastSegment());
+                    if (deployedVDB == null) {
+                        deployedVDB = DeployVdbAction.deployVdb(teiidServer, selectedVdb);
+                    }
+
+                    if (deployedVDB != null && deployedVDB.getStatus().equals(VDB.Status.ACTIVE)) {
+                        executeVdb(DqpPlugin.getInstance().getServerManager().getDefaultServer(),
+                                   selectedVdb.getFullPath().removeFileExtension().lastSegment());
+                    } else if (deployedVDB != null && deployedVDB.getStatus().equals(VDB.Status.LOADING)) {
+                        StringBuilder message = new StringBuilder(getString("vdbLoadingMessage", selectedVdb.getName())); //$NON-NLS-1$
+                        MessageDialog.openWarning(getShell(), getString("vdbLoadingTitle"), //$NON-NLS-1$
+                                                  message.toString());
+                    } else {
+                        StringBuilder message = new StringBuilder(getString("vdbNotActiveMessage", selectedVdb.getName())); //$NON-NLS-1$
+                        if (null != deployedVDB) {
+                            for (String error : deployedVDB.getValidityErrors()) {
+                                message.append("\nERROR:\t").append(error); //$NON-NLS-1$
+                            }
+                        }
+                        MessageDialog.openWarning(getShell(), getString("vdbNotActiveTitle"), //$NON-NLS-1$
+                                                  message.toString());
+                    }
+					
 				} else {
 					MessageDialog
 							.openWarning(
@@ -164,15 +136,14 @@ public class ExecuteVdbWorker implements VdbConstants {
 	
 
 	public void executeVdb(TeiidServer teiidServer, String vdbName)
-			throws CoreException {
+			throws Exception {
 		processForDTP(teiidServer, vdbName);
 	}
 
 	public void processForDTP(TeiidServer teiidServer, String vdbName)
-			throws CoreException {
+			throws Exception {
 
-		String driverPath = Admin.class.getProtectionDomain().getCodeSource().getLocation().getFile();
-
+		String driverPath = teiidServer.getAdminDriverPath();
 		TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName,teiidServer.getTeiidJdbcInfo());
 
 		String connectionURL = jdbcInfo.getUrl();

@@ -2,9 +2,7 @@ package org.teiid.designer.runtime.connection;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.vdb.Vdb;
 
@@ -14,15 +12,14 @@ import org.teiid.designer.vdb.Vdb;
  */
 public class ModelConnectionMatcher {
 
-    public Collection<TeiidDataSource> findTeiidDataSources( Collection<String> names,
-                                                             ExecutionAdmin admin ) throws Exception {
+    public Collection<TeiidDataSource> findTeiidDataSources( Collection<String> names) throws Exception {
         Collection<TeiidDataSource> dataSources = new ArrayList<TeiidDataSource>();
 
         for (String name : names) {
             if (name.equalsIgnoreCase("DefaultDS") || name.equalsIgnoreCase("JmsXA")) { //$NON-NLS-1$ //$NON-NLS-2$
                 continue;
             }
-            TeiidDataSource tds = new TeiidDataSource(name, name, "<unknown>", admin); //$NON-NLS-1$
+            TeiidDataSource tds = new TeiidDataSource(name, name, "<unknown>"); //$NON-NLS-1$
             
             if (name.startsWith(Vdb.PREVIEW_PREFIX)) {
                 if (name.length() > ModelerCore.workspaceUuid().toString().length() + 8) {

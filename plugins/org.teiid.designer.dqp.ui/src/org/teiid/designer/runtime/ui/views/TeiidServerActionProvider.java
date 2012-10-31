@@ -33,7 +33,6 @@ import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServer;
@@ -268,10 +267,11 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 List<Object> selectedObjs = getSelectedObjects();
                 for (Object obj : selectedObjs) {
                     TeiidDataSource tds = RuntimeAssistant.adapt(obj, TeiidDataSource.class);
-                    ExecutionAdmin admin = tds.getAdmin();
-                    if (admin != null) {
+                    TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
+                    
+                    if (teiidServer != null && teiidServer.isConnected()) {
                         try {
-                            admin.deleteDataSource(tds.getName());
+                            teiidServer.deleteDataSource(tds.getName());
                         } catch (Exception e) {
                             DqpUiConstants.UTIL.log(IStatus.WARNING,
                                                     e,
@@ -293,11 +293,11 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 List<Object> selectedObjs = getSelectedObjects();
                 for (Object obj : selectedObjs) {
                     TeiidVdb vdb = RuntimeAssistant.adapt(obj, TeiidVdb.class);
-
-                    ExecutionAdmin admin = vdb.getAdmin();
-                    if (admin != null) {
+                    TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
+                    
+                    if (teiidServer != null && teiidServer.isConnected()) {
                         try {
-                            admin.undeployVdb(vdb.getVdb());
+                            teiidServer.undeployVdb(vdb.getVdb());
                         } catch (Exception e) {
                             DqpUiConstants.UTIL.log(IStatus.WARNING,
                                                     e,
@@ -319,12 +319,12 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 List<Object> selectedObjs = getSelectedObjects();
                 for (Object obj : selectedObjs) {
                     TeiidVdb vdb = RuntimeAssistant.adapt(obj, TeiidVdb.class);
-
-                    ExecutionAdmin admin = vdb.getAdmin();
-                    if (admin != null) {
+                    TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
+                    
+                    if (teiidServer != null && teiidServer.isConnected()) {
                         try {
                             // admin.undeployVdb(vdb.getVdb());
-                            ExecuteVDBAction.executeVdb(admin.getServer(), vdb.getVdb().getName());
+                            ExecuteVDBAction.executeVdb(teiidServer, vdb.getVdb().getName());
                         } catch (Exception e) {
                             DqpUiConstants.UTIL.log(IStatus.WARNING,
                                                     e,
@@ -364,16 +364,8 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
                 
                 if (teiidServer != null && teiidServer.isConnected()) {
-                    ExecutionAdmin admin;
-                    try {
-                        admin = teiidServer.connect();
-                    } catch (Exception ex) {
-                        DqpUiConstants.UTIL.log(ex);
-                        return;
-                    }
-                    
                     CreateDataSourceAction action = new CreateDataSourceAction();
-                    action.setAdmin(admin);
+                    action.setTeiidServer(teiidServer);
                     
                     action.setSelection(new StructuredSelection());
                     action.setEnabled(true);

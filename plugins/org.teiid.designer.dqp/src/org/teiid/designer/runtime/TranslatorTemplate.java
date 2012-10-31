@@ -9,10 +9,8 @@
 package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-
 import java.util.ArrayList;
 import java.util.Properties;
-
 import org.teiid.adminapi.PropertyDefinition;
 
 /**
@@ -38,7 +36,7 @@ public class TranslatorTemplate extends TeiidTranslator {
      * @param translator the translator whose properties are used to create this template (never <code>null</code>)
      */
     public TranslatorTemplate( TeiidTranslator translator ) {
-        super(new PseudoTranslator(translator), translator.getPropertyDefinitions(), translator.getAdmin());
+        super(new PseudoTranslator(translator), translator.getPropertyDefinitions(), translator.getTeiidServer());
         this.changedProperties = new Properties();
     }
 

@@ -20,7 +20,7 @@ import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ExecutionAdmin;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
@@ -88,7 +88,7 @@ public class VdbDeployer {
         }
     }
 
-    private final ExecutionAdmin admin; // the current Teiid server
+    private final TeiidServer teiidServer; // the current Teiid server
     private final boolean autoCreateDsOnServer; // indicates if data source should be auto-created on server without asking user
     private Exception error; // non-null if error caught while deploying
     private final Shell shell;
@@ -99,19 +99,19 @@ public class VdbDeployer {
     /**
      * @param shell the shell to use for any UI (may not be <code>null</code>)
      * @param vdbBeingDeployed the VDB being deployed (may not be <code>null</code>)
-     * @param defaultServerAdmin the server execution admin (may not be <code>null</code>)
+     * @param defaultServer the server (may not be <code>null</code>)
      * @param shouldAutoCreateDataSourceOnServer indicates if data sources that match the default name should be auto-created if
      *        they don't exist on Teiid server
      */
     public VdbDeployer( Shell shell,
                         Vdb vdbBeingDeployed,
-                        ExecutionAdmin defaultServerAdmin,
+                        TeiidServer defaultServer,
                         boolean shouldAutoCreateDataSourceOnServer ) {
         CoreArgCheck.isNotNull(vdbBeingDeployed, "Vdb is null"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(defaultServerAdmin, "ExecutionAdmin is null"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(defaultServer, "Default Teiid Server is null"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(shell, "Shell is null"); //$NON-NLS-1$
 
-        this.admin = defaultServerAdmin;
+        this.teiidServer = defaultServer;
         this.shell = shell;
         this.vdb = vdbBeingDeployed;
         this.autoCreateDsOnServer = shouldAutoCreateDataSourceOnServer;
@@ -194,7 +194,7 @@ public class VdbDeployer {
                     }
 
                     // DS not found on server
-                    if (!this.admin.dataSourceExists(jndiName)) {
+                    if (!this.teiidServer.dataSourceExists(jndiName)) {
                         // auto-create if user did not change the default DS name
                         String defaultName = VdbModelEntry.createDefaultJndiName(modelEntry.getName());
 
@@ -242,7 +242,7 @@ public class VdbDeployer {
                         if ((autoCreate || createOnServer) && (model != null)) {
                             monitor.subTask(UTIL.getString(PREFIX + "createModelDataSourceTask", modelName)); //$NON-NLS-1$
 
-                            if (this.admin.getOrCreateDataSource(model,
+                            if (this.teiidServer.getOrCreateDataSource(model,
                                                                  jndiName,
                                                                  false,
                                                                  DqpPlugin.getInstance().getPasswordProvider()) == null) {
@@ -281,7 +281,7 @@ public class VdbDeployer {
 
             if (this.status == null) {
                 monitor.subTask(UTIL.getString(PREFIX + "deployVdbTask", getVdbName())); //$NON-NLS-1$
-                this.deployedVdb = this.admin.deployVdb(this.vdb);
+                this.deployedVdb = this.teiidServer.deployVdb(this.vdb);
                 this.status = ((this.deployedVdb == null) ? DeployStatus.DEPLOY_VDB_FAILED : DeployStatus.DEPLOYED_VDB);
             }
         } catch (Exception e) {
@@ -309,8 +309,9 @@ public class VdbDeployer {
     /**
      * @param modelEntry the model entry whose translator entry is being validated
      * @return <code>true</code> if model entry has a valid translator
+     * @throws Exception
      */
-    private boolean hasValidTranslator( VdbModelEntry modelEntry ) {
+    private boolean hasValidTranslator( VdbModelEntry modelEntry ) throws Exception {
         // assertion: must be a source model
         String translatorName = modelEntry.getTranslator();
 
@@ -320,13 +321,13 @@ public class VdbDeployer {
         }
 
         // make sure server has translator with that name
-        boolean isValid = (this.admin.getTranslator(translatorName) != null);
+        boolean isValid = (teiidServer.getTranslator(translatorName) != null);
         
         // Check for overridden translator names
         if( !isValid && !this.vdb.getTranslators().isEmpty()) {
         	for( TranslatorOverride override : this.vdb.getTranslators() ) {
         		if( override.getName().equalsIgnoreCase(translatorName) ) {
-        			isValid = (this.admin.getTranslator(override.getType()) != null);
+        			isValid = (teiidServer.getTranslator(override.getType()) != null);
         			break;
         		}
         	}

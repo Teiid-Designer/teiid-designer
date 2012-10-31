@@ -8,16 +8,14 @@
 package org.teiid.designer.runtime.connection;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidTranslator;
-import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.vdb.connections.VdbSourceConnection;
 
 
@@ -76,16 +74,16 @@ public class SourceConnectionBinding {
         this.modelName = modelName;
         this.modelLocation = modelLocation;
 
-        ExecutionAdmin admin = null;
+        TeiidServer teiidServer = null;
 
         // make sure all translators from same server
         for (TeiidTranslator translator : translators) {
             if (translator == null) {
                 throw new IllegalArgumentException(Util.getString("translatorCannotBeNullForSourceBinding")); //$NON-NLS-1$
             }
-            if (admin == null) {
-                admin = translator.getAdmin();
-            } else if (admin != translator.getAdmin()) {
+            if (teiidServer == null) {
+                teiidServer = translator.getTeiidServer();
+            } else if (teiidServer != translator.getTeiidServer()) {
                 throw new IllegalArgumentException(Util.getString("sourceBindingWithTranslatorsFromDifferentServers")); //$NON-NLS-1$
             }
 
@@ -102,7 +100,7 @@ public class SourceConnectionBinding {
         CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
 
         // make sure server is the same
-        if (this.translators.iterator().next().getAdmin() != translator.getAdmin()) {
+        if (translator.getTeiidServer() != null && ! translator.getTeiidServer().equals(this.translators.iterator().next().getTeiidServer())) {
             throw new IllegalArgumentException(Util.getString("sourceBindingWithTranslatorsFromDifferentServers")); //$NON-NLS-1$
         }
 

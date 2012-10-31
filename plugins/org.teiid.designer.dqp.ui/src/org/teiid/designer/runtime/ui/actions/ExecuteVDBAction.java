@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime.ui.actions;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
@@ -100,7 +99,7 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
     	}
     }
     
-    public static void executeVdb( TeiidServer teiidServer, String vdbName ) throws CoreException {
+    public static void executeVdb( TeiidServer teiidServer, String vdbName ) throws Exception {
     	if( worker == null ) {
     		worker = new ExecuteVdbWorker();
     	}

@@ -9,11 +9,9 @@ package org.teiid.designer.runtime.ui.connection;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -28,9 +26,8 @@ import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ExecutionAdmin;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidDataSource;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.connection.ModelConnectionMapper;
 import org.teiid.designer.vdb.VdbModelEntry;
@@ -68,12 +65,10 @@ public class VdbSourceConnectionHandler implements SourceHandler {
 
         VdbSourceConnection vdbSourceConnection = null;
 
-        ExecutionAdmin defaultAdmin = getDefaultServer().connect();
-
         String uuid = ModelerCore.workspaceUuid().toString();
 
         try {
-            vdbSourceConnection = mapper.getVdbSourceConnection(defaultAdmin, uuid);
+            vdbSourceConnection = mapper.getVdbSourceConnection(getDefaultServer(), uuid);
         } catch (ModelWorkspaceException e) {
             UTIL.log(IStatus.ERROR,
                      e,
@@ -149,7 +144,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
                 TeiidServer defServer = getDefaultServer();
                 if (defServer != null && defServer.isConnected()) {
                     try {
-                        initialSelection = defServer.connect().getDataSource(jndiName);
+                        initialSelection = defServer.getDataSource(jndiName);
                     } catch (Exception e) {
                         UTIL.log(IStatus.ERROR,
                                  e,
@@ -197,7 +192,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
                 TeiidServer defServer = getDefaultServer();
                 if (defServer != null && defServer.isConnected()) {
                     try {
-                        initialSelection = defServer.connect().getTranslator(transName);
+                        initialSelection = defServer.getTranslator(transName);
                     } catch (Exception e) {
                         UTIL.log(IStatus.ERROR,
                                  e,
@@ -231,7 +226,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
             Collection<TeiidDataSource> dataSources = null;
 
             try {
-                dataSources = defaultServer.connect().getDataSources();
+                dataSources = defaultServer.getDataSources();
             } catch (Exception e) {
                 UTIL.log(IStatus.ERROR,
                          e,
@@ -273,7 +268,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
 
         if ((defaultServer != null) && defaultServer.isConnected()) {
             try {
-                TeiidTranslator translator = defaultServer.connect().getTranslator(translatorName);
+                TeiidTranslator translator = defaultServer.getTranslator(translatorName);
 
                 if (translator != null) {
                     Collection<PropertyDefinition> props = new ArrayList<PropertyDefinition>();
@@ -336,7 +331,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
             Collection<TeiidTranslator> translators = null;
 
             try {
-                translators = defaultServer.connect().getTranslators();
+                translators = defaultServer.getTranslators();
             } catch (Exception e) {
                 UTIL.log(IStatus.ERROR,
                          e,

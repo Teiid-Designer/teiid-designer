@@ -55,7 +55,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
-import org.teiid.adminapi.Admin;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.datatools.connectivity.ui.TeiidAdHocScriptRunnable;
@@ -73,6 +72,7 @@ import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
+import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
@@ -200,11 +200,11 @@ public class PreviewDataWorker {
         	if( translatorName != null ) {
         		TeiidTranslator tt = null; 
         		
-        		try {
-					tt = getServerManager().getDefaultServer().connect().getTranslator(translatorName);
-				} catch (Exception e) {
-					DqpUiConstants.UTIL.log(e);
-				}
+                try {
+                    tt = getServerManager().getDefaultServer().getTranslator(translatorName);
+                } catch (Exception e) {
+                    DqpUiConstants.UTIL.log(e);
+                }
         		
         		if( tt == null ) {
         			boolean result = MessageDialog.openQuestion(getShell(), 
@@ -374,17 +374,16 @@ public class PreviewDataWorker {
     	                                       "failed to produce valid SQL to execute", null)); //$NON-NLS-1$
     	    return;
     	}
-    	
-        // use the Admin API to get the location of the client jar
-        String driverPath = Admin.class.getProtectionDomain().getCodeSource().getLocation().getFile();
-        try {
 
+    	TeiidServer defaultServer = getServerManager().getDefaultServer();
+        try {
+            String driverPath = defaultServer.getAdminDriverPath();
             String vdbName = PreviewManager.getPreviewProjectVdbName(project);
             if (vdbName.endsWith(TeiidVdb.VDB_DOT_EXTENSION)) {
                 vdbName = vdbName.substring(0, vdbName.length() - 4);
             }
    
-            TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName, getServerManager().getDefaultServer().getTeiidJdbcInfo());
+            TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName, defaultServer.getTeiidJdbcInfo());
 
             // Note that this is a Transient profile, it is not visible in
             // the UI and goes away when it is garbage collected.
@@ -427,9 +426,7 @@ public class PreviewDataWorker {
             // This runnable executes the SQL and displays the results
             // in the DTP 'SQL Results' view.
             executeSQLResultRunnable(sqlConnection, labelStr, sql, ID, config, profile);
-        } catch (CoreException e) {
-            DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
         }
     }

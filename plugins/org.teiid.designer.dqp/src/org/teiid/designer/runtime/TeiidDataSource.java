@@ -1,9 +1,8 @@
 package org.teiid.designer.runtime;
 
 import java.util.Properties;
-
-import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.HashCodeUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 /**
  * @since 8.0
@@ -16,22 +15,18 @@ public class TeiidDataSource implements Comparable<TeiidDataSource> {
     private String connectionProfileName;
     private final Properties properties;
 
-    private final ExecutionAdmin admin;
-
     private boolean isPreview = false;
 
     public TeiidDataSource( String displayName,
                             String dataSourceName,
-                            String dataSourceType,
-                            ExecutionAdmin admin ) {
-        this(displayName, dataSourceName, dataSourceType, new Properties(), admin);
+                            String dataSourceType ) {
+        this(displayName, dataSourceName, dataSourceType, new Properties());
     }
 
     public TeiidDataSource( String displayName,
                             String dataSourceName,
                             String dataSourceType,
-                            Properties properties,
-                            ExecutionAdmin admin ) {
+                            Properties properties) {
         CoreArgCheck.isNotEmpty(dataSourceName, "dataSourceName"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(dataSourceType, "dataSourceType"); //$NON-NLS-1$
 
@@ -39,11 +34,6 @@ public class TeiidDataSource implements Comparable<TeiidDataSource> {
         this.dataSourceName = dataSourceName;
         this.dataSourceType = dataSourceType;
         this.properties = properties;
-        this.admin = admin;
-    }
-
-    public ExecutionAdmin getAdmin() {
-        return admin;
     }
 
     /**

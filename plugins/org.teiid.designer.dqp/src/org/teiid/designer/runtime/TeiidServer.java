@@ -9,13 +9,19 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
+import java.util.Collection;
 import java.util.Properties;
+import java.util.Set;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
+import org.teiid.adminapi.VDB;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.StringUtilities;
-import org.teiid.designer.runtime.ExecutionAdmin.PingType;
+import org.teiid.designer.runtime.connection.IPasswordProvider;
+import org.teiid.designer.runtime.impl.ExecutionAdmin;
+import org.teiid.designer.vdb.Vdb;
 
 
 /**
@@ -23,7 +29,7 @@ import org.teiid.designer.runtime.ExecutionAdmin.PingType;
  *
  * @since 8.0
  */
-public class TeiidServer implements HostProvider {
+public class TeiidServer implements HostProvider, IExecutionAdmin {
 
     // ===========================================================================================================================
     // Class Methods
@@ -49,7 +55,7 @@ public class TeiidServer implements HostProvider {
     // Fields
     // ===========================================================================================================================
 
-    protected ExecutionAdmin admin;
+    protected IExecutionAdmin admin;
 
     /**
      * The object that will fire the events.
@@ -134,24 +140,9 @@ public class TeiidServer implements HostProvider {
     // ===========================================================================================================================
     // Methods
     // ===========================================================================================================================
-    
-    /**
-     * Perform cleanup
-     */
-    public void close() {
-        if (this.admin != null) {
-            this.admin.close();
-            this.admin = null;
-        }
-    }
 
-    /**
-     * Basically closes the connection and admin and nulls out the admin reference so next call to connect will
-     * reconstruct the Teiid connection from scratch.
-     */
+    @Override
     public void disconnect() {
-        close();
-
         if (this.admin != null) {
             this.admin.disconnect();
             this.admin = null;
@@ -192,7 +183,7 @@ public class TeiidServer implements HostProvider {
      * 
      * @throws Exception
      */
-    public ExecutionAdmin connect() throws Exception {
+    public void connect() throws Exception {
         if (! isParentConnected()) {
             throw new Exception(DqpPlugin.Util.getString("jbossServerNotStartedMessage")); //$NON-NLS-1$
         }
@@ -200,11 +191,9 @@ public class TeiidServer implements HostProvider {
         if (this.admin == null) {
             
             this.admin = new ExecutionAdmin(this);
-            this.admin.load();
+            this.admin.connect();
             notifyRefresh();
         }
-
-        return this.admin;
     }
     
     /**
@@ -368,7 +357,7 @@ public class TeiidServer implements HostProvider {
             return;
         
         if (this.admin != null) {
-            this.admin.getEventManager().notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(this));
+            getEventManager().notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(this));
         } else {
             DqpPlugin.getInstance().getServerManager().notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(this));
         }
@@ -400,7 +389,7 @@ public class TeiidServer implements HostProvider {
         try {
             connect();
             ping();
-            close();
+            disconnect();
             this.admin = null;
         } catch (Exception e) {
             String msg = Util.getString("cannotConnectToServer", this); //$NON-NLS-1$
@@ -422,8 +411,9 @@ public class TeiidServer implements HostProvider {
      */
     public IStatus testJDBCPing(String host, String port, String username, String password) {
         try {
-            connect().ping(PingType.JDBC);
-            close();
+            connect();
+            admin.ping(PingType.JDBC);
+            disconnect();
             this.admin = null;
         } catch (Exception e) {
             String msg = Util.getString("cannotConnectToServer", this); //$NON-NLS-1$
@@ -454,7 +444,8 @@ public class TeiidServer implements HostProvider {
 		props.put("connection-url", getVdbDataSourceConnectionUrl(vdbName)); //$NON-NLS-1$
     	
     	try {
-			connect().getOrCreateDataSource(displayName, jndiName, "connector-jdbc", props); //$NON-NLS-1$
+			connect();
+			admin.getOrCreateDataSource(displayName, jndiName, "connector-jdbc", props); //$NON-NLS-1$
 		} catch (Exception ex) {
 			String msg = "Error creating data source for VDB " + vdbName; //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
@@ -477,5 +468,114 @@ public class TeiidServer implements HostProvider {
         }
 
         return txt;
+    }
+    
+    @Override
+    public boolean dataSourceExists(String name) throws Exception {
+        connect();
+        return admin.dataSourceExists(name);
+    }
+
+    @Override
+    public void deleteDataSource(String jndiName) throws Exception {
+        connect();
+        admin.deleteDataSource(jndiName);
+    }
+
+    @Override
+    public VDB deployVdb(IFile vdbFile) throws Exception {
+        connect();
+        return admin.deployVdb(vdbFile);
+    }
+
+    @Override
+    public VDB deployVdb(Vdb vdb) throws Exception {
+        connect();
+        return admin.deployVdb(vdb);
+    }
+
+    @Override
+    public TeiidDataSource getDataSource(String name) throws Exception {
+        connect();
+        return admin.getDataSource(name);
+    }
+
+    @Override
+    public Collection<TeiidDataSource> getDataSources() throws Exception {
+        connect();
+        return admin.getDataSources();
+    }
+
+    @Override
+    public Set<String> getDataSourceTypeNames() throws Exception {
+        connect();
+        return admin.getDataSourceTypeNames();
+    }
+
+    @Override
+    public TeiidDataSource getOrCreateDataSource(IFile model,
+                                                 String jndiName,
+                                                 boolean previewVdb,
+                                                 IPasswordProvider passwordProvider) throws Exception {
+
+        connect();
+        return admin.getOrCreateDataSource(model, jndiName, previewVdb, passwordProvider);
+    }
+
+    @Override
+    public TeiidDataSource getOrCreateDataSource(String displayName,
+                                                 String jndiName,
+                                                 String typeName,
+                                                 Properties properties) throws Exception {
+        connect();
+        return admin.getOrCreateDataSource(displayName, jndiName, typeName, properties);
+    }
+
+    @Override
+    public TeiidTranslator getTranslator(String name) throws Exception {
+        connect();
+        return admin.getTranslator(name);
+    }
+
+    @Override
+    public Collection<TeiidTranslator> getTranslators() throws Exception {
+        connect();
+        return admin.getTranslators();
+    }
+
+    @Override
+    public Set<TeiidVdb> getVdbs() throws Exception {
+        connect();
+        return admin.getVdbs();
+    }
+    
+    @Override
+    public VDB getVdb(String name) throws Exception {
+        connect();
+        return admin.getVdb(name);
+    }
+
+    @Override
+    public void undeployVdb(String vdbName) throws Exception {
+        connect();
+        admin.undeployVdb(vdbName);
+    }
+    
+    @Override
+    public void undeployVdb(VDB vdb) throws Exception {
+        connect();
+        admin.undeployVdb(vdb);
+    }
+
+    @Override
+    public IStatus ping(PingType pingType) throws Exception {
+        connect();
+        return admin.ping(pingType);
+    }
+    
+    @Override
+    public String getAdminDriverPath() throws Exception {
+        connect();
+        return admin.getAdminDriverPath();
     }
 }
