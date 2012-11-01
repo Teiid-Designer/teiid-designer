@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.osgi.util.NLS;
-import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
@@ -113,19 +112,17 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
 
         // run this only if we have a preview server
         if (this.previewServer == null || ! previewServer.isConnected()) {
-            status = new Status(IStatus.INFO, PLUGIN_ID, DqpPlugin.Util.getString("jbossServerNotStartedMessage")); //$NON-NLS-1$
+        	return Status.OK_STATUS;
         }
         
-        if (status == null) {
-            // Only if there is a fully connected preview server do we attempt to
-            // deploy the preview vdb on it.
-            try {
-                // update/create connection info
-                getContext().ensureConnectionInfoIsValid(pvdb, this.previewServer);
-            } catch (Exception e) {
-                status = new Status(IStatus.ERROR, PLUGIN_ID,
-                               NLS.bind(Messages.UpdatePreviewVdbJobError, this.model.getFullPath()), e);
-            }
+        // Only if there is a fully connected preview server do we attempt to
+        // deploy the preview vdb on it.
+        try {
+            // update/create connection info
+            getContext().ensureConnectionInfoIsValid(pvdb, this.previewServer);
+        } catch (Exception e) {
+            status = new Status(IStatus.ERROR, PLUGIN_ID,
+                           NLS.bind(Messages.UpdatePreviewVdbJobError, this.model.getFullPath()), e);
         }
 
         try {

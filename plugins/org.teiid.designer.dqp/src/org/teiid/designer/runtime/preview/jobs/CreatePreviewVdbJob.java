@@ -55,6 +55,7 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
 
     /**
      * @param model the model whose Preview VDB is being created (may not be <code>null</code>)
+     * @param context the preview context
      * @throws Exception if unable to construct the Preview VDB
      */
     public CreatePreviewVdbJob( IFile model,
@@ -68,6 +69,7 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
 
     /**
      * @param project the project whose Preview VDB is being created (may not be <code>null</code>)
+     * @param context the preview context
      * @throws Exception if unable to construct the Preview VDB
      */
     public CreatePreviewVdbJob( IProject project,
