@@ -103,7 +103,7 @@ public class JdbcManagerImpl implements JdbcManager {
     }
 
     /**
-     * @return The shared instance of this class.
+     * @return The shared instance of this class (can be <code>null</code>)
      * @since 5.0
      */
     public static JdbcManager get() {
