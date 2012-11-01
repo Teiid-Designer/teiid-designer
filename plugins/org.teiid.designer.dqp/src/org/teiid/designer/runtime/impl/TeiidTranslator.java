@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.runtime;
+package org.teiid.designer.runtime.impl;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 import java.util.ArrayList;
@@ -18,17 +18,20 @@ import org.teiid.adminapi.Translator;
 import org.teiid.core.designer.HashCodeUtil;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.runtime.ITeiidTranslator;
+import org.teiid.designer.runtime.TeiidPropertyDefinition;
+import org.teiid.designer.runtime.TeiidServer;
 
 /**
  *
  * @since 8.0
  */
-public class TeiidTranslator implements Comparable<TeiidTranslator> {
+public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTranslator {
 
     private final Translator translator;
     private final TeiidServer teiidServer;
 
-    private final Collection<? extends PropertyDefinition> propDefs;
+    private final Collection<TeiidPropertyDefinition> propDefs = new ArrayList<TeiidPropertyDefinition>();
 
     public TeiidTranslator( Translator translator, Collection<? extends PropertyDefinition> propDefs, TeiidServer teiidServer) {
         CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
@@ -37,7 +40,24 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
 
         this.translator = translator;
         this.teiidServer = teiidServer;
-        this.propDefs = propDefs;
+        
+        for (PropertyDefinition propDefn : propDefs) {
+            TeiidPropertyDefinition teiidPropertyDefn = new TeiidPropertyDefinition();
+            
+            teiidPropertyDefn.setName(propDefn.getName());
+            teiidPropertyDefn.setDisplayName(propDefn.getDisplayName());
+            teiidPropertyDefn.setDescription(propDefn.getDescription());
+            teiidPropertyDefn.setPropertyTypeClassName(propDefn.getPropertyTypeClassName());
+            teiidPropertyDefn.setDefaultValue(propDefn.getDefaultValue());
+            teiidPropertyDefn.setAllowedValues(propDefn.getAllowedValues());
+            teiidPropertyDefn.setModifiable(propDefn.isModifiable());
+            teiidPropertyDefn.setConstrainedToAllowedValues(propDefn.isConstrainedToAllowedValues());
+            teiidPropertyDefn.setAdvanced(propDefn.isAdvanced());
+            teiidPropertyDefn.setRequired(propDefn.isRequired());
+            teiidPropertyDefn.setMasked(propDefn.isMasked());
+            
+            this.propDefs.add(teiidPropertyDefn);
+        }
     }
 
     /**
@@ -61,7 +81,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
         if (obj == null) return false;
         if (obj.getClass() != getClass()) return false;
 
-        TeiidTranslator other = (TeiidTranslator)obj;
+        ITeiidTranslator other = (ITeiidTranslator)obj;
         TeiidServer otherServer = other.getTeiidServer();
 
         if (getName().equals(other.getName()) && (getTeiidServer() == otherServer || getTeiidServer().equals(otherServer)) ) return true;
@@ -74,10 +94,11 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
      * 
      * @return the names of the properties with invalid values (never <code>null</code> but can be empty)
      */
+    @Override
     public Collection<String> findInvalidProperties() {
         Collection<String> propertyNames = new ArrayList<String>();
 
-        for (PropertyDefinition propDefn : this.propDefs) {
+        for (TeiidPropertyDefinition propDefn : this.propDefs) {
             String name = propDefn.getName();
             String value = getPropertyValue(name);
 
@@ -102,6 +123,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
      * 
      * @see org.teiid.teiidServerapi.AdminObject#getName()
      */
+    @Override
     public String getName() {
         return translator.getName();
     }
@@ -111,6 +133,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
      * 
      * @see org.teiid.teiidServerapi.AdminObject#getProperties()
      */
+    @Override
     public Properties getProperties() {
         return translator.getProperties();
     }
@@ -120,6 +143,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
      * 
      * @see org.teiid.teiidServerapi.AdminObject#getPropertyValue(java.lang.String)
      */
+    @Override
     public String getPropertyValue( String name ) {
         return translator.getPropertyValue(name);
     }
@@ -127,6 +151,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
     /**
      * @return type
      */
+    @Override
     public String getType() {
         return this.translator.getType();
     }
@@ -146,18 +171,16 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
     /**
      * @return the execution teiidServer (never <code>null</code>)
      */
+    @Override
     public TeiidServer getTeiidServer() {
         return this.teiidServer;
     }
     
-    /**
-     * @param name the name of the <code>PropertyDefinition</code> being requested (never <code>null</code> or empty)
-     * @return the property definition or <code>null</code> if not found
-     */
-    public PropertyDefinition getPropertyDefinition( String name ) {
+    @Override
+    public TeiidPropertyDefinition getPropertyDefinition( String name ) {
         CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
 
-        for (PropertyDefinition propDef : getPropertyDefinitions()) {
+        for (TeiidPropertyDefinition propDef : getPropertyDefinitions()) {
             if (name.equals(propDef.getName())) return propDef;
         }
 
@@ -167,10 +190,11 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
     /**
      * @return the string version of the default value for each property (empty string if no default)
      */
+    @Override
     public Properties getDefaultPropertyValues() {
         Properties defaultValues = new Properties();
 
-        for (PropertyDefinition propDef : getPropertyDefinitions()) {
+        for (TeiidPropertyDefinition propDef : getPropertyDefinitions()) {
             String value = (propDef.getDefaultValue() == null) ? StringUtilities.EMPTY_STRING
                                                               : propDef.getDefaultValue().toString();
             defaultValues.setProperty(propDef.getName(), value);
@@ -185,10 +209,11 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
      * @return null if the property exists and the proposed value is valid or an error message
      * @since 7.0
      */
+    @Override
     public String isValidPropertyValue( String name,
                                         String value ) {
         // make sure there is a property definition
-        PropertyDefinition definition = this.getPropertyDefinition(name);
+        TeiidPropertyDefinition definition = this.getPropertyDefinition(name);
         if (definition == null) return Util.getString("missingPropertyDefinition", name); //$NON-NLS-1$
 
         // make sure there is a value
@@ -274,6 +299,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
      * @throws Exception if there is a problem changing the property
      * @since 5.0
      */
+    @Override
     public void setPropertyValue( String name,
                                   String value ) throws Exception {
         CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
@@ -285,6 +311,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
      * @throws Exception if there is a problem changing the properties
      * @since 7.0
      */
+    @Override
     public void setProperties( Properties changedProperties ) throws Exception {
         CoreArgCheck.isNotNull(changedProperties, "changedProperties"); //$NON-NLS-1$
         Set<Entry<Object, Object>> entrySet = changedProperties.entrySet();
@@ -299,11 +326,8 @@ public class TeiidTranslator implements Comparable<TeiidTranslator> {
         }
     }
     
-    /**
-     * @return an immutable collection of property definitions (never <code>null</code>);
-     * @since 7.0
-     */
-    public Collection<? extends PropertyDefinition> getPropertyDefinitions() {
+    @Override
+    public Collection<TeiidPropertyDefinition> getPropertyDefinitions() {
         return this.propDefs;
     }
 

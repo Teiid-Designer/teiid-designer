@@ -28,8 +28,8 @@ import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
 import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.runtime.EventManager;
+import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.TeiidServer;
-import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.vdb.Vdb;
 
 /**
@@ -73,7 +73,7 @@ public class ExecutionAdminTest {
         return new ExecutionAdmin(admin, teiidServer);
     }
 
-    private TeiidTranslator getNewTeiidTranslator() throws Exception {
+    private ITeiidTranslator getNewTeiidTranslator() throws Exception {
         return new TeiidTranslator(mock(Translator.class), PROP_DEFS, teiidServer);
     }
 
@@ -199,7 +199,7 @@ public class ExecutionAdminTest {
 
     @Test
     public void shouldAllowSetPropertyValue() throws Exception {
-        TeiidTranslator mockTranslator = mock(TeiidTranslator.class);
+        ITeiidTranslator mockTranslator = mock(TeiidTranslator.class);
         when(mockTranslator.isValidPropertyValue("name", "value")).thenReturn(null);
         getNewAdmin().setPropertyValue(mockTranslator, "name", "value");
     }
@@ -222,7 +222,7 @@ public class ExecutionAdminTest {
     @Test
     public void shouldAllowSetProperties() throws Exception {
         ExecutionAdmin admin = mock(ExecutionAdmin.class);
-        TeiidTranslator teiidTranslator = getNewTeiidTranslator();
+        ITeiidTranslator teiidTranslator = getNewTeiidTranslator();
 
         Properties newProps = new Properties();
         newProps.put("prop_1", "value_1");

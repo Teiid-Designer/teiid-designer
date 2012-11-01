@@ -12,10 +12,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.eclipse.wst.server.core.IServer;
+import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServer;
-import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
 
@@ -139,7 +139,7 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
 
             // hide translators related variables from other local variables
             TRANSLATORS: {
-                Collection<TeiidTranslator> translators;
+                Collection<ITeiidTranslator> translators;
 
                 if (provider.isShowTranslators()) {
                     translators = teiidServer.getTranslators();

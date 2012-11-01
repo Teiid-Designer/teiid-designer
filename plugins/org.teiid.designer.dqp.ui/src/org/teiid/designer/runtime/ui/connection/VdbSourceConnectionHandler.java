@@ -26,9 +26,10 @@ import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.TeiidDataSource;
+import org.teiid.designer.runtime.TeiidPropertyDefinition;
 import org.teiid.designer.runtime.TeiidServer;
-import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.connection.ModelConnectionMapper;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.connections.SourceHandler;
@@ -188,7 +189,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
 
                 SelectTranslatorDialog dialog = new SelectTranslatorDialog(Display.getCurrent().getActiveShell());
 
-                TeiidTranslator initialSelection = null;
+                ITeiidTranslator initialSelection = null;
                 TeiidServer defServer = getDefaultServer();
                 if (defServer != null && defServer.isConnected()) {
                     try {
@@ -205,8 +206,8 @@ public class VdbSourceConnectionHandler implements SourceHandler {
 
                 if (dialog.getReturnCode() == Window.OK) {
                     Object result = dialog.getFirstResult();
-                    if (result != null && result instanceof TeiidTranslator) {
-                        vdbModelEntry.setTranslator(((TeiidTranslator)result).getName());
+                    if (result != null && result instanceof ITeiidTranslator) {
+                        vdbModelEntry.setTranslator(((ITeiidTranslator)result).getName());
                     }
                 }
             }
@@ -268,12 +269,12 @@ public class VdbSourceConnectionHandler implements SourceHandler {
 
         if ((defaultServer != null) && defaultServer.isConnected()) {
             try {
-                TeiidTranslator translator = defaultServer.getTranslator(translatorName);
+                ITeiidTranslator translator = defaultServer.getTranslator(translatorName);
 
                 if (translator != null) {
                     Collection<PropertyDefinition> props = new ArrayList<PropertyDefinition>();
 
-                    for (org.teiid.adminapi.PropertyDefinition propDefn : translator.getPropertyDefinitions()) {
+                    for (TeiidPropertyDefinition propDefn : translator.getPropertyDefinitions()) {
                         TranslatorProperty prop = new TranslatorProperty(propDefn.getPropertyTypeClassName());
                         prop.advanced = propDefn.isAdvanced();
                         prop.description = propDefn.getDescription();
@@ -328,7 +329,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         TeiidServer defaultServer = getDefaultServer();
 
         if ((defaultServer != null) && defaultServer.isConnected()) {
-            Collection<TeiidTranslator> translators = null;
+            Collection<ITeiidTranslator> translators = null;
 
             try {
                 translators = defaultServer.getTranslators();
@@ -341,7 +342,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
             if (translators != null) {
                 Collection<String> translatorTypes = new ArrayList<String>();
 
-                for (TeiidTranslator translator : translators) {
+                for (ITeiidTranslator translator : translators) {
                     translatorTypes.add(translator.getName());
                 }
 

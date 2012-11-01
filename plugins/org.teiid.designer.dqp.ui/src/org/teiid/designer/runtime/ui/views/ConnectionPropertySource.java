@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime.ui.views;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,10 +22,10 @@ import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
-import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.JDBCConnectionPropertyNames;
-import org.teiid.designer.runtime.TeiidTranslator;
+import org.teiid.designer.runtime.TeiidPropertyDefinition;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
@@ -35,7 +34,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
  */
 public class ConnectionPropertySource implements IPropertySource {
 
-    private TeiidTranslator translator;
+    private ITeiidTranslator translator;
     private final Properties initialValues;
 
     private boolean isEditable = false;
@@ -44,7 +43,7 @@ public class ConnectionPropertySource implements IPropertySource {
     /**
      * @param connector the connector whose properties are being edited (never <code>null</code>)
      */
-    public ConnectionPropertySource( TeiidTranslator translator ) {
+    public ConnectionPropertySource( ITeiidTranslator translator ) {
         this(translator.getProperties());
         this.translator = translator;
     }
@@ -75,11 +74,11 @@ public class ConnectionPropertySource implements IPropertySource {
     @Override
 	public IPropertyDescriptor[] getPropertyDescriptors() {
         IPropertyDescriptor[] result = new IPropertyDescriptor[0];
-        Collection<? extends PropertyDefinition> typeDefs = this.translator.getPropertyDefinitions();
+        Collection<TeiidPropertyDefinition> typeDefs = this.translator.getPropertyDefinitions();
         boolean showExpertProps = this.provider.isShowingExpertProperties();
         Collection<PropertyDescriptor> temp = new ArrayList<PropertyDescriptor>(typeDefs.size());
 
-        for (final PropertyDefinition propDefn : typeDefs) {
+        for (final TeiidPropertyDefinition propDefn : typeDefs) {
             final String id = propDefn.getName();
             String displayName = propDefn.getDisplayName();
             //
@@ -99,7 +98,7 @@ public class ConnectionPropertySource implements IPropertySource {
                 }
 
                 // set validator
-                final TeiidTranslator validator = this.translator;
+                final ITeiidTranslator validator = this.translator;
 
                 descriptor.setValidator(new ICellEditorValidator() {
                     @Override
@@ -156,7 +155,7 @@ public class ConnectionPropertySource implements IPropertySource {
         // return empty string
         if (result.length() == 0) return result;
 
-        PropertyDefinition propDefn = this.translator.getPropertyDefinition(propName);
+        TeiidPropertyDefinition propDefn = this.translator.getPropertyDefinition(propName);
 
         // if masked property don't return actual result
         if (propDefn.isMasked()) {
@@ -187,7 +186,7 @@ public class ConnectionPropertySource implements IPropertySource {
      */
     @Override
 	public void resetPropertyValue( Object id ) {
-        PropertyDefinition propDefn = ((PropertyDefinition)id);
+        TeiidPropertyDefinition propDefn = ((TeiidPropertyDefinition)id);
         setPropertyValue(id, this.initialValues.getProperty(propDefn.getName()));
     }
 

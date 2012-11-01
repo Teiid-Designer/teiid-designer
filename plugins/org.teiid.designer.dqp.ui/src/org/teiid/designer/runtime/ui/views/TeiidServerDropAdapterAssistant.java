@@ -19,8 +19,8 @@ import org.eclipse.ui.navigator.CommonDropAdapter;
 import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.TeiidServer;
-import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.actions.DeployVdbAction;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
@@ -42,8 +42,8 @@ public class TeiidServerDropAdapterAssistant extends CommonDropAdapterAssistant 
     @Override
     public IStatus validateDrop(Object target, int operation, TransferData transferType) {
         currentTransfer = transferType;
-        
-        if (RuntimeAssistant.adapt(target, TeiidTranslator.class) != null && currentTransfer != null
+
+        if (RuntimeAssistant.adapt(target, ITeiidTranslator.class) != null && currentTransfer != null
             && isSupportedType(currentTransfer)) {
             // plugin cannot be loaded without the plugin data
             return Status.OK_STATUS;

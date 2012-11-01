@@ -23,6 +23,7 @@ import org.teiid.designer.core.spi.RegistrySPI;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.runtime.connection.IConnectionProperties;
 import org.teiid.designer.runtime.impl.ExecutionAdmin;
+import org.teiid.designer.runtime.impl.TeiidTranslator;
 
 /**
  *
@@ -60,7 +61,7 @@ public class MockObjectFactory {
      * @return the translator
      * @since 7.0
      */
-    public static TeiidTranslator createTeiidTranslator( final String name,
+    public static ITeiidTranslator createTeiidTranslator( final String name,
                                                          final String translatorTypeName ) {
         final Translator translator = createTranslator(name, translatorTypeName);
 
@@ -77,7 +78,7 @@ public class MockObjectFactory {
      * @return the translator
      * @since 7.0
      */
-    public static TeiidTranslator createTeiidTranslator( final String name,
+    public static ITeiidTranslator createTeiidTranslator( final String name,
                                                          final String translatorTypeName,
                                                          final Collection<PropertyDefinition> propertyDefs ) {
         final Translator translator = createTranslator(name, translatorTypeName);

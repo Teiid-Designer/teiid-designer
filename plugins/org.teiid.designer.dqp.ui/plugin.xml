@@ -360,7 +360,7 @@
                type="org.teiid.designer.runtime.TeiidDataSource">
          </adapter>
          <adapter
-               type="org.teiid.designer.runtime.TeiidTranslator">
+               type="org.teiid.designer.runtime.ITeiidTranslator">
          </adapter>
          <adapter
                type="org.teiid.designer.runtime.ITeiidVdb">

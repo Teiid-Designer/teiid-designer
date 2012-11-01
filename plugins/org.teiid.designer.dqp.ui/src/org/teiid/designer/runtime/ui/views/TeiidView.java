@@ -40,10 +40,10 @@ import org.eclipse.wst.server.core.IServerLifecycleListener;
 import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServerManager;
-import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
@@ -85,7 +85,7 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
          */
         @Override
         public boolean select( Viewer viewer, Object parentElement, Object element ) {
-            TeiidTranslator teiidTranslator = RuntimeAssistant.adapt(element, TeiidTranslator.class);
+            ITeiidTranslator teiidTranslator = RuntimeAssistant.adapt(element, ITeiidTranslator.class);
             if (teiidTranslator != null)
                 return false;
 

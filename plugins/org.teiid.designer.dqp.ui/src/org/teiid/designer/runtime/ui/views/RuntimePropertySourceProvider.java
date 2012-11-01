@@ -19,7 +19,7 @@ import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
-import org.teiid.designer.runtime.TeiidTranslator;
+import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.TranslatorTemplate;
 import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -49,12 +49,12 @@ public class RuntimePropertySourceProvider implements IPropertySourceProvider {
     @Override
 	public IPropertySource getPropertySource( Object object ) {
         if (object instanceof TranslatorTemplate) {
-            ConnectionPropertySource source = new ConnectionPropertySource((TeiidTranslator)object);
+            ConnectionPropertySource source = new ConnectionPropertySource((TranslatorTemplate)object);
             source.setEditable(this.connectorsEditable);
             source.setProvider(this);
             return source;
-        } else if (object instanceof TeiidTranslator) {
-            ConnectionPropertySource source = new ConnectionPropertySource(new TranslatorTemplate((TeiidTranslator)object));
+        } else if (object instanceof ITeiidTranslator) {
+            ConnectionPropertySource source = new ConnectionPropertySource(new TranslatorTemplate((ITeiidTranslator)object));
             source.setEditable(this.connectorsEditable);
             source.setProvider(this);
             return source;

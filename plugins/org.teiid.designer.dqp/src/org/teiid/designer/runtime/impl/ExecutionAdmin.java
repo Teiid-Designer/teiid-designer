@@ -46,13 +46,13 @@ import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.EventManager;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionAdmin;
+import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidAdminInfo;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerUtils;
-import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
@@ -69,7 +69,7 @@ import org.teiid.jdbc.TeiidDriver;
 public class ExecutionAdmin implements IExecutionAdmin {
 
     private final Admin admin;
-    protected Map<String, TeiidTranslator> translatorByNameMap;
+    protected Map<String, ITeiidTranslator> translatorByNameMap;
     protected Collection<String> dataSourceNames;
     protected Map<String, TeiidDataSource> dataSourceByNameMap;
     protected Set<String> dataSourceTypeNames;
@@ -204,7 +204,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     public void disconnect() {
     	// 
     	this.admin.close();
-        this.translatorByNameMap = new HashMap<String, TeiidTranslator>();
+        this.translatorByNameMap = new HashMap<String, ITeiidTranslator>();
         this.dataSourceNames = new ArrayList<String>();
         this.dataSourceByNameMap = new HashMap<String, TeiidDataSource>();
         this.dataSourceTypeNames = new HashSet<String>();
@@ -440,14 +440,14 @@ public class ExecutionAdmin implements IExecutionAdmin {
     }
 
     @Override
-    public TeiidTranslator getTranslator( String name ) {
+    public ITeiidTranslator getTranslator( String name ) {
         CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
         return this.translatorByNameMap.get(name);
     }
 
     @Override
-    public Collection<TeiidTranslator> getTranslators() {
-        return this.translatorByNameMap.values();
+    public Collection<ITeiidTranslator> getTranslators() {
+        return Collections.unmodifiableCollection(translatorByNameMap.values());
     }
 
     @Override
@@ -508,14 +508,14 @@ public class ExecutionAdmin implements IExecutionAdmin {
     }
     
     private void init() throws Exception {
-        this.translatorByNameMap = new HashMap<String, TeiidTranslator>();
+        this.translatorByNameMap = new HashMap<String, ITeiidTranslator>();
         this.dataSourceNames = new ArrayList<String>();
         this.dataSourceByNameMap = new HashMap<String, TeiidDataSource>();
         this.dataSourceTypeNames = new HashSet<String>();
         refreshVDBs();
     }
 
-    private void internalSetPropertyValue( TeiidTranslator translator,
+    private void internalSetPropertyValue( ITeiidTranslator translator,
                                            String propName,
                                            String value,
                                            boolean notify ) throws Exception {
@@ -609,7 +609,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
      * @throws Exception if there is a problem changing the properties
      * @since 7.0
      */
-    public void setProperties( TeiidTranslator translator,
+    public void setProperties( ITeiidTranslator translator,
                                Properties changedProperties ) throws Exception {
         CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(changedProperties, "changedProperties"); //$NON-NLS-1$
@@ -634,7 +634,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
      * @throws Exception if there is a problem setting the property
      * @since 7.0
      */
-    public void setPropertyValue( TeiidTranslator translator,
+    public void setPropertyValue( ITeiidTranslator translator,
                                   String propName,
                                   String value ) throws Exception {
         CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$

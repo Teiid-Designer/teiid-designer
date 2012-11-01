@@ -139,14 +139,14 @@ public interface IExecutionAdmin {
      * @throws Exception 
      * @since 7.0
      */
-     TeiidTranslator getTranslator(String name) throws Exception;
+     ITeiidTranslator getTranslator(String name) throws Exception;
 
     /**
      * 
      * @return collection of Teiid translators
      * @throws Exception 
      */
-     Collection<TeiidTranslator> getTranslators() throws Exception;
+     Collection<ITeiidTranslator> getTranslators() throws Exception;
 
     /**
      * @return an unmodifiable collection of VDBs deployed on the server

@@ -71,11 +71,11 @@ import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
-import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob;
@@ -198,7 +198,7 @@ public class PreviewDataWorker {
         	
         	String translatorName = helper.getTranslatorName(mr);
         	if( translatorName != null ) {
-        		TeiidTranslator tt = null; 
+        		ITeiidTranslator tt = null; 
         		
                 try {
                     tt = getServerManager().getDefaultServer().getTranslator(translatorName);

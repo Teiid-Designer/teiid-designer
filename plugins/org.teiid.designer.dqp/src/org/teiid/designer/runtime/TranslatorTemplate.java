@@ -9,34 +9,28 @@
 package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Properties;
-import org.teiid.adminapi.PropertyDefinition;
+import org.teiid.core.designer.util.CoreArgCheck;
 
 /**
- * The <code>TranslatorTemplate</code> class is an implementation of {@link TeiidTranslator} that does not communicate with a Teiid
+ * The <code>TranslatorTemplate</code> class is an implementation of {@link ITeiidTranslator} that does not communicate with a Teiid
  *
  * @since 8.0
  */
-public class TranslatorTemplate extends TeiidTranslator {
+public class TranslatorTemplate implements ITeiidTranslator {
 
     private final Properties changedProperties;
-
-    /**
-     * @param name the name of the new translator (never <code>null</code>)
-     * @param type the type of the new translator (never <code>null</code>)
-     */
-    public TranslatorTemplate( String name,
-                              String type ) {
-        super(new PseudoTranslator(name, type), new ArrayList<PropertyDefinition>(), null);
-        this.changedProperties = new Properties();
-    }
+    
+    private ITeiidTranslator translator;
 
     /**
      * @param translator the translator whose properties are used to create this template (never <code>null</code>)
      */
-    public TranslatorTemplate( TeiidTranslator translator ) {
-        super(new PseudoTranslator(translator), translator.getPropertyDefinitions(), translator.getTeiidServer());
+    public TranslatorTemplate( ITeiidTranslator translator ) {
+        CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
+
+        this.translator = translator;
         this.changedProperties = new Properties();
     }
 
@@ -47,57 +41,37 @@ public class TranslatorTemplate extends TeiidTranslator {
         return this.changedProperties;
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.runtime.TeiidTranslator#getPropertyValue(java.lang.String)
-     */
     @Override
     public String getPropertyValue( String name ) {
         if (this.changedProperties.containsKey(name)) {
             return this.changedProperties.getProperty(name);
         }
 
-        return super.getPropertyValue(name);
+        return translator.getPropertyValue(name);
+    }
+    
+    @Override
+    public Properties getDefaultPropertyValues() {
+        return translator.getDefaultPropertyValues();
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.runtime.TeiidTranslator#getProperties()
-     */
+    @Override
+    public String isValidPropertyValue(String name, String value) {
+        return translator.isValidPropertyValue(name, value);
+    }
+
     @Override
     public Properties getProperties() {
-        Properties props = new Properties(super.getProperties());
+        Properties props = new Properties(translator.getProperties());
         props.putAll(this.changedProperties);
         return props;
     }
 
-    /**
-     * Modifies the name of the translator.
-     * 
-     * @param name the new name (may be <code>null</code>)
-     */
-    public void setName( String name ) {
-        ((PseudoTranslator)getTranslator()).setName(name);
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.runtime.TeiidTranslator#setProperties(java.util.Properties)
-     * @throws UnsupportedOperationException if called
-     */
     @Override
     public void setProperties( Properties changedProperties ) throws Exception {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.runtime.TeiidTranslator#setPropertyValue(java.lang.String, java.lang.String)
-     */
     @Override
     public void setPropertyValue( String name,
                                   String value ) throws Exception {
@@ -108,4 +82,33 @@ public class TranslatorTemplate extends TeiidTranslator {
         }
     }
 
+    @Override
+    public Collection<String> findInvalidProperties() {
+        return translator.findInvalidProperties();
+    }
+
+    @Override
+    public String getName() {
+        return translator.getName();
+    }
+
+    @Override
+    public String getType() {
+        return translator.getType();
+    }
+
+    @Override
+    public TeiidServer getTeiidServer() {
+        return translator.getTeiidServer();
+    }
+
+    @Override
+    public TeiidPropertyDefinition getPropertyDefinition(String name) {
+        return translator.getPropertyDefinition(name);
+    }
+
+    @Override
+    public Collection<TeiidPropertyDefinition> getPropertyDefinitions() {
+       return translator.getPropertyDefinitions();
+    }
 }

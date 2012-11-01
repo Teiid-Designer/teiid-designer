@@ -12,7 +12,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.teiid.designer.runtime.TeiidTranslator;
+import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 
 /**
@@ -53,8 +53,8 @@ public class StatusBarUpdater implements DqpUiConstants,
                 return UTIL.getString("StatusBarUpdater.num_elements_selected", String.valueOf(nElements)); //$NON-NLS-1$
             } 
             Object elem= selection.getFirstElement();
-            if (elem instanceof TeiidTranslator) {
-                return ((TeiidTranslator) elem).getName();
+            if (elem instanceof ITeiidTranslator) {
+                return ((ITeiidTranslator) elem).getName();
             }
             
             return elem.getClass().getName();

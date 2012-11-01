@@ -522,13 +522,13 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
     }
 
     @Override
-    public TeiidTranslator getTranslator(String name) throws Exception {
+    public ITeiidTranslator getTranslator(String name) throws Exception {
         connect();
         return admin.getTranslator(name);
     }
 
     @Override
-    public Collection<TeiidTranslator> getTranslators() throws Exception {
+    public Collection<ITeiidTranslator> getTranslators() throws Exception {
         connect();
         return admin.getTranslators();
     }

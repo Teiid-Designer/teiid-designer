@@ -19,8 +19,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.TeiidServer;
-import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
 import org.teiid.designer.runtime.ui.views.TeiidServerLabelProvider;
@@ -42,7 +42,7 @@ public class SelectTranslatorDialog extends ElementTreeSelectionDialog implement
 
     private Text translatorNameText;
     private MessageLabel statusMessageLabel;
-    private TeiidTranslator selectedTranslator;
+    private ITeiidTranslator selectedTranslator;
 
     public SelectTranslatorDialog( Shell parent ) {
         super(parent, new TeiidServerLabelProvider(), new TeiidServerContentProvider(false, true, false));
@@ -123,11 +123,11 @@ public class SelectTranslatorDialog extends ElementTreeSelectionDialog implement
 
         Object firstElement = selection.getFirstElement();
 
-        if (!(firstElement instanceof TeiidTranslator)) {
+        if (!(firstElement instanceof ITeiidTranslator)) {
             this.selectedTranslator = null;
             this.translatorNameText.setText(UNDEFINED);
         } else {
-            this.selectedTranslator = (TeiidTranslator)selection.getFirstElement();
+            this.selectedTranslator = (ITeiidTranslator)selection.getFirstElement();
             this.translatorNameText.setText(selectedTranslator.getName());
         }
 
@@ -139,7 +139,7 @@ public class SelectTranslatorDialog extends ElementTreeSelectionDialog implement
                                     DqpUiConstants.PLUGIN_ID,
                                     DqpUiConstants.UTIL.getString("SelectTranslatorDialog.okSelectionMessage")); //$NON-NLS-1$
         if (selectedObject != null) {
-            if (!(selectedObject instanceof TeiidTranslator)) {
+            if (!(selectedObject instanceof ITeiidTranslator)) {
                 status = new Status(IStatus.ERROR,
                                     DqpUiConstants.PLUGIN_ID,
                                     DqpUiConstants.UTIL.getString("SelectTranslatorDialog.invalidSelectionMessage")); //$NON-NLS-1$
@@ -162,7 +162,7 @@ public class SelectTranslatorDialog extends ElementTreeSelectionDialog implement
      * 
      * @return the TeiidTranslator. may return null
      */
-    public TeiidTranslator getSelectedTranslator() {
+    public ITeiidTranslator getSelectedTranslator() {
         return this.selectedTranslator;
     }
 

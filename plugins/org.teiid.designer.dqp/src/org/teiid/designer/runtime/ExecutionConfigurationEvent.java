@@ -160,14 +160,14 @@ public final class ExecutionConfigurationEvent {
      * @return the connector involved in the event
      * @throws IllegalStateException if method is called for a server event
      */
-    public TeiidTranslator getTranslator() {
+    public ITeiidTranslator getTranslator() {
         if (this.targetType != TargetType.TRANSLATOR) {
             throw new IllegalStateException(Util.getString("invalidTargetTypeForGetTranslatorMethod", //$NON-NLS-1$
                                                            this.targetType,
                                                            TargetType.TRANSLATOR));
         }
 
-        return (TeiidTranslator)this.target;
+        return (ITeiidTranslator)this.target;
     }
 
     /**

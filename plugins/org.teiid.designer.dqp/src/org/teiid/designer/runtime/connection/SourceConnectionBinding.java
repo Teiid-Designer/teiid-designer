@@ -14,8 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.TeiidServer;
-import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.vdb.connections.VdbSourceConnection;
 
 
@@ -28,7 +28,7 @@ public class SourceConnectionBinding {
 
     private final String modelName;
     private final String modelLocation;
-    private final Set<TeiidTranslator> translators = new HashSet<TeiidTranslator>();
+    private final Set<ITeiidTranslator> translators = new HashSet<ITeiidTranslator>();
     
     private final List<VdbSourceConnection> vdbSources = new ArrayList<VdbSourceConnection>();
 
@@ -53,7 +53,7 @@ public class SourceConnectionBinding {
      */
     public SourceConnectionBinding( String modelName,
                           String path,
-                          TeiidTranslator translator ) {
+                          ITeiidTranslator translator ) {
         this(modelName, path, Collections.singleton(translator));
         CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
     }
@@ -66,7 +66,7 @@ public class SourceConnectionBinding {
      */
     public SourceConnectionBinding( String modelName,
                           String modelLocation,
-                          Set<TeiidTranslator> translators ) {
+                          Set<ITeiidTranslator> translators ) {
         CoreArgCheck.isNotEmpty(modelName, "modelName"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(modelLocation, "modelLocation"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(translators, "translators"); //$NON-NLS-1$
@@ -77,7 +77,7 @@ public class SourceConnectionBinding {
         TeiidServer teiidServer = null;
 
         // make sure all translators from same server
-        for (TeiidTranslator translator : translators) {
+        for (ITeiidTranslator translator : translators) {
             if (translator == null) {
                 throw new IllegalArgumentException(Util.getString("translatorCannotBeNullForSourceBinding")); //$NON-NLS-1$
             }
@@ -96,7 +96,7 @@ public class SourceConnectionBinding {
      * @return <code>true</code> if the translator was added
      * @throws IllegalArgumentException if translator being added is from a different server
      */
-    public boolean addTranslator( TeiidTranslator translator ) {
+    public boolean addTranslator( ITeiidTranslator translator ) {
         CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
 
         // make sure server is the same
@@ -111,7 +111,7 @@ public class SourceConnectionBinding {
      * @return an unmodifiable collection of translators (never <code>null</code> or empty)
      * @since 7.0
      */
-    public Set<TeiidTranslator> getTranslators() {
+    public Set<ITeiidTranslator> getTranslators() {
         return Collections.unmodifiableSet(this.translators);
     }
 
@@ -136,7 +136,7 @@ public class SourceConnectionBinding {
      * @throws IllegalArgumentException if trying to remove the last translator in the model binding or if removing a translator
      *         that is not part of this model binding
      */
-    public void removeTranslator( TeiidTranslator translator ) {
+    public void removeTranslator( ITeiidTranslator translator ) {
         CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
 
         // don't allow last translator to be removed
@@ -169,7 +169,7 @@ public class SourceConnectionBinding {
         int count = this.translators.size();
         int i = 1;
 
-        for (TeiidTranslator translator : this.translators) {
+        for (ITeiidTranslator translator : this.translators) {
             sb.append(translator.getName());
 
             if (i < count) {

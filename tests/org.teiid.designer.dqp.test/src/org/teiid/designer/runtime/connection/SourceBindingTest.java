@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.teiid.designer.runtime.TeiidServer;
-import org.teiid.designer.runtime.TeiidTranslator;
+import org.teiid.designer.runtime.ITeiidTranslator;
 
 
 /**
@@ -26,25 +26,25 @@ import org.teiid.designer.runtime.TeiidTranslator;
  */
 public class SourceBindingTest {
 
-    private static final Set<TeiidTranslator> NULL_CONNECTORS = null;
-    private static final TeiidTranslator NULL_CONNECTOR = null;
+    private static final Set<ITeiidTranslator> NULL_CONNECTORS = null;
+    private static final ITeiidTranslator NULL_CONNECTOR = null;
 
     @Mock
     private TeiidServer teiidServer;
 
-    private TeiidTranslator commonConnector;
+    private ITeiidTranslator commonConnector;
 
     @Before
     public void beforeEach() {
         MockitoAnnotations.initMocks(this);
 
-        commonConnector = mock(TeiidTranslator.class);
+        commonConnector = mock(ITeiidTranslator.class);
         when(commonConnector.getType()).thenReturn("theType");
         when(commonConnector.getTeiidServer()).thenReturn(teiidServer);
     }
 
-    private TeiidTranslator getMockConnector() {
-        TeiidTranslator conn = mock(TeiidTranslator.class);
+    private ITeiidTranslator getMockConnector() {
+        ITeiidTranslator conn = mock(ITeiidTranslator.class);
         TeiidServer newTeiidServer = mock(TeiidServer.class);
         when(conn.getType()).thenReturn("theType");
         when(conn.getTeiidServer()).thenReturn(newTeiidServer);
@@ -52,8 +52,8 @@ public class SourceBindingTest {
         return conn;
     }
 
-    private TeiidTranslator getMockConnectorWithCommonAdmin() {
-        TeiidTranslator conn = mock(TeiidTranslator.class);
+    private ITeiidTranslator getMockConnectorWithCommonAdmin() {
+        ITeiidTranslator conn = mock(ITeiidTranslator.class);
         when(conn.getType()).thenReturn("theType");
         when(conn.getTeiidServer()).thenReturn(teiidServer);
 
@@ -61,19 +61,19 @@ public class SourceBindingTest {
     }
 
     private SourceConnectionBinding getNewSourceBinding() {
-        Set<TeiidTranslator> connectors = new HashSet<TeiidTranslator>();
+        Set<ITeiidTranslator> connectors = new HashSet<ITeiidTranslator>();
         connectors.add(getMockConnector());
         return new SourceConnectionBinding("name", "path", connectors);
     }
 
     private SourceConnectionBinding getNewSourceBindingWithCommonAdmin() {
-        Set<TeiidTranslator> connectors = new HashSet<TeiidTranslator>();
+        Set<ITeiidTranslator> connectors = new HashSet<ITeiidTranslator>();
         connectors.add(getMockConnectorWithCommonAdmin());
         return new SourceConnectionBinding("name", "path", connectors);
     }
 
     private SourceConnectionBinding getNewSourceBindingWithMultipleConnectors() {
-        Set<TeiidTranslator> connectors = new HashSet<TeiidTranslator>();
+        Set<ITeiidTranslator> connectors = new HashSet<ITeiidTranslator>();
         connectors.add(getMockConnectorWithCommonAdmin());
         connectors.add(commonConnector);
         return new SourceConnectionBinding("name", "path", connectors);
@@ -136,12 +136,12 @@ public class SourceBindingTest {
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowCreateSourceBindingWithEmptyConnectors() {
-        new SourceConnectionBinding("name", "path", new HashSet<TeiidTranslator>());
+        new SourceConnectionBinding("name", "path", new HashSet<ITeiidTranslator>());
     }
 
     @Test
     public void shouldCreateSourceBindingWithConnectors() {
-        Set<TeiidTranslator> connectors = new HashSet<TeiidTranslator>();
+        Set<ITeiidTranslator> connectors = new HashSet<ITeiidTranslator>();
         connectors.add(getMockConnector());
         new SourceConnectionBinding("name", "path", connectors);
     }
