@@ -62,7 +62,7 @@ public class ModelNameChecker extends ModelNameUtil implements UiConstants {
 	 */
 	public ModelNameChecker(String modelName, String fileExtension, IContainer targetContainer, int flags) {
 		super();
-		CoreArgCheck.isNotNull(fileExtension, "modelName"); //$NON-NLS-1$
+		CoreArgCheck.isNotNull(modelName, "modelName"); //$NON-NLS-1$
 		CoreArgCheck.isNotNull(fileExtension, "fileExtension"); //$NON-NLS-1$
 		
 		setFlags(flags);

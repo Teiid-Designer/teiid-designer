@@ -100,6 +100,8 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
     private ISelection selection;
     
     private IContainer folder;
+    
+    private boolean initializing = false;
 
     /**
      * Constructor for NewModelWizardSpecifyModelPage
@@ -332,6 +334,7 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
      * building.
      */
     private void initialize() {
+    	initializing = true;
         roots = new LinkedHashSet();
         if (SelectionUtilities.isEmptySelection(selection)) {
             return;
@@ -404,6 +407,8 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
                 processRootObject(selections.next(), true);
             }// end while
         }// end else
+        
+        initializing = false;
     }
 
     /**
@@ -574,6 +579,10 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
      * must select at least one of genOut or genInput
      */
     void checkStatus() {
+    	if( initializing ) {
+    		return;
+    	}
+    	
         boolean hasWarnings = false;
         if (!unsavedResources.isEmpty()) {
         	setErrorMessage(Util.getString("GenerateXsdWizard.unsavedModels")); //$NON-NLS-1$
