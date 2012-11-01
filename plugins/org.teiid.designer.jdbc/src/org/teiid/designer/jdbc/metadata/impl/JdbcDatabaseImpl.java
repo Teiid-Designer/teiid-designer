@@ -563,7 +563,7 @@ public class JdbcDatabaseImpl extends JdbcNodeImpl implements JdbcDatabase, Inte
     public IStatus selectDefaultNodes( String username ) {
         try {
         	String driverName = this.getDatabaseInfo().getDriverName();
-        	if( driverName.toUpperCase().contains("TEIID") ) { //$NON-NLS-1$
+        	if( driverName != null && driverName.toUpperCase().contains("TEIID") ) { //$NON-NLS-1$
         		return Status.OK_STATUS;
         	}
             boolean isExcelOrAccess = false;

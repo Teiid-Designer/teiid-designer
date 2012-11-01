@@ -18,6 +18,7 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.jdbc.JdbcException;
 import org.teiid.designer.jdbc.JdbcManager;
+import org.teiid.designer.jdbc.JdbcManagerImpl;
 import org.teiid.designer.jdbc.JdbcPlugin;
 import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants;
@@ -31,8 +32,6 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
 public class JdbcRelationalUtil implements ModelerJdbcRelationalConstants {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(JdbcRelationalUtil.class);
-
-    private static final String JDBC_MANAGER_NAME = getString("jdbcManagerName"); //$NON-NLS-1$
 
     private static final String ESCAPE_CHARACTER = "\""; //$NON-NLS-1$
 
@@ -63,13 +62,11 @@ public class JdbcRelationalUtil implements ModelerJdbcRelationalConstants {
     }
 
     /**
+     * @return the JDBC manager (never <code>null</code>)
      * @since 4.0
      */
     public static JdbcManager getJdbcManager() {
-        if (JdbcRelationalUtil.mgr == null) {
-            JdbcRelationalUtil.mgr = JdbcPlugin.createJdbcManager(JDBC_MANAGER_NAME);
-        }
-        return JdbcRelationalUtil.mgr;
+        return JdbcPlugin.getJdbcManager();
     }
 
     /**
