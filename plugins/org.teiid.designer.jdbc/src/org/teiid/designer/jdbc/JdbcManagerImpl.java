@@ -118,6 +118,7 @@ public class JdbcManagerImpl implements JdbcManager {
     private ProfileManager profileManager;
     private DriverManager driverManager;
     private boolean sourcesUpdated;
+    private boolean driversUpdated;
     private ProfileListener profileListener;
 
     /**
@@ -267,20 +268,19 @@ public class JdbcManagerImpl implements JdbcManager {
      */
     @Override
 	public List getJdbcDrivers() {
-        if (drivers == null) {
+        if (this.driversUpdated) {
             synchronized (driversLock) {
-                if (drivers == null) {
-                    final JdbcFactoryImpl factory = new JdbcFactoryImpl();
-                    drivers = factory.createJdbcDriverContainer();
-                    final DriverInstance[] tempDrivers = driverManager.getDriverInstancesByCategory("org.eclipse.datatools.connectivity.db.category"); //$NON-NLS-1$
-                    for (final DriverInstance driverInstance : tempDrivers) {
-                        final JdbcDriver driver = factory.createJdbcDriver();
-                        driver.setName(driverInstance.getName());
-                        driver.setPreferredDriverClassName(driverInstance.getNamedPropertyByID("org.eclipse.datatools.connectivity.db.driverClass")); //$NON-NLS-1$
-                        driver.setUrlSyntax(driverInstance.getNamedPropertyByID("org.eclipse.datatools.connectivity.db.URL")); //$NON-NLS-1$
-                        driver.setJdbcDriverContainer(drivers);
-                        drivers.getJdbcDrivers().add(driver);
-                    }
+                this.driversUpdated = false;
+                final JdbcFactoryImpl factory = new JdbcFactoryImpl();
+                drivers = factory.createJdbcDriverContainer();
+                final DriverInstance[] tempDrivers = driverManager.getDriverInstancesByCategory("org.eclipse.datatools.connectivity.db.category"); //$NON-NLS-1$
+                for (final DriverInstance driverInstance : tempDrivers) {
+                    final JdbcDriver driver = factory.createJdbcDriver();
+                    driver.setName(driverInstance.getName());
+                    driver.setPreferredDriverClassName(driverInstance.getNamedPropertyByID("org.eclipse.datatools.connectivity.db.driverClass")); //$NON-NLS-1$
+                    driver.setUrlSyntax(driverInstance.getNamedPropertyByID("org.eclipse.datatools.connectivity.db.URL")); //$NON-NLS-1$
+                    driver.setJdbcDriverContainer(drivers);
+                    drivers.getJdbcDrivers().add(driver);
                 }
             }
         }
@@ -310,20 +310,27 @@ public class JdbcManagerImpl implements JdbcManager {
      */
     @Override
 	public List getJdbcSources() {
-        if (sources == null || sourcesUpdated) {
+        if (this.sourcesUpdated) {
             synchronized (sourcesLock) {
-                if (sources == null) {
-                    final JdbcFactoryImpl factory = new JdbcFactoryImpl();
-                    sources = factory.createJdbcSourceContainer();
-                    final IConnectionProfile[] tempProfiles = profileManager.getProfilesByCategory("org.eclipse.datatools.connectivity.db.category"); //$NON-NLS-1$
-                    for (final IConnectionProfile profile : tempProfiles) {
-                        final JdbcSource source = getJdbcSource(profile);
-                        source.setJdbcSourceContainer(sources);
-                        sources.getJdbcSources().add(source);
-                    }
+                this.sourcesUpdated = false;
+                final JdbcFactoryImpl factory = new JdbcFactoryImpl();
+                sources = factory.createJdbcSourceContainer();
+
+                final IConnectionProfile[] tempProfiles = profileManager.getProfilesByCategory("org.eclipse.datatools.connectivity.db.category"); //$NON-NLS-1$
+
+                // first time this is called the profile listener is notified and reload is called
+                if (this.sourcesUpdated) {
+                    return getJdbcSources();
+                }
+
+                for (final IConnectionProfile profile : tempProfiles) {
+                    final JdbcSource source = getJdbcSource(profile);
+                    source.setJdbcSourceContainer(sources);
+                    sources.getJdbcSources().add(source);
                 }
             }
         }
+
         return sources.getJdbcSources();
     }
 
@@ -593,8 +600,8 @@ public class JdbcManagerImpl implements JdbcManager {
      */
     @Override
 	public void reload( final IProgressMonitor monitor ) {
-        shutdown();
-        start();
+        this.sourcesUpdated = true;
+        this.driversUpdated = true;
     }
 
     /* (non-Javadoc)
@@ -678,6 +685,8 @@ public class JdbcManagerImpl implements JdbcManager {
         profileListener = new ProfileListener();
         profileManager.addProfileListener(profileListener);
         driverManager = DriverManager.getInstance();
+        this.sourcesUpdated = true;
+        this.driversUpdated = true;
     }
     
     protected void setProfileManager(ProfileManager profManager) {

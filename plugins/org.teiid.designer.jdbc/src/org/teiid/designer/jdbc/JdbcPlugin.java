@@ -117,6 +117,7 @@ public class JdbcPlugin extends Plugin {
     };
 
     static JdbcPlugin INSTANCE = null;
+    private static JdbcManagerImpl jdbcMgr;
 
     public static boolean DEBUG = false;
 
@@ -124,15 +125,15 @@ public class JdbcPlugin extends Plugin {
      * Starts the manager for the {@link JdbcDriver} instances by loading the instances from the supplied model. This method is safe
      * to call more than once; the method returns whether the manager was actually started.
      * 
-     * @param jdbcModelUri the full path to the model file containing the {@link JdbcDriver} instances.
-     * @return true if the manager was started, or false if the manager was already started
-     * @throws JdbcException if there is an error loading the manager
-     * @see #getJdbcDriverManager()
+     * @return the JDBC manager (never <code>null</code>)
      */
-    public static JdbcManager createJdbcManager( final String name ) {
-        final JdbcManagerImpl mgr = new JdbcManagerImpl(name);
-        mgr.start();
-        return mgr;
+    public static JdbcManager getJdbcManager() {
+        if (JdbcPlugin.jdbcMgr == null) {
+            JdbcPlugin.jdbcMgr = new JdbcManagerImpl(Util.getString("jdbcManagerName")); //$NON-NLS-1$
+            JdbcPlugin.jdbcMgr.start();
+        }
+
+        return JdbcPlugin.jdbcMgr;
     }
 
     /**
@@ -248,4 +249,23 @@ public class JdbcPlugin extends Plugin {
         ((PluginUtilImpl)Util).initializePlatformLogger(this); // This must be called to initialize the platform logger!
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+     */
+    @Override
+    public void stop(BundleContext context) throws Exception {
+        JdbcManager mgr = JdbcManagerImpl.get();
+
+        if ((mgr != null) && (mgr instanceof JdbcManagerImpl)) {
+            ((JdbcManagerImpl)mgr).shutdown();
+        }
+
+        if (JdbcPlugin.jdbcMgr != null) {
+            JdbcPlugin.jdbcMgr.shutdown();
+        }
+
+        super.stop(context);
+    }
 }
