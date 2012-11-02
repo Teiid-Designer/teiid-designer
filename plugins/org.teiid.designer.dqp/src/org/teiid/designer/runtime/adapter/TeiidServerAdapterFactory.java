@@ -15,9 +15,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidAdminInfo;
+import org.teiid.designer.runtime.ITeiidConnectionInfo;
+import org.teiid.designer.runtime.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.TeiidAdminInfo;
-import org.teiid.designer.runtime.TeiidConnectionInfo;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
@@ -90,7 +92,7 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
             return null;
         
         // See if we already have registered this teiid server
-        String serverUrl = TeiidConnectionInfo.MM + server.getHost() + ':' + jb7.getManagementPort();
+        String serverUrl = ITeiidConnectionInfo.MM + server.getHost() + ':' + jb7.getManagementPort();
         ITeiidServer teiidServer = serverManager.getServer(serverUrl);
         if (teiidServer != null)
             return teiidServer;
@@ -132,16 +134,16 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
         
         String jdbcPort = TeiidServerAdapterUtil.getJdbcPort(server);
        
-        TeiidAdminInfo teiidAdminInfo = new TeiidAdminInfo(new Integer(jboss7Server.getManagementPort()).toString(),
+        ITeiidAdminInfo teiidAdminInfo = new TeiidAdminInfo(new Integer(jboss7Server.getManagementPort()).toString(),
                                                            jboss7Server.getUsername(),
                                                            serverManager.getSecureStorageProvider(),
                                                            jboss7Server.getPassword(),
                                                            false);
         
-        TeiidJdbcInfo teiidJdbcInfo = new TeiidJdbcInfo(jdbcPort,
-                                                        TeiidJdbcInfo.DEFAULT_JDBC_USERNAME,
+        ITeiidJdbcInfo teiidJdbcInfo = new TeiidJdbcInfo(jdbcPort,
+                                                        ITeiidJdbcInfo.DEFAULT_JDBC_USERNAME,
                                                         serverManager.getSecureStorageProvider(),
-                                                        TeiidJdbcInfo.DEFAULT_JDBC_PASSWORD,
+                                                        ITeiidJdbcInfo.DEFAULT_JDBC_PASSWORD,
                                                         false);
 
         ITeiidServer teiidServer = new TeiidServer(jboss7Server.getHost(), teiidAdminInfo, teiidJdbcInfo, serverManager, server);

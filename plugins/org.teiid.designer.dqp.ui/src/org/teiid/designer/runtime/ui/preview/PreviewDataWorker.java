@@ -71,6 +71,7 @@ import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.ITeiidVdb;
@@ -383,7 +384,7 @@ public class PreviewDataWorker {
                 vdbName = vdbName.substring(0, vdbName.length() - 4);
             }
    
-            TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName, defaultServer.getTeiidJdbcInfo());
+            ITeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName, defaultServer.getTeiidJdbcInfo());
 
             // Note that this is a Transient profile, it is not visible in
             // the UI and goes away when it is garbage collected.

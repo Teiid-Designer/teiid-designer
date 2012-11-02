@@ -660,8 +660,8 @@ public final class TeiidServerManager implements EventManager {
                     NodeList servers = root.getChildNodes();
 
                     for (int size = servers.getLength(), i = 0; i < size; ++i) {
-                        TeiidAdminInfo teiidAdminInfo = null;
-                        TeiidJdbcInfo teiidJdbcInfo = null;
+                        ITeiidAdminInfo teiidAdminInfo = null;
+                        ITeiidJdbcInfo teiidJdbcInfo = null;
                         Node serverNode = servers.item(i);
 
                         // server attributes (host, custom label, default server)
@@ -801,7 +801,7 @@ public final class TeiidServerManager implements EventManager {
                                                               teiidAdminInfo.getUsername(),
                                                               secureStorageProvider,
                                                               null,
-                                                              TeiidJdbcInfo.DEFAULT_SECURE);
+                                                              ITeiidJdbcInfo.DEFAULT_SECURE);
                         }
 
                         // add server to registry
@@ -833,7 +833,7 @@ public final class TeiidServerManager implements EventManager {
         return Status.OK_STATUS;
     }
     
-    private IServer findParentServer(String host, TeiidAdminInfo teiidAdminInfo) throws OrphanedTeiidServerException {
+    private IServer findParentServer(String host, ITeiidAdminInfo teiidAdminInfo) throws OrphanedTeiidServerException {
         IServer[] servers = parentServersProvider.getServers();
         for (IServer server : servers) {
             if (! host.equals(server.getHost()))

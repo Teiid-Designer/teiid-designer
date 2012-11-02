@@ -35,8 +35,8 @@ import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.ITeiidServer;
-import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -203,7 +203,7 @@ public final class ServerPage extends WizardPage {
             GridDataFactory.swtDefaults().applyTo(label);
 
             jdbcUsernameText = new Text(teiidJdbcGroup, SWT.BORDER);
-            jdbcUsernameText.setText(TeiidJdbcInfo.DEFAULT_JDBC_USERNAME);
+            jdbcUsernameText.setText(ITeiidJdbcInfo.DEFAULT_JDBC_USERNAME);
             GridDataFactory.fillDefaults().applyTo(jdbcUsernameText);
             jdbcUsernameText.setToolTipText(UTIL.getString("serverPageUserToolTip")); //$NON-NLS-1$
             jdbcUsernameText.addFocusListener(new FocusAdapter() {
@@ -220,7 +220,7 @@ public final class ServerPage extends WizardPage {
             GridDataFactory.swtDefaults().applyTo(label);
 
             jdbcPasswordText = new Text(teiidJdbcGroup, SWT.BORDER);
-            jdbcPasswordText.setText(TeiidJdbcInfo.DEFAULT_JDBC_PASSWORD);
+            jdbcPasswordText.setText(ITeiidJdbcInfo.DEFAULT_JDBC_PASSWORD);
             GridDataFactory.fillDefaults().grab(true, false).applyTo(jdbcPasswordText);
             jdbcPasswordText.setToolTipText(UTIL.getString("serverPagePasswordToolTip")); //$NON-NLS-1$
             jdbcPasswordText.setEchoChar('*');
@@ -311,12 +311,12 @@ public final class ServerPage extends WizardPage {
                     
                     jbossServerNameText.setText(server.getName());
 
-                    TeiidJdbcInfo teiidJdbcInfo = teiidServer.getTeiidJdbcInfo();
+                    ITeiidJdbcInfo teiidJdbcInfo = teiidServer.getTeiidJdbcInfo();
                     
-                    if (TeiidJdbcInfo.DEFAULT_JDBC_USERNAME.equals(jdbcUsernameText.getText()))
+                    if (ITeiidJdbcInfo.DEFAULT_JDBC_USERNAME.equals(jdbcUsernameText.getText()))
                         jdbcUsernameText.setText(teiidJdbcInfo.getUsername());
                     
-                    if (TeiidJdbcInfo.DEFAULT_JDBC_PASSWORD.equals(jdbcPasswordText.getText()))
+                    if (ITeiidJdbcInfo.DEFAULT_JDBC_PASSWORD.equals(jdbcPasswordText.getText()))
                         jdbcPasswordText.setText(teiidJdbcInfo.getPassword());
                    
                     jdbcURLText.setText(teiidJdbcInfo.getUrl());
@@ -339,7 +339,7 @@ public final class ServerPage extends WizardPage {
         if (teiidServer != null) {
             teiidServer.setCustomLabel(displayNameText.getText());
         
-            TeiidJdbcInfo teiidJdbcInfo = teiidServer.getTeiidJdbcInfo();        
+            ITeiidJdbcInfo teiidJdbcInfo = teiidServer.getTeiidJdbcInfo();        
             teiidJdbcInfo.setUsername(jdbcUsernameText.getText());
             teiidJdbcInfo.setPassword(jdbcPasswordText.getText());
             

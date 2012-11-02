@@ -12,8 +12,8 @@ import static org.teiid.designer.runtime.DqpPlugin.Util;
 import java.net.MalformedURLException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.HashCodeUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
 import org.teiid.designer.core.util.StringUtilities;
@@ -23,18 +23,8 @@ import org.teiid.designer.core.util.StringUtilities;
  *
  * @since 8.0
  */
-public abstract class TeiidConnectionInfo {
+public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
 
-    /**
-     * Protocol address prefix for secure server connections
-     */
-    public static final String MMS = "mms://"; //$NON-NLS-1$
-    
-    /**
-     * Protocol address prefix for server connections
-     */
-    public static final String MM = "mm://"; //$NON-NLS-1$
-    
     protected static final int DEFAULT_PORT_NUMBER = 0;
 
     private HostProvider hostProvider;
@@ -169,10 +159,8 @@ public abstract class TeiidConnectionInfo {
         return true;
     }
 
-    /**
-     * @return the host provider (never <code>null</code>)
-     */
-    protected HostProvider getHostProvider() {
+    @Override
+    public HostProvider getHostProvider() {
         if (this.hostProvider == null) {
             return HostProvider.DEFAULT_HOST_PROVIDER;
         }
@@ -180,16 +168,15 @@ public abstract class TeiidConnectionInfo {
         return this.hostProvider;
     }
     
-    /**
-     * @return the secureStorageProvider
-     */
-    protected ISecureStorageProvider getSecureStorageProvider() {
+    @Override
+    public ISecureStorageProvider getSecureStorageProvider() {
         return this.secureStorageProvider;
     }
 
     /**
      * @return the password (can be <code>null</code> or empty)
      */
+    @Override
     public String getPassword() {
         if (password != null)
             return password;
@@ -207,6 +194,7 @@ public abstract class TeiidConnectionInfo {
     /**
      * @return the port (can be <code>null</code> or empty)
      */
+    @Override
     public String getPort() {
         return this.port;
     }
@@ -215,6 +203,7 @@ public abstract class TeiidConnectionInfo {
      * @return the port number
      */
     
+    @Override
     public int getPortNumber() {
     	return portNumber;
     }
@@ -222,11 +211,13 @@ public abstract class TeiidConnectionInfo {
     /**
      * @return the connection type (never <code>null</code>)
      */
+    @Override
     public abstract String getType();
 
     /**
      * @return the URL (never <code>null</code>)
      */
+    @Override
     public String getUrl() {
         // mm<s>://host:port
         StringBuilder sb = new StringBuilder();
@@ -241,6 +232,7 @@ public abstract class TeiidConnectionInfo {
     /**
      * @return the user name (can be <code>null</code> or empty)
      */
+    @Override
     public String getUsername() {
         return this.username;
     }
@@ -263,6 +255,7 @@ public abstract class TeiidConnectionInfo {
     /**
      * @return <code>true</code> if a secure connection protocol is being used
      */
+    @Override
     public boolean isSecure() {
         return this.secure;
     }
@@ -272,7 +265,8 @@ public abstract class TeiidConnectionInfo {
      * 
      * @param info the connection properties whose values are being used to update state
      */
-    public void setAll( TeiidConnectionInfo info ) {
+    @Override
+    public void setAll( ITeiidConnectionInfo info ) {
         setHostProvider(info.getHostProvider());
         setPort(info.getPort());
         setPassword(info.getPassword());
@@ -284,6 +278,7 @@ public abstract class TeiidConnectionInfo {
      * @param hostProvider the new value for host provider (never <code>null</code>)
      * @throws IllegalArgumentException if hostProvider is <code>null</code>
      */
+    @Override
     public void setHostProvider( HostProvider hostProvider ) {
         CoreArgCheck.isNotNull(hostProvider, "hostProvider"); //$NON-NLS-1$
         this.hostProvider = hostProvider;
@@ -292,6 +287,7 @@ public abstract class TeiidConnectionInfo {
     /**
      * @param password the new value for password (can be empty or <code>null</code>)
      */
+    @Override
     public void setPassword( String password ) {
         if (password != null) {
             // Only store non-null values
@@ -309,6 +305,7 @@ public abstract class TeiidConnectionInfo {
      * @param port the new value for port (never empty or <code>null</code>)
      * @see #validate()
      */
+    @Override
     public void setPort( String port ) {
         this.port = port;
         try {
@@ -321,6 +318,7 @@ public abstract class TeiidConnectionInfo {
     /**
      * @param secure the new value for if a secure connection protocol should be used
      */
+    @Override
     public void setSecure( boolean secure ) {
         this.secure = secure;
     }
@@ -329,6 +327,7 @@ public abstract class TeiidConnectionInfo {
      * @param username the new value for user name
      * @see #validate()
      */
+    @Override
     public void setUsername( String username ) {
         this.username = username;
     }
@@ -352,6 +351,7 @@ public abstract class TeiidConnectionInfo {
     /**
      * @return a status indicating if the connection info is in a validate state (never <code>null</code>)
      */
+    @Override
     public IStatus validate() {
         IStatus status = validateUrl();
 

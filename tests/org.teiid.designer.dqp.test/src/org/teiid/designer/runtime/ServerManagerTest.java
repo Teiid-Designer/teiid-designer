@@ -289,8 +289,8 @@ public class ServerManagerTest {
         ISecureStorageProvider secureStorageProvider = new DefaultStorageProvider();
 
         // construct a server just to get its URL
-        TeiidAdminInfo adminInfo = new TeiidAdminInfo(adminPort, adminUser, secureStorageProvider, adminPassword, adminSecure);
-        TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, secureStorageProvider, jdbcPassword, jdbcSecure);
+        ITeiidAdminInfo adminInfo = new TeiidAdminInfo(adminPort, adminUser, secureStorageProvider, adminPassword, adminSecure);
+        ITeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, secureStorageProvider, jdbcPassword, jdbcSecure);
         TeiidServer testServer = new TeiidServer(null, adminInfo, jdbcInfo, eventMgr, parentServer);
         adminInfo.setHostProvider(testServer);
         jdbcInfo.setHostProvider(testServer);

@@ -27,16 +27,16 @@ public class ServerTest {
     private static final ISecureStorageProvider SECURE_STORAGE_PROVIDER = new DefaultStorageProvider();
     private static final boolean SECURE = true;
 
-    private TeiidAdminInfo adminInfo;
-    private TeiidJdbcInfo jdbcInfo;
+    private ITeiidAdminInfo adminInfo;
+    private ITeiidJdbcInfo jdbcInfo;
     private EventManager eventMgr;
     private ITeiidServer teiidServer;
     private IServer parentServer;
 
     @Before
     public void beforeEach() {
-        this.adminInfo = mock(TeiidAdminInfo.class);
-        this.jdbcInfo = mock(TeiidJdbcInfo.class);
+        this.adminInfo = mock(ITeiidAdminInfo.class);
+        this.jdbcInfo = mock(ITeiidJdbcInfo.class);
         this.eventMgr = mock(EventManager.class);
         this.parentServer = mock(IServer.class);
         

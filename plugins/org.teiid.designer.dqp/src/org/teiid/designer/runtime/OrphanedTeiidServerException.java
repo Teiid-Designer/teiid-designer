@@ -31,7 +31,7 @@ public class OrphanedTeiidServerException extends Exception {
      * 
      * @param teiidAdminInfo 
      */
-    public OrphanedTeiidServerException(TeiidAdminInfo teiidAdminInfo) {
+    public OrphanedTeiidServerException(ITeiidAdminInfo teiidAdminInfo) {
         this.teiidServerUrl = teiidAdminInfo.getUrl();
     }
     

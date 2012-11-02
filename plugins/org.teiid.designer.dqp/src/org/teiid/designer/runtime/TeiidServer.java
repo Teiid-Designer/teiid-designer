@@ -66,12 +66,12 @@ public class TeiidServer implements ITeiidServer {
     /**
      * The Teiid JDBC connection info object
      */
-    private TeiidJdbcInfo teiidJdbcInfo;
+    private ITeiidJdbcInfo teiidJdbcInfo;
 
     /**
      * The Teiid Admin connection info object
      */
-    private TeiidAdminInfo teiidAdminInfo;
+    private ITeiidAdminInfo teiidAdminInfo;
 
     private String connectionError;
 
@@ -114,8 +114,8 @@ public class TeiidServer implements ITeiidServer {
      * @throws IllegalArgumentException if any of the parameters are <code>null</code>
      */
     public TeiidServer( String host,
-                   TeiidAdminInfo adminInfo,
-                   TeiidJdbcInfo jdbcInfo,
+                   ITeiidAdminInfo adminInfo,
+                   ITeiidJdbcInfo jdbcInfo,
                    EventManager eventManager,
                    IServer parentServer) {
         CoreArgCheck.isNotNull(adminInfo, "adminInfo"); //$NON-NLS-1$
@@ -216,12 +216,12 @@ public class TeiidServer implements ITeiidServer {
     }
 
     @Override
-    public TeiidAdminInfo getTeiidAdminInfo() {
+    public ITeiidAdminInfo getTeiidAdminInfo() {
         return teiidAdminInfo;
     }
 
     @Override
-    public TeiidJdbcInfo getTeiidJdbcInfo() {
+    public ITeiidJdbcInfo getTeiidJdbcInfo() {
         return teiidJdbcInfo;
     }
     

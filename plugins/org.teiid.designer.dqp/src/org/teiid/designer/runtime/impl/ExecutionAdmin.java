@@ -40,13 +40,13 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.runtime.EventManager;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionAdmin;
+import org.teiid.designer.runtime.ITeiidAdminInfo;
 import org.teiid.designer.runtime.ITeiidDataSource;
+import org.teiid.designer.runtime.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.ITeiidVdb;
-import org.teiid.designer.runtime.TeiidAdminInfo;
 import org.teiid.designer.runtime.TeiidDataSource;
-import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServerUtils;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
@@ -103,7 +103,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     public ExecutionAdmin(ITeiidServer teiidServer) throws Exception {
         CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
         
-        TeiidAdminInfo teiidAdminInfo = teiidServer.getTeiidAdminInfo();
+        ITeiidAdminInfo teiidAdminInfo = teiidServer.getTeiidAdminInfo();
         char[] passwordArray = null;
         if (teiidAdminInfo.getPassword() != null) {
             passwordArray = teiidAdminInfo.getPassword().toCharArray();
@@ -639,7 +639,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     
     private IStatus pingJdbc() {
         String host = teiidServer.getHost();
-        TeiidJdbcInfo teiidJdbcInfo = teiidServer.getTeiidJdbcInfo();
+        ITeiidJdbcInfo teiidJdbcInfo = teiidServer.getTeiidJdbcInfo();
         
         Connection teiidJdbcConnection = null;
         String url = "jdbc:teiid:ping@mm://" + host + ':' + teiidJdbcInfo.getPort(); //$NON-NLS-1$

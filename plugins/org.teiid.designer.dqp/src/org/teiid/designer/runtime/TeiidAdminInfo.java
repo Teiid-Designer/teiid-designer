@@ -10,22 +10,7 @@ import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
  *
  * @since 8.0
  */
-public class TeiidAdminInfo extends TeiidConnectionInfo {
-
-    /**
-     * The default Teiid Admin persist password flag. Value is {@value} .
-     */
-    public static final boolean DEFAULT_PERSIST_PASSWORD = true;
-
-    /**
-     * The default Teiid Admin port number. Value is {@value} .
-     */
-    public static final String DEFAULT_PORT = "9999"; //$NON-NLS-1$
-
-    /**
-     * The default Teiid Admin secure protocol flag. Value is {@value} .
-     */
-    public static final boolean DEFAULT_SECURE = true;
+public class TeiidAdminInfo extends TeiidConnectionInfo implements ITeiidAdminInfo {
 
     /** 
      * @param port the connection port (can be <code>null</code> or empty)
@@ -55,7 +40,7 @@ public class TeiidAdminInfo extends TeiidConnectionInfo {
      */
     @SuppressWarnings( "javadoc" )
     @Override
-    public TeiidAdminInfo clone() {
+    public ITeiidAdminInfo clone() {
         TeiidAdminInfo cloned = new TeiidAdminInfo(getPort(), getUsername(), getSecureStorageProvider(), getPassword(), isSecure());
         cloned.setHostProvider(getHostProvider());
         return cloned;

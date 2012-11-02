@@ -22,6 +22,7 @@ import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.datatools.ui.dialogs.TeiidCPWizardDialog;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -139,7 +140,7 @@ public class ExecuteVdbWorker implements VdbConstants {
 			throws Exception {
 
 		String driverPath = teiidServer.getAdminDriverPath();
-		TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName,teiidServer.getTeiidJdbcInfo());
+		ITeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName, teiidServer.getTeiidJdbcInfo());
 
 		String connectionURL = jdbcInfo.getUrl();
 

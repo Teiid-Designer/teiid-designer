@@ -18,7 +18,7 @@ import org.jboss.ide.eclipse.as.management.core.JBoss7ManagerUtil;
 import org.jboss.ide.eclipse.as.management.core.ModelDescriptionConstants;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidJdbcInfo;
+import org.teiid.designer.runtime.ITeiidJdbcInfo;
 
 /**
  * @since 8.0
@@ -162,7 +162,7 @@ public abstract class TeiidServerAdapterUtil extends ModelDescriptionConstants {
      */
     public static String getJdbcPort(IServer server) {
         if (server.getServerState() != IServer.STATE_STARTED)
-            return TeiidJdbcInfo.DEFAULT_PORT;
+            return ITeiidJdbcInfo.DEFAULT_PORT;
         
         ModelNode request = new ModelNode();
         request.get(OP).set(READ_ATTRIBUTE_OPERATION);   
@@ -177,8 +177,8 @@ public abstract class TeiidServerAdapterUtil extends ModelDescriptionConstants {
             ModelNode result = executeRequest(server, request);
             return result.asString();
         } catch (Exception ex) {
-            DqpPlugin.Util.log(IStatus.ERROR, ex, "Failed to get teiid jdbc port, defaulting to " + TeiidJdbcInfo.DEFAULT_PORT); //$NON-NLS-1$
-            return TeiidJdbcInfo.DEFAULT_PORT;
+            DqpPlugin.Util.log(IStatus.ERROR, ex, "Failed to get teiid jdbc port, defaulting to " + ITeiidJdbcInfo.DEFAULT_PORT); //$NON-NLS-1$
+            return ITeiidJdbcInfo.DEFAULT_PORT;
         }
     }    
 }

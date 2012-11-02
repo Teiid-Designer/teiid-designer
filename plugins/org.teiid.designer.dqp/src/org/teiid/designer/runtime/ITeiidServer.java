@@ -26,12 +26,12 @@ public interface ITeiidServer extends IExecutionAdmin, HostProvider {
     /**
      * @return TeiidAdminInfo
      */
-    TeiidAdminInfo getTeiidAdminInfo();
+    ITeiidAdminInfo getTeiidAdminInfo();
 
     /**
      * @return TeiidJdbcInfo
      */
-    TeiidJdbcInfo getTeiidJdbcInfo();
+    ITeiidJdbcInfo getTeiidJdbcInfo();
     
     /**
      * An appropriate name for this teiid server

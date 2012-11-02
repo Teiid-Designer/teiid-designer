@@ -36,8 +36,8 @@ import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
+import org.teiid.designer.runtime.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.ITeiidServer;
-import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
@@ -326,7 +326,7 @@ public class TeiidServerEditor extends EditorPart {
         // Overwrite the properties of the teiid server
         teiidServer.setCustomLabel(customNameText.getText());
         
-        TeiidJdbcInfo jdbcInfo = teiidServer.getTeiidJdbcInfo();
+        ITeiidJdbcInfo jdbcInfo = teiidServer.getTeiidJdbcInfo();
         jdbcInfo.setUsername(jdbcUserNameText.getText());
         jdbcInfo.setPassword(jdbcPasswdText.getText());
         
