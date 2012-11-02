@@ -30,7 +30,6 @@ import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.runtime.EventManager;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidTranslator;
-import org.teiid.designer.runtime.impl.ExecutionAdmin;
 import org.teiid.designer.vdb.Vdb;
 
 /**

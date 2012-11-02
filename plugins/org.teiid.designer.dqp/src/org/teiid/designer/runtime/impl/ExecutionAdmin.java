@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -46,13 +47,13 @@ import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.EventManager;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionAdmin;
+import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidAdminInfo;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerUtils;
 import org.teiid.designer.runtime.TeiidTranslator;
-import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
@@ -75,7 +76,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     protected Set<String> dataSourceTypeNames;
     private final EventManager eventManager;
     private final TeiidServer teiidServer;
-    private Set<TeiidVdb> teiidVdbs;
+    private Map<String, ITeiidVdb> teiidVdbs;
     private final ModelConnectionMatcher connectionMatcher;
 
     private boolean loaded = false;
@@ -127,9 +128,6 @@ public class ExecutionAdmin implements IExecutionAdmin {
         init();
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.designer.runtime.IExecutionAdmin#dataSourceExists(java.lang.String)
-     */
     @Override
     public boolean dataSourceExists( String name ) {
         // Check if exists, return false
@@ -140,9 +138,6 @@ public class ExecutionAdmin implements IExecutionAdmin {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.designer.runtime.IExecutionAdmin#deleteDataSource(java.lang.String)
-     */
     @Override
     public void deleteDataSource( String jndiName ) throws Exception {
         // Check if exists, return false
@@ -160,16 +155,10 @@ public class ExecutionAdmin implements IExecutionAdmin {
                 }
             }
         }
-        //    	
-        // // TODO: I18n
-        // throw new Exception(Util.getString("errorDeletingDataSource", jndiName, getServer().getUrl()));
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.designer.runtime.IExecutionAdmin#deployVdb(org.eclipse.core.resources.IFile)
-     */
     @Override
-    public VDB deployVdb( IFile vdbFile ) throws Exception {
+    public void deployVdb( IFile vdbFile ) throws Exception {
         CoreArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
 
         String vdbName = vdbFile.getFullPath().lastSegment();
@@ -201,18 +190,13 @@ public class ExecutionAdmin implements IExecutionAdmin {
             }
         }
 
-        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createDeployVDBEvent(vdb));
-        
-        return vdb;
+        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createDeployVDBEvent(vdb.getName()));
     }
     
-    /* (non-Javadoc)
-     * @see org.teiid.designer.runtime.IExecutionAdmin#deployVdb(org.teiid.designer.vdb.Vdb)
-     */
     @Override
-    public VDB deployVdb( Vdb vdb ) throws Exception {
+    public void deployVdb( Vdb vdb ) throws Exception {
         CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
-        return deployVdb(vdb.getFile());
+        deployVdb(vdb.getFile());
     }
 
     /**
@@ -225,31 +209,20 @@ public class ExecutionAdmin implements IExecutionAdmin {
         this.dataSourceNames = new ArrayList<String>();
         this.dataSourceByNameMap = new HashMap<String, TeiidDataSource>();
         this.dataSourceTypeNames = new HashSet<String>();
-        this.teiidVdbs = Collections.emptySet();
+        this.teiidVdbs = new HashMap<String, ITeiidVdb>();
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.designer.runtime.IExecutionAdmin#getDataSource(java.lang.String)
-     */
     @Override
     public TeiidDataSource getDataSource(String name) {
         return this.dataSourceByNameMap.get(name);
     }
     
-    /* (non-Javadoc)
-     * @see org.teiid.designer.runtime.IExecutionAdmin#getDataSources()
-     */
     @Override
-    @SuppressWarnings("javadoc")
 	public Collection<TeiidDataSource> getDataSources() {
         return this.dataSourceByNameMap.values();
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.designer.runtime.IExecutionAdmin#getDataSourceTypeNames()
-     */
     @Override
-    @SuppressWarnings("javadoc")
 	public Set<String> getDataSourceTypeNames() {
         return this.dataSourceTypeNames;
     }
@@ -261,9 +234,6 @@ public class ExecutionAdmin implements IExecutionAdmin {
         return this.eventManager;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.designer.runtime.IExecutionAdmin#getOrCreateDataSource(org.eclipse.core.resources.IFile, java.lang.String, boolean, org.teiid.designer.runtime.connection.IPasswordProvider)
-     */
     @Override
     public TeiidDataSource getOrCreateDataSource( IFile model,
                                                   String jndiName,
@@ -336,9 +306,6 @@ public class ExecutionAdmin implements IExecutionAdmin {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.designer.runtime.IExecutionAdmin#getOrCreateDataSource(java.lang.String, java.lang.String, java.lang.String, java.util.Properties)
-     */
     @Override
     public TeiidDataSource getOrCreateDataSource( String displayName,
                                                   String jndiName,
@@ -473,43 +440,72 @@ public class ExecutionAdmin implements IExecutionAdmin {
         return this.teiidServer;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.designer.runtime.IExecutionAdmin#getTranslator(java.lang.String)
-     */
     @Override
     public TeiidTranslator getTranslator( String name ) {
         CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
         return this.translatorByNameMap.get(name);
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.designer.runtime.IExecutionAdmin#getTranslators()
-     */
     @Override
     public Collection<TeiidTranslator> getTranslators() {
         return this.translatorByNameMap.values();
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.designer.runtime.IExecutionAdmin#getVdb(java.lang.String)
-     */
     @Override
-    public VDB getVdb( String name ) {
+    public ITeiidVdb getVdb( String name ) {
         CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
 
-        for (TeiidVdb vdb : this.teiidVdbs) {
-            if (vdb.getName().equals(name)) return vdb.getVdb();
-        }
-
-        return null;
+        return teiidVdbs.get(name);
+    }
+    
+    @Override
+    public boolean hasVdb(String name) throws Exception {
+        return getVdb(name) != null;
+    }
+    
+    @Override
+    public boolean isVdbActive(String vdbName) throws Exception {
+        if (! hasVdb(vdbName))
+            return false;
+        
+        return getVdb(vdbName).isActive();
+    }
+    
+    @Override
+    public boolean isVdbLoading(String vdbName) throws Exception {
+        if (! hasVdb(vdbName))
+            return false;
+        
+        return getVdb(vdbName).isLoading();
+    }
+    
+    @Override
+    public boolean hasVdbFailed(String vdbName) throws Exception {
+        if (! hasVdb(vdbName))
+            return false;
+        
+        return getVdb(vdbName).hasFailed();
+    }
+    
+    @Override
+    public boolean wasVdbRemoved(String vdbName) throws Exception {
+        if (! hasVdb(vdbName))
+            return false;
+        
+        return getVdb(vdbName).wasRemoved();
+    }
+    
+    @Override
+    public List<String> retrieveVdbValidityErrors(String vdbName) throws Exception {
+        if (! hasVdb(vdbName))
+            return Collections.emptyList();
+        
+        return getVdb(vdbName).getValidityErrors();
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.designer.runtime.IExecutionAdmin#getVdbs()
-     */
     @Override
-    public Set<TeiidVdb> getVdbs() {
-        return this.teiidVdbs;
+    public Collection<ITeiidVdb> getVdbs() {
+        return Collections.unmodifiableCollection(teiidVdbs.values());
     }
     
     private void init() throws Exception {
@@ -531,9 +527,6 @@ public class ExecutionAdmin implements IExecutionAdmin {
             if (oldValue == null) {
                 if (value == null) return;
             } else if (oldValue.equals(value)) return;
-
-            // set value
-            // this.admin.setTranslatorProperty(translator.getName(), propName, value);
 
             if (notify) {
                 // TODO: Will we ever update Translator properties in TEIID Server?
@@ -603,13 +596,12 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
     protected void refreshVDBs() throws Exception {
         Collection<? extends VDB> vdbs = Collections.unmodifiableCollection(this.admin.getVDBs());
-        Set<TeiidVdb> tmpVdbs = new HashSet();
+        
+        teiidVdbs = new HashMap<String, ITeiidVdb>();
 
         for (VDB vdb : vdbs) {
-            tmpVdbs.add(new TeiidVdb(vdb, teiidServer));
+            teiidVdbs.put(vdb.getName(), new TeiidVdb(vdb, teiidServer));
         }
-
-        this.teiidVdbs = Collections.unmodifiableSet(tmpVdbs);
     }
 
     /**
@@ -652,20 +644,17 @@ public class ExecutionAdmin implements IExecutionAdmin {
         internalSetPropertyValue(translator, propName, value, true);
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.designer.runtime.IExecutionAdmin#undeployVdb(java.lang.String)
-     */
     @Override
     public void undeployVdb( String vdbName) throws Exception {
         this.admin.undeploy(appendVdbExtension(vdbName));
-        VDB vdb = getVdb(vdbName);
+        ITeiidVdb vdb = getVdb(vdbName);
 
         refreshVDBs();
 
         if (vdb == null) {
 
         } else {
-            this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUnDeployVDBEvent(vdb));
+            this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUnDeployVDBEvent(vdb.getName()));
         }
     }
     
@@ -677,30 +666,15 @@ public class ExecutionAdmin implements IExecutionAdmin {
      */
     public void undeployVdb( String vdbName, int vdbVersion ) throws Exception {
         this.admin.undeploy(appendVdbExtension(vdbName));
-        VDB vdb = getVdb(vdbName);
+        ITeiidVdb vdb = getVdb(vdbName);
 
         refreshVDBs();
 
         if (vdb == null) {
 
         } else {
-            this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUnDeployVDBEvent(vdb));
+            this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUnDeployVDBEvent(vdb.getName()));
         }
-    }
-
-    /* (non-Javadoc)
-     * @see org.teiid.designer.runtime.IExecutionAdmin#undeployVdb(org.teiid.adminapi.VDB)
-     */
-    @Override
-    public void undeployVdb( VDB vdb ) throws Exception {
-        CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
-
-        /* Seems that full name of vdb is actually the name.vdb */
-        admin.undeploy(appendVdbExtension(vdb.getName()));
-
-        refreshVDBs();
-
-        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUnDeployVDBEvent(vdb));
     }
     
     /**
@@ -717,9 +691,6 @@ public class ExecutionAdmin implements IExecutionAdmin {
         return vdbName + Vdb.FILE_EXTENSION;
     }
     
-    /* (non-Javadoc)
-     * @see org.teiid.designer.runtime.IExecutionAdmin#ping(org.teiid.designer.runtime.ExecutionAdmin.PingType)
-     */
     @Override
     public IStatus ping(PingType pingType) {
         String msg = Util.getString("cannotConnectToServer", teiidServer.getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
@@ -850,18 +821,17 @@ public class ExecutionAdmin implements IExecutionAdmin {
                     first = false;
                 }
                 // Get the VDB using admin API
-                VDB vdb = getVdb(vdbName);
+                ITeiidVdb vdb = getVdb(vdbName);
                 // Determine if VDB is loading, or whether to wait
                 if(vdb!=null) {
-                    VDB.Status vdbStatus = vdb.getStatus();
                     // return if no models in VDB, or VDB has errors (done loading)
-                    if(vdb.getModels().isEmpty() || vdbStatus.equals(VDB.Status.FAILED) || 
-                       vdbStatus.equals(VDB.Status.REMOVED) || vdbStatus.equals(VDB.Status.ACTIVE)) {
+                    if(vdb.hasModels() || vdb.hasFailed() || 
+                       vdb.wasRemoved() || vdb.isActive()) {
                         refresh();
                         return;
                     }
                     // If the VDB Status is LOADING, but a validity error was found - return
-                    if(vdbStatus.equals(VDB.Status.LOADING) && !vdb.getValidityErrors().isEmpty()) {
+                    if(vdb.isLoading() && !vdb.getValidityErrors().isEmpty()) {
                         refresh();
                         return;
                     }

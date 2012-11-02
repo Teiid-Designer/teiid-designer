@@ -52,7 +52,6 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.osgi.util.NLS;
-import org.teiid.adminapi.VDB;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
@@ -81,10 +80,10 @@ import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
+import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServer;
-import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.jobs.CompositePreviewJob;
 import org.teiid.designer.runtime.preview.jobs.CreatePreviewVdbJob;
@@ -493,7 +492,6 @@ public final class PreviewManager extends JobChangeAdapter
 
         if (helper.hasConnectionInfo(modelResource)) {
             String jndiName = this.context.getPreviewVdbJndiName(previewVdb.getFile().getFullPath());
-
             // create data source on server if we need to
             if (!getPreviewServer().dataSourceExists(jndiName)) {
                 getOrCreateDataSource(model, jndiName);
@@ -638,7 +636,7 @@ public final class PreviewManager extends JobChangeAdapter
         return ModelerCore.getWorkspace().getRoot().getFile(path);
     }
     
-    private String getFullDeployedVdbName(VDB deployedVdb) { 
+    private String getFullDeployedVdbName(ITeiidVdb deployedVdb) { 
         String fullVdbName = deployedVdb.getPropertyValue("deployment-name");;
         if (!fullVdbName.endsWith(Vdb.FILE_EXTENSION)) {
             fullVdbName = fullVdbName + Vdb.FILE_EXTENSION;
@@ -748,7 +746,7 @@ public final class PreviewManager extends JobChangeAdapter
             assert (projectOrModel instanceof IFile) : "IResource is not an IFile"; //$NON-NLS-1$
             String prefix = Vdb.getPreviewVdbPrefix(projectOrModel);
 
-            if (projectOrModel.getFileExtension().equalsIgnoreCase(TeiidVdb.VDB_EXTENSION)) {
+            if (projectOrModel.getFileExtension().equalsIgnoreCase(ITeiidVdb.VDB_EXTENSION)) {
                 String vdbName = projectOrModel.getFullPath().removeFileExtension().lastSegment();
 
                 if (vdbName.startsWith(prefix)) {
@@ -1118,10 +1116,10 @@ public final class PreviewManager extends JobChangeAdapter
             // make sure server has a copy of the Preview VDB
             if (getPreviewServer() != null) {
                 try {
-                    deploy = (getPreviewServer().getVdb(getPreviewVdbDeployedName(pvdbFile)) == null);
+                    String vdbName = getPreviewVdbDeployedName(pvdbFile);
 
                     // server does not have a copy. update status map.
-                    if (deploy) {
+                    if (getPreviewServer().hasVdb(vdbName)) {
                         setNeedsToBeDeployedStatus(pvdbFile, true);
                     }
                 } catch (Exception e) {
@@ -1361,7 +1359,7 @@ public final class PreviewManager extends JobChangeAdapter
             monitor.subTask(NLS.bind(Messages.PreviewSetupMergeTask, projectPreviewVdbName));
 
             if (projectVdbIFile != null) {
-            	VDB deployedProjectVdb = getPreviewServer().getVdb(projectPreviewVdbName);
+            	ITeiidVdb deployedProjectVdb = getPreviewServer().getVdb(projectPreviewVdbName);
             	Vdb localProjectVdb = new Vdb(projectVdbIFile, new NullProgressMonitor());
             	localProjectVdb.removeAllImportVdbs();
             	// Add imports for all preview vdbs under project
@@ -1611,7 +1609,7 @@ public final class PreviewManager extends JobChangeAdapter
 
                 Collection<Job> jobs = new ArrayList<Job>();
 
-                for (TeiidVdb vdb : getPreviewServer().getVdbs()) {
+                for (ITeiidVdb vdb : getPreviewServer().getVdbs()) {
                     if (vdb.isPreviewVdb()) {
                         Job job = new DeleteDeployedPreviewVdbJob(vdb.getName(), vdb.getVersion(),
                                                                   getPreviewVdbJndiName(vdb.getName()), this.context,

@@ -71,11 +71,11 @@ import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.TeiidTranslator;
-import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob;
@@ -379,7 +379,7 @@ public class PreviewDataWorker {
         try {
             String driverPath = defaultServer.getAdminDriverPath();
             String vdbName = PreviewManager.getPreviewProjectVdbName(project);
-            if (vdbName.endsWith(TeiidVdb.VDB_DOT_EXTENSION)) {
+            if (vdbName.endsWith(ITeiidVdb.VDB_DOT_EXTENSION)) {
                 vdbName = vdbName.substring(0, vdbName.length() - 4);
             }
    

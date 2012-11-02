@@ -363,7 +363,7 @@
                type="org.teiid.designer.runtime.TeiidTranslator">
          </adapter>
          <adapter
-               type="org.teiid.designer.runtime.TeiidVdb">
+               type="org.teiid.designer.runtime.ITeiidVdb">
          </adapter>
       </factory>
    </extension>

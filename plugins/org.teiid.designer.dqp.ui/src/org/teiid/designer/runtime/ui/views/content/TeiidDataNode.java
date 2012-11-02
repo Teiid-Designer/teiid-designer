@@ -9,12 +9,11 @@ package org.teiid.designer.runtime.ui.views.content;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.core.IServer;
-import org.teiid.adminapi.Model;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidTranslator;
-import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
@@ -93,8 +92,8 @@ public class TeiidDataNode<V> implements ITeiidContentNode<AbstractTeiidFolder> 
             return ((TeiidTranslator) value).getName();
         }
 
-        if (value instanceof TeiidVdb) {
-            return ((TeiidVdb) value).getName();
+        if (value instanceof ITeiidVdb) {
+            return ((ITeiidVdb) value).getName();
         }
 
         if (value instanceof SourceConnectionBinding) {
@@ -118,22 +117,22 @@ public class TeiidDataNode<V> implements ITeiidContentNode<AbstractTeiidFolder> 
             return ((TeiidTranslator) value).getName();
         }
 
-        if (value instanceof TeiidVdb) {
-            TeiidVdb vdb = (TeiidVdb) value;
+        if (value instanceof ITeiidVdb) {
+            ITeiidVdb vdb = (ITeiidVdb) value;
             StringBuilder builder = new StringBuilder();
             builder.append("VDB:\t\t").append(vdb.getName()).append("\nState:\t"); //$NON-NLS-1$ //$NON-NLS-2$
             if (vdb.isActive()) {
                 builder.append(ACTIVE_VDB);
             } else {
                 builder.append(INACTIVE_VDB);
-                for (String error : vdb.getVdb().getValidityErrors()) {
+                for (String error : vdb.getValidityErrors()) {
                     builder.append("\nERROR:\t").append(error); //$NON-NLS-1$
                 }
             }
 
             builder.append("\nModels:"); //$NON-NLS-1$
-            for (Model model : vdb.getVdb().getModels()) {
-                builder.append("\n\t   ").append(model.getName()); //$NON-NLS-1$
+            for (String modelName : vdb.getModelNames()) {
+                builder.append("\n\t   ").append(modelName); //$NON-NLS-1$
             }
             
             return builder.toString();
@@ -161,8 +160,8 @@ public class TeiidDataNode<V> implements ITeiidContentNode<AbstractTeiidFolder> 
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTION_SOURCE_ICON);
         }
 
-        if (value instanceof TeiidVdb) {
-            if (((TeiidVdb) value).isActive()) {
+        if (value instanceof ITeiidVdb) {
+            if (((ITeiidVdb) value).isActive()) {
                 return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.DEPLOY_VDB);
             }
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.INACTIVE_DEPLOYED_VDB);

@@ -27,6 +27,7 @@ import org.mockito.MockitoAnnotations;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.designer.runtime.connection.IConnectionProperties;
+import org.teiid.designer.runtime.impl.ExecutionAdmin;
 
 /**
  * 

@@ -8,8 +8,6 @@
 package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-
-import org.teiid.adminapi.VDB;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 
@@ -30,8 +28,8 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(EventType.ADD, TargetType.SERVER, teiidServer);
     }
 
-    public static ExecutionConfigurationEvent createDeployVDBEvent( VDB vdb ) {
-        return new ExecutionConfigurationEvent(EventType.ADD, TargetType.VDB, vdb);
+    public static ExecutionConfigurationEvent createDeployVDBEvent( String vdbName ) {
+        return new ExecutionConfigurationEvent(EventType.ADD, TargetType.VDB, vdbName);
     }
 
     public static ExecutionConfigurationEvent createRemoveDataSourceEvent( TeiidDataSource dataSource ) {
@@ -51,8 +49,8 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(EventType.DEFAULT, TargetType.SERVER, oldDefaultServer, newDefaultServer);
     }
 
-    public static ExecutionConfigurationEvent createUnDeployVDBEvent( VDB vdb ) {
-        return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.VDB, vdb);
+    public static ExecutionConfigurationEvent createUnDeployVDBEvent( String vdbName ) {
+        return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.VDB, vdbName);
     }
 
     public static ExecutionConfigurationEvent createUpdateDataSourceEvent( TeiidDataSource dataSource ) {

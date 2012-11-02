@@ -82,7 +82,7 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
 
         // delete PVDB from server
         try {
-            if (teiidServer.getVdb(this.pvdbName) != null) {
+            if (teiidServer.hasVdb(this.pvdbName)) {
                 teiidServer.undeployVdb(this.pvdbName);
             }
         } catch (Exception e) {

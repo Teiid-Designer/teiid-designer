@@ -10,13 +10,13 @@ package org.teiid.designer.runtime;
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
-import org.teiid.adminapi.VDB;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
@@ -473,15 +473,15 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
     }
 
     @Override
-    public VDB deployVdb(IFile vdbFile) throws Exception {
+    public void deployVdb(IFile vdbFile) throws Exception {
         connect();
-        return admin.deployVdb(vdbFile);
+        admin.deployVdb(vdbFile);
     }
 
     @Override
-    public VDB deployVdb(Vdb vdb) throws Exception {
+    public void deployVdb(Vdb vdb) throws Exception {
         connect();
-        return admin.deployVdb(vdb);
+        admin.deployVdb(vdb);
     }
 
     @Override
@@ -534,27 +534,57 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
     }
 
     @Override
-    public Set<TeiidVdb> getVdbs() throws Exception {
+    public Collection<ITeiidVdb> getVdbs() throws Exception {
         connect();
         return admin.getVdbs();
     }
     
     @Override
-    public VDB getVdb(String name) throws Exception {
+    public ITeiidVdb getVdb(String name) throws Exception {
         connect();
         return admin.getVdb(name);
+    }
+    
+    @Override
+    public boolean hasVdb(String name) throws Exception {
+        connect();
+        return admin.hasVdb(name);
+    }
+
+    @Override
+    public boolean isVdbActive(String vdbName) throws Exception {
+        connect();
+        return admin.isVdbActive(vdbName);
+    }
+
+    @Override
+    public boolean isVdbLoading(String vdbName) throws Exception {
+        connect();
+        return admin.isVdbLoading(vdbName);
+    }
+
+    @Override
+    public boolean hasVdbFailed(String vdbName) throws Exception {
+        connect();
+        return admin.hasVdbFailed(vdbName);
+    }
+
+    @Override
+    public boolean wasVdbRemoved(String vdbName) throws Exception {
+        connect();
+        return admin.wasVdbRemoved(vdbName);
+    }
+    
+    @Override
+    public List<String> retrieveVdbValidityErrors(String vdbName) throws Exception {
+        connect();
+        return admin.retrieveVdbValidityErrors(vdbName);
     }
 
     @Override
     public void undeployVdb(String vdbName) throws Exception {
         connect();
         admin.undeployVdb(vdbName);
-    }
-    
-    @Override
-    public void undeployVdb(VDB vdb) throws Exception {
-        connect();
-        admin.undeployVdb(vdb);
     }
 
     @Override

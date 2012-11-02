@@ -17,7 +17,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.teiid.adminapi.VDB;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
@@ -85,36 +84,32 @@ public class ExecuteVdbWorker implements VdbConstants {
 
 	void internalRun(final IFile selectedVdb) {
 		TeiidServer teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
-		VDB deployedVDB = null;
 
 		try {
 			if (teiidServer != null) {
 				IStatus connectStatus = teiidServer.ping();
 				if (connectStatus.isOK()) {
-					
-                    deployedVDB = teiidServer.getVdb(selectedVdb.getFullPath().removeFileExtension().lastSegment());
-                    if (deployedVDB == null) {
-                        deployedVDB = DeployVdbAction.deployVdb(teiidServer, selectedVdb);
+				    String vdbName = selectedVdb.getFullPath().removeFileExtension().lastSegment();
+                    if (! teiidServer.hasVdb(vdbName)) {
+                        DeployVdbAction.deployVdb(teiidServer, selectedVdb);
                     }
 
-                    if (deployedVDB != null && deployedVDB.getStatus().equals(VDB.Status.ACTIVE)) {
-                        executeVdb(DqpPlugin.getInstance().getServerManager().getDefaultServer(),
-                                   selectedVdb.getFullPath().removeFileExtension().lastSegment());
-                    } else if (deployedVDB != null && deployedVDB.getStatus().equals(VDB.Status.LOADING)) {
+                    if (teiidServer.isVdbActive(vdbName)) {
+                        executeVdb(DqpPlugin.getInstance().getServerManager().getDefaultServer(), vdbName);
+                    } else if (teiidServer.isVdbLoading(vdbName)) {
                         StringBuilder message = new StringBuilder(getString("vdbLoadingMessage", selectedVdb.getName())); //$NON-NLS-1$
                         MessageDialog.openWarning(getShell(), getString("vdbLoadingTitle"), //$NON-NLS-1$
                                                   message.toString());
                     } else {
                         StringBuilder message = new StringBuilder(getString("vdbNotActiveMessage", selectedVdb.getName())); //$NON-NLS-1$
-                        if (null != deployedVDB) {
-                            for (String error : deployedVDB.getValidityErrors()) {
+                        if (teiidServer.hasVdb(vdbName)) {
+                            for (String error : teiidServer.retrieveVdbValidityErrors(vdbName)) {
                                 message.append("\nERROR:\t").append(error); //$NON-NLS-1$
                             }
                         }
                         MessageDialog.openWarning(getShell(), getString("vdbNotActiveTitle"), //$NON-NLS-1$
                                                   message.toString());
                     }
-					
 				} else {
 					MessageDialog
 							.openWarning(

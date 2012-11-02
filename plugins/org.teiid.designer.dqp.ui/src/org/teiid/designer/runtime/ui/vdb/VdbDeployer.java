@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.adminapi.VDB;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
@@ -94,7 +93,6 @@ public class VdbDeployer {
     private final Shell shell;
     private DeployStatus status; // non-null after deploying
     private final Vdb vdb; // the workspace VDB
-    private VDB deployedVdb; // the VDB deployed on Teiid
 
     /**
      * @param shell the shell to use for any UI (may not be <code>null</code>)
@@ -115,13 +113,6 @@ public class VdbDeployer {
         this.shell = shell;
         this.vdb = vdbBeingDeployed;
         this.autoCreateDsOnServer = shouldAutoCreateDataSourceOnServer;
-    }
-
-    /**
-     * @return the Teiid VDB or <code>null</code> if the workspace VDB has not been deployed
-     */
-    public VDB getDeployedVdb() {
-        return this.deployedVdb;
     }
 
     /**
@@ -194,7 +185,8 @@ public class VdbDeployer {
                     }
 
                     // DS not found on server
-                    if (!this.teiidServer.dataSourceExists(jndiName)) {
+                    if (!teiidServer.dataSourceExists(jndiName)) {
+
                         // auto-create if user did not change the default DS name
                         String defaultName = VdbModelEntry.createDefaultJndiName(modelEntry.getName());
 
@@ -242,7 +234,7 @@ public class VdbDeployer {
                         if ((autoCreate || createOnServer) && (model != null)) {
                             monitor.subTask(UTIL.getString(PREFIX + "createModelDataSourceTask", modelName)); //$NON-NLS-1$
 
-                            if (this.teiidServer.getOrCreateDataSource(model,
+                            if (teiidServer.getOrCreateDataSource(model,
                                                                  jndiName,
                                                                  false,
                                                                  DqpPlugin.getInstance().getPasswordProvider()) == null) {
@@ -281,8 +273,8 @@ public class VdbDeployer {
 
             if (this.status == null) {
                 monitor.subTask(UTIL.getString(PREFIX + "deployVdbTask", getVdbName())); //$NON-NLS-1$
-                this.deployedVdb = this.teiidServer.deployVdb(this.vdb);
-                this.status = ((this.deployedVdb == null) ? DeployStatus.DEPLOY_VDB_FAILED : DeployStatus.DEPLOYED_VDB);
+                teiidServer.deployVdb(this.vdb);
+                this.status = ((! teiidServer.hasVdb(getVdbName())) ? DeployStatus.DEPLOY_VDB_FAILED : DeployStatus.DEPLOYED_VDB);
             }
         } catch (Exception e) {
             this.status = DeployStatus.EXCEPTION;

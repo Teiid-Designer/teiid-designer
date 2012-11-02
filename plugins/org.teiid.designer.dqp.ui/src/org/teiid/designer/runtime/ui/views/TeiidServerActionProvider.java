@@ -33,11 +33,11 @@ import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
-import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
@@ -292,12 +292,12 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             public void run() {
                 List<Object> selectedObjs = getSelectedObjects();
                 for (Object obj : selectedObjs) {
-                    TeiidVdb vdb = RuntimeAssistant.adapt(obj, TeiidVdb.class);
+                    ITeiidVdb vdb = RuntimeAssistant.adapt(obj, ITeiidVdb.class);
                     TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
                     
                     if (teiidServer != null && teiidServer.isConnected()) {
                         try {
-                            teiidServer.undeployVdb(vdb.getVdb());
+                            teiidServer.undeployVdb(vdb.getName());
                         } catch (Exception e) {
                             DqpUiConstants.UTIL.log(IStatus.WARNING,
                                                     e,
@@ -318,13 +318,13 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             public void run() {
                 List<Object> selectedObjs = getSelectedObjects();
                 for (Object obj : selectedObjs) {
-                    TeiidVdb vdb = RuntimeAssistant.adapt(obj, TeiidVdb.class);
+                    ITeiidVdb vdb = RuntimeAssistant.adapt(obj, ITeiidVdb.class);
                     TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
                     
                     if (teiidServer != null && teiidServer.isConnected()) {
                         try {
                             // admin.undeployVdb(vdb.getVdb());
-                            ExecuteVDBAction.executeVdb(teiidServer, vdb.getVdb().getName());
+                            ExecuteVDBAction.executeVdb(teiidServer, vdb.getName());
                         } catch (Exception e) {
                             DqpUiConstants.UTIL.log(IStatus.WARNING,
                                                     e,
@@ -366,7 +366,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 if (teiidServer != null && teiidServer.isConnected()) {
                     CreateDataSourceAction action = new CreateDataSourceAction();
                     action.setTeiidServer(teiidServer);
-                    
                     action.setSelection(new StructuredSelection());
                     action.setEnabled(true);
                     action.run();
@@ -518,8 +517,8 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 manager.add(this.deleteDataSourceAction);                
                 manager.add(new Separator());
                 
-            } else if (RuntimeAssistant.adapt(selection, TeiidVdb.class) != null) {
-                TeiidVdb teiidVdb = RuntimeAssistant.adapt(selection, TeiidVdb.class);
+            } else if (RuntimeAssistant.adapt(selection, ITeiidVdb.class) != null) {
+                ITeiidVdb teiidVdb = RuntimeAssistant.adapt(selection, ITeiidVdb.class);
                 this.executeVdbAction.setEnabled(teiidVdb.isActive());
                 manager.add(this.executeVdbAction);
                 manager.add(new Separator());
@@ -545,7 +544,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
 
             boolean allVdbs = true;
             for (Object obj : selectedObjs) {
-                if (RuntimeAssistant.adapt(obj, TeiidVdb.class) == null) {
+                if (RuntimeAssistant.adapt(obj, ITeiidVdb.class) == null) {
                     allVdbs = false;
                     break;
                 }

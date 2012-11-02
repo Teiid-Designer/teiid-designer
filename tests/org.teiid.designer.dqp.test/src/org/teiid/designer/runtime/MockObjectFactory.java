@@ -22,6 +22,7 @@ import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.spi.RegistrySPI;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.runtime.connection.IConnectionProperties;
+import org.teiid.designer.runtime.impl.ExecutionAdmin;
 
 /**
  *

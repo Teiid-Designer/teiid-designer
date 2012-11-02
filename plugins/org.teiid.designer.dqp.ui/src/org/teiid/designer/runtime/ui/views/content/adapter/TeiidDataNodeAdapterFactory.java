@@ -8,9 +8,9 @@
 package org.teiid.designer.runtime.ui.views.content.adapter;
 
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
-import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode;
 import org.teiid.designer.runtime.ui.views.content.TeiidDataNode;
 
@@ -31,7 +31,7 @@ public class TeiidDataNodeAdapterFactory implements IAdapterFactory {
         
         if (TeiidDataSource.class == adapterType ||
             TeiidTranslator.class == adapterType ||
-            TeiidVdb.class == adapterType) {
+            ITeiidVdb.class == adapterType) {
         
             Object value = teiidDataNode.getValue();
         
@@ -59,7 +59,7 @@ public class TeiidDataNodeAdapterFactory implements IAdapterFactory {
         return new Class[] { ITeiidResourceNode.class, 
                                            TeiidDataSource.class,
                                            TeiidTranslator.class,
-                                           TeiidVdb.class };
+                                           ITeiidVdb.class };
     }
 
 }

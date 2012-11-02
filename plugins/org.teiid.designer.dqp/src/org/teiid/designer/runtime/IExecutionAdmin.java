@@ -8,11 +8,11 @@
 package org.teiid.designer.runtime;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
-import org.teiid.adminapi.VDB;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.vdb.Vdb;
 
@@ -21,8 +21,19 @@ import org.teiid.designer.vdb.Vdb;
  */
 public interface IExecutionAdmin {
 
+    /**
+     * Type of ping to be performed
+     */
     enum PingType {
-        ADMIN, JDBC;
+        /**
+         * Ping the admin port of the server
+         */
+        ADMIN, 
+        
+        /**
+         * Ping the JDBC port of the server
+         */
+        JDBC;
     }
     
     /**
@@ -59,7 +70,7 @@ public interface IExecutionAdmin {
      * 
      * @throws Exception if deployment fails
      */
-     VDB deployVdb(IFile vdbFile) throws Exception;
+     void deployVdb(IFile vdbFile) throws Exception;
 
     /**
      * Deploys the input Vdb archive file to the related Teiid server
@@ -68,7 +79,7 @@ public interface IExecutionAdmin {
      * 
      * @throws Exception if deployment fails
      */
-     VDB deployVdb(Vdb vdb) throws Exception;
+     void deployVdb(Vdb vdb) throws Exception;
 
     /**
      * Returns a teiid data source object if it exists in this server
@@ -138,17 +149,64 @@ public interface IExecutionAdmin {
      Collection<TeiidTranslator> getTranslators() throws Exception;
 
     /**
-     * @return an unmodifiable set of VDBs deployed on the server
+     * @return an unmodifiable collection of VDBs deployed on the server
      * @throws Exception 
      */
-     Set<TeiidVdb> getVdbs() throws Exception;
+     Collection<ITeiidVdb> getVdbs() throws Exception;
 
      /**
       * @param name 
-      * @return the {@link TeiidVdb} with the given name
+      * @return the {@link ITeiidVdb} with the given name
       * @throws Exception 
       */
-     VDB getVdb(String name) throws Exception;
+     ITeiidVdb getVdb(String name) throws Exception;
+     
+     /**
+      * @param name 
+      * @return whether server contains a vdb with the given name
+      * @throws Exception 
+      */
+     boolean hasVdb( String name ) throws Exception;
+     
+     /**
+      * @param vdbName
+      *  
+      * @return <code>true</code> if the vdb is active
+      * @throws Exception 
+      */
+     boolean isVdbActive(String vdbName) throws Exception;
+     
+     /**
+      * @param vdbName
+      *  
+      * @return <code>true</code> if the vdb is loading
+      * @throws Exception
+      */
+     boolean isVdbLoading(String vdbName) throws Exception;
+     
+     /**
+      * @param vdbName
+      *  
+      * @return <code>true</code> if the vdb failed
+      * @throws Exception
+      */
+     boolean hasVdbFailed(String vdbName) throws Exception;
+     
+     /**
+      * @param vdbName 
+      * 
+      * @return <code>true</code> if the vdb was removed
+      * @throws Exception
+      */
+     boolean wasVdbRemoved(String vdbName) throws Exception;
+     
+     /**
+      * @param vdbName
+      * 
+      * @return any validity errors from the vdb when it was deployed
+      * @throws Exception
+      */
+     List<String> retrieveVdbValidityErrors(String vdbName) throws Exception;
      
      /**
       * 
@@ -158,17 +216,11 @@ public interface IExecutionAdmin {
      void undeployVdb(String vdbName) throws Exception;
      
     /**
-     * 
-     * @param vdb 
-     * @throws Exception if undeploying vdb fails
-     */
-     void undeployVdb(VDB vdb) throws Exception;
-
-    /**
      * Ping the admin client to determine whether if is still connected
      * @param pingType 
      * 
-     * @return
+     * @return {@link IStatus} describing state of ping
+     * 
      * @throws Exception 
      */
      IStatus ping(PingType pingType) throws Exception;

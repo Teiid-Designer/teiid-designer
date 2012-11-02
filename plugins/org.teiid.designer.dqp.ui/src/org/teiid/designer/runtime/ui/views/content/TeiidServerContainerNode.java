@@ -12,10 +12,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.eclipse.wst.server.core.IServer;
+import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidTranslator;
-import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
 
@@ -122,10 +122,10 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
 
             // hide VDBs related variables from other local variables
             VDBS: {
-                Collection<TeiidVdb> vdbs;
+                Collection<ITeiidVdb> vdbs;
 
                 if (provider.isShowVDBs()) {
-                    vdbs = new ArrayList<TeiidVdb>(teiidServer.getVdbs());
+                    vdbs = new ArrayList<ITeiidVdb>(teiidServer.getVdbs());
 
                     if (!vdbs.isEmpty()) {
                         children.add(new VdbsFolder(this, vdbs));
