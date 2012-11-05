@@ -7,7 +7,7 @@
 */
 package org.teiid.designer.runtime.ui.views.content;
 
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 
 /**
  * @since 8.0
@@ -15,13 +15,13 @@ import org.teiid.designer.runtime.TeiidServer;
 public class TeiidErrorNode extends TeiidContentNode<ITeiidContainerNode<?>> {
 
     private final String text;
-    private final TeiidServer teiidServer;
+    private final ITeiidServer teiidServer;
 
     /**
      * @param container
      * @param text
      */
-    protected TeiidErrorNode(ITeiidContainerNode parent, TeiidServer teiidServer, String text) {
+    protected TeiidErrorNode(ITeiidContainerNode parent, ITeiidServer teiidServer, String text) {
         super(parent, text);
         this.teiidServer = teiidServer;
         this.text = text;
@@ -32,16 +32,21 @@ public class TeiidErrorNode extends TeiidContentNode<ITeiidContainerNode<?>> {
         return super.getName();
     }
 
+    /**
+     * Return the error text
+     * 
+     * @return error text
+     */
     public String getText() {
         return text;
     }
     
     /**
-     * Get the {@link TeiidServer} associated with this error
+     * Get the {@link ITeiidServer} associated with this error
      * 
-     * @return {@link TeiidServer} or null if a server has not yet been adapted.
+     * @return {@link ITeiidServer} or null if a server has not yet been adapted.
      */
-    public TeiidServer getTeiidServer() {
+    public ITeiidServer getTeiidServer() {
         return teiidServer;
     }
 }

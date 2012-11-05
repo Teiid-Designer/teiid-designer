@@ -36,8 +36,8 @@ import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
@@ -58,7 +58,7 @@ public class TeiidServerEditor extends EditorPart {
     
     private TeiidServerManager serverManager;
     
-    private TeiidServer teiidServer;
+    private ITeiidServer teiidServer;
     
     private ScrolledForm form;
     private FormToolkit toolkit;

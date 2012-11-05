@@ -37,7 +37,7 @@ public class TeiidDataSourceFactory {
      * 
      * @throws Exception
      */
-    public ITeiidDataSource createDataSource( TeiidServer teiidServer, 
+    public ITeiidDataSource createDataSource( ITeiidServer teiidServer, 
                                                    IFile model,
                                                    String jndiName,
                                                    boolean previewVdb,

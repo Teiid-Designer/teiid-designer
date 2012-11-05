@@ -43,7 +43,7 @@ public class TeiidTranslatorTest {
     private static Collection<PropertyDefinition> PROP_DEFS;
 
     @Mock
-    private TeiidServer teiidServer;
+    private ITeiidServer teiidServer;
     @Mock
     private PropertyDefinition propertyDefinition;
     @Mock

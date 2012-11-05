@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import org.eclipse.wst.server.core.IServer;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
 
 /**
- * Root node of the {@link TeiidServer} tree view.
+ * Root node of the {@link ITeiidServer} tree view.
  * 
  * The node is cached against its {@link TeiidServerContentProvider} so that the same
  * node can be returned, allowing calls to method like setExpandedState(node, true) to
@@ -32,7 +32,7 @@ public class TeiidResourceNode extends TeiidContentNode implements ITeiidResourc
     
     private ArrayList<ITeiidContentNode<? extends ITeiidContainerNode<?>>> children;
     private TeiidServerContentProvider provider;
-    private TeiidServer teiidServer;
+    private ITeiidServer teiidServer;
 
     private TeiidErrorNode error;
 
@@ -101,7 +101,7 @@ public class TeiidResourceNode extends TeiidContentNode implements ITeiidResourc
         
         synchronized(provider) {
             try {
-                teiidServer = (TeiidServer)getServer().loadAdapter(TeiidServer.class, null);
+                teiidServer = (ITeiidServer)getServer().loadAdapter(ITeiidServer.class, null);
 
                 if (teiidServer != null && teiidServer.isConnected()) {
                     if (children == null)
@@ -164,7 +164,7 @@ public class TeiidResourceNode extends TeiidContentNode implements ITeiidResourc
      * @return the teiidServer
      */
     @Override
-    public TeiidServer getTeiidServer() {
+    public ITeiidServer getTeiidServer() {
         return this.teiidServer;
     }
 

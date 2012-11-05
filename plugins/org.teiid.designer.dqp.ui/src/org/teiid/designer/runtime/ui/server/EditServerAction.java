@@ -12,13 +12,14 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
 
 /**
- * The <code>EditServerAction</code> runs a UI that allows {@link TeiidServer server} properties to be changed.
+ * The <code>EditServerAction</code> runs a UI that allows {@link ITeiidServer server} properties to be changed.
  *
  * @since 8.0
  */
@@ -31,7 +32,7 @@ public final class EditServerAction extends BaseSelectionListenerAction {
     /**
      * The selected server being edited.
      */
-    private TeiidServer serverBeingEdited;
+    private ITeiidServer serverBeingEdited;
 
     /**
      * The server manager used to create and edit servers.
@@ -107,7 +108,7 @@ public final class EditServerAction extends BaseSelectionListenerAction {
             return false;
         }
 
-        TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
+        ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
 
         // enable if server is selected
         if (teiidServer != null) {

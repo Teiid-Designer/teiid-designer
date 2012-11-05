@@ -20,7 +20,7 @@ import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
 
 /**
- * The <code>NewServerAction</code> runs a UI that allows the user to create a new {@link TeiidServer server}.
+ * The <code>NewServerAction</code> runs a UI that allows the user to create a new {@link ITeiidServer server}.
  *
  * @since 8.0
  */

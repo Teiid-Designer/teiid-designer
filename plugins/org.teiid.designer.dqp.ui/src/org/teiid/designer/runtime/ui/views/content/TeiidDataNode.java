@@ -11,6 +11,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.core.IServer;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.ITeiidDataSource;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidDataSource;
@@ -36,7 +37,7 @@ public class TeiidDataNode<V> implements ITeiidContentNode<AbstractTeiidFolder> 
     
     private AbstractTeiidFolder parentNode;
     private V value;
-    private TeiidServer teiidServer;
+    private ITeiidServer teiidServer;
     
     /**
      * Create new instance
@@ -56,11 +57,11 @@ public class TeiidDataNode<V> implements ITeiidContentNode<AbstractTeiidFolder> 
     }
     
     /**
-     * Get the {@link TeiidServer} that this folder belongs to
+     * Get the {@link ITeiidServer} that this folder belongs to
      * 
      * @return teiidServer
      */
-    public TeiidServer getTeiidServer() {
+    public ITeiidServer getTeiidServer() {
         return teiidServer;
     }
 

@@ -98,7 +98,7 @@ public class ServerManagerTest {
     private IServersProvider serversProvider = new TestServersProvider();
 
     @Mock
-    private TeiidServer server1;
+    private ITeiidServer server1;
 
     @Before
     public void beforeEach() throws Exception {
@@ -231,7 +231,7 @@ public class ServerManagerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowNullUpdatedServerForUpdateServer() {
-        this.mgr.updateServer(mock(TeiidServer.class), null);
+        this.mgr.updateServer(mock(ITeiidServer.class), null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -249,7 +249,7 @@ public class ServerManagerTest {
         this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(3));
 
-        TeiidServer teiidServer = this.mgr.getServer(RESTORED_SERVER1_URL);
+        ITeiidServer teiidServer = this.mgr.getServer(RESTORED_SERVER1_URL);
         assertThat(teiidServer, notNullValue());
         assertThat(teiidServer.getTeiidAdminInfo().getUsername(), is(RESTORED_SERVER1_USER));
         assertThat(teiidServer, is(not(this.mgr.getDefaultServer())));
@@ -295,7 +295,7 @@ public class ServerManagerTest {
         adminInfo.setHostProvider(testServer);
         jdbcInfo.setHostProvider(testServer);
 
-        TeiidServer teiidServer = this.mgr.getServer(testServer.getUrl());
+        ITeiidServer teiidServer = this.mgr.getServer(testServer.getUrl());
         assertThat(teiidServer, notNullValue());
         assertThat(teiidServer, is(this.mgr.getDefaultServer()));
         assertThat(teiidServer.getCustomLabel(), is(customLabel));

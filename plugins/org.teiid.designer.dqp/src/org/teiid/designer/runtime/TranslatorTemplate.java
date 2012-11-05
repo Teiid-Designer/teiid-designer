@@ -98,7 +98,7 @@ public class TranslatorTemplate implements ITeiidTranslator {
     }
 
     @Override
-    public TeiidServer getTeiidServer() {
+    public ITeiidServer getTeiidServer() {
         return translator.getTeiidServer();
     }
 

@@ -23,7 +23,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
@@ -53,7 +53,7 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
     private String pwd;
     private ConnectionInfoProviderFactory providerFactory;
 
-    private TeiidServer cachedServer;
+    private ITeiidServer cachedServer;
 
     /**
      * @since 5.0
@@ -64,7 +64,7 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
         providerFactory = new ConnectionInfoProviderFactory();
     }
 
-    public void setTeiidServer( TeiidServer teiidServer ) {
+    public void setTeiidServer( ITeiidServer teiidServer ) {
         this.cachedServer = teiidServer;
     }
 
@@ -99,7 +99,7 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
         }
         try {
 
-            TeiidServer teiidServer = cachedServer;
+            ITeiidServer teiidServer = cachedServer;
             if (teiidServer == null) {
                 if (DqpPlugin.getInstance().getServerManager().getDefaultServer() == null) {
                     MessageDialog.openConfirm(iww.getShell(), getString("noServer.title"), //$NON-NLS-1$

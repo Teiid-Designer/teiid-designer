@@ -7,7 +7,7 @@
 */
 package org.teiid.designer.runtime.ui.views.content;
 
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 
 
 /**
@@ -21,7 +21,7 @@ public interface ITeiidResourceNode extends ITeiidContainerNode {
     /** 
      * @return TeiidServer
      */
-    TeiidServer getTeiidServer();
+    ITeiidServer getTeiidServer();
 
     /**
      * Set the node's children to be dirty, implying a refresh

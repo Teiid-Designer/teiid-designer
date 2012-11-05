@@ -35,7 +35,7 @@ import org.jboss.tools.as.wst.server.ui.xpl.ServerToolTip;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder;
@@ -69,7 +69,7 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
      * Servers that a connection can't be established. Value is the last time establishing a connection was tried.
      */
     @GuardedBy( "offlineServersLock" )
-    private final Map<TeiidServer, Long> offlineServerMap = new HashMap<TeiidServer, Long>();
+    private final Map<ITeiidServer, Long> offlineServerMap = new HashMap<ITeiidServer, Long>();
     
     private boolean showVDBs = true;
     private boolean showDataSources = true;
@@ -472,7 +472,7 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
                 protected boolean isMyType(Object selected) {
                     return RuntimeAssistant.adapt(selected, AbstractTeiidFolder.class) != null ||
                         RuntimeAssistant.adapt(selected, TeiidDataNode.class) != null ||
-                        RuntimeAssistant.adapt(selected, TeiidServer.class) != null;
+                        RuntimeAssistant.adapt(selected, ITeiidServer.class) != null;
                 }
                 @Override
                 protected void fillStyledText(Composite parent, StyledText sText, Object o) {

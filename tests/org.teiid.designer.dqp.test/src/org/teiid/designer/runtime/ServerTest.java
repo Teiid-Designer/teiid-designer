@@ -30,7 +30,7 @@ public class ServerTest {
     private TeiidAdminInfo adminInfo;
     private TeiidJdbcInfo jdbcInfo;
     private EventManager eventMgr;
-    private TeiidServer teiidServer;
+    private ITeiidServer teiidServer;
     private IServer parentServer;
 
     @Before
@@ -99,11 +99,11 @@ public class ServerTest {
 
     @Test
     public void shouldBeEqualsWhenAllPropertiesAreTheSame() {
-        TeiidServer server1 = new TeiidServer(null,
+        ITeiidServer server1 = new TeiidServer(null,
                                     new TeiidAdminInfo(PORT, USER, SECURE_STORAGE_PROVIDER, PSWD, SECURE),
                                     new TeiidJdbcInfo(PORT, USER, SECURE_STORAGE_PROVIDER, PSWD, SECURE),
                                     this.eventMgr, this.parentServer);
-        TeiidServer server2 = new TeiidServer(null,
+        ITeiidServer server2 = new TeiidServer(null,
                                     new TeiidAdminInfo(PORT, USER, SECURE_STORAGE_PROVIDER, PSWD, SECURE),
                                     new TeiidJdbcInfo(PORT, USER, SECURE_STORAGE_PROVIDER, PSWD, SECURE),
                                     this.eventMgr, this.parentServer);

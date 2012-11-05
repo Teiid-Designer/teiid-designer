@@ -41,12 +41,12 @@ import org.teiid.designer.runtime.EventManager;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionAdmin;
 import org.teiid.designer.runtime.ITeiidDataSource;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidAdminInfo;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerUtils;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
@@ -68,7 +68,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     protected Map<String, ITeiidDataSource> dataSourceByNameMap;
     protected Set<String> dataSourceTypeNames;
     private final EventManager eventManager;
-    private final TeiidServer teiidServer;
+    private final ITeiidServer teiidServer;
     private Map<String, ITeiidVdb> teiidVdbs;
     private final ModelConnectionMatcher connectionMatcher;
 
@@ -81,7 +81,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
      * @param teiidServer the server this admin belongs to (never <code>null</code>)
      * @throws Exception if there is a problem connecting the server
      */
-    ExecutionAdmin(Admin admin, TeiidServer teiidServer) throws Exception {
+    ExecutionAdmin(Admin admin, ITeiidServer teiidServer) throws Exception {
         CoreArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
         
@@ -100,7 +100,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
      * 
      * @throws Exception if there is a problem connecting the server
      */
-    public ExecutionAdmin(TeiidServer teiidServer) throws Exception {
+    public ExecutionAdmin(ITeiidServer teiidServer) throws Exception {
         CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
         
         TeiidAdminInfo teiidAdminInfo = teiidServer.getTeiidAdminInfo();
@@ -357,7 +357,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     /**
      * @return the server who owns this admin object (never <code>null</code>)
      */
-    public TeiidServer getServer() {
+    public ITeiidServer getServer() {
         return this.teiidServer;
     }
 

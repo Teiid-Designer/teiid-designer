@@ -52,7 +52,7 @@ public interface ITeiidTranslator {
     /**
      * @return the execution teiidServer (never <code>null</code>)
      */
-    TeiidServer getTeiidServer();
+    ITeiidServer getTeiidServer();
 
     /**
      * @return the string version of the default value for each property (empty string if no default)

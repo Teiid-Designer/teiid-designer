@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.eclipse.wst.server.core.IServer;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 
 /**
  * @param <V> actual business objects this folder has as children
@@ -22,7 +22,7 @@ public abstract class AbstractTeiidFolder<V> implements ITeiidContainerNode<Teii
     
     private TeiidServerContainerNode parentNode;
     private Collection<V> theValues;
-    private TeiidServer teiidServer;
+    private ITeiidServer teiidServer;
     
     private List<ITeiidContentNode<? extends ITeiidContainerNode<?>>> children;
     
@@ -44,11 +44,11 @@ public abstract class AbstractTeiidFolder<V> implements ITeiidContainerNode<Teii
     }
     
     /**
-     * Get the {@link TeiidServer} that this folder belongs to
+     * Get the {@link ITeiidServer} that this folder belongs to
      * 
      * @return teiidServer
      */
-    public TeiidServer getTeiidServer() {
+    public ITeiidServer getTeiidServer() {
         return teiidServer;
     }
 

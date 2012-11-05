@@ -180,12 +180,12 @@ public final class TeiidServerManager implements EventManager {
     /**
      * The server registry.
      */
-    private final List<TeiidServer> teiidServers;
+    private final List<ITeiidServer> teiidServers;
 
     /**
      * The default server.
      */
-    private TeiidServer defaultServer;
+    private ITeiidServer defaultServer;
 
     /**
      * Lock used for when accessing the server registry.
@@ -212,9 +212,9 @@ public final class TeiidServerManager implements EventManager {
             int state = event.getState();
             IServer parentServer = event.getServer();
             TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
-            TeiidServer teiidServer = null;
+            ITeiidServer teiidServer = null;
 
-            for (TeiidServer tServer : getServers()) {
+            for (ITeiidServer tServer : getServers()) {
                 if (tServer.getParent().equals(parentServer)) {
                     teiidServer = tServer;
                     break;
@@ -230,7 +230,7 @@ public final class TeiidServerManager implements EventManager {
                     * Update all the settings since the server has been started and a 
                     * proper set of queries can take place.
                     */
-                    TeiidServer queryServer = factory.createTeiidServer(parentServer, TeiidServerManager.this);
+                    ITeiidServer queryServer = factory.createTeiidServer(parentServer, TeiidServerManager.this);
                     teiidServer.getTeiidAdminInfo().setAll(queryServer.getTeiidAdminInfo());
                     teiidServer.getTeiidJdbcInfo().setAll(queryServer.getTeiidJdbcInfo());
                     try {
@@ -272,11 +272,11 @@ public final class TeiidServerManager implements EventManager {
         public void serverChanged(IServer server) {
             TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
             
-            for (TeiidServer teiidServer : getServers()) {
+            for (ITeiidServer teiidServer : getServers()) {
                 if (! server.equals(teiidServer.getParent()))
                     continue;
                 
-                TeiidServer newTeiidServer = factory.createTeiidServer(server, TeiidServerManager.this);
+                ITeiidServer newTeiidServer = factory.createTeiidServer(server, TeiidServerManager.this);
                     
                 // Cannot use updateServer as it replaces rather than modified the existing server
                 // and references in editor will thus hang on to the old defunct version
@@ -300,7 +300,7 @@ public final class TeiidServerManager implements EventManager {
             server.removeServerListener(serverStateListener);
             
             // Tidy up the server manager by removing the related teiid server
-            for (TeiidServer teiidServer : getServers()) {
+            for (ITeiidServer teiidServer : getServers()) {
                 if (server.equals(teiidServer.getParent())) {
                     removeServer(teiidServer);
                     break;
@@ -325,7 +325,7 @@ public final class TeiidServerManager implements EventManager {
     // ===========================================================================================================================
 
     /**
-     * @param stateLocationPath the directory where the {@link TeiidServer} registry} is persisted (may be <code>null</code> if
+     * @param stateLocationPath the directory where the {@link ITeiidServer} registry} is persisted (may be <code>null</code> if
      *        persistence is not desired)
      * @param passwordProvider 
      * @param parentServersProvider 
@@ -333,7 +333,7 @@ public final class TeiidServerManager implements EventManager {
      */
     public TeiidServerManager( String stateLocationPath, IPasswordProvider passwordProvider, 
                                IServersProvider parentServersProvider, ISecureStorageProvider secureStorageProvider ) {
-        this.teiidServers = new ArrayList<TeiidServer>();
+        this.teiidServers = new ArrayList<ITeiidServer>();
         this.stateLocationPath = stateLocationPath;
         this.parentServersProvider = parentServersProvider;
         this.secureStorageProvider = secureStorageProvider;
@@ -404,7 +404,7 @@ public final class TeiidServerManager implements EventManager {
      * @param teiidServer the server being added (never <code>null</code>)
      * @return a status indicating if the server was added to the registry
      */
-    public IStatus addServer( TeiidServer teiidServer ) {
+    public IStatus addServer( ITeiidServer teiidServer ) {
         CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
         return internalAddServer(teiidServer, true);
     }
@@ -412,7 +412,7 @@ public final class TeiidServerManager implements EventManager {
     /**
      * @return defaultServer
      */
-    public TeiidServer getDefaultServer() {
+    public ITeiidServer getDefaultServer() {
         return defaultServer;
     }
 
@@ -427,10 +427,10 @@ public final class TeiidServerManager implements EventManager {
      * @param url the URL of the server being requested (never <code>null</code> )
      * @return the requested server or <code>null</code> if not found in the registry
      */
-    public TeiidServer getServer( String url ) {
+    public ITeiidServer getServer( String url ) {
         CoreArgCheck.isNotNull(url, "url"); //$NON-NLS-1$
 
-        for (TeiidServer teiidServer : getServers()) {
+        for (ITeiidServer teiidServer : getServers()) {
             if (url.equals(teiidServer.getUrl())) {
                 return teiidServer;
             }
@@ -442,10 +442,10 @@ public final class TeiidServerManager implements EventManager {
     /**
      * @return an unmodifiable collection of registered servers (never <code>null</code>)
      */
-    public Collection<TeiidServer> getServers() {
+    public Collection<ITeiidServer> getServers() {
         try {
             this.serverLock.readLock().lock();
-            return Collections.unmodifiableCollection(new ArrayList<TeiidServer>(this.teiidServers));
+            return Collections.unmodifiableCollection(new ArrayList<ITeiidServer>(this.teiidServers));
         } finally {
             this.serverLock.readLock().unlock();
         }
@@ -471,10 +471,10 @@ public final class TeiidServerManager implements EventManager {
      * @param notifyListeners indicates if registry listeners should be notified
      * @return a status indicating if the server was added to the registry
      */
-    private IStatus internalAddServer( TeiidServer teiidServer,
+    private IStatus internalAddServer( ITeiidServer teiidServer,
                                        boolean notifyListeners ) {
         boolean added = false;
-        TeiidServer defaultServer = null;
+        ITeiidServer defaultServer = null;
 
         try {
             this.serverLock.writeLock().lock();
@@ -508,7 +508,7 @@ public final class TeiidServerManager implements EventManager {
      * @param notifyListeners indicates if registry listeners should be notified
      * @return a status indicating if the specified server was removed from the registry
      */
-    private IStatus internalRemoveServer( TeiidServer teiidServer,
+    private IStatus internalRemoveServer( ITeiidServer teiidServer,
                                           boolean notifyListeners ) {
         boolean removed = false;
 
@@ -516,7 +516,7 @@ public final class TeiidServerManager implements EventManager {
             this.serverLock.writeLock().lock();
 
             // see if registered server has the same key
-            for (TeiidServer registeredServer : this.teiidServers) {
+            for (ITeiidServer registeredServer : this.teiidServers) {
                 if (registeredServer.hasSameKey(teiidServer)) {
                     removed = this.teiidServers.remove(registeredServer);
                     if (removed) {
@@ -555,7 +555,7 @@ public final class TeiidServerManager implements EventManager {
      * 
      * @return true if this server is the default, false otherwise.
      */
-    public boolean isDefaultServer( TeiidServer teiidServer ) {
+    public boolean isDefaultServer( ITeiidServer teiidServer ) {
         CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
         if (this.defaultServer == null) {
             return false;
@@ -567,14 +567,14 @@ public final class TeiidServerManager implements EventManager {
      * @param teiidServer the server being tested (never <code>null</code>)
      * @return <code>true</code> if the server has been registered
      */
-    public boolean isRegistered( TeiidServer teiidServer ) {
+    public boolean isRegistered( ITeiidServer teiidServer ) {
         CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
 
         try {
             this.serverLock.readLock().lock();
 
             // check to make sure no other registered server has the same key
-            for (TeiidServer registeredServer : this.teiidServers) {
+            for (ITeiidServer registeredServer : this.teiidServers) {
                 if (registeredServer.hasSameKey(teiidServer)) {
                     return true;
                 }
@@ -597,7 +597,7 @@ public final class TeiidServerManager implements EventManager {
             this.serverLock.readLock().lock();
 
             // check to make sure no other registered server has the same key
-            for (TeiidServer registeredServer : this.teiidServers) {
+            for (ITeiidServer registeredServer : this.teiidServers) {
                 if (registeredServer.getUrl().equals(url)) {
                     return true;
                 }
@@ -641,7 +641,7 @@ public final class TeiidServerManager implements EventManager {
      * @param teiidServer the server being removed (never <code>null</code>)
      * @return a status indicating if the specified segetUrlrver was removed from the registry (never <code>null</code>)
      */
-    public IStatus removeServer( TeiidServer teiidServer ) {
+    public IStatus removeServer( ITeiidServer teiidServer ) {
         CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
         return internalRemoveServer(teiidServer, true);
     }
@@ -813,7 +813,7 @@ public final class TeiidServerManager implements EventManager {
                             continue;
                         }
                         
-                        TeiidServer teiidServer = new TeiidServer(host, teiidAdminInfo, teiidJdbcInfo, this, parentServer);
+                        ITeiidServer teiidServer = new TeiidServer(host, teiidAdminInfo, teiidJdbcInfo, this, parentServer);
                         teiidServer.setCustomLabel(customLabel);
                         
                         addServer(teiidServer);
@@ -856,7 +856,7 @@ public final class TeiidServerManager implements EventManager {
     /**
      * @param teiidServer Sets defaultServer to the specified value. May be null.
      */
-    public void setDefaultServer( TeiidServer teiidServer ) {
+    public void setDefaultServer( ITeiidServer teiidServer ) {
         boolean notify = false;
         if (teiidServer != null) {
             notify = !teiidServer.equals(this.defaultServer);
@@ -864,7 +864,7 @@ public final class TeiidServerManager implements EventManager {
             notify = defaultServer != null;
         }
 
-        TeiidServer oldDefaultServer = this.defaultServer;
+        ITeiidServer oldDefaultServer = this.defaultServer;
         this.defaultServer = teiidServer;
 
         if (notify) {
@@ -873,7 +873,7 @@ public final class TeiidServerManager implements EventManager {
     }
 
     /**
-     * Saves the {@link TeiidServer} registry to the file system, shuts down the {@link PreviewManager}, and performs any other tasks
+     * Saves the {@link ITeiidServer} registry to the file system, shuts down the {@link PreviewManager}, and performs any other tasks
      * needed to shutdown. Shutdown may take a bit of time so it is advised to pass in a monitor and, if needed, show the user a
      * dialog that blocks until the monitor is finished.
      * 
@@ -924,7 +924,7 @@ public final class TeiidServerManager implements EventManager {
                 Element root = doc.createElement(SERVERS_TAG);
                 doc.appendChild(root);
 
-                for (TeiidServer teiidServer : getServers()) {
+                for (ITeiidServer teiidServer : getServers()) {
                     Element serverElement = doc.createElement(SERVER_TAG);
                     root.appendChild(serverElement);
                     
@@ -1013,8 +1013,8 @@ public final class TeiidServerManager implements EventManager {
      * @param updatedServer the new version of the server being put in the server registry (never <code>null</code>)
      * @return a status indicating if the server was updated in the registry (never <code>null</code>)
      */
-    public IStatus updateServer( TeiidServer replacedServer,
-                                 TeiidServer updatedServer ) {
+    public IStatus updateServer( ITeiidServer replacedServer,
+                                 ITeiidServer updatedServer ) {
         CoreArgCheck.isNotNull(replacedServer, "previousServerVersion"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(updatedServer, "newServerVersion"); //$NON-NLS-1$
 

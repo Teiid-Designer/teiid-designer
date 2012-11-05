@@ -11,6 +11,7 @@ import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
@@ -46,7 +47,7 @@ public final class RefreshServerAction extends BaseSelectionListenerAction {
     @Override
     public void run() {
         IStructuredSelection sselection = getStructuredSelection();
-        final TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(sselection);
+        final ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(sselection);
         if (teiidServer == null)
             return;
         
@@ -73,7 +74,7 @@ public final class RefreshServerAction extends BaseSelectionListenerAction {
         if (selection.size() != 1)
             return false;
         
-        TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
+        ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
         if (teiidServer != null && teiidServer.isParentConnected())
             return true;
         

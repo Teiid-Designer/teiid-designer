@@ -14,14 +14,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -38,8 +35,8 @@ import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -66,7 +63,7 @@ public final class ServerPage extends WizardPage {
     /**
      * The server being editor or <code>null</code> if creating a new server.
      */
-    private TeiidServer teiidServer;
+    private ITeiidServer teiidServer;
 
     /**
      * The current validation status.
@@ -436,7 +433,7 @@ public final class ServerPage extends WizardPage {
     /**
      * @return the server represented by the dialog inputs
      */
-    TeiidServer getServer() {
+    ITeiidServer getServer() {
         return teiidServer;
     }
     

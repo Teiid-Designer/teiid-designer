@@ -13,7 +13,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.vdb.ExecuteVdbDialog;
@@ -67,7 +67,7 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
             if (obj instanceof IFile) {
                 String extension = ((IFile)obj).getFileExtension();
                 if (extension != null && extension.equals("vdb")) { //$NON-NLS-1$
-//                    TeiidServer teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+//                    ITeiidServer teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
 //                    if (teiidServer != null) {
                         return true;
 //                    }
@@ -99,7 +99,7 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
     	}
     }
     
-    public static void executeVdb( TeiidServer teiidServer, String vdbName ) throws Exception {
+    public static void executeVdb( ITeiidServer teiidServer, String vdbName ) throws Exception {
     	if( worker == null ) {
     		worker = new ExecuteVdbWorker();
     	}

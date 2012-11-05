@@ -81,10 +81,10 @@ import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.ITeiidDataSource;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.TeiidDataSourceFactory;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.jobs.CompositePreviewJob;
 import org.teiid.designer.runtime.preview.jobs.CreatePreviewVdbJob;
@@ -282,7 +282,7 @@ public final class PreviewManager extends JobChangeAdapter
     /**
      * The Teiid server being used for preview (may be <code>null</code>).
      */
-    private volatile AtomicReference<TeiidServer> previewServer = new AtomicReference<TeiidServer>();
+    private volatile AtomicReference<ITeiidServer> previewServer = new AtomicReference<ITeiidServer>();
 
     /**
      * A map with the project path as the key and a collection of PVDBs and there deploy flag indicating if the PVDB needs to be
@@ -468,7 +468,7 @@ public final class PreviewManager extends JobChangeAdapter
      */
     @Override
     public IStatus ensureConnectionInfoIsValid( Vdb previewVdb,
-                                                TeiidServer previewServer ) throws Exception {
+                                                ITeiidServer previewServer ) throws Exception {
         assert (previewServer != null) : "Preview server is null"; //$NON-NLS-1$
 
         if (previewVdb.getModelEntries().isEmpty()) {
@@ -651,7 +651,7 @@ public final class PreviewManager extends JobChangeAdapter
         return factory.createDataSource(getPreviewServer(), model, jndiName, true, this.passwordProvider);
     }
 
-    TeiidServer getPreviewServer() {
+    ITeiidServer getPreviewServer() {
         return this.previewServer.get();
     }
 
@@ -1184,7 +1184,7 @@ public final class PreviewManager extends JobChangeAdapter
     public void previewSetup( final Object objectToPreview,
                               IProgressMonitor monitor ) throws Exception {
         assert isPreviewEnabled() : "previewSetup should not be called if preview is disabled"; //$NON-NLS-1$
-        TeiidServer previewServer = getPreviewServer();
+        ITeiidServer previewServer = getPreviewServer();
         assert (previewServer != null) : "Should not be called when preview server is null"; //$NON-NLS-1$
         
         ModelResource model = ModelUtil.getModel(objectToPreview);
@@ -1508,9 +1508,9 @@ public final class PreviewManager extends JobChangeAdapter
         this.passwordProvider = passwordProvider;
     }
 
-    private void setPreviewServer( TeiidServer teiidServer ) {
+    private void setPreviewServer( ITeiidServer teiidServer ) {
         final PreviewContext previewContext = this.context;
-        final TeiidServer oldServer = getPreviewServer();
+        final ITeiidServer oldServer = getPreviewServer();
 
         // set new server
         this.previewServer.set(teiidServer);
@@ -1527,7 +1527,7 @@ public final class PreviewManager extends JobChangeAdapter
 
                     @Override
                     public IStatus ensureConnectionInfoIsValid( Vdb previewVdb,
-                                                                TeiidServer previewServer ) throws Exception {
+                                                                ITeiidServer previewServer ) throws Exception {
                         return previewContext.ensureConnectionInfoIsValid(previewVdb, oldServer);
                     }
 
@@ -1763,11 +1763,11 @@ public final class PreviewManager extends JobChangeAdapter
 
     class ServerDeleteJobListener extends JobChangeAdapter {
         private final CountDownLatch latch;
-        private final TeiidServer teiidServer;
+        private final ITeiidServer teiidServer;
         private boolean serverDeleted = false;
 
         public ServerDeleteJobListener( CountDownLatch latch,
-                                        TeiidServer teiidServer,
+                                        ITeiidServer teiidServer,
                                         boolean serverDeleted ) {
             this.latch = latch;
             this.teiidServer = teiidServer;

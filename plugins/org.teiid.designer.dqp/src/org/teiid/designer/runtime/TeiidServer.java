@@ -11,8 +11,10 @@ import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.WeakHashMap;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -28,7 +30,7 @@ import org.teiid.designer.vdb.Vdb;
  *
  * @since 8.0
  */
-public class TeiidServer implements HostProvider, IExecutionAdmin {
+public class TeiidServer implements ITeiidServer {
 
     // ===========================================================================================================================
     // Class Methods
@@ -99,6 +101,8 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
     // Constructors
     // ===========================================================================================================================
 
+    private static Map<String, TeiidServer> servers = new WeakHashMap();
+    
     /**
      * Constructs on new <code>Server</code>.
      * 
@@ -175,11 +179,7 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
         return true;
     }
 
-    /**
-     * Connect to this {@link TeiidServer}
-     * 
-     * @throws Exception
-     */
+    @Override
     public void connect() throws Exception {
         if (! isParentConnected()) {
             throw new Exception(DqpPlugin.Util.getString("jbossServerNotStartedMessage")); //$NON-NLS-1$
@@ -193,11 +193,7 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
         }
     }
     
-    /**
-     * Disconnect then connect to this server. This is preferable to 
-     * calling {@link #disconnect()} and {@link #connect()} separately
-     * since it only notifies at the end of the reconnection.
-     */
+    @Override
     public void reconnect() {
         try {
             // Call disconnect() first to clear out Server & admin caches
@@ -219,23 +215,22 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
         }
     }
 
+    @Override
     public TeiidAdminInfo getTeiidAdminInfo() {
         return teiidAdminInfo;
     }
 
+    @Override
     public TeiidJdbcInfo getTeiidJdbcInfo() {
         return teiidJdbcInfo;
     }
     
+    @Override
     public EventManager getEventManager() {
         return eventManager;
     }
     
-    /**
-     * An appropriate name for this teiid server
-     * 
-     * @return {@link #getCustomLabel()} if available otherwise {@link #getUrl()}
-     */
+    @Override
     public String getDisplayName() {
         return getCustomLabel() != null ? getCustomLabel() : getUrl();
     }
@@ -243,22 +238,16 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
     /**
      * @return the host URL (never <code>null</code>)
      */
+    @Override
     public String getUrl() {
         return getTeiidAdminInfo().getUrl();
     }
 
-    /**
-     * @return the custom label or <code>null</code> if not being used
-     */
+    @Override
     public String getCustomLabel() {
         return this.customLabel;
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.runtime.HostProvider#getHost()
-     */
     @Override
     public String getHost() {
         if (this.host == null) {
@@ -271,6 +260,7 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
     /**
      * @return the parentServer
      */
+    @Override
     public IServer getParent() {
         return this.parentServer;
     }
@@ -296,7 +286,8 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
      * @return <code>true</code> if the servers have the same key
      * @throws IllegalArgumentException if the argument is <code>null</code>
      */
-    public boolean hasSameKey( TeiidServer otherServer ) {
+    @Override
+    public boolean hasSameKey( ITeiidServer otherServer ) {
         CoreArgCheck.isNotNull(otherServer, "otherServer"); //$NON-NLS-1$
         return (equivalent(getUrl(), otherServer.getUrl()) && equivalent(getTeiidAdminInfo().getUsername(),
                                                                          otherServer.getTeiidAdminInfo().getUsername()));
@@ -305,6 +296,7 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
     /**
      * @return <code>true</code> if a connection to this server exists and is working
      */
+    @Override
     public boolean isConnected() {
         if (! isParentConnected() && this.admin == null) {
             return false;
@@ -317,6 +309,7 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
      * 
      * @return true is started, otherwise false
      */
+    @Override
     public boolean isParentConnected() {
         return this.parentServer != null && this.parentServer.getServerState() == IServer.STATE_STARTED;
     }
@@ -326,6 +319,7 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
      * 
      * @return a status if the server connection can be established (never <code>null</code>)
      */
+    @Override
     public IStatus ping() {
         String msg = Util.getString("cannotConnectToServer", getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
         
@@ -341,6 +335,7 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
         return Status.OK_STATUS;
     }
 
+    @Override
     public void notifyRefresh() {
         if (! notifyListeners)
             return;
@@ -352,17 +347,19 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
         }
     }
 
+    @Override
     public String getConnectionError() {
         return connectionError;
     }
 
-    public void setConnectionError( String connectionError ) {
+    private void setConnectionError( String connectionError ) {
         this.connectionError = connectionError;
     }
 
     /**
      * @param customLabel the new custom label or <code>null</code> or empty if the custom label is not being used
      */
+    @Override
     public void setCustomLabel( String customLabel ) {
         this.customLabel = StringUtilities.isEmpty(customLabel) ? null : customLabel;
     }
@@ -374,6 +371,7 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
      * 
      * @return a status if the server connection can be established (never <code>null</code>)
      */
+    @Override
     public IStatus testPing() {
         try {
             connect();
@@ -398,6 +396,7 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
      * 
      * @return status as to the ping's success
      */
+    @Override
     public IStatus testJDBCPing(String host, String port, String username, String password) {
         try {
             connect();
@@ -418,6 +417,7 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
 		return "jdbc:teiid:" + vdbName + "@mm://"+host+':'+port;  //$NON-NLS-1$ //$NON-NLS-2$
     }
     
+    @Override
     public IStatus createVdbDataSource(String vdbName, String displayName, String jndiName) {
     	Properties props = new Properties();
 		String username = this.teiidJdbcInfo.getUsername();

@@ -9,7 +9,7 @@ package org.teiid.designer.runtime.ui.views.content.adapter;
 
 import java.util.List;
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ui.views.content.ITeiidContentNode;
 import org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode;
 import org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode;
@@ -29,7 +29,7 @@ public class TeiidResourceNodeAdapterFactory implements IAdapterFactory {
         if (ITeiidResourceNode.class == adapterType)
             return teiidResourceNode;
         
-        if (TeiidServer.class == adapterType)
+        if (ITeiidServer.class.isAssignableFrom(adapterType))
             return adaptToTeiidServer(teiidResourceNode);
         
         if (TeiidServerContainerNode.class == adapterType)
@@ -39,11 +39,11 @@ public class TeiidResourceNodeAdapterFactory implements IAdapterFactory {
     }
 
     /**
-     * Adapt to a {@link TeiidServer}
+     * Adapt to a {@link ITeiidServer}
      * 
      * @param adaptableObject
      */
-    private TeiidServer adaptToTeiidServer(ITeiidResourceNode teiidResourceNode) {
+    private ITeiidServer adaptToTeiidServer(ITeiidResourceNode teiidResourceNode) {
         return teiidResourceNode.getTeiidServer();
     }
 
@@ -67,7 +67,7 @@ public class TeiidResourceNodeAdapterFactory implements IAdapterFactory {
     
     @Override
     public Class[] getAdapterList() {
-        return new Class[] { TeiidServer.class, ITeiidResourceNode.class, TeiidServerContainerNode.class };
+        return new Class[] { ITeiidServer.class, ITeiidResourceNode.class, TeiidServerContainerNode.class };
     }
 
 }

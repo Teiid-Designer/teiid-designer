@@ -19,8 +19,8 @@ import org.eclipse.ui.navigator.CommonDropAdapter;
 import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ITeiidTranslator;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.actions.DeployVdbAction;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
@@ -37,7 +37,7 @@ public class TeiidServerDropAdapterAssistant extends CommonDropAdapterAssistant 
      */
     private TransferData currentTransfer;
     
-    private TeiidServer theTargetServer;
+    private ITeiidServer theTargetServer;
     
     @Override
     public IStatus validateDrop(Object target, int operation, TransferData transferType) {
@@ -47,11 +47,10 @@ public class TeiidServerDropAdapterAssistant extends CommonDropAdapterAssistant 
             && isSupportedType(currentTransfer)) {
             // plugin cannot be loaded without the plugin data
             return Status.OK_STATUS;
-        } else if (RuntimeAssistant.adapt(target, TeiidServer.class) != null && currentTransfer != null
+        } else if (RuntimeAssistant.adapt(target, ITeiidServer.class) != null && currentTransfer != null
                    && isSupportedType(currentTransfer)) {
             // plugin cannot be loaded without the plugin data
-            theTargetServer = RuntimeAssistant.adapt(target, TeiidServer.class);
-            
+            theTargetServer = RuntimeAssistant.adapt(target, ITeiidServer.class);
             return Status.OK_STATUS;
         }
         

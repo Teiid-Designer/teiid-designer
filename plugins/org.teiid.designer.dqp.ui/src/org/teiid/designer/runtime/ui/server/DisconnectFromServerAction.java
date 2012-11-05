@@ -4,6 +4,7 @@ import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
@@ -37,7 +38,7 @@ public class DisconnectFromServerAction extends BaseSelectionListenerAction {
     @Override
     public void run() {
         IStructuredSelection sselection = getStructuredSelection();
-        final TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(sselection);
+        final ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(sselection);
         UiBusyIndicator.showWhile(display, new Runnable() {
 
             @Override
@@ -54,7 +55,7 @@ public class DisconnectFromServerAction extends BaseSelectionListenerAction {
      */
     @Override
     protected boolean updateSelection( IStructuredSelection selection ) {
-        TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
+        ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
         return ((selection.size() == 1) && (teiidServer != null));
     }
 

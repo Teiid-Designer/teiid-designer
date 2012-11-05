@@ -13,9 +13,9 @@ import java.util.Collections;
 import java.util.List;
 import org.eclipse.wst.server.core.IServer;
 import org.teiid.designer.runtime.ITeiidDataSource;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.ITeiidVdb;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
 
@@ -26,7 +26,7 @@ import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
 public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends TeiidContentNode<T> implements ITeiidContainerNode<T> {
 
     private List<ITeiidContentNode<TeiidServerContainerNode>> children;
-    private TeiidServer teiidServer;
+    private ITeiidServer teiidServer;
     private TeiidServerContentProvider provider;
     private TeiidErrorNode error;
     
@@ -160,9 +160,11 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
     }
 
     /**
-     * @return the {@link TeiidServer} this node represents
+     * Get this container's teiid server
+     * 
+     * @return {@link ITeiidServer}
      */
-    public TeiidServer getTeiidServer() {
+    public ITeiidServer getTeiidServer() {
         return teiidServer;
     }
     

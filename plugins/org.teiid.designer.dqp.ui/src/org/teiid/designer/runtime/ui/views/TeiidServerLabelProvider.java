@@ -23,7 +23,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.IDescriptionProvider;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
@@ -58,7 +58,7 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
      * Servers that a connection can't be established. Value is the last time establishing a connection was tried.
      */
     @GuardedBy( "offlineServersLock" )
-    private final Map<TeiidServer, Long> offlineServerMap = new HashMap<TeiidServer, Long>();
+    private final Map<ITeiidServer, Long> offlineServerMap = new HashMap<ITeiidServer, Long>();
 
     /**
      * Lock used for when accessing the offline server map. The map will be accessed in different threads as the decorator runs in
@@ -69,7 +69,7 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
     /**
      * @param teiidServer the server that is offline
      */
-    private void addOfflineServer(TeiidServer teiidServer) {
+    private void addOfflineServer(ITeiidServer teiidServer) {
         try {
             this.offlineServersLock.writeLock().lock();
             this.offlineServerMap.put(teiidServer, System.currentTimeMillis());
@@ -96,7 +96,7 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
         if (getServerManager() != null) {
             assert (element instanceof TeiidServerContainerNode) : "element is not a server (check plugin.xml enablement)"; //$NON-NLS-1$
             TeiidServerContainerNode node = (TeiidServerContainerNode) element;
-            TeiidServer teiidServer = node.getTeiidServer();
+            ITeiidServer teiidServer = node.getTeiidServer();
             
             if (isOkToConnect(teiidServer)) {
                 // decorate server if can't connect
@@ -130,7 +130,7 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
         }
  
         if (element instanceof TeiidErrorNode) {
-            TeiidServer teiidServer = ((TeiidErrorNode) element).getTeiidServer();
+            ITeiidServer teiidServer = ((TeiidErrorNode) element).getTeiidServer();
             
             if (getServerManager() != null && teiidServer != null && this.serverMgr.isDefaultServer(teiidServer))
                 return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ERROR_ICON);
@@ -180,7 +180,7 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
      * @param teiidServer the server being checked
      * @return <code>true</code> if it is OK to try and connect
      */
-    private synchronized boolean isOkToConnect(TeiidServer teiidServer) {
+    private synchronized boolean isOkToConnect(ITeiidServer teiidServer) {
         boolean check = false; // check map for time
 
         try {

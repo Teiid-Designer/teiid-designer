@@ -27,6 +27,7 @@ import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
@@ -246,11 +247,11 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
     }
 
     /**
-     * Open the {@link TeiidServerEditor} for the given {@link TeiidServer}
+     * Open the {@link TeiidServerEditor} for the given {@link ITeiidServer}
      * 
      * @param server 
      */
-    public static void editTeiidServer(TeiidServer server) {
+    public static void editTeiidServer(ITeiidServer server) {
         IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         IWorkbenchPage page = workbenchWindow.getActivePage();
         

@@ -321,7 +321,7 @@
             adaptableType="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode"
             class="org.teiid.designer.runtime.ui.views.content.adapter.TeiidServerContainerNodeAdapterFactory">
          <adapter
-               type="org.teiid.designer.runtime.TeiidServer">
+               type="org.teiid.designer.runtime.ITeiidServer">
          </adapter>
          <adapter
                type="org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode">
@@ -331,7 +331,7 @@
             adaptableType="org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode"
             class="org.teiid.designer.runtime.ui.views.content.adapter.TeiidResourceNodeAdapterFactory">
          <adapter
-               type="org.teiid.designer.runtime.TeiidServer">
+               type="org.teiid.designer.runtime.ITeiidServer">
          </adapter>
          <adapter
                type="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
@@ -347,7 +347,7 @@
                type="org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode">
          </adapter>
          <adapter
-               type="org.teiid.designer.runtime.TeiidServer">
+               type="org.teiid.designer.runtime.ITeiidServer">
          </adapter>
       </factory>
       <factory

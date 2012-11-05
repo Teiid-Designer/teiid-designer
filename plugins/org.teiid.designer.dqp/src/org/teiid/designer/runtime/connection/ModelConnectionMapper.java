@@ -14,7 +14,7 @@ import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.vdb.connections.VdbSourceConnection;
 
 /**
@@ -109,7 +109,7 @@ public class ModelConnectionMapper {
         return connectionInfoProvider;
     }
 
-    public VdbSourceConnection getVdbSourceConnection( TeiidServer teiidServer,
+    public VdbSourceConnection getVdbSourceConnection( ITeiidServer teiidServer,
                                                        String workspaceUuid ) throws Exception {
         if (teiidServer == null || ! teiidServer.isConnected()) {
             return null;

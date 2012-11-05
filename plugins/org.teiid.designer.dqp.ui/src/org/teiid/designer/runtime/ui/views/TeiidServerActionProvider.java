@@ -34,9 +34,9 @@ import org.eclipse.ui.navigator.ICommonViewerSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ITeiidDataSource;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -267,7 +267,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 List<Object> selectedObjs = getSelectedObjects();
                 for (Object obj : selectedObjs) {
                     ITeiidDataSource tds = RuntimeAssistant.adapt(obj, ITeiidDataSource.class);
-                    TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
+                    ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
                     
                     if (teiidServer != null && teiidServer.isConnected()) {
                         try {
@@ -293,7 +293,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 List<Object> selectedObjs = getSelectedObjects();
                 for (Object obj : selectedObjs) {
                     ITeiidVdb vdb = RuntimeAssistant.adapt(obj, ITeiidVdb.class);
-                    TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
+                    ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
                     
                     if (teiidServer != null && teiidServer.isConnected()) {
                         try {
@@ -319,7 +319,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 List<Object> selectedObjs = getSelectedObjects();
                 for (Object obj : selectedObjs) {
                     ITeiidVdb vdb = RuntimeAssistant.adapt(obj, ITeiidVdb.class);
-                    TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
+                    ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
                     
                     if (teiidServer != null && teiidServer.isConnected()) {
                         try {
@@ -361,7 +361,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
 
             @Override
             public void run() {
-                TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
+                ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
                 
                 if (teiidServer != null && teiidServer.isConnected()) {
                     CreateDataSourceAction action = new CreateDataSourceAction();
@@ -485,14 +485,14 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             return;
         }
         
-        TeiidServer teiidServer = null;
+        ITeiidServer teiidServer = null;
         
         if (selectedObjs.size() == 1) {
             Object selection = selectedObjs.get(0);
             
             // This will adapt either the TeiidResourceNode or the
             // TeiidServerContainerNode to the TeiidServer
-            teiidServer = RuntimeAssistant.adapt(selection, TeiidServer.class);
+            teiidServer = RuntimeAssistant.adapt(selection, ITeiidServer.class);
             
             if (teiidServer != null) {
                 boolean teiidServerConnected = teiidServer.isConnected();

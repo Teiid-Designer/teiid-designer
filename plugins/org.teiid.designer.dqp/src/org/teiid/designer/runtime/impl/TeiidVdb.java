@@ -7,8 +7,8 @@ import java.util.List;
 import org.teiid.adminapi.Model;
 import org.teiid.adminapi.VDB;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ITeiidVdb;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.vdb.Vdb;
 /**
  * @since 8.0
@@ -17,12 +17,12 @@ public class TeiidVdb implements ITeiidVdb, Comparable<TeiidVdb> {
     
     private final VDB vdb;
 
-    private final TeiidServer teiidServer;
+    private final ITeiidServer teiidServer;
 
     private final boolean isPreview;
 
     public TeiidVdb( VDB vdb,
-                     TeiidServer teiidServer ) {
+                     ITeiidServer teiidServer ) {
         CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(teiidServer, "teiidServer"); //$NON-NLS-1$
 

@@ -8,7 +8,7 @@
 package org.teiid.designer.runtime.ui.views.content.adapter;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder;
 import org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode;
 
@@ -26,7 +26,7 @@ public class TeiidFolderAdapterFactory implements IAdapterFactory {
 
         if (ITeiidResourceNode.class == adapterType)
             return adaptToTeiidResourceNode(abstractTeiidFolder);
-        else if (TeiidServer.class == adapterType)
+        else if (adapterType.isInstance(ITeiidServer.class))
             return adaptToTeiidServer(abstractTeiidFolder);
         
         return null;
@@ -45,17 +45,17 @@ public class TeiidFolderAdapterFactory implements IAdapterFactory {
     }
 
     /**
-     * Try and adapt to a {@link TeiidServer}
+     * Try and adapt to a {@link ITeiidServer}
      * 
      * @param adaptableObject
      */
-    private TeiidServer adaptToTeiidServer(AbstractTeiidFolder<?> abstractTeiidFolder) {
+    private ITeiidServer adaptToTeiidServer(AbstractTeiidFolder<?> abstractTeiidFolder) {
         return abstractTeiidFolder.getTeiidServer();
     }
 
     @Override
     public Class[] getAdapterList() {
-        return new Class[] {ITeiidResourceNode.class, TeiidServer.class};
+        return new Class[] {ITeiidResourceNode.class, ITeiidServer.class};
     }
 
 }

@@ -22,7 +22,7 @@
             adaptableType="org.eclipse.wst.server.core.IServer"
             class="org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory">
          <adapter
-               type="org.teiid.designer.runtime.TeiidServer">
+               type="org.teiid.designer.runtime.ITeiidServer">
          </adapter>
       </factory>
    </extension>

@@ -17,8 +17,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.prefs.BackingStoreException;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 
 
@@ -120,7 +120,7 @@ public final class RuntimeAssistant {
     /**
      * @return the default Teiid server (can be <code>null</code>)
      */
-    private static TeiidServer getServer() {
+    private static ITeiidServer getServer() {
         return getServerManager().getDefaultServer();
     }
 
@@ -190,12 +190,12 @@ public final class RuntimeAssistant {
     }
     
     /**
-     * Get a {@link TeiidServer} from the given selection if one can be adapted
+     * Get a {@link ITeiidServer} from the given selection if one can be adapted
      * 
      * @param selection
      * @return server or null
      */
-    public static TeiidServer getServerFromSelection(ISelection selection) {
+    public static ITeiidServer getServerFromSelection(ISelection selection) {
         if (selection == null || ! (selection instanceof StructuredSelection))
             return null;
         
@@ -206,7 +206,7 @@ public final class RuntimeAssistant {
         StructuredSelection ss = (StructuredSelection) selection;
         Object element = ss.getFirstElement();
         
-        return adapt(element, TeiidServer.class);
+        return adapt(element, ITeiidServer.class);
     }
 
     /**

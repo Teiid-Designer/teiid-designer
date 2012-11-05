@@ -20,7 +20,7 @@ import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidDataSourceFactory;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
@@ -88,7 +88,7 @@ public class VdbDeployer {
         }
     }
 
-    private final TeiidServer teiidServer; // the current Teiid server
+    private final ITeiidServer teiidServer; // the current Teiid server
     private final boolean autoCreateDsOnServer; // indicates if data source should be auto-created on server without asking user
     private Exception error; // non-null if error caught while deploying
     private final Shell shell;
@@ -104,7 +104,7 @@ public class VdbDeployer {
      */
     public VdbDeployer( Shell shell,
                         Vdb vdbBeingDeployed,
-                        TeiidServer defaultServer,
+                        ITeiidServer defaultServer,
                         boolean shouldAutoCreateDataSourceOnServer ) {
         CoreArgCheck.isNotNull(vdbBeingDeployed, "Vdb is null"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(defaultServer, "Default Teiid Server is null"); //$NON-NLS-1$

@@ -71,10 +71,10 @@ import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbJob;
@@ -375,7 +375,7 @@ public class PreviewDataWorker {
     	    return;
     	}
 
-    	TeiidServer defaultServer = getServerManager().getDefaultServer();
+    	ITeiidServer defaultServer = getServerManager().getDefaultServer();
         try {
             String driverPath = defaultServer.getAdminDriverPath();
             String vdbName = PreviewManager.getPreviewProjectVdbName(project);

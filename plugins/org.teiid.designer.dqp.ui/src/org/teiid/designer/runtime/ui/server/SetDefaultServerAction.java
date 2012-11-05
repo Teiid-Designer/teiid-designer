@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
@@ -42,7 +42,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
     /**
      * The servers being deleted (never <code>null</code>).
      */
-    private TeiidServer selectedServer;
+    private ITeiidServer selectedServer;
 
     /**
      * @param shell the parent shell used to display the dialog
@@ -83,7 +83,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
     	}
         this.teiidServerManager.setDefaultServer(this.selectedServer);
         if( !this.selectedServer.isConnected() ) {
-        	final TeiidServer theNewDefaultServer = this.selectedServer;
+        	final ITeiidServer theNewDefaultServer = this.selectedServer;
             UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
 
                 @Override
@@ -111,7 +111,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
         }
         
         // reset selected server collection
-        TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
+        ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
 
         // enable only if selected object is server and not same server
         if (teiidServer == null)

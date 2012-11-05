@@ -17,7 +17,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.osgi.util.NLS;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 import org.teiid.designer.vdb.Vdb;
@@ -37,7 +38,7 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
     /**
      * The server where the preview is being performed (may be <code>null</code> if preview is not enabled).
      */
-    private final TeiidServer previewServer;
+    private final ITeiidServer previewServer;
 
     /**
      * The Preview VDB to be updated (never <code>null</code>).
@@ -51,7 +52,7 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
      * @throws Exception if unable to construct the Preview VDB path
      */
     public UpdatePreviewVdbJob( IFile changedModel,
-                                TeiidServer previewServer,
+                                ITeiidServer previewServer,
                                 PreviewContext context ) throws Exception {
         super(NLS.bind(Messages.UpdatePreviewVdbJob, changedModel.getFullPath().removeFileExtension()), context);
         this.model = changedModel;
@@ -85,7 +86,7 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
     /**
      * @return the preview server used for this job (may be <code>null</code>)
      */
-    public TeiidServer getPreviewServer() {
+    public ITeiidServer getPreviewServer() {
         return this.previewServer;
     }
 

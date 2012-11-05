@@ -10,7 +10,6 @@ package org.teiid.designer.runtime.ui.server;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -25,7 +24,7 @@ import org.teiid.core.designer.event.IChangeListener;
 import org.teiid.core.designer.event.IChangeNotifier;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 
@@ -37,7 +36,7 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 
 	private static final String PREFIX = I18nUtil.getPropertyPrefix(ServerSelectionDialog.class);
 
-	TeiidServer selectedServer;
+	ITeiidServer selectedServer;
 	
 	Combo serversCombo;
 
@@ -111,8 +110,8 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 					selectedServer = null;
 					String serverName = serversCombo.getItem(serversCombo.getSelectionIndex());
 					
-					Collection<TeiidServer> teiidServers = DqpPlugin.getInstance().getServerManager().getServers();
-					for( TeiidServer teiidServer : teiidServers ) {
+					Collection<ITeiidServer> teiidServers = DqpPlugin.getInstance().getServerManager().getServers();
+					for( ITeiidServer teiidServer : teiidServers ) {
 						if( teiidServer.getCustomLabel().equalsIgnoreCase(serverName) ) {
 							selectedServer = teiidServer;
 							break;
@@ -122,9 +121,9 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 					updateState();
 				}
 			});
-			Collection<TeiidServer> teiidServers = DqpPlugin.getInstance().getServerManager().getServers();
+			Collection<ITeiidServer> teiidServers = DqpPlugin.getInstance().getServerManager().getServers();
 			List<String> nameList = new ArrayList<String>();
-			for( TeiidServer teiidServer : teiidServers ) {
+			for( ITeiidServer teiidServer : teiidServers ) {
 				nameList.add(teiidServer.getCustomLabel());
 			}
 			WidgetUtil.setComboItems(serversCombo, nameList, null, true);
@@ -133,7 +132,7 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 		return panel;
 	}
 
-	public TeiidServer getServer() {
+	public ITeiidServer getServer() {
 		return this.selectedServer;
 	}
 

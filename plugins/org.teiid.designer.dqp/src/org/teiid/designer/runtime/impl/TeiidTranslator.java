@@ -18,9 +18,9 @@ import org.teiid.adminapi.Translator;
 import org.teiid.core.designer.HashCodeUtil;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.TeiidPropertyDefinition;
-import org.teiid.designer.runtime.TeiidServer;
 
 /**
  *
@@ -29,11 +29,11 @@ import org.teiid.designer.runtime.TeiidServer;
 public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTranslator {
 
     private final Translator translator;
-    private final TeiidServer teiidServer;
+    private final ITeiidServer teiidServer;
 
     private final Collection<TeiidPropertyDefinition> propDefs = new ArrayList<TeiidPropertyDefinition>();
 
-    public TeiidTranslator( Translator translator, Collection<? extends PropertyDefinition> propDefs, TeiidServer teiidServer) {
+    public TeiidTranslator( Translator translator, Collection<? extends PropertyDefinition> propDefs, ITeiidServer teiidServer) {
         CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(propDefs, "propDefs"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(teiidServer, "teiidServer"); //$NON-NLS-1$
@@ -82,7 +82,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
         if (obj.getClass() != getClass()) return false;
 
         ITeiidTranslator other = (ITeiidTranslator)obj;
-        TeiidServer otherServer = other.getTeiidServer();
+        ITeiidServer otherServer = other.getTeiidServer();
 
         if (getName().equals(other.getName()) && (getTeiidServer() == otherServer || getTeiidServer().equals(otherServer)) ) return true;
 
@@ -172,7 +172,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
      * @return the execution teiidServer (never <code>null</code>)
      */
     @Override
-    public TeiidServer getTeiidServer() {
+    public ITeiidServer getTeiidServer() {
         return this.teiidServer;
     }
     

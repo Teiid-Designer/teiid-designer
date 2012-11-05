@@ -17,7 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ITeiidTranslator;
 
 
@@ -30,7 +30,7 @@ public class SourceBindingTest {
     private static final ITeiidTranslator NULL_CONNECTOR = null;
 
     @Mock
-    private TeiidServer teiidServer;
+    private ITeiidServer teiidServer;
 
     private ITeiidTranslator commonConnector;
 
@@ -45,7 +45,7 @@ public class SourceBindingTest {
 
     private ITeiidTranslator getMockConnector() {
         ITeiidTranslator conn = mock(ITeiidTranslator.class);
-        TeiidServer newTeiidServer = mock(TeiidServer.class);
+        ITeiidServer newTeiidServer = mock(ITeiidServer.class);
         when(conn.getType()).thenReturn("theType");
         when(conn.getTeiidServer()).thenReturn(newTeiidServer);
 

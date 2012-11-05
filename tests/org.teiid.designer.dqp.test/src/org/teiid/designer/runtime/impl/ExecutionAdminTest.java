@@ -28,8 +28,8 @@ import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
 import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.runtime.EventManager;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ITeiidTranslator;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.vdb.Vdb;
 
 /**
@@ -43,7 +43,7 @@ public class ExecutionAdminTest {
     private Admin admin;
     
     @Mock 
-    private TeiidServer teiidServer;
+    private ITeiidServer teiidServer;
     
     @Mock
     private EventManager eventManager;

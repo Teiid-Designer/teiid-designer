@@ -22,7 +22,6 @@ import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.spi.RegistrySPI;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.runtime.connection.IConnectionProperties;
-import org.teiid.designer.runtime.impl.ExecutionAdmin;
 import org.teiid.designer.runtime.impl.TeiidTranslator;
 
 /**
@@ -86,9 +85,9 @@ public class MockObjectFactory {
         return new TeiidTranslator(translator, propertyDefs, createTeiidServer());
     }
 
-    private static TeiidServer createTeiidServer() {
+    private static ITeiidServer createTeiidServer() {
         final EventManager eventManager = mock(EventManager.class);
-        final TeiidServer teiidServer = mock(TeiidServer.class);
+        final ITeiidServer teiidServer = mock(ITeiidServer.class);
         
         return teiidServer;
     }

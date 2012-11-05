@@ -51,7 +51,7 @@ import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
 import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
@@ -106,7 +106,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
 
     Map<String, ModelResource> relationalModelsMap;
 
-    private TeiidServer teiidServer;
+    private ITeiidServer teiidServer;
     // private JdbcManager jdbcManager;
     private ConnectionInfoProviderFactory providerFactory;
     // private IConnectionProfile selectedProfile;
@@ -122,7 +122,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
     /**
      * @since 4.0
      */
-    public CreateDataSourceWizard( TeiidServer teiidServer,
+    public CreateDataSourceWizard( ITeiidServer teiidServer,
                                    Collection<ModelResource> relationalModels,
                                    ModelResource initialSelection ) {
         super(DqpUiPlugin.getDefault(), TITLE, null);

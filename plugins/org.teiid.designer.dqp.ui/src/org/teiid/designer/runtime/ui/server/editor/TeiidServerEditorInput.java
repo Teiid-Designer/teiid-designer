@@ -13,7 +13,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.ITeiidServer;
 
 /**
  *
@@ -38,11 +38,11 @@ public class TeiidServerEditorInput implements IEditorInput, IPersistableElement
     }
     
     /**
-     * Get the {@link TeiidServer} referenced by this input
+     * Get the {@link ITeiidServer} referenced by this input
      * 
-     * @return the {@link TeiidServer} or null
+     * @return the {@link ITeiidServer} or null
      */
-    public TeiidServer getTeiidServer() {
+    public ITeiidServer getTeiidServer() {
         DqpPlugin dqpPlugin = DqpPlugin.getInstance();
         if (dqpPlugin == null) 
             return null;
@@ -94,7 +94,7 @@ public class TeiidServerEditorInput implements IEditorInput, IPersistableElement
     @Override
     public String getName() {
         if (serverUrl != null) {
-            TeiidServer server = getTeiidServer();
+            ITeiidServer server = getTeiidServer();
             if (server != null)
                 return server.getCustomLabel();
             

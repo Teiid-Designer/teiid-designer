@@ -22,8 +22,8 @@ import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.datatools.ui.dialogs.TeiidCPWizardDialog;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.actions.DeployVdbAction;
@@ -83,7 +83,7 @@ public class ExecuteVdbWorker implements VdbConstants {
 	}
 
 	void internalRun(final IFile selectedVdb) {
-		TeiidServer teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+		ITeiidServer teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
 
 		try {
 			if (teiidServer != null) {
@@ -130,12 +130,12 @@ public class ExecuteVdbWorker implements VdbConstants {
 	}
 	
 
-	public void executeVdb(TeiidServer teiidServer, String vdbName)
+	public void executeVdb(ITeiidServer teiidServer, String vdbName)
 			throws Exception {
 		processForDTP(teiidServer, vdbName);
 	}
 
-	public void processForDTP(TeiidServer teiidServer, String vdbName)
+	public void processForDTP(ITeiidServer teiidServer, String vdbName)
 			throws Exception {
 
 		String driverPath = teiidServer.getAdminDriverPath();

@@ -24,7 +24,7 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(EventType.ADD, TargetType.DATA_SOURCE, dataSource);
     }
 
-    public static ExecutionConfigurationEvent createAddServerEvent( TeiidServer teiidServer ) {
+    public static ExecutionConfigurationEvent createAddServerEvent( ITeiidServer teiidServer ) {
         return new ExecutionConfigurationEvent(EventType.ADD, TargetType.SERVER, teiidServer);
     }
 
@@ -36,16 +36,16 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.DATA_SOURCE, dataSource);
     }
 
-    public static ExecutionConfigurationEvent createRemoveServerEvent( TeiidServer teiidServer ) {
+    public static ExecutionConfigurationEvent createRemoveServerEvent( ITeiidServer teiidServer ) {
         return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.SERVER, teiidServer);
     }
 
-    public static ExecutionConfigurationEvent createServerRefreshEvent( TeiidServer teiidServer ) {
+    public static ExecutionConfigurationEvent createServerRefreshEvent( ITeiidServer teiidServer ) {
         return new ExecutionConfigurationEvent(EventType.REFRESH, TargetType.SERVER, teiidServer);
     }
 
-    public static ExecutionConfigurationEvent createSetDefaultServerEvent( TeiidServer oldDefaultServer,
-                                                                           TeiidServer newDefaultServer ) {
+    public static ExecutionConfigurationEvent createSetDefaultServerEvent( ITeiidServer oldDefaultServer,
+                                                                           ITeiidServer newDefaultServer ) {
         return new ExecutionConfigurationEvent(EventType.DEFAULT, TargetType.SERVER, oldDefaultServer, newDefaultServer);
     }
 
@@ -57,8 +57,8 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(EventType.UPDATE, TargetType.DATA_SOURCE, dataSource);
     }
 
-    public static ExecutionConfigurationEvent createUpdateServerEvent( TeiidServer teiidServer,
-                                                                       TeiidServer updatedServer ) {
+    public static ExecutionConfigurationEvent createUpdateServerEvent( ITeiidServer teiidServer,
+                                                                       ITeiidServer updatedServer ) {
         return new ExecutionConfigurationEvent(EventType.UPDATE, TargetType.SERVER, teiidServer, updatedServer);
     }
 
@@ -125,14 +125,14 @@ public final class ExecutionConfigurationEvent {
      * @return the server involved in the event (may be <code>null</code>)
      * @throws IllegalStateException if method is called for a connector event
      */
-    public TeiidServer getServer() {
+    public ITeiidServer getServer() {
         if (this.targetType != TargetType.SERVER) {
             throw new IllegalStateException(Util.getString("invalidTargetTypeForGetServerMethod", //$NON-NLS-1$
                                                            this.targetType,
                                                            TargetType.SERVER));
         }
 
-        return (TeiidServer)this.target;
+        return (ITeiidServer)this.target;
     }
 
     /**
@@ -176,14 +176,14 @@ public final class ExecutionConfigurationEvent {
      * @return the updated server involved in the event (may be <code>null</code>)
      * @throws IllegalStateException if method is called for a connector event
      */
-    public TeiidServer getUpdatedServer() {
+    public ITeiidServer getUpdatedServer() {
         if (this.targetType != TargetType.SERVER) {
             throw new IllegalStateException(Util.getString("invalidTargetTypeForGetUpdatedServerMethod", //$NON-NLS-1$
                                                            this.targetType,
                                                            TargetType.SERVER));
         }
 
-        return (TeiidServer)this.updatedTarget;
+        return (ITeiidServer)this.updatedTarget;
     }
 
     public enum EventType {

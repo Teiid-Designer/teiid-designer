@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
@@ -54,7 +55,7 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
                                         int pvdbVersion,
                                         String jndiName,
                                         PreviewContext context,
-                                        TeiidServer previewServer ) {
+                                        ITeiidServer previewServer ) {
         super(NLS.bind(Messages.DeleteDeployedPreviewVdbJob, pvdbName), context, previewServer);
 
         assert !StringUtilities.isEmpty(pvdbName) : "Preview VDB name is null or empty"; //$NON-NLS-1$
@@ -76,7 +77,7 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
             return Status.CANCEL_STATUS;
         }
 
-        TeiidServer teiidServer = getPreviewServer();
+        ITeiidServer teiidServer = getPreviewServer();
         int errors = 0;
         IStatus deleteVdbErrorStatus = null;
 

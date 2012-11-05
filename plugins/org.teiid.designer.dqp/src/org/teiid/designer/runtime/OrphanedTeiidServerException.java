@@ -11,7 +11,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 
 /**
- * Exception thrown if a {@link TeiidServer} is constructed but a related
+ * Exception thrown if a {@link ITeiidServer} is constructed but a related
  * {@link IServer} cannot be found in the {@link ServerCore#getServers()}
  * collection.
  * 

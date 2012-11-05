@@ -30,8 +30,8 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
@@ -121,7 +121,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
      */
     @Override
     public void run() {
-        TeiidServer teiidServer = getServerManager().getDefaultServer();
+        ITeiidServer teiidServer = getServerManager().getDefaultServer();
 
         for (IFile nextVDB : this.selectedVDBs) {
             boolean doDeploy = VdbRequiresSaveChecker.insureOpenVdbSaved(nextVDB);
@@ -144,7 +144,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
      * Ask the user to select the vdb and deploy it
      */
     public void queryUserAndRun() {
-        TeiidServer teiidServer = getServerManager().getDefaultServer();
+        ITeiidServer teiidServer = getServerManager().getDefaultServer();
         
         DeployVdbDialog dialog = new DeployVdbDialog(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(), designerProperties);
 
@@ -204,7 +204,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
      * @param teiidServer the teiidServer where the VDB is being deployed to (can be <code>null</code>)
      * @param vdbOrVdbFile the VDB being deployed
      */
-    public static void deployVdb( TeiidServer teiidServer,
+    public static void deployVdb( ITeiidServer teiidServer,
                                  final Object vdbOrVdbFile ) {
     	deployVdb(teiidServer, vdbOrVdbFile, shouldAutoCreateDataSource());
     }
@@ -216,7 +216,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 	 * @param vdbOrVdbFile
 	 * @param doCreateDataSource
 	 */
-	public static void deployVdb(TeiidServer teiidServer, final Object vdbOrVdbFile, final boolean doCreateDataSource) {
+	public static void deployVdb(ITeiidServer teiidServer, final Object vdbOrVdbFile, final boolean doCreateDataSource) {
 		Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
 
 		try {
@@ -323,7 +323,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     
     private static void createVdbDataSource(Object vdbOrVdbFile, String displayName, String jndiName) {
     	Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new Vdb((IFile) vdbOrVdbFile, null) : (Vdb) vdbOrVdbFile);
-    	TeiidServer teiidServer = getServerManager().getDefaultServer();
+    	ITeiidServer teiidServer = getServerManager().getDefaultServer();
     	teiidServer.createVdbDataSource(vdb.getFile().getName(), displayName, jndiName);
     }
 
