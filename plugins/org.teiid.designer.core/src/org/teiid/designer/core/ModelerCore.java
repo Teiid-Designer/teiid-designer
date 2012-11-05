@@ -7,11 +7,7 @@
  */
 package org.teiid.designer.core;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,7 +17,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -62,6 +57,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.core.designer.util.Stopwatch;
+import org.teiid.designer.WorkspaceUUIDService;
 import org.teiid.designer.core.ModelerCore.EXTENSION_POINT.EOBJECT_MATCHER_FACTORY;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.container.ContainerImpl;
@@ -1656,32 +1652,9 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         getValidationPreferences();
 
         final File file = getStateLocation().append(WORKSPACE_UUID_FILE).toFile();
+        WorkspaceUUIDService.getInstance().setRestoreLocation(file);
         
-        UUID workspaceUuid = null;
-        if (file.exists()) {
-            final BufferedReader reader = new BufferedReader(new FileReader(file));
-            try {
-                workspaceUuid = registry.register(UUID_KEY, UUID.fromString(reader.readLine()));
-            } catch (final IOException error) {
-            } finally {
-                try {
-                    reader.close();
-                } catch (final IOException ignored) {
-                }
-            }
-        }
-        if (workspaceUuid == null) {
-            workspaceUuid = registry.register(UUID_KEY, UUID.randomUUID());
-            final FileWriter writer = new FileWriter(file);
-            try {
-                writer.write(workspaceUuid.toString());
-            } finally {
-                try {
-                    writer.close();
-                } catch (final IOException ignored) {
-                }
-            }
-        }
+        registry.register(UUID_KEY, WorkspaceUUIDService.getInstance().getUUID());
 
         watch.stop();
         StartupLogger.log(" ModelerCore.startup() FINISHED", watch.getTotalDuration()); //$NON-NLS-1$

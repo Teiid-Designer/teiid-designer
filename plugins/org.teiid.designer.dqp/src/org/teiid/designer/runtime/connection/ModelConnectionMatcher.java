@@ -2,7 +2,8 @@ package org.teiid.designer.runtime.connection;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import org.teiid.designer.core.ModelerCore;
+import java.util.UUID;
+import org.teiid.designer.WorkspaceUUIDService;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.vdb.Vdb;
@@ -23,7 +24,8 @@ public class ModelConnectionMatcher {
             TeiidDataSource tds = new TeiidDataSource(name, name, "<unknown>"); //$NON-NLS-1$
             
             if (name.startsWith(Vdb.PREVIEW_PREFIX)) {
-                if (name.length() > ModelerCore.workspaceUuid().toString().length() + 8) {
+                UUID workspaceUuid = WorkspaceUUIDService.getInstance().getUUID();
+                if (name.length() > workspaceUuid.toString().length() + 8) {
                     tds.setPreview(true);
                 }
             }
