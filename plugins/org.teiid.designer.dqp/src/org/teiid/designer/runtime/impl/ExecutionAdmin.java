@@ -37,20 +37,20 @@ import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.designer.runtime.EventManager;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent;
-import org.teiid.designer.runtime.IExecutionAdmin;
-import org.teiid.designer.runtime.ITeiidAdminInfo;
-import org.teiid.designer.runtime.ITeiidDataSource;
-import org.teiid.designer.runtime.ITeiidJdbcInfo;
-import org.teiid.designer.runtime.ITeiidServer;
-import org.teiid.designer.runtime.ITeiidTranslator;
-import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServerUtils;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
 import org.teiid.designer.runtime.preview.Messages;
+import org.teiid.designer.runtime.spi.EventManager;
+import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.spi.IExecutionAdmin;
+import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
+import org.teiid.designer.runtime.spi.ITeiidDataSource;
+import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.jdbc.TeiidDriver;
 
@@ -186,12 +186,6 @@ public class ExecutionAdmin implements IExecutionAdmin {
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createDeployVDBEvent(vdb.getName()));
     }
     
-    @Override
-    public void deployVdb( Vdb vdb ) throws Exception {
-        CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
-        deployVdb(vdb.getFile());
-    }
-
     /**
      * Closes the admin and re-sets the cached items from the server
      */

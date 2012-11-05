@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -31,14 +32,13 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.EditorPart;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
-import org.teiid.designer.runtime.IExecutionConfigurationListener;
-import org.teiid.designer.runtime.ITeiidJdbcInfo;
-import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
+import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent.TargetType;
+import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
+import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**

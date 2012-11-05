@@ -18,7 +18,7 @@ import org.jboss.ide.eclipse.as.management.core.JBoss7ManagerUtil;
 import org.jboss.ide.eclipse.as.management.core.ModelDescriptionConstants;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ITeiidJdbcInfo;
+import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 
 /**
  * @since 8.0

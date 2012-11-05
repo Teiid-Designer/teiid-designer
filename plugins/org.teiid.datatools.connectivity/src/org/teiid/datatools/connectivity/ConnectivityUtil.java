@@ -22,8 +22,8 @@ import org.eclipse.datatools.connectivity.drivers.IPropertySet;
 import org.eclipse.datatools.connectivity.drivers.PropertySetImpl;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
-import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
 import org.teiid.datatools.connectivity.security.impl.EquinoxSecureStorageProvider;
+import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
 
 /**
  * 

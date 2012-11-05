@@ -13,7 +13,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 
 /**
  *

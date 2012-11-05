@@ -23,7 +23,7 @@ import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.event.IChangeNotifier;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
-import org.teiid.designer.runtime.connection.IPasswordProvider;
+import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 
 
 /**

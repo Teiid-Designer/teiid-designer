@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.eclipse.wst.server.core.IServer;
-import org.teiid.designer.runtime.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 
 /**
  * @param <V> actual business objects this folder has as children

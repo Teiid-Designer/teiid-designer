@@ -14,7 +14,7 @@ import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.vdb.connections.VdbSourceConnection;
 
 /**

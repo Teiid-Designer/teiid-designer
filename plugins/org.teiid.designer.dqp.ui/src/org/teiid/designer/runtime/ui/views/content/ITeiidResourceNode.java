@@ -7,7 +7,7 @@
 */
 package org.teiid.designer.runtime.ui.views.content;
 
-import org.teiid.designer.runtime.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 
 
 /**

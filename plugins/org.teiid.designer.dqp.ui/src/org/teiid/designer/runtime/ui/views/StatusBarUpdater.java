@@ -12,7 +12,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.teiid.designer.runtime.ITeiidTranslator;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 
 /**

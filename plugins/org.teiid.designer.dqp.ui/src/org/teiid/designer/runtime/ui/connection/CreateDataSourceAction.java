@@ -23,7 +23,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.actions.SortableSelectionAction;

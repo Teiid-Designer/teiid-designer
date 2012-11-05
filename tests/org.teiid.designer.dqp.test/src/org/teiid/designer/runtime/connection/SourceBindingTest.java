@@ -17,8 +17,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.teiid.designer.runtime.ITeiidServer;
-import org.teiid.designer.runtime.ITeiidTranslator;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
 
 
 /**

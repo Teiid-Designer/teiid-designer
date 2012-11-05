@@ -22,7 +22,16 @@ import org.eclipse.wst.server.core.IServer;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.impl.ExecutionAdmin;
-import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.runtime.spi.EventManager;
+import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.spi.HostProvider;
+import org.teiid.designer.runtime.spi.IExecutionAdmin;
+import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
+import org.teiid.designer.runtime.spi.ITeiidDataSource;
+import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 
 
 /**
@@ -475,12 +484,6 @@ public class TeiidServer implements ITeiidServer {
     public void deployVdb(IFile vdbFile) throws Exception {
         connect();
         admin.deployVdb(vdbFile);
-    }
-
-    @Override
-    public void deployVdb(Vdb vdb) throws Exception {
-        connect();
-        admin.deployVdb(vdb);
     }
 
     @Override

@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.datatools.connectivity.security;
+package org.teiid.datatools.connectivity.spi;
 
 
 

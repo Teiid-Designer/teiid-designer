@@ -18,9 +18,10 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.Vdb;
 
 /**

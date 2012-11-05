@@ -5,7 +5,8 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.runtime;
+package org.teiid.designer.runtime.spi;
+
 
 /**
  * The <code>IExecutionConfigurationListener</code> interface defines the API for a server registry listener.

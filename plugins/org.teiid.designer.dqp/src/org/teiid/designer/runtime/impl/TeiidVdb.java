@@ -7,8 +7,8 @@ import java.util.List;
 import org.teiid.adminapi.Model;
 import org.teiid.adminapi.VDB;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.designer.runtime.ITeiidServer;
-import org.teiid.designer.runtime.ITeiidVdb;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.vdb.Vdb;
 /**
  * @since 8.0

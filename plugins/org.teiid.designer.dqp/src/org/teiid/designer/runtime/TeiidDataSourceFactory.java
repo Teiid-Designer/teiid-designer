@@ -15,7 +15,9 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
-import org.teiid.designer.runtime.connection.IPasswordProvider;
+import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
+import org.teiid.designer.runtime.spi.ITeiidDataSource;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 
 /**
  * @since 8.0

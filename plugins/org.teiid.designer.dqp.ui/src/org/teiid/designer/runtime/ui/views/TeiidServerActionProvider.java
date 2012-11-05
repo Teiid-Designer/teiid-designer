@@ -33,12 +33,12 @@ import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ITeiidDataSource;
-import org.teiid.designer.runtime.ITeiidServer;
-import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
+import org.teiid.designer.runtime.spi.ITeiidDataSource;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.actions.ExecuteVDBAction;
@@ -268,7 +268,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 for (Object obj : selectedObjs) {
                     ITeiidDataSource tds = RuntimeAssistant.adapt(obj, ITeiidDataSource.class);
                     ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
-                    
                     if (teiidServer != null && teiidServer.isConnected()) {
                         try {
                             teiidServer.deleteDataSource(tds.getName());

@@ -12,9 +12,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
-import org.teiid.designer.runtime.ITeiidServer;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
 

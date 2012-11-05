@@ -17,10 +17,10 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.DebugConstants;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 
 /**
  * The <code>TeiidPreviewVdbJob</code> class are jobs that either deploy Preview VDBs to a Teiid server or remove Preview VDBs

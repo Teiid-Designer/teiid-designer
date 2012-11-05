@@ -19,9 +19,9 @@ import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
-import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.TranslatorTemplate;
 import org.teiid.designer.runtime.connection.SourceConnectionBinding;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.ui.properties.ModelPropertySource;
 

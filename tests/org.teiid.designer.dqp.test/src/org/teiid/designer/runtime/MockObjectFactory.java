@@ -23,6 +23,9 @@ import org.teiid.designer.core.spi.RegistrySPI;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.runtime.connection.IConnectionProperties;
 import org.teiid.designer.runtime.impl.TeiidTranslator;
+import org.teiid.designer.runtime.spi.EventManager;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
 
 /**
  *

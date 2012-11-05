@@ -14,6 +14,7 @@ import static org.junit.Assert.assertThat;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Before;
 import org.junit.Test;
+import org.teiid.designer.runtime.spi.HostProvider;
 
 /**
  * 

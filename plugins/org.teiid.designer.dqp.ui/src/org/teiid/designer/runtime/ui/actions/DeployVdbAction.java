@@ -30,9 +30,9 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.TeiidServerManager;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.vdb.DeployVdbDialog;
@@ -41,6 +41,7 @@ import org.teiid.designer.runtime.ui.vdb.VdbRequiresSaveChecker;
 import org.teiid.designer.ui.actions.ISelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.Vdb;
 
 

@@ -15,8 +15,10 @@ import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.HashCodeUtil;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
-import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
+import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.runtime.spi.HostProvider;
+import org.teiid.designer.runtime.spi.ITeiidConnectionInfo;
 
 /**
  * 

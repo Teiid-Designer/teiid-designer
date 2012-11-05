@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.runtime.connection;
+package org.teiid.designer.runtime.connection.spi;
 
 /**
  * Simple interface provides DQP preview manager ability to ask for user password

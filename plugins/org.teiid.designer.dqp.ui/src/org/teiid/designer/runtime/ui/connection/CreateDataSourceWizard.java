@@ -51,7 +51,7 @@ import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
 import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
-import org.teiid.designer.runtime.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;

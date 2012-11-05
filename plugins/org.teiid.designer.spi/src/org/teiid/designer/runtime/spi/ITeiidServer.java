@@ -5,11 +5,10 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.designer.runtime;
+package org.teiid.designer.runtime.spi;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IServer;
-
 /**
  * @since 8.0
  *

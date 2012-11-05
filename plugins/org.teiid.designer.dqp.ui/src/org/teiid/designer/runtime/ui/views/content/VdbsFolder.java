@@ -8,7 +8,7 @@
 package org.teiid.designer.runtime.ui.views.content;
 
 import java.util.Collection;
-import org.teiid.designer.runtime.ITeiidVdb;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 
 /**

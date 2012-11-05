@@ -71,15 +71,15 @@ import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ITeiidJdbcInfo;
-import org.teiid.designer.runtime.ITeiidServer;
-import org.teiid.designer.runtime.ITeiidTranslator;
-import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob;
+import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.dialogs.AccessPatternColumnsDialog;
 import org.teiid.designer.runtime.ui.dialogs.ParameterInputDialog;
@@ -91,7 +91,6 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.webservice.util.WebServiceUtil;
-
 
 /**
  * @since 8.0

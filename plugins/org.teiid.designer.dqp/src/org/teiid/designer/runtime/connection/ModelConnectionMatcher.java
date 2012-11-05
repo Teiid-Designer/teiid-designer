@@ -3,8 +3,8 @@ package org.teiid.designer.runtime.connection;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.runtime.ITeiidDataSource;
 import org.teiid.designer.runtime.TeiidDataSource;
+import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.vdb.Vdb;
 
 

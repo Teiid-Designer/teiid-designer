@@ -5,10 +5,10 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.designer.runtime;
+package org.teiid.designer.runtime.spi;
 
 import org.eclipse.core.runtime.IStatus;
-import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
+import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
 
 /**
  * @since 8.0

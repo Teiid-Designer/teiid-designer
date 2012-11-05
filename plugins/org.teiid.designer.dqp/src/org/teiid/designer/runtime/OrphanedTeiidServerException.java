@@ -9,6 +9,8 @@ package org.teiid.designer.runtime;
 
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
+import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 
 /**
  * Exception thrown if a {@link ITeiidServer} is constructed but a related

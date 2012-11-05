@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.designer.runtime;
+package org.teiid.designer.runtime.spi;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,7 +13,6 @@ import java.util.Properties;
 import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
-import org.teiid.designer.vdb.Vdb;
 
 /**
  * @since 8.0
@@ -70,15 +69,6 @@ public interface IExecutionAdmin {
      * @throws Exception if deployment fails
      */
      void deployVdb(IFile vdbFile) throws Exception;
-
-    /**
-     * Deploys the input Vdb archive file to the related Teiid server
-     * 
-     * @param vdb the local Vdb to deploy
-     * 
-     * @throws Exception if deployment fails
-     */
-     void deployVdb(Vdb vdb) throws Exception;
 
     /**
      * Returns a teiid data source object if it exists in this server

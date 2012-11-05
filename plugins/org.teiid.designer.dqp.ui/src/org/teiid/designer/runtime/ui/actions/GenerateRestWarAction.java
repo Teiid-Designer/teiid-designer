@@ -55,6 +55,7 @@ import org.teiid.designer.ui.actions.ISelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
 
 

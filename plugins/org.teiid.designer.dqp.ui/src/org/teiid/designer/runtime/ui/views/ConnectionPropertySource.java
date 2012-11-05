@@ -23,9 +23,9 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.JDBCConnectionPropertyNames;
-import org.teiid.designer.runtime.TeiidPropertyDefinition;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
+import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 

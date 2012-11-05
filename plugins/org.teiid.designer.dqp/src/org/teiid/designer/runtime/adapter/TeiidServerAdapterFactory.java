@@ -15,14 +15,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ITeiidAdminInfo;
-import org.teiid.designer.runtime.ITeiidConnectionInfo;
-import org.teiid.designer.runtime.ITeiidJdbcInfo;
-import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.TeiidAdminInfo;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
+import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
+import org.teiid.designer.runtime.spi.ITeiidConnectionInfo;
+import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 
 /**
  * Adapter factory that can adapt an {@link IServer} to a {@link ITeiidServer}

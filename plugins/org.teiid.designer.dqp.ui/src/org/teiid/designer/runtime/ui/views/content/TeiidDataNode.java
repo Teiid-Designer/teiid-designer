@@ -10,13 +10,12 @@ package org.teiid.designer.runtime.ui.views.content;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.core.IServer;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.designer.runtime.ITeiidDataSource;
-import org.teiid.designer.runtime.ITeiidServer;
-import org.teiid.designer.runtime.ITeiidTranslator;
-import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidDataSource;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.connection.SourceConnectionBinding;
+import org.teiid.designer.runtime.spi.ITeiidDataSource;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 

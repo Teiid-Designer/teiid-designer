@@ -42,7 +42,7 @@ import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.actions.DeployVdbAction;
 import org.teiid.designer.runtime.ui.actions.EditVdbAction;
 import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;

@@ -27,10 +27,9 @@ import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
 import org.teiid.designer.core.ModelWorkspaceMock;
-import org.teiid.designer.runtime.EventManager;
-import org.teiid.designer.runtime.ITeiidServer;
-import org.teiid.designer.runtime.ITeiidTranslator;
-import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.runtime.spi.EventManager;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
 
 /**
  * 
@@ -86,12 +85,6 @@ public class ExecutionAdminTest {
     public void shouldNotAllowNullIFileVdbForDeployVdb() throws Exception {
         IFile nullFile = null;
         getNewAdmin().deployVdb(nullFile);
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowNullVdbForDeployVdb() throws Exception {
-        Vdb nullVdb = null;
-        getNewAdmin().deployVdb(nullVdb);
     }
 
     @Test

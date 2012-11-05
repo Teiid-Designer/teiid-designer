@@ -16,10 +16,10 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.core.util.StringUtilities;
-import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 
 /**
  * The <code>DeleteDeployedPreviewVdbJob</code> deletes a Preview VDB from a Teiid server and also deletes its associated JNDI

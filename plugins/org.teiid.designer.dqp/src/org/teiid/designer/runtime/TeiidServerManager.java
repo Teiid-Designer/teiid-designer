@@ -37,13 +37,19 @@ import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.core.designer.util.Base64;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
+import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory.ServerOptions;
-import org.teiid.designer.runtime.connection.IPasswordProvider;
+import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.preview.PreviewManager;
+import org.teiid.designer.runtime.spi.EventManager;
+import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
+import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
+import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -390,7 +396,7 @@ public final class TeiidServerManager implements EventManager {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.runtime.EventManager#addListener(org.teiid.designer.runtime.IExecutionConfigurationListener)
+     * @see org.teiid.designer.runtime.spi.EventManager#addListener(org.teiid.designer.runtime.spi.IExecutionConfigurationListener)
      */
     @Override
     public boolean addListener( IExecutionConfigurationListener listener ) {
@@ -612,7 +618,7 @@ public final class TeiidServerManager implements EventManager {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.runtime.EventManager#notifyListeners(org.teiid.designer.runtime.ExecutionConfigurationEvent)
+     * @see org.teiid.designer.runtime.spi.EventManager#notifyListeners(org.teiid.designer.runtime.spi.ExecutionConfigurationEvent)
      */
     @Override
     public void notifyListeners( ExecutionConfigurationEvent event ) {
@@ -629,7 +635,7 @@ public final class TeiidServerManager implements EventManager {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.runtime.EventManager#removeListener(org.teiid.designer.runtime.IExecutionConfigurationListener)
+     * @see org.teiid.designer.runtime.spi.EventManager#removeListener(org.teiid.designer.runtime.spi.IExecutionConfigurationListener)
      */
     @Override
     public boolean removeListener( IExecutionConfigurationListener listener ) {

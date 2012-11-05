@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import org.eclipse.wst.server.core.IServer;
-import org.teiid.designer.runtime.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
 

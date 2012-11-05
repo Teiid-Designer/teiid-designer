@@ -29,6 +29,8 @@ import org.teiid.adminapi.Translator;
 import org.teiid.designer.runtime.connection.IConnectionProperties;
 import org.teiid.designer.runtime.impl.ExecutionAdmin;
 import org.teiid.designer.runtime.impl.TeiidTranslator;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
 
 /**
  * 

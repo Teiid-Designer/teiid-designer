@@ -20,7 +20,7 @@ import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidDataSourceFactory;
-import org.teiid.designer.runtime.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
@@ -276,7 +276,7 @@ public class VdbDeployer {
 
             if (this.status == null) {
                 monitor.subTask(UTIL.getString(PREFIX + "deployVdbTask", getVdbName())); //$NON-NLS-1$
-                teiidServer.deployVdb(this.vdb);
+                teiidServer.deployVdb(vdb.getFile());
                 this.status = ((! teiidServer.hasVdb(getVdbName())) ? DeployStatus.DEPLOY_VDB_FAILED : DeployStatus.DEPLOYED_VDB);
             }
         } catch (Exception e) {

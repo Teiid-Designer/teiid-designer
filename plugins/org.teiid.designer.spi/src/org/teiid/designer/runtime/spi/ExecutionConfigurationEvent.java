@@ -5,11 +5,10 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.runtime;
+package org.teiid.designer.runtime.spi;
 
-import static org.teiid.designer.runtime.DqpPlugin.Util;
+import static org.teiid.designer.DesignerSPIPlugin.Util;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 
 
 /**
@@ -133,20 +132,6 @@ public final class ExecutionConfigurationEvent {
         }
 
         return (ITeiidServer)this.target;
-    }
-
-    /**
-     * @return the source binding involved in the event
-     * @throws IllegalStateException if method is called for a non-source binding event
-     */
-    public SourceConnectionBinding getSourceBinding() {
-        if (this.targetType != TargetType.SOURCE_BINDING) {
-            throw new IllegalStateException(Util.getString("invalidTargetTypeForGetSourceBindingMethod", //$NON-NLS-1$
-                                                           this.targetType,
-                                                           TargetType.SOURCE_BINDING));
-        }
-
-        return (SourceConnectionBinding)this.target;
     }
 
     /**

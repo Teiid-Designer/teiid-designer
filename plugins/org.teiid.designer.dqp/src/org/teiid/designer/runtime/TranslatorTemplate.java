@@ -12,6 +12,9 @@ import static org.teiid.designer.runtime.DqpPlugin.Util;
 import java.util.Collection;
 import java.util.Properties;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
+import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
 
 /**
  * The <code>TranslatorTemplate</code> class is an implementation of {@link ITeiidTranslator} that does not communicate with a Teiid

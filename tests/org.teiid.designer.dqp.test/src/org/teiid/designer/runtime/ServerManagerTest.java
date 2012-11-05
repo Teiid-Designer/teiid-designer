@@ -32,7 +32,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.teiid.core.util.SmartTestDesignerSuite;
-import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
+import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
+import org.teiid.designer.runtime.spi.EventManager;
+import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.spi.HostProvider;
+import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
+import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
+import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 
 /**
  * 

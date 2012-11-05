@@ -12,10 +12,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.eclipse.wst.server.core.IServer;
-import org.teiid.designer.runtime.ITeiidDataSource;
-import org.teiid.designer.runtime.ITeiidServer;
-import org.teiid.designer.runtime.ITeiidTranslator;
-import org.teiid.designer.runtime.ITeiidVdb;
+import org.teiid.designer.runtime.spi.ITeiidDataSource;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
 

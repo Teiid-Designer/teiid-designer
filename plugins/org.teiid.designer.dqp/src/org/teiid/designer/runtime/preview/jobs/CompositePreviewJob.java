@@ -21,9 +21,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
-import org.teiid.designer.runtime.ITeiidServer;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 
 /**
  * The <code>CompositePreviewJob</code> is a job that wraps multiple {@link PreviewVdbJob}s. Jobs can be run in sequence or

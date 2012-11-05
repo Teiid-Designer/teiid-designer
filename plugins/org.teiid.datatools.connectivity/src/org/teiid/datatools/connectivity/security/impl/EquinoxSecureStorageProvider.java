@@ -12,7 +12,7 @@ import java.net.URLEncoder;
 import org.eclipse.equinox.security.storage.EncodingUtils;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
-import org.teiid.datatools.connectivity.security.ISecureStorageProvider;
+import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
 
 /**
  * Implementation of {@link ISecureStorageProvider} which uses Eclipse's Equinox

@@ -76,16 +76,9 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.webservice.WebServicePackage;
 import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
-import org.teiid.designer.runtime.IExecutionConfigurationListener;
-import org.teiid.designer.runtime.ITeiidDataSource;
-import org.teiid.designer.runtime.ITeiidServer;
-import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.TeiidDataSourceFactory;
-import org.teiid.designer.runtime.connection.IPasswordProvider;
+import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.preview.jobs.CompositePreviewJob;
 import org.teiid.designer.runtime.preview.jobs.CreatePreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.DeleteDeployedPreviewVdbJob;
@@ -93,6 +86,13 @@ import org.teiid.designer.runtime.preview.jobs.DeletePreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.ModelChangedJob;
 import org.teiid.designer.runtime.preview.jobs.ModelProjectOpenedJob;
 import org.teiid.designer.runtime.preview.jobs.UpdatePreviewVdbJob;
+import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent.EventType;
+import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent.TargetType;
+import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
+import org.teiid.designer.runtime.spi.ITeiidDataSource;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbUtil;
@@ -381,7 +381,7 @@ public final class PreviewManager extends JobChangeAdapter
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.runtime.IExecutionConfigurationListener#configurationChanged(org.teiid.designer.runtime.ExecutionConfigurationEvent)
+     * @see org.teiid.designer.runtime.spi.IExecutionConfigurationListener#configurationChanged(org.teiid.designer.runtime.spi.ExecutionConfigurationEvent)
      */
     @Override
     public void configurationChanged( ExecutionConfigurationEvent event ) {

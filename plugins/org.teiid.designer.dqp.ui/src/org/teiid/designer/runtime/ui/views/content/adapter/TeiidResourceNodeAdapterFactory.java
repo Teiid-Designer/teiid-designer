@@ -9,7 +9,7 @@ package org.teiid.designer.runtime.ui.views.content.adapter;
 
 import java.util.List;
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.teiid.designer.runtime.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.views.content.ITeiidContentNode;
 import org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode;
 import org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode;
