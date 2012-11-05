@@ -291,7 +291,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.teiid.designer.relational"
          download-size="0"
@@ -367,12 +367,6 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="teiid_embedded_query"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="org.teiid.designer"
@@ -512,5 +506,11 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="org.teiid.8-2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
