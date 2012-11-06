@@ -30,8 +30,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.datatools.connectivity.IConnectionProfile;
-import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.AdminFactory;
@@ -39,13 +37,10 @@ import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.designer.core.workspace.ModelUtil;
-import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
-import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.EventManager;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionAdmin;
+import org.teiid.designer.runtime.ITeiidDataSource;
 import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidAdminInfo;
@@ -54,7 +49,6 @@ import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerUtils;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
-import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.vdb.Vdb;
@@ -71,7 +65,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     private final Admin admin;
     protected Map<String, ITeiidTranslator> translatorByNameMap;
     protected Collection<String> dataSourceNames;
-    protected Map<String, TeiidDataSource> dataSourceByNameMap;
+    protected Map<String, ITeiidDataSource> dataSourceByNameMap;
     protected Set<String> dataSourceTypeNames;
     private final EventManager eventManager;
     private final TeiidServer teiidServer;
@@ -145,7 +139,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
             if (!this.admin.getDataSourceNames().contains(jndiName)) {
                 this.dataSourceNames.remove(jndiName);
-                TeiidDataSource tds = this.dataSourceByNameMap.get(jndiName);
+                ITeiidDataSource tds = this.dataSourceByNameMap.get(jndiName);
 
                 if (tds != null) {
                     this.dataSourceByNameMap.remove(jndiName);
@@ -206,18 +200,18 @@ public class ExecutionAdmin implements IExecutionAdmin {
     	this.admin.close();
         this.translatorByNameMap = new HashMap<String, ITeiidTranslator>();
         this.dataSourceNames = new ArrayList<String>();
-        this.dataSourceByNameMap = new HashMap<String, TeiidDataSource>();
+        this.dataSourceByNameMap = new HashMap<String, ITeiidDataSource>();
         this.dataSourceTypeNames = new HashSet<String>();
         this.teiidVdbs = new HashMap<String, ITeiidVdb>();
     }
 
     @Override
-    public TeiidDataSource getDataSource(String name) {
+    public ITeiidDataSource getDataSource(String name) {
         return this.dataSourceByNameMap.get(name);
     }
     
     @Override
-	public Collection<TeiidDataSource> getDataSources() {
+	public Collection<ITeiidDataSource> getDataSources() {
         return this.dataSourceByNameMap.values();
     }
 
@@ -234,79 +228,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     }
 
     @Override
-    public TeiidDataSource getOrCreateDataSource( IFile model,
-                                                  String jndiName,
-                                                  boolean previewVdb,
-                                                  IPasswordProvider passwordProvider ) throws Exception {
-
-        // first check to see if DS with that name already exists
-        TeiidDataSource dataSource = getDataSource(jndiName);
-
-        if (dataSource != null) {
-            return dataSource;
-        }
-
-        // need to create a DS
-        ModelResource modelResource = ModelUtil.getModelResource(model, true);
-        ConnectionInfoProviderFactory manager = new ConnectionInfoProviderFactory();
-        IConnectionInfoProvider connInfoProvider = manager.getProvider(modelResource);
-        IConnectionProfile modelConnectionProfile = connInfoProvider.getConnectionProfile(modelResource);
-        		
-        Properties props = connInfoProvider.getTeiidRelatedProperties(modelConnectionProfile);
-        String dataSourceType = connInfoProvider.getDataSourceType();
-
-        if (!props.isEmpty()) {
-            // The data source property key represents what's needed as a property for the Teiid Data Source
-            // This is provided by the getDataSourcePasswordPropertyKey() method.
-            String dsPasswordKey = connInfoProvider.getDataSourcePasswordPropertyKey();
-            boolean requiresPassword = (dsPasswordKey != null && connInfoProvider.requiresPassword(modelConnectionProfile));
-
-            if (modelConnectionProfile != null) {
-                String pwd = null;
-
-                // Check Password
-                if (requiresPassword) {
-                    // Check connection info provider. Property will be coming in with a key = "password"
-                    pwd = modelConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
-
-                    if (pwd == null) {
-                        IConnectionProfile existingConnectionProfile = ProfileManager.getInstance().getProfileByName(modelConnectionProfile.getName());
-
-                        if (existingConnectionProfile != null) {
-                            // make sure the password property is there. if not get from connection profile.
-                            // Use DTP's constant for profile: IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID =
-                            // org.eclipse.datatools.connectivity.db.password
-                            // DTP's connection profile "password" key, if exists for a profile type, is returned via the
-                            // provider's getPasswordPropertyKey() method. This can be different than
-                            // getDataSourcePasswordPropertyKey().
-                            if (props.getProperty(connInfoProvider.getPasswordPropertyKey()) == null) {
-                                pwd = existingConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
-                            }
-                        }
-
-                        if ((pwd == null) && (passwordProvider != null)) {
-                            pwd = passwordProvider.getPassword(modelResource.getItemName(), modelConnectionProfile.getName());
-                        }
-                    }
-
-                    if (pwd != null) {
-                        props.setProperty(dsPasswordKey, pwd);
-                    }
-                }
-
-                if (!requiresPassword || (pwd != null)) {
-                    TeiidDataSource tds = getOrCreateDataSource(jndiName, jndiName, dataSourceType, props);
-                    tds.setPreview(previewVdb);
-                    return tds;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    public TeiidDataSource getOrCreateDataSource( String displayName,
+    public ITeiidDataSource getOrCreateDataSource( String displayName,
                                                   String jndiName,
                                                   String typeName,
                                                   Properties properties ) throws Exception {
@@ -317,7 +239,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
         // Check if exists, return false
         if (dataSourceExists(jndiName)) {
-            TeiidDataSource tds = this.dataSourceByNameMap.get(jndiName);
+            ITeiidDataSource tds = this.dataSourceByNameMap.get(jndiName);
             if (tds != null) {
                 return tds;
             }
@@ -366,7 +288,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
         // Check that local name list contains new jndiName
         if (dataSourceExists(jndiName)) {
             String nullStr = null;
-            TeiidDataSource tds = new TeiidDataSource(nullStr, jndiName, typeName, properties);
+            ITeiidDataSource tds = new TeiidDataSource(nullStr, jndiName, typeName, properties);
 
             this.dataSourceByNameMap.put(jndiName, tds);
             this.eventManager.notifyListeners(ExecutionConfigurationEvent.createAddDataSourceEvent(tds));
@@ -510,7 +432,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     private void init() throws Exception {
         this.translatorByNameMap = new HashMap<String, ITeiidTranslator>();
         this.dataSourceNames = new ArrayList<String>();
-        this.dataSourceByNameMap = new HashMap<String, TeiidDataSource>();
+        this.dataSourceByNameMap = new HashMap<String, ITeiidDataSource>();
         this.dataSourceTypeNames = new HashSet<String>();
         refreshVDBs();
     }
@@ -561,8 +483,8 @@ public class ExecutionAdmin implements IExecutionAdmin {
         refreshDataSourceNames();
 
         this.dataSourceByNameMap.clear();
-        Collection<TeiidDataSource> tdsList = connectionMatcher.findTeiidDataSources(this.dataSourceNames);
-        for (TeiidDataSource ds : tdsList) {
+        Collection<ITeiidDataSource> tdsList = connectionMatcher.findTeiidDataSources(this.dataSourceNames);
+        for (ITeiidDataSource ds : tdsList) {
             this.dataSourceByNameMap.put(ds.getName(), ds);
         }
 

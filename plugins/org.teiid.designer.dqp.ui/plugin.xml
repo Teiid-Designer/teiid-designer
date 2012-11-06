@@ -357,7 +357,7 @@
                type="org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode">
          </adapter>
          <adapter
-               type="org.teiid.designer.runtime.TeiidDataSource">
+               type="org.teiid.designer.runtime.ITeiidDataSource">
          </adapter>
          <adapter
                type="org.teiid.designer.runtime.ITeiidTranslator">

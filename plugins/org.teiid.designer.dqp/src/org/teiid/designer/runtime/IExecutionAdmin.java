@@ -13,7 +13,6 @@ import java.util.Properties;
 import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
-import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.vdb.Vdb;
 
 /**
@@ -88,16 +87,16 @@ public interface IExecutionAdmin {
      * @return the teiid data source object (can be <code>null</code>)
      * @throws Exception 
      */
-     TeiidDataSource getDataSource(String name) throws Exception;
+     ITeiidDataSource getDataSource(String name) throws Exception;
 
      /**
       * Returns all teiid data source object if any on this server
       * 
-      * @return collection of {@link TeiidDataSource}
+      * @return collection of {@link ITeiidDataSource}
       * 
       * @throws Exception
       */
-     Collection<TeiidDataSource> getDataSources() throws Exception;
+     Collection<ITeiidDataSource> getDataSources() throws Exception;
 
      /**
       * Get the type names of the data sources
@@ -108,19 +107,6 @@ public interface IExecutionAdmin {
      Set<String> getDataSourceTypeNames() throws Exception;
 
     /**
-     * @param model the model containing source info
-     * @param jndiName the JNDI name
-     * @param previewVdb the model's preview vdb
-     * @param passwordProvider the password provider
-     * @return Teiid data source object
-     * @throws Exception if data source creation fails
-     */
-     TeiidDataSource getOrCreateDataSource(IFile model,
-                                                          String jndiName,
-                                                          boolean previewVdb,
-                                                          IPasswordProvider passwordProvider) throws Exception;
-
-    /**
      * @param displayName the JNDI display name
      * @param jndiName the JNDI name
      * @param typeName the translator type name
@@ -128,7 +114,7 @@ public interface IExecutionAdmin {
      * @return true if data source is created. false if it already exists
      * @throws Exception if data source creation fails
      */
-     TeiidDataSource getOrCreateDataSource(String displayName,
+     ITeiidDataSource getOrCreateDataSource(String displayName,
                                                           String jndiName,
                                                           String typeName,
                                                           Properties properties) throws Exception;

@@ -80,9 +80,10 @@ import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
+import org.teiid.designer.runtime.ITeiidDataSource;
 import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.TeiidDataSource;
+import org.teiid.designer.runtime.TeiidDataSourceFactory;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.jobs.CompositePreviewJob;
@@ -645,8 +646,9 @@ public final class PreviewManager extends JobChangeAdapter
     	
     }
 
-    public TeiidDataSource getOrCreateDataSource( IFile model, String jndiName ) throws Exception {
-        return getPreviewServer().getOrCreateDataSource(model, jndiName, true, this.passwordProvider);
+    public ITeiidDataSource getOrCreateDataSource( IFile model, String jndiName ) throws Exception {
+        TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
+        return factory.createDataSource(getPreviewServer(), model, jndiName, true, this.passwordProvider);
     }
 
     TeiidServer getPreviewServer() {

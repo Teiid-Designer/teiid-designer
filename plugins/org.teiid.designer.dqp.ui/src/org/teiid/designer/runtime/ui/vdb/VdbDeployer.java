@@ -19,6 +19,7 @@ import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.TeiidDataSourceFactory;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
@@ -234,7 +235,9 @@ public class VdbDeployer {
                         if ((autoCreate || createOnServer) && (model != null)) {
                             monitor.subTask(UTIL.getString(PREFIX + "createModelDataSourceTask", modelName)); //$NON-NLS-1$
 
-                            if (teiidServer.getOrCreateDataSource(model,
+                            TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
+                            if (factory.createDataSource(teiidServer,
+                                                                 model,
                                                                  jndiName,
                                                                  false,
                                                                  DqpPlugin.getInstance().getPasswordProvider()) == null) {

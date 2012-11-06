@@ -26,8 +26,8 @@ import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidDataSource;
 import org.teiid.designer.runtime.ITeiidTranslator;
-import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidPropertyDefinition;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.connection.ModelConnectionMapper;
@@ -141,7 +141,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
 
                 SelectJndiDataSourceDialog dialog = new SelectJndiDataSourceDialog(Display.getCurrent().getActiveShell());
 
-                TeiidDataSource initialSelection = null;
+                ITeiidDataSource initialSelection = null;
                 TeiidServer defServer = getDefaultServer();
                 if (defServer != null && defServer.isConnected()) {
                     try {
@@ -158,8 +158,8 @@ public class VdbSourceConnectionHandler implements SourceHandler {
 
                 if (dialog.getReturnCode() == Window.OK) {
                     Object result = dialog.getFirstResult();
-                    if (result != null && result instanceof TeiidDataSource) {
-                        vdbModelEntry.setJndiName(((TeiidDataSource)result).getName());
+                    if (result != null && result instanceof ITeiidDataSource) {
+                        vdbModelEntry.setJndiName(((ITeiidDataSource)result).getName());
                     }
                 }
             }
@@ -224,7 +224,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         TeiidServer defaultServer = getDefaultServer();
 
         if ((defaultServer != null) && defaultServer.isConnected()) {
-            Collection<TeiidDataSource> dataSources = null;
+            Collection<ITeiidDataSource> dataSources = null;
 
             try {
                 dataSources = defaultServer.getDataSources();
@@ -237,7 +237,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
             if (dataSources != null) {
                 Collection<String> dataSourceNames = new ArrayList<String>();
 
-                for (TeiidDataSource dataSource : dataSources) {
+                for (ITeiidDataSource dataSource : dataSources) {
                     if (!dataSource.isPreview()) {
                         dataSourceNames.add(dataSource.getName());
                     }

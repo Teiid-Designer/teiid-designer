@@ -7,7 +7,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 /**
  * @since 8.0
  */
-public class TeiidDataSource implements Comparable<TeiidDataSource> {
+public class TeiidDataSource implements Comparable<TeiidDataSource>, ITeiidDataSource {
 
     private final String displayName;
     private final String dataSourceName;
@@ -57,13 +57,14 @@ public class TeiidDataSource implements Comparable<TeiidDataSource> {
         if (obj == null) return false;
         if (obj.getClass() != getClass()) return false;
 
-        TeiidDataSource other = (TeiidDataSource)obj;
+        ITeiidDataSource other = (ITeiidDataSource)obj;
 
         if (getName().equals(other.getName())) return true;
 
         return false;
     }
 
+    @Override
     public String getDisplayName() {
         if (this.connectionProfileName != null) {
             return this.displayName + ":" + this.connectionProfileName; //$NON-NLS-1$
@@ -71,6 +72,7 @@ public class TeiidDataSource implements Comparable<TeiidDataSource> {
         return this.displayName;
     }
 
+    @Override
     public String getName() {
         return this.dataSourceName;
     }
@@ -80,22 +82,27 @@ public class TeiidDataSource implements Comparable<TeiidDataSource> {
      * 
      * @return the type
      */
+    @Override
     public String getType() {
         return this.dataSourceType;
     }
 
+    @Override
     public Properties getProperties() {
         return this.properties;
     }
 
+    @Override
     public String getPropertyValue( String name ) {
         return this.properties.getProperty(name);
     }
 
+    @Override
     public void setProfileName( String name ) {
         this.connectionProfileName = name;
     }
 
+    @Override
     public String getProfileName() {
         return this.connectionProfileName;
     }
@@ -103,6 +110,7 @@ public class TeiidDataSource implements Comparable<TeiidDataSource> {
     /**
      * @return isPreview
      */
+    @Override
     public boolean isPreview() {
         return isPreview;
     }
@@ -110,6 +118,7 @@ public class TeiidDataSource implements Comparable<TeiidDataSource> {
     /**
      * @param isPreview Sets isPreview to the specified value.
      */
+    @Override
     public void setPreview( boolean isPreview ) {
         this.isPreview = isPreview;
     }

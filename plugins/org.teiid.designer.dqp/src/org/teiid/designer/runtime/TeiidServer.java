@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.StringUtilities;
-import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.impl.ExecutionAdmin;
 import org.teiid.designer.vdb.Vdb;
 
@@ -413,7 +412,7 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
         return Status.OK_STATUS;
     }
     
-    public String getVdbDataSourceConnectionUrl(String vdbName) {
+    private String getVdbDataSourceConnectionUrl(String vdbName) {
     	String host = this.teiidAdminInfo.getHostProvider().getHost();
 		String port = this.teiidAdminInfo.getPort();
 		return "jdbc:teiid:" + vdbName + "@mm://"+host+':'+port;  //$NON-NLS-1$ //$NON-NLS-2$
@@ -485,13 +484,13 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
     }
 
     @Override
-    public TeiidDataSource getDataSource(String name) throws Exception {
+    public ITeiidDataSource getDataSource(String name) throws Exception {
         connect();
         return admin.getDataSource(name);
     }
 
     @Override
-    public Collection<TeiidDataSource> getDataSources() throws Exception {
+    public Collection<ITeiidDataSource> getDataSources() throws Exception {
         connect();
         return admin.getDataSources();
     }
@@ -503,17 +502,7 @@ public class TeiidServer implements HostProvider, IExecutionAdmin {
     }
 
     @Override
-    public TeiidDataSource getOrCreateDataSource(IFile model,
-                                                 String jndiName,
-                                                 boolean previewVdb,
-                                                 IPasswordProvider passwordProvider) throws Exception {
-
-        connect();
-        return admin.getOrCreateDataSource(model, jndiName, previewVdb, passwordProvider);
-    }
-
-    @Override
-    public TeiidDataSource getOrCreateDataSource(String displayName,
+    public ITeiidDataSource getOrCreateDataSource(String displayName,
                                                  String jndiName,
                                                  String typeName,
                                                  Properties properties) throws Exception {

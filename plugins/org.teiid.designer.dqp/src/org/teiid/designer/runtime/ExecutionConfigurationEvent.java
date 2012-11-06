@@ -20,7 +20,7 @@ import org.teiid.designer.runtime.connection.SourceConnectionBinding;
  */
 public final class ExecutionConfigurationEvent {
 
-    public static ExecutionConfigurationEvent createAddDataSourceEvent( TeiidDataSource dataSource ) {
+    public static ExecutionConfigurationEvent createAddDataSourceEvent( ITeiidDataSource dataSource ) {
         return new ExecutionConfigurationEvent(EventType.ADD, TargetType.DATA_SOURCE, dataSource);
     }
 
@@ -32,7 +32,7 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(EventType.ADD, TargetType.VDB, vdbName);
     }
 
-    public static ExecutionConfigurationEvent createRemoveDataSourceEvent( TeiidDataSource dataSource ) {
+    public static ExecutionConfigurationEvent createRemoveDataSourceEvent( ITeiidDataSource dataSource ) {
         return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.DATA_SOURCE, dataSource);
     }
 
@@ -53,7 +53,7 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.VDB, vdbName);
     }
 
-    public static ExecutionConfigurationEvent createUpdateDataSourceEvent( TeiidDataSource dataSource ) {
+    public static ExecutionConfigurationEvent createUpdateDataSourceEvent( ITeiidDataSource dataSource ) {
         return new ExecutionConfigurationEvent(EventType.UPDATE, TargetType.DATA_SOURCE, dataSource);
     }
 
@@ -102,14 +102,14 @@ public final class ExecutionConfigurationEvent {
      * @return the connector involved in the event
      * @throws IllegalStateException if method is called for a server event
      */
-    public TeiidDataSource getDataSource() {
+    public ITeiidDataSource getDataSource() {
         if (this.targetType != TargetType.DATA_SOURCE) {
             throw new IllegalStateException(Util.getString("invalidTargetTypeForGetDataSourceMethod", //$NON-NLS-1$
                                                            this.targetType,
                                                            TargetType.DATA_SOURCE));
         }
 
-        return (TeiidDataSource)this.target;
+        return (ITeiidDataSource)this.target;
     }
 
     /**

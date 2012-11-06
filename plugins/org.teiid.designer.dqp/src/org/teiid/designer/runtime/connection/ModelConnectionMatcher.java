@@ -3,6 +3,7 @@ package org.teiid.designer.runtime.connection;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.runtime.ITeiidDataSource;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.vdb.Vdb;
 
@@ -12,8 +13,8 @@ import org.teiid.designer.vdb.Vdb;
  */
 public class ModelConnectionMatcher {
 
-    public Collection<TeiidDataSource> findTeiidDataSources( Collection<String> names) throws Exception {
-        Collection<TeiidDataSource> dataSources = new ArrayList<TeiidDataSource>();
+    public Collection<ITeiidDataSource> findTeiidDataSources( Collection<String> names) throws Exception {
+        Collection<ITeiidDataSource> dataSources = new ArrayList<ITeiidDataSource>();
 
         for (String name : names) {
             if (name.equalsIgnoreCase("DefaultDS") || name.equalsIgnoreCase("JmsXA")) { //$NON-NLS-1$ //$NON-NLS-2$

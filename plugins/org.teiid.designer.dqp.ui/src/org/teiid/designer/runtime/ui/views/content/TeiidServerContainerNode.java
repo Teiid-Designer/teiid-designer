@@ -12,9 +12,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.eclipse.wst.server.core.IServer;
+import org.teiid.designer.runtime.ITeiidDataSource;
 import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.ITeiidVdb;
-import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
@@ -105,7 +105,7 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
         try {
             // hide Data Sources related variables from other local variables
             DATA_SOURCES: {
-                Collection<TeiidDataSource> dataSources;
+                Collection<ITeiidDataSource> dataSources;
 
                 if (provider.isShowDataSources()) {
                     dataSources = new ArrayList(teiidServer.getDataSources());

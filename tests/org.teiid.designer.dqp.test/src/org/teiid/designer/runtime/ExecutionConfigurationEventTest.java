@@ -66,7 +66,7 @@ public class ExecutionConfigurationEventTest {
 
     @Test
     public void shouldCreateAddDataSourceEventWithDataSource() {
-        ExecutionConfigurationEvent.createAddDataSourceEvent(mock(TeiidDataSource.class));
+        ExecutionConfigurationEvent.createAddDataSourceEvent(mock(ITeiidDataSource.class));
     }
 
     @Test( expected = IllegalArgumentException.class )
@@ -76,7 +76,7 @@ public class ExecutionConfigurationEventTest {
 
     @Test
     public void shouldCreateRemoveDataSourceEventWithDataSource() {
-        ExecutionConfigurationEvent.createRemoveDataSourceEvent(mock(TeiidDataSource.class));
+        ExecutionConfigurationEvent.createRemoveDataSourceEvent(mock(ITeiidDataSource.class));
     }
 
     @Test( expected = IllegalArgumentException.class )
@@ -86,7 +86,7 @@ public class ExecutionConfigurationEventTest {
 
     @Test
     public void shouldCreateUpdateDataSourceEventWithDataSource() {
-        ExecutionConfigurationEvent.createUpdateDataSourceEvent(mock(TeiidDataSource.class));
+        ExecutionConfigurationEvent.createUpdateDataSourceEvent(mock(ITeiidDataSource.class));
     }
 
     @Test( expected = IllegalStateException.class )
@@ -106,32 +106,32 @@ public class ExecutionConfigurationEventTest {
 
     @Test( expected = IllegalStateException.class )
     public void shouldNotAllowGetServerWithAddDataSourceEvent() {
-        ExecutionConfigurationEvent.createAddDataSourceEvent(mock(TeiidDataSource.class)).getServer();
+        ExecutionConfigurationEvent.createAddDataSourceEvent(mock(ITeiidDataSource.class)).getServer();
     }
 
     @Test( expected = IllegalStateException.class )
     public void shouldNotAllowGetServerWithRemoveDataSourceEvent() {
-        ExecutionConfigurationEvent.createRemoveDataSourceEvent(mock(TeiidDataSource.class)).getServer();
+        ExecutionConfigurationEvent.createRemoveDataSourceEvent(mock(ITeiidDataSource.class)).getServer();
     }
 
     @Test( expected = IllegalStateException.class )
     public void shouldNotAllowGetServerWithUpdateDataSourceEvent() {
-        ExecutionConfigurationEvent.createUpdateDataSourceEvent(mock(TeiidDataSource.class)).getServer();
+        ExecutionConfigurationEvent.createUpdateDataSourceEvent(mock(ITeiidDataSource.class)).getServer();
     }
 
     @Test( expected = IllegalStateException.class )
     public void shouldNotAllowGetUpdatedServerWithAddDataSourceEvent() {
-        ExecutionConfigurationEvent.createAddDataSourceEvent(mock(TeiidDataSource.class)).getUpdatedServer();
+        ExecutionConfigurationEvent.createAddDataSourceEvent(mock(ITeiidDataSource.class)).getUpdatedServer();
     }
 
     @Test( expected = IllegalStateException.class )
     public void shouldNotAllowGetUpdatedServerWithRemoveDataSourceEvent() {
-        ExecutionConfigurationEvent.createRemoveDataSourceEvent(mock(TeiidDataSource.class)).getUpdatedServer();
+        ExecutionConfigurationEvent.createRemoveDataSourceEvent(mock(ITeiidDataSource.class)).getUpdatedServer();
     }
 
     @Test( expected = IllegalStateException.class )
     public void shouldNotAllowGetUpdatedServerWithUpdateDataSourceEvent() {
-        ExecutionConfigurationEvent.createUpdateDataSourceEvent(mock(TeiidDataSource.class)).getUpdatedServer();
+        ExecutionConfigurationEvent.createUpdateDataSourceEvent(mock(ITeiidDataSource.class)).getUpdatedServer();
     }
 
     @Test

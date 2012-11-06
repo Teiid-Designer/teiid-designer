@@ -33,9 +33,9 @@ import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.ITeiidDataSource;
 import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
@@ -266,7 +266,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             public void run() {
                 List<Object> selectedObjs = getSelectedObjects();
                 for (Object obj : selectedObjs) {
-                    TeiidDataSource tds = RuntimeAssistant.adapt(obj, TeiidDataSource.class);
+                    ITeiidDataSource tds = RuntimeAssistant.adapt(obj, ITeiidDataSource.class);
                     TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
                     
                     if (teiidServer != null && teiidServer.isConnected()) {
@@ -513,7 +513,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 manager.add(this.editServerAction);
                 manager.add(new Separator());
                 
-            } else if (RuntimeAssistant.adapt(selection, TeiidDataSource.class) != null) {
+            } else if (RuntimeAssistant.adapt(selection, ITeiidDataSource.class) != null) {
                 manager.add(this.deleteDataSourceAction);                
                 manager.add(new Separator());
                 
@@ -533,7 +533,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             boolean allDataSources = true;
             
             for (Object obj : selectedObjs) {
-                if (RuntimeAssistant.adapt(obj, TeiidDataSource.class) == null) {
+                if (RuntimeAssistant.adapt(obj, ITeiidDataSource.class) == null) {
                     allDataSources = false;
                     break;
                 }

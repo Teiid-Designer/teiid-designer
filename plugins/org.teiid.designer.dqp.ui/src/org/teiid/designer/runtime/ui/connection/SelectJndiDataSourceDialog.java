@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidDataSource;
+import org.teiid.designer.runtime.ITeiidDataSource;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
@@ -42,7 +42,7 @@ public class SelectJndiDataSourceDialog extends ElementTreeSelectionDialog imple
 
     private Text dataSourceNameText;
     private MessageLabel statusMessageLabel;
-    private TeiidDataSource selectedDataSource;
+    private ITeiidDataSource selectedDataSource;
 
     public SelectJndiDataSourceDialog( Shell parent ) {
         super(parent, new TeiidServerLabelProvider(), new TeiidServerContentProvider(false, false, true));
@@ -111,8 +111,8 @@ public class SelectJndiDataSourceDialog extends ElementTreeSelectionDialog imple
             public boolean select( Viewer viewer,
                                    Object parentElement,
                                    Object element ) {
-                if (element instanceof TeiidDataSource) {
-                    String name = ((TeiidDataSource)element).getName();
+                if (element instanceof ITeiidDataSource) {
+                    String name = ((ITeiidDataSource)element).getName();
                     return !name.startsWith(Vdb.PREVIEW_PREFIX);
                 }
 
@@ -135,11 +135,11 @@ public class SelectJndiDataSourceDialog extends ElementTreeSelectionDialog imple
 
         Object firstElement = selection.getFirstElement();
 
-        if (!(firstElement instanceof TeiidDataSource)) {
+        if (!(firstElement instanceof ITeiidDataSource)) {
             this.selectedDataSource = null;
             this.dataSourceNameText.setText(UNDEFINED);
         } else {
-            this.selectedDataSource = (TeiidDataSource)selection.getFirstElement();
+            this.selectedDataSource = (ITeiidDataSource)selection.getFirstElement();
             this.dataSourceNameText.setText(selectedDataSource.getName());
         }
 
@@ -151,7 +151,7 @@ public class SelectJndiDataSourceDialog extends ElementTreeSelectionDialog imple
                                     DqpUiConstants.PLUGIN_ID,
                                     DqpUiConstants.UTIL.getString("SelectJndiDataSourceDialog.okSelectionMessage")); //$NON-NLS-1$
         if (selectedObject != null) {
-            if (!(selectedObject instanceof TeiidDataSource)) {
+            if (!(selectedObject instanceof ITeiidDataSource)) {
                 status = new Status(IStatus.ERROR,
                                     DqpUiConstants.PLUGIN_ID,
                                     DqpUiConstants.UTIL.getString("SelectJndiDataSourceDialog.invalidSelectionMessage")); //$NON-NLS-1$
@@ -174,7 +174,7 @@ public class SelectJndiDataSourceDialog extends ElementTreeSelectionDialog imple
      * 
      * @return the TeiidDataSource. may return null
      */
-    public TeiidDataSource getSelectedTranslator() {
+    public ITeiidDataSource getSelectedTranslator() {
         return this.selectedDataSource;
     }
 

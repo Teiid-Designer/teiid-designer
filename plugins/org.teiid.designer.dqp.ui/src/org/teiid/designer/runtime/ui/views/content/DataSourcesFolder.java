@@ -8,13 +8,13 @@
 package org.teiid.designer.runtime.ui.views.content;
 
 import java.util.Collection;
-import org.teiid.designer.runtime.TeiidDataSource;
+import org.teiid.designer.runtime.ITeiidDataSource;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 
 /**
  * @since 8.0
  */
-public class DataSourcesFolder extends AbstractTeiidFolder<TeiidDataSource> {
+public class DataSourcesFolder extends AbstractTeiidFolder<ITeiidDataSource> {
 
     private static final String DATA_SOURCES_FOLDER_NAME = DqpUiConstants.UTIL.getString(DataSourcesFolder.class.getSimpleName() + ".label"); //$NON-NLS-1$
     
@@ -24,7 +24,7 @@ public class DataSourcesFolder extends AbstractTeiidFolder<TeiidDataSource> {
      * @param parentNode
      * @param values
      */
-    public DataSourcesFolder(TeiidServerContainerNode parentNode, Collection<TeiidDataSource> values ) {
+    public DataSourcesFolder(TeiidServerContainerNode parentNode, Collection<ITeiidDataSource> values ) {
         super(parentNode, values);
     }
 

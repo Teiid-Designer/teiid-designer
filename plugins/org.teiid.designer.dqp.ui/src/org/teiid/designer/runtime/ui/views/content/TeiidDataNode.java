@@ -10,6 +10,7 @@ package org.teiid.designer.runtime.ui.views.content;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.core.IServer;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.runtime.ITeiidDataSource;
 import org.teiid.designer.runtime.ITeiidTranslator;
 import org.teiid.designer.runtime.ITeiidVdb;
 import org.teiid.designer.runtime.TeiidDataSource;
@@ -81,11 +82,11 @@ public class TeiidDataNode<V> implements ITeiidContentNode<AbstractTeiidFolder> 
     
     @Override
     public String getName() {
-        if (value instanceof TeiidDataSource) {
-            if (((TeiidDataSource) value).getDisplayName() != null) {
-                return ((TeiidDataSource) value).getDisplayName();
+        if (value instanceof ITeiidDataSource) {
+            if (((ITeiidDataSource) value).getDisplayName() != null) {
+                return ((ITeiidDataSource) value).getDisplayName();
             }
-            return ((TeiidDataSource) value).getName();
+            return ((ITeiidDataSource) value).getName();
         }
         
         if (value instanceof ITeiidTranslator) {
@@ -156,7 +157,7 @@ public class TeiidDataNode<V> implements ITeiidContentNode<AbstractTeiidFolder> 
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_BINDING_ICON);
         }
 
-        if (value instanceof TeiidDataSource) {
+        if (value instanceof ITeiidDataSource) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTION_SOURCE_ICON);
         }
 
