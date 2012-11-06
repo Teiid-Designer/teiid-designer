@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -666,6 +667,8 @@ public class WebServiceBuilderHelper {
 
             try {
                 if(model!=null) ModelBuildUtil.rebuildImports(model.getEmfResource(), false);
+                //Rebuild project 
+               	model.getResource().getProject().build(IncrementalProjectBuilder.CLEAN_BUILD, null);
             } catch (final ModelWorkspaceException e) {
                 Util.log(e);
             }
