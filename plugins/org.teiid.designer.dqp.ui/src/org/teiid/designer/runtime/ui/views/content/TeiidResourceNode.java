@@ -92,16 +92,14 @@ public class TeiidResourceNode extends ContentNode<ITypeNode> implements IResour
         try {
             teiidServer = (TeiidServer) getServer().loadAdapter(TeiidServer.class, null);
 
-            if (teiidServer != null) {
-                if (teiidServer.isConnected()) {
-                    if (children == null)
-                        children = new ArrayList<IContentNode<? extends IContainerNode<?>>>();
+            if (teiidServer != null && teiidServer.isConnected()) {
+                if (children == null)
+                    children = new ArrayList<IContentNode<? extends IContainerNode<?>>>();
                     
-                    children.add(new TeiidServerContainerNode(this, provider));
-                } else {
-                    setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(getClass().getSimpleName() + ".labelNotConnected"))); //$NON-NLS-1$
-                    return;
-                }
+                children.add(new TeiidServerContainerNode(this, provider));
+            } else {
+                setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(getClass().getSimpleName() + ".labelNotConnected"))); //$NON-NLS-1$
+                return;
             }
 
             clearError();

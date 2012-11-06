@@ -15,6 +15,7 @@ import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.views.content.TeiidResourceNode;
+import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
 
@@ -53,22 +54,10 @@ public final class RefreshServerAction extends BaseSelectionListenerAction {
 
             @Override
             public void run() {
-                try {
-                	// Call disconnect() first to clear out Server & admin caches
-                	teiidServer.disconnect();
-                	
-                	if (! teiidServer.isParentConnected())
-                	    return;
-                	
-                	// Refresh is implied in the getting of the admin object since it will
-                	// automatically load and refresh.
-                    teiidServer.getAdmin();
-                    teiidServer.setConnectionError(null);
-                } catch (Exception e) {
-                    UTIL.log(e);
-                    String msg = UTIL.getString("serverReconnectErrorMsg", teiidServer); //$NON-NLS-1$
-                    teiidServer.setConnectionError(msg);
-                }
+                teiidServer.reconnect();
+                
+                if (teiidServer.getConnectionError() != null)
+                    WidgetUtil.showError(teiidServer.getConnectionError());
             }
         });
     }

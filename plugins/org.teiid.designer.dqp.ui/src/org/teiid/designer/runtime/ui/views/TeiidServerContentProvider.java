@@ -70,6 +70,8 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
     
     private class RefreshThread extends Thread {
         private boolean refreshCompleted = true;
+    
+        private boolean die = false;
         
         private LinkedBlockingQueue<Object> queue = new LinkedBlockingQueue<Object>();
         
@@ -86,13 +88,24 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
             });
         }
         
+
+        /**
+         * End the thread
+         */
+        public void die() {
+            die = true;
+        }
+        
         public void refresh() {
+            if (die)
+                return;
+            
             queue.add(new Object());
         }
         
         @Override
         public void run() {
-            while (! Thread.currentThread().isInterrupted()) {
+            while (! Thread.currentThread().isInterrupted() && ! die) {
                 try {
                     if (refreshCompleted) {
                         queue.take();
@@ -467,5 +480,8 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
         pendingUpdates.clear();
         
         DqpPlugin.getInstance().getServerManager().removeListener(configListener);
+        
+        refreshThread.die();
+        refreshThread = null;
     }
 }

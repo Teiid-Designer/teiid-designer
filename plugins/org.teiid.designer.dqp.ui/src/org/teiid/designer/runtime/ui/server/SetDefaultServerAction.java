@@ -87,15 +87,12 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
             UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
 
                 @Override
-				public void run() {
-			        try {
-			        	// Call disconnect() first to clear out Server & admin caches
-			        	theNewDefaultServer.getAdmin().refresh();
-			        } catch (Exception e) {
-			            UTIL.log(e);
-			            String msg = UTIL.getString("serverReconnectErrorMsg", theNewDefaultServer.getUrl()); //$NON-NLS-1$
-			            WidgetUtil.showError(msg);
-			        }
+                public void run() {
+                    // Call disconnect() first to clear out Server & admin caches
+                    theNewDefaultServer.reconnect();
+
+                    if (theNewDefaultServer.getConnectionError() != null)
+                        WidgetUtil.showError(theNewDefaultServer.getConnectionError());
                 }
             });
         }

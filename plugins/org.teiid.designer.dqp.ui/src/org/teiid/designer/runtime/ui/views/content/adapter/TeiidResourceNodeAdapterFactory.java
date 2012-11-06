@@ -32,7 +32,7 @@ public class TeiidResourceNodeAdapterFactory implements IAdapterFactory {
         if (TeiidServer.class == adapterType)
             return adaptToTeiidServer(teiidResourceNode);
         
-        if (TeiidResourceNode.class == adapterType)
+        if (TeiidServerContainerNode.class == adapterType)
             return adaptToTeiidServerContainerNode(teiidResourceNode);
         
         return null;

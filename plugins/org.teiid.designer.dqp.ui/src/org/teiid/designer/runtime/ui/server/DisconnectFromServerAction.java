@@ -7,7 +7,6 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
-import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
 
@@ -43,14 +42,7 @@ public class DisconnectFromServerAction extends BaseSelectionListenerAction {
 
             @Override
             public void run() {
-                try {
-                	// Call disconnect() first to clear out Server & admin caches
-                	teiidServer.disconnect();
-                } catch (Exception e) {
-                    UTIL.log(e);
-                    String msg = UTIL.getString("serverReconnectErrorMsg", teiidServer); //$NON-NLS-1$
-                    WidgetUtil.showError(msg);
-                }
+                teiidServer.disconnect();
             }
         });
     }

@@ -31,6 +31,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
+import org.eclipse.wst.server.core.IServerListener;
+import org.eclipse.wst.server.core.ServerEvent;
 import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -196,37 +198,107 @@ public final class TeiidServerManager implements EventManager {
      */
     private RuntimeState state = RuntimeState.INVALID;
     
+    private IServerListener serverStateListener = new IServerListener() {
+
+        @Override
+        public void serverChanged(ServerEvent event) {
+            if (event == null) return;
+
+            int eventKind = event.getKind();
+            if ((eventKind & ServerEvent.SERVER_CHANGE) == 0) return;
+
+            // server change event
+            if ((eventKind & ServerEvent.STATE_CHANGE) == 0) return;
+
+            int state = event.getState();
+            IServer parentServer = event.getServer();
+            TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
+            TeiidServer teiidServer = null;
+
+            for (TeiidServer tServer : getServers()) {
+                if (tServer.getParent().equals(parentServer)) {
+                    teiidServer = tServer;
+                    break;
+                }
+            }
+            
+            if (teiidServer != null && (state == IServer.STATE_STOPPING || state == IServer.STATE_STOPPED)) {
+                teiidServer.disconnect();
+            } else if (state == IServer.STATE_STARTED) {
+
+                if (teiidServer != null && teiidServer.isParentConnected()) {
+                    /*
+                    * Update all the settings since the server has been started and a 
+                    * proper set of queries can take place.
+                    */
+                    TeiidServer queryServer = factory.createTeiidServer(parentServer, TeiidServerManager.this);
+                    teiidServer.getTeiidAdminInfo().setAll(queryServer.getTeiidAdminInfo());
+                    teiidServer.getTeiidJdbcInfo().setAll(queryServer.getTeiidJdbcInfo());
+                    try {
+                        teiidServer.reconnect();
+                    } catch (Exception ex) {
+                        Util.log(ex);
+                    }
+                    
+                }
+                else {
+                    /*
+                     * This is a parent that we know nothing about.
+                     * Could be irrelevant or could have a teiid server
+                     * that has not been connected to yet.
+                     */
+                    teiidServer = factory.createTeiidServer(parentServer,
+                                                      TeiidServerManager.this,
+                                                      ServerOptions.ADD_TO_REGISTRY,
+                                                      ServerOptions.CONNECT);
+                }
+            }
+        }
+    };
+    
     /**
      * Listener for removing teiid servers if there parent server is removed
      */
-    private IServerLifecycleListener serversListener = new ServerLifecycleAdapter() {
+    private IServerLifecycleListener serverLifeCycleListener = new ServerLifecycleAdapter() {
         
         @Override
         public void serverAdded(IServer server) {
+            server.addServerListener(serverStateListener);
+            
             TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
             factory.createTeiidServer(server, TeiidServerManager.this, ServerOptions.ADD_TO_REGISTRY);
-        };
+        }
         
         @Override
         public void serverChanged(IServer server) {
+            TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
+            
             for (TeiidServer teiidServer : getServers()) {
-                if (server.equals(teiidServer.getParent())) {
-                    TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
-                    TeiidServer newTeiidServer = factory.createTeiidServer(server, TeiidServerManager.this);
+                if (! server.equals(teiidServer.getParent()))
+                    continue;
+                
+                TeiidServer newTeiidServer = factory.createTeiidServer(server, TeiidServerManager.this);
                     
-                    // Cannot use updateServer as it replaces rather than modified the existing server
-                    // and references in editor will thus hang on to the old defunct version
-                    teiidServer.getTeiidAdminInfo().setAll(newTeiidServer.getTeiidAdminInfo());
-                    teiidServer.getTeiidJdbcInfo().setAll(newTeiidServer.getTeiidJdbcInfo());
-                    teiidServer.notifyRefresh();
+                // Cannot use updateServer as it replaces rather than modified the existing server
+                // and references in editor will thus hang on to the old defunct version
+                teiidServer.getTeiidAdminInfo().setAll(newTeiidServer.getTeiidAdminInfo());
+                teiidServer.getTeiidJdbcInfo().setAll(newTeiidServer.getTeiidJdbcInfo());
+                teiidServer.notifyRefresh();
                     
-                    return;
-                }
+                return;
             }
-        };
-        
+            
+            /*
+             * We have a parent server with no teiid server attached
+             * This may be intentional if the parent server is not teiid
+             * enabled but should check just in case.
+             */
+            factory.createTeiidServer(server, TeiidServerManager.this, ServerOptions.ADD_TO_REGISTRY);
+        }
+       
         @Override
         public void serverRemoved(IServer server) {
+            server.removeServerListener(serverStateListener);
             
             // Tidy up the server manager by removing the related teiid server
             for (TeiidServer teiidServer : getServers()) {
@@ -285,7 +357,10 @@ public final class TeiidServerManager implements EventManager {
         this.previewManager = tempPreviewManager;
         this.state = RuntimeState.STARTED;
         
-        parentServersProvider.addServerLifecycleListener(serversListener);
+        parentServersProvider.addServerLifecycleListener(serverLifeCycleListener);
+        for (IServer server : parentServersProvider.getServers()) {
+            server.addServerListener(serverStateListener);
+        }
     }
 
     // ===========================================================================================================================
@@ -299,7 +374,7 @@ public final class TeiidServerManager implements EventManager {
      * @return {@link IServerLifecycleListener}
      */
     public IServerLifecycleListener getServerLifeCycleListener() {
-        return serversListener;
+        return serverLifeCycleListener;
     }
     
 
@@ -474,6 +549,13 @@ public final class TeiidServerManager implements EventManager {
         return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("serverManagerRegistryRemoveUnexpectedError", teiidServer)); //$NON-NLS-1$
     }
 
+    /**
+     * Is this server the default
+     * 
+     * @param teiidServer
+     * 
+     * @return true if this server is the default, false otherwise.
+     */
     public boolean isDefaultServer( TeiidServer teiidServer ) {
         CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
         if (this.defaultServer == null) {
@@ -796,10 +878,11 @@ public final class TeiidServerManager implements EventManager {
      * dialog that blocks until the monitor is finished.
      * 
      * @param monitor the progress monitor (may be <code>null</code>)
+     * @throws Exception 
      */
     public void shutdown( IProgressMonitor monitor ) throws Exception {
         
-        parentServersProvider.removeServerLifecycleListener(serversListener);
+        parentServersProvider.removeServerLifecycleListener(serverLifeCycleListener);
         
         // return if already being shutdown
         if ((this.state == RuntimeState.SHUTTING_DOWN) || (this.state == RuntimeState.SHUTDOWN)) return;

@@ -16,14 +16,11 @@ import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerListener;
-import org.eclipse.wst.server.core.ServerEvent;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.AdminFactory;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.StringUtilities;
-import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.jdbc.TeiidDriver;
 
 
@@ -94,44 +91,12 @@ public class TeiidServer implements HostProvider {
      */
     private IServer parentServer;
 
-    private IServerListener serverListener = new IServerListener() {
-
-        @Override
-        public void serverChanged(ServerEvent event) {
-            if (event == null)
-                return;
-            
-            int eventKind = event.getKind();
-            if ((eventKind & ServerEvent.SERVER_CHANGE) == 0)
-                return;
-            
-            // server change event
-            if ((eventKind & ServerEvent.STATE_CHANGE) == 0)
-                return;
-            
-            int state = event.getState();
-            
-            if (state == IServer.STATE_STOPPING || state == IServer.STATE_STOPPED) {
-                disconnect();
-                notifyRefresh();
-            } else if (state == IServer.STATE_STARTED && TeiidServerAdapterUtil.isJBossServerConnected(event.getServer())) {
-                
-                // Ask the jboss server what port we are on as it may
-                // still be set to the default port and this may be different
-                // in the jboss server.
-                String port = TeiidServerAdapterUtil.getJdbcPort(parentServer);
-                teiidJdbcInfo.setPort(port);
-                
-                try {
-                    getAdmin();
-                } catch (Exception ex) {
-                    Util.log(ex);
-                } finally {
-                    notifyRefresh();
-                }
-            }
-        }
-    };
+    /**
+     * Internal flag to ensure {@link #notifyRefresh()} does not
+     * send any signals to listeners. Should always be called in pairs,
+     * ie. turn off -> do work -> turn on
+     */
+    private boolean notifyListeners = true;
 
     // ===========================================================================================================================
     // Constructors
@@ -170,8 +135,6 @@ public class TeiidServer implements HostProvider {
         
         if (parentServer.getServerState() != IServer.STATE_STARTED)
             disconnect();
-        
-        parentServer.addServerListener(serverListener);
     }
 
     // ===========================================================================================================================
@@ -234,6 +197,11 @@ public class TeiidServer implements HostProvider {
         return true;
     }
 
+    /**
+     * Connect to this {@link TeiidServer}
+     * 
+     * @throws Exception
+     */
     public ExecutionAdmin getAdmin() throws Exception {
         if (! isParentConnected()) {
             throw new Exception(DqpPlugin.Util.getString("jbossServerNotStartedMessage")); //$NON-NLS-1$
@@ -248,9 +216,36 @@ public class TeiidServer implements HostProvider {
                                             this,
                                             this.eventManager);
             this.admin.load();
+            notifyRefresh();
         }
 
         return this.admin;
+    }
+    
+    /**
+     * Disconnect then connect to this server. This is preferable to 
+     * calling {@link #disconnect()} and {@link #connect()} separately
+     * since it only notifies at the end of the reconnection.
+     */
+    public void reconnect() {
+        try {
+            // Call disconnect() first to clear out Server & admin caches
+            notifyListeners = false;
+            disconnect();
+            notifyListeners = true;
+            
+            if (isParentConnected()) {
+                // Refresh is implied in the getting of the admin object since it will
+                // automatically load and refresh.
+                getAdmin();
+            }
+            
+            setConnectionError(null);
+        } catch (Exception e) {
+            DqpPlugin.Util.log(e);
+            String msg = DqpPlugin.Util.getString("serverReconnectErrorMsg", this); //$NON-NLS-1$
+            setConnectionError(msg);
+        }
     }
 
     public TeiidAdminInfo getTeiidAdminInfo() {
@@ -380,6 +375,9 @@ public class TeiidServer implements HostProvider {
     }
 
     public void notifyRefresh() {
+        if (! notifyListeners)
+            return;
+        
         if (this.admin != null) {
             this.admin.getEventManager().notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(this));
         } else {
