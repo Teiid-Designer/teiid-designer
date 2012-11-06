@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -32,6 +31,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
@@ -68,6 +68,8 @@ public class TeiidServerEditor extends EditorPart {
     private Hyperlink jbServerNameHyperlink;
 
     private Text hostNameText;
+    
+    private Text versionText;
 
     private FormText adminDescriptionText;
 
@@ -192,6 +194,14 @@ public class TeiidServerEditor extends EditorPart {
         hostNameText.setEditable(false);
         hostNameText.setEnabled(false);
         
+        Label versionLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerOverviewSection.versionLabel")); //$NON-NLS-1$
+        blueForeground(versionLabel);
+        
+        versionText = toolkit.createText(composite, teiidServer.getServerVersion().toString());
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(versionText);
+        versionText.setEditable(false);
+        versionText.setEnabled(false);
+        
         Label jbLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerOverviewSection.jbLabel")); //$NON-NLS-1$
         blueForeground(jbLabel);
         
@@ -300,6 +310,7 @@ public class TeiidServerEditor extends EditorPart {
             public void run() {
                 customNameText.setText(teiidServer.getCustomLabel() != null ? teiidServer.getCustomLabel() : ""); //$NON-NLS-1$
                 hostNameText.setText(teiidServer.getHost());
+                versionText.setText(teiidServer.getServerVersion().toString());
                 jbServerNameHyperlink.setText(teiidServer.getParent() != null ? teiidServer.getParent().getName() : ""); //$NON-NLS-1$
                 jdbcUserNameText.setText(teiidServer.getTeiidJdbcInfo().getUsername());
                 jdbcPasswdText.setText(teiidServer.getTeiidJdbcInfo().getPassword());
