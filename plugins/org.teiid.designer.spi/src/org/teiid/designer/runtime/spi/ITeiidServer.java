@@ -9,11 +9,17 @@ package org.teiid.designer.runtime.spi;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IServer;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 /**
  * @since 8.0
  *
  */
 public interface ITeiidServer extends IExecutionAdmin, HostProvider {
+
+    /**
+     * @return the version information of this server
+     */
+    ITeiidServerVersion getServerVersion();
 
     /**
      * Disconnect then connect to this server. This is preferable to 
@@ -136,5 +142,12 @@ public interface ITeiidServer extends IExecutionAdmin, HostProvider {
      * @return IStatus as to whether it succeeded
      */
     IStatus createVdbDataSource(String vdbName, String displayName, String jndiName);
+
+    /**
+     * Update this server with the properties of the given server
+     * 
+     * @param otherServer
+     */
+    void update(ITeiidServer otherServer);
 
 }

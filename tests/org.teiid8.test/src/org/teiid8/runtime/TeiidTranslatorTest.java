@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.runtime;
+package org.teiid8.runtime;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -26,11 +26,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
-import org.teiid.designer.runtime.connection.IConnectionProperties;
-import org.teiid.designer.runtime.impl.ExecutionAdmin;
-import org.teiid.designer.runtime.impl.TeiidTranslator;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
+import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
 
 /**
  * 
@@ -46,27 +44,27 @@ public class TeiidTranslatorTest {
 
     @Mock
     private ITeiidServer teiidServer;
-    @Mock
-    private PropertyDefinition propertyDefinition;
+    
     @Mock
     private Translator translator;
 
     private TeiidTranslator teiidTranslator;
     
+    private TeiidPropertyDefinition propertyDefinition;
     
-
     @BeforeClass
     public static void oneTimeSetup() {
         PROPERTIES = new Properties();
-        PROPERTIES.setProperty(IConnectionProperties.CONNECTOR_TYPE, TRANSLATOR_TYPE_NAME);
+        PROPERTIES.setProperty(MockObjectFactory.CONNECTOR_TYPE, TRANSLATOR_TYPE_NAME);
     }
 
     @Before
     public void beforeEach() {
         MockitoAnnotations.initMocks(this);
 
+        PropertyDefinition propertyDefinition = mock(PropertyDefinition.class);
         PROP_DEFS = new ArrayList<PropertyDefinition>(1);
-        when(propertyDefinition.getName()).thenReturn("name");
+        when(propertyDefinition.getName()).thenReturn(PROP_NAME);
         PROP_DEFS.add(propertyDefinition);
         
         this.translator = mock(Translator.class);
@@ -76,6 +74,7 @@ public class TeiidTranslatorTest {
         when(this.translator.getType()).thenReturn(TYPE_NAME);
         
         this.teiidTranslator = new TeiidTranslator(this.translator, PROP_DEFS, teiidServer);
+        this.propertyDefinition = teiidTranslator.getPropertyDefinition(PROP_NAME);
     }
     
     @Test( expected = IllegalArgumentException.class )
@@ -110,8 +109,7 @@ public class TeiidTranslatorTest {
 
     @Test
     public void shouldReturnInvalidValueForMissingProperty() {
-        when(this.teiidTranslator.getPropertyDefinition(PROP_NAME)).thenReturn(null); // remove property
-        assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, "true"), notNullValue());
+        assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME + "1", "true"), notNullValue());
     }
 
     // ======================================================================================
@@ -126,8 +124,8 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldDetectValidBooleanPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Boolean.TYPE.getName());
-
+        propertyDefinition.setPropertyTypeClassName(Boolean.TYPE.getName());
+        
         // tests
         assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, "true"), nullValue());
         assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, "false"), nullValue());
@@ -136,7 +134,7 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldReturnInvalidBooleanPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Boolean.TYPE.getName());
+        propertyDefinition.setPropertyTypeClassName(Boolean.TYPE.getName());
 
         // tests
         assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, "blue"), notNullValue());
@@ -146,7 +144,7 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldDetectValidCharacterPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Character.TYPE.getName());
+        propertyDefinition.setPropertyTypeClassName(Character.TYPE.getName());
 
         // tests
         assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, "c"), nullValue());
@@ -157,7 +155,7 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldReturnInvalidCharacterPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Character.TYPE.getName());
+        propertyDefinition.setPropertyTypeClassName(Character.TYPE.getName());
 
         // tests
         assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, "cc"), notNullValue());
@@ -167,7 +165,7 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldDetectValidBytePropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Byte.TYPE.getName());
+        propertyDefinition.setPropertyTypeClassName(Byte.TYPE.getName());
 
         // tests
         assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, "1"), nullValue());
@@ -179,7 +177,7 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldReturnInvalidBytePropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Byte.TYPE.getName());
+        propertyDefinition.setPropertyTypeClassName(Byte.TYPE.getName());
 
         // tests
         assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, Long.toString((long)Byte.MAX_VALUE + (long)1)), notNullValue());
@@ -190,7 +188,7 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldDetectValidShortPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Short.TYPE.getName());
+        propertyDefinition.setPropertyTypeClassName(Short.TYPE.getName());
 
         // tests
         assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, "1"), nullValue());
@@ -202,7 +200,7 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldReturnInvalidShortPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Short.TYPE.getName());
+        propertyDefinition.setPropertyTypeClassName(Short.TYPE.getName());
 
         // tests
         assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, Long.toString((long)Short.MAX_VALUE + 1)), notNullValue());
@@ -213,7 +211,7 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldDetectValidIntegerPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Integer.TYPE.getName());
+        propertyDefinition.setPropertyTypeClassName(Integer.TYPE.getName());
 
         // tests
         assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, "1"), nullValue());
@@ -225,7 +223,7 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldReturnInvalidIntegerPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Integer.TYPE.getName());
+        propertyDefinition.setPropertyTypeClassName(Integer.TYPE.getName());
 
         // tests
         assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, Double.toString(Integer.MAX_VALUE + 1)), notNullValue());
@@ -236,7 +234,7 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldDetectValidLongPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Long.TYPE.getName());
+        propertyDefinition.setPropertyTypeClassName(Long.TYPE.getName());
 
         // tests
         assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, "1"), nullValue());
@@ -248,7 +246,7 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldReturnInvalidLongPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Long.TYPE.getName());
+        propertyDefinition.setPropertyTypeClassName(Long.TYPE.getName());
 
         // tests
         assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, Double.toString((double)Long.MAX_VALUE + 1)), notNullValue());
@@ -259,7 +257,7 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldDetectValidFloatPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Float.TYPE.getName());
+        propertyDefinition.setPropertyTypeClassName(Float.TYPE.getName());
 
         // tests
         assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, "1.0"), nullValue());
@@ -273,7 +271,7 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldReturnInvalidFloatPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Float.TYPE.getName());
+        propertyDefinition.setPropertyTypeClassName(Float.TYPE.getName());
 
         // tests
         assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, null), notNullValue());
@@ -282,7 +280,7 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldDetectValidDoublePropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Double.TYPE.getName());
+        propertyDefinition.setPropertyTypeClassName(Double.TYPE.getName());
 
         // tests
         assertThat(teiidTranslator.isValidPropertyValue(PROP_NAME, "1.0"), nullValue());
@@ -296,7 +294,7 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldReturnInvalidDoublePropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Double.TYPE.getName());
+        propertyDefinition.setPropertyTypeClassName(Double.TYPE.getName());
 
         // tests
         assertThat(this.teiidTranslator.isValidPropertyValue(PROP_NAME, null), notNullValue());

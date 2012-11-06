@@ -1,4 +1,4 @@
-package org.teiid.designer.runtime.impl;
+package org.teiid8.runtime;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,14 +6,16 @@ import java.util.Collections;
 import java.util.List;
 import org.teiid.adminapi.Model;
 import org.teiid.adminapi.VDB;
-import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.util.ArgCheck;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
-import org.teiid.designer.vdb.Vdb;
+
 /**
  * @since 8.0
  */
 public class TeiidVdb implements ITeiidVdb, Comparable<TeiidVdb> {
+    
+    private static final String PREVIEW = "preview"; //$NON-NLS-1$
     
     private final VDB vdb;
 
@@ -23,12 +25,12 @@ public class TeiidVdb implements ITeiidVdb, Comparable<TeiidVdb> {
 
     public TeiidVdb( VDB vdb,
                      ITeiidServer teiidServer ) {
-        CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(teiidServer, "teiidServer"); //$NON-NLS-1$
+        ArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
+        ArgCheck.isNotNull(teiidServer, "teiidServer"); //$NON-NLS-1$
 
         this.vdb = vdb;
         this.teiidServer = teiidServer;
-        isPreview = Boolean.parseBoolean(vdb.getProperties().getProperty(Vdb.Xml.PREVIEW));
+        isPreview = Boolean.parseBoolean(vdb.getProperties().getProperty(PREVIEW));
     }
 
     /* (non-Javadoc)
@@ -36,7 +38,7 @@ public class TeiidVdb implements ITeiidVdb, Comparable<TeiidVdb> {
      */
     @Override
 	public int compareTo( TeiidVdb vdb ) {
-        CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
+        ArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
         return getName().compareTo(vdb.getName());
     }
 

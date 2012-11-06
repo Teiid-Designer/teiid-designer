@@ -28,14 +28,6 @@ public class TeiidServerUtils {
     public static final String MMS_PREFIX = "mms://"; //$NON-NLS-1$
     public static final String COLON = ":"; //$NON-NLS-1$
     public static final String COMMA = ","; //$NON-NLS-1$
-    
-    public static final String TEST_VDB = "<vdb name=\"ping\" version=\"1\">" + //$NON-NLS-1$
-			"<model visible=\"true\" name=\"Foo\" type=\"PHYSICAL\" path=\"/dummy/Foo\">" + //$NON-NLS-1$
-			"<source name=\"s\" translator-name=\"loopback\"/>" + //$NON-NLS-1$
-			"<metadata type=\"DDL\"><![CDATA[CREATE FOREIGN TABLE G1 (e1 string, e2 integer);]]> </metadata>" + //$NON-NLS-1$
-			"</model>" + //$NON-NLS-1$
-			"</vdb>"; //$NON-NLS-1$ +
-
 
     public TeiidServerUtils getInstance() {
         return this;

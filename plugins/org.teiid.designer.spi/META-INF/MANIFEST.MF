@@ -13,5 +13,7 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="3.8.0",
 Export-Package: org.teiid.datatools.connectivity.spi,
  org.teiid.designer,
  org.teiid.designer.runtime.connection.spi,
- org.teiid.designer.runtime.spi
+ org.teiid.designer.runtime.registry,
+ org.teiid.designer.runtime.spi,
+ org.teiid.designer.runtime.version.spi
 Bundle-Activator: org.teiid.designer.DesignerSPIPlugin

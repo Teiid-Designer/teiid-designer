@@ -1,8 +1,8 @@
-package org.teiid.designer.runtime;
+package org.teiid8.runtime;
 
 import java.util.Properties;
-import org.teiid.core.designer.HashCodeUtil;
-import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.util.ArgCheck;
+import org.teiid.core.util.HashCodeUtil;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 
 /**
@@ -28,8 +28,8 @@ public class TeiidDataSource implements Comparable<TeiidDataSource>, ITeiidDataS
                             String dataSourceName,
                             String dataSourceType,
                             Properties properties) {
-        CoreArgCheck.isNotEmpty(dataSourceName, "dataSourceName"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(dataSourceType, "dataSourceType"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(dataSourceName, "dataSourceName"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(dataSourceType, "dataSourceType"); //$NON-NLS-1$
 
         this.displayName = displayName;
         this.dataSourceName = dataSourceName;
@@ -44,7 +44,7 @@ public class TeiidDataSource implements Comparable<TeiidDataSource>, ITeiidDataS
      */
     @Override
     public int compareTo( TeiidDataSource dataSource ) {
-        CoreArgCheck.isNotNull(dataSource, "dataSource"); //$NON-NLS-1$
+        ArgCheck.isNotNull(dataSource, "dataSource"); //$NON-NLS-1$
         return getName().compareTo(dataSource.getName());
     }
 

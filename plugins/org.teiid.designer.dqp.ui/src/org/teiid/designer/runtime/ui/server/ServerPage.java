@@ -35,6 +35,7 @@ import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
@@ -294,7 +295,12 @@ public final class ServerPage extends WizardPage {
             throw new RuntimeException("Cannot create the teiid server on the UI thread"); //$NON-NLS-1$
         
         TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
-        teiidServer = factory.createTeiidServer(server, getServerManager());
+        /*
+         * Adapt the IServer to a teiid server but have to consider that the former has 
+         * probably not been started yet so a 'default server' will be returned. Only when
+         * the server is started will the settings be updated correctly.
+         */
+        teiidServer = factory.adaptServer(server, ServerOptions.NO_CHECK_CONNECTION);
 
         display.asyncExec(new Runnable() {
             

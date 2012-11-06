@@ -40,8 +40,8 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
-import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory.ServerOptions;
 import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.spi.EventManager;
@@ -50,6 +50,8 @@ import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -128,6 +130,11 @@ public final class TeiidServerManager implements EventManager {
      * The attribute used to persist a server's host value.
      */
     private static final String HOST_ATTR = "host"; //$NON-NLS-1$
+    
+    /**
+     * The attribute used to persist a server's version value.
+     */
+    private static final String SERVER_VERSION = "version"; //$NON-NLS-1$
 
     /**
      * The attribute used to persist a server's port value.
@@ -236,9 +243,11 @@ public final class TeiidServerManager implements EventManager {
                     * Update all the settings since the server has been started and a 
                     * proper set of queries can take place.
                     */
-                    ITeiidServer queryServer = factory.createTeiidServer(parentServer, TeiidServerManager.this);
-                    teiidServer.getTeiidAdminInfo().setAll(queryServer.getTeiidAdminInfo());
-                    teiidServer.getTeiidJdbcInfo().setAll(queryServer.getTeiidJdbcInfo());
+                    ITeiidServer queryServer = factory.adaptServer(parentServer,
+                                                                   ServerOptions.NO_CHECK_SERVER_REGISTRY);
+                    
+                    teiidServer.update(queryServer);
+
                     try {
                         teiidServer.reconnect();
                     } catch (Exception ex) {
@@ -252,8 +261,7 @@ public final class TeiidServerManager implements EventManager {
                      * Could be irrelevant or could have a teiid server
                      * that has not been connected to yet.
                      */
-                    teiidServer = factory.createTeiidServer(parentServer,
-                                                      TeiidServerManager.this,
+                    teiidServer = factory.adaptServer(parentServer,
                                                       ServerOptions.ADD_TO_REGISTRY,
                                                       ServerOptions.CONNECT);
                 }
@@ -271,7 +279,7 @@ public final class TeiidServerManager implements EventManager {
             server.addServerListener(serverStateListener);
             
             TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
-            factory.createTeiidServer(server, TeiidServerManager.this, ServerOptions.ADD_TO_REGISTRY);
+            factory.adaptServer(server, ServerOptions.ADD_TO_REGISTRY);
         }
         
         @Override
@@ -282,14 +290,13 @@ public final class TeiidServerManager implements EventManager {
                 if (! server.equals(teiidServer.getParent()))
                     continue;
                 
-                ITeiidServer newTeiidServer = factory.createTeiidServer(server, TeiidServerManager.this);
-                    
+                ITeiidServer newTeiidServer = factory.adaptServer(server, ServerOptions.NO_CHECK_SERVER_REGISTRY);
+                
                 // Cannot use updateServer as it replaces rather than modified the existing server
                 // and references in editor will thus hang on to the old defunct version
-                teiidServer.getTeiidAdminInfo().setAll(newTeiidServer.getTeiidAdminInfo());
-                teiidServer.getTeiidJdbcInfo().setAll(newTeiidServer.getTeiidJdbcInfo());
+                teiidServer.update(newTeiidServer);
                 teiidServer.notifyRefresh();
-                    
+                
                 return;
             }
             
@@ -298,7 +305,7 @@ public final class TeiidServerManager implements EventManager {
              * This may be intentional if the parent server is not teiid
              * enabled but should check just in case.
              */
-            factory.createTeiidServer(server, TeiidServerManager.this, ServerOptions.ADD_TO_REGISTRY);
+            factory.adaptServer(server, ServerOptions.ADD_TO_REGISTRY);
         }
        
         @Override
@@ -681,6 +688,12 @@ public final class TeiidServerManager implements EventManager {
                         String customLabel = null;
                         boolean previewServer = false;
 
+                        // version attribute
+                        ITeiidServerVersion teiidServerVersion = new TeiidServerVersion(ITeiidServerVersion.DEFAULT_TEIID_8_SERVER);
+                        Node versionNode = serverAttributeMap.getNamedItem(SERVER_VERSION);
+                        if (versionNode != null)
+                            teiidServerVersion = new TeiidServerVersion(versionNode.getNodeValue());
+                        
                         // host attribute
                         Node hostNode = serverAttributeMap.getNamedItem(HOST_ATTR);
 
@@ -819,7 +832,12 @@ public final class TeiidServerManager implements EventManager {
                             continue;
                         }
                         
-                        ITeiidServer teiidServer = new TeiidServer(host, teiidAdminInfo, teiidJdbcInfo, this, parentServer);
+                        TeiidServerFactory teiidServerFactory = new TeiidServerFactory();
+                        ITeiidServer teiidServer = teiidServerFactory.createTeiidServer(teiidServerVersion, 
+                                                                                                                         teiidAdminInfo,
+                                                                                                                         teiidJdbcInfo,
+                                                                                                                         this,
+                                                                                                                         parentServer);
                         teiidServer.setCustomLabel(customLabel);
                         
                         addServer(teiidServer);
@@ -933,6 +951,10 @@ public final class TeiidServerManager implements EventManager {
                 for (ITeiidServer teiidServer : getServers()) {
                     Element serverElement = doc.createElement(SERVER_TAG);
                     root.appendChild(serverElement);
+                    
+                    { // Server Version
+                        serverElement.setAttribute(SERVER_VERSION, teiidServer.getServerVersion().toString());
+                    }
                     
                     { // Host
                         serverElement.setAttribute(HOST_ATTR, teiidServer.getHost());

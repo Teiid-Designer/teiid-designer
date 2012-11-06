@@ -21,7 +21,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.StringUtilities;
-import org.teiid.designer.runtime.impl.ExecutionAdmin;
+import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
+import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.HostProvider;
@@ -32,6 +33,8 @@ import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 
 
 /**
@@ -64,6 +67,8 @@ public class TeiidServer implements ITeiidServer {
     // ===========================================================================================================================
     // Fields
     // ===========================================================================================================================
+
+    private ITeiidServerVersion serverVersion;
 
     protected IExecutionAdmin admin;
 
@@ -115,24 +120,27 @@ public class TeiidServer implements ITeiidServer {
     /**
      * Constructs on new <code>Server</code>.
      * 
-     * @param host the server host (<code>null</code> or empty if default host should be used)
+     * @param serverVersion the version of the server
      * @param adminInfo the server admin connection properties (never <code>null</code>)
      * @param jdbcInfo the server JDBC connection properties (never <code>null</code>)
      * @param eventManager the event manager (never <code>null</code>)
      * @param parentServer the parent {@link IServer} (never <code>null</code>)
      * @throws IllegalArgumentException if any of the parameters are <code>null</code>
      */
-    public TeiidServer( String host,
+    TeiidServer( ITeiidServerVersion serverVersion,
                    ITeiidAdminInfo adminInfo,
                    ITeiidJdbcInfo jdbcInfo,
                    EventManager eventManager,
                    IServer parentServer) {
+        CoreArgCheck.isNotNull(serverVersion, "serverVersion"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(adminInfo, "adminInfo"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(jdbcInfo, "jdbcInfo"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(eventManager, "eventManager"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(parentServer, "parentServer"); //$NON-NLS-1$
 
-        this.host = host;
+        this.serverVersion = serverVersion;
+        
+        this.host = parentServer.getHost();
         
         this.teiidAdminInfo = adminInfo;
         this.teiidAdminInfo.setHostProvider(this);
@@ -151,6 +159,11 @@ public class TeiidServer implements ITeiidServer {
     // Methods
     // ===========================================================================================================================
 
+    @Override
+    public ITeiidServerVersion getServerVersion() {
+        return serverVersion;
+    }
+    
     @Override
     public void disconnect() {
         if (this.admin != null) {
@@ -195,9 +208,11 @@ public class TeiidServer implements ITeiidServer {
         }
         
         if (this.admin == null) {
+            this.admin = TeiidRuntimeRegistry.getInstance().getExecutionAdmin(this);
             
-            this.admin = new ExecutionAdmin(this);
-            this.admin.connect();
+            if (admin != null)
+                this.admin.connect();
+            
             notifyRefresh();
         }
     }
@@ -320,7 +335,11 @@ public class TeiidServer implements ITeiidServer {
      */
     @Override
     public boolean isParentConnected() {
-        return this.parentServer != null && this.parentServer.getServerState() == IServer.STATE_STARTED;
+        if(this.parentServer == null || this.parentServer.getServerState() != IServer.STATE_STARTED)
+            return false;
+        
+        TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory(); 
+        return factory.isParentServerConnected(parentServer);
     }
     
     /**
@@ -589,5 +608,15 @@ public class TeiidServer implements ITeiidServer {
     public String getAdminDriverPath() throws Exception {
         connect();
         return admin.getAdminDriverPath();
+    }
+    
+    @Override
+    public void update(ITeiidServer otherServer) {
+        CoreArgCheck.isNotNull(otherServer);
+        
+        serverVersion = new TeiidServerVersion(otherServer.getServerVersion().toString());
+        
+        getTeiidAdminInfo().setAll(otherServer.getTeiidAdminInfo());
+        getTeiidJdbcInfo().setAll(otherServer.getTeiidJdbcInfo());  
     }
 }

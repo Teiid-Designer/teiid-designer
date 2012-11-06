@@ -1,12 +1,10 @@
-package org.teiid.designer.runtime.connection;
+package org.teiid8.runtime;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 import org.teiid.designer.WorkspaceUUIDService;
-import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
-import org.teiid.designer.vdb.Vdb;
 
 
 /**
@@ -14,6 +12,11 @@ import org.teiid.designer.vdb.Vdb;
  */
 public class ModelConnectionMatcher {
 
+    /**
+     * The prefix used before the workspace identifier when creating a Preview VDB name.
+     */
+    public static final String PREVIEW_PREFIX = "PREVIEW_"; //$NON-NLS-1$
+    
     public Collection<ITeiidDataSource> findTeiidDataSources( Collection<String> names) throws Exception {
         Collection<ITeiidDataSource> dataSources = new ArrayList<ITeiidDataSource>();
 
@@ -23,7 +26,7 @@ public class ModelConnectionMatcher {
             }
             TeiidDataSource tds = new TeiidDataSource(name, name, "<unknown>"); //$NON-NLS-1$
             
-            if (name.startsWith(Vdb.PREVIEW_PREFIX)) {
+            if (name.startsWith(PREVIEW_PREFIX)) {
                 UUID workspaceUuid = WorkspaceUUIDService.getInstance().getUUID();
                 if (name.length() > workspaceUuid.toString().length() + 8) {
                     tds.setPreview(true);

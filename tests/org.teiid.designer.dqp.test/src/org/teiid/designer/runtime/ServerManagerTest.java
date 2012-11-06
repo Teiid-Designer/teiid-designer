@@ -40,6 +40,8 @@ import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 
 /**
  * 
@@ -282,6 +284,8 @@ public class ServerManagerTest {
         this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(2));
 
+        ITeiidServerVersion serverVersion = new TeiidServerVersion(ITeiidServerVersion.DEFAULT_TEIID_8_SERVER);
+        
         String customLabel = "My Custom Label";
         String adminPort = "31443";
         boolean adminSecure = true;
@@ -292,13 +296,13 @@ public class ServerManagerTest {
         String jdbcUser = "teiid";
         String jdbcPassword = null;
         EventManager eventMgr = mock(EventManager.class);
-        IServer parentServer = mock(IServer.class);
+        IServer parentServer1 = mock(IServer.class);
         ISecureStorageProvider secureStorageProvider = new DefaultStorageProvider();
 
         // construct a server just to get its URL
         ITeiidAdminInfo adminInfo = new TeiidAdminInfo(adminPort, adminUser, secureStorageProvider, adminPassword, adminSecure);
         ITeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, secureStorageProvider, jdbcPassword, jdbcSecure);
-        TeiidServer testServer = new TeiidServer(null, adminInfo, jdbcInfo, eventMgr, parentServer);
+        TeiidServer testServer = new TeiidServer(serverVersion, adminInfo, jdbcInfo, eventMgr, parentServer1);
         adminInfo.setHostProvider(testServer);
         jdbcInfo.setHostProvider(testServer);
 
@@ -316,7 +320,8 @@ public class ServerManagerTest {
         assertThat(teiidServer.getTeiidJdbcInfo().getPassword(), is(jdbcPassword));
         assertThat(teiidServer.getTeiidJdbcInfo().isSecure(), is(jdbcSecure));
 
-        String host = "myserver.com";
+        IServer parentServer2 = mock(IServer.class);
+        when(parentServer2.getHost()).thenReturn("myserver.com");
         customLabel = "";
         adminPort = "31444";
         adminSecure = false;
@@ -330,7 +335,7 @@ public class ServerManagerTest {
         // construct a server just to get its URL
         adminInfo = new TeiidAdminInfo(adminPort, adminUser, secureStorageProvider, adminPassword, adminSecure);
         jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, secureStorageProvider, jdbcPassword, jdbcSecure);
-        testServer = new TeiidServer(host, adminInfo, jdbcInfo, eventMgr, parentServer);
+        testServer = new TeiidServer(serverVersion, adminInfo, jdbcInfo, eventMgr, parentServer2);
         adminInfo.setHostProvider(testServer);
         jdbcInfo.setHostProvider(testServer);
 
@@ -338,7 +343,7 @@ public class ServerManagerTest {
         assertThat(teiidServer, notNullValue());
         assertThat(teiidServer, is(not(this.mgr.getDefaultServer())));
         assertThat(teiidServer.getCustomLabel(), nullValue()); // customLabel is empty string but gets set as a null
-        assertThat(teiidServer.getHost(), is(host));
+        assertThat(teiidServer.getHost(), is(parentServer2.getHost()));
         assertThat(teiidServer.getTeiidAdminInfo().getPort(), is(adminPort));
         assertThat(teiidServer.getTeiidAdminInfo().getUsername(), is(adminUser));
         assertThat(teiidServer.getTeiidAdminInfo().getPassword(), is(adminPassword));

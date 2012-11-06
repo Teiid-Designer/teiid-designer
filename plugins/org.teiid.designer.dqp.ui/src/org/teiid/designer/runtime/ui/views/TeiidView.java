@@ -38,10 +38,10 @@ import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
 import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
+import org.jboss.ide.eclipse.as.core.server.internal.JBossServer;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidServerManager;
-import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
@@ -290,7 +290,7 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
 
         IServer[] servers = DqpPlugin.getInstance().getServersProvider().getServers();
         for (IServer server : servers) {
-            if (TeiidServerAdapterUtil.isJBossServer(server)) {
+            if (server.loadAdapter(JBossServer.class, null) != null) {
                 serverMap.add(server);
             }
         }

@@ -5,19 +5,19 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.runtime.impl;
+package org.teiid8.runtime;
 
-import static org.teiid.designer.runtime.DqpPlugin.Util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
-import org.teiid.core.designer.HashCodeUtil;
-import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.util.ArgCheck;
+import org.teiid.core.util.HashCodeUtil;
+import org.teiid.core.util.StringUtil;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
@@ -34,9 +34,9 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
     private final Collection<TeiidPropertyDefinition> propDefs = new ArrayList<TeiidPropertyDefinition>();
 
     public TeiidTranslator( Translator translator, Collection<? extends PropertyDefinition> propDefs, ITeiidServer teiidServer) {
-        CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(propDefs, "propDefs"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(teiidServer, "teiidServer"); //$NON-NLS-1$
+        ArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(propDefs, "propDefs"); //$NON-NLS-1$
+        ArgCheck.isNotNull(teiidServer, "teiidServer"); //$NON-NLS-1$
 
         this.translator = translator;
         this.teiidServer = teiidServer;
@@ -67,7 +67,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
      */
     @Override
     public int compareTo( TeiidTranslator translator ) {
-        CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
+        ArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
         return getName().compareTo(translator.getName());
     }
 
@@ -102,7 +102,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
             String name = propDefn.getName();
             String value = getPropertyValue(name);
 
-            if (StringUtilities.isEmpty(value)) {
+            if (StringUtil.isEmpty(value)) {
                 if (propDefn.isRequired()) {
                     propertyNames.add(name);
                 }
@@ -178,7 +178,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
     
     @Override
     public TeiidPropertyDefinition getPropertyDefinition( String name ) {
-        CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
+        ArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
 
         for (TeiidPropertyDefinition propDef : getPropertyDefinitions()) {
             if (name.equals(propDef.getName())) return propDef;
@@ -195,7 +195,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
         Properties defaultValues = new Properties();
 
         for (TeiidPropertyDefinition propDef : getPropertyDefinitions()) {
-            String value = (propDef.getDefaultValue() == null) ? StringUtilities.EMPTY_STRING
+            String value = (propDef.getDefaultValue() == null) ? StringUtil.Constants.EMPTY_STRING
                                                               : propDef.getDefaultValue().toString();
             defaultValues.setProperty(propDef.getName(), value);
         }
@@ -214,11 +214,11 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
                                         String value ) {
         // make sure there is a property definition
         TeiidPropertyDefinition definition = this.getPropertyDefinition(name);
-        if (definition == null) return Util.getString("missingPropertyDefinition", name); //$NON-NLS-1$
+        if (definition == null) return NLS.bind(Messages.missingPropertyDefinition, name);
 
         // make sure there is a value
         if (value == null) {
-            return Util.getString("invalidNullPropertyValue", name); //$NON-NLS-1$
+            return NLS.bind(Messages.invalidNullPropertyValue, name);
         }
 
         String type = definition.getPropertyTypeClassName();
@@ -227,50 +227,50 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
 
         if (Boolean.class.getName().equals(type) || Boolean.TYPE.getName().equals(type)) {
             if (!value.equalsIgnoreCase(Boolean.TRUE.toString()) && !value.equalsIgnoreCase(Boolean.FALSE.toString())) {
-                return Util.getString("invalidPropertyEditorValue", value, Boolean.TYPE.getName()); //$NON-NLS-1$
+                return NLS.bind(Messages.invalidPropertyEditorValue, value, Boolean.TYPE.getName());
             }
         } else if (Character.class.getName().equals(type) || Character.TYPE.getName().equals(type)) {
             if (value.length() != 1) {
-                return Util.getString("invalidPropertyEditorValue", value, Character.TYPE.getName()); //$NON-NLS-1$
+                return NLS.bind(Messages.invalidPropertyEditorValue, value, Character.TYPE.getName());
             }
         } else if (Byte.class.getName().equals(type) || Byte.TYPE.getName().equals(type)) {
             try {
                 Byte.parseByte(value);
             } catch (Exception e) {
-                return Util.getString("invalidPropertyEditorValue", value, Byte.TYPE.getName()); //$NON-NLS-1$
+                return NLS.bind(Messages.invalidPropertyEditorValue, value, Byte.TYPE.getName());
             }
         } else if (Short.class.getName().equals(type) || Short.TYPE.getName().equals(type)) {
             try {
                 Short.parseShort(value);
             } catch (Exception e) {
-                return Util.getString("invalidPropertyEditorValue", value, Short.TYPE.getName()); //$NON-NLS-1$
+                return NLS.bind(Messages.invalidPropertyEditorValue, value, Short.TYPE.getName());
             }
         } else if (Integer.class.getName().equals(type) || Integer.TYPE.getName().equals(type)) {
             try {
                 Integer.parseInt(value);
             } catch (Exception e) {
-                return Util.getString("invalidPropertyEditorValue", value, Integer.TYPE.getName()); //$NON-NLS-1$
+                return NLS.bind(Messages.invalidPropertyEditorValue, value, Integer.TYPE.getName());
             }
         } else if (Long.class.getName().equals(type) || Long.TYPE.getName().equals(type)) {
             try {
                 Long.parseLong(value);
             } catch (Exception e) {
-                return Util.getString("invalidPropertyEditorValue", value, Long.TYPE.getName()); //$NON-NLS-1$
+                return NLS.bind(Messages.invalidPropertyEditorValue, value, Long.TYPE.getName());
             }
         } else if (Float.class.getName().equals(type) || Float.TYPE.getName().equals(type)) {
             try {
                 Float.parseFloat(value);
             } catch (Exception e) {
-                return Util.getString("invalidPropertyEditorValue", value, Float.TYPE.getName()); //$NON-NLS-1$
+                return NLS.bind(Messages.invalidPropertyEditorValue, value, Float.TYPE.getName());
             }
         } else if (Double.class.getName().equals(type) || Double.TYPE.getName().equals(type)) {
             try {
                 Double.parseDouble(value);
             } catch (Exception e) {
-                return Util.getString("invalidPropertyEditorValue", value, Double.TYPE.getName()); //$NON-NLS-1$
+                return NLS.bind(Messages.invalidPropertyEditorValue, value, Double.TYPE.getName());
             }
         } else if (!String.class.getName().equals(type)){
-            return Util.getString("unknownPropertyType", name, type); //$NON-NLS-1$
+            return NLS.bind(Messages.unknownPropertyType, name, type);
         }
 
         // should only get here if valid so far
@@ -284,7 +284,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
                 }
             }
 
-            return Util.getString("invalidPropertyEditorConstrainedValue", value, values.toString()); //$NON-NLS-1$;
+            return NLS.bind(Messages.invalidPropertyEditorConstrainedValue, value, values.toString());
         }
 
         // valid value
@@ -302,7 +302,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
     @Override
     public void setPropertyValue( String name,
                                   String value ) throws Exception {
-        CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
+        ArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
         getProperties().setProperty(name, value); // TODO does the teiidServer call do this
     }
 
@@ -313,9 +313,9 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
      */
     @Override
     public void setProperties( Properties changedProperties ) throws Exception {
-        CoreArgCheck.isNotNull(changedProperties, "changedProperties"); //$NON-NLS-1$
+        ArgCheck.isNotNull(changedProperties, "changedProperties"); //$NON-NLS-1$
         Set<Entry<Object, Object>> entrySet = changedProperties.entrySet();
-        CoreArgCheck.isNotEmpty(entrySet, "changedProperties"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(entrySet, "changedProperties"); //$NON-NLS-1$
 
         // TODO does the teiidServer call do this
         Properties props = getProperties();
@@ -338,7 +338,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
      */
     @Override
     public String toString() {
-        return Util.getString("connectorDetailedName", getName(), getType(), getTeiidServer()); //$NON-NLS-1$
+        return NLS.bind(Messages.connectorDetailedName, getName(), getType());
     }
 
 }

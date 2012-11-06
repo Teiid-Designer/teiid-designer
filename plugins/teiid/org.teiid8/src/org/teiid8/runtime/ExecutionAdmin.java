@@ -5,10 +5,8 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.runtime.impl;
+package org.teiid8.runtime;
 
-import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
-import static org.teiid.designer.runtime.DqpPlugin.Util;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,17 +29,17 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.server.core.IServer;
+import org.jboss.dmr.ModelNode;
+import org.jboss.ide.eclipse.as.core.server.v7.management.AS7ManagementDetails;
+import org.jboss.ide.eclipse.as.management.core.JBoss7ManagerUtil;
+import org.jboss.ide.eclipse.as.management.core.ModelDescriptionConstants;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.AdminFactory;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
-import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.designer.runtime.TeiidDataSource;
-import org.teiid.designer.runtime.TeiidServerUtils;
-import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
-import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
-import org.teiid.designer.runtime.preview.Messages;
+import org.teiid.core.util.ArgCheck;
 import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.IExecutionAdmin;
@@ -51,8 +49,9 @@ import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
-import org.teiid.designer.vdb.Vdb;
 import org.teiid.jdbc.TeiidDriver;
+import org.teiid.logging.LogManager;
+
 
 
 /**
@@ -62,6 +61,15 @@ import org.teiid.jdbc.TeiidDriver;
  */
 public class ExecutionAdmin implements IExecutionAdmin {
 
+    private static String PLUGIN_ID = "org.teiid.8-2";  //$NON-NLS-1$
+    
+    public static final String TEST_VDB = "<vdb name=\"ping\" version=\"1\">" + //$NON-NLS-1$
+    "<model visible=\"true\" name=\"Foo\" type=\"PHYSICAL\" path=\"/dummy/Foo\">" + //$NON-NLS-1$
+    "<source name=\"s\" translator-name=\"loopback\"/>" + //$NON-NLS-1$
+    "<metadata type=\"DDL\"><![CDATA[CREATE FOREIGN TABLE G1 (e1 string, e2 integer);]]> </metadata>" + //$NON-NLS-1$
+    "</model>" + //$NON-NLS-1$
+    "</vdb>"; //$NON-NLS-1$ +
+    
     private final Admin admin;
     protected Map<String, ITeiidTranslator> translatorByNameMap;
     protected Collection<String> dataSourceNames;
@@ -82,8 +90,8 @@ public class ExecutionAdmin implements IExecutionAdmin {
      * @throws Exception if there is a problem connecting the server
      */
     ExecutionAdmin(Admin admin, ITeiidServer teiidServer) throws Exception {
-        CoreArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
+        ArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
+        ArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
         
         this.admin = admin;
         this.teiidServer = teiidServer;
@@ -101,7 +109,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
      * @throws Exception if there is a problem connecting the server
      */
     public ExecutionAdmin(ITeiidServer teiidServer) throws Exception {
-        CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
+        ArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
         
         ITeiidAdminInfo teiidAdminInfo = teiidServer.getTeiidAdminInfo();
         char[] passwordArray = null;
@@ -152,7 +160,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
     @Override
     public void deployVdb( IFile vdbFile ) throws Exception {
-        CoreArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
+        ArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
 
         String vdbName = vdbFile.getFullPath().lastSegment();
         String vdbNameNoExt = vdbFile.getFullPath().removeFileExtension().lastSegment();
@@ -226,10 +234,10 @@ public class ExecutionAdmin implements IExecutionAdmin {
                                                   String jndiName,
                                                   String typeName,
                                                   Properties properties ) throws Exception {
-        CoreArgCheck.isNotEmpty(displayName, "displayName"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(jndiName, "jndiName"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(typeName, "typeName"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(properties, "properties"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(displayName, "displayName"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(jndiName, "jndiName"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(typeName, "typeName"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(properties, "properties"); //$NON-NLS-1$
 
         // Check if exists, return false
         if (dataSourceExists(jndiName)) {
@@ -269,9 +277,9 @@ public class ExecutionAdmin implements IExecutionAdmin {
         // Verify the "typeName" exists.
         if (!this.dataSourceTypeNames.contains(typeName)) {
             if("connector-jdbc".equals(typeName)) {  //$NON-NLS-1$
-                throw new Exception(Util.getString("jdcbSourceForClassNameNotFound", connProfileDriverClass, getServer()));  //$NON-NLS-1$
+                throw new Exception(NLS.bind(Messages.jdcbSourceForClassNameNotFound, connProfileDriverClass, getServer()));
             } else {
-                throw new Exception(Util.getString("dataSourceTypeDoesNotExist", typeName, getServer())); //$NON-NLS-1$
+                throw new Exception(NLS.bind(Messages.dataSourceTypeDoesNotExist, typeName, getServer()));
             }
         }
 
@@ -291,21 +299,51 @@ public class ExecutionAdmin implements IExecutionAdmin {
         }
 
         // We shouldn't get here if data source was created
-        throw new Exception(Util.getString("errorCreatingDataSource", jndiName, typeName, getServer())); //$NON-NLS-1$
+        throw new Exception(NLS.bind(Messages.errorCreatingDataSource, jndiName, typeName));
     }
 
     /*
      * Look for an installed driver that has the driverClass which matches the supplied driverClass name.
      * 
-     * @param driverClass the driver class to match
+     * @param requestDriverClass the driver class to match
      * @return the name of the matching driver, null if not found
      */
-    private String getDSMatchForDriverClass(String driverClass) throws Exception {
-        if (driverClass == null)
+    private String getDSMatchForDriverClass(String requestDriverClass) throws Exception {
+        if (requestDriverClass == null)
             return null;
-        
-        // Get the installed JDBC Driver mappings
-        return TeiidServerAdapterUtil.getJDBCDriver(teiidServer.getParent(), driverClass);
+
+        if (!getServer().isParentConnected())
+            return null;
+
+        ModelNode request = new ModelNode();
+        request.get(ModelDescriptionConstants.OP).set("installed-drivers-list"); //$NON-NLS-1$
+
+        ModelNode address = new ModelNode();
+        address.add(ModelDescriptionConstants.SUBSYSTEM, "datasources"); //$NON-NLS-1$
+        request.get(ModelDescriptionConstants.OP_ADDR).set(address);
+
+        try {
+            String requestString = request.toJSONString(true);
+            IServer parentServer = getServer().getParent();
+            
+            AS7ManagementDetails as7ManagementDetails = new AS7ManagementDetails(parentServer);
+            String resultString = JBoss7ManagerUtil.getService(parentServer).execute(as7ManagementDetails, requestString);
+            ModelNode operationResult = ModelNode.fromJSONString(resultString);
+
+            List<ModelNode> driverList = operationResult.asList();
+            for (ModelNode driver : driverList) {
+                String driverClassName = driver.get("driver-class-name").asString(); //$NON-NLS-1$
+                String driverName = driver.get("driver-name").asString(); //$NON-NLS-1$
+
+                if (requestDriverClass.equalsIgnoreCase(driverClassName)) return driverName;
+            }
+
+        } catch (Exception ex) {
+            // Failed to get mapping
+            LogManager.logError(getClass().getSimpleName(), ex, NLS.bind(Messages.failedToGetDriverMappings, requestDriverClass));
+        }
+
+        return null;
     }
     
     /*
@@ -327,22 +365,22 @@ public class ExecutionAdmin implements IExecutionAdmin {
                     try {
                         iStream = new FileInputStream(theFile);
                     } catch (FileNotFoundException ex) {
-                        Util.log(IStatus.ERROR, NLS.bind(Messages.JarDeploymentJarNotFound, theFile.getPath()));
+                        LogManager.logError(getClass().getSimpleName(), ex, NLS.bind(Messages.JarDeploymentJarNotFound, theFile.getPath()));
                         continue;
                     }
                     try {
                         admin.deploy(fileName, iStream);
                     } catch (Exception ex) {
                         // Jar deployment failed
-                        Util.log(IStatus.ERROR, ex, NLS.bind(Messages.JarDeploymentFailed, theFile.getPath()));
+                        LogManager.logError(getClass().getSimpleName(), ex, NLS.bind(Messages.JarDeploymentFailed, theFile.getPath()));
                     }
                 } else {
                     // Could not read the file
-                    Util.log(IStatus.ERROR, NLS.bind(Messages.JarDeploymentJarNotReadable, theFile.getPath()));
+                    LogManager.logError(getClass().getSimpleName(), NLS.bind(Messages.JarDeploymentJarNotReadable, theFile.getPath()));
                 }
             } else {
                 // The file was not found
-                Util.log(IStatus.ERROR, NLS.bind(Messages.JarDeploymentJarNotFound, theFile.getPath()));
+                LogManager.logError(getClass().getSimpleName(), NLS.bind(Messages.JarDeploymentJarNotFound, theFile.getPath()));
             }
 
         }
@@ -357,7 +395,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
     @Override
     public ITeiidTranslator getTranslator( String name ) {
-        CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
         return this.translatorByNameMap.get(name);
     }
 
@@ -368,7 +406,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
     @Override
     public ITeiidVdb getVdb( String name ) {
-        CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
 
         return teiidVdbs.get(name);
     }
@@ -448,13 +486,14 @@ public class ExecutionAdmin implements IExecutionAdmin {
                 // this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(translator));
             }
         } else {
-            throw new Exception(Util.getString("invalidPropertyValue", value, propName)); //$NON-NLS-1$
+            throw new Exception(NLS.bind(Messages.invalidPropertyValue, value, propName));
         }
     }
 
     /**
      * @throws Exception if refreshing admin connection fails
      */
+    @Override
     public void connect() throws Exception {
         if (!this.loaded) {
             refresh();
@@ -527,9 +566,9 @@ public class ExecutionAdmin implements IExecutionAdmin {
      */
     public void setProperties( ITeiidTranslator translator,
                                Properties changedProperties ) throws Exception {
-        CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(changedProperties, "changedProperties"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(changedProperties.entrySet(), "changedProperties"); //$NON-NLS-1$
+        ArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
+        ArgCheck.isNotNull(changedProperties, "changedProperties"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(changedProperties.entrySet(), "changedProperties"); //$NON-NLS-1$
 
         if (changedProperties.size() == 1) {
             String name = changedProperties.stringPropertyNames().iterator().next();
@@ -553,9 +592,9 @@ public class ExecutionAdmin implements IExecutionAdmin {
     public void setPropertyValue( ITeiidTranslator translator,
                                   String propName,
                                   String value ) throws Exception {
-        CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(propName, "propName"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(value, "value"); //$NON-NLS-1$
+        ArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(propName, "propName"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(value, "value"); //$NON-NLS-1$
         internalSetPropertyValue(translator, propName, value, true);
     }
 
@@ -600,15 +639,15 @@ public class ExecutionAdmin implements IExecutionAdmin {
      * @return
      */
     private String appendVdbExtension(String vdbName) {
-        if (vdbName.endsWith(Vdb.FILE_EXTENSION))
+        if (vdbName.endsWith(ITeiidVdb.VDB_EXTENSION))
             return vdbName;
         
-        return vdbName + Vdb.FILE_EXTENSION;
+        return vdbName + ITeiidVdb.VDB_DOT_EXTENSION;
     }
     
     @Override
     public IStatus ping(PingType pingType) {
-        String msg = Util.getString("cannotConnectToServer", teiidServer.getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
+        String msg = NLS.bind(Messages.cannotConnectToServer, teiidServer.getTeiidAdminInfo().getUsername());
         try {
             if (this.admin == null)
                 throw new Exception(msg);
@@ -639,14 +678,14 @@ public class ExecutionAdmin implements IExecutionAdmin {
         String url = "jdbc:teiid:ping@mm://" + host + ':' + teiidJdbcInfo.getPort(); //$NON-NLS-1$
         
         try {
-            admin.deploy("ping-vdb.xml", new ByteArrayInputStream(TeiidServerUtils.TEST_VDB.getBytes())); //$NON-NLS-1$
+            admin.deploy("ping-vdb.xml", new ByteArrayInputStream(TEST_VDB.getBytes())); //$NON-NLS-1$
             
             try{
                 String urlAndCredentials = url + ";user=" + teiidJdbcInfo.getUsername() + ";password=" + teiidJdbcInfo.getPassword() + ';';  //$NON-NLS-1$ //$NON-NLS-2$              
                 teiidJdbcConnection = TeiidDriver.getInstance().connect(urlAndCredentials, null);
                //pass
             } catch(SQLException ex){
-                String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
+                String msg = NLS.bind(Messages.serverDeployUndeployProblemPingingTeiidJdbc, url);
                 return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
             } finally {
                 admin.undeploy("ping-vdb.xml"); //$NON-NLS-1$
@@ -657,7 +696,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
                 admin.close();
             }
         } catch (Exception ex) {
-            String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc", url); //$NON-NLS-1$
+            String msg = NLS.bind(Messages.serverDeployUndeployProblemPingingTeiidJdbc, url);
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
         }
         

@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.runtime.impl;
+package org.teiid8.runtime;
 
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.Properties;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -26,10 +25,11 @@ import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
-import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
+import org.teiid8.runtime.ExecutionAdmin;
+import org.teiid8.runtime.TeiidTranslator;
 
 /**
  * 
@@ -46,8 +46,6 @@ public class ExecutionAdminTest {
     
     @Mock
     private EventManager eventManager;
-
-    private ModelWorkspaceMock modelWorkspaceMock;
     
     @Before
     public void beforeEach() {
@@ -55,17 +53,10 @@ public class ExecutionAdminTest {
         
         when(teiidServer.getEventManager()).thenReturn(eventManager);
         
-    	modelWorkspaceMock = new ModelWorkspaceMock();
-        
         PROP_DEFS = new ArrayList<PropertyDefinition>(1);
         PropertyDefinition propDef = mock(PropertyDefinition.class);
         when(propDef.getName()).thenReturn("name");
         PROP_DEFS.add(mock(PropertyDefinition.class));
-    }
-    
-    @After
-    public void afterEach() {
-        modelWorkspaceMock.dispose();
     }
 
     private ExecutionAdmin getNewAdmin() throws Exception {
@@ -106,7 +97,8 @@ public class ExecutionAdminTest {
     	VDB vdb = mock(VDB.class);
     	when(admin.getVDB("MyVdb", 1)).thenReturn(vdb);
     	when(vdb.getStatus()).thenReturn(VDB.Status.ACTIVE);
-    	
+    	when(vdb.getName()).thenReturn(vdbName);
+        
         getNewAdmin().deployVdb(vdbFile);
     }
 
