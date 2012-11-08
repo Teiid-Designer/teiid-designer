@@ -402,7 +402,11 @@ public class TableNotificationHandler implements INotifyChangedListener, UiConst
         List annotations = theAnnotationContainer.getAnnotations();
 
         for (Iterator iter = annotations.iterator(); iter.hasNext();) {
-            annotatedEObject = ((Annotation)iter.next()).getAnnotatedObject();
+        	Object next = iter.next();
+        	if( next == null ) {
+        		break;
+        	}
+            annotatedEObject = ((Annotation)next).getAnnotatedObject();
 
             // if (NotificationUtilities.isRemoved(theNotification)) {
             TableViewer viewer = (TableViewer)viewersByClass.get(annotatedEObject.eClass());

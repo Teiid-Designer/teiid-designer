@@ -19,6 +19,14 @@ import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
  */
 public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssistant {
 
+	
+    /**
+     * Removes any incompatible MEDs from a model resource
+     * 
+     * @param modelResource the target model resource (cannot be <code>null</code>)
+     * @throws Exception if error trying to detect and remove incompatible MEDs from model resource
+     */
+	public abstract void cleanupModelResourceMEDs(Object modelResource) throws Exception;
     /**
      * Obtains from the ModelResource, the ModelExtensionDefinition.
      * 

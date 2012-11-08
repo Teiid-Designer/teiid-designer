@@ -44,11 +44,14 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.osgi.framework.Bundle;
 import org.teiid.designer.core.ModelInitializer;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.transaction.UnitOfWorkImpl;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelImport;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -430,6 +433,17 @@ public class NewModelWizard extends AbstractWizard
                     if (originalModelAnotation != null) {
                         originalModelAnotation.setPrimaryMetamodelUri(uri);
                         originalModelAnotation.setModelType(getModelType());
+                        
+                        // Remove any unsupported MEDS
+                    	try {
+                    		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+                			EmfModelObjectExtensionAssistant assistant = (EmfModelObjectExtensionAssistant)registry.getModelExtensionAssistant("core"); //$NON-NLS-1$
+                			assistant.cleanupModelResourceMEDs(modelResource);
+							//ModelExtensionUtils.removeUnsupportedMEDs(modelResource);
+						} catch (Exception ex) {
+	                        setExceptionOccurred(true);
+	                        ModelerCore.Util.log(IStatus.ERROR, ex, ex.getMessage());
+						}
 
                         // Force save after setting these properties.
                         try {

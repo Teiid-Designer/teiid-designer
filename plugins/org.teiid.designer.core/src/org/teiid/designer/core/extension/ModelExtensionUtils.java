@@ -600,7 +600,7 @@ class ModelExtensionUtils {
         if (annotation != null) {
             annotation.getTags().remove(propId);
 
-            if (deleteModelObjectAnnotation && annotation.getTags().isEmpty()) {
+            if (deleteModelObjectAnnotation && annotation.getTags().isEmpty() && annotation.getDescription() == null) {
                 ModelResourceContainerFactory.deleteAnnotation(annotation);
             }
         }

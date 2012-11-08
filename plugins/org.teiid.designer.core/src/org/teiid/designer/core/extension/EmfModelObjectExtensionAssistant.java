@@ -32,6 +32,8 @@ import org.teiid.designer.core.util.ModelResourceContainerFactory;
 import org.teiid.designer.core.util.ModelVisitorProcessor;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
@@ -47,6 +49,41 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
 
     private static final String PREFIX = I18nUtil.getPropertyPrefix(EmfModelObjectExtensionAssistant.class);
 
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#cleanupModelResourceMEDs(java.lang.Object)
+     * @throws Exception if error trying to detect and remove incompatible MEDs from model resource
+     */
+    @Override
+	public void cleanupModelResourceMEDs(Object modelResource) throws Exception {
+    	CoreArgCheck.isNotNull(modelResource, "modelResource is null"); //$NON-NLS-1$
+    	CoreArgCheck.isInstanceOf(ModelResource.class, modelResource);
+    	
+    	ModelResource theModelResource = (ModelResource)modelResource;
+    	
+    	Collection<String> supportedNamespaces = ModelExtensionUtils.getSupportedNamespaces(theModelResource);
+    	
+    	for( String namespacePrefix : supportedNamespaces ) {
+    		ModelExtensionAssistant assistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(namespacePrefix);
+
+    		ModelExtensionDefinition med = assistant.getModelExtensionDefinition();
+
+    		if( assistant instanceof ModelObjectExtensionAssistant ) {
+    			
+                if (!med.extendsMetamodelUri(theModelResource.getModelAnnotation().getPrimaryMetamodelUri())) {
+                	// remove MED
+                	((ModelObjectExtensionAssistant)assistant).removeModelExtensionDefinition(modelResource);
+                } else if (!med.getSupportedModelTypes().contains(theModelResource.getModelType()) ) {
+                    // remove MED
+                	((ModelObjectExtensionAssistant)assistant).removeModelExtensionDefinition(modelResource);
+                }
+
+            }
+    	}
+    }
+    
     /**
      * @param modelObject the model object (must be either an {@link EObject}, {@link ModelResource}, or an {@link IFile}.
      * @return the model resource or <code>null</code> if not found
