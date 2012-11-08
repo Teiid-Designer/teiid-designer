@@ -492,7 +492,16 @@ public class ExtensionPlugin extends Plugin {
     }
 
     protected static class ModelObjectExtensionAssistantAdapter extends ModelObjectExtensionAssistant {
-
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#cleanupModelResourceMEDs(java.lang.Object)
+         * @throws Exception if error trying to detect and remove incompatible MEDs from model resource
+         */
+        @Override
+    	public void cleanupModelResourceMEDs(Object modelResource) throws Exception {
+        	// nothing to do
+        }
         /**
          * {@inheritDoc}
          * 
