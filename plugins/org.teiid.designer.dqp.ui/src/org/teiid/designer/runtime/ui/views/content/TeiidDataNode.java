@@ -11,6 +11,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContentNode;
 import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IResourceNode;
+import org.teiid.adminapi.Model;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidTranslator;
@@ -18,12 +20,22 @@ import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.runtime.ui.views.TeiidServerLabelProvider;
 
 /**
  * @param <V> 
  * @since 8.0
  */
 public class TeiidDataNode<V> implements IContentNode<AbstractTeiidFolder> {
+    
+    /**
+     * Prefix for language NLS properties
+     */
+    private static final String PREFIX = I18nUtil.getPropertyPrefix(TeiidServerLabelProvider.class);
+    
+    private static final String ACTIVE_VDB = DqpUiPlugin.UTIL.getString(PREFIX + "activeVdb"); //$NON-NLS-1$
+    
+    private static final String INACTIVE_VDB = DqpUiPlugin.UTIL.getString(PREFIX + "inactiveVdb"); //$NON-NLS-1$
     
     private static final String PATH_SEPARATOR = "/"; //$NON-NLS-1$
     
@@ -101,6 +113,48 @@ public class TeiidDataNode<V> implements IContentNode<AbstractTeiidFolder> {
         }
         
         return null;
+    }
+    
+    @Override
+    public String toString() {
+        if (value instanceof TeiidDataSource) {
+            if (((TeiidDataSource) value).getDisplayName() != null) {
+                return ((TeiidDataSource) value).getDisplayName();
+            }
+            return ((TeiidDataSource) value).getName();
+        }
+        
+        if (value instanceof TeiidTranslator) {
+            return ((TeiidTranslator) value).getName();
+        }
+
+        if (value instanceof TeiidVdb) {
+            TeiidVdb vdb = (TeiidVdb) value;
+            StringBuilder builder = new StringBuilder();
+            builder.append("VDB:\t\t").append(vdb.getName()).append("\nState:\t"); //$NON-NLS-1$ //$NON-NLS-2$
+            if (vdb.isActive()) {
+                builder.append(ACTIVE_VDB);
+            } else {
+                builder.append(INACTIVE_VDB);
+                for (String error : vdb.getVdb().getValidityErrors()) {
+                    builder.append("\nERROR:\t").append(error); //$NON-NLS-1$
+                }
+            }
+
+            builder.append("\nModels:"); //$NON-NLS-1$
+            for (Model model : vdb.getVdb().getModels()) {
+                builder.append("\n\t   ").append(model.getName()); //$NON-NLS-1$
+            }
+            
+            return builder.toString();
+        }
+
+        if (value instanceof SourceConnectionBinding) {
+            SourceConnectionBinding binding = (SourceConnectionBinding) value;
+            return binding.getModelName();
+        }
+        
+        return super.toString();   
     }
     
     /**

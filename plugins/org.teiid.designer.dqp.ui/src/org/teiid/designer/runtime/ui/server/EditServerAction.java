@@ -14,10 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
-import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
-import org.teiid.designer.runtime.ui.views.TeiidView;
-import org.teiid.designer.ui.common.util.UiUtil;
 
 
 /**
@@ -64,7 +61,7 @@ public final class EditServerAction extends BaseSelectionListenerAction {
         this.shell = shell;
         this.teiidServerManager = teiidServerManager;
     }
-
+    
     // ===========================================================================================================================
     // Methods
     // ===========================================================================================================================
@@ -95,13 +92,6 @@ public final class EditServerAction extends BaseSelectionListenerAction {
     	if( this.serverBeingEdited == null ) return;
     	    
     	DqpUiPlugin.editTeiidServer(serverBeingEdited);
-    	
-    	// refresh viewer in Teiid View to display latest label
-    	TeiidView teiidView = (TeiidView)UiUtil.getViewPart(DqpUiConstants.Extensions.CONNECTORS_VIEW_ID);
-	        
-    	if (teiidView != null) {
-    	    teiidView.updateLabel(this.serverBeingEdited);
-    	}
     }
 
     /**

@@ -34,7 +34,7 @@ import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
  */
 public class TeiidResourceNode extends ContentNode<ITypeNode> implements IResourceNode {
     
-    private static Map<TeiidServerContentProvider, TeiidResourceNode> nodeCache = new WeakHashMap<TeiidServerContentProvider, TeiidResourceNode>();
+    private static Map<String, TeiidResourceNode> nodeCache = new WeakHashMap<String, TeiidResourceNode>();
     
     private ArrayList<IContentNode<? extends IContainerNode<?>>> children;
     private TeiidServerContentProvider provider;
@@ -49,10 +49,11 @@ public class TeiidResourceNode extends ContentNode<ITypeNode> implements IResour
      * @return new or cached {@link TeiidResourceNode}
      */
     public static TeiidResourceNode getInstance(IServer server, TeiidServerContentProvider provider) {
-        TeiidResourceNode node = nodeCache.get(provider);
+        String key = server.toString() + provider.toString();
+        TeiidResourceNode node = nodeCache.get(key);
         if (node == null) {
             node = new TeiidResourceNode(server, provider);
-            nodeCache.put(provider, node); 
+            nodeCache.put(key, node); 
         } else {
             // Existing node but children may be out of date
             // Remove children so they are refreshed
@@ -89,37 +90,44 @@ public class TeiidResourceNode extends ContentNode<ITypeNode> implements IResour
             return;
         }
         
-        try {
-            teiidServer = (TeiidServer) getServer().loadAdapter(TeiidServer.class, null);
+        synchronized(provider) {
+            try {
+                teiidServer = (TeiidServer)getServer().loadAdapter(TeiidServer.class, null);
 
-            if (teiidServer != null && teiidServer.isConnected()) {
-                if (children == null)
-                    children = new ArrayList<IContentNode<? extends IContainerNode<?>>>();
-                    
-                children.add(new TeiidServerContainerNode(this, provider));
-            } else {
-                setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(getClass().getSimpleName() + ".labelNotConnected"))); //$NON-NLS-1$
-                return;
+                if (teiidServer != null && teiidServer.isConnected()) {
+                    if (children == null) children = new ArrayList<IContentNode<? extends IContainerNode<?>>>();
+
+                    children.add(new TeiidServerContainerNode(this, provider));
+                } else {
+                    setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(getClass().getSimpleName()
+                                                                                                 + ".labelNotConnected"))); //$NON-NLS-1$
+                    return;
+                }
+
+                clearError();
+
+            } catch (Exception e) {
+                DqpUiConstants.UTIL.log(e);
+                setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(getClass().getSimpleName()
+                                                                                             + ".labelRetrievalError"))); //$NON-NLS-1$
             }
-
-            clearError();
-            
-        } catch (Exception e) {
-            DqpUiConstants.UTIL.log(e);
-            setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(getClass().getSimpleName() + ".labelRetrievalError"))); //$NON-NLS-1$
         }
     }
     
     @Override
     public final void clearChildren() {
-        clearError();
-        if (children != null) {
-            for (IContentNode<? extends IContainerNode<?>> child : children) {
-                child.dispose();
+        synchronized (provider) {
+            clearError();
+            if (children != null) {
+                for (IContentNode<? extends IContainerNode<?>> child : children) {
+                    child.dispose();
+                }
+
+                children.clear();
+                children = null;
             }
-            
-            children.clear();
-            children = null;
+
+            teiidServer = null;
         }
     }
     
@@ -164,5 +172,18 @@ public class TeiidResourceNode extends ContentNode<ITypeNode> implements IResour
      */
     public boolean hasChildren() {
         return children != null && ! children.isEmpty();
+    }
+    
+    @Override
+    public String toString() {
+        if (teiidServer == null)
+            return DqpUiConstants.UTIL.getString(TeiidResourceNode.class.getSimpleName() + ".labelNotConnected"); //$NON-NLS-1$
+        
+        String ttip = teiidServer.toString();
+        if( teiidServer.getConnectionError() != null ) {
+            ttip = ttip + "\n\n" + teiidServer.getConnectionError(); //$NON-NLS-1$
+        }
+        
+        return ttip;
     }
 }

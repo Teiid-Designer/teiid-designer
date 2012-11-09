@@ -18,25 +18,31 @@ import net.jcip.annotations.GuardedBy;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContainerNode;
 import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContentNode;
+import org.jboss.tools.as.wst.server.ui.xpl.ServerToolTip;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
+import org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder;
 import org.teiid.designer.runtime.ui.views.content.DataSourcesFolder;
+import org.teiid.designer.runtime.ui.views.content.TeiidDataNode;
 import org.teiid.designer.runtime.ui.views.content.TeiidResourceNode;
 import org.teiid.designer.runtime.ui.views.content.TranslatorsFolder;
 import org.teiid.designer.runtime.ui.views.content.VdbsFolder;
@@ -69,8 +75,7 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
     private boolean showTranslators = true;
     
     private class RefreshThread extends Thread {
-        private boolean refreshCompleted = true;
-    
+        
         private boolean die = false;
         
         private LinkedBlockingQueue<Object> queue = new LinkedBlockingQueue<Object>();
@@ -78,14 +83,6 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
         public RefreshThread() {
             super(TeiidServerContentProvider.this + "." + RefreshThread.class.getSimpleName()); //$NON-NLS-1$
             setDaemon(true);
-            
-            // Tracks loadElementJob to determine when it has finished
-            loadElementJob.addJobChangeListener(new JobChangeAdapter() {
-                @Override
-                public void done(IJobChangeEvent event) {
-                    refreshCompleted = true;
-                }
-            });
         }
         
 
@@ -107,11 +104,10 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
         public void run() {
             while (! Thread.currentThread().isInterrupted() && ! die) {
                 try {
-                    if (refreshCompleted) {
+                    if (pendingUpdates.size() == 0) {
                         queue.take();
                         
                         // Successfully taken from the queue so do the refresh
-                        refreshCompleted = false;
                         doRefreshWork();
                     }
                     
@@ -255,16 +251,13 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
         
         @Override
         public void configurationChanged( final ExecutionConfigurationEvent event ) {
-            
-            TeiidServer eventServer = event.getServer();
-            if (eventServer == null)
-                return;
-            
             refreshThread.refresh();
         }
     };
     
     private RefreshThread refreshThread = new RefreshThread();
+    
+    private ServerToolTip tooltip;
     
     /**
      * Content will include VDBs, translators, and data sources.
@@ -468,6 +461,29 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
     public void inputChanged( Viewer viewer, Object oldInput, Object newInput ) {
         if (viewer instanceof TreeViewer) {
             this.viewer = (TreeViewer) viewer;
+            if( tooltip != null )
+                tooltip.deactivate();
+            
+            tooltip = new ServerToolTip(this.viewer.getTree()) {
+                
+                @Override
+                protected boolean isMyType(Object selected) {
+                    return RuntimeAssistant.adapt(selected, AbstractTeiidFolder.class) != null ||
+                        RuntimeAssistant.adapt(selected, TeiidDataNode.class) != null ||
+                        RuntimeAssistant.adapt(selected, TeiidServer.class) != null;
+                }
+                @Override
+                protected void fillStyledText(Composite parent, StyledText sText, Object o) {
+                   if (o instanceof TreeItem) {
+                       String text = ((TreeItem) o).getData().toString();
+                       sText.setText(text.replace("\n", "<br>"));  //$NON-NLS-1$ //$NON-NLS-2$
+                   }
+                }
+            };
+            tooltip.setShift(new Point(15, 8));
+            tooltip.setPopupDelay(500); // in ms
+            tooltip.setHideOnMouseDown(true);
+            tooltip.activate();
         } else {
             this.viewer = null;
         }

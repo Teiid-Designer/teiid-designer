@@ -114,13 +114,17 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
         TeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
 
         // enable only if selected object is server and not same server
-        if (teiidServer != null) {
-            this.selectedServer = teiidServer;
-            if (this.teiidServerManager.getDefaultServer() != null
-                && !this.selectedServer.equals(this.teiidServerManager.getDefaultServer())) {
-                return true;
-            }
-        }
+        if (teiidServer == null)
+            return false;
+        
+        this.selectedServer = teiidServer;
+        
+        // No default server selected so display the action to allow it
+        if (teiidServerManager.getDefaultServer() == null)
+            return true;
+        
+        if (! this.selectedServer.equals(this.teiidServerManager.getDefaultServer()))
+            return true;
 
         return false;
     }

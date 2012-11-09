@@ -19,6 +19,7 @@ import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
 
 /**
@@ -138,5 +139,18 @@ public class TeiidServerContainerNode extends ContainerNode<TeiidResourceNode> {
      */
     public TeiidServer getTeiidServer() {
         return teiidServer;
+    }
+    
+    @Override
+    public String toString() {
+        if (teiidServer == null)
+            return DqpUiConstants.UTIL.getString(TeiidResourceNode.class.getSimpleName() + ".labelNotConnected"); //$NON-NLS-1$
+        
+        String ttip = teiidServer.toString();
+        if( teiidServer.getConnectionError() != null ) {
+            ttip = ttip + "\n\n" + teiidServer.getConnectionError(); //$NON-NLS-1$
+        }
+        
+        return ttip;
     }
 }

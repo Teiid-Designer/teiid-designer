@@ -332,6 +332,8 @@ public class TeiidServerEditor extends EditorPart {
         
         dirty = false;
         firePropertyChange(IEditorPart.PROP_DIRTY);
+        
+        serverManager.notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(teiidServer));
     }
 
     @Override

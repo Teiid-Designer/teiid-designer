@@ -7,7 +7,6 @@
  */
 package org.teiid.designer.runtime.ui.views;
 
-import java.util.List;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -18,19 +17,11 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -49,25 +40,19 @@ import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
 import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
-import org.teiid.adminapi.Model;
-import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidDataSource;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterUtil;
-import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.server.NewServerAction;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
-import org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder;
 import org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode;
-import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.KeyInValueHashMap;
 import org.teiid.designer.ui.common.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -154,9 +139,6 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
      */
     static final String PREFIX = I18nUtil.getPropertyPrefix(TeiidView.class);
 
-    static final String ACTIVE_VDB = getString("activeVdb"); //$NON-NLS-1$
-    static final String INACTIVE_VDB = getString("inactiveVdb"); //$NON-NLS-1$
-    
     /**
      * Used for restoring view state
      */
@@ -174,9 +156,6 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
     private Combo jbossServerCombo;
 
     private CommonViewer viewer;
-
-    /** needed for key listening */
-    private KeyAdapter kaKeyAdapter;
 
     private IPropertySourceProvider propertySourceProvider;
 
@@ -298,8 +277,6 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
         viewer = getCommonViewer();
         GridDataFactory.fillDefaults().grab(true, true).applyTo(viewer.getControl());
 
-        hookToolTips();
-
         viewer.setSorter(new NameSorter());
 
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -309,8 +286,6 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
             }
         });
 
-        initKeyListener();
-        
         DqpPlugin.getInstance().getServersProvider().addServerLifecycleListener(serversListener);
         
         // Populate the jboss server combo box which
@@ -382,28 +357,6 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
         return super.getAdapter(adapter);
     }
 
-    String getConnectorToolTip( TeiidTranslator connector ) {
-        return connector.getName();
-    }
-
-    SourceConnectionBinding getSelectedBinding() {
-        StructuredSelection selection = (StructuredSelection)viewer.getSelection();
-        if (!selection.isEmpty() && selection.getFirstElement() instanceof SourceConnectionBinding) {
-            return (SourceConnectionBinding)selection.getFirstElement();
-        }
-
-        return null;
-    }
-
-    List<Object> getSelectedObjects() {
-        StructuredSelection selection = (StructuredSelection)viewer.getSelection();
-        if (!selection.isEmpty()) {
-            return SelectionUtilities.getSelectedObjects(selection);
-        }
-
-        return null;
-    }
-
     /**
      * @return the server manager being used by this view
      */
@@ -411,178 +364,10 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
         return DqpPlugin.getInstance().getServerManager();
     }
 
-    String getVDBToolTip( TeiidVdb vdb ) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("VDB:\t\t").append(vdb.getName()).append("\nState:\t"); //$NON-NLS-1$ //$NON-NLS-2$
-        if (vdb.isActive()) {
-            builder.append(ACTIVE_VDB);
-        } else {
-            builder.append(INACTIVE_VDB);
-            for (String error : vdb.getVdb().getValidityErrors()) {
-                builder.append("\nERROR:\t").append(error); //$NON-NLS-1$
-            }
-        }
-
-        builder.append("\nModels:"); //$NON-NLS-1$
-        for (Model model : vdb.getVdb().getModels()) {
-            builder.append("\n\t   ").append(model.getName()); //$NON-NLS-1$
-        }
-        return builder.toString();
-    }
-
-    /**
-     * On certain keys execute certain actions
-     */
-    void handleKeyEvent( KeyEvent event ) {
-        if (event.stateMask != 0) return;
-
-        if (event.character == SWT.DEL) {
-            // if (deleteConnectorBindingAction != null && deleteConnectorBindingAction.isEnabled()) {
-            // deleteConnectorBindingAction.run();
-            // }
-        }
-    }
-
     void handleSelectionChanged( SelectionChangedEvent event ) {
         updateStatusLine((IStructuredSelection)event.getSelection());
     }
 
-    /**
-     * Tooltips over connectors and types requires a mouse label listener
-     */
-    private void hookToolTips() {
-        final Listener labelListener = new Listener() {
-            @Override
-            public void handleEvent( Event event ) {
-                Label label = (Label)event.widget;
-                Shell shell = label.getShell();
-                switch (event.type) {
-                    case SWT.MouseDown:
-                        viewer.setSelection(new StructuredSelection(label.getData("_TOOLTIP"))); //$NON-NLS-1$
-                        shell.dispose();
-                        break;
-                    case SWT.MouseExit:
-                        shell.dispose();
-                        break;
-                }
-            }
-        };
-
-        Listener treeListener = new Listener() {
-
-            Shell tip = null;
-            Label label = null;
-
-            private void disposeTip() {
-                if (tip != null) {
-                    tip.dispose();
-                    tip = null;
-                    label = null;
-                }
-            }
-
-            @Override
-            public void handleEvent( Event event ) {
-                switch (event.type) {
-                    case SWT.MouseMove: {
-                        if (tip == null) {
-                            break;
-                        }
-                        TreeItem item = viewer.getTree().getItem(new Point(event.x, event.y));
-                        if (item != null && !item.isDisposed()) {
-                            Object data = item.getData();
-                            if (!label.isDisposed() && data == label.getData("_TOOLTIP")) { //$NON-NLS-1$
-                                break;
-                            }
-                        }
-                        disposeTip();
-                        break;
-                    }
-                    case SWT.FocusOut:
-                    case SWT.Dispose:
-                    case SWT.KeyDown: {
-                        disposeTip();
-                        break;
-                    }
-                    case SWT.MouseHover: {
-                        TreeItem item = viewer.getTree().getItem(new Point(event.x, event.y));
-                        if (item != null) {
-                            if (tip != null && !tip.isDisposed()) {
-                                tip.dispose();
-                            }
-                            Object data = item.getData();
-                            if (data != null) {
-                                String tooltip = CoreStringUtil.Constants.EMPTY_STRING;
-                                if (data instanceof TeiidTranslator) {
-                                    tooltip = getConnectorToolTip((TeiidTranslator)data);
-                                } else if (data instanceof TeiidVdb) {
-                                    tooltip = getVDBToolTip((TeiidVdb)data);
-                                } else if (data instanceof AbstractTeiidFolder) {
-                                    tooltip = ((AbstractTeiidFolder)data).getName();
-                                } else if( data instanceof TeiidServer ) {
-                                	TeiidServer teiidServer = (TeiidServer)data;
-                                	String ttip = teiidServer.toString();
-                                	if( teiidServer.getConnectionError() != null ) {
-                                		ttip = ttip + "\n\n" + teiidServer.getConnectionError(); //$NON-NLS-1$
-                                	}
-                                	tooltip = ttip;
-                                } else {
-                                    tooltip = data.toString();
-                                }
-                                if (tooltip != null) {
-                                    tip = new Shell(viewer.getTree().getShell(), SWT.ON_TOP | SWT.TOOL);
-                                    FillLayout fillLayout = new FillLayout();
-                                    fillLayout.marginHeight = 1;
-                                    fillLayout.marginWidth = 1;
-                                    tip.setLayout(fillLayout);
-                                    label = new Label(tip, SWT.NONE);
-                                    label.setForeground(tip.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-                                    label.setBackground(tip.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-                                    label.setData("_TOOLTIP", data); //$NON-NLS-1$
-                                    label.setText(tooltip);
-                                    label.addListener(SWT.MouseExit, labelListener);
-                                    label.addListener(SWT.MouseDown, labelListener);
-                                    Point size = tip.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-                                    Point pt = viewer.getTree().toDisplay(event.x, event.y);
-                                    tip.setBounds(pt.x, pt.y + 26, size.x, size.y);
-                                    tip.setVisible(true);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        };
-        viewer.getTree().setToolTipText(""); //$NON-NLS-1$
-        viewer.getTree().addListener(SWT.FocusOut, treeListener);
-        viewer.getTree().addListener(SWT.Dispose, treeListener);
-        viewer.getTree().addListener(SWT.KeyDown, treeListener);
-        viewer.getTree().addListener(SWT.MouseMove, treeListener);
-        viewer.getTree().addListener(SWT.MouseHover, treeListener);
-    }
-
-    private void initKeyListener() {
-
-        // create the adapter
-        if (kaKeyAdapter == null) {
-
-            kaKeyAdapter = new KeyAdapter() {
-
-                @Override
-                public void keyReleased( KeyEvent event ) {
-                    handleKeyEvent(event);
-                }
-            };
-        }
-
-        // add the adapter as a listener
-        if (viewer != null) {
-            viewer.getControl().removeKeyListener(kaKeyAdapter);
-            viewer.getControl().addKeyListener(kaKeyAdapter);
-
-        }
-    }
-    
     /**
      * {@inheritDoc}
      * 
@@ -608,13 +393,6 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
     public void setFocus() {
         viewer.getControl().setFocus();
     }
-    
-    /**
-     * @param object the object needing to be updated in the viewer
-     */
-    public void updateLabel(Object object) {
-        this.viewer.update(object, null);
-    }
 
     /**
      * Updates Eclipse's Status line based on current selection in Teiid View
@@ -627,16 +405,7 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
 
         if (selection.size() == 1) {
             Object selectedObject = selection.getFirstElement();
-
-            if (selectedObject instanceof TeiidServer) {
-                msg = getString("statusBar.server.label", ((TeiidServer)selectedObject).toString()); //$NON-NLS-1$
-            } else if (selectedObject instanceof TeiidTranslator) {
-                msg = getString("statusBar.translator.label", ((TeiidTranslator)selectedObject).getName()); //$NON-NLS-1$
-            } else if (selectedObject instanceof TeiidVdb) {
-                msg = getString("statusBar.vdb.label", ((TeiidVdb)selectedObject).getName()); //$NON-NLS-1$
-            } else if (selectedObject instanceof TeiidDataSource) {
-                msg = getString("statusBar.datasource.label", ((TeiidDataSource)selectedObject).getDisplayName()); //$NON-NLS-1$
-            }
+            msg = selectedObject.toString();
         }
         getViewSite().getActionBars().getStatusLineManager().setMessage(msg);
     }

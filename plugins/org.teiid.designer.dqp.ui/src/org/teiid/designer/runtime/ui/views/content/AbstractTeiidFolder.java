@@ -101,6 +101,11 @@ public abstract class AbstractTeiidFolder<V> implements IContainerNode<TeiidServ
             children = null;
         }
     }
+    
+    @Override
+    public String toString() {
+        return getName();
+    }
 
     @Override
     public void dispose() {
