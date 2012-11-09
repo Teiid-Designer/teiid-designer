@@ -51,7 +51,7 @@ public class ProcedureGenerator implements SqlConstants {
 	private static final String XMI_EXTENSION = ".xmi";  //$NON-NLS-1$
 	private static final String RESULT_LOWER = "result";  //$NON-NLS-1$
 	private static final String INVOKE_SEGMENT_1 = "invoke('"; //$NON-NLS-1$
-	private static final String INVOKE_SEGMENT_2 =  "', null, REQUEST.xml_out, true, null))"; //$NON-NLS-1$
+	private static final String INVOKE_SEGMENT_2 =  "', null, REQUEST.xml_out, null, TRUE))"; //$NON-NLS-1$
 	private static final String NULL_LOWER = "null";  //$NON-NLS-1$
 
 	private ProcedureInfo requestInfo;
@@ -236,7 +236,7 @@ public class ProcedureGenerator implements SqlConstants {
                  SELECT t.* FROM 
                       TABLE(EXEC CountryInfoServiceXML.CapitalCity.create_CapitalCity(OPS.GETCAPITALCITY.countryISOCode)) 
                  AS request, 
-                 TABLE(EXEC CountryInfoService.invoke('SOAP11', null, REQUEST.xml_out, null)) 
+                 TABLE(EXEC CountryInfoService.invoke('SOAP11', null, REQUEST.xml_out, null, TRUE)) 
                  AS response, 
                  TABLE(EXEC CountryInfoServiceXML.CapitalCity.extract_CapitalCityResponse(RESPONSE.result)) 
                  AS t;
@@ -247,7 +247,7 @@ public class ProcedureGenerator implements SqlConstants {
                  SELECT t.* FROM 
                     TABLE(EXEC <view-model-name>.<request_procedure>(OPS.GETCAPITALCITY.countryISOCode)) 
                  AS request, 
-                 	TABLE(EXEC <source-model-name>.invoke('SOAP11', null, REQUEST.xml_out, null)) 
+                 	TABLE(EXEC <source-model-name>.invoke('SOAP11', null, REQUEST.xml_out, null, true)) 
                  AS response, 
                  	TABLE(EXEC <view-model-name>.<response_procedure>(RESPONSE.result)) 
                  AS t;
@@ -437,7 +437,7 @@ public class ProcedureGenerator implements SqlConstants {
     					PriceServiceView.GetPrice_procedure.productID,
     					PriceServiceView.GetPrice_procedure.productName)) 
     				AS request, 
-    			TABLE(EXEC PriceService.invoke('SOAP11', null, REQUEST.xml_out, null)) 
+    			TABLE(EXEC PriceService.invoke('SOAP11', null, REQUEST.xml_out, null, true)) 
     				AS response, 
     			TABLE(EXEC PriceServiceView.GetPrice_response(RESPONSE.result)) 
     				AS t;
@@ -521,7 +521,7 @@ public class ProcedureGenerator implements SqlConstants {
     		}
     		sb.append(FUNCTION_INVOKE);
     		sb.append(L_PAREN).append(S_QUOTE).append(this.bindingType).append(S_QUOTE).append(COMMA).append(SPACE).append(actionStr).append(COMMA).append(SPACE); 
-    		sb.append(REQUEST).append(DOT).append("xml_out").append(COMMA).append(SPACE).append(TRUE).append(COMMA).append(SPACE).append(NULL_LOWER); //$NON-NLS-1$
+    		sb.append(REQUEST).append(DOT).append("xml_out").append(COMMA).append(SPACE).append(NULL_LOWER).append(COMMA).append(SPACE).append(TRUE); //$NON-NLS-1$
     		sb.append(R_PAREN);
     	}
     	sb.append(R_PAREN).append(RETURN).append(TAB4).append(AS).append(SPACE).append(RESPONSE_LOWER).append(COMMA).append(RETURN);
