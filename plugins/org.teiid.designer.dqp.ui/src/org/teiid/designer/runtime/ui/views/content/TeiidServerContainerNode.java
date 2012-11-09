@@ -11,10 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.ContainerNode;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContainerNode;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContentNode;
-import org.teiid.designer.runtime.DqpPlugin;
+import org.eclipse.wst.server.core.IServer;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidTranslator;
@@ -23,56 +20,87 @@ import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
 
 /**
+ * @param <T> 
  * @since 8.0
  */
-public class TeiidServerContainerNode extends ContainerNode<TeiidResourceNode> {
+public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends TeiidContentNode<T> implements ITeiidContainerNode<T> {
 
-    private List<IContentNode<? extends IContainerNode<?>>> children;
+    private List<ITeiidContentNode<TeiidServerContainerNode>> children;
     private TeiidServer teiidServer;
     private TeiidServerContentProvider provider;
+    private TeiidErrorNode error;
     
     /**
      * @param server
      */
-    protected TeiidServerContainerNode(TeiidResourceNode parent, TeiidServerContentProvider provider) {
+    protected TeiidServerContainerNode(T parent, TeiidServerContentProvider provider) {
         super(parent, parent.getTeiidServer().getDisplayName());
         this.teiidServer = parent.getTeiidServer();
         this.provider = provider;
     }
     
-    /**
-     * Does this node have any children
-     * 
-     * @return true if there are children.
-     */
+    private void clearError() {
+        if (error != null) {
+            error.dispose();
+            error = null;
+        }
+    }
+    
+    @Override
+    public T getContainer() {
+        return super.getContainer();
+    }
+    
+    @Override
     public boolean hasChildren() {
         return children != null && ! children.isEmpty();
     }
 
     @Override
-    protected List<? extends IContentNode<?>> delegateGetChildren() {
+    public final List<? extends ITeiidContentNode<?>> getChildren() {
+        if (error != null) {
+            return Collections.singletonList(error);
+        }
         return children;
     }
-
+    
     @Override
-    protected void delegateClearChildren() {
+    public final void clearChildren() {
+        clearError();
+        
         if (children != null) {
-            for (IContentNode<? extends IContainerNode<?>> child : children) {
+            for (ITeiidContentNode<TeiidServerContainerNode> child : children) {
                 child.dispose();
             }
             children.clear();
             children = null;
         }
     }
+    
+    protected void setError(TeiidErrorNode error) {
+        clearError();
+        this.error = error;
+    }
 
     @Override
-    protected void delegateLoad() throws Exception {
+    public void dispose() {
+        clearChildren();
+        super.dispose();
+    }
+
+    @Override
+    public final void load() {
+        if (getServer().getServerState() != IServer.STATE_STARTED) {
+            setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(TeiidServerContainerNode.class.getSimpleName() + "ServerContentLabelNotConnected"))); //$NON-NLS-1$
+            return;
+        }
+        
         if (!teiidServer.isConnected()) {
             return;
         }
         
-        children = new ArrayList<IContentNode<? extends IContainerNode<?>>>();
-
+        children = new ArrayList<ITeiidContentNode<TeiidServerContainerNode>>();
+        
         try {
             // hide Data Sources related variables from other local variables
             DATA_SOURCES: {
@@ -124,18 +152,14 @@ public class TeiidServerContainerNode extends ContainerNode<TeiidResourceNode> {
                 
                 break TRANSLATORS;
             }
+            clearError();
         } catch (Exception e) {
-            // Want to log the exception as well as throw it since the 
-            // tree viewer doesnt provide details of the whole exception
-            DqpPlugin.Util.log(e);
-            throw e;
+            setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(TeiidServerContainerNode.class.getSimpleName() + "ServerContentLabelNotConnected"))); //$NON-NLS-1$
         }
     }
 
     /**
-     * Get this container's teiid server
-     * 
-     * @return {@link TeiidServer}
+     * @return the {@link TeiidServer} this node represents
      */
     public TeiidServer getTeiidServer() {
         return teiidServer;

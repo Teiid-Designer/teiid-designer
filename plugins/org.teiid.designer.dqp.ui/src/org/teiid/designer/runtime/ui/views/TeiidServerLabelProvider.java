@@ -19,16 +19,16 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContentNode;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder;
+import org.teiid.designer.runtime.ui.views.content.ITeiidContentNode;
+import org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode;
 import org.teiid.designer.runtime.ui.views.content.TeiidDataNode;
 import org.teiid.designer.runtime.ui.views.content.TeiidErrorNode;
-import org.teiid.designer.runtime.ui.views.content.TeiidResourceNode;
 import org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode;
 
 /**
@@ -105,7 +105,7 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
      */
     @Override
     public Image getImage(Object element) {
-        if (element instanceof TeiidResourceNode) {
+        if (element instanceof ITeiidResourceNode) {
             return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
         }
         
@@ -150,8 +150,8 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
      */
     @Override
     public String getText(Object element) {
-        if (element instanceof IContentNode) {
-            IContentNode node = (IContentNode) element;
+        if (element instanceof ITeiidContentNode) {
+            ITeiidContentNode node = (ITeiidContentNode) element;
             return node.getName();
         }
 

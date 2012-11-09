@@ -9,8 +9,6 @@ package org.teiid.designer.runtime.ui.views.content;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.core.IServer;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContentNode;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IResourceNode;
 import org.teiid.adminapi.Model;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.TeiidDataSource;
@@ -26,7 +24,7 @@ import org.teiid.designer.runtime.ui.views.TeiidServerLabelProvider;
  * @param <V> 
  * @since 8.0
  */
-public class TeiidDataNode<V> implements IContentNode<AbstractTeiidFolder> {
+public class TeiidDataNode<V> implements ITeiidContentNode<AbstractTeiidFolder> {
     
     /**
      * Prefix for language NLS properties
@@ -70,18 +68,13 @@ public class TeiidDataNode<V> implements IContentNode<AbstractTeiidFolder> {
     }
 
     @Override
-    public IResourceNode getParent() {
+    public ITeiidResourceNode getParent() {
         return parentNode != null ? parentNode.getParent() : null;
     }
 
     @Override
     public AbstractTeiidFolder getContainer() {
         return parentNode;
-    }
-
-    @Override
-    public String getAddress() {
-        return getParent().getAddress() + PATH_SEPARATOR + getName();
     }
 
     @Override

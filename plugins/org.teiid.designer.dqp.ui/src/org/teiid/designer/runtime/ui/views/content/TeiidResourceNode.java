@@ -13,12 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import org.eclipse.wst.server.core.IServer;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.ContentNode;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContainerNode;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContentNode;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IErrorNode;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IResourceNode;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.ITypeNode;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
@@ -32,25 +26,25 @@ import org.teiid.designer.runtime.ui.views.TeiidServerContentProvider;
  * 
  * @since 8.0
  */
-public class TeiidResourceNode extends ContentNode<ITypeNode> implements IResourceNode {
+public class TeiidResourceNode extends TeiidContentNode implements ITeiidResourceNode {
     
-    private static Map<String, TeiidResourceNode> nodeCache = new WeakHashMap<String, TeiidResourceNode>();
+    private static Map<String, ITeiidResourceNode> nodeCache = new WeakHashMap<String, ITeiidResourceNode>();
     
-    private ArrayList<IContentNode<? extends IContainerNode<?>>> children;
+    private ArrayList<ITeiidContentNode<? extends ITeiidContainerNode<?>>> children;
     private TeiidServerContentProvider provider;
     private TeiidServer teiidServer;
 
-    private IErrorNode error;
+    private TeiidErrorNode error;
     
     /**
      * @param server
      * @param provider
      * 
-     * @return new or cached {@link TeiidResourceNode}
+     * @return new or cached {@link ITeiidResourceNode}
      */
-    public static TeiidResourceNode getInstance(IServer server, TeiidServerContentProvider provider) {
+    public static ITeiidResourceNode getInstance(IServer server, TeiidServerContentProvider provider) {
         String key = server.toString() + provider.toString();
-        TeiidResourceNode node = nodeCache.get(key);
+        ITeiidResourceNode node = nodeCache.get(key);
         if (node == null) {
             node = new TeiidResourceNode(server, provider);
             nodeCache.put(key, node); 
@@ -75,7 +69,7 @@ public class TeiidResourceNode extends ContentNode<ITypeNode> implements IResour
     }
 
     @Override
-    public final List<? extends IContentNode<?>> getChildren() {
+    public final List<? extends ITeiidContentNode<?>> getChildren() {
         if (error != null) {
             return Collections.singletonList(error);
         }
@@ -95,7 +89,8 @@ public class TeiidResourceNode extends ContentNode<ITypeNode> implements IResour
                 teiidServer = (TeiidServer)getServer().loadAdapter(TeiidServer.class, null);
 
                 if (teiidServer != null && teiidServer.isConnected()) {
-                    if (children == null) children = new ArrayList<IContentNode<? extends IContainerNode<?>>>();
+                    if (children == null)
+                        children = new ArrayList<ITeiidContentNode<? extends ITeiidContainerNode<?>>>();
 
                     children.add(new TeiidServerContainerNode(this, provider));
                 } else {
@@ -119,7 +114,7 @@ public class TeiidResourceNode extends ContentNode<ITypeNode> implements IResour
         synchronized (provider) {
             clearError();
             if (children != null) {
-                for (IContentNode<? extends IContainerNode<?>> child : children) {
+                for (ITeiidContentNode<? extends ITeiidContainerNode<?>> child : children) {
                     child.dispose();
                 }
 
@@ -138,7 +133,7 @@ public class TeiidResourceNode extends ContentNode<ITypeNode> implements IResour
         }
     }
     
-    protected void setError(IErrorNode error) {
+    protected void setError(TeiidErrorNode error) {
         clearError();
         this.error = error;
     }
@@ -154,15 +149,6 @@ public class TeiidResourceNode extends ContentNode<ITypeNode> implements IResour
      */
     public TeiidServer getTeiidServer() {
         return this.teiidServer;
-    }
-    
-    @Override
-    public String getAddress() {
-        if (getParent() == null) {
-            // special handling for root node
-            return ""; //$NON-NLS-1$
-        }
-        return getParent().getAddress() + PATH_SEPARATOR + getContainer().getName() + "=" + getName(); //$NON-NLS-1$
     }
 
     /**

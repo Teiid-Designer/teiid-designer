@@ -31,8 +31,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wst.server.core.IServer;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContainerNode;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContentNode;
 import org.jboss.tools.as.wst.server.ui.xpl.ServerToolTip;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
@@ -42,6 +40,9 @@ import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder;
 import org.teiid.designer.runtime.ui.views.content.DataSourcesFolder;
+import org.teiid.designer.runtime.ui.views.content.ITeiidContainerNode;
+import org.teiid.designer.runtime.ui.views.content.ITeiidContentNode;
+import org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode;
 import org.teiid.designer.runtime.ui.views.content.TeiidDataNode;
 import org.teiid.designer.runtime.ui.views.content.TeiidResourceNode;
 import org.teiid.designer.runtime.ui.views.content.TranslatorsFolder;
@@ -61,7 +62,7 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
     private static final String LOAD_ELEMENT_JOB = DqpUiConstants.UTIL.getString(TeiidServerContentProvider.class.getSimpleName() + ".jobName"); //$NON-NLS-1$
     private static final Object PENDING = new Object();
     
-    private ConcurrentMap<IContainerNode, Object> pendingUpdates = new ConcurrentHashMap<IContainerNode, Object>();
+    private ConcurrentMap<ITeiidContainerNode, Object> pendingUpdates = new ConcurrentHashMap<ITeiidContainerNode, Object>();
     private transient TreeViewer viewer;
 
     /**
@@ -126,7 +127,7 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
                         return;
                     
                     Tree tree = viewer.getTree();
-                    TeiidResourceNode trn = null;
+                    ITeiidResourceNode trn = null;
                     
                     // Preserve the selection
                     int selectionCount = tree.getSelectionCount();
@@ -147,14 +148,14 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
                         Object element = o.getLastSegment();
                         
                         if (isTeiidResourceNode(element)) {
-                            trn = (TeiidResourceNode) element;
+                            trn = (ITeiidResourceNode) element;
                             break;
                         }
                         
                         Object[] children = TeiidServerContentProvider.this.getChildren(element);
                         for (Object child : children) {
                             if (isTeiidResourceNode(child)) {
-                                trn = (TeiidResourceNode) child;
+                                trn = (ITeiidResourceNode) child;
                                 break;
                             }
                         }
@@ -182,7 +183,7 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
                 }
                 
                 private boolean isTeiidResourceNode(Object o) {
-                    return o instanceof TeiidResourceNode;
+                    return o instanceof ITeiidResourceNode;
                 }
                 
             }, false);
@@ -204,8 +205,8 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
         protected IStatus run(final IProgressMonitor monitor) {
             monitor.beginTask(LOAD_ELEMENT_JOB, IProgressMonitor.UNKNOWN);
             try {
-                final List<IContainerNode> updated = new ArrayList<IContainerNode>(pendingUpdates.size());
-                for (IContainerNode node : pendingUpdates.keySet()) {
+                final List<ITeiidContainerNode> updated = new ArrayList<ITeiidContainerNode>(pendingUpdates.size());
+                for (ITeiidContainerNode node : pendingUpdates.keySet()) {
                     try {
                         node.load();
                         updated.add(node);
@@ -232,7 +233,7 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
                                 pendingUpdates.remove(node);
                                 viewer.refresh(node);
                                 
-                                if (node instanceof TeiidResourceNode) {
+                                if (node instanceof ITeiidResourceNode) {
                                     viewer.setExpandedState(node, true);
                                     viewer.expandToLevel(node, 2);
                                 }
@@ -346,15 +347,15 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
             return new Object[0];
         
         if (parentElement instanceof IServer) {
-            TeiidResourceNode node = TeiidResourceNode.getInstance((IServer) parentElement, this);
+            ITeiidResourceNode node = TeiidResourceNode.getInstance((IServer) parentElement, this);
             return new Object[] { node };
             
-        } else if (parentElement instanceof IContainerNode) {
-            IContainerNode<?> container = (IContainerNode<?>) parentElement;
+        } else if (parentElement instanceof ITeiidContainerNode) {
+            ITeiidContainerNode<?> container = (ITeiidContainerNode<?>) parentElement;
             if (pendingUpdates.containsKey(container)) {
                 return new Object[] { PENDING };
             }
-            List<? extends IContentNode<?>> children = container.getChildren();
+            List<? extends ITeiidContentNode<?>> children = container.getChildren();
             if (children == null) {
                 pendingUpdates.putIfAbsent(container, PENDING);
                 loadElementJob.schedule();
@@ -381,10 +382,10 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
      */
     @Override
     public Object getParent( Object element ) {
-        if (element instanceof IContentNode) {
-            Object parent = ((IContentNode<?>) element).getContainer();
+        if (element instanceof ITeiidContentNode) {
+            Object parent = ((ITeiidContentNode<?>) element).getContainer();
             if (parent == null) {
-                parent = ((IContentNode<?>) element).getServer();
+                parent = ((ITeiidContentNode<?>) element).getServer();
             }
             return parent;
         }
@@ -445,7 +446,7 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
     public boolean hasChildren( Object element ) {
         if (element instanceof IServer) {
             return true;
-        } else if (element instanceof IContainerNode) {
+        } else if (element instanceof ITeiidContainerNode) {
             return true;
         }
         

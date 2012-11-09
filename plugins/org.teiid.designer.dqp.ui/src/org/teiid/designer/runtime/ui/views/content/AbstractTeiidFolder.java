@@ -11,23 +11,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.eclipse.wst.server.core.IServer;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContainerNode;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContentNode;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IResourceNode;
 import org.teiid.designer.runtime.TeiidServer;
 
 /**
+ * @param <V> actual business objects this folder has as children
+ * 
  * @since 8.0
  */
-public abstract class AbstractTeiidFolder<V> implements IContainerNode<TeiidServerContainerNode> {
-    
-    private static final String PATH_SEPARATOR = "/"; //$NON-NLS-1$
+public abstract class AbstractTeiidFolder<V> implements ITeiidContainerNode<TeiidServerContainerNode> {
     
     private TeiidServerContainerNode parentNode;
     private Collection<V> theValues;
     private TeiidServer teiidServer;
     
-    private List<IContentNode<? extends IContainerNode<?>>> children;
+    private List<ITeiidContentNode<? extends ITeiidContainerNode<?>>> children;
     
     /**
      * Create new instance
@@ -56,21 +53,13 @@ public abstract class AbstractTeiidFolder<V> implements IContainerNode<TeiidServ
     }
 
     @Override
-    public IResourceNode getParent() {
+    public ITeiidResourceNode getParent() {
         return parentNode != null ? parentNode.getParent() : null;
     }
 
     @Override
     public TeiidServerContainerNode getContainer() {
         return parentNode;
-    }
-
-    @Override
-    public String getAddress() {
-        if (getParent() == null)
-            return null;
-        
-        return getParent().getAddress() + PATH_SEPARATOR + getName();
     }
     
     @Override
@@ -79,7 +68,7 @@ public abstract class AbstractTeiidFolder<V> implements IContainerNode<TeiidServ
             return;
         }
         
-        children = new ArrayList<IContentNode<? extends IContainerNode<?>>>();
+        children = new ArrayList<ITeiidContentNode<? extends ITeiidContainerNode<?>>>();
         for (V value : theValues) {
             TeiidDataNode dataNode = new TeiidDataNode(this, value);
             children.add(dataNode);
@@ -87,14 +76,19 @@ public abstract class AbstractTeiidFolder<V> implements IContainerNode<TeiidServ
     }
     
     @Override
-    public List<? extends IContentNode<?>> getChildren() {
+    public List<? extends ITeiidContentNode<?>> getChildren() {
         return children;
+    }
+    
+    @Override
+    public boolean hasChildren() {
+        return children != null && ! children.isEmpty();
     }
     
     @Override
     public void clearChildren() {
         if (children != null) {
-            for (IContentNode<? extends IContainerNode<?>> child : children) {
+            for (ITeiidContentNode<? extends ITeiidContainerNode<?>> child : children) {
                 child.dispose();
             }
             children.clear();

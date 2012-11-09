@@ -8,15 +8,14 @@
 package org.teiid.designer.runtime.ui.views.content.adapter;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IResourceNode;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
+import org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode;
 import org.teiid.designer.runtime.ui.views.content.TeiidDataNode;
-import org.teiid.designer.runtime.ui.views.content.TeiidResourceNode;
 
 /**
- * Adapt a {@link TeiidResourceNode}
+ * Adapt a {@link ITeiidResourceNode}
  */
 public class TeiidDataNodeAdapterFactory implements IAdapterFactory {
 
@@ -27,7 +26,7 @@ public class TeiidDataNodeAdapterFactory implements IAdapterFactory {
         
         TeiidDataNode teiidDataNode = (TeiidDataNode) adaptableObject;
         
-        if (TeiidResourceNode.class == adapterType)
+        if (ITeiidResourceNode.class == adapterType)
             return adaptToTeiidResourceNode(teiidDataNode);
         
         if (TeiidDataSource.class == adapterType ||
@@ -44,20 +43,20 @@ public class TeiidDataNodeAdapterFactory implements IAdapterFactory {
     }
 
     /**
-     * Try and adapt to a {@link TeiidResourceNode}
+     * Try and adapt to a {@link ITeiidResourceNode}
      * 
      * @param teiidDataNode
      * @param adapterType
      * @return
      */
     private Object adaptToTeiidResourceNode(TeiidDataNode teiidDataNode) {
-        IResourceNode parent = teiidDataNode.getParent();
-        return parent instanceof TeiidResourceNode ? parent : null;
+        ITeiidResourceNode parent = teiidDataNode.getParent();
+        return parent != null ? parent : null;
     }
 
     @Override
     public Class[] getAdapterList() {
-        return new Class[] { TeiidResourceNode.class, 
+        return new Class[] { ITeiidResourceNode.class, 
                                            TeiidDataSource.class,
                                            TeiidTranslator.class,
                                            TeiidVdb.class };

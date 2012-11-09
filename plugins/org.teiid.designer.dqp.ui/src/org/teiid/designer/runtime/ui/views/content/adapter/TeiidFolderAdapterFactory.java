@@ -8,13 +8,12 @@
 package org.teiid.designer.runtime.ui.views.content.adapter;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IResourceNode;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder;
-import org.teiid.designer.runtime.ui.views.content.TeiidResourceNode;
+import org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode;
 
 /**
- * Adapt a {@link TeiidResourceNode}
+ * Adapt a {@link ITeiidResourceNode}
  */
 public class TeiidFolderAdapterFactory implements IAdapterFactory {
 
@@ -25,7 +24,7 @@ public class TeiidFolderAdapterFactory implements IAdapterFactory {
 
         AbstractTeiidFolder<?> abstractTeiidFolder = (AbstractTeiidFolder<?>) adaptableObject;
 
-        if (TeiidResourceNode.class == adapterType)
+        if (ITeiidResourceNode.class == adapterType)
             return adaptToTeiidResourceNode(abstractTeiidFolder);
         else if (TeiidServer.class == adapterType)
             return adaptToTeiidServer(abstractTeiidFolder);
@@ -34,15 +33,15 @@ public class TeiidFolderAdapterFactory implements IAdapterFactory {
     }
 
     /**
-     * Try and adapt to a {@link TeiidResourceNode}
+     * Try and adapt to a {@link ITeiidResourceNode}
      * 
      * @param teiidDataNode
      * @param adapterType
      * @return
      */
     private Object adaptToTeiidResourceNode(AbstractTeiidFolder<?> teiidDataNode) {
-        IResourceNode parent = teiidDataNode.getParent();
-        return parent instanceof TeiidResourceNode ? parent : null;
+        ITeiidResourceNode parent = teiidDataNode.getParent();
+        return parent != null ? parent : null;
     }
 
     /**
@@ -56,7 +55,7 @@ public class TeiidFolderAdapterFactory implements IAdapterFactory {
 
     @Override
     public Class[] getAdapterList() {
-        return new Class[] {TeiidResourceNode.class, TeiidServer.class};
+        return new Class[] {ITeiidResourceNode.class, TeiidServer.class};
     }
 
 }

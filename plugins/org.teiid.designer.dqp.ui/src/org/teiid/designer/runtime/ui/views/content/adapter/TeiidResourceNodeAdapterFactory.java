@@ -9,24 +9,24 @@ package org.teiid.designer.runtime.ui.views.content.adapter;
 
 import java.util.List;
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContentNode;
 import org.teiid.designer.runtime.TeiidServer;
-import org.teiid.designer.runtime.ui.views.content.TeiidResourceNode;
+import org.teiid.designer.runtime.ui.views.content.ITeiidContentNode;
+import org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode;
 import org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode;
 
 /**
- * Adapt a {@link TeiidResourceNode}
+ * Adapt a {@link ITeiidResourceNode}
  */
 public class TeiidResourceNodeAdapterFactory implements IAdapterFactory {
 
     @Override
     public Object getAdapter(Object adaptableObject, Class adapterType) {
-        if (! (adaptableObject instanceof TeiidResourceNode))
+        if (! (adaptableObject instanceof ITeiidResourceNode))
             return null;
         
-        TeiidResourceNode teiidResourceNode = (TeiidResourceNode) adaptableObject;
+        ITeiidResourceNode teiidResourceNode = (ITeiidResourceNode) adaptableObject;
         
-        if (TeiidResourceNode.class == adapterType)
+        if (ITeiidResourceNode.class == adapterType)
             return teiidResourceNode;
         
         if (TeiidServer.class == adapterType)
@@ -43,7 +43,7 @@ public class TeiidResourceNodeAdapterFactory implements IAdapterFactory {
      * 
      * @param adaptableObject
      */
-    private TeiidServer adaptToTeiidServer(TeiidResourceNode teiidResourceNode) {
+    private TeiidServer adaptToTeiidServer(ITeiidResourceNode teiidResourceNode) {
         return teiidResourceNode.getTeiidServer();
     }
 
@@ -54,9 +54,9 @@ public class TeiidResourceNodeAdapterFactory implements IAdapterFactory {
      * @param adaptableObject
      * @return
      */
-    private TeiidServerContainerNode adaptToTeiidServerContainerNode(TeiidResourceNode teiidResourceNode) {
+    private TeiidServerContainerNode adaptToTeiidServerContainerNode(ITeiidResourceNode teiidResourceNode) {
         if (teiidResourceNode.hasChildren()) {
-            List<? extends IContentNode<?>> children = teiidResourceNode.getChildren();
+            List<? extends ITeiidContentNode<?>> children = teiidResourceNode.getChildren();
             return (TeiidServerContainerNode) children.get(0);
         }
         
@@ -65,7 +65,7 @@ public class TeiidResourceNodeAdapterFactory implements IAdapterFactory {
     
     @Override
     public Class[] getAdapterList() {
-        return new Class[] { TeiidServer.class, TeiidResourceNode.class, TeiidServerContainerNode.class };
+        return new Class[] { TeiidServer.class, ITeiidResourceNode.class, TeiidServerContainerNode.class };
     }
 
 }

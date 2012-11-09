@@ -14,7 +14,7 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
-import org.teiid.designer.runtime.ui.views.content.TeiidResourceNode;
+import org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
@@ -78,7 +78,7 @@ public final class RefreshServerAction extends BaseSelectionListenerAction {
             return true;
         
         Object element = selection.getFirstElement();
-        if (RuntimeAssistant.adapt(element, TeiidResourceNode.class) != null)
+        if (RuntimeAssistant.adapt(element, ITeiidResourceNode.class) != null)
             return true;
         
         return false;

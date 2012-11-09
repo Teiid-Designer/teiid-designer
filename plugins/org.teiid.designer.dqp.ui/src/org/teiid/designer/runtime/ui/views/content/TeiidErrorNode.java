@@ -7,15 +7,12 @@
 */
 package org.teiid.designer.runtime.ui.views.content;
 
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.ContentNode;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IContainerNode;
-import org.jboss.ide.eclipse.as.ui.views.as7.management.content.IErrorNode;
 import org.teiid.designer.runtime.TeiidServer;
 
 /**
  * @since 8.0
  */
-public class TeiidErrorNode extends ContentNode<IContainerNode<?>> implements IErrorNode {
+public class TeiidErrorNode extends TeiidContentNode<ITeiidContainerNode<?>> {
 
     private final String text;
     private final TeiidServer teiidServer;
@@ -24,7 +21,7 @@ public class TeiidErrorNode extends ContentNode<IContainerNode<?>> implements IE
      * @param container
      * @param text
      */
-    protected TeiidErrorNode(IContainerNode parent, TeiidServer teiidServer, String text) {
+    protected TeiidErrorNode(ITeiidContainerNode parent, TeiidServer teiidServer, String text) {
         super(parent, text);
         this.teiidServer = teiidServer;
         this.text = text;
@@ -35,7 +32,6 @@ public class TeiidErrorNode extends ContentNode<IContainerNode<?>> implements IE
         return super.getName();
     }
 
-    @Override
     public String getText() {
         return text;
     }
@@ -48,7 +44,4 @@ public class TeiidErrorNode extends ContentNode<IContainerNode<?>> implements IE
     public TeiidServer getTeiidServer() {
         return teiidServer;
     }
-
-    
-
 }

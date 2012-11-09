@@ -223,7 +223,7 @@
             contentProvider="org.teiid.designer.runtime.ui.views.TeiidServerContentProvider"
             icon="icons/full/ctool16/teiid-server.png"
             id="org.teiid.designer.ui.servers.teiid.content"
-            labelProvider="org.teiid.designer.runtime.ui.views.TeiidServerLabelProvider"
+            labelProvider="org.teiid.designer.runtime.ui.views.TeiidViewDecoratingLabelProvider"
             name="%servers.navigatorContent.name"
             priority="lowest">
          <triggerPoints>
@@ -231,6 +231,26 @@
                   value="org.eclipse.wst.server.core.IServer">
             </instanceof>
          </triggerPoints>
+         <possibleChildren>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode">
+            </instanceof>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
+            </instanceof>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder">
+            </instanceof>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.TeiidDataNode">
+            </instanceof>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode">
+            </instanceof>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.TeiidErrorNode">
+            </instanceof>
+         </possibleChildren>
       </navigatorContent>
       <navigatorContent
             activeByDefault="true"
@@ -242,9 +262,29 @@
             priority="highest">
          <triggerPoints>
             <instanceof
-                  value="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
+                  value="org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode">
             </instanceof>
          </triggerPoints>
+         <possibleChildren>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode">
+            </instanceof>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
+            </instanceof>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder">
+            </instanceof>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.TeiidDataNode">
+            </instanceof>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode">
+            </instanceof>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.TeiidErrorNode">
+            </instanceof>
+         </possibleChildren>
          <dropAssistant
                class="org.teiid.designer.runtime.ui.views.TeiidViewDropAdapterAssistant"
                id="org.teiid.designer.runtime.ui.views.Teiid.dnd">
@@ -258,7 +298,7 @@
          <enablement>
             <or>
                <instanceof
-                     value="org.teiid.designer.runtime.ui.views.content.TeiidResourceNode">
+                     value="org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode">
                </instanceof>
                <instanceof
                      value="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
@@ -301,11 +341,11 @@
                type="org.teiid.designer.runtime.TeiidServer">
          </adapter>
          <adapter
-               type="org.teiid.designer.runtime.ui.views.content.TeiidResourceNode">
+               type="org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode">
          </adapter>
       </factory>
       <factory
-            adaptableType="org.teiid.designer.runtime.ui.views.content.TeiidResourceNode"
+            adaptableType="org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode"
             class="org.teiid.designer.runtime.ui.views.content.adapter.TeiidResourceNodeAdapterFactory">
          <adapter
                type="org.teiid.designer.runtime.TeiidServer">
@@ -314,14 +354,14 @@
                type="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
          </adapter>
          <adapter
-               type="org.teiid.designer.runtime.ui.views.content.TeiidResourceNode">
+               type="org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode">
          </adapter>
       </factory>
       <factory
             adaptableType="org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder"
             class="org.teiid.designer.runtime.ui.views.content.adapter.TeiidFolderAdapterFactory">
          <adapter
-               type="org.teiid.designer.runtime.ui.views.content.TeiidResourceNode">
+               type="org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode">
          </adapter>
          <adapter
                type="org.teiid.designer.runtime.TeiidServer">
@@ -331,7 +371,7 @@
             adaptableType="org.teiid.designer.runtime.ui.views.content.TeiidDataNode"
             class="org.teiid.designer.runtime.ui.views.content.adapter.TeiidDataNodeAdapterFactory">
          <adapter
-               type="org.teiid.designer.runtime.ui.views.content.TeiidResourceNode">
+               type="org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode">
          </adapter>
          <adapter
                type="org.teiid.designer.runtime.TeiidDataSource">
