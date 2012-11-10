@@ -9,9 +9,7 @@ package org.teiid.designer.runtime.ui.views;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -41,7 +39,6 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
 import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidServerManager;
@@ -279,13 +276,6 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
 
         viewer.setSorter(new NameSorter());
 
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged( SelectionChangedEvent event ) {
-                handleSelectionChanged(event);
-            }
-        });
-
         DqpPlugin.getInstance().getServersProvider().addServerLifecycleListener(serversListener);
         
         // Populate the jboss server combo box which
@@ -364,10 +354,6 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
         return DqpPlugin.getInstance().getServerManager();
     }
 
-    void handleSelectionChanged( SelectionChangedEvent event ) {
-        updateStatusLine((IStructuredSelection)event.getSelection());
-    }
-
     /**
      * {@inheritDoc}
      * 
@@ -392,22 +378,6 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
     @Override
     public void setFocus() {
         viewer.getControl().setFocus();
-    }
-
-    /**
-     * Updates Eclipse's Status line based on current selection in Teiid View
-     * 
-     * @param selection the current viewer selection (never <code>null</code>)
-     */
-    private void updateStatusLine( IStructuredSelection selection ) {
-        // If no selection or mutli-selection
-        String msg = StringUtilities.EMPTY_STRING;
-
-        if (selection.size() == 1) {
-            Object selectedObject = selection.getFirstElement();
-            msg = selectedObject.toString();
-        }
-        getViewSite().getActionBars().getStatusLineManager().setMessage(msg);
     }
 
     class NameSorter extends ViewerSorter {

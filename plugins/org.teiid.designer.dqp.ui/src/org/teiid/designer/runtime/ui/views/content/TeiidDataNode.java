@@ -18,7 +18,6 @@ import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
-import org.teiid.designer.runtime.ui.views.TeiidServerLabelProvider;
 
 /**
  * @param <V> 
@@ -29,13 +28,11 @@ public class TeiidDataNode<V> implements ITeiidContentNode<AbstractTeiidFolder> 
     /**
      * Prefix for language NLS properties
      */
-    private static final String PREFIX = I18nUtil.getPropertyPrefix(TeiidServerLabelProvider.class);
+    private static final String PREFIX = I18nUtil.getPropertyPrefix(TeiidDataNode.class);
     
-    private static final String ACTIVE_VDB = DqpUiPlugin.UTIL.getString(PREFIX + "activeVdb"); //$NON-NLS-1$
+    private static final String ACTIVE_VDB = DqpUiConstants.UTIL.getString(PREFIX + "activeVdb"); //$NON-NLS-1$
     
-    private static final String INACTIVE_VDB = DqpUiPlugin.UTIL.getString(PREFIX + "inactiveVdb"); //$NON-NLS-1$
-    
-    private static final String PATH_SEPARATOR = "/"; //$NON-NLS-1$
+    private static final String INACTIVE_VDB = DqpUiConstants.UTIL.getString(PREFIX + "inactiveVdb"); //$NON-NLS-1$
     
     private AbstractTeiidFolder parentNode;
     private V value;
@@ -179,7 +176,7 @@ public class TeiidDataNode<V> implements ITeiidContentNode<AbstractTeiidFolder> 
     }
 
     /**
-     * @return
+     * @return real value of this data node
      */
     public V getValue() {
         return value;

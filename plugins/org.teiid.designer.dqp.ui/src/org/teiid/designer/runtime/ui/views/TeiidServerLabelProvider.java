@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.jcip.annotations.GuardedBy;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IDecoration;
@@ -19,6 +21,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.navigator.IDescriptionProvider;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
@@ -37,13 +40,18 @@ import org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode;
  * @since 8.0
  */
 
-public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILightweightLabelDecorator {
+public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILightweightLabelDecorator, IDescriptionProvider {
 
     /**
      * If a server connection cannot be established, wait this amount of time before trying again.
      */
     private static final long RETRY_DURATION = 2000;
 
+    /**
+     * Pattern for use with modifying text for the description
+     */
+    private static Pattern pattern = Pattern.compile("[\\\n\\\t]+"); //$NON-NLS-1$
+    
     private TeiidServerManager serverMgr;
 
     /**
@@ -205,5 +213,13 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
 
         // OK to try and connect
         return true;
+    }
+
+    @Override
+    public String getDescription(Object element) {
+        String text = element.toString();
+  
+        Matcher matcher = pattern.matcher(text);
+        return matcher.replaceAll("  "); //$NON-NLS-1$
     }
 }

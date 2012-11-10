@@ -8,17 +8,24 @@
 package org.teiid.designer.runtime.ui.views;
 
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.ui.navigator.IDescriptionProvider;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
 /**
  * @since 8.0
  */
-public class TeiidViewDecoratingLabelProvider extends DecoratingLabelProvider {
+public class TeiidViewDecoratingLabelProvider extends DecoratingLabelProvider implements IDescriptionProvider {
 
     /**
      * Create a new instance
      */
     public TeiidViewDecoratingLabelProvider() {
         super(new TeiidServerLabelProvider(), DqpUiPlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator());
+    }
+    
+    @Override
+    public String getDescription(Object element) {
+        TeiidServerLabelProvider labelDecorator = (TeiidServerLabelProvider) getLabelProvider();
+        return labelDecorator.getDescription(element);
     }
 }
