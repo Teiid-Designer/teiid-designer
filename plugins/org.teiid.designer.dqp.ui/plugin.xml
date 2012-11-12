@@ -232,25 +232,19 @@
             </instanceof>
          </triggerPoints>
          <possibleChildren>
-            <instanceof
-                  value="org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode">
-            </instanceof>
-            <instanceof
-                  value="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
-            </instanceof>
-            <instanceof
-                  value="org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder">
-            </instanceof>
-            <instanceof
-                  value="org.teiid.designer.runtime.ui.views.content.TeiidDataNode">
-            </instanceof>
-            <instanceof
-                  value="org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode">
-            </instanceof>
-            <instanceof
-                  value="org.teiid.designer.runtime.ui.views.content.TeiidErrorNode">
-            </instanceof>
+            <reference
+                  definitionId="org.teiid.designer.dqp.ui.nodeDefinition">
+            </reference>
          </possibleChildren>
+         <dropAssistant
+               class="org.teiid.designer.runtime.ui.views.TeiidServerDropAdapterAssistant"
+               id="org.teiid.designer.dqp.ui.server.view.dropAdapter">
+            <possibleDropTargets>
+               <reference
+                     definitionId="org.teiid.designer.dqp.ui.nodeDefinition">
+               </reference>
+            </possibleDropTargets>
+         </dropAssistant>
       </navigatorContent>
       <navigatorContent
             activeByDefault="true"
@@ -266,29 +260,18 @@
             </instanceof>
          </triggerPoints>
          <possibleChildren>
-            <instanceof
-                  value="org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode">
-            </instanceof>
-            <instanceof
-                  value="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
-            </instanceof>
-            <instanceof
-                  value="org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder">
-            </instanceof>
-            <instanceof
-                  value="org.teiid.designer.runtime.ui.views.content.TeiidDataNode">
-            </instanceof>
-            <instanceof
-                  value="org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode">
-            </instanceof>
-            <instanceof
-                  value="org.teiid.designer.runtime.ui.views.content.TeiidErrorNode">
-            </instanceof>
+            <reference
+                  definitionId="org.teiid.designer.dqp.ui.nodeDefinition">
+            </reference>
          </possibleChildren>
          <dropAssistant
-               class="org.teiid.designer.runtime.ui.views.TeiidViewDropAdapterAssistant"
-               id="org.teiid.designer.runtime.ui.views.Teiid.dnd">
-            <possibleDropTargets></possibleDropTargets>
+               class="org.teiid.designer.runtime.ui.views.TeiidServerDropAdapterAssistant"
+               id="org.teiid.designer.dqp.ui.teiid.view.dropAdapter">
+            <possibleDropTargets>
+               <reference
+                     definitionId="org.teiid.designer.dqp.ui.nodeDefinition">
+               </reference>
+            </possibleDropTargets>
          </dropAssistant>
       </navigatorContent>
       <actionProvider
@@ -383,5 +366,34 @@
                type="org.teiid.designer.runtime.TeiidVdb">
          </adapter>
       </factory>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="org.teiid.designer.dqp.ui.nodeDefinition">
+         <or>
+            <instanceof
+                  value="org.eclipse.core.resources.IFile">
+            </instanceof>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode">
+            </instanceof>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.TeiidServerContainerNode">
+            </instanceof>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder">
+            </instanceof>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.TeiidDataNode">
+            </instanceof>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode">
+            </instanceof>
+            <instanceof
+                  value="org.teiid.designer.runtime.ui.views.content.TeiidErrorNode">
+            </instanceof>
+         </or>
+      </definition>
    </extension>
 </plugin>

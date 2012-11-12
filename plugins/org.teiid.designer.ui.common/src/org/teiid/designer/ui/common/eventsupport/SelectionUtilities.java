@@ -120,8 +120,8 @@ public class SelectionUtilities implements UiConstants {
      * @param theSelection the selection whose selected <code>Object</code>s are being requested
      * @return the selected <code>Object</code>s or an empty <code>List</code>
      */
-    public static List getSelectedObjects(ISelection theSelection) {
-        List result = null;
+    public static List<Object> getSelectedObjects(ISelection theSelection) {
+        List<Object> result = null;
 
         if ((theSelection != null) && !theSelection.isEmpty()) {
             if (theSelection instanceof IStructuredSelection) {

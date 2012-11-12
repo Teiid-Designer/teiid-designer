@@ -36,7 +36,6 @@ import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
-import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.vdb.DeployVdbDialog;
 import org.teiid.designer.runtime.ui.vdb.VdbDeployer;
 import org.teiid.designer.runtime.ui.vdb.VdbRequiresSaveChecker;
@@ -205,7 +204,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 			}
 
 			// make sure there is a Teiid connection
-			if (!RuntimeAssistant.ensureServerConnection(shell, UTIL.getString(I18N_PREFIX + "noTeiidInstanceMsg"))) { //$NON-NLS-1$
+			if (! teiidServer.isConnected()) {
 				return null;
 			}
 

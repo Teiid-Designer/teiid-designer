@@ -38,6 +38,7 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -77,7 +78,6 @@ import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ShowInContext;
-import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
@@ -1013,7 +1013,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         // code copied from superclass. only change is to the drag adapter
         TreeViewer viewer = getTreeViewer();
         int ops = DND.DROP_COPY | DND.DROP_MOVE;
-        Transfer[] transfers = new Transfer[] {LocalSelectionTransfer.getInstance(), ResourceTransfer.getInstance(),
+        Transfer[] transfers = new Transfer[] {LocalSelectionTransfer.getTransfer(), ResourceTransfer.getInstance(),
             FileTransfer.getInstance(), PluginTransfer.getInstance(), EObjectTransfer.getInstance()};
 
         // drop support
