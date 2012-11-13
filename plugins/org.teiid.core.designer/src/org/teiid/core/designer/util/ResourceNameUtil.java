@@ -25,6 +25,7 @@ public abstract class ResourceNameUtil {
     public static final String VDB_FILE_EXTENSION = "vdb"; //$NON-NLS-1$
     public static final String XSD_FILE_EXTENSION = "xsd"; //$NON-NLS-1$
     public static final String WSDL_FILE_EXTENSION = "wsdl"; //$NON-NLS-1$
+    public static final String MED_FILE_EXTENSION = "mxd"; //$NON-NLS-1$
 
     public static final String DOT_XMI_FILE_EXTENSION = ".xmi"; //$NON-NLS-1$
     public static final String DOT_VDB_FILE_EXTENSION = ".vdb"; //$NON-NLS-1$
