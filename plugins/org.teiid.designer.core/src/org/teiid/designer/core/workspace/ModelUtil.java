@@ -551,7 +551,10 @@ public class ModelUtil {
     	if (modelResource != null ) {
     		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
 			EmfModelObjectExtensionAssistant assistant = (EmfModelObjectExtensionAssistant)registry.getModelExtensionAssistant("core"); //$NON-NLS-1$
-			return assistant.getPropertyValue(modelResource.getModelAnnotation(), "core:vdb-name"); //$NON-NLS-1$
+			
+			if( assistant != null ) {
+				return assistant.getPropertyValue(modelResource.getModelAnnotation(), "core:vdb-name"); //$NON-NLS-1$
+			}
     	}
     	
     	return null;

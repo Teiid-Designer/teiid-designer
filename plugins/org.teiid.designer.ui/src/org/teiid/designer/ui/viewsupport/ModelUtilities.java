@@ -1717,7 +1717,10 @@ public abstract class ModelUtilities implements UiConstants {
         		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
     			CoreModelExtensionAssistant assistant = 
     					(CoreModelExtensionAssistant)registry.getModelExtensionAssistant(CoreModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix());
-    			return assistant.isVdbSourceModel(modelResource);
+    			
+    			if( assistant != null ) {
+    				return assistant.isVdbSourceModel(modelResource);
+    			}
 			} catch (Exception ex) {
 				UiConstants.Util.log(IStatus.ERROR, ex, ex.getMessage());
 			}
