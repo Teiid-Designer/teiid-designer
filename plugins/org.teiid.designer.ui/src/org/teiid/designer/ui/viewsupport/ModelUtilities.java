@@ -96,6 +96,7 @@ public abstract class ModelUtilities implements UiConstants {
     public static final String MODEL_FILE_EXTENSION = ResourceNameUtil.XMI_FILE_EXTENSION;
     public static final String VDB_FILE_EXTENSION = ResourceNameUtil.VDB_FILE_EXTENSION;
     public static final String XSD_FILE_EXTENSION = ResourceNameUtil.XSD_FILE_EXTENSION;
+    public static final String MED_FILE_EXTENSION = ResourceNameUtil.MED_FILE_EXTENSION;
 
     public static final String DOT_MODEL_FILE_EXTENSION = ResourceNameUtil.DOT_XMI_FILE_EXTENSION;
     public static final String DOT_VDB_FILE_EXTENSION = ResourceNameUtil.DOT_VDB_FILE_EXTENSION;
@@ -285,6 +286,23 @@ public abstract class ModelUtilities implements UiConstants {
             }
         }
 
+        return result;
+    }
+
+    /**
+     * Determines if the specified resource is an mxd file in a valid Modeler Project
+     * 
+     * @param resource the supplied IResource
+     * @return 'true' if the supplied resource is and mxd file, 'false' if not
+     */
+    public static boolean isMedFile( IResource resource ) {
+        boolean result = false;
+
+        // check if the extension = ".mxd"
+        if (resource instanceof IFile) {
+            String ext = ((IFile)resource).getFileExtension();
+            if (ext != null && ext.equals(MED_FILE_EXTENSION)) result = true;
+        }
         return result;
     }
 

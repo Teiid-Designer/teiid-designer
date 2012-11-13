@@ -91,7 +91,19 @@ public class Messages extends NLS {
     public static String modelMedDifferentVersionThanOneFoundInRegistry;
     public static String medChangedOnFileSystemDialogTitle;
     public static String medChangedOnFileSystemDialogMsg;
-
+    public static String medFileHasLegacyClassnames;
+    public static String modelMedHasLegacyClassnames;
+    public static String getSupportedPrefixesErrorMsg;
+    public static String getModelMedErrorMsg;
+    public static String saveModelMedErrorMsg;
+    public static String saveModelErrorMsg;
+    public static String fixMedFileClassnamesFailedMsg;
+    public static String legacyClassnameResolutionLabel;
+    public static String quickFixMedFileDirtyTitle;
+    public static String quickFixMedFileDirtyMsg;
+    public static String quickFixModelDirtyTitle;
+    public static String quickFixModelDirtyMsg;
+    
     public static String registerMedActionInvalidMedTitle;
     public static String registerMedActionInvalidMedMsg;
     public static String registerMedActionNamespacePrefixRegisteredTitle;

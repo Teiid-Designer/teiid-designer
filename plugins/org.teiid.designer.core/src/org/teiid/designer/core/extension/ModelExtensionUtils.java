@@ -8,13 +8,13 @@
 package org.teiid.designer.core.extension;
 
 import static org.teiid.designer.core.ModelerCore.Util;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
@@ -799,8 +799,12 @@ class ModelExtensionUtils {
                 }
             }
             
+            // Remove metaclass annotations from model if they are not in the MED
+            String[] medExtendedMetaclasses = definition.getExtendedMetaclasses();
+            removeUnsupportedMetaclassAnnotations(modelResource, definitionTags, medExtendedMetaclasses);
+            
             // properties
-            for (String extendedMetaclassName : definition.getExtendedMetaclasses()) {
+            for (String extendedMetaclassName : medExtendedMetaclasses) {
                 String metaclassKey = constructKey(EXTENDED_METACLASS_PREFIX, extendedMetaclassName);
                 Annotation metaclassAnnotation = getAnnotation(modelResource, definitionAnnotation, metaclassKey,
                                                                extendedMetaclassName, true);
@@ -937,6 +941,45 @@ class ModelExtensionUtils {
                     ModelerCore.rollbackTxn();
                 }
             }
+        }
+    }
+
+    /*
+     * Remove metaclass annotations from the model that are not included in the supplied MED
+     * @param modelResc the ModelResource
+     * @param defnTags the models definition annotation tags
+     * @param medMetaclasses the array of extended metaclasses in the MED
+     */
+    private static void removeUnsupportedMetaclassAnnotations(ModelResource modelResc, EMap<String, String> defnTags, String[] medMetaclasses) throws Exception {
+        // Track definition keys for later removal.
+        List<String> keysToRemove = new ArrayList<String>();
+        
+        List<String> medMetaclassList = Arrays.asList(medMetaclasses);
+        
+        // Iterate model's extended metaclass annotations, removing those not in the med.
+        for (Object object : defnTags.entrySet()) {
+            if (!(object instanceof EStringToStringMapEntryImpl)) {
+                throw new Exception(Util.getString(I18N_PREFIX + "modelExtensionDefinitionTagUnexpectedClass", //$NON-NLS-1$
+                                                   object.getClass()));
+            }
+
+            EStringToStringMapEntryImpl entry = (EStringToStringMapEntryImpl)object;
+            if (entry.getKey().startsWith(EXTENDED_METACLASS_PREFIX)) {
+                // Model Extended Metaclass name
+                String metaclassName = getKeyId(EXTENDED_METACLASS_PREFIX, entry.getKey());
+                
+                // If Model Extended Metaclass is not in the MED, remove it.
+                if(!medMetaclassList.contains(metaclassName)) {
+                    removeMetaclassAnnotation(modelResc,entry);
+                    // Track those entries removed
+                    keysToRemove.add(entry.getKey());
+                }
+            }
+        }
+        
+        // Remove Definition Tag for any removed metaclass annotations
+        for(String remKey: keysToRemove) {
+            defnTags.remove(remKey);
         }
     }
 
