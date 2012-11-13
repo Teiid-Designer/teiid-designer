@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -37,6 +38,7 @@ import org.teiid.designer.extension.ModelExtensionAssistantAggregator;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
+import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.UiConstants.ExtensionIds;
 
@@ -50,6 +52,8 @@ public final class ModelExtensionDefinitionBuilder extends IncrementalProjectBui
     private static final String SAX_ERR_PREFIX = "cvc-"; //$NON-NLS-1$
     private static final String MED_VALIDATION_MSG = "MED Validation: "; //$NON-NLS-1$
     private static final String SEE_DETAILS_MSG = " (See log for details)"; //$NON-NLS-1$
+    private static final String LEGACY_CLASSNAME_PREFIX = "com.metamatrix"; //$NON-NLS-1$
+    public static final String HAS_LEGACY_NAMES = "hasLegacyNames"; //$NON-NLS-1$
 
     private ModelExtensionAssistantAggregator aggregator = ExtensionPlugin.getInstance().getModelExtensionAssistantAggregator();
     private ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
@@ -106,10 +110,10 @@ public final class ModelExtensionDefinitionBuilder extends IncrementalProjectBui
                     medFile.deleteMarkers(null, true, IResource.DEPTH_INFINITE);
 
                     // parse to get parse problems
-                    parser.parse(medFile.getContents(), ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant());
+                    ModelExtensionDefinition med = parser.parse(medFile.getContents(), ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant());
 
                     // create new problem markers
-                    createMarkers(medFile, parser.getErrors(), parser.getWarnings(), parser.getInfos());
+                    createMarkers(medFile, med, parser.getErrors(), parser.getWarnings(), parser.getInfos());
                 } catch (Exception e) {
                     IStatus parseStatus = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.medFileParseErrorMsg,
                                                                                         medFile.getName()), e);
@@ -177,7 +181,7 @@ public final class ModelExtensionDefinitionBuilder extends IncrementalProjectBui
             monitor.beginTask(Messages.medCleanTaskName, (medFilesToClean.size() + modelFilesToClean.size()));
 
             // clean all MED problem markers
-            for (IFile medFile : visitor.getMedFiles()) {
+            for (IFile medFile : medFilesToClean) {
                 try {
                     monitor.subTask(NLS.bind(Messages.medCleanSubTaskName, medFile.getName()));
                     medFile.deleteMarkers(null, true, IResource.DEPTH_INFINITE);
@@ -191,7 +195,7 @@ public final class ModelExtensionDefinitionBuilder extends IncrementalProjectBui
             }
 
             // clean MED-related problem markers in Teiid Designer models
-            for (IFile modelFile : medFilesToClean) {
+            for (IFile modelFile : modelFilesToClean) {
                 try {
                     monitor.subTask(NLS.bind(Messages.medCleanSubTaskName, modelFile.getName()));
                     modelFile.deleteMarkers(ExtensionIds.PROBLEM_MARKER, true, IResource.DEPTH_INFINITE);
@@ -212,10 +216,14 @@ public final class ModelExtensionDefinitionBuilder extends IncrementalProjectBui
      * @param file the MED or model file who will create the problem marker (precondition: not <code>null</code>)
      * @param severity the marker severity
      * @param message the marker message (precondition: not <code>null</code> or empty)
+     * @param markerId the Id for the marker
+     * @param hasLegacyNames when 'true' adds "hasLegacyNames" attribute to the marker
      */
     private void createMarker( IFile file,
                                int severity,
-                               String message ) {
+                               String message,
+                               String markerId,
+                               boolean hasLegacyNames) {
         // parameters
         assert (file != null) : "file is null"; //$NON-NLS-1$
         assert ((message != null) && !message.isEmpty()) : "message is empty"; //$NON-NLS-1$
@@ -238,9 +246,10 @@ public final class ModelExtensionDefinitionBuilder extends IncrementalProjectBui
         Map attributes = new HashMap();
         attributes.put(IMarker.SEVERITY, severity);
         attributes.put(IMarker.MESSAGE, message);
+        if(hasLegacyNames) attributes.put(HAS_LEGACY_NAMES, true);
 
         try {
-            MarkerUtilities.createMarker(file, attributes, ExtensionIds.PROBLEM_MARKER);
+            MarkerUtilities.createMarker(file, attributes, markerId);
         } catch (CoreException e) {
             UTIL.log(e);
         }
@@ -254,6 +263,7 @@ public final class ModelExtensionDefinitionBuilder extends IncrementalProjectBui
      * @throws Exception if there is a problem writing the markers to the resource
      */
     private void createMarkers( IFile medFile,
+                                ModelExtensionDefinition med,
                                 Collection<String> errors,
                                 Collection<String> warnings,
                                 Collection<String> infos ) throws Exception {
@@ -264,23 +274,46 @@ public final class ModelExtensionDefinitionBuilder extends IncrementalProjectBui
 
         // create errors
         for (String message : errors) {
-            createMarker(medFile, IMarker.SEVERITY_ERROR, message);
+            createMarker(medFile, IMarker.SEVERITY_ERROR, message, ExtensionIds.PROBLEM_MARKER, false);
         }
 
         // create warnings
         for (String message : warnings) {
-            createMarker(medFile, IMarker.SEVERITY_WARNING, message);
+            createMarker(medFile, IMarker.SEVERITY_WARNING, message ,ExtensionIds.PROBLEM_MARKER, false);
         }
 
         // create infos
         for (String message : infos) {
-            createMarker(medFile, IMarker.SEVERITY_INFO, message);
+            createMarker(medFile, IMarker.SEVERITY_INFO, message, ExtensionIds.PROBLEM_MARKER, false);
+        }
+        
+        // Check for Legacy 'com.metamatrix' classnames
+        if(medHasLegacyClassnames(med)) {
+            createMarker(medFile, IMarker.SEVERITY_ERROR, Messages.medFileHasLegacyClassnames, ExtensionIds.PROBLEM_MARKER, true);
         }
     }
 
     private boolean medsAreEqual( ModelExtensionDefinition thisMed,
                                   ModelExtensionDefinition thatMed ) {
         return thisMed.equals(thatMed);
+    }
+    
+    /*
+     * Determine if the supplied MED contains property references to the legacy 'com.metamatrix' class names
+     * @param theMed the supplied MED
+     * @return 'true' if the MED contains properties that reference 'com.metamatrix' class names, 'false' if not.
+     */
+    private boolean medHasLegacyClassnames( ModelExtensionDefinition theMed ) {
+        boolean hasLegacyClassnames = false;
+        Map<String, Collection<ModelExtensionPropertyDefinition>> propMap = theMed.getPropertyDefinitions();
+        Set<String> mapKeys = propMap.keySet();
+        for(String mapKey : mapKeys) {
+            if(mapKey.startsWith(LEGACY_CLASSNAME_PREFIX)) {
+                hasLegacyClassnames = true;
+                break;
+            }
+        }
+        return hasLegacyClassnames;
     }
 
     /**
@@ -293,7 +326,7 @@ public final class ModelExtensionDefinitionBuilder extends IncrementalProjectBui
 
             // if there is no assistant than the MED is not registered
             if ((temp == null) || (!(temp instanceof ModelObjectExtensionAssistant))) {
-                createMarker(modelFile, IMarker.SEVERITY_WARNING, NLS.bind(Messages.modelMedNotFoundInRegistry, namespacePrefix));
+                createMarker(modelFile, IMarker.SEVERITY_WARNING, NLS.bind(Messages.modelMedNotFoundInRegistry, namespacePrefix), ExtensionIds.PROBLEM_MARKER, false);
             } else {
                 ModelObjectExtensionAssistant registryAssistant = (ModelObjectExtensionAssistant)temp;
                 ModelExtensionDefinition registryMed = registryAssistant.getModelExtensionDefinition();
@@ -301,10 +334,17 @@ public final class ModelExtensionDefinitionBuilder extends IncrementalProjectBui
                                                                               .createDefaultModelObjectExtensionAssistant(namespacePrefix);
                 ModelExtensionDefinition modelMed = modelAssistant.getModelExtensionDefinition(modelFile);
 
+                // Add marker if Model has properties with the legacy Class names ("com.metamatrix")
+                // No further analysis is done until legacy names are corrected.
+                if (medHasLegacyClassnames(modelMed)) {
+                    createMarker(modelFile, IMarker.SEVERITY_ERROR, Messages.modelMedHasLegacyClassnames, ExtensionIds.PROBLEM_MARKER, true);
+                    return;
+                }
+                
                 if (!medsAreEqual(registryMed, modelMed)) {
                     // make sure MED is same version as the registered one
                     createMarker(modelFile, IMarker.SEVERITY_WARNING,
-                                 NLS.bind(Messages.modelMedDifferentVersionThanOneFoundInRegistry, namespacePrefix));
+                                 NLS.bind(Messages.modelMedDifferentVersionThanOneFoundInRegistry, namespacePrefix), ExtensionIds.PROBLEM_MARKER, false);
                 }
             }
         }

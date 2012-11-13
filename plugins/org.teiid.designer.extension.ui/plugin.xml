@@ -94,4 +94,14 @@
          </run>
       </builder>
    </extension> 
+   
+<!-- QuickFix extension to resolve Med Problem Markers -->
+	<extension point="org.eclipse.ui.ide.markerResolution"> 
+	   <markerResolutionGenerator 
+	      class="org.teiid.designer.extension.ui.actions.MedMarkerResolutionGenerator" 
+	      markerType="org.teiid.designer.extension.ui.medMarker"> 
+          <attribute name="hasLegacyNames" value="true"/>	   
+       </markerResolutionGenerator> 
+	</extension> 
+   
 </plugin>
