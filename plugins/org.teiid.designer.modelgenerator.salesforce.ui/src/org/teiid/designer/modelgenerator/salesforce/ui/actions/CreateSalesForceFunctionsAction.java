@@ -97,7 +97,9 @@ public class CreateSalesForceFunctionsAction extends SortableSelectionAction {
                     ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
                                                                                                             .getRegistry()
                                                                                                             .getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
-                    return assistant.hasExtensionProperties(file);
+                    if( assistant != null ) {
+                    	return assistant.hasExtensionProperties(file);
+                    }
                 } catch (Exception e) {
                     UiConstants.Util.log(e);
                 }

@@ -24,6 +24,7 @@ import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
@@ -834,8 +835,11 @@ public class ModelUtil {
 				// Do nothing
 			}
     	}
-    	if( mr != null && mr.isLoaded()) {
+    	if( mr != null ) {
     		try {
+        		if( !mr.isLoaded() ) {
+        			mr.open(new NullProgressMonitor());
+        		}
     			String vdbSourceModelName = ModelUtil.getModelAnnotationPropertyValue((IFile)mr.getUnderlyingResource(), VDB_NAME_KEY);
     			return vdbSourceModelName != null;
 	    	} catch (ModelWorkspaceException ex) {

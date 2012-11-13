@@ -239,10 +239,12 @@ public class PreviewDataWorker {
             }
         };
 
-
+        
+        boolean setUpSuccessfull = false;
         // show dialog
         try {
             dialog.run(true, true, runnable);
+            setUpSuccessfull = true;
         } catch (InterruptedException e) {
             // canceled by user
         } catch (Throwable e) {
@@ -255,7 +257,7 @@ public class PreviewDataWorker {
                                     getString("error_in_execution")); //$NON-NLS-1$
         }
 
-        if (dialog.getReturnCode() == Window.OK) {
+        if (dialog.getReturnCode() == Window.OK && setUpSuccessfull) {
             // setup successful so run preview
             try {
                 internalRun(eObject, planOnly);

@@ -1326,22 +1326,6 @@ public final class PreviewManager extends JobChangeAdapter
                     // deploy PVDB
                     monitor.subTask(NLS.bind(Messages.PreviewSetupDeployTask, name));
                     
-                    try {
-                        admin.deployVdb(projectPvdbFile);
-                        setNeedsToBeDeployedStatus(projectPvdbFile, false);
-                    } catch (Exception e) {
-                        // only care if server exception when deploying a PVDB that is a dependency or a project PVDB
-                        if (dependsOn(modelToPreview, projectPvdbFile) || PreviewManager.isProjectPreviewVdb(projectPvdbFile)) {
-                            String modelName = getResourceNameForPreviewVdb(projectPvdbFile);
-                            status = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.DeployPreviewVdbDependencyError,
-                                                                                   modelName), e);
-                            throw new CoreException(status);
-                        }
-
-                        // make sure this PVDB does not get merged since it didn't get deployed
-                        pvdbsToRemove.remove(projectPvdbFile);
-                    }
-
                     if (monitor.isCanceled()) {
                         throw new InterruptedException();
                     }
@@ -1376,8 +1360,10 @@ public final class PreviewManager extends JobChangeAdapter
                 // Add imports for all VDB source models within this project
                 addPreviewSourceVdbImports(localProjectVdb, currentModelProject);
                 
-                String fullProjectVdbName = getFullDeployedVdbName(deployedProjectVdb);
-                admin.getAdminApi().undeploy(fullProjectVdbName);
+                if( deployedProjectVdb != null ) {
+	                String fullProjectVdbName = getFullDeployedVdbName(deployedProjectVdb);
+	                admin.getAdminApi().undeploy(fullProjectVdbName);
+                }
                 localProjectVdb.save(null);
                 localProjectVdb.getFile().refreshLocal(IResource.DEPTH_INFINITE, null);
                 admin.deployVdb(localProjectVdb.getFile()); 
