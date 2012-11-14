@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-admin-8.2.0.Beta2-SNAPSHOT-10-19-2012.jar" sourcepath="lib/teiid/teiid-8.2.0.Beta2-SNAPSHOT-10-19-2012-src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-api-8.2.0.Beta2-SNAPSHOT-10-19-2012.jar" sourcepath="lib/teiid/teiid-8.2.0.Beta2-SNAPSHOT-10-19-2012-src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-client-8.2.0.Beta2-SNAPSHOT-10-19-2012.jar" sourcepath="lib/teiid/teiid-8.2.0.Beta2-SNAPSHOT-10-19-2012-src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-common-core-8.2.0.Beta2-SNAPSHOT-10-19-2012.jar" sourcepath="lib/teiid/teiid-8.2.0.Beta2-SNAPSHOT-10-19-2012-src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-engine-8.2.0.Beta2-SNAPSHOT-10-19-2012.jar" sourcepath="lib/teiid/teiid-8.2.0.Beta2-SNAPSHOT-10-19-2012-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-admin-8.2.0.CR2.jar" sourcepath="lib/teiid/teiid-8.2.0.CR2-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-api-8.2.0.CR2.jar" sourcepath="lib/teiid/teiid-8.2.0.CR2-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-client-8.2.0.CR2.jar" sourcepath="lib/teiid/teiid-8.2.0.CR2-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-common-core-8.2.0.CR2.jar" sourcepath="lib/teiid/teiid-8.2.0.CR2-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid/teiid-engine-8.2.0.CR2.jar" sourcepath="lib/teiid/teiid-8.2.0.CR2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/common/xnio-api-3.0.3.GA.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/common/xnio-nio-3.0.3.GA.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/common/connector-api-1.5.jar"/>

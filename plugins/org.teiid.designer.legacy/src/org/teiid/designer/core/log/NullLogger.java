@@ -38,19 +38,25 @@ public class NullLogger implements Logger {
 	}
 
 	@Override
-	public void log(int arg0, String arg1, Object arg2) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void log(int arg0, String arg1, Throwable arg2, Object arg3) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void shutdown() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.teiid.logging.Logger#log(int, java.lang.String, java.lang.Object[])
+	 */
+	@Override
+	public void log(int arg0, String arg1, Object... arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.teiid.logging.Logger#log(int, java.lang.String, java.lang.Throwable, java.lang.Object[])
+	 */
+	@Override
+	public void log(int arg0, String arg1, Throwable arg2, Object... arg3) {
 		// TODO Auto-generated method stub
 		
 	}
