@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<chapter id="managing-vdbs-chapter">
+  <title>Managing VDBs</title>
+  	
+	<para>As stated in the introduction, the critical artifact for Teiid Designer the VDB, or Virtual DataBase. This 
+		section describes the details of how to create, edit, deploy and test your VDBs.
+	</para>
+	
+	<!-- ####### VDB CONTENT and STRUCTURE ######################################### -->
+	
+	<section id="create-vdb">
+		<title>Creating a VDB</title>
+		<para>To create an empty VDB launch Eclipse's <emphasis role="bold">New</emphasis> wizard, open the 
+			<emphasis role="bold">Teiid Designer</emphasis> category folder and select
+			<emphasis role="bold">Teiid VDB</emphasis>. You can also select one or more models in a model project, 
+			right-click and select <emphasis role="bold">New > Teiid VDB</emphasis> action.> 
+		</para>
+		<para>Launching this wizard will open the New VDB dialog. If you launched with one or more models selected
+			the dialog will contain the pre-selected models for inclusion in the new VDB.
+		</para>
+		<figure>
+			<title>New VDB Dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/new-vdb-wizard.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>Note that a VDB is scoped to be aware of models and files within the same model project as the VDB. You 
+			will not be allowed to add models to a VDB that exist in a different project.
+		</para>
+	</section>
+	
+	<section id="edit-vdb">
+		<title>Editing a VDB</title>
+		<para>To Edit an existing VDB, select the VDB in the explorer and right-click select Open action or simply
+			double-click the VDB. The VDB will be opened in a VDB Editor. (See the <xref linkend="vdb-editor-section" /> section)
+		</para>
+	</section>
+	
+	<section id="test-vdb">
+		<title>Test a VDB</title>
+		<para>xxxxxxxxxxxxxxxx
+		</para>
+	</section>
+	
+	<section id="reuse-vdbs">
+		<title>Reusing VDBs</title>
+		<para>xxxxxxxxxxxxxxxx
+		</para>
+	</section>
+	
+</chapter>

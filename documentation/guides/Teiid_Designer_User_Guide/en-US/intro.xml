@@ -616,24 +616,93 @@
 		  </itemizedlist>
         </section>
 
-        <section id="models-and-vdbs">
-    		<title>Models and VDBs</title>
+        <section id="the-virtual-database">
+    		<title>The Virtual Database</title>
 
-    		<para>Models used for data integration are packaged into a <emphasis role="bold">Virtual
-	   		  Database (VDB)</emphasis>. The models must be in a complete and consistent state
-			  when used for data integration. That is, the VDB must contain all the
-			  models and all resources they depend upon. VDB's are the transport mechanism to expose
-			  both the metadata to query against on a server and the corresponding references to the data sources
-			  and connections required to perform the actual DB queries. (See the 
-			  <xref linkend="vdb-editor-section" /> section)</para>
+    		<para>The critical artifact that <emphasis role="bold">Teiid Designer</emphasis> is intended to manage is the
+	   		  <emphasis role="bold">VDB</emphasis>, or <emphasis role="bold">Virtual DataBase</emphasis>. Through the 
+	   		  Teiid server, VDB's behave like standard JDBC database schema which can be connected to, queried and 
+	   		  updated based on how the VDB is configured. Since VDB's are just databases once they are deployed, they 
+	   		  can be used as sources to other view model transformations. This allows creating and deploying re-usable 
+	   		  or common VDB's in multiple layers depending on your business needs. </para>
 			
-		    <para><emphasis role="bold">Models and Connection Profiles</emphasis></para>
-
-
-		    <para>A <emphasis role="bold">connection profile</emphasis>  provides the connectivity to a data source and is 
-			  defined by the Eclipse <emphasis role="bold">Data Tools Project (DTP)</emphasis> framework. Designer utilizes this framework from within
-			  it's JDBC Importer.
-		    </para>
+		    <section id="vdb-content-and-structure">
+    			<title>VDB Content and Structure</title>
+    			In Designer, the VDB file names use a "<emphasis role="bold">.vdb</emphasis>" file extension. 
+    			VDBs are structurally just ZIP archive files containing 3 folders:
+				<itemizedlist>
+					<listitem>
+						<para> META-INF</para>
+						<itemizedlist>
+							<listitem>
+								<para> contains "vdb.xml" definition file</para>
+							</listitem>
+						</itemizedlist>
+					</listitem>
+					<listitem>
+						<para> runtime-inf</para>
+						<itemizedlist>
+							<listitem>
+								<para> contains a binary INDEX file for each model included in your VDB</para>
+							</listitem>
+						</itemizedlist>
+					</listitem>
+					<listitem>
+						<para> &lt;project folder name&gt;</para>
+						<itemizedlist>
+							<listitem>
+								<para> contains of the models you will be adding in the VDB Editor (i.e. *.xmi and *.xsd files)</para>
+							</listitem>
+						</itemizedlist>
+					</listitem>
+				</itemizedlist>
+				<para>When deployed, the metadata is consumed by Teiid in order to create the necessary runtime 
+					metadata for your model definitions. </para>
+				<para>The vdb.xml file contains:</para>
+				<itemizedlist>
+					<listitem>
+						<para> VDB name, version, properties</para>
+					</listitem>
+					<listitem>
+						<para> contained model information (name, translator name, connection info)</para>
+					</listitem>
+					<listitem>
+						<para> translator info</para>
+					</listitem>
+					<listitem>
+						<para> data role definitions for the referenced models</para>
+					</listitem>
+					<listitem>
+						<para> import VDB references</para>
+					</listitem>
+				</itemizedlist>
+				<para>The vdb.xml file example below highlights the basic model information. Note the VIRTUAL and 
+					PHYSICAL &lt;model&gt; elements containing property references to the INDEX files as well as the 
+					&lt;source&gt; element info for the PHYSICAL (aka source) model EU_CustomerAccounts.xmi.</para>
+				<synopsis>
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;vdb version="1" name="Financials"&gt;
+    &lt;model visible="true" type="VIRTUAL" name="US_CustomerAccounts" path="/Financials/US_CustomerAccounts.xmi"&gt;
+        &lt;property value="4097408696" name="checksum"/&gt;
+        &lt;property value="Relational" name="modelClass"/&gt;
+        &lt;property value="false" name="builtIn"/&gt;
+        &lt;property value="1592679058.INDEX" name="indexName"/&gt;
+        &lt;property value="/Financials/US_CustomerAccounts.xmi" name="imports"/&gt;
+    &lt;/model&gt;
+    &lt;model visible="true" type="PHYSICAL" name="EU_CustomerAccounts" path="/Financials/EU_CustomerAccounts.xmi"&gt;
+        &lt;property value="525566235" name="checksum"/&gt;
+        &lt;property value="Relational" name="modelClass"/&gt;
+        &lt;property value="false" name="builtIn"/&gt;
+        &lt;property value="1119071590.INDEX" name="indexName"/&gt;
+        &lt;source translator-name="postgresql" connection-jndi-name="EU_CustomerAccounts" name="EU_CustomerAccounts"/&gt;
+    &lt;/model&gt;
+&lt;/vdb&gt; 
+				</synopsis>
+				<para>Fortunately, Teiid Designer simplifies the management of your VDBs by providing a dedicated 
+					VDB Editor which maintains a consistent, valid vdb.xml file for you and assists in 
+					synchronizing your workspace models with any related models in your VDB.
+					(See the <xref linkend="vdb-editor-section" /> section)</para>
+    		</section>
         </section>			
 
         <section id="model-validation">
