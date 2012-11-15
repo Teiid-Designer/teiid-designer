@@ -14,7 +14,6 @@
 
 use strict;
 use Getopt::Long; 
-use LWP::Simple;
 
 my $line;
 
@@ -24,35 +23,39 @@ my $line;
 #
 #################
 sub usage {
-	print "Usage: $0 [-b <jbt repo branch>] [-t <target file to copy>] [-h]\n";
+	print "Usage: $0 [-b <jbt repo branch>] [-h]\n";
 	print "-b - jboss tools branch from which to get the base target file\n";
-	print "-t - base target file to copy (multiple.target) by default\n";
 	exit 1;
 }
 
 # jboss tools branch to download target file from
-my $jbt_branch = "tags/jbosstools-4.0.0.Alpha2";
+my $jbt_branch = "jbosstools-4.0.0.Beta2x";
+
+my $help;
+usage() if ( ! GetOptions('help|?' => \$help, 'b=s' => \$jbt_branch)
+					   or defined $help );
 
 # jboss tools target file
 my $jbt_target_file = "multiple.target";
 
-my $help;
-usage() if ( ! GetOptions('help|?' => \$help, 'b=s' => \$jbt_branch, 't=s' => \$jbt_target_file)
-					   or defined $help );
-
 # jboss tools target file url
-my $jbt_target_url = "http://anonsvn.jboss.org/repos/jbosstools/$jbt_branch/build/target-platform";
+my $jbt_target_url = "https://raw.github.com/jbosstools/jbosstools-build/$jbt_branch/target-platforms/jbosstools-JunoSR1a/multiple";
 
 print "Base target definition file is $jbt_target_file\n";
 unlink("$jbt_target_file");
 
 print "Downloading target file from $jbt_target_url/$jbt_target_file ...\n";
-my $base_target = get("$jbt_target_url/$jbt_target_file");
+`wget "$jbt_target_url/$jbt_target_file"`;
 
-if (length($base_target) == 0) {
+unless (-e $jbt_target_file) {
   print "$jbt_target_file not found ... exiting\n";
 	exit 1;
 }
+
+open FILE, "$jbt_target_file" or die "Couldn't read $jbt_target_file file: $!";
+binmode FILE;
+my $base_target = join("", <FILE>);
+close FILE;
 
 # 
 # Construct the jboss tools required features into a location snippet
