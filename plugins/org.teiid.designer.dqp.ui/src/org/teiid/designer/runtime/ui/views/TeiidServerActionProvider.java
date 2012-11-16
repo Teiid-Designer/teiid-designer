@@ -602,6 +602,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     @Override
     public void restoreState(IMemento aMemento) {
         restoreLocalPullDown(aMemento);
+        updateViewerFilters();
         super.restoreState(aMemento);
     }
 }
