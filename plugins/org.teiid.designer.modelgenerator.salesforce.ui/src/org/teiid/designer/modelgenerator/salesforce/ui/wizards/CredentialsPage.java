@@ -198,14 +198,7 @@ public class CredentialsPage extends AbstractWizardPage
         textFieldPassword.setToolTipText(text);
         textFieldPassword.setText(EMPTY_STR);
         this.textFieldPassword.setEchoChar('*');
-        this.textFieldPassword.addModifyListener(new ModifyListener() {
-
-            @Override
-			public void modifyText( final ModifyEvent event ) {
-                //passwordModified();
-            }
-        });
-
+        this.textFieldPassword.setEnabled(false);
 
         Composite buttonComposite = WidgetFactory.createPanel(pnl, SWT.NONE, GridData.FILL_VERTICAL);
         GridLayout layout = new GridLayout(1, false);
@@ -251,7 +244,7 @@ public class CredentialsPage extends AbstractWizardPage
         setErrorMessage(null);
         setMessage(getString("validate.profile")); //$NON-NLS-1$
         validateButton.setEnabled(true);
-        setPageComplete(true);
+        setPageComplete(false);
         importManager.setConnectionProfile(selectedConnectionProfile);
     }
 
@@ -292,7 +285,7 @@ public class CredentialsPage extends AbstractWizardPage
                 setMessage(getString("Click.Next")); //$NON-NLS-1$
                 setPageComplete(true);
             } else {
-                setErrorMessage(pingJob.getResult().getMessage());
+                setErrorMessage(getString("connectionFailedMsg")); //$NON-NLS-1$
                 setPageComplete(false);
             }
         }
