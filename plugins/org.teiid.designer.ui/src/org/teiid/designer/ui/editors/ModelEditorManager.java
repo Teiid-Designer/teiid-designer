@@ -223,24 +223,7 @@ abstract public class ModelEditorManager {
             boolean forceOpen = MessageDialogWithToggle.ALWAYS.equals(autoOpen);
 
             if (!forceOpen) {
-                MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoCancelQuestion(shell, OPEN_EDITOR_TITLE,
-                                                                                                 OPEN_EDITOR_MESSAGE,
-                                                                                                 ALWAY_FORCE_OPEN_MESSAGE, false,
-                                                                                                 UiPlugin.getDefault()
-                                                                                                         .getPreferenceStore(),
-                                                                                                 AUTO_OPEN_EDITOR_IF_NEEDED);
-                int result = dialog.getReturnCode();
-                switch (result) {
-                // yes, ok
-                case IDialogConstants.YES_ID:
-                case IDialogConstants.OK_ID:
-                    forceOpen = true;
-                    break;
-                // no
-                case IDialogConstants.NO_ID:
-                    forceOpen = false;
-                    break;
-                }
+                forceOpen = showDialogShouldOpenEditor(shell);
             }
 
             if (forceOpen) {
@@ -252,6 +235,37 @@ abstract public class ModelEditorManager {
         }
 
         return true;
+    }
+    
+    /**
+     * Show Dialog asking user if the editor should be opened.
+     * @param shell the shell
+     * @return 'true' if should be opened, 'false' if not
+     */
+    public static boolean showDialogShouldOpenEditor(Shell shell) {
+        boolean shouldOpen = false;
+
+        // Show the dialog
+        MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoCancelQuestion(shell, OPEN_EDITOR_TITLE,
+                                                                                         OPEN_EDITOR_MESSAGE,
+                                                                                         ALWAY_FORCE_OPEN_MESSAGE, false,
+                                                                                         UiPlugin.getDefault()
+                                                                                         .getPreferenceStore(),
+                                                                                         AUTO_OPEN_EDITOR_IF_NEEDED);
+        int result = dialog.getReturnCode();
+        switch (result) {
+            // yes, ok
+            case IDialogConstants.YES_ID:
+            case IDialogConstants.OK_ID:
+                shouldOpen = true;
+                break;
+                // no
+            case IDialogConstants.NO_ID:
+                shouldOpen = false;
+                break;
+        }
+
+        return shouldOpen;
     }
 
     /**

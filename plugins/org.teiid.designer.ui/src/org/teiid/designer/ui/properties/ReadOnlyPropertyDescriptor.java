@@ -7,8 +7,10 @@
  */
 package org.teiid.designer.ui.properties;
 
+import static org.teiid.designer.ui.PluginConstants.Prefs.General.AUTO_OPEN_EDITOR_IF_NEEDED;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.widgets.Composite;
@@ -74,13 +76,22 @@ public class ReadOnlyPropertyDescriptor implements IPropertyDescriptor {
         } else if ( status == NO_MODEL_EDITOR && modelFile != null ) {
             // one last check to see if the model is open
             if ( ! ModelEditorManager.isOpen(modelFile) ) {
-                // can't modify a property value on an EObject if it's ModelEditor is not open.
-                Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
-                if ( MessageDialog.openQuestion(shell, 
-                        ModelEditorManager.OPEN_EDITOR_TITLE, 
-                        ModelEditorManager.OPEN_EDITOR_MESSAGE) ) {
+                // get preference value for auto-open-editor
+                String autoOpen = UiPlugin.getDefault().getPreferenceStore().getString(AUTO_OPEN_EDITOR_IF_NEEDED);
+
+                // if the preference is to auto-open, then set forceOpen so we don't prompt the user
+                boolean forceOpen = MessageDialogWithToggle.ALWAYS.equals(autoOpen);
+
+                // If no preference, prompt the user
+                if (!forceOpen) {
+                    Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+                    forceOpen = ModelEditorManager.showDialogShouldOpenEditor(shell);
+                }
+                
+                if(forceOpen) {
                     ModelEditorManager.activate(modelFile, true);
                 }
+
                 return null;
             }
             return this.delegate.createPropertyEditor(parent);
