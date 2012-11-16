@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -39,7 +38,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelObjectAnnotationHelper;
@@ -55,6 +53,7 @@ import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionConstants;
 import org.teiid.designer.metamodels.relational.util.ParameterData;
 import org.teiid.designer.metamodels.relational.util.PushdownFunctionData;
+import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.udf.UdfManager;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
@@ -64,7 +63,6 @@ import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
-import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.RelationalObjectFactory;
 
@@ -88,7 +86,8 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
 		super(TITLE);
 		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor( PluginConstants.Images.NEW_PUSHDOWN_FUNCTION));
 		
-		Set<String> unsortedDatatypes = DataTypeManager.getAllDataTypeNames();
+		IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+		Set<String> unsortedDatatypes = service.getAllDataTypeNames();
 		datatypes = new ArrayList<String>();
 		
 		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);

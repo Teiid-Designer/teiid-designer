@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -25,7 +24,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -36,6 +34,7 @@ import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.relational.ui.edit.EditRelationalObjectDialog;
+import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.actions.INewChildAction;
 import org.teiid.designer.ui.actions.INewSiblingAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -58,7 +57,8 @@ public class CreateRelationalTableAction extends Action implements INewChildActi
 		super(TITLE);
 		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor( UiConstants.Images.NEW_TABLE_ICON));
 		
-		Set<String> unsortedDatatypes = DataTypeManager.getAllDataTypeNames();
+		IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+		Set<String> unsortedDatatypes = service.getAllDataTypeNames();
 		datatypes = new ArrayList<String>();
 		
 		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);

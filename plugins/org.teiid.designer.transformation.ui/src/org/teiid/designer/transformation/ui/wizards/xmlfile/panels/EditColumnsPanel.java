@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
-
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -28,7 +27,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
-import org.teiid.core.types.DataTypeManager;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.PluginConstants;
@@ -37,6 +36,7 @@ import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlColumnInfo;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlImportXmlConfigurationPage;
+import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.table.CheckBoxEditingSupport;
 import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 
@@ -347,7 +347,8 @@ public class EditColumnsPanel {
          */
         public DatatypeComboEditingSupport( ColumnViewer viewer ) {
             super(viewer);
-    		Set<String> unsortedDatatypes = DataTypeManager.getAllDataTypeNames();
+            IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+    		Set<String> unsortedDatatypes = service.getAllDataTypeNames();
     		Collection<String> dTypes = new ArrayList<String>();
     		
     		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);

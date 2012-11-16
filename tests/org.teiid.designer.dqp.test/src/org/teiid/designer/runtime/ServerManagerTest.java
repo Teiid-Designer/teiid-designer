@@ -284,7 +284,7 @@ public class ServerManagerTest {
         this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(2));
 
-        ITeiidServerVersion serverVersion = new TeiidServerVersion(ITeiidServerVersion.DEFAULT_TEIID_8_SERVER);
+        ITeiidServerVersion serverVersion = new TeiidServerVersion(ITeiidServerVersion.DEFAULT_TEIID_8_SERVER_ID);
         
         String customLabel = "My Custom Label";
         String adminPort = "31443";

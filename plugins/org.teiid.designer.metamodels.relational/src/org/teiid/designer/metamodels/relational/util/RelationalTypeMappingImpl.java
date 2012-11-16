@@ -11,14 +11,11 @@ import java.lang.reflect.Field;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.types.DataTypeManager;
-import org.teiid.core.types.JDBCSQLTypeInfo;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect;

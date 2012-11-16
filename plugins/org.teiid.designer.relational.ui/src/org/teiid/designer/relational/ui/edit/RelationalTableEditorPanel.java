@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -62,7 +61,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.core.types.DataTypeManager;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -79,6 +78,7 @@ import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.relational.ui.util.RelationalUiUtil;
+import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -1375,7 +1375,8 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
          */
         public DatatypeEditingSupport( ColumnViewer viewer ) {
             super(viewer);
-    		Set<String> unsortedDatatypes = DataTypeManager.getAllDataTypeNames();
+            IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+    		Set<String> unsortedDatatypes = service.getAllDataTypeNames();
     		Collection<String> dTypes = new ArrayList<String>();
     		
     		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);

@@ -13,12 +13,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import org.teiid.core.types.DataTypeManager;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.udf.UdfManager;
-import org.teiid.language.SQLConstants;
-import org.teiid.query.function.FunctionForm;
-import org.teiid.query.function.FunctionLibrary;
 import org.teiid.query.ui.UiConstants;
 
 /**
@@ -94,7 +91,8 @@ public class SqlSyntax {
         // DATATYPE NAMES List
 		Set<String> dataTypes = new HashSet<String>();
 		try {
-			dataTypes = DataTypeManager.getAllDataTypeNames();
+		    IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+			dataTypes = service.getAllDataTypeNames();
 			iter = dataTypes.iterator();
 			while (iter.hasNext()) {
 			    String dtypeName = (String)iter.next();

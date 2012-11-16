@@ -7,9 +7,8 @@
  */
 package org.teiid.designer.transformation.ui.reconciler;
 
+import javax.lang.model.type.NullType;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.types.DataTypeManager;
-import org.teiid.core.types.NullType;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.transformation.ui.PluginConstants;
@@ -18,12 +17,7 @@ import org.teiid.designer.transformation.util.RuntimeTypeConverter;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.util.TransformationMappingHelper;
 import org.teiid.designer.transformation.util.TransformationSqlHelper;
-import org.teiid.query.sql.symbol.AggregateSymbol;
-import org.teiid.query.sql.symbol.AliasSymbol;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.ExpressionSymbol;
-import org.teiid.query.sql.symbol.Symbol;
+import org.teiid.designer.type.IDataTypeManagerService;
 
 /**
  * Binding Business Object A Binding has the following properties: (1) Virtual Attribute - can be MetaObject or String(if creating
@@ -493,10 +487,12 @@ public class Binding {
     private String getSymbolDatatype( Expression seSymbol ) {
         String typeName;
         Class objClass = seSymbol.getType();
+        IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+        
         if (objClass == null) {
-            typeName = DataTypeManager.getDataTypeName(NullType.class);
+            typeName = service.getDataTypeName(NullType.class);
         } else {
-            typeName = DataTypeManager.getDataTypeName(objClass);
+            typeName = service.getDataTypeName(objClass);
         }
         return typeName;
     }
@@ -632,7 +628,7 @@ public class Binding {
         // //-------------------------------------------------------
         // if( !currentAttrTypeStr.equalsIgnoreCase(sqlSymbolTypeStr) ) {
         // // if the conversion is desired back to the original SQL type, no convert is required
-        // String originalSQLTypeStr = DataTypeManager.getDataTypeName(originalSymbol.getType());
+        // String originalSQLTypeStr = service.getDataTypeName(originalSymbol.getType());
         // if( !currentAttrTypeStr.equalsIgnoreCase(originalSQLTypeStr) ) {
         // // Check whether there is an Explicit or Implicit conversion
         // if( isExplicitOrImplicitConversion(sqlSymbolTypeStr,currentAttrTypeStr) ) {
@@ -649,6 +645,8 @@ public class Binding {
      * update the SQL Conversion display text and symbol for this binding
      */
     public void updateAvailableSymbolConversionAndText() {
+        IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+        
         sqlConversionText = null;
         availableSymbolConversion = null;
         if (getCurrentSymbol() == null) {
@@ -675,15 +673,15 @@ public class Binding {
         // -------------------------------------------------------
         if (!currentAttrTypeStr.equalsIgnoreCase(sqlSymbolTypeStr)) {
             // if the conversion is desired back to the original SQL type, no convert is required
-            String originalSQLTypeStr = DataTypeManager.getDataTypeName(oSymbol.getType());
+            String originalSQLTypeStr = service.getDataTypeName(oSymbol.getType());
             if (currentAttrTypeStr.equalsIgnoreCase(originalSQLTypeStr)) {
                 availableSymbolConversion = null;
                 // optimizer.optimize(oSymbol);
                 sqlConversionText = CONVERT_SQL_TEXT + CR + oSymbol.toString();
             } else {
                 // Check whether there is a conversion
-                boolean isExplicit = DataTypeManager.isExplicitConversion(sqlSymbolTypeStr, currentAttrTypeStr);
-                boolean isImplicit = DataTypeManager.isImplicitConversion(sqlSymbolTypeStr, currentAttrTypeStr);
+                boolean isExplicit = service.isExplicitConversion(sqlSymbolTypeStr, currentAttrTypeStr);
+                boolean isImplicit = service.isImplicitConversion(sqlSymbolTypeStr, currentAttrTypeStr);
                 // Explicit conversion, use it
                 if (isImplicit || isExplicit) {
                     // If symbol is aliased, get underlying symbol
@@ -709,7 +707,7 @@ public class Binding {
                             Expression cExpr = TransformationSqlHelper.getConvertedExpr(eSymbol);
                             if (cExpr instanceof Expression) {
                             	Expression seSymbol = (Expression)cExpr;
-                                String seSymbolTypeStr = DataTypeManager.getDataTypeName(seSymbol.getType());
+                                String seSymbolTypeStr = service.getDataTypeName(seSymbol.getType());
                                 if (seSymbolTypeStr != null && seSymbolTypeStr.equalsIgnoreCase(currentAttrTypeStr)) {
                                     availableSymbolConversion = seSymbol;
                                     // optimizer.optimize(availableSymbolConversion);
@@ -718,7 +716,7 @@ public class Binding {
                                     return;
                                 }
                             } else {
-                                String exprTypeStr = DataTypeManager.getDataTypeName(cExpr.getType());
+                                String exprTypeStr = service.getDataTypeName(cExpr.getType());
                                 if (exprTypeStr != null && exprTypeStr.equalsIgnoreCase(currentAttrTypeStr)) {
                                     ExpressionSymbol exprSymbol = new ExpressionSymbol("expr", cExpr); //$NON-NLS-1$
                                     availableSymbolConversion = exprSymbol;

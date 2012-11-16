@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -47,7 +46,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.types.DataTypeManager;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalParameter;
@@ -58,6 +57,7 @@ import org.teiid.designer.transformation.model.RelationalViewProcedure;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlTextViewer;
 import org.teiid.designer.transformation.ui.wizards.sqlbuilder.SQLTemplateDialog;
+import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.graphics.ColorManager;
 import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
@@ -811,7 +811,9 @@ public class ViewProcedureEditorPanel  implements RelationalConstants {
          */
         public DatatypeEditingSupport( ColumnViewer viewer ) {
             super(viewer);
-            Set<String> unsortedDatatypes = DataTypeManager.getAllDataTypeNames();
+            
+            IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+            Set<String> unsortedDatatypes = service.getAllDataTypeNames();
             Collection<String> dTypes = new ArrayList<String>();
 
             String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);

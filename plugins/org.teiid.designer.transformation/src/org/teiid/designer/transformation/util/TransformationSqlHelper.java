@@ -3166,7 +3166,7 @@ public class TransformationSqlHelper implements SqlConstants {
         // }
         //        
         Class originalTypeClass = expr.getType();
-        String originalTypeName = DataTypeManager.getDataTypeName(originalTypeClass);
+        String originalTypeName = service.getDataTypeName(originalTypeClass);
 
         // If the desired Type is different from the original Type, do convert
         if (!originalTypeName.equalsIgnoreCase(newTypeName)) {
@@ -3174,7 +3174,7 @@ public class TransformationSqlHelper implements SqlConstants {
             if (isConvertFunction(exprSymbol)) {
                 Expression convExpr = getConvertedExpr(exprSymbol);
                 Class convExprTypeClass = convExpr.getType();
-                String convExprTypeName = DataTypeManager.getDataTypeName(convExprTypeClass);
+                String convExprTypeName = service.getDataTypeName(convExprTypeClass);
                 // Check whether there is a conversion
                 boolean isExplicit = DataTypeManager.isExplicitConversion(convExprTypeName, newTypeName);
                 boolean isImplicit = DataTypeManager.isImplicitConversion(convExprTypeName, newTypeName);
@@ -3207,7 +3207,7 @@ public class TransformationSqlHelper implements SqlConstants {
                                        String newTypeName,
                                        String aliasName ) {
         Class originalTypeClass = elementSymbol.getType();
-        String originalTypeName = DataTypeManager.getDataTypeName(originalTypeClass);
+        String originalTypeName = service.getDataTypeName(originalTypeClass);
 
         Function convertFunction = getConversion(originalTypeName, newTypeName, elementSymbol);
 
@@ -3273,7 +3273,7 @@ public class TransformationSqlHelper implements SqlConstants {
             Expression cExpr = getConvertedExpr(symbol);
             if (cExpr instanceof Expression) {
             	Expression seSymbol = (Expression)cExpr;
-                String seSymbolTypeStr = DataTypeManager.getDataTypeName(seSymbol.getType());
+                String seSymbolTypeStr = service.getDataTypeName(seSymbol.getType());
                 // Check whether there is a conversion from the underlying symbol to the attribute type
                 boolean isExplicitConv = DataTypeManager.isExplicitConversion(seSymbolTypeStr, targetTypeStr);
                 boolean isImplicitConv = DataTypeManager.isImplicitConversion(seSymbolTypeStr, targetTypeStr);

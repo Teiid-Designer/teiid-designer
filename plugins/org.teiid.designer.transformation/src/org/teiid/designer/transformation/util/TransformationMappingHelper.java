@@ -13,11 +13,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import javax.management.Query;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
-import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;
@@ -30,6 +31,7 @@ import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.metamodels.function.Function;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.metamodels.transformation.SqlAlias;
@@ -39,18 +41,8 @@ import org.teiid.designer.metamodels.xml.XmlDocument;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.metadata.TransformationMetadataFactory;
 import org.teiid.designer.transformation.validation.TransformationValidator;
-import org.teiid.query.function.FunctionDescriptor;
-import org.teiid.query.function.FunctionLibrary;
-import org.teiid.query.metadata.QueryMetadataInterface;
-import org.teiid.query.metadata.TempMetadataID;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.SetQuery;
-import org.teiid.query.sql.symbol.Constant;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.Function;
-import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.visitor.FunctionCollectorVisitor;
+import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 
 /**
  * TransformationMappingHelper This class is responsible for handling mapping changes and source / target changes, in response to
@@ -306,7 +298,9 @@ public class TransformationMappingHelper implements SqlConstants {
         boolean typesMatch = false;
         if (seSymbol != null && attribute != null) {
             Class symType = seSymbol.getType();
-            if (symType != null && (symType == DataTypeManager.DefaultDataClasses.NULL || RuntimeTypeConverter.isExplicitMatch(seSymbol, attribute))) {
+            
+            IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+            if (symType != null && (symType == service.getDefaultDataClass(DataTypeName.NULL) || RuntimeTypeConverter.isExplicitMatch(seSymbol, attribute))) {
                 typesMatch = true;
             }
         }
@@ -1479,13 +1473,15 @@ public class TransformationMappingHelper implements SqlConstants {
                     datatype = (EObject)typeObj;
                 }
             } else if (typeObj instanceof Class) {
+                IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+                
                 // check for the NullType
                 if (typeObj == org.teiid.core.types.NullType.class) {
                     // convert the NullType constant to the String type
                     typeObj = String.class;
                 }
                 // Get the runtime type for the java Class
-                String runtimeTypeName = DataTypeManager.getDataTypeName((Class)typeObj);
+                String runtimeTypeName = service.getDataTypeName((Class)typeObj);
 
                 datatype = getDefaultDatatypeForRuntimeTypeName(runtimeTypeName);
             }

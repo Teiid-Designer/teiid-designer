@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
@@ -33,10 +32,6 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDVariety;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.teiid.core.types.DataTypeManager;
 import org.teiid.core.designer.id.IDGenerator;
 import org.teiid.core.designer.id.InvalidIDException;
 import org.teiid.core.designer.id.UUID;
@@ -47,12 +42,16 @@ import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.core.metamodel.aspect.AbstractMetamodelAspect;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect;
-import org.teiid.designer.metadata.runtime.MetadataConstants;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.types.EnterpriseDatatypeInfo;
+import org.teiid.designer.metadata.runtime.MetadataConstants;
 import org.teiid.designer.metamodels.xsd.XsdConstants;
 import org.teiid.designer.metamodels.xsd.XsdPlugin;
 import org.teiid.designer.metamodels.xsd.XsdUtil;
+import org.teiid.designer.type.IDataTypeManagerService;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 
 /**
@@ -301,9 +300,11 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
         // Retrieve the runtime type name from the appInfo
         String runtimeTypeName = this.getRuntimeTypeName(entity);
         if (runtimeTypeName != null) {
-            Class javaClass = DataTypeManager.getDataTypeClass(runtimeTypeName);
-            if (javaClass != null) {
-                return javaClass.getName();
+            
+            IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+            Class<?> javaClassName = service.getDataTypeClass(runtimeTypeName);
+            if (javaClassName != null) {
+                return javaClassName.getName();
             }
         }
         // Return Object as the default

@@ -8,10 +8,8 @@
 package org.teiid.designer.metamodels.relational.util;
 
 import java.sql.Types;
-
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
-import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.metadata.runtime.api.DataType;
 import org.teiid.designer.metamodels.relational.SearchabilityType;
 

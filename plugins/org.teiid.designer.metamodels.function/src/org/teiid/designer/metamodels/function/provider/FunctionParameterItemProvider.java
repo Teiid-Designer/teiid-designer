@@ -9,7 +9,6 @@ package org.teiid.designer.metamodels.function.provider;
 
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
@@ -21,9 +20,10 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
-import org.teiid.core.types.DataTypeManager;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.function.FunctionPackage;
 import org.teiid.designer.metamodels.function.FunctionParameter;
+import org.teiid.designer.type.IDataTypeManagerService;
 
 /**
  * This is the item provider adapter for a {@link org.teiid.designer.metamodels.function.FunctionParameter} object. <!--
@@ -97,7 +97,8 @@ public class FunctionParameterItemProvider extends ItemProviderAdapter
              */
             @Override
             public Collection getChoiceOfValues( Object object ) {
-                return DataTypeManager.getAllDataTypeNames();
+                IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+                return service.getAllDataTypeNames();
             }
 
         };

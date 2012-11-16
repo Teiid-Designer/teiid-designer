@@ -12,11 +12,13 @@ import java.util.Map;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.teiid.designer.DesignerSPIPlugin;
 import org.teiid.designer.runtime.spi.IExecutionAdmin;
 import org.teiid.designer.runtime.spi.IExecutionAdminFactory;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.type.IDataTypeManagerService;
 
 /**
  * @since 8.0
@@ -92,6 +94,23 @@ public class TeiidRuntimeRegistry {
             throw new Exception("No ExecutionAdmin factory registered for teiid server version " + teiidServer.getServerVersion()); //$NON-NLS-1$
         
         return factory.createExecutionAdmin(teiidServer);
+    }
+    
+    /**
+     * Get the teiid data type manager service
+     * 
+     * @param teiidServerVersion
+     * 
+     * @return instance of {@link IDataTypeManagerService}
+     * @throws Exception 
+     */
+    public IDataTypeManagerService getDataTypeManagerService(ITeiidServerVersion teiidServerVersion) throws Exception {
+        IExecutionAdminFactory factory = search(teiidServerVersion);
+        if (factory == null)
+            throw new Exception(DesignerSPIPlugin.Util.getString(
+                                                                 getClass().getSimpleName() + "NoExecutionAdminFactory", teiidServerVersion)); //$NON-NLS-1$
+        
+        return factory.getDataTypeManagerService();
     }
 
     /**

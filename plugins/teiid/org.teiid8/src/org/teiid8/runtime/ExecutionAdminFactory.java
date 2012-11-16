@@ -10,15 +10,27 @@ package org.teiid8.runtime;
 import org.teiid.designer.runtime.spi.IExecutionAdmin;
 import org.teiid.designer.runtime.spi.IExecutionAdminFactory;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid8.type.DataTypeManagerService;
 
 /**
  *
  */
 public class ExecutionAdminFactory implements IExecutionAdminFactory {
 
+    private DataTypeManagerService dataTypeManagerService;
+
     @Override
     public IExecutionAdmin createExecutionAdmin(ITeiidServer teiidServer) throws Exception {
         return new ExecutionAdmin(teiidServer);
     }
-
+    
+    @Override
+    public IDataTypeManagerService getDataTypeManagerService() {
+        if (dataTypeManagerService == null) {
+            dataTypeManagerService = new DataTypeManagerService();
+        }
+        
+        return dataTypeManagerService;
+    }
 }

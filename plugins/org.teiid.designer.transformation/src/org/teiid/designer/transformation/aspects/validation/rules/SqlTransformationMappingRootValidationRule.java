@@ -14,8 +14,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
+import javax.management.Query;
+import javax.swing.text.html.Option;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -23,7 +25,6 @@ import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingRoot;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.ValidationPreferences;
 import org.teiid.designer.core.container.Container;
@@ -45,6 +46,7 @@ import org.teiid.designer.metadata.runtime.MetadataRecord;
 import org.teiid.designer.metadata.runtime.TableRecord;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.function.Function;
 import org.teiid.designer.metamodels.function.ScalarFunction;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.Procedure;
@@ -68,23 +70,7 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.validation.SqlTransformationResult;
 import org.teiid.designer.transformation.validation.TransformationValidationResult;
 import org.teiid.designer.transformation.validation.TransformationValidator;
-import org.teiid.query.function.FunctionLibrary;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.AbstractCompareCriteria;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.CompareCriteria;
-import org.teiid.query.sql.lang.Option;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.Function;
-import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.visitor.CommandCollectorVisitor;
-import org.teiid.query.sql.visitor.ElementCollectorVisitor;
-import org.teiid.query.sql.visitor.FunctionCollectorVisitor;
-import org.teiid.query.sql.visitor.GroupCollectorVisitor;
-import org.teiid.query.sql.visitor.PredicateCollectorVisitor;
+import org.teiid.designer.type.IDataTypeManagerService;
 
 
 /**
@@ -868,13 +854,15 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                                 rightExpression = rightFunction.getArg(0);
                             }
                         }
+                        
+                        IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
 
                         if (leftExpression instanceof ElementSymbol && rightExpression instanceof ElementSymbol) {
                             Class leftDataType = ((Expression)leftExpression).getType();
                             Class rightDataType = ((Expression)rightExpression).getType();
                             if (!leftDataType.equals(rightDataType)) {
-                                Object[] params = new Object[] {compare, DataTypeManager.getDataTypeName(leftDataType),
-                                    DataTypeManager.getDataTypeName(rightDataType)};
+                                Object[] params = new Object[] {compare, service.getDataTypeName(leftDataType),
+                                    service.getDataTypeName(rightDataType)};
 
                                 ValidationProblem warningProblem = new ValidationProblemImpl(
                                                                                              0,

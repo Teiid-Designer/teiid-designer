@@ -11,11 +11,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.id.UUID;
-import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
@@ -31,9 +30,8 @@ import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.AttributeMappingHelper;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.validation.TransformationValidator;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.Expression;
+import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 
 
 /**
@@ -205,20 +203,21 @@ public class ProjectSymbolsValidationHelper {
             // ------------------------------------------------------------------------------
             // Check #2 - column datatype does not match the symbol datatype
             // ------------------------------------------------------------------------------
+            IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
             Class sourceType = singleElementSymbol.getType();
             String problemMsg = null;
             // check only if the source is a valid type
             SqlColumnAspect columnAspect = (SqlColumnAspect)AspectManager.getSqlAspect(outputColumn);
-            if (sourceType != null && sourceType != DataTypeManager.DefaultDataClasses.NULL) {
+            if (sourceType != null && sourceType != service.getDefaultDataClass(DataTypeName.NULL)) { 
                 EObject datatype = columnAspect.getDatatype(outputColumn);
                 SqlDatatypeAspect typeAspect = datatype != null ? (SqlDatatypeAspect)AspectManager.getSqlAspect(datatype) : null;
                 if (typeAspect != null) {
-                    Class targetType = DataTypeManager.getDataTypeClass(typeAspect.getRuntimeTypeName(datatype));
+                    Class targetType = service.getDataTypeClass(typeAspect.getRuntimeTypeName(datatype));
                     if (!sourceType.equals(targetType)) {
                         problemMsg = TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.The_datatype_type_of_the_column_{0}_does_not_match_the_source_column_type._1", //$NON-NLS-1$
                                                                          new Object[] {outputColumnName,
-                                                                             DataTypeManager.getDataTypeName(targetType),
-                                                                             DataTypeManager.getDataTypeName(sourceType)});
+                                                                             service.getDataTypeName(targetType),
+                                                                             service.getDataTypeName(sourceType)});
                         // create validation problem and additional to the results
                         ValidationProblem typeProblem = new ValidationProblemImpl(0, IStatus.ERROR, problemMsg);
                         validationResult.addProblem(typeProblem);

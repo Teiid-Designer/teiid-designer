@@ -12,10 +12,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
-
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -28,7 +25,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -39,6 +35,7 @@ import org.teiid.designer.transformation.model.RelationalViewModelFactory;
 import org.teiid.designer.transformation.model.RelationalViewTable;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.editors.EditViewTableDialog;
+import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.actions.INewChildAction;
 import org.teiid.designer.ui.actions.INewSiblingAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -47,7 +44,6 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
-import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 
 /**
@@ -67,7 +63,8 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
 		super(TITLE);
 		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor( UiConstants.Images.NEW_VIRTUAL_TABLE_ICON));
 		
-		Set<String> unsortedDatatypes = DataTypeManager.getAllDataTypeNames();
+		IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+		Set<String> unsortedDatatypes = service.getAllDataTypeNames();
 		datatypes = new ArrayList<String>();
 		
 		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);

@@ -148,7 +148,7 @@ public abstract class JBoss7ServerUtil extends ModelDescriptionConstants {
      */
     public static ITeiidServerVersion getTeiidRuntimeVersion(JBoss7Server jboss7Server) {
         if (! serverStarted(jboss7Server))
-            return new TeiidServerVersion(ITeiidServerVersion.DEFAULT_TEIID_8_SERVER);
+            return TeiidServerVersion.DEFAULT_TEIID_8_SERVER;
         
         ModelNode request = new ModelNode();
         request.get(OP).set(READ_ATTRIBUTE_OPERATION);   
@@ -164,7 +164,7 @@ public abstract class JBoss7ServerUtil extends ModelDescriptionConstants {
             return new TeiidServerVersion(result.asString());
         } catch (Exception ex) {
             DqpPlugin.Util.log(IStatus.ERROR, ex, "Failed to get teiid jdbc port, defaulting to " + ITeiidJdbcInfo.DEFAULT_PORT); //$NON-NLS-1$
-            return new TeiidServerVersion(ITeiidServerVersion.DEFAULT_TEIID_8_SERVER);
+            return new TeiidServerVersion(ITeiidServerVersion.DEFAULT_TEIID_8_SERVER_ID);
         }
     }    
 }

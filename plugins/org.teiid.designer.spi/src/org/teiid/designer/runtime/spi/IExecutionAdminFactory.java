@@ -7,6 +7,8 @@
 */
 package org.teiid.designer.runtime.spi;
 
+import org.teiid.designer.type.IDataTypeManagerService;
+
 /**
  * Factory for the creation of implementations of {@link IExecutionAdmin}
  */
@@ -22,4 +24,11 @@ public interface IExecutionAdminFactory {
      * @throws Exception 
      */
     IExecutionAdmin createExecutionAdmin(ITeiidServer teiidServer) throws Exception;
+
+    /**
+     * Get the teiid data type manager service
+     * 
+     * @return instance of {@link IDataTypeManagerService}
+     */
+    IDataTypeManagerService getDataTypeManagerService();
 }

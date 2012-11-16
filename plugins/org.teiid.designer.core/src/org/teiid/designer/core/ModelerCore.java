@@ -92,6 +92,10 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.core.workspace.ModelWorkspaceManagerSaveParticipant;
+import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.type.IDataTypeManagerService;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -332,6 +336,8 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     // user preferences and use default severity levels for all validation
     // rules.
     private static boolean IGNORE_VALIDATION_PREFERNCES_ON_BUILD = false;
+
+    private static ITeiidServerVersion teiidServerVersion = null;
 
     /**
      * Add all model resource sets known through the EXTERNAL_RESOURCE_SET extension to the specified container
@@ -2061,5 +2067,42 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     public static interface ILicense {
         String PRODUCER_NAME = getProducerName();
         String VERSION = getVersion();
+    }
+
+    /**
+     * Get the targeted teiid server version
+     * 
+     * @return teiid server version
+     */
+    public static ITeiidServerVersion getTeiidServerVersion() {
+        if (teiidServerVersion == null) {
+            return TeiidServerVersion.DEFAULT_TEIID_8_SERVER;
+        }
+        
+        return teiidServerVersion;
+    }
+    
+    /**
+     * Set the version of the targeted teiid server
+     * 
+     * @param serverVersion
+     */
+    public static void setTeiidServerVersion(ITeiidServerVersion serverVersion) {
+        teiidServerVersion = serverVersion;
+    }
+    
+    /**
+     * Get the teiid data type manager service for the
+     * targetted teiid server. The targeted teiid server
+     * can be changed using {@link #setTeiidServerVersion(ITeiidServerVersion)}
+     *  
+     * @return
+     */
+    public static IDataTypeManagerService getTeiidDataTypeManagerService() {
+        try {
+            return TeiidRuntimeRegistry.getInstance().getDataTypeManagerService(getTeiidServerVersion());
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

@@ -7,7 +7,8 @@
  */
 package org.teiid.designer.modelgenerator.ui;
 
-import org.teiid.core.types.DataTypeManager;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 import org.teiid.designer.ui.common.PreferenceKeyAndDefaultValue;
 
 
@@ -44,7 +45,7 @@ public interface PluginConstants {
             public static final PreferenceKeyAndDefaultValue[] PREFERENCES = 
                     new PreferenceKeyAndDefaultValue[] {
                         new PreferenceKeyAndDefaultValue(RELATIONAL_COLUMN_TYPE,
-                                DataTypeManager.DefaultDataTypes.STRING),                                
+                                ModelerCore.getTeiidDataTypeManagerService().getDefaultDataType(DataTypeName.STRING)),                                
                         
                         new PreferenceKeyAndDefaultValue(CLASS_IGNORED_STEREOTYPES,
                                 ZERO_LENGTH_STRING),
@@ -65,7 +66,8 @@ public interface PluginConstants {
                                 ZERO_LENGTH_STRING),
                                 
                         new PreferenceKeyAndDefaultValue(KEY_COLUMN_TYPE,
-                                DataTypeManager.DefaultDataTypes.LONG),
+                                ModelerCore.getTeiidDataTypeManagerService().getDefaultDataType(DataTypeName.LONG)),
+                                
                                         
                         new PreferenceKeyAndDefaultValue(KEY_COLUMN_LENGTH,
                         		new Integer(1)),

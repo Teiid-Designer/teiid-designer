@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import javax.management.Query;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -35,7 +36,6 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.ModelBuildUtil;
 import org.teiid.designer.core.container.Container;
@@ -67,9 +67,10 @@ import org.teiid.designer.metamodels.xml.XmlSequence;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.util.TransformationMappingHelper;
 import org.teiid.designer.transformation.util.TransformationSqlHelper;
+import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 import org.teiid.designer.webservice.WebServicePlugin;
 import org.teiid.designer.webservice.procedure.XsdInstanceNode;
-import org.teiid.query.sql.lang.Query;
 
 /**
  * Build XSD models from a set of Relational Entities.
@@ -514,7 +515,9 @@ public class WebServiceBuilderHelper {
                 sbuffer.append(docStr);
                 sbuffer.append("."); //$NON-NLS-1$
                 sbuffer.append(inpName);
-                if (runtimeType != null && !runtimeType.equals(DataTypeManager.DefaultDataTypes.STRING)) {
+                
+                IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+                if (runtimeType != null && !runtimeType.equals(service.getDefaultDataType(DataTypeName.STRING))) {
                     sbuffer.append(" = convert("); //$NON-NLS-1$
                     sbuffer.append(WebServiceUtil.INPUT_VARIABLE_PREFIX);
                     sbuffer.append(inpName.toUpperCase());

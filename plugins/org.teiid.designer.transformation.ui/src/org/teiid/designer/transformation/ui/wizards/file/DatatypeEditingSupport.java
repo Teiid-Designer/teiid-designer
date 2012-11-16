@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
-
 import org.eclipse.jface.viewers.ColumnViewer;
-import org.teiid.core.types.DataTypeManager;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 
 
@@ -23,7 +23,8 @@ public class DatatypeEditingSupport extends ComboBoxEditingSupport {
      */
     public DatatypeEditingSupport( ColumnViewer viewer ) {
         super(viewer);
-		Set<String> unsortedDatatypes = DataTypeManager.getAllDataTypeNames();
+        IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+		Set<String> unsortedDatatypes = service.getAllDataTypeNames();
 		Collection<String> dTypes = new ArrayList<String>();
 		
 		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);

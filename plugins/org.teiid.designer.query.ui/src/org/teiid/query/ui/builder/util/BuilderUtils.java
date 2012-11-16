@@ -15,13 +15,9 @@ import java.util.Map;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.types.DataTypeManager;
-import org.teiid.core.types.DataTypeManager.DefaultDataTypes;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.symbol.Constant;
-import org.teiid.query.sql.symbol.Function;
-import org.teiid.query.sql.visitor.SQLStringVisitor;
 import org.teiid.query.ui.UiConstants;
 
 
@@ -195,7 +191,8 @@ public final class BuilderUtils implements UiConstants {
      */
     public static String getType( Constant theConstant ) {
         Class typeClass = theConstant.getType();
-        return DataTypeManager.getDataTypeName(typeClass);
+        IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+        return service.getDataTypeName(typeClass);
     }
 
     /**
@@ -204,7 +201,8 @@ public final class BuilderUtils implements UiConstants {
      * @return the data type or <code>null</code> if invalid type
      */
     public static Class getTypeClass( String theType ) {
-        return (isValidType(theType)) ? DataTypeManager.getDataTypeClass(theType) : null;
+        IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+        return (isValidType(theType)) ? service.getDataTypeClass(theType) : null;
     }
 
     public static String getValidChars( String theTextType ) {

@@ -689,7 +689,7 @@ public final class TeiidServerManager implements EventManager {
                         boolean previewServer = false;
 
                         // version attribute
-                        ITeiidServerVersion teiidServerVersion = new TeiidServerVersion(ITeiidServerVersion.DEFAULT_TEIID_8_SERVER);
+                        ITeiidServerVersion teiidServerVersion = TeiidServerVersion.DEFAULT_TEIID_8_SERVER;
                         Node versionNode = serverAttributeMap.getNamedItem(SERVER_VERSION);
                         if (versionNode != null)
                             teiidServerVersion = new TeiidServerVersion(versionNode.getNodeValue());
@@ -890,6 +890,8 @@ public final class TeiidServerManager implements EventManager {
 
         ITeiidServer oldDefaultServer = this.defaultServer;
         this.defaultServer = teiidServer;
+        
+        ModelerCore.setTeiidServerVersion(defaultServer.getServerVersion());
 
         if (notify) {
             notifyListeners(ExecutionConfigurationEvent.createSetDefaultServerEvent(oldDefaultServer, this.defaultServer));

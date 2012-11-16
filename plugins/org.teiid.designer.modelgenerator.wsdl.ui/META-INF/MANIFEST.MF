@@ -37,7 +37,8 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.103.0,4.0.0)",
  org.teiid.designer.transformation;bundle-version="[8.0.0,9.0.0)",
  org.teiid.designer.transformation.ui;bundle-version="[8.0.0,9.0.0)",
  org.teiid.designer.relational;bundle-version="[8.0.0,9.0.0)",
- org.teiid.designer.legacy;bundle-version="[8.0.0,9.0.0)"
+ org.teiid.designer.legacy;bundle-version="[8.0.0,9.0.0)",
+ org.teiid.designer.spi;bundle-version="8.0.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.teiid.designer.modelgenerator.wsdl.ui,
  org.teiid.designer.modelgenerator.wsdl.ui.util,
