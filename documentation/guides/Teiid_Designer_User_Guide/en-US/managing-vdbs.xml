@@ -47,8 +47,105 @@
 	
 	<section id="reuse-vdbs">
 		<title>Reusing VDBs</title>
-		<para>xxxxxxxxxxxxxxxx
+		<para>Teiid 8.1 introduced the ability to treat your deployed VDB as just another database where the 
+			database category is your VDB name and each visible model in your VDB is treated as a schema. 
+			This is accomplished via a new &lt;import-vdb&gt; element in the vdb.xml definition. 
+			(see <ulink url="https://docs.jboss.org/author/display/TEIID/VDB+Reuse">Teiid 8.2 VDB Reuse section</ulink>). 
+			By allowing VDB's to referenced other VDBs, users can create reusable database components and reduce 
+			the amount of modeling required to create complex transformations.</para>
+
+ 
+
+		<para>The sample vdb.xml file below highlights the &lt;import-vdb&gt; element and the corresponding 
+			import-vdb-reference within the view model's &lt;model&gt; element.
 		</para>
+		
+<synopsis>
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;vdb version="1" name="PartssupplierViewsVDB"&gt;
+    &lt;property value="false" name="preview"/&gt;
+    &lt;import-vdb import-data-policies="false" version="1" name="PartssupplierSourcesVDB"/&gt;
+    &lt;model visible="true" type="VIRTUAL" name="PartsViewModel" path="/PartssupplierProject/PartsViewModel.xmi"&gt;
+        &lt;property value="1623826484" name="checksum"/&gt;
+        &lt;property value="Relational" name="modelClass"/&gt;
+        &lt;property value="false" name="builtIn"/&gt;
+        &lt;property value="655076658.INDEX" name="indexName"/&gt;
+        &lt;property value="PartssupplierSourcesVDB" name="import-vdb-reference"/&gt;
+    &lt;/model&gt;
+&lt;/vdb&gt;
+</synopsis>
+
+		<para>Teiid Designer exposes this capability by allowing users to import metadata from deployed VDBs via 
+			the JDBC Import option. Through this import, relational VDB source models are created which 
+			structurally represent the Catalog (VDB), Schema (Model) and Tables in Virtual DataBase.
+		</para>
+
+		<para>When dealing with the these VDB source models there are some limitations or rules, namely:
+			<itemizedlist>
+				<listitem>
+					<para> VDB source models are read-only</para>
+				</listitem>
+				<listitem>
+					<para> VDB source model name is determined by the deployed model name (schema) from the VDB it 
+						was imported from</para>
+				</listitem>
+				<listitem>
+					<para> Model names have to be unique within a model project</para>
+					<itemizedlist>
+						<listitem>
+							<para> VDB source models have to be imported/created in a project different than the project 
+								used to create and deploy the Reuse VDB
+		    				</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+				<listitem>
+					<para> The JDBC Import Wizard will restrict your options to comply with these rules</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+ 
+
+		<para>To create a VDB source model:</para>
+			<itemizedlist>
+				<listitem>
+					<para><emphasis role="bold">Step 5 </emphasis> - Select the model builder labeled
+					<emphasis role="bold">Build XML documents from XML schema</emphasis> and 
+					click <emphasis role="bold">Next ></emphasis>.  The <emphasis role="bold">Select XML Schema</emphasis> dialog
+					will be displayed.</para>
+				</listitem>
+
+				<listitem>
+					<para><emphasis role="bold">Step 1 </emphasis> - Deploy your VDB
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Step 2 </emphasis> - Launch the JDBC Import Wizard via the 
+						"<emphasis role="bold">Import &gt; Teiid Designer &gt; JDBC Database &gt;&gt; Source Model</emphasis>" action
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Step 3 </emphasis> - On the first page of the wizard create/select 
+						a valid connection profile for your deployed VDB.
+						<itemizedlist>
+							<listitem>
+    							<para>The wizard will detect that the connection profile is a Teiid VDB connection 
+    								and section will be displayed on the wizard page titled Teiid VDB Source Options
+    							</para>
+    						</listitem>
+    						<listitem>
+    						    <para>If Import as VDB source model is NOT checked, then the wizard will continue importing as a normal JDBC import
+    							</para>
+    						</listitem>
+    					</itemizedlist>
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Step 4 </emphasis> - XXX
+					</para>
+				</listitem>
+			</itemizedlist>
+		
 	</section>
 	
 </chapter>

@@ -635,7 +635,7 @@
 						<para> META-INF</para>
 						<itemizedlist>
 							<listitem>
-								<para> contains "vdb.xml" definition file</para>
+								<para> contains "<emphasis role="bold">vdb.xml</emphasis>" definition file</para>
 							</listitem>
 						</itemizedlist>
 					</listitem>
@@ -676,7 +676,7 @@
 						<para> import VDB references</para>
 					</listitem>
 				</itemizedlist>
-				<para>The vdb.xml file example below highlights the basic model information. Note the VIRTUAL and 
+				<para>The <emphasis role="bold">vdb.xml</emphasis> file example below highlights the basic model information. Note the VIRTUAL and 
 					PHYSICAL &lt;model&gt; elements containing property references to the INDEX files as well as the 
 					&lt;source&gt; element info for the PHYSICAL (aka source) model EU_CustomerAccounts.xmi.</para>
 				<synopsis>
