@@ -2390,7 +2390,21 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
          */
         @Override
         protected String[] refreshItems( Object element ) {
-            return SourceHandlerExtensionManager.getVdbConnectionFinder().getDataSourceNames();
+            List<String> dsNameList = new ArrayList<String>();
+            
+            // get the available datasource names from the server
+            String[] dsNames = SourceHandlerExtensionManager.getVdbConnectionFinder().getDataSourceNames();
+
+
+            // Copy dsNames into List for sorting
+            if (dsNames != null) {
+                dsNameList.addAll(Arrays.asList(dsNames));
+            }
+
+            // Sort names in alpha order
+            Collections.sort(dsNameList);
+            
+            return dsNameList.toArray(new String[dsNameList.size()]);
         }
 
         /**
