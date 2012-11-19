@@ -41,7 +41,8 @@
 	
 	<section id="test-vdb">
 		<title>Test a VDB</title>
-		<para>xxxxxxxxxxxxxxxx
+		<para> For details on how to test your VDB, see 
+			   <xref linkend="test-vdb-section" /> section
 		</para>
 	</section>
 	
@@ -107,45 +108,99 @@
  
 
 		<para>To create a VDB source model:</para>
-			<itemizedlist>
-				<listitem>
-					<para><emphasis role="bold">Step 5 </emphasis> - Select the model builder labeled
-					<emphasis role="bold">Build XML documents from XML schema</emphasis> and 
-					click <emphasis role="bold">Next ></emphasis>.  The <emphasis role="bold">Select XML Schema</emphasis> dialog
-					will be displayed.</para>
-				</listitem>
+		<itemizedlist>
+			<listitem>
+				<para><emphasis role="bold">Step 5 </emphasis> - Select the model builder labeled
+				<emphasis role="bold">Build XML documents from XML schema</emphasis> and 
+				click <emphasis role="bold">Next ></emphasis>.  The <emphasis role="bold">Select XML Schema</emphasis> dialog
+				will be displayed.</para>
+			</listitem>
 
-				<listitem>
-					<para><emphasis role="bold">Step 1 </emphasis> - Deploy your VDB
-					</para>
-				</listitem>
-				<listitem>
-					<para><emphasis role="bold">Step 2 </emphasis> - Launch the JDBC Import Wizard via the 
-						"<emphasis role="bold">Import &gt; Teiid Designer &gt; JDBC Database &gt;&gt; Source Model</emphasis>" action
-					</para>
-				</listitem>
-				<listitem>
-					<para><emphasis role="bold">Step 3 </emphasis> - On the first page of the wizard create/select 
-						a valid connection profile for your deployed VDB.
-						<itemizedlist>
-							<listitem>
-    							<para>The wizard will detect that the connection profile is a Teiid VDB connection 
-    								and section will be displayed on the wizard page titled Teiid VDB Source Options
-    							</para>
-    						</listitem>
-    						<listitem>
-    						    <para>If Import as VDB source model is NOT checked, then the wizard will continue importing as a normal JDBC import
-    							</para>
-    						</listitem>
-    					</itemizedlist>
-					</para>
-				</listitem>
-				<listitem>
-					<para><emphasis role="bold">Step 4 </emphasis> - XXX
-					</para>
-				</listitem>
-			</itemizedlist>
-		
+			<listitem>
+				<para><emphasis role="bold">Step 1 </emphasis> - Deploy your VDB
+				</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Step 2 </emphasis> - Launch the JDBC Import Wizard via the 
+					"<emphasis role="bold">Import &gt; Teiid Designer &gt; JDBC Database &gt;&gt; Source Model</emphasis>" action
+				</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Step 3 </emphasis> - On the first page of the wizard create/select 
+					a valid connection profile for your deployed VDB.
+					<itemizedlist>
+						<listitem>
+   							<para>The wizard will detect that the connection profile is a Teiid VDB connection 
+   								and a section will be displayed on the wizard page titled 
+   								<emphasis role="bold">Teiid VDB Source Options</emphasis>
+   							</para>
+   						</listitem>
+   						<listitem>
+   						    <para>If <emphasis role="bold">Import as VDB source model</emphasis> is NOT checked, 
+   						    	then the wizard will continue importing as a normal JDBC import
+   							</para>
+   						</listitem>
+   					</itemizedlist>
+				</para>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/jdbc-import-page-1-vdb-source.png"/>
+					</imageobject>
+				</mediaobject>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Step 4 </emphasis> - On the 3rd page, titled 
+					<emphasis role="bold">Select Database Objects</emphasis>, select a single schema to use to 
+					create as VDB source model.
+					<itemizedlist>
+				    	<listitem>
+   						    <para>Note the schema names are the names of the visible models in your deployed VDB.
+   							</para>
+   						</listitem>
+   					</itemizedlist>
+				</para>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/jdbc-import-page-3-vdb-source-error.png"/>
+					</imageobject>
+				</mediaobject>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Step 5 </emphasis> - The final page shows the name of the resulting 
+					VDB source model and the name is NOT editable.
+					<itemizedlist>
+						<listitem>
+   							<para>All other options are disabled
+   							</para>
+   						</listitem>
+   						<listitem>
+   						    <para>The target <emphasis role="bold">Into Folder</emphasis> must NOT contain a model 
+   						    	with the same name or the <emphasis role="bold">Finish</emphasis> button will be disabled
+   							</para>
+   						</listitem>
+   					</itemizedlist>
+				</para>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/jdbc-import-page-4-vdb-source.png"/>
+					</imageobject>
+				</mediaobject>
+			</listitem>
+		</itemizedlist>
+		<para>You can use your VDB source model like any other source model in your project. 
+			VDB source model tables can be used in your transformation queries and the view models 
+			will contain model imports to your VDB source models. However, when your view model is added to a 
+			VDB, any referenced VDB source models do NOT get added to your VDB. 
+			Instead, an &lt;import-vdb&gt; element (described above) reference is added in it's place.
+		</para>
+		<para>If VDB imports exist for a VDB, the <emphasis role="bold">Show Import VDBs</emphasis> button will be 
+			enabled and allow viewing the names of the imported VDBs as shown below.
+		</para>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/screencaps/show-import-vdbs-dialog.png"/>
+			</imageobject>
+		</mediaobject>
 	</section>
 	
 </chapter>
