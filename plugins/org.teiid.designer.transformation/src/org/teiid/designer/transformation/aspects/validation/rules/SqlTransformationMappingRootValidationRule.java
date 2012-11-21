@@ -71,6 +71,9 @@ import org.teiid.designer.transformation.validation.SqlTransformationResult;
 import org.teiid.designer.transformation.validation.TransformationValidationResult;
 import org.teiid.designer.transformation.validation.TransformationValidator;
 import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid.designer.udf.IFunctionLibrary;
+import org.teiid.designer.udf.IFunctionLibrary.FunctionName;
+import org.teiid.designer.udf.UdfManager;
 
 
 /**
@@ -806,6 +809,8 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             // A join predicate must be of the form "GroupA.ElementA = GroupB.ElementB".
             // collection groups that are joined
             List allJoins = new ArrayList();
+            IFunctionLibrary functionLibrary = UdfManager.getInstance().getFunctionLibrary();
+            
             for (final Iterator predicateIter = predicates.iterator(); predicateIter.hasNext();) {
                 Object predicate = predicateIter.next();
                 if (predicate instanceof CompareCriteria) {
@@ -839,7 +844,8 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                             String descriptorName = leftFunction.getFunctionDescriptor().getName();
                             if (leftFunction.isImplicit()
                                 && descriptorName != null
-                                && (descriptorName.equals(FunctionLibrary.CONVERT) || descriptorName.equals(FunctionLibrary.CAST))) {
+                                && (descriptorName.equals(functionLibrary.getFunctionName(FunctionName.CONVERT)) || 
+                                                          descriptorName.equals(functionLibrary.getFunctionName(FunctionName.CAST))) {
 
                                 leftExpression = leftFunction.getArg(0);
                             }
@@ -849,7 +855,8 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                             String descriptorName = rightFunction.getFunctionDescriptor().getName();
                             if (rightFunction.isImplicit()
                                 && descriptorName != null
-                                && (descriptorName.equals(FunctionLibrary.CONVERT) || descriptorName.equals(FunctionLibrary.CAST))) {
+                                && (descriptorName.equals(functionLibrary.getFunctionName(FunctionName.CONVERT)) || 
+                                                          descriptorName.equals(functionLibrary.getFunctionName(FunctionName.CAST))) {
 
                                 rightExpression = rightFunction.getArg(0);
                             }

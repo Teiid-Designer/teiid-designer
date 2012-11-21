@@ -11,10 +11,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.core.resources.IFile;
@@ -93,6 +95,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.core.workspace.ModelWorkspaceManagerSaveParticipant;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
+import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.sql.IQueryService;
@@ -339,6 +342,8 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     private static boolean IGNORE_VALIDATION_PREFERNCES_ON_BUILD = false;
 
     private static ITeiidServerVersion teiidServerVersion = null;
+
+    private static Set<ITeiidServerVersionListener> teiidServerVersionListeners;
 
     /**
      * Add all model resource sets known through the EXTERNAL_RESOURCE_SET extension to the specified container
@@ -2084,12 +2089,45 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     }
     
     /**
+     * Add a listener to be notified in the event the default server
+     * version is changed
+     * 
+     * @param listener
+     */
+    public static void addTeiidServerVersionListener(ITeiidServerVersionListener listener) {
+        if (teiidServerVersionListeners == null)
+            teiidServerVersionListeners = new HashSet<ITeiidServerVersionListener>();
+        
+        teiidServerVersionListeners.add(listener);
+    }
+    
+    /**
+     * Remove a listener no longer interested in listening
+     * to changes is server version
+     * 
+     * @param listener
+     */
+    public static void removeTeiidServerVersionListener(ITeiidServerVersionListener listener) {
+        if (teiidServerVersionListeners == null)
+            return;
+        
+        teiidServerVersionListeners.remove(listener);
+    }
+    
+    /**
      * Set the version of the targeted teiid server
      * 
      * @param serverVersion
      */
     public static void setTeiidServerVersion(ITeiidServerVersion serverVersion) {
         teiidServerVersion = serverVersion;
+        
+        if (teiidServerVersionListeners == null)
+            return;
+        
+        for (ITeiidServerVersionListener listener : teiidServerVersionListeners) {
+            listener.versionChanged(serverVersion);
+        }
     }
     
     /**

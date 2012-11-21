@@ -18,6 +18,8 @@ import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.sql.IQueryService;
 import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid.designer.udf.IFunctionForm;
+import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.designer.udf.UdfManager;
 import org.teiid.query.ui.UiConstants;
 
@@ -87,15 +89,10 @@ public class SqlSyntax {
 		Iterator iter;
 		try {
 			// FUNCTION NAMES List
-			FunctionLibrary functionLib = UdfManager.INSTANCE.getSystemFunctionLibrary();
-			List allCategories = functionLib.getFunctionCategories();
-			iter = allCategories.iterator();
-			while (iter.hasNext()) {
-			    String catName = (String)iter.next();
-			    List catFunctions = functionLib.getFunctionForms(catName);
-			    Iterator funcIter = catFunctions.iterator();
-			    while (funcIter.hasNext()) {
-			        FunctionForm fForm = (FunctionForm)funcIter.next();
+			IFunctionLibrary functionLib = UdfManager.getInstance().getSystemFunctionLibrary();
+			List<String> allCategories = functionLib.getFunctionCategories();
+			for (String category : allCategories) {
+			    for (IFunctionForm fForm : functionLib.getFunctionForms(category)) {
 			        String fName = fForm.getName();
 			        allFunctionNames.add(fName);
 			        String start = fName.substring(0, 1);

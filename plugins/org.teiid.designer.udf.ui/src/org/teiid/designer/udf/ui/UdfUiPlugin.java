@@ -9,7 +9,6 @@ package org.teiid.designer.udf.ui;
 
 import java.util.EventObject;
 import java.util.ResourceBundle;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -152,7 +151,7 @@ public final class UdfUiPlugin extends AbstractUiPlugin implements EventObjectLi
             @Override
 			public void run() {
             	try {
-            		UdfManager.INSTANCE.registerFunctionModel(modelResource, isDelete);
+            		UdfManager.getInstance().registerFunctionModel(modelResource, isDelete);
             	} catch (Exception e) {
                     UdfUiPlugin.UTIL.log(e);
                 }
@@ -165,7 +164,7 @@ public final class UdfUiPlugin extends AbstractUiPlugin implements EventObjectLi
             @Override
 			public void run() {
             	try {
-            		UdfManager.INSTANCE.notifySourceModelChanged(modelResource, isDelete);
+            		UdfManager.getInstance().notifySourceModelChanged(modelResource, isDelete);
             	} catch (Exception e) {
                     UdfUiPlugin.UTIL.log(e);
                 }

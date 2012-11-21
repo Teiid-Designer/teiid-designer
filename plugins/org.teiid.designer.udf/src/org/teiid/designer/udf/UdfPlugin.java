@@ -57,8 +57,6 @@ public final class UdfPlugin extends Plugin {
         super.start(context);
         plugin = this;
         ((PluginUtilImpl)UTIL).initializePlatformLogger(this);
-        // Initialize the use of user-defined functions
-        UdfManager.INSTANCE.initialize();
     }
 
     /**
@@ -69,6 +67,6 @@ public final class UdfPlugin extends Plugin {
     @Override
     public void stop( BundleContext context ) throws Exception {
         super.stop(context);
-        UdfManager.INSTANCE.shutdown();
+        UdfManager.getInstance().shutdown();
     }
 }

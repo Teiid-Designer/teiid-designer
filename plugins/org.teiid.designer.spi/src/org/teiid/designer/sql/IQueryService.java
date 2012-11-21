@@ -7,7 +7,10 @@
 */
 package org.teiid.designer.sql;
 
+import java.util.List;
 import java.util.Set;
+import org.teiid.designer.udf.FunctionMethodDescriptor;
+import org.teiid.designer.udf.IFunctionLibrary;
 
 /**
  *
@@ -55,4 +58,23 @@ public interface IQueryService {
      * @return type name
      */
     String getJDBCSQLTypeName(int jdbcType);
+
+    /**
+     * Create a new default function library
+     * 
+     * @return instance of {@link IFunctionLibrary}
+     */
+    IFunctionLibrary createFunctionLibrary();
+
+    /**
+     * Create a new function library with custom functions
+     * derived from the given list of descriptors
+     * 
+     * @param functionMethodDescriptors
+     * 
+     * @return instance of {@link IFunctionLibrary}
+     */
+    IFunctionLibrary createFunctionLibrary(List<FunctionMethodDescriptor> functionMethodDescriptors);
+    
+    
 }

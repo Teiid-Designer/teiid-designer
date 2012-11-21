@@ -9,11 +9,10 @@ package org.teiid.designer.udf;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -46,14 +45,9 @@ import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.relational.util.PushdownFunctionData;
-import org.teiid.metadata.FunctionMethod;
-import org.teiid.metadata.FunctionMethod.Determinism;
-import org.teiid.metadata.FunctionParameter;
-import org.teiid.query.function.FunctionDescriptor;
-import org.teiid.query.function.FunctionLibrary;
-import org.teiid.query.function.FunctionTree;
-import org.teiid.query.function.SystemFunctionManager;
-import org.teiid.query.function.UDFSource;
+import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.sql.IQueryService;
 
 
 /**
@@ -61,15 +55,13 @@ import org.teiid.query.function.UDFSource;
  */
 public final class UdfManager implements IResourceChangeListener {
     
-    public static final UdfManager INSTANCE = new UdfManager();
+    private static UdfManager INSTANCE;
     
-    public static final SystemFunctionManager SYSTEM_FUNCTION_MANAGER = new SystemFunctionManager();
+    private ModelObjectAnnotationHelper ANNOTATION_HELPER = new ModelObjectAnnotationHelper();
     
-    private static final ModelObjectAnnotationHelper ANNOTATION_HELPER = new ModelObjectAnnotationHelper();
+    private IFunctionLibrary systemFunctionLibrary;
     
-    private FunctionLibrary systemFunctionLibrary;
-    
-    private FunctionLibrary cachedFunctionLibrary;
+    private IFunctionLibrary cachedFunctionLibrary;
    
     /**
      * A set of function models.
@@ -82,6 +74,33 @@ public final class UdfManager implements IResourceChangeListener {
     
     private boolean changed = false;
 
+    private ITeiidServerVersionListener teiidServerVersionListener = new ITeiidServerVersionListener() {
+        
+        @Override
+        public void versionChanged(ITeiidServerVersion version) {
+            systemFunctionLibrary = null;
+            cachedFunctionLibrary = null;
+        }
+    };
+
+    /**
+     * Get the singleton instance of the manager
+     * 
+     * @return single instance of {@link UdfManager}
+     */
+    public static UdfManager getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new UdfManager();
+            try {
+                INSTANCE.initialize();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        
+        return INSTANCE;
+    }
+    
     /**
      * Don't allow public construction.
      * 
@@ -104,6 +123,9 @@ public final class UdfManager implements IResourceChangeListener {
 
         // register to receive resource events so that we can notify listeners when a function model changes
         ModelerCore.getWorkspace().addResourceChangeListener(this);
+        
+        // register as a listener for when the default server version is modified
+        ModelerCore.addTeiidServerVersionListener(teiidServerVersionListener);
         
         Collection<IResource> allResources = WorkspaceResourceFinderUtil.getAllWorkspaceResources();
         try {
@@ -300,114 +322,94 @@ public final class UdfManager implements IResourceChangeListener {
      */
     public void shutdown() {
         ModelerCore.getWorkspace().removeResourceChangeListener(this);
+        ModelerCore.removeTeiidServerVersionListener(teiidServerVersionListener);
     }
 
-    public FunctionLibrary getSystemFunctionLibrary() {
+    /**
+     * Get the default system function library
+     * 
+     * @return implementation of {@link IFunctionLibrary}
+     */
+    public IFunctionLibrary getSystemFunctionLibrary() {
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        
     	if( this.systemFunctionLibrary == null ) {
-    		this.systemFunctionLibrary = new FunctionLibrary(SYSTEM_FUNCTION_MANAGER.getSystemFunctions(), new FunctionTree[0]);
+    		this.systemFunctionLibrary = queryService.createFunctionLibrary(); 
     	}
+    	
     	return this.systemFunctionLibrary;
     }
     
-    public synchronized FunctionLibrary getFunctionLibrary() {
+    public synchronized IFunctionLibrary getFunctionLibrary() {
     	//System.out.println("UdfManger.getFunctionLibrary()");
     	if( !changed && this.cachedFunctionLibrary != null ) {
     		return this.cachedFunctionLibrary;
     	}
-    	// Dynamically return a function library for each call rather than cache it here.
-        Collection<FunctionTree> functionTrees = new ArrayList<FunctionTree>();
-        
+    	
+    	List<FunctionMethodDescriptor> functionMethodDescriptors = new ArrayList<FunctionMethodDescriptor>();
+    	
         for( ModelResource functionModelResource : functionModels ) {
         	ScalarFunction[] functions = getScalarFunctions(functionModelResource);
-        	if( functions.length > 0 ) {
-        		IMarker[] markers = getMarkers(functionModelResource);
+        	if( functions.length == 0 )
+        	    continue;
+        	    
+        	IMarker[] markers = getMarkers(functionModelResource);
         		
-        		String schema = FileUtils.getFilenameWithoutExtension(functionModelResource.getItemName());
-        		FunctionTree tree = new FunctionTree(schema, new UDFSource(Collections.EMPTY_LIST), false);
+        	String schema = FileUtils.getFilenameWithoutExtension(functionModelResource.getItemName());
         		
-        		for( ScalarFunction function : functions ) {
-        			// Function's must have a return parameter and a Scalar function may not yet have one after
-        			// it's initially created (intermediate state)
-        			// Also the Function AND it's return parameter (if non-null) need to be error free
-        			if( !isFunctionObjectErrorFree(function.getReturnParameter(), markers, functionModelResource) ||
-        				function.getReturnParameter() == null || 
-        				!isFunctionObjectErrorFree(function.getReturnParameter(), markers, functionModelResource)) {
-        				continue;
-        			}
-        			String description = null;
+        	for( ScalarFunction function : functions ) {
+        	    // Function's must have a return parameter and a Scalar function may not yet have one after
+        	    // it's initially created (intermediate state)
+        	    // Also the Function AND it's return parameter (if non-null) need to be error free
+        	    if( !isFunctionObjectErrorFree(function.getReturnParameter(), markers, functionModelResource) ||
+        	    function.getReturnParameter() == null || 
+        	    !isFunctionObjectErrorFree(function.getReturnParameter(), markers, functionModelResource)) {
+        	        continue;
+        	    }
+        	    String description = null;
         			
-        			try {
-						description = ModelerCore.getModelEditor().getDescription(function);
-					} catch (ModelerCoreException ex) {
-						UdfPlugin.UTIL.log(ex);
-					}
+        	    try {
+        	        description = ModelerCore.getModelEditor().getDescription(function);
+        	    } catch (ModelerCoreException ex) {
+        	        UdfPlugin.UTIL.log(ex);
+        	    }
         			
-					boolean functionPamameterHasError = false;
+        	    boolean functionPamameterHasError = false;
 					
-        			Collection<FunctionParameter> fParams = new ArrayList<FunctionParameter>();
+        	    Collection<FunctionParameterDescriptor> fParams = new ArrayList<FunctionParameterDescriptor>();
         			
-        			for( Object inputParam : function.getInputParameters() ) {
-        				if( inputParam instanceof org.teiid.designer.metamodels.function.FunctionParameter) {
-        					org.teiid.designer.metamodels.function.FunctionParameter param = (org.teiid.designer.metamodels.function.FunctionParameter)inputParam;
-        					fParams.add(new FunctionParameter(param.getName(), param.getType()));
-        					// If any function parameter has an error don't add this
-        					if( !functionPamameterHasError && !isFunctionObjectErrorFree(param, markers, functionModelResource)){
-        						functionPamameterHasError = true;
-        					}
-        				}
-        			}
+        	    for( Object inputParam : function.getInputParameters() ) {
+        	        if( inputParam instanceof org.teiid.designer.metamodels.function.FunctionParameter) {
+        	            org.teiid.designer.metamodels.function.FunctionParameter param = (org.teiid.designer.metamodels.function.FunctionParameter)inputParam;
+        	            fParams.add(new FunctionParameterDescriptor(param.getName(), param.getType()));
+        	            // If any function parameter has an error don't add this
+        	            if( !functionPamameterHasError && !isFunctionObjectErrorFree(param, markers, functionModelResource)){
+        	                functionPamameterHasError = true;
+        	            }
+        	        }
+        	    }
         			
-        			if( functionPamameterHasError ) {
-        				continue;
-        			}
+        	    if( functionPamameterHasError ) {
+        	        continue;
+        	    }
         			
-        			String returnParamName = ModelerCore.getModelEditor().getName(function.getReturnParameter());
-        			FunctionParameter outputParam = new FunctionParameter(returnParamName, function.getReturnParameter().getType()); 
+        	    String returnParamName = ModelerCore.getModelEditor().getName(function.getReturnParameter());
+        	    FunctionParameterDescriptor outputParam = new FunctionParameterDescriptor(returnParamName, function.getReturnParameter().getType()); 
         			
-        			/**
-        			 * 
-        			     public FunctionMethod(String name,
-                          String description,
-                          String category,
-                          PushDown pushdown,
-                          String invocationClass,
-                          String invocationMethod,
-                          List<FunctionParameter> inputParams,
-                          FunctionParameter outputParam,
-                          boolean nullOnNull,
-                          Determinism deterministic)
-                          
-                          public FunctionMethod(
-                          	String name, 
-                          	String description, 
-                          	String category, 
-        					String invocationClass, 
-        					String invocationMethod, 
-        					FunctionParameter[] inputParams, 
-        					FunctionParameter outputParam)
-        			 */
-        			
-        			FunctionMethod fMethod = 
-        				new FunctionMethod(
-        						function.getName(), 
-        						description, 
-        						function.getCategory(), 
-        						function.getInvocationClass(), 
-        						function.getInvocationMethod(),
-        						fParams.toArray(new FunctionParameter[0]),
-        						outputParam
-        						);
-        			fMethod.setPushDown(function.getPushDown().getLiteral());
-        			if( function.isDeterministic() ) {
-        				fMethod.setDeterminism(Determinism.DETERMINISTIC);
-        			} else {
-        				fMethod.setDeterminism(Determinism.NONDETERMINISTIC);
-        			}
-        			
-        			FunctionDescriptor fd = tree.addFunction(schema, null, fMethod, false);
-        			fd.setMetadataID(function);
-        		}
-        		functionTrees.add(tree);
+        	    FunctionMethodDescriptor fMethodDescriptor = new FunctionMethodDescriptor(function,
+        	                                                                                    function.getName(), 
+        	                                                                                    description, 
+        	                                                                                    function.getCategory(), 
+        	                                                                                    function.getInvocationClass(), 
+        	                                                                                    function.getInvocationMethod(),
+        	                                                                                    fParams.toArray(new FunctionParameterDescriptor[0]),
+        	                                                                                    outputParam,
+        	                                                                                    schema);
+        	    
+        	    fMethodDescriptor.setPushDown(function.getPushDown().getLiteral());
+        	    fMethodDescriptor.setDeterministic(function.isDeterministic());
+        	   
+        	    functionMethodDescriptors.add(fMethodDescriptor);
         	}
         }
         
@@ -418,7 +420,6 @@ public final class UdfManager implements IResourceChangeListener {
     		IMarker[] markers = getMarkers(sourceModel);
     		
     		String schema = FileUtils.getFilenameWithoutExtension(sourceModel.getItemName());
-    		FunctionTree tree = new FunctionTree(schema, new UDFSource(Collections.EMPTY_LIST), false);
     		
     		for( Procedure procedure : getPushdownFunctions(sourceModel) ) {
     			// Also the Function's input parameters AND it's return parameter (if non-null) need to be error free
@@ -440,11 +441,11 @@ public final class UdfManager implements IResourceChangeListener {
     			
 				boolean functionPamameterHasError = false;
 				
-    			Collection<FunctionParameter> fParams = new ArrayList<FunctionParameter>();
+    			Collection<FunctionParameterDescriptor> fParams = new ArrayList<FunctionParameterDescriptor>();
     			
     			for( ProcedureParameter inputParam : wrappedProcedure.getInputParameters() ) {
     				String dTypeName = ModelerCore.getModelEditor().getName(inputParam.getType());
-					fParams.add(new FunctionParameter(inputParam.getName(), dTypeName));
+					fParams.add(new FunctionParameterDescriptor(inputParam.getName(), dTypeName));
 					// If any function parameter has an error don't add this
 					if( !functionPamameterHasError && !isFunctionObjectErrorFree(inputParam, markers, sourceModel)){
 						functionPamameterHasError = true;
@@ -457,7 +458,7 @@ public final class UdfManager implements IResourceChangeListener {
     			
     			String dTypeName = ModelerCore.getModelEditor().getName(wrappedProcedure.getReturnParameter().getType());
     			String returnParamName = ModelerCore.getModelEditor().getName(wrappedProcedure.getReturnParameter());
-    			FunctionParameter outputParam = new FunctionParameter(returnParamName, dTypeName); 
+    			FunctionParameterDescriptor outputParam = new FunctionParameterDescriptor(returnParamName, dTypeName); 
     			
     			// Set the category name as the Model Name
     			String category = sourceModel.getItemName();
@@ -465,30 +466,27 @@ public final class UdfManager implements IResourceChangeListener {
     				category = category.replaceAll(".xmi", StringUtilities.EMPTY_STRING); //$NON-NLS-1$
     			}
     			
-    			FunctionMethod fMethod = 
-    				new FunctionMethod(
-    						wrappedProcedure.getName(), 
-    						description, 
-    						category, 
-    						null, 
-    						null,
-    						fParams.toArray(new FunctionParameter[0]),
-    						outputParam
-    						);
-    			fMethod.setPushDown(Boolean.toString(true));
-    			if( wrappedProcedure.isDeterministic() ) {
-    				fMethod.setDeterminism(Determinism.DETERMINISTIC);
-    			} else {
-    				fMethod.setDeterminism(Determinism.NONDETERMINISTIC);
-    			}
+    			FunctionMethodDescriptor fMethodDescriptor = new FunctionMethodDescriptor(procedure,
+    			                                                                            wrappedProcedure.getName(), 
+    			                                                                            description, 
+    			                                                                            category, 
+    			                                                                            null, 
+    			                                                                            null,
+    			                                                                            fParams.toArray(new FunctionParameterDescriptor[0]),
+    			                                                                            outputParam,
+    			                                                                            schema);
     			
-    			FunctionDescriptor fd = tree.addFunction(schema, null, fMethod, false);
-    			fd.setMetadataID(procedure);
+    			fMethodDescriptor.setPushDown(Boolean.toString(true));
+    			fMethodDescriptor.setDeterministic(wrappedProcedure.isDeterministic());
+    			
+    			functionMethodDescriptors.add(fMethodDescriptor);
     		}
-    		functionTrees.add(tree);
         }
-        //System.out.println("UdfManager.getFunctionLibrary() CREATED NEW FUNCTION LIBRARY");
-        this.cachedFunctionLibrary = new FunctionLibrary(SYSTEM_FUNCTION_MANAGER.getSystemFunctions(), functionTrees.toArray(new FunctionTree[functionTrees.size()]));
+        
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        
+        this.cachedFunctionLibrary = queryService.createFunctionLibrary(functionMethodDescriptors);
+
         this.changed = false;
         return this.cachedFunctionLibrary;
     }

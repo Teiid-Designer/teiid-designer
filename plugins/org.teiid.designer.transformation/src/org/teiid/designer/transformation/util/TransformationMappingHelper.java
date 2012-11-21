@@ -44,6 +44,9 @@ import org.teiid.designer.transformation.metadata.TransformationMetadataFactory;
 import org.teiid.designer.transformation.validation.TransformationValidator;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
+import org.teiid.designer.udf.IFunctionLibrary;
+import org.teiid.designer.udf.IFunctionLibrary.FunctionName;
+import org.teiid.designer.udf.UdfManager;
 
 /**
  * TransformationMappingHelper This class is responsible for handling mapping changes and source / target changes, in response to
@@ -517,7 +520,9 @@ public class TransformationMappingHelper implements ISQLConstants {
         	if (fd == null) {
         		continue;
         	}
-            if (fd.getName().equalsIgnoreCase(FunctionLibrary.LOOKUP)) {
+        	
+        	IFunctionLibrary functionLibrary = UdfManager.getInstance().getFunctionLibrary();
+            if (fd.getName().equalsIgnoreCase(functionLibrary.getFunctionName(FunctionName.LOOKUP))) {
                 Expression[] args = function.getArgs();
                 // First arg of the lookup is the group
                 if (args[0] instanceof Constant) {

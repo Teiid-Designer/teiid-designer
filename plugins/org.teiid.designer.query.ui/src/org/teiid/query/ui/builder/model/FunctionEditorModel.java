@@ -10,17 +10,11 @@ package org.teiid.query.ui.builder.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.udf.IFunctionForm;
+import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.designer.udf.UdfManager;
-
-import org.teiid.query.function.FunctionForm;
-import org.teiid.query.function.FunctionLibrary;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.symbol.Constant;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.ui.builder.util.BuilderUtils;
 
 /**
@@ -52,14 +46,14 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
 
     private String category;
     private String[] functions; // collection of function names valid for current category
-    private FunctionForm[] functionForms;
+    private IFunctionForm[] functionForms;
 
     private static String defaultCategory;
 
     /** The function library. All information about functions is obtained from here. */
-    private FunctionLibrary funcLib;
+    private IFunctionLibrary funcLib;
 
-    private FunctionForm selectedFunctionForm;
+    private IFunctionForm selectedFunctionForm;
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS
@@ -85,8 +79,8 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
         super.clear();
     }
 
-    private FunctionForm findFunctionForm( String theFunctionName ) {
-        FunctionForm result = null;
+    private IFunctionForm findFunctionForm( String theFunctionName ) {
+        IFunctionForm result = null;
 
         if (functionForms != null) {
             for (int i = 0; i < functionForms.length; i++) {
@@ -104,7 +98,7 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
         // not sure if users can dynamically add categories.
         // make this construct categories each time this method is called
         categories = null;
-        funcLib = UdfManager.INSTANCE.getFunctionLibrary(); //new FunctionLibrary(SystemFunctionManager.getSystemFunctions(),
+        funcLib = UdfManager.getInstance().getFunctionLibrary(); //new FunctionLibrary(SystemFunctionManager.getSystemFunctions(),
                                       //new FunctionTree(new UDFSource(Collections.EMPTY_LIST)));
         List list = funcLib.getFunctionCategories();
 
@@ -256,15 +250,15 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
 
                 if ((forms != null) && !forms.isEmpty()) {
                     int size = forms.size();
-                    functionForms = new FunctionForm[size];
+                    functionForms = new IFunctionForm[size];
                     functions = new String[size];
 
                     for (int i = 0; i < size; i++) {
-                        functionForms[i] = (FunctionForm)forms.get(i);
+                        functionForms[i] = (IFunctionForm) forms.get(i);
                         functions[i] = functionForms[i].getDisplayString();
                     }
                 } else {
-                    functionForms = new FunctionForm[1];
+                    functionForms = new IFunctionForm[1];
                     functions = new String[1];
                     functions[0] = NONE;
                 }
@@ -280,7 +274,7 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
             clear();
         } else {
             Expression[] newArgValues = theFunction.getArgs();
-            FunctionForm functionForm = funcLib.findFunctionForm(theFunction.getName(), newArgValues.length);
+            IFunctionForm functionForm = funcLib.findFunctionForm(theFunction.getName(), newArgValues.length);
 
             if( functionForm != null ) {
             	setCategory(functionForm.getCategory());
@@ -309,7 +303,7 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
     }
 
     public void setFunctionName( String theName ) {
-        FunctionForm functionForm = findFunctionForm(theName);
+        IFunctionForm functionForm = findFunctionForm(theName);
         CoreArgCheck.isNotNull(functionForm);
 
         if ((selectedFunctionForm == null) || !selectedFunctionForm.equals(functionForm)) {

@@ -22,7 +22,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
 import org.teiid.core.designer.id.ObjectID;
@@ -79,8 +78,8 @@ import org.teiid.designer.metamodels.core.Annotation;
 import org.teiid.designer.metamodels.core.ModelImport;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.TransformationHelper;
+import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.designer.udf.UdfManager;
-import org.teiid.query.function.FunctionLibrary;
 
 /**
  * Metadata implementation used by model workspace to resolve queries.
@@ -902,7 +901,7 @@ public class ModelerMetadata extends TransformationMetadata {
     }
     
     @Override
-    public FunctionLibrary getFunctionLibrary() {
-        return UdfManager.INSTANCE.getFunctionLibrary();
+    public IFunctionLibrary getFunctionLibrary() {
+        return UdfManager.getInstance().getFunctionLibrary();
     }
 }
