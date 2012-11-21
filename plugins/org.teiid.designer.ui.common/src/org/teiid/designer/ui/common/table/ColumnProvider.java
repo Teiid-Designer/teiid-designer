@@ -8,11 +8,9 @@
 package org.teiid.designer.ui.common.table;
 
 import java.util.Comparator;
-
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.teiid.metadata.Column;
 
 /**
  * @param <T>
