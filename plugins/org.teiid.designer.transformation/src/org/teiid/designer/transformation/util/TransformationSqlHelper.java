@@ -41,6 +41,7 @@ import org.teiid.designer.metadata.runtime.ProcedureParameterRecord;
 import org.teiid.designer.metamodels.transformation.InputSet;
 import org.teiid.designer.metamodels.transformation.SqlAlias;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
+import org.teiid.designer.sql.ISQLConstants;
 import org.teiid.designer.transformation.PreferenceConstants;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.aspects.sql.InputParameterSqlAspect;
@@ -93,7 +94,7 @@ import org.teiid.query.sql.visitor.ReferenceCollectorVisitor;
  *
  * @since 8.0
  */
-public class TransformationSqlHelper implements SqlConstants {
+public class TransformationSqlHelper implements ISQLConstants {
 
     private static final TransformationSqlHelper INSTANCE = new TransformationSqlHelper();
 
@@ -2441,7 +2442,7 @@ public class TransformationSqlHelper implements SqlConstants {
         // Get name for the supplied group
         String tableName = parentGroupSymbol.getName();
         if (tableName == null) {
-            tableName = SqlConstants.BLANK;
+            tableName = ISQLConstants.BLANK;
         }
 
         // If the supplied EObject is SqlAlias, get Alias name and aliased Object

@@ -38,11 +38,11 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
+import org.teiid.designer.sql.ISQLConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.textimport.VirtualTableRowObject;
 import org.teiid.designer.transformation.ui.wizards.VirtualRelationalObjectProcessor;
-import org.teiid.designer.transformation.util.SqlConstants;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.util.TransformationMappingHelper;
 import org.teiid.designer.transformation.validation.TransformationValidator;
@@ -472,16 +472,16 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
     }
 
     private int getSqlTypeFromString( String typeString ) {
-        if (typeString.equalsIgnoreCase(SqlConstants.SQL_TYPE_SELECT_STRING)) {
+        if (typeString.equalsIgnoreCase(ISQLConstants.SQL_TYPE_SELECT_STRING)) {
             return QueryValidator.SELECT_TRNS;
         }
-        if (typeString.equalsIgnoreCase(SqlConstants.SQL_TYPE_INSERT_STRING)) {
+        if (typeString.equalsIgnoreCase(ISQLConstants.SQL_TYPE_INSERT_STRING)) {
             return QueryValidator.INSERT_TRNS;
         }
-        if (typeString.equalsIgnoreCase(SqlConstants.SQL_TYPE_UPDATE_STRING)) {
+        if (typeString.equalsIgnoreCase(ISQLConstants.SQL_TYPE_UPDATE_STRING)) {
             return QueryValidator.UPDATE_TRNS;
         }
-        if (typeString.equalsIgnoreCase(SqlConstants.SQL_TYPE_DELETE_STRING)) {
+        if (typeString.equalsIgnoreCase(ISQLConstants.SQL_TYPE_DELETE_STRING)) {
             return QueryValidator.DELETE_TRNS;
         }
 

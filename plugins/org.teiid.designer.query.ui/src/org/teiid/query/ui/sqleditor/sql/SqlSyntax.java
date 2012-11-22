@@ -14,6 +14,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
+import org.teiid.designer.sql.IQueryService;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.udf.UdfManager;
 import org.teiid.query.ui.UiConstants;
@@ -26,30 +29,49 @@ import org.teiid.query.ui.UiConstants;
  * @since 8.0
  */
 public class SqlSyntax {
+    
+    IExecutionConfigurationListener configurationListener = new IExecutionConfigurationListener() {
+        
+        @Override
+        public void configurationChanged(ExecutionConfigurationEvent event) {
+            // TODO Auto-generated method stub
+            
+        }
+    };
+    
     // Word Lists
-    public static final List<String> RESERVED_WORDS = new ArrayList<String>();
-    public static final List<String> FUNCTION_NAMES = new ArrayList<String>();
-    public static final List<String> DATATYPE_NAMES = new ArrayList<String>();
-    public static final List<String> ALL_WORDS = new ArrayList<String>();
+    private List<String> RESERVED_WORDS = new ArrayList<String>();
+    private List<String> FUNCTION_NAMES = new ArrayList<String>();
+    private List<String> DATATYPE_NAMES = new ArrayList<String>();
+    private List<String> ALL_WORDS = new ArrayList<String>();
 
     // String with valid starting characters
-    public static final List<String> RESERVED_WORD_START_CHARS = new ArrayList<String>();
-    public static final List<String> FUNCTION_NAME_START_CHARS = new ArrayList<String>();
-    public static final List<String> DATATYPE_NAME_START_CHARS = new ArrayList<String>();
-    public static final List<String> ALL_WORD_START_CHARS = new ArrayList<String>();
+    private List<String> RESERVED_WORD_START_CHARS = new ArrayList<String>();
+    private List<String> FUNCTION_NAME_START_CHARS = new ArrayList<String>();
+    private List<String> DATATYPE_NAME_START_CHARS = new ArrayList<String>();
+    private List<String> ALL_WORD_START_CHARS = new ArrayList<String>();
 
-    static {
-    	
+    /**
+     * Create a new instance
+     */
+    public SqlSyntax() {
+        init();
+    }
+    
+    private void init() {
+        IQueryService sqlSyntaxService = ModelerCore.getTeiidQueryService();
+        IDataTypeManagerService dataTypeManagerService = ModelerCore.getTeiidDataTypeManagerService();
+        
         try {
 			// RESERVED WORDS List
-			for (String reservedWord : SQLConstants.getReservedWords()) {
+			for (String reservedWord : sqlSyntaxService.getReservedWords()) {
 			    RESERVED_WORDS.add(reservedWord);
 			    String start = reservedWord.substring(0, 1);
 			    if (!RESERVED_WORD_START_CHARS.contains(start)) {
 			        RESERVED_WORD_START_CHARS.add(start);
 			    }
 			}
-			for (String reservedWord : SQLConstants.getNonReservedWords()) {
+			for (String reservedWord : sqlSyntaxService.getNonReservedWords()) {
                 RESERVED_WORDS.add(reservedWord);
                 String start = reservedWord.substring(0, 1);
                 if (!RESERVED_WORD_START_CHARS.contains(start)) {
@@ -91,8 +113,7 @@ public class SqlSyntax {
         // DATATYPE NAMES List
 		Set<String> dataTypes = new HashSet<String>();
 		try {
-		    IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
-			dataTypes = service.getAllDataTypeNames();
+			dataTypes = dataTypeManagerService.getAllDataTypeNames();
 			iter = dataTypes.iterator();
 			while (iter.hasNext()) {
 			    String dtypeName = (String)iter.next();
@@ -129,7 +150,7 @@ public class SqlSyntax {
      * @param c the character to test
      * @return 'true' if the character is a valid word start, 'false' if not.
      */
-    public static boolean isSqlWordStart( char c ) {
+    public boolean isSqlWordStart( char c ) {
         // Iterate thru the list of valid starting characters
         Iterator iter = ALL_WORD_START_CHARS.iterator();
         while (iter.hasNext()) {
@@ -150,7 +171,7 @@ public class SqlSyntax {
      * @param c the character to test
      * @return 'true' if the character is a valid word part, 'false' if not.
      */
-    public static boolean isSqlWordPart( char c ) {
+    public boolean isSqlWordPart( char c ) {
         // Valid word parts are letters, digits, underscores
         boolean isLetter = Character.isLetter(c);
         boolean isDigit = Character.isDigit(c);
@@ -161,4 +182,39 @@ public class SqlSyntax {
         return false;
     }
 
+    /**
+     * Get the reserved words
+     * 
+     * @return list of reserved words
+     */
+    public List<String> getReservedWords() {
+        return Collections.unmodifiableList(RESERVED_WORDS);
+    }
+    
+    /**
+     * Get the data type names
+     * 
+     * @return list of data type names
+     */
+    public List<String> getDataTypeNames() {
+        return Collections.unmodifiableList(DATATYPE_NAMES);
+    }
+
+    /**
+     * Get the function names
+     * 
+     * @return list of function names
+     */
+    public List<String> getFunctionNames() {
+        return Collections.unmodifiableList(FUNCTION_NAMES);
+    }
+
+    /**
+     * Get all the words
+     * 
+     * @return list of all the words
+     */
+    public List<String> getAllWords() {
+        return Collections.unmodifiableList(ALL_WORDS);
+    }
 }

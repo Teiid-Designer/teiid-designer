@@ -24,6 +24,7 @@ import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.metadata.runtime.api.DataType;
 import org.teiid.designer.metamodels.relational.RelationalPlugin;
 import org.teiid.designer.metamodels.relational.SearchabilityType;
+import org.teiid.designer.sql.IQueryService;
 
 
 /**
@@ -121,7 +122,7 @@ public class RelationalTypeMappingImpl implements RelationalTypeMapping {
      * 
      * @param jdbcTypeName the name of the JDBC type
      * @return the {@link DataType} that best corresponds to the JDBC type name
-     * @throws ModelerCoreException if there is a problem with the {@link DataTypeManager}
+     * @throws ModelerCoreException if there is a problem with the {@link DatatypeManager}
      */
     @Override
 	public EObject getDatatype( final String jdbcTypeName ) throws ModelerCoreException {
@@ -144,14 +145,16 @@ public class RelationalTypeMappingImpl implements RelationalTypeMapping {
      * @param jdbcType the JDBC type
      * @return the {@link DataType} that best corresponds to the JDBC type, or null if no {@link DataType} could be found or if the type is
      *         ambiguous (such as {@link Types#OTHER}).
-     * @throws ModelerCoreException if there is a problem with the {@link DataTypeManager}
+     * @throws ModelerCoreException if there is a problem with the {@link DatatypeManager}
      */
     @Override
 	public EObject getDatatype( final int jdbcType ) throws ModelerCoreException {
         if (jdbcType == Types.JAVA_OBJECT) {
         	return findDatatype(DatatypeConstants.BuiltInNames.OBJECT);
         }
-        String typeName = JDBCSQLTypeInfo.getTypeName(jdbcType);
+        
+        IQueryService service = ModelerCore.getTeiidQueryService();
+        String typeName = service.getJDBCSQLTypeName(jdbcType);
         String builtinName = DatatypeConstants.getDatatypeNamefromRuntimeType(typeName);
         if (builtinName == null || DatatypeConstants.BuiltInNames.OBJECT.equals(builtinName)) {
         	return null; //not a known sql type

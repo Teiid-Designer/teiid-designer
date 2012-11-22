@@ -51,7 +51,7 @@ import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 import org.teiid.designer.schema.tools.model.schema.impl.BaseSchemaObject;
 import org.teiid.designer.schema.tools.processing.SchemaProcessingException;
 import org.teiid.designer.schema.tools.processing.SchemaProcessor;
-import org.teiid.designer.transformation.util.SqlConstants;
+import org.teiid.designer.sql.ISQLConstants;
 import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
@@ -502,8 +502,8 @@ public class ImportWsdlSchemaHandler {
 			String prefix = null;
 			StringBuilder parentXpath = new StringBuilder();
 			if (importManager.isMessageServiceMode()) {
-				responseInfo.addNamespace(SqlConstants.ENVELOPE_NS_ALIAS,
-						SqlConstants.ENVELOPE_NS);
+				responseInfo.addNamespace(ISQLConstants.ENVELOPE_NS_ALIAS,
+						ISQLConstants.ENVELOPE_NS);
 			}
 			//Add the default namespace.
 			responseInfo.addNamespace(ResponseInfo.DEFAULT_NS, this.responseSchemaTreeModel.getDefaultNamespace());

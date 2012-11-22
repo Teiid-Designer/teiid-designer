@@ -95,6 +95,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManagerSaveParticipant;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.sql.IQueryService;
 import org.teiid.designer.type.IDataTypeManagerService;
 
 /**
@@ -2093,7 +2094,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     
     /**
      * Get the teiid data type manager service for the
-     * targetted teiid server. The targeted teiid server
+     * targeted teiid server. The targeted teiid server
      * can be changed using {@link #setTeiidServerVersion(ITeiidServerVersion)}
      *  
      * @return
@@ -2101,6 +2102,21 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     public static IDataTypeManagerService getTeiidDataTypeManagerService() {
         try {
             return TeiidRuntimeRegistry.getInstance().getDataTypeManagerService(getTeiidServerVersion());
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    
+    /**
+     * Get the teiid query service for the
+     * targeted teiid server. The targeted teiid server
+     * can be changed using {@link #setTeiidServerVersion(ITeiidServerVersion)}
+     * 
+     * @return
+     */
+    public static IQueryService getTeiidQueryService() {
+        try {
+            return TeiidRuntimeRegistry.getInstance().getQueryService(getTeiidServerVersion());
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }

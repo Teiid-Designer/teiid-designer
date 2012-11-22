@@ -7,6 +7,7 @@
 */
 package org.teiid.designer.runtime.spi;
 
+import org.teiid.designer.sql.IQueryService;
 import org.teiid.designer.type.IDataTypeManagerService;
 
 /**
@@ -31,4 +32,11 @@ public interface IExecutionAdminFactory {
      * @return instance of {@link IDataTypeManagerService}
      */
     IDataTypeManagerService getDataTypeManagerService();
+
+    /**
+     * Get the query service
+     * 
+     * @return instance of {@link IQueryService}
+     */
+    IQueryService getQueryService();
 }

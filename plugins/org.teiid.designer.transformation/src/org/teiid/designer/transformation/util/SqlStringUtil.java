@@ -7,12 +7,14 @@
  */
 package org.teiid.designer.transformation.util;
 
+import org.teiid.designer.sql.ISQLConstants;
+
 /**
  * SQL String utility methods.
  *
  * @since 8.0
  */
-public final class SqlStringUtil implements SqlConstants {
+public final class SqlStringUtil implements ISQLConstants {
 
     /**
     * Get the index location of the SELECT from a SQL statement

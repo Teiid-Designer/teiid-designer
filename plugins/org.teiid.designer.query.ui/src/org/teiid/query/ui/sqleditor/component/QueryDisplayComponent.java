@@ -14,28 +14,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
+import javax.management.Query;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.designer.core.index.Block;
 import org.teiid.designer.core.query.QueryValidationResult;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.query.QueryValidator.ElementSymbolOptimization;
-import org.teiid.language.SQLConstants;
-import org.teiid.query.resolver.util.ResolverUtil;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.From;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.Select;
-import org.teiid.query.sql.lang.UnaryFromClause;
-import org.teiid.query.sql.proc.Block;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.symbol.MultipleElementSymbol;
-import org.teiid.query.sql.symbol.Symbol;
+import org.teiid.designer.sql.ISQLConstants;
 import org.teiid.query.ui.UiConstants;
 
 
@@ -219,7 +208,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
         //nValidations++;
         // Replace sqlString with the combined toSting() values of sqlDisplayNode's display node list, replacing the visible
         // nodes' text with the current value of sqlString.
-        if (!sqlString.trim().toUpperCase().startsWith(SQLConstants.Reserved.CREATE) && this.sqlDisplayNode != null) {
+        if (!sqlString.trim().toUpperCase().startsWith(ISQLConstants.SQL_TYPE_CREATE_STRING) && this.sqlDisplayNode != null) {
             StringBuffer text = new StringBuffer();
             boolean replaced = false;
             for (Iterator iter = this.sqlDisplayNode.getDisplayNodeList().iterator(); iter.hasNext();) {
@@ -230,7 +219,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
                         replaced = true;
                     }
                 } else {
-                    if (!replaced && node.getParent().languageObject instanceof Block && SQLConstants.Reserved.END.equals(node.toString())) {
+                    if (!replaced && node.getParent().languageObject instanceof Block && ISQLConstants.END.equals(node.toString())) {
                         text.append(sqlString);
                     }
                     text.append(node.toString());

@@ -20,6 +20,12 @@ import org.eclipse.jface.text.formatter.IFormattingStrategy;
  */
 public class SqlWordStrategy implements IFormattingStrategy {
 
+    private SqlSyntax sqlSyntax;
+
+    public SqlWordStrategy() {
+        sqlSyntax = new SqlSyntax();
+    }
+    
 	/**
 	 * @see org.eclipse.jface.text.formatter.IFormattingStrategy#formatterStarts(String)
 	 */
@@ -52,10 +58,10 @@ public class SqlWordStrategy implements IFormattingStrategy {
 		boolean isDone = false;
 		while (st.hasMoreTokens()) {
 			token = st.nextToken();
-			for (int j = 0; j < SqlSyntax.ALL_WORDS.size(); j++) {
+			for (String word : sqlSyntax.getAllWords()) {
 				if (token.equals(" ") | token.equals("\n")) //$NON-NLS-1$ //$NON-NLS-2$
 					break;
-				if (token.toUpperCase().equals(SqlSyntax.ALL_WORDS.get(j))) {
+				if (token.toUpperCase().equals(word)) {
 					token = token.toUpperCase();
 					isDone = true;
 					break;

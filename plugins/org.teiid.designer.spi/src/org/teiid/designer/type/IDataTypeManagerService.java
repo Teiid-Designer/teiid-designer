@@ -108,4 +108,11 @@ public interface IDataTypeManagerService {
      * @return true if the conversion is implicit;
      */
     boolean isImplicitConversion(String srcType, String tgtType);
+
+    /**
+     *  Cache the given name if not already cached.
+     * 
+     * @param name
+     */
+    String getCanonicalString(String name);
 }

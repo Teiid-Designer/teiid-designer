@@ -13,7 +13,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.MetamodelAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect;
-import org.teiid.language.SQLConstants;
+import org.teiid.designer.core.types.DatatypeConstants;
 
 
 
@@ -160,8 +160,8 @@ public abstract class DatatypeUtilities {
     
     public static String getRuntimeTypeName(final String datatype) throws ModelerCoreException {
     	String dType = datatype.toLowerCase();
-    	if( dType.equalsIgnoreCase(SQLConstants.Reserved.INT)) {
-    		dType = SQLConstants.Reserved.INTEGER.toLowerCase();
+    	if( dType.equalsIgnoreCase(DatatypeConstants.BuiltInNames.INT)) {
+    		dType = DatatypeConstants.BuiltInNames.INTEGER.toLowerCase();
     	}
     	EObject theDataType = getDatatype(dType);
     	if( theDataType == null ) {

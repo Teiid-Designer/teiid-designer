@@ -38,6 +38,7 @@ import org.teiid.designer.metamodels.transformation.SqlAlias;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.metamodels.transformation.StagingTable;
 import org.teiid.designer.metamodels.xml.XmlDocument;
+import org.teiid.designer.sql.ISQLConstants;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.metadata.TransformationMetadataFactory;
 import org.teiid.designer.transformation.validation.TransformationValidator;
@@ -50,7 +51,7 @@ import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
  *
  * @since 8.0
  */
-public class TransformationMappingHelper implements SqlConstants {
+public class TransformationMappingHelper implements ISQLConstants {
 
     private static final TransformationMappingHelper INSTANCE = new TransformationMappingHelper();
 

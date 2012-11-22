@@ -115,13 +115,18 @@ public class SqlCodeScanner extends RuleBasedScanner {
 
 		// Add word rule for keywords, datatypes, and function names.
 		WordRule wordRule = new CaseInsensitiveWordRule(new SqlWordDetector(), other);
-        for (int i = 0; i < SqlSyntax.RESERVED_WORDS.size(); i++)
-            wordRule.addWord(SqlSyntax.RESERVED_WORDS.get(i), keyword);
-        for (int i = 0; i < SqlSyntax.DATATYPE_NAMES.size(); i++)
-            wordRule.addWord(SqlSyntax.DATATYPE_NAMES.get(i), datatype);
-        for (int i = 0; i < SqlSyntax.FUNCTION_NAMES.size(); i++)
-            wordRule.addWord(SqlSyntax.FUNCTION_NAMES.get(i), function);
-		rules.add(wordRule);
+        SqlSyntax sqlSyntax = new SqlSyntax();
+		
+		for (String word : sqlSyntax.getReservedWords())
+            wordRule.addWord(word, keyword);
+        
+		for (String dataTypeName : sqlSyntax.getDataTypeNames())
+            wordRule.addWord(dataTypeName, datatype);
+        
+		for (String functionName : sqlSyntax.getFunctionNames())
+            wordRule.addWord(functionName, function);
+		
+        rules.add(wordRule);
 
 		IRule[] result = new IRule[rules.size()];
 		rules.toArray(result);

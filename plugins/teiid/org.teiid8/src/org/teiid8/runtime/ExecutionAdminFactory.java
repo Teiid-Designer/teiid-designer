@@ -10,7 +10,9 @@ package org.teiid8.runtime;
 import org.teiid.designer.runtime.spi.IExecutionAdmin;
 import org.teiid.designer.runtime.spi.IExecutionAdminFactory;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.sql.IQueryService;
 import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid8.sql.QueryService;
 import org.teiid8.type.DataTypeManagerService;
 
 /**
@@ -19,6 +21,8 @@ import org.teiid8.type.DataTypeManagerService;
 public class ExecutionAdminFactory implements IExecutionAdminFactory {
 
     private DataTypeManagerService dataTypeManagerService;
+    
+    private QueryService queryService;
 
     @Override
     public IExecutionAdmin createExecutionAdmin(ITeiidServer teiidServer) throws Exception {
@@ -32,5 +36,14 @@ public class ExecutionAdminFactory implements IExecutionAdminFactory {
         }
         
         return dataTypeManagerService;
+    }
+    
+    @Override
+    public IQueryService getQueryService() {
+        if (queryService == null) {
+            queryService = new QueryService();
+        }
+        
+        return queryService;
     }
 }

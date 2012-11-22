@@ -70,6 +70,7 @@ import org.teiid.core.designer.event.EventObjectListener;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.query.QueryValidationResult;
 import org.teiid.designer.core.query.QueryValidator;
+import org.teiid.designer.sql.ISQLConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.builder.CriteriaBuilder;
@@ -91,15 +92,6 @@ import org.teiid.designer.ui.common.text.ScaledFontManager;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.text.TextFontManager;
 import org.teiid.designer.ui.common.util.UiUtil;
-import org.teiid.language.SQLConstants;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.Select;
-import org.teiid.query.sql.lang.SetQuery;
-import org.teiid.query.sql.lang.SubqueryContainer;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.visitor.SQLStringVisitor;
 import org.teiid.query.ui.builder.util.ElementViewerFactory;
 import org.teiid.query.ui.sqleditor.component.AliasSymbolDisplayNode;
 import org.teiid.query.ui.sqleditor.component.DeleteDisplayNode;
@@ -1388,11 +1380,11 @@ public class SqlEditorPanel extends SashForm
             insertElements(elementNames, parentNames, selectEndIndex + 1, source);
         } else if (isDefaultQuery()) {
             String currentQuery = getText();
-            int insertIndex = currentQuery.toUpperCase().indexOf(SQLConstants.Reserved.SELECT)
-                              + SQLConstants.Reserved.SELECT.length();
+            int insertIndex = currentQuery.toUpperCase().indexOf(ISQLConstants.SELECT)
+                              + ISQLConstants.SELECT.length();
             insertElements(elementNames, parentNames, insertIndex, source);
         } else if (getText().trim().length() == 0) {
-            StringBuffer sb = new StringBuffer(SQLConstants.Reserved.SELECT);
+            StringBuffer sb = new StringBuffer(ISQLConstants.SELECT);
             // ------------------------------------------
             // Add the list of Elements to the SELECT
             // ------------------------------------------
@@ -1404,7 +1396,7 @@ public class SqlEditorPanel extends SashForm
                     sb.append(COMMA);
                 }
             }
-            sb.append(SPACE + SQLConstants.Reserved.FROM);
+            sb.append(SPACE + ISQLConstants.FROM);
             // ------------------------------------------
             // Add the list of Groupss to the FROM
             // ------------------------------------------

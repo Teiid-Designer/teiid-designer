@@ -22,9 +22,9 @@ import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.sql.ISQLConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidFileInfo;
-import org.teiid.designer.transformation.util.SqlConstants;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.LocatorImpl;
 
@@ -34,7 +34,7 @@ import org.xml.sax.helpers.LocatorImpl;
  *
  * @since 8.0
  */
-public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlConstants {
+public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQLConstants {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidXmlFileInfo.class);
 	
 

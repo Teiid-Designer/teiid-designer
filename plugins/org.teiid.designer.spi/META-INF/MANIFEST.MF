@@ -16,5 +16,6 @@ Export-Package: org.teiid.datatools.connectivity.spi,
  org.teiid.designer.runtime.registry,
  org.teiid.designer.runtime.spi,
  org.teiid.designer.runtime.version.spi,
+ org.teiid.designer.sql,
  org.teiid.designer.type
 Bundle-Activator: org.teiid.designer.DesignerSPIPlugin

@@ -29,6 +29,7 @@ import org.teiid.designer.core.validation.ValidationContext;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.metamodels.transformation.SqlTransformation;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
+import org.teiid.designer.sql.ISQLConstants;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.validation.SqlTransformationResult;
 import org.teiid.designer.transformation.validation.TransformationValidator;
@@ -40,7 +41,7 @@ import org.teiid.query.sql.lang.Command;
  *
  * @since 8.0
  */
-public class SqlMappingRootCache implements SqlConstants {
+public class SqlMappingRootCache implements ISQLConstants {
 
     // Caches for each command type
     private static HashMap selectSqlCache = new HashMap();

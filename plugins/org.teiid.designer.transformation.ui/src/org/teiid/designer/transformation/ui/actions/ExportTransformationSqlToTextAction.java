@@ -32,8 +32,8 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
+import org.teiid.designer.sql.ISQLConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
-import org.teiid.designer.transformation.util.SqlConstants;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -273,14 +273,14 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
     private String getSqlTypeString( int sqlType ) {
         switch (sqlType) {
             case QueryValidator.SELECT_TRNS:
-                return SqlConstants.SQL_TYPE_SELECT_STRING;
+                return ISQLConstants.SQL_TYPE_SELECT_STRING;
             case QueryValidator.INSERT_TRNS:
-                return SqlConstants.SQL_TYPE_INSERT_STRING;
+                return ISQLConstants.SQL_TYPE_INSERT_STRING;
             case QueryValidator.UPDATE_TRNS:
-                return SqlConstants.SQL_TYPE_UPDATE_STRING;
+                return ISQLConstants.SQL_TYPE_UPDATE_STRING;
             case QueryValidator.DELETE_TRNS:
-                return SqlConstants.SQL_TYPE_DELETE_STRING;
+                return ISQLConstants.SQL_TYPE_DELETE_STRING;
         }
-        return SqlConstants.SQL_TYPE_UNKNOWN_STRING;
+        return ISQLConstants.SQL_TYPE_UNKNOWN_STRING;
     }
 }

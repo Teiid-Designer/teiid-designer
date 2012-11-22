@@ -18,6 +18,7 @@ import org.teiid.designer.runtime.spi.IExecutionAdminFactory;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.sql.IQueryService;
 import org.teiid.designer.type.IDataTypeManagerService;
 
 /**
@@ -113,6 +114,23 @@ public class TeiidRuntimeRegistry {
         return factory.getDataTypeManagerService();
     }
 
+    /**
+     * Get the teiid sql syntax service
+     * 
+     * @param teiidServerVersion
+     * 
+     * @return instance of {@link IQueryService}
+     * @throws Exception 
+     */
+    public IQueryService getQueryService(ITeiidServerVersion teiidServerVersion) throws Exception {
+        IExecutionAdminFactory factory = search(teiidServerVersion);
+        if (factory == null)
+            throw new Exception(DesignerSPIPlugin.Util.getString(
+                                                                 getClass().getSimpleName() + "NoExecutionAdminFactory", teiidServerVersion)); //$NON-NLS-1$
+        
+        return factory.getQueryService();
+    }
+    
     /**
      * @param serverVersion
      * @return

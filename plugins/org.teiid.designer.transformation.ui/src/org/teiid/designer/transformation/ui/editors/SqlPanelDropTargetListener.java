@@ -21,11 +21,11 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
+import org.teiid.designer.sql.ISQLConstants;
 import org.teiid.designer.transformation.ui.actions.ITransformationDiagramActionConstants;
 import org.teiid.designer.transformation.ui.actions.TransformationSourceManager;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlEditorPanel;
 import org.teiid.designer.transformation.util.SqlAspectHelper;
-import org.teiid.designer.transformation.util.SqlConstants;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.util.EObjectTransfer;
@@ -232,7 +232,7 @@ public class SqlPanelDropTargetListener implements
         
         if( sqlText== null ||
             sqlText.length() == 0 ||
-            sqlText.equals(SqlConstants.BLANK)) {
+            sqlText.equals(ISQLConstants.BLANK)) {
             return true;
         }
         

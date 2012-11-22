@@ -18,13 +18,19 @@ import org.eclipse.jface.text.rules.IWordDetector;
  * @since 8.0
  */
 public class SqlWordDetector implements IWordDetector {
+   
+    private SqlSyntax sqlSyntax;
+
+    public SqlWordDetector() {
+        sqlSyntax = new SqlSyntax();
+    }
 
 	/**
 	 * @see org.eclipse.jface.text.rules.IWordDetector#isWordStart(char)
 	 */
 	@Override
 	public boolean isWordStart(char c) {
-        return SqlSyntax.isSqlWordStart(c);
+        return sqlSyntax.isSqlWordStart(c);
 	}
 
 	/**
@@ -32,7 +38,7 @@ public class SqlWordDetector implements IWordDetector {
 	 */
 	@Override
 	public boolean isWordPart(char c) {
-        return SqlSyntax.isSqlWordPart(c);
+        return sqlSyntax.isSqlWordPart(c);
 	}
 
 }

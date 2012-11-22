@@ -18,14 +18,14 @@ import org.eclipse.core.runtime.Status;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
-import org.teiid.designer.transformation.util.SqlConstants;
+import org.teiid.designer.sql.ISQLConstants;
 
 
 
 /**
  * @since 8.0
  */
-public abstract class ProcedureInfo implements SqlConstants {
+public abstract class ProcedureInfo implements ISQLConstants {
 
     public static final String SQL_BEGIN = "CREATE VIRTUAL PROCEDURE\nBEGIN\n"; //$NON-NLS-1$
     public static final String SQL_END = "\nEND"; //$NON-NLS-1$

@@ -13,8 +13,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import net.sf.saxon.om.DocumentInfo;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.type.Type;
@@ -55,6 +55,7 @@ import org.teiid.core.designer.xml.XPathHelper;
 import org.teiid.designer.metamodels.webservice.Input;
 import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.metamodels.xsd.XsdUtil;
+import org.teiid.designer.sql.ISQLConstants;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlEditorPanel;
 import org.teiid.designer.ui.OverlayImageIcon;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
@@ -71,11 +72,6 @@ import org.teiid.designer.webservice.ui.IInternalUiConstants;
 import org.teiid.designer.webservice.ui.WebServiceUiPlugin;
 import org.teiid.designer.webservice.ui.util.WebServiceUiUtil;
 import org.teiid.designer.webservice.util.WebServiceUtil;
-import org.teiid.language.SQLConstants;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.proc.AssignmentStatement;
-import org.teiid.query.sql.proc.DeclareStatement;
-import org.teiid.query.sql.proc.Statement;
 import org.teiid.query.ui.sqleditor.component.DisplayNode;
 import org.teiid.query.ui.sqleditor.component.DisplayNodeFactory;
 
@@ -155,7 +151,7 @@ public class VariableEditorDialog extends Dialog
                 List nodes = ancestor.getDisplayNodeList();
                 for (int ndx = 0; ndx < nodes.size(); ++ndx) {
                     DisplayNode node = (DisplayNode)nodes.get(ndx);
-                    if (node.getParent() == block && SQLConstants.Reserved.BEGIN.equals(node.toString())) {
+                    if (node.getParent() == block && ISQLConstants.BEGIN.equals(node.toString())) {
                         nodes.addAll(ndx + 2, newNodes);
                         break;
                     }

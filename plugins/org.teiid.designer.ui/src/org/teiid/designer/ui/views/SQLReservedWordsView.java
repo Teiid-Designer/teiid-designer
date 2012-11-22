@@ -19,8 +19,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.FilteredList;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.sql.IQueryService;
 import org.teiid.designer.ui.UiConstants;
-import org.teiid.language.SQLConstants;
 
 /**
  * SQLReservedWordsView is the View to display all available SQL ReservedWords in Designer.
@@ -72,7 +73,8 @@ public class SQLReservedWordsView extends ModelerView {
     }
 
     private Object[] getAllSQLReservedWords() {
-        return SQLConstants.getReservedWords().toArray();
+        IQueryService service = ModelerCore.getTeiidQueryService();
+        return service.getReservedWords().toArray();
     }
 
     /**

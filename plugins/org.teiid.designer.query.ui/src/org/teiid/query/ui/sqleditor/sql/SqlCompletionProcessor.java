@@ -35,19 +35,20 @@ public class SqlCompletionProcessor
 	 */
 	protected Vector proposalList = new Vector();
 	protected IContextInformationValidator fValidator = new Validator();
-/**
- * This method returns a list of completion proposals as ICompletionProposal 
- * objects. The proposals are based on the word at the offset in the document 
- * where the cursor is positioned. In this implementation, we find the word at 
- * the document offset and compare it to our list of SQL reserved words. 
- * The list is a subset, of those words that match what the user has entered. 
- * For example, the text or proposes the SQL keywords OR and ORDER. The list is 
- * returned as an array of completion proposals. 
- * 
- * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#computeCompletionProposals(ITextViewer, int)
- */
- 
-
+	
+	private SqlSyntax sqlSyntax = new SqlSyntax();
+	
+    /**
+     * This method returns a list of completion proposals as ICompletionProposal 
+     * objects. The proposals are based on the word at the offset in the document 
+     * where the cursor is positioned. In this implementation, we find the word at 
+     * the document offset and compare it to our list of SQL reserved words. 
+     * The list is a subset, of those words that match what the user has entered. 
+     * For example, the text or proposes the SQL keywords OR and ORDER. The list is 
+     * returned as an array of completion proposals. 
+     * 
+     * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#computeCompletionProposals(ITextViewer, int)
+     */
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(
 		ITextViewer viewer,
@@ -57,9 +58,9 @@ public class SqlCompletionProcessor
 			new WordPartDetector(viewer, documentOffset);
 
 		// iterate over all the different categories
-		for (int i = 0; i < SqlSyntax.ALL_WORDS.size(); i++) {
-			if ( (SqlSyntax.ALL_WORDS.get(i)).startsWith(wordPart.getString().toUpperCase()))
-			     proposalList.add(SqlSyntax.ALL_WORDS.get(i));
+		for (String word : sqlSyntax.getAllWords()) {
+			if ( word.startsWith(wordPart.getString().toUpperCase()))
+			     proposalList.add(word);
 		}
 
 		return turnProposalVectorIntoAdaptedArray(wordPart);

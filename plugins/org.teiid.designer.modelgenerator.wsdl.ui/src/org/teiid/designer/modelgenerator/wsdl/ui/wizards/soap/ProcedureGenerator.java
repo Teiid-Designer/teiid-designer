@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
@@ -19,8 +20,8 @@ import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
-import org.teiid.designer.transformation.util.SqlConstants;
-import org.teiid.language.SQLConstants;
+import org.teiid.designer.sql.IQueryService;
+import org.teiid.designer.sql.ISQLConstants;
 
 
 /** This class provides state information for the create and extract procedures that will be generated during
@@ -32,7 +33,7 @@ import org.teiid.language.SQLConstants;
  *
  * @since 8.0
  */
-public class ProcedureGenerator implements SqlConstants {
+public class ProcedureGenerator implements ISQLConstants {
 	public static final String PLUGIN_ID = ModelGeneratorWsdlUiConstants.PLUGIN_ID;
 	
 	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false, true);
@@ -420,7 +421,9 @@ public class ProcedureGenerator implements SqlConstants {
 	 * @return
 	 */
 	public String convertSqlNameSegment(String name) {
-		if( SQLConstants.isReservedWord(name) ) {
+	    IQueryService sqlSyntaxService = ModelerCore.getTeiidQueryService();
+        
+        if( sqlSyntaxService.isReservedWord(name) ) {
 			return '\"' + name + '\"';
 		}
 		

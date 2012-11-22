@@ -7,8 +7,8 @@
  */
 package org.teiid.designer.modelgenerator.salesforce.util;
 
-import org.teiid.language.SQLConstants;
-import org.teiid.query.sql.ProcedureReservedWords;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.sql.IQueryService;
 
 /**
  * @since 8.0
@@ -32,7 +32,9 @@ public class NameUtil {
      * @return
      */
     private static String checkReservedWords( String normal ) {
-        if (SQLConstants.isReservedWord(normal) || ProcedureReservedWords.isProcedureReservedWord(normal)) {
+        IQueryService sqlSyntaxService = ModelerCore.getTeiidQueryService();
+        
+        if( sqlSyntaxService.isReservedWord(normal) || sqlSyntaxService.isProcedureReservedWord(normal)) {
             normal = normal + "_"; //$NON-NLS-1$
         }
         return normal;

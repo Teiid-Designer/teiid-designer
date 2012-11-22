@@ -89,11 +89,6 @@ public class CriteriaCodeScanner extends RuleBasedScanner {
         // Add word rule for keywords, datatypes, and function names.
         WordRule wordRule = new WordRule(new SqlWordDetector(), other);
 
-        // for (int i = 0; i < SqlSyntax.DATATYPE_NAMES.size(); i++)
-        // wordRule.addWord((String)SqlSyntax.DATATYPE_NAMES.get(i), datatype);
-        // for (int i = 0; i < SqlSyntax.FUNCTION_NAMES.size(); i++)
-        // wordRule.addWord((String)SqlSyntax.FUNCTION_NAMES.get(i), function);
-
         rules.add(wordRule);
     }
 

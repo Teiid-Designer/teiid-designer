@@ -70,6 +70,7 @@ import org.teiid.designer.metamodels.transformation.TransformationMapping;
 import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
 import org.teiid.designer.metamodels.transformation.XQueryTransformationMappingRoot;
 import org.teiid.designer.metamodels.webservice.Operation;
+import org.teiid.designer.sql.ISQLConstants;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.query.metadata.QueryMetadataInterface;
 import org.teiid.query.sql.lang.Command;
@@ -88,7 +89,7 @@ import org.teiid.query.sql.visitor.ElementCollectorVisitor;
  *
  * @since 8.0
  */
-public class TransformationHelper implements SqlConstants {
+public class TransformationHelper implements ISQLConstants {
     public static final String THIS_CLASS = "TransformationHelper"; //$NON-NLS-1$
     private static final boolean IS_UNDOABLE = true;
     private static final boolean IS_SIGNIFICANT = true;
