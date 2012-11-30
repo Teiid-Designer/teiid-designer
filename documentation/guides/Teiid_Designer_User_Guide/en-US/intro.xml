@@ -733,8 +733,10 @@
 			virtual view. In other words, you can test the views with actual data
 			by simply selecting the table, view, procedure or XML document. The
 			preview functionality insures that data access behavior in the Teiid Designer will
-			reliably match when the VDB is deployed to the Server. Previewing
-			information is a fast and easy way to sample the data. Of course, to
+			reliably match when the VDB is deployed to the Server. 
+			( See:  <xref linkend="teiid-designer-server-section"/> for details)</para> 
+			
+			<para> Previewing information is a fast and easy way to sample the data. Of course, to
 			run more complicated queries like what your application likely uses,
 			simply execute the VDB in the Teiid Designer and type in any query or SQL
 			statement.</para>
