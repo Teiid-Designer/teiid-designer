@@ -110,6 +110,15 @@
 						<artifactId>maven-jdocbook-plugin</artifactId>
 						<version>2.3.3</version>
 						<extensions>true</extensions>
+                        <configuration>
+                            <formats>
+                                <format>
+                                    <formatName>html_single</formatName>
+                                    <stylesheetResource>classpath:/xslt/org/jboss/xhtml-single.xsl</stylesheetResource>
+                                    <finalName>index.html</finalName>
+                                </format>
+                            </formats>
+                        </configuration>
 					</plugin>
 				</plugins>
 			</build>
