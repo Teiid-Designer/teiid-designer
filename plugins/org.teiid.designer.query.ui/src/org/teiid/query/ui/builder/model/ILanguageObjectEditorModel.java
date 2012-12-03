@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.builder.model;
 
-import org.teiid.query.sql.LanguageObject;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 
 /**
  * The <code>ILanguageObjectEditorModel</code> interface represents a model of an
@@ -36,7 +36,7 @@ public interface ILanguageObjectEditorModel {
      * Gets the model's current <code>LanguageObject</code>. May not be equal to it's last saved value.
      * @return the language object or <code>null</code> if not complete and valid
      */
-    LanguageObject getLanguageObject();
+    ILanguageObject getLanguageObject();
     
     /**
      * Gets the <code>LanguageObject</code> class associated with this model.
@@ -80,7 +80,7 @@ public interface ILanguageObjectEditorModel {
      * @param theLanguageObject the value being used
      * @throws IllegalArgumentException if the object is not of the proper type
      */
-    void setLanguageObject(LanguageObject theLangObj);
+    void setLanguageObject(ILanguageObject theLangObj);
     
     /**
      * Gets the <code>LanguageObject</code> class associated with this model.

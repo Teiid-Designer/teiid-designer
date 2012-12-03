@@ -10,7 +10,6 @@ package org.teiid.designer.transformation.ui.editors.sqleditor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
@@ -24,13 +23,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.texteditor.DefaultRangeIndicator;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.query.QueryValidationResult;
 import org.teiid.designer.core.query.QueryValidator;
+import org.teiid.designer.query.IQueryParser;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.common.graphics.ColorManager;
-import org.teiid.query.metadata.QueryMetadataInterface;
-import org.teiid.query.parser.QueryParser;
-import org.teiid.query.sql.lang.Command;
 import org.teiid.query.ui.sqleditor.component.QueryDisplayComponent;
 
 
@@ -130,7 +130,7 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
      * 
      * @return the command, null if the query is not both parseable and resolvable
      */
-    public Command getCommand() {
+    public ICommand getCommand() {
         return queryDisplayComponent.getCommand();
     }
 
@@ -163,11 +163,11 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
 		public QueryValidationResult validateSql( String sqlString,
                                                   int type,
                                                   boolean cacheResult ) {
-            Command command = null;
+            ICommand command = null;
             IStatus status = null;
             try {
                 // QueryParser is not thread-safe, get new parser each time
-                QueryParser parser = new QueryParser();
+                IQueryParser parser = ModelerCore.getTeiidQueryService().getQueryParser();
                 command = parser.parseDesignerCommand(sqlString);
             } catch (Exception e) {
                 status = new Status(IStatus.ERROR, org.teiid.query.ui.UiConstants.PLUGIN_ID, 0, e.getMessage(), e);
@@ -182,7 +182,7 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
          * @return QueryMetadataInterface
          */
         @Override
-		public QueryMetadataInterface getQueryMetadata() {
+		public IQueryMetadataInterface getQueryMetadata() {
             return null;
         }
 
@@ -211,13 +211,13 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
         private boolean isParsable = false;
         private boolean isResolvable = false;
         private boolean isValidatable = false;
-        private Command command = null;
+        private ICommand command = null;
         private Collection<IStatus> statuses = null;
 
         /**
          * Construct an instance of SqlTransformationResult.
          */
-        public QueryValidationResultImpl( final Command command,
+        public QueryValidationResultImpl( final ICommand command,
                                           IStatus status ) {
             if (status != null) {
                 this.statuses = new ArrayList<IStatus>(1);
@@ -265,7 +265,7 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
          * @return the SQL command
          */
         @Override
-		public Command getCommand() {
+		public ICommand getCommand() {
             return this.command;
         }
 

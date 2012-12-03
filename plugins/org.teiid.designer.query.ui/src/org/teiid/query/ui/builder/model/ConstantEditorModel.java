@@ -15,9 +15,13 @@ import java.util.Calendar;
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.types.DataTypeManager.DefaultDataTypes;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.symbol.Constant;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.symbol.IConstant;
+import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 import org.teiid.query.ui.builder.util.BuilderUtils;
 
 /**
@@ -32,7 +36,7 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
     private static final String PREFIX = I18nUtil.getPropertyPrefix(ConstantEditorModel.class);
 
     /** The default type for constants. */
-    private static final String DEFAULT_TYPE = DefaultDataTypes.STRING;
+    private final String DEFAULT_TYPE;
 
     // event types
     public static final String TYPE = "TYPE"; //$NON-NLS-1$
@@ -50,10 +54,14 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
     private Timestamp timestampValue = null;
 
     private boolean conversionType = false;
-    private String type = DEFAULT_TYPE;
+    private String type;
 
     public ConstantEditorModel() {
-        super(Constant.class);
+        super(IConstant.class);
+        
+        IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+        DEFAULT_TYPE = service.getDefaultDataType(DataTypeName.STRING);
+        
         setDefaults();
     }
 
@@ -88,15 +96,15 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      * @return the current <code>Constant</code>
      * @throws IllegalStateException if the current value is not complete
      */
-    public Constant getConstant() {
-        return (Constant)getLanguageObject();
+    public IConstant getConstant() {
+        return (IConstant)getLanguageObject();
     }
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.model.AbstractLanguageObjectEditorModel#getLanguageObject()
      */
     @Override
-    public LanguageObject getLanguageObject() {
+    public ILanguageObject getLanguageObject() {
         // return null if not complete or valid
         if (!isComplete() || !isValid()) {
             return null;
@@ -133,7 +141,10 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
                 value = booleanValue;
             }
         }
-        return new Constant(value);
+        
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+        return factory.createConstant(value);
     }
 
     /**
@@ -147,10 +158,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
                                                          new Object[] {"getDate()", type})); //$NON-NLS-1$
         }
         return dateValue;
-    }
-
-    public static String getDefaultType() {
-        return DEFAULT_TYPE;
     }
 
     /**
@@ -336,7 +343,7 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
         }
     }
 
-    private void setConstant( Constant theConstant ) {
+    private void setConstant( IConstant theConstant ) {
         // return if current value is the same
         if (((theConstant == null) && (getConstant() == null))
             || ((theConstant != null) && (getConstant() != null) && theConstant.equals(getConstant()))) {
@@ -395,6 +402,7 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
     }
 
     private void setDefaults() {
+        type = DEFAULT_TYPE;
         booleanValue = new Boolean(true);
         dateValue = new Date(Calendar.getInstance().getTime().getTime());
         textValue = ""; //$NON-NLS-1$
@@ -406,9 +414,9 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      * @see org.teiid.query.ui.builder.model.AbstractLanguageObjectEditorModel#setLanguageObject(org.teiid.query.sql.LanguageObject)
      */
     @Override
-    public void setLanguageObject( LanguageObject theLangObj ) {
+    public void setLanguageObject( ILanguageObject theLangObj ) {
         super.setLanguageObject(theLangObj);
-        setConstant((Constant)theLangObj);
+        setConstant((IConstant)theLangObj);
     }
 
     public void setNull() {

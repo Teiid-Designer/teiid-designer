@@ -8,7 +8,7 @@
 package org.teiid.designer.transformation.ui.builder;
 
 import org.eclipse.swt.widgets.Control;
-import org.teiid.query.sql.LanguageObject;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModel;
 
 /**
@@ -41,7 +41,7 @@ public interface ILanguageObjectEditor {
      * @return the language object
      * @throws IllegalStateException if the current value is not complete
      */
-    LanguageObject getLanguageObject();
+    ILanguageObject getLanguageObject();
 
     /**
      * Gets the editor's model.
@@ -113,7 +113,7 @@ public interface ILanguageObjectEditor {
      * @param theLanguageObject the value being set in the editor
      * @throws IllegalArgumentException if the object is not of the proper type
      */
-    void setLanguageObject(LanguageObject theLanguageObject);
+    void setLanguageObject(ILanguageObject theLanguageObject);
     
     /**
      * Sets the editor's model.

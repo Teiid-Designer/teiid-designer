@@ -8,6 +8,8 @@
 package org.teiid8.type;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.core.types.DataTypeManager.DefaultDataClasses;
@@ -19,6 +21,38 @@ import org.teiid.designer.type.IDataTypeManagerService;
  *
  */
 public class DataTypeManagerService implements IDataTypeManagerService {
+
+    public static final String[] STRING_TYPES = new String[] {DefaultDataTypes.BIG_DECIMAL, DefaultDataTypes.BIG_INTEGER,
+                DefaultDataTypes.BYTE, DefaultDataTypes.CHAR, DefaultDataTypes.DOUBLE, DefaultDataTypes.FLOAT, DefaultDataTypes.INTEGER,
+                DefaultDataTypes.LONG, DefaultDataTypes.SHORT, DefaultDataTypes.STRING};
+    
+    private static final Map<String, Integer> TEXT_LIMITS;
+
+    private static final Map<String, String> VALID_CHARS;
+
+    static {
+        TEXT_LIMITS = new HashMap<String, Integer>();
+        TEXT_LIMITS.put(DefaultDataTypes.BIG_DECIMAL, new Integer(30)); // BIG_DECIMAL
+        TEXT_LIMITS.put(DefaultDataTypes.BIG_INTEGER, new Integer(30)); // BIG_INTEGER
+        TEXT_LIMITS.put(DefaultDataTypes.BYTE, new Integer(3)); // BYTE
+        TEXT_LIMITS.put(DefaultDataTypes.CHAR, new Integer(1)); // CHAR
+        TEXT_LIMITS.put(DefaultDataTypes.DOUBLE, new Integer(30)); // DOUBLE
+        TEXT_LIMITS.put(DefaultDataTypes.FLOAT, new Integer(30)); // FLOAT
+        TEXT_LIMITS.put(DefaultDataTypes.INTEGER, new Integer(10)); // INTEGER
+        TEXT_LIMITS.put(DefaultDataTypes.LONG, new Integer(19)); // LONG
+        TEXT_LIMITS.put(DefaultDataTypes.SHORT, new Integer(5)); // SHORT
+        TEXT_LIMITS.put(DefaultDataTypes.STRING, new Integer(256)); // STRING
+
+        VALID_CHARS = new HashMap<String, String>();
+        VALID_CHARS.put(DefaultDataTypes.BIG_DECIMAL, "0123456789-.eE"); // BIG_DECIMAL //$NON-NLS-1$
+        VALID_CHARS.put(DefaultDataTypes.BIG_INTEGER, "0123456789-"); // BIG_INTEGER //$NON-NLS-1$
+        VALID_CHARS.put(DefaultDataTypes.BYTE, "0123456789-"); // BYTE //$NON-NLS-1$
+        VALID_CHARS.put(DefaultDataTypes.DOUBLE, "0123456789-+.eE"); // DOUBLE //$NON-NLS-1$
+        VALID_CHARS.put(DefaultDataTypes.FLOAT, "0123456789-+.eE"); // FLOAT //$NON-NLS-1$
+        VALID_CHARS.put(DefaultDataTypes.INTEGER, "0123456789-"); // INTEGER //$NON-NLS-1$
+        VALID_CHARS.put(DefaultDataTypes.LONG, "0123456789-"); // LONG //$NON-NLS-1$
+        VALID_CHARS.put(DefaultDataTypes.SHORT, "0123456789-"); // SHORT //$NON-NLS-1$
+    }
 
     @Override
     public Class<?> getDataTypeClass(String name) {
@@ -63,6 +97,21 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     }
     
     @Override
+    public Integer getDataTypeLimit(String dataType) {
+        ArgCheck.isNotNull(dataType);
+        
+        Integer limit = TEXT_LIMITS.get(dataType);
+        return limit != null ? limit : -1;
+    }
+    
+    @Override
+    public String getDataTypeValidChars(String dataType) {
+        ArgCheck.isNotNull(dataType);
+        
+        return VALID_CHARS.get(dataType);
+    }
+    
+    @Override
     public Class<?> getDefaultDataClass(DataTypeName dataTypeName) {
         ArgCheck.isNotNull(dataTypeName);
 
@@ -84,4 +133,8 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         return DataTypeManager.getCanonicalString(name);
     }
 
+    @Override
+    public boolean canTransform(String sourceTypeName, String targetTypeName) {
+        return DataTypeManager.getTransform(sourceTypeName, targetTypeName) != null;
+    }
 }

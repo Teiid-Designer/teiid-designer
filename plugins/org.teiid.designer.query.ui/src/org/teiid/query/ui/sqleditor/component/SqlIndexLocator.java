@@ -11,28 +11,29 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.Delete;
-import org.teiid.query.sql.lang.ExistsCriteria;
-import org.teiid.query.sql.lang.From;
-import org.teiid.query.sql.lang.GroupBy;
-import org.teiid.query.sql.lang.Insert;
-import org.teiid.query.sql.lang.Option;
-import org.teiid.query.sql.lang.OrderBy;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.Select;
-import org.teiid.query.sql.lang.SetQuery;
-import org.teiid.query.sql.lang.StoredProcedure;
-import org.teiid.query.sql.lang.SubqueryCompareCriteria;
-import org.teiid.query.sql.lang.SubqueryFromClause;
-import org.teiid.query.sql.lang.SubquerySetCriteria;
-import org.teiid.query.sql.lang.Update;
-import org.teiid.query.sql.proc.CommandStatement;
-import org.teiid.query.sql.proc.CreateProcedureCommand;
-import org.teiid.query.sql.symbol.ScalarSubquery;
-import org.teiid.query.sql.visitor.CommandCollectorVisitor;
+import javax.swing.text.html.Option;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.ICommandCollectorVisitor;
+import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.lang.IDelete;
+import org.teiid.designer.query.sql.lang.IExistsCriteria;
+import org.teiid.designer.query.sql.lang.IFrom;
+import org.teiid.designer.query.sql.lang.IGroupBy;
+import org.teiid.designer.query.sql.lang.IInsert;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.lang.IOrderBy;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.query.sql.lang.ISelect;
+import org.teiid.designer.query.sql.lang.ISetQuery;
+import org.teiid.designer.query.sql.lang.IStoredProcedure;
+import org.teiid.designer.query.sql.lang.ISubqueryCompareCriteria;
+import org.teiid.designer.query.sql.lang.ISubqueryFromClause;
+import org.teiid.designer.query.sql.lang.ISubquerySetCriteria;
+import org.teiid.designer.query.sql.lang.IUpdate;
+import org.teiid.designer.query.sql.proc.ICommandStatement;
+import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
+import org.teiid.designer.query.sql.symbol.IScalarSubquery;
 
 /**
  * This class provides the GroupSymbolFinder the knowledge to know where the cursor is at so it can make decisions about what
@@ -123,7 +124,7 @@ public class SqlIndexLocator {
     private QueryDisplayComponent displayComponent;
     private DisplayNode commandDisplayNode;
     private DisplayNode primaryIndexDisplayNode;
-    private LanguageObject primaryLanguageObject;
+    private ILanguageObject primaryLanguageObject;
     // private String primaryLOTypeString = null;
     private boolean subQuerySelected = false;
     private boolean selectScopeSelected = false;
@@ -159,8 +160,10 @@ public class SqlIndexLocator {
     }
 
     public boolean hasSubQueries() {
-        if (primaryLanguageObject != null && primaryLanguageObject instanceof Query) {
-        	List subCommands = CommandCollectorVisitor.getCommands((Query)primaryLanguageObject);
+        if (primaryLanguageObject != null && primaryLanguageObject instanceof IQuery) {
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            ICommandCollectorVisitor commandCollectorVisitor = queryService.getCommandCollectorVisitor();
+        	List subCommands = commandCollectorVisitor.getCommands((IQuery)primaryLanguageObject);
             return !subCommands.isEmpty();
         }
 
@@ -190,7 +193,7 @@ public class SqlIndexLocator {
 
     private void setPrimaryLanguageObjectType() {
         if (primaryLanguageObject != null) {
-            if (primaryLanguageObject instanceof Query) {
+            if (primaryLanguageObject instanceof IQuery) {
                 // Check to see if it's a subquery???
                 DisplayNode parentNode = commandDisplayNode.getParent();
                 if (parentNode != null && getDisplayNodeType(parentNode) == EXISTS_CRITERIA) {
@@ -206,7 +209,7 @@ public class SqlIndexLocator {
                     primaryLanguageObjectType = TYPE_QUERY;
                     //                    primaryLOTypeString = "QUERY"; //$NON-NLS-1$
                 }
-            } else if (primaryLanguageObject instanceof SetQuery) {
+            } else if (primaryLanguageObject instanceof ISetQuery) {
                 DisplayNode parentNode = commandDisplayNode.getParent();
                 if (parentNode != null && getDisplayNodeType(parentNode) == EXISTS_CRITERIA) {
                     primaryLanguageObjectType = TYPE_QUERY_IN_CRITERIA;
@@ -270,119 +273,60 @@ public class SqlIndexLocator {
         if (node == null) {
             return UNKNOWN;
         }
-        if (node.languageObject instanceof Select) {
+        if (node.languageObject instanceof ISelect) {
             return SELECT;
-        } else if (node.languageObject instanceof From) {
+        } else if (node.languageObject instanceof IFrom) {
             return FROM;
         } else if (node instanceof WhereDisplayNode) {
             return WHERE;
-        } else if (node.languageObject instanceof GroupBy) {
+        } else if (node.languageObject instanceof IGroupBy) {
             return GROUP_BY;
         } else if (node instanceof HavingDisplayNode) {
             return HAVING;
-        } else if (node.languageObject instanceof OrderBy) {
+        } else if (node.languageObject instanceof IOrderBy) {
             return ORDER_BY;
         } else if (node.languageObject instanceof Option) {
             return OPTION;
-        } else if (node.languageObject instanceof Query) {
+        } else if (node.languageObject instanceof IQuery) {
             return QUERY;
-        } else if (node.languageObject instanceof SetQuery) {
+        } else if (node.languageObject instanceof ISetQuery) {
             return SET_QUERY;
-        } else if (node.languageObject instanceof Update) {
+        } else if (node.languageObject instanceof IUpdate) {
             return UPDATE;
-        } else if (node.languageObject instanceof Insert) {
+        } else if (node.languageObject instanceof IInsert) {
             return INSERT;
-        } else if (node.languageObject instanceof Delete) {
+        } else if (node.languageObject instanceof IDelete) {
             return DELETE;
-        } else if (node.languageObject instanceof StoredProcedure) {
+        } else if (node.languageObject instanceof IStoredProcedure) {
             return STORED_PROCEDURE;
-        } else if (node.languageObject instanceof CreateProcedureCommand) {
+        } else if (node.languageObject instanceof ICreateProcedureCommand) {
             return CREATE_UPDATE_PROCEDURE;
-        } else if (node.languageObject instanceof ExistsCriteria) {
+        } else if (node.languageObject instanceof IExistsCriteria) {
             return EXISTS_CRITERIA;
-        } else if (node.languageObject instanceof SubqueryFromClause) {
+        } else if (node.languageObject instanceof ISubqueryFromClause) {
             return SUBQUERY_FROM_CLAUSE;
-        } else if (node.languageObject instanceof ScalarSubquery) {
+        } else if (node.languageObject instanceof IScalarSubquery) {
             return SCALAR_SUBQUERY;
-        } else if (node.languageObject instanceof SubqueryCompareCriteria) {
+        } else if (node.languageObject instanceof ISubqueryCompareCriteria) {
             return SUBQUERY_COMPARE_CRITERIA;
-        } else if (node.languageObject instanceof SubquerySetCriteria) {
+        } else if (node.languageObject instanceof ISubquerySetCriteria) {
             return SUBQUERY_SET_CRITERIA;
-        } else if (node.languageObject instanceof Criteria) {
+        } else if (node.languageObject instanceof ICriteria) {
             return CRITERIA;
-        } else if (node.languageObject instanceof CommandStatement) {
+        } else if (node.languageObject instanceof ICommandStatement) {
             return COMMAND_STATEMENT;
         } else {
             return UNKNOWN;
         }
     }
 
-    // public String getDisplayNodeTypeString(int type) {
-    // String result = UNKNOWN_STR;
-    // switch(type) {
-    // case SELECT: { result = SELECT_STR; } break;
-    // case FROM: { result = FROM_STR; } break;
-    // case WHERE: { result = WHERE_STR; } break;
-    // case GROUP_BY: { result = GROUP_BY_STR; } break;
-    // case HAVING: { result = HAVING_STR; } break;
-    // case ORDER_BY: { result = ORDER_BY_STR; } break;
-    // case OPTION: { result = OPTION_STR;} break;
-    // case QUERY: { result = QUERY_STR; } break;
-    // case SET_QUERY: { result = SET_QUERY_STR; } break;
-    // case UPDATE: { result = UPDATE_STR;} break;
-    // case INSERT: { result = INSERT_STR;} break;
-    // case DELETE: { result = DELETE_STR;} break;
-    // case STORED_PROCEDURE: { result = STORED_PROCEDURE_STR;} break;
-    // case CREATE_UPDATE_PROCEDURE: { result = CREATE_UPDATE_PROCEDURE_STR;} break;
-    // case HAS_CRITERIA: { result = HAS_CRITERIA_STR;} break;
-    // case EXISTS_CRITERIA: { result = EXISTS_CRITERIA_STR;} break;
-    // case SUBQUERY_FROM_CLAUSE: { result = SUBQUERY_FROM_CLAUSE_STR;} break;
-    // case SCALAR_SUBQUERY: { result = SCALAR_SUBQUERY_STR;} break;
-    // case SUBQUERY_COMPARE_CRITERIA: { result = SUBQUERY_COMPARE_CRITERIA_STR;} break;
-    // case SUBQUERY_SET_CRITERIA: { result = SUBQUERY_SET_CRITERIA_STR;} break;
-    // case CRITERIA: { result = CRITERIA_STR;} break;
-    // case COMMAND_STATEMENT: { result = COMMAND_STATEMENT_STR;} break;
-    // case UNKNOWN:
-    // default: {} break;
-    // }
-    //
-    // return result;
-    // }
-
-    public LanguageObject getPrimaryLanguageObject() {
+    public ILanguageObject getPrimaryLanguageObject() {
         return this.primaryLanguageObject;
     }
 
     public int getPrimaryNodeType() {
         return this.primaryNodeType;
     }
-
-    // private LanguageObject getParentLanguageObject(DisplayNode childNode) {
-    // LanguageObject parentLO = null;
-    // DisplayNode parentNode = childNode.getParent();
-    // if( parentNode != null ) {
-    // parentLO = parentNode.getLanguageObject();
-    // }
-    //
-    // return parentLO;
-    // }
-
-    // public String getScopeDescription() {
-    // String scope =
-    //            "Selected [" //$NON-NLS-1$
-    // + getDisplayNodeTypeString(getPrimaryNodeType())
-    //            + "] In [" + primaryLOTypeString + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-    //
-    // return scope;
-    // }
-    //
-    // public String getParentScopeDescription(DisplayNode parentNode) {
-    // String scope =
-    // getDisplayNodeTypeString(getDisplayNodeType(parentNode))
-    // + IN + primaryLOTypeString;
-    //
-    // return scope;
-    // }
 
     public boolean isSubQueryNode( DisplayNode node ) {
         int nodeType = getDisplayNodeType(node);
@@ -404,28 +348,6 @@ public class SqlIndexLocator {
 
         return false;
     }
-
-    // public String getFullScopeDescription(String primaryDescription) {
-    // StringBuffer buffer = new StringBuffer();
-    // buffer.append(primaryDescription);
-    //
-    // // Start with the grandparent.
-    // DisplayNode parentNode = commandDisplayNode.getParent();
-    // if( parentNode != null )
-    // parentNode = parentNode.getParent();
-    //
-    // // Now we walk the nodes until parent == null
-    // while( parentNode != null ) {
-    // String segmentString = getParentScopeDescription(parentNode);
-    // buffer.append(IN + segmentString);
-    // parentNode = parentNode.getParent();
-    // }
-    // return buffer.toString();
-    // }
-
-    // private void correctIndexForCommandDisplayNode() {
-    // currentIndex = currentIndex - getIndexForDisplayNode(commandDisplayNode, getTopDisplayNode());
-    // }
 
     public int getIndexForDisplayNode( DisplayNode parentNode,
                                        DisplayNode targetNode ) {
@@ -474,10 +396,10 @@ public class SqlIndexLocator {
         Iterator iter = displayNodes.iterator();
         while (iter.hasNext()) {
             DisplayNode node = (DisplayNode)iter.next();
-            if (node.languageObject instanceof Select) {
+            if (node.languageObject instanceof ISelect) {
                 startSelectIndex = node.startIndex;
             }
-            if (node.languageObject instanceof From) {
+            if (node.languageObject instanceof IFrom) {
                 endFromIndex = node.endIndex + 1;
             }
             int correctedIndex = getCurrentIndex() - getCommandDisplayNode().getStartIndex();
@@ -485,7 +407,7 @@ public class SqlIndexLocator {
                 boolean inNode = isIndexInSelectScope(node, correctedIndex);
                 if (inNode) return true;
             }
-            if (node.languageObject instanceof ExistsCriteria) {
+            if (node.languageObject instanceof IExistsCriteria) {
                 boolean inNode = false;
                 for (Iterator iter2 = node.getChildren().iterator(); iter2.hasNext();) {
                     DisplayNode nextNode = (DisplayNode)iter2.next();
@@ -510,7 +432,7 @@ public class SqlIndexLocator {
         // first FROM\
 
         if (displayNode != null) {
-            if (displayNode.languageObject instanceof Select || displayNode.languageObject instanceof From) return true;
+            if (displayNode.languageObject instanceof ISelect || displayNode.languageObject instanceof IFrom) return true;
             int startSelectIndex = -1;
             int endFromIndex = -1;
             List displayNodes = displayNode.getChildren();
@@ -518,15 +440,15 @@ public class SqlIndexLocator {
             Iterator iter = displayNodes.iterator();
             while (iter.hasNext()) {
                 DisplayNode node = (DisplayNode)iter.next();
-                if (node.languageObject instanceof Select) {
+                if (node.languageObject instanceof ISelect) {
                     startSelectIndex = node.startIndex;
                 }
-                if (node.languageObject instanceof From) {
+                if (node.languageObject instanceof IFrom) {
                     endFromIndex = node.endIndex + 1;
                 }
 
-                if (node instanceof WhereDisplayNode || node.languageObject instanceof ExistsCriteria
-                    || node.languageObject instanceof Query) {
+                if (node instanceof WhereDisplayNode || node.languageObject instanceof IExistsCriteria
+                    || node.languageObject instanceof IQuery) {
                     boolean inNode = isIndexInSelectScope(node, index);
                     if (inNode) return true;
                 }
@@ -569,7 +491,7 @@ public class SqlIndexLocator {
     }
 
     public DisplayNode getSelectedSelectQuery() {
-        if (primaryIndexDisplayNode.languageObject instanceof Select || primaryIndexDisplayNode.languageObject instanceof From) return primaryIndexDisplayNode.getParent();
+        if (primaryIndexDisplayNode.languageObject instanceof ISelect || primaryIndexDisplayNode.languageObject instanceof IFrom) return primaryIndexDisplayNode.getParent();
 
         int startSelectIndex = -1;
         int endFromIndex = -1;
@@ -581,7 +503,7 @@ public class SqlIndexLocator {
             if (node instanceof SelectDisplayNode) {
                 startSelectIndex = node.startIndex;
             }
-            if (node.languageObject instanceof From) {
+            if (node.languageObject instanceof IFrom) {
                 endFromIndex = node.endIndex + 1;
             }
             int correctedIndex = getCurrentIndex() - getCommandDisplayNode().getStartIndex();
@@ -589,7 +511,7 @@ public class SqlIndexLocator {
                 DisplayNode selectNode = getSelectedSelectQuery(node, correctedIndex);
                 if (selectNode != null) return selectNode;
             }
-            if (node.languageObject instanceof ExistsCriteria) {
+            if (node.languageObject instanceof IExistsCriteria) {
                 for (Iterator iter2 = node.getChildren().iterator(); iter2.hasNext();) {
                     DisplayNode nextNode = (DisplayNode)iter2.next();
                     DisplayNode selectNode = getSelectedSelectQuery(nextNode, currentIndex);
@@ -613,7 +535,7 @@ public class SqlIndexLocator {
         // last FROM indexes
 
         if (displayNode != null) {
-            if (displayNode.languageObject instanceof Select || displayNode.languageObject instanceof From) return displayNode.getParent();
+            if (displayNode.languageObject instanceof ISelect || displayNode.languageObject instanceof IFrom) return displayNode.getParent();
 
             int startSelectIndex = -1;
             int endFromIndex = -1;
@@ -622,15 +544,15 @@ public class SqlIndexLocator {
             Iterator iter = displayNodes.iterator();
             while (iter.hasNext()) {
                 DisplayNode node = (DisplayNode)iter.next();
-                if (node.languageObject instanceof Select) {
+                if (node.languageObject instanceof ISelect) {
                     startSelectIndex = node.startIndex;
                 }
-                if (node.languageObject instanceof From) {
+                if (node.languageObject instanceof IFrom) {
                     endFromIndex = node.endIndex + 1;
                 }
 
-                if (node instanceof WhereDisplayNode || node.languageObject instanceof ExistsCriteria
-                    || node.languageObject instanceof Query) {
+                if (node instanceof WhereDisplayNode || node.languageObject instanceof IExistsCriteria
+                    || node.languageObject instanceof IQuery) {
                     DisplayNode selectNode = getSelectedSelectQuery(node, index);
                     if (selectNode != null) return selectNode;
                 }
@@ -666,21 +588,21 @@ public class SqlIndexLocator {
             while (!foundUnexpectedParent && foundExpectedCriteria) {
                 if (parentNode == null) foundUnexpectedParent = true;
                 else {
-                    if (shouldFindCriteria && !(parentNode.languageObject instanceof ExistsCriteria)) foundExpectedCriteria = false;
+                    if (shouldFindCriteria && !(parentNode.languageObject instanceof IExistsCriteria)) foundExpectedCriteria = false;
 
                     if (foundExpectedCriteria) {
                         shouldFindCriteria = false;
 
-                        if (parentNode.languageObject instanceof Query) {
+                        if (parentNode.languageObject instanceof IQuery) {
                             parentQueries.add(parentNode);
                             // Expect to find another exists criteria next
                             if (parentNode.getParent() != null
-                                && !(parentNode.getParent().languageObject instanceof SubqueryFromClause)) {
+                                && !(parentNode.getParent().languageObject instanceof ISubqueryFromClause)) {
                                 shouldFindCriteria = true;
                             }
-                        } else if (parentNode.languageObject instanceof From || parentNode.languageObject instanceof Select
-                                   || parentNode.languageObject instanceof ExistsCriteria || parentNode instanceof WhereDisplayNode
-                                   || parentNode.languageObject instanceof SubqueryFromClause) {
+                        } else if (parentNode.languageObject instanceof IFrom || parentNode.languageObject instanceof ISelect
+                                   || parentNode.languageObject instanceof IExistsCriteria || parentNode instanceof WhereDisplayNode
+                                   || parentNode.languageObject instanceof ISubqueryFromClause) {
                             // ALL OK
                         } else {
                             foundUnexpectedParent = true;
@@ -715,7 +637,7 @@ public class SqlIndexLocator {
         DisplayNode whereNode = node.getParent();
         if (whereNode != null && getDisplayNodeType(whereNode) == SqlIndexLocator.WHERE) {
             DisplayNode queryNode = whereNode.getParent();
-            if (queryNode != null && queryNode.languageObject instanceof Query) {
+            if (queryNode != null && queryNode.languageObject instanceof IQuery) {
                 return queryNode;
             }
         }

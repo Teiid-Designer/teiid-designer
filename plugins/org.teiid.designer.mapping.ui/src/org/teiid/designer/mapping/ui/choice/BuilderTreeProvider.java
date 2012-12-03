@@ -122,8 +122,8 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
         return emfLabelProvider.getText( obj );
 
 //=============================================================
-////        if ( obj instanceof GroupSymbol ) {
-////            GroupSymbol symbol = (GroupSymbol) obj;
+////        if ( obj instanceof IGroupSymbol ) {
+////            IGroupSymbol symbol = (IGroupSymbol) obj;
 ////            
 ////            String result = null;
 ////            // if symbol has a non-null definition, then it is an alias:

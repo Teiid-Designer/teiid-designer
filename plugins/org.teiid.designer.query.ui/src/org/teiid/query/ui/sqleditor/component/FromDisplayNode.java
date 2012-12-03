@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.sqleditor.component;
 
-import org.teiid.query.sql.lang.From;
+import org.teiid.designer.query.sql.lang.IFrom;
 
 /**
  * The <code>FromDisplayNode</code> class is used to represent a Query's entire FROM clause.
@@ -27,7 +27,7 @@ public class FromDisplayNode extends DisplayNode {
      * @param from the query language object used to construct this display node.
      */
     public FromDisplayNode( DisplayNode parentNode,
-                            From from ) {
+                            IFrom from ) {
         this.parentNode = parentNode;
         this.languageObject = from;
     }

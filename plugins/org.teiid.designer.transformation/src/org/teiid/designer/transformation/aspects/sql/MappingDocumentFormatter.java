@@ -7,15 +7,10 @@
  */
 package org.teiid.designer.transformation.aspects.sql;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -75,23 +70,18 @@ import org.teiid.designer.metamodels.xml.namespace.NamespaceContext;
 import org.teiid.designer.metamodels.xml.util.XmlDocumentUtil;
 import org.teiid.designer.metamodels.xml.util.XmlNamespaceComparator;
 import org.teiid.designer.metamodels.xsd.XsdUtil;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.xml.IMappingAttribute;
+import org.teiid.designer.xml.IMappingChoiceNode;
+import org.teiid.designer.xml.IMappingCriteriaNode;
+import org.teiid.designer.xml.IMappingDocument;
+import org.teiid.designer.xml.IMappingDocumentFactory;
+import org.teiid.designer.xml.IMappingElement;
+import org.teiid.designer.xml.IMappingNode;
+import org.teiid.designer.xml.IMappingRecursiveElement;
 import org.teiid.designer.xml.PluginConstants;
 import org.teiid.designer.xml.aspects.sql.MappingContext;
 import org.teiid.designer.xml.aspects.sql.XmlDocumentMappingHelper;
-import org.teiid.query.mapping.xml.MappingAllNode;
-import org.teiid.query.mapping.xml.MappingAttribute;
-import org.teiid.query.mapping.xml.MappingBaseNode;
-import org.teiid.query.mapping.xml.MappingChoiceNode;
-import org.teiid.query.mapping.xml.MappingCommentNode;
-import org.teiid.query.mapping.xml.MappingCriteriaNode;
-import org.teiid.query.mapping.xml.MappingDocument;
-import org.teiid.query.mapping.xml.MappingElement;
-import org.teiid.query.mapping.xml.MappingNode;
-import org.teiid.query.mapping.xml.MappingNodeConstants;
-import org.teiid.query.mapping.xml.MappingOutputter;
-import org.teiid.query.mapping.xml.MappingRecursiveElement;
-import org.teiid.query.mapping.xml.MappingSequenceNode;
-import org.teiid.query.mapping.xml.Namespace;
 
 
 /**
@@ -125,7 +115,7 @@ public class MappingDocumentFormatter {
      * @param xmlDoc
      * @return
      */
-    protected static MappingClassSet findMappingClassSet( final XmlDocument xmlDoc ) {
+    private static MappingClassSet findMappingClassSet( final XmlDocument xmlDoc ) {
         // Get the resource that contains this object ..
         final Resource resource = xmlDoc.eResource();
         if (resource == null) return null;
@@ -149,7 +139,7 @@ public class MappingDocumentFormatter {
      * @param xmlDoc
      * @return
      */
-    protected static List findTreeMappingRoot( final XmlDocument xmlDoc ) {
+    private static List findTreeMappingRoot( final XmlDocument xmlDoc ) {
         // Get the resource that contains this object ..
         final Resource resource = xmlDoc.eResource();
         if (resource == null) return Collections.EMPTY_LIST;
@@ -172,7 +162,7 @@ public class MappingDocumentFormatter {
         return treeMappingRoots;
     }
 
-    static String getNamespacePrefix( final XmlDocumentNode elementOrAttribute,
+    private String getNamespacePrefix( final XmlDocumentNode elementOrAttribute,
                                       final NamespaceContext context,
                                       final MappingContext mappingContext ) {
         if (elementOrAttribute == null) return null;
@@ -199,13 +189,13 @@ public class MappingDocumentFormatter {
      * @param ns
      * @return
      */
-    static String getNamespacePrefix( final XmlNamespace ns ) {
+    private String getNamespacePrefix( final XmlNamespace ns ) {
         String prefix = ns.getPrefix();
         if (prefix == null || prefix.trim().length() == 0) prefix = XmlDocumentUtil.createXmlPrefixFromUri(ns.getUri());
         return prefix;
     }
 
-    private static String getNamespacePrefix( final XSDComponent xsdComponent,
+    private String getNamespacePrefix( final XSDComponent xsdComponent,
                                               final NamespaceContext context,
                                               final MappingContext mappingContext,
                                               final String defaultTargetNamespace,
@@ -255,7 +245,7 @@ public class MappingDocumentFormatter {
         return null;
     }
 
-    private static String getSchemaInstanceNamespacePrefix( final NamespaceContext context ) {
+    private String getSchemaInstanceNamespacePrefix( final NamespaceContext context ) {
         final Iterator iter = context.getAllXmlNamespaces().iterator();
         while (iter.hasNext()) {
             final XmlNamespace nsDecl = (XmlNamespace)iter.next();
@@ -271,7 +261,7 @@ public class MappingDocumentFormatter {
         return defaultPrefix;
     }
 
-    public static String getSchemaNamespacePrefix( final NamespaceContext context ) {
+    private String getSchemaNamespacePrefix( final NamespaceContext context ) {
         final Iterator iter = context.getAllXmlNamespaces().iterator();
         while (iter.hasNext()) {
             final XmlNamespace nsDecl = (XmlNamespace)iter.next();
@@ -296,7 +286,7 @@ public class MappingDocumentFormatter {
      * @param context the namespace context from which namespace prefixes should be determined; never null
      * @return the value of the "soap-enc:arrayType" attribute; may be null if there is no type
      */
-    protected static String getSoapArrayType( final XmlElement element,
+    private String getSoapArrayType( final XmlElement element,
                                               final NamespaceContext context,
                                               final MappingContext mappingContext ) {
         XSDComponent xsdComponent = element.getXsdComponent();
@@ -352,7 +342,7 @@ public class MappingDocumentFormatter {
         return null;
     }
 
-    private static String getSoapEncodingNamespacePrefix( final NamespaceContext context ) {
+    private String getSoapEncodingNamespacePrefix( final NamespaceContext context ) {
         final XmlNamespace namespace = context.getBestNamespace(Soap.TARGET_NAMESPACE_URI);
         if (namespace != null) {
             final String prefix = getNamespacePrefix(namespace);
@@ -532,7 +522,7 @@ public class MappingDocumentFormatter {
      * @param component the XML Schema component
      * @return true if entity is to be unqualified.
      */
-    protected static boolean isPrefixRequired( final XSDComponent component,
+    private static boolean isPrefixRequired( final XSDComponent component,
                                                final XSDSchema schema,
                                                final String schemaNamespaceUri ) {
         // If the component is global, then it must be qualified ...
@@ -595,6 +585,8 @@ public class MappingDocumentFormatter {
 
     private boolean newlines;
 
+    private IMappingDocumentFactory mappingDocumentFactory;
+
     /**
      * Construct an instance of MappingDocumentFormatter.
      */
@@ -612,28 +604,34 @@ public class MappingDocumentFormatter {
         this.mappingContext = mappingContext;
         this.helper = new XmlDocumentMappingHelper(this.treeMappingRoots);
     }
+    
+    private IMappingDocumentFactory getFactory() {
+        if (mappingDocumentFactory == null) {
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            mappingDocumentFactory = queryService.getMappingDocumentFactory();
+        }
+        
+        return mappingDocumentFactory;
+    }
 
-    protected void createAttributeNode( final MappingElement parent,
+    private void createAttributeNode( final IMappingElement parent,
                                         final XmlAttribute element,
                                         final ElementInfo elementInfo,
                                         final MappingContext mappingContext ) {
         final String name = element.getName();
         final String nsPrefix = getNamespacePrefix(element, elementInfo.getNamespaceContext(), mappingContext);
-        MappingAttribute attribute = null;
+        IMappingAttribute attribute = null;
 
-        Namespace namespace = getNamespace(nsPrefix);
         // if the namespace equals to "xmlns" then we are defining a namespace attribute
-        if (nsPrefix != null && nsPrefix.equalsIgnoreCase(MappingNodeConstants.NAMESPACE_DECLARATION_ATTRIBUTE_NAMESPACE)) {
+        if (nsPrefix != null && nsPrefix.equalsIgnoreCase(IMappingAttribute.NAMESPACE_DECLARATION_ATTRIBUTE_NAMESPACE)) {
             // this is default name space where only "xmlns" is defined. We do not need to global map
             // as there may be more(I guess..)
-            namespace = new Namespace("", getFixedValue(element)); //$NON-NLS-1$
-            parent.addNamespace(namespace);
+            getFactory().addNamespace(parent, "", getFixedValue(element)); //$NON-NLS-1$
         } else if (name != null && nsPrefix != null
-                   && nsPrefix.equalsIgnoreCase(MappingNodeConstants.NAMESPACE_DECLARATION_ATTRIBUTE_NAMESPACE)) {
-            namespace = new Namespace(name, getFixedValue(element));
-            parent.addNamespace(namespace);
+                   && nsPrefix.equalsIgnoreCase(IMappingAttribute.NAMESPACE_DECLARATION_ATTRIBUTE_NAMESPACE)) {
+            getFactory().addNamespace(parent, name, getFixedValue(element));
         } else {
-            attribute = new MappingAttribute(name, namespace);
+            attribute = getFactory().createMappingAttribute(name, nsPrefix);
             attribute.setNameInSource(getNameInSource(element));
             attribute.setDefaultValue(getDefaultValue(element));
             attribute.setValue(getFixedValue(element));
@@ -644,52 +642,69 @@ public class MappingDocumentFormatter {
         }
     }
 
-    protected MappingNode createChoiceNode( MappingBaseNode parent,
+    private IMappingNode createChoiceNode( IMappingNode parent,
                                             final XmlChoice choice,
                                             final ElementInfo elementInfo ) {
-        final MappingCriteriaNode criteria = createCriteriaNode(choice);
-        if (parent != null && parent instanceof MappingChoiceNode && criteria != null) parent = ((MappingChoiceNode)parent).addCriteriaNode(criteria);
+        final IMappingCriteriaNode criteria = createCriteriaNode(choice);
+        if (parent != null && parent instanceof IMappingChoiceNode && criteria != null)
+            ((IMappingChoiceNode)parent).addCriteriaNode(criteria);
 
-        final MappingChoiceNode choiceNode = new MappingChoiceNode(choice.getDefaultErrorMode().getValue() == ChoiceErrorMode.THROW);
+        final IMappingChoiceNode choiceNode = getFactory().createMappingChoiceNode(choice.getDefaultErrorMode().getValue() == ChoiceErrorMode.THROW);
         choiceNode.setExclude(choice.isExcludeFromDocument());
         choiceNode.setSource(getSource(choice));
-        if(parent!=null) parent.addChoiceNode(choiceNode);
+        if(parent != null)
+            parent.addChild(choiceNode);
 
         choiceNode.addStagingTable(getStagingTable(choice));
         return choiceNode;
     }
 
-    protected MappingNode createCommentNode( final MappingElement parent,
+    private IMappingNode createCommentNode( final IMappingElement parent,
                                              final XmlComment comment,
                                              final ElementInfo elementInfo ) {
         final String text = comment.getText();
-        if (text != null && text.trim().length() > 0 && parent != null) parent.addCommentNode(new MappingCommentNode(text));
+        if (text != null && text.trim().length() > 0 && parent != null)
+            parent.addCommentNode(text);
         return null;
     }
 
-    MappingCriteriaNode createCriteriaNode( final ChoiceOption element ) {
+    private IMappingCriteriaNode createCriteriaNode( final ChoiceOption element ) {
         String criteria = getCriteria(element);
-        final boolean defalt = (element.getDefaultFor() != null);
+        final boolean isDefault = (element.getDefaultFor() != null);
 
         // if criteira node created with no default criteria, then assign some dummy
         // criteria so that we have some valid criteria.
-        if (criteria == null && !defalt) criteria = "TRUE = FALSE"; //$NON-NLS-1$
-        return new MappingCriteriaNode(criteria, defalt);
+        if (criteria == null && !isDefault) criteria = "TRUE = FALSE"; //$NON-NLS-1$
+        return getFactory().createMappingCriteriaNode(criteria, isDefault);
     }
 
     /**
      * @param rootMappingNode
      * @param rootElement
      */
-    protected MappingDocument createDocumentNode( final XmlRoot xmlRoot,
+    private IMappingDocument createDocumentNode( final XmlRoot xmlRoot,
+                                                  final NamespaceContext nsContext,
                                                   final ElementInfo rootElementInfo,
                                                   final MappingContext mappingContext ) {
 
         // Set the SOAP encoding information ...
         this.includeSoapDefaultEncoding = xmlDoc.getSoapEncoding().getValue() == SoapEncoding.DEFAULT;
-        final MappingDocument doc = new MappingDocument(xmlDoc.getEncoding(), xmlDoc.isFormatted());
-        final MappingElement rootNode = processElementNode(xmlRoot, rootElementInfo, mappingContext);
-        doc.addChildElement(rootNode);
+        
+        IMappingDocument doc = getFactory().createMappingDocument(xmlDoc.getEncoding(), xmlDoc.isFormatted());
+        IMappingElement node = processElementNode(xmlRoot, rootElementInfo, mappingContext);
+        doc.addChildElement(node);
+        
+        // Create the rest of the mapping node tree.
+        // When creating the mapping node tree the server assumes that attributes
+        // of an element are added before its child elements. The order below must
+        // not be changed.
+        IMappingNode rootNode = doc.getRootElement();
+        processNamespaces(xmlRoot.getDeclaredNamespaces(), rootNode, nsContext, rootElementInfo);
+        processChildren(xmlRoot.getAttributes(), rootNode, nsContext, rootElementInfo);
+        processChildren(xmlRoot.getComments(), rootNode, nsContext, rootElementInfo);
+        processChildren(xmlRoot.getEntities(), rootNode, nsContext, rootElementInfo);
+        processChildren(xmlRoot.getProcessingInstructions(), rootNode, nsContext, rootElementInfo);
+
         return doc;
     }
 
@@ -697,15 +712,18 @@ public class MappingDocumentFormatter {
      * @param rootMappingNode
      * @param rootElement
      */
-    protected MappingNode createElementNode( MappingBaseNode parent,
+    private IMappingNode createElementNode( IMappingNode parent,
                                              final XmlElement element,
                                              final ElementInfo elementInfo,
                                              final MappingContext mappingContext ) {
-        final MappingCriteriaNode criteria = createCriteriaNode(element);
-        if (parent != null && parent instanceof MappingChoiceNode && criteria != null) parent = ((MappingChoiceNode)parent).addCriteriaNode(criteria);
+        final IMappingCriteriaNode criteria = createCriteriaNode(element);
+        if (parent != null && parent instanceof IMappingChoiceNode && criteria != null) 
+            ((IMappingChoiceNode) parent).addCriteriaNode(criteria);
 
-        final MappingElement node = processElementNode(element, elementInfo, mappingContext);
-        if (parent != null) parent.addChildElement(node);
+        final IMappingElement node = processElementNode(element, elementInfo, mappingContext);
+        if (parent != null)
+            parent.addChild(node);
+        
         return node;
     }
 
@@ -717,7 +735,7 @@ public class MappingDocumentFormatter {
      * @param mappingClassSet
      * @return
      */
-    public MappingDocument createMapping() {
+    public IMappingDocument createMapping() {
         // Initialize the helper (which contains the map from XML->MappingClassObject
         this.helper.initialize();
 
@@ -727,20 +745,8 @@ public class MappingDocumentFormatter {
         final ElementInfo elementInfo = new ElementInfo(nsContext, null); // not null! see defect 11240
 
         // Create the root of the mapping node tree ...
-        final MappingDocument docMappingNode = createDocumentNode(xmlRootElement, elementInfo, this.mappingContext);
-        final MappingElement rootNode = (MappingElement)docMappingNode.getRootNode();
-
-        // Create the rest of the mapping node tree.
-        // When creating the mapping node tree the server assumes that attributes
-        // of an element are added before its child elements. The order below must
-        // not be changed.
-        processNamespaces(xmlRootElement.getDeclaredNamespaces(), rootNode, nsContext, elementInfo);
-        processChildren(xmlRootElement.getAttributes(), rootNode, nsContext, elementInfo);
-        processChildren(xmlRootElement.getComments(), rootNode, nsContext, elementInfo);
-        processChildren(xmlRootElement.getEntities(), rootNode, nsContext, elementInfo);
-        processChildren(xmlRootElement.getProcessingInstructions(), rootNode, nsContext, elementInfo);
-
-        return docMappingNode;
+        IMappingDocument document = createDocumentNode(xmlRootElement, nsContext, elementInfo, this.mappingContext);
+        return document;
     }
 
     /**
@@ -750,14 +756,14 @@ public class MappingDocumentFormatter {
      * @param parent parent MappingNode of the MappingNode to be created in this method call; this should never be null
      * @param context the namespace context for this entity ...
      */
-    protected void createMapping( final XmlDocumentEntity entity,
-                                  final MappingNode parent,
+    private void createMapping( final XmlDocumentEntity entity,
+                                  final IMappingNode parent,
                                   final NamespaceContext namespaceContext,
                                   final MappingContext mappingContext,
                                   final ElementInfo parentInfo ) {
         // 
         final int classifierId = entity.eClass().getClassifierID();
-        MappingNode entityMappingNode = null;
+        IMappingNode entityMappingNode = null;
         ElementInfo entityInfo = parentInfo;
         NamespaceContext entityNamespaceContext = namespaceContext;
         switch (classifierId) {
@@ -766,7 +772,7 @@ public class MappingDocumentFormatter {
                 entityNamespaceContext = new NamespaceContext(element, namespaceContext);
                 entityInfo = new ElementInfo(entityNamespaceContext, parentInfo);
 
-                entityMappingNode = createElementNode((MappingBaseNode)parent, element, entityInfo, mappingContext);
+                entityMappingNode = createElementNode(parent, element, entityInfo, mappingContext);
 
                 processNamespaces(element.getDeclaredNamespaces(), entityMappingNode, entityNamespaceContext, entityInfo);
                 processChildren(element.getAttributes(), entityMappingNode, entityNamespaceContext, entityInfo);
@@ -775,15 +781,15 @@ public class MappingDocumentFormatter {
                 processChildren(element.getProcessingInstructions(), entityMappingNode, entityNamespaceContext, entityInfo);
                 break;
             case XmlDocumentPackage.XML_ATTRIBUTE:
-                createAttributeNode((MappingElement)parent, (XmlAttribute)entity, entityInfo, mappingContext);
+                createAttributeNode((IMappingElement)parent, (XmlAttribute)entity, entityInfo, mappingContext);
                 break;
             case XmlDocumentPackage.XML_NAMESPACE:
-                createNamespaceAttribute((MappingElement)parent, (XmlNamespace)entity, entityInfo);
+                createNamespaceAttribute((IMappingElement)parent, (XmlNamespace)entity, entityInfo);
                 break;
             case XmlDocumentPackage.XML_ALL:
             case XmlDocumentPackage.XML_SEQUENCE:
                 final XmlContainerNode container = (XmlContainerNode)entity;
-                entityMappingNode = createSequenceNode((MappingBaseNode)parent, container, entityInfo);
+                entityMappingNode = createSequenceNode(parent, container, entityInfo);
                 // Case 5069 - removed lines - replaced with eContents - was resulting in implied ordering of output doc.
                 // processChildren(container.getContainers(),entityMappingNode,namespaceContext,parentInfo);
                 // processChildren(container.getElements(),entityMappingNode,namespaceContext,parentInfo);
@@ -792,7 +798,7 @@ public class MappingDocumentFormatter {
                 break;
             case XmlDocumentPackage.XML_CHOICE:
                 final XmlChoice choiceNode = (XmlChoice)entity;
-                entityMappingNode = createChoiceNode((MappingBaseNode)parent, choiceNode, entityInfo);
+                entityMappingNode = createChoiceNode(parent, choiceNode, entityInfo);
                 final List optionsInOrder = choiceNode.getOrderedChoiceOptions();
                 processChildren(optionsInOrder, entityMappingNode, namespaceContext, parentInfo);
                 break;
@@ -801,7 +807,7 @@ public class MappingDocumentFormatter {
                 // processChildren = true;
                 break;
             case XmlDocumentPackage.XML_COMMENT:
-                createCommentNode((MappingElement)parent, (XmlComment)entity, entityInfo);
+                createCommentNode((IMappingElement)parent, (XmlComment)entity, entityInfo);
                 break;
             case XmlDocumentPackage.PROCESSING_INSTRUCTION:
                 // entityMappingNode = createMappingNode(parentMappingNode,(ProcessingInstruction)entity,
@@ -812,58 +818,37 @@ public class MappingDocumentFormatter {
     }
 
     public String createMappingString() throws Exception {
-        final MappingDocument mapping = createMapping();
+        final IMappingDocument mapping = createMapping();
 
-        // Output the mapping objects to a stream
-        String result = null;
-        OutputStream moStream = null;
-        try {
-            moStream = new ByteArrayOutputStream();
-            final PrintWriter pw = new PrintWriter(moStream, true);
-            final MappingOutputter outputter = new MappingOutputter();
-            outputter.write(mapping, pw); // TODO FIX/REPLACE??? , isNewlines(), isIndent());
-            pw.flush();
-
-            result = moStream.toString();
-        } catch (final Exception e) {
-            throw e;
-        } finally {
-            if (moStream != null) {
-                try {
-                    moStream.close();
-                } catch (final IOException e1) {
-                    PluginConstants.Util.log(e1);
-                }
-                moStream = null;
-            }
-        }
-        return result;
+        return mapping.getMappingString();
     }
 
     /**
      * @param rootMappingNode
      * @param rootElement
      */
-    protected void createNamespaceAttribute( final MappingElement parent,
+    private void createNamespaceAttribute( final IMappingElement parent,
                                              final XmlNamespace ns,
                                              final ElementInfo elementInfo ) {
-        final Namespace namespace = new Namespace(ns.getPrefix(), ns.getUri());
-        parent.addNamespace(namespace);
+        getFactory().addNamespace(parent, ns.getPrefix(), ns.getUri());
     }
 
     /**
      * @param rootMappingNode
      * @param rootElement
      */
-    protected MappingNode createSequenceNode( MappingBaseNode parent,
+    private IMappingNode createSequenceNode( IMappingNode parent,
                                               final XmlContainerNode compositor,
                                               final ElementInfo elementInfo ) {
-        final MappingCriteriaNode criteria = createCriteriaNode(compositor);
-        if (parent != null && parent instanceof MappingChoiceNode && criteria != null) parent = ((MappingChoiceNode)parent).addCriteriaNode(criteria);
+        final IMappingCriteriaNode criteria = createCriteriaNode(compositor);
+        if (parent != null && parent instanceof IMappingChoiceNode && criteria != null)
+            ((IMappingChoiceNode)parent).addCriteriaNode(criteria);
 
-        MappingBaseNode seqNode = null;
-        if (compositor instanceof XmlSequence) seqNode = parent.addSequenceNode(new MappingSequenceNode());
-        else if (compositor instanceof XmlAll) seqNode = parent.addAllNode(new MappingAllNode());
+        IMappingNode seqNode = null;
+        if (compositor instanceof XmlSequence)
+            seqNode = parent.addChild(getFactory().createMappingSequenceNode());
+        else if (compositor instanceof XmlAll)
+            seqNode = parent.addChild(getFactory().createMappingAllNode());
         if(seqNode!=null) {
             seqNode.setExclude(compositor.isExcludeFromDocument());
             seqNode.setSource(getSource(compositor));
@@ -877,44 +862,40 @@ public class MappingDocumentFormatter {
      * @param rootMappingNode
      * @param rootElement
      */
-    protected MappingNode createSoapArrayTypeAttribute( final MappingElement parent,
+    private void createSoapArrayTypeAttribute( final IMappingElement parent,
                                                         final ElementInfo elementInfo ) {
         final String value = elementInfo.getSoapArrayType();
-        if (value == null) return null;
+        if (value == null) return;
 
         final NamespaceContext context = elementInfo.getNamespaceContext();
         final String prefix = getSoapEncodingNamespacePrefix(context);
-        final Namespace namespace = getNamespace(prefix);
 
-        final MappingAttribute attribute = new MappingAttribute(Soap.ARRAY_TYPE_XML_ATTRIBUTE_NAME, namespace);
+        final IMappingAttribute attribute = getFactory().createMappingAttribute(Soap.ARRAY_TYPE_XML_ATTRIBUTE_NAME, prefix);
         attribute.setValue(value);
         attribute.setOptional(true);
         attribute.setAlwaysInclude(true);
 
         parent.addAttribute(attribute);
-        return attribute;
     }
 
     /**
      * @param rootMappingNode
      * @param rootElement
      */
-    protected MappingAttribute createXsiTypeAttribute( final MappingElement parent,
+    private void createXsiTypeAttribute( final IMappingElement parent,
                                                        final ElementInfo elementInfo ) {
         final String value = elementInfo.getXsiType();
-        if (value == null) return null;
+        if (value == null) return;
 
         final NamespaceContext context = elementInfo.getNamespaceContext();
         final String prefix = getSchemaInstanceNamespacePrefix(context);
-        final Namespace namespace = getNamespace(prefix);
 
-        final MappingAttribute attribute = new MappingAttribute(XSI_TYPE_ATTRIBUTE_NAME, namespace);
+        final IMappingAttribute attribute = getFactory().createMappingAttribute(XSI_TYPE_ATTRIBUTE_NAME, prefix);
         attribute.setValue(value);
         attribute.setOptional(true);
         attribute.setAlwaysInclude(true);
 
         parent.addAttribute(attribute);
-        return attribute;
     }
 
     String getBuitInType( final XmlElement element ) {
@@ -935,15 +916,11 @@ public class MappingDocumentFormatter {
             }
             if (dataType != null && dtm.isBuiltInDatatype(dataType)) return dtm.getName(dataType);
         }
-        return MappingNodeConstants.Defaults.DEFAULT_BUILT_IN_TYPE;
+        return IMappingNode.DEFAULT_BUILT_IN_TYPE;
     }
 
     String getCriteria( final ChoiceOption element ) {
         String choiceCriteria = element.getChoiceCriteria();
-//        if (choiceCriteria != null && choiceCriteria.indexOf(UUID.PROTOCOL) >= 0) // Defect 23725 - changed call to get the
-        // element's Container object. CANNOT ASSUME
-        // RESOURCE SET is CONTAINER
-//        choiceCriteria = SqlConverter.convertUUIDsToFullNames(choiceCriteria, ModelerCore.getContainer(element));
         return choiceCriteria;
     }
 
@@ -965,7 +942,7 @@ public class MappingDocumentFormatter {
         return null;
     }
 
-    protected String getFullName( final EObject object ) {
+    private String getFullName( final EObject object ) {
         // find the SqlTableAspect for the mapping class ...
         final SqlAspect sqlAspect = (SqlAspect)ModelerCore.getMetamodelRegistry().getMetamodelAspect(object, SqlAspect.class);
         if (sqlAspect != null) return sqlAspect.getFullName(object);
@@ -975,24 +952,19 @@ public class MappingDocumentFormatter {
     int getMaxOccurrences( final XmlElement element ) {
         final XSDComponent xsdComponent = element.getXsdComponent();
         if (xsdComponent != null) return XsdUtil.getMaxOccurs(xsdComponent);
-        return MappingNodeConstants.Defaults.DEFAULT_CARDINALITY_MAXIMUM_BOUND.intValue();
+        return IMappingNode.DEFAULT_CARDINALITY_MAXIMUM_BOUND.intValue();
     }
 
     int getMinOccurrences( final XmlElement element ) {
         final XSDComponent xsdComponent = element.getXsdComponent();
         if (xsdComponent != null) return XsdUtil.getMinOccurs(xsdComponent);
-        return MappingNodeConstants.Defaults.DEFAULT_CARDINALITY_MINIMUM_BOUND.intValue();
+        return IMappingNode.DEFAULT_CARDINALITY_MINIMUM_BOUND.intValue();
     }
 
     String getNameInSource( final XmlDocumentEntity element ) {
         final MappingClassColumn mappingClassColumn = this.helper.getMappingClassColumn(element);
         if (mappingClassColumn != null) return getFullName(mappingClassColumn);
         return null;
-    }
-
-    Namespace getNamespace( final String prefix ) {
-        if (prefix != null) return new Namespace(prefix);
-        return MappingNodeConstants.NO_NAMESPACE;
     }
 
     String getRecursionCriteria( final XmlElement element ) {
@@ -1011,7 +983,7 @@ public class MappingDocumentFormatter {
     int getRecursionLimit( final XmlElement element ) {
         final MappingClass mappingClass = this.helper.getMappingClass(element);
         if (mappingClass != null && mappingClass.isRecursionAllowed() && mappingClass.isRecursive()) return mappingClass.getRecursionLimit();
-        return MappingNodeConstants.Defaults.DEFAULT_RECURSION_LIMIT.intValue();
+        return IMappingNode.DEFAULT_RECURSION_LIMIT.intValue();
     }
 
     String getRecursionMappingClass( final XmlElement element ) {
@@ -1055,7 +1027,7 @@ public class MappingDocumentFormatter {
      * @param context the namespace context from which namespace prefixes should be determined; never null
      * @return the value of the "xsi:type" attribute; may be null if there is no type
      */
-    protected String getXsiType( final XmlElement element,
+    private String getXsiType( final XmlElement element,
                                  final NamespaceContext context,
                                  final MappingContext mappingContext ) {
         // Get the type ...
@@ -1078,11 +1050,11 @@ public class MappingDocumentFormatter {
      * @param mappingContext the mapping context
      * @return the mapping node property value for text normalization
      */
-    protected String getXsiTypeTextNormalization( final XmlDocumentNode node,
+    private String getXsiTypeTextNormalization( final XmlDocumentNode node,
                                                   final MappingContext mappingContext ) {
         // Get the type ...
         final XSDComponent xsdComponent = node.getXsdComponent();
-        if (xsdComponent == null) return MappingNodeConstants.Defaults.DEFAULT_NORMALIZE_TEXT;
+        if (xsdComponent == null) return IMappingNode.DEFAULT_NORMALIZE_TEXT;
 
         // Find the type and its underlying whitespace normalization if available ...
         final XSDTypeDefinition typeDefn = XsdUtil.getType(xsdComponent);
@@ -1093,27 +1065,16 @@ public class MappingDocumentFormatter {
                 final XSDWhiteSpace whiteSpaceEnum = facet.getValue();
                 if (whiteSpaceEnum != null) switch (whiteSpaceEnum.getValue()) {
                     case XSDWhiteSpace.PRESERVE:
-                        return MappingNodeConstants.NORMALIZE_TEXT_PRESERVE;
+                        return IMappingNode.NORMALIZE_TEXT_PRESERVE;
                     case XSDWhiteSpace.REPLACE:
-                        return MappingNodeConstants.NORMALIZE_TEXT_REPLACE;
+                        return IMappingNode.NORMALIZE_TEXT_REPLACE;
                     case XSDWhiteSpace.COLLAPSE:
-                        return MappingNodeConstants.NORMALIZE_TEXT_COLLAPSE;
+                        return IMappingNode.NORMALIZE_TEXT_COLLAPSE;
                 }
             }
         }
 
-        // I don't think we need to do derive the text normalization for complex types with simple or empty content
-        // } else if (typeDefn instanceof XSDComplexTypeDefinition) {
-        // final XSDComplexTypeDefinition cmplxTypeDefn = (XSDComplexTypeDefinition)typeDefn;
-        // XSDContentTypeCategory contentType = cmplxTypeDefn.getContentTypeCategory();
-        // switch (contentType.getValue()) {
-        // case XSDContentTypeCategory.EMPTY: return MappingNodeConstants.NORMALIZE_TEXT_PRESERVE;
-        // case XSDContentTypeCategory.SIMPLE: return MappingNodeConstants.NORMALIZE_TEXT_PRESERVE;
-        // default: return MappingNodeConstants.Defaults.DEFAULT_NORMALIZE_TEXT;
-        // }
-        // }
-
-        return MappingNodeConstants.Defaults.DEFAULT_NORMALIZE_TEXT;
+        return IMappingNode.DEFAULT_NORMALIZE_TEXT;
     }
 
     /**
@@ -1136,7 +1097,7 @@ public class MappingDocumentFormatter {
             final XSDElementDeclaration xsdElement = (XSDElementDeclaration)xsdComponent;
             return xsdElement.isNillable();
         }
-        return MappingNodeConstants.Defaults.DEFAULT_IS_NILLABLE.booleanValue();
+        return IMappingNode.DEFAULT_IS_NILLABLE.booleanValue();
     }
 
     boolean isRecursive( final XmlElement element ) {
@@ -1145,8 +1106,8 @@ public class MappingDocumentFormatter {
         return false;
     }
 
-    protected void processChildren( final List children,
-                                    final MappingNode parentMappingNode,
+    private void processChildren( final List children,
+                                    final IMappingNode parentMappingNode,
                                     final NamespaceContext namespaceContext,
                                     final ElementInfo parentInfo ) {
         final Iterator iter = children.iterator();
@@ -1161,27 +1122,29 @@ public class MappingDocumentFormatter {
     }
 
     /**
-     * @param rootMappingNode
-     * @param rootElement
+     * @param element
+     * @param elementInfo
+     * @param mappingContext
+     * 
+     * @return element node
      */
-    protected MappingElement processElementNode( final XmlElement element,
+    private IMappingElement processElementNode(final XmlElement element,
                                                  final ElementInfo elementInfo,
-                                                 final MappingContext mappingContext ) {
-        MappingElement node = null;
+                                                 final MappingContext mappingContext ) {        
+        IMappingElement node = null;
 
         final String name = element.getName();
         final String nsPrefix = getNamespacePrefix(element, elementInfo.getNamespaceContext(), mappingContext);
-        final Namespace namespace = getNamespace(nsPrefix);
 
         // There are effectively three types of elements, recursive, criteria and regular..
         if (isRecursive(element)) {
             // first check if this is a "recursive" element
-            final MappingRecursiveElement elem = new MappingRecursiveElement(name, namespace, getRecursionMappingClass(element));
+            IMappingRecursiveElement elem = getFactory().createMappingRecursiveElement(name, nsPrefix, getRecursionMappingClass(element));
             elem.setCriteria(getRecursionCriteria(element));
             elem.setRecursionLimit(getRecursionLimit(element), throwExceptionOnRecursionLimit(element));
             node = elem;
         } else // this regular element
-        node = new MappingElement(name, namespace);
+        node = getFactory().createMappingElement(name, nsPrefix);
 
         // now load all other common properties.
         node.setMinOccurrs(getMinOccurrences(element));
@@ -1218,16 +1181,18 @@ public class MappingDocumentFormatter {
                 createXsiTypeAttribute(node, elementInfo);
             }
         }
+        
         return node;
     }
 
-    protected void processNamespaces( final List children,
-                                      final MappingNode parentMappingNode,
+    private void processNamespaces( final List children,
+                                      final IMappingNode parentMappingNode,
                                       final NamespaceContext namespaceContext,
                                       final ElementInfo parentInfo ) {
         final List orderedNamespaces = new LinkedList(children);
         final XmlNamespaceComparator comparator = new XmlNamespaceComparator();
         Collections.sort(orderedNamespaces, comparator);
+        
         processChildren(orderedNamespaces, parentMappingNode, namespaceContext, parentInfo);
     }
 
@@ -1248,17 +1213,17 @@ public class MappingDocumentFormatter {
     boolean throwExceptionOnRecursionLimit( final XmlElement element ) {
         final MappingClass mappingClass = this.helper.getMappingClass(element);
         if (mappingClass != null && mappingClass.isRecursionAllowed() && mappingClass.isRecursive()) return (mappingClass.getRecursionLimitErrorMode().getValue() == RecursionErrorMode.THROW);
-        return MappingNodeConstants.Defaults.DEFAULT_EXCEPTION_ON_RECURSION_LIMIT.booleanValue();
+        return IMappingNode.DEFAULT_EXCEPTION_ON_RECURSION_LIMIT.booleanValue();
 
     }
 
-    protected class ElementInfo {
+    private class ElementInfo {
         private String soapArrayType;
         private String xsiType;
         private final ElementInfo parentInfo;
         private final NamespaceContext namespaceContext;
 
-        protected ElementInfo( final NamespaceContext namespaceContext,
+        private ElementInfo( final NamespaceContext namespaceContext,
                                final ElementInfo parentInfo ) {
             this.parentInfo = parentInfo;
             this.namespaceContext = namespaceContext;

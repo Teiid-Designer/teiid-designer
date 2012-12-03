@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.sqleditor.component;
 
-import org.teiid.query.sql.lang.GroupBy;
+import org.teiid.designer.query.sql.lang.IGroupBy;
 
 /**
  * The <code>GroupByDisplayNode</code> class is used to represent a Query's GROUPBY clause.
@@ -27,7 +27,7 @@ public class GroupByDisplayNode extends DisplayNode {
      * @param groupBy the query language object used to construct this display node.
      */
     public GroupByDisplayNode( DisplayNode parentNode,
-                               GroupBy groupBy ) {
+                               IGroupBy groupBy ) {
         this.parentNode = parentNode;
         this.languageObject = groupBy;
     }

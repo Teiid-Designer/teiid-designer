@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.id.UUID;
 import org.teiid.designer.core.ModelerCore;
@@ -26,6 +25,9 @@ import org.teiid.designer.core.validation.ValidationResult;
 import org.teiid.designer.metadata.runtime.ColumnRecord;
 import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.AttributeMappingHelper;
 import org.teiid.designer.transformation.util.TransformationHelper;
@@ -50,7 +52,7 @@ public class ProjectSymbolsValidationHelper {
      * @param validationResult The validation result that gets updated with problems.
      * @since 4.3
      */
-    public void validateProjectedSymbols( final Command command,
+    public void validateProjectedSymbols( final ICommand command,
                                           final SqlTransformationMappingRoot transRoot,
                                           final ValidationResult validationResult ) {
         List projSymbols = command.getProjectedSymbols();
@@ -165,7 +167,7 @@ public class ProjectSymbolsValidationHelper {
             boolean foundMatch = false;
             EObject outputColumn = (EObject)colIter.next();
             String outputColumnName = TransformationHelper.getSqlColumnName(outputColumn);
-            Expression singleElementSymbol = (Expression)projIter.next();
+            IExpression singleElementSymbol = (IExpression)projIter.next();
             String symbolName = AttributeMappingHelper.getSymbolShortName(singleElementSymbol);
             if (outputColumnName.equalsIgnoreCase(symbolName)) {
                 foundMatch = true;
@@ -238,8 +240,8 @@ public class ProjectSymbolsValidationHelper {
             // -------------------------------------------------------------------------
             // The target attribute may not be a MappingClass column (fix for defect 10917)
             if (!(target instanceof MappingClass)) {
-                if ((singleElementSymbol instanceof ElementSymbol) && (outputColumn != null)) {
-                    final ElementSymbol eSymbol = (ElementSymbol)singleElementSymbol;
+                if ((singleElementSymbol instanceof IElementSymbol) && (outputColumn != null)) {
+                    final IElementSymbol eSymbol = (IElementSymbol)singleElementSymbol;
                     final Object metadataID = eSymbol.getMetadataID();
                     if ((metadataID != null) && (metadataID instanceof ColumnRecord)) {
                         ColumnRecord colRecord = (ColumnRecord)metadataID;

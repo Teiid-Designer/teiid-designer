@@ -18,12 +18,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.transformation.ui.builder.AbstractLanguageObjectEditor;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.ui.builder.model.ElementEditorModel;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener;
 import org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent;
@@ -58,7 +60,7 @@ public class ElementEditor extends AbstractLanguageObjectEditor {
      */
     public ElementEditor( Composite theParent,
                           ElementEditorModel theModel ) {
-        super(theParent, ElementSymbol.class, theModel);
+        super(theParent, IElementSymbol.class, theModel);
         controller = new ViewController();
         model = theModel;
         model.addModelListener(controller);
@@ -154,7 +156,7 @@ public class ElementEditor extends AbstractLanguageObjectEditor {
      */
     void handleTreeSelection() {
         IStructuredSelection selection = (IStructuredSelection)viewer.getSelection();
-        ElementSymbol element = null;
+        IElementSymbol element = null;
 
         if (!selection.isEmpty()) {
             ICriteriaStrategy strategy = ElementViewerFactory.getCriteriaStrategy(viewer);
@@ -162,10 +164,12 @@ public class ElementEditor extends AbstractLanguageObjectEditor {
 
             if (strategy.isValid(selection.getFirstElement())) {
                 Object eObj = selection.getFirstElement();
-                if (eObj instanceof ElementSymbol) {
-                    element = ((ElementSymbol)eObj);
+                if (eObj instanceof IElementSymbol) {
+                    element = ((IElementSymbol)eObj);
                 } else {
-                    element = new ElementSymbol(strategy.getRuntimeFullName(eObj), true);
+                    IQueryService queryService = ModelerCore.getTeiidQueryService();
+                    IQueryFactory factory = queryService.createQueryFactory();
+                    element = factory.createElementSymbol(strategy.getRuntimeFullName(eObj), true);
 
                     // the viewer model contains EObjects. so the objects in the selection will
                     // be EObjects. since the EObject is used later on in the QueryCriteriaStrategy.getNode()
@@ -182,12 +186,12 @@ public class ElementEditor extends AbstractLanguageObjectEditor {
      * @see org.teiid.designer.transformation.ui.builder.ILanguageObjectEditor#setLanguageObject(org.teiid.query.sql.LanguageObject)
      */
     @Override
-    public void setLanguageObject( LanguageObject theLanguageObject ) {
+    public void setLanguageObject( ILanguageObject theLanguageObject ) {
         if (theLanguageObject == null) {
             clear();
         } else {
-            if (!(theLanguageObject instanceof ElementSymbol)) {
-                CoreArgCheck.isTrue((theLanguageObject instanceof ElementSymbol),
+            if (!(theLanguageObject instanceof IElementSymbol)) {
+                CoreArgCheck.isTrue((theLanguageObject instanceof IElementSymbol),
                                     Util.getString(PREFIX + "invalidLanguageObject", //$NON-NLS-1$
                                                    new Object[] {theLanguageObject.getClass().getName()}));
             }

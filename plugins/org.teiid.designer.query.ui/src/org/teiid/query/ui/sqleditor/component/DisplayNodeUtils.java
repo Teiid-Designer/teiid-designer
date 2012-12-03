@@ -10,24 +10,24 @@ package org.teiid.query.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.CompareCriteria;
-import org.teiid.query.sql.lang.CompoundCriteria;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.From;
-import org.teiid.query.sql.lang.GroupBy;
-import org.teiid.query.sql.lang.IsNullCriteria;
-import org.teiid.query.sql.lang.MatchCriteria;
-import org.teiid.query.sql.lang.Option;
-import org.teiid.query.sql.lang.OrderBy;
-import org.teiid.query.sql.lang.Select;
-import org.teiid.query.sql.lang.SetCriteria;
-import org.teiid.query.sql.lang.SubqueryContainer;
-import org.teiid.query.sql.lang.UnaryFromClause;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.ScalarSubquery;
-import org.teiid.query.sql.symbol.Symbol;
+import javax.swing.text.html.Option;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.ICompareCriteria;
+import org.teiid.designer.query.sql.lang.ICompoundCriteria;
+import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.IFrom;
+import org.teiid.designer.query.sql.lang.IGroupBy;
+import org.teiid.designer.query.sql.lang.IIsNullCriteria;
+import org.teiid.designer.query.sql.lang.IMatchCriteria;
+import org.teiid.designer.query.sql.lang.IOrderBy;
+import org.teiid.designer.query.sql.lang.ISelect;
+import org.teiid.designer.query.sql.lang.ISetCriteria;
+import org.teiid.designer.query.sql.lang.ISubqueryContainer;
+import org.teiid.designer.query.sql.lang.IUnaryFromClause;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.symbol.IScalarSubquery;
+import org.teiid.designer.query.sql.symbol.ISymbol;
 import org.teiid.query.ui.UiConstants;
 import org.teiid.query.ui.UiPlugin;
 
@@ -205,7 +205,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
      * @return true if the node has at least one expression, false if not.
      */
     public static boolean hasExpression( DisplayNode node ) {
-        if (node.languageObject instanceof Expression) {
+        if (node.languageObject instanceof IExpression) {
             return true;
         }
         List nodes = node.getDisplayNodeList();
@@ -289,7 +289,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
      */
     public static int getStartIndexOfNextExpression( DisplayNode node,
                                                      int index ) {
-        if (node.languageObject instanceof Expression) {
+        if (node.languageObject instanceof IExpression) {
             if (node.isAnywhereWithin(index)) {
                 return node.getStartIndex();
             }
@@ -319,7 +319,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
     public static int getEndIndexOfPreviousExpression( DisplayNode node,
                                                        int index ) {
         int prevEnd = -1;
-        if (node.languageObject instanceof Expression) {
+        if (node.languageObject instanceof IExpression) {
             if (node.isAnywhereWithin(index)) {
                 return node.getEndIndex() + 1;
             }
@@ -402,15 +402,15 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
     public static boolean isClauseNode( DisplayNode clauseNode ) {
         if (clauseNode instanceof SelectDisplayNode) {
             return true;
-        } else if (clauseNode.languageObject instanceof From) {
+        } else if (clauseNode.languageObject instanceof IFrom) {
             return true;
         } else if (clauseNode instanceof WhereDisplayNode) {
             return true;
-        } else if (clauseNode.languageObject instanceof GroupBy) {
+        } else if (clauseNode.languageObject instanceof IGroupBy) {
             return true;
         } else if (clauseNode instanceof HavingDisplayNode) {
             return true;
-        } else if (clauseNode.languageObject instanceof OrderBy) {
+        } else if (clauseNode.languageObject instanceof IOrderBy) {
             return true;
         } else if (clauseNode.languageObject instanceof Option) {
             return true;
@@ -426,7 +426,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
      * @return true if the node is a command, false if not.
      */
     public static boolean isCommandNode( DisplayNode node ) {
-        return node.getLanguageObject() instanceof Command;
+        return node.getLanguageObject() instanceof ICommand;
     }
 
     /**
@@ -604,9 +604,9 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
         boolean result = false;
         if (criteriaDN != null) {
             // Must be one of the editable Criteria
-            if (criteriaDN.languageObject instanceof CompoundCriteria || criteriaDN.languageObject instanceof CompareCriteria
-                || criteriaDN.languageObject instanceof IsNullCriteria || criteriaDN.languageObject instanceof MatchCriteria
-                || criteriaDN.languageObject instanceof SetCriteria) {
+            if (criteriaDN.languageObject instanceof ICompoundCriteria || criteriaDN.languageObject instanceof ICompareCriteria
+                || criteriaDN.languageObject instanceof IIsNullCriteria || criteriaDN.languageObject instanceof IMatchCriteria
+                || criteriaDN.languageObject instanceof ISetCriteria) {
                 result = true;
             }
         }
@@ -633,7 +633,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
      * @return true if the node is within a Select displayNode, false if not.
      */
     public static boolean isWithinSelect( DisplayNode displayNode ) {
-        if (displayNode.languageObject instanceof Select) {
+        if (displayNode.languageObject instanceof ISelect) {
             return true;
         }
         DisplayNode parentNode = displayNode.getParent();
@@ -653,12 +653,12 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
      * @return true if the node is within a From displayNode, false if not.
      */
     public static boolean isWithinFrom( DisplayNode displayNode ) {
-        if (displayNode.languageObject instanceof From) {
+        if (displayNode.languageObject instanceof IFrom) {
             return true;
         }
         DisplayNode parentNode = displayNode.getParent();
         while (parentNode != null) {
-            if (parentNode.languageObject instanceof From) {
+            if (parentNode.languageObject instanceof IFrom) {
                 return true;
             }
             parentNode = parentNode.getParent();
@@ -695,7 +695,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
     public static boolean isWithinSubQueryNode( DisplayNode displayNode ) {
         DisplayNode parentNode = displayNode;
         while (parentNode != null) {
-            if (parentNode.languageObject instanceof SubqueryContainer) {
+            if (parentNode.languageObject instanceof ISubqueryContainer) {
                 return true;
             }
             parentNode = parentNode.getParent();
@@ -711,8 +711,8 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
      * @return true if the node is a symbol node, false if not.
      */
     public static boolean isSymbolNode( DisplayNode node ) {
-        if (node.languageObject instanceof Symbol || node.languageObject instanceof ElementSymbol
-            || node.languageObject instanceof UnaryFromClause) {
+        if (node.languageObject instanceof ISymbol || node.languageObject instanceof IElementSymbol
+            || node.languageObject instanceof IUnaryFromClause) {
             return true;
         }
         return false;
@@ -862,7 +862,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
      * @return the criteria display Node for this node.
      */
     public static DisplayNode getCriteriaInNode( DisplayNode node ) {
-        if (node.languageObject instanceof Criteria) {
+        if (node.languageObject instanceof ICriteria) {
             return node;
         }
 
@@ -884,12 +884,12 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
      */
     public static DisplayNode getExpressionForNode( DisplayNode node ) {
         if (node == null) return null;
-        if (node.languageObject instanceof ElementSymbol) {
+        if (node.languageObject instanceof IElementSymbol) {
             if (node.isInExpression()) {
                 return node.getExpression();
             }
             return null;
-        } else if (node.languageObject instanceof Expression && !(node.languageObject instanceof ScalarSubquery)) {
+        } else if (node.languageObject instanceof IExpression && !(node.languageObject instanceof IScalarSubquery)) {
             return node;
         } else if (node.isInExpression()) {
             return node.getExpression();

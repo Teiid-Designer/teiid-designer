@@ -13,18 +13,20 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.query.SetQueryUtil;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.From;
-import org.teiid.query.sql.lang.FromClause;
-import org.teiid.query.sql.lang.JoinPredicate;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.SetQuery;
-import org.teiid.query.sql.lang.SubqueryContainer;
-import org.teiid.query.sql.lang.SubqueryFromClause;
-import org.teiid.query.sql.lang.UnaryFromClause;
-import org.teiid.query.sql.visitor.ValueIteratorProviderCollectorVisitor;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.IValueIteratorProviderCollectorVisitor;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.lang.IFrom;
+import org.teiid.designer.query.sql.lang.IFromClause;
+import org.teiid.designer.query.sql.lang.IJoinPredicate;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.query.sql.lang.ISetQuery;
+import org.teiid.designer.query.sql.lang.ISubqueryContainer;
+import org.teiid.designer.query.sql.lang.ISubqueryFromClause;
+import org.teiid.designer.query.sql.lang.IUnaryFromClause;
 
 
 
@@ -64,38 +66,40 @@ public class QueryTreeContentProvider implements ITreeContentProvider {
      */
     @Override
 	public Object[] getChildren(Object obj) {
-        if ( obj instanceof SetQuery) {
-            return SetQueryUtil.getQueryList((SetQuery)obj).toArray();
-        } else if ( obj instanceof Query ) {
-            if ( ((Query) obj).getCriteria() == null ) {
-                return new Object[] { ((Query) obj).getFrom() };
+        if ( obj instanceof ISetQuery) {
+            return SetQueryUtil.getQueryList((ISetQuery)obj).toArray();
+        } else if ( obj instanceof IQuery ) {
+            if ( ((IQuery) obj).getCriteria() == null ) {
+                return new Object[] { ((IQuery) obj).getFrom() };
             }
-            return new Object[] { ((Query) obj).getFrom(), ((Query) obj).getCriteria() };
-        } else if ( obj instanceof From ) {
-            Collection clauses = ((From) obj).getClauses();
+            return new Object[] { ((IQuery) obj).getFrom(), ((IQuery) obj).getCriteria() };
+        } else if ( obj instanceof IFrom ) {
+            Collection clauses = ((IFrom) obj).getClauses();
             ArrayList children = new ArrayList(clauses.size());
             for ( Iterator iter = clauses.iterator() ; iter.hasNext() ; ) {
-                FromClause clause = (FromClause) iter.next();
-                if ( clause instanceof UnaryFromClause ) {
-                    children.add(((UnaryFromClause) clause).getGroup());
+                IFromClause clause = (IFromClause) iter.next();
+                if ( clause instanceof IUnaryFromClause ) {
+                    children.add(((IUnaryFromClause) clause).getGroup());
                 } else {
                     children.add(clause);
                 }
             }
             return children.toArray(); 
-        } else if ( obj instanceof FromClause ) {
-            if ( obj instanceof UnaryFromClause ) {
+        } else if ( obj instanceof IFromClause ) {
+            if ( obj instanceof IUnaryFromClause ) {
                 return new Object[] { };
-            } else if ( obj instanceof JoinPredicate ) {
-                return new Object[] { ((JoinPredicate) obj).getLeftClause(), ((JoinPredicate) obj).getRightClause() };
-            } else if ( obj instanceof SubqueryFromClause ) {
+            } else if ( obj instanceof IJoinPredicate ) {
+                return new Object[] { ((IJoinPredicate) obj).getLeftClause(), ((IJoinPredicate) obj).getRightClause() };
+            } else if ( obj instanceof ISubqueryFromClause ) {
                 return new Object[] { };
             }            
-        } else if ( obj instanceof Criteria ) {
-            List<SubqueryContainer<?>> containers = ValueIteratorProviderCollectorVisitor.getValueIteratorProviders((Criteria)obj);
-            List<Command> commands = new ArrayList<Command>();
+        } else if ( obj instanceof ICriteria ) {
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            IValueIteratorProviderCollectorVisitor visitor = queryService.getValueIteratorProviderCollectorVisitor();
+            List<ISubqueryContainer<?>> containers = visitor.getValueIteratorProviders((ICriteria)obj);
+            List<ICommand> commands = new ArrayList<ICommand>();
             
-            for (SubqueryContainer container : containers) {
+            for (ISubqueryContainer container : containers) {
                 commands.add(container.getCommand());
             }
             

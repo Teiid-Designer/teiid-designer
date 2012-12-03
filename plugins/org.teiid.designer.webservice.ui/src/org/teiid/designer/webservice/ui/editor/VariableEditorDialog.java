@@ -55,7 +55,11 @@ import org.teiid.core.designer.xml.XPathHelper;
 import org.teiid.designer.metamodels.webservice.Input;
 import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.metamodels.xsd.XsdUtil;
-import org.teiid.designer.sql.ISQLConstants;
+import org.teiid.designer.query.sql.ISQLConstants;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.proc.IAssignmentStatement;
+import org.teiid.designer.query.sql.proc.IDeclareStatement;
+import org.teiid.designer.query.sql.proc.IStatement;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlEditorPanel;
 import org.teiid.designer.ui.OverlayImageIcon;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
@@ -140,7 +144,7 @@ public class VariableEditorDialog extends Dialog
         this.selection = selection;
     }
 
-    private void addDisplayNode( Statement statement ) {
+    private void addDisplayNode( IStatement statement ) {
         DisplayNode block = this.editor.findBlock();
         DisplayNode newNode = DisplayNodeFactory.createDisplayNode(block, statement);
         if (newNode != null) {
@@ -372,7 +376,7 @@ public class VariableEditorDialog extends Dialog
         return null;
     }
 
-    private XsdInstanceNode getNode( DeclareStatement declaration ) {
+    private XsdInstanceNode getNode( IDeclareStatement declaration ) {
         for (Iterator iter = this.nodesToDeclarations.entrySet().iterator(); iter.hasNext();) {
             Entry nodeEntry = (Entry)iter.next();
             if (nodeEntry.getValue().equals(declaration)) {
@@ -522,13 +526,13 @@ public class VariableEditorDialog extends Dialog
         XsdInstanceNode node = (XsdInstanceNode)item.getData();
         node.setSelected(item.getChecked());
         if (item.getChecked()) {
-            DeclareStatement declaration = WebServiceUiUtil.createDeclareStatement(node, input);
+            IDeclareStatement declaration = WebServiceUiUtil.createDeclareStatement(node, input);
             this.nodesToDeclarations.put(node, declaration);
             WebServiceUiUtil.ensureVariablesUnique(this.nodesToDeclarations);
             this.editor.getDeclarationsToAssignments().put(declaration, declaration);
             addDisplayNode(declaration);
         } else {
-            removeVariableStatements((DeclareStatement)this.nodesToDeclarations.remove(node));
+            removeVariableStatements((IDeclareStatement)this.nodesToDeclarations.remove(node));
         }
         this.varSection.refresh();
         this.editor.refreshVariables();
@@ -570,7 +574,7 @@ public class VariableEditorDialog extends Dialog
                 this.nodeViewer.update(this.highlightedRecursionItems.toArray(), null);
             }
 
-            DeclareStatement declaration = (DeclareStatement)this.nodesToDeclarations.get(node);
+            IDeclareStatement declaration = (IDeclareStatement)this.nodesToDeclarations.get(node);
             if (declaration != null) {
                 for (Iterator iter = this.editor.getDeclarationsToAssignments().entrySet().iterator(); iter.hasNext();) {
                     Entry entry = (Entry)iter.next();
@@ -591,15 +595,15 @@ public class VariableEditorDialog extends Dialog
         }
     }
 
-    private void removeVariableStatements( DeclareStatement declaration ) {
-        AssignmentStatement assignment = (AssignmentStatement)this.editor.getDeclarationsToAssignments().remove(declaration);
+    private void removeVariableStatements( IDeclareStatement declaration ) {
+        IAssignmentStatement assignment = (IAssignmentStatement)this.editor.getDeclarationsToAssignments().remove(declaration);
         DisplayNode block = this.editor.findBlock();
         if (block != null) {
             for (Iterator childIter = block.getChildren().iterator(); childIter.hasNext();) {
                 DisplayNode blockChild = (DisplayNode)childIter.next();
-                if (blockChild.getLanguageObject() instanceof DeclareStatement || 
-                        blockChild.getLanguageObject() instanceof AssignmentStatement) {
-                    LanguageObject obj = blockChild.getLanguageObject();
+                if (blockChild.getLanguageObject() instanceof IDeclareStatement || 
+                        blockChild.getLanguageObject() instanceof IAssignmentStatement) {
+                    ILanguageObject obj = blockChild.getLanguageObject();
                     if (obj == declaration || obj == assignment) {
                         childIter.remove();
                         for (DisplayNode displayNode = block; displayNode != null; displayNode = displayNode.getParent()) {
@@ -639,7 +643,7 @@ public class VariableEditorDialog extends Dialog
     void updateDeletedNodes( List entries ) {
         for (Iterator entryIter = entries.iterator(); entryIter.hasNext();) {
             Entry varEntry = (Entry)entryIter.next();
-            DeclareStatement declaration = (DeclareStatement)varEntry.getKey();
+            IDeclareStatement declaration = (IDeclareStatement)varEntry.getKey();
             for (Iterator nodeIter = this.nodesToDeclarations.entrySet().iterator(); nodeIter.hasNext();) {
                 Entry nodeEntry = (Entry)nodeIter.next();
                 if (nodeEntry.getValue() == declaration) {
@@ -672,7 +676,7 @@ public class VariableEditorDialog extends Dialog
             Entry entry = (Entry)entryIter.next();
             try {
                 Object obj = XPathHelper.getSingleMatch(new StringReader(doc),
-                                                        WebServiceUtil.getXpath((AssignmentStatement)entry.getValue()));
+                                                        WebServiceUtil.getXpath((IAssignmentStatement)entry.getValue()));
                 if (obj instanceof NodeInfo) {
                     NodeInfo saxonNode = (NodeInfo)obj;
                     if (saxonNode.getNodeKind() == Type.ELEMENT || saxonNode.getNodeKind() == Type.ATTRIBUTE) {
@@ -717,10 +721,10 @@ public class VariableEditorDialog extends Dialog
             this.xpathText.setText(EMPTY_STRING);
         } else {
             Entry varEntry = (Entry)selection.getFirstElement();
-            DeclareStatement declaration = (DeclareStatement)varEntry.getKey();
+            IDeclareStatement declaration = (IDeclareStatement)varEntry.getKey();
             this.xpathSection.setText(UTIL.getString(VAR_XPATH_TITLE, declaration.getVariable().getShortName()));
             this.xpathSection.layout(); // This is necessary to get the title label resized
-            AssignmentStatement assignment = (AssignmentStatement)varEntry.getValue();
+            IAssignmentStatement assignment = (IAssignmentStatement)varEntry.getValue();
             this.xpathText.setText(WebServiceUtil.getXpath(assignment));
             // Select node in tree
             XsdInstanceNode node = getNode(declaration);

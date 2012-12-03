@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import javax.management.Query;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -64,6 +63,7 @@ import org.teiid.designer.metamodels.webservice.aspects.sql.OutputAspect;
 import org.teiid.designer.metamodels.xml.XmlDocument;
 import org.teiid.designer.metamodels.xml.XmlElement;
 import org.teiid.designer.metamodels.xml.XmlSequence;
+import org.teiid.designer.query.sql.lang.IQuery;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.util.TransformationMappingHelper;
 import org.teiid.designer.transformation.util.TransformationSqlHelper;
@@ -884,7 +884,7 @@ public class WebServiceBuilderHelper {
         sbuffer.append("BEGIN "); //$NON-NLS-1$
 
         // Create the default SELECT * FROM query using the output document
-        final Query qry = TransformationSqlHelper.createDefaultQuery(outputDoc);
+        final IQuery qry = TransformationSqlHelper.createDefaultQuery(outputDoc);
         if (qry != null) {
             sbuffer.append(qry.toString());
             sbuffer.append(";"); //$NON-NLS-1$
@@ -948,7 +948,7 @@ public class WebServiceBuilderHelper {
         }
 
         // Create the default SELECT * FROM query using the output document
-        final Query qry = TransformationSqlHelper.createDefaultQuery(outputDoc);
+        final IQuery qry = TransformationSqlHelper.createDefaultQuery(outputDoc);
 
         // Add query to the procedure
         if (qry != null) {

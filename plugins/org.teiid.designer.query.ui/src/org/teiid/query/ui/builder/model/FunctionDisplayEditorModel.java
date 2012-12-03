@@ -7,8 +7,8 @@
  */
 package org.teiid.query.ui.builder.model;
 
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.symbol.Function;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.symbol.IFunction;
 
 /**
  * The <code>FunctionDisplayEditorModel</code> class is used as a model for the
@@ -21,13 +21,13 @@ public class FunctionDisplayEditorModel extends AbstractLanguageObjectEditorMode
     /**
      * The currently selected <code>Function</code>.
      */
-    private Function selectedFunction;
+    private IFunction selectedFunction;
 
     /**
      * Constructs an <code>FunctionDisplayEditorModel</code> with an incomplete state.
      */
     public FunctionDisplayEditorModel() {
-        super(Function.class);
+        super(IFunction.class);
     }
 
     /**
@@ -36,8 +36,8 @@ public class FunctionDisplayEditorModel extends AbstractLanguageObjectEditorMode
      * @return the currently selected <code>Function</code>
      * @throws IllegalStateException if the current value is not complete
      */
-    public Function getFunction() {
-        Function function = (Function)getLanguageObject();
+    public IFunction getFunction() {
+        IFunction function = (IFunction)getLanguageObject();
         return function;
     }
 
@@ -45,7 +45,7 @@ public class FunctionDisplayEditorModel extends AbstractLanguageObjectEditorMode
      * @see org.teiid.query.ui.builder.model.AbstractLanguageObjectEditorModel#getLanguageObject()
      */
     @Override
-    public LanguageObject getLanguageObject() {
+    public ILanguageObject getLanguageObject() {
         return selectedFunction;
     }
 
@@ -62,7 +62,7 @@ public class FunctionDisplayEditorModel extends AbstractLanguageObjectEditorMode
      * 
      * @param theFunction the function becoming the current value
      */
-    public void selectFunction( Function theFunction ) {
+    public void selectFunction( IFunction theFunction ) {
         boolean changed = (!sameAsSelectedFunction(theFunction));
         if (changed) {
             selectedFunction = theFunction;
@@ -75,7 +75,7 @@ public class FunctionDisplayEditorModel extends AbstractLanguageObjectEditorMode
      * 
      * @param theFunction the function being saved
      */
-    private void setFunction( Function theFunction ) {
+    private void setFunction( IFunction theFunction ) {
         notifyListeners = false;
         if (theFunction == null) {
             selectedFunction = null;
@@ -87,7 +87,7 @@ public class FunctionDisplayEditorModel extends AbstractLanguageObjectEditorMode
         fireModelChanged(LanguageObjectEditorModelEvent.SAVED);
     }
 
-    private boolean sameAsSelectedFunction( Function newFunction ) {
+    private boolean sameAsSelectedFunction( IFunction newFunction ) {
         boolean same;
         if (selectedFunction == null) {
             same = (newFunction == null);
@@ -101,10 +101,10 @@ public class FunctionDisplayEditorModel extends AbstractLanguageObjectEditorMode
      * @see org.teiid.query.ui.builder.model.AbstractLanguageObjectEditorModel#setLanguageObject(org.teiid.query.sql.LanguageObject)
      */
     @Override
-    public void setLanguageObject( LanguageObject theLangObj ) {
-        if (!sameAsSelectedFunction((Function)theLangObj)) {
+    public void setLanguageObject( ILanguageObject theLangObj ) {
+        if (!sameAsSelectedFunction((IFunction)theLangObj)) {
             super.setLanguageObject(theLangObj);
-            setFunction((Function)theLangObj);
+            setFunction((IFunction)theLangObj);
         }
     }
 

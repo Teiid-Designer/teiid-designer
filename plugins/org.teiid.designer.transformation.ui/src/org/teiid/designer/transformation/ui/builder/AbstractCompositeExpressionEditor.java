@@ -21,10 +21,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.transformation.ui.builder.util.CompositeEditorMessagePanel;
 import org.teiid.designer.ui.common.util.WidgetUtil;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.ui.builder.model.CompositeLanguageObjectEditorModel;
 
 
@@ -59,7 +59,7 @@ public abstract class AbstractCompositeExpressionEditor extends AbstractComposit
 
     protected AbstractCompositeExpressionEditor( Composite theParent,
                                                  CompositeLanguageObjectEditorModel theModel ) {
-        super(theParent, Expression.class, theModel);
+        super(theParent, IExpression.class, theModel);
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
@@ -232,7 +232,7 @@ public abstract class AbstractCompositeExpressionEditor extends AbstractComposit
      * @see org.teiid.query.ui.builder.AbstractCompositeLanguageObjectEditor#setLanguageObject(org.teiid.query.sql.LanguageObject)
      */
     @Override
-    public void setLanguageObject( LanguageObject theLanguageObject ) {
+    public void setLanguageObject( ILanguageObject theLanguageObject ) {
         super.setLanguageObject(theLanguageObject);
 
         pnlMessages.setLanguageObject(theLanguageObject);

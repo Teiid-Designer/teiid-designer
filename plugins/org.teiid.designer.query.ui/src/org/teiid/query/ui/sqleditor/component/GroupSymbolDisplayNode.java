@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.sqleditor.component;
 
-import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 
 /**
  * The <code>GroupSymbolDisplayNode</code> class is used to represent a GroupSymbol.
@@ -25,7 +25,7 @@ public class GroupSymbolDisplayNode extends DisplayNode {
      *  @param parentNode the parent DisplayNode of this.
      *  @param obj the query language object used to construct this display node.
      */
-    public GroupSymbolDisplayNode(DisplayNode parentNode, GroupSymbol gSymbol) {
+    public GroupSymbolDisplayNode(DisplayNode parentNode, IGroupSymbol gSymbol) {
         this.parentNode = parentNode;
         this.languageObject = gSymbol;
     }

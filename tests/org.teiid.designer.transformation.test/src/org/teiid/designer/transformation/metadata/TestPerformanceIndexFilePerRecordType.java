@@ -18,7 +18,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-
 import org.teiid.core.designer.util.Stopwatch;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.core.index.AbstractIndexSelector;
@@ -35,8 +34,7 @@ import org.teiid.designer.core.metadata.runtime.FakeSqlModelAspect;
 import org.teiid.designer.core.metadata.runtime.FakeSqlTableAspect;
 import org.teiid.designer.core.metadata.runtime.RuntimeAdapter;
 import org.teiid.designer.core.workspace.ModelWorkspaceIndexManager;
-import org.teiid.designer.transformation.metadata.TransformationMetadataFactory;
-import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 
 /**
  * TestPerformanceIndexFilePerRecordType
@@ -272,7 +270,7 @@ public class TestPerformanceIndexFilePerRecordType extends TestCase {
                                 int numColumns ) throws Exception {
         helpCreateIndexFiles(numModels, numTables, numColumns);
         final IndexSelector selector = new TestIndexSelector();
-        QueryMetadataInterface queryMetadata = TransformationMetadataFactory.getInstance().getServerMetadata(selector);
+        IQueryMetadataInterface queryMetadata = TransformationMetadataFactory.getInstance().getServerMetadata(selector);
 
         Stopwatch sw = new Stopwatch();
         // Name of a column at the end of the model

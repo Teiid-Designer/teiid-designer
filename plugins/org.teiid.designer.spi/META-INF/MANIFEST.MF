@@ -12,11 +12,18 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="3.8.0",
  org.teiid.core.designer;bundle-version="8.0.0"
 Export-Package: org.teiid.datatools.connectivity.spi,
  org.teiid.designer,
+ org.teiid.designer.query,
+ org.teiid.designer.query.metadata,
+ org.teiid.designer.query.sql,
+ org.teiid.designer.query.sql.lang,
+ org.teiid.designer.query.sql.proc,
+ org.teiid.designer.query.sql.symbol,
  org.teiid.designer.runtime.connection.spi,
  org.teiid.designer.runtime.registry,
  org.teiid.designer.runtime.spi,
  org.teiid.designer.runtime.version.spi,
- org.teiid.designer.sql,
  org.teiid.designer.type,
- org.teiid.designer.udf
+ org.teiid.designer.udf,
+ org.teiid.designer.validator,
+ org.teiid.designer.xml
 Bundle-Activator: org.teiid.designer.DesignerSPIPlugin

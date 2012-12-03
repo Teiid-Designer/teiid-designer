@@ -9,8 +9,8 @@ package org.teiid.query.ui.sqleditor.component;
 
 import java.util.Iterator;
 import java.util.List;
-import org.teiid.query.sql.lang.Insert;
-import org.teiid.query.sql.lang.Option;
+import javax.swing.text.html.Option;
+import org.teiid.designer.query.sql.lang.IInsert;
 
 /**
  * The <code>InsertDisplayNode</code> class is used to represent a INSERT command.
@@ -30,7 +30,7 @@ public class InsertDisplayNode extends DisplayNode {
      * @param insert The insert language object used to construct this display node.
      */
     public InsertDisplayNode( DisplayNode parentNode,
-                              Insert insert ) {
+                              IInsert insert ) {
         this.parentNode = parentNode;
         this.languageObject = insert;
     }

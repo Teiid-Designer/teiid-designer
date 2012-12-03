@@ -10,13 +10,13 @@ package org.teiid.query.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.teiid.query.sql.lang.From;
-import org.teiid.query.sql.lang.GroupBy;
-import org.teiid.query.sql.lang.Into;
-import org.teiid.query.sql.lang.Option;
-import org.teiid.query.sql.lang.OrderBy;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.Select;
+import javax.swing.text.html.Option;
+import org.teiid.designer.query.sql.lang.IFrom;
+import org.teiid.designer.query.sql.lang.IGroupBy;
+import org.teiid.designer.query.sql.lang.IInto;
+import org.teiid.designer.query.sql.lang.IOrderBy;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.query.sql.lang.ISelect;
 
 /**
  * The <code>QueryDisplayNode</code> class is used to represent a SELECT Query.
@@ -36,7 +36,7 @@ public class QueryDisplayNode extends DisplayNode {
      * @param query the query language object used to construct this display node.
      */
     public QueryDisplayNode( DisplayNode parentNode,
-                             Query query ) {
+                             IQuery query ) {
         this.parentNode = parentNode;
         this.languageObject = query;
     }
@@ -58,17 +58,17 @@ public class QueryDisplayNode extends DisplayNode {
             resultNode = (DisplayNode)iter.next();
             switch (clauseType) {
                 case SELECT:
-                    if (resultNode.languageObject instanceof Select) {
+                    if (resultNode.languageObject instanceof ISelect) {
                         return resultNode;
                     }
                     break;
                 case INTO:
-                    if (resultNode.languageObject instanceof Into) {
+                    if (resultNode.languageObject instanceof IInto) {
                         return resultNode;
                     }
                     break;
                 case FROM:
-                    if (resultNode.languageObject instanceof From) {
+                    if (resultNode.languageObject instanceof IFrom) {
                         return resultNode;
                     }
                     break;
@@ -78,7 +78,7 @@ public class QueryDisplayNode extends DisplayNode {
                     }
                     break;
                 case GROUPBY:
-                    if (resultNode.languageObject instanceof GroupBy) {
+                    if (resultNode.languageObject instanceof IGroupBy) {
                         return resultNode;
                     }
                     break;
@@ -88,7 +88,7 @@ public class QueryDisplayNode extends DisplayNode {
                     }
                     break;
                 case ORDERBY:
-                    if (resultNode.languageObject instanceof OrderBy) {
+                    if (resultNode.languageObject instanceof IOrderBy) {
                         return resultNode;
                     }
                     break;

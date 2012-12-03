@@ -21,7 +21,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.core.index.AbstractIndexSelector;
 import org.teiid.designer.core.index.CompositeIndexSelector;
@@ -44,7 +43,7 @@ import org.teiid.designer.core.metadata.runtime.RuntimeAdapter;
 import org.teiid.designer.metadata.runtime.ColumnRecord;
 import org.teiid.designer.metadata.runtime.MetadataRecord;
 import org.teiid.designer.metadata.runtime.TableRecord;
-import org.teiid.query.metadata.StoredProcedureInfo;
+import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 
 /**
  * TestTransformationMetadata
@@ -460,7 +459,7 @@ public class TestTransformationMetadataFacade extends TestCase {
             facade.getElementIDsInGroupID(groupID);
             facade.getElementIDsInGroupID(groupID);
             assertEquals(1, metadata.indexFileHitCount);
-        } catch (QueryMetadataException e) {
+        } catch (Exception e) {
             // Expected
         }
     }
@@ -512,31 +511,6 @@ public class TestTransformationMetadataFacade extends TestCase {
         facade.getForeignKeysInGroup(groupID);
         facade.getForeignKeysInGroup(groupID);
         facade.getForeignKeysInGroup(groupID);
-        assertEquals(2, metadata.indexFileHitCount);
-    }
-
-    public void testGetAccessPatternsInGroupID() throws Exception {
-        System.out.println("\nTestTransformationMetadataFacade.testGetAccessPatternsInGroupID()"); //$NON-NLS-1$
-
-        final IndexSelector selector = new TestIndexSelector(IndexConstants.INDEX_NAME.TABLES_INDEX);
-        List selectors = new ArrayList(1);
-        selectors.add(selector);
-        IndexSelector composite = new CompositeIndexSelector(selectors);
-        QueryMetadataContext context = new QueryMetadataContext(composite);
-        final TestTransformationMetadata metadata = new TestTransformationMetadata(context);
-        final TransformationMetadataFacade facade = new TransformationMetadataFacade(metadata);
-
-        final Object groupID = facade.getGroupID("model1.table1"); //$NON-NLS-1$
-        Object result = facade.getAccessPatternsInGroup(groupID);
-        assertTrue(result instanceof Collection);
-        assertEquals(2, metadata.indexFileHitCount);
-
-        facade.getAccessPatternsInGroup(groupID);
-        facade.getAccessPatternsInGroup(groupID);
-        facade.getAccessPatternsInGroup(groupID);
-        facade.getAccessPatternsInGroup(groupID);
-        facade.getAccessPatternsInGroup(groupID);
-        facade.getAccessPatternsInGroup(groupID);
         assertEquals(2, metadata.indexFileHitCount);
     }
 
@@ -685,69 +659,63 @@ public class TestTransformationMetadataFacade extends TestCase {
         }
 
         @Override
-        public Object getElementID( String elementName ) throws QueryMetadataException {
+        public Object getElementID( String elementName ) throws Exception {
             indexFileHitCount++;
             return super.getElementID(elementName);
         }
 
         @Override
-        public Object getModelID( Object groupOrElementID ) throws QueryMetadataException {
+        public Object getModelID( Object groupOrElementID ) throws Exception {
             indexFileHitCount++;
             return super.getModelID(groupOrElementID);
         }
 
         @Override
-        public List getElementIDsInGroupID( Object groupID ) throws QueryMetadataException {
+        public List getElementIDsInGroupID( Object groupID ) throws Exception {
             indexFileHitCount++;
             return super.getElementIDsInGroupID(groupID);
         }
 
         @Override
-        public Collection getIndexesInGroup( Object groupID ) throws QueryMetadataException {
+        public Collection getIndexesInGroup( Object groupID ) throws Exception {
             indexFileHitCount++;
             return super.getIndexesInGroup(groupID);
         }
 
         @Override
-        public Collection getForeignKeysInGroup( Object groupID ) throws QueryMetadataException {
+        public Collection getForeignKeysInGroup( Object groupID ) throws Exception {
             indexFileHitCount++;
             return super.getForeignKeysInGroup(groupID);
         }
 
         @Override
-        public Collection getAccessPatternsInGroup( Object groupID ) throws QueryMetadataException {
-            indexFileHitCount++;
-            return super.getAccessPatternsInGroup(groupID);
-        }
-
-        @Override
-        public Collection getUniqueKeysInGroup( Object groupID ) throws QueryMetadataException {
+        public Collection getUniqueKeysInGroup( Object groupID ) throws Exception {
             indexFileHitCount++;
             return super.getUniqueKeysInGroup(groupID);
         }
 
         @Override
-        public StoredProcedureInfo getStoredProcedureInfoForProcedure( String procName )
-            throws QueryMetadataException {
+        public IStoredProcedureInfo getStoredProcedureInfoForProcedure( String procName )
+            throws Exception {
             indexFileHitCount++;
             return super.getStoredProcedureInfoForProcedure(procName);
         }
 
         @Override
-        public Object getGroupID( String groupName ) throws QueryMetadataException {
+        public Object getGroupID( String groupName ) throws Exception {
             indexFileHitCount++;
             return super.getGroupID(groupName);
         }
 
         @Override
         public Collection getGroupsForPartialName( String partialGroupName )
-            throws QueryMetadataException {
+            throws Exception {
             indexFileHitCount++;
             return super.getGroupsForPartialName(partialGroupName);
         }
 
         @Override
-        public Object getGroupIDForElementID( Object elementID ) throws QueryMetadataException {
+        public Object getGroupIDForElementID( Object elementID ) throws Exception {
             indexFileHitCount++;
             return super.getGroupIDForElementID(elementID);
         }

@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.sqleditor.component;
 
-import org.teiid.query.sql.lang.OrderBy;
+import org.teiid.designer.query.sql.lang.IOrderBy;
 
 /**
  * The <code>OrderByDisplayNode</code> class is used to represent a Query's ORDERBY clause.
@@ -27,7 +27,7 @@ public class OrderByDisplayNode extends DisplayNode {
      * @param orderBy the query language object used to construct this display node.
      */
     public OrderByDisplayNode( DisplayNode parentNode,
-                               OrderBy orderBy ) {
+                               IOrderBy orderBy ) {
         this.parentNode = parentNode;
         this.languageObject = orderBy;
     }

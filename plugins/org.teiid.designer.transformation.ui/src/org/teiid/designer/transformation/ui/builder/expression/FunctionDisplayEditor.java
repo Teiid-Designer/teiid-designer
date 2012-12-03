@@ -17,19 +17,19 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.ISQLStringVisitor;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.transformation.ui.builder.AbstractLanguageObjectEditor;
 import org.teiid.designer.transformation.ui.builder.ExpressionBuilder;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.symbol.Function;
-import org.teiid.query.sql.visitor.SQLStringVisitor;
 import org.teiid.query.ui.UiPlugin;
 import org.teiid.query.ui.builder.model.FunctionDisplayEditorModel;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener;
 import org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent;
-import org.teiid.query.ui.builder.util.BuilderUtils;
 
 
 /**
@@ -61,7 +61,7 @@ public class FunctionDisplayEditor extends AbstractLanguageObjectEditor {
      */
     public FunctionDisplayEditor( Composite theParent,
                                   FunctionDisplayEditorModel theModel ) {
-        super(theParent, Function.class, theModel);
+        super(theParent, IFunction.class, theModel);
         controller = new ViewController();
         model = theModel;
         model.addModelListener(controller);
@@ -101,7 +101,7 @@ public class FunctionDisplayEditor extends AbstractLanguageObjectEditor {
         GridData functionTextData = new GridData(GridData.FILL_BOTH);
         functionTextData.widthHint = TEXT_AREA_WIDTH_HINT;
         functionTextData.heightHint = TEXT_AREA_HEIGHT_HINT;
-        functionText.setText(BuilderUtils.UNDEFINED);
+        functionText.setText(ISQLStringVisitor.UNDEFINED);
         functionText.setLayoutData(functionTextData);
     }
 
@@ -109,8 +109,10 @@ public class FunctionDisplayEditor extends AbstractLanguageObjectEditor {
      * Displays the appropriate UI for the current model state.
      */
     void displayFunction() {
-        Function function = model.getFunction();
-        functionText.setText(SQLStringVisitor.getSQLString(function));
+        IFunction function = model.getFunction();
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        ISQLStringVisitor visitor = queryService.getSQLStringVisitor();
+        functionText.setText(visitor.getSQLString(function));
     }
 
     void editButtonPressed() {
@@ -120,7 +122,7 @@ public class FunctionDisplayEditor extends AbstractLanguageObjectEditor {
         dialog.setLanguageObject(model.getLanguageObject());
         dialog.open();
         if (dialog.getReturnCode() == Window.OK) {
-            LanguageObject modifiedLanguageObject = dialog.getLanguageObject();
+            ILanguageObject modifiedLanguageObject = dialog.getLanguageObject();
             // Inform model that language object has been changed. Model will fire
             // event to listeners, including us.
             model.setLanguageObject(modifiedLanguageObject);
@@ -154,12 +156,12 @@ public class FunctionDisplayEditor extends AbstractLanguageObjectEditor {
      * @see org.teiid.designer.transformation.ui.builder.ILanguageObjectEditor#setLanguageObject(org.teiid.query.sql.LanguageObject)
      */
     @Override
-    public void setLanguageObject( LanguageObject theLanguageObject ) {
+    public void setLanguageObject( ILanguageObject theLanguageObject ) {
         if (theLanguageObject == null) {
             clear();
         } else {
-            if (!(theLanguageObject instanceof Function)) {
-                CoreArgCheck.isTrue((theLanguageObject instanceof Function),
+            if (!(theLanguageObject instanceof IFunction)) {
+                CoreArgCheck.isTrue((theLanguageObject instanceof IFunction),
                                     Util.getString(PREFIX + "invalidLanguageObject", //$NON-NLS-1$
                                                    new Object[] {theLanguageObject.getClass().getName()}));
             }

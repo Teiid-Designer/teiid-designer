@@ -8,7 +8,7 @@
 package org.teiid.designer.core.query;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 
 
 /** 
@@ -52,7 +52,7 @@ public interface QueryValidator {
      * The QueryMetadataInterface used to validate the sql.
      * @return QueryMetadataInterface
      */
-    QueryMetadataInterface getQueryMetadata();
+    IQueryMetadataInterface getQueryMetadata();
     
     /**
      * Returns whether or not a query's mapping root is valid.  It may be stale. This is to prevent unnecessary validation 

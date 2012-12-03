@@ -7,10 +7,10 @@
 */
 package org.teiid8.runtime;
 
+import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.runtime.spi.IExecutionAdmin;
 import org.teiid.designer.runtime.spi.IExecutionAdminFactory;
 import org.teiid.designer.runtime.spi.ITeiidServer;
-import org.teiid.designer.sql.IQueryService;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid8.sql.QueryService;
 import org.teiid8.type.DataTypeManagerService;

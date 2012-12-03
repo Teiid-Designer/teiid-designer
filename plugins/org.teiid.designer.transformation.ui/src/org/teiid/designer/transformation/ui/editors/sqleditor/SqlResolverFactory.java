@@ -8,7 +8,7 @@
 package org.teiid.designer.transformation.ui.editors.sqleditor;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 
 /**
  * SqlResolverFactory
@@ -19,6 +19,6 @@ public interface SqlResolverFactory {
 
     public void setCurrentEObject(EObject eObj);
 
-    public QueryMetadataInterface getQueryMetadata();
+    public IQueryMetadataInterface getQueryMetadata();
 
 }

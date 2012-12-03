@@ -9,15 +9,17 @@ package org.teiid.query.ui.builder.util;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.CompoundCriteria;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.NotCriteria;
-import org.teiid.query.sql.lang.PredicateCriteria;
-import org.teiid.query.sql.symbol.Constant;
-import org.teiid.query.sql.symbol.Function;
-import org.teiid.query.sql.symbol.Reference;
-import org.teiid.query.sql.visitor.SQLStringVisitor;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.ISQLStringVisitor;
+import org.teiid.designer.query.sql.lang.ICompoundCriteria;
+import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.lang.INotCriteria;
+import org.teiid.designer.query.sql.lang.IPredicateCriteria;
+import org.teiid.designer.query.sql.symbol.IConstant;
+import org.teiid.designer.query.sql.symbol.IFunction;
+import org.teiid.designer.query.sql.symbol.IReference;
 import org.teiid.query.ui.UiConstants;
 import org.teiid.query.ui.UiPlugin;
 
@@ -76,17 +78,17 @@ public class LanguageObjectLabelProvider extends LabelProvider implements UiCons
     public Image getImage( Object theElement ) {
         Image result = null;
 
-        if (theElement instanceof Constant) {
+        if (theElement instanceof IConstant) {
             result = CONSTANT_IMAGE;
-        } else if (theElement instanceof Function) {
+        } else if (theElement instanceof IFunction) {
             result = FUNCTION_IMAGE;
-        } else if (theElement instanceof PredicateCriteria) {
+        } else if (theElement instanceof IPredicateCriteria) {
             result = PREDICATE_IMAGE;
-        } else if (theElement instanceof CompoundCriteria) {
+        } else if (theElement instanceof ICompoundCriteria) {
             result = COMPOUND_CRITERIA_IMAGE;
-        } else if (theElement instanceof NotCriteria) {
-            result = getNotCriteriaIcon((NotCriteria)theElement);
-        } else if (theElement instanceof Reference) {
+        } else if (theElement instanceof INotCriteria) {
+            result = getNotCriteriaIcon((INotCriteria)theElement);
+        } else if (theElement instanceof IReference) {
             result = REFERENCE_IMAGE;
         } else {
             result = UNDEFINED_IMAGE;
@@ -102,17 +104,17 @@ public class LanguageObjectLabelProvider extends LabelProvider implements UiCons
      * @param theCriteria the not criteria being rendered
      * @return the appropriate icon
      */
-    private Image getNotCriteriaIcon( NotCriteria theCriteria ) {
+    private Image getNotCriteriaIcon( INotCriteria theCriteria ) {
         Image result = null;
-        Criteria crit = theCriteria.getCriteria();
+        ICriteria crit = theCriteria.getCriteria();
 
-        if (crit instanceof PredicateCriteria) {
+        if (crit instanceof IPredicateCriteria) {
             result = PREDICATE_IMAGE;
         }
-        if (crit instanceof CompoundCriteria) {
+        if (crit instanceof ICompoundCriteria) {
             result = COMPOUND_CRITERIA_IMAGE;
-        } else if (crit instanceof NotCriteria) {
-            result = getNotCriteriaIcon((NotCriteria)crit);
+        } else if (crit instanceof INotCriteria) {
+            result = getNotCriteriaIcon((INotCriteria)crit);
         }
 
         return result;
@@ -126,9 +128,11 @@ public class LanguageObjectLabelProvider extends LabelProvider implements UiCons
         String result = null;
 
         if (theElement == null) {
-            result = BuilderUtils.UNDEFINED;
-        } else if (theElement instanceof LanguageObject) {
-            result = SQLStringVisitor.getSQLString((LanguageObject)theElement);
+            result = ISQLStringVisitor.UNDEFINED;
+        } else if (theElement instanceof ILanguageObject) {
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            ISQLStringVisitor visitor = queryService.getSQLStringVisitor();
+            result = visitor.getSQLString((ILanguageObject)theElement);
         } else {
             result = super.getText(theElement);
         }

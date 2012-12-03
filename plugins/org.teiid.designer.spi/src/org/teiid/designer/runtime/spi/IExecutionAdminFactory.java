@@ -7,7 +7,7 @@
 */
 package org.teiid.designer.runtime.spi;
 
-import org.teiid.designer.sql.IQueryService;
+import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.type.IDataTypeManagerService;
 
 /**

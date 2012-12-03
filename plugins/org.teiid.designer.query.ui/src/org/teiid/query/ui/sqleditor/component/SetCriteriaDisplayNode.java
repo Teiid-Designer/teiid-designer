@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.sqleditor.component;
 
-import org.teiid.query.sql.lang.SetCriteria;
+import org.teiid.designer.query.sql.lang.ISetCriteria;
 
 /**
  * The <code>SetCriteriaDisplayNode</code> class is used to represent a Set Criteria.
@@ -27,7 +27,7 @@ public class SetCriteriaDisplayNode extends DisplayNode {
      * @param criteria the query language object used to construct this display node.
      */
     public SetCriteriaDisplayNode( DisplayNode parentNode,
-                                   SetCriteria criteria ) {
+                                   ISetCriteria criteria ) {
         this.parentNode = parentNode;
         this.languageObject = criteria;
     }

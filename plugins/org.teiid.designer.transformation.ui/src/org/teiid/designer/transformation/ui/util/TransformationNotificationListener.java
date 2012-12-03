@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -54,6 +53,10 @@ import org.teiid.designer.metamodels.transformation.SqlAlias;
 import org.teiid.designer.metamodels.transformation.SqlTransformation;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.metamodels.transformation.TransformationPackage;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.query.sql.lang.IQueryCommand;
+import org.teiid.designer.query.sql.lang.ISelect;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
@@ -79,10 +82,6 @@ import org.teiid.designer.ui.refactor.actions.RenameRefactorAction;
 import org.teiid.designer.ui.undo.ModelerUndoManager;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.QueryCommand;
-import org.teiid.query.sql.lang.Select;
 
 
 /**
@@ -2180,12 +2179,12 @@ public class TransformationNotificationListener implements INotifyChangedListene
         // If the SELECT is valid, may need to prompt whether to add Elements...
         boolean addElemsToSelect = false;
         if (TransformationHelper.isValid(mappingRoot, QueryValidator.SELECT_TRNS)) {
-            Command selectCommand = SqlMappingRootCache.getSelectCommand(mappingRoot);
-            if (selectCommand instanceof Query) {
+            ICommand selectCommand = SqlMappingRootCache.getSelectCommand(mappingRoot);
+            if (selectCommand instanceof IQuery) {
                 // Check if callbacks are disabled
                 IPreferenceStore prefStore = UiPlugin.getDefault().getPreferenceStore();
                 boolean disableCallbacks = prefStore.getBoolean(PluginConstants.Prefs.Callbacks.DISABLE_CALLBACKS);
-                Select querySelect = ((Query)selectCommand).getSelect();
+                ISelect querySelect = ((IQuery)selectCommand).getSelect();
                 // Query is Valid, but not "SELECT *" - ask the user
                 if (!TransformationSqlHelper.isSelectStar(querySelect) && !disableCallbacks) {
                     final String message = UiConstants.Util.getString("TransformationNotificationListener.addSQLElemGrpAttrsMsg", //$NON-NLS-1$
@@ -2225,15 +2224,15 @@ public class TransformationNotificationListener implements INotifyChangedListene
         // If the SELECT is valid, may need to prompt whether to remove Elements...
         boolean removeElemsFromSelect = false;
         if (TransformationHelper.isValid(mappingRoot, QueryValidator.SELECT_TRNS)) {
-            Command selectCommand = SqlMappingRootCache.getSelectCommand(mappingRoot);
-            if (selectCommand instanceof Query) {
+            ICommand selectCommand = SqlMappingRootCache.getSelectCommand(mappingRoot);
+            if (selectCommand instanceof IQuery) {
                 // Check if callbacks are disabled
                 IPreferenceStore prefStore = UiPlugin.getDefault().getPreferenceStore();
                 boolean disableCallbacks = prefStore.getBoolean(PluginConstants.Prefs.Callbacks.DISABLE_CALLBACKS);
-                Select querySelect = ((Query)selectCommand).getSelect();
+                ISelect querySelect = ((IQuery)selectCommand).getSelect();
                 // Query is Valid, but not "SELECT *" - ask the user
                 if (!TransformationSqlHelper.isSelectStar(querySelect)
-                    && TransformationSqlHelper.hasSqlAliasGroupAttributes((Query)selectCommand, sqlAliasGroups)
+                    && TransformationSqlHelper.hasSqlAliasGroupAttributes((IQuery)selectCommand, sqlAliasGroups)
                     && !disableCallbacks) {
                     final String message = UiConstants.Util.getString("TransformationNotificationListener.removeSQLElemGrpRefsMsg", //$NON-NLS-1$
                                                                       DEFAULT_REMOVED_SOURCE);
@@ -2271,11 +2270,11 @@ public class TransformationNotificationListener implements INotifyChangedListene
         // If the SELECT is valid, may need to prompt whether to remove Elements...
         boolean removeElemsFromSelect = false;
         if (TransformationHelper.isValid(mappingRoot, QueryValidator.SELECT_TRNS)) {
-            Command selectCommand = SqlMappingRootCache.getSelectCommand(mappingRoot);
-            Query selectQuery = null;
+            ICommand selectCommand = SqlMappingRootCache.getSelectCommand(mappingRoot);
+            IQuery selectQuery = null;
 
-            if (selectCommand instanceof QueryCommand) {
-                selectQuery = ((QueryCommand)selectCommand).getProjectedQuery();
+            if (selectCommand instanceof IQueryCommand) {
+                selectQuery = ((IQueryCommand)selectCommand).getProjectedQuery();
             }
             if (selectQuery != null) {
                 // Check if callbacks are disabled

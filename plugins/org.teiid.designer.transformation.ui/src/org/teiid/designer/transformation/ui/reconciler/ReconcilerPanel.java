@@ -9,7 +9,6 @@ package org.teiid.designer.transformation.ui.reconciler;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -29,7 +28,15 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.symbol.IAliasSymbol;
+import org.teiid.designer.query.sql.symbol.IConstant;
+import org.teiid.designer.query.sql.symbol.IExpressionSymbol;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
@@ -38,11 +45,6 @@ import org.teiid.designer.transformation.ui.editors.sqleditor.SqlDisplayPanel;
 import org.teiid.designer.ui.common.graphics.GlobalUiFontManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.symbol.AliasSymbol;
-import org.teiid.query.sql.symbol.Constant;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.ExpressionSymbol;
 import org.teiid.query.ui.builder.util.ElementViewerFactory;
 
 
@@ -534,7 +536,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
         SqlList sqlList = sqlListPanel.getSqlList();
         int indexOfLast = 0;
         if (sqlList.size() > 0) {
-        	Expression symbol = sqlList.getSymbolAt(sqlList.size() - 1);
+        	IExpression symbol = sqlList.getSymbolAt(sqlList.size() - 1);
             indexOfLast = sqlList.indexOf(symbol);
         }
         return indexOfLast;
@@ -604,6 +606,9 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
     void setToNullButtonPressed() {
 
         if (reconcilerObject != null) {
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            IQueryFactory factory = queryService.createQueryFactory();
+            
             // Do the unbind
             List selectedBindings = bindingsPanel.getSelectedBindings();
 
@@ -612,8 +617,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
             // Need to crate an Expression Symbol (constant = NULL) name = "expr"
             List symbolsList = new ArrayList(selectedBindings.size());
             for (int i = 0; i < selectedBindings.size(); i++) {
-                Constant nullConstant = new Constant(null);
-                ExpressionSymbol nullExpression = new ExpressionSymbol(EXPRESSION, nullConstant);
+                IConstant nullConstant = factory.createConstant(null);
+                IExpressionSymbol nullExpression = factory.createExpressionSymbol(EXPRESSION, nullConstant);
                 symbolsList.add(nullExpression);
             }
             reconcilerObject.bind(selectedBindings, symbolsList);
@@ -640,17 +645,17 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
             expressionBuilder.create();
 
             List selBindings = bindingsPanel.getSelectedBindings();
-            LanguageObject startingLO = null;
+            ILanguageObject startingLO = null;
             if (selBindings.size() == 1) {
-            	Expression expSymbol = null;
-            	Expression symbol = ((Binding)selBindings.get(0)).getCurrentSymbol();
-                if (symbol instanceof AliasSymbol) {
-                    expSymbol = ((AliasSymbol)symbol).getSymbol();
-                    if (expSymbol instanceof ExpressionSymbol) {
-                        startingLO = ((ExpressionSymbol)expSymbol).getExpression();
+            	IExpression expSymbol = null;
+            	IExpression symbol = ((Binding)selBindings.get(0)).getCurrentSymbol();
+                if (symbol instanceof IAliasSymbol) {
+                    expSymbol = ((IAliasSymbol)symbol).getSymbol();
+                    if (expSymbol instanceof IExpressionSymbol) {
+                        startingLO = ((IExpressionSymbol)expSymbol).getExpression();
                     }
-                } else if (symbol instanceof ExpressionSymbol) {
-                    startingLO = ((ExpressionSymbol)symbol).getExpression();
+                } else if (symbol instanceof IExpressionSymbol) {
+                    startingLO = ((IExpressionSymbol)symbol).getExpression();
                 }
             }
 
@@ -665,7 +670,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
             // Insert or Replace when Dialog is OK'd, do nothing if cancelled
             // -------------------------------------------------------------------------
             if (status == Window.OK) {
-                LanguageObject langObj = expressionBuilder.getLanguageObject();
+                ILanguageObject langObj = expressionBuilder.getLanguageObject();
 
                 // Do the unbind
                 List selectedBindings = bindingsPanel.getSelectedBindings();
@@ -674,8 +679,10 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
 
                 // Need to crate an Expression Symbol (constant = NULL) name = "expr"
                 List symbolsList = new ArrayList(1);
-                if (langObj instanceof Expression) {
-                    ExpressionSymbol newExpression = new ExpressionSymbol(EXPRESSION, (Expression)langObj);
+                if (langObj instanceof IExpression) {
+                    IQueryService queryService = ModelerCore.getTeiidQueryService();
+                    IQueryFactory factory = queryService.createQueryFactory();
+                    IExpressionSymbol newExpression = factory.createExpressionSymbol(EXPRESSION, (IExpression)langObj);
                     symbolsList.add(newExpression);
 
                     reconcilerObject.bind(selectedBindings, symbolsList);
@@ -735,8 +742,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
 		public void removeBinding( Binding binding ) {
             // Put the bound symbol back on the unmatched symbols list
             Object sqlSymbol = binding.getCurrentSymbol();
-            if (sqlSymbol != null && sqlSymbol instanceof Expression) {
-            	Expression seSymbol = (Expression)sqlSymbol;
+            if (sqlSymbol != null && sqlSymbol instanceof IExpression) {
+            	IExpression seSymbol = (IExpression)sqlSymbol;
                 sqlListPanel.addSymbol(seSymbol);
             }
             sqlListPanel.selectIndex(0);
@@ -753,8 +760,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
             for (int i = 0; i < bindings.length; i++) {
                 Binding binding = (Binding)bindings[i];
                 Object sqlSymbol = binding.getCurrentSymbol();
-                if (sqlSymbol != null && sqlSymbol instanceof Expression) {
-                	Expression seSymbol = (Expression)sqlSymbol;
+                if (sqlSymbol != null && sqlSymbol instanceof IExpression) {
+                	IExpression seSymbol = (IExpression)sqlSymbol;
                     sqlListPanel.addSymbol(seSymbol);
                 }
             }
@@ -794,7 +801,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * @param symbol
          */
         @Override
-        public void addSymbol( Expression symbol ) {
+        public void addSymbol( IExpression symbol ) {
             updateSqlAndMessageDisplay();
         }
 
@@ -804,7 +811,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * @param symbol
          */
         @Override
-        public void insertSymbol( Expression symbol,
+        public void insertSymbol( IExpression symbol,
                                   int index ) {
             updateSqlAndMessageDisplay();
         }
@@ -825,7 +832,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * @param symbol
          */
         @Override
-        public void removeSymbol( Expression symbol ) {
+        public void removeSymbol( IExpression symbol ) {
             updateSqlAndMessageDisplay();
         }
 
@@ -845,7 +852,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * @param symbol
          */
         @Override
-        public void updateSymbol( Expression symbol ) {
+        public void updateSymbol( IExpression symbol ) {
             updateSqlAndMessageDisplay();
         }
 

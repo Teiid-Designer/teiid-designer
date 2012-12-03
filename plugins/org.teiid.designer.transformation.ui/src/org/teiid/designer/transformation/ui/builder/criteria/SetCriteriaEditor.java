@@ -38,20 +38,20 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
-
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.ISQLStringVisitor;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.lang.ISetCriteria;
 import org.teiid.designer.transformation.ui.builder.ExpressionBuilder;
 import org.teiid.designer.transformation.ui.builder.actions.AddSetCriteriaItemAction;
 import org.teiid.designer.transformation.ui.builder.actions.DeleteSetCriteriaItemAction;
 import org.teiid.designer.transformation.ui.builder.actions.EditSetCriteriaItemAction;
 import org.teiid.designer.ui.common.util.UiUtil;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.AbstractSetCriteria;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.SetCriteria;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.visitor.SQLStringVisitor;
 import org.teiid.query.ui.UiPlugin;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener;
 import org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent;
@@ -66,7 +66,7 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     private final static String PREFIX = I18nUtil.getPropertyPrefix(SetCriteriaEditor.class);
     private final static int HORIZONTAL_GAP_BETWEEN_BUTTONS = 7;
 
-    private SetCriteria setCriteria;
+    private ISetCriteria setCriteria;
     private CriteriaExpressionEditor editor;
     private Control component;
     SetCriteriaEditorModel theModel;
@@ -86,7 +86,7 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     private StackLayout stackLayout;
     private List curItemsList;
     private Map listItemToLangObjMap = new HashMap();
-    private LanguageObject[] objectsToSelect = new LanguageObject[] {};
+    private ILanguageObject[] objectsToSelect = new ILanguageObject[] {};
     private int curType = -1; // SetCriteriaEditorModel.LIST or
 
     // SetCriteriaEditorModel.SUBQUERY.
@@ -94,7 +94,7 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
 
     public SetCriteriaEditor( Composite parent,
                               SetCriteriaEditorModel model ) {
-        super(parent, AbstractSetCriteria.class, model);
+        super(parent, ISetCriteria.class, model);
         this.theModel = model;
         this.viewController = new ViewController();
         theModel.addModelListener(viewController);
@@ -322,8 +322,8 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         if (returnCode == Window.OK) {
             // Do not need to change either curItemsList or listItemToLangObjMap. We will do this when
             // we receive an event telling us that the values have been changed.
-            LanguageObject langObj = expBld.getLanguageObject();
-            objectsToSelect = new LanguageObject[] {langObj};
+            ILanguageObject langObj = expBld.getLanguageObject();
+            objectsToSelect = new ILanguageObject[] {langObj};
             theModel.addValue(langObj);
         }
     }
@@ -331,7 +331,7 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     void editButtonPressed() {
         // Can only be one item selected or edit button is disabled.
         String listItem = curItemsList.getSelection()[0];
-        LanguageObject obj = (LanguageObject)listItemToLangObjMap.get(listItem);
+        ILanguageObject obj = (ILanguageObject)listItemToLangObjMap.get(listItem);
         Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
         ExpressionBuilder expBld = new ExpressionBuilder(shell);
 
@@ -340,12 +340,12 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         expBld.setLanguageObject(obj);
         int returnCode = expBld.open();
         if (returnCode == Window.OK) {
-            LanguageObject newObj = expBld.getLanguageObject();
+            ILanguageObject newObj = expBld.getLanguageObject();
             if (!obj.equals(newObj)) {
                 // Do not need to change either curItemsList or
                 // listItemToLangObjMap. We will do this when we receive an event
                 // telling us that the values have been changed.
-                objectsToSelect = new LanguageObject[] {newObj};
+                objectsToSelect = new ILanguageObject[] {newObj};
                 theModel.replaceValue(obj, newObj);
             }
         }
@@ -367,19 +367,19 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         for (int i = 0; i < itemCount; i++) {
             if (stillIncludedMask[i]) {
                 String listItem = curItemsList.getItem(i);
-                LanguageObject obj = (LanguageObject)listItemToLangObjMap.get(listItem);
+                ILanguageObject obj = (ILanguageObject)listItemToLangObjMap.get(listItem);
                 newValues.add(obj);
             }
         }
         // Do not need to change either curItemsList or listItemToLangObjMap. We will do this when
         // we receive an event telling us that the values have been changed.
-        objectsToSelect = new LanguageObject[] {};
+        objectsToSelect = new ILanguageObject[] {};
         theModel.setValues(newValues);
     }
 
     @Override
-	public Expression getLeftExpression() {
-        Expression leftExpression = null;
+	public IExpression getLeftExpression() {
+        IExpression leftExpression = null;
         if (setCriteria != null) {
             leftExpression = setCriteria.getExpression();
         }
@@ -387,15 +387,15 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     }
 
     @Override
-	public Expression getRightExpression() {
+	public IExpression getRightExpression() {
         // Unused
         return null;
     }
 
     @Override
-    public void setLanguageObject( LanguageObject obj ) {
-        CoreArgCheck.isInstanceOf(SetCriteria.class, obj);
-        setCriteria = (SetCriteria)obj;
+    public void setLanguageObject( ILanguageObject obj ) {
+        CoreArgCheck.isInstanceOf(ISetCriteria.class, obj);
+        setCriteria = (ISetCriteria)obj;
         editor.setLanguageObject(getLeftExpression());
     }
 
@@ -436,12 +436,12 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         if (curType == SetCriteriaEditorModel.LIST) {
             curItemsList.removeAll();
             listItemToLangObjMap.clear();
-            SetCriteria setCriteria = (SetCriteria)theModel.getLanguageObject();
+            ISetCriteria setCriteria = (ISetCriteria)theModel.getLanguageObject();
             Collection newValues = setCriteria.getValues();
             // Put the list of values into curItemsList and into listItemToLangObjMap
             Iterator it = newValues.iterator();
             while (it.hasNext()) {
-                LanguageObject langObj = (LanguageObject)it.next();
+                ILanguageObject langObj = (ILanguageObject)it.next();
                 String itemName = langObj.toString();
                 curItemsList.add(itemName);
                 listItemToLangObjMap.put(itemName, langObj);
@@ -484,7 +484,7 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     }
 
     void displayCommand() {
-        Command command = theModel.getCommand();
+        ICommand command = theModel.getCommand();
         String displayText;
         if (command == null) {
             Object selection = theModel.getSubquerySelection();
@@ -494,7 +494,9 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
                 displayText = theModel.getInvalidSelectionMessage();
             }
         } else {
-            displayText = SQLStringVisitor.getSQLString(command);
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            ISQLStringVisitor visitor = queryService.getSQLStringVisitor();
+            displayText = visitor.getSQLString(command);
         }
         subquerySQLText.setText(displayText);
     }

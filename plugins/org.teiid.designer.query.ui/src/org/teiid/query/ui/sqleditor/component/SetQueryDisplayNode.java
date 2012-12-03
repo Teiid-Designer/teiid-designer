@@ -10,7 +10,7 @@ package org.teiid.query.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.designer.query.sql.lang.ISetQuery;
 
 /**
  * The <code>SetQueryDisplayNode</code> class is used to represent a Set Query, for example Union Queries.
@@ -30,7 +30,7 @@ public class SetQueryDisplayNode extends DisplayNode {
      * @param seQuery the query language object used to construct this display node.
      */
     public SetQueryDisplayNode( DisplayNode parentNode,
-                                SetQuery setQuery ) {
+                                ISetQuery setQuery ) {
         this.parentNode = parentNode;
         this.languageObject = setQuery;
     }

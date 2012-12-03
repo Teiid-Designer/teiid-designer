@@ -9,8 +9,8 @@ package org.teiid.designer.transformation.ui.builder.criteria;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.teiid.designer.query.sql.lang.IExpression;
 import org.teiid.designer.transformation.ui.builder.ILanguageObjectEditor;
-import org.teiid.query.sql.symbol.Expression;
 
 
 /**
@@ -25,11 +25,11 @@ public interface IPredicateCriteriaTypeEditor extends ILanguageObjectEditor {
 	
 	Control createLeftComponent(Composite parent);
 	
-	Expression getLeftExpression();
+	IExpression getLeftExpression();
 	
 	Control createRightComponent(Composite parent);
 	
-	Expression getRightExpression();
+	IExpression getRightExpression();
 	
 	void setOperator(String operator);
 }

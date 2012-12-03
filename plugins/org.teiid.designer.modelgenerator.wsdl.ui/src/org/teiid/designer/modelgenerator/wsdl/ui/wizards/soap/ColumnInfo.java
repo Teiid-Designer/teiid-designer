@@ -9,17 +9,19 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
-import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
 
 
 /**
@@ -47,7 +49,7 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
     /**
      * The unique column name (never <code>null</code> or empty).
      */
-	private ElementSymbol nameSymbol;
+	private IElementSymbol nameSymbol;
 	
 	 /**
      * The unique column datatype (never <code>null</code> or empty).
@@ -168,7 +170,9 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
      * problems for an element symbol so these are replaced these with '_'.
      */
     private void initNameSymbol(final String name) {
-        nameSymbol = new ElementSymbol(name.replaceAll("\\.", "_"));  //$NON-NLS-1$//$NON-NLS-2$
+        IQueryService service = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = service.createQueryFactory();
+        nameSymbol = factory.createElementSymbol(name.replaceAll("\\.", "_"));  //$NON-NLS-1$//$NON-NLS-2$
     }
 
     /**

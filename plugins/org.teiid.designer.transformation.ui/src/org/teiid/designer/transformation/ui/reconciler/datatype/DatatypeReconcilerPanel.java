@@ -8,7 +8,6 @@
 package org.teiid.designer.transformation.ui.reconciler.datatype;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -39,6 +38,13 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
+import org.teiid.designer.query.sql.symbol.IAliasSymbol;
+import org.teiid.designer.query.sql.symbol.IConstant;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.symbol.IExpressionSymbol;
+import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
@@ -55,13 +61,6 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.viewsupport.DatatypeSelectionDialog;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
-import org.teiid.query.sql.symbol.AggregateSymbol;
-import org.teiid.query.sql.symbol.AliasSymbol;
-import org.teiid.query.sql.symbol.Constant;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.ExpressionSymbol;
-import org.teiid.query.sql.symbol.Function;
 
 /**
  * Panel used by the DatatypeReconcilerDialog to assist in displaying and editing/fixing datatype conflicts for mapped or bound
@@ -427,8 +426,8 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
             // Get Name String
             if (object instanceof EObject) {
                 sb.append(getAttributeShortName(object));
-            } else if (object instanceof Expression) {
-                String shortName = TransformationSqlHelper.getSingleElementSymbolShortName((Expression)object, false);
+            } else if (object instanceof IExpression) {
+                String shortName = TransformationSqlHelper.getSingleElementSymbolShortName((IExpression)object, false);
                 sb.append(shortName);
             } else if (object instanceof Binding) {
                 sb.append(((Binding)object).getCurrentAttrName());
@@ -454,8 +453,8 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         if (object != null) {
             if (object instanceof EObject) {
                 result = ModelUtilities.getEMFLabelProvider().getImage(object);
-            } else if (object instanceof Expression) {
-                result = getImageForSymbol((Expression)object);
+            } else if (object instanceof IExpression) {
+                result = getImageForSymbol((IExpression)object);
             }
         }
         return result;
@@ -484,25 +483,25 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
     /**
      * Get the Image for the SingleElementSymbol
      */
-    private Image getImageForSymbol( Expression seSymbol ) {
+    private Image getImageForSymbol( IExpression seSymbol ) {
         Image result = null;
 
         // If symbol is AliasSymbol, get underlying symbol
-        if (seSymbol != null && seSymbol instanceof AliasSymbol) {
-            seSymbol = ((AliasSymbol)seSymbol).getSymbol();
+        if (seSymbol != null && seSymbol instanceof IAliasSymbol) {
+            seSymbol = ((IAliasSymbol)seSymbol).getSymbol();
         }
         // ElementSymbol
-        if ((seSymbol instanceof ElementSymbol)) {
+        if ((seSymbol instanceof IElementSymbol)) {
             result = UiPlugin.getDefault().getImage(SYMBOL_ICON);
             // AggregateSymbol
-        } else if (seSymbol instanceof AggregateSymbol) {
+        } else if (seSymbol instanceof IAggregateSymbol) {
             result = UiPlugin.getDefault().getImage(FUNCTION_ICON);
             // ExpressionSymbol
-        } else if (seSymbol instanceof ExpressionSymbol) {
-            Expression expression = ((ExpressionSymbol)seSymbol).getExpression();
-            if (expression != null && expression instanceof Constant) {
+        } else if (seSymbol instanceof IExpressionSymbol) {
+            IExpression expression = ((IExpressionSymbol)seSymbol).getExpression();
+            if (expression != null && expression instanceof IConstant) {
                 result = UiPlugin.getDefault().getImage(CONSTANT_ICON);
-            } else if (expression != null && expression instanceof Function) {
+            } else if (expression != null && expression instanceof IFunction) {
                 result = UiPlugin.getDefault().getImage(FUNCTION_ICON);
             }
         }

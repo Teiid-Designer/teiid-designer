@@ -58,6 +58,9 @@ import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot
 import org.teiid.designer.metamodels.webservice.Interface;
 import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.metamodels.xml.XmlDocument;
+import org.teiid.designer.query.sql.proc.IAssignmentStatement;
+import org.teiid.designer.query.sql.proc.IBlock;
+import org.teiid.designer.query.sql.proc.IDeclareStatement;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.actions.TransformationSourceManager;
@@ -78,9 +81,6 @@ import org.teiid.designer.webservice.ui.IInternalUiConstants;
 import org.teiid.designer.webservice.ui.WebServiceUiPlugin;
 import org.teiid.designer.webservice.ui.util.WebServiceUiUtil;
 import org.teiid.designer.webservice.util.WebServiceUtil;
-import org.teiid.query.sql.proc.AssignmentStatement;
-import org.teiid.query.sql.proc.Block;
-import org.teiid.query.sql.proc.DeclareStatement;
 import org.teiid.query.ui.sqleditor.component.DisplayNode;
 import org.teiid.query.ui.sqleditor.component.QueryDisplayComponent;
 
@@ -265,7 +265,7 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
                 if (object2 == null) {
                     return 1;
                 }
-                return ((DeclareStatement)object1).getVariable().getShortName().compareTo(((DeclareStatement)object2).getVariable().getShortName());
+                return ((IDeclareStatement)object1).getVariable().getShortName().compareTo(((IDeclareStatement)object2).getVariable().getShortName());
             }
         });
         this.varSection = new InputVariableSection(this.vSplitter, VARS_DESC, this) {
@@ -371,22 +371,22 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
         root.setVisible(true, true);
         for (Iterator childIter = root.getChildren().iterator(); childIter.hasNext();) {
             DisplayNode node = (DisplayNode)childIter.next();
-            if (node.getLanguageObject() instanceof Block) {
+            if (node.getLanguageObject() instanceof IBlock) {
                 // Update declaration-to-assignment mapping using new nodes and set visibility of all nodes as appropriate
                 node.setVisible(true, true);
                 Map declarations = new HashMap();
                 for (Iterator blockIter = node.getChildren().iterator(); blockIter.hasNext();) {
                     node = (DisplayNode)blockIter.next();
-                    if (node.getLanguageObject() instanceof DeclareStatement) {
-                        DeclareStatement declaration = (DeclareStatement)node.getLanguageObject();
+                    if (node.getLanguageObject() instanceof IDeclareStatement) {
+                        IDeclareStatement declaration = (IDeclareStatement)node.getLanguageObject();
                         if (declaration.getVariable().getName().startsWith(WebServiceUtil.INPUT_VARIABLE_PREFIX)) {
                             declarations.put(declaration.getVariable(), declaration);
                             node.setVisible(true, true);
                         }
                     }
 
-                    if (node.getLanguageObject() instanceof AssignmentStatement || node.getLanguageObject() instanceof DeclareStatement) {
-                        AssignmentStatement assignment = (AssignmentStatement)node.getLanguageObject();
+                    if (node.getLanguageObject() instanceof IAssignmentStatement || node.getLanguageObject() instanceof IDeclareStatement) {
+                        IAssignmentStatement assignment = (IAssignmentStatement)node.getLanguageObject();
                         Object declaration = declarations.get(assignment.getVariable());
                         if (declaration != null) {
                             this.declarationsToAssignments.put(declaration, assignment);
@@ -439,7 +439,7 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
     }
 
     private DisplayNode findBlock( DisplayNode node ) {
-        if (node.getLanguageObject() instanceof Block) {
+        if (node.getLanguageObject() instanceof IBlock) {
             return node;
         }
         for (Iterator iter = node.getChildren().iterator(); iter.hasNext();) {

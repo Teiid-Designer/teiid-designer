@@ -14,17 +14,28 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import javax.management.Query;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.index.Block;
 import org.teiid.designer.core.query.QueryValidationResult;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.query.QueryValidator.ElementSymbolOptimization;
-import org.teiid.designer.sql.ISQLConstants;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.ISQLConstants;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.IFrom;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.query.sql.lang.ISelect;
+import org.teiid.designer.query.sql.lang.IUnaryFromClause;
+import org.teiid.designer.query.sql.symbol.IMultipleElementSymbol;
+import org.teiid.designer.query.sql.symbol.ISymbol;
 import org.teiid.query.ui.UiConstants;
 
 
@@ -86,7 +97,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
     private DisplayNode sqlDisplayNode = null;
     
 	/** Command LanguageObject corresponding to the current DisplayNode, if any */
-    private Command command = null;
+    private ICommand command = null;
     
 	/** Optimizer On status */
     //TODO: allow for default optimization
@@ -363,7 +374,8 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
             // ---------------------
             String optimizedSql = getCommand().toString();
             
-            ResolverUtil.fullyQualifyElements(getCommand());
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            queryService.fullyQualifyElements(getCommand());
             this.optimized = ElementSymbolOptimization.DEOPTIMIZED;
             // --------------------------------------------------------------------------------------------------------------
             // DEFECT 23230
@@ -492,8 +504,8 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
      */
     public boolean isSelectStar() {
         boolean isSelectStar = false;
-        if(isParsable && getCommand()!=null && getCommand() instanceof Query) {
-            Select select = ((Query)getCommand()).getSelect();
+        if(isParsable && getCommand()!=null && getCommand() instanceof IQuery) {
+            ISelect select = ((IQuery)getCommand()).getSelect();
             if(select!=null) {
                 isSelectStar = select.isStar();
             }
@@ -505,14 +517,14 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
      *   Expand the Query SELECT *.  If the current query is a SELECT *, it is expanded. 
      */
     public void expandSelect() {
-    	Command theCommand = getCommand();
-        if(isSelectStar() && theCommand instanceof Query) {
-            Query query = (Query)theCommand;
+    	ICommand theCommand = getCommand();
+        if(isSelectStar() && theCommand instanceof IQuery) {
+            IQuery query = (IQuery)theCommand;
             // If ANY of the Select Symbols are Multi-Element Symbols, expand
             boolean expandSelect = false;
             List syms = query.getSelect().getSymbols();
             for(int i=0; i<syms.size(); i++) {
-                if(syms.get(i) instanceof MultipleElementSymbol) {
+                if(syms.get(i) instanceof IMultipleElementSymbol) {
                     expandSelect = true;
                     break;
                 }
@@ -524,7 +536,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
                 StringBuffer selectStr = new StringBuffer(SELECT_STR+SPACE);
                 for(int i=0; i<symbols.size(); i++) {
                     if(i!=0) selectStr.append(COMMA+SPACE);
-                    String symbolName = ((Expression)symbols.get(i)).toString();
+                    String symbolName = ((IExpression)symbols.get(i)).toString();
                     selectStr.append(symbolName);
                 }
                 if(symbols.size()>0) selectStr.append(SPACE+CR);
@@ -544,7 +556,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
         DisplayNode commandNode = getCommandDisplayNodeAtIndex(index);
         if(isParsable && commandNode instanceof QueryDisplayNode) {
         	// command DisplayNode is a QueryDisplayNode
-            return canExpand((Query)commandNode.getLanguageObject());
+            return canExpand((IQuery)commandNode.getLanguageObject());
         }
         return false;
     }
@@ -564,7 +576,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
         	QueryDisplayNode queryDisplayNode = (QueryDisplayNode)commandDisplayNode;
             SelectDisplayNode selectDisplayNode = 
             	(SelectDisplayNode)queryDisplayNode.getClauseDisplayNode(SELECT);
-            Query query = (Query)queryDisplayNode.getLanguageObject();
+            IQuery query = (IQuery)queryDisplayNode.getLanguageObject();
 
             // expand Select 
             // Get the list of SELECT symbols
@@ -572,7 +584,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
             StringBuffer selectStr = new StringBuffer(SPACE);
             for(int i=0; i<symbols.size(); i++) {
                 if(i!=0) selectStr.append(COMMA+SPACE);
-                String symbolName = ((Expression)symbols.get(i)).toString();
+                String symbolName = ((IExpression)symbols.get(i)).toString();
                 selectStr.append(symbolName);
             }
             if(symbols.size()>0) selectStr.append(SPACE+CR);
@@ -586,11 +598,11 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
      * Get the current Query command.
      * @return the query command.
      */
-    public Command getCommand() {
+    public ICommand getCommand() {
         return command;
     }
 
-    private void setCommand(Command theCommand) {
+    private void setCommand(ICommand theCommand) {
         command = theCommand;
     }
 
@@ -961,9 +973,9 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
             Iterator iter = getSelectSymbolDisplayNodes().iterator();
             while(iter.hasNext()) {
                 DisplayNode node = (DisplayNode)iter.next();
-                if(node.getLanguageObject() instanceof Symbol) {
-                    LanguageObject langObj = node.getLanguageObject();
-                    if(langObj instanceof MultipleElementSymbol) {
+                if(node.getLanguageObject() instanceof ISymbol) {
+                    ILanguageObject langObj = node.getLanguageObject();
+                    if(langObj instanceof IMultipleElementSymbol) {
                     	starIndex = node.getStartIndex();
                     	break;
                     }
@@ -1091,16 +1103,16 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
      * @param query the query language object to test.
      * @return true if the query can be expanded, false if not. 
      */
-	private boolean canExpand(Query query) {
+	private boolean canExpand(IQuery query) {
 	    boolean canExpand = false;
 	    if(query!=null) {
-         	Select select = query.getSelect();
+         	ISelect select = query.getSelect();
          	boolean hasMultiSymbol = false;
          	// Test whether the SELECT has any multi-symbols.
          	if(select!=null) {
                 List syms = select.getSymbols();
                 for(int i=0; i<syms.size(); i++) {
-                    if(syms.get(i) instanceof MultipleElementSymbol) {
+                    if(syms.get(i) instanceof IMultipleElementSymbol) {
                         hasMultiSymbol = true;
                         break;
                     }
@@ -1145,7 +1157,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
             // Rebuild the sql string, replacing the Select
             while( iter.hasNext() ) {
                 DisplayNode clauseNode = (DisplayNode)iter.next();
-                if(clauseNode.getLanguageObject() instanceof Select) {
+                if(clauseNode.getLanguageObject() instanceof ISelect) {
                     sb.append(selectStr);
                 } else {
                     sb.append(clauseNode.toString());
@@ -1177,8 +1189,11 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
     */
     private boolean containsGroup(FromDisplayNode fromClause, String groupName) {
         if(fromClause!=null) {
-            From from = (From)fromClause.getLanguageObject();
-            return from.getGroups().contains(new GroupSymbol(groupName));
+            IFrom from = (IFrom)fromClause.getLanguageObject();
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            IQueryFactory factory = queryService.createQueryFactory();
+            
+            return from.getGroups().contains(factory.createGroupSymbol(groupName));
         }
         return false;
     }
@@ -1204,7 +1219,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
         if(nNodes==2) {
             // If there are two nodes, take the 1st node, or second if a symbol
             displayNode = (DisplayNode)displayNodes.get(0);
-            if( displayNode.getLanguageObject() instanceof Symbol || displayNode.getLanguageObject() instanceof UnaryFromClause) {
+            if( displayNode.getLanguageObject() instanceof ISymbol || displayNode.getLanguageObject() instanceof IUnaryFromClause) {
                 displayNode = (DisplayNode)displayNodes.get(1);
             }
         } else if(nNodes==1) {
@@ -1232,7 +1247,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
         //------------------------------------------------------------
         // Index is within a Symbol
         //------------------------------------------------------------
-        } else if (displayNode.getLanguageObject() instanceof Symbol || displayNode.getLanguageObject() instanceof UnaryFromClause) {
+        } else if (displayNode.getLanguageObject() instanceof ISymbol || displayNode.getLanguageObject() instanceof IUnaryFromClause) {
             int startIndex = displayNode.getStartIndex();
             if(index==startIndex) {
                 insertString(SPACE+symbolName+COMMA,displayNode.getStartIndex());

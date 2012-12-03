@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.teiid.api.exception.query.QueryParserException;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.mapping.choice.IChoiceObject;
 import org.teiid.designer.mapping.factory.IMappableTree;
 import org.teiid.designer.mapping.factory.TreeMappingAdapter;
@@ -66,6 +66,13 @@ import org.teiid.designer.mapping.ui.choice.actions.HideExcludedOptions;
 import org.teiid.designer.mapping.ui.choice.actions.LaunchCriteriaBuilder;
 import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
+import org.teiid.designer.query.IQueryParser;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.query.sql.IResolverVisitor;
+import org.teiid.designer.query.sql.ISQLStringVisitor;
+import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.transformation.ui.builder.CriteriaBuilder;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.validation.TransformationValidator;
@@ -75,12 +82,6 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
-import org.teiid.query.metadata.QueryMetadataInterface;
-import org.teiid.query.parser.QueryParser;
-import org.teiid.query.resolver.util.ResolverVisitor;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.visitor.SQLStringVisitor;
 import org.teiid.query.ui.builder.util.ElementViewerFactory;
 
 
@@ -915,8 +916,11 @@ public class ChoicePanel extends SashForm
         if (status == Window.OK) {
 
             // retrieve the new sql from the criteria builder
-            LanguageObject newCriteria = builder.getLanguageObject();
-            final String sqlCriteria = SQLStringVisitor.getSQLString(newCriteria);
+            ILanguageObject newCriteria = builder.getLanguageObject();
+            
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            ISQLStringVisitor visitor = queryService.getSQLStringVisitor();
+            final String sqlCriteria = visitor.getSQLString(newCriteria);
             // Recreate the query object so that the references within the new criteria (that the user entered in the criteria
             // builder dialog) get resolved. Can't just persist the command since the command is created as a result of the
             // validation process, not the other way around.
@@ -967,25 +971,27 @@ public class ChoicePanel extends SashForm
         }
     }
 
-    private Criteria getCriteria( final MappingClass mappingClass,
+    private ICriteria getCriteria( final MappingClass mappingClass,
                                   final String theCriteria ) {
 
         // validate/resolve to make sure LanguageObjects have metadata IDs.
         SqlTransformationMappingRoot mappingRoot = (SqlTransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(mappingClass);
         TransformationValidator validator = new TransformationValidator(mappingRoot, false);
 
-        QueryParser parser = new QueryParser();
-        Criteria crit = null;
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryParser parser = queryService.getQueryParser();
+        ICriteria crit = null;
         try {
             crit = parser.parseCriteria(theCriteria);
-        } catch (QueryParserException err) {
+        } catch (Exception err) {
             // ignore
         }
 
-        QueryMetadataInterface metadata = validator.getQueryMetadata();
+        IQueryMetadataInterface metadata = validator.getQueryMetadata();
 
         try {
-            ResolverVisitor.resolveLanguageObject(crit, metadata);
+            IResolverVisitor resolverVisitor = queryService.getResolverVisitor();
+            resolverVisitor.resolveLanguageObject(crit, metadata);
         } catch (Exception err) {
             // ignore
         }
@@ -1034,7 +1040,7 @@ public class ChoicePanel extends SashForm
     }
 
     public void updateCriteriaForSelectedRow( final String sCriteria,
-                                              final LanguageObject criteria ) {
+                                              final ILanguageObject criteria ) {
 
         int iSelectedIndex = tvOptionTableViewer.getTable().getSelectionIndex();
         if (iSelectedIndex < 0) {

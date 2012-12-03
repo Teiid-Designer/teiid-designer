@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -29,11 +28,11 @@ import org.teiid.designer.core.validation.ValidationContext;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.metamodels.transformation.SqlTransformation;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
-import org.teiid.designer.sql.ISQLConstants;
+import org.teiid.designer.query.sql.ISQLConstants;
+import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.validation.SqlTransformationResult;
 import org.teiid.designer.transformation.validation.TransformationValidator;
-import org.teiid.query.sql.lang.Command;
 
 
 /**
@@ -396,7 +395,7 @@ public class SqlMappingRootCache implements ISQLConstants {
      * @param transMappingRoot the transformation MappingRoot
      * @return the Command languageObject
      */
-    public static Command getSelectCommand(final Object transMappingRoot) {
+    public static ICommand getSelectCommand(final Object transMappingRoot) {
         return getCommand(transMappingRoot,QueryValidator.SELECT_TRNS);
     }
     
@@ -405,7 +404,7 @@ public class SqlMappingRootCache implements ISQLConstants {
      * @param transMappingRoot the transformation MappingRoot
      * @return the Command languageObject
      */
-    public static Command getInsertCommand(final Object transMappingRoot) {
+    public static ICommand getInsertCommand(final Object transMappingRoot) {
         return getCommand(transMappingRoot,QueryValidator.INSERT_TRNS);
     }
     
@@ -414,7 +413,7 @@ public class SqlMappingRootCache implements ISQLConstants {
      * @param transMappingRoot the transformation MappingRoot
      * @return the Command languageObject
      */
-    public static Command getUpdateCommand(final Object transMappingRoot) {
+    public static ICommand getUpdateCommand(final Object transMappingRoot) {
         return getCommand(transMappingRoot,QueryValidator.UPDATE_TRNS);
     }
     
@@ -423,7 +422,7 @@ public class SqlMappingRootCache implements ISQLConstants {
      * @param transMappingRoot the transformation MappingRoot
      * @return the Command languageObject
      */
-    public static Command getDeleteCommand(final Object transMappingRoot) {
+    public static ICommand getDeleteCommand(final Object transMappingRoot) {
         return getCommand(transMappingRoot,QueryValidator.DELETE_TRNS);
     }
 
@@ -639,8 +638,8 @@ public class SqlMappingRootCache implements ISQLConstants {
      * @param transMappingRoot the transformation MappingRoot
      * @return the Command languageObject
      */
-    public static Command getCommand(final Object transMappingRoot,final int cmdType) {
-        Command command = null;
+    public static ICommand getCommand(final Object transMappingRoot,final int cmdType) {
+        ICommand command = null;
 
         if(transMappingRoot!=null && TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
             // Get status (goes to cache first)

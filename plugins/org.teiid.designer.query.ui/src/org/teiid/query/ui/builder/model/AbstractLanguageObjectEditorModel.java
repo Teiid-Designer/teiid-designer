@@ -9,10 +9,9 @@ package org.teiid.query.ui.builder.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.query.sql.LanguageObject;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.query.ui.UiConstants;
 import org.teiid.query.ui.builder.util.BuilderUtils;
 
@@ -34,7 +33,7 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
     // FIELDS
     // /////////////////////////////////////////////////////////////////////////////////////////////
 
-    private LanguageObject savedLangObj;
+    private ILanguageObject savedLangObj;
 
     private List<ILanguageObjectEditorModelListener> listeners;
 
@@ -107,7 +106,7 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
      * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModel#getLanguageObject()
      */
     @Override
-	public abstract LanguageObject getLanguageObject();
+	public abstract ILanguageObject getLanguageObject();
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModel#getType()
@@ -122,7 +121,7 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
      * 
      * @return the <code>LanguageObject</code> or <code>null</code>
      */
-    protected LanguageObject getSavedLanguageObject() {
+    protected ILanguageObject getSavedLanguageObject() {
         return savedLangObj;
     }
 
@@ -195,7 +194,7 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
      * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModel#setLanguageObject(org.teiid.query.sql.LanguageObject)
      */
     @Override
-	public void setLanguageObject( LanguageObject theLangObj ) {
+	public void setLanguageObject( ILanguageObject theLangObj ) {
         if (theLangObj != null) {
             if (!modelType.isAssignableFrom(theLangObj.getClass())) {
                 CoreArgCheck.isTrue(modelType.isAssignableFrom(theLangObj.getClass()),
@@ -214,7 +213,7 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
     @Override
 	public void setModelType( Class theLanguageObjectClass ) {
         CoreArgCheck.isNotNull(theLanguageObjectClass, PREFIX + "nullType"); //$NON-NLS-1$
-        CoreArgCheck.isTrue(LanguageObject.class.isAssignableFrom(theLanguageObjectClass), PREFIX + "modelTypeNotLangObj"); //$NON-NLS-1$
+        CoreArgCheck.isTrue(ILanguageObject.class.isAssignableFrom(theLanguageObjectClass), PREFIX + "modelTypeNotLangObj"); //$NON-NLS-1$
 
         modelType = theLanguageObjectClass;
     }

@@ -17,12 +17,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.MatchCriteria;
-import org.teiid.query.sql.symbol.Expression;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.lang.IMatchCriteria;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener;
 import org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent;
 import org.teiid.query.ui.builder.model.MatchCriteriaEditorModel;
@@ -36,7 +35,7 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     private final static String PREFIX = I18nUtil.getPropertyPrefix(MatchCriteriaEditor.class);
     private final static int ESC_CHAR_TEXT_WIDTH = (int)(Display.getCurrent().getBounds().width * .01);
 
-    private MatchCriteria matchCriteria;
+    private IMatchCriteria matchCriteria;
     private CriteriaExpressionEditor leftEditor;
     private CriteriaExpressionEditor rightEditor;
     private Composite rightComponent;
@@ -47,7 +46,7 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
 
     public MatchCriteriaEditor( Composite parent,
                                 MatchCriteriaEditorModel model ) {
-        super(parent, MatchCriteria.class, model);
+        super(parent, IMatchCriteria.class, model);
         this.theModel = model;
         viewController = new ViewController();
         model.addModelListener(viewController);
@@ -106,8 +105,8 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     }
 
     @Override
-	public Expression getLeftExpression() {
-        Expression leftExpression = null;
+	public IExpression getLeftExpression() {
+        IExpression leftExpression = null;
         if (matchCriteria != null) {
             leftExpression = matchCriteria.getLeftExpression();
         }
@@ -115,8 +114,8 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     }
 
     @Override
-	public Expression getRightExpression() {
-        Expression rightExpression = null;
+	public IExpression getRightExpression() {
+        IExpression rightExpression = null;
         if (matchCriteria != null) {
             rightExpression = matchCriteria.getRightExpression();
         }
@@ -124,9 +123,9 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     }
 
     @Override
-    public void setLanguageObject( LanguageObject obj ) {
-        CoreArgCheck.isInstanceOf(MatchCriteria.class, obj);
-        matchCriteria = (MatchCriteria)obj;
+    public void setLanguageObject( ILanguageObject obj ) {
+        CoreArgCheck.isInstanceOf(IMatchCriteria.class, obj);
+        matchCriteria = (IMatchCriteria)obj;
         if (leftEditor != null) {
             leftEditor.setLanguageObject(getLeftExpression());
         }
@@ -161,7 +160,7 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
             char newChar = escCharText.getText().charAt(0);
             theModel.setEscapeChar(newChar);
         } else {
-            theModel.setEscapeChar(MatchCriteria.NULL_ESCAPE_CHAR);
+            theModel.setEscapeChar(IMatchCriteria.NULL_ESCAPE_CHAR);
         }
     }
 
@@ -172,10 +171,10 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         if ((textStr != null) && (textStr.length() > 0)) {
             oldChar = escCharText.getText().charAt(0);
         } else {
-            oldChar = MatchCriteria.NULL_ESCAPE_CHAR;
+            oldChar = IMatchCriteria.NULL_ESCAPE_CHAR;
         }
         if (oldChar != newChar) {
-            if (newChar != MatchCriteria.NULL_ESCAPE_CHAR) {
+            if (newChar != IMatchCriteria.NULL_ESCAPE_CHAR) {
                 escCharText.setText(new String(new char[] {newChar}));
             } else {
                 escCharText.setText(""); //$NON-NLS-1$

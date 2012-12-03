@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.sqleditor.component;
 
-import org.teiid.query.sql.lang.CompareCriteria;
+import org.teiid.designer.query.sql.lang.ICompareCriteria;
 
 /**
  * The <code>CompareCriteriaDisplayNode</code> class is used to represent CompareCriteria.
@@ -27,7 +27,7 @@ public class CompareCriteriaDisplayNode extends DisplayNode {
      * @param criteria the query language object used to construct this display node.
      */
     public CompareCriteriaDisplayNode( DisplayNode parentNode,
-                                       CompareCriteria criteria ) {
+                                       ICompareCriteria criteria ) {
         this.parentNode = parentNode;
         this.languageObject = criteria;
     }

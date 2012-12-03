@@ -9,13 +9,13 @@ package org.teiid.designer.transformation.util;
 
 import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
-
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.refactor.ReferenceUpdator;
 import org.teiid.designer.metamodels.transformation.SqlTransformation;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.transformation.validation.SqlTransformationResult;
 import org.teiid.designer.transformation.validation.TransformationValidator;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.navigator.PreOrderNavigator;
 
 /**
  * @since 8.0
@@ -41,6 +41,8 @@ public class TransformationReferenceUpdator implements ReferenceUpdator {
     }
 
     private void updateSqlTransformation(final SqlTransformation sqlTransformation, final UpdateLanguageObjectNameVisitor visitor) {
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        
         // get the mapping root for select transformation
         Object mappingRoot = sqlTransformation.getMapper();
         // update the select sql on the transformation
@@ -48,9 +50,9 @@ public class TransformationReferenceUpdator implements ReferenceUpdator {
         if(selectSql != null) {
             final SqlTransformationResult selectResult = TransformationValidator.parseSQL(selectSql);
             if(selectResult.isParsable()) {
-                final Command selectCmd = selectResult.getCommand();
+                final ICommand selectCmd = selectResult.getCommand();
                 // update the command with the new language object names
-                PreOrderNavigator.doVisit(selectCmd, visitor);
+                selectCmd.acceptVisitor(visitor);
                 String newSelect = selectCmd.toString();
                 if(!selectSql.equalsIgnoreCase(newSelect)) {
                     // invalidate the select cache
@@ -65,9 +67,9 @@ public class TransformationReferenceUpdator implements ReferenceUpdator {
         if(insertSql != null) {
             final SqlTransformationResult insertResult = TransformationValidator.parseSQL(insertSql);
             if(insertResult.isParsable()) {
-                final Command insertCmd = insertResult.getCommand();
+                final ICommand insertCmd = insertResult.getCommand();
                 // update the command with the new language object names
-                PreOrderNavigator.doVisit(insertCmd, visitor);
+                insertCmd.acceptVisitor(visitor);
                 String newInsert = insertCmd.toString();
                 if(!insertSql.equalsIgnoreCase(newInsert)) {
                     // invalidate the insert cache
@@ -82,9 +84,9 @@ public class TransformationReferenceUpdator implements ReferenceUpdator {
         if(updateSql != null) {
             final SqlTransformationResult updateResult = TransformationValidator.parseSQL(updateSql);
             if(updateResult.isParsable()) {
-                final Command updateCmd = updateResult.getCommand();
+                final ICommand updateCmd = updateResult.getCommand();
                 // update the command with the new language object names
-                PreOrderNavigator.doVisit(updateCmd, visitor);
+                updateCmd.acceptVisitor(visitor);
                 String newUpdate = updateCmd.toString();
                 if(!updateSql.equalsIgnoreCase(newUpdate)) {
                     // invalidate the update cache
@@ -99,9 +101,9 @@ public class TransformationReferenceUpdator implements ReferenceUpdator {
         if(deleteSql != null) {
             final SqlTransformationResult deleteResult = TransformationValidator.parseSQL(deleteSql);
             if(deleteResult.isParsable()) {
-                final Command deleteCmd = deleteResult.getCommand();
+                final ICommand deleteCmd = deleteResult.getCommand();
                 // delete the command with the new language object names
-                PreOrderNavigator.doVisit(deleteCmd, visitor);
+                deleteCmd.acceptVisitor(visitor);
                 String newDelete = deleteCmd.toString();
                 if(!deleteSql.equalsIgnoreCase(newDelete)) {
                     // invalidate the delete cache

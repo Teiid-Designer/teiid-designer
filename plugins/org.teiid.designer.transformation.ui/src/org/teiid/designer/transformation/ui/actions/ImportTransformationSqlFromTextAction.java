@@ -38,7 +38,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
-import org.teiid.designer.sql.ISQLConstants;
+import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.textimport.VirtualTableRowObject;

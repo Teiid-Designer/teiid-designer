@@ -14,10 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import javax.management.Query;
-import javax.swing.text.html.Option;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -46,7 +43,6 @@ import org.teiid.designer.metadata.runtime.MetadataRecord;
 import org.teiid.designer.metadata.runtime.TableRecord;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
-import org.teiid.designer.metamodels.function.Function;
 import org.teiid.designer.metamodels.function.ScalarFunction;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.Procedure;
@@ -63,6 +59,22 @@ import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.metamodels.xml.XmlDocument;
 import org.teiid.designer.metamodels.xml.XmlRoot;
 import org.teiid.designer.metamodels.xml.impl.XmlDocumentImpl;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.ICommandCollectorVisitor;
+import org.teiid.designer.query.sql.IElementCollectorVisitor;
+import org.teiid.designer.query.sql.IFunctionCollectorVisitor;
+import org.teiid.designer.query.sql.IGroupCollectorVisitor;
+import org.teiid.designer.query.sql.IPredicateCollectorVisitor;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.ICompareCriteria;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.lang.IOption;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.symbol.IFunction;
+import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.metadata.TransformationMetadata;
 import org.teiid.designer.transformation.util.AttributeMappingHelper;
@@ -83,6 +95,17 @@ import org.teiid.designer.udf.UdfManager;
  */
 public class SqlTransformationMappingRootValidationRule implements ObjectValidationRule {
 
+    private final IGroupCollectorVisitor groupCollectorVisitor;
+    
+    /**
+     * 
+     */
+    public SqlTransformationMappingRootValidationRule() {
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        groupCollectorVisitor = queryService.getGroupCollectorVisitor();
+    }
+    
+    
     /*
      * @See org.teiid.designer.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
      */
@@ -326,9 +349,9 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
      * Validate parameters, resultSet and the sql that defines a update procedure. 1) Error -> INSERT procedure is trying to
      * insert against the same virtual group 2) Error -> UPDATE procedure is trying to update against the same virtual group 3)
      * Error -> DELETE procedure is trying to delete against the same virtual group 4) Warn -> If INSERT procedure does not
-     * contain a single INSERT command. 5) Warn -> If HAS/TRANSLATE criteria constructs are used in INSERT procedures. 6) Warn ->
-     * If UPDATE procedure does not contain a single UPDATE command. 7) Warn -> If DELETE procedure does not contain a single
-     * DELETE command.
+     * contain a single INSERT ICommand. 5) Warn -> If HAS/TRANSLATE criteria constructs are used in INSERT procedures. 6) Warn ->
+     * If UPDATE procedure does not contain a single UPDATE ICommand. 7) Warn -> If DELETE procedure does not contain a single
+     * DELETE ICommand.
      */
     private void validateUpdateProcedures( final TransformationValidationResult transformResult,
                                            final SqlTransformationMappingRoot transRoot,
@@ -347,28 +370,28 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         
         if (!transform.isInsertSqlDefault() && transformResult.hasInsertResult()) {
             // validate insert procedure
-            Command insertCommand = transformResult.getInsertResult().getCommand();
+            ICommand insertCommand = transformResult.getInsertResult().getCommand();
             if (insertCommand != null) {
                 // check if any of the commands are of type insert
-                validateSubCommands(insertCommand, Command.TYPE_INSERT, transRoot, validationResult);
+                validateSubCommands(insertCommand, ICommand.TYPE_INSERT, transRoot, validationResult);
             }
         }
 
         if (!transform.isUpdateSqlDefault() && transformResult.hasUpdateResult()) {
             // validate update procedure
-            Command updateCommand = transformResult.getUpdateResult().getCommand();
+            ICommand updateCommand = transformResult.getUpdateResult().getCommand();
             if (updateCommand != null) {
                 // check if any of the commands are of type update
-                validateSubCommands(updateCommand, Command.TYPE_UPDATE, transRoot, validationResult);
+                validateSubCommands(updateCommand, ICommand.TYPE_UPDATE, transRoot, validationResult);
             }
         }
 
         if (!transform.isDeleteSqlDefault() && transformResult.hasDeleteResult()) {
             // validate delete procedure
-            Command deleteCommand = transformResult.getDeleteResult().getCommand();
+            ICommand deleteCommand = transformResult.getDeleteResult().getCommand();
             if (deleteCommand != null) {
                 // check if any of the commands are of type delete
-                validateSubCommands(deleteCommand, Command.TYPE_DELETE, transRoot, validationResult);
+                validateSubCommands(deleteCommand, ICommand.TYPE_DELETE, transRoot, validationResult);
             }
         }
     }
@@ -377,10 +400,10 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
      * Validate the subcommands.
      * 
      * @param superCmd The super command to validate
-     * @param subCmdType Pass the subcommand type to check something in the subcommand in the context of the super command.
+     * @param subCmdType Pass the subcommand type to check something in the subcommand in the context of the super ICommand.
      * @param transRoot The mapping root of the transformation
      */
-    private void validateSubCommands( final Command command,
+    private void validateSubCommands( final ICommand command,
                                       final int subCmdType,
                                       final SqlTransformationMappingRoot transRoot,
                                       final ValidationResult validationResult ) {
@@ -390,23 +413,25 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         // the super command
         boolean foundDesiredSubCmd = false;
         // get all the sub commands and iterate through them
-        final Collection commands = CommandCollectorVisitor.getCommands(command);
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        ICommandCollectorVisitor commandCollectorVisitor = queryService.getCommandCollectorVisitor();
+        final Collection commands = commandCollectorVisitor.getCommands(command);
         // get the target for the transformation
         EObject target = transRoot.getTarget();
         for (final Iterator cmdIter = commands.iterator(); cmdIter.hasNext();) {
-            Command subCommand = (Command)cmdIter.next();
+            ICommand subCommand = (ICommand)cmdIter.next();
             int currentCmdType = subCommand.getType();
             // if subcommand type is samme as that expected for super command
             if (currentCmdType == subCmdType) {
                 foundDesiredSubCmd = true;
             }
             switch (currentCmdType) {
-                case Command.TYPE_QUERY:
-                    if (subCommand instanceof Query) {
-                        validateQuery((Query)subCommand, transRoot, validationResult);
+                case ICommand.TYPE_QUERY:
+                    if (subCommand instanceof IQuery) {
+                        validateQuery((IQuery)subCommand, transRoot, validationResult);
                     }
                     break;
-                case Command.TYPE_INSERT:
+                case ICommand.TYPE_INSERT:
                     if (containsTarget(subCommand, target)) {
                         // create validation problem and addition to the results
                         typeProblem = new ValidationProblemImpl(
@@ -415,7 +440,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                                                                 TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.The_insert_procedure_for_the_virtualGroup_{0},_is_trying_to_execute_an_insert_against_itself._1", TransformationHelper.getSqlEObjectName(target))); //$NON-NLS-1$
                     }
                     break;
-                case Command.TYPE_UPDATE:
+                case ICommand.TYPE_UPDATE:
                     if (containsTarget(subCommand, target)) {
                         // create validation problem and addition to the results
                         typeProblem = new ValidationProblemImpl(
@@ -424,7 +449,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                                                                 TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.The_update_procedure_for_the_virtualGroup_{0},_is_trying_to_execute_an_update_against_itself._2", TransformationHelper.getSqlEObjectName(target))); //$NON-NLS-1$    				    
                     }
                     break;
-                case Command.TYPE_DELETE:
+                case ICommand.TYPE_DELETE:
                     if (containsTarget(subCommand, target)) {
                         // create validation problem and addition to the results
                         typeProblem = new ValidationProblemImpl(
@@ -444,28 +469,28 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                 return;
             }
             // for each of the subcommand, validate its subcommands
-            validateSubCommands(subCommand, Command.TYPE_UNKNOWN, transRoot, validationResult);
+            validateSubCommands(subCommand, ICommand.TYPE_UNKNOWN, transRoot, validationResult);
         }
 
         // if we do care abpout the subcommand type for the super command
         // or desired subcommand is not found for the super command
-        if (subCmdType != Command.TYPE_UNKNOWN && !foundDesiredSubCmd) {
+        if (subCmdType != ICommand.TYPE_UNKNOWN && !foundDesiredSubCmd) {
             switch (subCmdType) {
-                case Command.TYPE_INSERT:
+                case ICommand.TYPE_INSERT:
                     // create validation problem and addition to the results
                     typeProblem = new ValidationProblemImpl(
                                                             0,
                                                             IStatus.WARNING,
                                                             TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.The_insert_procedure_for_the_virtualGroup_{0}_does____not_execute_an_insert._1", TransformationHelper.getSqlEObjectName(target))); //$NON-NLS-1$
                     break;
-                case Command.TYPE_UPDATE:
+                case ICommand.TYPE_UPDATE:
                     // create validation problem and addition to the results
                     typeProblem = new ValidationProblemImpl(
                                                             0,
                                                             IStatus.WARNING,
                                                             TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.The_update_procedure_for_the_virtualGroup_{0}_does____not_execute_an_update._2", TransformationHelper.getSqlEObjectName(target))); //$NON-NLS-1$
                     break;
-                case Command.TYPE_DELETE:
+                case ICommand.TYPE_DELETE:
                     // create validation problem and addition to the results
                     typeProblem = new ValidationProblemImpl(
                                                             0,
@@ -481,14 +506,14 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
     }
 
     /**
-     * Check if any of the target group represented by the EObject is used in the given command.
+     * Check if any of the target group represented by the EObject is used in the given ICommand.
      */
-    private boolean containsTarget( final Command command,
+    private boolean containsTarget( final ICommand command,
                                     final EObject target ) {
         String targetName = TransformationHelper.getSqlEObjectFullName(target);
         String targetUUID = TransformationHelper.getSqlEObjectUUID(target);
-        for (final Iterator grpIter = GroupCollectorVisitor.getGroups(command, true).iterator(); grpIter.hasNext();) {
-            GroupSymbol group = (GroupSymbol)grpIter.next();
+        for (final Iterator grpIter = groupCollectorVisitor.getGroups(command, true).iterator(); grpIter.hasNext();) {
+            IGroupSymbol group = (IGroupSymbol)grpIter.next();
             if (group.getName().equalsIgnoreCase(targetUUID) || group.getName().equalsIgnoreCase(targetName)) {
                 return true;
             }
@@ -503,7 +528,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
      * are not used in the sql defining the procedure 4) Error -> If the command defining a procedure is an update procedure. 5)
      * Error - > If the command defining proc is an update, the proc should have a result with one column of type int.
      */
-    private void validateVirtualProcedures( final Command command,
+    private void validateVirtualProcedures( final ICommand command,
                                             final SqlTransformationMappingRoot transRoot,
                                             final ValidationResult validationResult ) {
         if (validationResult.isFatalObject(transRoot)) {
@@ -520,7 +545,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         int cmdType = command.getType();
         // get the resultSet on the procedure
         ProcedureResult procResult = procTrgt.getResult();
-        if (procResult == null && cmdType != Command.TYPE_UPDATE_PROCEDURE) {
+        if (procResult == null && cmdType != ICommand.TYPE_UPDATE_PROCEDURE) {
             // create validation problem and additional to the results
             ValidationProblem typeProblem = new ValidationProblemImpl(
                                                                       0,
@@ -536,7 +561,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         final Collection elements = getElementsIncludeParameters(command);
         final Collection upperSymbolNames = new HashSet(elements.size());
         for (final Iterator elmntIter = elements.iterator(); elmntIter.hasNext();) {
-            final ElementSymbol symbol = (ElementSymbol)elmntIter.next();
+            final IElementSymbol symbol = (IElementSymbol)elmntIter.next();
             final String symbolUpperName = AttributeMappingHelper.getSymbolFullName(symbol).toUpperCase();
             upperSymbolNames.add(symbolUpperName);
         }
@@ -577,7 +602,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         }
 
         // If it is update command then result should have one column of type 'int'
-        if (cmdType == Command.TYPE_INSERT || cmdType == Command.TYPE_UPDATE || cmdType == Command.TYPE_DELETE) {
+        if (cmdType == ICommand.TYPE_INSERT || cmdType == ICommand.TYPE_UPDATE || cmdType == ICommand.TYPE_DELETE) {
             Collection columns = procResult.getColumns();
             String typeName = null;
             if (columns.size() == 1) {
@@ -602,11 +627,14 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         }
     }
 
-    private Collection getElementsIncludeParameters( LanguageObject obj ) {
+    private Collection getElementsIncludeParameters( ILanguageObject obj ) {
         if (obj == null) {
             return Collections.EMPTY_LIST;
         }
-        return ElementCollectorVisitor.getElements(obj, true, true);
+        
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor();
+        return elementCollectorVisitor.getElements(obj, true, true);
     }
 
     /**
@@ -737,12 +765,12 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         SqlTransformationResult selectResult = transformResult.getSelectResult();
         // apply validation furtur validation checks on the valid Select query
         if (selectResult != null) {
-            Command command = selectResult.getCommand();
+            ICommand command = selectResult.getCommand();
             if (command != null) {
-                if (command instanceof Query) {
-                    validateQuery((Query)command, transRoot, validationResult);
+                if (command instanceof IQuery) {
+                    validateQuery((IQuery)command, transRoot, validationResult);
                 }
-                validateSubCommands(command, Command.TYPE_UNKNOWN, transRoot, validationResult);
+                validateSubCommands(command, ICommand.TYPE_UNKNOWN, transRoot, validationResult);
             }
 
             if (!validationResult.isFatalObject(transRoot)) {
@@ -761,12 +789,13 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             // if there is a string function (SUBSTRING, LOCATE, and INSERT), warn the user that it is one based
             int pref = context.getPreferenceStatus(ValidationPreferences.CORE_STRING_FUNCTIONS_ONE_BASED, IStatus.WARNING);
             if (pref != IStatus.OK) {
-                Collection functions = new HashSet();
-                FunctionCollectorVisitor visitor = new FunctionCollectorVisitor(functions);
-                DeepPreOrderNavigator.doVisit(command, visitor);
+                IQueryService queryService = ModelerCore.getTeiidQueryService();
+                IFunctionCollectorVisitor functionCollectorVisitor = queryService.getFunctionCollectorVisitor();
+                Collection<IFunction> functions = functionCollectorVisitor.getFunctions(command, true, true);
+                
                 Iterator iter = functions.iterator();
                 while (iter.hasNext()) {
-                    Function function = (Function)iter.next();
+                    IFunction function = (IFunction)iter.next();
                     String functionName = function.getName().toUpperCase();
                     if ("SUBSTRING".equals(functionName) || "LOCATE".equals(functionName) || "INSERT".equals(functionName)) {//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                         ValidationProblem stringFunctionWarning = new ValidationProblemImpl(
@@ -786,12 +815,17 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
      * Apply additional validation checks on query in the command defining the transform. 1) WARNING - > If there is a cross join
      * involved in the sql. 2) WARNING -> IF there is a join involved between elements of differrent types.
      */
-    private void validateQuery( final Query query,
+    private void validateQuery( final IQuery query,
                                 final SqlTransformationMappingRoot transRoot,
                                 final ValidationResult validationResult ) {
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+        IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor();
+        IPredicateCollectorVisitor predicateCollectorVisitor = queryService.getPredicateCollectorVisitor();
+        
         // apply additional validation checks for queries
-        Collection predicates = PredicateCollectorVisitor.getPredicates(query);
-        Collection groups = GroupCollectorVisitor.getGroups(query, true);
+        Collection predicates = predicateCollectorVisitor.getPredicates(query);
+        Collection groups = groupCollectorVisitor.getGroups(query, true);
         if (predicates.isEmpty() && groups.size() > 1) {
             // There are no predicates but there are groups
             // (this is the trivial case)
@@ -813,18 +847,18 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             
             for (final Iterator predicateIter = predicates.iterator(); predicateIter.hasNext();) {
                 Object predicate = predicateIter.next();
-                if (predicate instanceof CompareCriteria) {
-                    CompareCriteria compare = (CompareCriteria)predicate;
+                if (predicate instanceof ICompareCriteria) {
+                    ICompareCriteria compare = (ICompareCriteria)predicate;
                     // collect all the groups involved in this join
                     Collection groupsInJoin = new HashSet();
-                    for (final Iterator elementIter = ElementCollectorVisitor.getElements(compare, true).iterator(); elementIter.hasNext();) {
-                        ElementSymbol element = (ElementSymbol)elementIter.next();
-                        GroupSymbol group = element.getGroupSymbol();
+                    for (final Iterator elementIter = elementCollectorVisitor.getElements(compare, true).iterator(); elementIter.hasNext();) {
+                        IElementSymbol element = (IElementSymbol)elementIter.next();
+                        IGroupSymbol group = element.getGroupSymbol();
                         if (group == null && element.isExternalReference()) {
                             String elementFullName = element.getName();
                             int grpIndex = elementFullName.indexOf(element.getShortName());
                             String groupName = elementFullName.substring(0, grpIndex - 1);
-                            group = new GroupSymbol(groupName);
+                            group = factory.createGroupSymbol(groupName);
                         }
                         if (group != null) {
                             groupsInJoin.add(group);
@@ -834,29 +868,29 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                     if (groupsInJoin.size() > 1) {
                         allJoins.add(groupsInJoin);
                     }
-                    if (compare.getOperator() == AbstractCompareCriteria.EQ) {
-                        Object leftExpression = compare.getLeftExpression();
-                        Object rightExpression = compare.getRightExpression();
+                    if (compare.getOperator() == ICompareCriteria.EQ) {
+                        IExpression leftExpression = compare.getLeftExpression();
+                        IExpression rightExpression = compare.getRightExpression();
                         // in case of CAST/CONVERT functions get the elementsymbol in the function
                         // and compare types
-                        if (leftExpression instanceof Function) {
-                            Function leftFunction = (Function)leftExpression;
+                        if (leftExpression instanceof IFunction) {
+                            IFunction leftFunction = (IFunction)leftExpression;
                             String descriptorName = leftFunction.getFunctionDescriptor().getName();
                             if (leftFunction.isImplicit()
                                 && descriptorName != null
                                 && (descriptorName.equals(functionLibrary.getFunctionName(FunctionName.CONVERT)) || 
-                                                          descriptorName.equals(functionLibrary.getFunctionName(FunctionName.CAST))) {
+                                                          descriptorName.equals(functionLibrary.getFunctionName(FunctionName.CAST)))) {
 
                                 leftExpression = leftFunction.getArg(0);
                             }
                         }
-                        if (rightExpression instanceof Function) {
-                            Function rightFunction = (Function)rightExpression;
+                        if (rightExpression instanceof IFunction) {
+                            IFunction rightFunction = (IFunction)rightExpression;
                             String descriptorName = rightFunction.getFunctionDescriptor().getName();
                             if (rightFunction.isImplicit()
                                 && descriptorName != null
                                 && (descriptorName.equals(functionLibrary.getFunctionName(FunctionName.CONVERT)) || 
-                                                          descriptorName.equals(functionLibrary.getFunctionName(FunctionName.CAST))) {
+                                                          descriptorName.equals(functionLibrary.getFunctionName(FunctionName.CAST)))) {
 
                                 rightExpression = rightFunction.getArg(0);
                             }
@@ -864,9 +898,9 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                         
                         IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
 
-                        if (leftExpression instanceof ElementSymbol && rightExpression instanceof ElementSymbol) {
-                            Class leftDataType = ((Expression)leftExpression).getType();
-                            Class rightDataType = ((Expression)rightExpression).getType();
+                        if (leftExpression instanceof IElementSymbol && rightExpression instanceof IElementSymbol) {
+                            Class leftDataType = leftExpression.getType();
+                            Class rightDataType = rightExpression.getType();
                             if (!leftDataType.equals(rightDataType)) {
                                 Object[] params = new Object[] {compare, service.getDataTypeName(leftDataType),
                                     service.getDataTypeName(rightDataType)};
@@ -899,7 +933,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                         Collection join2 = (Collection)allJoins.get(j);
                         // check if groups in join2 are in join1
                         for (final Iterator grpIter = join2.iterator(); grpIter.hasNext();) {
-                            GroupSymbol joinGrp = (GroupSymbol)grpIter.next();
+                            IGroupSymbol joinGrp = (IGroupSymbol)grpIter.next();
                             // all groups in join1 and join2 are joined together
                             if (join1.contains(joinGrp)) {
                                 groupsJoined.addAll(join1);
@@ -973,7 +1007,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
     private Collection getNamesForGroupSymbols( final Collection groups ) {
         Collection groupNames = new HashSet(groups.size());
         for (final Iterator iter = groups.iterator(); iter.hasNext();) {
-            GroupSymbol grpSyb = (GroupSymbol)iter.next();
+            IGroupSymbol grpSyb = (IGroupSymbol)iter.next();
             Object metadataID = grpSyb.getMetadataID();
             if (metadataID != null && metadataID instanceof MetadataRecord) {
                 groupNames.add(((MetadataRecord)metadataID).getFullName());
@@ -990,10 +1024,10 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
      * 
      * @since 4.2
      */
-    private void validateOption( final Command command,
+    private void validateOption( final ICommand command,
                                  final SqlTransformationMappingRoot root,
                                  final ValidationResult result ) {
-        Option option = command.getOption();
+        IOption option = command.getOption();
         if (option == null) {
             return;
         }
@@ -1014,15 +1048,14 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
      * 
      * @since 4.2
      */
-    private void validateDepOptionGroups( final Collection groupNames,
+    private void validateDepOptionGroups( final Collection<String> groupNames,
                                           final SqlTransformationMappingRoot root,
                                           final ValidationResult result ) {
         if (groupNames == null || groupNames.isEmpty()) {
             return;
         }
 
-        for (final Iterator iter = groupNames.iterator(); iter.hasNext();) {
-            String groupName = (String)iter.next();
+        for (String groupName : groupNames) {
             // check if the group name specified is a fully qualified name
             // if it is not a fully qualified name, its
             // probably an alias name
@@ -1052,21 +1085,20 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
      * 
      * @since 4.2
      */
-    private void validateOptionNoCacheGrps( final Command command,
+    private void validateOptionNoCacheGrps( final ICommand command,
                                             final SqlTransformationMappingRoot root,
                                             final ValidationResult result ) {
 
-        Option option = command.getOption();
+        IOption option = command.getOption();
         if (option == null || !option.isNoCache()) {
             return;
         }
-        Collection groups = GroupCollectorVisitor.getGroups(command, true);
+        Collection groups = groupCollectorVisitor.getGroups(command, true);
         // names of groups specified in NO cACHE clause
-        Collection noCacheGroups = option.getNoCacheGroups();
+        Collection<String> noCacheGroups = option.getNoCacheGroups();
         boolean hasMaterializedGroups = false;
         if (noCacheGroups != null) {
-            for (final Iterator iter = noCacheGroups.iterator(); iter.hasNext();) {
-                String groupName = (String)iter.next();
+            for (String groupName : noCacheGroups) {
                 boolean foundMaterializedMatch = false;
                 // collections of short and group names that match the
                 // names of noCacheGroup
@@ -1075,7 +1107,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                 Collection aliasNamesMatched = new LinkedList();
                 // compare the name against against the names of materialized virtual groups
                 for (final Iterator grpIter = groups.iterator(); grpIter.hasNext();) {
-                    GroupSymbol grpSymbol = (GroupSymbol)grpIter.next();
+                    IGroupSymbol grpSymbol = (IGroupSymbol)grpIter.next();
                     Object metadataID = grpSymbol.getMetadataID();
                     if (metadataID != null && metadataID instanceof TableRecord) {
                         TableRecord record = (TableRecord)metadataID;

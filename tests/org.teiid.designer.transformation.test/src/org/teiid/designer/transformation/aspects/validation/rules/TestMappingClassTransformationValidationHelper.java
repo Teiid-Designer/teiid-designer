@@ -12,16 +12,16 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IStatus;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.validation.ValidationResult;
 import org.teiid.designer.core.validation.ValidationResultImpl;
 import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.metamodels.transformation.TransformationFactory;
-import org.teiid.designer.transformation.aspects.validation.rules.MappingClassTransformationValidationHelper;
-import org.teiid.query.parser.QueryParser;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.designer.query.IQueryParser;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.query.sql.lang.ISetQuery;
 
 
 /** 
@@ -70,13 +70,13 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
         return mappingClass;
     }
 
-    public Command parseCommand(String sql) throws Exception {
-        QueryParser parser = new QueryParser();
+    public ICommand parseCommand(String sql) throws Exception {
+        IQueryParser parser = ModelerCore.getTeiidQueryService().getQueryParser();
         return parser.parseCommand(sql);
     }
     
     public void testNonQueryNonSetQuery() throws Exception {
-        Command command = parseCommand("Delete from x");//$NON-NLS-1$
+        ICommand command = parseCommand("Delete from x");//$NON-NLS-1$
         MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
         ValidationResult result = new ValidationResultImpl(new Object());
         rule.validate(command, helpTransformationMappingRoot(), result);
@@ -86,96 +86,96 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
     }
 
     public void testNoInputSelectNoRecursiveMappingClass() throws Exception {
-        Command command = parseCommand("SELECT e FROM g");//$NON-NLS-1$
+        ICommand command = parseCommand("SELECT e FROM g");//$NON-NLS-1$
         MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
         MappingClass mappingClass = helpGetMappingClass();
         ValidationResult result = new ValidationResultImpl(mappingClass);
-        rule.validate((Query)command, mappingClass, result);
+        rule.validate((IQuery)command, mappingClass, result);
         assertTrue(!result.hasProblems());
     }
 
     public void testInputSelectNoRecursiveMappingClass() throws Exception {
-        Command command = parseCommand("SELECT e, INPUT.f FROM g");//$NON-NLS-1$
+        ICommand command = parseCommand("SELECT e, INPUT.f FROM g");//$NON-NLS-1$
         MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
         MappingClass mappingClass = helpGetMappingClass();
         ValidationResult result = new ValidationResultImpl(new Object());
-        rule.validate((Query)command, mappingClass, result);
+        rule.validate((IQuery)command, mappingClass, result);
         assertFalse(result.hasProblems());
         assertEquals(0, result.getProblems().length);
     }
     
     public void testNoInputSelectRecursiveMappingClassNoCriteria() throws Exception {
-        Command command = parseCommand("SELECT e FROM g");//$NON-NLS-1$
+        ICommand command = parseCommand("SELECT e FROM g");//$NON-NLS-1$
         MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
         MappingClass mappingClass = helpGetRecursiveMappingClass();
         ValidationResult result = new ValidationResultImpl(new Object());
-        rule.validate((Query)command, mappingClass, result);
+        rule.validate((IQuery)command, mappingClass, result);
         assertTrue(result.hasProblems());
         assertEquals(1, result.getProblems().length);
         assertEquals(IStatus.WARNING, (result.getProblems()[0]).getSeverity());
     }
     
     public void testInputSelectRecursiveMappingClassNoCriteria() throws Exception {
-        Command command = parseCommand("SELECT e, INPUT.f FROM g");//$NON-NLS-1$
+        ICommand command = parseCommand("SELECT e, INPUT.f FROM g");//$NON-NLS-1$
         MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
         MappingClass mappingClass = helpGetRecursiveMappingClass();
         ValidationResult result = new ValidationResultImpl(new Object());
-        rule.validate((Query)command, mappingClass, result);
+        rule.validate((IQuery)command, mappingClass, result);
         assertTrue(result.hasProblems());
         assertEquals(1, result.getProblems().length);
         assertEquals(IStatus.WARNING, (result.getProblems()[0]).getSeverity());
     }
     
     public void testNoInputSelectRecursiveMappingClassNoInputCriteria() throws Exception {
-        Command command = parseCommand("SELECT e FROM g where x = y");//$NON-NLS-1$
+        ICommand command = parseCommand("SELECT e FROM g where x = y");//$NON-NLS-1$
         MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
         MappingClass mappingClass = helpGetRecursiveMappingClass();
         ValidationResult result = new ValidationResultImpl(new Object());
-        rule.validate((Query)command, mappingClass, result);
+        rule.validate((IQuery)command, mappingClass, result);
         assertTrue(result.hasProblems());
         assertEquals(1, result.getProblems().length);
         assertEquals(IStatus.WARNING, (result.getProblems()[0]).getSeverity());
     }
     
     public void testInputSelectRecursiveMappingClassInputCriteria() throws Exception {
-        Command command = parseCommand("SELECT e FROM g where x = Input.y");//$NON-NLS-1$
+        ICommand command = parseCommand("SELECT e FROM g where x = Input.y");//$NON-NLS-1$
         MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
         MappingClass mappingClass = helpGetRecursiveMappingClass();
         ValidationResult result = new ValidationResultImpl(new Object());
-        rule.validate((Query)command, mappingClass, result);
+        rule.validate((IQuery)command, mappingClass, result);
         assertTrue(result.hasProblems());
         assertEquals(1, result.getProblems().length);
         assertEquals(IStatus.WARNING, (result.getProblems()[0]).getSeverity());
     }
 
     public void testNoInputUNIONSelectRecursiveMappingClassNoInputCriteria() throws Exception {
-        Command command = parseCommand("SELECT e FROM g where x = y UNION SELECT e FROM g");//$NON-NLS-1$
+        ICommand command = parseCommand("SELECT e FROM g where x = y UNION SELECT e FROM g");//$NON-NLS-1$
         MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
         MappingClass mappingClass = helpGetRecursiveMappingClass();
         ValidationResult result = new ValidationResultImpl(new Object());
-        rule.validate((SetQuery)command, mappingClass, result);
+        rule.validate((ISetQuery)command, mappingClass, result);
         assertTrue(result.hasProblems());
         assertEquals(1, result.getProblems().length);
         assertEquals(IStatus.WARNING, (result.getProblems()[0]).getSeverity());
     }
 
     public void testInputUNIONSelectRecursiveMappingClassInputCriteria() throws Exception {
-        Command command = parseCommand("SELECT e FROM g where x = Input.y UNION SELECT e FROM g");//$NON-NLS-1$
+        ICommand command = parseCommand("SELECT e FROM g where x = Input.y UNION SELECT e FROM g");//$NON-NLS-1$
         MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
         MappingClass mappingClass = helpGetRecursiveMappingClass();
         ValidationResult result = new ValidationResultImpl(new Object());
-        rule.validate((SetQuery)command, mappingClass, result);
+        rule.validate((ISetQuery)command, mappingClass, result);
         assertTrue(result.hasProblems());
         assertEquals(1, result.getProblems().length);
         assertEquals(IStatus.WARNING, (result.getProblems()[0]).getSeverity());
     }
     
     public void testInputUNIONSelectRecursiveMappingClassNoCriteria() throws Exception {
-        Command command = parseCommand("SELECT e, INPUT.f FROM g  UNION SELECT e FROM g");//$NON-NLS-1$
+        ICommand command = parseCommand("SELECT e, INPUT.f FROM g  UNION SELECT e FROM g");//$NON-NLS-1$
         MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
         MappingClass mappingClass = helpGetRecursiveMappingClass();
         ValidationResult result = new ValidationResultImpl(new Object());
-        rule.validate((SetQuery)command, mappingClass, result);
+        rule.validate((ISetQuery)command, mappingClass, result);
         assertTrue(result.hasProblems());
         assertEquals(1, result.getProblems().length);
         assertEquals(IStatus.WARNING, (result.getProblems()[0]).getSeverity());

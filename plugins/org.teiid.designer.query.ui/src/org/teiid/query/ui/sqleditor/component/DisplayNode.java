@@ -10,9 +10,9 @@ package org.teiid.query.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.symbol.Expression;
+import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 
 /**
  * The <code>DisplayNode</code> class is the base class used by <code>QueryDisplayComponent</code> to represent all types of
@@ -29,7 +29,7 @@ public class DisplayNode implements DisplayNodeConstants {
     protected int startIndex = 0;
     protected int endIndex = 0;
     protected DisplayNode parentNode = null;
-    protected LanguageObject languageObject = null;
+    protected ILanguageObject languageObject = null;
     protected List<DisplayNode> childNodeList = new ArrayList(1);
     protected List<DisplayNode> displayNodeList = new ArrayList(1);
     private boolean visible = true;
@@ -52,7 +52,7 @@ public class DisplayNode implements DisplayNodeConstants {
     /**
      * Get the LanguageObject associated with this DisplayNode
      */
-    public LanguageObject getLanguageObject() {
+    public ILanguageObject getLanguageObject() {
         return languageObject;
     }
 
@@ -175,7 +175,7 @@ public class DisplayNode implements DisplayNodeConstants {
     public DisplayNode getExpression() {
         DisplayNode parentNode = this;
         while (parentNode != null) {
-            if (parentNode.languageObject instanceof Expression) {
+            if (parentNode.languageObject instanceof IExpression) {
                 return parentNode;
             }
             parentNode = parentNode.getParent();
@@ -203,7 +203,7 @@ public class DisplayNode implements DisplayNodeConstants {
     public DisplayNode getCriteria() {
         DisplayNode parentNode = this;
         while (parentNode != null) {
-            if (parentNode.languageObject instanceof Criteria) {
+            if (parentNode.languageObject instanceof ICriteria) {
                 return parentNode;
             }
             parentNode = parentNode.getParent();

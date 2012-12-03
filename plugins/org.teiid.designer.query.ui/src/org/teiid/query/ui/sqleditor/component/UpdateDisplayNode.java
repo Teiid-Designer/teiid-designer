@@ -9,8 +9,8 @@ package org.teiid.query.ui.sqleditor.component;
 
 import java.util.Iterator;
 import java.util.List;
-import org.teiid.query.sql.lang.Option;
-import org.teiid.query.sql.lang.Update;
+import javax.swing.text.html.Option;
+import org.teiid.designer.query.sql.lang.IUpdate;
 
 /**
  * The <code>UpdateDisplayNode</code> class is used to represent a UPDATE command.
@@ -30,7 +30,7 @@ public class UpdateDisplayNode extends DisplayNode {
      * @param update The update language object used to construct this display node.
      */
     public UpdateDisplayNode( DisplayNode parentNode,
-                              Update update ) {
+                              IUpdate update ) {
         this.parentNode = parentNode;
         this.languageObject = update;
     }

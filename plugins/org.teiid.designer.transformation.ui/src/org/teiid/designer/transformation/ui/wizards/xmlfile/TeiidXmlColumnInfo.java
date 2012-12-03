@@ -13,10 +13,13 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
-import org.teiid.query.sql.symbol.ElementSymbol;
 
 
 /**
@@ -34,7 +37,7 @@ public class TeiidXmlColumnInfo {
     /**
      * The unique column name (never <code>null</code> or empty).
      */
-	private ElementSymbol nameSymbol;
+	private IElementSymbol nameSymbol;
 	
 	 /**
      * The unique column datatype (never <code>null</code> or empty).
@@ -182,11 +185,13 @@ public class TeiidXmlColumnInfo {
 	 * Initialise the {@link ElementSymbol} to hold the
 	 * name. This validates the symbol's character composition.
 	 * 
-	 * The '.' character is the only puntuation symbol that will cause
+	 * The '.' character is the only punctuation symbol that will cause
 	 * problems for an element symbol so these are replaced these with '_'.
 	 */
 	private void initNameSymbol(final String name) {
-	    nameSymbol = new ElementSymbol(name.replaceAll("\\.", "_"));  //$NON-NLS-1$//$NON-NLS-2$
+	    IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+	    nameSymbol = factory.createElementSymbol(name.replaceAll("\\.", "_"));  //$NON-NLS-1$//$NON-NLS-2$
 	}
 	
 	/**

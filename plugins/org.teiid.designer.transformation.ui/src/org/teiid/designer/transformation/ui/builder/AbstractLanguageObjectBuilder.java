@@ -32,17 +32,18 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.ISQLStringVisitor;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.builder.actions.DeleteViewerObjectAction;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlDisplayPanel;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Dialog;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.visitor.SQLStringVisitor;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener;
 import org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent;
 import org.teiid.query.ui.builder.util.BuilderUtils;
@@ -69,9 +70,9 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
 
     private ILanguageObjectEditor editor;
 
-    private LanguageObject savedSelection;
+    private ILanguageObject savedSelection;
 
-    protected LanguageObject savedLangObj;
+    protected ILanguageObject savedLangObj;
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONTROLS
@@ -337,7 +338,7 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectInputProvider#getLanguageObject()
      */
-    public LanguageObject getLanguageObject() {
+    public ILanguageObject getLanguageObject() {
         return treeViewer.getLanguageObject();
     }
 
@@ -346,7 +347,7 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
      * 
      * @return the saved <code>LanguageObject</code> or <code>null</code>
      */
-    protected LanguageObject getSavedLanguageObject() {
+    protected ILanguageObject getSavedLanguageObject() {
         return savedLangObj;
     }
 
@@ -405,7 +406,7 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
 
         // need the editor's language object in order to update tree.
         // the language object should never be null. if it was this handler should not have been called
-        LanguageObject langObj = editor.getLanguageObject();
+        ILanguageObject langObj = editor.getLanguageObject();
 
         CoreArgCheck.isNotNull(langObj, Util.getString(PREFIX + "nullLangObj", //$NON-NLS-1$
                                                        new Object[] {"handleSetSelected"})); //$NON-NLS-1$
@@ -432,7 +433,7 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
             }
         } else {
             // selection with either be a LanguageObject or an Undefined object (String)
-            savedSelection = (selectedObj instanceof LanguageObject) ? (LanguageObject)selectedObj : null;
+            savedSelection = (selectedObj instanceof ILanguageObject) ? (ILanguageObject)selectedObj : null;
         }
 
         setEditorLanguageObject(savedSelection);
@@ -454,11 +455,14 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
         return isRoot;
     }
 
-    protected void setCurrentSql( LanguageObject theLangObj ) {
-        currentSql.setText(SQLStringVisitor.getSQLString(theLangObj));
+    protected void setCurrentSql( ILanguageObject theLangObj ) {
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        ISQLStringVisitor visitor = queryService.getSQLStringVisitor();
+        
+        currentSql.setText(visitor.getSQLString(theLangObj));
     }
 
-    protected void setEditorLanguageObject( LanguageObject theEditorLangObj ) {
+    protected void setEditorLanguageObject( ILanguageObject theEditorLangObj ) {
         getEditor().setLanguageObject(savedSelection);
 
         if (!editor.isEnabled()) {
@@ -495,10 +499,10 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
         }
     }
 
-    public void setLanguageObject( LanguageObject theLangObj ) {
+    public void setLanguageObject( ILanguageObject theLangObj ) {
         // language object must be cloned here so that the original isn't modified.
         // this prevents the original from being modified even if the user cancels out of the builder.
-        LanguageObject langObj = (theLangObj == null) ? null : (LanguageObject)theLangObj.clone();
+        ILanguageObject langObj = (theLangObj == null) ? null : (ILanguageObject)theLangObj.clone();
 
         savedLangObj = langObj;
         setOriginalSql(langObj);
@@ -533,8 +537,11 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
         });
     }
 
-    protected void setOriginalSql( LanguageObject theLangObj ) {
-        originalSql.setText(SQLStringVisitor.getSQLString(theLangObj));
+    protected void setOriginalSql( ILanguageObject theLangObj ) {
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        ISQLStringVisitor visitor = queryService.getSQLStringVisitor();
+        
+        originalSql.setText(visitor.getSQLString(theLangObj));
     }
 
 }

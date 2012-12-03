@@ -39,7 +39,7 @@ import org.teiid.designer.core.metadata.runtime.RuntimeAdapter;
 import org.teiid.designer.metadata.runtime.ColumnRecord;
 import org.teiid.designer.metadata.runtime.MetadataRecord;
 import org.teiid.designer.metadata.runtime.TableRecord;
-import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 
 /**
  * TestTransformationMetadata
@@ -348,7 +348,7 @@ public class TestTransformationMetadata extends TestCase {
         selector.addIndexFileName(IndexConstants.INDEX_NAME.TABLES_INDEX);
 
         QueryMetadataContext context = new QueryMetadataContext(selector);
-        QueryMetadataInterface queryMetadata = new TestMetadata(context);
+        IQueryMetadataInterface queryMetadata = new TestMetadata(context);
 
         Object result = queryMetadata.getGroupID("model1.table1"); //$NON-NLS-1$
         assertNotNull(result);
@@ -372,7 +372,7 @@ public class TestTransformationMetadata extends TestCase {
         selector.addIndexFileName(IndexConstants.INDEX_NAME.TABLES_INDEX);
 
         QueryMetadataContext context = new QueryMetadataContext(selector);
-        QueryMetadataInterface queryMetadata = new TestMetadata(context);
+        IQueryMetadataInterface queryMetadata = new TestMetadata(context);
 
         printIndexFile();
         assertNotNull(queryMetadata.getGroupID("model1.table1")); //$NON-NLS-1$

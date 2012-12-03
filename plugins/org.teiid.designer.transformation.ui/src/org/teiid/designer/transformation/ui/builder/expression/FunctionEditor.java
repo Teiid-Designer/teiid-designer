@@ -8,7 +8,6 @@
 package org.teiid.designer.transformation.ui.builder.expression;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -30,9 +29,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.transformation.ui.builder.AbstractLanguageObjectEditor;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.ui.builder.model.FunctionEditorModel;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener;
 import org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent;
@@ -81,7 +80,7 @@ public class FunctionEditor extends AbstractLanguageObjectEditor {
      */
     public FunctionEditor( Composite theParent,
                            FunctionEditorModel theModel ) {
-        super(theParent, Function.class, theModel);
+        super(theParent, IFunction.class, theModel);
         // Note: the call to super calls createUi
 
         controller = new ViewController();
@@ -273,12 +272,12 @@ public class FunctionEditor extends AbstractLanguageObjectEditor {
      * @see org.teiid.designer.transformation.ui.builder.ILanguageObjectEditor#setLanguageObject(org.teiid.query.sql.LanguageObject)
      */
     @Override
-    public void setLanguageObject( LanguageObject theLanguageObject ) {
+    public void setLanguageObject( ILanguageObject theLanguageObject ) {
         if (theLanguageObject == null) {
             clear();
         } else {
-            if (!(theLanguageObject instanceof Function)) {
-                CoreArgCheck.isTrue((theLanguageObject instanceof Function),
+            if (!(theLanguageObject instanceof IFunction)) {
+                CoreArgCheck.isTrue((theLanguageObject instanceof IFunction),
                                     Util.getString(PREFIX + "invalidLanguageObject", //$NON-NLS-1$
                                                    new Object[] {theLanguageObject.getClass().getName()}));
             }

@@ -26,11 +26,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IFrom;
+import org.teiid.designer.query.sql.lang.IQueryCommand;
+import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.designer.ui.common.util.WidgetFactory;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.From;
-import org.teiid.query.sql.lang.QueryCommand;
-import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.ui.UiConstants;
 
 
@@ -51,7 +51,7 @@ public class QueryTreeSelectionDialog extends ElementTreeSelectionDialog impleme
     private static final String UNIONALL_CHECKBOX_TEXT = Util.getString("QueryTreeSelectionDialog.unionAllCheckbox.text"); //$NON-NLS-1$
     private static final String UNIONALL_CHECKBOX_TIP = Util.getString("QueryTreeSelectionDialog.unionAllCheckbox.toolTip"); //$NON-NLS-1$
 
-    private Command root;
+    private ICommand root;
     private Button unionAllCheckbox;
     private boolean unionAll = false;
 
@@ -64,7 +64,7 @@ public class QueryTreeSelectionDialog extends ElementTreeSelectionDialog impleme
      * @param contentProvider an ITreeContentProvider for the tree
      */
     public QueryTreeSelectionDialog( Shell parent,
-                                     Command root ) {
+                                     ICommand root ) {
         super(parent, new QueryTreeLabelProvider(), QueryTreeContentProvider.getInstance());
         this.root = root;
         init();
@@ -79,7 +79,7 @@ public class QueryTreeSelectionDialog extends ElementTreeSelectionDialog impleme
      * @param contentProvider an ITreeContentProvider for the tree
      */
     public QueryTreeSelectionDialog( Shell parent,
-                                     Command root,
+                                     ICommand root,
                                      ILabelProvider labelProvider ) {
         super(parent, new QueryTreeLabelProvider(labelProvider), QueryTreeContentProvider.getInstance());
         this.root = root;
@@ -87,7 +87,7 @@ public class QueryTreeSelectionDialog extends ElementTreeSelectionDialog impleme
     }
 
     private void init() {
-        List<Command> inputList = new ArrayList<Command>(1);
+        List<ICommand> inputList = new ArrayList<ICommand>(1);
         inputList.add(root);
         setInput(inputList);
         setAllowMultiple(false);
@@ -126,8 +126,8 @@ public class QueryTreeSelectionDialog extends ElementTreeSelectionDialog impleme
     }
 
     void setUnionAllCheckbox( int indx ) {
-        if (this.root != null && this.root instanceof SetQuery) {
-            SetQuery union = (SetQuery)this.root;
+        if (this.root != null && this.root instanceof ISetQuery) {
+            ISetQuery union = (ISetQuery)this.root;
             unionAllCheckbox.setSelection(union.isAll());
             this.unionAll = union.isAll();
         }
@@ -154,12 +154,12 @@ public class QueryTreeSelectionDialog extends ElementTreeSelectionDialog impleme
     public int getSelectedUnionSegmentIndex() {
         int index = -1;
         // make sure the base query is a union
-        if (this.root instanceof SetQuery) {
+        if (this.root instanceof ISetQuery) {
             // Selected objects
             Object[] results = getResult();
             if (results.length == 1) {
                 // Selected object is a Command
-                if (results[0] instanceof Command) {
+                if (results[0] instanceof ICommand) {
                     // Get all root children (Commands), figure out the index of the selected object
                     Object[] children = QueryTreeContentProvider.getInstance().getChildren(this.root);
                     for (int i = 0; i < children.length; i++) {
@@ -192,11 +192,11 @@ public class QueryTreeSelectionDialog extends ElementTreeSelectionDialog impleme
     public boolean unionQueryFromClauseSelected() {
         boolean fromSelected = false;
         // make sure the base query is a union
-        if (this.root instanceof SetQuery) {
+        if (this.root instanceof ISetQuery) {
             // Selected objects
             Object[] results = getResult();
             if (results.length == 1) {
-                if (results[0] instanceof From) {
+                if (results[0] instanceof IFrom) {
                     fromSelected = true;
                 }
             }
@@ -212,20 +212,20 @@ public class QueryTreeSelectionDialog extends ElementTreeSelectionDialog impleme
     public int getUnionQuerySegmentIndexForFromClause() {
         int segmentIndex = -1;
         // make sure the base query is a union
-        if (this.root instanceof SetQuery) {
+        if (this.root instanceof ISetQuery) {
             // Selected objects
             Object[] results = getResult();
             if (results.length == 1) {
                 // Selected Object is a FROM clause
-                if (results[0] instanceof From) {
+                if (results[0] instanceof IFrom) {
                     // Get all the root Commands
                     Object[] children = QueryTreeContentProvider.getInstance().getChildren(this.root);
                     // Look through the root commands, find one that has FROM clause we're looking for.
                     for (int i = 0; i < children.length; i++) {
-                        if (children[i] instanceof QueryCommand) {
+                        if (children[i] instanceof IQueryCommand) {
                             Object[] queryChildren = QueryTreeContentProvider.getInstance().getChildren(children[i]);
                             for (int iClause = 0; iClause < queryChildren.length; iClause++) {
-                                if ((queryChildren[iClause] instanceof From) && queryChildren[iClause].equals(results[0])) {
+                                if ((queryChildren[iClause] instanceof IFrom) && queryChildren[iClause].equals(results[0])) {
                                     segmentIndex = i;
                                     break;
                                 }

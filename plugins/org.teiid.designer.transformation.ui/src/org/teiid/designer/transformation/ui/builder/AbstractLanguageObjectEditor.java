@@ -12,11 +12,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetUtil;
-import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModel;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener;
 
@@ -130,7 +129,7 @@ public abstract class AbstractLanguageObjectEditor implements ILanguageObjectEdi
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#getLanguageObject()
      */
     @Override
-	public LanguageObject getLanguageObject() {
+	public ILanguageObject getLanguageObject() {
         return model.getLanguageObject();
     }
 
@@ -221,8 +220,8 @@ public abstract class AbstractLanguageObjectEditor implements ILanguageObjectEdi
 	public void setEditorType( Class theEditorType ) {
         CoreArgCheck.isNotNull(theEditorType, Util.getString(PREFIX + "nullEditorType")); //$NON-NLS-1$
 
-        if (!LanguageObject.class.isAssignableFrom(theEditorType)) {
-            CoreArgCheck.isTrue(LanguageObject.class.isAssignableFrom(theEditorType), Util.getString(PREFIX
+        if (!ILanguageObject.class.isAssignableFrom(theEditorType)) {
+            CoreArgCheck.isTrue(ILanguageObject.class.isAssignableFrom(theEditorType), Util.getString(PREFIX
                                                                                                      + "editorTypeNotLangObj")); //$NON-NLS-1$
         }
 
@@ -255,6 +254,6 @@ public abstract class AbstractLanguageObjectEditor implements ILanguageObjectEdi
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#setLanguageObject(org.teiid.query.sql.LanguageObject)
      */
     @Override
-	public abstract void setLanguageObject( LanguageObject theLanguageObject );
+	public abstract void setLanguageObject( ILanguageObject theLanguageObject );
 
 }

@@ -7,8 +7,8 @@
  */
 package org.teiid.designer.transformation.ui.builder;
 
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.transformation.ui.builder.util.LanguageObjectContentProvider;
-import org.teiid.query.sql.LanguageObject;
 
 /**
  * The <code>ILanguageObjectInputProvider</code> interface is used by the {@link LanguageObjectContentProvider}
@@ -25,5 +25,5 @@ public interface ILanguageObjectInputProvider {
      * Gets the <code>LanguageObject</code> being provided.
      * @return the LanguageObject
      */
-    LanguageObject getLanguageObject();
+    ILanguageObject getLanguageObject();
 }

@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.sqleditor.component;
 
-import org.teiid.query.sql.symbol.Function;
+import org.teiid.designer.query.sql.symbol.IFunction;
 
 /**
  * The <code>FunctionDisplayNode</code> class is used to represent a Function.
@@ -27,7 +27,7 @@ public class FunctionDisplayNode extends DisplayNode {
      * @param function the query language object used to construct this display node.
      */
     public FunctionDisplayNode( DisplayNode parentNode,
-                                Function function ) {
+                                IFunction function ) {
         this.parentNode = parentNode;
         this.languageObject = function;
     }

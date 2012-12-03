@@ -25,14 +25,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.util.SqlUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
-import org.teiid.designer.sql.ISQLConstants;
+import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
@@ -266,7 +266,7 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
         StringBuffer sb = new StringBuffer(relativeTablePath.length() + theSql.length() + 20);
         theSql = theSql.replaceAll("\\\\", Matcher.quoteReplacement("\\\\")); //$NON-NLS-1$ //$NON-NLS-2$
         theSql = theSql.replaceAll("\\n", Matcher.quoteReplacement("\\n")); //$NON-NLS-1$ //$NON-NLS-2$
-        sb.append(relativeTablePath).append(DELIMETER).append(getSqlTypeString(sqlType)).append(DELIMETER).append(theSql).append(SqlUtil.CR_CHAR);
+        sb.append(relativeTablePath).append(DELIMETER).append(getSqlTypeString(sqlType)).append(DELIMETER).append(theSql).append(CoreStringUtil.Constants.CARRIAGE_RETURN_CHAR);
         return sb.toString();
     }
 

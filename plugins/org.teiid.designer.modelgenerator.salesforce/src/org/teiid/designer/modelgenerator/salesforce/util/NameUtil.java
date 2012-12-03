@@ -8,7 +8,7 @@
 package org.teiid.designer.modelgenerator.salesforce.util;
 
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.sql.IQueryService;
+import org.teiid.designer.query.IQueryService;
 
 /**
  * @since 8.0

@@ -9,7 +9,6 @@ package org.teiid.designer.transformation.ui.actions;
 
 import java.util.EventObject;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -22,6 +21,8 @@ import org.teiid.designer.core.query.QueryValidationResult;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.metamodels.diagram.Diagram;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IQuery;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
@@ -40,8 +41,6 @@ import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.undo.ModelerUndoManager;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.Query;
 import org.teiid.query.ui.sqleditor.component.QueryDisplayNode;
 
 
@@ -168,7 +167,7 @@ public class ReconcileTransformationAction extends TransformationAction implemen
                     SqlEditorPanel sePanel = tObjEditorPage.getCurrentSqlEditor();
                     boolean isUnion = sePanel.isCommandUnion();
                     if (isUnion) {
-                        Command command = sePanel.getCommand();
+                        ICommand command = sePanel.getCommand();
                         int uIndex = sePanel.getCurrentUnionCommandSegmentIndex();
                         // index -1 : consider the entire command, make sure its resolvable
                         if (uIndex == -1) {
@@ -177,7 +176,7 @@ public class ReconcileTransformationAction extends TransformationAction implemen
                             }
                         } else {
                             QueryDisplayNode qdn = (QueryDisplayNode)sePanel.getCurrentCommandDisplayNode();
-                            command = (Query)qdn.getLanguageObject();
+                            command = (IQuery)qdn.getLanguageObject();
                             // If command is not resolved, attempt to resolve it.
                             if (!command.isResolved()) {
                                 QueryValidator validator = new TransformationValidator(
@@ -191,7 +190,7 @@ public class ReconcileTransformationAction extends TransformationAction implemen
                             }
                         }
                     } else {
-                        Command command = sePanel.getCommand();
+                        ICommand command = sePanel.getCommand();
                         if (command != null && !command.isResolved()) {
                             shouldEnable = false;
                         }

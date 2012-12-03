@@ -7,10 +7,12 @@
  */
 package org.teiid.query.ui.builder.model;
 
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.AbstractCompareCriteria;
-import org.teiid.query.sql.lang.CompareCriteria;
-import org.teiid.query.sql.symbol.Expression;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.lang.ICompareCriteria;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.query.ui.sqleditor.component.DisplayNodeConstants;
 
 /**
@@ -23,8 +25,7 @@ public class CompareCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdi
     public final static String LEFT_EXPRESSION = "COMPARE CRITERIA LEFT EXPRESSION"; //$NON-NLS-1$
     public final static String RIGHT_EXPRESSION = "COMPARE CRITERIA RIGHT EXPRESSION"; //$NON-NLS-1$
     public final static String OPERATOR = "OPERATOR"; //$NON-NLS-1$
-    private final static CompareCriteria EMPTY_COMPARE_CRITERIA = new CompareCriteria();
-
+    
     public final static String EQ = DisplayNodeConstants.EQUALS;
     public final static String NE = DisplayNodeConstants.NE;
     public final static String LT = DisplayNodeConstants.LT;
@@ -34,6 +35,8 @@ public class CompareCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdi
 
     private final static String[] OPERATORS = new String[] {EQ, NE, LT, GT, LE, GE};
 
+    private final ICompareCriteria emptyCompareCriteria;
+    
     private CriteriaExpressionEditorModel leftExpModel;
     private CriteriaExpressionEditorModel rightExpModel;
     private int curOperatorInt;
@@ -41,12 +44,17 @@ public class CompareCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdi
 
     public CompareCriteriaEditorModel( CriteriaExpressionEditorModel left,
                                        CriteriaExpressionEditorModel right ) {
-        super(CompareCriteria.class);
+        super(ICompareCriteria.class);
         this.leftExpModel = left;
         this.rightExpModel = right;
         this.leftExpModel.addModelListener(this);
         this.rightExpModel.addModelListener(this);
-        this.curOperatorInt = EMPTY_COMPARE_CRITERIA.getOperator();
+        
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+        emptyCompareCriteria = factory.createCompareCriteria();
+        
+        this.curOperatorInt = emptyCompareCriteria.getOperator();
         this.curOperatorStr = this.operatorAsString(this.curOperatorInt);
 
         // initialize expressions
@@ -75,8 +83,11 @@ public class CompareCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdi
     }
 
     @Override
-    public LanguageObject getLanguageObject() {
-        CompareCriteria compareCriteria = new CompareCriteria();
+    public ILanguageObject getLanguageObject() {
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+        
+        ICompareCriteria compareCriteria = factory.createCompareCriteria();
         compareCriteria.setLeftExpression(leftExpModel.getExpression());
         compareCriteria.setRightExpression(rightExpModel.getExpression());
         compareCriteria.setOperator(curOperatorInt);
@@ -85,14 +96,14 @@ public class CompareCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdi
     }
 
     @Override
-    public void setLanguageObject( LanguageObject obj ) {
+    public void setLanguageObject( ILanguageObject obj ) {
 
         super.setLanguageObject(obj);
-        CompareCriteria curCompareCriteria;
+        ICompareCriteria curCompareCriteria;
         if (obj == null) {
             clear();
         } else {
-            curCompareCriteria = (CompareCriteria)obj;
+            curCompareCriteria = (ICompareCriteria)obj;
             setLeftExpression(curCompareCriteria.getLeftExpression());
             setRightExpression(curCompareCriteria.getRightExpression());
             setOperator(curCompareCriteria.getOperator());
@@ -103,22 +114,22 @@ public class CompareCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdi
     public void clear() {
         notifyListeners = false;
 
-        setLeftExpression(EMPTY_COMPARE_CRITERIA.getLeftExpression());
-        setRightExpression(EMPTY_COMPARE_CRITERIA.getRightExpression());
-        setOperator(EMPTY_COMPARE_CRITERIA.getOperator());
+        setLeftExpression(emptyCompareCriteria.getLeftExpression());
+        setRightExpression(emptyCompareCriteria.getRightExpression());
+        setOperator(emptyCompareCriteria.getOperator());
 
         notifyListeners = true;
         super.clear();
     }
 
     @Override
-    public void setLeftExpression( Expression exp ) {
+    public void setLeftExpression( IExpression exp ) {
         leftExpModel.setLanguageObject(exp);
         fireModelChanged(LEFT_EXPRESSION);
     }
 
     @Override
-    public void setRightExpression( Expression exp ) {
+    public void setRightExpression( IExpression exp ) {
         rightExpModel.setLanguageObject(exp);
         fireModelChanged(RIGHT_EXPRESSION);
     }
@@ -141,17 +152,17 @@ public class CompareCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdi
         int opInt = -1;
         if (op != null) {
             if (op.equals(EQ)) {
-                opInt = AbstractCompareCriteria.EQ;
+                opInt = ICompareCriteria.EQ;
             } else if (op.equals(NE)) {
-                opInt = AbstractCompareCriteria.NE;
+                opInt = ICompareCriteria.NE;
             } else if (op.equals(LT)) {
-                opInt = AbstractCompareCriteria.LT;
+                opInt = ICompareCriteria.LT;
             } else if (op.equals(GT)) {
-                opInt = AbstractCompareCriteria.GT;
+                opInt = ICompareCriteria.GT;
             } else if (op.equals(LE)) {
-                opInt = AbstractCompareCriteria.LE;
+                opInt = ICompareCriteria.LE;
             } else if (op.equals(GE)) {
-                opInt = AbstractCompareCriteria.GE;
+                opInt = ICompareCriteria.GE;
             }
         }
         return opInt;
@@ -160,22 +171,22 @@ public class CompareCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdi
     private String operatorAsString( int op ) {
         String str = ""; //$NON-NLS-1$
         switch (op) {
-            case AbstractCompareCriteria.EQ:
+            case ICompareCriteria.EQ:
                 str = EQ;
                 break;
-            case AbstractCompareCriteria.NE:
+            case ICompareCriteria.NE:
                 str = NE;
                 break;
-            case AbstractCompareCriteria.LT:
+            case ICompareCriteria.LT:
                 str = LT;
                 break;
-            case AbstractCompareCriteria.GT:
+            case ICompareCriteria.GT:
                 str = GT;
                 break;
-            case AbstractCompareCriteria.LE:
+            case ICompareCriteria.LE:
                 str = LE;
                 break;
-            case AbstractCompareCriteria.GE:
+            case ICompareCriteria.GE:
                 str = GE;
                 break;
         }
@@ -199,7 +210,7 @@ public class CompareCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdi
     }
 
     @Override
-    public Expression getLeftExpression() {
+    public IExpression getLeftExpression() {
         return leftExpModel.getExpression();
     }
 
@@ -208,7 +219,7 @@ public class CompareCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdi
     }
 
     @Override
-    public Expression getRightExpression() {
+    public IExpression getRightExpression() {
         return rightExpModel.getExpression();
     }
 

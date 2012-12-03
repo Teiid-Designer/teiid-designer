@@ -9,9 +9,9 @@ package org.teiid.designer.transformation.ui.builder.criteria;
 
 
 import org.teiid.designer.metamodels.transformation.InputParameter;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.transformation.ui.UiConstants;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.ui.builder.util.CriteriaStrategy;
 
 /**
@@ -36,12 +36,12 @@ public class QueryCriteriaStrategy extends CriteriaStrategy {
      * @see org.teiid.query.ui.builder.util.ICriteriaStrategy#getNode(org.teiid.query.sql.LanguageObject)
      */
     @Override
-    public Object getNode(LanguageObject theLangObj) {
+    public Object getNode(ILanguageObject theLangObj) {
         Object result = null;
 
         if (isValid(theLangObj)) {
         
-            if (theLangObj instanceof ElementSymbol) {
+            if (theLangObj instanceof IElementSymbol) {
                 result = theLangObj;
             }
         
@@ -64,7 +64,7 @@ public class QueryCriteriaStrategy extends CriteriaStrategy {
         } else {
         	//If ElementSymbol, labelProvider is already returning the entire String, so
         	//do not recurse.  BWP 11/24/03
-        	if (!(theNode instanceof ElementSymbol)) {
+        	if (!(theNode instanceof IElementSymbol)) {
         		while (true) {
             		Object parent = contentProvider.getParent(theNode);
                 	if ( parent == null ) {

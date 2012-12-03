@@ -24,7 +24,7 @@ import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.metadata.runtime.api.DataType;
 import org.teiid.designer.metamodels.relational.RelationalPlugin;
 import org.teiid.designer.metamodels.relational.SearchabilityType;
-import org.teiid.designer.sql.IQueryService;
+import org.teiid.designer.query.IQueryService;
 
 
 /**

@@ -10,16 +10,16 @@ package org.teiid.designer.transformation.ui.reconciler;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
+import org.teiid.designer.query.sql.symbol.IAliasSymbol;
+import org.teiid.designer.query.sql.symbol.IConstant;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.symbol.IExpressionSymbol;
+import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.util.TransformationSqlHelper;
-import org.teiid.query.sql.symbol.AggregateSymbol;
-import org.teiid.query.sql.symbol.AliasSymbol;
-import org.teiid.query.sql.symbol.Constant;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.ExpressionSymbol;
-import org.teiid.query.sql.symbol.Function;
 
 /**
  * Label provider for the SqlSymbolList - the provided Objects are SingleElementSymbols.
@@ -42,14 +42,14 @@ public class SqlLabelProvider
         if(columnIndex==0) {
             if(element!=null) {
                 // Alias Symbol
-                if(element instanceof AliasSymbol) {
-                    AliasSymbol aSymbol = (AliasSymbol)element;
-                    Expression uSymbol = aSymbol.getSymbol();
+                if(element instanceof IAliasSymbol) {
+                    IAliasSymbol aSymbol = (IAliasSymbol)element;
+                    IExpression uSymbol = aSymbol.getSymbol();
                     String symName = TransformationSqlHelper.getSingleElementSymbolShortName(uSymbol,true);
                     result = symName + " AS " + aSymbol.getShortName(); //$NON-NLS-1$
                 // SingleElementSymbol
-                } else if(element instanceof Expression) {
-                    result = TransformationSqlHelper.getSingleElementSymbolShortName((Expression)element,true);
+                } else if(element instanceof IExpression) {
+                    result = TransformationSqlHelper.getSingleElementSymbolShortName((IExpression)element,true);
                 }
             }
         }
@@ -63,12 +63,12 @@ public class SqlLabelProvider
 	public Image getColumnImage(Object element, int columnIndex) {
         Image image = null;
         if(columnIndex==0) {
-            if(element instanceof ExpressionSymbol) {
+            if(element instanceof IExpressionSymbol) {
                 image = UiPlugin.getDefault().getImage(FUNCTION_ICON);
-            } else if(element instanceof Expression) {
+            } else if(element instanceof IExpression) {
                 // Defect 23945 - added private method to get image for multiple types
                 // of SQL symbols
-                image = getImageForSymbol((Expression)element);
+                image = getImageForSymbol((IExpression)element);
             }
         }
 		return image;
@@ -77,25 +77,25 @@ public class SqlLabelProvider
     /**
      *  Get the Image for the SingleElementSymbol
      */
-    private Image getImageForSymbol(Expression seSymbol) {
+    private Image getImageForSymbol(IExpression seSymbol) {
         Image result = null;
         
         // If symbol is AliasSymbol, get underlying symbol
-        if( seSymbol!=null && seSymbol instanceof AliasSymbol ) {
-            seSymbol = ((AliasSymbol)seSymbol).getSymbol();
+        if( seSymbol!=null && seSymbol instanceof IAliasSymbol ) {
+            seSymbol = ((IAliasSymbol)seSymbol).getSymbol();
         }
         // ElementSymbol
-        if ( (seSymbol instanceof ElementSymbol) ) {
+        if ( (seSymbol instanceof IElementSymbol) ) {
             result = UiPlugin.getDefault().getImage(SYMBOL_ICON);
         // AggregateSymbol
-        } else if ( seSymbol instanceof AggregateSymbol ) {
+        } else if ( seSymbol instanceof IAggregateSymbol ) {
             result = UiPlugin.getDefault().getImage(FUNCTION_ICON);
         // ExpressionSymbol
-        } else if ( seSymbol instanceof ExpressionSymbol ) {
-            Expression expression = ((ExpressionSymbol)seSymbol).getExpression();
-            if(expression!=null && expression instanceof Constant) {
+        } else if ( seSymbol instanceof IExpressionSymbol ) {
+            IExpression expression = ((IExpressionSymbol)seSymbol).getExpression();
+            if(expression!=null && expression instanceof IConstant) {
                 result = UiPlugin.getDefault().getImage(CONSTANT_ICON);
-            } else if ( expression!=null && expression instanceof Function ) {
+            } else if ( expression!=null && expression instanceof IFunction ) {
                 result = UiPlugin.getDefault().getImage(FUNCTION_ICON);
             }
         }

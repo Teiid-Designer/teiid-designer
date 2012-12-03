@@ -8,15 +8,14 @@
 package org.teiid.query.ui.builder.util;
 
 import java.text.MessageFormat;
-
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.teiid.api.exception.query.QueryParserException;
-import org.teiid.query.parser.QueryParser;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.query.IQueryParser;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.query.ui.UiConstants;
 
 /**
@@ -74,10 +73,10 @@ public class CriteriaStrategy implements ICriteriaStrategy {
      * @see com.metamatrix.toolbox.ui.query.builder.criteria.SubqueryCommandOwner#getCommand(com.metamatrix.common.tree.TreeNode)
      */
     @Override
-	public Command getCommand(Object theNode) {
+	public ICommand getCommand(Object theNode) {
         checkState();
         
-        Command result = null;
+        ICommand result = null;
         
         if (isValid(theNode)) {
         	String nodeName = getRuntimeFullName(theNode);
@@ -131,12 +130,12 @@ public class CriteriaStrategy implements ICriteriaStrategy {
      * @see org.teiid.query.ui.builder.util.ICriteriaStrategy#getNode(org.teiid.query.sql.LanguageObject)
      */
     @Override
-	public Object getNode(LanguageObject theLangObj) {
+	public Object getNode(ILanguageObject theLangObj) {
         Object result = null;
 
         if (isValid(theLangObj)) {
-            if (theLangObj instanceof ElementSymbol) {
-                result = ((ElementSymbol)theLangObj).getMetadataID();
+            if (theLangObj instanceof IElementSymbol) {
+                result = ((IElementSymbol)theLangObj).getMetadataID();
             }
         }
 
@@ -155,16 +154,16 @@ public class CriteriaStrategy implements ICriteriaStrategy {
             : ! ((ITreeContentProvider) viewer.getContentProvider()).hasChildren(theNode);
     }
 
-    protected Command parseSql(String theSql) {
-        Command command = null;
+    protected ICommand parseSql(String theSql) {
+        ICommand command = null;
 
         if (theSql != null) {
             try {
                 // QueryParser is not thread-safe, construct new
-                QueryParser parser = new QueryParser();
+                IQueryParser parser = ModelerCore.getTeiidQueryService().getQueryParser();
                 command = parser.parseCommand(theSql);
             }
-            catch (QueryParserException theException) {
+            catch (Exception theException) {
                 // No need to act on this or log message.  Null return means it failed.
             }
         }

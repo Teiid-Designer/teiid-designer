@@ -15,7 +15,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;
 import org.teiid.designer.metamodels.webservice.Input;
-import org.teiid.query.sql.ProcedureReservedWords;
+import org.teiid.designer.query.sql.ISQLConstants;
 
 
 
@@ -88,6 +88,6 @@ public class ProcedureCriteriaMappingFactory {
      */
     public String generateVariableName(final IPath xsdElementPath) {
         String xsdElementName = xsdElementPath.lastSegment();
-        return ProcedureReservedWords.VARIABLES + CoreStringUtil.Constants.DOT+xsdElementName;
+        return ISQLConstants.VARIABLES + CoreStringUtil.Constants.DOT+xsdElementName;
     }
 }

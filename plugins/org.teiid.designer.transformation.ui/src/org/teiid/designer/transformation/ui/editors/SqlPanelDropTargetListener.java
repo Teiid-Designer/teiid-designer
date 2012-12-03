@@ -21,7 +21,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
-import org.teiid.designer.sql.ISQLConstants;
+import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.transformation.ui.actions.ITransformationDiagramActionConstants;
 import org.teiid.designer.transformation.ui.actions.TransformationSourceManager;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlEditorPanel;

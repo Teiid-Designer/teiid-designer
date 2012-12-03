@@ -15,6 +15,17 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.designer.metamodels.diagram.Diagram;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.lang.IFrom;
+import org.teiid.designer.query.sql.lang.IFromClause;
+import org.teiid.designer.query.sql.lang.IGroupBy;
+import org.teiid.designer.query.sql.lang.IInto;
+import org.teiid.designer.query.sql.lang.IOption;
+import org.teiid.designer.query.sql.lang.IOrderBy;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.query.sql.lang.ISelect;
+import org.teiid.designer.query.sql.lang.IUnaryFromClause;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.editors.TransformationObjectEditorPage;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlEditorPanel;
@@ -24,17 +35,6 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.editors.ModelObjectEditorPage;
 import org.teiid.designer.ui.editors.MultiPageModelEditor;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.From;
-import org.teiid.query.sql.lang.FromClause;
-import org.teiid.query.sql.lang.GroupBy;
-import org.teiid.query.sql.lang.Into;
-import org.teiid.query.sql.lang.Option;
-import org.teiid.query.sql.lang.OrderBy;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.Select;
-import org.teiid.query.sql.lang.UnaryFromClause;
 
 /**
  * AddJoinExpressionAction This action will create an inner join on the two selected columns. The action is currently contributed
@@ -97,10 +97,10 @@ public class AddJoinExpressionAction extends TransformationAction {
                     // TransformationObjectEditorPage
                     // Get the sqlEditor
                     SqlEditorPanel sqlEditor = transOEP.getCurrentSqlEditor();
-                    Command command = sqlEditor.getCommand();
-                    if (command instanceof Query) {
-                        Query query = (Query)command;
-                        Select select = query.getSelect();
+                    ICommand command = sqlEditor.getCommand();
+                    if (command instanceof IQuery) {
+                        IQuery query = (IQuery)command;
+                        ISelect select = query.getSelect();
                         String newQuery = "SELECT " + select.toString() + joinClause; //$NON-NLS-1$
                         sqlEditor.setText(newQuery);
                     }
@@ -203,18 +203,18 @@ public class AddJoinExpressionAction extends TransformationAction {
     private boolean isSimpleQuery( SqlEditorPanel sqlEditor ) {
         boolean isSimpleQuery = false;
 
-        Command command = sqlEditor.getCommand();
-        if (command != null && command instanceof Query) {
+        ICommand command = sqlEditor.getCommand();
+        if (command != null && command instanceof IQuery) {
             // Get all of the query components
-            Query query = (Query)command;
-            Select select = query.getSelect();
-            From from = query.getFrom();
-            Criteria criteria = query.getCriteria();
-            GroupBy groupBy = query.getGroupBy();
-            Criteria having = query.getHaving();
-            Into into = query.getInto();
-            Option option = query.getOption();
-            OrderBy orderBy = query.getOrderBy();
+            IQuery query = (IQuery)command;
+            ISelect select = query.getSelect();
+            IFrom from = query.getFrom();
+            ICriteria criteria = query.getCriteria();
+            IGroupBy groupBy = query.getGroupBy();
+            ICriteria having = query.getHaving();
+            IInto into = query.getInto();
+            IOption option = query.getOption();
+            IOrderBy orderBy = query.getOrderBy();
             // Select and From must be non-null. All others must be null
             if (select != null && from != null && criteria == null && groupBy == null && having == null && into == null
                 && option == null && orderBy == null) {
@@ -224,8 +224,8 @@ public class AddJoinExpressionAction extends TransformationAction {
                     boolean allUnary = true;
                     Iterator fromIter = fromClauses.iterator();
                     while (fromIter.hasNext()) {
-                        FromClause fromClause = (FromClause)fromIter.next();
-                        if (!(fromClause instanceof UnaryFromClause)) {
+                        IFromClause fromClause = (IFromClause)fromIter.next();
+                        if (!(fromClause instanceof IUnaryFromClause)) {
                             allUnary = false;
                             break;
                         }

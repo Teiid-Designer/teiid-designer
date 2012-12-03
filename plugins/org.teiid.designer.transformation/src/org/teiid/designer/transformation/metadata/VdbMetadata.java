@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.api.exception.query.QueryMetadataException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.id.UUID;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
@@ -58,7 +58,7 @@ public class VdbMetadata extends ModelerMetadata {
     @Override
     protected Collection findMetadataRecords( final char recordType,
                                               final String entityName,
-                                              final boolean isPartialName ) throws QueryMetadataException {
+                                              final boolean isPartialName ) throws Exception {
 
         Collection eObjects = new LinkedList();
 
@@ -149,13 +149,13 @@ public class VdbMetadata extends ModelerMetadata {
      */
     @Override
     protected Index[] getIndexes( final char recordType,
-                                  final IndexSelector selector ) throws QueryMetadataException {
+                                  final IndexSelector selector ) throws Exception {
         // The the index file name for the record type
         try {
             final String indexName = IndexUtil.getIndexFileNameForRecordType(recordType);
             return IndexUtil.getIndexes(indexName, selector);
         } catch (Exception e) {
-            throw new QueryMetadataException(
+            throw new TeiidDesignerException(
                                                    e,
                                                    TransformationPlugin.Util.getString("TransformationMetadata.Error_trying_to_obtain_index_file_using_IndexSelector_1", selector)); //$NON-NLS-1$
         }

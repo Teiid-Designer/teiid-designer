@@ -12,14 +12,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.query.QueryValidationResult;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.query.sql.lang.Command;
+import org.teiid.designer.query.sql.lang.ICommand;
 
 /**
  * SqlTransformationResult
@@ -33,7 +32,7 @@ public class SqlTransformationResult implements QueryValidationResult {
     private boolean isValidatable = false;
     private IStatus targetValidStatus = null;
     private String sqlString = null;
-    private Command command = null;
+    private ICommand command = null;
     private Collection sourceGroups = Collections.EMPTY_LIST;
     private Collection<IStatus> statuses = null;
     private Collection<IStatus> updateStatuses = null;
@@ -46,7 +45,7 @@ public class SqlTransformationResult implements QueryValidationResult {
     /**
      * Construct an instance of SqlTransformationResult.
      */
-    public SqlTransformationResult(final Command command, Collection<IStatus> statuses) {
+    public SqlTransformationResult(final ICommand command, Collection<IStatus> statuses) {
         this.command = command;
         this.statuses = statuses;
         isParsable = command != null ? true : false;        
@@ -55,7 +54,7 @@ public class SqlTransformationResult implements QueryValidationResult {
     /**
      * Construct an instance of SqlTransformationResult with both Standard Select status list and Update SQL Status list
      */
-    public SqlTransformationResult(final Command command, Collection<IStatus> statuses, Collection<IStatus> updateStatuses ) {
+    public SqlTransformationResult(final ICommand command, Collection<IStatus> statuses, Collection<IStatus> updateStatuses ) {
         this.command = command;
         this.statuses = statuses;
         this.updateStatuses = updateStatuses;
@@ -65,7 +64,7 @@ public class SqlTransformationResult implements QueryValidationResult {
     /**
      * Construct an instance of SqlTransformationResult.
      */
-    public SqlTransformationResult(final Command command, IStatus status) {
+    public SqlTransformationResult(final ICommand command, IStatus status) {
         this(command, new HashSet<IStatus>(1));
         if (status != null) {
             this.statuses.add(status);      
@@ -100,7 +99,7 @@ public class SqlTransformationResult implements QueryValidationResult {
      * set the command language object
      * @param sqlString the SQL text string. 
      */
-    public void setCommand(Command command) {
+    public void setCommand(ICommand command) {
         this.command = command;
     }
 
@@ -171,7 +170,7 @@ public class SqlTransformationResult implements QueryValidationResult {
 	 * @return the SQL command
 	 */
 	@Override
-	public Command getCommand( ) {
+	public ICommand getCommand( ) {
 		return this.command;
 	}
 

@@ -21,7 +21,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
-
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -30,6 +29,7 @@ import org.teiid.designer.metamodels.diagram.Diagram;
 import org.teiid.designer.metamodels.transformation.MappingClassColumn;
 import org.teiid.designer.metamodels.transformation.SqlAlias;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
+import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.editors.TransformationObjectEditorPage;
@@ -45,7 +45,6 @@ import org.teiid.designer.ui.editors.ModelObjectEditorPage;
 import org.teiid.designer.ui.editors.MultiPageModelEditor;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
-import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.ui.tree.AddGroupSelectionValidator;
 import org.teiid.query.ui.tree.QueryTreeSelectionDialog;
 
@@ -333,7 +332,7 @@ public class TransformationSourceManager implements UiConstants {
         if (transMappingRoot != null && sourceEObject != null) {
             // If existing command is a UNION, prompt for user input.
             if (TransformationHelper.isUnionCommand(transMappingRoot)) {
-                SetQuery unionQuery = (SetQuery)SqlMappingRootCache.getSelectCommand(transMappingRoot);
+                ISetQuery unionQuery = (ISetQuery)SqlMappingRootCache.getSelectCommand(transMappingRoot);
 
                 Shell shell = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
 
@@ -454,7 +453,7 @@ public class TransformationSourceManager implements UiConstants {
 
         if (transMappingRoot != null && sourceEObjects != null && !sourceEObjects.isEmpty()) {
             if (TransformationHelper.isUnionCommand(transMappingRoot)) {
-                SetQuery unionQuery = (SetQuery)SqlMappingRootCache.getSelectCommand(transMappingRoot);
+                ISetQuery unionQuery = (ISetQuery)SqlMappingRootCache.getSelectCommand(transMappingRoot);
 
                 Shell shell = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
 

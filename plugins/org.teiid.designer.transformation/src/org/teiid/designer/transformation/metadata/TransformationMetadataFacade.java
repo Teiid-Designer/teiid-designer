@@ -15,25 +15,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.LRUCache;
 import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.metadata.runtime.ColumnRecord;
-import org.teiid.designer.metadata.runtime.ColumnSetRecord.ColumnSetRecordProperties;
 import org.teiid.designer.metadata.runtime.ForeignKeyRecord.ForeignKeyRecordProperties;
 import org.teiid.designer.metadata.runtime.MetadataRecord;
 import org.teiid.designer.metadata.runtime.MetadataRecord.MetadataRecordProperties;
 import org.teiid.designer.metadata.runtime.ProcedureRecord.ProcedureRecordProperties;
 import org.teiid.designer.metadata.runtime.TableRecord;
 import org.teiid.designer.metadata.runtime.TableRecord.TableRecordProperties;
-import org.teiid.query.mapping.relational.QueryNode;
-import org.teiid.query.mapping.xml.MappingDocument;
-import org.teiid.query.mapping.xml.MappingNode;
-import org.teiid.query.metadata.BasicQueryMetadataWrapper;
-import org.teiid.query.metadata.GroupInfo;
-import org.teiid.query.metadata.StoredProcedureInfo;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.query.metadata.IStoredProcedureInfo;
+import org.teiid.designer.udf.IFunctionLibrary;
+import org.teiid.designer.udf.UdfManager;
 
 /**
  * Modelers implementation of QueryMetadataInterface that reads columns, groups, modeles etc. index files for various metadata
@@ -42,7 +38,7 @@ import org.teiid.query.metadata.StoredProcedureInfo;
  *
  * @since 8.0
  */
-public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
+public class TransformationMetadataFacade implements IQueryMetadataInterface {
 
     /**
      * Default amount of space in the cache
@@ -56,6 +52,8 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
     public static final int DEFAULT_SPACELIMIT_PARTIAL_NAME_CACHE = 100;
 
     private static final int GROUP_INFO_CACHE_SIZE = 500;
+    
+    private static final String GROUP_INFO_CACHE_PREFIX = "groupinfo/"; //$NON-NLS-1$
 
     private final TransformationMetadata metadata;
     private final Map<String, Object> nameToIdCache;
@@ -69,7 +67,6 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
 
     public TransformationMetadataFacade( final TransformationMetadata delegate,
                                          int cacheSize ) {
-    	super(delegate);
         CoreArgCheck.isNotNull(delegate);
         this.metadata = delegate;
         this.nameToIdCache = Collections.synchronizedMap(new LRUCache<String, Object>(cacheSize));
@@ -82,11 +79,8 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
     // I N T E R F A C E M E T H O D S
     // ==================================================================================
 
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getElementID(java.lang.String)
-     */
     @Override
-	public Object getElementID( final String elementName ) throws QueryMetadataException {
+	public Object getElementID( final String elementName ) throws Exception {
         // Check the cache first ...
         MetadataRecord record = getRecordByName(elementName, IndexConstants.RECORD_TYPE.COLUMN);
 
@@ -102,11 +96,8 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
         return record;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getGroupID(java.lang.String)
-     */
     @Override
-	public Object getGroupID( final String groupName ) throws QueryMetadataException {
+	public Object getGroupID( final String groupName ) throws Exception {
         // Check the cache first ...
         MetadataRecord record = getRecordByName(groupName, IndexConstants.RECORD_TYPE.TABLE);
 
@@ -122,12 +113,9 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
         return record;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getGroupsForPartialName(java.lang.String)
-     */
     @Override
 	public Collection getGroupsForPartialName( final String partialGroupName )
-        throws QueryMetadataException {
+        throws Exception {
         // Check the cache first ...
         String fullName = getFullNameByPartialName(partialGroupName, IndexConstants.RECORD_TYPE.TABLE);
 
@@ -155,11 +143,8 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
         return partialNameRecords;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getModelID(java.lang.Object)
-     */
     @Override
-	public Object getModelID( final Object groupOrElementID ) throws QueryMetadataException {
+	public Object getModelID( final Object groupOrElementID ) throws Exception {
         CoreArgCheck.isInstanceOf(MetadataRecord.class, groupOrElementID);
 
         MetadataRecord record = (MetadataRecord)groupOrElementID;
@@ -184,7 +169,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
      * @see org.teiid.query.metadata.QueryMetadataInterface#getElementIDsInGroupID(java.lang.Object)
      */
     @Override
-	public List getElementIDsInGroupID( final Object groupID ) throws QueryMetadataException {
+	public List getElementIDsInGroupID( final Object groupID ) throws Exception {
         CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -218,11 +203,8 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
         return elementIDs;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getGroupIDForElementID(java.lang.Object)
-     */
     @Override
-	public Object getGroupIDForElementID( final Object elementID ) throws QueryMetadataException {
+	public Object getGroupIDForElementID( final Object elementID ) throws Exception {
         CoreArgCheck.isInstanceOf(ColumnRecord.class, elementID);
         ColumnRecord columnRecord = (ColumnRecord)elementID;
 
@@ -243,14 +225,11 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
         return record;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getStoredProcedureInfoForProcedure(java.lang.String)
-     */
     @Override
-	public StoredProcedureInfo getStoredProcedureInfoForProcedure( final String fullyQualifiedProcedureName )
-        throws QueryMetadataException {
+	public IStoredProcedureInfo getStoredProcedureInfoForProcedure( final String fullyQualifiedProcedureName )
+        throws Exception {
 
-        StoredProcedureInfo procInfo = null;
+        IStoredProcedureInfo procInfo = null;
 
         // Check the cache first ...
         MetadataRecord record = getRecordByName(fullyQualifiedProcedureName, IndexConstants.RECORD_TYPE.CALLABLE);
@@ -273,7 +252,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
         // found record
         if (procInfo == null && record != null) {
             // if the record is found it should have been update with the procInfo object
-            procInfo = (StoredProcedureInfo)record.getPropertyValue(ProcedureRecordProperties.STORED_PROC_INFO_FOR_RECORD);
+            procInfo = (IStoredProcedureInfo)record.getPropertyValue(ProcedureRecordProperties.STORED_PROC_INFO_FOR_RECORD);
             // this should never occur but if procInfo cannot be found on the record
             if (procInfo == null) {
                 procInfo = this.metadata.getStoredProcedureInfoForProcedure(fullyQualifiedProcedureName);
@@ -284,23 +263,20 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
         return procInfo;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getVirtualPlan(java.lang.Object)
-     */
     @Override
-	public QueryNode getVirtualPlan( final Object groupID ) throws QueryMetadataException {
+	public Object getVirtualPlan( final Object groupID ) throws Exception {
         CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
 
-        QueryNode queryPlan = (QueryNode)tableRecord.getPropertyValue(TableRecordProperties.QUERY_PLAN);
+        String queryPlan = (String)tableRecord.getPropertyValue(TableRecordProperties.QUERY_PLAN);
         if (queryPlan == null) {
             synchronized (tableRecord) {
                 // look up the cache again, might have been updated by
                 // the thread that just released the lock
-                queryPlan = (QueryNode)tableRecord.getPropertyValue(TableRecordProperties.QUERY_PLAN);
+                queryPlan = (String)tableRecord.getPropertyValue(TableRecordProperties.QUERY_PLAN);
                 if (queryPlan == null) {
-                    queryPlan = this.metadata.getVirtualPlan(groupID);
+                    queryPlan = (String)this.metadata.getVirtualPlan(groupID);
                     tableRecord.setPropertyValue(TableRecordProperties.QUERY_PLAN, queryPlan);
                 }
             }
@@ -309,11 +285,8 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
         return queryPlan;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getInsertPlan(java.lang.Object)
-     */
     @Override
-	public String getInsertPlan( final Object groupID ) throws QueryMetadataException {
+	public String getInsertPlan( final Object groupID ) throws Exception {
         CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -333,11 +306,8 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
         return insertPlan;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getUpdatePlan(java.lang.Object)
-     */
     @Override
-	public String getUpdatePlan( final Object groupID ) throws QueryMetadataException {
+	public String getUpdatePlan( final Object groupID ) throws Exception {
         CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -357,11 +327,8 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
         return updatePlan;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getDeletePlan(java.lang.Object)
-     */
     @Override
-	public String getDeletePlan( final Object groupID ) throws QueryMetadataException {
+	public String getDeletePlan( final Object groupID ) throws Exception {
         CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -382,13 +349,8 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
 
     }
 
-
-
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getIndexesInGroup(java.lang.Object)
-     */
     @Override
-	public Collection getIndexesInGroup( final Object groupID ) throws QueryMetadataException {
+	public Collection getIndexesInGroup( final Object groupID ) throws Exception {
         CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -408,11 +370,8 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
         return indexes;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getUniqueKeysInGroup(java.lang.Object)
-     */
     @Override
-	public Collection getUniqueKeysInGroup( final Object groupID ) throws QueryMetadataException {
+	public Collection getUniqueKeysInGroup( final Object groupID ) throws Exception {
         CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -432,11 +391,8 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
         return uks;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getForeignKeysInGroup(java.lang.Object)
-     */
     @Override
-	public Collection getForeignKeysInGroup( final Object groupID ) throws QueryMetadataException {
+	public Collection getForeignKeysInGroup( final Object groupID ) throws Exception {
         CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -456,12 +412,9 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
         return fks;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getPrimaryKeyIDForForeignKeyID(java.lang.Object)
-     */
     @Override
 	public Object getPrimaryKeyIDForForeignKeyID( final Object foreignKeyID )
-        throws QueryMetadataException {
+        throws Exception {
         CoreArgCheck.isInstanceOf(MetadataRecord.class, foreignKeyID);
 
         MetadataRecord keyRecord = (MetadataRecord)foreignKeyID;
@@ -481,223 +434,9 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
         return primaryKey;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getAccessPatternsInGroup(java.lang.Object)
-     */
-    @Override
-	public Collection getAccessPatternsInGroup( final Object groupID )
-        throws QueryMetadataException {
-        CoreArgCheck.isInstanceOf(MetadataRecord.class, groupID);
-
-        MetadataRecord record = (MetadataRecord)groupID;
-        Collection accPatterns = (Collection)record.getPropertyValue(TableRecordProperties.ACCESS_PTTRNS_IN_GROUP);
-        if (accPatterns == null) {
-            synchronized (record) {
-                // look up the cache again, might have been updated by
-                // the thread that just released the lock
-                accPatterns = (Collection)record.getPropertyValue(TableRecordProperties.ACCESS_PTTRNS_IN_GROUP);
-                if (accPatterns == null) {
-                    accPatterns = this.metadata.getAccessPatternsInGroup(groupID);
-                    record.setPropertyValue(TableRecordProperties.ACCESS_PTTRNS_IN_GROUP, accPatterns);
-                }
-            }
-        }
-
-        return accPatterns;
-    }
-
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getElementIDsInIndex(java.lang.Object)
-     */
-    @Override
-	public List getElementIDsInIndex( final Object index ) throws QueryMetadataException {
-        CoreArgCheck.isInstanceOf(MetadataRecord.class, index);
-
-        MetadataRecord record = (MetadataRecord)index;
-
-        List elementIDs = (List)record.getPropertyValue(ColumnSetRecordProperties.ELEMENTS_IN_INDEX);
-        if (elementIDs == null) {
-            synchronized (record) {
-                // look up the cache again, might have been updated by
-                // the thread that just released the lock
-                elementIDs = (List)record.getPropertyValue(ColumnSetRecordProperties.ELEMENTS_IN_INDEX);
-                if (elementIDs == null) {
-                    elementIDs = this.metadata.getElementIDsInIndex(index);
-                    if (elementIDs != null) {
-                        record.setPropertyValue(ColumnSetRecordProperties.ELEMENTS_IN_INDEX, elementIDs);
-                        for (Iterator elemntIter = elementIDs.iterator(); elemntIter.hasNext();) {
-                            MetadataRecord columnRecord = (MetadataRecord)elemntIter.next();
-                            // Update the cache ...
-                            if (columnRecord != null) {
-                                updateNameToIdCache(columnRecord.getFullName(),
-                                                    columnRecord.getRecordType(),
-                                                    columnRecord.getUUID());
-                                updateIdToRecordCache(columnRecord.getUUID(), columnRecord);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return elementIDs;
-    }
-
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getElementIDsInKey(java.lang.Object)
-     */
-    @Override
-	public List getElementIDsInKey( final Object key ) throws QueryMetadataException {
-        CoreArgCheck.isInstanceOf(MetadataRecord.class, key);
-
-        MetadataRecord record = (MetadataRecord)key;
-
-        List elementIDs = (List)record.getPropertyValue(ColumnSetRecordProperties.ELEMENTS_IN_KEY);
-        if (elementIDs == null) {
-            synchronized (record) {
-                // look up the cache again, might have been updated by
-                // the thread that just released the lock
-                elementIDs = (List)record.getPropertyValue(ColumnSetRecordProperties.ELEMENTS_IN_KEY);
-                if (elementIDs == null) {
-                    elementIDs = this.metadata.getElementIDsInKey(key);
-                    if (elementIDs != null) {
-                        record.setPropertyValue(ColumnSetRecordProperties.ELEMENTS_IN_KEY, elementIDs);
-                        for (Iterator elemntIter = elementIDs.iterator(); elemntIter.hasNext();) {
-                            MetadataRecord columnRecord = (MetadataRecord)elemntIter.next();
-                            // Update the cache ...
-                            if (columnRecord != null) {
-                                updateNameToIdCache(columnRecord.getFullName(),
-                                                    columnRecord.getRecordType(),
-                                                    columnRecord.getUUID());
-                                updateIdToRecordCache(columnRecord.getUUID(), columnRecord);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return elementIDs;
-    }
-
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getElementIDsInAccessPattern(java.lang.Object)
-     */
-    @Override
-	public List getElementIDsInAccessPattern( final Object accessPattern )
-        throws QueryMetadataException {
-        CoreArgCheck.isInstanceOf(MetadataRecord.class, accessPattern);
-
-        MetadataRecord record = (MetadataRecord)accessPattern;
-
-        List elementIDs = (List)record.getPropertyValue(ColumnSetRecordProperties.ELEMENTS_IN_ACCESS_PTTRN);
-        if (elementIDs == null) {
-            synchronized (record) {
-                // look up the cache again, might have been updated by
-                // the thread that just released the lock
-                elementIDs = (List)record.getPropertyValue(ColumnSetRecordProperties.ELEMENTS_IN_ACCESS_PTTRN);
-                if (elementIDs == null) {
-                    elementIDs = this.metadata.getElementIDsInAccessPattern(accessPattern);
-                    if (elementIDs != null) {
-                        record.setPropertyValue(ColumnSetRecordProperties.ELEMENTS_IN_ACCESS_PTTRN, elementIDs);
-                        for (Iterator elemntIter = elementIDs.iterator(); elemntIter.hasNext();) {
-                            MetadataRecord columnRecord = (MetadataRecord)elemntIter.next();
-                            // Update the cache ...
-                            if (columnRecord != null) {
-                                updateNameToIdCache(columnRecord.getFullName(),
-                                                    columnRecord.getRecordType(),
-                                                    columnRecord.getUUID());
-                                updateIdToRecordCache(columnRecord.getUUID(), columnRecord);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return elementIDs;
-    }
-
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getMappingNode(java.lang.Object)
-     */
-    @Override
-	public MappingNode getMappingNode( final Object groupID ) throws QueryMetadataException {
-        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
-
-        MetadataRecord record = (MetadataRecord)groupID;
-
-        MappingDocument mappingNode = (MappingDocument)record.getPropertyValue(TableRecordProperties.MAPPING_NODE_FOR_RECORD);
-        if (mappingNode == null) {
-            synchronized (record) {
-                // look up the cache again, might have been updated by
-                // the thread that just released the lock
-                mappingNode = (MappingDocument)record.getPropertyValue(TableRecordProperties.MAPPING_NODE_FOR_RECORD);
-                if (mappingNode == null) {
-                    mappingNode = (MappingDocument)this.metadata.getMappingNode(groupID);
-                    record.setPropertyValue(TableRecordProperties.MAPPING_NODE_FOR_RECORD, mappingNode);
-                }
-            }
-        }
-
-        return mappingNode.clone();
-    }
-
-
-    /* (non-Javadoc)
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getXMLTempGroups(java.lang.Object)
-     */
-    @Override
-	public Collection getXMLTempGroups( final Object groupID ) throws QueryMetadataException {
-        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
-
-        MetadataRecord record = (MetadataRecord)groupID;
-
-        Collection tempGroups = (Collection)record.getPropertyValue(TableRecordProperties.TEMPORARY_GROUPS_FOR_DOCUMENT);
-        if (tempGroups == null) {
-            synchronized (record) {
-                // look up the cache again, might have been updated by
-                // the thread that just released the lock
-                tempGroups = (Collection)record.getPropertyValue(TableRecordProperties.TEMPORARY_GROUPS_FOR_DOCUMENT);
-                if (tempGroups == null) {
-                    tempGroups = this.metadata.getXMLTempGroups(groupID);
-                    record.setPropertyValue(TableRecordProperties.TEMPORARY_GROUPS_FOR_DOCUMENT, tempGroups);
-                }
-            }
-        }
-
-        return tempGroups;
-    }
-
-    @Override
-	public List getXMLSchemas( final Object groupID ) throws QueryMetadataException {
-        CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
-
-        MetadataRecord record = (MetadataRecord)groupID;
-
-        List schemas = (List)record.getPropertyValue(TableRecordProperties.SCHEMAS_FOR_DOCUMENT);
-        if (schemas == null) {
-            synchronized (record) {
-                // look up the cache again, might have been updated by
-                // the thread that just released the lock
-                schemas = (List)record.getPropertyValue(TableRecordProperties.SCHEMAS_FOR_DOCUMENT);
-                if (schemas == null) {
-                    schemas = this.metadata.getXMLSchemas(groupID);
-                    record.setPropertyValue(TableRecordProperties.SCHEMAS_FOR_DOCUMENT, schemas);
-                }
-            }
-        }
-
-        return schemas;
-    }
-
-
-    /* 
-     * @see org.teiid.query.metadata.QueryMetadataInterface#getExtensionProperties(java.lang.Object)
-     */
     @Override
 	public Properties getExtensionProperties( final Object metadataID )
-        throws QueryMetadataException {
+        throws Exception {
 
         CoreArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
 
@@ -795,33 +534,43 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
     }
 
     @Override
-    public Object addToMetadataCache( Object metadataID,
-                                      String key,
-                                      Object value ) {
-        CoreArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
-        if (key.startsWith(GroupInfo.CACHE_PREFIX)) {
-            return this.groupInfoCache.put(metadataID + "/" + key, value); //$NON-NLS-1$
-        }
-        MetadataRecord record = (MetadataRecord)metadataID;
-        synchronized (record) {
-            Object result = record.getPropertyValue(key);
-            record.setPropertyValue(key, value);
-            return result;
-        }
+    public String getFullName(Object metadataID) throws Exception {
+        return null;
     }
 
     @Override
-    public Object getFromMetadataCache( Object metadataID,
-                                        String key ) {
-        CoreArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
-        if (key.startsWith(GroupInfo.CACHE_PREFIX)) {
-            return this.groupInfoCache.get(metadataID + "/" + key); //$NON-NLS-1$
-        }
-        MetadataRecord record = (MetadataRecord)metadataID;
-        synchronized (record) {
-            return record.getPropertyValue(key);
-        }
+    public String getElementType(Object elementID) throws Exception {
+        return null;
     }
 
+    @Override
+    public Object getDefaultValue(Object elementID) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Object getMinimumValue(Object elementID) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Object getMaximumValue(Object elementID) throws Exception {
+        return null;
+    }
+
+    @Override
+    public boolean isVirtualGroup(Object groupID) throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isVirtualModel(Object modelID) throws Exception {
+        return false;
+    }
+
+    @Override
+    public IFunctionLibrary getFunctionLibrary() {
+        return UdfManager.getInstance().getFunctionLibrary();
+    }
 
 }

@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.transformation.util;
 
-import org.teiid.designer.sql.ISQLConstants;
+import org.teiid.designer.query.sql.ISQLConstants;
 
 /**
  * SQL String utility methods.

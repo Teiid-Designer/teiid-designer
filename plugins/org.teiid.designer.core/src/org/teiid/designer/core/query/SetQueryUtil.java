@@ -9,28 +9,27 @@ package org.teiid.designer.core.query;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.QueryCommand;
-import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.query.sql.lang.IQueryCommand;
+import org.teiid.designer.query.sql.lang.ISetQuery;
 
 /**
  * @since 8.0
  */
 public class SetQueryUtil {
 
-    public static int setQueryAtIndex(SetQuery query, int index, QueryCommand newQuery) {
+    public static int setQueryAtIndex(ISetQuery query, int index, IQueryCommand newQuery) {
         if (index < 0) {
             return index;
         }
-        if (query.getLeftQuery() instanceof SetQuery) {
-            index = setQueryAtIndex((SetQuery)query.getLeftQuery(), index, newQuery);
+        if (query.getLeftQuery() instanceof ISetQuery) {
+            index = setQueryAtIndex((ISetQuery)query.getLeftQuery(), index, newQuery);
         } else if (index-- == 0) {
             query.setLeftQuery(newQuery);
             return -1;
         } 
-        if (query.getRightQuery() instanceof SetQuery) {
-            index = setQueryAtIndex((SetQuery)query.getRightQuery(), index, newQuery);
+        if (query.getRightQuery() instanceof ISetQuery) {
+            index = setQueryAtIndex((ISetQuery)query.getRightQuery(), index, newQuery);
         } else if (index-- == 0){
             query.setRightQuery(newQuery);
             return -1;
@@ -38,18 +37,18 @@ public class SetQueryUtil {
         return index;
     }
     
-    public static List<Query> getQueryList(SetQuery query) {
-        ArrayList<Query> queries = new ArrayList<Query>();
+    public static List<IQuery> getQueryList(ISetQuery query) {
+        ArrayList<IQuery> queries = new ArrayList<IQuery>();
         addToQueryList(queries, query);
         return queries;
     }
     
-    static void addToQueryList(List<Query> queries, QueryCommand command) {
-        if (command instanceof SetQuery) {
-            addToQueryList(queries, ((SetQuery)command).getLeftQuery());
-            addToQueryList(queries, ((SetQuery)command).getRightQuery());
+    static void addToQueryList(List<IQuery> queries, IQueryCommand command) {
+        if (command instanceof ISetQuery) {
+            addToQueryList(queries, ((ISetQuery)command).getLeftQuery());
+            addToQueryList(queries, ((ISetQuery)command).getRightQuery());
         } else {
-            queries.add((Query)command);
+            queries.add((IQuery)command);
         }
     }
     

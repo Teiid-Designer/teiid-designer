@@ -10,15 +10,16 @@ package org.teiid.designer.transformation.util;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.id.ObjectID;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;
-import org.teiid.query.sql.LanguageVisitor;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.symbol.Symbol;
+import org.teiid.designer.query.AbstractLanguageVisitor;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.symbol.IGroupSymbol;
+import org.teiid.designer.query.sql.symbol.ISymbol;
 
 
 /**
@@ -27,7 +28,7 @@ import org.teiid.query.sql.symbol.Symbol;
  * the names of the coressponding new objects.   
  * @since 8.0
  */
-public class UpdateLanguageObjectNameVisitor extends LanguageVisitor {
+public class UpdateLanguageObjectNameVisitor extends AbstractLanguageVisitor {
 
     private final Map oldToNewObjects;
     private Map oldToNewNames = new HashMap();    
@@ -43,20 +44,21 @@ public class UpdateLanguageObjectNameVisitor extends LanguageVisitor {
     }
 
     /** 
-     * @see org.teiid.query.sql.LanguageVisitor#visit(org.teiid.query.sql.symbol.ElementSymbol)
+     * @see IElementSymbol
      * @since 4.2
      */
     @Override
-    public void visit(ElementSymbol obj) {
+    public void visit(IElementSymbol obj) {
         String fullName = obj.getShortName();
         if (obj.getGroupSymbol() != null) {
-            fullName = obj.getGroupSymbol().getDefinition() + Symbol.SEPARATOR + fullName;
+            fullName = obj.getGroupSymbol().getDefinition() + ISymbol.SEPARATOR + fullName;
             visit(obj.getGroupSymbol());
         } 
         
         String newName = getNewName(fullName);
         if(newName != null) {
-            obj.setShortName(Symbol.getShortName(newName));
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            obj.setShortName(queryService.getSymbolShortName(newName));
         }
     }
     
@@ -65,7 +67,7 @@ public class UpdateLanguageObjectNameVisitor extends LanguageVisitor {
      * @since 4.2
      */
     @Override
-    public void visit(GroupSymbol obj) {
+    public void visit(IGroupSymbol obj) {
         String fullName = obj.getDefinition();
         
         String newName = getNewName(fullName);

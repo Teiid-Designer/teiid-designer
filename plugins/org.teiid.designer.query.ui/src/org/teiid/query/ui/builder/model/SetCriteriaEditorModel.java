@@ -13,15 +13,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.eclipse.jface.viewers.TreeViewer;
-
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.AbstractSetCriteria;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.QueryCommand;
-import org.teiid.query.sql.lang.SetCriteria;
-import org.teiid.query.sql.lang.SubquerySetCriteria;
-import org.teiid.query.sql.symbol.Expression;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.lang.IQueryCommand;
+import org.teiid.designer.query.sql.lang.ISetCriteria;
+import org.teiid.designer.query.sql.lang.ISubquerySetCriteria;
 import org.teiid.query.ui.builder.util.ElementViewerFactory;
 import org.teiid.query.ui.builder.util.ICriteriaStrategy;
 
@@ -35,8 +36,7 @@ public class SetCriteriaEditorModel extends AbstractPredicateCriteriaTypeEditorM
     private final static String PREFIX = I18nUtil.getPropertyPrefix(SetCriteriaEditorModel.class);
     private final static String[] OPERATORS = new String[] {Util.getString(PREFIX + "in") //$NON-NLS-1$
     };
-    private final static SetCriteria EMPTY_SET_CRITERIA = new SetCriteria();
-    private final static SubquerySetCriteria EMPTY_SUBQUERY_SET_CRITERIA = new SubquerySetCriteria();
+    
     public final static String EXPRESSION = "SET CRITERIA EXPRESSION"; //$NON-NLS-1$
     public final static String SUBTYPE_CHANGED = "SET CRITERIA SUBTYPE CHANGED"; //$NON-NLS-1$
     public final static String VALUES = "SET CRITERIA VALUES"; //$NON-NLS-1$
@@ -46,17 +46,26 @@ public class SetCriteriaEditorModel extends AbstractPredicateCriteriaTypeEditorM
     public final static int SUBQUERY = 2;
     private final static int INITIAL_TYPE = LIST;
 
+    private final ISetCriteria emptySetCriteria;
+    private final ISubquerySetCriteria emptySubquerySetCriteria;
+   
     private CriteriaExpressionEditorModel expModel;
     private Collection values = new ArrayList();
-    private Command subqueryCommand = EMPTY_SUBQUERY_SET_CRITERIA.getCommand();
     private int curType = INITIAL_TYPE; // LIST or SUBQUERY
     private ICriteriaStrategy criteriaStrategy = null;
+    private ICommand subqueryCommand;
     private Object curSubquerySelection = null;
 
     public SetCriteriaEditorModel( CriteriaExpressionEditorModel model ) {
-        super(AbstractSetCriteria.class);
+        super(ISetCriteria.class);
         this.expModel = model;
         this.expModel.addModelListener(this);
+        
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+        emptySetCriteria = factory.createSetCriteria();
+        emptySubquerySetCriteria = factory.createSubquerySetCriteria();
+        subqueryCommand = emptySubquerySetCriteria.getCommand();
     }
 
     public SetCriteriaEditorModel() {
@@ -84,34 +93,37 @@ public class SetCriteriaEditorModel extends AbstractPredicateCriteriaTypeEditorM
     }
 
     @Override
-    public LanguageObject getLanguageObject() {
+    public ILanguageObject getLanguageObject() {
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+        
         if (curType == LIST) {
-            SetCriteria setCriteria = new SetCriteria();
+            ISetCriteria setCriteria = factory.createSetCriteria();
             setCriteria.setExpression(expModel.getExpression());
             setCriteria.setValues(values);
             return setCriteria;
         }
         // must be SUBQUERY
-        SubquerySetCriteria subquerySetCriteria = new SubquerySetCriteria();
+        ISubquerySetCriteria subquerySetCriteria = factory.createSubquerySetCriteria();
         subquerySetCriteria.setExpression(expModel.getExpression());
-        subquerySetCriteria.setCommand((QueryCommand)subqueryCommand);
+        subquerySetCriteria.setCommand((IQueryCommand)subqueryCommand);
         return subquerySetCriteria;
     }
 
     @Override
-    public void setLanguageObject( LanguageObject obj ) {
+    public void setLanguageObject( ILanguageObject obj ) {
         super.setLanguageObject(obj);
         if (obj == null) {
             clear();
         } else {
-            if (obj instanceof SetCriteria) {
+            if (obj instanceof ISetCriteria) {
                 setCurType(LIST);
-                SetCriteria curSetCriteria = (SetCriteria)obj;
+                ISetCriteria curSetCriteria = (ISetCriteria)obj;
                 setExpression(curSetCriteria.getExpression());
                 setValues(curSetCriteria.getValues());
             } else { // must be SUBQUERY
                 setCurType(SUBQUERY);
-                SubquerySetCriteria curSubquerySetCriteria = (SubquerySetCriteria)obj;
+                ISubquerySetCriteria curSubquerySetCriteria = (ISubquerySetCriteria)obj;
                 setExpression(curSubquerySetCriteria.getExpression());
                 setCommand(curSubquerySetCriteria.getCommand());
             }
@@ -124,10 +136,10 @@ public class SetCriteriaEditorModel extends AbstractPredicateCriteriaTypeEditorM
 
         setCurType(INITIAL_TYPE);
         if (curType == LIST) {
-            setExpression(EMPTY_SET_CRITERIA.getExpression());
-            setValues(EMPTY_SET_CRITERIA.getValues());
+            setExpression(emptySetCriteria.getExpression());
+            setValues(emptySetCriteria.getValues());
         } else {
-            setCommand(EMPTY_SUBQUERY_SET_CRITERIA.getCommand());
+            setCommand(emptySubquerySetCriteria.getCommand());
         }
 
         notifyListeners = true;
@@ -140,9 +152,9 @@ public class SetCriteriaEditorModel extends AbstractPredicateCriteriaTypeEditorM
         expModel.save();
     }
 
-    public void setExpression( Expression exp ) {
+    public void setExpression( IExpression exp ) {
         boolean same;
-        Expression oldExp = expModel.getExpression();
+        IExpression oldExp = expModel.getExpression();
         if (exp == null) {
             same = (oldExp == null);
         } else {
@@ -154,27 +166,27 @@ public class SetCriteriaEditorModel extends AbstractPredicateCriteriaTypeEditorM
         }
     }
 
-    public Expression getExpression() {
+    public IExpression getExpression() {
         return expModel.getExpression();
     }
 
     @Override
-    public void setLeftExpression( Expression exp ) {
+    public void setLeftExpression( IExpression exp ) {
         setExpression(exp);
     }
 
     @Override
-    public Expression getLeftExpression() {
+    public IExpression getLeftExpression() {
         return getExpression();
     }
 
     @Override
-    public void setRightExpression( Expression exp ) {
+    public void setRightExpression( IExpression exp ) {
         // Unused abstract method
     }
 
     @Override
-    public Expression getRightExpression() {
+    public IExpression getRightExpression() {
         // Unused abstract method
         return null;
     }
@@ -196,21 +208,21 @@ public class SetCriteriaEditorModel extends AbstractPredicateCriteriaTypeEditorM
         }
     }
 
-    public void addValue( LanguageObject newValue ) {
+    public void addValue( ILanguageObject newValue ) {
         if (!this.values.contains(newValue)) {
             this.values.add(newValue);
             fireModelChanged(VALUES);
         }
     }
 
-    public void replaceValue( LanguageObject oldValue,
-                              LanguageObject newValue ) {
+    public void replaceValue( ILanguageObject oldValue,
+                              ILanguageObject newValue ) {
         this.values.remove(oldValue);
         this.values.add(newValue);
         fireModelChanged(VALUES);
     }
 
-    public void setCommand( Command cmd ) {
+    public void setCommand( ICommand cmd ) {
         boolean same;
         if (subqueryCommand == null) {
             // We will always set to changed for null
@@ -224,7 +236,7 @@ public class SetCriteriaEditorModel extends AbstractPredicateCriteriaTypeEditorM
         }
     }
 
-    public Command getCommand() {
+    public ICommand getCommand() {
         return subqueryCommand;
     }
 
@@ -277,10 +289,10 @@ public class SetCriteriaEditorModel extends AbstractPredicateCriteriaTypeEditorM
     public void setSubquerySelection( Object selection ) {
         curSubquerySelection = selection;
         if (curSubquerySelection != null) {
-            Command cmd = criteriaStrategy.getCommand(selection);
+            ICommand cmd = criteriaStrategy.getCommand(selection);
             setCommand(cmd);
         } else {
-            setCommand(EMPTY_SUBQUERY_SET_CRITERIA.getCommand());
+            setCommand(emptySubquerySetCriteria.getCommand());
         }
     }
 
@@ -291,7 +303,7 @@ public class SetCriteriaEditorModel extends AbstractPredicateCriteriaTypeEditorM
     private boolean subqueryIsComplete() {
         boolean complete = false;
         if (subqueryCommand != null) {
-            complete = (!subqueryCommand.equals(EMPTY_SUBQUERY_SET_CRITERIA.getCommand()));
+            complete = (!subqueryCommand.equals(emptySubquerySetCriteria.getCommand()));
         }
         return complete;
     }

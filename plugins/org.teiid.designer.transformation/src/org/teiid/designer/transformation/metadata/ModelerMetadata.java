@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.id.ObjectID;
 import org.teiid.core.designer.id.UUID;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -78,8 +79,6 @@ import org.teiid.designer.metamodels.core.Annotation;
 import org.teiid.designer.metamodels.core.ModelImport;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.TransformationHelper;
-import org.teiid.designer.udf.IFunctionLibrary;
-import org.teiid.designer.udf.UdfManager;
 
 /**
  * Metadata implementation used by model workspace to resolve queries.
@@ -151,14 +150,6 @@ public class ModelerMetadata extends TransformationMetadata {
         return extProps;
     }
 
-    /**
-     * There is no vdb contect for models in the modeler.
-     */
-    @Override
-    public String getVirtualDatabaseName() {
-        return null;
-    }
-
     // ==================================================================================
     // P R O T E C T E D M E T H O D S
     // ==================================================================================
@@ -170,12 +161,12 @@ public class ModelerMetadata extends TransformationMetadata {
      * @param recordType
      * @param entityName the name to match
      * @param isPartialName true if the entity name is a partially qualified
-     * @throws QueryMetadataException
+     * @throws Exception
      */
     @Override
     protected Collection findMetadataRecords( final char recordType,
                                               final String entityName,
-                                              final boolean isPartialName ) throws QueryMetadataException {
+                                              final boolean isPartialName ) throws Exception {
 
         Collection eObjects = new ArrayList();
 
@@ -316,7 +307,7 @@ public class ModelerMetadata extends TransformationMetadata {
 
     protected Collection findSystemMetadataRecords( final char recordType,
                                                     final String entityName,
-                                                    final boolean isPartialName ) throws QueryMetadataException {
+                                                    final boolean isPartialName ) throws Exception {
         Collection eObjects = new ArrayList();
 
         List tokens = CoreStringUtil.getTokens(entityName, DELIMITER_STRING);
@@ -363,10 +354,10 @@ public class ModelerMetadata extends TransformationMetadata {
      * @param recordType The record type for the expected MetadataRecord
      * @param eObjects The collection of EObject instances whose records are returned
      * @return The metadataRecords for the eObjects
-     * @throws QueryMetadataException
+     * @throws Exception
      */
     protected Collection createMetadataRecords( final char recordType,
-                                                final Collection eObjects ) throws QueryMetadataException {
+                                                final Collection eObjects ) throws Exception {
         if (eObjects != null && !eObjects.isEmpty()) {
             Collection records = new ArrayList(eObjects.size());
             for (Iterator eObjIter = eObjects.iterator(); eObjIter.hasNext();) {
@@ -386,10 +377,10 @@ public class ModelerMetadata extends TransformationMetadata {
      * @param recordType The record type for the expected MetadataRecord
      * @param eObject The EObject whose record is returned
      * @return The metadataRecord for the eObject
-     * @throws QueryMetadataException
+     * @throws Exception
      */
     protected MetadataRecord createMetadataRecord( final char recordType,
-                                                   final EObject eObject ) throws QueryMetadataException {
+                                                   final EObject eObject ) throws Exception {
         MetadataRecord record = null;
         SqlAspect sqlAspect = AspectManager.getSqlAspect(eObject);
         if (!sqlAspect.isQueryable(eObject)) {
@@ -462,7 +453,7 @@ public class ModelerMetadata extends TransformationMetadata {
             case IndexConstants.RECORD_TYPE.JOIN_DESCRIPTOR:
                 return null;
             default:
-                throw new QueryMetadataException(
+                throw new TeiidDesignerException(
                                                        TransformationPlugin.Util.getString("TransformationMetadata.No_known_index_file_type_associated_with_the_recordType_1", new Character(recordType))); //$NON-NLS-1$
         }
 
@@ -508,11 +499,11 @@ public class ModelerMetadata extends TransformationMetadata {
      * @param entityName the name to match
      * @param isPartialName true if the entity name is a partially qualified
      * @return results
-     * @throws QueryMetadataException
+     * @throws Exception
      */
     @Override
     protected Collection findChildRecords( final MetadataRecord parentRecord,
-                                           final char childRecordType ) throws QueryMetadataException {
+                                           final char childRecordType ) throws Exception {
         CoreArgCheck.isNotNull(parentRecord);
         // find the eObject on the parent record
         EObject parentObj = (EObject)parentRecord.getEObject();
@@ -683,10 +674,10 @@ public class ModelerMetadata extends TransformationMetadata {
      * @param recordType The record type for the expected MetadataRecord
      * @param eObjects The collection of EObject whose record is returned
      * @return The metadataRecord for the eObject
-     * @throws QueryMetadataException
+     * @throws Exception
      */
     private Collection findMetadataRecords( final char recordType,
-                                            final Collection eObjects ) throws QueryMetadataException {
+                                            final Collection eObjects ) throws Exception {
         Collection records = new ArrayList(eObjects.size());
         for (Iterator eObjIter = eObjects.iterator(); eObjIter.hasNext();) {
             EObject eObj = (EObject)eObjIter.next();
@@ -888,7 +879,7 @@ public class ModelerMetadata extends TransformationMetadata {
     @Override
     protected Collection findChildRecordsForColumns( MetadataRecord parentRecord,
                                                      char childRecordType,
-                                                     List uuids ) throws QueryMetadataException {
+                                                     List uuids ) throws Exception {
         Collection kids = findChildRecords(parentRecord, childRecordType);
         ArrayList<MetadataRecord> result = new ArrayList<MetadataRecord>();
         for (Object o : kids) {
@@ -898,10 +889,5 @@ public class ModelerMetadata extends TransformationMetadata {
             }
         }
         return result;
-    }
-    
-    @Override
-    public IFunctionLibrary getFunctionLibrary() {
-        return UdfManager.getInstance().getFunctionLibrary();
     }
 }

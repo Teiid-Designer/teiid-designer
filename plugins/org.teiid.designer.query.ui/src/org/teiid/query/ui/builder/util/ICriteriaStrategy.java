@@ -8,8 +8,8 @@
 package org.teiid.query.ui.builder.util;
 
 import org.eclipse.jface.viewers.TreeViewer;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.Command;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 
 /**
  * The <code>CriteriaStrategy</code> interface is used by the <code>SetCriteriaController</code>
@@ -25,7 +25,7 @@ public interface ICriteriaStrategy {
      * @param theNode the node to create the command from
      * @return the requested command or <code>null</code> if a command can't be created
      */
-    Command getCommand(Object theNode);
+    ICommand getCommand(Object theNode);
     
     /**
      * Gets the runtime full name of the given node. This full name will be used when creating 
@@ -40,7 +40,7 @@ public interface ICriteriaStrategy {
      * @param theLangObj the object being converted
      * @return an object typed according to the strategy
      */
-    Object getNode(LanguageObject theLangObj);
+    Object getNode(ILanguageObject theLangObj);
     
     /**
      * Gets a user message indicating why the given node is invalid.
@@ -56,7 +56,7 @@ public interface ICriteriaStrategy {
     TreeViewer getTreeViewer();
 
     /**
-     * Indicates if the given node can be used to create a valid {@link Command}.
+     * Indicates if the given node can be used to create a valid {@link ICommand}.
      * @param theNode the node being checked
      * @return <code>true</code> if the node is valid; <code>false</code> otherwise.
      */

@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.sqleditor.component;
 
-import org.teiid.query.sql.lang.CompoundCriteria;
+import org.teiid.designer.query.sql.lang.ICompoundCriteria;
 
 /**
  * The <code>CompoundCriteriaDisplayNode</code> class is used to represent CompoundCriteria.
@@ -27,7 +27,7 @@ public class CompoundCriteriaDisplayNode extends DisplayNode {
      * @param criteria the query language object used to construct this display node.
      */
     public CompoundCriteriaDisplayNode( DisplayNode parentNode,
-                                        CompoundCriteria criteria ) {
+                                        ICompoundCriteria criteria ) {
         this.parentNode = parentNode;
         this.languageObject = criteria;
     }

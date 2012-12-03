@@ -9,8 +9,8 @@ package org.teiid.query.ui.sqleditor.component;
 
 import java.util.Iterator;
 import java.util.List;
-import org.teiid.query.sql.lang.Delete;
-import org.teiid.query.sql.lang.Option;
+import javax.swing.text.html.Option;
+import org.teiid.designer.query.sql.lang.IDelete;
 
 /**
  * The <code>DeleteDisplayNode</code> class is used to represent a DELETE command.
@@ -27,10 +27,10 @@ public class DeleteDisplayNode extends DisplayNode {
      * DeleteDisplayNode constructor
      * 
      * @param parentNode the parent DisplayNode of this.
-     * @param update The delete language object used to construct this display node.
+     * @param delete The delete language object used to construct this display node.
      */
     public DeleteDisplayNode( DisplayNode parentNode,
-                              Delete delete ) {
+                              IDelete delete ) {
         this.parentNode = parentNode;
         this.languageObject = delete;
     }

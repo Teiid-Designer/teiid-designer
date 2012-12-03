@@ -9,7 +9,7 @@ package org.teiid.designer.core.query;
 
 import java.util.Collection;
 import org.eclipse.core.runtime.IStatus;
-import org.teiid.query.sql.lang.Command;
+import org.teiid.designer.query.sql.lang.ICommand;
 
 /** 
  * ValidationResult, utility containign the status of validating sql.
@@ -41,7 +41,7 @@ public interface QueryValidationResult {
 	 * SQL String was not parsable.
 	 * @return the SQL command
 	 */
-	Command getCommand();
+	ICommand getCommand();
 	
     /**
      * Get the status List indicating the success/ failure of validation

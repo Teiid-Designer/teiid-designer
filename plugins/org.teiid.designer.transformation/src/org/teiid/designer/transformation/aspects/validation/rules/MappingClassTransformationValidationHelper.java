@@ -12,12 +12,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.core.validation.ValidationProblem;
@@ -31,14 +31,16 @@ import org.teiid.designer.metamodels.transformation.TreeMappingRoot;
 import org.teiid.designer.metamodels.xml.XmlContainerNode;
 import org.teiid.designer.metamodels.xml.XmlElement;
 import org.teiid.designer.metamodels.xml.util.XmlDocumentUtil;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.IGroupsUsedByElementsVisitor;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.query.sql.lang.IQueryCommand;
+import org.teiid.designer.query.sql.lang.ISetQuery;
+import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.transformation.TransformationPlugin;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.QueryCommand;
-import org.teiid.query.sql.lang.SetQuery;
-import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.visitor.GroupsUsedByElementsVisitor;
 
 /**
  * This validation rule applys aaditional validation checks for sql transformations whose targets are mapping classes. Checks
@@ -57,7 +59,7 @@ public class MappingClassTransformationValidationHelper {
      * 
      * @since 4.2
      */
-    public void validate( final Command command,
+    public void validate( final ICommand command,
                           final SqlTransformationMappingRoot transRoot,
                           final ValidationResult validationResult ) {
         EObject targetObj = transRoot.getTarget();
@@ -71,10 +73,10 @@ public class MappingClassTransformationValidationHelper {
         if (mappingClass.isRecursionAllowed() && mappingClass.isRecursive() && mappingClass.eResource() instanceof EmfResource) {
 
             validateRecursiveMappingClass(mappingClass, validationResult);
-        } else if (command instanceof Query) {
-            validate((Query)command, mappingClass, validationResult);
-        } else if (command instanceof SetQuery) {
-            validate((SetQuery)command, mappingClass, validationResult);
+        } else if (command instanceof IQuery) {
+            validate((IQuery)command, mappingClass, validationResult);
+        } else if (command instanceof ISetQuery) {
+            validate((ISetQuery)command, mappingClass, validationResult);
         } else {
             ValidationProblem errorProblem = new ValidationProblemImpl(
                                                                        0,
@@ -84,7 +86,7 @@ public class MappingClassTransformationValidationHelper {
         }
     }
 
-    public void validate( final Query query,
+    public void validate( final IQuery query,
                    final MappingClass mappingClass,
                    final ValidationResult validationResult ) {
         ValidationProblem problem2 = checkInputParamInCriteria(query, mappingClass);
@@ -94,17 +96,17 @@ public class MappingClassTransformationValidationHelper {
         }
     }
 
-    public void validate( final SetQuery setQuery,
+    public void validate( final ISetQuery setQuery,
                    final MappingClass mappingClass,
                    final ValidationResult validationResult ) {
         boolean hasInputParamInCriteria = false;
         ValidationProblem inputCriteriaProblem = null;
-        for (QueryCommand query : setQuery.getQueryCommands()) {
-            if (query instanceof SetQuery) {
-                validate((SetQuery)query, mappingClass, validationResult);
+        for (IQueryCommand query : setQuery.getQueryCommands()) {
+            if (query instanceof ISetQuery) {
+                validate((ISetQuery)query, mappingClass, validationResult);
                 return;
             }
-            ValidationProblem problem2 = checkInputParamInCriteria((Query)query, mappingClass);
+            ValidationProblem problem2 = checkInputParamInCriteria((IQuery)query, mappingClass);
             if (problem2 != null && !hasInputParamInCriteria) {
                 inputCriteriaProblem = problem2;
             } else {
@@ -121,17 +123,20 @@ public class MappingClassTransformationValidationHelper {
      * WARNING -> IF input parameters are not used in the criteria of any of the queries in the transformation,
      * for a recursive mapping class.
      */
-    ValidationProblem checkInputParamInCriteria( final Query query,
+    ValidationProblem checkInputParamInCriteria( final IQuery query,
                                                  final MappingClass mappingClass ) {
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+        IGroupsUsedByElementsVisitor groupsUsedByElementsVisitor = queryService.getGroupsUsedByElementsVisitor();
+        
         if (mappingClass.isRecursive()) {
             boolean foundInParam = false;
-            Criteria criteriaClause = query.getCriteria();
+            ICriteria criteriaClause = query.getCriteria();
             if (criteriaClause != null) {
-                Set<GroupSymbol> groups = GroupsUsedByElementsVisitor.getGroups(criteriaClause);
-                if (groups.contains(new GroupSymbol("INPUT")) //$NON-NLS-1$
-                || groups.contains(new GroupSymbol("INPUTS"))) { //$NON-NLS-1$
+                Set<IGroupSymbol> groups = groupsUsedByElementsVisitor.getGroups(criteriaClause);
+                if (groups.contains(factory.createGroupSymbol("INPUT")) //$NON-NLS-1$
+                || groups.contains(factory.createGroupSymbol("INPUTS"))) { //$NON-NLS-1$
                     foundInParam = true;
-                       
                 }
             }
             if (!foundInParam) {

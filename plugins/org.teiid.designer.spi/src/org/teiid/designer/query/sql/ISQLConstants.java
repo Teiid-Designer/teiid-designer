@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.sql;
+package org.teiid.designer.query.sql;
 
 /**
  * SqlConstants
@@ -24,10 +24,12 @@ public interface ISQLConstants {
     String SPACE = " "; //$NON-NLS-1$
     String COMMA = ","; //$NON-NLS-1$
     String TRUE = "TRUE"; //$NON-NLS-1$
+    String FALSE = "FALSE"; //$NON-NLS-1$
     String RETURN = "\n"; //$NON-NLS-1$
     String SELECT = "SELECT"; //$NON-NLS-1$
     String FROM = "FROM"; //$NON-NLS-1$
     String WHERE = "WHERE"; //$NON-NLS-1$
+    String HAVING = "HAVING"; //$NON-NLS-1$
 	char DOT = '.';
 	char STAR = '*';
     char L_PAREN = '(';
@@ -50,6 +52,7 @@ public interface ISQLConstants {
     String TEXTTABLE = "TEXTTABLE"; //$NON-NLS-1$
     String TABLE = "TABLE"; //$NON-NLS-1$
     String EXEC = "EXEC"; //$NON-NLS-1$
+    String CONVERT = "CONVERT"; //$NON-NLS-1$
     
     String ENVELOPE_NS = "http://schemas.xmlsoap.org/soap/envelope/"; //$NON-NLS-1$
     String ENVELOPE_NS_ALIAS = "soap"; //$NON-NLS-1$
@@ -76,4 +79,10 @@ public interface ISQLConstants {
     
     String FUNCTION_INVOKE = "invoke"; //$NON-NLS-1$
     String FUNCTION_INVOKE_HTTP = "invokeHttp"; //$NON-NLS-1$
+    
+    String ROWCOUNT = "ROWCOUNT"; //$NON-NLS-1
+    String CHANGING = "CHANGING"; //$NON-NLS-1$
+    String VARIABLES = "VARIABLES"; //$NON-NLS-1$
+    String DVARS = "DVARS"; //$NON-NLS-1$
+    
 }

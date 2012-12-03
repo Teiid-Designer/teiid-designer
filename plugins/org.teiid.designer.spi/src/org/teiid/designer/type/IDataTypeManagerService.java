@@ -79,6 +79,24 @@ public interface IDataTypeManagerService {
     String getDefaultDataType(DataTypeName dataTypeName);
     
     /**
+     * Get the length of the data type
+     * 
+     * @param dataTypeName
+     * 
+     * @return integer indicating data type limit
+     */
+    Integer getDataTypeLimit(String dataType);
+    
+    /**
+     * Get the valid characters of the data type
+     * 
+     * @param dataTypeName
+     * 
+     * @return string of valid characters or null if all characters are valid
+     */
+    String getDataTypeValidChars(String dataType);
+    
+    /**
      * Get the default data class represented by the 
      * given {@link DataTypeName} enumerator
      * 
@@ -115,4 +133,16 @@ public interface IDataTypeManagerService {
      * @param name
      */
     String getCanonicalString(String name);
+    
+    /**
+     * Can a value transformation between the sourceType with given name
+     * and the targetType of given name be attained. The Class for source and target type
+     * are not needed to do this lookup.
+     * 
+     * @param sourceTypeName
+     * @param targetTypeName
+     * 
+     * @return true if a transform is possible between the types
+     */
+    boolean canTransform(String sourceTypeName, String targetTypeName);
 }

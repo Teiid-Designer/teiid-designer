@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.sqleditor.component;
 
-import org.teiid.query.sql.lang.Criteria;
+import org.teiid.designer.query.sql.lang.ICriteria;
 
 /**
  * The <code>WhereDisplayNode</code> class is used to represent a Query's WHERE clause.
@@ -27,7 +27,7 @@ public class WhereDisplayNode extends DisplayNode {
      * @param criteria the query language object used to construct this display node.
      */
     public WhereDisplayNode( DisplayNode parentNode,
-                             Criteria criteria ) {
+                             ICriteria criteria ) {
         this.parentNode = parentNode;
         this.languageObject = criteria;
     }

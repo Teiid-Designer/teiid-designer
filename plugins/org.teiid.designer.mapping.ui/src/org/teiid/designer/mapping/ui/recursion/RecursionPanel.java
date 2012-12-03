@@ -42,14 +42,15 @@ import org.teiid.designer.mapping.ui.UiPlugin;
 import org.teiid.designer.mapping.ui.recursion.actions.ClearCriteria;
 import org.teiid.designer.mapping.ui.recursion.actions.LaunchCriteriaBuilder;
 import org.teiid.designer.metamodels.transformation.MappingClass;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.ISQLStringVisitor;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.lang.IQuery;
 import org.teiid.designer.transformation.ui.builder.CriteriaBuilder;
 import org.teiid.designer.transformation.validation.SqlTransformationResult;
 import org.teiid.designer.transformation.validation.TransformationValidator;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.visitor.SQLStringVisitor;
 import org.teiid.query.ui.builder.util.ElementViewerFactory;
 
 
@@ -519,9 +520,10 @@ public class RecursionPanel extends SashForm implements SelectionListener, UiCon
         if (status == Window.OK) {
 
             // retrieve the new sql from the criteria builder
-            LanguageObject newCriteria = builder.getLanguageObject();
-
-            String sCriteriaString = SQLStringVisitor.getSQLString(newCriteria);
+            ILanguageObject newCriteria = builder.getLanguageObject();
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            ISQLStringVisitor visitor = queryService.getSQLStringVisitor();
+            String sCriteriaString = visitor.getSQLString(newCriteria);
             // this: updateCriteriaForSelectedRow( criteriaString );
             docRecursionConditionCriteria.set(sCriteriaString);
 
@@ -533,10 +535,10 @@ public class RecursionPanel extends SashForm implements SelectionListener, UiCon
         setButtonStates();
     }
 
-    private Query getCommand( String sSql ) {
+    private IQuery getCommand( String sSql ) {
         String sCommand = DEFAULT_SELECT + sSql;
         SqlTransformationResult result = TransformationValidator.parseSQL(sCommand);
-        return (Query)result.getCommand();
+        return (IQuery)result.getCommand();
     }
 
     private CriteriaBuilder getCriteriaBuilder() {

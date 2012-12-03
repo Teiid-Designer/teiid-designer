@@ -12,10 +12,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.XmlAttribute;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.XmlElement;
-import org.teiid.query.sql.symbol.ElementSymbol;
 
 
 /**
@@ -34,7 +37,7 @@ public class TeiidColumnInfo {
     /**
      * The unique column name (never <code>null</code> or empty).
      */
-	private ElementSymbol nameSymbol;
+	private IElementSymbol nameSymbol;
 	
 	 /**
      * The unique column datatype (never <code>null</code> or empty).
@@ -147,7 +150,9 @@ public class TeiidColumnInfo {
 	 * problems for an element symbol so these are replaced these with '_'.
 	 */
 	private void initNameSymbol(final String name) {
-	    nameSymbol = new ElementSymbol(name.replaceAll("\\.", "_"));  //$NON-NLS-1$//$NON-NLS-2$
+	    IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+	    nameSymbol = factory.createElementSymbol(name.replaceAll("\\.", "_"));  //$NON-NLS-1$//$NON-NLS-2$
 	}
 	
 	/**

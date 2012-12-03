@@ -36,12 +36,12 @@ import org.teiid.designer.metamodels.transformation.MappingClassColumn;
 import org.teiid.designer.metamodels.transformation.SqlTransformation;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryParser;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.SqlConverter;
-import org.teiid.query.parser.QueryParser;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.symbol.AliasSymbol;
-import org.teiid.query.sql.symbol.ElementSymbol;
 
 /**
  * SqlTransformationMappingRootSqlAspect
@@ -383,7 +383,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
                 // replace the InputSet bindings with references all collect all the bindings
                 List bindingNames = null;
                 if (target instanceof MappingClass) {
-                    final Command command = parseSQL(selectSql);
+                    final ICommand command = parseSQL(selectSql);
                     final InputSet inputSet = ((MappingClass)target).getInputSet();
                     if (inputSet != null) {
                         bindingNames = new ArrayList(inputSet.getInputParameters().size());
@@ -416,7 +416,10 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
                                             MappingClassColumn mappingColumn = binding.getMappingClassColumn();
                                             SqlAspect sqlAspect = AspectManager.getSqlAspect(mappingColumn);
                                             String mappingColumnName = sqlAspect.getFullName(mappingColumn);
-                                            bindingNames.add(new AliasSymbol(inputName, new ElementSymbol(mappingColumnName)).toString());
+                                            
+                                            IQueryService queryService = ModelerCore.getTeiidQueryService();
+                                            IQueryFactory factory = queryService.createQueryFactory();
+                                            bindingNames.add(factory.createAliasSymbol(inputName, factory.createElementSymbol(mappingColumnName)).toString());
                                         }
                                     }
                                 }
@@ -512,11 +515,11 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @param sqlString the SQL to parse
      * @return the SqlTransformationResult object
      */
-    public static Command parseSQL( final String sqlString ) {
-        Command command = null;
+    public static ICommand parseSQL( final String sqlString ) {
+        ICommand command = null;
         try {
             // QueryParser is not thread-safe, get new parser each time
-            QueryParser parser = new QueryParser();
+            IQueryParser parser = ModelerCore.getTeiidQueryService().getQueryParser();
             command = parser.parseDesignerCommand(sqlString);
         } catch (Exception e) {
             TransformationPlugin.Util.log(IStatus.ERROR, e, e.getLocalizedMessage());

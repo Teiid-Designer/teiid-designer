@@ -27,14 +27,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.symbol.IConstant;
 import org.teiid.designer.transformation.ui.builder.AbstractLanguageObjectEditor;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.widget.CalendarWidget;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.ui.builder.model.ConstantEditorModel;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener;
 import org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent;
@@ -95,7 +94,7 @@ public final class ConstantEditor extends AbstractLanguageObjectEditor {
      */
     public ConstantEditor( Composite theParent,
                            ConstantEditorModel theModel ) {
-        super(theParent, Constant.class, theModel);
+        super(theParent, IConstant.class, theModel);
 
         controller = new ViewController();
         model = theModel;
@@ -245,7 +244,7 @@ public final class ConstantEditor extends AbstractLanguageObjectEditor {
 
         cbxType = new Combo(pnlContent, SWT.BORDER | SWT.READ_ONLY);
         cbxType.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        cbxType.setItems(BuilderUtils.ALL_TYPES);
+        cbxType.setItems(BuilderUtils.getAllTypes().toArray(new String[0]));
         cbxType.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( SelectionEvent theEvent ) {
@@ -443,20 +442,19 @@ public final class ConstantEditor extends AbstractLanguageObjectEditor {
     private void normalizeTypes() {
         // processTypeChange = false;
         String selection = cbxType.getText(); // save current selection
-        String[] invalidTypes = BuilderUtils.INVALID_CONVERSION_ARG_TYPES;
         boolean conversionType = isConversionType();
 
-        for (int i = 0; i < invalidTypes.length; i++) {
+        for (String invalidType : BuilderUtils.getInvalidTypes()) {
             if (conversionType) {
-                if (cbxType.indexOf(invalidTypes[i]) != -1) {
-                    cbxType.remove(invalidTypes[i]);
+                if (cbxType.indexOf(invalidType) != -1) {
+                    cbxType.remove(invalidType);
                 } else {
                     // assume if one type is not there then all of them are not there
                     break;
                 }
             } else {
-                if (cbxType.indexOf(invalidTypes[i]) == -1) {
-                    cbxType.add(invalidTypes[i]);
+                if (cbxType.indexOf(invalidType) == -1) {
+                    cbxType.add(invalidType);
                 } else {
                     // assume if one type is there then all of them are there
                     break;
@@ -472,11 +470,11 @@ public final class ConstantEditor extends AbstractLanguageObjectEditor {
      * @see org.teiid.designer.transformation.ui.builder.ILanguageObjectEditor#setLanguageObject(org.teiid.query.sql.LanguageObject)
      */
     @Override
-    public void setLanguageObject( LanguageObject theLanguageObject ) {
+    public void setLanguageObject( ILanguageObject theLanguageObject ) {
         if (theLanguageObject == null) {
             clear();
         } else {
-            CoreArgCheck.isTrue((theLanguageObject instanceof Constant),
+            CoreArgCheck.isTrue((theLanguageObject instanceof IConstant),
                                 Util.getString(PREFIX + "invalidLanguageObject", //$NON-NLS-1$
                                                new Object[] {theLanguageObject.getClass().getName()}));
 
@@ -558,14 +556,6 @@ public final class ConstantEditor extends AbstractLanguageObjectEditor {
             }
         }
 
-    }
-
-    /**
-     * @see org.teiid.designer.transformation.ui.builder.AbstractLanguageObjectEditor#getLanguageObject()
-     */
-    @Override
-    public LanguageObject getLanguageObject() {
-        return super.getLanguageObject();
     }
 
 }

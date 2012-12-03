@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.sqleditor.component;
 
-import org.teiid.query.sql.symbol.AliasSymbol;
+import org.teiid.designer.query.sql.symbol.IAliasSymbol;
 
 /**
  * The <code>AliasSymbolDisplayNode</code> class is used to represent AliasSymbols.
@@ -27,7 +27,7 @@ public class AliasSymbolDisplayNode extends DisplayNode {
      * @param symbol the query language object used to construct this display node.
      */
     public AliasSymbolDisplayNode( DisplayNode parentNode,
-                                   AliasSymbol symbol ) {
+                                   IAliasSymbol symbol ) {
         this.parentNode = parentNode;
         this.languageObject = symbol;
     }

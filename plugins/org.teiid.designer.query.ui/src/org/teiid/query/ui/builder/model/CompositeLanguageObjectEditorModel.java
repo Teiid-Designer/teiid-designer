@@ -9,10 +9,9 @@ package org.teiid.query.ui.builder.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.query.sql.LanguageObject;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 
 /**
  * The <code>CompositeLanguageObjectEditorModel</code> manages a collection of <code>ILanguageObjectEditorModel</code>s.
@@ -78,11 +77,11 @@ public abstract class CompositeLanguageObjectEditorModel extends AbstractLanguag
      * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModel#getLanguageObject()
      */
     @Override
-    public LanguageObject getLanguageObject() {
+    public ILanguageObject getLanguageObject() {
         CoreArgCheck.isNotNull(models, Util.getString(PREFIX + "noModelsFound", //$NON-NLS-1$
                                                       new Object[] {"getLanguageObject"})); //$NON-NLS-1$
 
-        LanguageObject langObj = null;
+        ILanguageObject langObj = null;
         if (currentModel != null) {
             langObj = currentModel.getLanguageObject();
         }
@@ -164,12 +163,12 @@ public abstract class CompositeLanguageObjectEditorModel extends AbstractLanguag
      * @see org.teiid.query.ui.builder.model.AbstractLanguageObjectEditorModel#setLanguageObject(org.teiid.query.sql.LanguageObject)
      */
     @Override
-    public void setLanguageObject( LanguageObject theLangObj ) {
+    public void setLanguageObject( ILanguageObject theLangObj ) {
         CoreArgCheck.isNotNull(models, Util.getString(PREFIX + "noModelsFound", //$NON-NLS-1$
                                                       new Object[] {"setLanguageObject"})); //$NON-NLS-1$
 
         super.setLanguageObject(theLangObj);
-        LanguageObject langObj = getSavedLanguageObject();
+        ILanguageObject langObj = getSavedLanguageObject();
         ILanguageObjectEditorModel newModel = null;
 
         if (langObj == null) {

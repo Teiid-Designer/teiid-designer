@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.builder.model;
 
-import org.teiid.query.sql.symbol.Expression;
+import org.teiid.designer.query.sql.lang.IExpression;
 
 /**
  * The <code>ExpressionEditorModel</code> is a composite model that contains the following models:
@@ -53,7 +53,7 @@ public class ExpressionEditorModel extends CompositeLanguageObjectEditorModel {
     public ExpressionEditorModel(ConstantEditorModel theConstantEditorModel,
                                  ElementEditorModel theElementEditorModel,
                                  FunctionEditorModel theFunctionEditorModel) {
-        super(Expression.class);
+        super(IExpression.class);
         
         constantModel = theConstantEditorModel;
         addModel(constantModel);
@@ -81,7 +81,7 @@ public class ExpressionEditorModel extends CompositeLanguageObjectEditorModel {
         return functionModel;
     }
     
-	public Expression getExpression() {
-		return (Expression)getLanguageObject();
+	public IExpression getExpression() {
+		return (IExpression)getLanguageObject();
 	}
 }

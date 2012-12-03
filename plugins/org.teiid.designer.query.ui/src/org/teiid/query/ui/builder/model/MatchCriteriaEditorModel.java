@@ -8,9 +8,12 @@
 package org.teiid.query.ui.builder.model;
 
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.MatchCriteria;
-import org.teiid.query.sql.symbol.Expression;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.lang.IMatchCriteria;
 
 /**
  * MatchCriteriaEditorModel
@@ -22,23 +25,28 @@ public class MatchCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdito
     private final static String PREFIX = I18nUtil.getPropertyPrefix(MatchCriteriaEditorModel.class);
     private final static String[] OPERATORS = new String[] {Util.getString(PREFIX + "like") //$NON-NLS-1$
     };
-    private final static MatchCriteria EMPTY_MATCH_CRITERIA = new MatchCriteria();
-
+    
     public final static String LEFT_EXPRESSION = "MATCH CRITERIA LEFT EXPRESSION"; //$NON-NLS-1$
     public final static String RIGHT_EXPRESSION = "MATCH CRITERIA RIGHT EXPRESSION"; //$NON-NLS-1$
     public final static String ESCAPE_CHAR = "MATCH CRITERIA ESCAPE CHAR"; //$NON-NLS-1$
 
+    private final IMatchCriteria emptyMatchCriteria;
+    
     private CriteriaExpressionEditorModel leftExpModel;
     private CriteriaExpressionEditorModel rightExpModel;
     private char escapeChar;
 
     public MatchCriteriaEditorModel( CriteriaExpressionEditorModel left,
                                      CriteriaExpressionEditorModel right ) {
-        super(MatchCriteria.class);
+        super(IMatchCriteria.class);
         this.leftExpModel = left;
         this.rightExpModel = right;
         this.leftExpModel.addModelListener(this);
         this.rightExpModel.addModelListener(this);
+        
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+        emptyMatchCriteria = factory.createMatchCriteria();
     }
 
     public MatchCriteriaEditorModel() {
@@ -46,8 +54,11 @@ public class MatchCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdito
     }
 
     @Override
-    public LanguageObject getLanguageObject() {
-        MatchCriteria matchCriteria = new MatchCriteria();
+    public ILanguageObject getLanguageObject() {
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+        IMatchCriteria matchCriteria = factory.createMatchCriteria();
+        
         matchCriteria.setLeftExpression(leftExpModel.getExpression());
         matchCriteria.setRightExpression(rightExpModel.getExpression());
         matchCriteria.setEscapeChar(escapeChar);
@@ -67,16 +78,16 @@ public class MatchCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdito
     }
 
     @Override
-    public void setLanguageObject( LanguageObject obj ) {
+    public void setLanguageObject( ILanguageObject obj ) {
         super.setLanguageObject(obj);
-        MatchCriteria curMatchCriteria;
+        IMatchCriteria curMatchCriteria;
         if (obj == null) {
             clear();
         } else {
-            curMatchCriteria = (MatchCriteria)obj;
-            Expression newLeftExpression = curMatchCriteria.getLeftExpression();
+            curMatchCriteria = (IMatchCriteria)obj;
+            IExpression newLeftExpression = curMatchCriteria.getLeftExpression();
             setLeftExpression(newLeftExpression);
-            Expression newRightExpression = curMatchCriteria.getRightExpression();
+            IExpression newRightExpression = curMatchCriteria.getRightExpression();
             setRightExpression(newRightExpression);
             char newEscapeChar = curMatchCriteria.getEscapeChar();
             setEscapeChar(newEscapeChar);
@@ -87,9 +98,9 @@ public class MatchCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdito
     public void clear() {
         notifyListeners = false;
 
-        setLeftExpression(EMPTY_MATCH_CRITERIA.getLeftExpression());
-        setRightExpression(EMPTY_MATCH_CRITERIA.getRightExpression());
-        setEscapeChar(EMPTY_MATCH_CRITERIA.getEscapeChar());
+        setLeftExpression(emptyMatchCriteria.getLeftExpression());
+        setRightExpression(emptyMatchCriteria.getRightExpression());
+        setEscapeChar(emptyMatchCriteria.getEscapeChar());
 
         notifyListeners = true;
         super.clear();
@@ -103,14 +114,14 @@ public class MatchCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdito
     }
 
     @Override
-    public Expression getLeftExpression() {
+    public IExpression getLeftExpression() {
         return leftExpModel.getExpression();
     }
 
     @Override
-    public void setLeftExpression( Expression exp ) {
+    public void setLeftExpression( IExpression exp ) {
         boolean same;
-        Expression oldExp = leftExpModel.getExpression();
+        IExpression oldExp = leftExpModel.getExpression();
         if (exp == null) {
             same = (oldExp == null);
         } else {
@@ -123,14 +134,14 @@ public class MatchCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdito
     }
 
     @Override
-    public Expression getRightExpression() {
+    public IExpression getRightExpression() {
         return rightExpModel.getExpression();
     }
 
     @Override
-    public void setRightExpression( Expression exp ) {
+    public void setRightExpression( IExpression exp ) {
         boolean same;
-        Expression oldExp = rightExpModel.getExpression();
+        IExpression oldExp = rightExpModel.getExpression();
         if (exp == null) {
             same = (oldExp == null);
         } else {

@@ -7,8 +7,8 @@
  */
 package org.teiid.query.ui.builder.model;
 
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
 
 /**
  * The <code>ElementEditorModel</code> class is used as a model for the
@@ -24,7 +24,7 @@ public class ElementEditorModel extends AbstractLanguageObjectEditorModel {
     /**
      * The currently selected <code>ElementSymbol</code>.
      */
-    private ElementSymbol selectedElement;
+    private IElementSymbol selectedElement;
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS
@@ -34,7 +34,7 @@ public class ElementEditorModel extends AbstractLanguageObjectEditorModel {
      * Constructs an <code>ElementEditorModel</code> with an incomplete state.
      */
     public ElementEditorModel() {
-        super(ElementSymbol.class);
+        super(IElementSymbol.class);
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,15 +56,15 @@ public class ElementEditorModel extends AbstractLanguageObjectEditorModel {
      * @return the currently selected <code>ElementSymbol</code>
      * @throws IllegalStateException if the current value is not complete
      */
-    public ElementSymbol getElementSymbol() {
-        return (ElementSymbol)getLanguageObject();
+    public IElementSymbol getElementSymbol() {
+        return (IElementSymbol)getLanguageObject();
     }
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.model.AbstractLanguageObjectEditorModel#getLanguageObject()
      */
     @Override
-    public LanguageObject getLanguageObject() {
+    public ILanguageObject getLanguageObject() {
         return selectedElement;
     }
 
@@ -82,7 +82,7 @@ public class ElementEditorModel extends AbstractLanguageObjectEditorModel {
      * @param theElement the element becoming the current value
      * @return <code>true</code> if selected element has changed; <code>false</code> otherwise.
      */
-    public boolean selectElementSymbol( ElementSymbol theElement ) {
+    public boolean selectElementSymbol( IElementSymbol theElement ) {
         boolean changed = false;
 
         if (selectedElement == null) {
@@ -104,7 +104,7 @@ public class ElementEditorModel extends AbstractLanguageObjectEditorModel {
      * 
      * @param theElement the element being saved
      */
-    private void setElementSymbol( ElementSymbol theElement ) {
+    private void setElementSymbol( IElementSymbol theElement ) {
         if (theElement == null) {
             clear();
         } else {
@@ -125,9 +125,9 @@ public class ElementEditorModel extends AbstractLanguageObjectEditorModel {
      * @see org.teiid.query.ui.builder.model.AbstractLanguageObjectEditorModel#setLanguageObject(org.teiid.query.sql.LanguageObject)
      */
     @Override
-    public void setLanguageObject( LanguageObject theLangObj ) {
+    public void setLanguageObject( ILanguageObject theLangObj ) {
         super.setLanguageObject(theLangObj);
-        setElementSymbol((ElementSymbol)theLangObj);
+        setElementSymbol((IElementSymbol)theLangObj);
     }
 
 }

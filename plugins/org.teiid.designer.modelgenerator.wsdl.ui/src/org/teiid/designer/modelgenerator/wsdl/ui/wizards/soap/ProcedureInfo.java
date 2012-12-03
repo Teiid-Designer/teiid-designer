@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.Status;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
-import org.teiid.designer.sql.ISQLConstants;
+import org.teiid.designer.query.sql.ISQLConstants;
 
 
 

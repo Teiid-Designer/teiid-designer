@@ -9,14 +9,13 @@ package org.teiid.designer.mapping.ui.recursion;
 
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.teiid.designer.mapping.ui.PluginConstants;
 import org.teiid.designer.mapping.ui.UiConstants;
 import org.teiid.designer.metadata.runtime.MetadataRecord;
 import org.teiid.designer.metamodels.transformation.MappingClassColumn;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.transformation.util.TransformationHelper;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.ui.builder.util.CriteriaStrategy;
 
 
@@ -48,13 +47,13 @@ public class RecursionCriteriaStrategy
      * @see org.teiid.query.ui.builder.util.ICriteriaStrategy#getNode(org.teiid.query.sql.LanguageObject)
      */
     @Override
-    public Object getNode( LanguageObject theLangObj ) {
+    public Object getNode( ILanguageObject theLangObj ) {
         Object result = null;
 
         if (isValid(theLangObj)) {
         
-            if (theLangObj instanceof ElementSymbol) {
-                Object obj = ((ElementSymbol)theLangObj).getMetadataID();
+            if (theLangObj instanceof IElementSymbol) {
+                Object obj = ((IElementSymbol)theLangObj).getMetadataID();
 
                 if (obj != null) {
                    if (obj instanceof MetadataRecord) {

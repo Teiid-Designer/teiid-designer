@@ -17,16 +17,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.query.sql.symbol.IConstant;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.symbol.IFunction;
+import org.teiid.designer.query.sql.symbol.IReference;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.builder.ILanguageObjectEditor;
 import org.teiid.designer.transformation.ui.builder.expression.ConstantEditor;
 import org.teiid.designer.ui.common.util.UiUtil;
-import org.teiid.query.sql.symbol.Constant;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.Function;
-import org.teiid.query.sql.symbol.Reference;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModel;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener;
 import org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent;
@@ -120,19 +119,19 @@ public class CompositeEditorMessagePanel extends Composite implements UiConstant
     }
 
     private boolean isConstant() {
-        return (langObj == null) ? false : (langObj instanceof Constant);
+        return (langObj == null) ? false : (langObj instanceof IConstant);
     }
 
     private boolean isElement() {
-        return (langObj == null) ? false : (langObj instanceof ElementSymbol);
+        return (langObj == null) ? false : (langObj instanceof IElementSymbol);
     }
 
     private boolean isFunction() {
-        return (langObj == null) ? false : (langObj instanceof Function);
+        return (langObj == null) ? false : (langObj instanceof IFunction);
     }
 
     private boolean isReference() {
-        return (langObj == null) ? false : (langObj instanceof Reference);
+        return (langObj == null) ? false : (langObj instanceof IReference);
     }
 
     public void setLanguageObject( Object theLangObj ) {

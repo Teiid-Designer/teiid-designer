@@ -20,22 +20,15 @@ import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.core.index.CompositeIndexSelector;
 import org.teiid.designer.core.index.IndexSelector;
 import org.teiid.designer.core.index.RuntimeIndexSelector;
 import org.teiid.designer.metadata.runtime.ColumnRecord;
-import org.teiid.designer.metadata.runtime.ColumnSetRecord;
 import org.teiid.designer.metadata.runtime.MetadataRecord;
 import org.teiid.designer.metadata.runtime.TableRecord;
-import org.teiid.designer.transformation.metadata.TransformationMetadataFactory;
-
-
-import org.teiid.query.mapping.relational.QueryNode;
-import org.teiid.query.mapping.xml.MappingNode;
-import org.teiid.query.metadata.QueryMetadataInterface;
-import org.teiid.query.metadata.StoredProcedureInfo;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 
 /**
  * TestServerRuntimeMetadata
@@ -124,7 +117,7 @@ public class TestServerRuntimeMetadata extends TestCase {
         return new RuntimeIndexSelector(filePath);
     }    
     
-    private QueryMetadataInterface helpGetTransformatrionMetadata(IndexSelector selector)  {
+    private IQueryMetadataInterface helpGetTransformatrionMetadata(IndexSelector selector)  {
         return TransformationMetadataFactory.getInstance().getServerMetadata(selector);
     }
 
@@ -133,7 +126,7 @@ public class TestServerRuntimeMetadata extends TestCase {
             String url = SmartTestDesignerSuite.getTestDataPath(getClass())+"/indexTestFolder/BQT.vdb"; //$NON-NLS-1$
             IndexSelector selector = helpGetRuntimeSelector1(new File(url).toURI().toURL());
 
-            QueryMetadataInterface metadata = helpGetTransformatrionMetadata(selector);
+            IQueryMetadataInterface metadata = helpGetTransformatrionMetadata(selector);
 
             Object elementID = metadata.getElementID("bQT.bQt2.HuGEA.INTKEY"); //$NON-NLS-1$
 
@@ -155,7 +148,7 @@ public class TestServerRuntimeMetadata extends TestCase {
             String resourcePath =  SmartTestDesignerSuite.getTestDataPath(getClass())+DELIMITER+RESOURCE_FOLDER+DELIMITER+BQT_VDB; 
             IndexSelector selector = helpGetRuntimeSelector2(resourcePath);
 
-            QueryMetadataInterface metadata = helpGetTransformatrionMetadata(selector);
+            IQueryMetadataInterface metadata = helpGetTransformatrionMetadata(selector);
 
             Object elementID = metadata.getElementID("bQT.bQt2.HuGEA.INTKEY"); //$NON-NLS-1$
 
@@ -170,34 +163,11 @@ public class TestServerRuntimeMetadata extends TestCase {
             e.printStackTrace();
             fail(e.getMessage());    
         }
-    }
-
-    public void testGetTempGroupsForDocument() {
-        try {
-            String url = SmartTestDesignerSuite.getTestDataPath(getClass())+DELIMITER+"indexTestFolder/QueryTest2.vdb"; //$NON-NLS-1$
-            IndexSelector selector = helpGetRuntimeSelector1(new File(url).toURI().toURL());
-
-            QueryMetadataInterface metadata = helpGetTransformatrionMetadata(selector);
-
-            Object groupID = metadata.getGroupID("XQTNestedDoc.testBoundTempTable"); //$NON-NLS-1$
-
-            assertNotNull(groupID);
-            assertTrue(groupID instanceof TableRecord);
-
-            TableRecord record = (TableRecord) groupID;
-            
-            Collection tempGroups = metadata.getXMLTempGroups(record);
-            
-            assertEquals(2, tempGroups.size());
-        } catch(Exception e) {
-            e.printStackTrace();
-            fail(e.getMessage());    
-        }
-    }    
+    } 
 
     public void testColumnRecord0() throws Exception {
         try {
-            QueryMetadataInterface metadata = helpGetMetadata(BQT_VDB);
+            IQueryMetadataInterface metadata = helpGetMetadata(BQT_VDB);
             metadata.getElementID(null);
             fail("Expected Arg Check failure"); //$NON-NLS-1$
         } catch(Exception e) {
@@ -205,33 +175,6 @@ public class TestServerRuntimeMetadata extends TestCase {
         }
     }
     
-    public void testGetElementIDsInKey13760() throws Exception {
-        QueryMetadataInterface metadata = helpGetMetadata(QUERY_TEST_VDB);
-        
-        Object groupID = metadata.getGroupID("BQT2.SMALLB"); //$NON-NLS-1$
-
-        Collection ukeys = metadata.getUniqueKeysInGroup(groupID);
-
-        assertNotNull(ukeys);
-        assertEquals(2, ukeys.size());
-        for(final Iterator iter = ukeys.iterator(); iter.hasNext();) {
-            ColumnSetRecord record = (ColumnSetRecord) iter.next();
-            if(record.getFullName().equalsIgnoreCase("BQT2.SMALLB.Pk_SmallB")) { //$NON-NLS-1$
-                Collection elements = metadata.getElementIDsInKey(record);
-                assertNotNull(elements);
-                assertEquals(1, elements.size());
-                ColumnRecord colRecord = (ColumnRecord) elements.iterator().next();
-                assertEquals("BQT2.SMALLB.INTKEY", colRecord.getFullName().toUpperCase()); //$NON-NLS-1$
-            } else if(record.getFullName().equalsIgnoreCase("BQT2.SMALLB.Uk_SmallB")) { //$NON-NLS-1$
-                Collection elements = metadata.getElementIDsInKey(record);
-                assertNotNull(elements);
-                assertEquals(1, elements.size());
-                ColumnRecord colRecord = (ColumnRecord) elements.iterator().next();
-                assertEquals("BQT2.SMALLB.STRINGKEY", colRecord.getFullName().toUpperCase());                 //$NON-NLS-1$
-            }
-        }
-    }
-
     public void testGetGroupID1() throws Exception {
         ServerRuntimeMetadata metadata = helpGetMetadata(QUERY_TEST_VDB);
 
@@ -247,7 +190,7 @@ public class TestServerRuntimeMetadata extends TestCase {
     }    
 
     public void testGetElementID3() throws Exception {
-        QueryMetadataInterface metadata = helpGetMetadata(BQT_VDB);
+        IQueryMetadataInterface metadata = helpGetMetadata(BQT_VDB);
 
         Object elementID = metadata.getElementID("BQT.BQT2.HUGEA.INTKEY"); //$NON-NLS-1$
 
@@ -261,7 +204,7 @@ public class TestServerRuntimeMetadata extends TestCase {
     }
     
     public void testGetElementID4() throws Exception {
-        QueryMetadataInterface metadata = helpGetMetadata(PARTS_VDB);
+        IQueryMetadataInterface metadata = helpGetMetadata(PARTS_VDB);
 
         Object elementID = metadata.getElementID("PartsSupplier.PartsSupplier.Parts.Part_Color"); //$NON-NLS-1$
 
@@ -276,35 +219,26 @@ public class TestServerRuntimeMetadata extends TestCase {
 
     // defect 16920 
 	public void testGetStroredProc16920 () throws Exception {
-		QueryMetadataInterface metadata = helpGetMetadata(SOAP_VDB);
+		IQueryMetadataInterface metadata = helpGetMetadata(SOAP_VDB);
 
 		try {
 		    metadata.getStoredProcedureInfoForProcedure("UPD_ST_ADDR"); //$NON-NLS-1$
-        } catch (QueryMetadataException e) {
+        } catch (Exception e) {
         }// expected exception
 	}
 
-    public void testGetVirtualDatabaseName() throws Exception {
-        QueryMetadataInterface metadata = helpGetMetadata(BQT_VDB);
-
-        String vdbName = metadata.getVirtualDatabaseName();
-
-        assertNotNull(vdbName);
-        assertEquals("BQT", vdbName); //$NON-NLS-1$
-    }
-
     public void testGetVirtualXmlPlan() throws Exception {
-        QueryMetadataInterface metadata = helpGetMetadata(XML_VDB);
+        IQueryMetadataInterface metadata = helpGetMetadata(XML_VDB);
         Object groupID = metadata.getGroupID("BooksDoc.bookSetMixedDocument"); //$NON-NLS-1$
         assertNotNull(groupID);
         assertTrue(groupID instanceof TableRecord);
 
-        QueryNode node = metadata.getVirtualPlan(groupID);
+        Object node = metadata.getVirtualPlan(groupID);
         assertNotNull(node);
     }
 
 //    public void testGetXmlSchemas() throws Exception {
-//        QueryMetadataInterface metadata = helpGetMetadata(XML_VDB);
+//        IQueryMetadataInterface metadata = helpGetMetadata(XML_VDB);
 //        Object groupID = metadata.getGroupID("BooksDoc.bookSetMixedDocument"); //$NON-NLS-1$
 //        assertNotNull(groupID);
 //        assertTrue(groupID instanceof TableRecord);
@@ -314,18 +248,8 @@ public class TestServerRuntimeMetadata extends TestCase {
 //        assertEquals(1, schemas.size());
 //    }
 
-    public void testGetMapping() throws Exception {
-        QueryMetadataInterface metadata = helpGetMetadata(XML_VDB);
-        Object groupID = metadata.getGroupID("BooksDoc.bookSetMixedDocument"); //$NON-NLS-1$
-        assertNotNull(groupID);
-        assertTrue(groupID instanceof TableRecord);
-        MappingNode node = metadata.getMappingNode(groupID);
-        assertNotNull(node);
-        //assertEquals("BQT", vdbName); //$NON-NLS-1$
-    }    
-
     public void testGetGroupsForPartialName() throws Exception {
-        QueryMetadataInterface metadata = helpGetMetadata(BQT_VDB);
+        IQueryMetadataInterface metadata = helpGetMetadata(BQT_VDB);
 
         Collection groups = metadata.getGroupsForPartialName("HUGEA"); //$NON-NLS-1$
 
@@ -335,30 +259,18 @@ public class TestServerRuntimeMetadata extends TestCase {
     }
     
 	public void testExtensions() throws Exception {
-		QueryMetadataInterface metadata = helpGetMetadata(Annotation_VDB);
+		IQueryMetadataInterface metadata = helpGetMetadata(Annotation_VDB);
 
-		StoredProcedureInfo info = metadata.getStoredProcedureInfoForProcedure("smallA.smallA"); //$NON-NLS-1$
+		IStoredProcedureInfo info = metadata.getStoredProcedureInfoForProcedure("smallA.smallA"); //$NON-NLS-1$
 		Object procID = info.getProcedureID();
 		assertNotNull(info.getProcedureID());		
 		Properties props = metadata.getExtensionProperties(procID);
 		assertNotNull(props);
 	}
-
-	public void testNativeType() throws Exception {
-		QueryMetadataInterface metadata = helpGetMetadata(BQT_VDB);
-
-        Object elementID = metadata.getElementID("BQT.BQT2.HUGEA.INTKEY"); //$NON-NLS-1$
-
-        assertNotNull(elementID);
-        assertTrue(elementID instanceof ColumnRecord);
-
-        ColumnRecord record = (ColumnRecord) elementID;
-		assertEquals("NUMBER", metadata.getNativeType(record)); //$NON-NLS-1$
-	}
 	
     public void testColumnRecordWithNullArg() {
         try {
-            QueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
+            IQueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
             metadata.getElementID(null);
             fail("Expected Arg Check failure"); //$NON-NLS-1$
         } catch(Exception e) {
@@ -369,7 +281,7 @@ public class TestServerRuntimeMetadata extends TestCase {
     public void testGetGroupID() {
         System.out.println("\nTestServerRuntimeMetadata.testGetGroupID()"); //$NON-NLS-1$
         try {
-            QueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
+            IQueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
 
             Object groupID = metadata.getGroupID("AuthorsDoc.authorBooksDocument"); //$NON-NLS-1$
             assertNotNull(groupID);
@@ -387,7 +299,7 @@ public class TestServerRuntimeMetadata extends TestCase {
     public void testGetElementIDsForGroupID() {
         System.out.println("\nTestServerRuntimeMetadata.testGetElementIDsForGroupID()"); //$NON-NLS-1$
         try {
-            QueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
+            IQueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
 
             Object groupID = metadata.getGroupID("AuthorsDoc.authorBooksDocument"); //$NON-NLS-1$
             assertNotNull(groupID);
@@ -409,7 +321,7 @@ public class TestServerRuntimeMetadata extends TestCase {
     public void testGetElementIDsForGroupID2() {
         System.out.println("\nTestServerRuntimeMetadata.testGetElementIDsForGroupID2()"); //$NON-NLS-1$
         try {
-            QueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
+            IQueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
 
             Object groupID = metadata.getGroupID("AuthorsDoc.authorsBooksDocument"); //$NON-NLS-1$
             assertNotNull(groupID);
@@ -431,7 +343,7 @@ public class TestServerRuntimeMetadata extends TestCase {
     public void testGetElementIDsForGroupID3() {
         System.out.println("\nTestServerRuntimeMetadata.testGetElementIDsForGroupID3()"); //$NON-NLS-1$
         try {
-            QueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
+            IQueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
 
             Object groupID = metadata.getGroupID("BOOKSO.BOOKS"); //$NON-NLS-1$
             assertNotNull(groupID);
@@ -453,7 +365,7 @@ public class TestServerRuntimeMetadata extends TestCase {
     public void testGetElementIDsForGroupID4() {
         System.out.println("\nTestServerRuntimeMetadata.testGetElementIDsForGroupID4()"); //$NON-NLS-1$
         try {
-            QueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
+            IQueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
 
             Object groupID = metadata.getGroupID("BooksDoc.bookListingDocument"); //$NON-NLS-1$
             assertNotNull(groupID);
@@ -475,7 +387,7 @@ public class TestServerRuntimeMetadata extends TestCase {
     public void testGetElementIDsForGroupID5() {
         System.out.println("\nTestServerRuntimeMetadata.testGetElementIDsForGroupID5()"); //$NON-NLS-1$
         try {
-            QueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
+            IQueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
 
             Object groupID = metadata.getGroupID("BooksDoc.bookSetMixedDocument.MappingClasses.bookSetMixed"); //$NON-NLS-1$
             assertNotNull(groupID);
@@ -498,7 +410,7 @@ public class TestServerRuntimeMetadata extends TestCase {
     public void testGetUniqueKeysInGroup() {
         System.out.println("\nTestServerRuntimeMetadata.testGetUniqueKeysInGroup()"); //$NON-NLS-1$
         try {
-            QueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
+            IQueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
 
             Object groupID = metadata.getGroupID("BOOKSO.BOOK_AUTHORS"); //$NON-NLS-1$
             assertNotNull(groupID);
@@ -506,27 +418,6 @@ public class TestServerRuntimeMetadata extends TestCase {
             
             Collection records = metadata.getUniqueKeysInGroup(groupID);
             assertEquals(1,records.size());
-            helpPrintResult(records);
-        } catch(Exception e) {
-            e.printStackTrace();
-            fail(e.getMessage());    
-        }
-    }
-
-    public void testGetElementIDsInKey() {
-        System.out.println("\nTestServerRuntimeMetadata.testGetElementIDsInKey()"); //$NON-NLS-1$
-        try {
-            QueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
-
-            Object groupID = metadata.getGroupID("BOOKSO.BOOK_AUTHORS"); //$NON-NLS-1$
-            assertNotNull(groupID);
-            assertTrue(groupID instanceof TableRecord);
-            
-            Collection records = metadata.getUniqueKeysInGroup(groupID);
-            assertEquals(1,records.size());
-            MetadataRecord record = (MetadataRecord)records.iterator().next();
-            records = metadata.getElementIDsInKey(record);
-            assertEquals(2,records.size());
             helpPrintResult(records);
         } catch(Exception e) {
             e.printStackTrace();
@@ -537,7 +428,7 @@ public class TestServerRuntimeMetadata extends TestCase {
     public void testGetForeignKeysInGroup() {
         System.out.println("\nTestServerRuntimeMetadata.testGetForeignKeysInGroup()"); //$NON-NLS-1$
         try {
-            QueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
+            IQueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
 
             Object groupID = metadata.getGroupID("BOOKSO.BOOK_AUTHORS"); //$NON-NLS-1$
             assertNotNull(groupID);
@@ -555,7 +446,7 @@ public class TestServerRuntimeMetadata extends TestCase {
     public void testGetPrimaryKeyIDForForeignKeyID() {
         System.out.println("\nTestServerRuntimeMetadata.testGetPrimaryKeyIDForForeignKeyID()"); //$NON-NLS-1$
         try {
-            QueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
+            IQueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
 
             Object groupID = metadata.getGroupID("BOOKSO.BOOK_AUTHORS"); //$NON-NLS-1$
             assertNotNull(groupID);
@@ -580,13 +471,13 @@ public class TestServerRuntimeMetadata extends TestCase {
     public void testGetVirtualPlan() {
         System.out.println("\nTestServerRuntimeMetadata.testGetVirtualPlan()"); //$NON-NLS-1$
         try {
-            QueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
+            IQueryMetadataInterface metadata = helpGetMetadata(BOOKS_VDB);
 
             Object groupID = metadata.getGroupID("BOOKSR.LIBRARY"); //$NON-NLS-1$
             assertNotNull(groupID);
             assertTrue(groupID instanceof TableRecord);
             
-            QueryNode result = metadata.getVirtualPlan(groupID);
+            Object result = metadata.getVirtualPlan(groupID);
             assertNotNull(result);
             System.out.println(result);
         } catch(Exception e) {
@@ -598,7 +489,7 @@ public class TestServerRuntimeMetadata extends TestCase {
 	public void testGetInsertPlan() {
 		System.out.println("\nTestServerRuntimeMetadata.testGetVirtualPlan()"); //$NON-NLS-1$
 		try {
-			QueryMetadataInterface metadata = helpGetMetadata(TXN_VDB);
+			IQueryMetadataInterface metadata = helpGetMetadata(TXN_VDB);
 
 			Object groupID = metadata.getGroupID("TxnTestVirtual.PartTxn"); //$NON-NLS-1$
 			assertNotNull(groupID);
@@ -613,42 +504,8 @@ public class TestServerRuntimeMetadata extends TestCase {
 		}
 	}
     
-    public void testGetVDBResourcePaths() {
-        System.out.println("\nTestServerRuntimeMetadata.testGetVDBResourcePaths()"); //$NON-NLS-1$
-        try {
-            QueryMetadataInterface metadata = helpGetMetadata(PARTS_VDB, BQT_VDB);
-            String[] paths = metadata.getVDBResourcePaths();
-            assertNotNull(paths);
-            assertEquals(18, paths.length);
-        } catch(Exception e) {
-            fail(e.getMessage());    
-        }
-    }
-
-    public void testGetCharacterVDBResource() {
-        System.out.println("\nTestServerRuntimeMetadata.testGetCharacterVDBResource()"); //$NON-NLS-1$
-        try {
-            QueryMetadataInterface metadata = helpGetMetadata(PARTS_VDB, BQT_VDB);
-            String contents = metadata.getCharacterVDBResource("/PartsPrj/PartsSupplier.xmi"); //$NON-NLS-1$
-            assertNotNull(contents);
-        } catch(Exception e) {
-            fail(e.getMessage());    
-        }        
-    }
-
-    public void testGetBinaryVDBResource() {
-        System.out.println("\nTestServerRuntimeMetadata.testGetBinaryVDBResource()"); //$NON-NLS-1$
-        try {
-            QueryMetadataInterface metadata = helpGetMetadata(PARTS_VDB, BQT_VDB);
-            byte[] contents = metadata.getBinaryVDBResource("/PartsPrj/PartsSupplier.xmi"); //$NON-NLS-1$
-            assertNotNull(contents);
-        } catch(Exception e) {
-            fail(e.getMessage());    
-        }        
-    }
-
     public void testXMLResultSetColumnPosition() throws Exception{
-        QueryMetadataInterface metadata = helpGetMetadata(BOOKS_SERVICE_VDB);      
+        IQueryMetadataInterface metadata = helpGetMetadata(BOOKS_SERVICE_VDB);      
         Object elementID1 = metadata.getElementID("BooksWebService.Books.getBookCollection.getBookCollectionOutput.Message Samples"); //$NON-NLS-1$
         assertNotNull(elementID1);
         assertTrue(elementID1 instanceof ColumnRecord);

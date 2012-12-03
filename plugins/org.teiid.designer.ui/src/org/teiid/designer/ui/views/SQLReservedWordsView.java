@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.FilteredList;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.sql.IQueryService;
+import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.ui.UiConstants;
 
 /**

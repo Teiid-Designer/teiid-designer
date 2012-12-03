@@ -42,6 +42,9 @@ public interface DisplayNodeConstants {
     public static final String UNDEFINED = "<undefined>"; //$NON-NLS-1$
     public static final String EXEC = "EXEC"; //$NON-NLS-1$
     public static final String NAME = "NAME"; //$NON-NLS-1$
+    public static final char ID_ESCAPE_CHAR = '\"';
+    public static final String BEGIN_HINT = "/*+"; //$NON-NLS-1$
+    public static final String END_HINT = "*/"; //$NON-NLS-1$
 
 	// Node Type Identifiers
     public static final int ELEMENT = 0;

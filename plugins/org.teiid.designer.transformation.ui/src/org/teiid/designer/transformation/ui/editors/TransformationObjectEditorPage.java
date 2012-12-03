@@ -73,6 +73,9 @@ import org.teiid.designer.metamodels.transformation.InputSet;
 import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.metamodels.transformation.SqlTransformation;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IQueryCommand;
+import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
@@ -109,9 +112,6 @@ import org.teiid.designer.ui.undo.IUndoManager;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.StatusBarUpdater;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.QueryCommand;
-import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.ui.builder.util.ElementViewerFactory;
 
 
@@ -979,9 +979,9 @@ public class TransformationObjectEditorPage
             
             // If the command is a SetQuery (UNION), update the reconciled status on the editorPanel
             // Go ahead and check the command regardless if it's resolved or not.
-            Command newCommand = TransformationHelper.getCommand(currentMappingRoot, cmdType);
-            if (newCommand instanceof SetQuery) {
-                updateEditorSetQueryStates((SetQuery)newCommand);
+            ICommand newCommand = TransformationHelper.getCommand(currentMappingRoot, cmdType);
+            if (newCommand instanceof ISetQuery) {
+                updateEditorSetQueryStates((ISetQuery)newCommand);
             }
 
             // Update the external groups for SqlEditor Builder tree
@@ -2441,12 +2441,12 @@ public class TransformationObjectEditorPage
      * 
      * @param unionQuery the SetQuery
      */
-    private void updateEditorSetQueryStates( SetQuery unionQuery ) {
+    private void updateEditorSetQueryStates( ISetQuery unionQuery ) {
         List queries = SetQueryUtil.getQueryList(unionQuery);
         int nQueries = queries.size();
         List reconciledList = new ArrayList(nQueries);
         for (int i = 0; i < nQueries; i++) {
-            QueryCommand qCommand = (QueryCommand)queries.get(i);
+            IQueryCommand qCommand = (IQueryCommand)queries.get(i);
             boolean nameMatchReqd = false;
             if (i == 0) {
                 nameMatchReqd = true;
@@ -2705,7 +2705,7 @@ public class TransformationObjectEditorPage
      * @param eventType the EventType received
      * @param eventSource the source of the event
      */
-    private void handleSqlEditorCommandEvent( final Command command,
+    private void handleSqlEditorCommandEvent( final ICommand command,
     										  final String sqlString,
                                               int eventType,
                                               Object eventSource ) {
@@ -2739,9 +2739,9 @@ public class TransformationObjectEditorPage
 
         // If the command is a SetQuery (UNION), update the reconciled status on the editorPanel
         // Go ahead and check the command regardless if it's resolved or not.
-        Command newCommand = TransformationHelper.getCommand(currentMappingRoot, cmdType);
-        if (newCommand instanceof SetQuery) {
-            updateEditorSetQueryStates((SetQuery)newCommand);
+        ICommand newCommand = TransformationHelper.getCommand(currentMappingRoot, cmdType);
+        if (newCommand instanceof ISetQuery) {
+            updateEditorSetQueryStates((ISetQuery)newCommand);
         }
 
         // Set editor message area
@@ -2968,7 +2968,7 @@ public class TransformationObjectEditorPage
                 // Add Query Output Status (if invalid)
                 if (!targetAndSQLOutSizesOK) {
                     if (cmdType == QueryValidator.SELECT_TRNS) {
-                        Command cmd = TransformationHelper.getCommand(currentMappingRoot, cmdType);
+                        ICommand cmd = TransformationHelper.getCommand(currentMappingRoot, cmdType);
                         if (cmd.getProjectedSymbols().size() == 0) {
                             buff.append("\n" + QUERY_SIZE_MISMATCH_NO_PROJECTED_SYMBOLS_MSG); //$NON-NLS-1$
                         } else {

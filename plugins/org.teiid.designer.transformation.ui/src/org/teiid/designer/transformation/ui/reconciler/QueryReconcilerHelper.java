@@ -19,6 +19,9 @@ import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.query.SetQueryUtil;
 import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IQueryCommand;
+import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.util.AttributeMappingHelper;
@@ -26,9 +29,6 @@ import org.teiid.designer.transformation.util.SqlMappingRootCache;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.util.TransformationMappingHelper;
 import org.teiid.designer.transformation.validation.TransformationValidator;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.QueryCommand;
-import org.teiid.query.sql.lang.SetQuery;
 
 /**
  * Reconciler Helper that the Reconciler Panel works with
@@ -76,11 +76,11 @@ public class QueryReconcilerHelper  {
     private void init(SqlTransformationMappingRoot mappingRoot,int unionQuerySegment) {
         if(mappingRoot!=null) {
             // Get the transformation SELECT command
-            Command originalCommand = SqlMappingRootCache.getSelectCommand(mappingRoot);
+            ICommand originalCommand = SqlMappingRootCache.getSelectCommand(mappingRoot);
             
-            if(originalCommand instanceof SetQuery && unionQuerySegment!=-1) {
-                List queries = SetQueryUtil.getQueryList((SetQuery)originalCommand);
-                originalCommand = (Command)queries.get(unionQuerySegment);
+            if(originalCommand instanceof ISetQuery && unionQuerySegment!=-1) {
+                List queries = SetQueryUtil.getQueryList((ISetQuery)originalCommand);
+                originalCommand = (ICommand)queries.get(unionQuerySegment);
                 // If command is not resolved, attempt to resolve it.
                 if(!originalCommand.isResolved()) {
                     QueryValidator validator = new TransformationValidator(mappingRoot);
@@ -273,13 +273,13 @@ public class QueryReconcilerHelper  {
             String newSegmentSql = this.reconcilerObject.getModifiedSql();
             QueryValidator validator = new TransformationValidator(this.transMappingRoot);
             QueryValidationResult result = validator.validateSql(newSegmentSql, QueryValidator.SELECT_TRNS, false);
-            QueryCommand newSegmentCommand = null;
+            IQueryCommand newSegmentCommand = null;
             if(result.isParsable()) {
-                newSegmentCommand = (QueryCommand)result.getCommand();
+                newSegmentCommand = (IQueryCommand)result.getCommand();
             }
-            Command command = SqlMappingRootCache.getSelectCommand(this.transMappingRoot);
-            if(command!=null && command instanceof SetQuery) {
-                SetQuery unionQuery = (SetQuery)command.clone();
+            ICommand command = SqlMappingRootCache.getSelectCommand(this.transMappingRoot);
+            if(command!=null && command instanceof ISetQuery) {
+                ISetQuery unionQuery = (ISetQuery)command.clone();
                 SetQueryUtil.setQueryAtIndex(unionQuery, uIndex, newSegmentCommand);
                 String newUnionSql = unionQuery.toString();
                 TransformationHelper.setSelectSqlString(this.transMappingRoot,newUnionSql,true,txnSource);

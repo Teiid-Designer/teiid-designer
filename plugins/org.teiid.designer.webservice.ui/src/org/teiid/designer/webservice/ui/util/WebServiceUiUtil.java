@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.xsd.XSDElementDeclaration;
-import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.query.QueryValidator;
@@ -42,6 +42,15 @@ import org.teiid.designer.metamodels.webservice.Interface;
 import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.metamodels.webservice.Output;
 import org.teiid.designer.metamodels.xml.XmlDocument;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.proc.IAssignmentStatement;
+import org.teiid.designer.query.sql.proc.IBlock;
+import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
+import org.teiid.designer.query.sql.proc.IDeclareStatement;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.util.TransformationSqlHelper;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -52,15 +61,6 @@ import org.teiid.designer.webservice.procedure.XsdInstanceNode;
 import org.teiid.designer.webservice.ui.IInternalUiConstants;
 import org.teiid.designer.webservice.ui.WebServiceUiPlugin;
 import org.teiid.designer.webservice.util.WebServiceUtil;
-import org.teiid.query.sql.proc.AssignmentStatement;
-import org.teiid.query.sql.proc.Block;
-import org.teiid.query.sql.proc.CommandStatement;
-import org.teiid.query.sql.proc.CreateProcedureCommand;
-import org.teiid.query.sql.proc.DeclareStatement;
-import org.teiid.query.sql.symbol.Constant;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.Function;
 
 /**
  * @since 8.0
@@ -95,13 +95,13 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
     // Static Methods
 
     private static void addVariableStatements( XsdInstanceNode node,
-                                               Block block,
+                                               IBlock block,
                                                Input input,
                                                List nodes,
                                                List variables ) {
         if (node.isSelectable()) {
             nodes.add(node);
-            DeclareStatement declaration = WebServiceUiUtil.createDeclareStatement(node, input);
+            IDeclareStatement declaration = createDeclareStatement(node, input);
             variables.add(declaration.getVariable());
             block.getStatements().add(0, declaration);
         }
@@ -135,14 +135,24 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
      * @return
      * @since 5.0.1
      */
-    public static DeclareStatement createDeclareStatement( XsdInstanceNode node,
+    public static IDeclareStatement createDeclareStatement( XsdInstanceNode node,
                                                            Input input ) {
+        
+        IQueryService service = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = service.createQueryFactory();
+        
         String name = AspectManager.getSqlAspect(input).getFullName(input);
 
-        DeclareStatement statement = new DeclareStatement(new ElementSymbol(getQualifiedInputVariableName(node.getName())),
+        IDeclareStatement statement = factory.createDeclareStatement(
+                                                          factory.createElementSymbol(getQualifiedInputVariableName(node.getName())),
                                                           DatatypeConstants.RuntimeTypeNames.STRING);
-        statement.setValue(new Function(WebServiceUtil.XPATHVALUE, new Expression[] {new ElementSymbol(name),
-            new Constant(WebServiceUtil.createXPath(node))}));
+        
+        IFunction function = factory.createFunction(WebServiceUtil.XPATHVALUE, 
+                                                               new IExpression[] {
+                                                                            factory.createElementSymbol(name),
+                                                                            factory.createConstant(WebServiceUtil.createXPath(node))
+                                                                            });
+        statement.setValue(function);
 
         return statement;
     }
@@ -167,12 +177,12 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
      */
     public static void ensureVariablesUnique( Map nodesToDeclarations ) {
         XsdInstanceNode[] nodes = new XsdInstanceNode[nodesToDeclarations.size()];
-        ElementSymbol[] vars = new ElementSymbol[nodes.length];
+        IElementSymbol[] vars = new IElementSymbol[nodes.length];
         Iterator iter = nodesToDeclarations.entrySet().iterator();
         for (int ndx = 0; iter.hasNext(); ++ndx) {
             Entry entry = (Entry)iter.next();
             nodes[ndx] = (XsdInstanceNode)entry.getKey();
-            vars[ndx] = ((DeclareStatement)entry.getValue()).getVariable();
+            vars[ndx] = ((IDeclareStatement)entry.getValue()).getVariable();
         } // for
         WebServiceUiUtil.ensureVariablesUnique(nodes, vars);
     }
@@ -189,12 +199,12 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
      * @since 5.0.1
      */
     public static void ensureVariablesUnique( XsdInstanceNode[] nodes,
-                                              ElementSymbol[] variables ) {
+                                              IElementSymbol[] variables ) {
         for (int ndx1 = variables.length; --ndx1 > 0;) {
-            ElementSymbol var1 = variables[ndx1];
+            IElementSymbol var1 = variables[ndx1];
             String name1 = var1.getShortName();
             for (int ndx2 = ndx1; --ndx2 >= 0;) {
-                ElementSymbol var2 = variables[ndx2];
+                IElementSymbol var2 = variables[ndx2];
                 if (name1.equalsIgnoreCase(var2.getShortName())) {
                     XsdInstanceNode node1 = nodes[ndx1];
                     XsdInstanceNode node2 = nodes[ndx2];
@@ -413,37 +423,41 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
                                             Object transactionSource,
                                             boolean replace ) {
         SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(operation);
-        CreateProcedureCommand proc = null;
+        ICreateProcedureCommand proc = null;
         if (!TransformationHelper.isEmptySelect(root)) {
-            proc = (CreateProcedureCommand)TransformationHelper.getCommand(root, QueryValidator.SELECT_TRNS);
+            proc = (ICreateProcedureCommand)TransformationHelper.getCommand(root, QueryValidator.SELECT_TRNS);
         }
         boolean initVar = true;
         boolean initSelect = true;
+        
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+        
         if (proc == null) {
             String sqlString = TransformationHelper.getSelectSqlString(root);
             if (sqlString != null && sqlString.length() > 0) {
                 initVar = false;
                 initSelect = false;
             } else {
-                proc = new CreateProcedureCommand(new Block());
+                proc = factory.createCreateProcedureCommand(factory.createBlock());
             }
         } else {
-            Block block = proc.getBlock();
+            IBlock block = proc.getBlock();
             if (block == null) {
-                proc.setBlock(new Block());
+                proc.setBlock(factory.createBlock());
             } else {
                 for (Iterator statementIter = block.getStatements().iterator(); statementIter.hasNext();) {
                     Object statement = statementIter.next();
-                    if (statement instanceof DeclareStatement) {
+                    if (statement instanceof IDeclareStatement) {
                         if (replace
-                            && ((DeclareStatement)statement).getVariable().getName().startsWith(WebServiceUtil.INPUT_VARIABLE_PREFIX)) {
+                            && ((IDeclareStatement)statement).getVariable().getName().startsWith(WebServiceUtil.INPUT_VARIABLE_PREFIX)) {
                             statementIter.remove();
                         } else {
                             initVar = false;
                         }
-                    } else if (statement instanceof AssignmentStatement) {
+                    } else if (statement instanceof IAssignmentStatement) {
                         if (replace
-                            && ((AssignmentStatement)statement).getVariable().getName().startsWith(WebServiceUtil.INPUT_VARIABLE_PREFIX)) {
+                            && ((IAssignmentStatement)statement).getVariable().getName().startsWith(WebServiceUtil.INPUT_VARIABLE_PREFIX)) {
                             statementIter.remove();
                         } else {
                             initVar = false;
@@ -467,7 +481,7 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
                     List vars = new ArrayList();
                     addVariableStatements(new XsdInstanceNode(elem), proc.getBlock(), input, nodes, vars);
                     WebServiceUiUtil.ensureVariablesUnique((XsdInstanceNode[])nodes.toArray(new XsdInstanceNode[nodes.size()]),
-                                                           (ElementSymbol[])vars.toArray(new ElementSymbol[vars.size()]));
+                                                           (IElementSymbol[])vars.toArray(new IElementSymbol[vars.size()]));
                 }
             }
         }
@@ -476,7 +490,7 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
             if (output != null) {
                 XmlDocument doc = output.getXmlDocument();
                 if (doc != null) {
-                    proc.getBlock().addStatement(new CommandStatement(TransformationSqlHelper.createDefaultQuery(doc)));
+                    proc.getBlock().addStatement(factory.createCommandStatement(TransformationSqlHelper.createDefaultQuery(doc)));
                 }
             }
         }
@@ -632,8 +646,8 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
         return ModelUtil.isXsdFile(theFile);
     }
 
-    private static boolean prefixAncestorNamesUntilUnique( ElementSymbol var1,
-                                                           ElementSymbol var2,
+    private static boolean prefixAncestorNamesUntilUnique( IElementSymbol var1,
+                                                           IElementSymbol var2,
                                                            XsdInstanceNode node1,
                                                            XsdInstanceNode node2 ) {
         String name1 = var1.getShortName();
@@ -657,8 +671,8 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
         return false;
     }
 
-    private static void prefixNamespaceSegmentsUntilUnique( ElementSymbol var1,
-                                                            ElementSymbol var2,
+    private static void prefixNamespaceSegmentsUntilUnique( IElementSymbol var1,
+                                                            IElementSymbol var2,
                                                             String namespace1,
                                                             String namespace2 ) {
         String name1 = var1.getShortName();

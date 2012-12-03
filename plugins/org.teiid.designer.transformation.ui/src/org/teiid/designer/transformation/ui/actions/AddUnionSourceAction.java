@@ -14,11 +14,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
-
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.diagram.ui.editor.DiagramToolBarManager;
 import org.teiid.designer.metamodels.diagram.Diagram;
+import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.editors.TransformationObjectEditorPage;
@@ -29,7 +29,6 @@ import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelObjectEditorPage;
 import org.teiid.designer.ui.editors.MultiPageModelEditor;
 import org.teiid.designer.ui.undo.ModelerUndoManager;
-import org.teiid.query.sql.lang.SetQuery;
 
 /**
  * AddUnionSourceAction
@@ -171,7 +170,7 @@ public class AddUnionSourceAction extends TransformationAction {
         boolean unionAll = true;
         EObject transMappingRoot = getTransformation();
         if(TransformationHelper.isParsableSetQuery(transMappingRoot)) {
-            SetQuery setQuery = (SetQuery)TransformationHelper.getCommand(transMappingRoot, QueryValidator.SELECT_TRNS);
+            ISetQuery setQuery = (ISetQuery)TransformationHelper.getCommand(transMappingRoot, QueryValidator.SELECT_TRNS);
             return setQuery.isAll();
         }
         return unionAll;

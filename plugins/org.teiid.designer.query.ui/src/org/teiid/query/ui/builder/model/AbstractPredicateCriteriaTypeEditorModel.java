@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.builder.model;
 
-import org.teiid.query.sql.symbol.Expression;
+import org.teiid.designer.query.sql.lang.IExpression;
 
 /**
  * AbstractPredicateCriteriaTypeEditorModel
@@ -25,11 +25,11 @@ public abstract class AbstractPredicateCriteriaTypeEditorModel extends AbstractL
 	
 	public abstract void setCurrentOperator(String op);
     
-    public abstract Expression getLeftExpression();
+    public abstract IExpression getLeftExpression();
     
-    public abstract void setLeftExpression(Expression exp);
+    public abstract void setLeftExpression(IExpression exp);
 
-	public abstract Expression getRightExpression();
+	public abstract IExpression getRightExpression();
 	
-	public abstract void setRightExpression(Expression exp);
+	public abstract void setRightExpression(IExpression exp);
 }

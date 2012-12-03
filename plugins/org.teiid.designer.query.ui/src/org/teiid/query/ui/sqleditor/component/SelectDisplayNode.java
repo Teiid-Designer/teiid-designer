@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.sqleditor.component;
 
-import org.teiid.query.sql.lang.Select;
+import org.teiid.designer.query.sql.lang.ISelect;
 
 /**
  * The <code>SelectDisplayNode</code> class is used to represent a Query's SELECT clause.
@@ -27,7 +27,7 @@ public class SelectDisplayNode extends DisplayNode {
      * @param select the query language object used to construct this display node.
      */
     public SelectDisplayNode( DisplayNode parentNode,
-                              Select select ) {
+                              ISelect select ) {
         this.parentNode = parentNode;
         this.languageObject = select;
     }

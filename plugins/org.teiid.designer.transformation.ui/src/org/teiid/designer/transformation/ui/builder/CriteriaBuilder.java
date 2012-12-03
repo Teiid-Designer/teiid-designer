@@ -12,17 +12,16 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.query.sql.lang.ICompoundCriteria;
+import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.lang.INotCriteria;
+import org.teiid.designer.query.sql.lang.IPredicateCriteria;
 import org.teiid.designer.transformation.ui.builder.actions.AndCriteriaAction;
 import org.teiid.designer.transformation.ui.builder.actions.NotCriteriaAction;
 import org.teiid.designer.transformation.ui.builder.actions.OrCriteriaAction;
 import org.teiid.designer.transformation.ui.builder.criteria.CriteriaEditor;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.CompoundCriteria;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.NotCriteria;
-import org.teiid.query.sql.lang.PredicateCriteria;
 import org.teiid.query.ui.builder.model.CriteriaEditorModel;
 
 /**
@@ -131,11 +130,11 @@ public class CriteriaBuilder extends AbstractLanguageObjectBuilder {
      * @see org.teiid.designer.transformation.ui.builder.AbstractLanguageObjectBuilder#setEditorLanguageObject(org.teiid.query.sql.LanguageObject)
      */
     @Override
-    protected void setEditorLanguageObject( LanguageObject theEditorLangObj ) {
-        if (theEditorLangObj instanceof CompoundCriteria) {
+    protected void setEditorLanguageObject( ILanguageObject theEditorLangObj ) {
+        if (theEditorLangObj instanceof ICompoundCriteria) {
             getEditor().clear();
-        } else if (theEditorLangObj instanceof NotCriteria) {
-            setEditorLanguageObject(((NotCriteria)theEditorLangObj).getCriteria());
+        } else if (theEditorLangObj instanceof INotCriteria) {
+            setEditorLanguageObject(((INotCriteria)theEditorLangObj).getCriteria());
         } else {
             getEditor().setLanguageObject(theEditorLangObj);
         }
@@ -151,10 +150,10 @@ public class CriteriaBuilder extends AbstractLanguageObjectBuilder {
         Object selectedObj = getTreeViewer().getSelectedObject();
 
         // use the object currently in the editor
-        setEnabledStatus((selectedObj instanceof LanguageObject) ? (LanguageObject)selectedObj : null);
+        setEnabledStatus((selectedObj instanceof ILanguageObject) ? (ILanguageObject)selectedObj : null);
     }
 
-    private void setEnabledStatus( LanguageObject theLangObj ) {
+    private void setEnabledStatus( ILanguageObject theLangObj ) {
         if (getTreeViewer().isUndefined(theLangObj)) {
             andAction.setEnabled(false);
             orAction.setEnabled(false);
@@ -164,17 +163,17 @@ public class CriteriaBuilder extends AbstractLanguageObjectBuilder {
         } else {
             boolean enableEditor = true;
 
-            if (theLangObj instanceof PredicateCriteria) {
+            if (theLangObj instanceof IPredicateCriteria) {
                 andAction.setEnabled(true);
                 orAction.setEnabled(true);
                 notAction.setEnabled(true);
-            } else if (theLangObj instanceof CompoundCriteria) {
+            } else if (theLangObj instanceof ICompoundCriteria) {
                 // if an undefined node already exists don't allow another one
-                CompoundCriteria crit = (CompoundCriteria)theLangObj;
+                ICompoundCriteria crit = (ICompoundCriteria)theLangObj;
                 notAction.setEnabled(true);
 
                 if (!getTreeViewer().hasUndefinedChild(theLangObj)) {
-                    if (crit.getOperator() == CompoundCriteria.AND) {
+                    if (crit.getOperator() == ICompoundCriteria.LogicalOperator.AND) {
                         andAction.setEnabled(true);
                         orAction.setEnabled(false);
                     } else {
@@ -188,9 +187,9 @@ public class CriteriaBuilder extends AbstractLanguageObjectBuilder {
 
                 // editor.clear();
                 enableEditor = false;
-            } else if (theLangObj instanceof NotCriteria) {
-                NotCriteria notCrit = (NotCriteria)theLangObj;
-                Criteria subCrit = notCrit.getCriteria();
+            } else if (theLangObj instanceof INotCriteria) {
+                INotCriteria notCrit = (INotCriteria)theLangObj;
+                ICriteria subCrit = notCrit.getCriteria();
                 setEnabledStatus(subCrit);
                 return;
             } else {

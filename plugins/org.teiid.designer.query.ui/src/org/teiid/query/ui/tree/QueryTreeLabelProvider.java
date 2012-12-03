@@ -10,16 +10,16 @@ package org.teiid.query.ui.tree;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.From;
-import org.teiid.query.sql.lang.JoinPredicate;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.SetQuery;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.ExpressionSymbol;
-import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.IFrom;
+import org.teiid.designer.query.sql.lang.IJoinPredicate;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.query.sql.lang.ISetQuery;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.symbol.IExpressionSymbol;
+import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.query.ui.UiConstants;
 import org.teiid.query.ui.UiPlugin;
 import org.teiid.query.ui.builder.util.ElementViewerFactory;
@@ -85,9 +85,9 @@ public class QueryTreeLabelProvider implements ILabelProvider, UiConstants {
     @Override
 	public Image getImage(Object element) {
         
-        if ( element instanceof LanguageObject ) {
-            if ( element instanceof SetQuery ) {
-                switch ( ((SetQuery) element).getOperation() ) {
+        if ( element instanceof ILanguageObject ) {
+            if ( element instanceof ISetQuery ) {
+                switch ( ((ISetQuery) element).getOperation() ) {
                     case INTERSECT:
                         return null; //INTERSECT_ICON;
                     case EXCEPT:
@@ -96,21 +96,21 @@ public class QueryTreeLabelProvider implements ILabelProvider, UiConstants {
                     default:
                         return UNION_ICON;
                 }
-            } else if ( element instanceof Query ) {
+            } else if ( element instanceof IQuery ) {
                 return SELECT_ICON;
-            } else if ( element instanceof Criteria ) {
+            } else if ( element instanceof ICriteria ) {
                 return WHERE_ICON;
-            } else if ( element instanceof From ) {
+            } else if ( element instanceof IFrom ) {
                 return FROM_ICON;
-            } else if ( element instanceof JoinPredicate ) {
+            } else if ( element instanceof IJoinPredicate ) {
                 return JOIN_ICON;
-            } else if ( element instanceof Expression ) {
-                if ( element instanceof ExpressionSymbol) {
+            } else if ( element instanceof IExpression ) {
+                if ( element instanceof IExpressionSymbol) {
                     return EXPRESSION_ICON;
                 }
-                return ( delegate == null ? null : delegate.getImage(((ElementSymbol) element).getMetadataID()) );
-            } else if ( element instanceof GroupSymbol ) {
-                Object id = ((GroupSymbol) element).getMetadataID();
+                return ( delegate == null ? null : delegate.getImage(((IElementSymbol) element).getMetadataID()) );
+            } else if ( element instanceof IGroupSymbol ) {
+                Object id = ((IGroupSymbol) element).getMetadataID();
                 if ( id != null ) {
                     return ( delegate == null ? null : delegate.getImage(id) );
                 }
@@ -129,14 +129,14 @@ public class QueryTreeLabelProvider implements ILabelProvider, UiConstants {
      */
     @Override
 	public String getText(Object element) {
-        if ( element instanceof LanguageObject ) {
-            if ( element instanceof SetQuery ) {
+        if ( element instanceof ILanguageObject ) {
+            if ( element instanceof ISetQuery ) {
                 return UNION;
-            } else if ( element instanceof Query ) {
-                return ((Query) element).getSelect().toString();
-            } else if ( element instanceof From ) {
+            } else if ( element instanceof IQuery ) {
+                return ((IQuery) element).getSelect().toString();
+            } else if ( element instanceof IFrom ) {
                 return FROM;
-            } else if ( element instanceof Criteria ) {
+            } else if ( element instanceof ICriteria ) {
                 return WHERE + ' ' + element.toString();
             }
             return element.toString(); 

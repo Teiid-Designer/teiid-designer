@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.sqleditor.component;
 
-import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
 
 /**
  * The <code>ElementSymbolDisplayNode</code> class is used to represent an ElemenSymbol.
@@ -23,10 +23,10 @@ public class ElementSymbolDisplayNode extends DisplayNode {
      * ElementSymbolDisplayNode constructor
      * 
      * @param parentNode the parent DisplayNode of this.
-     * @param eSymbol the ElementSymbol language object used to construct this display node.
+     * @param eSymbol the IElementSymbol language object used to construct this display node.
      */
     public ElementSymbolDisplayNode( DisplayNode parentNode,
-                                     ElementSymbol eSymbol ) {
+                                     IElementSymbol eSymbol ) {
         this.parentNode = parentNode;
         this.languageObject = eSymbol;
     }
@@ -58,7 +58,7 @@ public class ElementSymbolDisplayNode extends DisplayNode {
      */
     @Override
     public String toString() {
-        ElementSymbol symbol = (ElementSymbol)this.languageObject;
+        IElementSymbol symbol = (IElementSymbol)this.languageObject;
         return symbol.toString();
     }
 }

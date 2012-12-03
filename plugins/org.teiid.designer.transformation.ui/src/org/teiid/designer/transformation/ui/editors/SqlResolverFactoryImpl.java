@@ -8,10 +8,9 @@
 package org.teiid.designer.transformation.ui.editors;
 
 import org.eclipse.emf.ecore.EObject;
-
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.transformation.metadata.TransformationMetadataFactory;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlResolverFactory;
-import org.teiid.query.metadata.QueryMetadataInterface;
 
 /**
  * SqlResolverFactoryImpl
@@ -21,7 +20,7 @@ import org.teiid.query.metadata.QueryMetadataInterface;
 public class SqlResolverFactoryImpl implements SqlResolverFactory {
     
     private EObject eObj;
-    private QueryMetadataInterface metadata;
+    private IQueryMetadataInterface metadata;
     
     @Override
 	public void setCurrentEObject(EObject eObject) {
@@ -30,7 +29,7 @@ public class SqlResolverFactoryImpl implements SqlResolverFactory {
     }
     
     @Override
-	public QueryMetadataInterface getQueryMetadata() {
+	public IQueryMetadataInterface getQueryMetadata() {
     	if(metadata == null) {
     		metadata = TransformationMetadataFactory.getInstance().getModelerMetadata(this.eObj); 
     	}

@@ -13,9 +13,8 @@ import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.query.sql.LanguageObject;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.query.ui.builder.model.CompositeLanguageObjectEditorModel;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModel;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener;
@@ -199,7 +198,7 @@ public abstract class AbstractCompositeLanguageObjectEditor extends AbstractLang
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#setLanguageObject(org.teiid.query.sql.LanguageObject)
      */
     @Override
-    public void setLanguageObject( LanguageObject theLanguageObject ) {
+    public void setLanguageObject( ILanguageObject theLanguageObject ) {
         getModel().setLanguageObject(theLanguageObject);
     }
 

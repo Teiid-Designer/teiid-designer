@@ -14,27 +14,29 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.widgets.Shell;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.transformation.SqlAlias;
 import org.teiid.designer.metamodels.transformation.TransformationFactory;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.IElementCollectorVisitor;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.query.sql.lang.IQueryCommand;
+import org.teiid.designer.query.sql.lang.ISPParameter;
+import org.teiid.designer.query.sql.lang.ISelect;
+import org.teiid.designer.query.sql.lang.ISetQuery;
+import org.teiid.designer.query.sql.symbol.IAliasSymbol;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.util.TransformationSqlHelper;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.QueryCommand;
-import org.teiid.query.sql.lang.SPParameter;
-import org.teiid.query.sql.lang.Select;
-import org.teiid.query.sql.lang.SetQuery;
-import org.teiid.query.sql.symbol.AliasSymbol;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 
 /**
  * Reconciler Business Object that the Reconciler Panel works with
@@ -59,10 +61,10 @@ public class ReconcilerObject {
     private BindingList bindingList = new BindingList();
     private SqlList sqlList = new SqlList();
 
-    private Command originalCommand = null;
+    private ICommand originalCommand = null;
     private List originalSymbols = new ArrayList();
     private List originalInputParamSymbols = new ArrayList();
-    private QueryCommand modifiedCommand = null;
+    private IQueryCommand modifiedCommand = null;
 
     private boolean sqlModifiable = true; // mdTODO: should be false when not a QueryCommand
     private boolean isSelectDistinct = false;
@@ -76,7 +78,7 @@ public class ReconcilerObject {
      * @param transformationObj the TransformationMappingRoot this is based on.
      */
     public ReconcilerObject( EObject targetGroup,
-                             Command originalCommand,
+                             ICommand originalCommand,
                              boolean targetLocked ) {
         this.originalCommand = originalCommand;
         this.targetGroup = targetGroup;
@@ -97,19 +99,19 @@ public class ReconcilerObject {
      */
     private void init() {
         // Get projected symbols from the SELECT, retain for future use
-        if (originalCommand != null && originalCommand instanceof QueryCommand) {
+        if (originalCommand != null && originalCommand instanceof IQueryCommand) {
             this.sqlModifiable = true;
-            modifiedCommand = (QueryCommand)originalCommand.clone();
+            modifiedCommand = (IQueryCommand)originalCommand.clone();
             originalSymbols.addAll(modifiedCommand.getProjectedSymbols());
             // Remember if the the SELECT is select distinct
-            this.isSelectDistinct = isSelectDistinct((QueryCommand)originalCommand);
+            this.isSelectDistinct = isSelectDistinct((IQueryCommand)originalCommand);
         }
         // Get the procedure InputParameters from the SQL command
         List originalInputParams = TransformationSqlHelper.getProcedureInputParams(originalCommand);
         Iterator paramIter = originalInputParams.iterator();
         while (paramIter.hasNext()) {
-            SPParameter param = (SPParameter)paramIter.next();
-            ElementSymbol eSymbol = param.getParameterSymbol();
+            ISPParameter param = (ISPParameter)paramIter.next();
+            IElementSymbol eSymbol = param.getParameterSymbol();
             this.originalInputParamSymbols.add(eSymbol);
         }
 
@@ -126,7 +128,7 @@ public class ReconcilerObject {
             EObject attribute = (EObject)attrIter.next();
             String attrShortName = TransformationHelper.getSqlEObjectName(attribute);
             // If a matching symbol is found, use it in the binding. And remove from working list
-            Expression seSymbol = getSymbolWithShortName(attrShortName, workingSymbolList);
+            IExpression seSymbol = getSymbolWithShortName(attrShortName, workingSymbolList);
             if (seSymbol != null) {
                 bindingList.add(new Binding(attribute, seSymbol));
             } else {
@@ -150,12 +152,12 @@ public class ReconcilerObject {
      * @param workingSymbolList the workingList of symbols to search
      * @return the matching symbol from the list, if found. If not found, returns null.
      */
-    private Expression getSymbolWithShortName( String name,
-                                                        List workingSymbolList ) {
-    	Expression result = null;
+    private IExpression getSymbolWithShortName( String name,
+                                                        List<IExpression> workingSymbolList ) {
+    	IExpression result = null;
         Iterator iter = workingSymbolList.iterator();
         while (iter.hasNext()) {
-        	Expression seSymbol = (Expression)iter.next();
+        	IExpression seSymbol = (IExpression)iter.next();
             String symbolName = TransformationSqlHelper.getSingleElementSymbolShortName(seSymbol, false);
             if (symbolName != null && symbolName.equalsIgnoreCase(name)) {
                 result = seSymbol;
@@ -268,7 +270,7 @@ public class ReconcilerObject {
      * 
      * @param symbol the symbol to remove
      */
-    public void removeSymbol( Expression symbol ) {
+    public void removeSymbol( IExpression symbol ) {
         sqlList.remove(symbol);
         updateCommandFromBindings();
     }
@@ -353,7 +355,7 @@ public class ReconcilerObject {
         Binding binding = null;
         while (iter.hasNext()) {
             binding = (Binding)iter.next();
-            Expression symbol = binding.getCurrentSymbol();
+            IExpression symbol = binding.getCurrentSymbol();
             // Add the current symbol to the list, if not null
             if (symbol != null) {
                 unboundSQL.add(symbol);
@@ -370,11 +372,11 @@ public class ReconcilerObject {
     public void bind( List bindings,
                       List sqlSymbols ) {
         Binding binding = null;
-        Expression sqlSymbol = null;
+        IExpression sqlSymbol = null;
         if (bindings.size() == sqlSymbols.size()) {
             for (int i = 0; i < bindings.size(); i++) {
                 binding = (Binding)bindings.get(i);
-                sqlSymbol = (Expression)sqlSymbols.get(i);
+                sqlSymbol = (IExpression)sqlSymbols.get(i);
                 if (binding.getCurrentSymbol() == null) {
                     binding.setNewSymbol(sqlSymbol);
                 }
@@ -385,11 +387,9 @@ public class ReconcilerObject {
         removeSymbols(sqlSymbols);
     }
 
-    public void createNewBindings( List sqlSymbols ) {
+    public void createNewBindings( List<IExpression> sqlSymbols ) {
         if (sqlSymbols!=null && !sqlSymbols.isEmpty()) {
-            Iterator iter = sqlSymbols.iterator();
-            while (iter.hasNext()) {
-            	Expression symbol = (Expression)iter.next();
+            for (IExpression symbol : sqlSymbols) {
                 String symbolShortName = TransformationSqlHelper.getSingleElementSymbolShortName(symbol, false);
                 if (bindingList.hasRemovedBindingMatch(symbolShortName)) {
                     Binding removedBinding = bindingList.getRemovedBindingMatch(symbolShortName);
@@ -471,7 +471,7 @@ public class ReconcilerObject {
                 Iterator iter = selectedSymbols.iterator();
                 while (iter.hasNext()) {
                     iter.next();
-                    // SingleElementSymbol symbol = (SingleElementSymbol)iter.next();
+                    // SingleElementSymbol symbol = (SingleIElementSymbol)iter.next();
                     // TableItem item = sqlListPanel.getTableViewer().getTable().getItem(rowIndex);
                     // Do Not allow creation of duplicate Attribute Names
                     // if( containsIgnoreCase(getTargetAttributeNamesOrdered(),sqlName) ) {
@@ -526,8 +526,8 @@ public class ReconcilerObject {
             String originalSQL = originalCommand.toString();
             String modifiedSQL = modifiedCommand.toString();
             // If the original Query was SELECT *, expand it for comparison
-            if (originalCommand instanceof QueryCommand && isSelectStar((QueryCommand)originalCommand)) {
-                originalSQL = expandSelectStar((QueryCommand)originalCommand);
+            if (originalCommand instanceof IQueryCommand && isSelectStar((IQueryCommand)originalCommand)) {
+                originalSQL = expandSelectStar((IQueryCommand)originalCommand);
             }
             sqlModified = !modifiedSQL.equals(originalSQL);
         }
@@ -575,10 +575,10 @@ public class ReconcilerObject {
     /**
      * Determine if the supplied symbol is an inputParameter symbol.
      * 
-     * @param symbol the ElementSymbol to test.
+     * @param symbol the IElementSymbol to test.
      * @return 'true' if supplied symbol is InputParameter, 'false' if not.
      */
-    public boolean isInputParameterSymbol( Expression symbol ) {
+    public boolean isInputParameterSymbol( IExpression symbol ) {
         boolean isInputParamSymbol = false;
         // See if it's in the InputParameter symbol list.
         if (this.originalInputParamSymbols.contains(symbol)) {
@@ -604,10 +604,10 @@ public class ReconcilerObject {
      * 
      * @return true if the query is a SELECT *, false if not.
      */
-    private boolean isSelectStar( QueryCommand queryCommand ) {
+    private boolean isSelectStar( IQueryCommand queryCommand ) {
         boolean isSelectStar = false;
         if (queryCommand != null) {
-            Select select = queryCommand.getProjectedQuery().getSelect();
+            ISelect select = queryCommand.getProjectedQuery().getSelect();
             if (select != null) {
                 isSelectStar = select.isStar();
             }
@@ -620,10 +620,10 @@ public class ReconcilerObject {
      * 
      * @return true if the query is a SELECT DISTINCT, false if not.
      */
-    private boolean isSelectDistinct( QueryCommand queryCommand ) {
+    private boolean isSelectDistinct( IQueryCommand queryCommand ) {
         boolean isSelectDistinct = false;
         if (queryCommand != null) {
-            Select select = queryCommand.getProjectedQuery().getSelect();
+            ISelect select = queryCommand.getProjectedQuery().getSelect();
             if (select != null) {
                 isSelectDistinct = select.isDistinct();
             }
@@ -636,15 +636,18 @@ public class ReconcilerObject {
      * 
      * @return the modified query string with the SELECT * expanded.
      */
-    private String expandSelectStar( QueryCommand queryCommand ) {
-        QueryCommand qComm = (QueryCommand)queryCommand.clone();
+    private String expandSelectStar( IQueryCommand queryCommand ) {
+        IQueryCommand qComm = (IQueryCommand)queryCommand.clone();
         if (qComm != null) {
-            Select select = queryCommand.getProjectedQuery().getSelect();
+            ISelect select = queryCommand.getProjectedQuery().getSelect();
             boolean isDistinct = select.isDistinct();
             if (select.isStar()) {
                 // Get the list of SELECT symbols
                 List symbols = queryCommand.getProjectedSymbols();
-                Select newSelect = new Select(symbols);
+                
+                IQueryService queryService = ModelerCore.getTeiidQueryService();
+                IQueryFactory factory = queryService.createQueryFactory();
+                ISelect newSelect = factory.createSelect(symbols);
                 if (isDistinct) {
                     newSelect.setDistinct(isDistinct);
                 }
@@ -857,7 +860,7 @@ public class ReconcilerObject {
             // Bound - get the Symbol from the binding
             // --------------------------------------------------------------
             if (binding.isBound() && !binding.isInputParamBinding()) {
-            	Expression symbol = binding.createBindingSymbol();
+            	IExpression symbol = binding.createBindingSymbol();
                 if (!isInputParameterSymbol(symbol)) {
                     newSymbols.add(binding.createBindingSymbol());
                 }
@@ -868,12 +871,12 @@ public class ReconcilerObject {
                 // current attribute name
                 String attrName = binding.getCurrentAttrName();
                 // See if there is a matching symbol in the unmatched working list
-                Expression seSymbol = getSymbolWithShortName(attrName, unmatchedSymbols);
+                IExpression seSymbol = getSymbolWithShortName(attrName, unmatchedSymbols);
                 if (seSymbol != null && !isInputParameterSymbol(seSymbol)) {
                     newSymbols.add(seSymbol);
                 } else {
                     if (!unmatchedSymbols.isEmpty()) {
-                        seSymbol = (Expression)unmatchedSymbols.get(0);
+                        seSymbol = (IExpression)unmatchedSymbols.get(0);
                         if (seSymbol != null && !isInputParameterSymbol(seSymbol)) {
                             newSymbols.add(seSymbol);
                         }
@@ -890,21 +893,23 @@ public class ReconcilerObject {
         // If there are unmatched symbols remaining, add them
         iter = unmatchedSymbols.iterator();
         while (iter.hasNext()) {
-        	Expression sym = (Expression)iter.next();
+        	IExpression sym = (IExpression)iter.next();
             if (sym != null && !isInputParameterSymbol(sym)) {
                 newSymbols.add(sym);
             }
         }
 
         // Use the new list of symbols to update the modified Query
-        Select newSelect = new Select(newSymbols);
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+        ISelect newSelect = factory.createSelect(newSymbols);
         if (this.isSelectDistinct) {
             newSelect.setDistinct(true);
         }
-        if (modifiedCommand instanceof Query) {
-            ((Query)modifiedCommand).setSelect(newSelect);
-        } else if (modifiedCommand instanceof SetQuery) {
-            ((SetQuery)modifiedCommand).getProjectedQuery().setSelect(newSelect);
+        if (modifiedCommand instanceof IQuery) {
+            ((IQuery)modifiedCommand).setSelect(newSelect);
+        } else if (modifiedCommand instanceof ISetQuery) {
+            ((ISetQuery)modifiedCommand).getProjectedQuery().setSelect(newSelect);
         }
 
     }
@@ -913,11 +918,11 @@ public class ReconcilerObject {
         return this.originalSymbols;
     }
 
-    public Command getModifiedCommand() {
+    public ICommand getModifiedCommand() {
         return modifiedCommand;
     }
 
-    public Command getOriginalCommand() {
+    public ICommand getOriginalCommand() {
         return originalCommand;
     }
 
@@ -932,21 +937,23 @@ public class ReconcilerObject {
         Collection unreferencedGroupSymbols = new ArrayList(allGroupSymbols);
         // Let's get list of all Element symbols...
 
-        Collection referencedElementSymbols = ElementCollectorVisitor.getElements(originalCommand, true, true);
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor();
+        Collection referencedElementSymbols = elementCollectorVisitor.getElements(originalCommand, true, true);
 
         Iterator iter = referencedElementSymbols.iterator();
         while (iter.hasNext()) {
-        	Expression nextSymbol = (Expression)iter.next();
-            if (nextSymbol instanceof AliasSymbol) {
-            	Expression theSymbol = ((AliasSymbol)nextSymbol).getSymbol();
-                if (theSymbol instanceof ElementSymbol) {
-                    GroupSymbol nextGS = ((ElementSymbol)theSymbol).getGroupSymbol();
+        	IExpression nextSymbol = (IExpression)iter.next();
+            if (nextSymbol instanceof IAliasSymbol) {
+            	IExpression theSymbol = ((IAliasSymbol)nextSymbol).getSymbol();
+                if (theSymbol instanceof IElementSymbol) {
+                    IGroupSymbol nextGS = ((IElementSymbol)theSymbol).getGroupSymbol();
                     if (TransformationSqlHelper.containsGroupSymbol(allGroupSymbols, nextGS)) {
                         unreferencedGroupSymbols.remove(nextGS);
                     }
                 }
-            } else if (nextSymbol instanceof ElementSymbol) {
-                GroupSymbol nextGS = ((ElementSymbol)nextSymbol).getGroupSymbol();
+            } else if (nextSymbol instanceof IElementSymbol) {
+                IGroupSymbol nextGS = ((IElementSymbol)nextSymbol).getGroupSymbol();
                 if (TransformationSqlHelper.containsGroupSymbol(allGroupSymbols, nextGS)) {
                     unreferencedGroupSymbols.remove(nextGS);
                 }
@@ -967,17 +974,17 @@ public class ReconcilerObject {
 
         Iterator iter = originalSymbols.iterator();
         while (iter.hasNext()) {
-        	Expression nextSymbol = (Expression)iter.next();
-            if (nextSymbol instanceof AliasSymbol) {
-            	Expression theSymbol = ((AliasSymbol)nextSymbol).getSymbol();
-                if (theSymbol instanceof ElementSymbol) {
-                    GroupSymbol nextGS = ((ElementSymbol)theSymbol).getGroupSymbol();
+        	IExpression nextSymbol = (IExpression)iter.next();
+            if (nextSymbol instanceof IAliasSymbol) {
+            	IExpression theSymbol = ((IAliasSymbol)nextSymbol).getSymbol();
+                if (theSymbol instanceof IElementSymbol) {
+                    IGroupSymbol nextGS = ((IElementSymbol)theSymbol).getGroupSymbol();
                     if (!TransformationSqlHelper.containsGroupSymbol(referencedGroupSymbols, nextGS)) {
                         referencedGroupSymbols.add(nextGS);
                     }
                 }
-            } else if (nextSymbol instanceof ElementSymbol) {
-                GroupSymbol nextGS = ((ElementSymbol)nextSymbol).getGroupSymbol();
+            } else if (nextSymbol instanceof IElementSymbol) {
+                IGroupSymbol nextGS = ((IElementSymbol)nextSymbol).getGroupSymbol();
                 if (!TransformationSqlHelper.containsGroupSymbol(referencedGroupSymbols, nextGS)) {
                     referencedGroupSymbols.add(nextGS);
                 }

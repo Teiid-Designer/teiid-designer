@@ -21,13 +21,12 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.query.sql.lang.ICriteria;
 import org.teiid.designer.transformation.ui.builder.AbstractCompositeLanguageObjectEditor;
 import org.teiid.designer.transformation.ui.builder.ILanguageObjectEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
-import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.ui.builder.model.CompositeLanguageObjectEditorModel;
 import org.teiid.query.ui.builder.model.CriteriaEditorModel;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener;
@@ -70,7 +69,7 @@ public class CriteriaEditor extends AbstractCompositeLanguageObjectEditor {
 
     public CriteriaEditor( Composite theParent,
                            CriteriaEditorModel theModel ) {
-        super(theParent, Criteria.class, theModel);
+        super(theParent, ICriteria.class, theModel);
 
         model = theModel;
         controller = new ViewController();

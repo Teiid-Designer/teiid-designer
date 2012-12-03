@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.sqleditor.component;
 
-import org.teiid.query.sql.LanguageObject;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 
 /**
  * The <code>SymbolDisplayNode</code> class is used to represent a Symbol.
@@ -25,7 +25,7 @@ public class SymbolDisplayNode extends DisplayNode {
      *  @param parentNode the parent DisplayNode of this.
      *  @param obj the query language object used to construct this display node.
      */
-    public SymbolDisplayNode(DisplayNode parentNode, LanguageObject obj) {
+    public SymbolDisplayNode(DisplayNode parentNode, ILanguageObject obj) {
         this.parentNode = parentNode;
         this.languageObject = obj;
     }

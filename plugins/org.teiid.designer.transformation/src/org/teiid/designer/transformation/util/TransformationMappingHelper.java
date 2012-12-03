@@ -13,10 +13,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import javax.management.Query;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.ModelerCore;
@@ -31,19 +29,31 @@ import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
-import org.teiid.designer.metamodels.function.Function;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.metamodels.transformation.SqlAlias;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.metamodels.transformation.StagingTable;
 import org.teiid.designer.metamodels.xml.XmlDocument;
-import org.teiid.designer.sql.ISQLConstants;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.metadata.IMetadataID;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.query.sql.IFunctionCollectorVisitor;
+import org.teiid.designer.query.sql.ISQLConstants;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.query.sql.lang.ISetQuery;
+import org.teiid.designer.query.sql.symbol.IConstant;
+import org.teiid.designer.query.sql.symbol.IFunction;
+import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.metadata.TransformationMetadataFactory;
 import org.teiid.designer.transformation.validation.TransformationValidator;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
+import org.teiid.designer.udf.IFunctionDescriptor;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.designer.udf.IFunctionLibrary.FunctionName;
 import org.teiid.designer.udf.UdfManager;
@@ -185,7 +195,7 @@ public class TransformationMappingHelper implements ISQLConstants {
                 List attributes = TransformationHelper.getTransformationTargetAttributes(transMappingRoot);
 
                 // Get the Command for the supplied Type
-                Command command = TransformationHelper.getCommand(transMappingRoot, type);
+                ICommand command = TransformationHelper.getCommand(transMappingRoot, type);
                 // Get the list of names for the Select
                 List sqlNames = TransformationSqlHelper.getProjectedSymbolNames(command);
 
@@ -234,7 +244,7 @@ public class TransformationMappingHelper implements ISQLConstants {
      * @return 'true' if the reconciled, 'false' if not
      */
     public static boolean targetAndCommandReconcile( EObject transMappingRoot,
-                                                     Command command,
+                                                     ICommand command,
                                                      boolean nameMatchReqd ) {
         // Must be a QueryCommand, or there are no projected Symbols.
         boolean sizesMatch = false;
@@ -255,7 +265,7 @@ public class TransformationMappingHelper implements ISQLConstants {
                 // Get attributes that arent in an AccessPattern
                 List attributes = TransformationHelper.getTransformationTargetAttributes(transMappingRoot);
                 // Get the list of names for the Select
-                List sqlNames = TransformationSqlHelper.getProjectedSymbolNames(command);
+                List<String> sqlNames = TransformationSqlHelper.getProjectedSymbolNames(command);
 
                 // check number of Virtual Group Elems vs. number of projected symbols.
                 if (sqlNames.size() == attributes.size()) {
@@ -297,7 +307,7 @@ public class TransformationMappingHelper implements ISQLConstants {
      * @param attribute the EObject attribute
      * @return 'true' if the types match, 'false' if not
      */
-    public static boolean typesMatch( Expression seSymbol,
+    public static boolean typesMatch( IExpression seSymbol,
                                        EObject attribute ) {
         boolean typesMatch = false;
         if (seSymbol != null && attribute != null) {
@@ -322,7 +332,7 @@ public class TransformationMappingHelper implements ISQLConstants {
                                           List attributeList ) {
         if (symbolList != null && attributeList != null && symbolList.size() == attributeList.size()) {
             for (int i = 0; i < symbolList.size(); i++) {
-            	Expression seSymbol = (Expression)symbolList.get(i);
+            	IExpression seSymbol = (IExpression)symbolList.get(i);
                 EObject attr = (EObject)attributeList.get(i);
                 if (!typesMatch(seSymbol, attr)) {
                     return false;
@@ -362,7 +372,7 @@ public class TransformationMappingHelper implements ISQLConstants {
      * @return 'true' if the command is valid, 'false' if not
      */
     private static boolean commandValid( EObject transMappingRoot,
-                                         Command command ) {
+                                         ICommand command ) {
         boolean isCommandValid = false;
         // If command is not resolved, attempt to resolve it.
         if (!command.isResolved()) {
@@ -402,7 +412,7 @@ public class TransformationMappingHelper implements ISQLConstants {
                 TransformationHelper.reconcileInputsAndAliases(transMappingRoot);
 
                 List allCommands = new ArrayList();
-                Command selectCommand = SqlMappingRootCache.getSelectCommand(transMappingRoot);
+                ICommand selectCommand = SqlMappingRootCache.getSelectCommand(transMappingRoot);
                 allCommands.add(selectCommand);
 
                 // Include sources for INS/UPD/DEL transformations also.
@@ -423,7 +433,7 @@ public class TransformationMappingHelper implements ISQLConstants {
                 }
 
                 // Get the Command Lookup GroupSymbols that arent in the mapping
-                QueryMetadataInterface metadata = TransformationMetadataFactory.getInstance().getModelerMetadata(transMappingRoot,
+                IQueryMetadataInterface metadata = TransformationMetadataFactory.getInstance().getModelerMetadata(transMappingRoot,
                                                                                                                  false);
 
                 List<EObjectAlias> symbolsToAdd = new ArrayList<EObjectAlias>();
@@ -431,7 +441,7 @@ public class TransformationMappingHelper implements ISQLConstants {
 
                 Iterator commandIter = allCommands.iterator();
                 while (commandIter.hasNext()) {
-                    Command command = (Command)commandIter.next();
+                    ICommand command = (ICommand)commandIter.next();
                     getEObjectAliases(transMappingRoot, command, symbolsToAdd, symbolsIncluded, metadata);
                 }
 
@@ -500,37 +510,41 @@ public class TransformationMappingHelper implements ISQLConstants {
     }
 
     private static void getEObjectAliases( EObject transMappingRoot,
-                                         Command command,
+                                         ICommand command,
                                          List<EObjectAlias> toAdd,
                                          List<EObjectAlias> included,
-                                         QueryMetadataInterface metadata ) {
+                                         IQueryMetadataInterface metadata ) {
 
         // Get the GroupSymbols from the SQL command (duplicates removed)
-        Collection<GroupSymbol> sqlGroupSymbols = TransformationSqlHelper.getGroupSymbols(command);
+        Collection<IGroupSymbol> sqlGroupSymbols = TransformationSqlHelper.getGroupSymbols(command);
 
-        Collection<Function> functions = FunctionCollectorVisitor.getFunctions(command, true, true);
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+        IFunctionCollectorVisitor functionCollectorVisitor = queryService.getFunctionCollectorVisitor();
+        
+        Collection<IFunction> functions = functionCollectorVisitor.getFunctions(command, true, true);
 
         // Get the SqlAliases for the mapping
         List mappingAliases = TransformationHelper.getAllSqlAliases(transMappingRoot);
 
         List<EObjectAlias> allAliases = new ArrayList<EObjectAlias>();
         
-        for (Function function : functions) {
-        	FunctionDescriptor fd = function.getFunctionDescriptor();
+        for (IFunction function : functions) {
+        	IFunctionDescriptor fd = function.getFunctionDescriptor();
         	if (fd == null) {
         		continue;
         	}
         	
         	IFunctionLibrary functionLibrary = UdfManager.getInstance().getFunctionLibrary();
             if (fd.getName().equalsIgnoreCase(functionLibrary.getFunctionName(FunctionName.LOOKUP))) {
-                Expression[] args = function.getArgs();
+                IExpression[] args = function.getArgs();
                 // First arg of the lookup is the group
-                if (args[0] instanceof Constant) {
-                    String groupName = (String)((Constant)args[0]).getValue();
+                if (args[0] instanceof IConstant) {
+                    String groupName = (String)((IConstant)args[0]).getValue();
 
                     try {
-                        Object metadataID = metadata.getGroupID(groupName);
-                        GroupSymbol symbol = new GroupSymbol(groupName);
+                        Object metadataID = metadata.getGroupID(groupName);                        
+                        IGroupSymbol symbol = factory.createGroupSymbol(groupName);
                         symbol.setMetadataID(metadataID);
                         if (!TransformationSqlHelper.containsGroupSymbol(sqlGroupSymbols, symbol)) {
                         	sqlGroupSymbols.add(symbol);
@@ -546,13 +560,13 @@ public class TransformationMappingHelper implements ISQLConstants {
             }
 		}
         
-        // Check each GroupSymbol against the mapping SqlAliases. If not there add to result list
+        // Check each IGroupSymbol against the mapping SqlAliases. If not there add to result list
         Iterator iter = sqlGroupSymbols.iterator();
         while (iter.hasNext()) {
-            GroupSymbol gSymbol = (GroupSymbol)iter.next();
+            IGroupSymbol gSymbol = (IGroupSymbol)iter.next();
 
             // If group symbol not in alias list, add to result list
-            if ((gSymbol.getMetadataID() instanceof TempMetadataID) && !gSymbol.isProcedure()) {
+            if ((gSymbol.getMetadataID() instanceof IMetadataID) && !gSymbol.isProcedure()) {
             	continue;
             }
             
@@ -577,7 +591,7 @@ public class TransformationMappingHelper implements ISQLConstants {
     }
 
     /**
-     * Determine if GroupSymbol is represented in the SqlAlias List.
+     * Determine if IGroupSymbol is represented in the SqlAlias List.
      * 
      * @param gSymbol the GroupSymbol
      * @param sqlAliases the SqlAlias List
@@ -603,7 +617,7 @@ public class TransformationMappingHelper implements ISQLConstants {
     }
 
     /**
-     * Determine if GroupSymbol is represented in the SqlAlias List.
+     * Determine if IGroupSymbol is represented in the SqlAlias List.
      * 
      * @param sqlAlias the SqlAlias
      * @param objects
@@ -668,7 +682,7 @@ public class TransformationMappingHelper implements ISQLConstants {
             }
 
             boolean isValid = SqlMappingRootCache.isSelectValid(transMappingRoot);
-            Command validCommand = null;
+            ICommand validCommand = null;
             if (isValid) {
                 validCommand = SqlMappingRootCache.getSelectCommand(transMappingRoot);
             }
@@ -924,13 +938,13 @@ public class TransformationMappingHelper implements ISQLConstants {
      * @param queryCommand the query Command object
      * @return the modified Query language object
      */
-    public static void resetSelectSqlOnNameConflict( Command command,
+    public static void resetSelectSqlOnNameConflict( ICommand command,
                                                      EObject transMappingRoot,
                                                      boolean isSignificant,
                                                      Object source ) {
         // Modify query select if necessary
-        if (command != null && command instanceof Query && TransformationSqlHelper.hasProjectedSymbolNameConflict(command)) {
-            Query newQuery = TransformationSqlHelper.createQueryFixNameConflicts((Query)command, false);
+        if (command != null && command instanceof IQuery && TransformationSqlHelper.hasProjectedSymbolNameConflict(command)) {
+            IQuery newQuery = TransformationSqlHelper.createQueryFixNameConflicts((IQuery)command, false);
             // Set the SQL Statement
             if (newQuery != null) {
                 TransformationHelper.setSelectSqlString(transMappingRoot, newQuery.toString(), isSignificant, source);
@@ -1202,19 +1216,19 @@ public class TransformationMappingHelper implements ISQLConstants {
      */
     public static boolean orderGroupAttributes( final EObject transMappingRoot,
                                                 boolean requiresValidSelect,
-                                                Command modifiedCommand ) {
+                                                ICommand modifiedCommand ) {
         // Do nothing if the target Group is Locked
         if (!TransformationHelper.isTargetGroupLocked(transMappingRoot)) {
             boolean isValid = true;
             if (requiresValidSelect) isValid = SqlMappingRootCache.isSelectValid(transMappingRoot);
 
-            Command validCommand = null;
+            ICommand validCommand = null;
             if (isValid) {
                 validCommand = SqlMappingRootCache.getSelectCommand(transMappingRoot);
                 // Get the Target for this MappingRoot
                 EObject targetGroup = TransformationHelper.getTransformationTarget(transMappingRoot);
-                List projectedSymbolNames = null;
-                if (modifiedCommand != null && validCommand instanceof SetQuery) {
+                List<String> projectedSymbolNames = null;
+                if (modifiedCommand != null && validCommand instanceof ISetQuery) {
                     projectedSymbolNames = TransformationSqlHelper.getProjectedSymbolUniqueNames(modifiedCommand);
                 } else {
                     // Get the list of proposed unique names for the ProjectedSymbols
@@ -1482,7 +1496,7 @@ public class TransformationMappingHelper implements ISQLConstants {
                 IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
                 
                 // check for the NullType
-                if (typeObj == org.teiid.core.types.NullType.class) {
+                if (((Class)typeObj).getSimpleName().equals(service.getDataTypeClass(null).getSimpleName())) {
                     // convert the NullType constant to the String type
                     typeObj = String.class;
                 }

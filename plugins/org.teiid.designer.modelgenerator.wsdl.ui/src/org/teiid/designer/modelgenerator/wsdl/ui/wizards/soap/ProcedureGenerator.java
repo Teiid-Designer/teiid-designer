@@ -20,8 +20,8 @@ import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
-import org.teiid.designer.sql.IQueryService;
-import org.teiid.designer.sql.ISQLConstants;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.ISQLConstants;
 
 
 /** This class provides state information for the create and extract procedures that will be generated during

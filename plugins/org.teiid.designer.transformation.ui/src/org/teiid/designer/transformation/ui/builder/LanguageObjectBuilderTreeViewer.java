@@ -15,19 +15,21 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.lang.ICompoundCriteria;
+import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.lang.INotCriteria;
+import org.teiid.designer.query.sql.lang.IPredicateCriteria;
+import org.teiid.designer.query.sql.symbol.IConstant;
+import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.builder.util.LanguageObjectContentProvider;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.CompoundCriteria;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.NotCriteria;
-import org.teiid.query.sql.lang.PredicateCriteria;
-import org.teiid.query.sql.symbol.Constant;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.ui.builder.util.BuilderUtils;
 import org.teiid.query.ui.builder.util.LanguageObjectLabelProvider;
 
@@ -40,7 +42,7 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
 
     LanguageObjectContentProvider contentProvider;
 
-    private LanguageObject langObj;
+    private ILanguageObject langObj;
 
     public LanguageObjectBuilderTreeViewer( Composite theParent ) {
         super(theParent, SWT.NONE);
@@ -53,31 +55,34 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
     }
 
     public void addUndefinedAndCriteria() {
-        addUndefinedCriteria((Criteria)getSelectedObject(), true);
+        addUndefinedCriteria((ICriteria)getSelectedObject(), true);
     }
 
-    private void addUndefinedCriteria( Criteria theCriteria,
+    private void addUndefinedCriteria( ICriteria theCriteria,
                                        boolean theAndFlag ) {
         CoreArgCheck.isNotNull(theCriteria); // should not be calling if null
 
         Object newSelection = StructuredSelection.EMPTY;
 
-        if (theCriteria instanceof CompoundCriteria) {
-            CompoundCriteria criteria = (CompoundCriteria)theCriteria;
-            criteria.addCriteria((Criteria)null);
+        if (theCriteria instanceof ICompoundCriteria) {
+            ICompoundCriteria criteria = (ICompoundCriteria)theCriteria;
+            criteria.addCriteria((ICriteria)null);
             refresh(true);
             newSelection = contentProvider.getChildAt((criteria.getCriteriaCount() - 1), criteria);
-        } else if (theCriteria instanceof NotCriteria) {
+        } else if (theCriteria instanceof INotCriteria) {
             // the contained Criteria must be a CompoundCriteria
-            addUndefinedCriteria(((NotCriteria)theCriteria).getCriteria(), theAndFlag);
-        } else if (theCriteria instanceof PredicateCriteria) {
-            CompoundCriteria compoundCriteria = new CompoundCriteria();
-            compoundCriteria.setOperator((theAndFlag) ? CompoundCriteria.AND : CompoundCriteria.OR);
-            compoundCriteria.addCriteria(theCriteria);
-            compoundCriteria.addCriteria((Criteria)null);
+            addUndefinedCriteria(((INotCriteria)theCriteria).getCriteria(), theAndFlag);
+        } else if (theCriteria instanceof IPredicateCriteria) {
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            IQueryFactory factory = queryService.createQueryFactory();
+            
+            ICompoundCriteria compoundCriteria = factory.createCompoundCriteria(
+                                                           (theAndFlag) ? ICompoundCriteria.LogicalOperator.AND : ICompoundCriteria.LogicalOperator.OR,
+                                                           theCriteria,
+                                                           null);
 
             // modify parent here
-            LanguageObject parent = (LanguageObject)contentProvider.getParent(theCriteria);
+            ILanguageObject parent = (ILanguageObject)contentProvider.getParent(theCriteria);
             int index = contentProvider.getChildIndex(theCriteria);
 
             if (parent == null) {
@@ -87,14 +92,14 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
                 // select undefined criteria
                 newSelection = contentProvider.getChildAt(1, contentProvider.getRoot());
                 expandToLevel(newSelection, ALL_LEVELS);
-            } else if ((parent instanceof NotCriteria) || (parent instanceof CompoundCriteria)) {
-                CompoundCriteria criteria = null;
+            } else if ((parent instanceof INotCriteria) || (parent instanceof ICompoundCriteria)) {
+                ICompoundCriteria criteria = null;
 
-                if (parent instanceof NotCriteria) {
+                if (parent instanceof INotCriteria) {
                     // then NotCriteria's contained criteria must be a CompoundCriteria
-                    criteria = (CompoundCriteria)((NotCriteria)parent).getCriteria();
+                    criteria = (ICompoundCriteria)((INotCriteria)parent).getCriteria();
                 } else {
-                    criteria = (CompoundCriteria)parent;
+                    criteria = (ICompoundCriteria)parent;
                 }
 
                 List crits = criteria.getCriteria();
@@ -121,30 +126,30 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
     }
 
     public void addUndefinedOrCriteria() {
-        addUndefinedCriteria((Criteria)getSelectedObject(), false);
+        addUndefinedCriteria((ICriteria)getSelectedObject(), false);
     }
 
     private boolean canDelete( Object theLangObj ) {
         boolean result = true;
-        LanguageObject parent = (LanguageObject)contentProvider.getParent(theLangObj);
+        ILanguageObject parent = (ILanguageObject)contentProvider.getParent(theLangObj);
 
         if (parent == null) {
             // object is root. can only delete if not undefined
             result = !isUndefined(theLangObj);
-        } else if (parent instanceof Function) {
-            // all function arguments except converstion type constants can be deleted
-            if (theLangObj instanceof Constant) {
-                result = !BuilderUtils.isConversionType((Constant)theLangObj);
+        } else if (parent instanceof IFunction) {
+            // all function arguments except conversion type constants can be deleted
+            if (theLangObj instanceof IConstant) {
+                result = !BuilderUtils.isConversionType((IConstant)theLangObj);
             }
-        } else if (parent instanceof NotCriteria) {
+        } else if (parent instanceof INotCriteria) {
             // get compound criteria and ask again
-            NotCriteria notCrit = (NotCriteria)parent;
-            Criteria criteria = notCrit.getCriteria();
+            INotCriteria notCrit = (INotCriteria)parent;
+            ICriteria criteria = notCrit.getCriteria();
 
             // NotCriteria must contain either another NotCriteria or a CompoundCriteria
-            while (!(criteria instanceof CompoundCriteria)) {
+            while (!(criteria instanceof ICompoundCriteria)) {
                 // must be a NotCriteria
-                criteria = ((NotCriteria)criteria).getCriteria();
+                criteria = ((INotCriteria)criteria).getCriteria();
                 result = canDelete(criteria);
             }
         }
@@ -165,7 +170,7 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
             //
 
             Object newSelection = StructuredSelection.EMPTY;
-            LanguageObject parent = (LanguageObject)contentProvider.getParent(theLangObj);
+            ILanguageObject parent = (ILanguageObject)contentProvider.getParent(theLangObj);
 
             if (parent == null) {
                 // object being delete is root language object
@@ -173,33 +178,33 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
                 refresh(true);
                 newSelection = contentProvider.getRoot();
                 expandToLevel(newSelection, ALL_LEVELS);
-            } else if (parent instanceof Function) {
+            } else if (parent instanceof IFunction) {
                 // set the arg to null in parent
                 int index = contentProvider.getChildIndex(theLangObj);
 
-                Expression[] args = ((Function)parent).getArgs();
+                IExpression[] args = ((IFunction)parent).getArgs();
                 args[index] = null;
 
                 refresh(true);
                 newSelection = contentProvider.getChildAt(index, parent);
-            } else if (parent instanceof Criteria) {
+            } else if (parent instanceof ICriteria) {
                 if (contentProvider.getChildCount(parent) > 1) {
-                    CompoundCriteria compoundCriteria = null;
+                    ICompoundCriteria compoundCriteria = null;
 
                     // parent is either a compound criteria or not criteria
-                    if (parent instanceof CompoundCriteria) {
-                        compoundCriteria = (CompoundCriteria)parent;
+                    if (parent instanceof ICompoundCriteria) {
+                        compoundCriteria = (ICompoundCriteria)parent;
                     } else { // NotCriteria
-                        NotCriteria notCrit = (NotCriteria)parent;
-                        Criteria criteria = notCrit.getCriteria();
+                        INotCriteria notCrit = (INotCriteria)parent;
+                        ICriteria criteria = notCrit.getCriteria();
 
                         // NotCriteria must contain either another NotCriteria or a CompoundCriteria
-                        while (!(criteria instanceof CompoundCriteria)) {
+                        while (!(criteria instanceof ICompoundCriteria)) {
                             // must be a NotCriteria
-                            criteria = ((NotCriteria)criteria).getCriteria();
+                            criteria = ((INotCriteria)criteria).getCriteria();
                         }
 
-                        compoundCriteria = (CompoundCriteria)criteria;
+                        compoundCriteria = (ICompoundCriteria)criteria;
                     }
 
                     List crits = compoundCriteria.getCriteria();
@@ -223,7 +228,7 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
                                 // selection taken care of below in block checking for size of 1
                             } else {
                                 // replace deleted node with undefined node
-                                crits.set(index, (Criteria)null);
+                                crits.set(index, (ICriteria)null);
                                 refresh(true);
                                 newSelection = contentProvider.getChildAt(index, parent);
                             }
@@ -238,7 +243,7 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
 
                     if (crits.size() == 1) {
                         // need to modify parent node with the child (refresh done there)
-                        modifyLanguageObject(parent, (LanguageObject)contentProvider.getChildAt(0, parent), false);
+                        modifyLanguageObject(parent, (ILanguageObject)contentProvider.getChildAt(0, parent), false);
                         doSelect = false; // modify does select
                     }
                 }
@@ -265,7 +270,7 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
      * @see org.teiid.designer.transformation.ui.builder.ILanguageObjectInputProvider#getLanguageObject()
      */
     @Override
-	public LanguageObject getLanguageObject() {
+	public ILanguageObject getLanguageObject() {
         return langObj;
     }
 
@@ -323,7 +328,7 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
     }
 
     private void modifyLanguageObject( Object theObject,
-                                       LanguageObject theNewValue,
+                                       ILanguageObject theNewValue,
                                        boolean retainSelection ) {
         CoreArgCheck.isNotNull(theNewValue); // should not be null when modifying
 
@@ -332,30 +337,30 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
         //
 
         Object newSelection = StructuredSelection.EMPTY;
-        LanguageObject parent = (LanguageObject)contentProvider.getParent(theObject);
+        ILanguageObject parent = (ILanguageObject)contentProvider.getParent(theObject);
 
         Object newValue = theNewValue;
 
         if (parent == null) {
             // root language object
-            setLanguageObject((LanguageObject)newValue);
+            setLanguageObject((ILanguageObject)newValue);
             refresh(true);
             newSelection = contentProvider.getRoot();
             expandToLevel(newSelection, ALL_LEVELS);
 
-            if (newSelection instanceof Function) {
-                Function function = (Function)newSelection;
+            if (newSelection instanceof IFunction) {
+                IFunction function = (IFunction)newSelection;
 
                 if (function.getArgs().length > 0) {
                     newSelection = contentProvider.getChildAt(0, function);
                 }
             }
-        } else if (parent instanceof Function) {
+        } else if (parent instanceof IFunction) {
             // set the arg to new value in parent
             int index = contentProvider.getChildIndex(theObject);
 
-            Expression[] args = ((Function)parent).getArgs();
-            args[index] = (Expression)newValue;
+            IExpression[] args = ((IFunction)parent).getArgs();
+            args[index] = (IExpression)newValue;
 
             refresh(true);
             expandToLevel(parent, ALL_LEVELS);
@@ -363,7 +368,7 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
             newSelection = contentProvider.getChildAt(index, parent);
 
             if (!retainSelection) {
-                if (newSelection instanceof Function) {
+                if (newSelection instanceof IFunction) {
                     // if function arg change to be a function, select first function arg
                     if (contentProvider.getChildCount(newSelection) > 0) {
                         newSelection = contentProvider.getChildAt(0, newSelection);
@@ -379,20 +384,20 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
                     }
                 }
             }
-        } else if (parent instanceof Criteria) {
+        } else if (parent instanceof ICriteria) {
             // theLangObj must also be a Criteria
             // since NotCriteria aren't really edited in the editor (their contained criteria is). Need to
             // save the state in order to restore it when modifying
-            Criteria newCriteria = (Criteria)newValue;
+            ICriteria newCriteria = (ICriteria)newValue;
             int index = contentProvider.getChildIndex(theObject);
 
-            if ((parent instanceof CompoundCriteria) || (parent instanceof NotCriteria)) {
-                CompoundCriteria compoundCriteria = null;
+            if ((parent instanceof ICompoundCriteria) || (parent instanceof INotCriteria)) {
+                ICompoundCriteria compoundCriteria = null;
 
-                if (parent instanceof CompoundCriteria) {
-                    compoundCriteria = (CompoundCriteria)parent;
+                if (parent instanceof ICompoundCriteria) {
+                    compoundCriteria = (ICompoundCriteria)parent;
                 } else {
-                    compoundCriteria = (CompoundCriteria)((NotCriteria)parent).getCriteria();
+                    compoundCriteria = (ICompoundCriteria)((INotCriteria)parent).getCriteria();
                 }
 
                 List criteriaCollection = compoundCriteria.getCriteria();
@@ -428,10 +433,12 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
         Object selectedObj = getSelectedObject();
         CoreArgCheck.isNotNull(selectedObj); // should not be calling if no row selected
 
-        if (selectedObj instanceof NotCriteria) {
-            modifySelectedItem(((NotCriteria)selectedObj).getCriteria(), true);
-        } else if (selectedObj instanceof Criteria) {
-            modifySelectedItem(new NotCriteria((Criteria)selectedObj), true);
+        if (selectedObj instanceof INotCriteria) {
+            modifySelectedItem(((INotCriteria)selectedObj).getCriteria(), true);
+        } else if (selectedObj instanceof ICriteria) {
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            IQueryFactory factory = queryService.createQueryFactory();
+            modifySelectedItem(factory.createNotCriteria((ICriteria)selectedObj), true);
         } else if (isUndefined(selectedObj)) {
             CoreArgCheck.isTrue(false, Util.getString(PREFIX + "unexpectedType", //$NON-NLS-1$
                                                       new Object[] {"modifyNotCriteriaStatus", BuilderUtils.UNDEFINED})); //$NON-NLS-1$
@@ -441,7 +448,7 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
         }
     }
 
-    public void modifySelectedItem( LanguageObject theLangObj,
+    public void modifySelectedItem( ILanguageObject theLangObj,
                                     boolean retainSelection ) {
         modifyLanguageObject(getSelectedObject(), theLangObj, retainSelection);
     }
@@ -457,7 +464,7 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
         });
     }
 
-    public void setLanguageObject( LanguageObject theLangObj ) {
+    public void setLanguageObject( ILanguageObject theLangObj ) {
         langObj = theLangObj;
         setInput(this);
     }

@@ -46,12 +46,12 @@ import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
+import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.schema.tools.model.schema.SchemaModel;
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 import org.teiid.designer.schema.tools.model.schema.impl.BaseSchemaObject;
 import org.teiid.designer.schema.tools.processing.SchemaProcessingException;
 import org.teiid.designer.schema.tools.processing.SchemaProcessor;
-import org.teiid.designer.sql.ISQLConstants;
 import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 

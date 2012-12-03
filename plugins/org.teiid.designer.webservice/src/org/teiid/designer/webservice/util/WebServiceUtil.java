@@ -17,7 +17,6 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDTypeDefinition;
-
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
@@ -32,15 +31,15 @@ import org.teiid.designer.metamodels.webservice.WebServiceComponent;
 import org.teiid.designer.metamodels.webservice.WebServicePackage;
 import org.teiid.designer.metamodels.xml.XmlDocument;
 import org.teiid.designer.metamodels.xml.XmlValueHolder;
+import org.teiid.designer.query.sql.ISQLConstants;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.proc.IAssignmentStatement;
+import org.teiid.designer.query.sql.symbol.IConstant;
+import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.webservice.WebServicePlugin;
 import org.teiid.designer.webservice.procedure.DocumentGenerator;
 import org.teiid.designer.webservice.procedure.XsdInstanceNode;
-import org.teiid.query.sql.ProcedureReservedWords;
-import org.teiid.query.sql.proc.AssignmentStatement;
-import org.teiid.query.sql.symbol.Constant;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.Function;
 
 /**
  * @since 8.0
@@ -54,7 +53,7 @@ public class WebServiceUtil {
     private static final String PLACEHOLDER = WebServicePlugin.Util.getString("WebServiceUtil.chooseElementOrAttribute"); //$NON-NLS-1$
 
     public static final String INPUT_VARIABLE_UNQUALIFIED_PREFIX = "IN_"; //$NON-NLS-1$
-    public static final String INPUT_VARIABLE_PREFIX = ProcedureReservedWords.VARIABLES + '.' + INPUT_VARIABLE_UNQUALIFIED_PREFIX;
+    public static final String INPUT_VARIABLE_PREFIX = ISQLConstants.VARIABLES + '.' + INPUT_VARIABLE_UNQUALIFIED_PREFIX;
 
     // Special xpathvalue function
     public static final String XPATHVALUE = "xpathvalue"; //$NON-NLS-1$
@@ -216,19 +215,19 @@ public class WebServiceUtil {
         return ModelerCore.getMetamodelRegistry().getMetamodelDescriptor(WebServicePackage.eNS_URI);
     }
 
-    public static String getXpath(AssignmentStatement statement) {
-        Function function = getXpathFunction(statement);
+    public static String getXpath(IAssignmentStatement statement) {
+        IFunction function = getXpathFunction(statement);
         if (function != null && function.getArgs().length > 1) {
-            return (String)((Constant)function.getArg(1)).getValue();
+            return (String)((IConstant)function.getArg(1)).getValue();
         }
         return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
-    public static Function getXpathFunction(AssignmentStatement statement) {
+    public static IFunction getXpathFunction(IAssignmentStatement statement) {
         if (statement.getExpression() != null) {
-            Expression expr = statement.getExpression();
-            if (expr instanceof Function) {
-                Function function = (Function)expr;
+            IExpression expr = statement.getExpression();
+            if (expr instanceof IFunction) {
+                IFunction function = (IFunction)expr;
                 if (XPATHVALUE.equalsIgnoreCase(function.getName())) {
                     return function;
                 }

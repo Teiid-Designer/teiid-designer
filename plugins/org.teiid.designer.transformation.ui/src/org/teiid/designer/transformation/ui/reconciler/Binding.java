@@ -11,6 +11,12 @@ import javax.lang.model.type.NullType;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeManager;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.symbol.IAliasSymbol;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.symbol.IExpressionSymbol;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.util.RuntimeTypeConverter;
@@ -54,9 +60,9 @@ public class Binding {
     private EObject newAttrDatatype;
     private String newAttrName;
 
-    private Expression originalSymbol;
-    private Expression newSymbol;
-    private Expression availableSymbolConversion;
+    private IExpression originalSymbol;
+    private IExpression newSymbol;
+    private IExpression availableSymbolConversion;
 
     // private boolean canConvertSql = false;
     private boolean sqlWasConverted = false;
@@ -79,7 +85,7 @@ public class Binding {
      * @param symbol the symbol to be bound to the attribute
      */
     public Binding( Object attribute,
-    		Expression symbol ) {
+    		IExpression symbol ) {
         setAttribute(attribute);
         setOriginalSymbol(symbol);
     }
@@ -127,7 +133,7 @@ public class Binding {
     /**
      * @return SQL Symbol binding
      */
-    public Expression getOriginalSymbol() {
+    public IExpression getOriginalSymbol() {
         return originalSymbol;
     }
 
@@ -137,8 +143,8 @@ public class Binding {
      * 
      * @return SQL Symbol binding
      */
-    public Expression getCurrentSymbol() {
-    	Expression result = originalSymbol;
+    public IExpression getCurrentSymbol() {
+    	IExpression result = originalSymbol;
         if (newSymbol != null) {
             result = newSymbol;
         }
@@ -152,7 +158,7 @@ public class Binding {
      */
     public String getCurrentSymbolRuntimeType() {
         String runtimeType = null;
-        Expression currentSymbol = getCurrentSymbol();
+        IExpression currentSymbol = getCurrentSymbol();
         if (currentSymbol != null) {
             runtimeType = RuntimeTypeConverter.getRuntimeType(currentSymbol);
         }
@@ -166,7 +172,7 @@ public class Binding {
      */
     public int getCurrentSymbolLength() {
         int length = 0;
-        Expression currentSymbol = getCurrentSymbol();
+        IExpression currentSymbol = getCurrentSymbol();
         if (currentSymbol != null) {
             length = TransformationSqlHelper.getElementSymbolLength(currentSymbol);
         }
@@ -190,7 +196,7 @@ public class Binding {
      * 
      * @param the SQL Symbol
      */
-    public void setOriginalSymbol( Expression seSymbol ) {
+    public void setOriginalSymbol( IExpression seSymbol ) {
         this.originalSymbol = seSymbol;
         this.newSymbol = null;
         // Update SQL Conversion Data - based on symbol and attr type
@@ -216,7 +222,7 @@ public class Binding {
      * 
      * @param the SQL Symbol
      */
-    public void setNewSymbol( Expression seSymbol ) {
+    public void setNewSymbol( IExpression seSymbol ) {
         if (this.originalSymbol == null) {
             this.originalSymbol = seSymbol;
             this.newSymbol = seSymbol;
@@ -454,16 +460,16 @@ public class Binding {
         StringBuffer sb = new StringBuffer();
         Object sqlSymbol = getCurrentSymbol();
         if (sqlSymbol != null) {
-            // If its an AliasSymbol, use underlying symbol
-            if (sqlSymbol instanceof AliasSymbol) {
-                sqlSymbol = ((AliasSymbol)sqlSymbol).getSymbol();
+            // If its an IAliasSymbol, use underlying symbol
+            if (sqlSymbol instanceof IAliasSymbol) {
+                sqlSymbol = ((IAliasSymbol)sqlSymbol).getSymbol();
             }
-            if (sqlSymbol != null && sqlSymbol instanceof Expression) {
-                String symbolName = TransformationSqlHelper.getSingleElementSymbolShortName((Expression)sqlSymbol, true);
+            if (sqlSymbol != null && sqlSymbol instanceof IExpression) {
+                String symbolName = TransformationSqlHelper.getSingleElementSymbolShortName((IExpression)sqlSymbol, true);
                 // show aliased if necessary
                 if (!isInputParamBinding()) {
                     String attrName = getCurrentAttrName();
-                    String symShortName = TransformationSqlHelper.getSingleElementSymbolShortName((Expression)sqlSymbol,
+                    String symShortName = TransformationSqlHelper.getSingleElementSymbolShortName((IExpression)sqlSymbol,
                                                                                                   false);
                     // If symbol and attribute shortNames are different, show as aliased
                     if (!attrName.equalsIgnoreCase(symShortName)) {
@@ -477,14 +483,14 @@ public class Binding {
                     sb = new StringBuffer(symbolName);
                 }
                 if (showType) {
-                    sb.append(" : " + getSymbolDatatype((Expression)sqlSymbol)); //$NON-NLS-1$
+                    sb.append(" : " + getSymbolDatatype((IExpression)sqlSymbol)); //$NON-NLS-1$
                 }
             }
         }
         return sb.toString();
     }
 
-    private String getSymbolDatatype( Expression seSymbol ) {
+    private String getSymbolDatatype( IExpression seSymbol ) {
         String typeName;
         Class objClass = seSymbol.getType();
         IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
@@ -503,54 +509,39 @@ public class Binding {
      * 
      * @return the SingleElementSymbol for the current state of the binding
      */
-    public Expression createBindingSymbol() {
-    	Expression result = null;
+    public IExpression createBindingSymbol() {
+    	IExpression result = null;
         if (isBound()) {
-        	Expression currentSymbol = getCurrentSymbol();
+        	IExpression currentSymbol = getCurrentSymbol();
             String currentAttrName = getCurrentAttrName();
             String symbolShortName = TransformationSqlHelper.getSingleElementSymbolShortName(currentSymbol, false);
             // -----------------------------------------------------------------
             // Name of current Symbol matches the target Attribute
             // -----------------------------------------------------------------
             if (symbolShortName != null && symbolShortName.equalsIgnoreCase(currentAttrName)) {
-                result = (Expression)currentSymbol.clone();
-                // If this is an alias, get the underlying symbol and drop alias
-                // if(currentSymbol instanceof AliasSymbol) {
-                // SingleElementSymbol uSymbol = ((AliasSymbol)currentSymbol).getSymbol();
-                // if( currentAttrName.equalsIgnoreCase(uSymbol.getShortName()) ) {
-                // newSymbols.add((SingleElementSymbol)uSymbol.clone());
-                // } else {
-                // AliasSymbol aSym = (AliasSymbol)currentSymbol.clone();
-                // aSym.setName(currentAttrName);
-                // newSymbols.add(aSym);
-                // }
-                // } else {
-                //                                
-                // if( currentAttrName.equalsIgnoreCase(symbolShortName) ) {
-                // newSymbols.add((SingleElementSymbol)currentSymbol.clone());
-                // } else {
-                // newSymbols.add(new AliasSymbol(currentAttrName,currentSymbol));
-                // }
-                // }
+                result = (IExpression)currentSymbol.clone();
 
                 // -----------------------------------------------------------------
                 // Name of sql doesnt match the target Attribute
                 // -----------------------------------------------------------------
             } else {
                 // If this is already an alias, rename it
-                if (currentSymbol instanceof AliasSymbol) {
-                	Expression uSymbol = ((AliasSymbol)currentSymbol).getSymbol();
+                if (currentSymbol instanceof IAliasSymbol) {
+                	IExpression uSymbol = ((IAliasSymbol)currentSymbol).getSymbol();
                     // If underlying symbol matches, drop the alias
-                    if (Symbol.getShortName(uSymbol).equalsIgnoreCase(currentAttrName)) {
-                        result = (Expression)uSymbol.clone();
+                	IQueryService queryService = ModelerCore.getTeiidQueryService();
+                    if (queryService.getSymbolShortName(uSymbol).equalsIgnoreCase(currentAttrName)) {
+                        result = (IExpression)uSymbol.clone();
                     } else {
-                        AliasSymbol aSym = (AliasSymbol)currentSymbol.clone();
+                        IAliasSymbol aSym = (IAliasSymbol)currentSymbol.clone();
                         aSym.setShortName(currentAttrName);
                         result = aSym;
                     }
                     // If this is not an alias, make it one
                 } else {
-                    currentSymbol = new AliasSymbol(currentAttrName, currentSymbol);
+                    IQueryService queryService = ModelerCore.getTeiidQueryService();
+                    IQueryFactory factory = queryService.createQueryFactory();
+                    currentSymbol = factory.createAliasSymbol(currentAttrName, currentSymbol);
                     result = currentSymbol;
                 }
             }
@@ -614,31 +605,6 @@ public class Binding {
             // canConvertSql=true;
             return;
         }
-        // ----------------------------------------------------
-        // Get the DataType Name for the current SQL Symbol
-        // ----------------------------------------------------
-        // EObject attrDatatype = getCurrentAttrDatatype();
-        // String currentAttrTypeStr = RuntimeTypeConverter.getRuntimeType(attrDatatype);
-        //            
-        // Object sqlSymbol = getCurrentSymbol();
-        // String sqlSymbolTypeStr = RuntimeTypeConverter.getRuntimeType(sqlSymbol);
-        //        
-        // //-------------------------------------------------------
-        // // DataTypes are not equal, see if a convert is possible
-        // //-------------------------------------------------------
-        // if( !currentAttrTypeStr.equalsIgnoreCase(sqlSymbolTypeStr) ) {
-        // // if the conversion is desired back to the original SQL type, no convert is required
-        // String originalSQLTypeStr = service.getDataTypeName(originalSymbol.getType());
-        // if( !currentAttrTypeStr.equalsIgnoreCase(originalSQLTypeStr) ) {
-        // // Check whether there is an Explicit or Implicit conversion
-        // if( isExplicitOrImplicitConversion(sqlSymbolTypeStr,currentAttrTypeStr) ) {
-        // // Enable, unless it's an AggregateSymbol
-        // if( !(originalSymbol instanceof AggregateSymbol) ) {
-        // canConvertSql=true;
-        // }
-        // }
-        // }
-        // }
     }
 
     /**
@@ -646,6 +612,8 @@ public class Binding {
      */
     public void updateAvailableSymbolConversionAndText() {
         IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
         
         sqlConversionText = null;
         availableSymbolConversion = null;
@@ -666,7 +634,7 @@ public class Binding {
 
         Object sqlSymbol = getCurrentSymbol();
         String sqlSymbolTypeStr = RuntimeTypeConverter.getRuntimeType(sqlSymbol);
-        Expression oSymbol = originalSymbol;
+        IExpression oSymbol = originalSymbol;
 
         // -------------------------------------------------------
         // DataTypes not equal, update the SQL to do the CONVERT
@@ -685,28 +653,28 @@ public class Binding {
                 // Explicit conversion, use it
                 if (isImplicit || isExplicit) {
                     // If symbol is aliased, get underlying symbol
-                    if (oSymbol instanceof AliasSymbol) {
-                        AliasSymbol aSym = (AliasSymbol)oSymbol;
+                    if (oSymbol instanceof IAliasSymbol) {
+                        IAliasSymbol aSym = (IAliasSymbol)oSymbol;
                         oSymbol = aSym.getSymbol();
                         // Symbol alias should be target attribute name
                         symbolAlias = getCurrentAttrName();
                     }
-                    if (oSymbol instanceof ElementSymbol) {
+                    if (oSymbol instanceof IElementSymbol) {
                         symbolAlias = getCurrentAttrName();
-                        AliasSymbol aSymbol = TransformationSqlHelper.convertElementSymbol((ElementSymbol)oSymbol,
+                        IAliasSymbol aSymbol = TransformationSqlHelper.convertElementSymbol((IElementSymbol)oSymbol,
                                                                                            currentAttrTypeStr,
                                                                                            symbolAlias);
                         availableSymbolConversion = aSymbol;
                         sqlConversionText = getSQLLabelText(aSymbol, symbolAlias, isExplicit);
                         return;
-                    } else if (oSymbol instanceof ExpressionSymbol) {
-                        ExpressionSymbol eSymbol = (ExpressionSymbol)oSymbol.clone();
-                        // First check whether the Expression is a ConvertFunction, and the converted
+                    } else if (oSymbol instanceof IExpressionSymbol) {
+                        IExpressionSymbol eSymbol = (IExpressionSymbol)oSymbol.clone();
+                        // First check whether the IExpression is a ConvertFunction, and the converted
                         // Symbol type matches the desired type.
                         if (TransformationSqlHelper.isConvertFunction(eSymbol)) {
-                            Expression cExpr = TransformationSqlHelper.getConvertedExpr(eSymbol);
-                            if (cExpr instanceof Expression) {
-                            	Expression seSymbol = (Expression)cExpr;
+                            IExpression cExpr = TransformationSqlHelper.getConvertedExpr(eSymbol);
+                            if (cExpr != null) {
+                            	IExpression seSymbol = cExpr;
                                 String seSymbolTypeStr = service.getDataTypeName(seSymbol.getType());
                                 if (seSymbolTypeStr != null && seSymbolTypeStr.equalsIgnoreCase(currentAttrTypeStr)) {
                                     availableSymbolConversion = seSymbol;
@@ -718,7 +686,7 @@ public class Binding {
                             } else {
                                 String exprTypeStr = service.getDataTypeName(cExpr.getType());
                                 if (exprTypeStr != null && exprTypeStr.equalsIgnoreCase(currentAttrTypeStr)) {
-                                    ExpressionSymbol exprSymbol = new ExpressionSymbol("expr", cExpr); //$NON-NLS-1$
+                                    IExpressionSymbol exprSymbol = factory.createExpressionSymbol("expr", cExpr); //$NON-NLS-1$
                                     availableSymbolConversion = exprSymbol;
                                     // optimizer.optimize(availableSymbolConversion);
                                     if (symbolAlias != null) {
@@ -730,22 +698,17 @@ public class Binding {
                                     // optimizer.deoptimize(availableSymbolConversion);
                                     return;
                                 } else if (exprTypeStr != null) {
-                                    ExpressionSymbol exprSymb = new ExpressionSymbol("expr", cExpr); //$NON-NLS-1$
+                                    IExpressionSymbol exprSymb = factory.createExpressionSymbol("expr", cExpr); //$NON-NLS-1$
                                     eSymbol = TransformationSqlHelper.convertExpressionSymbol(exprSymb, currentAttrTypeStr);
                                 }
                             }
                         } else {
-//                            if (!(oSymbol instanceof AggregateSymbol)) {
-                                eSymbol = TransformationSqlHelper.convertExpressionSymbol((ExpressionSymbol)oSymbol,
-                                                                                          currentAttrTypeStr);
-//                            } else {
-//                                sqlConversionText = CONVERT_SQL_TEXT + CR + CANNOT_CONVERT_AGGREGATE_TEXT;
-//                                return;
-//                            }
+                            eSymbol = TransformationSqlHelper.convertExpressionSymbol((IExpressionSymbol)oSymbol,
+                                                                                      currentAttrTypeStr);
                         }
                         sqlConversionText = getSQLLabelText(eSymbol, symbolAlias, isExplicit);
                         if (symbolAlias != null) {
-                            availableSymbolConversion = new AliasSymbol(symbolAlias, eSymbol);
+                            availableSymbolConversion = factory.createAliasSymbol(symbolAlias, eSymbol);
                         } else {
                             availableSymbolConversion = eSymbol;
                         }
@@ -767,7 +730,7 @@ public class Binding {
         return;
     }
 
-    private String getSQLLabelText( Expression seSymbol,
+    private String getSQLLabelText( IExpression seSymbol,
                                     String symbolAlias,
                                     boolean isExplicit ) {
         StringBuffer sb = new StringBuffer();
@@ -776,7 +739,7 @@ public class Binding {
             sb.append(seSymbol.toString());
             // optimizer.deoptimize(seSymbol);
             // If symbolAlias was passed in, use it
-            if (symbolAlias != null && !(seSymbol instanceof AliasSymbol)) {
+            if (symbolAlias != null && !(seSymbol instanceof IAliasSymbol)) {
                 sb.append(SPACE + AS + SPACE + symbolAlias);
             }
             // If explicit conversion, warn loss of precision
@@ -786,25 +749,4 @@ public class Binding {
         }
         return sb.toString();
     }
-
-    // /**
-    // * Determine if there is an explicit or implicit conversion from the source type
-    // * to the target type.
-    // * @param srcType the source Type
-    // * @param tgtType the target Type
-    // * @return 'true' if there is a conversion, 'false' if not.
-    // */
-    // private boolean isExplicitOrImplicitConversion(String srcType,String tgtType) {
-    // boolean isConversion = false;
-    //
-    // // Check whether there is a conversion
-    // boolean isExplicit = DataTypeManager.isExplicitConversion(srcType, tgtType);
-    // boolean isImplicit = DataTypeManager.isImplicitConversion(srcType, tgtType);
-    //
-    // if( isImplicit || isExplicit ) {
-    // isConversion = true;
-    // }
-    // return isConversion;
-    // }
-
 }

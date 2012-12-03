@@ -13,8 +13,8 @@ import java.util.Iterator;
 import java.util.Map;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.symbol.Expression;
+import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.lang.IExpression;
 
 
 /**
@@ -74,7 +74,7 @@ public class CriteriaEditorModel extends CompositeLanguageObjectEditorModel {
                                 IsNullCriteriaEditorModel theIsNullCriteriaModel,
                                 MatchCriteriaEditorModel theMatchCriteriaModel,
                                 SetCriteriaEditorModel theSetCriteriaModel ) {
-        super(Criteria.class);
+        super(ICriteria.class);
 
         typeModelMap = new HashMap();
         typeOperatorMap = new HashMap();
@@ -136,8 +136,8 @@ public class CriteriaEditorModel extends CompositeLanguageObjectEditorModel {
         return compareModel;
     }
 
-    public Criteria getCriteria() {
-        return (Criteria)getLanguageObject();
+    public ICriteria getCriteria() {
+        return (ICriteria)getLanguageObject();
     }
 
     public Class getCriteriaType() {
@@ -237,8 +237,8 @@ public class CriteriaEditorModel extends CompositeLanguageObjectEditorModel {
 
                 if (currentModel != newModel) {
                     // save expressions from model being swapped out
-                    Expression leftExpression = currentModel.getLeftExpression();
-                    Expression rightExpression = currentModel.getRightExpression();
+                    IExpression leftExpression = currentModel.getLeftExpression();
+                    IExpression rightExpression = currentModel.getRightExpression();
 
                     setCurrentModel(newModel); // newModel is now the current model
 

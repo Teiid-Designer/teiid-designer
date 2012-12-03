@@ -8,7 +8,6 @@
 package org.teiid.designer.webservice.ui.editor;
 
 import java.util.Map.Entry;
-
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -33,6 +32,8 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.query.sql.proc.IAssignmentStatement;
+import org.teiid.designer.query.sql.proc.IDeclareStatement;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -41,8 +42,6 @@ import org.teiid.designer.ui.common.widget.DefaultContentProvider;
 import org.teiid.designer.webservice.ui.IInternalUiConstants;
 import org.teiid.designer.webservice.ui.WebServiceUiPlugin;
 import org.teiid.designer.webservice.util.WebServiceUtil;
-import org.teiid.query.sql.proc.AssignmentStatement;
-import org.teiid.query.sql.proc.DeclareStatement;
 
 
 /**
@@ -104,7 +103,7 @@ public class InputVariableSection implements IInternalUiConstants {
 			public String getColumnText( Object element,
                                          int columnIndex ) {
 
-                DeclareStatement declaration = (DeclareStatement)((Entry)element).getKey();
+                IDeclareStatement declaration = (IDeclareStatement)((Entry)element).getKey();
                 return declaration.getVariable().getShortName() + " : " + declaration.getVariableType(); //$NON-NLS-1$
             }
         });
@@ -196,7 +195,7 @@ public class InputVariableSection implements IInternalUiConstants {
             table.setToolTipText(null);
         } else {
             Entry entry = (Entry)item.getData();
-            table.setToolTipText(WebServiceUtil.getXpath((AssignmentStatement)entry.getValue()));
+            table.setToolTipText(WebServiceUtil.getXpath((IAssignmentStatement)entry.getValue()));
         }
     }
    

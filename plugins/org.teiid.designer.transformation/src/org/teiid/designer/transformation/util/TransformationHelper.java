@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.emf.mapping.MappingRoot;
-import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.common.xmi.XMIHeader;
@@ -70,18 +69,20 @@ import org.teiid.designer.metamodels.transformation.TransformationMapping;
 import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
 import org.teiid.designer.metamodels.transformation.XQueryTransformationMappingRoot;
 import org.teiid.designer.metamodels.webservice.Operation;
-import org.teiid.designer.sql.ISQLConstants;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.query.sql.IElementCollectorVisitor;
+import org.teiid.designer.query.sql.ISQLConstants;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.query.sql.lang.IQueryCommand;
+import org.teiid.designer.query.sql.lang.ISetQuery;
+import org.teiid.designer.query.sql.lang.IStoredProcedure;
+import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
+import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.transformation.TransformationPlugin;
-import org.teiid.query.metadata.QueryMetadataInterface;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.QueryCommand;
-import org.teiid.query.sql.lang.SetQuery;
-import org.teiid.query.sql.lang.StoredProcedure;
-import org.teiid.query.sql.proc.CreateProcedureCommand;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 
 
 /**
@@ -298,15 +299,15 @@ public class TransformationHelper implements ISQLConstants {
                 // If the source is a StoredProcedure, create Virtual Procedure
                 if (TransformationHelper.isSqlProcedure(sourceGroup)) {
                     // Create StoredProcedure
-                    StoredProcedure proc = TransformationSqlHelper.createStoredProc(sourceGroup);
+                    IStoredProcedure proc = TransformationSqlHelper.createStoredProc(sourceGroup);
                     if (proc != null) {
-                        CreateProcedureCommand cCommand = TransformationSqlHelper.createVirtualProcCommmandForCommand(proc);
+                        ICreateProcedureCommand cCommand = TransformationSqlHelper.createVirtualProcCommmandForCommand(proc);
                         // Set the SQL STring on the transformation ...
                         setSelectSqlString(transMappingRoot, cCommand.toString(), false, txnSource);
                     }
                 } else {
                     // Create the query node for the default query ...
-                    Query query = TransformationSqlHelper.createDefaultQuery(sourceGroup);
+                    IQuery query = TransformationSqlHelper.createDefaultQuery(sourceGroup);
                     // Set the SQL STring on the transformation ...
                     setSelectSqlString(transMappingRoot, query.toString(), true, txnSource);
                 }
@@ -2675,22 +2676,19 @@ public class TransformationHelper implements ISQLConstants {
         return null;
     }
 
-    public static GroupSymbol getTargetGroupSymbol(final Table targetGroup,
-                              final QueryMetadataInterface metadata) throws QueryMetadataException {
+    public static IGroupSymbol getTargetGroupSymbol(final Table targetGroup,
+                              final IQueryMetadataInterface metadata) throws Exception {
         if (targetGroup == null) {
             return null;
         }
         String targetGroupFullName = TransformationHelper.getSqlEObjectFullName(targetGroup);
         String targetGroupUUID = TransformationHelper.getSqlEObjectUUID(targetGroup);
-        GroupSymbol gSymbol = new GroupSymbol(targetGroupFullName);
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+        IGroupSymbol gSymbol = factory.createGroupSymbol(targetGroupFullName);
         Object groupID;
         
-        try {
-            groupID = metadata.getGroupID(targetGroupUUID);
-        } catch (Exception ex) {
-            throw new QueryMetadataException(ex.getMessage());
-        }
-        
+        groupID = metadata.getGroupID(targetGroupUUID);
         if (groupID != null) {
             gSymbol.setMetadataID(groupID);
             return gSymbol;
@@ -2896,7 +2894,7 @@ public class TransformationHelper implements ISQLConstants {
      * @param cmdType the commandType to get the current SQL String
      * @return the Command for the specified type
      */
-    public static Command getCommand( Object transMappingRoot,
+    public static ICommand getCommand( Object transMappingRoot,
                                       int cmdType ) {
         return SqlMappingRootCache.getCommand(transMappingRoot, cmdType);
     }
@@ -3002,8 +3000,8 @@ public class TransformationHelper implements ISQLConstants {
     public static boolean isValidQuery( Object transMappingRoot ) {
         boolean result = false;
         if (SqlMappingRootCache.isSelectValid(transMappingRoot)) {
-            Command command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
-            if (command instanceof Query) {
+            ICommand command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
+            if (command instanceof IQuery) {
                 result = true;
             }
         }
@@ -3021,9 +3019,9 @@ public class TransformationHelper implements ISQLConstants {
         boolean result = false;
 
         if (SqlMappingRootCache.isSelectValid(transMappingRoot)) {
-            Command command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
+            ICommand command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
 
-            if (command instanceof CreateProcedureCommand) {
+            if (command instanceof ICreateProcedureCommand) {
                 result = true;
             }
         }
@@ -3041,8 +3039,8 @@ public class TransformationHelper implements ISQLConstants {
     public static boolean isValidSetQuery( Object transMappingRoot ) {
         boolean result = false;
         if (SqlMappingRootCache.isSelectValid(transMappingRoot)) {
-            Command command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
-            if (command instanceof SetQuery) {
+            ICommand command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
+            if (command instanceof ISetQuery) {
                 result = true;
             }
         }
@@ -3058,8 +3056,8 @@ public class TransformationHelper implements ISQLConstants {
     public static boolean isParsableQuery( Object transMappingRoot ) {
         boolean result = false;
         if (SqlMappingRootCache.isSelectParsable(transMappingRoot)) {
-            Command command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
-            if (command instanceof Query) {
+            ICommand command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
+            if (command instanceof IQuery) {
                 result = true;
             }
         }
@@ -3075,44 +3073,13 @@ public class TransformationHelper implements ISQLConstants {
     public static boolean isParsableSetQuery( Object transMappingRoot ) {
         boolean result = false;
         if (SqlMappingRootCache.isSelectParsable(transMappingRoot)) {
-            Command command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
-            if (command instanceof SetQuery) {
+            ICommand command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
+            if (command instanceof ISetQuery) {
                 result = true;
             }
         }
         return result;
     }
-
-    // /**
-    // * Method to determine if the transformation SELECT is the default SELECT
-    // *
-    // * @param transMappingRoot the transformation mapping root.
-    // * @return true if the Select SQL is the initial default, false if not.
-    // */
-    // public static boolean isInitialSelect( Object transMappingRoot ) {
-    // String sqlString = TransformationHelper.getSelectSqlString(transMappingRoot);
-    // return isDefaultSelect(sqlString);
-    // }
-
-    // /**
-    // * Method to determine if the supplied SQL is the initial default
-    // *
-    // * @param sqlString the SQL string.
-    // * @return true if the supplied SQL is the default select, false if not.
-    // */
-    // public static boolean isDefaultSelect( String sqlString ) {
-    // if (sqlString == null) return false;
-    //
-    // StringBuffer sb = new StringBuffer(sqlString);
-    // SqlStringUtil.replaceAll(sb, CR, BLANK);
-    // SqlStringUtil.replaceAll(sb, TAB, BLANK);
-    // SqlStringUtil.replaceAll(sb, DBL_SPACE, SPACE);
-    // String str = sb.toString();
-    // if (str != null && str.trim().equalsIgnoreCase(DEFAULT_SELECT)) {
-    // return true;
-    // }
-    // return false;
-    // }
 
     /**
      * Method to determine if the transformation SELECT is a 'SELECT xxx FROM' String
@@ -3195,14 +3162,14 @@ public class TransformationHelper implements ISQLConstants {
     public static boolean canUseReconciler( Object transMappingRoot ) {
         boolean canUse = false;
         boolean isValid = SqlMappingRootCache.isSelectValid(transMappingRoot);
-        Command command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
+        ICommand command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
         if (command != null) {
             // If the command is a query and is validatable, can reconcile
-            if (isValid && command instanceof Query) {
+            if (isValid && command instanceof IQuery) {
                 canUse = true;
                 // If the command is a SetQuery, not required to pass validation.
                 // There will be further checks in the editor on the specific segment to reconcile
-            } else if (command instanceof SetQuery) {
+            } else if (command instanceof ISetQuery) {
                 canUse = true;
             }
         }
@@ -3217,8 +3184,8 @@ public class TransformationHelper implements ISQLConstants {
      */
     public static boolean isUnionCommand( Object transMappingRoot ) {
         boolean isUnion = false;
-        Command command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
-        if (command != null && command instanceof SetQuery) {
+        ICommand command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
+        if (command != null && command instanceof ISetQuery) {
             isUnion = true;
         }
         return isUnion;
@@ -3288,117 +3255,6 @@ public class TransformationHelper implements ISQLConstants {
     }
 
     /**
-     * Get the generated procedure text string for a given SELECT query command
-     * 
-     * @param transMappingRoot the transformation mapping root
-     * @param type the type of the statement to generate the procedure for
-     * @return the generated procedure text string
-     */
-//    public static String getGeneratedProcedureStr( Object transMappingRoot,
-//                                                   int type ) {
-//        // Get the generated procedure (if possible)
-//        CreateUpdateProcedureCommand generatedProc = getGeneratedProcedure(transMappingRoot, type);
-//
-//        // If non-null, return the string
-//        if (generatedProc != null) {
-//            return generatedProc.toString();
-//        }
-//        return null;
-//    }
-
-//    /**
-//     * Get the generated procedure for a given SELECT query command
-//     * 
-//     * @param transMappingRoot the transformation mapping root
-//     * @param type the type of the statement to generate the procedure for
-//     * @return the generated procedure
-//     */
-//    public static CreateUpdateProcedureCommand getGeneratedProcedure( Object transMappingRoot,
-//                                                                      int type ) {
-//        CreateUpdateProcedureCommand generatedProc = null;
-//
-//        if (transMappingRoot != null && isSqlTransformationMappingRoot(transMappingRoot)) {
-//
-//            EObject targetGroup = getTransformationTarget(transMappingRoot);
-//
-//            if (targetGroup == null) {
-//                return null;
-//            }
-//
-//            boolean isValid = SqlMappingRootCache.isSelectValid(transMappingRoot);
-//
-//            // Get the corresponding procedure type
-//            int procType = 0;
-//            if (type == QueryValidator.INSERT_TRNS) {
-//                procType = UpdateProcedureGenerator.INSERT_PROCEDURE;
-//            } else if (type == QueryValidator.UPDATE_TRNS) {
-//                procType = UpdateProcedureGenerator.UPDATE_PROCEDURE;
-//            } else if (type == QueryValidator.DELETE_TRNS) {
-//                procType = UpdateProcedureGenerator.DELETE_PROCEDURE;
-//            }
-//
-//            // Get the generated procedure from generator utility
-//            if (isValid
-//                && (procType == UpdateProcedureGenerator.INSERT_PROCEDURE
-//                    || procType == UpdateProcedureGenerator.UPDATE_PROCEDURE || procType == UpdateProcedureGenerator.DELETE_PROCEDURE)) {
-//                String virtualTargetFullName = getSqlEObjectFullName(targetGroup);
-//                Command selectCommand = SqlMappingRootCache.getSelectCommand(transMappingRoot);
-//                // Can only generate procedures for Query Commands
-//                if (selectCommand != null && selectCommand instanceof Query) {
-//                    try {
-//                        QueryMetadataInterface resolver = TransformationMetadataFactory.getInstance().getModelerMetadata(targetGroup);
-//                        generatedProc = UpdateProcedureGenerator.createProcedure(procType,
-//                                                                                 virtualTargetFullName,
-//                                                                                 selectCommand,
-//                                                                                 resolver);
-//                    } catch (TeiidDesignerComponentException e) {
-//                        // Exception leaves generatedProc null
-//                        String message = "[TransformationHelper.getGeneratedProcedure()] INFO:  Couldnt generate procedure\n"; //$NON-NLS-1$
-//                        TransformationPlugin.Util.log(IStatus.INFO, message + e.getMessage());
-//                    }
-//                }
-//            }
-//        }
-//        return generatedProc;
-//    }
-
-    /**
-     * Get the generated procedure errors for a query
-     * 
-     * @param transMappingRoot the transformation mapping root
-     * @return the procedure generation errors
-     */
-//    public static String getProcedureGenerationErrorMsg( Object transMappingRoot ) {
-//        String errorMsg = null;
-//
-//        if (transMappingRoot != null && isSqlTransformationMappingRoot(transMappingRoot)) {
-//
-//            EObject targetGroup = getTransformationTarget(transMappingRoot);
-//
-//            if (targetGroup == null) {
-//                return null;
-//            }
-//
-//            boolean isValid = SqlMappingRootCache.isSelectValid(transMappingRoot);
-//
-//            // If SELECT statement is valid, attempt to get validation error message
-//            if (isValid) {
-//                Command selectCommand = SqlMappingRootCache.getSelectCommand(transMappingRoot);
-//                QueryMetadataInterface resolver = TransformationMetadataFactory.getInstance().getModelerMetadata(targetGroup);
-//                // validate that a procedure can be generated
-//                UpdateValidationVisitor updateVisitor = new UpdateValidationVisitor(resolver);
-//                PreOrderNavigator.doVisit(selectCommand, updateVisitor);
-//                ValidatorReport report = updateVisitor.getReport();
-//                if (report.hasItems()) {
-//                    errorMsg = report.getFailureMessage();
-//                }
-//            }
-//        }
-//
-//        return errorMsg;
-//    }
-
-    /**
      * For the provided TransformationMappingRoot, get all of the Source Attributes for the supplied Target Attribute.
      * 
      * @param targetAttr the target attribute
@@ -3409,9 +3265,9 @@ public class TransformationHelper implements ISQLConstants {
                                                                Object transMappingRoot ) {
         Collection sourceAttributes = null;
         if (transMappingRoot != null && TransformationHelper.isTransformationMappingRoot(transMappingRoot)) {
-            Command selectCommand = TransformationHelper.getCommand(transMappingRoot, QueryValidator.SELECT_TRNS);
+            ICommand selectCommand = TransformationHelper.getCommand(transMappingRoot, QueryValidator.SELECT_TRNS);
             // Handle non-Union queries. Get source attributes from mappings
-            if (!(selectCommand instanceof SetQuery)) {
+            if (!(selectCommand instanceof ISetQuery)) {
                 sourceAttributes = new ArrayList();
                 // Get the Attribute Mapping List
                 EList attrMappings = ((MappingRoot)transMappingRoot).getNested();
@@ -3430,7 +3286,7 @@ public class TransformationHelper implements ISQLConstants {
                 }
                 // Handle Union queries differently - (need to extract each query in the union)
             } else {
-                sourceAttributes = getUnionSourceAttributesForTargetAttr(targetAttr, (SetQuery)selectCommand);
+                sourceAttributes = getUnionSourceAttributesForTargetAttr(targetAttr, (ISetQuery)selectCommand);
             }
         }
         if (sourceAttributes == null) {
@@ -3448,9 +3304,12 @@ public class TransformationHelper implements ISQLConstants {
      * @return the collection of source attributes
      */
     private static Collection getUnionSourceAttributesForTargetAttr( Object targetAttr,
-                                                                     SetQuery unionQry ) {
+                                                                     ISetQuery unionQry ) {
         List sourceAttributes = new ArrayList();
-        if (unionQry != null && unionQry.getOperation() == org.teiid.query.sql.lang.SetQuery.Operation.UNION
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor();
+        
+        if (unionQry != null && unionQry.getOperation() == ISetQuery.Operation.UNION
             && unionQry.isResolved()) {
             List projSymbolNames = TransformationSqlHelper.getProjectedSymbolNames(unionQry);
             // Find index of the symbol that matches the target attribute name
@@ -3471,16 +3330,16 @@ public class TransformationHelper implements ISQLConstants {
                 List queries = SetQueryUtil.getQueryList(unionQry);
                 Iterator qIter = queries.iterator();
                 while (qIter.hasNext()) {
-                    QueryCommand query = (QueryCommand)qIter.next();
+                    IQueryCommand query = (IQueryCommand)qIter.next();
                     List projSymbols = query.getProjectedSymbols();
                     // number of project symbols in each query in the union should be same as
                     // number of project symbols on the union, if the query is properly reconciled
                     // but there is no gaurentee so check the index in the proj of union to the proj
                     // of qury
                     if (index < projSymbols.size()) {
-                    	Expression seSymbol = (Expression)projSymbols.get(index);
+                    	IExpression seSymbol = (IExpression)projSymbols.get(index);
                         // Get the ElementSymbols / corresponding EObjs
-                        Collection elemSymbols = ElementCollectorVisitor.getElements(seSymbol, true);
+                        Collection elemSymbols = elementCollectorVisitor.getElements(seSymbol, true);
                         Collection elemEObjs = TransformationSqlHelper.getElementSymbolEObjects(elemSymbols, query);
                         sourceAttributes.addAll(elemEObjs);
                     }

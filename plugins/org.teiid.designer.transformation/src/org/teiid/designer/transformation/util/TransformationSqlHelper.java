@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metadata.runtime.ColumnRecordImpl;
 import org.teiid.designer.core.metadata.runtime.TableRecordImpl;
@@ -41,52 +40,55 @@ import org.teiid.designer.metadata.runtime.ProcedureParameterRecord;
 import org.teiid.designer.metamodels.transformation.InputSet;
 import org.teiid.designer.metamodels.transformation.SqlAlias;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
-import org.teiid.designer.sql.ISQLConstants;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.metadata.IMetadataID;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.query.metadata.IStoredProcedureInfo;
+import org.teiid.designer.query.sql.IElementCollectorVisitor;
+import org.teiid.designer.query.sql.IGroupCollectorVisitor;
+import org.teiid.designer.query.sql.IGroupsUsedByElementsVisitor;
+import org.teiid.designer.query.sql.IReferenceCollectorVisitor;
+import org.teiid.designer.query.sql.ISQLConstants;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.IFrom;
+import org.teiid.designer.query.sql.lang.IFromClause;
+import org.teiid.designer.query.sql.lang.IGroupBy;
+import org.teiid.designer.query.sql.lang.IOrderBy;
+import org.teiid.designer.query.sql.lang.IOrderByItem;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.query.sql.lang.IQueryCommand;
+import org.teiid.designer.query.sql.lang.ISPParameter;
+import org.teiid.designer.query.sql.lang.ISelect;
+import org.teiid.designer.query.sql.lang.ISetQuery;
+import org.teiid.designer.query.sql.lang.IStoredProcedure;
+import org.teiid.designer.query.sql.lang.ISubqueryFromClause;
+import org.teiid.designer.query.sql.lang.IUnaryFromClause;
+import org.teiid.designer.query.sql.proc.IBlock;
+import org.teiid.designer.query.sql.proc.ICommandStatement;
+import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
+import org.teiid.designer.query.sql.symbol.IAliasSymbol;
+import org.teiid.designer.query.sql.symbol.IConstant;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.symbol.IExpressionSymbol;
+import org.teiid.designer.query.sql.symbol.IFunction;
+import org.teiid.designer.query.sql.symbol.IGroupSymbol;
+import org.teiid.designer.query.sql.symbol.IMultipleElementSymbol;
+import org.teiid.designer.query.sql.symbol.IReference;
+import org.teiid.designer.query.sql.symbol.ISymbol;
 import org.teiid.designer.transformation.PreferenceConstants;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.aspects.sql.InputParameterSqlAspect;
 import org.teiid.designer.transformation.metadata.TransformationMetadataFactory;
 import org.teiid.designer.transformation.validation.SqlTransformationResult;
 import org.teiid.designer.transformation.validation.TransformationValidator;
+import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
+import org.teiid.designer.udf.IFunctionDescriptor;
+import org.teiid.designer.udf.IFunctionLibrary;
+import org.teiid.designer.udf.IFunctionLibrary.FunctionName;
 import org.teiid.designer.udf.UdfManager;
-import org.teiid.language.SQLConstants;
-import org.teiid.query.function.FunctionDescriptor;
-import org.teiid.query.function.FunctionLibrary;
-import org.teiid.query.metadata.QueryMetadataInterface;
-import org.teiid.query.metadata.StoredProcedureInfo;
-import org.teiid.query.metadata.TempMetadataID;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.From;
-import org.teiid.query.sql.lang.FromClause;
-import org.teiid.query.sql.lang.GroupBy;
-import org.teiid.query.sql.lang.OrderBy;
-import org.teiid.query.sql.lang.OrderByItem;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.QueryCommand;
-import org.teiid.query.sql.lang.SPParameter;
-import org.teiid.query.sql.lang.Select;
-import org.teiid.query.sql.lang.SetQuery;
-import org.teiid.query.sql.lang.SetQuery.Operation;
-import org.teiid.query.sql.lang.StoredProcedure;
-import org.teiid.query.sql.lang.SubqueryFromClause;
-import org.teiid.query.sql.lang.UnaryFromClause;
-import org.teiid.query.sql.proc.Block;
-import org.teiid.query.sql.proc.CommandStatement;
-import org.teiid.query.sql.proc.CreateProcedureCommand;
-import org.teiid.query.sql.symbol.AliasSymbol;
-import org.teiid.query.sql.symbol.Constant;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.ExpressionSymbol;
-import org.teiid.query.sql.symbol.Function;
-import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.symbol.MultipleElementSymbol;
-import org.teiid.query.sql.symbol.Reference;
-import org.teiid.query.sql.symbol.Symbol;
-import org.teiid.query.sql.visitor.ElementCollectorVisitor;
-import org.teiid.query.sql.visitor.GroupCollectorVisitor;
-import org.teiid.query.sql.visitor.GroupsUsedByElementsVisitor;
-import org.teiid.query.sql.visitor.ReferenceCollectorVisitor;
 
 
 /**
@@ -110,6 +112,24 @@ public class TransformationSqlHelper implements ISQLConstants {
      */
     public static TransformationSqlHelper getInstance() {
         return INSTANCE;
+    }
+    
+    /**
+     * Convenience method for retrieving the query service
+     * 
+     * @return instance of {@link IQueryService}
+     */
+    public static IQueryService getQueryService() {
+        return ModelerCore.getTeiidQueryService();
+    }
+    
+    /**
+     * Convenience method for retrieving a query factory
+     * 
+     * @return instance of {@link IQueryFactory}
+     */
+    public static IQueryFactory getQueryFactory() {
+        return getQueryService().createQueryFactory();
     }
 
     /**
@@ -180,20 +200,6 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Update All SQL (SELECT,UPDATE,INSERT,DELETE) for the transformation when a source group is removed.
-     * 
-     * @param transMappingRoot the transformation mapping root
-     * @param sourceEObj the source group removed
-     */
-    public static void updateAllSqlOnSqlAliasGroupRemoved( EObject transMappingRoot, // NO_UCD
-                                                           EObject sqlAliasGroup,
-                                                           boolean removeElemsFromSelect,
-                                                           Object source ) {
-        // modTODO: only the SELECT is modified currently - may extend to include other SQL(?)
-        updateSelectSqlOnSqlAliasGroupRemoved(transMappingRoot, sqlAliasGroup, removeElemsFromSelect, source);
-    }
-
-    /**
      * Update All SQL (SELECT,UPDATE,INSERT,DELETE) for the transformation when source groups are removed.
      * 
      * @param transMappingRoot the transformation mapping root
@@ -221,7 +227,7 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Update Select SQL for the transformation when a source group is added.
+     * Update ISelect SQL for the transformation when a source group is added.
      * 
      * @param transMappingRoot the transformation mapping root
      * @param sqlAliasGroup the SqlAlias group to add
@@ -234,11 +240,11 @@ public class TransformationSqlHelper implements ISQLConstants {
                                                             Object source ) {
         if (org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper.isTable(sqlAliasGroup)) {
             // ------------------------------------------------------------------------------
-            // Add the new group to the From clause and its attributes to the select clause
+            // Add the new group to the IFrom clause and its attributes to the select clause
             // WILL NOT CHANGE UNLESS ITS A PARSABLE QUERY. (DONT CHANGE SETQUERY)
             // -----------------------------------------------------------------
             if (TransformationHelper.isParsableQuery(transMappingRoot) || TransformationHelper.isEmptySelect(transMappingRoot)) {
-                // Add the source Group to the Query From Clause
+                // Add the source Group to the IQuery IFrom Clause
                 if (sqlAliasGroup != null) {
                     List groups = new ArrayList(1);
                     groups.add(sqlAliasGroup);
@@ -252,7 +258,7 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Update Select SQL for the transformation when a source group is added.
+     * Update ISelect SQL for the transformation when a source group is added.
      * 
      * @param transMappingRoot the transformation mapping root
      * @param sqlAliasGroups the SqlAlias groups to add
@@ -264,7 +270,7 @@ public class TransformationSqlHelper implements ISQLConstants {
                                                              boolean addElemsToSelect,
                                                              Object source ) {
         // ------------------------------------------------------------------------------
-        // Add the new group to the From clause and its attributes to the select clause
+        // Add the new group to the IFrom clause and its attributes to the select clause
         // WILL NOT CHANGE UNLESS ITS A PARSABLE QUERY. (DONT CHANGE SETQUERY)
         // -----------------------------------------------------------------
         if (TransformationHelper.isParsableQuery(transMappingRoot) || TransformationHelper.isEmptySelect(transMappingRoot)
@@ -277,43 +283,7 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Update Select SQL for the transformation when a source group is removed.
-     * 
-     * @param transMappingRoot the transformation mapping root
-     * @param source the source group removed
-     */
-    public static void updateSelectSqlOnSqlAliasGroupRemoved( EObject transMappingRoot,
-                                                              EObject sqlAliasGroup,
-                                                              boolean removeElemsFromSelect,
-                                                              Object source ) {
-        if (org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper.isTable(sqlAliasGroup)) {
-            // if source is null, use this Helper as the source
-            if (source == null) {
-                source = getInstance();
-            }
-            // ------------------------------------------------------------------------------
-            // Remove the new group from the From clause and its attributes
-            // from the select clause
-            // WILL NOT CHANGE UNLESS ITS A PARSABLE QUERY. (DONT CHANGE SETQUERY)
-            // -----------------------------------------------------------------
-            if (TransformationHelper.isParsableQuery(transMappingRoot) || TransformationHelper.isEmptySelect(transMappingRoot)) {
-                // Create AliasedMetaObject for Link End
-                // AliasedMetaObject aliasedGroupMO = createAliasedMO(newLinkMO);
-                // Remove the source Groups from the Query From Clause
-                if (sqlAliasGroup != null) {
-                    List groups = new ArrayList(1);
-                    groups.add(sqlAliasGroup);
-                    final TransformationValidator validator = new TransformationValidator(
-                                                                                          (SqlTransformationMappingRoot)transMappingRoot,
-                                                                                          false);
-                    removeSqlAliasGroupsFromSelectStatement(transMappingRoot, groups, removeElemsFromSelect, source, validator);
-                }
-            }
-        }
-    }
-
-    /**
-     * Update Select SQL for the transformation when source groups are removed.
+     * Update ISelect SQL for the transformation when source groups are removed.
      * 
      * @param transMappingRoot the transformation mapping root
      * @param sources the source groups removed
@@ -323,7 +293,7 @@ public class TransformationSqlHelper implements ISQLConstants {
                                                                boolean removeElemsFromSelect,
                                                                Object source ) {
         // ------------------------------------------------------------------------------
-        // Remove the new group from the From clause and its attributes
+        // Remove the new group from the IFrom clause and its attributes
         // from the select clause
         // WILL NOT CHANGE UNLESS ITS A PARSABLE QUERY. (DONT CHANGE SETQUERY)
         // -----------------------------------------------------------------
@@ -340,7 +310,7 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Update Select SQL for the transformation when target elements are removed.
+     * Update ISelect SQL for the transformation when target elements are removed.
      * 
      * @param transMappingRoot the transformation mapping root
      * @param elementEObjs the elements to remove from the SQL
@@ -363,7 +333,7 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Update UNION Select SQL for the transformation when source groups are added.
+     * Update UNION ISelect SQL for the transformation when source groups are added.
      * 
      * @param transMappingRoot the transformation mapping root
      * @param sourceGroups the source groups being added
@@ -381,15 +351,15 @@ public class TransformationSqlHelper implements ISQLConstants {
         // ------------------------------------------------------------------------------
         if (TransformationHelper.isParsableQuery(transMappingRoot) || TransformationHelper.isParsableSetQuery(transMappingRoot)
             || TransformationHelper.isEmptySelect(transMappingRoot)) {
-            Command command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
+            ICommand command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
             if (command != null) {
-                if (command instanceof QueryCommand) {
-                    SetQuery newQuery = createSetQueryAddUnionSources((QueryCommand)command, sourceGroups, useAll);
+                if (command instanceof IQueryCommand) {
+                    ISetQuery newQuery = createSetQueryAddUnionSources((IQueryCommand)command, sourceGroups, useAll);
                     // Set the new MetaObject property
                     TransformationHelper.setSelectSqlString(transMappingRoot, newQuery.toString(), false, txnSource);
                 }
             } else {
-                SetQuery newQuery = createSetQueryAddUnionSources(null, sourceGroups, useAll);
+                ISetQuery newQuery = createSetQueryAddUnionSources(null, sourceGroups, useAll);
                 // Set the new MetaObject property
                 TransformationHelper.setSelectSqlString(transMappingRoot, newQuery.toString(), false, txnSource);
             }
@@ -397,7 +367,7 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Update UNION Select SQL for the transformation, adding the source Groups to the desired UNION segment.
+     * Update UNION ISelect SQL for the transformation, adding the source Groups to the desired UNION segment.
      * 
      * @param transMappingRoot the transformation mapping root
      * @param sourceGroups the source groups being added
@@ -413,14 +383,14 @@ public class TransformationSqlHelper implements ISQLConstants {
         // WILL NOT CHANGE SQL UNLESS ITS A PARSABLE UNION QUERY.
         // ----------------------------------------------------------------------------------------------
         if (TransformationHelper.isParsableSetQuery(transMappingRoot)) {
-            Command command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
-            if (command != null && command instanceof SetQuery) {
-                SetQuery newSetQuery = (SetQuery)command.clone();
-                List queries = ((SetQuery)command).getQueryCommands();
-                QueryCommand queryCommand = (QueryCommand)queries.get(nSegmentIndex);
-                if (queryCommand instanceof Query) {
-                    Query query = (Query)queryCommand;
-                    Query newQuery = createQueryAddGroupsToFrom(query, sourceGroups);
+            ICommand command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
+            if (command != null && command instanceof ISetQuery) {
+                ISetQuery newSetQuery = (ISetQuery)command.clone();
+                List queries = ((ISetQuery)command).getQueryCommands();
+                IQueryCommand queryCommand = (IQueryCommand)queries.get(nSegmentIndex);
+                if (queryCommand instanceof IQuery) {
+                    IQuery query = (IQuery)queryCommand;
+                    IQuery newQuery = createQueryAddGroupsToFrom(query, sourceGroups);
                     SetQueryUtil.setQueryAtIndex(newSetQuery, nSegmentIndex, newQuery);
                     // Set the new MetaObject property
                     TransformationHelper.setSelectSqlString(transMappingRoot, newSetQuery.toString(), false, txnSource);
@@ -448,7 +418,7 @@ public class TransformationSqlHelper implements ISQLConstants {
         }
 
         boolean isValid = SqlMappingRootCache.isSelectValid(transMappingRoot);
-        Command command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
+        ICommand command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
 
         boolean doAutoExpandSelect = TransformationPlugin.getDefault().getPreferences().getBoolean(PreferenceConstants.AUTO_EXPAND_SELECT, PreferenceConstants.AUTO_EXPAND_SELECT_DEFAULT);
         if( !doAutoExpandSelect && addElemsToSelect ) {
@@ -458,11 +428,11 @@ public class TransformationSqlHelper implements ISQLConstants {
         // --------------------------------------------------------
         // If query is resolvable, work with the LanguageObjects
         // --------------------------------------------------------
-        if (isValid && command instanceof Query) {
-            Query query = (Query)command;
+        if (isValid && command instanceof IQuery) {
+            IQuery query = (IQuery)command;
 
-            // Add new Groups to the Query From Clause
-            Query newQuery = createQueryAddSqlAliasGroups(query,
+            // Add new Groups to the IQuery IFrom Clause
+            IQuery newQuery = createQueryAddSqlAliasGroups(query,
                                                           sqlAliasGroups,
                                                           doAutoExpandSelect,
                                                           QueryValidator.SELECT_TRNS,
@@ -475,13 +445,13 @@ public class TransformationSqlHelper implements ISQLConstants {
             // --------------------------------------------------------
         } else if (TransformationHelper.isEmptySelect(transMappingRoot)) {
 
-            // Add Groups to the Query From Clause
+            // Add Groups to the IQuery IFrom Clause
             Object targetGrp = TransformationHelper.getTransformationLinkTarget(transMappingRoot);
 
             // If target is not a procedure, create default query
             if (!TransformationHelper.isSqlProcedure(targetGrp)) {
                 // Create empty SELECT * FROM query
-                Query qry = createDefaultQuery(null);
+                IQuery qry = createDefaultQuery(null);
                 qry = createQueryAddSqlAliasGroups(qry, sqlAliasGroups, doAutoExpandSelect, QueryValidator.SELECT_TRNS, validator);
                 // Set the new mappingRoot SQL
                 TransformationHelper.setSelectSqlString(transMappingRoot, qry.toString(), false, txnSource);
@@ -495,15 +465,15 @@ public class TransformationSqlHelper implements ISQLConstants {
                     // EObject is Procedure
                     if (TransformationHelper.isSqlProcedure(aliasedEObject)) {
                         // Create StoredProcedure
-                        StoredProcedure proc = createStoredProc(sqlAlias);
+                        IStoredProcedure proc = createStoredProc(sqlAlias);
                         if (proc != null) {
-                            CreateProcedureCommand cCommand = createVirtualProcCommmandForCommand(proc);
+                            ICreateProcedureCommand cCommand = createVirtualProcCommmandForCommand(proc);
                             // Set the new mappingRoot SQL
                             TransformationHelper.setSelectSqlString(transMappingRoot, cCommand.toString(), false, txnSource);
                         }
                     } else if( TransformationHelper.isSqlTable(aliasedEObject)) {
                         // Create empty SELECT * FROM query
-                        Query qry = createDefaultQuery(null);
+                        IQuery qry = createDefaultQuery(null);
                         // Add the sqlAliases
                         qry = createQueryAddSqlAliasGroups(qry,
                                                            sqlAliasGroups,
@@ -511,21 +481,21 @@ public class TransformationSqlHelper implements ISQLConstants {
                                                            QueryValidator.SELECT_TRNS,
                                                            validator);
 
-                        CreateProcedureCommand cCommand = createVirtualProcCommmandForCommand(qry);
+                        ICreateProcedureCommand cCommand = createVirtualProcCommmandForCommand(qry);
                         // Set the new mappingRoot SQL
                         TransformationHelper.setSelectSqlString(transMappingRoot, cCommand.toString(), false, txnSource);
                     }
                     // Multiple Groups added
                 } else {
                     // Create empty SELECT * FROM query
-                    Query qry = createDefaultQuery(null);
+                    IQuery qry = createDefaultQuery(null);
                     qry = createQueryAddSqlAliasGroups(qry,
                                                        sqlAliasGroups,
                                                        doAutoExpandSelect,
                                                        QueryValidator.SELECT_TRNS,
                                                        validator);
 
-                    CreateProcedureCommand cCommand = createVirtualProcCommmandForCommand(qry);
+                    ICreateProcedureCommand cCommand = createVirtualProcCommmandForCommand(qry);
                     // Set the new mappingRoot SQL
                     TransformationHelper.setSelectSqlString(transMappingRoot, cCommand.toString(), false, txnSource);
                 }
@@ -560,15 +530,14 @@ public class TransformationSqlHelper implements ISQLConstants {
      * @param command the Command
      * @return the CreateUpdateProcedureCommand
      */
-    public static CreateProcedureCommand createVirtualProcCommmandForCommand( Command command ) {
-        Block block = new Block();
+    public static ICreateProcedureCommand createVirtualProcCommmandForCommand( ICommand command ) {
+        IBlock block = getQueryFactory().createBlock();
 
-        CommandStatement cmdStmt = new CommandStatement(command);
-
+        ICommandStatement cmdStmt = getQueryFactory().createCommandStatement(command);
         block.addStatement(cmdStmt);
 
         // Create the CreateUpdateProcedureCommand
-        CreateProcedureCommand cCommand = new CreateProcedureCommand(block);
+        ICreateProcedureCommand cCommand = getQueryFactory().createCreateProcedureCommand(block);
 
         return cCommand;
     }
@@ -577,32 +546,32 @@ public class TransformationSqlHelper implements ISQLConstants {
      * add the group elements to the supplied query SELECT SQL
      * 
      * @param query the query LanguageObject
-     * @param addedGroups the list of groups whose elements to add to the Select Clause
+     * @param addedGroups the list of groups whose elements to add to the ISelect Clause
      */
-    private static Query createQueryAddSqlAliasGroupElemsToSelect( Query resolvedQuery,
+    private static IQuery createQueryAddSqlAliasGroupElemsToSelect( IQuery resolvedQuery,
                                                                    List addedSqlAliasGroups ) {
-        Query result = null;
-        // If the Query is a SELECT *, not necessary to add
+        IQuery result = null;
+        // If the IQuery is a SELECT *, not necessary to add
         if (!isSelectStar(resolvedQuery.getSelect())) {
-            result = (Query)resolvedQuery.clone();
+            result = (IQuery)resolvedQuery.clone();
 
-            // Get the current query Select Clause
-            Select select = resolvedQuery.getSelect();
+            // Get the current query ISelect Clause
+            ISelect select = resolvedQuery.getSelect();
             List currentSelectSymbols = select.getSymbols();
 
             // Get the new Group Elements
             List newElementSymbols = createElemSymbols(addedSqlAliasGroups);
 
-            // List of new Select Symbols to create
+            // List of new ISelect Symbols to create
             List selectSymbols = new ArrayList();
             selectSymbols.addAll(currentSelectSymbols);
             selectSymbols.addAll(newElementSymbols);
 
             List newSelectSymbols = renameConflictingSymbols(selectSymbols);
 
-            // Replace the Select with newSymbols, default to SELECT * if no symbols
+            // Replace the ISelect with newSymbols, default to SELECT * if no symbols
             if (newSelectSymbols.size() == 0) {
-                newSelectSymbols.add(new MultipleElementSymbol());
+                newSelectSymbols.add(getQueryFactory().createMultipleElementSymbol());
                 select.setSymbols(newSelectSymbols);
             } else {
                 select.setSymbols(newSelectSymbols);
@@ -614,44 +583,42 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * add list of Groups to the Query FROM clause
+     * add list of Groups to the IQuery FROM clause
      * 
      * @param query the query LanguageObject
      * @param addGroupList the List of groups to add to the query.
      * @param isResolvable flag indicating whether the query is resolvable
      */
-    private static Query createQueryAddSqlAliasGroupsToFrom( Query resolvedQuery,
+    private static IQuery createQueryAddSqlAliasGroupsToFrom( IQuery resolvedQuery,
                                                              List sqlAliasGroups ) {
-        Query result = null;
+        IQuery result = null;
 
         if (resolvedQuery != null && sqlAliasGroups != null) {
-            // Query result - Clone the input
-            result = (Query)resolvedQuery.clone();
+            // IQuery result - Clone the input
+            result = (IQuery)resolvedQuery.clone();
 
             // --------------------------------------------------------------------
             // Get the list of groups (AliasedMetaObjects) from the command
             // --------------------------------------------------------------------
-            // Get the current query From Clause
-            From from = resolvedQuery.getFrom();
+            // Get the current query IFrom Clause
+            IFrom from = resolvedQuery.getFrom();
             // Defect 19499: The query doesnt necessarily have a FROM clause (eg "SELECT 1 AS Col1, 2 AS Col2")
-            From newFrom;
+            IFrom newFrom;
             if (from != null) {
-                newFrom = (From)from.clone();
+                newFrom = (IFrom)from.clone();
             } else {
-                newFrom = new From();
+                newFrom = getQueryFactory().createFrom();
             }
 
-            // Get all of the current GroupSymbols for the query
-            List currentGroupSymbols = new ArrayList();
-            GroupCollectorVisitor.getGroupsIgnoreInlineViews(resolvedQuery, currentGroupSymbols);
+            IGroupCollectorVisitor groupCollectorVisitor = getQueryService().getGroupCollectorVisitor();
 
             // Make GroupSymbols from the groups passed in
             List clausesToAdd = createFromClauses(sqlAliasGroups);
 
             Iterator iter = clausesToAdd.iterator();
             while (iter.hasNext()) {
-                FromClause nextFromClause = (FromClause)iter.next();
-                if (!newFrom.containsGroup(((UnaryFromClause)nextFromClause).getGroup())) {
+                IFromClause nextFromClause = (IFromClause)iter.next();
+                if (!newFrom.containsGroup(((IUnaryFromClause)nextFromClause).getGroup())) {
                     newFrom.addClause(nextFromClause);
                 }
             }
@@ -661,36 +628,36 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * add list of Groups EObjects to the Query FROM clause
+     * add list of Groups EObjects to the IQuery FROM clause
      * 
      * @param query the query LanguageObject
      * @param addGroupList the List of groups to add to the query.
      * @return the modified query
      */
-    private static Query createQueryAddGroupsToFrom( Query query,
+    private static IQuery createQueryAddGroupsToFrom( IQuery query,
                                                      List grpEObjs ) {
-        Query result = null;
+        IQuery result = null;
 
         if (query != null && grpEObjs != null) {
-            // Query result - Clone the input
-            result = (Query)query.clone();
+            // IQuery result - Clone the input
+            result = (IQuery)query.clone();
 
             // --------------------------------------------------------------------
             // Get the current list of groups from the command
             // --------------------------------------------------------------------
-            // Get the current query From Clause
-            From from = query.getFrom();
-            From newFrom;
+            // Get the current query IFrom Clause
+            IFrom from = query.getFrom();
+            IFrom newFrom;
             if (from != null) {
-                newFrom = (From)from.clone();
+                newFrom = (IFrom)from.clone();
             } else {
-                newFrom = new From();
+                newFrom = getQueryFactory().createFrom();
             }
 
             // Make FromClauses for the groups passed in
             for (int i = 0; i < grpEObjs.size(); i++) {
                 EObject grpEObj = (EObject)grpEObjs.get(i);
-                FromClause fClause = createFromClause(grpEObj);
+                IFromClause fClause = createFromClause(grpEObj);
                 newFrom.addClause(fClause);
             }
             result.setFrom(newFrom);
@@ -699,24 +666,24 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * add list of Groups to the Query FROM clause
+     * add list of Groups to the IQuery FROM clause
      * 
      * @param query the query LanguageObject
      * @param addGroupList the List of groups to add to the query.
      */
-    private static Query createQueryAddSqlAliasGroups( Query resolvedQuery,
+    private static IQuery createQueryAddSqlAliasGroups( IQuery resolvedQuery,
                                                        List sqlAliasGroups,
                                                        boolean addGroupElemsToSelect,
                                                        int cmdType,
                                                        TransformationValidator validator ) {
-        Query result = null;
+        IQuery result = null;
         if (resolvedQuery != null && sqlAliasGroups != null) {
-            // Add the new groups to the Query FROM clause
+            // Add the new groups to the IQuery FROM clause
             result = createQueryAddSqlAliasGroupsToFrom(resolvedQuery, sqlAliasGroups);
 
             // Parse the newSQL
             SqlTransformationResult parserResult = TransformationValidator.parseSQL(result.toString());
-            Query resultQuery = (Query)parserResult.getCommand();
+            IQuery resultQuery = (IQuery)parserResult.getCommand();
             // Attempt to Resolve and Validate after adding groups
             boolean isResolvable = false;
             boolean isValid = false;
@@ -732,7 +699,7 @@ public class TransformationSqlHelper implements ISQLConstants {
 
             // Now add the Group Elements to the SELECT if desired
             if (isValid) {
-                Select select = resultQuery.getSelect();
+                ISelect select = resultQuery.getSelect();
                 if (isSelectStar(select)) {
                     result = createQueryFixNameConflicts(resultQuery, addGroupElemsToSelect);
                 } else {
@@ -748,24 +715,25 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * add list of Groups to a Query or SetQuery, appending the additional commands to the end.
+     * add list of Groups to a IQuery or SetQuery, appending the additional commands to the end.
      * 
-     * @param queryCommand the incoming query command (either a Query or a SetQuery)
+     * @param queryCommand the incoming query command (either a IQuery or a SetQuery)
      * @param unionSourceGroups the List of groups to add as union sources
      * @param useAll 'true' if adding UNION ALL, 'false' if adding UNION
      * @return the new union (SetQuery)
      */
-    private static SetQuery createSetQueryAddUnionSources( QueryCommand queryCommand,
+    private static ISetQuery createSetQueryAddUnionSources( IQueryCommand queryCommand,
                                                            List unionSourceGrps,
                                                            boolean useAll ) {
-        SetQuery result = null;
-        result = new SetQuery(Operation.UNION);
+        ISetQuery result = null;
+        
+        result = getQueryFactory().createSetQuery(ISetQuery.Operation.UNION);
         result.setAll(useAll);
         Iterator iter = null;
         
         if (queryCommand != null) {
         	// Set the left query to the current command
-            result.setLeftQuery((QueryCommand)queryCommand.clone());
+            result.setLeftQuery((IQueryCommand)queryCommand.clone());
 
             iter = unionSourceGrps.iterator();
         } else {
@@ -775,18 +743,18 @@ public class TransformationSqlHelper implements ISQLConstants {
             // Create a default query with the first source groups (left and right)
             if (iter.hasNext()) {
                 EObject sourceGroup = (EObject)iter.next();
-                Query qry = createDefaultQuery(sourceGroup);
+                IQuery qry = createDefaultQuery(sourceGroup);
                 result.setLeftQuery(qry);
                 if (iter.hasNext()) {
                     sourceGroup = (EObject)iter.next();
-                    QueryCommand right = createDefaultQuery(sourceGroup);                    
+                    IQueryCommand right = createDefaultQuery(sourceGroup);                    
                     result.setRightQuery(right);
                 }
             }
 
             // If there are MORE than 2 sources, go ahead and create a New query command and set it as the Left query
             if (iter.hasNext()) {
-                SetQuery unionResult = new SetQuery(Operation.UNION);
+                ISetQuery unionResult = getQueryFactory().createSetQuery(ISetQuery.Operation.UNION);
                 unionResult.setAll(useAll);
                 unionResult.setLeftQuery(result);
                 result = unionResult;
@@ -796,11 +764,11 @@ public class TransformationSqlHelper implements ISQLConstants {
         // Add new queries for each of the source groups
         while (iter.hasNext()) {
             EObject sourceGroup = (EObject)iter.next();
-            Query qry = createDefaultQuery(sourceGroup);
+            IQuery qry = createDefaultQuery(sourceGroup);
             result.setRightQuery(qry);
             if (iter.hasNext()) {
-                QueryCommand left = result;
-                result = new SetQuery(Operation.UNION);
+                IQueryCommand left = result;
+                result = getQueryFactory().createSetQuery(ISetQuery.Operation.UNION);
                 result.setAll(useAll);
                 result.setLeftQuery(left);
             }
@@ -827,20 +795,12 @@ public class TransformationSqlHelper implements ISQLConstants {
         }
 
         boolean isValid = SqlMappingRootCache.isSelectValid(transMappingRoot);
-        Command command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
+        ICommand command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
 
         // If query is resolvable, work with the LanguageObjects
-        if (isValid && command instanceof Query) {
-            Query query = (Query)command;
-
-            // DeOptimize the Query First
-            // if(isResolvable) {
-            // elementSymbolOptimizer.deoptimize(query);
-            // }
-
-            // Remove Groups and Group Elems from the Query
-            // Object targetGrp = TransformationHelper.getTransformationLinkTarget(transMappingRoot);
-            Query newQuery = createQueryRemoveSqlAliasGroups(query,
+        if (isValid && command instanceof IQuery) {
+            IQuery query = (IQuery)command;
+            IQuery newQuery = createQueryRemoveSqlAliasGroups(query,
                                                              sqlAliasGroups,
                                                              removeElemsFromSelect,
                                                              QueryValidator.SELECT_TRNS,
@@ -848,8 +808,6 @@ public class TransformationSqlHelper implements ISQLConstants {
 
             // Set the new MetaObject property
             TransformationHelper.setSelectSqlString(transMappingRoot, newQuery.toString(), false, txnSource);
-        } else {
-            rebuildQueryRemovingSqlAliasGroups(transMappingRoot, sqlAliasGroups);
         }
     }
 
@@ -870,19 +828,14 @@ public class TransformationSqlHelper implements ISQLConstants {
         }
 
         boolean isValid = SqlMappingRootCache.isSelectValid(transMappingRoot);
-        Command command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
+        ICommand command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
 
         // If query is resolvable, work with the LanguageObjects
-        if (isValid && command instanceof Query) {
-            Query query = (Query)command;
-
-            // DeOptimize the Query First
-            // if(isResolvable) {
-            // elementSymbolOptimizer.deoptimize(query);
-            // }
+        if (isValid && command instanceof IQuery) {
+            IQuery query = (IQuery)command;
 
             // Remove Elems from the Query
-            Query newQuery = createQueryRemoveElems(query, elementEObjs);
+            IQuery newQuery = createQueryRemoveElems(query, elementEObjs);
 
             // Set the new MetaObject property
             if (newQuery != null) {
@@ -892,86 +845,41 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * rebuilds the Query, removing the specified group (if it exists)
-     * 
-     * @param queryMO the query MetaObject
-     * @param aliasedGroupMO the group MetaObject to omit from the query
-     */
-    private static void rebuildQueryRemovingSqlAliasGroups( EObject transMappingRoot,
-                                                            List sqlAliasGroups ) {
-        if (transMappingRoot == null || sqlAliasGroups == null) return;
-
-        // // List of all the query source links
-        // Collection queryLinks = getQueryLinkEditor().getSourceLinks(queryMO);
-        //        
-        // // New From
-        // From from = new From();
-        //        
-        // Iterator iter = queryLinks.iterator();
-        // while(iter.hasNext()) {
-        // MetaObject linkMO = (MetaObject)iter.next();
-        // AliasedMetaObject aliasedCurrentGroupMO = createAliasedMO(linkMO);
-        // Iterator removeGroupIter = aliasedGroupMOs.iterator();
-        // while(removeGroupIter.hasNext()) {
-        // AliasedMetaObject aliasedGroupMO = (AliasedMetaObject)removeGroupIter.next();
-        // // If the link end object is the group to remove, dont add it.
-        // if( aliasedCurrentGroupMO!=null && !aliasedCurrentGroupMO.equals(aliasedGroupMO) ) {
-        // from.addClause( createFromClauseForGroup(aliasedCurrentGroupMO) );
-        // }
-        // }
-        // }
-        // //--------------------------------------------------
-        // // Replace the FROM clause. This triggers Change
-        // // Event on the QueryOperationDefinition
-        // //--------------------------------------------------
-        // replaceSQLFromClause(queryMO,from.toString());
-    }
-
-    // private static void replaceSQLFromClause(Object transMappingRoot, String newFrom) {
-    // // The current SQL string
-    // String sqlString = TransformationHelper.getSelectSqlString(transMappingRoot);
-    // // Replace its FROM clause
-    // if(sqlString!=null) {
-    // sqlString = SqlStringUtil.replaceFrom(sqlString,newFrom);
-    // }
-    // // Set the new MetaObject property
-    // TransformationHelper.setSelectSqlString(transMappingRoot,sqlString);
-    // }
-
-    /**
      * removes the group elements from the supplied query
      * 
      * @param query the query LanguageObject
-     * @param removeGroupList the list of groups whose elemets to remove from the Select Clause
+     * @param removeGroupList the list of groups whose elemets to remove from the ISelect Clause
      * @param isResolvable flag indicating whether the query is resolvable
      */
-    private static Query createQueryRemoveSqlAliasGroupElemsFromSelect( Query resolvedQuery,
+    private static IQuery createQueryRemoveSqlAliasGroupElemsFromSelect( IQuery resolvedQuery,
                                                                         List removeSqlAliasGroups ) {
-        Query result = null;
-        // If the Query is not a SELECT *, ask whether to delete Group attributes from SELECT
+        IQuery result = null;
+        // If the IQuery is not a SELECT *, ask whether to delete Group attributes from SELECT
         if (hasSqlAliasGroupAttributes(resolvedQuery, removeSqlAliasGroups)) {
-            result = (Query)resolvedQuery.clone();
+            result = (IQuery)resolvedQuery.clone();
             List aliasGroupSymbols = createGroupSymbols(removeSqlAliasGroups);
-            // Get the current query Select Clause
-            Select select = resolvedQuery.getSelect();
+            // Get the current query ISelect Clause
+            ISelect select = resolvedQuery.getSelect();
             List currentSelectSymbols = select.getSymbols();
 
-            // List of new Select Symbols to create
+            IGroupsUsedByElementsVisitor groupsUsedByElementsVisitor = getQueryService().getGroupsUsedByElementsVisitor();
+            
+            // List of new ISelect Symbols to create
             List newSelectSymbols = new ArrayList(currentSelectSymbols.size());
 
             Iterator iter = currentSelectSymbols.iterator();
             while (iter.hasNext()) {
-            	Expression selectSymbol = (Expression)iter.next();
+            	IExpression selectSymbol = (IExpression)iter.next();
                 // Get all Groups referenced by symbol
-                Collection symbolGroups = GroupsUsedByElementsVisitor.getGroups(selectSymbol);
+                Collection symbolGroups = groupsUsedByElementsVisitor.getGroups(selectSymbol);
                 Iterator symbolGroupIter = symbolGroups.iterator();
                 boolean removeSymbol = false;
                 while (symbolGroupIter.hasNext()) {
-                    GroupSymbol symbGroup = (GroupSymbol)symbolGroupIter.next();
+                    IGroupSymbol symbGroup = (IGroupSymbol)symbolGroupIter.next();
 
                     Iterator removeGroupIter = aliasGroupSymbols.iterator();
                     while (removeGroupIter.hasNext()) {
-                        GroupSymbol removeGroupSymbol = (GroupSymbol)removeGroupIter.next();
+                        IGroupSymbol removeGroupSymbol = (IGroupSymbol)removeGroupIter.next();
                         if (symbGroup.equals(removeGroupSymbol)) {
                             removeSymbol = true;
                             break;
@@ -987,7 +895,7 @@ public class TransformationSqlHelper implements ISQLConstants {
             }
             // Replace the SELECT with new Symbols, default to SELECT * if no symbols left
             if (newSelectSymbols.size() == 0) {
-                newSelectSymbols.add(new MultipleElementSymbol());
+                newSelectSymbols.add(getQueryFactory().createMultipleElementSymbol());
                 select.setSymbols(newSelectSymbols);
             } else {
                 select.setSymbols(newSelectSymbols);
@@ -1001,12 +909,12 @@ public class TransformationSqlHelper implements ISQLConstants {
      * removes the elements from the supplied query
      * 
      * @param query the query LanguageObject
-     * @param removeElements the list of elements to remove from the Select Clause
+     * @param removeElements the list of elements to remove from the ISelect Clause
      * @param isResolvable flag indicating whether the query is resolvable
      */
-    protected static Query createQueryRemoveElems( Query resolvedQuery,
+    protected static IQuery createQueryRemoveElems( IQuery resolvedQuery,
                                                    List removeElements ) {
-        Query result = resolvedQuery;
+        IQuery result = resolvedQuery;
 
         List removeNames = new ArrayList(removeElements.size());
         Iterator iter = removeElements.iterator();
@@ -1019,15 +927,15 @@ public class TransformationSqlHelper implements ISQLConstants {
             }
         }
 
-        // If the Query is not a SELECT *, ask whether to delete Group attributes from SELECT
+        // If the IQuery is not a SELECT *, ask whether to delete Group attributes from SELECT
         if (hasSqlElemSymbols(resolvedQuery, removeElements)) {
             // Get the names of the Elements to remove
-            result = (Query)resolvedQuery.clone();
-            // Get the current query Select Clause
-            Select select = resolvedQuery.getSelect();
+            result = (IQuery)resolvedQuery.clone();
+            // Get the current query ISelect Clause
+            ISelect select = resolvedQuery.getSelect();
             List currentSelectSymbols = resolvedQuery.getProjectedSymbols();
 
-            // List of new Select Symbols to create
+            // List of new ISelect Symbols to create
             List newSelectSymbols = removeSymbols(currentSelectSymbols, removeNames);
 
             // Replace the SELECT with new Symbols, default to SELECT FROM if no symbols left
@@ -1037,7 +945,7 @@ public class TransformationSqlHelper implements ISQLConstants {
 
         if (result.getGroupBy() != null) {
             // Remove any symbols from the Group By that exist in the removeElements list
-            GroupBy groupBy = result.getGroupBy();
+            IGroupBy groupBy = result.getGroupBy();
             List currentGroupBySymbols = groupBy.getSymbols();
             List newGroupBySymbols = removeSymbols(currentGroupBySymbols, removeNames);
             groupBy.getSymbols().clear();
@@ -1053,10 +961,10 @@ public class TransformationSqlHelper implements ISQLConstants {
 
         if (result.getOrderBy() != null) {
             // Remove any symbols from the Order By that exist in the removeElements list
-            OrderBy orderBy = result.getOrderBy();
-            final Iterator<OrderByItem> iter2 = orderBy.getOrderByItems().iterator();
+            IOrderBy orderBy = result.getOrderBy();
+            final Iterator<IOrderByItem> iter2 = orderBy.getOrderByItems().iterator();
             while (iter2.hasNext()) {
-                final OrderByItem next = iter2.next();
+                final IOrderByItem next = iter2.next();
                 final String name = TransformationSqlHelper.getSingleElementSymbolShortName(next.getSymbol(), false);
                 if (removeNames.contains(name)) {
                     iter2.remove();
@@ -1073,7 +981,7 @@ public class TransformationSqlHelper implements ISQLConstants {
         return result;
     }
 
-    // TODO: COULD BE PROBLEMATTIC!!! OrderBy and GroupBy can hold expressions
+    // TODO: COULD BE PROBLEMATTIC!!! OrderBy and GroupBy can hold IExpressions
     private static List removeSymbols( List currentSymbols,
                                        List symbolNamesToRemove ) {
         if (currentSymbols == null || symbolNamesToRemove == null) {
@@ -1084,8 +992,8 @@ public class TransformationSqlHelper implements ISQLConstants {
         final Iterator iter = currentSymbols.iterator();
         while (iter.hasNext()) {
             final Object next = iter.next();
-            if (next instanceof Expression) {
-            	Expression seSymbol = (Expression)next;
+            if (next instanceof IExpression) {
+            	IExpression seSymbol = (IExpression)next;
                 String symName = TransformationSqlHelper.getSingleElementSymbolShortName(seSymbol, false);
                 if (!symbolNamesToRemove.contains(symName)) {
                     result.add(seSymbol);
@@ -1100,41 +1008,41 @@ public class TransformationSqlHelper implements ISQLConstants {
      * removes the groups from the supplied query
      * 
      * @param query the query LanguageObject
-     * @param removedGroups the list of groups to remove from the From Clause
+     * @param removedGroups the list of groups to remove from the IFrom Clause
      * @param isResolvable flag indicating whether the query is resolvable
      */
-    private static Query createQueryRemoveSqlAliasGroupsFromFrom( Query resolvedQuery,
+    private static IQuery createQueryRemoveSqlAliasGroupsFromFrom( IQuery resolvedQuery,
                                                                   List removedSqlAliasGrps ) {
-        Query result = null;
+        IQuery result = null;
         if (resolvedQuery != null) {
-            result = (Query)resolvedQuery.clone();
-            // Get the current query From Clause
-            From from = resolvedQuery.getFrom();
-            List currentFromClauses = from.getClauses();
+            result = (IQuery)resolvedQuery.clone();
+            // Get the current query IFrom Clause
+            IFrom from = resolvedQuery.getFrom();
+            List<IFromClause> currentFromClauses = from.getClauses();
 
-            // List of new From Clauses to create
-            List newFromClauses = new ArrayList(currentFromClauses.size());
+            // List of new IFrom Clauses to create
+            List<IFromClause> newFromClauses = new ArrayList(currentFromClauses.size());
 
-            // Go thru the current From Clauses and see if they need to be removed
+            // Go thru the current IFrom Clauses and see if they need to be removed
             Iterator iter = currentFromClauses.iterator();
             while (iter.hasNext()) {
-                FromClause fromClause = (FromClause)iter.next();
+                IFromClause fromClause = (IFromClause)iter.next();
                 boolean removeIt = false;
                 Iterator removeSqlAliasGrpIter = removedSqlAliasGrps.iterator();
                 while (removeSqlAliasGrpIter.hasNext()) {
                     EObject removeGroupEObj = (EObject)removeSqlAliasGrpIter.next();
                     // UnaryFromClause
-                    if (fromClause instanceof UnaryFromClause) {
-                        GroupSymbol gSymbol = ((UnaryFromClause)fromClause).getGroup();
+                    if (fromClause instanceof IUnaryFromClause) {
+                        IGroupSymbol gSymbol = ((IUnaryFromClause)fromClause).getGroup();
 
-                        GroupSymbol removeGroupSymbol = createGroupSymbol(removeGroupEObj);
+                        IGroupSymbol removeGroupSymbol = createGroupSymbol(removeGroupEObj);
                         if (gSymbol != null && gSymbol.equals(removeGroupSymbol)) {
                             removeIt = true;
                             break;
                         }
                         // SubqueryFromClause
-                    } else if (fromClause instanceof SubqueryFromClause) {
-                        SubqueryFromClause sqf = (SubqueryFromClause)fromClause;
+                    } else if (fromClause instanceof ISubqueryFromClause) {
+                        ISubqueryFromClause sqf = (ISubqueryFromClause)fromClause;
                         if (removeGroupEObj instanceof SqlAlias) {
                             if (isMatch(sqf, (SqlAlias)removeGroupEObj)) {
                                 removeIt = true;
@@ -1147,7 +1055,7 @@ public class TransformationSqlHelper implements ISQLConstants {
                     newFromClauses.add(fromClause);
                 }
             }
-            // Replace the From with new Clauses
+            // Replace the IFrom with new Clauses
             from.setClauses(newFromClauses);
             result.setFrom(from);
         }
@@ -1155,50 +1063,27 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     // Determine if the SubqueryFromClause and SqlAlias match
-    public static boolean isMatch( SubqueryFromClause subqueryFrom,
+    private static boolean isMatch( ISubqueryFromClause subqueryFrom,
                                    SqlAlias sqlAlias ) {
         boolean isMatch = false;
         if (subqueryFrom != null && sqlAlias != null) {
-            Command fromClauseQuery = subqueryFrom.getCommand();
+            ICommand fromClauseQuery = subqueryFrom.getCommand();
             String fromClauseName = subqueryFrom.getName();
             // If StoredProcedure, add group directly to groups list
-            if (fromClauseQuery instanceof StoredProcedure) {
-                StoredProcedure fromClauseProc = (StoredProcedure)fromClauseQuery;
+            if (fromClauseQuery instanceof IStoredProcedure) {
+                IStoredProcedure fromClauseProc = (IStoredProcedure)fromClauseQuery;
                 String fromClauseProcName = fromClauseProc.getProcedureCallableName();
                 String sqlAliasName = sqlAlias.getAlias();
                 EObject sqlAliasEObj = sqlAlias.getAliasedObject();
                 // Check alias names
                 if (fromClauseName != null && fromClauseName.equalsIgnoreCase(sqlAliasName)) {
                     if (TransformationHelper.isSqlProcedure(sqlAliasEObj)) {
-                        StoredProcedureInfo procInfo = getProcInfo(TransformationHelper.getSqlEObjectFullName(sqlAliasEObj),
+                        IStoredProcedureInfo procInfo = getProcInfo(TransformationHelper.getSqlEObjectFullName(sqlAliasEObj),
                                                                    sqlAliasEObj);
                         String sqlAliasProcName = procInfo.getProcedureCallableName();
                         if (fromClauseProcName != null && fromClauseProcName.equalsIgnoreCase(sqlAliasProcName)) {
                             isMatch = true;
                         }
-                    }
-                }
-            }
-        }
-        return isMatch;
-    }
-
-    // Determine if the StoredProcedure and SqlAlias match
-    public static boolean isMatch( StoredProcedure storedProc, // NO_UCD
-                                   SqlAlias sqlAlias ) {
-        boolean isMatch = false;
-        if (storedProc != null && sqlAlias != null) {
-            String procName = storedProc.getProcedureCallableName();
-            String sqlAliasName = sqlAlias.getAlias();
-            EObject sqlAliasEObj = sqlAlias.getAliasedObject();
-            // Check alias names
-            if (procName != null && procName.equalsIgnoreCase(sqlAliasName)) {
-                if (TransformationHelper.isSqlProcedure(sqlAliasEObj)) {
-                    StoredProcedureInfo procInfo = getProcInfo(TransformationHelper.getSqlEObjectFullName(sqlAliasEObj),
-                                                               sqlAliasEObj);
-                    String sqlAliasProcName = procInfo.getProcedureCallableName();
-                    if (procName.equalsIgnoreCase(sqlAliasProcName)) {
-                        isMatch = true;
                     }
                 }
             }
@@ -1212,17 +1097,17 @@ public class TransformationSqlHelper implements ISQLConstants {
      * @param query the query LanguageObject
      * @param removeGroupList the List of groups to remove from the query.
      */
-    private static Query createQueryRemoveSqlAliasGroups( Query resolvedQuery,
+    private static IQuery createQueryRemoveSqlAliasGroups( IQuery resolvedQuery,
                                                           List sqlAliasGroups,
                                                           boolean removeGroupElemsFromSelect,
                                                           int cmdType,
                                                           TransformationValidator validator ) {
-        Query result = null;
+        IQuery result = null;
         if (resolvedQuery != null && sqlAliasGroups != null) {
-            // If the Query is not a SELECT *, ask whether to delete Group attributes from SELECT
+            // If the IQuery is not a SELECT *, ask whether to delete Group attributes from SELECT
             if (!isSelectStar(resolvedQuery.getSelect()) && hasSqlAliasGroupAttributes(resolvedQuery, sqlAliasGroups)) {
                 if (removeGroupElemsFromSelect) {
-                    // Remove the group elements from the Query SELECT
+                    // Remove the group elements from the IQuery SELECT
                     result = createQueryRemoveSqlAliasGroupElemsFromSelect(resolvedQuery, sqlAliasGroups);
                 } else {
                     result = resolvedQuery;
@@ -1230,12 +1115,12 @@ public class TransformationSqlHelper implements ISQLConstants {
             }
 
             // Null return means that no changes were made
-            Query resultQuery = null;
+            IQuery resultQuery = null;
             boolean isValid = false;
             if (result != null) {
                 // Parse the newSQL
                 SqlTransformationResult parserResult = TransformationValidator.parseSQL(result.toString());
-                resultQuery = (Query)parserResult.getCommand();
+                resultQuery = (IQuery)parserResult.getCommand();
                 // Attempt to Resolve and Validate after adding groups
                 boolean isResolvable = false;
                 // If parsable, Resolve
@@ -1260,17 +1145,17 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * This method rebuilds the Query Language Object in the event of a projected Symbol name conflict.
+     * This method rebuilds the IQuery Language Object in the event of a projected Symbol name conflict.
      * @param resolvedQuery 
      * @param addGroupElemsToSelect 
      * 
-     * @return the modified Query language object
+     * @return the modified IQuery language object
      */
-    public static Query createQueryFixNameConflicts( Query resolvedQuery , boolean addGroupElemsToSelect) {
-        Query modifiedQuery = null;
+    public static IQuery createQueryFixNameConflicts( IQuery resolvedQuery , boolean addGroupElemsToSelect) {
+        IQuery modifiedQuery = null;
         if (resolvedQuery != null) {
-            // Modified Query Result
-            modifiedQuery = (Query)resolvedQuery.clone();
+            // Modified IQuery Result
+            modifiedQuery = (IQuery)resolvedQuery.clone();
 
             if (hasProjectedSymbolNameConflict(resolvedQuery)) {
                 // Get the current symbols for the Query
@@ -1279,17 +1164,17 @@ public class TransformationSqlHelper implements ISQLConstants {
                 // Fix name conflicts
                 List newSymbols = renameConflictingSymbols(currentSymbols);
 
-                // Reset the Select Symbols
-                Select newSelect = new Select(newSymbols);
+                // Reset the ISelect Symbols
+                ISelect newSelect = getQueryFactory().createSelect(newSymbols);
                 modifiedQuery.setSelect(newSelect);
             } else if( addGroupElemsToSelect ) {
             	List currentSelectSymbols = resolvedQuery.getSelect().getSymbols();
                 if (currentSelectSymbols.size() == 1) {
-                	Expression singleSelectSymbol = (Expression)currentSelectSymbols.get(0);
-                    if (singleSelectSymbol instanceof MultipleElementSymbol) {
-                    	List<ElementSymbol> elementSymbols = ((MultipleElementSymbol)singleSelectSymbol).getElementSymbols();
-                    	// Reset the Select Symbols
-                        Select newSelect = new Select(elementSymbols);
+                	IExpression singleSelectSymbol = (IExpression)currentSelectSymbols.get(0);
+                    if (singleSelectSymbol instanceof IMultipleElementSymbol) {
+                    	List<IElementSymbol> elementSymbols = ((IMultipleElementSymbol)singleSelectSymbol).getElementSymbols();
+                    	// Reset the ISelect Symbols
+                        ISelect newSelect = getQueryFactory().createSelect(elementSymbols);
                         modifiedQuery.setSelect(newSelect);
                     }
                 }
@@ -1303,25 +1188,25 @@ public class TransformationSqlHelper implements ISQLConstants {
      * "SELECT * FROM"
      * 
      * @param source the source for the query, can be a table or procedure
-     * @return the Query language object result
+     * @return the IQuery language object result
      */
-    public static Query createDefaultQuery( EObject source ) {
+    public static IQuery createDefaultQuery( EObject source ) {
         // create SELECT *
-        Select newSelect = new Select();
-        newSelect.addSymbol(new MultipleElementSymbol());
+        ISelect newSelect = getQueryFactory().createSelect();
+        newSelect.addSymbol(getQueryFactory().createMultipleElementSymbol());
 
         // Create FROM
-        From newFrom = new From();
+        IFrom newFrom = getQueryFactory().createFrom();
         // Add group to FROM
         if (source != null) {
-            FromClause clause = createFromClause(source);
+            IFromClause clause = createFromClause(source);
             if (clause != null) {
                 newFrom.addClause(clause);
             }
         }
 
-        // Create Query and set SELECT and FROM
-        Query query = new Query();
+        // Create IQuery and set SELECT and FROM
+        IQuery query = getQueryFactory().createQuery();
         query.setSelect(newSelect);
         query.setFrom(newFrom);
 
@@ -1331,10 +1216,10 @@ public class TransformationSqlHelper implements ISQLConstants {
     /**
      * Determine if the supplied command has a name conflict (has duplicate short names).
      * 
-     * @param command the Command language object
+     * @param command the ICommand language object
      * @return 'true' if there is a name conflict, 'false' if not.
      */
-    public static boolean hasProjectedSymbolNameConflict( Command command ) {
+    public static boolean hasProjectedSymbolNameConflict( ICommand command ) {
         boolean hasConflict = false;
         if (command != null) {
             // maintain collection of short names
@@ -1342,9 +1227,7 @@ public class TransformationSqlHelper implements ISQLConstants {
             // Get the list of Projected symbols
             List symbols = command.getProjectedSymbols();
             // Look for duplicate short names
-            Iterator symbolIter = symbols.iterator();
-            while (symbolIter.hasNext()) {
-            	Expression seSymbol = (Expression)symbolIter.next();
+            for (IExpression seSymbol : command.getProjectedSymbols()) {
                 String name = TransformationSqlHelper.getSingleElementSymbolShortName(seSymbol, false);
                 // Construct unique name using symbol name and previous names
                 String uniqueName = getUniqueName(name, attrNames);
@@ -1360,12 +1243,12 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     // Return a List of the Shortened Names of the Projected Symbols
-    public static List getProjectedSymbolNames( Command command ) {
+    public static List<String> getProjectedSymbolNames( ICommand command ) {
         if (command == null) return Collections.EMPTY_LIST;
         // ---------------------------------------------------
         // Get the List of ProjectedSymbols from the command
         // ---------------------------------------------------
-        List projectedSymbols = command.getProjectedSymbols();
+        List<IExpression> projectedSymbols = command.getProjectedSymbols();
 
         // -------------------------------
         // Build the List of symbolNames
@@ -1376,9 +1259,7 @@ public class TransformationSqlHelper implements ISQLConstants {
         } else {
             symbolNames = new ArrayList(projectedSymbols.size());
             // Populate the list with the symbol names
-            Iterator symbolIter = projectedSymbols.iterator();
-            while (symbolIter.hasNext()) {
-            	Expression symbol = (Expression)symbolIter.next();
+            for (IExpression symbol : projectedSymbols) {
                 String shortName = getSingleElementSymbolShortName(symbol, false);
                 if (shortName != null) {
                     symbolNames.add(shortName);
@@ -1390,51 +1271,53 @@ public class TransformationSqlHelper implements ISQLConstants {
 
     /**
      * Get the short name for a SingleElementSymbol. Includes logic to handle the case of implicit Functions, to hide the function
-     * name. For expressionSymbols, the showExpression flag can be set 'true' to show the expression text or 'false' to show the
+     * name. For IExpressionSymbols, the showExpression flag can be set 'true' to show the IExpression text or 'false' to show the
      * default name
      * 
      * @param symbol the SingleElementSymbol to get the short name
-     * @param showExpression flag to determine if full expression text is returned, or default name
+     * @param showExpression flag to determine if full IExpression text is returned, or default name
      * @return the short name for the supplied symbol
      */
-    public static String getSingleElementSymbolShortName( Expression symbol,
+    public static String getSingleElementSymbolShortName( IExpression symbol,
                                                           boolean showExpression ) {
         String symbolName = BLANK;
+        
         if (symbol != null) {
-            // Handle ExpressionSymbols - if Implicit Function, the function name is hidden
-            if (symbol instanceof ExpressionSymbol) {
-                // get the expression
-                Expression expr = ((ExpressionSymbol)symbol).getExpression();
-                // Expression is a Function, look for implicit function
-                if (expr instanceof Function) {
+            // Handle IExpressionSymbols - if Implicit Function, the function name is hidden
+            if (symbol instanceof IExpressionSymbol) {
+                // get the IExpression
+                IExpression expr = ((IExpressionSymbol)symbol).getExpression();
+                // IExpression is a Function, look for implicit function
+                if (expr instanceof IFunction) {
                     // if implicit function, use the arg symbol name, otherwise use function name
-                    Function func = (Function)expr;
+                    IFunction func = (IFunction)expr;
                     if (func.isImplicit()) {
-                        Collection elementSymbols = ElementCollectorVisitor.getElements(func, true);
+                        IElementCollectorVisitor elementCollectorVisitor = getQueryService().getElementCollectorVisitor();
+                        Collection elementSymbols = elementCollectorVisitor.getElements(func, true);
                         if (elementSymbols.size() == 1) {
-                            ElementSymbol element = (ElementSymbol)elementSymbols.iterator().next();
+                            IElementSymbol element = (IElementSymbol)elementSymbols.iterator().next();
                             symbolName = element.getShortName();
                         } else {
-                            symbolName = (showExpression) ? symbol.toString() : Symbol.getShortName(symbol);
+                            symbolName = (showExpression) ? symbol.toString() : getQueryService().getSymbolShortName(symbol);
                         }
                         // Not an implicit function
                     } else {
-                        symbolName = (showExpression) ? symbol.toString() : Symbol.getShortName(symbol);
+                        symbolName = (showExpression) ? symbol.toString() : getQueryService().getSymbolShortName(symbol);
                     }
                     // Expression not a Function
                 } else {
-                    symbolName = (showExpression) ? symbol.toString() : Symbol.getShortName(symbol);
+                    symbolName = (showExpression) ? symbol.toString() : getQueryService().getSymbolShortName(symbol);
                 }
-                // Not expression symbol, use short name
+                // Not IExpression symbol, use short name
             } else {
-                symbolName = Symbol.getShortName(symbol);
+                symbolName = getQueryService().getSymbolShortName(symbol);
             }
         }
         return symbolName;
     }
 
     // Return a List of Shortened QuerySelect symbol names, renaming them to make unique
-    public static List getProjectedSymbolUniqueNames( Command command ) {
+    public static List<String> getProjectedSymbolUniqueNames( ICommand command ) {
         List uniqueNames = new ArrayList();
         List selectNames = getProjectedSymbolNames(command);
 
@@ -1457,14 +1340,14 @@ public class TransformationSqlHelper implements ISQLConstants {
      * @param command the command languageObject
      * @return the list of SPParameters that are IN or INOUT
      */
-    public static List getProcedureInputParams( Command command ) {
+    public static List getProcedureInputParams( ICommand command ) {
         if (command == null) return Collections.EMPTY_LIST;
 
         ArrayList inputParams = new ArrayList();
 
         // Add InputParameters for supplied command (if it's a StoredProcedure)
-        if (command instanceof StoredProcedure) {
-            List procInParams = ((StoredProcedure)command).getInputParameters();
+        if (command instanceof IStoredProcedure) {
+            List procInParams = ((IStoredProcedure)command).getInputParameters();
             inputParams.addAll(procInParams);
         }
 
@@ -1473,12 +1356,12 @@ public class TransformationSqlHelper implements ISQLConstants {
 
     /**
      * Create a Map of unique name (key) to a EObject (value) from the supplied StoredProcedure. If a projected symbol is an
-     * ElementSymbol which is resolved to an EObject, the EObject will be added to the Map.
+     * IElementSymbol which is resolved to an EObject, the EObject will be added to the Map.
      * 
-     * @param command the supplied StoredProcedure object.
+     * @param command the supplied IStoredProcedure object.
      * @return map of unique name to EObject
      */
-    public static Map getProcInputParamEObjects( StoredProcedure storedProc ) { // NO_UCD
+    public static Map getProcInputParamEObjects( IStoredProcedure storedProc ) { // NO_UCD
         Map symbolEObjMap = new HashMap();
 
         // Add the Procedure Input Parameters to the Map
@@ -1489,8 +1372,8 @@ public class TransformationSqlHelper implements ISQLConstants {
             // add the name/Parameter to the map
             Iterator iter = inputParams.iterator();
             while (iter.hasNext()) {
-                SPParameter param = (SPParameter)iter.next();
-                ElementSymbol symbol = param.getParameterSymbol();
+                ISPParameter param = (ISPParameter)iter.next();
+                IElementSymbol symbol = param.getParameterSymbol();
                 String name = symbol.getShortName();
                 Object eObj = getElementSymbolEObject(symbol);
                 if (eObj != null) {
@@ -1533,20 +1416,19 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Create a Map of unique name (key) to a "type" object (value). The type object may be a Datatype, if the ElementSymbol is
+     * Create a Map of unique name (key) to a "type" object (value). The type object may be a Datatype, if the IElementSymbol is
      * resolved. Else the type object will be a Class type.
      * 
-     * @param command the supplied Command object.
+     * @param command the supplied ICommand object.
      * @return map of unique name to type Object
      */
-    public static Map getProjectedSymbolUniqueTypes( Command command ) {
+    public static Map getProjectedSymbolUniqueTypes( ICommand command ) {
         if (command != null) {
             Map symbolTypeMap = new HashMap();
             // Get the list of SELECT symbols
-            List symbols = command.getProjectedSymbols();
+            List<IExpression> symbols = command.getProjectedSymbols();
             // Populate the list with the symbol names
-            for (Iterator symbolIter = symbols.iterator(); symbolIter.hasNext();) {
-            	Expression symbol = (Expression)symbolIter.next();
+            for (IExpression symbol : symbols) {
                 String name = TransformationSqlHelper.getSingleElementSymbolShortName(symbol, false);
 
                 Object typeObj = getElementSymbolType(symbol);
@@ -1563,13 +1445,13 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Create a Map of unique name (key) to a "type" object (value). The type object may be a Datatype, if the ElementSymbol is
+     * Create a Map of unique name (key) to a "type" object (value). The type object may be a Datatype, if the IElementSymbol is
      * resolved. Else the type object will be a Class type. Also get the Procedure InputParameter types as well.
      * 
-     * @param command the supplied Command object.
+     * @param command the supplied ICommand object.
      * @return map of unique name to type Object
      */
-    public static Map getProjectedSymbolAndProcInputUniqueTypes( Command command ) {
+    public static Map getProjectedSymbolAndProcInputUniqueTypes( ICommand command ) {
         if (command != null) {
             // Get name-type map for the projected symbols
             Map symbolTypeMap = getProjectedSymbolUniqueTypes(command);
@@ -1580,8 +1462,8 @@ public class TransformationSqlHelper implements ISQLConstants {
             // add the name/Parameter to the map
             Iterator iter = inputParams.iterator();
             while (iter.hasNext()) {
-                SPParameter param = (SPParameter)iter.next();
-                ElementSymbol symbol = param.getParameterSymbol();
+                ISPParameter param = (ISPParameter)iter.next();
+                IElementSymbol symbol = param.getParameterSymbol();
                 String name = symbol.getShortName();
                 Object eObj = getElementSymbolType(symbol);
                 symbolTypeMap.put(name, eObj);
@@ -1593,24 +1475,23 @@ public class TransformationSqlHelper implements ISQLConstants {
 
     /**
      * Create a Map of unique name (key) to a EObject (value) from the supplied Command. If a projected symbol is and
-     * ElementSymbol which is resolved to an EObject, the EObject will be added to the Map.
+     * IElementSymbol which is resolved to an EObject, the EObject will be added to the Map.
      * 
-     * @param command the supplied Command object.
+     * @param command the supplied ICommand object.
      * @return map of unique name to length
      */
-    public static Map getProjectedSymbolEObjects( Command command ) {
+    public static Map getProjectedSymbolEObjects( ICommand command ) {
         Map symbolEObjMap = new HashMap();
         if (command != null) {
             // Get the list of SELECT symbols
-            List symbols = command.getProjectedSymbols();
+            List<IExpression> symbols = command.getProjectedSymbols();
             // Populate the list with the symbol names
             Iterator symbolIter = symbols.iterator();
-            while (symbolIter.hasNext()) {
-            	Expression symbol = (Expression)symbolIter.next();
+            for (IExpression symbol : symbols) {
                 String name = TransformationSqlHelper.getSingleElementSymbolShortName(symbol, false);
                 Object eObj = null;
-                if (symbol instanceof ElementSymbol) {
-                    eObj = getElementSymbolEObject((ElementSymbol)symbol);
+                if (symbol instanceof IElementSymbol) {
+                    eObj = getElementSymbolEObject((IElementSymbol)symbol);
                 }
 
                 // There may be duplicates in the elementMap (self-joins,etc)
@@ -1629,12 +1510,12 @@ public class TransformationSqlHelper implements ISQLConstants {
 
     /**
      * Create a Map of unique name (key) to a EObject (value) from the supplied Command. If a projected symbol is and
-     * ElementSymbol which is resolved to an EObject, the EObject will be added to the Map.
+     * IElementSymbol which is resolved to an EObject, the EObject will be added to the Map.
      * 
-     * @param command the supplied Command object.
+     * @param command the supplied ICommand object.
      * @return map of unique name to length
      */
-    public static Map getProjectedSymbolAndProcInputEObjects( Command command ) {
+    public static Map getProjectedSymbolAndProcInputEObjects( ICommand command ) {
         // Get the projected Symbol - EObject Map
         Map projectedSymbolEObjMap = getProjectedSymbolEObjects(command);
 
@@ -1646,8 +1527,8 @@ public class TransformationSqlHelper implements ISQLConstants {
             // add the name/Parameter to the map
             Iterator iter = inputParams.iterator();
             while (iter.hasNext()) {
-                SPParameter param = (SPParameter)iter.next();
-                ElementSymbol symbol = param.getParameterSymbol();
+                ISPParameter param = (ISPParameter)iter.next();
+                IElementSymbol symbol = param.getParameterSymbol();
                 String name = symbol.getShortName();
                 Object eObj = getElementSymbolEObject(symbol);
                 if (eObj != null) {
@@ -1662,25 +1543,23 @@ public class TransformationSqlHelper implements ISQLConstants {
      * Create a Map of unique name (key) to a length (value). If a projected symbol's type is a String Datatype, then the length
      * will be set. Otherwise the length is set to -1 in th map, to indicate a non-string Datatype.
      * 
-     * @param command the supplied Command object.
+     * @param command the supplied ICommand object.
      * @param hasXMLDocSource 'true' if the command has XML Document source
      * @return map of unique name to length
      */
-    public static Map getProjectedSymbolLengths( Command command,
+    public static Map getProjectedSymbolLengths( ICommand command,
                                                  boolean hasXMLDocSource ) {
         Map symbolLengthMap = new HashMap();
 
         if (command != null) {
             // Get the list of SELECT symbols
-            List symbols = command.getProjectedSymbols();
+            List<IExpression> symbols = command.getProjectedSymbols();
             // Populate the list with the symbol names
-            Iterator symbolIter = symbols.iterator();
-            while (symbolIter.hasNext()) {
-            	Expression symbol = (Expression)symbolIter.next();
+            for (IExpression symbol : symbols) {
                 String name = TransformationSqlHelper.getSingleElementSymbolShortName(symbol, false);
 
                 Object typeObj = getElementSymbolType(symbol);
-                boolean xmlDocSourceCase = hasXMLDocSource && (command instanceof CreateProcedureCommand);
+                boolean xmlDocSourceCase = hasXMLDocSource && (command instanceof ICreateProcedureCommand);
 
                 // There may be duplicates in the elementMap (self-joins,etc)
                 // If so, the name is made unique first...
@@ -1698,11 +1577,11 @@ public class TransformationSqlHelper implements ISQLConstants {
      * Create a Map of unique name (key) to a length (value). If a projected symbol's type is a String Datatype, then the length
      * will be set. Otherwise the length is set to -1 in th map, to indicate a non-string Datatype.
      * 
-     * @param command the supplied Command object.
+     * @param command the supplied ICommand object.
      * @param hasXMLDocSource 'true' if the command has XML Document source
      * @return map of unique name to length
      */
-    public static Map getProjectedSymbolAndProcInputLengths( Command command,
+    public static Map getProjectedSymbolAndProcInputLengths( ICommand command,
                                                              boolean hasXMLDocSource ) {
         // Get the map of projected Symbol names to lengths
         Map symbolLengthMap = getProjectedSymbolLengths(command, hasXMLDocSource);
@@ -1713,12 +1592,12 @@ public class TransformationSqlHelper implements ISQLConstants {
             // Add parameter lengths to the mapp
             Iterator paramIter = inputParams.iterator();
             while (paramIter.hasNext()) {
-                SPParameter param = (SPParameter)paramIter.next();
-                ElementSymbol symbol = param.getParameterSymbol();
+                ISPParameter param = (ISPParameter)paramIter.next();
+                IElementSymbol symbol = param.getParameterSymbol();
                 String name = symbol.getShortName();
 
                 Object typeObj = getElementSymbolType(symbol);
-                boolean xmlDocSourceCase = hasXMLDocSource && (command instanceof CreateProcedureCommand);
+                boolean xmlDocSourceCase = hasXMLDocSource && (command instanceof ICreateProcedureCommand);
 
                 // Put the type length in the symbolLengthMap
                 updateTypeLengthMap(symbolLengthMap, name, typeObj, symbol, xmlDocSourceCase);
@@ -1738,7 +1617,7 @@ public class TransformationSqlHelper implements ISQLConstants {
     private static void updateTypeLengthMap( Map theMap,
                                              String name,
                                              Object typeObj,
-                                             Expression symbol,
+                                             IExpression symbol,
                                              boolean xmlDocSourceCase ) {
         // If the type is Datatype and it's a String Datatype, put the length in the map
         // Otherwise put in a -1
@@ -1781,22 +1660,24 @@ public class TransformationSqlHelper implements ISQLConstants {
      * Determine if the symbol is a concat, substring, or decode function
      * 
      * @param SingleElementSymbol
-     * @return Function null if not found
+     * @return IFunction null if not found
      * @since 4.2.2
      */
-    private static Function isStringFunction( Expression symbol ) {
-        ExpressionSymbol expressionSymbol = null;
-        Function function = null;
+    private static IFunction isStringFunction( IExpression symbol ) {
+        IExpressionSymbol expressionSymbol = null;
+        IFunction function = null;
 
-        if (symbol instanceof AliasSymbol && ((AliasSymbol)symbol).getSymbol() instanceof ExpressionSymbol) {
-            expressionSymbol = (ExpressionSymbol)((AliasSymbol)symbol).getSymbol();
-        } else if (symbol instanceof ExpressionSymbol) {
-            expressionSymbol = (ExpressionSymbol)symbol;
+        if (symbol instanceof IAliasSymbol && ((IAliasSymbol)symbol).getSymbol() instanceof IExpressionSymbol) {
+            expressionSymbol = (IExpressionSymbol)((IAliasSymbol)symbol).getSymbol();
+        } else if (symbol instanceof IExpressionSymbol) {
+            expressionSymbol = (IExpressionSymbol)symbol;
         }
-        if (expressionSymbol != null && expressionSymbol.getExpression() instanceof Function) {
-            function = (Function)expressionSymbol.getExpression();
-            if (function.getName().equalsIgnoreCase(FunctionLibrary.CONCAT)
-                || function.getName().equalsIgnoreCase(FunctionLibrary.CONCAT_OPERATOR)) {
+        if (expressionSymbol != null && expressionSymbol.getExpression() instanceof IFunction) {
+            function = (IFunction)expressionSymbol.getExpression();
+            IFunctionLibrary functionLibrary = UdfManager.getInstance().getFunctionLibrary();
+            
+            if (function.getName().equalsIgnoreCase(functionLibrary.getFunctionName(FunctionName.CONCAT))
+                || function.getName().equalsIgnoreCase(functionLibrary.getFunctionName(FunctionName.CONCAT_OPERATOR))) {
                 return function;
             } else if (isDecodeOrSubString(function)) {
                 return function;
@@ -1811,13 +1692,14 @@ public class TransformationSqlHelper implements ISQLConstants {
     /**
      * Helper method to determine if the function is decodeString or subString
      * 
-     * @param Function function
+     * @param IFunction function
      * @return boolean
      * @since 4.2.2
      */
-    private static boolean isDecodeOrSubString( Function function ) {
-        if (function.getName().equalsIgnoreCase(FunctionLibrary.DECODESTRING)
-            || function.getName().equalsIgnoreCase(FunctionLibrary.SUBSTRING)) {
+    private static boolean isDecodeOrSubString( IFunction function ) {
+        IFunctionLibrary functionLibrary = UdfManager.getInstance().getFunctionLibrary();
+        if (function.getName().equalsIgnoreCase(functionLibrary.getFunctionName(FunctionName.DECODESTRING))
+            || function.getName().equalsIgnoreCase(functionLibrary.getFunctionName(FunctionName.SUBSTRING))) {
             return true;
         }
         return false;
@@ -1827,17 +1709,17 @@ public class TransformationSqlHelper implements ISQLConstants {
     /**
      * Determine the concatenated string lengths
      * 
-     * @param Function
+     * @param IFunction
      * @return int length of 2 concatenated string columns
      * @since 4.2.2
      */
-    private static int concatSymbolLength( Expression exprObject ) {
-        Expression[] args = null;
-        ElementSymbol elSymbol = null;
+    private static int concatSymbolLength( IExpression exprObject ) {
+        IExpression[] args = null;
+        IElementSymbol elSymbol = null;
         int stringLength = 0;
 
-        if (exprObject instanceof Function) {
-            Function myFunc = (Function)exprObject;
+        if (exprObject instanceof IFunction) {
+            IFunction myFunc = (IFunction)exprObject;
             if (isDecodeOrSubString(myFunc)) {
                 return stringLength += getMaxStringLength(myFunc);
             } else if (myFunc.getName().equalsIgnoreCase("chr")) { //$NON-NLS-1$
@@ -1846,14 +1728,14 @@ public class TransformationSqlHelper implements ISQLConstants {
 
             args = myFunc.getArgs();
             for (int i = 0; i < args.length; i++) {
-                Expression symbol = args[i];
+                IExpression symbol = args[i];
 
-                if (symbol instanceof Function) {
+                if (symbol instanceof IFunction) {
                     stringLength += concatSymbolLength(symbol);
                 }
 
-                if (symbol instanceof ElementSymbol) {
-                    elSymbol = (ElementSymbol)symbol;
+                if (symbol instanceof IElementSymbol) {
+                    elSymbol = (IElementSymbol)symbol;
                     Object mID = elSymbol.getMetadataID();
                     if (mID != null && mID instanceof ColumnRecord) {
                         int length = ((ColumnRecord)mID).getLength();
@@ -1865,8 +1747,8 @@ public class TransformationSqlHelper implements ISQLConstants {
                         stringLength += ModelerCore.getTransformationPreferences().getDefaultStringLength();
                     }
                 }
-                if (symbol instanceof Constant) {
-                    Constant constant = (Constant)args[i];
+                if (symbol instanceof IConstant) {
+                    IConstant constant = (IConstant)args[i];
                     Object value = constant.getValue();
                     if (value != null && value instanceof String) {
                         stringLength += ((String)value).length();
@@ -1875,8 +1757,8 @@ public class TransformationSqlHelper implements ISQLConstants {
                     }
                 }
             }
-        } else if (exprObject instanceof ElementSymbol) {
-            elSymbol = (ElementSymbol)exprObject;
+        } else if (exprObject instanceof IElementSymbol) {
+            elSymbol = (IElementSymbol)exprObject;
             Object mID = elSymbol.getMetadataID();
             if (mID != null && mID instanceof ColumnRecord) {
                 int length = ((ColumnRecord)mID).getLength();
@@ -1887,8 +1769,8 @@ public class TransformationSqlHelper implements ISQLConstants {
             } else {
                 stringLength += ModelerCore.getTransformationPreferences().getDefaultStringLength();
             }
-        } else if (exprObject instanceof Constant) {
-            Constant constant = (Constant)exprObject;
+        } else if (exprObject instanceof IConstant) {
+            IConstant constant = (IConstant)exprObject;
             Object value = constant.getValue();
             if (value != null && value instanceof String) {
                 stringLength += ((String)value).length();
@@ -1902,27 +1784,27 @@ public class TransformationSqlHelper implements ISQLConstants {
     /**
      * Determines the length of possible nested string function using recursion on concatSymbolLength
      * 
-     * @return int length of concatenated expression
+     * @return int length of concatenated IExpression
      * @since 4.2.2
      */
-    public static int getSymbolLength( Expression symbol ) {
+    public static int getSymbolLength( IExpression symbol ) {
         int stringLength = 0;
 
-        Function function = null;
+        IFunction function = null;
 
         if ((function = isStringFunction(symbol)) != null) {
             if (!isDecodeOrSubString(function)) {
-                Expression[] args = function.getArgs();
+                IExpression[] args = function.getArgs();
                 for (int i = 0; i < args.length; i++) {
-                    Expression exprSymbol = args[i];
+                    IExpression exprSymbol = args[i];
 
-                    if (exprSymbol instanceof Function) {
+                    if (exprSymbol instanceof IFunction) {
                         stringLength += concatSymbolLength(exprSymbol);
                     }
-                    if (exprSymbol instanceof ElementSymbol) {
+                    if (exprSymbol instanceof IElementSymbol) {
                         stringLength += concatSymbolLength(exprSymbol);
                     }
-                    if (exprSymbol instanceof Constant) {
+                    if (exprSymbol instanceof IConstant) {
                         stringLength += concatSymbolLength(exprSymbol);
                     }
                 }
@@ -1939,14 +1821,16 @@ public class TransformationSqlHelper implements ISQLConstants {
      * Helper method to determine the max length of given substring/decodeString length. No matter if it is the 2 or 3 param
      * substring function always can obtain the max length from first argument of function
      * 
-     * @param Function
+     * @param IFunction
      * @return int max length of function's first param
      * @since 4.2.2
      */
-    private static int getMaxStringLength( Function function ) {
-        Expression[] args = function.getArgs();
-        Expression exprSymbol = args[0];
-        if (function.getName().equalsIgnoreCase(FunctionLibrary.DECODESTRING)) {
+    private static int getMaxStringLength( IFunction function ) {
+        IExpression[] args = function.getArgs();
+        IExpression exprSymbol = args[0];
+        
+        IFunctionLibrary functionLibrary = UdfManager.getInstance().getFunctionLibrary();
+        if (function.getName().equalsIgnoreCase(functionLibrary.getFunctionName(FunctionName.DECODESTRING))) {
             return getDecodeLength(function);
         }
         return concatSymbolLength(exprSymbol);
@@ -1956,18 +1840,18 @@ public class TransformationSqlHelper implements ISQLConstants {
      * Helper method to determine the max length of decodeString. Either the column size will be max or one of the string lengths
      * from decode part
      * 
-     * @param Function
+     * @param IFunction
      * @return int max length of column size or max decode string length
      * @since 4.2.2
      */
-    private static int getDecodeLength( Function function ) {
-        Expression[] args = function.getArgs();
-        Expression exprSymbol = null;
+    private static int getDecodeLength( IFunction function ) {
+        IExpression[] args = function.getArgs();
+        IExpression exprSymbol = null;
 
         int maxLength = 0;
         exprSymbol = args[0];
-        if (exprSymbol instanceof ElementSymbol) {
-            ElementSymbol elmSymbol = (ElementSymbol)exprSymbol;
+        if (exprSymbol instanceof IElementSymbol) {
+            IElementSymbol elmSymbol = (IElementSymbol)exprSymbol;
             Object mID = elmSymbol.getMetadataID();
             if (mID != null && mID instanceof ColumnRecord) {
                 int length = ((ColumnRecord)mID).getLength();
@@ -1980,8 +1864,8 @@ public class TransformationSqlHelper implements ISQLConstants {
             }
         }
         exprSymbol = args[1];
-        if (exprSymbol instanceof Constant) {
-            Constant constSym = (Constant)exprSymbol;
+        if (exprSymbol instanceof IConstant) {
+            IConstant constSym = (IConstant)exprSymbol;
             Object constObj = constSym.getValue();
             if (constObj != null && constObj instanceof String) {
                 String decodes = (String)constObj;
@@ -1989,7 +1873,7 @@ public class TransformationSqlHelper implements ISQLConstants {
                 String delimiter = ","; //$NON-NLS-1$
                 if (args.length == 3) {
                     exprSymbol = args[2];
-                    constSym = (Constant)exprSymbol;
+                    constSym = (IConstant)exprSymbol;
                     constObj = constSym.getValue();
                     if (constObj != null && constObj instanceof String) {
                         delimiter = (String)constObj;
@@ -2010,21 +1894,19 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Get the ordered list of query select element Types from a Command The "type" will be one of three things (1) null - When
+     * Get the ordered list of query select element Types from a ICommand The "type" will be one of three things (1) null - When
      * the target attribute is unmatched (2) Datatype - When the target attribute is bound to a symbol which resolves to a
-     * MetaObject (3) java class type - When the target attribute is bound to an expression
+     * MetaObject (3) java class type - When the target attribute is bound to an IExpression
      * 
-     * @param comman the Command language object
+     * @param comman the ICommand language object
      * @return the ordered list of query SELECT element types
      */
-    public static List getProjectedSymbolTypes( Command command ) { // NO_UCD
+    public static List getProjectedSymbolTypes( ICommand command ) { // NO_UCD
         List selectTypes = new ArrayList();
         if (command != null) {
             // Get the list of SELECT symbols
-            List symbols = command.getProjectedSymbols();
-            Iterator iter = symbols.iterator();
-            while (iter.hasNext()) {
-            	Expression symbol = (Expression)iter.next();
+            List<IExpression> symbols = command.getProjectedSymbols();
+            for (IExpression symbol : symbols) {
                 selectTypes.add(getElementSymbolType(symbol));
             }
         }
@@ -2032,25 +1914,25 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     // Return a Map of renamed symbols - new name (key) and SelectSymbol (value)
-    public static Map getRenamedSymbolsMap( List symbols ) {
+    public static Map getRenamedSymbolsMap( List<IExpression> symbols ) {
         Map renameMap = new HashMap();
         // Make sure all the symbols are SingleElementSymbols
         List seSymbols = new ArrayList();
         Iterator symbolIter = symbols.iterator();
         while (symbolIter.hasNext()) {
-        	Expression sSymbol = (Expression)symbolIter.next();
-            if (sSymbol instanceof MultipleElementSymbol) {
-                List meSymbols = ((MultipleElementSymbol)sSymbol).getElementSymbols();
+        	IExpression sSymbol = (IExpression)symbolIter.next();
+            if (sSymbol instanceof IMultipleElementSymbol) {
+                List meSymbols = ((IMultipleElementSymbol)sSymbol).getElementSymbols();
                 if (meSymbols != null) {
                     Iterator meIter = meSymbols.iterator();
                     while (meIter.hasNext()) {
-                        ElementSymbol eSymbol = (ElementSymbol)meIter.next();
+                        IElementSymbol eSymbol = (IElementSymbol)meIter.next();
                         if (eSymbol != null) {
                             seSymbols.add(eSymbol);
                         }
                     }
                 }
-            } else if (sSymbol instanceof Expression) {
+            } else if (sSymbol instanceof IExpression) {
                 seSymbols.add(sSymbol);
             }
         }
@@ -2058,19 +1940,19 @@ public class TransformationSqlHelper implements ISQLConstants {
         // Populate the list with the symbol names
         symbolIter = seSymbols.iterator();
         while (symbolIter.hasNext()) {
-        	Expression seSymbol = (Expression)symbolIter.next();
+        	IExpression seSymbol = (IExpression)symbolIter.next();
             String name = TransformationSqlHelper.getSingleElementSymbolShortName(seSymbol, false);
             String uniqueName = name;
 
-            Expression underlyingSymbol = seSymbol;
+            IExpression underlyingSymbol = seSymbol;
 
             // If this is an alias, set the symbol to be the underlying object
-            if (seSymbol instanceof AliasSymbol) {
-                underlyingSymbol = ((AliasSymbol)seSymbol).getSymbol();
+            if (seSymbol instanceof IAliasSymbol) {
+                underlyingSymbol = ((IAliasSymbol)seSymbol).getSymbol();
             }
-            if (underlyingSymbol instanceof ElementSymbol) {
+            if (underlyingSymbol instanceof IElementSymbol) {
                 // Set MetaObject ref in Map for SingleElementSymbol
-                ElementSymbol eSymbol = (ElementSymbol)underlyingSymbol;
+                IElementSymbol eSymbol = (IElementSymbol)underlyingSymbol;
                 // There may be duplicates in the elementMap (self-joins,etc)
                 // If so, the name is made unique first...
                 uniqueName = getUniqueName(name, elementNames);
@@ -2079,7 +1961,7 @@ public class TransformationSqlHelper implements ISQLConstants {
                 if (idObj != null && idObj instanceof MetadataRecord) {
                     elementNames.add(uniqueName);
                 }
-            } else if (underlyingSymbol instanceof ExpressionSymbol) {
+            } else if (underlyingSymbol instanceof IExpressionSymbol) {
                 // There may be duplicates in the elementMap (self-joins,etc)
                 // If so, the name is made unique first...
                 uniqueName = getUniqueName(name, elementNames);
@@ -2105,8 +1987,8 @@ public class TransformationSqlHelper implements ISQLConstants {
         while (iter.hasNext()) {
             SqlAlias sqlAlias = (SqlAlias)iter.next();
             // Create unary from clause
-            GroupSymbol gSymbol = createGroupSymbol(sqlAlias);
-            result.add(new UnaryFromClause(gSymbol));
+            IGroupSymbol gSymbol = createGroupSymbol(sqlAlias);
+            result.add(getQueryFactory().createUnaryFromClause(gSymbol));
         }
         return result;
     }
@@ -2117,10 +1999,10 @@ public class TransformationSqlHelper implements ISQLConstants {
      * @param eObject the supplied EObject
      * @return the generated FROM clause
      */
-    private static FromClause createFromClause( EObject eObject ) {
+    private static IFromClause createFromClause( EObject eObject ) {
         CoreArgCheck.isNotNull(eObject);
 
-        FromClause fromClause = new UnaryFromClause(createGroupSymbol(eObject));
+        IFromClause fromClause = getQueryFactory().createUnaryFromClause(createGroupSymbol(eObject));
 
         return fromClause;
     }
@@ -2137,7 +2019,7 @@ public class TransformationSqlHelper implements ISQLConstants {
         Iterator iter = groupEObjs.iterator();
         while (iter.hasNext()) {
             EObject eObj = (EObject)iter.next();
-            GroupSymbol gSymbol = createGroupSymbol(eObj);
+            IGroupSymbol gSymbol = createGroupSymbol(eObj);
             if (gSymbol != null) {
                 result.add(gSymbol);
             }
@@ -2146,15 +2028,15 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Create a StoredProcedure from a Procedure EObject or SqlAlias. The aliasedObject of the SqlAlias must be a procedure.
+     * Create a IStoredProcedure from a Procedure EObject or SqlAlias. The aliasedObject of the SqlAlias must be a procedure.
      * 
      * @param eObj the Procedure or SqlAlias object
      * @return the generated StoredProcedure
      */
-    public static StoredProcedure createStoredProc( EObject eObj ) {
+    public static IStoredProcedure createStoredProc( EObject eObj ) {
         CoreArgCheck.isNotNull(eObj);
 
-        StoredProcedure storedProc = null;
+        IStoredProcedure storedProc = null;
 
         // If the supplied EObject is SqlAlias, get Alias name and aliased Object
         if (eObj instanceof SqlAlias) {
@@ -2168,7 +2050,7 @@ public class TransformationSqlHelper implements ISQLConstants {
             String procFullName = procedureAspect.getFullName(eObj);
 
             // Create StoredProc and set ID/name
-            storedProc = new StoredProcedure();
+            storedProc = getQueryFactory().createStoredProcedure();
             storedProc.setProcedureName(procFullName);
             storedProc.setDisplayNamedParameters(true);
             // Get the Parameter attributes from the group
@@ -2179,7 +2061,7 @@ public class TransformationSqlHelper implements ISQLConstants {
             Iterator iter = spParams.iterator();
 
             while (iter.hasNext()) {
-                storedProc.setParameter((SPParameter)iter.next());
+                storedProc.setParameter((ISPParameter)iter.next());
             }
 
             EObject results = (EObject)procedureAspect.getResult(eObj);
@@ -2188,7 +2070,7 @@ public class TransformationSqlHelper implements ISQLConstants {
                 List rsCols = rsAspect.getColumns(results);
                 if (rsCols.size() > 0) {
                     // it doesn't matter at this point what the columns are, just that is has a resultset
-                    SPParameter param = new SPParameter(spParams.size(), SPParameter.RESULT_SET, "RESULT"); //$NON-NLS-1$
+                    ISPParameter param = getQueryFactory().createSPParameter(spParams.size(), ISPParameter.ParameterInfo.RESULT_SET, "RESULT"); //$NON-NLS-1$
                     param.addResultSetColumn("RESULT", String.class, "RESULT"); //$NON-NLS-1$ //$NON-NLS-2$
                     storedProc.setParameter(param);
                 }
@@ -2199,13 +2081,13 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Create a GroupSymbol from a group EOject or SqlAlias
+     * Create a IGroupSymbol from a group EOject or SqlAlias
      * 
      * @param groupEObj the supplied group EObject
      * @return the corresponding GroupSymbols
      */
-    public static GroupSymbol createGroupSymbol( EObject groupEObj ) {
-        GroupSymbol gSymbol = null;
+    public static IGroupSymbol createGroupSymbol( EObject groupEObj ) {
+        IGroupSymbol gSymbol = null;
 
         String aliasName = null;
         // If the supplied EObject is SqlAlias, get Alias name and aliased Object
@@ -2214,7 +2096,7 @@ public class TransformationSqlHelper implements ISQLConstants {
             aliasName = sqlAlias.getAlias();
             groupEObj = sqlAlias.getAliasedObject();
         }
-        // Create the GroupSymbol using the EObject and alias (if any)
+        // Create the IGroupSymbol using the EObject and alias (if any)
         if (org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper.isTable(groupEObj)) {
             SqlTableAspect tableAspect = (SqlTableAspect)AspectManager.getSqlAspect(groupEObj);
             boolean hasResource = groupEObj.eResource() != null ? true : false;
@@ -2229,9 +2111,9 @@ public class TransformationSqlHelper implements ISQLConstants {
                 groupID = getGroupID(tableFullName, groupEObj);
             }
             if (aliasName != null && !aliasName.equalsIgnoreCase(tableShortName)) {
-                gSymbol = new GroupSymbol(aliasName, tableFullName);
+                gSymbol = getQueryFactory().createGroupSymbol(aliasName, tableFullName);
             } else {
-                gSymbol = new GroupSymbol(tableFullName);
+                gSymbol = getQueryFactory().createGroupSymbol(tableFullName);
             }
             // Set the MetadataID if it was found
             if (groupID != null) {
@@ -2241,22 +2123,19 @@ public class TransformationSqlHelper implements ISQLConstants {
             // InputSet iSet = (InputSet)groupEObj;
             String inputSetFullName = "InputSet"; //$NON-NLS-1$
             String inputSetShortName = "InputSet"; //$NON-NLS-1$
-            // SqlTableAspect tableAspect = (SqlTableAspect)SqlAspectManager.getSqlAspect(groupEObj);
-            // String inputSetFullName = tableAspect.getFullName(groupEObj);
-            // String inputSetShortName = tableAspect.getName(groupEObj);
             if (aliasName != null && !aliasName.equalsIgnoreCase(inputSetShortName)) {
-                gSymbol = new GroupSymbol(aliasName, inputSetFullName);
+                gSymbol = getQueryFactory().createGroupSymbol(aliasName, inputSetFullName);
             } else {
-                gSymbol = new GroupSymbol(inputSetFullName);
+                gSymbol = getQueryFactory().createGroupSymbol(inputSetFullName);
             }
         } else if (org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper.isProcedure(groupEObj)) {
             SqlProcedureAspect procAspect = (SqlProcedureAspect)AspectManager.getSqlAspect(groupEObj);
             String name = procAspect.getFullName(groupEObj);
             String shortName = procAspect.getName(groupEObj);
             if (aliasName != null && !aliasName.equalsIgnoreCase(shortName)) {
-                gSymbol = new GroupSymbol(aliasName, name);
+                gSymbol = getQueryFactory().createGroupSymbol(aliasName, name);
             } else {
-                gSymbol = new GroupSymbol(name);
+                gSymbol = getQueryFactory().createGroupSymbol(name);
             }
         }
 
@@ -2277,19 +2156,7 @@ public class TransformationSqlHelper implements ISQLConstants {
         SqlAspect sqlAspect = AspectManager.getSqlAspect(elmntObj);
         CoreArgCheck.isInstanceOf(SqlColumnAspect.class, sqlAspect);
         elemID = new ColumnRecordImpl((SqlColumnAspect)sqlAspect, elmntObj);
-        // Defect 17972: The following call was done many times and opened/closed model files to peek at
-        // the Header (isModelFile()) Dennis F. Suggested replacing with the above code
-        // QueryMetadataInterface resolver = TransformationMetadataFactory.getInstance().getModelerMetadata(elmntObj);
-        // elemID = resolver.getElementID(elementFullName);
-        // } catch (QueryMetadataException e) {
-        //            String message = TransformationPlugin.Util.getString("TransformationSqlHelper.elementIDNotFoundError",     //$NON-NLS-1$
-        // elementFullName);
-        // TransformationPlugin.Util.log(IStatus.WARNING, e, message);
-        // } catch (MetaMatrixComponentException e) {
-        //            String message = TransformationPlugin.Util.getString("TransformationSqlHelper.elementIDNotFoundError",     //$NON-NLS-1$
-        // elementFullName);
-        // TransformationPlugin.Util.log(IStatus.WARNING, e, message);
-        // }
+
         return elemID;
     }
 
@@ -2303,23 +2170,10 @@ public class TransformationSqlHelper implements ISQLConstants {
     private static Object getGroupID( String groupFullName,
                                       EObject grpObj ) {
         Object groupID = null;
-        // try {
-        // Defect 17972: The following call was done many times and opened/closed model files to peek at
-        // the Header (isModelFile()) Dennis F. Suggested replacing with the above code
-        // QueryMetadataInterface resolver = TransformationMetadataFactory.getInstance().getModelerMetadata(grpObj);
-        // groupID = recom.metamatrixsolver.getGroupID(groupFullName);
         SqlAspect sqlAspect = AspectManager.getSqlAspect(grpObj);
         CoreArgCheck.isInstanceOf(SqlTableAspect.class, sqlAspect);
         groupID = new TableRecordImpl((SqlTableAspect)sqlAspect, grpObj);
-        // } catch (QueryMetadataException e) {
-        //            String message = TransformationPlugin.Util.getString("TransformationSqlHelper.groupIDNotFoundError",     //$NON-NLS-1$
-        // groupFullName);
-        // TransformationPlugin.Util.log(IStatus.WARNING, e, message);
-        // } catch (MetaMatrixComponentException e) {
-        //            String message = TransformationPlugin.Util.getString("TransformationSqlHelper.groupIDNotFoundError",     //$NON-NLS-1$
-        // groupFullName);
-        // TransformationPlugin.Util.log(IStatus.WARNING, e, message);
-        // }
+
         return groupID;
     }
 
@@ -2330,11 +2184,11 @@ public class TransformationSqlHelper implements ISQLConstants {
      * @param procObj the eObject of the procedure
      * @return the Object ID
      */
-    private static StoredProcedureInfo getProcInfo( String procFullName,
+    private static IStoredProcedureInfo getProcInfo( String procFullName,
                                                     EObject procObj ) {
-        StoredProcedureInfo procInfo = null;
+        IStoredProcedureInfo procInfo = null;
         try {
-            QueryMetadataInterface resolver = TransformationMetadataFactory.getInstance().getModelerMetadata(procObj);
+            IQueryMetadataInterface resolver = TransformationMetadataFactory.getInstance().getModelerMetadata(procObj);
             procInfo = resolver.getStoredProcedureInfoForProcedure(procFullName);
         } catch (Exception e) {
             String message = TransformationPlugin.Util.getString("TransformationSqlHelper.groupIDNotFoundError", //$NON-NLS-1$
@@ -2371,7 +2225,7 @@ public class TransformationSqlHelper implements ISQLConstants {
         List result = new ArrayList();
 
         // Create GroupSymbol
-        GroupSymbol groupSymbol = createGroupSymbol(groupSqlAlias);
+        IGroupSymbol groupSymbol = createGroupSymbol(groupSqlAlias);
 
         // Get the aliased EObject
         EObject groupEObj = groupSqlAlias.getAliasedObject();
@@ -2381,7 +2235,7 @@ public class TransformationSqlHelper implements ISQLConstants {
             SqlTableAspect tableAspect = (SqlTableAspect)AspectManager.getSqlAspect(groupEObj);
             List columns = tableAspect.getColumns(groupEObj);
             Iterator columnIter = columns.iterator();
-            Expression seSymbol = null;
+            IExpression seSymbol = null;
             while (columnIter.hasNext()) {
                 EObject columnEObj = (EObject)columnIter.next();
                 seSymbol = createElemSymbol(columnEObj, groupSymbol);
@@ -2410,16 +2264,18 @@ public class TransformationSqlHelper implements ISQLConstants {
                 EObject elemEObj = (EObject)i.next();
 
                 String type = TransformationHelper.getRuntimeType(elemEObj);
-                final Class clazz = DataTypeManager.getDataTypeClass(type);
+                
+                IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+                final Class clazz = service.getDataTypeClass(type);
 
                 String paramName = TransformationHelper.getSqlEObjectName(elemEObj);
 
-                ElementSymbol symbol = new ElementSymbol(groupSymbol.getName() + Symbol.SEPARATOR + paramName);
+                IElementSymbol symbol = getQueryFactory().createElementSymbol(groupSymbol.getName() + ISymbol.SEPARATOR + paramName);
                 symbol.setType(clazz);
                 result.add(symbol);
 
                 if (inout.contains(elemEObj)) {
-                    symbol = new ElementSymbol(groupSymbol.getName() + Symbol.SEPARATOR + paramName + "_IN"); //$NON-NLS-1$
+                    symbol = getQueryFactory().createElementSymbol(groupSymbol.getName() + ISymbol.SEPARATOR + paramName + "_IN"); //$NON-NLS-1$
                     symbol.setType(clazz);
                     result.add(symbol);
                 }
@@ -2430,15 +2286,18 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Create an ElementSymbol from a group EOject or SqlAlias
+     * Create an IElementSymbol from a group EOject or SqlAlias
      * 
      * @param groupEObj the supplied group EObject
      * @return the corresponding GroupSymbols
      */
-    public static Expression createElemSymbol( EObject elemEObj,
-                                                        GroupSymbol parentGroupSymbol ) {
-    	Expression seSymbol = null;
-
+    public static IExpression createElemSymbol( EObject elemEObj,
+                                                        IGroupSymbol parentGroupSymbol ) {
+    	IExpression seSymbol = null;
+    	IDataTypeManagerService dataTypeService = ModelerCore.getTeiidDataTypeManagerService();
+    	
+    	Class<?> nullClass = dataTypeService.getDefaultDataClass(DataTypeName.NULL);
+    	
         // Get name for the supplied group
         String tableName = parentGroupSymbol.getName();
         if (tableName == null) {
@@ -2460,16 +2319,16 @@ public class TransformationSqlHelper implements ISQLConstants {
 
             String fullName = tableName + "." + aspect.getName(elemEObj); //$NON-NLS-1$          
 
-            ElementSymbol element = new ElementSymbol(fullName);
+            IElementSymbol element = getQueryFactory().createElementSymbol(fullName);
             element.setGroupSymbol(parentGroupSymbol);
             final String rtType = aspect.getRuntimeType(elemEObj);
             if (rtType != null) {
-                final Class clazz = DataTypeManager.getDataTypeClass(rtType);
-                element.setMetadataID(new TempMetadataID(fullName.toUpperCase(), clazz));
+                final Class clazz = dataTypeService.getDataTypeClass(rtType);
+                element.setMetadataID(getQueryFactory().createMetadataID(fullName.toUpperCase(), clazz));
                 element.setType(clazz);
             } else {
-                element.setMetadataID(new TempMetadataID(fullName.toUpperCase(), DataTypeManager.DefaultDataClasses.NULL));
-                element.setType(DataTypeManager.DefaultDataClasses.NULL);
+                element.setMetadataID(getQueryFactory().createMetadataID(fullName.toUpperCase(), nullClass));
+                element.setType(nullClass);
             }
             seSymbol = element;
             // Create ElementSymbols using eObj and alias (if any)
@@ -2481,7 +2340,7 @@ public class TransformationSqlHelper implements ISQLConstants {
             // Get MetadataID for uuid
             Object elemID = getElementID(colUUID, elemEObj);
             if (columnAliasName != null) {
-                ElementSymbol elemSymbol = new ElementSymbol(tableName + "." + colShortName); //$NON-NLS-1$
+                IElementSymbol elemSymbol = getQueryFactory().createElementSymbol(tableName + "." + colShortName); //$NON-NLS-1$
                 elemSymbol.setGroupSymbol(parentGroupSymbol);
                 // Set the MetadataID if it was found
                 if (elemID != null) {
@@ -2489,14 +2348,14 @@ public class TransformationSqlHelper implements ISQLConstants {
                 }
                 final String rtType = columnAspect.getRuntimeType(elemEObj);
                 if (rtType != null) {
-                    final Class clazz = DataTypeManager.getDataTypeClass(rtType);
+                    final Class clazz = dataTypeService.getDataTypeClass(rtType);
                     elemSymbol.setType(clazz);
                 } else {
-                    elemSymbol.setType(DataTypeManager.DefaultDataClasses.NULL);
+                    elemSymbol.setType(nullClass);
                 }
-                seSymbol = new AliasSymbol(columnAliasName, elemSymbol);
+                seSymbol = getQueryFactory().createAliasSymbol(columnAliasName, elemSymbol);
             } else {
-                ElementSymbol elemSymbol = new ElementSymbol(tableName + "." + colShortName); //$NON-NLS-1$
+                IElementSymbol elemSymbol = getQueryFactory().createElementSymbol(tableName + "." + colShortName); //$NON-NLS-1$
                 elemSymbol.setGroupSymbol(parentGroupSymbol);
                 // Set the MetadataID if it was found
                 if (elemID != null) {
@@ -2504,10 +2363,10 @@ public class TransformationSqlHelper implements ISQLConstants {
                 }
                 final String rtType = columnAspect.getRuntimeType(elemEObj);
                 if (rtType != null) {
-                    final Class clazz = DataTypeManager.getDataTypeClass(rtType);
+                    final Class clazz = dataTypeService.getDataTypeClass(rtType);
                     elemSymbol.setType(clazz);
                 } else {
-                    elemSymbol.setType(DataTypeManager.DefaultDataClasses.NULL);
+                    elemSymbol.setType(nullClass);
                 }
                 seSymbol = elemSymbol;
             }
@@ -2515,21 +2374,21 @@ public class TransformationSqlHelper implements ISQLConstants {
             SqlProcedureParameterAspect aspect = (SqlProcedureParameterAspect)AspectManager.getSqlAspect(elemEObj);
             String paramName = TransformationHelper.getSqlEObjectFullName(elemEObj);
 
-            ElementSymbol element = new ElementSymbol(paramName);
+            IElementSymbol element = getQueryFactory().createElementSymbol(paramName);
             element.setGroupSymbol(parentGroupSymbol);
             if (aspect != null) {
                 final String rtType = aspect.getRuntimeType(elemEObj);
                 if (rtType != null) {
-                    final Class clazz = DataTypeManager.getDataTypeClass(rtType);
-                    element.setMetadataID(new TempMetadataID(paramName.toUpperCase(), clazz));
+                    final Class clazz = dataTypeService.getDataTypeClass(rtType);
+                    element.setMetadataID(getQueryFactory().createMetadataID(paramName.toUpperCase(), clazz));
                     element.setType(clazz);
                 } else {
-                    element.setMetadataID(new TempMetadataID(paramName.toUpperCase(), DataTypeManager.DefaultDataClasses.NULL));
-                    element.setType(DataTypeManager.DefaultDataClasses.NULL);
+                    element.setMetadataID(getQueryFactory().createMetadataID(paramName.toUpperCase(), nullClass));
+                    element.setType(nullClass);
                 }
             } else {
-                element.setMetadataID(new TempMetadataID(paramName.toUpperCase(), DataTypeManager.DefaultDataClasses.NULL));
-                element.setType(DataTypeManager.DefaultDataClasses.NULL);
+                element.setMetadataID(getQueryFactory().createMetadataID(paramName.toUpperCase(), nullClass));
+                element.setType(nullClass);
             }
             seSymbol = element;
         }
@@ -2555,26 +2414,26 @@ public class TransformationSqlHelper implements ISQLConstants {
 
             Map workingRenSymMap = new HashMap(renamedSymbolsMap);
 
-            // Iterate through the current Select symbols
+            // Iterate through the current ISelect symbols
             // If any are MultipleElementSymbols, replace them with the SingleElementSymbols
             // if they contain a renamed symbol
             // Once a symbol is renamed, the Map entry is removed so duplicates dont get renamed
             for (int i = 0; i < seSymbols.size(); i++) {
-            	Expression currentSelectSymbol = (Expression)seSymbols.get(i);
+            	IExpression currentSelectSymbol = (IExpression)seSymbols.get(i);
                 // ---------------------------------------------------------------
                 // Current Symbol is MultiElement - expand it if necessary
                 // ---------------------------------------------------------------
-                if (currentSelectSymbol instanceof MultipleElementSymbol) {
+                if (currentSelectSymbol instanceof IMultipleElementSymbol) {
                     // Check whether the MultiSymbol needs expanding
-                    boolean shouldExpand = shouldExpand((MultipleElementSymbol)currentSelectSymbol, workingRenSymMap);
+                    boolean shouldExpand = shouldExpand((IMultipleElementSymbol)currentSelectSymbol, workingRenSymMap);
                     // If the MultiSymbol needs expanding, expand it with renamed symbol
                     if (shouldExpand) {
                         // Get SingleElementSybmols for this MultiSymbol
-                        List multiElemSymbols = ((MultipleElementSymbol)currentSelectSymbol).getElementSymbols();
+                        List multiElemSymbols = ((IMultipleElementSymbol)currentSelectSymbol).getElementSymbols();
                         Iterator iter = multiElemSymbols.iterator();
                         // Go thru all SingleElement symbols, and rename if necessary
                         while (iter.hasNext()) {
-                        	Expression renamedSymbol = renameSymbolUsingMap((Expression)iter.next(),
+                        	IExpression renamedSymbol = renameSymbolUsingMap((IExpression)iter.next(),
                                                                                      workingRenSymMap);
                             newSymbols.add(renamedSymbol);
                         }
@@ -2585,8 +2444,8 @@ public class TransformationSqlHelper implements ISQLConstants {
                     // ----------------------------------------------------------------
                     // Current Symbol is SingleElementSymbol - rename it if necessary
                     // ----------------------------------------------------------------
-                } else if (currentSelectSymbol instanceof Expression) {
-                	Expression renamedSymbol = renameSymbolUsingMap((Expression)currentSelectSymbol,
+                } else if (currentSelectSymbol instanceof IExpression) {
+                	IExpression renamedSymbol = renameSymbolUsingMap((IExpression)currentSelectSymbol,
                                                                              workingRenSymMap);
                     newSymbols.add(renamedSymbol);
                 }
@@ -2602,7 +2461,7 @@ public class TransformationSqlHelper implements ISQLConstants {
      * Determine if the MultiElementSymbol should be expanded, based on the supplied map. The map contains newName (key) to
      * SingleElementSymbol (value)
      */
-    private static boolean shouldExpand( MultipleElementSymbol multiElemSymbol,
+    private static boolean shouldExpand( IMultipleElementSymbol multiElemSymbol,
                                          Map renamedSymbolsMap ) {
         boolean shouldExpand = false;
 
@@ -2624,17 +2483,17 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * method to rename a Expression. The Expression is checked against the renamedSymbolsMap. If the symbol is
+     * method to rename a IExpression. The IExpression is checked against the renamedSymbolsMap. If the symbol is
      * in the renamedSymbolsMap, set the name to the new value. Otherwise, return the original symbol.
      * 
-     * @param seSymbol the Expression to check.
+     * @param seSymbol the IExpression to check.
      * @param renamedSymbolsMap the map of renamed symbols
-     * @return the renamed Expression (renamed only if necessary)
+     * @return the renamed IExpression (renamed only if necessary)
      */
-    private static Expression renameSymbolUsingMap( Expression seSymbol,
+    private static IExpression renameSymbolUsingMap( IExpression seSymbol,
                                                              Map renamedSymbolsMap ) {
         // Default is just going to return what comes in
-    	Expression resultSymbol = seSymbol;
+    	IExpression resultSymbol = seSymbol;
         if (seSymbol != null) {
             Iterator renamedIter = renamedSymbolsMap.keySet().iterator();
             // Check the Map. If seSymbol is in the Map, rename it to the new name.
@@ -2642,14 +2501,14 @@ public class TransformationSqlHelper implements ISQLConstants {
                 // newName key
                 String newName = (String)renamedIter.next();
                 // get corresponding symbol
-                Expression renamedSymbol = (Expression)renamedSymbolsMap.get(newName);
+                IExpression renamedSymbol = (IExpression)renamedSymbolsMap.get(newName);
                 // If seSymbol is in the Map, rename it and quit.
                 if (renamedSymbol.equals(seSymbol)) {
-                    if (seSymbol instanceof AliasSymbol) {
-                        ((AliasSymbol)seSymbol).setShortName(newName);
+                    if (seSymbol instanceof IAliasSymbol) {
+                        ((IAliasSymbol)seSymbol).setShortName(newName);
                         resultSymbol = seSymbol;
                     } else {
-                        resultSymbol = new AliasSymbol(newName, seSymbol);
+                        resultSymbol = getQueryFactory().createAliasSymbol(newName, seSymbol);
                     }
                     // Remove renamed from the Map so duplicates dont get renamed
                     renamedSymbolsMap.remove(newName);
@@ -2662,6 +2521,7 @@ public class TransformationSqlHelper implements ISQLConstants {
 
     private static List createSPParams( List procParams ) {
         List spparams = new ArrayList(procParams.size());
+        
         int index = 0;
         for (int i = 0; i < procParams.size(); i++) {
             EObject paramObject = (EObject)procParams.get(i);
@@ -2672,30 +2532,30 @@ public class TransformationSqlHelper implements ISQLConstants {
                 String name = paramAspect.getName(paramObject);
                 switch (direction) {
                     case MetadataConstants.PARAMETER_TYPES.IN_PARM:
-                        SPParameter spparam1 = new SPParameter(index, new ElementSymbol(name));
+                        ISPParameter spparam1 = getQueryFactory().createSPParameter(index, getQueryFactory().createElementSymbol(name));
                         spparam1.setName(name);
-                        spparam1.setParameterType(SPParameter.IN);
+                        spparam1.setParameterType(ISPParameter.ParameterInfo.IN);
                         spparams.add(spparam1);
                         index++;
                         break;
                     case MetadataConstants.PARAMETER_TYPES.INOUT_PARM:
-                        SPParameter spparam2 = new SPParameter(index, new ElementSymbol(name));
+                        ISPParameter spparam2 = getQueryFactory().createSPParameter(index, getQueryFactory().createElementSymbol(name));
                         spparam2.setName(name);
-                        spparam2.setParameterType(SPParameter.INOUT);
+                        spparam2.setParameterType(ISPParameter.ParameterInfo.INOUT);
                         spparams.add(spparam2);
                         index++;
                         break;
                     case MetadataConstants.PARAMETER_TYPES.OUT_PARM:
-                        SPParameter spparam3 = new SPParameter(index, new ElementSymbol(name));
+                        ISPParameter spparam3 = getQueryFactory().createSPParameter(index, getQueryFactory().createElementSymbol(name));
                         spparam3.setName(name);
-                        spparam3.setParameterType(SPParameter.OUT);
+                        spparam3.setParameterType(ISPParameter.ParameterInfo.OUT);
                         spparams.add(spparam3);
                         index++;
                         break;
                     case MetadataConstants.PARAMETER_TYPES.RETURN_VALUE:
-                        SPParameter spparam4 = new SPParameter(index, new ElementSymbol(name));
+                        ISPParameter spparam4 = getQueryFactory().createSPParameter(index, getQueryFactory().createElementSymbol(name));
                         spparam4.setName(name);
-                        spparam4.setParameterType(SPParameter.RETURN_VALUE);
+                        spparam4.setParameterType(ISPParameter.ParameterInfo.RETURN_VALUE);
                         spparams.add(spparam4);
                         index++;
                         break;
@@ -2706,7 +2566,7 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     // Get Short name for GroupSymbol
-    public static String getGroupSymbolShortName( GroupSymbol gSymbol ) {
+    public static String getGroupSymbolShortName( IGroupSymbol gSymbol ) {
         String shortName = null;
         if (gSymbol != null) {
             String symbolDefn = gSymbol.getDefinition();
@@ -2725,17 +2585,19 @@ public class TransformationSqlHelper implements ISQLConstants {
     /**
      * Get a list of all the GroupSymbols in the supplied command.
      * 
-     * @param command the Command language object
+     * @param command the ICommand language object
      * @return the List of GroupSymbols
      */
-    public static Collection getGroupSymbols( Command command ) {
+    public static Collection<IGroupSymbol> getGroupSymbols( ICommand command ) {
+        IGroupCollectorVisitor groupCollectorVisitor = getQueryService().getGroupCollectorVisitor();
+        
         // All groups - including duplicates
-        Collection allGrps = GroupCollectorVisitor.getGroupsIgnoreInlineViews(command, false);
+        Collection allGrps = groupCollectorVisitor.getGroupsIgnoreInlineViews(command, false);
         // New group for result - no duplicates
-        Collection result = new ArrayList(allGrps.size());
+        Collection<IGroupSymbol> result = new ArrayList<IGroupSymbol>(allGrps.size());
         Iterator iter = allGrps.iterator();
         while (iter.hasNext()) {
-            GroupSymbol gSymbol = (GroupSymbol)iter.next();
+            IGroupSymbol gSymbol = (IGroupSymbol)iter.next();
             if (!containsGroupSymbol(result, gSymbol)) {
                 result.add(gSymbol);
             }
@@ -2744,7 +2606,7 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Determine if the supplied symbols list contains the supplied GroupSymbol. Both the GroupSymbol canonical name and
+     * Determine if the supplied symbols list contains the supplied GroupSymbol. Both the IGroupSymbol canonical name and
      * definitions are compared. This method required because the GroupSymbol.equals will not work - it assumes that both
      * GroupSymbols were obtained from the same "queryFrame". This is not always the case, such as UNION queries.
      * 
@@ -2753,9 +2615,9 @@ public class TransformationSqlHelper implements ISQLConstants {
      * @return 'true' if the list already contains the supplied symbol, 'false' if not.
      */
     public static boolean containsGroupSymbol( Collection symbols,
-                                               GroupSymbol gSymbol ) {
+                                               IGroupSymbol gSymbol ) {
         boolean result = false;
-        // Get the supplied GroupSymbol name and definition
+        // Get the supplied IGroupSymbol name and definition
 //        String gSymbName = gSymbol.getCanonicalName();
      // TODO: This may not be right
         String gSymbName = gSymbol.getName();
@@ -2763,7 +2625,7 @@ public class TransformationSqlHelper implements ISQLConstants {
         // Check the list for a matching symbol
         Iterator iter = symbols.iterator();
         while (iter.hasNext()) {
-            GroupSymbol listSymbol = (GroupSymbol)iter.next();
+            IGroupSymbol listSymbol = (IGroupSymbol)iter.next();
 //            String lSymbName = listSymbol.getCanonicalName();
             // TODO: This may not be right
             String lSymbName = gSymbol.getName();
@@ -2794,15 +2656,16 @@ public class TransformationSqlHelper implements ISQLConstants {
      * @since 5.0
      */
     public static boolean containsElementSymbol( Collection symbols,
-    		Expression eSymbol ) {
+    		IExpression eSymbol ) {
         EObject referencedColumn = getSingleElementSymbolEObject(eSymbol);
         Iterator iter = symbols.iterator();
         while (iter.hasNext()) {
-        	Expression next = (Expression)iter.next();
+        	IExpression next = (IExpression)iter.next();
             if (eSymbol == next) {
                 return true;
             }
-            if (Symbol.getName(eSymbol).equalsIgnoreCase(Symbol.getName(next) )){
+            
+            if (getQueryService().getSymbolName(eSymbol).equalsIgnoreCase(getQueryService().getSymbolName(next) )){
                 // If Names are same, do one last check if the EObjects (column refs) are same
                 if (referencedColumn != null) {
                     EObject nextReferencedEObject = getSingleElementSymbolEObject(next);
@@ -2824,15 +2687,15 @@ public class TransformationSqlHelper implements ISQLConstants {
      * @return
      * @since 5.0
      */
-    public static EObject getSingleElementSymbolEObject( Expression singleSymbol ) {
+    public static EObject getSingleElementSymbolEObject( IExpression singleSymbol ) {
         EObject referencedColumn = null;
-        if (singleSymbol instanceof AliasSymbol) {
-        	Expression theSymbol = ((AliasSymbol)singleSymbol).getSymbol();
-            if (theSymbol instanceof ElementSymbol) {
-                referencedColumn = TransformationSqlHelper.getElementSymbolEObject((ElementSymbol)theSymbol);
+        if (singleSymbol instanceof IAliasSymbol) {
+        	IExpression theSymbol = ((IAliasSymbol)singleSymbol).getSymbol();
+            if (theSymbol instanceof IElementSymbol) {
+                referencedColumn = TransformationSqlHelper.getElementSymbolEObject((IElementSymbol)theSymbol);
             }
-        } else if (singleSymbol instanceof ElementSymbol) {
-            referencedColumn = TransformationSqlHelper.getElementSymbolEObject((ElementSymbol)singleSymbol);
+        } else if (singleSymbol instanceof IElementSymbol) {
+            referencedColumn = TransformationSqlHelper.getElementSymbolEObject((IElementSymbol)singleSymbol);
         }
         return referencedColumn;
     }
@@ -2846,13 +2709,14 @@ public class TransformationSqlHelper implements ISQLConstants {
      */
     public static int getReferenceCount( Object transMappingRoot,
                                          int type ) {
-        // Get the Command for the supplied Type
-        Command command = TransformationHelper.getCommand(transMappingRoot, type);
+        // Get the ICommand for the supplied Type
+        ICommand command = TransformationHelper.getCommand(transMappingRoot, type);
 
         int refCount = 0;
         if (command != null) {
             // Get the list of References
-            List<Reference> refs = ReferenceCollectorVisitor.getReferences(command);
+            IReferenceCollectorVisitor referenceCollectorVisitor = getQueryService().getReferenceCollectorVisitor();
+            List<IReference> refs = referenceCollectorVisitor.getReferences(command);
             refCount = refs.size();
         }
 
@@ -2865,7 +2729,7 @@ public class TransformationSqlHelper implements ISQLConstants {
      * @param symbol the ElementSymbol
      * @return the symbol EObject
      */
-    public static EObject getElementSymbolEObject( ElementSymbol symbol ) {
+    public static EObject getElementSymbolEObject( IElementSymbol symbol ) {
         EObject result = null;
         if (symbol != null) {
             Object elemObj = symbol.getMetadataID();
@@ -2884,16 +2748,16 @@ public class TransformationSqlHelper implements ISQLConstants {
      * Get the EObject the the symbol is resolved to - null if not resolved
      * 
      * @param symbol the ElementSymbol
-     * @param command the Command that the ElementSymbol comes from
+     * @param command the ICommand that the IElementSymbol comes from
      * @return the symbol EObject, null if not found
      */
-    public static EObject getElementSymbolEObject( ElementSymbol symbol,
-                                                   Command command ) {
+    public static EObject getElementSymbolEObject( IElementSymbol symbol,
+                                                   ICommand command ) {
         EObject result = null;
         if (symbol != null) {
             Object elemObj = symbol.getMetadataID();
-            if (elemObj instanceof TempMetadataID) {
-                elemObj = ((TempMetadataID)elemObj).getOriginalMetadataID();
+            if (elemObj instanceof IMetadataID) {
+                elemObj = ((IMetadataID)elemObj).getOriginalMetadataID();
             }
             if (elemObj instanceof MetadataRecord) {
                 result = (EObject)((MetadataRecord)elemObj).getEObject();
@@ -2905,23 +2769,23 @@ public class TransformationSqlHelper implements ISQLConstants {
     /**
      * Get the SingleElementSymbol type. The "type" will be one of three things (1) null - When the SingleElementSymbol is not
      * resolve / no type (2) Datatype - SingleElementSymbol is not resolved - Datatype of the SqlColumn (3) java class type -
-     * SingleElementSymbol is Expression, etc, type is Class
+     * SingleElementSymbol is IExpression, etc, type is Class
      * 
      * @param symbol the SingleElementSymbol
      * @return the symbols type
      */
-    public static Object getElementSymbolType( Expression symbol ) {
+    public static Object getElementSymbolType( IExpression symbol ) {
         Object datatype = null;
         // If this is an alias, set the symbol to be the aliased symbol
-        if (symbol instanceof AliasSymbol) {
-            symbol = ((AliasSymbol)symbol).getSymbol();
+        if (symbol instanceof IAliasSymbol) {
+            symbol = ((IAliasSymbol)symbol).getSymbol();
         }
 
         // -------------------------------------
         // Element Symbol
         // -------------------------------------
-        if (symbol instanceof ElementSymbol) {
-            ElementSymbol eSymbol = (ElementSymbol)symbol;
+        if (symbol instanceof IElementSymbol) {
+            IElementSymbol eSymbol = (IElementSymbol)symbol;
             // get MetadataID from resolved symbol
             Object idObj = eSymbol.getMetadataID();
             // MetadataRecord = get resolved EObject datatype
@@ -2932,17 +2796,17 @@ public class TransformationSqlHelper implements ISQLConstants {
                     datatype = columnAspect.getDatatype(recordEObj);
                 }
                 // TempMetadataID - get type
-            } else if (idObj instanceof TempMetadataID) {
-                datatype = ((TempMetadataID)idObj).getType();
+            } else if (idObj instanceof IMetadataID) {
+                datatype = ((IMetadataID)idObj).getType();
                 // MetadataID is null, get symbol datatype
             } else if (idObj == null) {
                 datatype = eSymbol.getType();
             }
             // -------------------------------------
-            // Expression Symbol
+            // IExpression Symbol
             // -------------------------------------
-        } else if (symbol instanceof ExpressionSymbol) {
-            ExpressionSymbol exSymbol = (ExpressionSymbol)symbol;
+        } else if (symbol instanceof IExpressionSymbol) {
+            IExpressionSymbol exSymbol = (IExpressionSymbol)symbol;
             datatype = exSymbol.getType();
         }
         return datatype;
@@ -2954,18 +2818,18 @@ public class TransformationSqlHelper implements ISQLConstants {
      * @param symbol the SingleElementSymbol
      * @return the symbols type length
      */
-    public static int getElementSymbolLength( Expression symbol ) {
+    public static int getElementSymbolLength( IExpression symbol ) {
         int length = -1;
         // If this is an alias, set the symbol to be the aliased symbol
-        if (symbol instanceof AliasSymbol) {
-            symbol = ((AliasSymbol)symbol).getSymbol();
+        if (symbol instanceof IAliasSymbol) {
+            symbol = ((IAliasSymbol)symbol).getSymbol();
         }
 
         // -------------------------------------
         // Element Symbol
         // -------------------------------------
-        if (symbol instanceof ElementSymbol) {
-            ElementSymbol eSymbol = (ElementSymbol)symbol;
+        if (symbol instanceof IElementSymbol) {
+            IElementSymbol eSymbol = (IElementSymbol)symbol;
             EObject eObj = getElementSymbolEObject(eSymbol);
             if (eObj != null) {
                 length = TransformationHelper.getSqlColumnLength(eObj);
@@ -2978,17 +2842,17 @@ public class TransformationSqlHelper implements ISQLConstants {
      * Get the List of EObjects that the ElementSymbols are resolved to.
      * 
      * @param elemSymbols the collection of ElementSymbols
-     * @param command the Command that the elemSymbols come from
+     * @param command the ICommand that the elemSymbols come from
      * @return the List of EObjects
      */
-    public static List getElementSymbolEObjects( Collection elemSymbols,
-                                                 Command command ) {
-        List result = Collections.EMPTY_LIST;
+    public static List<EObject> getElementSymbolEObjects( Collection elemSymbols,
+                                                 ICommand command ) {
+        List<EObject> result = Collections.EMPTY_LIST;
         if (elemSymbols != null) {
             result = new ArrayList(elemSymbols.size());
             Iterator iter = elemSymbols.iterator();
             while (iter.hasNext()) {
-                ElementSymbol eSymbol = (ElementSymbol)iter.next();
+                IElementSymbol eSymbol = (IElementSymbol)iter.next();
                 EObject elemEObj = getElementSymbolEObject(eSymbol, command);
                 if (elemEObj != null) {
                     result.add(elemEObj);
@@ -2999,18 +2863,18 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Get the EObject that the GroupSymbol is resolved to.
+     * Get the EObject that the IGroupSymbol is resolved to.
      * 
      * @param symbol the GroupSymbol
-     * @return the EObject that the GroupSymbol is resolved to.
+     * @return the EObject that the IGroupSymbol is resolved to.
      */
-    public static EObject getGroupSymbolEObject( GroupSymbol symbol ) {
+    public static EObject getGroupSymbolEObject( IGroupSymbol symbol ) {
         EObject result = null;
         if (symbol != null) {
             Object groupObj = symbol.getMetadataID();
             if (groupObj != null) {
                 if (symbol.isProcedure()) {
-                    TempMetadataID tid = (TempMetadataID)groupObj;
+                    IMetadataID tid = (IMetadataID)groupObj;
                     groupObj = tid.getOriginalMetadataID();
                 }
 
@@ -3036,7 +2900,7 @@ public class TransformationSqlHelper implements ISQLConstants {
             result = new ArrayList(groupSymbols.size());
             Iterator iter = groupSymbols.iterator();
             while (iter.hasNext()) {
-                GroupSymbol gSymbol = (GroupSymbol)iter.next();
+                IGroupSymbol gSymbol = (IGroupSymbol)iter.next();
                 EObject grpEObj = getGroupSymbolEObject(gSymbol);
                 if (grpEObj != null) {
                     result.add(grpEObj);
@@ -3047,12 +2911,12 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Get the EObject that the StoredProcedure is resolved to.
+     * Get the EObject that the IStoredProcedure is resolved to.
      * 
      * @param symbol the StoredProcedure
-     * @return the EObject that the StoredProcedure is resolved to.
+     * @return the EObject that the IStoredProcedure is resolved to.
      */
-    public static EObject getStoredProcedureEObject( StoredProcedure storedProc ) {
+    public static EObject getStoredProcedureEObject( IStoredProcedure storedProc ) {
         EObject result = null;
         if (storedProc != null) {
             Object procID = storedProc.getProcedureID();
@@ -3069,26 +2933,30 @@ public class TransformationSqlHelper implements ISQLConstants {
      * 
      * @param select the query SELECT clause
      * @param removeGroupList the List of Groups being removed
-     * @return 'true' if the Select clause contains any attributes belonging to the groupList groups
+     * @return 'true' if the ISelect clause contains any attributes belonging to the groupList groups
      */
-    public static boolean hasSqlAliasGroupAttributes( Query query,
+    public static boolean hasSqlAliasGroupAttributes( IQuery query,
                                                       List sqlAliasGroups ) {
         boolean result = false;
         // Create List of GroupSymbols corresponding to supplied SqlAliases
         List aliasGroupSymbols = createGroupSymbols(sqlAliasGroups);
 
         if (!isSelectStar(query.getSelect())) {
+            
+            IGroupsUsedByElementsVisitor groupsUsedByElementsVisitor = getQueryService().getGroupsUsedByElementsVisitor();
+            IElementCollectorVisitor elementCollectorVisitor = getQueryService().getElementCollectorVisitor();
+            
             // Get all ElementSymbols referenced in the select
-            Collection selectElements = ElementCollectorVisitor.getElements(query.getSelect(), true);
+            Collection selectElements = elementCollectorVisitor.getElements(query.getSelect(), true);
             // Determine if any of the elements groups is in the remove list
             Iterator iter = selectElements.iterator();
             while (iter.hasNext()) {
-                ElementSymbol selectElem = (ElementSymbol)iter.next();
+                IElementSymbol selectElem = (IElementSymbol)iter.next();
                 // Get all Groups referenced by the ElementSymbol
-                Collection symbolGroups = GroupsUsedByElementsVisitor.getGroups(selectElem);
+                Collection symbolGroups = groupsUsedByElementsVisitor.getGroups(selectElem);
                 Iterator symbolGroupIter = symbolGroups.iterator();
                 while (symbolGroupIter.hasNext()) {
-                    GroupSymbol groupSymbol = (GroupSymbol)symbolGroupIter.next();
+                    IGroupSymbol groupSymbol = (IGroupSymbol)symbolGroupIter.next();
                     if (aliasGroupSymbols.contains(groupSymbol)) {
                         result = true;
                         break;
@@ -3109,7 +2977,7 @@ public class TransformationSqlHelper implements ISQLConstants {
      * @param elemEObjs the List of Element EObjects
      * @return 'true' if any of the query projected symbols names matches the name of the supplied list of element EObjects
      */
-    public static boolean hasSqlElemSymbols( Query query,
+    public static boolean hasSqlElemSymbols( IQuery query,
                                              List elemEObjs ) {
         boolean result = false;
         List projSymbolNames = getProjectedSymbolNames(query);
@@ -3134,14 +3002,14 @@ public class TransformationSqlHelper implements ISQLConstants {
      * methods to check whether the supplied SELECT clause is a SELECT *
      * 
      * @param select the query SELECT clause
-     * @return 'true' if the Select clause is a SELECT *
+     * @return 'true' if the ISelect clause is a SELECT *
      */
-    public static boolean isSelectStar( Select select ) {
+    public static boolean isSelectStar( ISelect select ) {
         boolean result = false;
         List currentSelectSymbols = select.getSymbols();
         if (currentSelectSymbols.size() == 1) {
-        	Expression singleSelectSymbol = (Expression)currentSelectSymbols.get(0);
-            if (singleSelectSymbol instanceof MultipleElementSymbol) {
+        	IExpression singleSelectSymbol = (IExpression)currentSelectSymbols.get(0);
+            if (singleSelectSymbol instanceof IMultipleElementSymbol) {
                 result = true;
             }
         }
@@ -3149,46 +3017,48 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Convert an ExpressionSymbol to the specified type
+     * Convert an IExpressionSymbol to the specified type
      * 
-     * @param exprSymbol the original ExpressionSymbol
-     * @param newTypeName the type to convert the original ExpressionSymbol to
-     * @return the converted expression Symbol
+     * @param exprSymbol the original IExpressionSymbol
+     * @param newTypeName the type to convert the original IExpressionSymbol to
+     * @return the converted IExpression Symbol
      */
-    public static ExpressionSymbol convert( ExpressionSymbol exprSymbol,
+    public static IExpressionSymbol convert( IExpressionSymbol exprSymbol,
                                             String newTypeName ) {
-        ExpressionSymbol newExpressionSymbol = (ExpressionSymbol)exprSymbol.clone();
+        IExpressionSymbol newExpressionSymbol = (IExpressionSymbol)exprSymbol.clone();
 
-        // Get the original ExpressionSymbol Type
-        Expression expr = exprSymbol.getExpression();
+        // Get the original IExpressionSymbol Type
+        IExpression expr = exprSymbol.getExpression();
         // if ( expr == null ) {
-        // // AggregateSymbols can contain null expressions - if so, use the symbol itself
+        // // AggregateSymbols can contain null IExpressions - if so, use the symbol itself
         // expr = exprSymbol;
         // }
         //        
         Class originalTypeClass = expr.getType();
+        
+        IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
         String originalTypeName = service.getDataTypeName(originalTypeClass);
 
         // If the desired Type is different from the original Type, do convert
         if (!originalTypeName.equalsIgnoreCase(newTypeName)) {
-            // If the supplied ExpressionSymbol is a Convert Function, try to reuse it and change the type
+            // If the supplied IExpressionSymbol is a Convert Function, try to reuse it and change the type
             if (isConvertFunction(exprSymbol)) {
-                Expression convExpr = getConvertedExpr(exprSymbol);
+                IExpression convExpr = getConvertedExpr(exprSymbol);
                 Class convExprTypeClass = convExpr.getType();
                 String convExprTypeName = service.getDataTypeName(convExprTypeClass);
                 // Check whether there is a conversion
-                boolean isExplicit = DataTypeManager.isExplicitConversion(convExprTypeName, newTypeName);
-                boolean isImplicit = DataTypeManager.isImplicitConversion(convExprTypeName, newTypeName);
+                boolean isExplicit = service.isExplicitConversion(convExprTypeName, newTypeName);
+                boolean isImplicit = service.isImplicitConversion(convExprTypeName, newTypeName);
                 // If theres a conversion, go ahead and use it
                 if (isExplicit || isImplicit) {
-                    Function func = getConversion(convExprTypeName, newTypeName, convExpr);
+                    IFunction func = getConversion(convExprTypeName, newTypeName, convExpr);
                     newExpressionSymbol.setExpression(func);
                 } else {
-                    Function convertFunction = getConversion(originalTypeName, newTypeName, expr);
+                    IFunction convertFunction = getConversion(originalTypeName, newTypeName, expr);
                     newExpressionSymbol.setExpression(convertFunction);
                 }
             } else {
-                Function convertFunction = getConversion(originalTypeName, newTypeName, expr);
+                IFunction convertFunction = getConversion(originalTypeName, newTypeName, expr);
                 newExpressionSymbol.setExpression(convertFunction);
             }
         }
@@ -3196,63 +3066,70 @@ public class TransformationSqlHelper implements ISQLConstants {
     }
 
     /**
-     * Convert an Elementymbol to the specified type. An alias symbol is created with the supplied aliasName. If the supplied
+     * Convert an ElementSymbol to the specified type. An alias symbol is created with the supplied aliasName. If the supplied
      * aliasName is null, the original element symbol name is used as the alias.
      * 
      * @param elementSymbol the original ElementSymbol
-     * @param newTypeName the type to convert the original ElementSymbol to
+     * @param newTypeName the type to convert the original IElementSymbol to
      * @param aliasName if not null, this is the aliasName, otherwise use elementSymbolName
      * @return the converted element Symbol
      */
-    public static AliasSymbol convert( ElementSymbol elementSymbol,
+    public static IAliasSymbol convert( IElementSymbol elementSymbol,
                                        String newTypeName,
                                        String aliasName ) {
         Class originalTypeClass = elementSymbol.getType();
+        
+        IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
         String originalTypeName = service.getDataTypeName(originalTypeClass);
 
-        Function convertFunction = getConversion(originalTypeName, newTypeName, elementSymbol);
+        IFunction convertFunction = getConversion(originalTypeName, newTypeName, elementSymbol);
 
-        ExpressionSymbol exprSymbol = new ExpressionSymbol(NEW_CONVERSION_NAME, convertFunction);
-        AliasSymbol newSymbol = null;
+        IExpressionSymbol exprSymbol = getQueryFactory().createExpressionSymbol(NEW_CONVERSION_NAME, convertFunction);
+        IAliasSymbol newSymbol = null;
         if (aliasName != null) {
-            newSymbol = new AliasSymbol(aliasName, exprSymbol);
+            newSymbol = getQueryFactory().createAliasSymbol(aliasName, exprSymbol);
         } else {
-            newSymbol = new AliasSymbol(elementSymbol.getShortName(), exprSymbol);
+            newSymbol = getQueryFactory().createAliasSymbol(elementSymbol.getShortName(), exprSymbol);
         }
         return newSymbol;
     }
 
-    public static Function getConversion( String originalTypeName,
+    public static IFunction getConversion( String originalTypeName,
                                           String newTypeName,
-                                          Expression expression ) {
-        Class originalType = DataTypeManager.getDataTypeClass(originalTypeName);
+                                          IExpression expression ) {
+        
+        IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+        IFunctionLibrary functionLibrary = UdfManager.getInstance().getFunctionLibrary();
+        
+        Class originalType = service.getDataTypeClass(originalTypeName);
 
-        FunctionLibrary library = UdfManager.INSTANCE.getFunctionLibrary();
-        FunctionDescriptor fd = library.findFunction(FunctionLibrary.CONVERT, new Class[] {originalType,
-            DataTypeManager.DefaultDataClasses.STRING});
+        IFunctionLibrary library = UdfManager.getInstance().getFunctionLibrary();
+        Class<?> stringDataClass = service.getDefaultDataClass(DataTypeName.STRING);
+        IFunctionDescriptor fd = library.findFunction(functionLibrary.getFunctionName(FunctionName.CONVERT), 
+                                                      new Class[] {originalType, stringDataClass});
 
-        Function conversion = new Function(fd.getName(), new Expression[] {expression, new Constant(newTypeName)});
-        conversion.setType(DataTypeManager.getDataTypeClass(newTypeName));
+        IFunction conversion = getQueryFactory().createFunction(fd.getName(), new IExpression[] {expression, getQueryFactory().createConstant(newTypeName)});
+        conversion.setType(service.getDataTypeClass(newTypeName));
         conversion.setFunctionDescriptor(fd);
 
         return conversion;
     }
 
-    public static boolean isConvertFunction( ExpressionSymbol exprSymbol ) {
-        Expression expr = exprSymbol.getExpression();
-        if (expr instanceof Function) {
-            String fName = ((Function)expr).getName();
-            if (fName.equalsIgnoreCase(SQLConstants.Reserved.CONVERT)) {
+    public static boolean isConvertFunction( IExpressionSymbol exprSymbol ) {
+        IExpression expr = exprSymbol.getExpression();
+        if (expr instanceof IFunction) {
+            String fName = ((IFunction)expr).getName();
+            if (fName.equalsIgnoreCase(ISQLConstants.CONVERT)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static Expression getConvertedExpr( ExpressionSymbol exprSymbol ) {
+    public static IExpression getConvertedExpr( IExpressionSymbol exprSymbol ) {
         if (isConvertFunction(exprSymbol)) {
-            Expression expr = exprSymbol.getExpression();
-            Expression fExp = ((Function)expr).getArg(0);
+            IExpression expr = exprSymbol.getExpression();
+            IExpression fExp = ((IFunction)expr).getArg(0);
             return fExp;
             // if(fExp instanceof SingleElementSymbol) {
             // return (SingleElementSymbol)fExp;
@@ -3261,31 +3138,33 @@ public class TransformationSqlHelper implements ISQLConstants {
         return null;
     }
 
-    public static AliasSymbol convertElementSymbol( ElementSymbol symbol,
+    public static IAliasSymbol convertElementSymbol( IElementSymbol symbol,
                                                     String targetTypeStr,
                                                     String aliasName ) {
         return convert(symbol, targetTypeStr, aliasName);
     }
 
-    public static ExpressionSymbol convertExpressionSymbol( ExpressionSymbol symbol,
+    public static IExpressionSymbol convertExpressionSymbol( IExpressionSymbol symbol,
                                                             String targetTypeStr ) {
-        // Handle case where the Expression is already a Convert Function
+        // Handle case where the IExpression is already a Convert Function
         if (isConvertFunction(symbol)) {
-            Expression cExpr = getConvertedExpr(symbol);
-            if (cExpr instanceof Expression) {
-            	Expression seSymbol = (Expression)cExpr;
+            IExpression cExpr = getConvertedExpr(symbol);
+            if (cExpr instanceof IExpression) {
+            	IExpression seSymbol = (IExpression)cExpr;
+            	
+            	IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
                 String seSymbolTypeStr = service.getDataTypeName(seSymbol.getType());
                 // Check whether there is a conversion from the underlying symbol to the attribute type
-                boolean isExplicitConv = DataTypeManager.isExplicitConversion(seSymbolTypeStr, targetTypeStr);
-                boolean isImplicitConv = DataTypeManager.isImplicitConversion(seSymbolTypeStr, targetTypeStr);
+                boolean isExplicitConv = service.isExplicitConversion(seSymbolTypeStr, targetTypeStr);
+                boolean isImplicitConv = service.isImplicitConversion(seSymbolTypeStr, targetTypeStr);
                 if (isImplicitConv || isExplicitConv) {
-                    if (seSymbol instanceof ExpressionSymbol) {
-                        return convertExpressionSymbol((ExpressionSymbol)seSymbol, targetTypeStr);
-                    } else if (seSymbol instanceof ElementSymbol) {
-                        AliasSymbol aSymbol = convertElementSymbol((ElementSymbol)seSymbol, targetTypeStr, null);
-                        Expression aseSymbol = aSymbol.getSymbol();
-                        if (aseSymbol instanceof ExpressionSymbol) {
-                            return (ExpressionSymbol)aseSymbol;
+                    if (seSymbol instanceof IExpressionSymbol) {
+                        return convertExpressionSymbol((IExpressionSymbol)seSymbol, targetTypeStr);
+                    } else if (seSymbol instanceof IElementSymbol) {
+                        IAliasSymbol aSymbol = convertElementSymbol((IElementSymbol)seSymbol, targetTypeStr, null);
+                        IExpression aseSymbol = aSymbol.getSymbol();
+                        if (aseSymbol instanceof IExpressionSymbol) {
+                            return (IExpressionSymbol)aseSymbol;
                         }
                     }
                 } else {

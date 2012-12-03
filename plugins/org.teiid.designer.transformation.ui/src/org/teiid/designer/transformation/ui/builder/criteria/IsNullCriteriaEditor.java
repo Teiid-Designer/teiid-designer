@@ -10,12 +10,11 @@ package org.teiid.designer.transformation.ui.builder.criteria;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.IsNullCriteria;
-import org.teiid.query.sql.symbol.Expression;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.IIsNullCriteria;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener;
 import org.teiid.query.ui.builder.model.IsNullCriteriaEditorModel;
 import org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent;
@@ -33,7 +32,7 @@ public class IsNullCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
 
     public IsNullCriteriaEditor( Composite parent,
                                  IsNullCriteriaEditorModel model ) {
-        super(parent, IsNullCriteria.class, model);
+        super(parent, IIsNullCriteria.class, model);
         this.theModel = model;
         viewController = new ViewController();
         theModel.addModelListener(viewController);
@@ -66,20 +65,20 @@ public class IsNullCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     }
 
     @Override
-	public Expression getLeftExpression() {
-        Expression leftExpression = theModel.getLeftExpression();
+	public IExpression getLeftExpression() {
+        IExpression leftExpression = theModel.getLeftExpression();
         return leftExpression;
     }
 
     @Override
-	public Expression getRightExpression() {
+	public IExpression getRightExpression() {
         // Unused
         return null;
     }
 
     @Override
-    public void setLanguageObject( LanguageObject obj ) {
-        CoreArgCheck.isInstanceOf(IsNullCriteria.class, obj);
+    public void setLanguageObject( ILanguageObject obj ) {
+        CoreArgCheck.isInstanceOf(IIsNullCriteria.class, obj);
         theModel.setLanguageObject(obj);
     }
 
@@ -104,7 +103,7 @@ public class IsNullCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     }
 
     void displayExpression() {
-        LanguageObject langObj = theModel.getLeftExpression();
+        ILanguageObject langObj = theModel.getLeftExpression();
         editor.setLanguageObject(langObj);
     }
 

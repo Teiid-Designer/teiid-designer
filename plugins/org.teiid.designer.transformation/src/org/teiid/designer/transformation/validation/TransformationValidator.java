@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.index.IndexSelector;
@@ -48,6 +47,17 @@ import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.metamodels.transformation.SqlTransformation;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.metamodels.webservice.Operation;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryParser;
+import org.teiid.designer.query.IQueryResolver;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.query.sql.IReferenceCollectorVisitor;
+import org.teiid.designer.query.sql.IResolverVisitor;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.metadata.QueryMetadataContext;
 import org.teiid.designer.transformation.metadata.TransformationMetadataFacade;
@@ -56,21 +66,12 @@ import org.teiid.designer.transformation.metadata.VdbMetadata;
 import org.teiid.designer.transformation.util.SqlMappingRootCache;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.util.TransformationSqlHelper;
-import org.teiid.query.metadata.QueryMetadataInterface;
-import org.teiid.query.parser.QueryParser;
-import org.teiid.query.resolver.QueryResolver;
-import org.teiid.query.resolver.util.ResolverUtil;
-import org.teiid.query.resolver.util.ResolverVisitor;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.proc.CreateProcedureCommand;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.visitor.ReferenceCollectorVisitor;
-import org.teiid.query.validator.UpdateValidator;
-import org.teiid.query.validator.UpdateValidator.UpdateType;
-import org.teiid.query.validator.Validator;
-import org.teiid.query.validator.ValidatorFailure;
-import org.teiid.query.validator.ValidatorReport;
+import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid.designer.validator.IUpdateValidator;
+import org.teiid.designer.validator.IUpdateValidator.TransformUpdateType;
+import org.teiid.designer.validator.IValidator;
+import org.teiid.designer.validator.IValidator.IValidatorFailure;
+import org.teiid.designer.validator.IValidator.IValidatorReport;
 
 /**
  * TransformationValidator Static methods for doing Validation on the transformation.
@@ -86,7 +87,7 @@ public class TransformationValidator implements QueryValidator {
                                                           + ".QUERY_METADATA_INTERFACE"; //$NON-NLS-1$
 
     // toolkit metadata
-    private QueryMetadataInterface metadata;
+    private IQueryMetadataInterface metadata;
     private final boolean restrictSearch;
     private final SqlTransformationMappingRoot mappingRoot;
     private final EObject targetGroup;
@@ -300,7 +301,7 @@ public class TransformationValidator implements QueryValidator {
 	        case QueryValidator.INSERT_TRNS: {
 	        	if( ((SqlTransformation)this.mappingRoot.getHelper()).isInsertSqlDefault()) {
 	        		IStatus status = new Status(IStatus.OK, TransformationPlugin.PLUGIN_ID, 0,  "\"Use Default\" option is turned on for Insert procedure.", null); //$NON-NLS-1$
-	        		Command command = null;
+	        		ICommand command = null;
 	        		if( sql != null && sql.length() > 0 ) {
 	        			SqlTransformationResult parsedResult = parseSQL(sql);
 	        			command = parsedResult.getCommand();
@@ -313,7 +314,7 @@ public class TransformationValidator implements QueryValidator {
 	        case QueryValidator.UPDATE_TRNS: {
 	        	if( ((SqlTransformation)this.mappingRoot.getHelper()).isUpdateSqlDefault()) {
 	        		IStatus status = new Status(IStatus.OK, TransformationPlugin.PLUGIN_ID, 0,  "\"Use Default\" option is turned on for UPDATE procedure.", null); //$NON-NLS-1$
-	        		Command command = null;
+	        		ICommand command = null;
 	        		if( sql != null && sql.length() > 0 ) {
 	        			SqlTransformationResult parsedResult = parseSQL(sql);
 	        			command = parsedResult.getCommand();
@@ -326,7 +327,7 @@ public class TransformationValidator implements QueryValidator {
 	        case QueryValidator.DELETE_TRNS: {
 	        	if( ((SqlTransformation)this.mappingRoot.getHelper()).isDeleteSqlDefault()) {
 	        		IStatus status = new Status(IStatus.OK, TransformationPlugin.PLUGIN_ID, 0, "\"Use Default\" option is turned on for DELETE procedure.", null); //$NON-NLS-1$
-	        		Command command = null;
+	        		ICommand command = null;
 	        		if( sql != null && sql.length() > 0 ) {
 	        			SqlTransformationResult parsedResult = parseSQL(sql);
 	        			command = parsedResult.getCommand();
@@ -341,14 +342,15 @@ public class TransformationValidator implements QueryValidator {
         commandValidationResult = parseSQL(sql);
         
         if (commandValidationResult.isParsable() && transformType != UNKNOWN_TRNS) {
-            Command command = commandValidationResult.getCommand();
+            ICommand command = commandValidationResult.getCommand();
 
             // resolve command
             commandValidationResult = resolveCommand(command, transformType);
             // aTODO commandValidationResult = resolveCommand(command, transformType, this.targetGroup);
             if (commandValidationResult.isResolvable()) {
                 if (this.elementSymbolOptimization == ElementSymbolOptimization.DEOPTIMIZED) {
-                    ResolverUtil.fullyQualifyElements(command);
+                    IQueryService queryService = ModelerCore.getTeiidQueryService();
+                    queryService.fullyQualifyElements(command);
                 }
                 // validate command
                 commandValidationResult = validateCommand(command, transformType);
@@ -375,7 +377,7 @@ public class TransformationValidator implements QueryValidator {
      * @return the SqlTransformationResult object
      */
     public static SqlTransformationResult parseSQL( final String sqlString ) {
-        Command command = null;
+        ICommand command = null;
         IStatus status = null;
         if (sqlString == null || sqlString.trim().isEmpty()) {
             String msg = TransformationPlugin.Util.getString("TransformationValidator.emptySQLMessage"); //$NON-NLS-1$
@@ -383,7 +385,7 @@ public class TransformationValidator implements QueryValidator {
         } else {
             try {
                 // QueryParser is not thread-safe, get new parser each time
-                QueryParser parser = new QueryParser();
+                IQueryParser parser = ModelerCore.getTeiidQueryService().getQueryParser();
                 command = parser.parseDesignerCommand(sqlString);
             } catch (Exception e) {
                 status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
@@ -406,7 +408,7 @@ public class TransformationValidator implements QueryValidator {
      * @param externalMetadata the externalMetadata required to resolve the command
      * @return the SqlTransformationResult object
      */
-    public SqlTransformationResult resolveCommand( final Command command,
+    public SqlTransformationResult resolveCommand( final ICommand command,
                                                    final int transformType ) {
         IStatus status = checkCommandType(command, transformType, this.targetGroup);
         if (status != null && status.getSeverity() != IStatus.OK) {
@@ -422,27 +424,32 @@ public class TransformationValidator implements QueryValidator {
         // ------------------------------------------------------------
         // Resolve the Command
         // ------------------------------------------------------------
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IResolverVisitor resolverVisitor = queryService.getResolverVisitor();
+        IQueryFactory factory = queryService.createQueryFactory();
+        IQueryResolver queryResolver = queryService.getQueryResolver();
+        
         try {
             // Attempt to resolve the command
-            final QueryMetadataInterface metadata = getQueryMetadata();
+            final IQueryMetadataInterface metadata = getQueryMetadata();
             
             String targetFullName = TransformationHelper.getSqlEObjectFullName(this.targetGroup);
-            GroupSymbol gSymbol = new GroupSymbol(targetFullName);
+            IGroupSymbol gSymbol = factory.createGroupSymbol(targetFullName);
             if (this.elementSymbolOptimization == ElementSymbolOptimization.OPTIMIZED) {
-                ResolverVisitor.setFindShortName(true);
+                resolverVisitor.setProperty(IResolverVisitor.SHORT_NAME, true);
             }
-            QueryResolver.resolveCommand(command, gSymbol, getTeiidCommandType(transformType), metadata);
+            queryResolver.resolveCommand(command, gSymbol, getTeiidCommandType(transformType), metadata);
             // If unsuccessful, an exception is thrown
 
-            if (command instanceof CreateProcedureCommand) {
-                List<ElementSymbol> projectedSymbols = getProjectedSymbols();
-                ((CreateProcedureCommand)command).setProjectedSymbols(projectedSymbols);
+            if (command instanceof ICreateProcedureCommand) {
+                List<IElementSymbol> projectedSymbols = getProjectedSymbols();
+                ((ICreateProcedureCommand)command).setProjectedSymbols(projectedSymbols);
             }
         } catch (Exception e) {
             // create status
             status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
         } finally {
-            ResolverVisitor.setFindShortName(false);
+            resolverVisitor.setProperty(IResolverVisitor.SHORT_NAME, false);
         }
 
         if (status != null && status.getSeverity() == IStatus.ERROR) {
@@ -462,17 +469,17 @@ public class TransformationValidator implements QueryValidator {
         switch (cmdtype) {
             case QueryValidator.SELECT_TRNS:
                 if (this.targetGroup instanceof Table || this.targetGroup instanceof MappingClass) {
-                    return Command.TYPE_QUERY;
+                    return ICommand.TYPE_QUERY;
                 }
-                return Command.TYPE_STORED_PROCEDURE;
+                return ICommand.TYPE_STORED_PROCEDURE;
             case QueryValidator.INSERT_TRNS:
-                return Command.TYPE_INSERT;
+                return ICommand.TYPE_INSERT;
             case QueryValidator.UPDATE_TRNS:
-                return Command.TYPE_UPDATE;
+                return ICommand.TYPE_UPDATE;
             case QueryValidator.DELETE_TRNS:
-                return Command.TYPE_DELETE;
+                return ICommand.TYPE_DELETE;
         }
-        return Command.TYPE_UNKNOWN;
+        return ICommand.TYPE_UNKNOWN;
     }
 
     /**
@@ -482,13 +489,16 @@ public class TransformationValidator implements QueryValidator {
      * @param command the Command languageObject
      * @return the SqlTransformationResult object
      */
-    public SqlTransformationResult validateCommand( final Command command, final int cmdType) {
+    public SqlTransformationResult validateCommand( final ICommand command, final int cmdType) {
         CoreArgCheck.isNotNull(command);
         Collection<IStatus> statusList = null;
         Collection<IStatus> updateStatusList = null;
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        
         try {
             // Validate
-            ValidatorReport report = Validator.validate(command, getQueryMetadata());
+            IValidator validator = queryService.getValidator();
+            IValidatorReport report = validator.validate(command, getQueryMetadata());
             // If Validation report has nothing, command is valid
             if (!report.hasItems()) {
                 // If no report items - validation is successful
@@ -521,26 +531,26 @@ public class TransformationValidator implements QueryValidator {
         
         if( validateAndResolve && cmdType == QueryValidator.SELECT_TRNS && allowsUpdates) {
         	updateStatusList = new ArrayList();
-        	UpdateType insertType = UpdateType.INSTEAD_OF;
-        	UpdateType updateType = UpdateType.INSTEAD_OF;
-        	UpdateType deleteType = UpdateType.INSTEAD_OF;
+        	TransformUpdateType insertType = TransformUpdateType.INSTEAD_OF;
+        	TransformUpdateType updateType = TransformUpdateType.INSTEAD_OF;
+        	TransformUpdateType deleteType = TransformUpdateType.INSTEAD_OF;
         	SqlTransformation transformation = (SqlTransformation)mappingRoot.getHelper();
         	boolean doUpdateValidation = false;
         	if( transformation.isInsertSqlDefault() ) {
-        		insertType = UpdateType.INHERENT;
+        		insertType = TransformUpdateType.INHERENT;
         		doUpdateValidation = true;
         	}
         	if( transformation.isUpdateSqlDefault() ) {
-        		updateType = UpdateType.INHERENT;
+        		updateType = TransformUpdateType.INHERENT;
         		doUpdateValidation = true;
         	} 
         	if( transformation.isDeleteSqlDefault() ) {
-        		deleteType = UpdateType.INHERENT;
+        		deleteType = TransformUpdateType.INHERENT;
         		doUpdateValidation = true;
         	} 
         	if( doUpdateValidation ) {
-	        	UpdateValidator updateValidator = new UpdateValidator(metadata, insertType, updateType, deleteType );
-	        	List<ElementSymbol> elemSymbols = null;
+	        	IUpdateValidator updateValidator = queryService.getUpdateValidator(metadata, insertType, updateType, deleteType );
+	        	List<IElementSymbol> elemSymbols = null;
 	        	
 	        	try {
 	        		elemSymbols = getProjectedSymbols();
@@ -553,15 +563,14 @@ public class TransformationValidator implements QueryValidator {
 	                updateStatusList.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e));
 	            }
 	
-	            if (updateStatusList == null || updateStatusList.isEmpty()) {
-	            	updateStatusList = new ArrayList<IStatus>();
-	            	if( insertType == UpdateType.INHERENT) {
+	            if (updateStatusList.isEmpty()) {
+	            	if( insertType == TransformUpdateType.INHERENT) {
 	            		updateStatusList.addAll(getReportStatusList(updateValidator.getInsertReport(), INSERT_SQL_PROBLEM));
 	            	}
-	            	if( updateType == UpdateType.INHERENT) {
+	            	if( updateType == TransformUpdateType.INHERENT) {
 	            		updateStatusList.addAll(getReportStatusList(updateValidator.getUpdateReport(), UPDATE_SQL_PROBLEM));
 	            	}
-	            	if( deleteType == UpdateType.INHERENT) {
+	            	if( deleteType == TransformUpdateType.INHERENT) {
 	            		updateStatusList.addAll(getReportStatusList(updateValidator.getDeleteReport(), DELETE_SQL_PROBLEM));
 	            	}
 	            	
@@ -579,7 +588,7 @@ public class TransformationValidator implements QueryValidator {
     }
 
     @Override
-	public QueryMetadataInterface getQueryMetadata() {
+	public IQueryMetadataInterface getQueryMetadata() {
         return getDirectQueryMetadata();
 
     }
@@ -588,7 +597,7 @@ public class TransformationValidator implements QueryValidator {
      * Return the {@link org.teiid.query.metadata.QueryMetadataInterface} instance to use for query validation and
      * resolution.
      */
-    private QueryMetadataInterface getDirectQueryMetadata() {
+    private IQueryMetadataInterface getDirectQueryMetadata() {
         if (this.metadata == null && this.mappingRoot.eResource() != null) {
             TransformationMetadataFactory factory = TransformationMetadataFactory.getInstance();
             final boolean useServerMetadata = (this.validationContext != null && this.validationContext.useServerIndexes());
@@ -639,7 +648,7 @@ public class TransformationValidator implements QueryValidator {
                 IndexSelector selector = null;
                 if (this.validationContext.useIndexesToResolve()) {
                     if (this.validationContext.getData(QUERY_METADATA_INTERFACE) != null) {
-                        this.metadata = (QueryMetadataInterface)this.validationContext.getData(QUERY_METADATA_INTERFACE);
+                        this.metadata = (IQueryMetadataInterface)this.validationContext.getData(QUERY_METADATA_INTERFACE);
                         // make sure the type is what we think it should be.
                         if (!(this.metadata instanceof VdbMetadata)
                             && ((this.metadata instanceof TransformationMetadataFacade) && !(((TransformationMetadataFacade)this.metadata).getDelegate() instanceof VdbMetadata))) {
@@ -674,7 +683,7 @@ public class TransformationValidator implements QueryValidator {
      * @param targetGroup The traget virtual group or procedure.
      * @return The status indicating if the command is valid.
      */
-    public static IStatus checkCommandType( final Command command,
+    private IStatus checkCommandType( final ICommand command,
                                             final int transformType,
                                             final Object targetGroup ) {
         CoreArgCheck.isNotNull(command);
@@ -684,19 +693,19 @@ public class TransformationValidator implements QueryValidator {
         switch (transformType) {
             case QueryValidator.SELECT_TRNS:
                 if (targetGroup instanceof Table) {
-                    if (cmdType != Command.TYPE_QUERY && cmdType != Command.TYPE_STORED_PROCEDURE) {
+                    if (cmdType != ICommand.TYPE_QUERY && cmdType != ICommand.TYPE_STORED_PROCEDURE) {
                         // create validation problem and addition to the results
                         String msg = TransformationPlugin.Util.getString("TransformationValidator.Query_defining_a_virtual_group_can_only_be_of_type_Select_or_Exec._1"); //$NON-NLS-1$
                         return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, msg, null);
                     }
                 } else if (targetGroup instanceof Procedure) {
-                    if (!(cmdType == Command.TYPE_UPDATE_PROCEDURE )) {
+                    if (!(cmdType == ICommand.TYPE_UPDATE_PROCEDURE )) {
                         // create validation problem and addition to the results
                         String msg = TransformationPlugin.Util.getString("TransformationValidator.Query_defining_a_virtual_procedure_can_only_be_of_type_Virtual_procedure._2"); //$NON-NLS-1$
                         return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, msg, null);
                     }
                 } else if (targetGroup instanceof Operation) {
-                    if (cmdType != Command.TYPE_UPDATE_PROCEDURE) {
+                    if (cmdType != ICommand.TYPE_UPDATE_PROCEDURE) {
                         // create validation problem and addition to the results
                         String msg = TransformationPlugin.Util.getString("TransformationValidator.Query_defining_an_operation_can_only_be_of_type_Virtual_procedure._1"); //$NON-NLS-1$
                         return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, msg, null);
@@ -706,7 +715,7 @@ public class TransformationValidator implements QueryValidator {
             case QueryValidator.INSERT_TRNS:
             case QueryValidator.UPDATE_TRNS:
             case QueryValidator.DELETE_TRNS:
-                if (cmdType != Command.TYPE_TRIGGER_ACTION && !(cmdType == Command.TYPE_UPDATE_PROCEDURE )) {
+                if (cmdType != ICommand.TYPE_TRIGGER_ACTION && !(cmdType == ICommand.TYPE_UPDATE_PROCEDURE )) {
                     // create validation problem and addition to the results
                     String msg = TransformationPlugin.Util.getString("TransformationValidator.Only_update_procedures_are_allowed_in_the_INSERT/UPDATE/DELETE_tabs._1"); //$NON-NLS-1$
                     return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, msg, null);
@@ -730,15 +739,12 @@ public class TransformationValidator implements QueryValidator {
      * @param report the ValidatorReport
      * @return the List of Status
      */
-    private List<IStatus> createStatusList( final ValidatorReport report ) {
+    private List<IStatus> createStatusList( final IValidatorReport report ) {
         if (report != null && report.hasItems()) {
-        	Collection<ValidatorFailure> items = report.getItems();
+        	Collection<IValidatorFailure> items = report.getItems();
             List<IStatus> statusList = new ArrayList<IStatus>(items.size());
-            for (ValidatorFailure item : items) {
-            	IStatus status = new Status(
-            	item.getStatus() == org.teiid.query.validator.ValidatorFailure.Status.ERROR ? IStatus.ERROR : IStatus.WARNING,
-            			TransformationPlugin.PLUGIN_ID, 0, item.toString(), null);
-                statusList.add(status);
+            for (IValidatorFailure item : items) {
+                statusList.add(item.getStatus());
             }
             return statusList;
         }
@@ -771,9 +777,9 @@ public class TransformationValidator implements QueryValidator {
         return outputColumns;
     }
     
-    private List<ElementSymbol> getProjectedSymbols() throws Exception {
+    private List<IElementSymbol> getProjectedSymbols() throws Exception {
         List<EObject> outputColumns = getOutputColumns(this.mappingRoot);
-        List<ElementSymbol> projectedSymbols = new ArrayList<ElementSymbol>(outputColumns.size());
+        List<IElementSymbol> projectedSymbols = new ArrayList<IElementSymbol>(outputColumns.size());
         for (EObject outputColumn : outputColumns) {
             String outputColumnName = TransformationHelper.getSqlColumnName(outputColumn);
             SqlColumnAspect columnAspect = (SqlColumnAspect)AspectManager.getSqlAspect(outputColumn);
@@ -781,9 +787,12 @@ public class TransformationValidator implements QueryValidator {
             SqlDatatypeAspect typeAspect = datatype != null ? (SqlDatatypeAspect)AspectManager.getSqlAspect(datatype) : null;
             Class<?> targetType = null;
             if (typeAspect != null) {
-                targetType = DataTypeManager.getDataTypeClass(typeAspect.getRuntimeTypeName(datatype));
+                IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+                targetType = service.getDataTypeClass(typeAspect.getRuntimeTypeName(datatype));
             }
-            ElementSymbol column = new ElementSymbol(outputColumnName);
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            IQueryFactory factory = queryService.createQueryFactory();
+            IElementSymbol column = factory.createElementSymbol(outputColumnName);
             column.setType(targetType);
             column.setMetadataID(getQueryMetadata().getElementID(columnAspect.getFullName(outputColumn)));
             projectedSymbols.add(column);
@@ -792,16 +801,12 @@ public class TransformationValidator implements QueryValidator {
         return projectedSymbols;
     }
     
-    private List<IStatus> getReportStatusList(ValidatorReport report, int errorCode) {
-    	Collection<ValidatorFailure> items = report.getItems();
+    private List<IStatus> getReportStatusList(IValidatorReport report, int errorCode) {
+    	Collection<IValidatorFailure> items = report.getItems();
     	
     	List<IStatus> statusList = new ArrayList<IStatus>(items.size());
-    	for( ValidatorFailure item : items ) {
-    		int statusID = IStatus.WARNING;
-    		if( item.getStatus() == ValidatorFailure.Status.ERROR ) {
-    			statusID = IStatus.ERROR; 
-    		}
-    		IStatus status = new Status(statusID, TransformationPlugin.PLUGIN_ID, errorCode, item.toString(), null);
+    	for( IValidatorFailure item : items ) {
+    		IStatus status = new Status(item.getStatus().getSeverity(), TransformationPlugin.PLUGIN_ID, errorCode, item.toString(), null);
     		statusList.add(status);
     	}
     	
@@ -815,9 +820,12 @@ public class TransformationValidator implements QueryValidator {
      * @param statuslist to which an error can be added
      * @return statuslist The updated status list
      */
-    private Collection<IStatus> validateReferences( final Command command,
+    private Collection<IStatus> validateReferences( final ICommand command,
                                                     Collection<IStatus> statusList ) {
-        Collection references = ReferenceCollectorVisitor.getReferences(command);
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IReferenceCollectorVisitor referenceCollectorVisitor = queryService.getReferenceCollectorVisitor();
+        
+        Collection references = referenceCollectorVisitor.getReferences(command);
         if (!references.isEmpty()) {
             statusList = statusList != null ? statusList : new ArrayList<IStatus>(1);
             IStatus status = new Status(
@@ -838,7 +846,7 @@ public class TransformationValidator implements QueryValidator {
      * @param statuslist to which an error can be added
      * @return statuslist The updated status list
      */
-    private Collection<IStatus> validateSources( final Command command,
+    private Collection<IStatus> validateSources( final ICommand command,
                                                  Collection<IStatus> statusList ) {
         if (isTargetASourceInCommand(command)) {
             statusList = statusList != null ? statusList : new ArrayList<IStatus>(1);
@@ -850,7 +858,7 @@ public class TransformationValidator implements QueryValidator {
         return statusList;
     }
 
-    protected boolean isTargetASourceInCommand( Command command ) {
+    protected boolean isTargetASourceInCommand( ICommand command ) {
         boolean result = false;
         Collection sourceSymbols = TransformationSqlHelper.getGroupSymbols(command);
         List sourceEObjects = TransformationSqlHelper.getGroupSymbolEObjects(sourceSymbols);

@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.sqleditor.component;
 
-import org.teiid.query.sql.lang.MatchCriteria;
+import org.teiid.designer.query.sql.lang.IMatchCriteria;
 
 /**
  * The <code>MatchCriteriaDisplayNode</code> class is used to represent a Match Criteria.
@@ -27,7 +27,7 @@ public class MatchCriteriaDisplayNode extends DisplayNode {
      * @param criteria the query language object used to construct this display node.
      */
     public MatchCriteriaDisplayNode( DisplayNode parentNode,
-                                     MatchCriteria criteria ) {
+                                     IMatchCriteria criteria ) {
         this.parentNode = parentNode;
         this.languageObject = criteria;
     }

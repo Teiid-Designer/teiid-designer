@@ -37,7 +37,6 @@ import org.teiid.designer.core.index.IndexSelector;
 import org.teiid.designer.core.index.TargetLocationIndexSelector;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;
-import org.teiid.designer.metadata.runtime.MetadataRecord;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.types.DatatypeManager;
@@ -53,6 +52,7 @@ import org.teiid.designer.core.validation.ValidationResultImpl;
 import org.teiid.designer.mapping.factory.DefaultMappableTree;
 import org.teiid.designer.mapping.factory.IMappableTree;
 import org.teiid.designer.mapping.factory.TreeMappingAdapter;
+import org.teiid.designer.metadata.runtime.MetadataRecord;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.metamodels.transformation.MappingClassColumn;
@@ -71,21 +71,21 @@ import org.teiid.designer.metamodels.xml.XmlRoot;
 import org.teiid.designer.metamodels.xml.XmlValueHolder;
 import org.teiid.designer.metamodels.xml.util.XmlDocumentUtil;
 import org.teiid.designer.metamodels.xsd.XsdUtil;
+import org.teiid.designer.query.IQueryParser;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.query.sql.IGroupsUsedByElementsVisitor;
+import org.teiid.designer.query.sql.IResolverVisitor;
+import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.metadata.QueryMetadataContext;
 import org.teiid.designer.transformation.metadata.TransformationMetadataFactory;
+import org.teiid.designer.validator.IValidator;
+import org.teiid.designer.validator.IValidator.IValidatorFailure;
+import org.teiid.designer.validator.IValidator.IValidatorReport;
 import org.teiid.designer.xml.PluginConstants;
 import org.teiid.designer.xml.aspects.sql.XmlElementSqlAspect;
-import org.teiid.query.metadata.QueryMetadataInterface;
-import org.teiid.query.parser.QueryParser;
-import org.teiid.query.report.ReportItem;
-import org.teiid.query.resolver.util.ResolverUtil;
-import org.teiid.query.resolver.util.ResolverVisitor;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.visitor.GroupsUsedByElementsVisitor;
-import org.teiid.query.validator.Validator;
-import org.teiid.query.validator.ValidatorReport;
 
 /**
  * XmlDocumentValidationRule
@@ -813,14 +813,15 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
 
         String choiceCriteria = option.getChoiceCriteria();
         // have a criteria, validate it
-        Criteria criteria = null;
+        ICriteria criteria = null;
         Collection groups = null;
         try {
             // Parse
-            QueryParser parser = new QueryParser();
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            IQueryParser parser = queryService.getQueryParser();
             criteria = parser.parseCriteria(choiceCriteria);
 
-            QueryMetadataInterface metadata = null;
+            IQueryMetadataInterface metadata = null;
             if (context != null && context.useServerIndexes()) {
                 // Validating within the vdb context. The TargetLocationIndexSelector will gather
                 // all index files under a specified directory location.
@@ -841,10 +842,12 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
             groups = getGroups(criteria, metadata);
 
             // Resolve
-            ResolverVisitor.resolveLanguageObject(criteria, groups, metadata);
+            IResolverVisitor resolverVisitor = queryService.getResolverVisitor();
+            resolverVisitor.resolveLanguageObject(criteria, groups, metadata);
 
             // validate
-            ValidatorReport report = Validator.validate(criteria, metadata);
+            IValidator validator = queryService.getValidator();
+            IValidatorReport report = validator.validate(criteria, metadata);
             if (report.hasItems()) {
                 Collection problems = createValidationProblems(report);
                 for (Iterator probIter = problems.iterator(); probIter.hasNext();) {
@@ -881,7 +884,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
 
         // Iterate the criteria groups - ensure that they are among the valid list of mapping classes
         for (final Iterator grpIter = groups.iterator(); grpIter.hasNext();) {
-            GroupSymbol grpSymbol = (GroupSymbol)grpIter.next();
+            IGroupSymbol grpSymbol = (IGroupSymbol)grpIter.next();
             MetadataRecord record = (MetadataRecord)grpSymbol.getMetadataID();
             EObject grpObject = (EObject)context.getResourceContainer().getEObjectFinder().find(record.getUUID());
             if (!validMappingClasses.contains(grpObject)) {
@@ -965,11 +968,14 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
     /**
      * Get the resolved groups for the elements on the criteria, including any groups used in subqueries.
      */
-    private Collection getGroups( final Criteria criteria,
-                                  final QueryMetadataInterface metadata ) throws Exception {
-        Set<GroupSymbol> groups = GroupsUsedByElementsVisitor.getGroups(criteria);
-        for (GroupSymbol groupSymbol : groups) {
-            ResolverUtil.resolveGroup(groupSymbol, metadata);
+    private Collection getGroups( final ICriteria criteria,
+                                  final IQueryMetadataInterface metadata ) throws Exception {
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IGroupsUsedByElementsVisitor groupsUsedByElementsVisitor = queryService.getGroupsUsedByElementsVisitor();
+        
+        Set<IGroupSymbol> groups = groupsUsedByElementsVisitor.getGroups(criteria);
+        for (IGroupSymbol groupSymbol : groups) {
+            queryService.resolveGroup(groupSymbol, metadata);
         }
         return groups;
     }
@@ -1042,12 +1048,12 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
      * @param report the ValidatorReport
      * @return the List of ValidationProblem
      */
-    private Collection createValidationProblems( final ValidatorReport report ) {
+    private Collection createValidationProblems( final IValidatorReport report ) {
         if (report != null && report.hasItems()) {
-            Collection items = report.getItems();
+            Collection<IValidatorFailure> items = report.getItems();
             Collection problemList = new ArrayList(items.size());
-            for (Iterator itemIter = items.iterator(); itemIter.hasNext();) {
-                ReportItem item = (ReportItem)itemIter.next();
+            for (Iterator<IValidatorFailure> itemIter = items.iterator(); itemIter.hasNext();) {
+                IValidatorFailure item = itemIter.next();
                 ValidationProblem problem = new ValidationProblemImpl(0, IStatus.ERROR, item.toString());
                 problemList.add(problem);
             }

@@ -10,12 +10,11 @@ package org.teiid.designer.transformation.ui.builder.criteria;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.CompareCriteria;
-import org.teiid.query.sql.symbol.Expression;
+import org.teiid.designer.query.sql.lang.ICompareCriteria;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.query.ui.builder.model.CompareCriteriaEditorModel;
 import org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener;
 import org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent;
@@ -38,7 +37,7 @@ public class CompareCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
 
     public CompareCriteriaEditor( Composite parent,
                                   CompareCriteriaEditorModel model ) {
-        super(parent, CompareCriteria.class, model);
+        super(parent, ICompareCriteria.class, model);
         this.theModel = model;
         viewController = new ViewController();
         model.addModelListener(viewController);
@@ -86,20 +85,20 @@ public class CompareCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     }
 
     @Override
-	public Expression getLeftExpression() {
-        Expression leftExpression = theModel.getLeftExpression();
+	public IExpression getLeftExpression() {
+        IExpression leftExpression = theModel.getLeftExpression();
         return leftExpression;
     }
 
     @Override
-	public Expression getRightExpression() {
-        Expression rightExpression = theModel.getRightExpression();
+	public IExpression getRightExpression() {
+        IExpression rightExpression = theModel.getRightExpression();
         return rightExpression;
     }
 
     @Override
-    public void setLanguageObject( LanguageObject obj ) {
-        CoreArgCheck.isInstanceOf(CompareCriteria.class, obj);
+    public void setLanguageObject( ILanguageObject obj ) {
+        CoreArgCheck.isInstanceOf(ICompareCriteria.class, obj);
         theModel.setLanguageObject(obj);
     }
 

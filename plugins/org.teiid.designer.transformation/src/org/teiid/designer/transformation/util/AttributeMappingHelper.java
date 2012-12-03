@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;
@@ -22,13 +21,13 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metadata.runtime.MetadataRecord;
 import org.teiid.designer.metamodels.transformation.TransformationFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.metadata.IMetadataID;
+import org.teiid.designer.query.sql.IElementCollectorVisitor;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.transformation.TransformationPlugin;
-import org.teiid.query.metadata.TempMetadataID;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.Symbol;
-import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 
 /**
  * AttributeMappingHelper - static methods for keeping the target attribute mappings for
@@ -84,10 +83,13 @@ public class AttributeMappingHelper {
             	return changed;
             }
             // Get the SQL Command and the Projected Symbols
-            Command command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
+            ICommand command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
             List projectedSymbols = command.getProjectedSymbols();
             // Get the target attributes that arent specified in an accessPattern
             List attrs = TransformationHelper.getTransformationTargetAttributes((EObject)transMappingRoot);       
+            
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor();
             
             // Iterate attributes, setting each mapping
             Iterator iter = attrs.iterator();
@@ -102,11 +104,11 @@ public class AttributeMappingHelper {
                         changed = true;
                     }
                     // Find element matching the attribute name (if it exists)
-                    Expression seSymbol = getSymbolWithName(projectedSymbols,colName);
+                    IExpression seSymbol = getSymbolWithName(projectedSymbols,colName);
                     if(seSymbol!=null) {
                         // Get the ElementSymbols / corresponding EObjs
-                        Collection elemSymbols = ElementCollectorVisitor.getElements(seSymbol,true);
-                        Collection elemEObjs = TransformationSqlHelper.getElementSymbolEObjects(elemSymbols,command);
+                        Collection elemSymbols = elementCollectorVisitor.getElements(seSymbol,true);
+                        Collection<EObject> elemEObjs = TransformationSqlHelper.getElementSymbolEObjects(elemSymbols,command);
                         // Set Elem EObjs as inputs for attr Mapping
                         changed = setAttributeMapping(transMappingRoot,attr,elemEObjs,txnSource) || changed;
                     }
@@ -583,11 +585,11 @@ public class AttributeMappingHelper {
      * @param name the symbol name
      * @return the SingleElementSymbol from the List with the provided name, null if not found.
      */
-    private static Expression getSymbolWithName(List seSymbols, String name) {
-    	Expression result = null;
+    private static IExpression getSymbolWithName(List seSymbols, String name) {
+    	IExpression result = null;
         Iterator iter = seSymbols.iterator();
         while(iter.hasNext()) {
-        	Expression seSymbol = (Expression)iter.next();
+        	IExpression seSymbol = (IExpression)iter.next();
             String symbolName = TransformationSqlHelper.getSingleElementSymbolShortName(seSymbol,false);
             if(symbolName!=null && symbolName.equalsIgnoreCase(name)) {
                 result = seSymbol;
@@ -602,7 +604,7 @@ public class AttributeMappingHelper {
      * actual name.
      * @param symbol 
      */
-    public static String getSymbolShortName(final Expression symbol) {
+    public static String getSymbolShortName(final IExpression symbol) {
     	String fullName = getSymbolFullName(symbol);
     	int index = fullName.lastIndexOf("."); //$NON-NLS-1$
     	return fullName.substring(index+1);   
@@ -612,21 +614,23 @@ public class AttributeMappingHelper {
      * The symbol might be a UUID, lookup the MetadataRecord, for the
      * actual name.
      */
-    public static String getSymbolFullName(final Expression symbol) {
+    public static String getSymbolFullName(final IExpression symbol) {
         CoreArgCheck.isNotNull(symbol);
-        if(symbol instanceof ElementSymbol) {
-            Object metadataID = ((ElementSymbol)symbol).getMetadataID();
-            if(metadataID != null) {
-                if(metadataID instanceof MetadataRecord) {
-                    MetadataRecord record = (MetadataRecord) metadataID;
-                    return record.getFullName();
-                }
-                TempMetadataID tempID = (TempMetadataID) metadataID;
+        if(symbol instanceof IElementSymbol) {
+            Object metadataID = ((IElementSymbol)symbol).getMetadataID();
+            
+            if(metadataID instanceof MetadataRecord) {
+                MetadataRecord record = (MetadataRecord) metadataID;
+                return record.getFullName();
+            }
+            else if (metadataID instanceof IMetadataID) {
+                IMetadataID tempID = (IMetadataID) metadataID;
                 return tempID.getID();
             }
         }
     
-        return Symbol.getName(symbol);
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        return queryService.getSymbolName(symbol);
     }
 
 }

@@ -9,17 +9,16 @@ package org.teiid.designer.transformation.ui.builder.util;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.query.sql.lang.ICompoundCriteria;
+import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.lang.ILogicalCriteria;
+import org.teiid.designer.query.sql.lang.INotCriteria;
+import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.builder.ILanguageObjectInputProvider;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.CompoundCriteria;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.LogicalCriteria;
-import org.teiid.query.sql.lang.NotCriteria;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.ui.builder.util.BuilderUtils;
 
 
@@ -41,7 +40,7 @@ public class LanguageObjectContentProvider implements ITreeContentProvider, UiCo
     // FIELDS
     // /////////////////////////////////////////////////////////////////////////////////////////////
 
-    private LanguageObject langObj;
+    private ILanguageObject langObj;
 
     private Object[] roots = new Object[0];
 
@@ -86,24 +85,24 @@ public class LanguageObjectContentProvider implements ITreeContentProvider, UiCo
         return result;
     }
 
-    private Object[] getChildren( Criteria theCriteria ) {
+    private Object[] getChildren( ICriteria theCriteria ) {
         Object[] result = null;
 
-        if (theCriteria instanceof NotCriteria) {
-            NotCriteria notCrit = (NotCriteria)theCriteria;
-            Criteria criteria = notCrit.getCriteria();
+        if (theCriteria instanceof INotCriteria) {
+            INotCriteria notCrit = (INotCriteria)theCriteria;
+            ICriteria criteria = notCrit.getCriteria();
 
-            if (criteria instanceof LogicalCriteria) {
+            if (criteria instanceof ILogicalCriteria) {
                 result = getChildren(criteria);
             }
         } else {
-            if (theCriteria instanceof CompoundCriteria) {
-                CompoundCriteria compoundCrit = (CompoundCriteria)theCriteria;
+            if (theCriteria instanceof ICompoundCriteria) {
+                ICompoundCriteria compoundCrit = (ICompoundCriteria)theCriteria;
                 int size = compoundCrit.getCriteriaCount();
                 result = new Object[size];
 
                 for (int i = 0; i < size; i++) {
-                    Criteria criteria = compoundCrit.getCriteria(i);
+                    ICriteria criteria = compoundCrit.getCriteria(i);
                     result[i] = (criteria == null) ? BuilderUtils.UNDEFINED : (Object)criteria;
                 }
             }
@@ -112,26 +111,26 @@ public class LanguageObjectContentProvider implements ITreeContentProvider, UiCo
         return (result == null) ? new Object[0] : result;
     }
 
-    private Object[] getChildren( Expression theExpression ) {
+    private Object[] getChildren( IExpression theExpression ) {
         Object[] result = null;
 
-        if (theExpression instanceof Function) {
-            result = getChildren((Function)theExpression);
+        if (theExpression instanceof IFunction) {
+            result = getChildren((IFunction)theExpression);
         }
 
         return (result == null) ? new Object[0] : result;
     }
 
-    private Object[] getChildren( Function theFunction ) {
+    private Object[] getChildren( IFunction theFunction ) {
         Object[] result = null;
 
         if (theFunction.isImplicit()) {
             // according to Alex, all implicit functions are conversions and
             // the first argument is what is being converted (which could be a function or expression)
-            Expression arg = theFunction.getArgs()[0];
-            result = (arg instanceof Function) ? getChildren((Function)arg) : getChildren(arg);
+            IExpression arg = theFunction.getArgs()[0];
+            result = (arg instanceof IFunction) ? getChildren((IFunction)arg) : getChildren(arg);
         } else {
-            Expression[] args = theFunction.getArgs();
+            IExpression[] args = theFunction.getArgs();
 
             if ((args != null) && (args.length > 0)) {
                 result = new Object[args.length];
@@ -154,10 +153,10 @@ public class LanguageObjectContentProvider implements ITreeContentProvider, UiCo
         Object[] result = null;
 
         if (theParent != null) {
-            if (theParent instanceof Criteria) {
-                result = getChildren((Criteria)theParent);
-            } else if (theParent instanceof Expression) {
-                result = getChildren((Expression)theParent);
+            if (theParent instanceof ICriteria) {
+                result = getChildren((ICriteria)theParent);
+            } else if (theParent instanceof IExpression) {
+                result = getChildren((IExpression)theParent);
             }
         }
         return (result == null) ? new Object[0] : result;

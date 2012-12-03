@@ -7,7 +7,7 @@
  */
 package org.teiid.query.ui.builder.model;
 
-import org.teiid.query.sql.symbol.Expression;
+import org.teiid.designer.query.sql.lang.IExpression;
 
 /**
  * CriteriaExpressionEditorModel
@@ -47,7 +47,7 @@ public class CriteriaExpressionEditorModel extends CompositeLanguageObjectEditor
     public CriteriaExpressionEditorModel(ConstantEditorModel theConstantEditorModel,
                                          ElementEditorModel theElementEditorModel,
                                          FunctionDisplayEditorModel theFunctionEditorModel) {
-        super(Expression.class);
+        super(IExpression.class);
         
         elementModel = theElementEditorModel;
         addModel(elementModel);
@@ -75,8 +75,8 @@ public class CriteriaExpressionEditorModel extends CompositeLanguageObjectEditor
         return functionModel;
     }
     
-    public Expression getExpression() {
-    	Expression exp = (Expression)getLanguageObject();
+    public IExpression getExpression() {
+    	IExpression exp = (IExpression)getLanguageObject();
         return exp;
     }
     

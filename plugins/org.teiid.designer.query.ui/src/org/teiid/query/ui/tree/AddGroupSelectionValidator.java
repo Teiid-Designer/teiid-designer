@@ -10,10 +10,10 @@ package org.teiid.query.ui.tree;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-import org.teiid.query.sql.lang.From;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.Select;
-import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.designer.query.sql.lang.IFrom;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.query.sql.lang.ISelect;
+import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.query.ui.UiConstants;
 
 
@@ -63,11 +63,11 @@ public class AddGroupSelectionValidator implements ISelectionStatusValidator {
         this.isUnion = false;
         if ( selection.length != 1 ) {
             return INVALID_STATUS;
-        } else if ( selection[0] instanceof From ) {
+        } else if ( selection[0] instanceof IFrom ) {
             return OK_FROM_STATUS;
-        } else if ( selection[0] instanceof SetQuery 
-                        || selection[0] instanceof Query
-                        || selection[0] instanceof Select ) {
+        } else if ( selection[0] instanceof ISetQuery 
+                        || selection[0] instanceof IQuery
+                        || selection[0] instanceof ISelect ) {
             this.isUnion = true;
             return OK_UNION_STATUS;
         } 

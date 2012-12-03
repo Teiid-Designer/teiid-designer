@@ -12,6 +12,13 @@ import java.util.Arrays;
 import java.util.List;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.symbol.IConstant;
+import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.udf.IFunctionForm;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.designer.udf.UdfManager;
@@ -60,7 +67,7 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
     // /////////////////////////////////////////////////////////////////////////////////////////////
 
     public FunctionEditorModel() {
-        super(Function.class);
+        super(IFunction.class);
         getCategories();
     }
 
@@ -139,28 +146,30 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
      * @return the current <code>Function</code>
      * @throws IllegalStateException if the current value is not complete
      */
-    public Function getFunction() {
-        return (Function)getLanguageObject();
+    public IFunction getFunction() {
+        return (IFunction)getLanguageObject();
     }
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.model.AbstractLanguageObjectEditorModel#getLanguageObject()
      */
     @Override
-    public LanguageObject getLanguageObject() {
+    public ILanguageObject getLanguageObject() {
         // return null if not complete
         if (!isComplete()) {
             return null;
         }
 
         int numArgs = argValues.size();
-        Expression[] args = new Expression[numArgs];
+        IExpression[] args = new IExpression[numArgs];
 
         for (int i = 0; i < numArgs; i++) {
-            args[i] = (Expression)argValues.get(i);
+            args[i] = (IExpression)argValues.get(i);
         }
 
-        return new Function(selectedFunctionForm.getName(), args);
+        IQueryService service = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = service.createQueryFactory();
+        return factory.createFunction(selectedFunctionForm.getName(), args);
     }
 
     /**
@@ -176,7 +185,7 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
         Object result = theProposedValue;
 
         if (BuilderUtils.isConversionTypeArg(theFunctionName, theArgName)) {
-            if ((theProposedValue instanceof Constant) && BuilderUtils.isConversionTypeConstant(theProposedValue)) {
+            if ((theProposedValue instanceof IConstant) && BuilderUtils.isConversionTypeConstant(theProposedValue)) {
                 result = theProposedValue;
             } else {
                 result = BuilderUtils.createConversionTypeConstant();
@@ -267,13 +276,13 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
         }
     }
 
-    private void setFunction( Function theFunction ) {
+    private void setFunction( IFunction theFunction ) {
         notifyListeners = false;
 
         if (theFunction == null) {
             clear();
         } else {
-            Expression[] newArgValues = theFunction.getArgs();
+            IExpression[] newArgValues = theFunction.getArgs();
             IFunctionForm functionForm = funcLib.findFunctionForm(theFunction.getName(), newArgValues.length);
 
             if( functionForm != null ) {
@@ -296,7 +305,7 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
      * @throws IllegalArgumentException if the argument value array is null
      * @throws ArrayIndexOutOfBoundsException if the index is invalid
      */
-    public void setFunctionArgValue( Expression theValue,
+    public void setFunctionArgValue( IExpression theValue,
                                      int theIndex ) {
         CoreArgCheck.isNotNull(argValues);
         argValues.set(theIndex, theValue);
@@ -351,9 +360,9 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
      * @see org.teiid.query.ui.builder.model.AbstractLanguageObjectEditorModel#setLanguageObject(org.teiid.query.sql.LanguageObject)
      */
     @Override
-    public void setLanguageObject( LanguageObject theLangObj ) {
+    public void setLanguageObject( ILanguageObject theLangObj ) {
         super.setLanguageObject(theLangObj);
-        setFunction((Function)theLangObj);
+        setFunction((IFunction)theLangObj);
     }
 
 }

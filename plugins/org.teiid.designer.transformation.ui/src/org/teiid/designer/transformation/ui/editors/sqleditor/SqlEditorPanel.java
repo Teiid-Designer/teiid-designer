@@ -70,7 +70,16 @@ import org.teiid.core.designer.event.EventObjectListener;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.query.QueryValidationResult;
 import org.teiid.designer.core.query.QueryValidator;
-import org.teiid.designer.sql.ISQLConstants;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.ISQLConstants;
+import org.teiid.designer.query.sql.ISQLStringVisitor;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.query.sql.lang.ISelect;
+import org.teiid.designer.query.sql.lang.ISetQuery;
+import org.teiid.designer.query.sql.lang.ISubqueryContainer;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.builder.CriteriaBuilder;
@@ -739,7 +748,7 @@ public class SqlEditorPanel extends SashForm
      * 
      * @return the command, null if the query is not both parseable and resolvable
      */
-    public Command getCommand() {
+    public ICommand getCommand() {
         return queryDisplayComponent.getCommand();
     }
 
@@ -1128,7 +1137,7 @@ public class SqlEditorPanel extends SashForm
 
         // launch Epression Builder with the selected language object or with
         // null to start off with undefined language object
-        builder.setLanguageObject((replaceMode) ? (Expression)expressionNode.getLanguageObject() : null);
+        builder.setLanguageObject((replaceMode) ? (IExpression)expressionNode.getLanguageObject() : null);
 
         // -------------------------------------------------------------------------
         // Display the Dialog
@@ -1139,8 +1148,10 @@ public class SqlEditorPanel extends SashForm
         // Insert or Replace when Dialog is OK'd, do nothing if cancelled
         // -------------------------------------------------------------------------
         if (status == Window.OK) {
-            LanguageObject langObj = builder.getLanguageObject();
-            String langString = SQLStringVisitor.getSQLString(langObj);
+            ILanguageObject langObj = builder.getLanguageObject();
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            ISQLStringVisitor visitor = queryService.getSQLStringVisitor();
+            String langString = visitor.getSQLString(langObj);
 
             // ------------------
             // Replace Mode
@@ -1157,12 +1168,12 @@ public class SqlEditorPanel extends SashForm
                 if (queryDisplayComponent.isIndexWithin(index, DisplayNodeConstants.SELECT)) {
                     // Get Select clause DisplayNode
                     DisplayNode clauseNode = queryDisplayComponent.getQueryClauseAtIndex(index);
-                    LanguageObject selectObj;
+                    ILanguageObject selectObj;
                     try {
                         selectObj = clauseNode.getLanguageObject();
-                        if (selectObj != null && selectObj instanceof Select) {
+                        if (selectObj != null && selectObj instanceof ISelect) {
                             // Check whether this is a "SELECT *"
-                            if (((Select)selectObj).isStar()) {
+                            if (((ISelect)selectObj).isStar()) {
                                 // First check if the cursor is after the *
                                 boolean isAtClauseEnd = DisplayNodeUtils.isIndexAtClauseEnd(clauseNode, index);
                                 // Expand the Select
@@ -1245,7 +1256,7 @@ public class SqlEditorPanel extends SashForm
 
         // launch Criteria Builder with the selected language object or with
         // null to start off with undefined language object
-        builder.setLanguageObject((replaceMode) ? (Criteria)criteriaNode.getLanguageObject() : null);
+        builder.setLanguageObject((replaceMode) ? (ICriteria)criteriaNode.getLanguageObject() : null);
 
         // -------------------------------------------------------------------------
         // Display the Dialog
@@ -1256,8 +1267,10 @@ public class SqlEditorPanel extends SashForm
         // Insert or Replace when Dialog is OK'd, do nothing if cancelled
         // -------------------------------------------------------------------------
         if (status == Window.OK) {
-            LanguageObject newCriteria = builder.getLanguageObject();
-            String criteriaString = SQLStringVisitor.getSQLString(newCriteria);
+            ILanguageObject newCriteria = builder.getLanguageObject();
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            ISQLStringVisitor visitor = queryService.getSQLStringVisitor();
+            String criteriaString = visitor.getSQLString(newCriteria);
             // ------------------
             // Replace Mode
             // ------------------
@@ -1521,8 +1534,8 @@ public class SqlEditorPanel extends SashForm
     public boolean isCommandUnion() {
         boolean result = false;
         if (isParsable()) {
-            Command command = queryDisplayComponent.getCommand();
-            if (command instanceof SetQuery) {
+            ICommand command = queryDisplayComponent.getCommand();
+            if (command instanceof ISetQuery) {
                 result = true;
             }
         }
@@ -1558,7 +1571,7 @@ public class SqlEditorPanel extends SashForm
         if (currentCommandDN instanceof QueryDisplayNode) {
             DisplayNode parent = currentCommandDN.getParent();
             while (parent != null) {
-                if (parent.getLanguageObject() instanceof SubqueryContainer) {
+                if (parent.getLanguageObject() instanceof ISubqueryContainer) {
                     return true;
                 }
                 parent = parent.getParent();
@@ -1639,7 +1652,7 @@ public class SqlEditorPanel extends SashForm
             if (getOuterMost) {
                 while (result != null) {
                     DisplayNode parent = result.getParent();
-                    if (parent != null && parent.getLanguageObject() instanceof Criteria) {
+                    if (parent != null && parent.getLanguageObject() instanceof ICriteria) {
                         result = parent;
                     } else {
                         break;

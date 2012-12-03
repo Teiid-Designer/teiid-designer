@@ -85,4 +85,27 @@ public interface IFunctionLibrary {
      */
     List<IFunctionForm> getFunctionForms(String category);
 
+    /**
+     * Find the function with the given name and number
+     * of arguments
+     * 
+     * @param name
+     * @param length number of arguments
+     * 
+     * @return function or null
+     */
+    IFunctionForm findFunctionForm(String name, int length);
+
+    /**
+     * Find a function descriptor given a name and the types of the arguments.
+     * This method matches based on case-insensitive function name and
+     * an exact match of the number and types of parameter arguments.
+     * 
+     * @param name Name of the function to resolve
+     * @param types Array of classes representing the types
+     * 
+     * @return Descriptor if found, null if not found
+     */
+    IFunctionDescriptor findFunction(String name, Class[] types);
+
 }

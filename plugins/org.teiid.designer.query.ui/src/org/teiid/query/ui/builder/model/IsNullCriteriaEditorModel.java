@@ -8,9 +8,12 @@
 package org.teiid.query.ui.builder.model;
 
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.IsNullCriteria;
-import org.teiid.query.sql.symbol.Expression;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.IIsNullCriteria;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 
 /**
  * IsNullCriteriaEditorModel
@@ -23,14 +26,18 @@ public class IsNullCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdit
     private final static String PREFIX = I18nUtil.getPropertyPrefix(IsNullCriteriaEditorModel.class);
     private final static String[] OPERATORS = new String[] {Util.getString(PREFIX + "isNull") //$NON-NLS-1$
     };
-    private final static IsNullCriteria EMPTY_IS_NULL_CRITERIA = new IsNullCriteria();
+    private final IIsNullCriteria emptyIsNullCriteria;
 
     private CriteriaExpressionEditorModel expEditorModel;
 
     public IsNullCriteriaEditorModel( CriteriaExpressionEditorModel eem ) {
-        super(IsNullCriteria.class);
+        super(IIsNullCriteria.class);
         this.expEditorModel = eem;
         this.expEditorModel.addModelListener(this);
+        
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+        emptyIsNullCriteria = factory.createIsNullCriteria();
     }
 
     public IsNullCriteriaEditorModel() {
@@ -50,13 +57,13 @@ public class IsNullCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdit
     }
 
     @Override
-    public void setLanguageObject( LanguageObject obj ) {
+    public void setLanguageObject( ILanguageObject obj ) {
         super.setLanguageObject(obj);
-        IsNullCriteria curIsNullCriteria;
+        IIsNullCriteria curIsNullCriteria;
         if (obj == null) {
             clear();
         } else {
-            curIsNullCriteria = (IsNullCriteria)obj;
+            curIsNullCriteria = (IIsNullCriteria)obj;
             expEditorModel.setLanguageObject(curIsNullCriteria.getExpression());
         }
     }
@@ -64,7 +71,7 @@ public class IsNullCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdit
     @Override
     public void clear() {
         notifyListeners = false;
-        expEditorModel.setLanguageObject(EMPTY_IS_NULL_CRITERIA.getExpression());
+        expEditorModel.setLanguageObject(emptyIsNullCriteria.getExpression());
         notifyListeners = true;
 
         super.clear();
@@ -77,8 +84,11 @@ public class IsNullCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdit
     }
 
     @Override
-    public LanguageObject getLanguageObject() {
-        IsNullCriteria isNullCriteria = new IsNullCriteria();
+    public ILanguageObject getLanguageObject() {
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IQueryFactory factory = queryService.createQueryFactory();
+        
+        IIsNullCriteria isNullCriteria = factory.createIsNullCriteria();
         isNullCriteria.setExpression(expEditorModel.getExpression());
         return isNullCriteria;
     }
@@ -108,14 +118,14 @@ public class IsNullCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdit
         // Interface method that is unused
     }
 
-    public Expression getExpression() {
-        Expression exp = expEditorModel.getExpression();
+    public IExpression getExpression() {
+        IExpression exp = expEditorModel.getExpression();
         return exp;
     }
 
-    public void setExpression( Expression exp ) {
+    public void setExpression( IExpression exp ) {
         boolean same;
-        Expression oldExp = expEditorModel.getExpression();
+        IExpression oldExp = expEditorModel.getExpression();
         if (exp == null) {
             same = (oldExp == null);
         } else {
@@ -128,23 +138,23 @@ public class IsNullCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdit
     }
 
     @Override
-    public Expression getLeftExpression() {
+    public IExpression getLeftExpression() {
         return getExpression();
     }
 
     @Override
-    public void setLeftExpression( Expression exp ) {
+    public void setLeftExpression( IExpression exp ) {
         setExpression(exp);
     }
 
     @Override
-    public Expression getRightExpression() {
+    public IExpression getRightExpression() {
         // Unused abstract method
         return null;
     }
 
     @Override
-    public void setRightExpression( Expression exp ) {
+    public void setRightExpression( IExpression exp ) {
         // Unused abstract method
     }
 }
