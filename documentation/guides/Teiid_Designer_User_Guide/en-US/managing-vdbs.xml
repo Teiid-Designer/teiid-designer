@@ -110,13 +110,6 @@
 		<para>To create a VDB source model:</para>
 		<itemizedlist>
 			<listitem>
-				<para><emphasis role="bold">Step 5 </emphasis> - Select the model builder labeled
-				<emphasis role="bold">Build XML documents from XML schema</emphasis> and 
-				click <emphasis role="bold">Next ></emphasis>.  The <emphasis role="bold">Select XML Schema</emphasis> dialog
-				will be displayed.</para>
-			</listitem>
-
-			<listitem>
 				<para><emphasis role="bold">Step 1 </emphasis> - Deploy your VDB
 				</para>
 			</listitem>
