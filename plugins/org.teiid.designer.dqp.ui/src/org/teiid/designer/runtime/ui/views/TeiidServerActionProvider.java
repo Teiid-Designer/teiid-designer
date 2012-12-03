@@ -512,20 +512,27 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 manager.add(this.editServerAction);
                 manager.add(new Separator());
                 
-            } else if (RuntimeAssistant.adapt(selection, ITeiidDataSource.class) != null) {
+            }
+            
+            if (RuntimeAssistant.adapt(selection, ITeiidDataSource.class) != null) {
                 manager.add(this.deleteDataSourceAction);                
                 manager.add(new Separator());
                 
-            } else if (RuntimeAssistant.adapt(selection, ITeiidVdb.class) != null) {
+            }
+            
+            if (RuntimeAssistant.adapt(selection, ITeiidVdb.class) != null) {
                 ITeiidVdb teiidVdb = RuntimeAssistant.adapt(selection, ITeiidVdb.class);
                 this.executeVdbAction.setEnabled(teiidVdb.isActive());
                 manager.add(this.executeVdbAction);
                 manager.add(new Separator());
                 manager.add(this.undeployVdbAction);
                 
-            } else if (selection instanceof DataSourcesFolder) {
+            }
+            
+            if (selection instanceof DataSourcesFolder) {
                 manager.add(this.createDataSourceAction);
             }
+            
         } else {
             // More than 1 selected object
             

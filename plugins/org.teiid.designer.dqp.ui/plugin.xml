@@ -365,6 +365,9 @@
          <adapter
                type="org.teiid.designer.runtime.spi.ITeiidVdb">
          </adapter>
+         <adapter
+               type="org.teiid.designer.runtime.spi.ITeiidServer">
+         </adapter>
       </factory>
    </extension>
    <extension

@@ -9,6 +9,7 @@ package org.teiid.designer.runtime.ui.views.content.adapter;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode;
@@ -39,6 +40,10 @@ public class TeiidDataNodeAdapterFactory implements IAdapterFactory {
                 return value;
         }
         
+        if (ITeiidServer.class == adapterType) {
+            return adaptToTeiidServer(teiidDataNode);
+        }
+        
         return null;
     }
 
@@ -46,12 +51,20 @@ public class TeiidDataNodeAdapterFactory implements IAdapterFactory {
      * Try and adapt to a {@link ITeiidResourceNode}
      * 
      * @param teiidDataNode
-     * @param adapterType
      * @return
      */
     private Object adaptToTeiidResourceNode(TeiidDataNode teiidDataNode) {
         ITeiidResourceNode parent = teiidDataNode.getParent();
         return parent != null ? parent : null;
+    }
+    
+    /**
+     * Try and adapt to a {@link ITeiidServer}
+     * 
+     * @param teiidDataNode
+     */
+    private ITeiidServer adaptToTeiidServer(TeiidDataNode teiidDataNode) {
+        return teiidDataNode.getTeiidServer();
     }
 
     @Override
@@ -59,7 +72,8 @@ public class TeiidDataNodeAdapterFactory implements IAdapterFactory {
         return new Class[] { ITeiidResourceNode.class, 
                                            ITeiidDataSource.class,
                                            ITeiidTranslator.class,
-                                           ITeiidVdb.class };
+                                           ITeiidVdb.class,
+                                           ITeiidServer.class };
     }
 
 }
