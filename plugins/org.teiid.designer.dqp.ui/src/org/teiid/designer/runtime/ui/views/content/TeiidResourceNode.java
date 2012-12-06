@@ -35,6 +35,8 @@ public class TeiidResourceNode extends TeiidContentNode implements ITeiidResourc
     private TeiidServer teiidServer;
 
     private TeiidErrorNode error;
+
+    private boolean dirty = true;
     
     /**
      * @param server
@@ -48,10 +50,6 @@ public class TeiidResourceNode extends TeiidContentNode implements ITeiidResourc
         if (node == null) {
             node = new TeiidResourceNode(server, provider);
             nodeCache.put(key, node); 
-        } else {
-            // Existing node but children may be out of date
-            // Remove children so they are refreshed
-            node.clearChildren();
         }
         
         return node; 
@@ -67,9 +65,23 @@ public class TeiidResourceNode extends TeiidContentNode implements ITeiidResourc
         super(server, DqpUiConstants.UTIL.getString(TeiidResourceNode.class.getSimpleName() + ".label")); //$NON-NLS-1$
         this.provider = provider;
     }
+    
+    @Override
+    public void setDirty() {
+        dirty = true;
+    }
 
     @Override
     public final List<? extends ITeiidContentNode<?>> getChildren() {
+        if (dirty) {
+            /* 
+             * node flagged as dirty so the children are out-of-date. Avoid
+             * returning them thereby making the content provider reload 
+             * them.
+             */
+            return null;
+        }
+        
         if (error != null) {
             return Collections.singletonList(error);
         }
@@ -79,8 +91,11 @@ public class TeiidResourceNode extends TeiidContentNode implements ITeiidResourc
     
     @Override
     public final void load() {
+        clearChildren();
+        
         if (getServer().getServerState() != IServer.STATE_STARTED) {
             setError(new TeiidErrorNode(this, null, DqpUiConstants.UTIL.getString(getClass().getSimpleName() + ".labelNotConnected"))); //$NON-NLS-1$
+            dirty = false;
             return;
         }
         
@@ -105,12 +120,13 @@ public class TeiidResourceNode extends TeiidContentNode implements ITeiidResourc
                 DqpUiConstants.UTIL.log(e);
                 setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(getClass().getSimpleName()
                                                                                              + ".labelRetrievalError"))); //$NON-NLS-1$
+            } finally {
+                dirty = false;
             }
         }
     }
     
-    @Override
-    public final void clearChildren() {
+    private void clearChildren() {
         synchronized (provider) {
             clearError();
             if (children != null) {
@@ -147,17 +163,14 @@ public class TeiidResourceNode extends TeiidContentNode implements ITeiidResourc
     /**
      * @return the teiidServer
      */
+    @Override
     public TeiidServer getTeiidServer() {
         return this.teiidServer;
     }
 
-    /**
-     * Does this node have any children
-     * 
-     * @return true if there are children.
-     */
+    @Override
     public boolean hasChildren() {
-        return children != null && ! children.isEmpty();
+        return dirty || (children != null && ! children.isEmpty());
     }
     
     @Override

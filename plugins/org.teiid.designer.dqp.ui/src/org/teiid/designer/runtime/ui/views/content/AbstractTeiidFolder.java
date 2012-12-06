@@ -64,6 +64,8 @@ public abstract class AbstractTeiidFolder<V> implements ITeiidContainerNode<Teii
     
     @Override
     public void load() {
+        clearChildren();
+        
         if (getTeiidServer() == null || !getTeiidServer().isConnected()) {
             return;
         }
@@ -85,8 +87,7 @@ public abstract class AbstractTeiidFolder<V> implements ITeiidContainerNode<Teii
         return children != null && ! children.isEmpty();
     }
     
-    @Override
-    public void clearChildren() {
+    private void clearChildren() {
         if (children != null) {
             for (ITeiidContentNode<? extends ITeiidContainerNode<?>> child : children) {
                 child.dispose();

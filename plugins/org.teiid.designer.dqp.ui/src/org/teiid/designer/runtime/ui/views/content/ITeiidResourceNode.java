@@ -23,4 +23,10 @@ public interface ITeiidResourceNode extends ITeiidContainerNode {
      */
     TeiidServer getTeiidServer();
 
+    /**
+     * Set the node's children to be dirty, implying a refresh
+     * is necessary
+     */
+    void setDirty();
+
 }

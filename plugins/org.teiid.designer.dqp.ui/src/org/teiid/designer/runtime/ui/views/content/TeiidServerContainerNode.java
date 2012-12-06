@@ -64,8 +64,7 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
         return children;
     }
     
-    @Override
-    public final void clearChildren() {
+    private void clearChildren() {
         clearError();
         
         if (children != null) {
@@ -90,6 +89,8 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
 
     @Override
     public final void load() {
+        clearChildren();
+        
         if (getServer().getServerState() != IServer.STATE_STARTED) {
             setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(TeiidServerContainerNode.class.getSimpleName() + "ServerContentLabelNotConnected"))); //$NON-NLS-1$
             return;

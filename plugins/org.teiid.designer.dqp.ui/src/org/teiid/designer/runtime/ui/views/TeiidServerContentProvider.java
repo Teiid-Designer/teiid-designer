@@ -348,6 +348,7 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
         
         if (parentElement instanceof IServer) {
             ITeiidResourceNode node = TeiidResourceNode.getInstance((IServer) parentElement, this);
+            node.setDirty();
             return new Object[] { node };
             
         } else if (parentElement instanceof ITeiidContainerNode) {

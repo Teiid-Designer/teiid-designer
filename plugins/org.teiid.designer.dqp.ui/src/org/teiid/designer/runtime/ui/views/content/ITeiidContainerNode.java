@@ -32,11 +32,4 @@ public interface ITeiidContainerNode<T extends ITeiidContainerNode<?>> extends I
      */
     void load();
 
-    /**
-     * Clears the children of this container. After this method has been
-     * invoked, getChildren() must return null. This method is called when a
-     * refresh is requested.
-     */
-    void clearChildren();
-
 }
