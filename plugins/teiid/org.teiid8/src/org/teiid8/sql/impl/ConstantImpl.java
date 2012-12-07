@@ -14,7 +14,7 @@ import org.teiid.query.sql.symbol.Constant;
 /**
  *
  */
-public class ConstantImpl extends LanguageObjectImpl implements IConstant {
+public class ConstantImpl extends ExpressionImpl implements IConstant {
 
     /**
      * @param constant
@@ -36,11 +36,6 @@ public class ConstantImpl extends LanguageObjectImpl implements IConstant {
     @Override
     public ConstantImpl clone() {
         return new ConstantImpl((Constant) getDelegate().clone());
-    }
-
-    @Override
-    public Class<?> getType() {
-        return getDelegate().getType();
     }
 
     @Override

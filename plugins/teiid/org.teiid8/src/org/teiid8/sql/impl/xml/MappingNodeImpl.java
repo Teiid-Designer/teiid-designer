@@ -130,4 +130,31 @@ public class MappingNodeImpl implements IMappingNode {
         
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public String toString() {
+        return mappingNode.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.mappingNode == null) ? 0 : this.mappingNode.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        MappingNodeImpl other = (MappingNodeImpl)obj;
+        if (this.mappingNode == null) {
+            if (other.mappingNode != null) return false;
+        } else if (!this.mappingNode.equals(other.mappingNode)) return false;
+        return true;
+    }
+    
+    
 }

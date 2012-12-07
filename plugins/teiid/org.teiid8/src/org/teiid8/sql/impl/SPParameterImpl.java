@@ -89,4 +89,29 @@ public class SPParameterImpl implements ISPParameter {
     public void setMetadataID(Object object) {
         getDelegate().setMetadataID(object);
     }
+    
+    @Override
+    public String toString() {
+        return parameter.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.parameter == null) ? 0 : this.parameter.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        SPParameterImpl other = (SPParameterImpl)obj;
+        if (this.parameter == null) {
+            if (other.parameter != null) return false;
+        } else if (!this.parameter.equals(other.parameter)) return false;
+        return true;
+    }
 }

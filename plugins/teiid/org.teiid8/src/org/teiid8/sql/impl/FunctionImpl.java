@@ -18,7 +18,7 @@ import org.teiid.query.sql.symbol.Function;
 /**
  *
  */
-public class FunctionImpl extends LanguageObjectImpl implements IFunction {
+public class FunctionImpl extends ExpressionImpl implements IFunction {
 
     /**
      * @param function
@@ -42,11 +42,6 @@ public class FunctionImpl extends LanguageObjectImpl implements IFunction {
         return new FunctionImpl((Function) getDelegate().clone());
     }
 
-    @Override
-    public Class<?> getType() {
-        return getDelegate().getType();
-    }
-    
     @Override
     public void setType(Class<?> type) {
         getDelegate().setType(type);

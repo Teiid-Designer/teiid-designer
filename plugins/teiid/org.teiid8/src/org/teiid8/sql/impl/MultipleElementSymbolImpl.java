@@ -16,7 +16,7 @@ import org.teiid.query.sql.symbol.MultipleElementSymbol;
 /**
  *
  */
-public class MultipleElementSymbolImpl extends LanguageObjectImpl implements IMultipleElementSymbol {
+public class MultipleElementSymbolImpl extends ExpressionImpl implements IMultipleElementSymbol {
 
     /**
      * @param multipleElementSymbol
@@ -38,11 +38,6 @@ public class MultipleElementSymbolImpl extends LanguageObjectImpl implements IMu
     @Override
     public MultipleElementSymbolImpl clone() {
         return new MultipleElementSymbolImpl((MultipleElementSymbol) getDelegate().clone());
-    }
-
-    @Override
-    public Class<?> getType() {
-        return getDelegate().getType();
     }
 
     @Override

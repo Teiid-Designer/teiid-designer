@@ -20,6 +20,7 @@ import org.teiid.designer.runtime.spi.HostProvider;
 import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 /**
  * 
@@ -32,6 +33,7 @@ public class ServerTest {
     private static final ISecureStorageProvider SECURE_STORAGE_PROVIDER = new DefaultStorageProvider();
     private static final boolean SECURE = true;
 
+    private ITeiidServerVersion serverVersion;
     private ITeiidAdminInfo adminInfo;
     private ITeiidJdbcInfo jdbcInfo;
     private EventManager eventMgr;
@@ -40,32 +42,38 @@ public class ServerTest {
 
     @Before
     public void beforeEach() {
+        this.serverVersion = mock(ITeiidServerVersion.class);
         this.adminInfo = mock(ITeiidAdminInfo.class);
         this.jdbcInfo = mock(ITeiidJdbcInfo.class);
         this.eventMgr = mock(EventManager.class);
         this.parentServer = mock(IServer.class);
         
-        this.teiidServer = new TeiidServer(null, adminInfo, jdbcInfo, eventMgr, parentServer);
+        this.teiidServer = new TeiidServer(serverVersion, adminInfo, jdbcInfo, eventMgr, parentServer);
     }
 
     @Test(expected = IllegalArgumentException.class)
+    public void shouldNotCreateServerWithNullServerVersion() {
+        new TeiidServer(null, this.adminInfo, this.jdbcInfo, this.eventMgr, this.parentServer);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotCreateServerWithNullAdminInfo() {
-        new TeiidServer(null, null, this.jdbcInfo, this.eventMgr, this.parentServer);
+        new TeiidServer(serverVersion, null, this.jdbcInfo, this.eventMgr, this.parentServer);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotCreateServerWithNullJdbcInfo() {
-        new TeiidServer(null, this.adminInfo, null, this.eventMgr, this.parentServer);
+        new TeiidServer(serverVersion, this.adminInfo, null, this.eventMgr, this.parentServer);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotCreateServerWithNullEventManager() {
-        new TeiidServer(null, this.adminInfo, this.jdbcInfo, null, this.parentServer);
+        new TeiidServer(serverVersion, this.adminInfo, this.jdbcInfo, null, this.parentServer);
     }
     
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotCreateServerWithNullParentServer() {
-        new TeiidServer(null, this.adminInfo, this.jdbcInfo, this.eventMgr, null);
+        new TeiidServer(serverVersion, this.adminInfo, this.jdbcInfo, this.eventMgr, null);
     }
 
     @Test
@@ -104,11 +112,11 @@ public class ServerTest {
 
     @Test
     public void shouldBeEqualsWhenAllPropertiesAreTheSame() {
-        ITeiidServer server1 = new TeiidServer(null,
+        ITeiidServer server1 = new TeiidServer(serverVersion,
                                     new TeiidAdminInfo(PORT, USER, SECURE_STORAGE_PROVIDER, PSWD, SECURE),
                                     new TeiidJdbcInfo(PORT, USER, SECURE_STORAGE_PROVIDER, PSWD, SECURE),
                                     this.eventMgr, this.parentServer);
-        ITeiidServer server2 = new TeiidServer(null,
+        ITeiidServer server2 = new TeiidServer(serverVersion,
                                     new TeiidAdminInfo(PORT, USER, SECURE_STORAGE_PROVIDER, PSWD, SECURE),
                                     new TeiidJdbcInfo(PORT, USER, SECURE_STORAGE_PROVIDER, PSWD, SECURE),
                                     this.eventMgr, this.parentServer);

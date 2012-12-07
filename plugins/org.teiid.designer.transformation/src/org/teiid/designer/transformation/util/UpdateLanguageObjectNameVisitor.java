@@ -17,6 +17,7 @@ import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;
 import org.teiid.designer.query.AbstractLanguageVisitor;
 import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.query.sql.symbol.ISymbol;
@@ -25,7 +26,7 @@ import org.teiid.designer.query.sql.symbol.ISymbol;
 /**
  * This visitor update the language objects in the Command being visited by replacing
  * the names of language objects which point to the old EObjects in the map with
- * the names of the coressponding new objects.   
+ * the names of the corresponding new objects.   
  * @since 8.0
  */
 public class UpdateLanguageObjectNameVisitor extends AbstractLanguageVisitor {
@@ -35,9 +36,10 @@ public class UpdateLanguageObjectNameVisitor extends AbstractLanguageVisitor {
 
     /** 
      * UpdateLanguageObjectNameVisitor
-     * @param Map of old EObjects to the new EObjects, references to old EObjects
+     * 
+     * @param oldToNewObjects Map of old EObjects to the new EObjects, references to old EObjects
      * in the query need to be replaced with new EObjects
-     * @since 4.2
+     *
      */
     public UpdateLanguageObjectNameVisitor(final Map oldToNewObjects) {
         this.oldToNewObjects = oldToNewObjects;
@@ -48,34 +50,33 @@ public class UpdateLanguageObjectNameVisitor extends AbstractLanguageVisitor {
      * @since 4.2
      */
     @Override
-    public void visit(IElementSymbol obj) {
-        String fullName = obj.getShortName();
-        if (obj.getGroupSymbol() != null) {
-            fullName = obj.getGroupSymbol().getDefinition() + ISymbol.SEPARATOR + fullName;
-            visit(obj.getGroupSymbol());
+    public void visit(ILanguageObject obj) {
+
+        if (obj instanceof IElementSymbol) {
+            IElementSymbol elementSymbol = (IElementSymbol) obj;
+            String fullName = elementSymbol.getShortName();
+            if (elementSymbol.getGroupSymbol() != null) {
+                fullName = elementSymbol.getGroupSymbol().getDefinition() + ISymbol.SEPARATOR + fullName;
+                visit(elementSymbol.getGroupSymbol());
+            }
+
+            String newName = getNewName(fullName);
+            if (newName != null) {
+                IQueryService queryService = ModelerCore.getTeiidQueryService();
+                elementSymbol.setShortName(queryService.getSymbolShortName(newName));
+            }
         } 
-        
-        String newName = getNewName(fullName);
-        if(newName != null) {
-            IQueryService queryService = ModelerCore.getTeiidQueryService();
-            obj.setShortName(queryService.getSymbolShortName(newName));
-        }
-    }
-    
-    /** 
-     * @see org.teiid.query.sql.LanguageVisitor#visit(org.teiid.query.sql.symbol.GroupSymbol)
-     * @since 4.2
-     */
-    @Override
-    public void visit(IGroupSymbol obj) {
-        String fullName = obj.getDefinition();
-        
-        String newName = getNewName(fullName);
-        if(newName != null) {
-            if (obj.getDefinition() == null) {
-                obj.setName(newName);
-            } else {
-                obj.setDefinition(newName);                
+        else if (obj instanceof IGroupSymbol) {
+            IGroupSymbol groupSymbol = (IGroupSymbol) obj;
+            String fullName = groupSymbol.getDefinition();
+
+            String newName = getNewName(fullName);
+            if (newName != null) {
+                if (groupSymbol.getDefinition() == null) {
+                    groupSymbol.setName(newName);
+                } else {
+                    groupSymbol.setDefinition(newName);
+                }
             }
         }
     }
@@ -117,6 +118,6 @@ public class UpdateLanguageObjectNameVisitor extends AbstractLanguageVisitor {
         // look up new name and update symbol name
         String newName = (String) this.oldToNewNames.get(fullName.toUpperCase());
         return newName;
-    }    
+    }
 
 }

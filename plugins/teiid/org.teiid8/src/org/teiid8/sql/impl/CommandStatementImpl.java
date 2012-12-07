@@ -8,7 +8,9 @@
 package org.teiid8.sql.impl;
 
 import org.teiid.designer.query.sql.ILanguageVisitor;
+import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.proc.ICommandStatement;
+import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.proc.CommandStatement;
 
 /**
@@ -36,5 +38,16 @@ public class CommandStatementImpl extends StatementImpl implements ICommandState
     @Override
     public CommandStatementImpl clone() {
         return new CommandStatementImpl((CommandStatement) getDelegate().clone());
+    }
+
+    @Override
+    public ICommand getCommand() {
+        return getFactory().convert(getDelegate().getCommand());
+    }
+
+    @Override
+    public void setCommand(ICommand command) {
+        Command commandImpl = getFactory().convert(command);
+        getDelegate().setCommand(commandImpl);
     }
 }

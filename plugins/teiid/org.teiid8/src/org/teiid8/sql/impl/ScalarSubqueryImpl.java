@@ -16,7 +16,7 @@ import org.teiid.query.sql.symbol.ScalarSubquery;
 /**
  *
  */
-public class ScalarSubqueryImpl extends LanguageObjectImpl implements IScalarSubquery {
+public class ScalarSubqueryImpl extends ExpressionImpl implements IScalarSubquery {
 
     /**
      * @param scalarSubquery
@@ -38,11 +38,6 @@ public class ScalarSubqueryImpl extends LanguageObjectImpl implements IScalarSub
     @Override
     public ScalarSubqueryImpl clone() {
         return new ScalarSubqueryImpl((ScalarSubquery) getDelegate().clone());
-    }
-
-    @Override
-    public Class<?> getType() {
-        return getDelegate().getType();
     }
 
     @Override

@@ -15,7 +15,7 @@ import org.teiid.query.sql.symbol.Reference;
 /**
  *
  */
-public class ReferenceImpl extends LanguageObjectImpl implements IReference {
+public class ReferenceImpl extends ExpressionImpl implements IReference {
 
     /**
      * @param reference
@@ -37,11 +37,6 @@ public class ReferenceImpl extends LanguageObjectImpl implements IReference {
     @Override
     public ReferenceImpl clone() {
         return new ReferenceImpl((Reference) getDelegate().clone());
-    }
-
-    @Override
-    public Class<?> getType() {
-        return getDelegate().getType();
     }
 
     @Override

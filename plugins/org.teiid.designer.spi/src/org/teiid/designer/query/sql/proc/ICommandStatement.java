@@ -7,9 +7,11 @@
 */
 package org.teiid.designer.query.sql.proc;
 
+import org.teiid.designer.query.sql.lang.ISubqueryContainer;
+
 /**
  *
  */
-public interface ICommandStatement extends IStatement {
+public interface ICommandStatement extends IStatement, ISubqueryContainer {
 
 }

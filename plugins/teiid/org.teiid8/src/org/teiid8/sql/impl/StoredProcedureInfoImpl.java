@@ -21,15 +21,16 @@ public class StoredProcedureInfoImpl implements IStoredProcedureInfo {
 
     private final StoredProcedureInfo storedProcedureInfo;
     
-    private final SyntaxFactory factory = new SyntaxFactory();
-    
     /**
-     * 
+     * @param storedProcedureInfo 
      */
     public StoredProcedureInfoImpl(StoredProcedureInfo storedProcedureInfo) {
         this.storedProcedureInfo = storedProcedureInfo;
     }
 
+    /**
+     * @return the internal delegate
+     */
     public StoredProcedureInfo getDelegate() {
         return storedProcedureInfo;
     }
@@ -89,6 +90,8 @@ public class StoredProcedureInfoImpl implements IStoredProcedureInfo {
 
     @Override
     public void addParameter(ISPParameter parameter) {
+        SPParameterImpl dParameter = (SPParameterImpl) parameter;
+        getDelegate().addParameter(dParameter.getDelegate());
     }
 
     @Override
@@ -111,4 +114,32 @@ public class StoredProcedureInfoImpl implements IStoredProcedureInfo {
         getDelegate().setUpdateCount(updateCount);
     }
 
+    @Override
+    public String toString() {
+        return storedProcedureInfo.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.storedProcedureInfo == null) ? 0 : this.storedProcedureInfo.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        StoredProcedureInfoImpl other = (StoredProcedureInfoImpl)obj;
+        if (this.storedProcedureInfo == null) {
+            if (other.storedProcedureInfo != null) return false;
+        } else if (!this.storedProcedureInfo.equals(other.storedProcedureInfo)) return false;
+        return true;
+    }
+    
+    
+
+    
 }

@@ -35,6 +35,14 @@ public class FunctionLibraryImpl implements IFunctionLibrary {
      * Create new default instance
      */
     public FunctionLibraryImpl() {
+        /*
+         * System function manager needs this classloader since it uses reflection to instantiate classes, 
+         * such as FunctionMethods. The default classloader is taken from the thread, which in turn takes
+         * a random plugin. Since no plugin depends on this plugin, ClassNotFound exceptions result.
+         * 
+         * So set the class loader to the one belonging to this plugin.
+         */
+        systemFunctionManager.setClassloader(getClass().getClassLoader());
         functionLibrary = new FunctionLibrary(systemFunctionManager.getSystemFunctions(), new FunctionTree[0]);
     }
 

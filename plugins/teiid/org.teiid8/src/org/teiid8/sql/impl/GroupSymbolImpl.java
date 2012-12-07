@@ -7,8 +7,10 @@
 */
 package org.teiid8.sql.impl;
 
+import org.teiid.designer.query.metadata.IMetadataID;
 import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
+import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
@@ -60,11 +62,21 @@ public class GroupSymbolImpl extends SymbolImpl implements IGroupSymbol {
 
     @Override
     public Object getMetadataID() {
-        return getDelegate().getMetadataID();
+        Object metadataID = getDelegate().getMetadataID();
+        if (metadataID instanceof TempMetadataID) {
+            return new MetadataIDImpl((TempMetadataID) metadataID);
+        }
+        
+        return metadataID;
     }
 
     @Override
     public void setMetadataID(Object metadataID) {
+        if (metadataID instanceof IMetadataID) {
+            MetadataIDImpl metadataIDImpl = (MetadataIDImpl) metadataID;
+            metadataID = metadataIDImpl.getDelegate();
+        }
+        
         getDelegate().setMetadataID(metadataID);
     }
 

@@ -2873,7 +2873,7 @@ public class TransformationSqlHelper implements ISQLConstants {
         if (symbol != null) {
             Object groupObj = symbol.getMetadataID();
             if (groupObj != null) {
-                if (symbol.isProcedure()) {
+                if (symbol.isProcedure() && groupObj instanceof IMetadataID) {
                     IMetadataID tid = (IMetadataID)groupObj;
                     groupObj = tid.getOriginalMetadataID();
                 }

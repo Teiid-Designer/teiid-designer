@@ -7,9 +7,13 @@
  */
 package org.teiid8.sql.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.query.sql.lang.ISetCriteria;
 import org.teiid.query.sql.lang.SetCriteria;
 import org.teiid.query.sql.symbol.Expression;
@@ -59,12 +63,30 @@ public class SetCriteriaImpl extends PredicateCriteriaImpl implements ISetCriter
 
     @Override
     public Collection<Object> getValues() {
-        return getDelegate().getValues();
+        Collection values = getDelegate().getValues();
+        if (values == null)
+            return Collections.emptyList();
+        else
+            return values;
     }
 
     @Override
     public void setValues(Collection<Object> values) {
-        getDelegate().setValues(values);
+        if (values == null || values.isEmpty()) {
+            getDelegate().setValues(Collections.emptyList());
+            return;
+        }
+        
+        List<Object> unwrapValues = new ArrayList<Object>();
+        for (Object v : values) {
+            if (v instanceof ILanguageObject) {
+                unwrapValues.add(getFactory().convert((ILanguageObject) v));
+            } else {
+                unwrapValues.add(v);
+            }
+        }
+        
+        getDelegate().setValues(unwrapValues);
     }
 
     @Override

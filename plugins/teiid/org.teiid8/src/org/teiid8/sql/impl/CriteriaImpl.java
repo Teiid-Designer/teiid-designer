@@ -13,7 +13,7 @@ import org.teiid.query.sql.lang.Criteria;
 /**
  *
  */
-public abstract class CriteriaImpl extends LanguageObjectImpl implements ICriteria {
+public abstract class CriteriaImpl extends ExpressionImpl implements ICriteria {
 
     /**
      * @param criteria
@@ -25,10 +25,5 @@ public abstract class CriteriaImpl extends LanguageObjectImpl implements ICriter
     @Override
     public Criteria getDelegate() {
         return (Criteria) delegate;
-    }
-
-    @Override
-    public Class<?> getType() {
-        return getDelegate().getType();
     }
 }

@@ -103,7 +103,7 @@ public class QueryImpl extends QueryCommandImpl implements IQuery {
 
     @Override
     public ICriteria getCriteria() {
-        return getFactory().convert(getDelegate().getSelect());
+        return getFactory().convert(getDelegate().getCriteria());
     }
 
     @Override

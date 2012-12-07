@@ -71,4 +71,31 @@ public class MappingDocumentImpl implements IMappingDocument {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return this.document.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.document == null) ? 0 : this.document.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        MappingDocumentImpl other = (MappingDocumentImpl)obj;
+        if (this.document == null) {
+            if (other.document != null) return false;
+        } else if (!this.document.equals(other.document)) return false;
+        return true;
+    }
+    
+    
+
 }

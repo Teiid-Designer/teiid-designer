@@ -7,13 +7,14 @@
 */
 package org.teiid8.sql.impl;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.query.sql.LanguageObject;
 
 /**
  *
  */
-public abstract class LanguageObjectImpl implements ILanguageObject {
+public class LanguageObjectImpl implements ILanguageObject {
 
     protected final LanguageObject delegate;
     
@@ -32,9 +33,56 @@ public abstract class LanguageObjectImpl implements ILanguageObject {
      * 
      * @return language object
      */
-    public abstract LanguageObject getDelegate();
+    public LanguageObject getDelegate() {
+        return delegate;
+    }
     
     @Override
-    public abstract ILanguageObject clone();
+    public ILanguageObject clone() {
+        return new LanguageObjectImpl((LanguageObject) delegate.clone());
+    }
+    
+    @Override
+    public void acceptVisitor(ILanguageVisitor visitor) {
+        visitor.visit(this);
+    }
 
+    @Override
+    public String toString() {
+        return delegate.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.delegate == null) ? 0 : this.delegate.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        
+        if (obj == null)
+            return false;
+        
+        if (getClass() != obj.getClass())
+            return false;
+        
+        LanguageObjectImpl other = (LanguageObjectImpl)obj;
+        
+        if (this.delegate == null) {
+            if (other.delegate != null)
+                return false;
+        } else if (!this.delegate.equals(other.delegate))
+            return false;
+        
+        return true;
+    }
+    
+    
+
+    
 }

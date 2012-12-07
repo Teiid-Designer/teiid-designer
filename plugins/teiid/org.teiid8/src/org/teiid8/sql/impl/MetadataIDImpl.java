@@ -26,6 +26,13 @@ public class MetadataIDImpl implements IMetadataID {
         this.tempMetadataID = tempMetadataID;
     }
 
+    /**
+     * @return delegate
+     */
+    public TempMetadataID getDelegate() {
+        return tempMetadataID;
+    }
+    
     @Override
     public String getID() {
         return tempMetadataID.getID();

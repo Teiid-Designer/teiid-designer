@@ -135,7 +135,17 @@ public class SyntaxFactory implements IQueryFactory {
             Constructor<?> constructor = objectClass.getConstructor(object.getClass());
             return constructor.newInstance(object);
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            
+            // No specific class so try and wrap in a generic expression or language object
+            if (object instanceof Expression) {
+                return new ExpressionImpl((Expression) object);
+            }
+            else if (object instanceof LanguageObject) {
+                return new LanguageObjectImpl((LanguageObject) object);
+            } 
+            else {
+                throw new RuntimeException(ex);
+            }
         }
     }
     
@@ -207,6 +217,9 @@ public class SyntaxFactory implements IQueryFactory {
      * @return the delegate object
      */
     public <T extends LanguageObject> T convert(ILanguageObject languageObject) {
+        if (languageObject == null)
+            return null;
+        
         LanguageObjectImpl languageObjectImpl = (LanguageObjectImpl) languageObject;
         return (T) languageObjectImpl.getDelegate();
     }
@@ -230,6 +243,9 @@ public class SyntaxFactory implements IQueryFactory {
      * @return the getFactory().wrapped expression
      */
     public <T extends ILanguageObject> T convert(Expression expression) {
+        if (expression == null)
+            return null;
+        
         return (T) createExpression(expression);
     }
     
@@ -243,8 +259,10 @@ public class SyntaxFactory implements IQueryFactory {
     public <T extends ILanguageObject, S extends LanguageObject> List<S> unwrap(Collection<T> objects) {
         List<S> languageObjects = new ArrayList<S>();
         
-        for (T languageObject : objects) {
-            languageObjects.add((S) convert(languageObject));
+        if (objects != null) {
+            for (T languageObject : objects) {
+                languageObjects.add((S) convert(languageObject));
+            }
         }
         
         return languageObjects;
@@ -260,8 +278,10 @@ public class SyntaxFactory implements IQueryFactory {
     public <T extends ILanguageObject, S extends LanguageObject> List<T> wrap(Collection<S> delegateList) {
         List<T> wrapList = new ArrayList<T>();
         
-        for (S delegateItem : delegateList) {
-            wrapList.add((T) createLanguageObject(delegateItem));
+        if (delegateList != null) {
+            for (S delegateItem : delegateList) {
+                wrapList.add((T) createLanguageObject(delegateItem));
+            }
         }
         
         return wrapList;
@@ -320,7 +340,13 @@ public class SyntaxFactory implements IQueryFactory {
     @Override
     public IFunction createFunction(String name,
                                     IExpression[] arguments) {
-        List<IExpression> argsList = Arrays.asList(arguments);
+        List<IExpression> argsList;
+        if (arguments == null) {
+            argsList = new ArrayList<IExpression>();
+        } else {
+            argsList = Arrays.asList(arguments);
+        }
+        
         List<Expression> dargs = unwrap(argsList);
         Function function = new Function(name, dargs.toArray(new Expression[0]));
         return new FunctionImpl(function);
@@ -444,7 +470,8 @@ public class SyntaxFactory implements IQueryFactory {
 
     @Override
     public IIsNullCriteria createIsNullCriteria(IExpression expression) {
-        return convert(new IsNullCriteria());
+        Expression dExpression = convert(expression);
+        return convert(new IsNullCriteria(dExpression));
     }
 
     @Override
@@ -454,7 +481,8 @@ public class SyntaxFactory implements IQueryFactory {
 
     @Override
     public INotCriteria createNotCriteria(ICriteria criteria) {
-        return convert(new NotCriteria());
+        Criteria dCriteria = convert(criteria);
+        return convert(new NotCriteria(dCriteria));
     }
 
     @Override
@@ -510,8 +538,10 @@ public class SyntaxFactory implements IQueryFactory {
     public ICompoundCriteria createCompoundCriteria(LogicalOperator operator,
                                                     ICriteria... criteria) {
         List<Criteria> criteriaList = new ArrayList<Criteria>();
-        for (ICriteria c : criteria) {
-            criteriaList.add((Criteria) convert(c));
+        if (criteria != null) {
+            for (ICriteria c : criteria) {
+                criteriaList.add((Criteria) convert(c));
+            }
         }
         
         return convert(new CompoundCriteria(operator.index(), criteriaList));
