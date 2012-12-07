@@ -57,7 +57,9 @@ public class TeiidResourceNodeAdapterFactory implements IAdapterFactory {
     private TeiidServerContainerNode adaptToTeiidServerContainerNode(ITeiidResourceNode teiidResourceNode) {
         if (teiidResourceNode.hasChildren()) {
             List<? extends ITeiidContentNode<?>> children = teiidResourceNode.getChildren();
-            return (TeiidServerContainerNode) children.get(0);
+            ITeiidContentNode<?> child = children.get(0);
+            if (child instanceof TeiidServerContainerNode)
+                return (TeiidServerContainerNode) child;
         }
         
         return null;
