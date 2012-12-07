@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,6 +64,9 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
     private static String PLUGIN_ID = "org.teiid.8-2";  //$NON-NLS-1$
     
+    /**
+     * Test VDB model
+     */
     public static final String TEST_VDB = "<vdb name=\"ping\" version=\"1\">" + //$NON-NLS-1$
     "<model visible=\"true\" name=\"Foo\" type=\"PHYSICAL\" path=\"/dummy/Foo\">" + //$NON-NLS-1$
     "<source name=\"s\" translator-name=\"loopback\"/>" + //$NON-NLS-1$
@@ -194,9 +198,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createDeployVDBEvent(vdb.getName()));
     }
     
-    /**
-     * Closes the admin and re-sets the cached items from the server
-     */
+    @Override
     public void disconnect() {
     	// 
     	this.admin.close();
@@ -706,6 +708,16 @@ public class ExecutionAdmin implements IExecutionAdmin {
     @Override
     public String getAdminDriverPath() {
         return Admin.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+    }
+    
+    @Override
+    public Driver getTeiidDriver(String driverClass) throws Exception {
+        Class<?> klazz = getClass().getClassLoader().loadClass(driverClass);
+        Object driver = klazz.newInstance();
+        if (driver instanceof Driver)
+            return (Driver) driver;
+        
+        throw new Exception(NLS.bind(Messages.cannotLoadDriverClass, driverClass));
     }
     
     /**

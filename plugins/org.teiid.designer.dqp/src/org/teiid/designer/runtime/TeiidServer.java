@@ -9,12 +9,11 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
+import java.sql.Driver;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.WeakHashMap;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -114,8 +113,6 @@ public class TeiidServer implements ITeiidServer {
     // ===========================================================================================================================
     // Constructors
     // ===========================================================================================================================
-
-    private static Map<String, TeiidServer> servers = new WeakHashMap();
     
     /**
      * Constructs on new <code>Server</code>.
@@ -608,6 +605,12 @@ public class TeiidServer implements ITeiidServer {
     public String getAdminDriverPath() throws Exception {
         connect();
         return admin.getAdminDriverPath();
+    }
+    
+    @Override
+    public Driver getTeiidDriver(String driverClass) throws Exception {
+        connect();
+        return admin.getTeiidDriver(driverClass);
     }
     
     @Override

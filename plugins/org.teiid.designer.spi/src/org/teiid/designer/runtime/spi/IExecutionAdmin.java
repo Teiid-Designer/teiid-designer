@@ -7,6 +7,7 @@
 */
 package org.teiid.designer.runtime.spi;
 
+import java.sql.Driver;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
@@ -212,4 +213,15 @@ public interface IExecutionAdmin {
       * @throws Exception 
       */
      String getAdminDriverPath() throws Exception;
+     
+     /**
+      * Get the teiid server driver for the given class
+      * 
+     * @param driverClass 
+      * 
+      * @return instance of {@link Driver}
+      * 
+     * @throws Exception 
+      */
+     Driver getTeiidDriver(String driverClass) throws Exception;
 }

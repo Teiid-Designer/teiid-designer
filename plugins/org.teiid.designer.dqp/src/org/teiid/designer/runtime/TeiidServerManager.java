@@ -891,7 +891,7 @@ public final class TeiidServerManager implements EventManager {
         ITeiidServer oldDefaultServer = this.defaultServer;
         this.defaultServer = teiidServer;
         
-        ModelerCore.setTeiidServerVersion(defaultServer.getServerVersion());
+        ModelerCore.setDefaultServer(defaultServer);
 
         if (notify) {
             notifyListeners(ExecutionConfigurationEvent.createSetDefaultServerEvent(oldDefaultServer, this.defaultServer));

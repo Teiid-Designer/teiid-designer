@@ -13,6 +13,8 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.JDBCConnection;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 
 /**
  * @since 8.0
@@ -73,17 +75,15 @@ public class TeiidJDBCConnection extends JDBCConnection {
             }
         }
         
-        Driver jdbcDriver = null;
-        try {
-            jdbcDriver = (Driver)cl.loadClass(driverClass).newInstance();
-        }
-        catch (Exception ex) {}
+        ITeiidServer defaultServer = ModelerCore.getDefaultServer();
         
-        if (jdbcDriver == null) {
-            jdbcDriver = (Driver)this.getClass().getClassLoader().loadClass(driverClass).newInstance();
+        Driver jdbcDriver = defaultServer.getTeiidDriver(driverClass);
+        
+        if (jdbcDriver != null) {
+            return jdbcDriver.connect(connectURL, connectionProps);
         }
         
-        return jdbcDriver.connect(connectURL, connectionProps); // return super.createConnection(cl);
+        throw new Exception("Cannot find Teiid Driver"); //$NON-NLS-1$
     }
 
 }

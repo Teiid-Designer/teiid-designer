@@ -96,6 +96,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.core.workspace.ModelWorkspaceManagerSaveParticipant;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
@@ -341,7 +342,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     // rules.
     private static boolean IGNORE_VALIDATION_PREFERNCES_ON_BUILD = false;
 
-    private static ITeiidServerVersion teiidServerVersion = null;
+    private static ITeiidServer defaultTeiidServer = null;
 
     private static Set<ITeiidServerVersionListener> teiidServerVersionListeners;
 
@@ -2074,6 +2075,15 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         String PRODUCER_NAME = getProducerName();
         String VERSION = getVersion();
     }
+    
+    /**
+     * Get the targeted teiid server
+     * 
+     * @return teiid server
+     */
+    public static ITeiidServer getDefaultServer() {
+        return defaultTeiidServer;
+    }
 
     /**
      * Get the targeted teiid server version
@@ -2081,11 +2091,11 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return teiid server version
      */
     public static ITeiidServerVersion getTeiidServerVersion() {
-        if (teiidServerVersion == null) {
+        if (defaultTeiidServer == null) {
             return TeiidServerVersion.DEFAULT_TEIID_8_SERVER;
         }
         
-        return teiidServerVersion;
+        return defaultTeiidServer.getServerVersion();
     }
     
     /**
@@ -2117,23 +2127,23 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     /**
      * Set the version of the targeted teiid server
      * 
-     * @param serverVersion
+     * @param defaultServer
      */
-    public static void setTeiidServerVersion(ITeiidServerVersion serverVersion) {
-        teiidServerVersion = serverVersion;
+    public static void setDefaultServer(ITeiidServer defaultServer) {
+        defaultTeiidServer = defaultServer;
         
         if (teiidServerVersionListeners == null)
             return;
         
         for (ITeiidServerVersionListener listener : teiidServerVersionListeners) {
-            listener.versionChanged(serverVersion);
+            listener.versionChanged(defaultServer.getServerVersion());
         }
     }
     
     /**
      * Get the teiid data type manager service for the
      * targeted teiid server. The targeted teiid server
-     * can be changed using {@link #setTeiidServerVersion(ITeiidServerVersion)}
+     * can be changed using {@link #setDefaultServer(ITeiidServerVersion)}
      *  
      * @return
      */
@@ -2148,7 +2158,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     /**
      * Get the teiid query service for the
      * targeted teiid server. The targeted teiid server
-     * can be changed using {@link #setTeiidServerVersion(ITeiidServerVersion)}
+     * can be changed using {@link #setDefaultServer(ITeiidServerVersion)}
      * 
      * @return
      */
