@@ -1000,7 +1000,7 @@ class ModelExtensionUtils {
     }
 
     private interface PropertyTagKeys {
-        String ADVANCED = "advance"; //$NON-NLS-1$
+        String ADVANCED = "advanced"; //$NON-NLS-1$
         String ALLOWED_VALUES = "allowedValues"; //$NON-NLS-1$
         String DEFAULT_VALUE = "defaultValue"; //$NON-NLS-1$
         String DESCRIPTIONS = "description"; //$NON-NLS-1$

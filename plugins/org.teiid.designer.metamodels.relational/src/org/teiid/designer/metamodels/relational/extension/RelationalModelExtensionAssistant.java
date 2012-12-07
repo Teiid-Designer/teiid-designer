@@ -42,7 +42,9 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
         DETERMINISTIC(getPropertyId("deterministic")), //$NON-NLS-1$
         NATIVE_QUERY(getPropertyId("native-query")), //$NON-NLS-1$
         NON_PREPARED(getPropertyId("non-prepared")), //$NON-NLS-1$
-        USES_DISTINCT_ROWS(getPropertyId("uses-distinct-rows")); //$NON-NLS-1$
+        USES_DISTINCT_ROWS(getPropertyId("uses-distinct-rows")), //$NON-NLS-1$
+        VARARGS(getPropertyId("varargs")), //$NON-NLS-1$
+        NULL_ON_NULL(getPropertyId("null-on-null")); //$NON-NLS-1$
 
         public static boolean same(final PropertyName propName,
                                    final String value) {
@@ -174,6 +176,18 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
                 // EObject should not have the requested property definition
                 return null;
             }
+            
+            if( PropertyName.same(PropertyName.VARARGS, propId)
+            	|| PropertyName.same(PropertyName.NULL_ON_NULL, propId)) {
+                if ((modelObject instanceof Procedure) && ModelUtil.isPhysical(modelObject)) {
+                    if (((Procedure)modelObject).isFunction()) {
+                        return propDefn;
+                    }
+                    removeProperty(modelObject, PropertyName.VARARGS.toString());
+                    removeProperty(modelObject, PropertyName.NULL_ON_NULL.toString());
+                }
+                return null;
+        	}
 
             return propDefn;
         }

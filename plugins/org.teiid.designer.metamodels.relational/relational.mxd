@@ -5,7 +5,7 @@
     <p:modelType>VIRTUAL</p:modelType>
     <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ProcedureImpl">
         <p:property advanced="false" defaultValue="false" index="true" masked="false" name="deterministic" required="false" type="boolean">
-            <p:description locale="en">Specifies that the source function will always returns the same result for a specific input value</p:description>
+            <p:description locale="en">Specifies that the source function will always return the same result for a specific input value</p:description>
             <p:display locale="en">Deterministic</p:display>
         </p:property>
         <p:property advanced="false" defaultValue="false" index="true" masked="false" name="non-prepared" required="false" type="boolean">
@@ -28,6 +28,14 @@
         </p:property>
         <p:property advanced="false" defaultValue="false" index="true" masked="false" name="decomposable" required="false" type="boolean">
             <p:display locale="en">Decomposable</p:display>
+        </p:property>
+        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="varargs" required="false" type="boolean">
+            <p:description locale="en_US">Indicates that the last arg may be repeated a variable number of times.</p:description>
+            <p:display locale="en_US">Variable Arguments</p:display>
+        </p:property>
+        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="null-on-null" required="false" type="boolean">
+            <p:description locale="en_US">indicates that the function will return null.</p:description>
+            <p:display locale="en_US">Returns null on null</p:display>
         </p:property>
     </p:extendedMetaclass>
     <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.BaseTableImpl">

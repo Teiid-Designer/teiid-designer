@@ -21,5 +21,13 @@
         <p:property advanced="false" defaultValue="false" index="true" masked="false" name="decomposable" required="false" type="boolean">
             <p:display locale="en">Decomposable</p:display>
         </p:property>
+        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="varargs" required="false" type="boolean">
+            <p:description locale="en_US">Indicates that the last arg may be repeated a variable number of times.</p:description>
+            <p:display locale="en_US">Variable Arguments</p:display>
+        </p:property>
+        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="null-on-null" required="false" type="boolean">
+            <p:description locale="en_US">indicates that the function will return null.</p:description>
+            <p:display locale="en_US">Returns null when null</p:display>
+        </p:property>
     </p:extendedMetaclass>
 </modelExtension>

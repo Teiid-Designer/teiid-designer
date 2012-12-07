@@ -7,11 +7,16 @@
  */
 package org.teiid.designer.metamodels.function.extension;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.function.FunctionPackage;
 import org.teiid.designer.metamodels.function.ScalarFunction;
 
 /**
@@ -31,7 +36,9 @@ public class FunctionModelExtensionAssistant extends EmfModelObjectExtensionAssi
         ALLOWS_DISTINCT(getPropertyId("allows-distinct")), //$NON-NLS-1$
         ANALYTIC(getPropertyId("analytic")), //$NON-NLS-1$
         DECOMPOSABLE(getPropertyId("decomposable")), //$NON-NLS-1$
-        USES_DISTINCT_ROWS(getPropertyId("uses-distinct-rows")); //$NON-NLS-1$
+        USES_DISTINCT_ROWS(getPropertyId("uses-distinct-rows")), //$NON-NLS-1$
+        VARARGS(getPropertyId("varargs")), //$NON-NLS-1$
+        NULL_ON_NULL(getPropertyId("null-on-null")); //$NON-NLS-1$
 
         public static boolean same(final PropertyName propName,
                                    final String value) {
@@ -52,6 +59,24 @@ public class FunctionModelExtensionAssistant extends EmfModelObjectExtensionAssi
         @Override
         public String toString() {
             return this.propName;
+        }
+    }
+    
+    /**
+     * Saves the relational MED to a model if necessary.
+     * @param model the model being checked (can be <code>null</code>)
+     * @throws Exception if there is an error applying MED
+     */
+    public void applyMedIfNecessary(final IResource model) throws Exception {
+        if (model != null) {
+            final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(model);
+
+            if (modelResource != null && !modelResource.isReadOnly()) {
+                if ((ModelType.FUNCTION_LITERAL == modelResource.getModelType())
+                    && FunctionPackage.eNS_URI.equals(modelResource.getPrimaryMetamodelUri()) && !supportsMyNamespace(model)) {
+                    saveModelExtensionDefinition(model);
+                }
+            }
         }
     }
 

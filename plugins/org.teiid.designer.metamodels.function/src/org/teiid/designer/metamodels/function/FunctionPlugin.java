@@ -13,6 +13,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.emf.common.CommonPlugin;
@@ -20,8 +22,16 @@ import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.osgi.framework.BundleContext;
+import org.teiid.api.exception.query.FunctionExecutionException;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
+import org.teiid.designer.core.workspace.ModelWorkspaceNotification;
+import org.teiid.designer.core.workspace.ModelWorkspaceNotificationAdapter;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+import org.teiid.designer.metamodels.function.extension.FunctionModelExtensionAssistant;
+import org.teiid.designer.metamodels.function.extension.FunctionModelExtensionConstants;
 
 
 /**
@@ -111,6 +121,8 @@ public class FunctionPlugin extends Plugin {
     }
 
     static FunctionPlugin INSTANCE = null;
+    
+    private ModelWorkspaceNotificationAdapter workspaceListener = null;
 
     /**
      * Construct an instance of MetaMatrixPlugin.
@@ -127,5 +139,67 @@ public class FunctionPlugin extends Plugin {
         super.start(context);
         INSTANCE = this;
         ((PluginUtilImpl)Util).initializePlatformLogger(this); // This must be called to initialize the platform logger!
+    
+        // register to receive workspace model events
+        this.workspaceListener = new ModelWorkspaceNotificationAdapter() {
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.core.workspace.ModelWorkspaceNotificationAdapter#notifyReloaded(org.teiid.designer.core.workspace.ModelWorkspaceNotification)
+             */
+            @Override
+            public void notifyReloaded(ModelWorkspaceNotification notification) {
+                handleNewModelEvent(notification);
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.core.workspace.ModelWorkspaceNotificationAdapter#notifyAdd(org.teiid.designer.core.workspace.ModelWorkspaceNotification)
+             */
+            @Override
+            public void notifyAdd(ModelWorkspaceNotification notification) {
+                handleNewModelEvent(notification);
+            }
+        };
+        ModelWorkspaceManager.getModelWorkspaceManager().addNotificationListener(this.workspaceListener);
+
+    }
+    
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+     */
+    @Override
+    public void stop(BundleContext context) throws Exception {
+        // unregister workspace listener
+        if (this.workspaceListener != null) {
+            ModelWorkspaceManager.getModelWorkspaceManager().removeNotificationListener(this.workspaceListener);
+        }
+
+        super.stop(context);
+    }
+    
+    /**
+     * @param notification the notification being handled (never <code>null</code>)
+     */
+    void handleNewModelEvent(final ModelWorkspaceNotification notification) {
+        if (notification.isPostChange()) {
+            final IResource model = (IResource)notification.getNotifier();
+
+            if (model != null) {
+                final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+                final String prefix = FunctionModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
+                final FunctionModelExtensionAssistant assistant = (FunctionModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
+
+                try {
+                    assistant.applyMedIfNecessary(model);
+                } catch (Exception e) {
+                    Util.log(e);
+                }
+            }
+        }
     }
 }
