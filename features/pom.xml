@@ -13,6 +13,7 @@
 	<version>0.0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
+	  <module>org.teiid.designer.teiid.client.feature</module>
 		<module>org.teiid.designer.feature</module>
 		<module>org.teiid.designer.test.feature</module>
 		<module>org.teiid.designer.runtime.feature</module>

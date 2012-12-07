@@ -13,6 +13,7 @@
 	<version>0.0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
+		<module>teiid</module>
 		<module>net.jcip.annotations</module>
 		<module>net.sf.saxon</module>
 		<module>org.apache.poi</module>
@@ -75,6 +76,7 @@
 		<module>org.teiid.designer.roles.ui</module>
 		<module>org.teiid.designer.schema.tools</module>
 		<module>org.teiid.designer.sdt</module>
+		<module>org.teiid.designer.spi</module>
 		<module>org.teiid.designer.tools.textimport.ui</module>
 		<module>org.teiid.designer.transformation</module>
 		<module>org.teiid.designer.transformation.ui</module>
@@ -91,7 +93,6 @@
 		<module>org.teiid.designer.xsd</module>
 		<module>org.teiid.designer.xsd.ui</module>
 		<module>org.wsdl4j</module>
-		<module>teiid_embedded_query</module>
 	</modules>
 </project>
 	

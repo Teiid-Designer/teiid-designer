@@ -508,9 +508,10 @@
          unpack="false"/>
 
    <plugin
-         id="org.teiid.8-2"
+         id="org.teiid.designer.spi"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

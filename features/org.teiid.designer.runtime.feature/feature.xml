@@ -24,6 +24,10 @@ Including: Connection management, VDB creation and management and Data Preview/V
          version="0.0.0"
          name="Teiid Designer Design-time"/>
 
+   <includes
+         id="org.teiid.designer.teiid.client.feature"
+         version="0.0.0"/>
+
    <requires>
       <import plugin="org.eclipse.core.runtime" version="3.8.0" match="compatible"/>
       <import plugin="org.jdom" version="1.1.1" match="compatible"/>
@@ -121,7 +125,6 @@ Including: Connection management, VDB creation and management and Data Preview/V
       <import feature="org.eclipse.datatools.sqldevtools.schemaobjecteditor.feature" version="1.7.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.datatools.sqldevtools.sqlbuilder.feature" version="1.7.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.datatools.sqltools.doc.user" version="1.7.0" match="greaterOrEqual"/>
-      <import plugin="org.teiid.8-2" version="8.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.relational" version="8.0.0" match="compatible"/>
    </requires>
 
