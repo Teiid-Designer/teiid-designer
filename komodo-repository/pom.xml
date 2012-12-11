@@ -1,0 +1,48 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.teiid.komodo</groupId>
+    <artifactId>komodo</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>komodo-repository</artifactId>
+  <name>Komodo Repository</name>
+  <description>Komodo repository module</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.overlord.sramp</groupId>
+            <artifactId>s-ramp-repository-jcr</artifactId>
+            <version>${s-ramp.version}</version>
+        </dependency>
+
+        <!-- needed to pull in separate test jar -->
+        <dependency>
+            <groupId>org.overlord.sramp</groupId>
+            <artifactId>s-ramp-repository-jcr</artifactId>
+            <version>${s-ramp.version}</version>
+            <classifier>tests</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.log4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+ 
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
