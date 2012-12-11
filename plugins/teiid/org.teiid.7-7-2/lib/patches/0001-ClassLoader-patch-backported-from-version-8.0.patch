@@ -1,0 +1,73 @@
+From cb323beee151e0e803e4c6d876fe8cbdf8234660 Mon Sep 17 00:00:00 2001
+From: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date: Tue, 11 Dec 2012 23:09:21 +0000
+Subject: [PATCH] ClassLoader patch backported from version 8.0
+
+* Allows a classloader to be set on SystemSource, necessary for invoking
+  the function method classes. Designer requires this since the default
+  plugin classloaders have no dependencies on the teiid client plugins.
+---
+ .../query/function/SystemFunctionManager.java      |   11 ++++++++++-
+ .../teiid/query/function/source/SystemSource.java  |   14 ++++++++++++--
+ 2 files changed, 22 insertions(+), 3 deletions(-)
+
+diff --git a/engine/src/main/java/org/teiid/query/function/SystemFunctionManager.java b/engine/src/main/java/org/teiid/query/function/SystemFunctionManager.java
+index 869bd63..24eb2a7 100644
+--- a/engine/src/main/java/org/teiid/query/function/SystemFunctionManager.java
++++ b/engine/src/main/java/org/teiid/query/function/SystemFunctionManager.java
+@@ -34,6 +34,7 @@ public class SystemFunctionManager {
+ 
+ 	private FunctionTree systemFunctionTree;
+ 	private boolean allowEnvFunction = true;
++	private ClassLoader classLoader;
+ 	
+ 	public FunctionTree getSystemFunctions() {
+     	if(systemFunctionTree == null) { 
+@@ -73,5 +74,13 @@ public class SystemFunctionManager {
+ 
+ 	public void setAllowEnvFunction(boolean allowEnvFunction) {
+ 		this.allowEnvFunction = allowEnvFunction;
+-	}    
++	}
++
++	public ClassLoader getClassLoader() {
++	 	return this.classLoader;
++	}
++								    
++	public void setClassloader(ClassLoader classloader) {
++	 	this.classLoader = classloader;
++	}
+ }
+diff --git a/engine/src/main/java/org/teiid/query/function/source/SystemSource.java b/engine/src/main/java/org/teiid/query/function/source/SystemSource.java
+index 31caa6d..18cbeec 100644
+--- a/engine/src/main/java/org/teiid/query/function/source/SystemSource.java
++++ b/engine/src/main/java/org/teiid/query/function/source/SystemSource.java
+@@ -53,6 +53,8 @@ public class SystemSource implements FunctionMetadataSource, FunctionCategoryCon
+     
+     /** Cached list of system function metadata, created in constructor */
+     private List<org.teiid.metadata.FunctionMethod> functions = new ArrayList<org.teiid.metadata.FunctionMethod>();
++
++		private ClassLoader classLoader;
+     
+     /**
+      * Construct a source of system metadata.
+@@ -1102,6 +1104,14 @@ public class SystemSource implements FunctionMetadataSource, FunctionCategoryCon
+      * @throws ClassNotFoundException If class could not be found
+      */
+     public Class<?> getInvocationClass(String className) throws ClassNotFoundException {
+-        return Class.forName(className);    
+-    }
++        return Class.forName(className, true, classLoader==null?Thread.currentThread().getContextClassLoader():classLoader);
++		}
++					     
++		public void setClassLoader(ClassLoader classLoader) {
++		 		this.classLoader = classLoader;
++		}
++												    
++		public ClassLoader getClassLoader() {
++				return classLoader;
++		}
+ }
+-- 
+1.7.7.6
+
