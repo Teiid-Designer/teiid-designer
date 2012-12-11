@@ -205,7 +205,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
      * @return true if the node has at least one expression, false if not.
      */
     public static boolean hasExpression( DisplayNode node ) {
-        if (node.languageObject instanceof IExpression) {
+        if (node.languageObject.isExpression()) {
             return true;
         }
         List nodes = node.getDisplayNodeList();
@@ -289,7 +289,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
      */
     public static int getStartIndexOfNextExpression( DisplayNode node,
                                                      int index ) {
-        if (node.languageObject instanceof IExpression) {
+        if (node.languageObject.isExpression()) {
             if (node.isAnywhereWithin(index)) {
                 return node.getStartIndex();
             }
@@ -319,7 +319,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
     public static int getEndIndexOfPreviousExpression( DisplayNode node,
                                                        int index ) {
         int prevEnd = -1;
-        if (node.languageObject instanceof IExpression) {
+        if (node.languageObject.isExpression()) {
             if (node.isAnywhereWithin(index)) {
                 return node.getEndIndex() + 1;
             }
@@ -889,7 +889,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
                 return node.getExpression();
             }
             return null;
-        } else if (node.languageObject instanceof IExpression && !(node.languageObject instanceof IScalarSubquery)) {
+        } else if (node.languageObject.isExpression() && !(node.languageObject instanceof IScalarSubquery)) {
             return node;
         } else if (node.isInExpression()) {
             return node.getExpression();

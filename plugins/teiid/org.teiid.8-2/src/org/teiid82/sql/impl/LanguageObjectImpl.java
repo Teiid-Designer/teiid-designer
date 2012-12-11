@@ -51,6 +51,16 @@ public class LanguageObjectImpl implements ILanguageObject {
     public String toString() {
         return delegate.toString();
     }
+    
+    @Override
+    public boolean isFunction() {
+        return false;
+    }
+    
+    @Override
+    public boolean isExpression() {
+        return false;
+    }
 
     @Override
     public int hashCode() {

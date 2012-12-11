@@ -136,7 +136,7 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
         if (parent == null) {
             // object is root. can only delete if not undefined
             result = !isUndefined(theLangObj);
-        } else if (parent instanceof IFunction) {
+        } else if (parent.isFunction()) {
             // all function arguments except conversion type constants can be deleted
             if (theLangObj instanceof IConstant) {
                 result = !BuilderUtils.isConversionType((IConstant)theLangObj);
@@ -178,7 +178,7 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
                 refresh(true);
                 newSelection = contentProvider.getRoot();
                 expandToLevel(newSelection, ALL_LEVELS);
-            } else if (parent instanceof IFunction) {
+            } else if (parent.isFunction()) {
                 // set the arg to null in parent
                 int index = contentProvider.getChildIndex(theLangObj);
 
@@ -348,14 +348,14 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
             newSelection = contentProvider.getRoot();
             expandToLevel(newSelection, ALL_LEVELS);
 
-            if (newSelection instanceof IFunction) {
+            if (newSelection instanceof ILanguageObject && ((ILanguageObject) newSelection).isFunction()) {
                 IFunction function = (IFunction)newSelection;
 
                 if (function.getArgs().length > 0) {
                     newSelection = contentProvider.getChildAt(0, function);
                 }
             }
-        } else if (parent instanceof IFunction) {
+        } else if (parent.isFunction()) {
             // set the arg to new value in parent
             int index = contentProvider.getChildIndex(theObject);
 
@@ -368,7 +368,7 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
             newSelection = contentProvider.getChildAt(index, parent);
 
             if (!retainSelection) {
-                if (newSelection instanceof IFunction) {
+                if (newSelection instanceof ILanguageObject && ((ILanguageObject) newSelection).isFunction()) {
                     // if function arg change to be a function, select first function arg
                     if (contentProvider.getChildCount(newSelection) > 0) {
                         newSelection = contentProvider.getChildAt(0, newSelection);

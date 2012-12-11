@@ -175,7 +175,7 @@ public class DisplayNode implements DisplayNodeConstants {
     public DisplayNode getExpression() {
         DisplayNode parentNode = this;
         while (parentNode != null) {
-            if (parentNode.languageObject instanceof IExpression) {
+            if (parentNode.languageObject.isExpression()) {
                 return parentNode;
             }
             parentNode = parentNode.getParent();

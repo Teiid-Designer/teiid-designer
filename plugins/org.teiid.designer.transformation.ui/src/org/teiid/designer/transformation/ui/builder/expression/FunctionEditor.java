@@ -276,8 +276,8 @@ public class FunctionEditor extends AbstractLanguageObjectEditor {
         if (theLanguageObject == null) {
             clear();
         } else {
-            if (!(theLanguageObject instanceof IFunction)) {
-                CoreArgCheck.isTrue((theLanguageObject instanceof IFunction),
+            if (!(theLanguageObject.isFunction())) {
+                CoreArgCheck.isTrue((theLanguageObject.isFunction()),
                                     Util.getString(PREFIX + "invalidLanguageObject", //$NON-NLS-1$
                                                    new Object[] {theLanguageObject.getClass().getName()}));
             }

@@ -11,12 +11,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
 import org.teiid.designer.query.sql.symbol.IAliasSymbol;
 import org.teiid.designer.query.sql.symbol.IConstant;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.query.sql.symbol.IExpressionSymbol;
-import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
@@ -76,7 +76,7 @@ public class BindingLabelProvider extends ModelExplorerLabelProvider
                 break;
             case 1 : // SQL Symbol Column
                 Object sqlSymbol = binding.getCurrentSymbol();
-                if(sqlSymbol!=null && sqlSymbol instanceof IExpression) {
+                if(sqlSymbol instanceof ILanguageObject && ((ILanguageObject) sqlSymbol).isExpression()) {
                     // Defect 23945 - added private method to get image for multiple types
                     // of SQL symbols
                     image = getImageForSymbol((IExpression)sqlSymbol);
@@ -109,7 +109,7 @@ public class BindingLabelProvider extends ModelExplorerLabelProvider
             IExpression expression = ((IExpressionSymbol)seSymbol).getExpression();
             if(expression!=null && expression instanceof IConstant) {
                 result = UiPlugin.getDefault().getImage(CONSTANT_ICON);
-            } else if ( expression!=null && expression instanceof IFunction ) {
+            } else if ( expression!=null && expression.isFunction() ) {
                 result = UiPlugin.getDefault().getImage(FUNCTION_ICON);
             }
         }

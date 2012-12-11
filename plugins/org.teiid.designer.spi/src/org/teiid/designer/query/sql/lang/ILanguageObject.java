@@ -25,5 +25,15 @@ public interface ILanguageObject {
      * @param visitor
      */
     void acceptVisitor(ILanguageVisitor visitor);
+    
+    /**
+     * Is this object a function
+     */
+    boolean isFunction();
+    
+    /**
+     * Is this object an expression
+     */
+    boolean isExpression();
 
 }

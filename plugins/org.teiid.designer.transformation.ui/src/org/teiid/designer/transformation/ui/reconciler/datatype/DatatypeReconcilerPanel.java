@@ -39,12 +39,12 @@ import org.eclipse.swt.widgets.TableItem;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect;
 import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
 import org.teiid.designer.query.sql.symbol.IAliasSymbol;
 import org.teiid.designer.query.sql.symbol.IConstant;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.query.sql.symbol.IExpressionSymbol;
-import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
@@ -426,7 +426,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
             // Get Name String
             if (object instanceof EObject) {
                 sb.append(getAttributeShortName(object));
-            } else if (object instanceof IExpression) {
+            } else if (object instanceof ILanguageObject && ((ILanguageObject) object).isExpression()) {
                 String shortName = TransformationSqlHelper.getSingleElementSymbolShortName((IExpression)object, false);
                 sb.append(shortName);
             } else if (object instanceof Binding) {
@@ -453,7 +453,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         if (object != null) {
             if (object instanceof EObject) {
                 result = ModelUtilities.getEMFLabelProvider().getImage(object);
-            } else if (object instanceof IExpression) {
+            } else if (object instanceof ILanguageObject && ((ILanguageObject) object).isExpression()) {
                 result = getImageForSymbol((IExpression)object);
             }
         }
@@ -501,7 +501,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
             IExpression expression = ((IExpressionSymbol)seSymbol).getExpression();
             if (expression != null && expression instanceof IConstant) {
                 result = UiPlugin.getDefault().getImage(CONSTANT_ICON);
-            } else if (expression != null && expression instanceof IFunction) {
+            } else if (expression != null && expression.isFunction()) {
                 result = UiPlugin.getDefault().getImage(FUNCTION_ICON);
             }
         }

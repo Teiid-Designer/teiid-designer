@@ -18,7 +18,6 @@ import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.query.sql.lang.INotCriteria;
 import org.teiid.designer.query.sql.lang.IPredicateCriteria;
 import org.teiid.designer.query.sql.symbol.IConstant;
-import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.query.sql.symbol.IReference;
 import org.teiid.query.ui.UiConstants;
 import org.teiid.query.ui.UiPlugin;
@@ -80,7 +79,7 @@ public class LanguageObjectLabelProvider extends LabelProvider implements UiCons
 
         if (theElement instanceof IConstant) {
             result = CONSTANT_IMAGE;
-        } else if (theElement instanceof IFunction) {
+        } else if (theElement instanceof ILanguageObject && ((ILanguageObject) theElement).isFunction()) {
             result = FUNCTION_IMAGE;
         } else if (theElement instanceof IPredicateCriteria) {
             result = PREDICATE_IMAGE;

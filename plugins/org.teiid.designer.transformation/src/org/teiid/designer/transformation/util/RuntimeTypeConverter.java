@@ -16,6 +16,7 @@ import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.type.IDataTypeManagerService;
 
 /**
@@ -205,7 +206,7 @@ public class RuntimeTypeConverter {
             } else if (dtMgr.isSimpleDatatype((EObject)theObj)) {
                 return dtMgr.getRuntimeTypeName(eObj);
             }
-        } else if (theObj instanceof IExpression) {
+        } else if (theObj instanceof ILanguageObject && ((ILanguageObject) theObj).isExpression()) {
             Class objClass = ((IExpression)theObj).getType();
             if (objClass == null) {
                 type = service.getDataTypeName(NullType.class);
