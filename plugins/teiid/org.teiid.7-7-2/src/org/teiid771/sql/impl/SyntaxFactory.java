@@ -356,10 +356,11 @@ public class SyntaxFactory implements IQueryFactory {
 
     @Override
     public IAggregateSymbol createAggregateSymbol(String functionName,
+                                                  IAggregateSymbol.AggregateType functionType,
                                                   boolean isDistinct,
                                                   IExpression expression) {
         Expression dExpression = convert(expression);
-        return convert(new AggregateSymbol(functionName, functionName, isDistinct, dExpression));
+        return convert(new AggregateSymbol(functionName, functionType.name(), isDistinct, dExpression));
     }
 
     @Override

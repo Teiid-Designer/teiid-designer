@@ -7,7 +7,11 @@
 */
 package org.teiid.designer.runtime.registry;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -109,7 +113,7 @@ public class TeiidRuntimeRegistry {
         IExecutionAdminFactory factory = search(teiidServerVersion);
         if (factory == null)
             throw new Exception(DesignerSPIPlugin.Util.getString(
-                                                                 getClass().getSimpleName() + "NoExecutionAdminFactory", teiidServerVersion)); //$NON-NLS-1$
+                                                                 getClass().getSimpleName() + ".NoExecutionAdminFactory", teiidServerVersion)); //$NON-NLS-1$
         
         return factory.getDataTypeManagerService();
     }
@@ -126,7 +130,7 @@ public class TeiidRuntimeRegistry {
         IExecutionAdminFactory factory = search(teiidServerVersion);
         if (factory == null)
             throw new Exception(DesignerSPIPlugin.Util.getString(
-                                                                 getClass().getSimpleName() + "NoExecutionAdminFactory", teiidServerVersion)); //$NON-NLS-1$
+                                                                 getClass().getSimpleName() + ".NoExecutionAdminFactory", teiidServerVersion)); //$NON-NLS-1$
         
         return factory.getQueryService();
     }
@@ -145,28 +149,20 @@ public class TeiidRuntimeRegistry {
         for (Map.Entry<ITeiidServerVersion, IExecutionAdminFactory> entry : factories.entrySet()) {
             ITeiidServerVersion entryVersion = entry.getKey();
             
-            if (! serverVersion.getMajor().equals(entryVersion.getMajor()))
-                continue;
-            
-            String serverMinor = serverVersion.getMinor();
-            String entryMinor = entryVersion.getMinor();
-            
-            if (! serverMinor.equals(entryMinor) && ! serverMinor.equals(WILDCARD) && ! entryMinor.equals(WILDCARD))
-                continue;
-            
-            String serverMicro = serverVersion.getMicro();
-            String entryMicro = entryVersion.getMicro();
-            
-            if (! serverMicro.equals(entryMicro) && ! serverMicro.equals(WILDCARD) && ! entryMicro.equals(WILDCARD))
-                continue;
-            
-            /*
-             *  Either server version or entry version contain sufficient wildcards
-             *  to be considered a match
-             */
-            return entry.getValue();
+            if (serverVersion.compareTo(entryVersion))
+                return entry.getValue();
         }
         
         return null;
+    }
+    
+    /**
+     * Retrieve all registered server versions
+     * 
+     * @return unmodifiable collection
+     */
+    public Collection<ITeiidServerVersion> getRegisteredServerVersions() {
+        List<ITeiidServerVersion> versions = new ArrayList<ITeiidServerVersion>(factories.keySet());
+        return Collections.unmodifiableCollection(versions);
     }
 }

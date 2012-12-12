@@ -62,4 +62,11 @@ public interface ITeiidServerVersion {
      * @return true if there are wildcards. false otherwise
      */
     boolean hasWildCards();
+
+    /**
+     * @param otherVersion
+     * 
+     * @return true if the otherVersion is considered equivalent
+     */
+    boolean compareTo(ITeiidServerVersion otherVersion);
 }

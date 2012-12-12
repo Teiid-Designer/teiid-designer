@@ -7,9 +7,14 @@
  */
 package org.teiid.designer.schema.tools;
 
-import org.teiid.designer.schema.tools.NameUtil;
-
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import java.util.Collection;
 import junit.framework.TestCase;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 public class NameUtilTest extends TestCase {
 
@@ -18,6 +23,12 @@ public class NameUtilTest extends TestCase {
     private static String trailingUnderscore;
     private static String duplicate;
 
+    private Collection<ITeiidServerVersion> serverVersions;
+    
+    public NameUtilTest() throws Exception {
+        serverVersions = TeiidRuntimeRegistry.getInstance().getRegisteredServerVersions();
+    }
+    
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -26,24 +37,46 @@ public class NameUtilTest extends TestCase {
         trailingUnderscore = new String("foo_bar_"); //$NON-NLS-1$
         duplicate = new String("foo_bar(foo_bar)"); //$NON-NLS-1$
     }
+    
+    /**
+     * @param version
+     */
+    private void setDefaultServerVersion(ITeiidServerVersion version) {
+        ITeiidServer teiidServer = mock(ITeiidServer.class);
+        when(teiidServer.getServerVersion()).thenReturn(version);
+
+        ModelerCore.setDefaultServer(teiidServer);
+    }
 
     /*
      * Test method for 'org.teiid.designer.schema.tools.NameUtil.normalizeNameForRelationalTable(String)'
      */
     public void testDots() {
-        assertEquals("foo_bar", NameUtil.normalizeName(dots)); //$NON-NLS-1$
+        for (ITeiidServerVersion version : serverVersions) {
+            setDefaultServerVersion(version);
+            assertEquals("foo_bar", NameUtil.normalizeName(dots)); //$NON-NLS-1$
+        }
     }
 
     public void testParens() {
-        assertEquals("foo_bar", NameUtil.normalizeName(parens)); //$NON-NLS-1$
+        for (ITeiidServerVersion version : serverVersions) {
+            setDefaultServerVersion(version);
+            assertEquals("foo_bar", NameUtil.normalizeName(parens)); //$NON-NLS-1$
+        }
     }
 
     public void testUnderscore() {
-        assertEquals("foo_bar", NameUtil.normalizeName(trailingUnderscore)); //$NON-NLS-1$
+        for (ITeiidServerVersion version : serverVersions) {
+            setDefaultServerVersion(version);
+            assertEquals("foo_bar", NameUtil.normalizeName(trailingUnderscore)); //$NON-NLS-1$
+        }
     }
 
     public void testDuplicate() {
-        assertEquals("foo_bar", NameUtil.normalizeName(duplicate)); //$NON-NLS-1$
+        for (ITeiidServerVersion version : serverVersions) {
+            setDefaultServerVersion(version);
+            assertEquals("foo_bar", NameUtil.normalizeName(duplicate)); //$NON-NLS-1$
+        }
     }
 
 }

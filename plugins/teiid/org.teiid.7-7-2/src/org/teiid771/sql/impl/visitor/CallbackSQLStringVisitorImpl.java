@@ -370,6 +370,11 @@ public class CallbackSQLStringVisitorImpl extends SQLStringVisitor implements IS
             return;
         }
         
+        if (delegate instanceof AggregateSymbol) {
+            visit((AggregateSymbol) delegate);
+            return;
+        }
+        
         if (delegate instanceof ExpressionSymbol) {
             visit((ExpressionSymbol)delegate);
             return;
@@ -472,11 +477,6 @@ public class CallbackSQLStringVisitorImpl extends SQLStringVisitor implements IS
 
         if (delegate instanceof MatchCriteria) {
             visit((MatchCriteria)delegate);
-            return;
-        }
-        
-        if (delegate instanceof AggregateSymbol) {
-            visit((AggregateSymbol)delegate);
             return;
         }
         

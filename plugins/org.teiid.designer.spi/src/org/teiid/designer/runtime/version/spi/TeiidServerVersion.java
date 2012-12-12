@@ -127,5 +127,26 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         return true;
     }
 
+    @Override
+    public boolean compareTo(ITeiidServerVersion otherVersion) {
+        if (! getMajor().equals(otherVersion.getMajor()))
+            return false;
+        
+        String entryMinor = otherVersion.getMinor();
+        
+        if (! getMinor().equals(entryMinor) && ! getMinor().equals(WILDCARD) && ! entryMinor.equals(WILDCARD))
+            return false;
+        
+        String entryMicro = otherVersion.getMicro();
+        
+        if (! getMicro().equals(entryMicro) && ! getMicro().equals(WILDCARD) && ! entryMicro.equals(WILDCARD))
+            return false;
+        
+        /*
+         *  Either this version or entry version contain sufficient wildcards
+         *  to be considered a match
+         */
+        return true;
+    }
     
 }

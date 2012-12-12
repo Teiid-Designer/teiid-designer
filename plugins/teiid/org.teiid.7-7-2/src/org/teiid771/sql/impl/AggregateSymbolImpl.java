@@ -82,9 +82,4 @@ public class AggregateSymbolImpl extends ExpressionSymbolImpl implements IAggreg
     public void setType(Class<?> type) {
         throw new UnsupportedOperationException();
     }
-
-    @Override
-    public boolean isFunction() {
-        throw new UnsupportedOperationException();
-    }
 }

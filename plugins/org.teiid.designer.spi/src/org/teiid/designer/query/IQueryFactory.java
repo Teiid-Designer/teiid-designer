@@ -50,6 +50,7 @@ import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
 import org.teiid.designer.query.sql.proc.IDeclareStatement;
 import org.teiid.designer.query.sql.proc.IRaiseStatement;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
+import org.teiid.designer.query.sql.symbol.IAggregateSymbol.AggregateType;
 import org.teiid.designer.query.sql.symbol.IAliasSymbol;
 import org.teiid.designer.query.sql.symbol.IConstant;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
@@ -79,12 +80,13 @@ public interface IQueryFactory {
      * Create a new aggregate symbol
      * 
      * @param functionName 
+     * @param functionType 
      * @param isDistinct 
      * @param expression
      * 
      * @return instance of {@link IAggregateSymbol}
      */
-    IAggregateSymbol createAggregateSymbol(String functionName, boolean isDistinct, IExpression expression);
+    IAggregateSymbol createAggregateSymbol(String functionName, AggregateType functionType, boolean isDistinct, IExpression expression);
     
     /**
      * Create a new element symbol

@@ -7,8 +7,8 @@
             class="org.teiid82.runtime.ExecutionAdminFactory">
          <version
                major="8"
-               micro="*"
-               minor="2">
+               minor="*"
+               micro="*">
          </version>
       </runtimeFactory>
    </extension>
