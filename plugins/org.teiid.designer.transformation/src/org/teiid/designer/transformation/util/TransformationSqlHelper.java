@@ -1289,7 +1289,7 @@ public class TransformationSqlHelper implements ISQLConstants {
                 // get the IExpression
                 IExpression expr = ((IExpressionSymbol)symbol).getExpression();
                 // IExpression is a Function, look for implicit function
-                if (expr.isFunction()) {
+                if (expr != null && expr.isFunction()) {
                     // if implicit function, use the arg symbol name, otherwise use function name
                     IFunction func = (IFunction)expr;
                     if (func.isImplicit()) {
@@ -1719,7 +1719,7 @@ public class TransformationSqlHelper implements ISQLConstants {
         IElementSymbol elSymbol = null;
         int stringLength = 0;
 
-        if (exprObject.isFunction()) {
+        if (exprObject != null && exprObject.isFunction()) {
             IFunction myFunc = (IFunction)exprObject;
             if (isDecodeOrSubString(myFunc)) {
                 return stringLength += getMaxStringLength(myFunc);
@@ -1731,7 +1731,7 @@ public class TransformationSqlHelper implements ISQLConstants {
             for (int i = 0; i < args.length; i++) {
                 IExpression symbol = args[i];
 
-                if (symbol.isFunction()) {
+                if (symbol != null && symbol.isFunction()) {
                     stringLength += concatSymbolLength(symbol);
                 }
 
@@ -1799,7 +1799,7 @@ public class TransformationSqlHelper implements ISQLConstants {
                 for (int i = 0; i < args.length; i++) {
                     IExpression exprSymbol = args[i];
 
-                    if (exprSymbol.isFunction()) {
+                    if (exprSymbol != null && exprSymbol.isFunction()) {
                         stringLength += concatSymbolLength(exprSymbol);
                     }
                     if (exprSymbol instanceof IElementSymbol) {
@@ -1933,7 +1933,7 @@ public class TransformationSqlHelper implements ISQLConstants {
                         }
                     }
                 }
-            } else if (sSymbol.isExpression()) {
+            } else if (sSymbol != null && sSymbol.isExpression()) {
                 seSymbols.add(sSymbol);
             }
         }
@@ -2445,7 +2445,7 @@ public class TransformationSqlHelper implements ISQLConstants {
                     // ----------------------------------------------------------------
                     // Current Symbol is SingleElementSymbol - rename it if necessary
                     // ----------------------------------------------------------------
-                } else if (currentSelectSymbol.isExpression()) {
+                } else if (currentSelectSymbol != null && currentSelectSymbol.isExpression()) {
                 	IExpression renamedSymbol = renameSymbolUsingMap((IExpression)currentSelectSymbol,
                                                                              workingRenSymMap);
                     newSymbols.add(renamedSymbol);
@@ -3118,7 +3118,7 @@ public class TransformationSqlHelper implements ISQLConstants {
 
     public static boolean isConvertFunction( IExpressionSymbol exprSymbol ) {
         IExpression expr = exprSymbol.getExpression();
-        if (expr.isFunction()) {
+        if (expr != null && expr.isFunction()) {
             String fName = ((IFunction)expr).getName();
             if (fName.equalsIgnoreCase(ISQLConstants.CONVERT)) {
                 return true;
@@ -3150,7 +3150,7 @@ public class TransformationSqlHelper implements ISQLConstants {
         // Handle case where the IExpression is already a Convert Function
         if (isConvertFunction(symbol)) {
             IExpression cExpr = getConvertedExpr(symbol);
-            if (cExpr.isExpression()) {
+            if (cExpr != null && cExpr.isExpression()) {
             	IExpression seSymbol = (IExpression)cExpr;
             	
             	IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();

@@ -873,7 +873,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                         IExpression rightExpression = compare.getRightExpression();
                         // in case of CAST/CONVERT functions get the elementsymbol in the function
                         // and compare types
-                        if (leftExpression.isFunction()) {
+                        if (leftExpression != null && leftExpression.isFunction()) {
                             IFunction leftFunction = (IFunction)leftExpression;
                             String descriptorName = leftFunction.getFunctionDescriptor().getName();
                             if (leftFunction.isImplicit()
@@ -884,7 +884,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                                 leftExpression = leftFunction.getArg(0);
                             }
                         }
-                        if (rightExpression.isFunction()) {
+                        if (rightExpression != null && rightExpression.isFunction()) {
                             IFunction rightFunction = (IFunction)rightExpression;
                             String descriptorName = rightFunction.getFunctionDescriptor().getName();
                             if (rightFunction.isImplicit()

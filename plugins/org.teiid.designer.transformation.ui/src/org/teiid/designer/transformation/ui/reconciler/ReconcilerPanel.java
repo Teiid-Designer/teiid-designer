@@ -679,7 +679,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
 
                 // Need to crate an Expression Symbol (constant = NULL) name = "expr"
                 List symbolsList = new ArrayList(1);
-                if (langObj.isExpression()) {
+                if (langObj != null && langObj.isExpression()) {
                     IQueryService queryService = ModelerCore.getTeiidQueryService();
                     IQueryFactory factory = queryService.createQueryFactory();
                     IExpressionSymbol newExpression = factory.createExpressionSymbol(EXPRESSION, (IExpression)langObj);

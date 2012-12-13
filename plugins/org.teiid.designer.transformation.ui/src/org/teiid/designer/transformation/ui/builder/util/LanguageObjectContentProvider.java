@@ -114,7 +114,7 @@ public class LanguageObjectContentProvider implements ITreeContentProvider, UiCo
     private Object[] getChildren( IExpression theExpression ) {
         Object[] result = null;
 
-        if (theExpression.isFunction()) {
+        if (theExpression != null && theExpression.isFunction()) {
             result = getChildren((IFunction)theExpression);
         }
 
@@ -128,7 +128,7 @@ public class LanguageObjectContentProvider implements ITreeContentProvider, UiCo
             // according to Alex, all implicit functions are conversions and
             // the first argument is what is being converted (which could be a function or expression)
             IExpression arg = theFunction.getArgs()[0];
-            result = (arg.isFunction()) ? getChildren((IFunction)arg) : getChildren(arg);
+            result = (arg != null && arg.isFunction()) ? getChildren((IFunction)arg) : getChildren(arg);
         } else {
             IExpression[] args = theFunction.getArgs();
 

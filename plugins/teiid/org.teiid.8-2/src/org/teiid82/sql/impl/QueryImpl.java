@@ -81,7 +81,7 @@ public class QueryImpl extends QueryCommandImpl implements IQuery {
 
     @Override
     public IFrom getFrom() {
-        return getFactory().convert(getDelegate().getSelect());
+        return getFactory().convert(getDelegate().getFrom());
     }
 
     @Override
@@ -92,7 +92,7 @@ public class QueryImpl extends QueryCommandImpl implements IQuery {
 
     @Override
     public IInto getInto() {
-        return getFactory().convert(getDelegate().getSelect());
+        return getFactory().convert(getDelegate().getInto());
     }
 
     @Override
@@ -114,7 +114,7 @@ public class QueryImpl extends QueryCommandImpl implements IQuery {
 
     @Override
     public ICriteria getHaving() {
-        return getFactory().convert(getDelegate().getSelect());
+        return getFactory().convert(getDelegate().getHaving());
     }
 
     @Override
@@ -125,7 +125,7 @@ public class QueryImpl extends QueryCommandImpl implements IQuery {
 
     @Override
     public IGroupBy getGroupBy() {
-        return getFactory().convert(getDelegate().getSelect());
+        return getFactory().convert(getDelegate().getGroupBy());
     }
 
     @Override

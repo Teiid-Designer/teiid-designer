@@ -170,7 +170,10 @@ public class TeiidResourceNode extends TeiidContentNode implements ITeiidResourc
 
     @Override
     public boolean hasChildren() {
-        return !dirty || (children != null && ! children.isEmpty());
+        if (dirty)
+            return false;
+        
+        return children != null && ! children.isEmpty();
     }
     
     @Override

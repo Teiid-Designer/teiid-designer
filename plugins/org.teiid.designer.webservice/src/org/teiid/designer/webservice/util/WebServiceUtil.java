@@ -226,7 +226,7 @@ public class WebServiceUtil {
     public static IFunction getXpathFunction(IAssignmentStatement statement) {
         if (statement.getExpression() != null) {
             IExpression expr = statement.getExpression();
-            if (expr.isFunction()) {
+            if (expr != null && expr.isFunction()) {
                 IFunction function = (IFunction)expr;
                 if (XPATHVALUE.equalsIgnoreCase(function.getName())) {
                     return function;

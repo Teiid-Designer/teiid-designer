@@ -15,7 +15,6 @@ import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.ICompareCriteria;
 import org.teiid.designer.query.sql.lang.ICompoundCriteria;
 import org.teiid.designer.query.sql.lang.ICriteria;
-import org.teiid.designer.query.sql.lang.IExpression;
 import org.teiid.designer.query.sql.lang.IFrom;
 import org.teiid.designer.query.sql.lang.IGroupBy;
 import org.teiid.designer.query.sql.lang.IIsNullCriteria;
@@ -205,7 +204,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
      * @return true if the node has at least one expression, false if not.
      */
     public static boolean hasExpression( DisplayNode node ) {
-        if (node.languageObject.isExpression()) {
+        if (node.languageObject != null && node.languageObject.isExpression()) {
             return true;
         }
         List nodes = node.getDisplayNodeList();
@@ -289,7 +288,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
      */
     public static int getStartIndexOfNextExpression( DisplayNode node,
                                                      int index ) {
-        if (node.languageObject.isExpression()) {
+        if (node.languageObject != null && node.languageObject.isExpression()) {
             if (node.isAnywhereWithin(index)) {
                 return node.getStartIndex();
             }
@@ -319,7 +318,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
     public static int getEndIndexOfPreviousExpression( DisplayNode node,
                                                        int index ) {
         int prevEnd = -1;
-        if (node.languageObject.isExpression()) {
+        if (node.languageObject != null && node.languageObject.isExpression()) {
             if (node.isAnywhereWithin(index)) {
                 return node.getEndIndex() + 1;
             }
@@ -889,7 +888,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
                 return node.getExpression();
             }
             return null;
-        } else if (node.languageObject.isExpression() && !(node.languageObject instanceof IScalarSubquery)) {
+        } else if (node.languageObject != null && node.languageObject.isExpression() && !(node.languageObject instanceof IScalarSubquery)) {
             return node;
         } else if (node.isInExpression()) {
             return node.getExpression();
