@@ -8,16 +8,16 @@
 package org.teiid.designer.datatools.profiles.xml;
 
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.DatatoolsPlugin;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
-import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.type.IDataTypeManagerService.DataSourceTypes;
 
 
 /**
@@ -35,7 +35,7 @@ public class XmlUrlConnectionInfoProvider  extends ConnectionInfoHelper implemen
 
 	@Override
 	public String getDataSourceType() {
-		return DataSourceConnectionConstants.DataSource.WS;
+	    return ModelerCore.getTeiidDataTypeManagerService().getDataSourceType(DataSourceTypes.WS);
 	}
 
 	@Override

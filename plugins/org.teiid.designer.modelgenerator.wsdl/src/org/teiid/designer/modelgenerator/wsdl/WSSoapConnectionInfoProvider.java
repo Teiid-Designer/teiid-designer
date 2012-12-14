@@ -9,12 +9,14 @@ package org.teiid.designer.modelgenerator.wsdl;
 
 import java.util.Properties;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
+import org.teiid.designer.type.IDataTypeManagerService.DataSourceTypes;
 import org.teiid.designer.ui.common.ICredentialsCommon;
 
 
@@ -195,7 +197,7 @@ public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implemen
      */
     @Override
     public String getDataSourceType() {
-        return DataSourceConnectionConstants.DataSource.WS;
+        return ModelerCore.getTeiidDataTypeManagerService().getDataSourceType(DataSourceTypes.WS);
     }
     
 	@Override

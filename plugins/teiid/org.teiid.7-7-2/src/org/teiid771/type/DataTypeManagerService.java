@@ -30,6 +30,15 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     private static final Map<String, Integer> TEXT_LIMITS;
 
     private static final Map<String, String> VALID_CHARS;
+    
+    // Data Source Type names supported by the server
+    private static final String JDBC = "connector-jdbc"; //$NON-NLS-1$
+    private static final String SALESFORCE = "connector-salesforce"; //$NON-NLS-1$ 
+    private static final String LDAP = "connector-ldap"; //$NON-NLS-1$ 
+    private static final String FILE = "connector-file"; //$NON-NLS-1$ 
+    private static final String JDBC_XA = "connector-jdbc-xa"; //$NON-NLS-1$
+    private static final String WS = "connector-ws"; //$NON-NLS-1$
+    private static final String UNKNOWN = "connector-unknown"; //$NON-NLS-1$
 
     static {
         TEXT_LIMITS = new HashMap<String, Integer>();
@@ -137,5 +146,25 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     @Override
     public boolean canTransform(String sourceTypeName, String targetTypeName) {
         return DataTypeManager.getTransform(sourceTypeName, targetTypeName) != null;
+    }
+
+    @Override
+    public String getDataSourceType(DataSourceTypes dataSourceType) {
+        switch (dataSourceType) {
+            case FILE:
+                return FILE;
+            case JDBC:
+                return JDBC;
+            case JDBC_XA:
+                return JDBC_XA;
+            case LDAP:
+                return LDAP;
+            case SALESFORCE:
+                return SALESFORCE;
+            case WS:
+                return WS;
+            default:
+                return UNKNOWN;
+        }
     }
 }

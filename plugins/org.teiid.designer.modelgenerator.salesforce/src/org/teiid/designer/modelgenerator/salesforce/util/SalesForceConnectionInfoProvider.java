@@ -8,14 +8,14 @@
 package org.teiid.designer.modelgenerator.salesforce.util;
 
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
-import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.modelgenerator.salesforce.datatools.ISalesForceProfileConstants;
+import org.teiid.designer.type.IDataTypeManagerService.DataSourceTypes;
 
 
 /**
@@ -121,7 +121,7 @@ public class SalesForceConnectionInfoProvider extends ConnectionInfoHelper imple
      */
     @Override
     public String getDataSourceType() {
-        return DataSourceConnectionConstants.DataSource.SALESFORCE;
+        return ModelerCore.getTeiidDataTypeManagerService().getDataSourceType(DataSourceTypes.SALESFORCE);
     }
 
 	@Override

@@ -42,6 +42,19 @@ public interface IDataTypeManagerService {
     }
     
     /**
+     * Types of data source supported by teiid servers
+     */
+    enum DataSourceTypes {
+        JDBC,
+        SALESFORCE, 
+        LDAP,
+        FILE, 
+        JDBC_XA,
+        WS,
+        UNKNOWN
+    }
+    
+    /**
      * Get the data type class with the given name.
      * 
      * @param name
@@ -145,4 +158,14 @@ public interface IDataTypeManagerService {
      * @return true if a transform is possible between the types
      */
     boolean canTransform(String sourceTypeName, String targetTypeName);
+
+    /**
+     * Get the teiid server specific name of the data source type
+     *  
+     * @param dataSourceType
+     * 
+     * @return data source type name
+     */
+    String getDataSourceType(DataSourceTypes dataSourceType);
+    
 }

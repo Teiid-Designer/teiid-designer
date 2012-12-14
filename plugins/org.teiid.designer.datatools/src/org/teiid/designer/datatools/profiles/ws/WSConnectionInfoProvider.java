@@ -2,11 +2,12 @@ package org.teiid.designer.datatools.profiles.ws;
 
 import java.util.Properties;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
-import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.type.IDataTypeManagerService.DataSourceTypes;
 import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 
@@ -66,7 +67,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
 
 	@Override
 	public String getDataSourceType() {
-		return DataSourceConnectionConstants.DataSource.WS;
+	    return ModelerCore.getTeiidDataTypeManagerService().getDataSourceType(DataSourceTypes.WS);
 	}
 
 	@Override

@@ -1,13 +1,13 @@
 package org.teiid.designer.datatools.profiles.ldap;
 
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
-import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.type.IDataTypeManagerService.DataSourceTypes;
 
 
 /**
@@ -79,7 +79,7 @@ public class LDAPConnectionInfoProvider extends ConnectionInfoHelper implements 
 
     @Override
     public String getDataSourceType() {
-        return DataSourceConnectionConstants.DataSource.LDAP;
+        return ModelerCore.getTeiidDataTypeManagerService().getDataSourceType(DataSourceTypes.LDAP);
     }
 
     @Override

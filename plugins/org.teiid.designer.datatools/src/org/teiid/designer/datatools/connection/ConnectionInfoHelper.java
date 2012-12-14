@@ -17,6 +17,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ResourceAnnotationHelper;
 import org.teiid.designer.datatools.DatatoolsPlugin;
 import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
+import org.teiid.designer.type.IDataTypeManagerService.DataSourceTypes;
 
 /**
  * @since 8.0
@@ -388,7 +389,8 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
             }
 
         }
-        return DataSourceConnectionConstants.DataSource.UNKNOWN;
+        
+        return ModelerCore.getTeiidDataTypeManagerService().getDataSourceType(DataSourceTypes.UNKNOWN);
     }
     
     /**

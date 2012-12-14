@@ -10,7 +10,6 @@ package org.teiid.designer.jdbc.ui.wizards;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -18,16 +17,17 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.DatatoolsPlugin;
 import org.teiid.designer.datatools.JdbcTranslatorHelper;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
-import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.jdbc.ui.InternalModelerJdbcUiPluginConstants;
+import org.teiid.designer.type.IDataTypeManagerService.DataSourceTypes;
 
 /**
  * 
@@ -273,7 +273,7 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
      */
     @Override
     public String getDataSourceType() {
-        return DataSourceConnectionConstants.DataSource.JDBC;
+        return ModelerCore.getTeiidDataTypeManagerService().getDataSourceType(DataSourceTypes.JDBC);
     }
 
 	@Override

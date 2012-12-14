@@ -1,14 +1,14 @@
 package org.teiid.designer.datatools.profiles.flatfile;
 
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.DatatoolsPlugin;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
-import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.type.IDataTypeManagerService.DataSourceTypes;
 
 
 /**
@@ -27,7 +27,7 @@ public class FlatFileConnectionInfoProvider  extends ConnectionInfoHelper implem
 
 	@Override
 	public String getDataSourceType() {
-		return DataSourceConnectionConstants.DataSource.FILE;
+	    return ModelerCore.getTeiidDataTypeManagerService().getDataSourceType(DataSourceTypes.FILE);
 	}
 
 	@Override

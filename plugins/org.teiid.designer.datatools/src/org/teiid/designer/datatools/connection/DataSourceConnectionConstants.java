@@ -38,24 +38,4 @@ public interface DataSourceConnectionConstants {
             JDBC_ANSI, JDBC_SIMPLE, SQLSERVER, DB2, H2, DERBY, METAMATRIX, SALESFORCE, TERADATA, LOOPBACK, LDAP, FILE, WS};
 
     }
-
-/**
- * @since 8.0
- */
-    public interface DataSource {
-        /*
-         *  [connector-jdbc-xa, connector-file, connector-ldap, connector-salesforce, connector-jdbc]
-         */
-
-        String JDBC = "connector-jdbc"; //$NON-NLS-1$
-        String SALESFORCE = "teiid-connector-salesforce.rar"; //$NON-NLS-1$ 
-        String LDAP = "teiid-connector-ldap.rar"; //$NON-NLS-1$ 
-        String FILE = "teiid-connector-file.rar"; //$NON-NLS-1$ 
-        String JDBC_XA = "connector-jdbc-xa"; //$NON-NLS-1$
-        String WS = "teiid-connector-ws.rar"; //$NON-NLS-1$
-        String UNKNOWN = "connector-unknown"; //$NON-NLS-1$
-        
-
-        public final static String[] DATA_SOURCES = {JDBC, JDBC_XA, SALESFORCE, LDAP, FILE};
-    }
 }
