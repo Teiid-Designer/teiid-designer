@@ -40,6 +40,12 @@ public interface ITeiidServerVersion {
      * Default teiid 8 server version
      */
     public static final String DEFAULT_TEIID_8_SERVER_ID = EIGHT + DOT + ZERO + DOT + ZERO;
+
+    /**
+     * Default teiid 7 server version
+     */
+    public static final String DEFAULT_TEIID_7_SERVER_ID = SEVEN + DOT + SEVEN + DOT + ZERO;
+    
     
     /**
      * @return the major version segment

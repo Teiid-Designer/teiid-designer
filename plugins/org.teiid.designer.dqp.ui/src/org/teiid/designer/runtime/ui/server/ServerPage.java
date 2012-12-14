@@ -19,7 +19,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -38,10 +41,12 @@ import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
+import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
@@ -80,6 +85,10 @@ public final class ServerPage extends WizardPage {
     private Text jdbcPasswordText;
 
     private Text jdbcURLText;
+
+    private Button adminSSLButton;
+
+    private Button jdbcSSLButton;
     
     private IServerLifecycleListener serverLifecycleListener = new IServerLifecycleListener() {
         
@@ -249,6 +258,39 @@ public final class ServerPage extends WizardPage {
         }
 
     }
+    
+    private void constructSecureConnectionPanel(Composite parent) {
+        Group teiidSSLGroup = WidgetFactory.createGroup(parent, UTIL.getString("serverPageSecureConnectionInfoLabel")); //$NON-NLS-1$);
+        GridDataFactory.fillDefaults().applyTo(teiidSSLGroup);
+        GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 5).applyTo(teiidSSLGroup);
+        
+        { // admin ssl
+            adminSSLButton = new Button(teiidSSLGroup, SWT.CHECK);
+            adminSSLButton.setText(UTIL.getString("serverPageSecureConnAdminLabel")); //$NON-NLS-1$
+            GridDataFactory.swtDefaults().grab(true, false).align(SWT.CENTER, SWT.CENTER).applyTo(adminSSLButton);
+            adminSSLButton.setToolTipText(UTIL.getString("serverPageSecureConnAdminLabel")); //$NON-NLS-1$
+            adminSSLButton.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    handlePropertiesModified();
+                }
+            });
+        }
+        
+        { // jdbc ssl
+            jdbcSSLButton = new Button(teiidSSLGroup, SWT.CHECK);
+            jdbcSSLButton.setText(UTIL.getString("serverPageSecureConnJDBCLabel")); //$NON-NLS-1$
+            GridDataFactory.swtDefaults().grab(true, false).align(SWT.CENTER, SWT.CENTER).applyTo(jdbcSSLButton);
+            jdbcSSLButton.setToolTipText(UTIL.getString("serverPageSecureConnJDBCLabel")); //$NON-NLS-1$
+            jdbcSSLButton.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    handlePropertiesModified();
+                }
+            });
+        }
+        
+    }
 
     /**
      * {@inheritDoc}
@@ -266,6 +308,7 @@ public final class ServerPage extends WizardPage {
         // Add display name component
         constructDisplayNamePanel(pnlMain);
         constructIServerCreationPanel(pnlMain);
+        constructSecureConnectionPanel(pnlMain);
         constructTeiidJdbcConnectionPanel(pnlMain);
 
         setControl(pnlMain);
@@ -317,6 +360,17 @@ public final class ServerPage extends WizardPage {
                     
                     jbossServerNameText.setText(server.getName());
 
+                    if (ITeiidServerVersion.SEVEN.equals(teiidServer.getServerVersion().getMajor())) {
+                        ITeiidAdminInfo teiidAdminInfo = teiidServer.getTeiidAdminInfo();
+                        adminSSLButton.setSelection(teiidAdminInfo.isSecure());
+                        adminSSLButton.setEnabled(true);
+                    }
+                    else {
+                        // Not a 7.x server so disable the button
+                        adminSSLButton.setSelection(false);
+                        adminSSLButton.setEnabled(false);
+                    }
+
                     ITeiidJdbcInfo teiidJdbcInfo = teiidServer.getTeiidJdbcInfo();
                     
                     if (ITeiidJdbcInfo.DEFAULT_JDBC_USERNAME.equals(jdbcUsernameText.getText()))
@@ -325,6 +379,8 @@ public final class ServerPage extends WizardPage {
                     if (ITeiidJdbcInfo.DEFAULT_JDBC_PASSWORD.equals(jdbcPasswordText.getText()))
                         jdbcPasswordText.setText(teiidJdbcInfo.getPassword());
                    
+                    jdbcSSLButton.setSelection(teiidJdbcInfo.isSecure());
+                    
                     jdbcURLText.setText(teiidJdbcInfo.getUrl());
                     
                     String displayName = displayNameText.getText();
@@ -345,9 +401,13 @@ public final class ServerPage extends WizardPage {
         if (teiidServer != null) {
             teiidServer.setCustomLabel(displayNameText.getText());
         
+            ITeiidAdminInfo teiidAdminInfo = teiidServer.getTeiidAdminInfo();
+            teiidAdminInfo.setSecure(adminSSLButton.getSelection());
+            
             ITeiidJdbcInfo teiidJdbcInfo = teiidServer.getTeiidJdbcInfo();        
             teiidJdbcInfo.setUsername(jdbcUsernameText.getText());
             teiidJdbcInfo.setPassword(jdbcPasswordText.getText());
+            teiidJdbcInfo.setSecure(jdbcSSLButton.getSelection());
             
             jdbcURLText.setText(teiidJdbcInfo.getUrl());
         }

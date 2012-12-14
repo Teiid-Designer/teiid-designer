@@ -23,8 +23,29 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 /**
  * @since 8.0
  */
-public abstract class JBoss7ServerUtil extends ModelDescriptionConstants {
+public abstract class JBoss7ServerUtil extends JBossServerUtil {
 
+    private static final String OP = ModelDescriptionConstants.OP;
+    
+    private static final String NAME = ModelDescriptionConstants.NAME;
+    
+    private static final String READ_ATTRIBUTE_OPERATION = ModelDescriptionConstants.READ_ATTRIBUTE_OPERATION;
+
+    private static final String READ_CHILDREN_NAMES_OPERATION = ModelDescriptionConstants.READ_CHILDREN_NAMES_OPERATION;
+
+    private static final String SUBSYSTEM = ModelDescriptionConstants.SUBSYSTEM;
+
+    private static final String CHILD_TYPE = ModelDescriptionConstants.CHILD_TYPE;
+
+    private static final String SOCKET_BINDING_GROUP = ModelDescriptionConstants.SOCKET_BINDING_GROUP;
+
+    private static final String SOCKET_BINDING = ModelDescriptionConstants.SOCKET_BINDING;
+
+    private static final String OP_ADDR = ModelDescriptionConstants.OP_ADDR;
+
+    private static final String PORT = ModelDescriptionConstants.PORT;
+    
+    
     /**
      * @param server
      * @param request
@@ -36,23 +57,6 @@ public abstract class JBoss7ServerUtil extends ModelDescriptionConstants {
         
         String resultString = JBoss7ManagerUtil.getService(server).execute(new AS7ManagementDetails(server), requestString);
         return ModelNode.fromJSONString(resultString);
-    }
-    
-    /**
-     * Test the given server for whether its been started
-     * 
-     * @param jboss7Server
-     * 
-     * @return true is server is in the started state
-     */
-    private static boolean serverStarted(JBoss7Server jboss7Server) {
-        if (jboss7Server == null)
-            return false;
-        
-        if (jboss7Server.getServer().getServerState() != IServer.STATE_STARTED)
-            return false;
-        
-        return true;
     }
     
     /**
@@ -85,6 +89,7 @@ public abstract class JBoss7ServerUtil extends ModelDescriptionConstants {
      * Determine whether the given server has teiid support
      * 
      * @param jboss7Server
+     * 
      * @return true is server has teiid support, false otherwise
      */
     public static boolean isTeiidServer(JBoss7Server jboss7Server) {

@@ -22,6 +22,12 @@ public class TeiidServerVersion implements ITeiidServerVersion {
      */
     public static final ITeiidServerVersion DEFAULT_TEIID_8_SERVER = new TeiidServerVersion(DEFAULT_TEIID_8_SERVER_ID);
 
+    /**
+     * The default teiid 7 server version
+     */
+    public static final ITeiidServerVersion DEFAULT_TEIID_7_SERVER = new TeiidServerVersion(DEFAULT_TEIID_7_SERVER_ID);
+
+    
     private String versionString = ZERO + DOT + ZERO + DOT + ZERO;
 
     private final String majorVersion;

@@ -47,7 +47,17 @@ public class TeiidServerFactory {
         /**
          * Do NOT query whether the parent {@link IServer} is connected
          */
-        NO_CHECK_CONNECTION
+        NO_CHECK_CONNECTION,
+        
+        /**
+         * Server uses secure connections for admin requests
+         */
+        ADMIN_SECURE_CONNECTION,
+        
+        /**
+         * Server uses secure connections for jdbc requests
+         */
+        JDBC_SECURE_CONNECTION
     }
     
     /**
@@ -59,6 +69,14 @@ public class TeiidServerFactory {
         List<ServerOptions> optionList = Collections.emptyList(); 
         if (options != null)
             optionList = Arrays.asList(options);
+        
+        if (optionList.contains(ServerOptions.ADMIN_SECURE_CONNECTION)) {
+            teiidServer.getTeiidAdminInfo().setSecure(true);
+        }
+        
+        if (optionList.contains(ServerOptions.JDBC_SECURE_CONNECTION)) {
+            teiidServer.getTeiidJdbcInfo().setSecure(true);
+        }
         
         if (optionList.contains(ServerOptions.CONNECT)) {
             // Connect this teiid server
@@ -126,7 +144,7 @@ public class TeiidServerFactory {
      * @param parentServer 
      * @param options 
      * 
-     * @return
+     * @return instance of {@link ITeiidServer}
      */
     public ITeiidServer createTeiidServer(ITeiidServerVersion serverVersion,
                                                                ITeiidAdminInfo teiidAdminInfo,

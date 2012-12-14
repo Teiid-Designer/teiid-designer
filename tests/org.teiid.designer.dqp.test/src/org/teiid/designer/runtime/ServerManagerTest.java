@@ -245,7 +245,7 @@ public class ServerManagerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowNullUrlForGetServer() {
-        this.mgr.getServer(null);
+        this.mgr.getServer((String) null);
     }
 
     @Test

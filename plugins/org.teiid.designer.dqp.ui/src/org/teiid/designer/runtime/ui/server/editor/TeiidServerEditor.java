@@ -15,6 +15,9 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -37,8 +40,10 @@ import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
+import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
@@ -72,6 +77,8 @@ public class TeiidServerEditor extends EditorPart {
     private Text versionText;
 
     private FormText adminDescriptionText;
+    
+    private Button adminSSLCheckbox;
 
     private Hyperlink adminPingHyperlink;
 
@@ -82,6 +89,8 @@ public class TeiidServerEditor extends EditorPart {
     private Text jdbcPasswdText;
 
     private Label jdbcPort;
+    
+    private Button jdbcSSLCheckbox;
 
     private Hyperlink jdbcPingHyperlink;
 
@@ -109,6 +118,13 @@ public class TeiidServerEditor extends EditorPart {
     private KeyAdapter dirtyKeyListener = new KeyAdapter() {
         @Override
         public void keyReleased(KeyEvent e) {
+            TeiidServerEditor.this.setDirty();
+        }
+    };
+    
+    private SelectionListener dirtySelectionListener = new SelectionAdapter() {
+        @Override
+        public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
             TeiidServerEditor.this.setDirty();
         }
     };
@@ -227,6 +243,14 @@ public class TeiidServerEditor extends EditorPart {
         blueForeground(adminDescriptionText);
         GridDataFactory.fillDefaults().grab(false, false).span(2, 1).applyTo(adminDescriptionText);
         
+        if (ITeiidServerVersion.SEVEN.equals(teiidServer.getServerVersion().getMajor())) {
+            adminSSLCheckbox = toolkit.createButton(composite, UTIL.getString("serverPageSecureConnAdminLabel"), SWT.CHECK); //$NON-NLS-1$
+            adminSSLCheckbox.setSelection(teiidServer.getTeiidAdminInfo().isSecure());
+            blueForeground(adminSSLCheckbox);
+            adminSSLCheckbox.addSelectionListener(dirtySelectionListener);
+            GridDataFactory.fillDefaults().grab(false, false).span(2, 1).applyTo(adminSSLCheckbox);
+        }
+        
         adminPingHyperlink = toolkit.createHyperlink(composite, UTIL.getString("TeiidServerAdminSection.testPingButtonLabel"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().grab(true, false).applyTo(adminPingHyperlink);
         adminPingHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
@@ -279,6 +303,12 @@ public class TeiidServerEditor extends EditorPart {
         
         jdbcPort = toolkit.createLabel(composite, teiidServer.getTeiidJdbcInfo().getPort());
         blueForeground(jdbcPort);
+        
+        jdbcSSLCheckbox = toolkit.createButton(composite, UTIL.getString("serverPageSecureConnJDBCLabel"), SWT.CHECK); //$NON-NLS-1$
+        jdbcSSLCheckbox.setSelection(teiidServer.getTeiidJdbcInfo().isSecure());
+        blueForeground(jdbcSSLCheckbox);
+        jdbcSSLCheckbox.addSelectionListener(dirtySelectionListener);
+        GridDataFactory.fillDefaults().grab(false, false).span(2, 1).applyTo(jdbcSSLCheckbox);
         
         jdbcPingHyperlink = toolkit.createHyperlink(composite, UTIL.getString("TeiidServerJDBCSection.testPingButtonLabel"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().grab(true, false).applyTo(jdbcPingHyperlink);
@@ -337,9 +367,15 @@ public class TeiidServerEditor extends EditorPart {
         // Overwrite the properties of the teiid server
         teiidServer.setCustomLabel(customNameText.getText());
         
+        if (adminSSLCheckbox != null) {
+            ITeiidAdminInfo adminInfo = teiidServer.getTeiidAdminInfo();
+            adminInfo.setSecure(adminSSLCheckbox.getSelection());
+        }
+        
         ITeiidJdbcInfo jdbcInfo = teiidServer.getTeiidJdbcInfo();
         jdbcInfo.setUsername(jdbcUserNameText.getText());
         jdbcInfo.setPassword(jdbcPasswdText.getText());
+        jdbcInfo.setSecure(jdbcSSLCheckbox.getSelection());
         
         dirty = false;
         firePropertyChange(IEditorPart.PROP_DIRTY);

@@ -453,6 +453,22 @@ public final class TeiidServerManager implements EventManager {
     }
 
     /**
+     * @param parentServer the parent server of the requested teiid server
+     * @return the requested server or <code>null</code> if not found in the registry
+     */
+    public ITeiidServer getServer( IServer parentServer) {
+        CoreArgCheck.isNotNull(parentServer, "parentServer"); //$NON-NLS-1$
+
+        for (ITeiidServer teiidServer : getServers()) {
+            if (parentServer.equals(teiidServer.getParent())) {
+                return teiidServer;
+            }
+        }
+
+        return null;
+    }
+    
+    /**
      * @return an unmodifiable collection of registered servers (never <code>null</code>)
      */
     public Collection<ITeiidServer> getServers() {
