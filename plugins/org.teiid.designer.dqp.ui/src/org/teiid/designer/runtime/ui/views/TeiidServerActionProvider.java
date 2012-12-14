@@ -354,7 +354,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         viewer.addSelectionChangedListener(this.editServerAction);
 
         // the new server action is always enabled
-        this.newServerAction = new NewServerAction(shell, getServerManager());
+        this.newServerAction = new NewServerAction(shell);
         
         this.createDataSourceAction = new Action() {
 

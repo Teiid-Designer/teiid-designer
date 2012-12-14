@@ -8,13 +8,17 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.designer.runtime.TeiidServer;
+import org.eclipse.ui.PlatformUI;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidServerManager;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
@@ -24,7 +28,7 @@ import org.teiid.designer.runtime.ui.DqpUiPlugin;
  *
  * @since 8.0
  */
-public class NewServerAction extends Action {
+public class NewServerAction extends Action implements IHandler {
 
     /**
      * The server manager used to create and edit servers.
@@ -34,24 +38,25 @@ public class NewServerAction extends Action {
     /**
      * The shell used to display the dialog that edits and creates servers.
      */
-    private final Shell shell;
+    private Shell shell = null;
 
-    /**
-     * @param shell the parent shell used to display the dialog
-     * @param teiidServerManager the server manager to use when creating and editing servers
-     */
-    public NewServerAction( Shell shell,
-                            TeiidServerManager teiidServerManager ) {
+    public NewServerAction() {
         super(UTIL.getString("newServerActionText")); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(teiidServerManager, "serverManager"); //$NON-NLS-1$
-
+        
         if (Platform.isRunning()) {
             setToolTipText(UTIL.getString("newServerActionToolTip")); //$NON-NLS-1$
             setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.NEW_SERVER_ICON));
         }
-
+        
+        this.teiidServerManager = DqpPlugin.getInstance().getServerManager();
+    }
+    
+    /**
+     * @param shell the parent shell used to display the dialog
+     */
+    public NewServerAction( Shell shell) {
+        this();
         this.shell = shell;
-        this.teiidServerManager = teiidServerManager;
     }
 
     /**
@@ -61,6 +66,10 @@ public class NewServerAction extends Action {
      */
     @Override
     public void run() {
+        if (shell == null) {
+            shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+        }
+        
         ServerWizard wizard = new ServerWizard(this.teiidServerManager);      
         WizardDialog dialog = new WizardDialog(this.shell, wizard) {
             /**
@@ -78,5 +87,26 @@ public class NewServerAction extends Action {
         };
         
         dialog.open();
+    }
+    
+    @Override
+    public Object execute(ExecutionEvent event) {
+        run();
+        return null;
+    }
+
+    @Override
+    public void addHandlerListener(IHandlerListener handlerListener) {
+        // Not required
+    }
+
+    @Override
+    public void dispose() {
+        // Not required
+    }
+
+    @Override
+    public void removeHandlerListener(IHandlerListener handlerListener) {
+        // Not required
     }
 }

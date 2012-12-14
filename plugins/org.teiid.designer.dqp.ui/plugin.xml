@@ -302,6 +302,28 @@
          </enablement>
       </actionProvider>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.wst.server.ui.ServersView">
+         <command
+               commandId="org.teiid.designer.dqp.ui.newServerAction"
+               icon="icons/full/ctool16/new-teiid-server.png"
+               label="New Jboss Teiid Server"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.teiid.designer.runtime.ui.server.NewServerAction"
+            description="Show wizard for configuring new Jboss Teiid Server"
+            id="org.teiid.designer.dqp.ui.newServerAction"
+            name="New Jboss Teiid Server">
+      </command>
+   </extension>
    <extension point="org.eclipse.ui.editors">
       <editor
             class="org.teiid.designer.runtime.ui.server.editor.TeiidServerEditor"

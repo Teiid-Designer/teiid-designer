@@ -233,7 +233,7 @@ public class TeiidView extends CommonNavigator implements DqpUiConstants {
             public void linkActivated(HyperlinkEvent e) {
                 if (serverMap.isEmpty()) {
                     // There are no servers so open the server wizard
-                    NewServerAction action = new NewServerAction(getViewSite().getShell(), getServerManager());
+                    NewServerAction action = new NewServerAction(getViewSite().getShell());
                     action.run();
                 } else {
                     //open the servers view
