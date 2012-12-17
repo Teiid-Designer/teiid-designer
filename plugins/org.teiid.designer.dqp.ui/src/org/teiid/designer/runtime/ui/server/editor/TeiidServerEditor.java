@@ -244,11 +244,14 @@ public class TeiidServerEditor extends EditorPart {
         GridDataFactory.fillDefaults().grab(false, false).span(2, 1).applyTo(adminDescriptionText);
         
         if (ITeiidServerVersion.SEVEN.equals(teiidServer.getServerVersion().getMajor())) {
-            adminSSLCheckbox = toolkit.createButton(composite, UTIL.getString("serverPageSecureConnAdminLabel"), SWT.CHECK); //$NON-NLS-1$
+            Label checkboxLabel = toolkit.createLabel(composite, UTIL.getString("serverPageSecureConnAdminLabel")); //$NON-NLS-1$
+            GridDataFactory.fillDefaults().grab(true, false).applyTo(checkboxLabel);
+            blueForeground(checkboxLabel);
+            
+            adminSSLCheckbox = toolkit.createButton(composite, "", SWT.CHECK); //$NON-NLS-1$
             adminSSLCheckbox.setSelection(teiidServer.getTeiidAdminInfo().isSecure());
-            blueForeground(adminSSLCheckbox);
             adminSSLCheckbox.addSelectionListener(dirtySelectionListener);
-            GridDataFactory.fillDefaults().grab(false, false).span(2, 1).applyTo(adminSSLCheckbox);
+            GridDataFactory.fillDefaults().grab(false, false).applyTo(adminSSLCheckbox);
         }
         
         adminPingHyperlink = toolkit.createHyperlink(composite, UTIL.getString("TeiidServerAdminSection.testPingButtonLabel"), SWT.NONE); //$NON-NLS-1$
@@ -304,11 +307,15 @@ public class TeiidServerEditor extends EditorPart {
         jdbcPort = toolkit.createLabel(composite, teiidServer.getTeiidJdbcInfo().getPort());
         blueForeground(jdbcPort);
         
-        jdbcSSLCheckbox = toolkit.createButton(composite, UTIL.getString("serverPageSecureConnJDBCLabel"), SWT.CHECK); //$NON-NLS-1$
+        Label checkboxLabel = toolkit.createLabel(composite, UTIL.getString("serverPageSecureConnJDBCLabel")); //$NON-NLS-1$
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(checkboxLabel);
+        blueForeground(checkboxLabel);
+        
+        jdbcSSLCheckbox = toolkit.createButton(composite, "", SWT.CHECK); //$NON-NLS-1$
         jdbcSSLCheckbox.setSelection(teiidServer.getTeiidJdbcInfo().isSecure());
         blueForeground(jdbcSSLCheckbox);
         jdbcSSLCheckbox.addSelectionListener(dirtySelectionListener);
-        GridDataFactory.fillDefaults().grab(false, false).span(2, 1).applyTo(jdbcSSLCheckbox);
+        GridDataFactory.fillDefaults().grab(false, false).applyTo(jdbcSSLCheckbox);
         
         jdbcPingHyperlink = toolkit.createHyperlink(composite, UTIL.getString("TeiidServerJDBCSection.testPingButtonLabel"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().grab(true, false).applyTo(jdbcPingHyperlink);

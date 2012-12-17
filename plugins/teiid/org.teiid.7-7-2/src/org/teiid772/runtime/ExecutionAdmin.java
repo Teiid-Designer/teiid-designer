@@ -613,7 +613,6 @@ public class ExecutionAdmin implements IExecutionAdmin {
                 if( teiidJdbcConnection != null ) {
                     teiidJdbcConnection.close();
                 }
-                admin.close();
             }
         } catch (Exception ex) {
             String msg = NLS.bind(Messages.serverDeployUndeployProblemPingingTeiidJdbc, url);

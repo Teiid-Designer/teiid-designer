@@ -277,7 +277,7 @@ public class VdbDeployer {
             if (this.status == null) {
                 monitor.subTask(UTIL.getString(PREFIX + "deployVdbTask", getVdbName())); //$NON-NLS-1$
                 teiidServer.deployVdb(vdb.getFile());
-                this.status = ((! teiidServer.hasVdb(getVdbName())) ? DeployStatus.DEPLOY_VDB_FAILED : DeployStatus.DEPLOYED_VDB);
+                this.status = (teiidServer.hasVdb(getVdbName()) ? DeployStatus.DEPLOYED_VDB : DeployStatus.DEPLOY_VDB_FAILED);
             }
         } catch (Exception e) {
             this.status = DeployStatus.EXCEPTION;
@@ -291,7 +291,7 @@ public class VdbDeployer {
      * @return the name of the VDB being deployed (never <code>null</code>)
      */
     public String getVdbName() {
-        return this.vdb.getFile().getName();
+        return this.vdb.getName().removeFileExtension().lastSegment();
     }
 
     /**

@@ -399,10 +399,21 @@ public class TeiidServer implements ITeiidServer {
     @Override
     public IStatus testPing() {
         try {
-            connect();
+            boolean testCausesConnect = false;
+            
+            if (admin == null) {
+                connect();
+                testCausesConnect = true;
+            }
+            
             ping();
-            disconnect();
-            this.admin = null;
+            
+            // Only disconnect if this test ping caused
+            // the connect
+            if (testCausesConnect) {
+                disconnect();
+            }
+            
         } catch (Exception e) {
             String msg = Util.getString("cannotConnectToServer", this); //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, e);
@@ -424,10 +435,21 @@ public class TeiidServer implements ITeiidServer {
     @Override
     public IStatus testJDBCPing(String host, String port, String username, String password) {
         try {
-            connect();
+            boolean testCausesConnect = false;
+            
+            if (admin == null) {
+                connect();
+                testCausesConnect = true;
+            }
+            
             admin.ping(PingType.JDBC);
-            disconnect();
-            this.admin = null;
+            
+            // Only disconnect if this test ping caused
+            // the connect
+            if (testCausesConnect) {
+                disconnect();
+            }
+            
         } catch (Exception e) {
             String msg = Util.getString("cannotConnectToServer", this); //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, e);
