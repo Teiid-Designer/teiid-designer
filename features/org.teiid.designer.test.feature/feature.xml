@@ -61,7 +61,8 @@
       <import plugin="org.teiid.designer.jdbc.test.framework" version="8.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.jdbc.relational"/>
       <import plugin="org.teiid.designer.vdb"/>
-      <import plugin="org.teiid8" version="8.0.0" match="compatible"/>
+      <import plugin="org.teiid.8-2" version="8.0.0" match="compatible"/>
+      <import plugin="org.teiid.7-7-2" version="8.0.0" match="compatible"/>
       <import plugin="org.mockito" version="1.9.0" match="greaterOrEqual"/>
       <import plugin="org.junit4" version="4.8.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui" version="3.103.0" match="compatible"/>
@@ -322,13 +323,21 @@
          unpack="false"/>
 
    <plugin
-         id="org.teiid8.test"
+         id="org.teiid.8-2.test"
          download-size="0"
          install-size="0"
          version="0.0.0"
          fragment="true"
          unpack="false"/>
 
+    <plugin
+         id="org.teiid.7-7-2.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
    <plugin
          id="org.teiid.designer.test"
          download-size="0"
