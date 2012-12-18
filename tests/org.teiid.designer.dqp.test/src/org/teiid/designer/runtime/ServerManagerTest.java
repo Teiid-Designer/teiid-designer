@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
-import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +51,7 @@ public class ServerManagerTest {
         
         private final String[] HOSTS = new String[] { "localhost", "myserver.com" };
         
-        private final int[] PORTS = new int[] { 8080, 8180, 8280, 31443, 31444 };
+        private final String[] PARENT_IDS = new String[] { "server1", "server2" };
         
         private List<IServer> servers = new ArrayList<IServer>();
         
@@ -61,14 +60,11 @@ public class ServerManagerTest {
          */
         public TestServersProvider() {
             
-            for (int port : PORTS) {
-                JBoss7Server mockJBossServer = mock(JBoss7Server.class);
-                when(mockJBossServer.getManagementPort()).thenReturn(port);
-                
+            for (String parentId : PARENT_IDS) {
                 for (String host : HOSTS) {
                     IServer mockServer = mock(IServer.class);
                     when(mockServer.getHost()).thenReturn(host);
-                    when(mockServer.loadAdapter(JBoss7Server.class, null)).thenReturn(mockJBossServer);
+                    when(mockServer.getId()).thenReturn(parentId);
                 
                     servers.add(mockServer);
                 }

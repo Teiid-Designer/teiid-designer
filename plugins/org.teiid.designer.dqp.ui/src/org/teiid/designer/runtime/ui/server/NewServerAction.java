@@ -31,11 +31,6 @@ import org.teiid.designer.runtime.ui.DqpUiPlugin;
 public class NewServerAction extends Action implements IHandler {
 
     /**
-     * The server manager used to create and edit servers.
-     */
-    private final TeiidServerManager teiidServerManager;
-
-    /**
      * The shell used to display the dialog that edits and creates servers.
      */
     private Shell shell = null;
@@ -47,8 +42,6 @@ public class NewServerAction extends Action implements IHandler {
             setToolTipText(UTIL.getString("newServerActionToolTip")); //$NON-NLS-1$
             setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.NEW_SERVER_ICON));
         }
-        
-        this.teiidServerManager = DqpPlugin.getInstance().getServerManager();
     }
     
     /**
@@ -69,8 +62,9 @@ public class NewServerAction extends Action implements IHandler {
         if (shell == null) {
             shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         }
-        
-        ServerWizard wizard = new ServerWizard(this.teiidServerManager);      
+
+        TeiidServerManager teiidServerManager = DqpPlugin.getInstance().getServerManager();
+        ServerWizard wizard = new ServerWizard(teiidServerManager);      
         WizardDialog dialog = new WizardDialog(this.shell, wizard) {
             /**
              * {@inheritDoc}

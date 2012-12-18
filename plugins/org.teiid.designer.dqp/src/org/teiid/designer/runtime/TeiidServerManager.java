@@ -34,7 +34,6 @@ import org.eclipse.wst.server.core.IServerLifecycleListener;
 import org.eclipse.wst.server.core.IServerListener;
 import org.eclipse.wst.server.core.ServerEvent;
 import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
-import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.core.designer.util.Base64;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
@@ -130,6 +129,8 @@ public final class TeiidServerManager implements EventManager {
      * The attribute used to persist a server's host value.
      */
     private static final String HOST_ATTR = "host"; //$NON-NLS-1$
+
+    private static final String PARENT_SERVER_ID = "parentServerId"; //$NON-NLS-1$
     
     /**
      * The attribute used to persist a server's version value.
@@ -170,6 +171,7 @@ public final class TeiidServerManager implements EventManager {
      * The attribute used to persist a server's secure value.
      */
     private static final String JDBC_SECURE_ATTR = "jdbcsecure"; //$NON-NLS-1$
+
     
     // ===========================================================================================================================
     // Fields
@@ -701,6 +703,7 @@ public final class TeiidServerManager implements EventManager {
                         }
 
                         String host = null;
+                        String parentServerId = null;
                         String customLabel = null;
                         boolean previewServer = false;
 
@@ -715,6 +718,12 @@ public final class TeiidServerManager implements EventManager {
 
                         if (hostNode != null) {
                             host = hostNode.getNodeValue();
+                        }
+                        
+                        Node parentServerNode = serverAttributeMap.getNamedItem(PARENT_SERVER_ID);
+                        
+                        if (parentServerNode != null) {
+                            parentServerId = parentServerNode.getNodeValue();
                         }
                         
                         // custom label attribute
@@ -842,7 +851,7 @@ public final class TeiidServerManager implements EventManager {
                         // add server to registry
                         IServer parentServer = null;
                         try {
-                            parentServer = findParentServer(host, teiidAdminInfo);
+                            parentServer = findParentServer(host, parentServerId, teiidAdminInfo);
                         } catch (OrphanedTeiidServerException ex) {
                             // Cannot add the teiid server since it has no parent
                             continue;
@@ -873,20 +882,19 @@ public final class TeiidServerManager implements EventManager {
         return Status.OK_STATUS;
     }
     
-    private IServer findParentServer(String host, ITeiidAdminInfo teiidAdminInfo) throws OrphanedTeiidServerException {
+    private IServer findParentServer(String host, String parentServerId, ITeiidAdminInfo teiidAdminInfo) throws OrphanedTeiidServerException {
         IServer[] servers = parentServersProvider.getServers();
         for (IServer server : servers) {
             if (! host.equals(server.getHost()))
                 continue;
             
-            JBoss7Server jb7 = (JBoss7Server) server.loadAdapter(JBoss7Server.class, null);
-            if (jb7 == null)
+            if (parentServerId != null && ! server.getId().equals(parentServerId)) {
+                // Double checks against the parent server id only if a parent server id was
+                // save. In the case of the old registry format, this was not possible so host
+                // comparison is sufficient
                 continue;
+            }
             
-            if (teiidAdminInfo.getPortNumber() != jb7.getManagementPort())
-                continue;
-            
-            // The host and admin port match so must be the same server
             return server;
         }
        
@@ -976,6 +984,10 @@ public final class TeiidServerManager implements EventManager {
                     
                     { // Host
                         serverElement.setAttribute(HOST_ATTR, teiidServer.getHost());
+                    }
+                    
+                    { // Parent Server Id
+                        serverElement.setAttribute(PARENT_SERVER_ID, teiidServer.getParent().getId());
                     }
                     
                     { // CUSTOM LABEL
