@@ -25,6 +25,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -34,8 +36,12 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerLifecycleListener;
+import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.IServersProvider;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent.TargetType;
@@ -78,6 +84,12 @@ public class TeiidServerEditor extends EditorPart {
 
     private FormText adminDescriptionText;
     
+    private Text adminUserNameText;
+
+    private Text adminPasswdText;
+    
+    private Control adminPort;
+    
     private Button adminSSLCheckbox;
 
     private Hyperlink adminPingHyperlink;
@@ -88,7 +100,7 @@ public class TeiidServerEditor extends EditorPart {
 
     private Text jdbcPasswdText;
 
-    private Label jdbcPort;
+    private Control jdbcPort;
     
     private Button jdbcSSLCheckbox;
 
@@ -104,6 +116,9 @@ public class TeiidServerEditor extends EditorPart {
         }
     };
     
+    /**
+     * Listener that updates the editor if the server is changed externally to the editor
+     */
     private IExecutionConfigurationListener excutionConfigListener = new IExecutionConfigurationListener() {
         
         @Override
@@ -115,17 +130,59 @@ public class TeiidServerEditor extends EditorPart {
         }
     };
 
+    /**
+     * Listener that sets the editor dirty on typing
+     */
     private KeyAdapter dirtyKeyListener = new KeyAdapter() {
         @Override
         public void keyReleased(KeyEvent e) {
+            if(((e.stateMask & SWT.CTRL) == SWT.CTRL) && (e.keyCode == 's')) {
+                // avoid setting dirty when user used keys to save
+                return;
+            }
+            
+            if (e.keyCode == SWT.CTRL) {
+                // if ctrl-s was pressed then ctrl is released last
+                return;
+            }
+            
             TeiidServerEditor.this.setDirty();
         }
     };
     
+    /**
+     * Listener that sets the editor dirty on checking of one of the checkboxes
+     */
     private SelectionListener dirtySelectionListener = new SelectionAdapter() {
         @Override
         public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
             TeiidServerEditor.this.setDirty();
+        }
+    };
+
+    /**
+     * Listener that closes the editor if the server is deleted
+     */
+    private IServerLifecycleListener serverLifecycleListener = new ServerLifecycleAdapter() {
+       @Override
+        public void serverRemoved(IServer server) {
+            if (! server.equals(teiidServer.getParent()))
+                return;
+            
+            TeiidServerEditor.this.getEditorSite().getPage().closeEditor(TeiidServerEditor.this, false);
+        } 
+    };
+    
+    private IWorkbenchListener shutdownListener = new IWorkbenchListener() {
+        
+        @Override
+        public boolean preShutdown(IWorkbench workbench, boolean forced) {
+            TeiidServerEditor.this.getEditorSite().getPage().closeEditor(TeiidServerEditor.this, false);
+            return true;
+        }
+        
+        @Override
+        public void postShutdown(IWorkbench workbench) {
         }
     };
     
@@ -136,9 +193,15 @@ public class TeiidServerEditor extends EditorPart {
         if (input instanceof TeiidServerEditorInput) {
             TeiidServerEditorInput tsei = (TeiidServerEditorInput) input;
             teiidServer = tsei.getTeiidServer();
-            serverManager = DqpPlugin.getInstance().getServerManager();
             
+            IServersProvider serversProvider = DqpPlugin.getInstance().getServersProvider();
+            serversProvider.addServerLifecycleListener(serverLifecycleListener);
+            
+            serverManager = DqpPlugin.getInstance().getServerManager();
             serverManager.addListener(excutionConfigListener);
+            
+            IWorkbench workbench = getEditorSite().getWorkbenchWindow().getWorkbench();
+            workbench.addWorkbenchListener(shutdownListener);
         }
     }
     
@@ -180,6 +243,13 @@ public class TeiidServerEditor extends EditorPart {
     
     private void blueForeground(Control control) {
         control.setForeground(control.getDisplay().getSystemColor(SWT.COLOR_DARK_BLUE));
+    }
+
+    private boolean isSevenServer() {
+        if (teiidServer == null)
+            return false;
+        
+        return ITeiidServerVersion.SEVEN.equals(teiidServer.getServerVersion().getMajor());
     }
 
     /**
@@ -239,11 +309,29 @@ public class TeiidServerEditor extends EditorPart {
         GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true).margins(5, 10).spacing(5, 20).applyTo(composite);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
        
-        adminDescriptionText = WidgetFactory.createFormText(composite, toolkit, UTIL.getString("TeiidServerAdminSection.description"), parentServerHyperlinkAdapter); //$NON-NLS-1$
-        blueForeground(adminDescriptionText);
-        GridDataFactory.fillDefaults().grab(false, false).span(2, 1).applyTo(adminDescriptionText);
-        
-        if (ITeiidServerVersion.SEVEN.equals(teiidServer.getServerVersion().getMajor())) {
+        if (isSevenServer()) {
+            
+            Label userNameLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerAdminSection.userNameLabel")); //$NON-NLS-1$
+            blueForeground(userNameLabel);
+            
+            adminUserNameText = toolkit.createText(composite, teiidServer.getTeiidAdminInfo().getUsername());
+            GridDataFactory.fillDefaults().grab(true, false).applyTo(adminUserNameText);
+            adminUserNameText.addKeyListener(dirtyKeyListener);
+            
+            Label passwdLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerAdminSection.passwordLabel")); //$NON-NLS-1$
+            blueForeground(passwdLabel);
+            
+            adminPasswdText = toolkit.createText(composite, teiidServer.getTeiidAdminInfo().getPassword(), SWT.PASSWORD);
+            GridDataFactory.fillDefaults().grab(true, false).applyTo(adminPasswdText);
+            adminPasswdText.addKeyListener(dirtyKeyListener);
+            
+            Label portLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerAdminSection.portLabel")); //$NON-NLS-1$
+            blueForeground(portLabel);
+            
+            adminPort = toolkit.createText(composite, teiidServer.getTeiidAdminInfo().getPort());
+            GridDataFactory.fillDefaults().grab(true, false).applyTo(adminPort);
+            adminPort.addKeyListener(dirtyKeyListener);
+            
             Label checkboxLabel = toolkit.createLabel(composite, UTIL.getString("serverPageSecureConnAdminLabel")); //$NON-NLS-1$
             GridDataFactory.fillDefaults().grab(true, false).applyTo(checkboxLabel);
             blueForeground(checkboxLabel);
@@ -252,7 +340,18 @@ public class TeiidServerEditor extends EditorPart {
             adminSSLCheckbox.setSelection(teiidServer.getTeiidAdminInfo().isSecure());
             adminSSLCheckbox.addSelectionListener(dirtySelectionListener);
             GridDataFactory.fillDefaults().grab(false, false).applyTo(adminSSLCheckbox);
+        } else {
+            adminDescriptionText = WidgetFactory.createFormText(composite, toolkit, UTIL.getString("TeiidServerAdminSection.description"), parentServerHyperlinkAdapter); //$NON-NLS-1$
+            blueForeground(adminDescriptionText);
+            GridDataFactory.fillDefaults().grab(false, false).span(2, 1).applyTo(adminDescriptionText);
+            
+            Label portLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerAdminSection.portLabel")); //$NON-NLS-1$
+            blueForeground(portLabel);
+            
+            adminPort = toolkit.createLabel(composite, teiidServer.getTeiidAdminInfo().getPort());
         }
+        
+        blueForeground(adminPort);
         
         adminPingHyperlink = toolkit.createHyperlink(composite, UTIL.getString("TeiidServerAdminSection.testPingButtonLabel"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().grab(true, false).applyTo(adminPingHyperlink);
@@ -304,7 +403,15 @@ public class TeiidServerEditor extends EditorPart {
         Label portLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerJDBCSection.portLabel")); //$NON-NLS-1$
         blueForeground(portLabel);
         
-        jdbcPort = toolkit.createLabel(composite, teiidServer.getTeiidJdbcInfo().getPort());
+        if (isSevenServer()) {
+            // Only if teiid server is version 7 will the port be editable since subsequent 
+            // versions the port can be gathered from the server
+            jdbcPort = toolkit.createText(composite, teiidServer.getTeiidJdbcInfo().getPort());
+            GridDataFactory.fillDefaults().grab(true, false).applyTo(jdbcPort);
+            jdbcPort.addKeyListener(dirtyKeyListener);
+        } else {
+            jdbcPort = toolkit.createLabel(composite, teiidServer.getTeiidJdbcInfo().getPort());
+        }
         blueForeground(jdbcPort);
         
         Label checkboxLabel = toolkit.createLabel(composite, UTIL.getString("serverPageSecureConnJDBCLabel")); //$NON-NLS-1$
@@ -349,9 +456,35 @@ public class TeiidServerEditor extends EditorPart {
                 hostNameText.setText(teiidServer.getHost());
                 versionText.setText(teiidServer.getServerVersion().toString());
                 jbServerNameHyperlink.setText(teiidServer.getParent() != null ? teiidServer.getParent().getName() : ""); //$NON-NLS-1$
-                jdbcUserNameText.setText(teiidServer.getTeiidJdbcInfo().getUsername());
-                jdbcPasswdText.setText(teiidServer.getTeiidJdbcInfo().getPassword());
-                jdbcPort.setText(teiidServer.getTeiidJdbcInfo().getPort());
+                
+                ITeiidAdminInfo teiidAdminInfo = teiidServer.getTeiidAdminInfo();
+                ITeiidJdbcInfo teiidJdbcInfo = teiidServer.getTeiidJdbcInfo();
+                
+                if (adminUserNameText != null) {
+                    adminUserNameText.setText(teiidAdminInfo.getUsername());
+                }
+                
+                if (adminPasswdText != null) {
+                    adminPasswdText.setText(teiidAdminInfo.getPassword());
+                }
+                
+                if (adminPort instanceof Text) {
+                    ((Text) adminPort).setText(teiidAdminInfo.getPort());
+                } else if (adminPort instanceof Label) {
+                    ((Label) adminPort).setText(teiidAdminInfo.getPort());
+                }
+                adminSSLCheckbox.setSelection(teiidAdminInfo.isSecure());
+                
+                jdbcUserNameText.setText(teiidJdbcInfo.getUsername());
+                jdbcPasswdText.setText(teiidJdbcInfo.getPassword());
+                
+                if (jdbcPort instanceof Text) {
+                    ((Text) jdbcPort).setText(teiidJdbcInfo.getPort());
+                } else if (jdbcPort instanceof Label) {
+                    ((Label) jdbcPort).setText(teiidJdbcInfo.getPort());
+                }
+                
+                jdbcSSLCheckbox.setSelection(teiidJdbcInfo.isSecure());
             }
         });
     }
@@ -359,6 +492,13 @@ public class TeiidServerEditor extends EditorPart {
     @Override
     public void dispose() {
         serverManager.removeListener(excutionConfigListener);
+        
+        IServersProvider serversProvider = DqpPlugin.getInstance().getServersProvider();
+        serversProvider.removeServerLifecycleListener(serverLifecycleListener);
+        
+        IWorkbench workbench = getEditorSite().getWorkbenchWindow().getWorkbench();
+        workbench.removeWorkbenchListener(shutdownListener);
+        
         super.dispose();
     }
     
@@ -374,8 +514,17 @@ public class TeiidServerEditor extends EditorPart {
         // Overwrite the properties of the teiid server
         teiidServer.setCustomLabel(customNameText.getText());
         
-        if (adminSSLCheckbox != null) {
-            ITeiidAdminInfo adminInfo = teiidServer.getTeiidAdminInfo();
+        ITeiidAdminInfo adminInfo = teiidServer.getTeiidAdminInfo();
+        
+        if (adminUserNameText != null) {
+            adminInfo.setUsername(adminUserNameText.getText());
+        }
+        
+        if (adminPasswdText != null) {
+            adminInfo.setPassword(adminPasswdText.getText());
+        }
+        
+        if (adminSSLCheckbox != null) {    
             adminInfo.setSecure(adminSSLCheckbox.getSelection());
         }
         
