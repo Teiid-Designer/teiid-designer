@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.PluginUtil;
@@ -114,8 +115,21 @@ public class DqpPlugin extends Plugin {
      * @return the server manager
      */
     public TeiidServerManager getServerManager() {
-        
         if (serverMgr == null) {
+            
+            /*
+             * Server manager init requires restoring its state dependent on
+             * the server provider which may not have been inited. To ensure
+             * that latter is inited avoid initing prior to the workbench initialization 
+             */
+            if (PlatformUI.getWorkbench().isStarting()) {
+                try {
+                    throw new Exception("Programming Error: Server Manager should not be instantiated prior to the workbench"); //$NON-NLS-1$
+                } catch (Exception ex) {
+                    Util.log(ex);
+                }
+            }
+            
             try {
                 initializeServerRegistry();
             } catch (final Exception e) {
