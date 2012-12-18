@@ -387,7 +387,8 @@ public class PreviewDataWorker {
 
             // Note that this is a Transient profile, it is not visible in
             // the UI and goes away when it is garbage collected.
-            IConnectionProfile profile = ConnectivityUtil.createTransientTeiidProfile(driverPath,
+            IConnectionProfile profile = ConnectivityUtil.createTransientTeiidProfile(defaultServer.getServerVersion(),
+                                                                                      driverPath,
                                                                                       jdbcInfo.getUrl(),
                                                                                       jdbcInfo.getUsername(),
                                                                                       jdbcInfo.getPassword(),

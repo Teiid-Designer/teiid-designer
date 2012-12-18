@@ -14,7 +14,7 @@ public interface ITeiidServerVersion {
     
     public static final String DOT = ".";  //$NON-NLS-1$
     
-    public static final String WILDCARD = "*"; //$NON-NLS-1$
+    public static final String WILDCARD = "x"; //$NON-NLS-1$
     
     public static final String ZERO = "0"; //$NON-NLS-1$
 

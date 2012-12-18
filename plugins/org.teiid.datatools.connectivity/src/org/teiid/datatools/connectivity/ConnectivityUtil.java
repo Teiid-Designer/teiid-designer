@@ -24,6 +24,7 @@ import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileCon
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 import org.teiid.datatools.connectivity.security.impl.EquinoxSecureStorageProvider;
 import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 /**
  * 
@@ -43,7 +44,7 @@ public class ConnectivityUtil {
     public static final String TEIID_PREVIEW_DRIVER_DEFINITION_ID = "DriverDefn.org.teiid.datatools.connectivity.driver.serverDriverTemplate.Teiid Driver Default"; //$NON-NLS-1$
     public static final String TEIID_PREVIEW_DRIVER_NAME = "Teiid Driver (default)"; //$NON-NLS-1$
     public static final String TEIID_PREVIEW_DRIVER_DEFN_TYPE = "org.teiid.datatools.connectivity.driver.serverDriverTemplate"; //$NON-NLS-1$
-	public static final String TEIID_DATABASE_VERSION = "8.x"; //$NON-NLS-1$
+	
 	public static final String TEIID_DRIVER_DEFINITION_ID_BASE = "DriverDefn.org.teiid.datatools.connectivity.driver.serverDriverTemplate."; //$NON-NLS-1$
 
 	/**
@@ -61,7 +62,8 @@ public class ConnectivityUtil {
      */
     public static final String JDBC_PASSWORD = "jdbc_password"; //$NON-NLS-1$
     
-    public static Properties createDriverProps( String jarList,
+    public static Properties createDriverProps(ITeiidServerVersion serverVersion, 
+                                                String jarList,
                                                 String driverURL,
                                                 String username,
                                                 String vdbName ) {
@@ -73,7 +75,7 @@ public class ConnectivityUtil {
         	baseProperties.setProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID, username);
         }
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_VENDOR_PROP_ID, TEIID_DATABASE_VENDOR_NAME);
-        baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID, TEIID_DATABASE_VERSION);
+        baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID, serverVersion.toString());
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_NAME_PROP_ID, vdbName);
         baseProperties.setProperty(IJDBCConnectionProfileConstants.SAVE_PASSWORD_PROP_ID, String.valueOf(true));
         // baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_JARLIST,
@@ -83,7 +85,8 @@ public class ConnectivityUtil {
         return baseProperties;
     }
 
-    public static IConnectionProfile createTransientTeiidProfile( String driverPath,
+    public static IConnectionProfile createTransientTeiidProfile( ITeiidServerVersion serverVersion,
+                                                                  String driverPath,
                                                                   String connectionURL,
                                                                   String username,
                                                                   String password,
@@ -93,7 +96,7 @@ public class ConnectivityUtil {
         try {
             DriverInstance mDriver = DriverManager.getInstance().getDriverInstanceByID(TEIID_PREVIEW_DRIVER_DEFINITION_ID);
             if (mDriver == null) {
-                createTeiidPreviewDriverInstance(driverPath, connectionURL, username);
+                createTeiidPreviewDriverInstance(serverVersion, driverPath, connectionURL, username);
             } else {
                 // JBIDE-7493 Eclipse updates can break profiles because the driverPath is plugin version specific.
                 String jarList = mDriver.getJarList();
@@ -105,7 +108,8 @@ public class ConnectivityUtil {
 
             storeJDBCPassword(connectionURL, password);
 
-            return pm.createTransientProfile(TEIID_PROFILE_PROVIDER_ID, createDriverProps(driverPath,
+            return pm.createTransientProfile(TEIID_PROFILE_PROVIDER_ID, createDriverProps(serverVersion,
+                                                                                          driverPath,
                                                                                           connectionURL,
                                                                                           username,
                                                                                           vdbName));
@@ -116,7 +120,7 @@ public class ConnectivityUtil {
 
     }
 
-    private static void createTeiidPreviewDriverInstance( String jarList,
+    private static void createTeiidPreviewDriverInstance( ITeiidServerVersion serverVersion, String jarList,
                                                           String driverURL, String username ) {
         IPropertySet pset = new PropertySetImpl(TEIID_PREVIEW_DRIVER_NAME, TEIID_PREVIEW_DRIVER_DEFINITION_ID);
         Properties baseProperties = new Properties();
@@ -129,7 +133,7 @@ public class ConnectivityUtil {
         }
         
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_VENDOR_PROP_ID, TEIID_DATABASE_VENDOR_NAME);
-        baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID, TEIID_DATABASE_VERSION);
+        baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID, serverVersion.toString());
         baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_JARLIST, jarList);
         baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_TYPE, TEIID_PREVIEW_DRIVER_DEFN_TYPE);
         baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_CLASS, TEIID_DRIVER_NAME);
@@ -183,7 +187,8 @@ public class ConnectivityUtil {
     }
 
     
-    public static Properties createVDBTeiidProfileProperties(String driverPath,
+    public static Properties createVDBTeiidProfileProperties(ITeiidServerVersion serverVersion, 
+            String driverPath,
     		String connectionURL,
     		String username,
     		String password,
@@ -192,7 +197,7 @@ public class ConnectivityUtil {
 
     	DriverInstance mDriver = DriverManager.getInstance().getDriverInstanceByID(TEIID_DRIVER_DEFINITION_ID_BASE + vdbName);
         if (mDriver == null) {
-            createTeiidPreviewDriverInstance(driverPath, driverPath, username);
+            createTeiidPreviewDriverInstance(serverVersion, driverPath, driverPath, username);
         } else {
 			// JBIDE-7493 Eclipse updates can break profiles because the driverPath is plugin version specific.
 			String jarList = mDriver.getJarList();
@@ -203,10 +208,11 @@ public class ConnectivityUtil {
         
         storeJDBCPassword(connectionURL, password);
 
-        return createDriverProps(driverPath, connectionURL, username, vdbName);
+        return createDriverProps(serverVersion, driverPath, connectionURL, username, vdbName);
     }
     
-    public static IConnectionProfile createVDBTeiidProfile( String driverPath,
+    public static IConnectionProfile createVDBTeiidProfile( ITeiidServerVersion serverVersion, 
+            String driverPath,
     		String connectionURL,
     		String username,
     		String password,
@@ -216,7 +222,7 @@ public class ConnectivityUtil {
     	try {
     		DriverInstance mDriver = DriverManager.getInstance().getDriverInstanceByID(TEIID_PREVIEW_DRIVER_DEFINITION_ID);
     		if (mDriver == null) {
-    			createTeiidPreviewDriverInstance(driverPath, connectionURL, username);
+    			createTeiidPreviewDriverInstance(serverVersion, driverPath, connectionURL, username);
     		} else {
     			// JBIDE-7493 Eclipse updates can break profiles because the driverPath is plugin version specific.
     			String jarList = mDriver.getJarList();
@@ -234,7 +240,7 @@ public class ConnectivityUtil {
 
     		return pm.createProfile(profileName, "", //$NON-NLS-1$
     				TEIID_PROFILE_PROVIDER_ID,
-    				createDriverProps(driverPath, connectionURL, username, vdbName));
+    				createDriverProps(serverVersion, driverPath, connectionURL, username, vdbName));
     	} catch (ConnectionProfileException e) {
     		Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, "error getting profile", e); //$NON-NLS-1$
     		throw new CoreException(status);

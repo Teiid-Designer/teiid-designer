@@ -7,7 +7,7 @@
             class="org.teiid772.runtime.ExecutionAdminFactory">
          <version
                major="7"
-               micro="*"
+               micro="x"
                minor="7">
          </version>
       </runtimeFactory>

@@ -155,7 +155,7 @@ public class ExecuteVdbWorker implements VdbConstants {
 					|| null == jdbcInfo.getPassword()
 					|| jdbcInfo.getPassword().isEmpty()) {
 				Properties cpProps = ConnectivityUtil
-						.createVDBTeiidProfileProperties(driverPath,connectionURL, jdbcInfo.getUsername(),jdbcInfo.getPassword(), vdbName, profileName);
+						.createVDBTeiidProfileProperties(teiidServer.getServerVersion(), driverPath,connectionURL, jdbcInfo.getUsername(),jdbcInfo.getPassword(), vdbName, profileName);
 				NewTeiidFilteredCPWizard wiz = new NewTeiidFilteredCPWizard(profileName, null);
 				TeiidCPWizardDialog wizardDialog = new TeiidCPWizardDialog(Display.getCurrent().getActiveShell(), wiz);
 				wizardDialog.setProperties(cpProps);
@@ -172,9 +172,13 @@ public class ExecuteVdbWorker implements VdbConstants {
 				}
 				// if we have all the info we create it w/o user interaction
 			} else {
-				profile = ConnectivityUtil.createVDBTeiidProfile(driverPath,
-						connectionURL, jdbcInfo.getUsername(),
-						jdbcInfo.getPassword(), vdbName, profileName);
+				profile = ConnectivityUtil.createVDBTeiidProfile(teiidServer.getServerVersion(),
+				                                                 driverPath,
+				                                                 connectionURL,
+				                                                 jdbcInfo.getUsername(),
+				                                                 jdbcInfo.getPassword(),
+				                                                 vdbName,
+				                                                 profileName);
 			}
 		}
 		IStatus connectionStatus = profile.connectWithoutJob();
