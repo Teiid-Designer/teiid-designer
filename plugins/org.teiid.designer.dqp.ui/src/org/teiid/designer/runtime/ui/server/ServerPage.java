@@ -447,6 +447,10 @@ public final class ServerPage extends WizardPage {
      * Processing done after wizard 'Finish' button is clicked. Wizard was not cancelled.
      */
     IStatus performFinish() {
+        // Check we have aquired the latest properties 
+        // in case the focus listener caused some anomoly
+        handlePropertiesModified();
+        
         if (! isPageComplete()) {
             return status;
         }
