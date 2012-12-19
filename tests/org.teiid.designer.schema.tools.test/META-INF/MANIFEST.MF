@@ -12,7 +12,7 @@ Export-Package: org.teiid.designer.schema.tools,
  org.teiid.designer.schema.tools.model.schema.impl
 Bundle-Localization: plugin
 Require-Bundle: org.junit4;bundle-version="[4.8.1,5.0.0)",
- org.teiid.designer.sdt;bundle-version="8.0.0",
- org.teiid.8-2;bundle-version="8.0.0",
- org.teiid.7-7-2;bundle-version="8.0.0",
- org.mockito;bundle-version="1.8.4"
+ org.teiid.designer.sdt;bundle-version="[8.0.0,9.0.0)",
+ org.teiid.8-2;bundle-version="[8.0.0,9.0.0)",
+ org.teiid.7-7-2;bundle-version="[8.0.0,9.0.0)",
+ org.mockito;bundle-version="[1.8.4,2.0.0)"
