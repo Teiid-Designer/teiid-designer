@@ -18,9 +18,6 @@
 		<module>net.sf.saxon</module>
 		<module>org.apache.poi</module>
 		<module>org.jaxen</module>
-		<!-- REMOVE to try to make target platform work correctly (avoid confusion 
-			between two versions of org.jdom) <module>org.jdom</module> -->
-		<module>org.mockito</module>
 		<module>org.teiid.datatools.connectivity</module>
 		<module>org.teiid.datatools.connectivity.model</module>
 		<module>org.teiid.datatools.connectivity.ui</module>
@@ -92,7 +89,6 @@
 		<module>org.teiid.designer.xml.ui</module>
 		<module>org.teiid.designer.xsd</module>
 		<module>org.teiid.designer.xsd.ui</module>
-		<module>org.wsdl4j</module>
 	</modules>
 </project>
 	

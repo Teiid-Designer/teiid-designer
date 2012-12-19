@@ -7,5 +7,5 @@ Fragment-Host: org.teiid.7-7-2;bundle-version="[8.0.0,9.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
 Bundle-Vendor: %Bundle-Vendor.0
-Require-Bundle: org.mockito;bundle-version="1.9.0",
+Require-Bundle: org.mockito;bundle-version="1.8.4",
  org.junit4;bundle-version="4.8.1"

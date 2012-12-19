@@ -20,7 +20,7 @@
    </license>
 
    <requires>
-      <import plugin="org.mockito" version="1.9.0" match="compatible"/>
+      <import plugin="org.mockito" version="1.8.4" match="compatible"/>
       <import plugin="org.eclipse.core.resources" version="3.8.0" match="compatible"/>
       <import plugin="org.eclipse.core.runtime" version="3.8.0" match="compatible"/>
       <import plugin="org.teiid.core.designer" version="8.0.0" match="compatible"/>
@@ -63,7 +63,6 @@
       <import plugin="org.teiid.designer.vdb"/>
       <import plugin="org.teiid.8-2" version="8.0.0" match="compatible"/>
       <import plugin="org.teiid.7-7-2" version="8.0.0" match="compatible"/>
-      <import plugin="org.mockito" version="1.9.0" match="greaterOrEqual"/>
       <import plugin="org.junit4" version="4.8.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui" version="3.103.0" match="compatible"/>
       <import plugin="org.teiid.designer.ui.common" version="8.0.0" match="compatible"/>

@@ -89,6 +89,9 @@ foreach $line (@features) {
 $jbt_repo_snippet .= "\t<repository location=\"http://download.jboss.org/jbosstools/updates/development/juno\"/>\n";
 $jbt_repo_snippet .= "</location>\n\n\n";
 
+my $mockito_unit;
+$mockito_unit = "\t\t\t<unit id=\"org.mockito\" version=\"1.8.4.v201102171835\"/>\n";
+
 #
 # Update the base target by modifying its
 # name and appending the jboss tools location
@@ -102,6 +105,9 @@ foreach $line (split /^/ , $base_target) {
 	}
 	elsif ($line =~ m/<\/locations>/) {
 		$line = $jbt_repo_snippet . $line;
+	}
+	elsif ($line =~ m/<!-- Orbit bundles -->/) {
+		$line = $line . $mockito_unit;
 	}
 
 	$td_contents = $td_contents . $line;
