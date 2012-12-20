@@ -494,7 +494,7 @@ public class XmlModelSelectionPage extends AbstractWizardPage
                 }
 
                 // validate characters in the proposed name
-                IStatus status = ModelNameUtil.validate(this.modelName, ModelerCore.MODEL_FILE_EXTENSION, null,
+                IStatus status = ModelNameUtil.validate(this.modelName, ModelerCore.MODEL_FILE_EXTENSION, resource!=null?resource.getParent():null,
                 		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES | ModelNameUtil.NO_EXISTING_MODEL_AT_LOCATION);
                 if (status.getSeverity() != IStatus.ERROR ) {
                     String name = getModelPath(temp, this.modelName);
