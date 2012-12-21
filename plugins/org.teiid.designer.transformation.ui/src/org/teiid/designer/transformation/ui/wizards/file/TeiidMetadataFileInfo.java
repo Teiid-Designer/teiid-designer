@@ -28,6 +28,7 @@ import org.teiid.designer.transformation.ui.UiConstants;
  *
  * @since 8.0
  */
+@SuppressWarnings("javadoc")
 public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataFileInfo.class);
 	
@@ -45,6 +46,9 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
     public static final String HEADER = "HEADER"; //$NON-NLS-1$
     public static final String SKIP = "SKIP"; //$NON-NLS-1$
     public static final String WIDTH = "width"; //$NON-NLS-1$
+    public static final String CR_1 = "\\r\\n"; //$NON-NLS-1$
+    public static final String CR_2 = "\\n"; //$NON-NLS-1$
+    public static final String EMPTY_STR = ""; //$NON-NLS-1$
 
 	private static final StringNameValidator validator = new RelationalStringNameValidator(false, true);
 	
@@ -244,7 +248,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 
 	/**
 	 * 
-	 * @param headerLineNumber
+	 * @param headerLineNumber the header line number
 	 */
 	public void setHeaderLineNumber(int headerLineNumber) {
 		CoreArgCheck.isPositive(headerLineNumber, "header line number is less than zero"); //$NON-NLS-1$
@@ -340,6 +344,9 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 		return this.escape;
 	}
 	
+	/**
+	 * @return the header string
+	 */
 	public String getHeaderString() {
 		if( cachedFirstLines.length == 0 ) {
 			return null;
@@ -365,10 +372,10 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
                 in = new BufferedReader(fr);
                 String str;
                 while ((str = in.readLine()) != null) {
-                	iLines++;
-
+                	Collection<String> strings = getRowsFromLine(str);
+                	iLines = iLines + strings.size();
                 	if( iLines <= numberOfCachedLines ) {
-                		lines.add(str);
+                		lines.addAll(strings);
                 	}
                 }
                 this.numberOfLinesInFile = iLines;
@@ -392,6 +399,46 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 		if( delimitedColumns ) {
 			defineColumns();
 		}
+	}
+	
+	private Collection<String> getRowsFromLine(String str) {
+		Collection<String> strings = new ArrayList<String>();
+		String theString = str;
+		
+		while( theString.length() > 0 ) {
+			if ( (str.indexOf(CR_1) > -1 || str.indexOf(CR_2) > -1) ) {
+				int lf_1_index = theString.indexOf(CR_1);
+				int lf_2_index = theString.indexOf(CR_2);
+				if( lf_1_index > -1 && lf_2_index > lf_1_index) {
+					// first linefeed is "\r\n"
+					String seg = theString.substring(0, lf_1_index);
+					strings.add(seg);
+					int strLen = theString.length();
+					int lengthLeft = (strLen-1) - (lf_1_index + 4);
+					if( lengthLeft > 0 ) {
+						theString = theString.substring((lf_1_index + 4), (strLen)).trim();
+					} else {
+						theString = EMPTY_STR;
+					}
+				} else if( lf_2_index > -1 ) {
+					// first linefeed is "\r\n"
+					String seg = theString.substring(0, lf_2_index);
+					strings.add(seg);
+					int strLen = theString.length();
+					int lengthLeft = (strLen-1) - (lf_2_index + 2);
+					if( lengthLeft > 0 ) {
+						theString = theString.substring((lf_2_index + 2), (strLen)).trim();
+					} else {
+						
+					}
+				}
+			} else {
+				strings.add(theString);
+				theString = EMPTY_STR;
+			}
+		}
+		
+		return strings;
 	}
 	
 	/**
@@ -599,7 +646,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	
 	/**
 	 * 
-	 * @param includeHeader the boolean indicator that the data file contains a header with column names and should 
+	 * @param useHeaderForColumnNames the boolean indicator that the data file contains a header with column names and should 
 	 * be used to load column names
 	 */
 	public void setDoUseHeaderForColumnNames(boolean useHeaderForColumnNames) {
@@ -645,7 +692,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	
 	/**
 	 * 
-	 * @param fixedWidthColumns the number of fixed with columns
+	 * @param numberOfFixedWidthColumns the number of fixed with columns
 	 */
 	public void setNumberOfFixedWidthColumns(int numberOfFixedWidthColumns) {
 		this.numberOfFixedWidthColumns = numberOfFixedWidthColumns;
@@ -790,7 +837,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
     }
     
     /**
-     * Parse the supplied row string from data file and return an array of strings the colum n values from the parsed data row
+     * Parse the supplied row string from data file and return an array of strings the column values from the parsed data row
      * 
      * @param rowString
      * @return 
