@@ -30,6 +30,7 @@ Including: Connection management, VDB creation and management and Data Preview/V
 
    <requires>
       <import plugin="org.eclipse.core.runtime" version="3.8.0" match="compatible"/>
+      <import plugin="org.eclipse.ui" version="3.103.0" match="compatible"/>
       <import plugin="org.jdom" version="1.1.1" match="compatible"/>
       <import plugin="org.eclipse.core.resources" version="3.8.0" match="compatible"/>
       <import plugin="org.teiid.designer.jdbc" version="8.0.0" match="compatible"/>
@@ -42,7 +43,6 @@ Including: Connection management, VDB creation and management and Data Preview/V
       <import plugin="org.teiid.designer.legacy" version="8.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.vdb" version="8.0.0" match="compatible"/>
       <import plugin="org.eclipse.datatools.connectivity" version="1.2.5" match="compatible"/>
-      <import plugin="net.jcip.annotations" version="1.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.datatools" version="8.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.metamodels.relational" version="8.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.metamodels.webservice" version="8.0.0" match="compatible"/>
@@ -53,6 +53,7 @@ Including: Connection management, VDB creation and management and Data Preview/V
       <import plugin="org.jboss.ide.eclipse.as.core" version="2.4.0" match="compatible"/>
       <import plugin="org.jboss.ide.eclipse.as.dmr" version="2.4.0" match="compatible"/>
       <import plugin="org.jboss.ide.eclipse.as.management.core" version="2.4.0" match="compatible"/>
+      <import plugin="org.teiid.designer.relational" version="8.0.0" match="compatible"/>
       <import plugin="org.teiid.datatools.connectivity" version="8.0.0" match="compatible"/>
       <import plugin="org.eclipse.ui.views" version="3.6.100" match="compatible"/>
       <import plugin="org.eclipse.jface.text" version="3.8.0" match="compatible"/>
@@ -61,7 +62,6 @@ Including: Connection management, VDB creation and management and Data Preview/V
       <import plugin="org.teiid.designer.vdb.ui" version="8.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.ui.common" version="8.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.ui" version="8.0.0" match="compatible"/>
-      <import plugin="org.eclipse.ui" version="3.103.0" match="compatible"/>
       <import plugin="org.eclipse.xsd" version="2.8.0" match="compatible"/>
       <import plugin="org.eclipse.ui.ide" version="3.8.0" match="compatible"/>
       <import plugin="org.teiid.designer.dqp" version="8.0.0" match="compatible"/>
@@ -87,7 +87,6 @@ Including: Connection management, VDB creation and management and Data Preview/V
       <import plugin="org.eclipse.datatools.sqltools.sqlscrapbook" version="1.0.2" match="compatible"/>
       <import plugin="org.eclipse.wst.server.ui" version="1.4.0" match="compatible"/>
       <import plugin="org.eclipse.ui.navigator" version="3.5.200" match="compatible"/>
-      <import plugin="org.jboss.ide.eclipse.as.ui" version="2.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.workbench" version="3.103.0" match="compatible"/>
       <import plugin="org.eclipse.datatools.connectivity.ui.dse" version="1.1.4" match="compatible"/>
       <import plugin="org.eclipse.ui.cheatsheets" version="3.4.200" match="compatible"/>
@@ -125,7 +124,9 @@ Including: Connection management, VDB creation and management and Data Preview/V
       <import feature="org.eclipse.datatools.sqldevtools.schemaobjecteditor.feature" version="1.7.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.datatools.sqldevtools.sqlbuilder.feature" version="1.7.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.datatools.sqltools.doc.user" version="1.7.0" match="greaterOrEqual"/>
-      <import plugin="org.teiid.designer.relational" version="8.0.0" match="compatible"/>
+      <import plugin="org.jbosstools.locus.jcip.annotations" version="1.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.spi" version="8.0.0" match="compatible"/>
+      <import plugin="org.jboss.ide.eclipse.as.ui" version="2.4.0" match="compatible"/>
    </requires>
 
    <plugin
@@ -137,13 +138,6 @@ Including: Connection management, VDB creation and management and Data Preview/V
 
    <plugin
          id="org.teiid.designer.dqp.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="net.jcip.annotations"
          download-size="0"
          install-size="0"
          version="0.0.0"

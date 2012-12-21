@@ -17,6 +17,21 @@
       [Enter License Description here.]
    </license>
 
+   <requires>
+      <import plugin="org.jdom" version="1.1.1" match="compatible"/>
+      <import plugin="org.jbosstools.locus.sf.saxon" version="9.2.1" match="compatible"/>
+      <import plugin="org.hamcrest.core" version="1.1.0" match="compatible"/>
+      <import plugin="org.teiid.designer.spi" version="8.0.0" match="compatible"/>
+      <import plugin="org.eclipse.core.runtime" version="3.8.0" match="compatible"/>
+      <import plugin="org.eclipse.core.resources" version="3.8.0" match="compatible"/>
+      <import plugin="org.eclipse.wst.server.core" version="1.4.0" match="compatible"/>
+      <import plugin="org.eclipse.datatools.connectivity" version="1.2.5" match="compatible"/>
+      <import plugin="org.jboss.ide.eclipse.as.core" version="2.4.0" match="compatible"/>
+      <import plugin="org.jboss.ide.eclipse.as.dmr" version="2.4.0" match="compatible"/>
+      <import plugin="org.jboss.ide.eclipse.as.management.core" version="2.4.0" match="compatible"/>
+      <import plugin="org.eclipse.osgi"/>
+   </requires>
+
    <plugin
          id="org.teiid.8-2"
          download-size="0"

@@ -14,9 +14,6 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>teiid</module>
-		<module>net.jcip.annotations</module>
-		<module>net.sf.saxon</module>
-		<module>org.apache.poi</module>
 		<module>org.teiid.datatools.connectivity</module>
 		<module>org.teiid.datatools.connectivity.model</module>
 		<module>org.teiid.datatools.connectivity.ui</module>

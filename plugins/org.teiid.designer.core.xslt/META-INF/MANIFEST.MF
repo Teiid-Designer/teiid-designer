@@ -7,7 +7,7 @@ Bundle-Activator: org.teiid.designer.core.xslt.CoreXsltPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Require-Bundle: org.teiid.core.designer;bundle-version="[8.0.0,9.0.0)",
- net.sf.saxon;bundle-version="[9.2.1,10.0.0)",
+ org.jbosstools.locus.sf.saxon;bundle-version="[9.2.1,10.0.0)",
  org.eclipse.core.runtime;bundle-version="[3.8.0,4.0.0)",
  org.jdom;bundle-version="[1.1.1,2.0.0)"
 Bundle-ActivationPolicy: lazy
