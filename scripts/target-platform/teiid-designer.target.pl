@@ -90,7 +90,9 @@ $jbt_repo_snippet .= "\t<repository location=\"http://download.jboss.org/jbossto
 $jbt_repo_snippet .= "</location>\n\n\n";
 
 my $mockito_unit;
+my $objenesis_unit;
 $mockito_unit = "\t\t\t<unit id=\"org.mockito\" version=\"1.8.4.v201102171835\"/>\n";
+$objenesis_unit = "\t\t\t<unit id=\"org.objenesis\" version=\"1.0.0.v201105211943\"/>\n";
 
 #
 # Update the base target by modifying its
@@ -108,6 +110,7 @@ foreach $line (split /^/ , $base_target) {
 	}
 	elsif ($line =~ m/<!-- Orbit bundles -->/) {
 		$line = $line . $mockito_unit;
+		$line = $line . $objenesis_unit;
 	}
 
 	$td_contents = $td_contents . $line;
