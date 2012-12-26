@@ -328,13 +328,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.wsdl4j"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.teiid.core.designer"
          download-size="0"
          install-size="0"
