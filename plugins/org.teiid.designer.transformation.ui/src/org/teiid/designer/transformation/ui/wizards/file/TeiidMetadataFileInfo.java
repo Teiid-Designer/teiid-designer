@@ -406,7 +406,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 		String theString = str;
 		
 		while( theString.length() > 0 ) {
-			if ( (str.indexOf(CR_1) > -1 || str.indexOf(CR_2) > -1) ) {
+			if ( (theString.indexOf(CR_1) > -1 || theString.indexOf(CR_2) > -1) ) {
 				int lf_1_index = theString.indexOf(CR_1);
 				int lf_2_index = theString.indexOf(CR_2);
 				if( lf_1_index > -1 && lf_2_index > lf_1_index) {
