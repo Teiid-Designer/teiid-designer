@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?>
+
+<target name="locus" sequenceNumber="3">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.jbosstools.locus.apache.poi.feature.feature.group" version="2.5.1.Final-v20121221-1203"/>
+<unit id="org.jbosstools.locus.jcip.annotations.feature.feature.group" version="1.0.0.Final-v20121221-1203"/>
+<unit id="org.jbosstools.locus.sf.saxon.feature.feature.group" version="9.2.1.Final-v20121221-1203"/>
+<repository location="http://download.jboss.org/teiid/designer/updates/locus"/>
+</location>
+</locations>
+<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+</target>

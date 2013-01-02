@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+    <groupId>org.jboss.tools</groupId>
+    <artifactId>parent</artifactId>
+    <version>4.1.0.JBIDE-11121-SNAPSHOT</version>
+    <relativePath></relativePath>
+  </parent>
+	<groupId>org.jboss.tools.target-platforms</groupId>
+	<artifactId>teiid.designer</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+	<name>Teiid Designer Target Platform</name>
+	<packaging>pom</packaging>
+
+	<build>
+		<plugins>
+			<!-- Attach the designer target to the configuration -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.3</version>
+				<executions>
+					<execution>
+						<id>attach-artifacts</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>attach-artifact</goal>
+						</goals>
+						<configuration>
+							<artifacts>
+								<artifact>
+									<file>teiid-designer.target</file>
+									<type>target</type>
+									<classifier>teiid-designer</classifier>
+								</artifact>
+							</artifacts>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<!-- Should be called explicitly in order to (re)create the output target file -->
+			<id>generate-target</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jboss.tools.tycho-plugins</groupId>
+						<artifactId>target-platform-utils</artifactId>
+						<version>0.0.1-SNAPSHOT</version>
+						<executions>
+							<execution>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>merge-targets</goal>
+								</goals>
+								<configuration>
+									<sourceTargetArtifacts>
+										<item>
+											<groupId>org.jboss.tools.target-platforms.soatools</groupId>
+											<artifactId>multiple</artifactId>
+											<version>4.2.1.a-SNAPSHOT</version>
+										</item>
+									</sourceTargetArtifacts>
+									<sourceTargetFiles>
+										<item>locus.target</item>
+									</sourceTargetFiles>
+									<outputFile>teiid-designer.target</outputFile>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.eclipse.tycho.extras</groupId>
+						<artifactId>target-platform-validation-plugin</artifactId>
+						<version>${tychoExtrasVersion}</version>
+						<executions>
+							<execution>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>validate-target-platform</goal>
+								</goals>
+								<configuration>
+									<targetFiles>
+										<param>teiid-designer.target</param>
+									</targetFiles>
+									<failOnError>true</failOnError>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>
+
