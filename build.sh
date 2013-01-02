@@ -116,7 +116,7 @@ MVN="mvn clean install"
 # Turn on dedugging if required
 #
 if [ "${DEBUG}" == "1" ]; then
-  MVN_FLAGS="-e -X"
+  MVN_FLAGS="-e -X -U"
 fi
 
 #
@@ -124,7 +124,7 @@ fi
 # -P <profiles> : The profiles to be used for downloading jbosstools artifacts
 # -D maven.repo.local : Assign the $LOCAL_REPO as the target repository
 #
-MVN_FLAGS="${MVN_FLAGS} -P default,jbosstools-staging-aggregate -Dmaven.repo.local=${LOCAL_REPO}"
+MVN_FLAGS="${MVN_FLAGS} -P target-platform,multiple.target -Dmaven.repo.local=${LOCAL_REPO} -Dno.jbosstools.site -Dtycho.localArtifacts=ignore"
 
 echo "==============="
 
