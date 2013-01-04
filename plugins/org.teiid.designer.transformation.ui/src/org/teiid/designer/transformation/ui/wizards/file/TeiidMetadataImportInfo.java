@@ -256,7 +256,28 @@ public class TeiidMetadataImportInfo implements UiConstants {
 		TeiidXmlFileInfo info = getXmlFileInfo(file);
 		if( info != null ) {
 			info.setDoProcess(doProcess);
+			if( doProcess ) {
+				if( getSourceModelName() == null ) {
+					String fileName = info.getDataFile().getName();
+					if(fileName.toLowerCase().endsWith(".xml")) { //$NON-NLS-1$
+						fileName = fileName.substring(0, fileName.length()-4);
+					}
+					setSourceModelName(fileName + "_Source"); //$NON-NLS-1$
+				}
+				if( getViewModelName() == null ) {
+					String fileName = info.getDataFile().getName();
+					if(fileName.toLowerCase().endsWith(".xml")) { //$NON-NLS-1$
+						fileName = fileName.substring(0, fileName.length()-4);
+					}
+					setViewModelName(fileName + "_View"); //$NON-NLS-1$
+				}
+			}
 		}
+		
+		if( doProcess ) {
+			
+		}
+		
 		validate();
 	}
 	

@@ -45,6 +45,10 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
         return Util.getString(I18N_PREFIX + id);
     }
     
+    private static String getString( final String id, final Object arg1) {
+        return Util.getString(I18N_PREFIX + id, arg1);
+    }
+    
     /**
      * The number of cached lines of the data file for display
      */
@@ -312,6 +316,20 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 				return;
 			}
 		}
+		
+		// Check for duplicate column names
+		// Walk through list of columns and cache the names
+		Collection<String> toUpperNames = new ArrayList<String>(this.getColumnInfoList().length);
+		
+		for( TeiidXmlColumnInfo info : this.getColumnInfoList()) {
+			if( toUpperNames.contains(info.getName().toUpperCase()) ) {
+				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("status.duplicateColumnNames", info.getName()))); //$NON-NLS-1$
+				return;
+			}
+			toUpperNames.add(info.getName().toUpperCase());
+		}
+		
+		
 		
 		// Validate Paths
 		

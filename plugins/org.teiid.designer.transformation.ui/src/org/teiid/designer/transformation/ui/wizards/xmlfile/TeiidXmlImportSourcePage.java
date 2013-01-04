@@ -167,6 +167,8 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	private Collection<IConnectionProfile> connectionProfiles;
 
 	private TeiidMetadataImportInfo info;
+	
+	private TeiidXmlFileInfo xmlFileInfo;
 
 	boolean creatingControl = false;
 
@@ -948,13 +950,23 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		}
 
 		String fileName = EMPTY_STRING;
-		for (TeiidXmlFileInfo xmlFileInfo : this.info.getXmlFileInfos()) {
-			if (xmlFileInfo.doProcess()) {
+		String sourceFileName = EMPTY_STRING;
+		xmlFileInfo = null;
+		for (TeiidXmlFileInfo fileInfo : this.info.getXmlFileInfos()) {
+			if (fileInfo.doProcess()) {
+				xmlFileInfo = fileInfo;
 				fileName = xmlFileInfo.getDataFile().getName();
+				if( this.info.getSourceModelName() != null ) {
+					sourceFileName = this.info.getSourceModelName();
+				} else {
+					sourceFileName = "SourceProcedures"; //$NON-NLS-1$
+					this.info.setSourceModelName(sourceFileName);
+				}
 				break;
 			}
 		}
 		this.selectedFileText.setText(fileName);
+		this.sourceModelFileText.setText(sourceFileName);
 
 		synchronizing = false;
 	}
@@ -1177,7 +1189,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 				this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "existingSourceModelHasNoProcedure", info.getSourceModelName(), procedureName)); //$NON-NLS-1$
 			}
 		} else {
-			if (info.getSourceModelName() == null || info.getSourceModelName().length() == 0) {
+			if (xmlFileInfo == null || !xmlFileInfo.doProcess() || info.getSourceModelName() == null || info.getSourceModelName().length() == 0) {
 				this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "sourceModelUndefined")); //$NON-NLS-1$
 			} else {
 				this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "sourceModelWillBeCreated", info.getSourceModelName(), procedureName)); //$NON-NLS-1$
