@@ -60,6 +60,7 @@
 			<unit id="org.jboss.ide.eclipse.as.dmr" version="0.0.0"/>
 			<unit id="org.jboss.ide.eclipse.as.management.core" version="0.0.0"/>
 			<unit id="org.jboss.ide.eclipse.as.ui" version="0.0.0"/>
+			<unit id="org.jboss.ide.eclipse.as.server.rse.integration.feature.feature.group" version="0.0.0"/>
 			<!-- Required by ModeShape Tools -->
 			<unit id="org.jboss.tools.usage" version="0.0.0"/>
 			<!-- Required by Switchyard Tools -->
