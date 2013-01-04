@@ -21,12 +21,13 @@ public class JBossServerUtil {
      * Determine whether the jboss server is contactable by attempting
      * to create a socket to its web port
      * 
+     * @param parentServer
      * @param jbossServer
      * 
      * @return true if server can be connected
      */
-    public static boolean isJBossServerConnected(JBossServer jbossServer) {
-        if (!serverStarted(jbossServer)) 
+    public static boolean isJBossServerConnected(IServer parentServer, JBossServer jbossServer) {
+        if (!serverStarted(parentServer)) 
             return false;
 
         Socket socket = null;
@@ -49,12 +50,13 @@ public class JBossServerUtil {
     /**
      * Determine whether the given server has teiid support
      * 
+     * @param parentServer
      * @param jbossServer
      * 
      * @return true is server has teiid support, false otherwise
      */
-    public static boolean isTeiidServer(JBossServer jbossServer) {
-        if (!serverStarted(jbossServer)) 
+    public static boolean isTeiidServer(IServer parentServer, JBossServer jbossServer) {
+        if (!serverStarted(parentServer)) 
             return false;
 
         //TODO can we try harder to determine this??
@@ -65,15 +67,15 @@ public class JBossServerUtil {
     /**
      * Test the given server for whether its been started
      * 
-     * @param jbossServer
+     * @param server
      * 
      * @return true is server is in the started state
      */
-    protected static boolean serverStarted(JBossServer jbossServer) {
-        if (jbossServer == null) 
+    protected static boolean serverStarted(IServer server) {
+        if (server == null) 
             return false;
 
-        if (jbossServer.getServer().getServerState() != IServer.STATE_STARTED) 
+        if (server.getServerState() != IServer.STATE_STARTED) 
             return false;
 
         return true;

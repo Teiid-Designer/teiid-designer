@@ -134,7 +134,8 @@ public class TeiidServer implements ITeiidServer {
         CoreArgCheck.isNotNull(jdbcInfo, "jdbcInfo"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(eventManager, "eventManager"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(parentServer, "parentServer"); //$NON-NLS-1$
-
+        CoreArgCheck.isTrue(! parentServer.getClass().getSimpleName().equals("ServerWorkingCopy"), "TeiidServer parent should not be a working copy");  //$NON-NLS-1$//$NON-NLS-2$
+        
         this.serverVersion = serverVersion;
         
         this.host = parentServer.getHost();

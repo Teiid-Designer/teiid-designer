@@ -125,7 +125,8 @@ public class ExecutionAdmin implements IExecutionAdmin {
                                                                                               teiidAdminInfo.getPortNumber(), 
                                                                                               teiidAdminInfo.getUsername(),
                                                                                               passwordArray);
-
+        ArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
+        
         this.teiidServer = teiidServer;
         this.eventManager = teiidServer.getEventManager();
         this.connectionMatcher = new ModelConnectionMatcher();

@@ -75,11 +75,11 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
     public ITeiidServer adaptServer(final IServer server, ServerOptions... options) {
         JBoss7Server jb7 = (JBoss7Server) server.loadAdapter(JBoss7Server.class, null);
         if (jb7 != null) {
-            return adaptJBoss7Server(jb7, options);
+            return adaptJBoss7Server(server, jb7, options);
         } else {
             JBossServer jb = (JBossServer) server.loadAdapter(JBossServer.class, null);
             if (jb != null)
-                return adaptJBossServer(jb, options);
+                return adaptJBossServer(server, jb, options);
         }
         
         return null;
@@ -94,7 +94,7 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
      * 
      * @return
      */
-    private ITeiidServer adaptJBossServer(JBossServer jbossServer, ServerOptions... options) {
+    private ITeiidServer adaptJBossServer(IServer parentServer, JBossServer jbossServer, ServerOptions... options) {
         ITeiidServer teiidServer = null;
         
         List<ServerOptions> optionList = Collections.emptyList(); 
@@ -110,27 +110,27 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
             // and return any teiid server found that fits the url
          
             
-            teiidServer = getTeiidServerManager().getServer(jbossServer.getServer());
+            teiidServer = getTeiidServerManager().getServer(parentServer);
             if (teiidServer != null)
                 return teiidServer;
         }
         
         synchronized (lock) {
             if (! optionList.contains(ServerOptions.NO_CHECK_CONNECTION)) {
-                if (! JBossServerUtil.isJBossServerConnected(jbossServer))
+                if (! JBossServerUtil.isJBossServerConnected(parentServer, jbossServer))
                     return null;
             
-                if (! JBossServerUtil.isTeiidServer(jbossServer))
+                if (! JBossServerUtil.isTeiidServer(parentServer, jbossServer))
                     return null;
             }
 
             // Check again in case the thread had to wait for the lock
             if (! optionList.contains(ServerOptions.NO_CHECK_SERVER_REGISTRY)) {
-                teiidServer = getTeiidServerManager().getServer(jbossServer.getServer());
+                teiidServer = getTeiidServerManager().getServer(parentServer);
             }
             
             if (teiidServer == null)
-                teiidServer = createJbossTeiidServer(jbossServer, options);
+                teiidServer = createJbossTeiidServer(parentServer, jbossServer, options);
         
             return teiidServer;
         }
@@ -140,12 +140,13 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
      * Adapt the JBoss 7 server to an {@link ITeiidServer} only if
      * JB is started and contains a teiid server.
      * 
+     * @param parentServer
      * @param jboss7Server
      * @param options
      * 
      * @return
      */
-    private ITeiidServer adaptJBoss7Server(JBoss7Server jboss7Server, ServerOptions... options) {
+    private ITeiidServer adaptJBoss7Server(IServer parentServer, JBoss7Server jboss7Server, ServerOptions... options) {
         ITeiidServer teiidServer = null;
         
         List<ServerOptions> optionList = Collections.emptyList(); 
@@ -161,27 +162,27 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
             // and return any teiid server found that fits the url
          
             
-            teiidServer = getTeiidServerManager().getServer(jboss7Server.getServer());
+            teiidServer = getTeiidServerManager().getServer(parentServer);
             if (teiidServer != null)
                 return teiidServer;
         }
         
         synchronized (lock) {
             if (! optionList.contains(ServerOptions.NO_CHECK_CONNECTION)) {
-                if (! JBoss7ServerUtil.isJBossServerConnected(jboss7Server))
+                if (! JBoss7ServerUtil.isJBossServerConnected(parentServer, jboss7Server))
                     return null;
             
-                if (! JBoss7ServerUtil.isTeiidServer(jboss7Server))
+                if (! JBoss7ServerUtil.isTeiidServer(parentServer, jboss7Server))
                     return null;
             }
 
             // Check again in case the thread had to wait for the lock
             if (! optionList.contains(ServerOptions.NO_CHECK_SERVER_REGISTRY)) {
-                teiidServer = getTeiidServerManager().getServer(jboss7Server.getServer());
+                teiidServer = getTeiidServerManager().getServer(parentServer);
             }
             
             if (teiidServer == null)
-                teiidServer = createJboss7TeiidServer(jboss7Server, options);
+                teiidServer = createJboss7TeiidServer(parentServer, jboss7Server, options);
         
             return teiidServer;
         }
@@ -192,21 +193,21 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
      * 
      * @see ServerOptions for the options parameter.
      * 
+     * @param parentServer
      * @param jboss7Server
      * @param options
      * 
      * @return new {@link ITeiidServer}
      */
-    private ITeiidServer createJboss7TeiidServer(final JBoss7Server jboss7Server, ServerOptions... options) {
-        
+    private ITeiidServer createJboss7TeiidServer(final IServer parentServer, final JBoss7Server jboss7Server, ServerOptions... options) {
         TeiidServerFactory factory = new TeiidServerFactory();
-        ITeiidServer teiidServer = factory.createTeiidServer(JBoss7ServerUtil.getTeiidRuntimeVersion(jboss7Server),
+        ITeiidServer teiidServer = factory.createTeiidServer(JBoss7ServerUtil.getTeiidRuntimeVersion(parentServer, jboss7Server),
                                                                                         getTeiidServerManager(),
-                                                                                        jboss7Server.getServer(), 
+                                                                                        parentServer, 
                                                                                         new Integer(jboss7Server.getManagementPort()).toString(), 
                                                                                         jboss7Server.getUsername(), 
                                                                                         jboss7Server.getPassword(), 
-                                                                                        JBoss7ServerUtil.getJdbcPort(jboss7Server), 
+                                                                                        JBoss7ServerUtil.getJdbcPort(parentServer, jboss7Server), 
                                                                                         ITeiidJdbcInfo.DEFAULT_JDBC_USERNAME, 
                                                                                         ITeiidJdbcInfo.DEFAULT_JDBC_PASSWORD, 
                                                                                         options);
@@ -219,12 +220,13 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
      * 
      * @see ServerOptions for the options parameter.
      * 
+     * @param parentServer
      * @param jbossServer
      * @param options
      * 
      * @return new {@link ITeiidServer}
      */
-    private ITeiidServer createJbossTeiidServer(final JBossServer jbossServer, ServerOptions... options) {
+    private ITeiidServer createJbossTeiidServer(final IServer parentServer, final JBossServer jbossServer, ServerOptions... options) {
         
         List<ServerOptions> optionList = new ArrayList<ServerOptions>();
         if (options != null) {
@@ -239,7 +241,7 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
         TeiidServerFactory factory = new TeiidServerFactory();
         ITeiidServer teiidServer = factory.createTeiidServer(TeiidServerVersion.DEFAULT_TEIID_7_SERVER,
                                                                                         getTeiidServerManager(),
-                                                                                        jbossServer.getServer(), 
+                                                                                        parentServer, 
                                                                                         ITeiidAdminInfo.DEFAULT_LEGACY_PORT, 
                                                                                         ITeiidAdminInfo.DEFAULT_ADMIN_USERNAME,
                                                                                         ITeiidAdminInfo.DEFAULT_ADMIN_PASSWORD, 
@@ -262,11 +264,11 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
         
         JBoss7Server jb7 = (JBoss7Server) server.loadAdapter(JBoss7Server.class, null);
         if (jb7 != null) {
-            return JBoss7ServerUtil.isJBossServerConnected(jb7);
+            return JBoss7ServerUtil.isJBossServerConnected(server, jb7);
         } else {
             JBossServer jb = (JBossServer) server.loadAdapter(JBossServer.class, null);
             if (jb != null)
-                return JBossServerUtil.isJBossServerConnected(jb);
+                return JBossServerUtil.isJBossServerConnected(server, jb);
         }
         
         return false;

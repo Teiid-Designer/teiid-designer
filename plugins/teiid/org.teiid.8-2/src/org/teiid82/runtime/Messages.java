@@ -39,7 +39,7 @@ public final class Messages extends NLS {
     public static String cannotLoadDriverClass;
     
     static {
-        NLS.initializeMessages("org.teiid8.runtime.messages", Messages.class); //$NON-NLS-1$
+        NLS.initializeMessages("org.teiid82.runtime.messages", Messages.class); //$NON-NLS-1$
     }
 
 }

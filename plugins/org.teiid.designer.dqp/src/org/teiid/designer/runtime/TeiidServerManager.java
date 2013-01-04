@@ -292,7 +292,7 @@ public final class TeiidServerManager implements EventManager {
                 if (! server.equals(teiidServer.getParent()))
                     continue;
                 
-                ITeiidServer newTeiidServer = factory.adaptServer(server, ServerOptions.NO_CHECK_SERVER_REGISTRY);
+                ITeiidServer newTeiidServer = factory.adaptServer(server, ServerOptions.NO_CHECK_SERVER_REGISTRY, ServerOptions.NO_CHECK_CONNECTION);
                 
                 // Cannot use updateServer as it replaces rather than modified the existing server
                 // and references in editor will thus hang on to the old defunct version
