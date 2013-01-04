@@ -473,7 +473,10 @@ public class TeiidServerEditor extends EditorPart {
                 } else if (adminPort instanceof Label) {
                     ((Label) adminPort).setText(teiidAdminInfo.getPort());
                 }
-                adminSSLCheckbox.setSelection(teiidAdminInfo.isSecure());
+                
+                if (adminSSLCheckbox != null) {
+                    adminSSLCheckbox.setSelection(teiidAdminInfo.isSecure());
+                }
                 
                 jdbcUserNameText.setText(teiidJdbcInfo.getUsername());
                 jdbcPasswdText.setText(teiidJdbcInfo.getPassword());
