@@ -11,6 +11,7 @@ import java.io.InputStream;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.komodo.repository.RepositoryManager;
 import org.overlord.sramp.repository.DerivedArtifactsFactory;
 import org.overlord.sramp.repository.PersistenceFactory;
 import org.overlord.sramp.repository.QueryManagerFactory;
@@ -29,7 +30,7 @@ public abstract class RepositoryTest {
      * Sets up the in-memory S-RAMP repository.
      */
     @BeforeClass
-    public static void startupRepository() {
+    public static void startRepository() {
         // use the in-memory config for unit tests
         System.setProperty("sramp.modeshape.config.url", "classpath://" + JCRRepository.class.getName() //$NON-NLS-1$ //$NON-NLS-2$
                                                          + "/META-INF/modeshape-configs/inmemory-sramp-config.json"); //$NON-NLS-1$
@@ -40,11 +41,12 @@ public abstract class RepositoryTest {
     }
 
     /**
-     * Shutdowns the S-RAMP in-memory repository.
+     * Shutdowns the S-RAMP repository.
+     * @throws Exception if there is a problem during shutdown
      */
     @AfterClass
-    public static void stopRepository() {
-        _repoMgr.getPersistenceManager().shutdown();
+    public static void stopRepository() throws Exception {
+        _repoMgr.shutdown();
     }
 
     /**
