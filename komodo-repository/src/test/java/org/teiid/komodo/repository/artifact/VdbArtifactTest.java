@@ -12,6 +12,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import java.io.InputStream;
 import org.junit.Test;
+import org.komodo.repository.artifact.VdbArtifact;
 import org.teiid.komodo.repository.RepositoryTest;
 
 /**
@@ -22,7 +23,7 @@ public class VdbArtifactTest extends RepositoryTest {
     @SuppressWarnings( "javadoc" )
     @Test
     public void shouldAddVdbWithNoParentPathToRepository() throws Exception {
-        final String vdbName = "twitter.vdb"; //$NON-NLS-1$
+        final String vdbName = "twitterVdb.xml"; //$NON-NLS-1$
         final VdbArtifact vdbArtifact = new VdbArtifact(vdbName, null);
 
         // load VDB
@@ -40,7 +41,7 @@ public class VdbArtifactTest extends RepositoryTest {
     @SuppressWarnings( "javadoc" )
     @Test
     public void shouldAddVdbWithParentPathToRepository() throws Exception {
-        final String vdbName = "twitter.vdb"; //$NON-NLS-1$
+        final String vdbName = "twitterVdb.xml"; //$NON-NLS-1$
         final VdbArtifact vdbArtifact = new VdbArtifact(vdbName, "MyProject/MyFolder"); //$NON-NLS-1$
 
         // load VDB
@@ -53,5 +54,26 @@ public class VdbArtifactTest extends RepositoryTest {
 
         // test
         assertThat(_repoMgr.exists(vdbArtifact), is(true));
+    }
+
+    @SuppressWarnings( "javadoc" )
+    @Test
+    public void shouldObtainVdbContentFromRepository() throws Exception {
+        final String vdbName = "twitterVdb.xml"; //$NON-NLS-1$
+        final VdbArtifact vdbArtifact = new VdbArtifact(vdbName, null);
+
+        // load VDB
+        final String path = ("vdb/" + vdbName); //$NON-NLS-1$
+        InputStream content = getResourceAsStream(path);
+        assertNotNull(content);
+
+        // add to the repo
+        _repoMgr.persist(vdbArtifact, content);
+
+        // get content back
+        content = _repoMgr.get(vdbArtifact);
+        assertNotNull(content);
+
+        content.close();
     }
 }

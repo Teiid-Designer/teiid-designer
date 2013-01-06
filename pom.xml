@@ -318,7 +318,9 @@
 
 	<!-- modules in alphabetical order -->
 	<modules>
+		<module>komodo-common</module>
 		<module>komodo-repository</module>
+		<module>komodo-teiid</module>
 	</modules>
 </project>
 
