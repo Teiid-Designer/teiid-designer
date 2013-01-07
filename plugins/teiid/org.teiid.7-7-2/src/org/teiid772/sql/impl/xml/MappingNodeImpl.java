@@ -58,6 +58,7 @@ public class MappingNodeImpl implements IMappingNode {
         if (mappingNode instanceof MappingBaseNode) {
             MappingElementImpl elementImpl = (MappingElementImpl) element;
             ((MappingBaseNode)mappingNode).addChildElement(elementImpl.getMappingNode());
+            return;
         }
         
         throw new UnsupportedOperationException();
@@ -67,6 +68,7 @@ public class MappingNodeImpl implements IMappingNode {
         if (mappingNode instanceof MappingBaseNode) {
             MappingCriteriaNodeImpl nodeImpl = (MappingCriteriaNodeImpl) node;
             ((MappingBaseNode)mappingNode).addCriteriaNode(nodeImpl.getMappingNode());
+            return;
         }
         
         throw new UnsupportedOperationException();
@@ -76,6 +78,7 @@ public class MappingNodeImpl implements IMappingNode {
         if (mappingNode instanceof MappingBaseNode) {
             MappingChoiceNodeImpl nodeImpl = (MappingChoiceNodeImpl) node;
             ((MappingBaseNode)mappingNode).addChoiceNode(nodeImpl.getMappingNode());
+            return;
         }
         
         throw new UnsupportedOperationException();
@@ -85,6 +88,7 @@ public class MappingNodeImpl implements IMappingNode {
         if (mappingNode instanceof MappingBaseNode) {
             MappingSequenceNodeImpl nodeImpl = (MappingSequenceNodeImpl) node;
             ((MappingBaseNode)mappingNode).addSequenceNode(nodeImpl.getMappingNode());
+            return;
         }
         
         throw new UnsupportedOperationException();
@@ -94,6 +98,7 @@ public class MappingNodeImpl implements IMappingNode {
         if (mappingNode instanceof MappingBaseNode) {
             MappingAllNodeImpl nodeImpl = (MappingAllNodeImpl) node;
             ((MappingBaseNode)mappingNode).addAllNode(nodeImpl.getMappingNode());
+            return;
         }
         
         throw new UnsupportedOperationException();
@@ -103,6 +108,7 @@ public class MappingNodeImpl implements IMappingNode {
         if (mappingNode instanceof MappingBaseNode) {
             MappingSourceNodeImpl nodeImpl = (MappingSourceNodeImpl) node;
             ((MappingBaseNode)mappingNode).addSourceNode(nodeImpl.getMappingNode());
+            return;
         }
         
         throw new UnsupportedOperationException();
@@ -117,6 +123,7 @@ public class MappingNodeImpl implements IMappingNode {
     public void setSource(String source) {
         if (mappingNode instanceof MappingBaseNode) {
             ((MappingBaseNode)mappingNode).setSource(source);
+            return;
         }
         
         throw new UnsupportedOperationException();
@@ -126,6 +133,7 @@ public class MappingNodeImpl implements IMappingNode {
     public void addStagingTable(String stagingTable) {
         if (mappingNode instanceof MappingBaseNode) {
             ((MappingBaseNode)mappingNode).addStagingTable(stagingTable);
+            return;
         }
         
         throw new UnsupportedOperationException();

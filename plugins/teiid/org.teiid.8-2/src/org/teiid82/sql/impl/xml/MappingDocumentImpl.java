@@ -14,8 +14,15 @@ import java.io.PrintWriter;
 import org.teiid.designer.xml.IMappingDocument;
 import org.teiid.designer.xml.IMappingElement;
 import org.teiid.designer.xml.IMappingNode;
+import org.teiid.query.mapping.xml.MappingAllNode;
+import org.teiid.query.mapping.xml.MappingChoiceNode;
+import org.teiid.query.mapping.xml.MappingCriteriaNode;
 import org.teiid.query.mapping.xml.MappingDocument;
+import org.teiid.query.mapping.xml.MappingElement;
 import org.teiid.query.mapping.xml.MappingOutputter;
+import org.teiid.query.mapping.xml.MappingRecursiveElement;
+import org.teiid.query.mapping.xml.MappingSequenceNode;
+import org.teiid.query.mapping.xml.MappingSourceNode;
 
 /**
  *
@@ -34,6 +41,28 @@ public class MappingDocumentImpl implements IMappingDocument {
 
     @Override
     public IMappingNode getRootElement() {
+        if (document.getRootNode() instanceof MappingAllNode) {
+            return new MappingAllNodeImpl((MappingAllNode) document.getRootNode());
+        }
+        if (document.getRootNode() instanceof MappingChoiceNode) {
+            return new MappingChoiceNodeImpl((MappingChoiceNode) document.getRootNode());
+        }
+        if (document.getRootNode() instanceof MappingCriteriaNode) {
+            return new MappingCriteriaNodeImpl((MappingCriteriaNode) document.getRootNode());
+        }
+        if (document.getRootNode() instanceof MappingRecursiveElement) {
+            return new MappingRecursiveElementImpl((MappingRecursiveElement) document.getRootNode());
+        }
+        if (document.getRootNode() instanceof MappingElement) {
+            return new MappingElementImpl((MappingElement) document.getRootNode());
+        }
+        if (document.getRootNode() instanceof MappingSequenceNode) {
+            return new MappingSequenceNodeImpl((MappingSequenceNode) document.getRootNode());
+        }
+        if (document.getRootNode() instanceof MappingSourceNode) {
+            return new MappingSourceNodeImpl((MappingSourceNode) document.getRootNode());
+        }
+
         return new MappingNodeImpl(document.getRootNode());
     }
 

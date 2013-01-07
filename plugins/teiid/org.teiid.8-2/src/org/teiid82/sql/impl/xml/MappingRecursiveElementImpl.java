@@ -25,6 +25,13 @@ public class MappingRecursiveElementImpl extends MappingElementImpl implements I
         super(new MappingRecursiveElement(name, namespace, recursionMappingClass));
     }
     
+    /**
+     * @param element
+     */
+    public MappingRecursiveElementImpl(MappingRecursiveElement element) {
+        super(element);
+    }
+    
     @Override
     MappingRecursiveElement getMappingNode() {
         return (MappingRecursiveElement) super.getMappingNode();
