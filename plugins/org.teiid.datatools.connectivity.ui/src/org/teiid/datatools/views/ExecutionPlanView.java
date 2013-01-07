@@ -1,9 +1,10 @@
 package org.teiid.datatools.views;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
@@ -30,8 +31,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.ViewPart;
 import org.teiid.datatools.connectivity.ui.Activator;
@@ -46,6 +45,9 @@ import org.teiid.datatools.connectivity.ui.Messages;
 public class ExecutionPlanView extends ViewPart {
     public static final String VIEW_ID = "views.executionPlanView"; //$NON-NLS-1$
 
+    private static final String IMPORT_PLAN_IMG = "icons/import_from_file.gif"; //$NON-NLS-1$
+    private static final String EXPORT_PLAN_IMG = "icons/export_to_file.gif"; //$NON-NLS-1$
+
     private static final String EXECUTION_PLAN_HELP_ID = "org.teiid.designer.runtime.ui.executionPlanOverview"; //$NON-NLS-1$
     private static final String PREFIX = "ExecutionPlanView."; //$NON-NLS-1$
 
@@ -57,6 +59,7 @@ public class ExecutionPlanView extends ViewPart {
     private String planString;
 
     private IAction saveToFileAction;
+    private IAction readFromFileAction;
 
     Button expandAll;
     Button collapseAll;
@@ -96,6 +99,8 @@ public class ExecutionPlanView extends ViewPart {
 
     private void configureToolBar( IToolBarManager toolBarMgr ) {
         toolBarMgr.add(this.saveToFileAction);
+        toolBarMgr.add(this.readFromFileAction);
+        
         toolBarMgr.update(true);
     }
 
@@ -116,7 +121,25 @@ public class ExecutionPlanView extends ViewPart {
         };
         this.saveToFileAction.setToolTipText(savePlanToFileActionTooltip);
         this.saveToFileAction.setEnabled(false);
-        this.saveToFileAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+        this.saveToFileAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(EXPORT_PLAN_IMG));
+
+        String readPlanFromFileActionText = Messages.getString(PREFIX + "readPlanFromFileButton.text"); //$NON-NLS-1$
+        String readPlanFromFileActionTooltip = Messages.getString(PREFIX + "readPlanFromFileButton.tooltip"); //$NON-NLS-1$
+
+        this.readFromFileAction = new Action(readPlanFromFileActionText, SWT.BORDER) {
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.jface.action.Action#run()
+             */
+            @Override
+            public void run() {
+                handleReadPlanFromFile();
+            }
+        };
+        this.readFromFileAction.setToolTipText(readPlanFromFileActionTooltip);
+        this.readFromFileAction.setEnabled(true);
+        this.readFromFileAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(IMPORT_PLAN_IMG));
     }
 
     /*
@@ -328,7 +351,7 @@ public class ExecutionPlanView extends ViewPart {
         return displayName;
     }
 
-    /*
+    /**
      * Save the current Execution Plan xml to a file.
      */
     public void handleSavePlanToFile() {
@@ -370,8 +393,59 @@ public class ExecutionPlanView extends ViewPart {
             }
         }
     }
+    
+    /**
+     * Save the current Execution Plan xml to a file.
+     */
+    public void handleReadPlanFromFile() {
+        Shell shell = Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
+        // Shell shell = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
+        FileDialog dlg = new FileDialog(shell, SWT.OPEN);
+        dlg.setFilterExtensions(new String[] {"*.xml", "*.*"}); //$NON-NLS-1$ //$NON-NLS-2$ 
+        dlg.setText(Messages.getString(PREFIX + "importPlanDialog.title")); //$NON-NLS-1$
+        dlg.setFileName(Messages.getString(PREFIX + "importPlanDialog.defaultFileName")); //$NON-NLS-1$
+        String fileStr = dlg.open();
+                
+        if (fileStr != null) {
+            FileReader fr = null;
+            BufferedReader in = null;
+            try {
+                fr = new FileReader(fileStr);
+                in = new BufferedReader(fr);
+                String str;
+                StringBuffer all = new StringBuffer();
+                while ((str = in.readLine()) != null) {
+                    all.append(str);
+                }
+                String planText = all.toString();
+                String sqlStr = Messages.getString(PREFIX + "readPlanFromFile.sql"); //$NON-NLS-1$
+                String descriptionStr = Messages.getString(PREFIX + "readPlanFromFile.description"); //$NON-NLS-1$
+                
+                updateContents(descriptionStr,sqlStr,planText);
 
-    /*
+            } catch (Exception e) {
+                IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+                                            Messages.getString(PREFIX + "importPlanDialog.error"), e); //$NON-NLS-1$
+                Activator.getDefault().getLog().log(status);
+            } finally {
+                try {
+                    if (fr != null) {
+                        fr.close();
+                    }
+                } catch (java.io.IOException e) {
+                }
+                try {
+                    if (in != null) {
+                        in.close();
+                    }
+                } catch (java.io.IOException e) {
+                }
+
+            }
+        }
+    }
+
+    /**
      * Update the state of the ExecutionPlan panel
      * @param description the text description for the panel
      * @param sql the SQL to display
@@ -382,7 +456,11 @@ public class ExecutionPlanView extends ViewPart {
                                 String planStr ) {
         this.planString = planStr;
         // Update the Object Name Label
-        panelDescriptionLabel.setText(description);
+        if(description!=null) {
+            panelDescriptionLabel.setText(description);
+        } else {
+            panelDescriptionLabel.setText(""); //$NON-NLS-1$
+        }
 
         // Update the SQL String
         if (sql != null) {
@@ -420,7 +498,7 @@ public class ExecutionPlanView extends ViewPart {
     /*
      * Update the button enabled states.
      */
-    public void updateButtonEnablements() {
+    private void updateButtonEnablements() {
         if (this.planString != null) {
             this.saveToFileAction.setEnabled(true);
             this.expandAll.setEnabled(true);
