@@ -7,6 +7,7 @@
  */
 package org.teiid.datatools.connectivity.ui;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -69,6 +70,41 @@ public class Activator extends AbstractUIPlugin {
         return plugin;
     }
     
+    /**
+     * Retrieves the image descriptor associated with the specified key from the {@link org.eclipse.jface.resource.ImageRegistry
+     * image registry}, creating the descriptor and registering it if it doesn't already exist. A null key will cause the
+     * descriptor for the "No image" image to be returned.
+     * 
+     * @param key The key associated with the image descriptor to retrieve. This must be in the form of the path to the image file
+     *        relative to this plug-in's folder; may be null.
+     * @return The image descriptor associated with the specified key.
+     * @since 4.0
+     */
+    public final ImageDescriptor getImageDescriptor( final String key ) {
+        final ImageRegistry registry = getImageRegistry();
+        final ImageDescriptor descriptor = registry.getDescriptor(key);
+        if (descriptor != null) {
+            return descriptor;
+        }
+        return createImageDescriptor(key);
+    }
+
+    /**
+     * @since 4.0
+     */
+    private ImageDescriptor createImageDescriptor( final String key ) {
+        try {
+            final URL url = new URL(getBundle().getEntry("/").toString() + key); //$NON-NLS-1$
+            final ImageDescriptor descriptor = ImageDescriptor.createFromURL(url);
+            final ImageRegistry registry = getImageRegistry();
+            registry.put(key, descriptor);
+            return descriptor;
+        } catch (final MalformedURLException err) {
+            plugin.log(err);
+            return null;
+        }
+    }
+
     @Override
 	protected void initializeImageRegistry(ImageRegistry registry) {
         Bundle bundle = Platform.getBundle(PLUGIN_ID);
