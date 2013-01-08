@@ -26,9 +26,4 @@ public abstract class LogicalCriteriaImpl extends LanguageObjectImpl implements 
     public LogicalCriteria getDelegate() {
         return (LogicalCriteria) delegate;
     }
-    
-    @Override
-    public boolean isFunction() {
-        return false;
-    }
 }

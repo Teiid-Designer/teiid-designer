@@ -26,9 +26,4 @@ public abstract class PredicateCriteriaImpl extends LanguageObjectImpl implement
     public PredicateCriteria getDelegate() {
         return (PredicateCriteria) delegate;
     }
-    
-    @Override
-    public boolean isFunction() {
-        return false;
-    }
 }
