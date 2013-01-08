@@ -238,14 +238,16 @@ IEditorActionDelegate, ISelectionChangedListener, IUpdate {
         }
 
         Statement stmt = sqlConnection.createStatement();
+        stmt.execute("SET NOEXEC ON"); //$NON-NLS-1$
         stmt.execute("SET SHOWPLAN DEBUG"); //$NON-NLS-1$
         stmt.executeQuery(sql);
         ResultSet planRs = stmt.executeQuery("SHOW PLAN"); //$NON-NLS-1$
         planRs.next();
         executionPlan = planRs.getString("PLAN_XML"); //$NON-NLS-1$
+        stmt.execute("SET NOEXEC OFF"); //$NON-NLS-1$
         return executionPlan;
     }
-
+    
     @Override
 	public void run( IAction action ) {
     }
