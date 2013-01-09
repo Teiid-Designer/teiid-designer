@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -1844,7 +1845,19 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                     public boolean select( final Viewer viewer,
                                            final Object parent,
                                            final Object element ) {
-                        if (element instanceof IContainer) return true;
+                        if (element instanceof IContainer) {
+                            // Get the project for this container
+                            IProject proj = ((IContainer)element).getProject();
+                            
+                            // Get the VDB Project
+                            IProject vdbProject = getVdb().getFile().getProject();
+                            
+                            // Can only add Models from the VDB Project
+                            if(proj.isOpen() && proj.equals(vdbProject)) {
+                                return true;
+                            } 
+                            return false;
+                        }
                         final IFile file = (IFile)element;
                         if (!ModelUtilities.isModelFile(file) && !ModelUtil.isXsdFile(file)) {
                         	return false;
@@ -1857,8 +1870,9 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                         return true;
                     }
                 };
+                                
                 ModelingResourceFilter wsFilter = new ModelingResourceFilter(filter);
-                wsFilter.setShowHiddenProjects(true);
+                wsFilter.setShowHiddenProjects(false);
                 final Object[] models = WidgetUtil.showWorkspaceObjectSelectionDialog(ADD_FILE_DIALOG_TITLE,
                                                                                       ADD_FILE_DIALOG_MESSAGE,
                                                                                       true,
