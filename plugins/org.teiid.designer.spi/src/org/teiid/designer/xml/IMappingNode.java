@@ -72,4 +72,9 @@ public interface IMappingNode {
      */
     void addStagingTable(String stagingTable);
 
+    /**
+     * @return
+     */
+    IMappingNode clone();
+
 }

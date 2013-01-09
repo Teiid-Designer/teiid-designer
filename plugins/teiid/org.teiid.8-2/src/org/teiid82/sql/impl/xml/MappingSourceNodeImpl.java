@@ -27,5 +27,10 @@ public class MappingSourceNodeImpl extends MappingNodeImpl implements IMappingSe
     MappingSourceNode getMappingNode() {
         return (MappingSourceNode) super.getMappingNode();
     }
+    
+    @Override
+    public MappingSourceNodeImpl clone() {
+        return new MappingSourceNodeImpl((MappingSourceNode) getMappingNode().clone());
+    }
 
 }

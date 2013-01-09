@@ -7,6 +7,8 @@
 */
 package org.teiid.designer.xml;
 
+import java.io.InputStream;
+
 
 
 
@@ -24,6 +26,18 @@ public interface IMappingDocumentFactory {
      */
     void addNamespace(IMappingElement element, String prefix, String uri);
 
+    /**
+     * Load a mapping document from the input stream and assign 
+     * the document the given name.
+     * 
+     * @param inputStream
+     * @param documentName
+     * @return new mapping document
+     * 
+     * @throws Exception
+     */
+    IMappingDocument loadMappingDocument(InputStream inputStream, String documentName) throws Exception;
+    
     /**
      * Create an XML Mapping Document
      * 

@@ -93,8 +93,7 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
 
         // the decorator framework actually constructs another instance of this provider and the server manager will not be set by
         // the getElements method
-        if (getServerManager() != null) {
-            assert (element instanceof TeiidServerContainerNode) : "element is not a server (check plugin.xml enablement)"; //$NON-NLS-1$
+        if (getServerManager() != null && element instanceof TeiidServerContainerNode) {
             TeiidServerContainerNode node = (TeiidServerContainerNode) element;
             ITeiidServer teiidServer = node.getTeiidServer();
             

@@ -29,11 +29,6 @@ public class JoinPredicateImpl extends FromClauseImpl implements IJoinPredicate 
     public JoinPredicate getDelegate() {
         return (JoinPredicate) delegate;
     }
-    
-    @Override
-    public boolean isFunction() {
-        return false;
-    }
 
     @Override
     public void acceptVisitor(ILanguageVisitor visitor) {

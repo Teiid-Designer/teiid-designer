@@ -36,6 +36,11 @@ public class MappingNodeImpl implements IMappingNode {
     }
     
     @Override
+    public MappingNodeImpl clone() {
+        return new MappingNodeImpl(mappingNode.clone());
+    }
+    
+    @Override
     public IMappingNode addChild(IMappingNode node) {
         if (node instanceof IMappingElement) {
             addChildElement((IMappingElement) node);

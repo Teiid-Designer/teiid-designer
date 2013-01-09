@@ -42,5 +42,7 @@ public interface IStoredProcedureInfo {
     int getUpdateCount();
 
     void setUpdateCount(int updateCount);
+
+    void setQueryPlan(IQueryNode queryNode);
     
 }

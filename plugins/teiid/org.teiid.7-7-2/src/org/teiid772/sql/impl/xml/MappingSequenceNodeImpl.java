@@ -27,5 +27,10 @@ public class MappingSequenceNodeImpl extends MappingNodeImpl implements IMapping
     MappingSequenceNode getMappingNode() {
         return (MappingSequenceNode) super.getMappingNode();
     }
+    
+    @Override
+    public MappingSequenceNodeImpl clone() {
+        return new MappingSequenceNodeImpl((MappingSequenceNode) getMappingNode().clone());
+    }
 
 }
