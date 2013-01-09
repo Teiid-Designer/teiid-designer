@@ -9,6 +9,7 @@ package org.teiid772.sql.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.query.metadata.StoredProcedureInfo;
@@ -113,6 +114,11 @@ public class StoredProcedureInfoImpl implements IStoredProcedureInfo {
     public void setUpdateCount(int updateCount) {
         getDelegate().setUpdateCount(updateCount);
     }
+    
+    @Override
+    public void setQueryPlan(IQueryNode queryNode) {
+        storedProcedureInfo.setQueryPlan(((QueryNodeImpl) queryNode).getDelegate());
+    }
 
     @Override
     public String toString() {
@@ -138,8 +144,5 @@ public class StoredProcedureInfoImpl implements IStoredProcedureInfo {
         } else if (!this.storedProcedureInfo.equals(other.storedProcedureInfo)) return false;
         return true;
     }
-    
-    
-
     
 }

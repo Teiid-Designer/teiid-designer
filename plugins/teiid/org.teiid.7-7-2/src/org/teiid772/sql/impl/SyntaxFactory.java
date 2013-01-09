@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import org.teiid.designer.query.IQueryFactory;
 import org.teiid.designer.query.metadata.IMetadataID;
+import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.IBetweenCriteria;
 import org.teiid.designer.query.sql.lang.ICommand;
@@ -69,6 +70,7 @@ import org.teiid.designer.udf.IFunctionDescriptor;
 import org.teiid.designer.udf.IFunctionForm;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.function.FunctionForm;
+import org.teiid.query.mapping.relational.QueryNode;
 import org.teiid.query.metadata.StoredProcedureInfo;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.sql.LanguageObject;
@@ -710,6 +712,11 @@ public class SyntaxFactory implements IQueryFactory {
     @Override
     public IStoredProcedureInfo createStoredProcedureInfo() {
         return new StoredProcedureInfoImpl(new StoredProcedureInfo());
+    }
+
+    @Override
+    public IQueryNode createQueryNode(String queryPlan) {
+        return new QueryNodeImpl(new QueryNode(queryPlan));
     }
     
 }

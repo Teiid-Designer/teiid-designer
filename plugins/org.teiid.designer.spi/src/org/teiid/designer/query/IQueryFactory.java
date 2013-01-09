@@ -9,6 +9,7 @@ package org.teiid.designer.query;
 
 import java.util.List;
 import org.teiid.designer.query.metadata.IMetadataID;
+import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.IBetweenCriteria;
 import org.teiid.designer.query.sql.lang.ICommand;
@@ -566,5 +567,14 @@ public interface IQueryFactory {
      * @return instance of {@link IStoredProcedureInfo}
      */
     IStoredProcedureInfo createStoredProcedureInfo();
+
+    /**
+     * Create a query node
+     * 
+     * @param queryPlan
+     * 
+     * @return instance of {@link IQueryNode}
+     */
+    IQueryNode createQueryNode(String queryPlan);
 
 }
