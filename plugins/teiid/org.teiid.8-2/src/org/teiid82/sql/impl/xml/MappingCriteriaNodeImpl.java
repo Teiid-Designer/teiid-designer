@@ -35,4 +35,8 @@ public class MappingCriteriaNodeImpl extends MappingNodeImpl implements IMapping
         return (MappingCriteriaNode) super.getMappingNode();
     }
     
+    @Override
+    public MappingCriteriaNodeImpl clone() {
+        return new MappingCriteriaNodeImpl((MappingCriteriaNode) getMappingNode().clone());
+    }
 }

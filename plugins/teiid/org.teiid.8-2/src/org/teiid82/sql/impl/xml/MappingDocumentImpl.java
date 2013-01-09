@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import org.teiid.designer.xml.IMappingDocument;
-import org.teiid.designer.xml.IMappingElement;
 import org.teiid.designer.xml.IMappingNode;
 import org.teiid.query.mapping.xml.MappingAllNode;
 import org.teiid.query.mapping.xml.MappingChoiceNode;
@@ -27,49 +26,60 @@ import org.teiid.query.mapping.xml.MappingSourceNode;
 /**
  *
  */
-public class MappingDocumentImpl implements IMappingDocument {
+public class MappingDocumentImpl extends MappingNodeImpl implements IMappingDocument {
 
-    private final MappingDocument document;
+    /**
+     * @param mappingDocument
+     */
+    public MappingDocumentImpl(MappingDocument mappingDocument) {
+        super(mappingDocument);
+    }
     
     /**
      * @param encoding
      * @param formatted
      */
     public MappingDocumentImpl(String encoding, boolean formatted) {
-        document = new MappingDocument(encoding, formatted);
+        this(new MappingDocument(encoding, formatted));
+    }
+
+    @Override
+    public MappingDocument getMappingNode() {
+        return (MappingDocument) super.getMappingNode();
     }
 
     @Override
     public IMappingNode getRootElement() {
-        if (document.getRootNode() instanceof MappingAllNode) {
-            return new MappingAllNodeImpl((MappingAllNode) document.getRootNode());
+        if (getMappingNode().getRootNode() instanceof MappingAllNode) {
+            return new MappingAllNodeImpl((MappingAllNode) getMappingNode().getRootNode());
         }
-        if (document.getRootNode() instanceof MappingChoiceNode) {
-            return new MappingChoiceNodeImpl((MappingChoiceNode) document.getRootNode());
+        if (getMappingNode().getRootNode() instanceof MappingChoiceNode) {
+            return new MappingChoiceNodeImpl((MappingChoiceNode) getMappingNode().getRootNode());
         }
-        if (document.getRootNode() instanceof MappingCriteriaNode) {
-            return new MappingCriteriaNodeImpl((MappingCriteriaNode) document.getRootNode());
+        if (getMappingNode().getRootNode() instanceof MappingCriteriaNode) {
+            return new MappingCriteriaNodeImpl((MappingCriteriaNode) getMappingNode().getRootNode());
         }
-        if (document.getRootNode() instanceof MappingRecursiveElement) {
-            return new MappingRecursiveElementImpl((MappingRecursiveElement) document.getRootNode());
+        if (getMappingNode().getRootNode() instanceof MappingRecursiveElement) {
+            return new MappingRecursiveElementImpl((MappingRecursiveElement) getMappingNode().getRootNode());
         }
-        if (document.getRootNode() instanceof MappingElement) {
-            return new MappingElementImpl((MappingElement) document.getRootNode());
+        if (getMappingNode().getRootNode() instanceof MappingElement) {
+            return new MappingElementImpl((MappingElement) getMappingNode().getRootNode());
         }
-        if (document.getRootNode() instanceof MappingSequenceNode) {
-            return new MappingSequenceNodeImpl((MappingSequenceNode) document.getRootNode());
+        if (getMappingNode().getRootNode() instanceof MappingSequenceNode) {
+            return new MappingSequenceNodeImpl((MappingSequenceNode) getMappingNode().getRootNode());
         }
-        if (document.getRootNode() instanceof MappingSourceNode) {
-            return new MappingSourceNodeImpl((MappingSourceNode) document.getRootNode());
+        if (getMappingNode().getRootNode() instanceof MappingSourceNode) {
+            return new MappingSourceNodeImpl((MappingSourceNode) getMappingNode().getRootNode());
         }
 
-        return new MappingNodeImpl(document.getRootNode());
+        return new MappingNodeImpl(getMappingNode().getRootNode());
     }
 
     @Override
-    public void addChildElement(IMappingElement element) {
-        MappingElementImpl elementImpl = (MappingElementImpl) element;
-        document.addChildElement(elementImpl.getMappingNode());
+    public IMappingNode addChild(IMappingNode node) {
+        MappingNodeImpl nodeImpl = (MappingNodeImpl) node;
+        getMappingNode().addChild(nodeImpl.getMappingNode());
+        return node;
     }
 
     @Override
@@ -81,7 +91,7 @@ public class MappingDocumentImpl implements IMappingDocument {
             moStream = new ByteArrayOutputStream();
             final PrintWriter pw = new PrintWriter(moStream, true);
             final MappingOutputter outputter = new MappingOutputter();
-            outputter.write(document, pw); // TODO FIX/REPLACE??? , isNewlines(), isIndent());
+            outputter.write(getMappingNode(), pw); // TODO FIX/REPLACE??? , isNewlines(), isIndent());
             pw.flush();
 
             result = moStream.toString();
@@ -99,32 +109,9 @@ public class MappingDocumentImpl implements IMappingDocument {
         }
         return result;
     }
-
-    @Override
-    public String toString() {
-        return this.document.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.document == null) ? 0 : this.document.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        MappingDocumentImpl other = (MappingDocumentImpl)obj;
-        if (this.document == null) {
-            if (other.document != null) return false;
-        } else if (!this.document.equals(other.document)) return false;
-        return true;
-    }
     
-    
-
+    @Override
+    public MappingDocumentImpl clone() {
+        return new MappingDocumentImpl((MappingDocument) getMappingNode().clone());
+    }
 }

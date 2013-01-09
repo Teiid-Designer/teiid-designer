@@ -31,10 +31,15 @@ public class MappingRecursiveElementImpl extends MappingElementImpl implements I
     public MappingRecursiveElementImpl(MappingRecursiveElement element) {
         super(element);
     }
-    
+
     @Override
     MappingRecursiveElement getMappingNode() {
         return (MappingRecursiveElement) super.getMappingNode();
+    }
+    
+    @Override
+    public MappingRecursiveElementImpl clone() {
+        return new MappingRecursiveElementImpl((MappingRecursiveElement) getMappingNode().clone());
     }
     
     @Override

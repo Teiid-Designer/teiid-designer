@@ -692,7 +692,7 @@ public class MappingDocumentFormatter {
         
         IMappingDocument doc = getFactory().createMappingDocument(xmlDoc.getEncoding(), xmlDoc.isFormatted());
         IMappingElement node = processElementNode(xmlRoot, rootElementInfo, mappingContext);
-        doc.addChildElement(node);
+        doc.addChild(node);
         
         // Create the rest of the mapping node tree.
         // When creating the mapping node tree the server assumes that attributes
