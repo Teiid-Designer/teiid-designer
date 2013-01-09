@@ -51,6 +51,11 @@ public interface UiConstants {
         String COLUMN_ERROR_ICON = OBJ16 + "column-error.png"; //$NON-NLS-1$
         String COLUMN_WARNING_ICON = OBJ16 + "column-warning.png"; //$NON-NLS-1$
         String PARAMETER_ICON = OBJ16 + "parameter.png"; //$NON-NLS-1$
+        String PARAMETER_IN_ICON = OBJ16 + "parameter-in.png"; //$NON-NLS-1$
+        String PARAMETER_INOUT_ICON = OBJ16 + "parameter-inout.png"; //$NON-NLS-1$
+        String PARAMETER_OUT_ICON = OBJ16 + "parameter-out.png"; //$NON-NLS-1$
+        String PARAMETER_RETURN_ICON = OBJ16 + "parameter-return.png"; //$NON-NLS-1$
+        String PARAMETER_UNKNOWN_ICON = OBJ16 + "parameter-unknown.png"; //$NON-NLS-1$
         String PARAMETER_ERROR_ICON = OBJ16 + "parameter-error.png"; //$NON-NLS-1$
         String PARAMETER_WARNING_ICON = OBJ16 + "parameter-warning.png"; //$NON-NLS-1$
         String FK_ICON = OBJ16 + "foreign-key.png"; //$NON-NLS-1$
@@ -69,6 +74,7 @@ public interface UiConstants {
         String TABLE_ERROR_ICON = OBJ16 + "relational-table-error.png"; //$NON-NLS-1$
         String TABLE_WARNING_ICON = OBJ16 + "relational-table-warning.png"; //$NON-NLS-1$
         String NEW_TABLE_ICON = OBJ16 + "new-relational-table.png"; //$NON-NLS-1$
+        String NEW_PROCEDURE_ICON = OBJ16 + "new-relational-procedure.png"; //$NON-NLS-1$
         String VIRTUAL_TABLE_ICON = OBJ16 + "virtual-relational-table.png"; //$NON-NLS-1$
         String NEW_VIRTUAL_TABLE_ICON = OBJ16 + "new-view-table.png"; //$NON-NLS-1$
         String VIRTUAL_TABLE_ERROR_ICON = OBJ16 + "virtual-relational-table-error.png"; //$NON-NLS-1$

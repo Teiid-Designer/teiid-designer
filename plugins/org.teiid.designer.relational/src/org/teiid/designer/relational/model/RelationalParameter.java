@@ -9,7 +9,11 @@ package org.teiid.designer.relational.model;
 
 import java.util.Properties;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
+import org.teiid.designer.relational.Messages;
+import org.teiid.designer.relational.RelationalPlugin;
 
 
 
@@ -179,6 +183,19 @@ public class RelationalParameter extends RelationalReference {
 	public void validate() {
 		// Walk through the properties for the parameter and set the status
 		super.validate();
+		
+		if( getStatus().getSeverity() == IStatus.ERROR ) {
+			return;
+		}
+		
+		// Parameter directions check
+		if( ((RelationalProcedure)getParent()).isFunction() ) {
+			if( ! getDirection().equalsIgnoreCase(DIRECTION.IN) &&
+				! getDirection().equalsIgnoreCase(DIRECTION.RETURN)	) {
+				setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, Messages.validate_error_invalidParameterDirectionInFunction ));
+				return;
+			}
+		}
 	}
     
     public void setProperties(Properties props) {

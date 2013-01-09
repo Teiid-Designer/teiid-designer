@@ -12,6 +12,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @since 8.0
  */
+@SuppressWarnings("javadoc")
 public class Messages extends NLS {
 	
 	public static String datatypeProcessor_error_while_computing_datatype;
@@ -37,6 +38,8 @@ public class Messages extends NLS {
 	public static String validate_error_duplicateColumnNamesInTable;
 	public static String validate_error_duplicateParameterNamesInProcedure;
 	public static String validate_warning_noParametersDefined;
+	public static String validate_error_invalidParameterDirectionInFunction;
+	public static String validate_error_tooManyResultParametersInFunction;
 
     static {
         NLS.initializeMessages("org.teiid.designer.relational.messages", Messages.class); //$NON-NLS-1$

@@ -19,10 +19,15 @@ import org.teiid.designer.relational.ui.UiPlugin;
  * @since 8.0
  */
 public class RelationalUiUtil implements RelationalConstants {
-	private static int OK = IStatus.OK;
 	private static int WARNING = IStatus.WARNING;
 	private static int ERROR = IStatus.ERROR;
 	
+	/**
+	 * @param objectType the relational object type
+	 * @param modelType the relational model type
+	 * @param status the error status object
+	 * @return the relevant Image
+	 */
 	public static Image getRelationalImage(int objectType, int modelType, IStatus status) {
 		int severity = status.getSeverity();
 		switch(objectType) {
@@ -46,11 +51,11 @@ public class RelationalUiUtil implements RelationalConstants {
 				if( severity == WARNING ) return UiPlugin.getDefault().getImage(UiConstants.Images.INDEX_WARNING_ICON);
 				return UiPlugin.getDefault().getImage(UiConstants.Images.INDEX_ICON);
 			}
-//			case TYPES.PARAMETER: {
-//				if( severity == ERROR ) return UiPlugin.getDefault().getImage(UiConstants.Images.PARAMETER_ERROR_ICON);
-//				if( severity == WARNING ) return UiPlugin.getDefault().getImage(UiConstants.Images.PARAMETER_WARNING_ICON);
-//				return UiPlugin.getDefault().getImage(UiConstants.Images.PARAMETER_ICON);
-//			}
+			case TYPES.PARAMETER: {
+				if( severity == ERROR ) return UiPlugin.getDefault().getImage(UiConstants.Images.PARAMETER_ERROR_ICON);
+				if( severity == WARNING ) return UiPlugin.getDefault().getImage(UiConstants.Images.PARAMETER_WARNING_ICON);
+				return UiPlugin.getDefault().getImage(UiConstants.Images.PARAMETER_ICON);
+			}
 			case TYPES.PK: {
 				if( severity == ERROR ) return UiPlugin.getDefault().getImage(UiConstants.Images.PK_ERROR_ICON);
 				if( severity == WARNING ) return UiPlugin.getDefault().getImage(UiConstants.Images.PK_WARNING_ICON);

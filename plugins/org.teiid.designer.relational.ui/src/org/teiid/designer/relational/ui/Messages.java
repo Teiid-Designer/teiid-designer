@@ -12,7 +12,9 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @since 8.0
  */
+@SuppressWarnings("javadoc")
 public class Messages extends NLS {
+	
 	
 	public static String elipsisLabel;
 	public static String addLabel;
@@ -35,6 +37,12 @@ public class Messages extends NLS {
     public static String createRelationalTableInitialMessage;
     public static String createRelationalTableExceptionMessage;
     public static String createRelationalTableHelpText;
+    
+    public static String createRelationalProcedureActionText;
+    public static String createRelationalProcedureTitle;
+    public static String createRelationalProcedureInitialMessage;
+    public static String createRelationalProcedureExceptionMessage;
+    public static String createRelationalProcedureHelpText;
 
     public static String modelFileLabel;
 
@@ -51,6 +59,22 @@ public class Messages extends NLS {
     public static String columnNameLabel;
     public static String dataTypeLabel;
     public static String lengthLabel;
+	public static String isFunctionLabel;
+	public static String parametersLabel;
+	public static String directionLabel;
+	public static String updateCountLabel;
+	public static String nonPreparedLabel;
+	public static String deterministicLabel;
+	public static String returnsNullOnNullLabel;
+	public static String variableArgumentsLabel;
+	public static String aggregateLabel;
+	public static String allowsDistinctLabel;
+	public static String allowsOrderByLabel;
+	public static String analyticLabel;
+	public static String decomposableLabel;
+	public static String usesDistinctRowsLabel;
+	public static String functionPropertiesLabel;
+	public static String aggregatePropertiesLabel;
 
 	public static String validationOkCreateObject;
 	public static String selectColumnsTitle;
@@ -65,6 +89,7 @@ public class Messages extends NLS {
 	public static String newForeignKeyMessage;
 	public static String cardinalityErrorTitle;
 	public static String cardinalityMustBeAnInteger;
+	public static String unsupportedObjectType;
     		
     static {
         NLS.initializeMessages("org.teiid.designer.relational.ui.messages", Messages.class); //$NON-NLS-1$

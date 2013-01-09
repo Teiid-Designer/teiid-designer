@@ -32,6 +32,11 @@ public class EditRelationalObjectDialog extends TitleAreaDialog implements IDial
 //    private Button OKButton;
 //    private boolean isControlComplete = false;
     
+    /**
+     * @param parentShell the parent shell
+     * @param relationalObject the relation object to edit
+     * @param file the target relational model file
+     */
     public EditRelationalObjectDialog(Shell parentShell, RelationalReference relationalObject, IFile file) {
         super(parentShell);
         this.setTitle(TITLE);
@@ -43,7 +48,7 @@ public class EditRelationalObjectDialog extends TitleAreaDialog implements IDial
     @Override
     protected void configureShell( Shell shell ) {
         super.configureShell(shell);
-        shell.setText(TITLE);
+        shell.setText(RelationalObjectEditorFactory.getDialogTitle(relationalObject));
     }
     
     /* (non-Javadoc)
@@ -54,8 +59,8 @@ public class EditRelationalObjectDialog extends TitleAreaDialog implements IDial
         Composite mainPanel = (Composite)super.createDialogArea(parent);
         ((GridLayout)mainPanel.getLayout()).marginHeight=10;
         ((GridLayout)mainPanel.getLayout()).marginWidth=10;
-        this.setTitle(TITLE);
-        this.setMessage(Messages.createRelationalTableInitialMessage);
+        this.setTitle(RelationalObjectEditorFactory.getDialogTitle(relationalObject));
+        this.setMessage(RelationalObjectEditorFactory.getInitialMessage(relationalObject));
         
         RelationalObjectEditorFactory.getEditorPanel(this, mainPanel, relationalObject, modelFile);
         

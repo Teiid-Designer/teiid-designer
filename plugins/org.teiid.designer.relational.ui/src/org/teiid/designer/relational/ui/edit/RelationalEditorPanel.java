@@ -16,7 +16,6 @@ import org.teiid.designer.relational.model.RelationalReference;
  * @since 8.0
  */
 public abstract class RelationalEditorPanel {
-	public static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	RelationalReference relationalObject;
 	IFile modelFile;
 	
@@ -24,6 +23,12 @@ public abstract class RelationalEditorPanel {
 	
 	IDialogStatusListener statusListener;
 
+	/**
+	 * @param parent the parent panel
+	 * @param relationalObject the relational object
+	 * @param modelFile the relational model file
+	 * @param statusListener the dialog status listener
+	 */
 	public RelationalEditorPanel(Composite parent, RelationalReference relationalObject, IFile modelFile, IDialogStatusListener statusListener) {
 		super();
 		this.relationalObject = relationalObject;
@@ -49,6 +54,9 @@ public abstract class RelationalEditorPanel {
 		statusListener.notifyStatusChanged(currentStatus);
 	}
 	
+	/**
+	 * @return the relational object reference
+	 */
 	public final RelationalReference getRelationalReference() {
 		return this.relationalObject;
 	}

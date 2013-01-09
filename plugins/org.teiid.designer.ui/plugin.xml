@@ -932,23 +932,6 @@
          label="%setDatatypeModelingAction.label">
       </specialAction>
    </extension>
-	<extension
-         id="newChildPushdownFunction"
-         name="%newChildPushdownFunction"
-         point="org.teiid.designer.ui.newChildAction">
-      <class
-            name="org.teiid.designer.ui.actions.CreatePushdownFunctionAction">
-      </class>
-   </extension>
-
-   <extension
-         id="newSiblingPushdownFunction"
-         name="%newSiblingPushdownFunction"
-         point="org.teiid.designer.ui.newSiblingAction">
-      <class
-            name="org.teiid.designer.ui.actions.CreatePushdownFunctionAction">
-      </class>
-   </extension>
 <!-- Actions contributed to the Model Projects -->
    <extension
         id="CloneProjectAction2"

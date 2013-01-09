@@ -12,9 +12,13 @@ package org.teiid.designer.relational;
  *
  * @since 8.0
  */
+@SuppressWarnings("javadoc")
 public interface RelationalConstants {
     final static String XMI_EXT = ".xmi"; //$NON-NLS-1$
     
+    /**
+     * Relational model object types
+     */
     class TYPES {
         public static final int UNDEFINED = -1;
         public static final int MODEL = 0;
@@ -33,6 +37,9 @@ public interface RelationalConstants {
         public static final int INDEX = 13;
     }
     
+    /**
+     *  relational model object type names
+     */
     final static String[] TYPE_NAMES = {
     	"Model", //$NON-NLS-1$
     	"Schema", //$NON-NLS-1$
@@ -49,6 +56,9 @@ public interface RelationalConstants {
     	"Index" //$NON-NLS-1$
     };
     
+    /**
+     * relational object type literal strings
+     */
     class TYPES_LITERAL {
         public static final String UNDEFINED = "UNDEFINED"; //$NON-NLS-1$
         public static final String MODEL = "MODEL"; //$NON-NLS-1$
@@ -74,6 +84,7 @@ public interface RelationalConstants {
         public static final String LIKE_ONLY = "LIKE_ONLY"; //$NON-NLS-1$
         public static final String SEARCHABLE = "SEARCHABLE"; //$NON-NLS-1$
         public static final String UNSEARCHABLE = "UNSEARCHABLE"; //$NON-NLS-1$
+        public static final String[] AS_ARRAY = { ALL_EXCEPT_LIKE, LIKE_ONLY, SEARCHABLE, UNSEARCHABLE };
     }
     
     // NO_NULLS, NULLABLE, NULLABLE_UNKNOWN
@@ -81,6 +92,8 @@ public interface RelationalConstants {
         public static final String NO_NULLS = "NO_NULLS"; //$NON-NLS-1$
         public static final String NULLABLE = "NULLABLE"; //$NON-NLS-1$
         public static final String NULLABLE_UNKNOWN = "NULLABLE_UNKNOWN"; //$NON-NLS-1$
+        public static final String[] AS_ARRAY = { NO_NULLS, NULLABLE, NULLABLE_UNKNOWN };
+        public static final String DEFAULT_VALUE = NULLABLE;
     }
     
     // MANY, ONE, UNSPECIFICIED, ZERO_TO_MANY, ZERO_TO_ONE
@@ -94,11 +107,13 @@ public interface RelationalConstants {
     }
     
     // AUTO, MULTIPLE, ONE, ZERO
-    class UPDATE_COUNT {
+	class UPDATE_COUNT {
         public static final String AUTO = "AUTO"; //$NON-NLS-1$
         public static final String MULTIPLE = "MULTIPLE"; //$NON-NLS-1$
         public static final String ONE = "ONE"; //$NON-NLS-1$
         public static final String ZERO = "ZERO"; //$NON-NLS-1$
+        public static final String[] AS_ARRAY = {AUTO, MULTIPLE, ONE, ZERO};
+        public static final String DEFAULT_VALUE = AUTO;
     }
     
     // IN, IN_OUT, OUT, RETURN, UNKNOWN
@@ -108,6 +123,22 @@ public interface RelationalConstants {
         public static final String OUT = "OUT"; //$NON-NLS-1$
         public static final String RETURN = "RETURN"; //$NON-NLS-1$
         public static final String UNKNOWN = "UNKNOWN"; //$NON-NLS-1$
+        public static final String[] AS_ARRAY = {IN, IN_OUT, OUT, RETURN, UNKNOWN};
+        public static final String DEFAULT_VALUE = IN;
+    }
+    
+    class PROCEDURE_EXT_PROPERTIES {
+        public static final String AGGREGATE = "relational:aggregate"; //$NON-NLS-1$
+        public static final String ALLOWS_ORDER_BY = "relational:allows-orderby"; //$NON-NLS-1$
+        public static final String ALLOWS_DISTINCT = "relational:allows-distinct"; //$NON-NLS-1$
+        public static final String ANALYTIC = "relational:analytic"; //$NON-NLS-1$
+        public static final String DECOMPOSABLE = "relational:decomposable"; //$NON-NLS-1$
+        public static final String DETERMINISTIC = "relational:deterministic"; //$NON-NLS-1$
+        public static final String NATIVE_QUERY = "relational:native-query"; //$NON-NLS-1$
+        public static final String NON_PREPARED = "relational:non-prepared"; //$NON-NLS-1$
+        public static final String USES_DISTINCT_ROWS = "relational:uses-distinct-rows"; //$NON-NLS-1$
+        public static final String VARARGS = "relational:varargs"; //$NON-NLS-1$
+        public static final String NULL_ON_NULL = "relational:null-on-null"; //$NON-NLS-1$
     }
 
 }

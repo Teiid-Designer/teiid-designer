@@ -464,7 +464,8 @@ public class ModelEditorImpl implements ModelEditor {
                     Collection filteredClasses = new ArrayList(rootClasses.size());
                     for( Object obj : rootClasses ) {
                     	String className = ((MetamodelRootClass)obj).getEClass().getName();
-                    	if( !className.equalsIgnoreCase("BaseTable") ) { //$NON-NLS-1$
+                    	if( !className.equalsIgnoreCase("BaseTable") && //$NON-NLS-1$
+                        	!className.equalsIgnoreCase("Procedure") ) { //$NON-NLS-1$
                     		filteredClasses.add(obj);
                     	}
                     }
@@ -3640,7 +3641,8 @@ public class ModelEditorImpl implements ModelEditor {
         Collection filteredClasses = new ArrayList(rootClasses.size());
         for( Object obj : rootClasses ) {
         	String className = ((MetamodelRootClass)obj).getEClass().getName();
-        	if( !className.equalsIgnoreCase("BaseTable") ) { //$NON-NLS-1$
+        	if( !className.equalsIgnoreCase("BaseTable") && //$NON-NLS-1$
+        		!className.equalsIgnoreCase("Procedure")) { //$NON-NLS-1$
         		filteredClasses.add(obj);
         	}
         }

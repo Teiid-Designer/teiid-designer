@@ -31,6 +31,8 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metamodels.core.Annotation;
 import org.teiid.designer.metamodels.core.AnnotationContainer;
 import org.teiid.designer.metamodels.core.CoreFactory;
@@ -47,6 +49,7 @@ import org.teiid.designer.metamodels.relational.PrimaryKey;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.ProcedureResult;
+import org.teiid.designer.metamodels.relational.ProcedureUpdateCount;
 import org.teiid.designer.metamodels.relational.RelationalFactory;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.relational.SearchabilityType;
@@ -54,6 +57,8 @@ import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.UniqueConstraint;
 import org.teiid.designer.metamodels.relational.UniqueKey;
 import org.teiid.designer.metamodels.relational.View;
+import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionAssistant;
+import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionConstants;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.RelationalPlugin;
@@ -64,7 +69,13 @@ import org.teiid.designer.relational.RelationalPlugin;
  * @since 8.0
  */
 public class RelationalModelFactory implements RelationalConstants {
+    /**
+     * 
+     */
     public static final String RELATIONAL_PACKAGE_URI = RelationalPackage.eNS_URI;
+    /**
+     * 
+     */
     public static final RelationalFactory FACTORY = RelationalFactory.eINSTANCE;
     
     private DatatypeProcessor datatypeProcessor;
@@ -72,18 +83,29 @@ public class RelationalModelFactory implements RelationalConstants {
     private Map<RelationalForeignKey, BaseTable> fkTableMap = new HashMap<RelationalForeignKey, BaseTable>();
     private Collection<RelationalIndex> indexes = new ArrayList<RelationalIndex>();
 
+    /**
+     * 
+     */
     public RelationalModelFactory() {
         super();
         this.datatypeProcessor = new DatatypeProcessor();
     }
     
+    private RelationalModelExtensionAssistant getExtensionAssistant() {
+    	final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+        final String prefix = RelationalModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
+        final RelationalModelExtensionAssistant assistant = (RelationalModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
+        
+        return assistant;
+    }
+    
     /**
      * Creates a relational model given a <code>IPath</code> location and a model name
      * 
-     * @param location
-     * @param modelName
-     * @return
-     * @throws ModelWorkspaceException
+     * @param location the container location of the model
+     * @param modelName the model name
+     * @return the ModelResource
+     * @throws ModelWorkspaceException if error creating model
      */
     public ModelResource createRelationalModel( IPath location, String modelName) throws ModelWorkspaceException {
         ModelWorkspaceItem mwItem = null;
@@ -130,6 +152,14 @@ public class RelationalModelFactory implements RelationalConstants {
 
         try {
             RelationalModelFactory builder = new RelationalModelFactory();
+
+            final RelationalModelExtensionAssistant assistant = getExtensionAssistant();
+
+            try {
+                assistant.applyMedIfNecessary(modelResource.getUnderlyingResource());
+            } catch (Exception e) {
+            	RelationalPlugin.Util.log(IStatus.ERROR, e, e.getMessage());
+            }
             
             builder.buildFullModel(model, modelResource, progressMonitor);
             
@@ -221,6 +251,7 @@ public class RelationalModelFactory implements RelationalConstants {
             case TYPES.PROCEDURE: {
                 EObject procedure = createProcedure(obj, modelResource);
                 modelResource.getEmfResource().getContents().add(procedure);
+                applyProcedureExtensionProperties((RelationalProcedure)obj,(Procedure) procedure);
             } break;
             case TYPES.INDEX: {
                 indexes.add((RelationalIndex)obj);
@@ -411,9 +442,11 @@ public class RelationalModelFactory implements RelationalConstants {
             
             String dTypeName = ModelerCore.getModelEditor().getName(datatype);
             
-            int paramLength = columnRef.getLength();
-            if( paramLength == 0 && DatatypeProcessor.DEFAULT_DATATYPE.equalsIgnoreCase(dTypeName) ) {
+            int datatypeLength = columnRef.getLength();
+            if( datatypeLength == 0 && DatatypeProcessor.DEFAULT_DATATYPE.equalsIgnoreCase(dTypeName) ) {
                 columnRef.setLength(DatatypeProcessor.DEFAULT_DATATYPE_LENGTH);
+            } else {
+            	columnRef.setLength(datatypeLength);
             }
         }
         
@@ -596,6 +629,10 @@ public class RelationalModelFactory implements RelationalConstants {
         Procedure procedure = FACTORY.createProcedure();
         procedure.setName(procedureRef.getName());
         procedure.setNameInSource(procedureRef.getNameInSource());
+        procedure.setFunction(procedureRef.isFunction());
+        procedure.setUpdateCount(getUpdateCount(procedureRef.getUpdateCount()));
+        
+
         
         // Set Description
         if( procedureRef.getDescription() != null ) {
@@ -646,14 +683,62 @@ public class RelationalModelFactory implements RelationalConstants {
             parameter.setType(datatype);
             String dTypeName = ModelerCore.getModelEditor().getName(datatype);
             
-            int paramLength = parameterRef.getLength();
-            if( paramLength == 0 && DatatypeProcessor.DEFAULT_DATATYPE.equalsIgnoreCase(dTypeName) ) {
+            int datatypeLength = parameterRef.getLength();
+            if( datatypeLength == 0 && DatatypeProcessor.DEFAULT_DATATYPE.equalsIgnoreCase(dTypeName) ) {
                 parameter.setLength(DatatypeProcessor.DEFAULT_DATATYPE_LENGTH);
+            } else {
+            	parameter.setLength(datatypeLength);
             }
         }
        
         
         return parameter;
+    }
+    
+    public void applyProcedureExtensionProperties(RelationalProcedure procedureRef, Procedure procedure) {
+        // Set Extension Properties here
+        final RelationalModelExtensionAssistant assistant = getExtensionAssistant();
+        if( assistant != null ) {
+        	try {
+				assistant.setPropertyValue(procedure, 
+						PROCEDURE_EXT_PROPERTIES.NON_PREPARED, 
+						Boolean.toString(procedureRef.isNonPrepared()));
+				if( procedureRef.isFunction() ) {
+					assistant.setPropertyValue(procedure, 
+							PROCEDURE_EXT_PROPERTIES.DETERMINISTIC, 
+							Boolean.toString(procedureRef.isDeterministic()));
+					assistant.setPropertyValue(procedure, 
+							PROCEDURE_EXT_PROPERTIES.NULL_ON_NULL, 
+							Boolean.toString(procedureRef.isReturnsNullOnNull()));
+					assistant.setPropertyValue(procedure, 
+							PROCEDURE_EXT_PROPERTIES.VARARGS, 
+							Boolean.toString(procedureRef.isVariableArguments()));
+					assistant.setPropertyValue(procedure, 
+							PROCEDURE_EXT_PROPERTIES.AGGREGATE, 
+							Boolean.toString(procedureRef.isAggregate()));
+					if( procedureRef.isAggregate() ) {
+						assistant.setPropertyValue(procedure, 
+								PROCEDURE_EXT_PROPERTIES.ALLOWS_DISTINCT, 
+								Boolean.toString(procedureRef.isAllowsDistinct()));
+						assistant.setPropertyValue(procedure, 
+								PROCEDURE_EXT_PROPERTIES.ALLOWS_ORDER_BY, 
+								Boolean.toString(procedureRef.isAllowsOrderBy()));
+						assistant.setPropertyValue(procedure, 
+								PROCEDURE_EXT_PROPERTIES.ANALYTIC, 
+								Boolean.toString(procedureRef.isAnalytic()));
+						assistant.setPropertyValue(procedure, 
+								PROCEDURE_EXT_PROPERTIES.DECOMPOSABLE, 
+								Boolean.toString(procedureRef.isDecomposable()));
+						assistant.setPropertyValue(procedure, 
+								PROCEDURE_EXT_PROPERTIES.USES_DISTINCT_ROWS, 
+								Boolean.toString(procedureRef.isUseDistinctRows()));
+					}
+				}
+			} catch (Exception ex) {
+				// TODO Auto-generated catch block
+				ex.printStackTrace();
+			}
+        }
     }
     
     public EObject createResultSet( RelationalReference ref, Procedure procedure, ModelResource modelResource) {
@@ -722,6 +807,23 @@ public class RelationalModelFactory implements RelationalConstants {
         }
         
         return DirectionKind.UNKNOWN_LITERAL;
+    }
+    
+    private  ProcedureUpdateCount getUpdateCount(String value) {
+        if( ProcedureUpdateCount.AUTO_LITERAL.getName().equalsIgnoreCase(value) ) {
+            return ProcedureUpdateCount.AUTO_LITERAL;
+        }
+        if( ProcedureUpdateCount.ONE_LITERAL.getName().equalsIgnoreCase(value) ) {
+            return ProcedureUpdateCount.ONE_LITERAL;
+        }
+        if( ProcedureUpdateCount.MULTIPLE_LITERAL.getName().equalsIgnoreCase(value) ) {
+            return ProcedureUpdateCount.MULTIPLE_LITERAL;
+        }
+        if( ProcedureUpdateCount.ZERO_LITERAL.getName().equalsIgnoreCase(value) ) {
+            return ProcedureUpdateCount.ZERO_LITERAL;
+        }
+        
+        return ProcedureUpdateCount.AUTO_LITERAL;
     }
     
     private MultiplicityKind getMultiplictyKind(String value) {

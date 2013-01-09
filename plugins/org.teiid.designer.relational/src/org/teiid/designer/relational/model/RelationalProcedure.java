@@ -35,6 +35,17 @@ public class RelationalProcedure extends RelationalReference {
     public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
     
     private boolean function;
+    private boolean nonPrepared;
+    private boolean deterministic;
+    private boolean returnsNullOnNull;
+    private boolean variableArguments;
+    private boolean aggregate;
+    private boolean allowsDistinct;
+    private boolean allowsOrderBy;
+    private boolean analytic;
+    private boolean decomposable;
+    private boolean useDistinctRows;
+    
     private String  updateCount;
     private Collection<RelationalParameter> parameters;
     private RelationalProcedureResultSet resultSet;
@@ -57,6 +68,32 @@ public class RelationalProcedure extends RelationalReference {
     }
 
     /**
+     * @return updateCount
+     */
+    public String getUpdateCount() {
+        return updateCount;
+    }
+    /**
+     * @param updateCount Sets updateCount to the specified value.
+     */
+    public void setUpdateCount( String updateCount ) {
+        this.updateCount = updateCount;
+    }
+    
+    /**
+     * @return function
+     */
+    public boolean isNonPrepared() {
+        return nonPrepared;
+    }
+    /**
+     * @param nonPrepared Sets non-prepared to the specified value.
+     */
+    public void setNonPrepared( boolean nonPrepared ) {
+        this.nonPrepared = nonPrepared;
+    }
+    
+    /**
      * @return function
      */
     public boolean isFunction() {
@@ -68,17 +105,122 @@ public class RelationalProcedure extends RelationalReference {
     public void setFunction( boolean function ) {
         this.function = function;
     }
+
     /**
-     * @return updateCount
+     * @return deterministic
      */
-    public String getUpdateCount() {
-        return updateCount;
+    public boolean isDeterministic() {
+        return deterministic;
     }
     /**
-     * @param updateCount Sets updateCount to the specified value.
+     * @param deterministic Sets deterministic to the specified value.
      */
-    public void setUpdateCount( String updateCount ) {
-        this.updateCount = updateCount;
+    public void setDeterministic( boolean deterministic ) {
+        this.deterministic = deterministic;
+    }
+    
+    /**
+     * @return returnsNullOnNull
+     */
+    public boolean isReturnsNullOnNull() {
+        return returnsNullOnNull;
+    }
+    /**
+     * @param returnsNullOnNull Sets returnsNullOnNull to the specified value.
+     */
+    public void setReturnsNullOnNull( boolean returnsNullOnNull ) {
+        this.returnsNullOnNull = returnsNullOnNull;
+    }
+    
+    /**
+     * @return variableArguments
+     */
+    public boolean isVariableArguments() {
+        return variableArguments;
+    }
+    /**
+     * @param variableArguments Sets variableArguments to the specified value.
+     */
+    public void setVariableArguments( boolean variableArguments ) {
+        this.variableArguments = variableArguments;
+    }
+    
+    /**
+     * @return aggregate
+     */
+    public boolean isAggregate() {
+        return aggregate;
+    }
+    /**
+     * @param aggregate Sets aggregate to the specified value.
+     */
+    public void setAggregate( boolean aggregate ) {
+        this.aggregate = aggregate;
+    }
+    
+    /**
+     * @return allowsDistinct
+     */
+    public boolean isAllowsDistinct() {
+        return allowsDistinct;
+    }
+    /**
+     * @param allowsDistinct Sets allowsDistinct to the specified value.
+     */
+    public void setAllowsDistinct( boolean allowsDistinct ) {
+        this.allowsDistinct = allowsDistinct;
+    }
+    
+    /**
+     * @return allowsOrderBy
+     */
+    public boolean isAllowsOrderBy() {
+        return allowsOrderBy;
+    }
+    /**
+     * @param allowsOrderBy Sets allowsOrderBy to the specified value.
+     */
+    public void setAllowsOrderBy( boolean allowsOrderBy ) {
+        this.allowsOrderBy = allowsOrderBy;
+    }
+    
+    /**
+     * @return analytic
+     */
+    public boolean isAnalytic() {
+        return analytic;
+    }
+    /**
+     * @param analytic Sets analytic to the specified value.
+     */
+    public void setAnalytic( boolean analytic ) {
+        this.analytic = analytic;
+    }
+    
+    /**
+     * @return decomposable
+     */
+    public boolean isDecomposable() {
+        return decomposable;
+    }
+    /**
+     * @param decomposable Sets decomposable to the specified value.
+     */
+    public void setDecomposable( boolean decomposable ) {
+        this.decomposable = decomposable;
+    }
+    
+    /**
+     * @return useDistinctRows
+     */
+    public boolean isUseDistinctRows() {
+        return useDistinctRows;
+    }
+    /**
+     * @param useDistinctRows Sets useDistinctRows to the specified value.
+     */
+    public void setUseDistinctRows( boolean useDistinctRows ) {
+        this.useDistinctRows = useDistinctRows;
     }
     /**
      * @return resultSet
@@ -215,6 +357,11 @@ public class RelationalProcedure extends RelationalReference {
 		// Walk through the properties for the table and set the status
 		super.validate();
 		
+		// Validate Children
+		for( RelationalParameter param : getParameters() ) {
+			param.validate();
+		}
+		
 		if( getStatus().getSeverity() == IStatus.ERROR ) {
 			return;
 		}
@@ -234,6 +381,7 @@ public class RelationalProcedure extends RelationalReference {
 					if( outerParam.getName().equalsIgnoreCase(innerParam.getName())) {
 						setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, 
 								NLS.bind(Messages.validate_error_duplicateParameterNamesInProcedure, getName())));
+						return;
 					}
 				}
 			}
@@ -244,5 +392,20 @@ public class RelationalProcedure extends RelationalReference {
 					Messages.validate_warning_noParametersDefined ));
 		}
 		
+		// Check for more than one RETURN parameter if Function
+		if( this.isFunction() ) {
+			boolean foundResultParam = false;
+			for( RelationalParameter param : getParameters() ) {
+				if( param.getDirection().equalsIgnoreCase(DIRECTION.RETURN)) {
+					if( foundResultParam ) {
+						setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID,
+								Messages.validate_error_tooManyResultParametersInFunction ));
+						return;
+					} else {
+						foundResultParam = true;
+					}
+				}
+			}
+		}
 	}
 }
