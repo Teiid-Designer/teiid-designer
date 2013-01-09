@@ -31,11 +31,6 @@ public class FunctionImpl extends ExpressionImpl implements IFunction {
     public Function getDelegate() {
         return (Function) delegate;
     }
-    
-    @Override
-    public boolean isFunction() {
-        return true;
-    }
 
     @Override
     public void acceptVisitor(ILanguageVisitor visitor) {

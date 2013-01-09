@@ -28,4 +28,9 @@ public class MappingAllNodeImpl extends MappingNodeImpl implements IMappingAllNo
         return (MappingAllNode) super.getMappingNode();
     }
     
+    @Override
+    public MappingAllNodeImpl clone() {
+        return new MappingAllNodeImpl((MappingAllNode) getMappingNode().clone());
+    }
+    
 }

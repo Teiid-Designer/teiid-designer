@@ -38,6 +38,11 @@ public class MappingRecursiveElementImpl extends MappingElementImpl implements I
     }
     
     @Override
+    public MappingRecursiveElementImpl clone() {
+        return new MappingRecursiveElementImpl((MappingRecursiveElement) getMappingNode().clone());
+    }
+    
+    @Override
     public void setCriteria(String recursionCriteria) {
         getMappingNode().setCriteria(recursionCriteria);
     }

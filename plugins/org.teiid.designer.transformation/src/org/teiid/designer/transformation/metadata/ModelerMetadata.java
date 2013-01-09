@@ -79,6 +79,7 @@ import org.teiid.designer.metamodels.core.Annotation;
 import org.teiid.designer.metamodels.core.ModelImport;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.TransformationHelper;
+import org.teiid.designer.transformation.util.UuidUtil;
 
 /**
  * Metadata implementation used by model workspace to resolve queries.
@@ -155,6 +156,24 @@ public class ModelerMetadata extends TransformationMetadata {
     // ==================================================================================
 
     /**
+     * Get the short element from the given full name
+     * 
+     * @param fullElementName
+     * @return
+     */
+    protected String getShortElementName(final String fullElementName) {
+        CoreArgCheck.isNotEmpty(fullElementName);
+        if (UuidUtil.isStringifiedUUID(fullElementName)) {
+            return UuidUtil.stripPrefixFromUUID(fullElementName);
+        }
+        int index = fullElementName.lastIndexOf(DELIMITER_CHAR);
+        if (index >= 0) {
+            return fullElementName.substring(index + 1);
+        }
+        return fullElementName;
+    }
+    
+    /**
      * Return all metadata records for the entity that matches the given entity name and is of the type specified by the record
      * type.
      * 
@@ -174,7 +193,7 @@ public class ModelerMetadata extends TransformationMetadata {
         if (CoreStringUtil.startsWithIgnoreCase(entityName, UUID.PROTOCOL)) {
             uuid = entityName.toLowerCase();
         } else {
-            String shortName = super.getShortElementName(entityName);
+            String shortName = getShortElementName(entityName);
             if (CoreStringUtil.startsWithIgnoreCase(shortName, UUID.PROTOCOL)) {
                 uuid = shortName.toLowerCase();
             }

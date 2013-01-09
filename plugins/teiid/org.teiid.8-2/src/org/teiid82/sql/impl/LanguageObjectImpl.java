@@ -10,6 +10,8 @@ package org.teiid82.sql.impl;
 import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Function;
 
 /**
  *
@@ -54,12 +56,12 @@ public class LanguageObjectImpl implements ILanguageObject {
     
     @Override
     public boolean isFunction() {
-        return false;
+        return delegate instanceof Function;
     }
     
     @Override
     public boolean isExpression() {
-        return false;
+        return delegate instanceof Expression;
     }
 
     @Override

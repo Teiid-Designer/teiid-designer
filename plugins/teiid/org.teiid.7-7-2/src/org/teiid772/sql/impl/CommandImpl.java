@@ -29,11 +29,6 @@ public abstract class CommandImpl extends LanguageObjectImpl implements ICommand
     public Command getDelegate() {
         return (Command) delegate;
     }
-    
-    @Override
-    public boolean isFunction() {
-        return false;
-    }
 
     @Override
     public int getType() {

@@ -12,6 +12,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.eclipse.wst.server.core.IServer;
+import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
@@ -29,6 +31,7 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
     private ITeiidServer teiidServer;
     private TeiidServerContentProvider provider;
     private TeiidErrorNode error;
+    private TeiidServerManager serverManager;
     
     /**
      * @param server
@@ -37,6 +40,7 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
         super(parent, parent.getTeiidServer().getDisplayName());
         this.teiidServer = parent.getTeiidServer();
         this.provider = provider;
+        this.serverManager = DqpPlugin.getInstance().getServerManager();
     }
     
     private void clearError() {
@@ -92,7 +96,7 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
         clearChildren();
         
         if (getServer().getServerState() != IServer.STATE_STARTED) {
-            setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(TeiidServerContainerNode.class.getSimpleName() + "ServerContentLabelNotConnected"))); //$NON-NLS-1$
+            setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(TeiidServerContainerNode.class.getSimpleName() + ".ServerContentLabelNotConnected"))); //$NON-NLS-1$
             return;
         }
         
@@ -155,7 +159,7 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
             }
             clearError();
         } catch (Exception e) {
-            setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(TeiidServerContainerNode.class.getSimpleName() + "ServerContentLabelNotConnected"))); //$NON-NLS-1$
+            setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(TeiidServerContainerNode.class.getSimpleName() + ".ServerContentLabelNotConnected"))); //$NON-NLS-1$
         }
     }
 
@@ -166,6 +170,19 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
      */
     public ITeiidServer getTeiidServer() {
         return teiidServer;
+    }
+    
+    @Override
+    public String getName() {
+        ITeiidServer defaultServer = serverManager.getDefaultServer();
+        int serverCount = serverManager.getServers().size();
+        
+        String name = super.getName();
+        if (getTeiidServer() != null && serverCount > 1 && getTeiidServer() == defaultServer) {
+            name = name + "  " + DqpUiConstants.UTIL.getString(TeiidServerContainerNode.class.getSimpleName() + ".ServerContentLabelDefault"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        
+        return name;
     }
     
     @Override

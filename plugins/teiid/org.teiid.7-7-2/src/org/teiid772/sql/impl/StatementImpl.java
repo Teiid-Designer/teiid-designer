@@ -26,10 +26,4 @@ public abstract class StatementImpl extends LanguageObjectImpl implements IState
     public Statement getDelegate() {
         return (Statement) delegate;
     }
-    
-    @Override
-    public boolean isFunction() {
-        return false;
-    }
-
 }

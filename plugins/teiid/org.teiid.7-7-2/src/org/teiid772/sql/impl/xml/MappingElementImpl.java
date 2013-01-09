@@ -37,6 +37,11 @@ public class MappingElementImpl extends MappingNodeImpl implements IMappingEleme
     MappingElement getMappingNode() {
         return (MappingElement) super.getMappingNode();
     }
+    
+    @Override
+    public MappingElementImpl clone() {
+        return new MappingElementImpl((MappingElement) getMappingNode().clone());
+    }
 
     @Override
     public void setMinOccurrs(int minOccurrences) {

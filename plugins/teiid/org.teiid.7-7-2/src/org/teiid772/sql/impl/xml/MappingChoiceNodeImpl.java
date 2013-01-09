@@ -34,6 +34,11 @@ public class MappingChoiceNodeImpl extends MappingNodeImpl implements IMappingCh
     MappingChoiceNode getMappingNode() {
         return (MappingChoiceNode) super.getMappingNode();
     }
+    
+    @Override
+    public MappingChoiceNodeImpl clone() {
+        return new MappingChoiceNodeImpl((MappingChoiceNode) getMappingNode().clone());
+    }
 
     @Override
     public void addCriteriaNode(IMappingCriteriaNode criteria) {

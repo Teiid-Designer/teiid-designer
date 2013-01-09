@@ -7,6 +7,7 @@
 */
 package org.teiid82.sql.impl.xml;
 
+import java.io.InputStream;
 import org.teiid.designer.xml.IMappingAllNode;
 import org.teiid.designer.xml.IMappingAttribute;
 import org.teiid.designer.xml.IMappingChoiceNode;
@@ -14,8 +15,12 @@ import org.teiid.designer.xml.IMappingCriteriaNode;
 import org.teiid.designer.xml.IMappingDocument;
 import org.teiid.designer.xml.IMappingDocumentFactory;
 import org.teiid.designer.xml.IMappingElement;
+import org.teiid.designer.xml.IMappingNode;
 import org.teiid.designer.xml.IMappingRecursiveElement;
 import org.teiid.designer.xml.IMappingSequenceNode;
+import org.teiid.query.mapping.xml.MappingDocument;
+import org.teiid.query.mapping.xml.MappingLoader;
+import org.teiid.query.mapping.xml.MappingNode;
 import org.teiid.query.mapping.xml.MappingNodeConstants;
 import org.teiid.query.mapping.xml.Namespace;
 
@@ -24,6 +29,16 @@ import org.teiid.query.mapping.xml.Namespace;
  */
 public class MappingDocumentFactory implements IMappingDocumentFactory {
 
+    @Override
+    public IMappingDocument loadMappingDocument(InputStream inputStream, String documentName) throws Exception {
+        MappingLoader reader = new MappingLoader();
+        MappingDocument mappingDoc = null;
+        mappingDoc = reader.loadDocument(inputStream);
+        mappingDoc.setName(documentName);
+        
+        return new MappingDocumentImpl(mappingDoc);
+    }
+    
     @Override
     public IMappingDocument createMappingDocument(String encoding, boolean formatted) {
         return new MappingDocumentImpl(encoding, formatted);
@@ -85,6 +100,16 @@ public class MappingDocumentFactory implements IMappingDocumentFactory {
     @Override
     public IMappingSequenceNode createMappingSequenceNode() {
         return new MappingSequenceNodeImpl();
+    }
+
+    /**
+     * Unwrap the mapping node from the wrapper class
+     * 
+     * @param mappingNode
+     * @return delegate mapping node
+     */
+    public MappingNode convert(IMappingNode mappingNode) {
+        return ((MappingNodeImpl) mappingNode).getMappingNode();
     }
   
 }

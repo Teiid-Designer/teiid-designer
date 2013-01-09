@@ -17,16 +17,28 @@ import org.teiid.query.mapping.xml.Namespace;
 public class MappingAttributeImpl extends MappingNodeImpl implements IMappingAttribute {
 
     /**
+     * @param attribute
+     */
+    public MappingAttributeImpl(MappingAttribute attribute) {
+        super(attribute);
+    }
+    
+    /**
      * @param name
      * @param namespace
      */
     public MappingAttributeImpl(String name, Namespace namespace) {
-        super(new MappingAttribute(name, namespace));
+        this(new MappingAttribute(name, namespace));
     }
-    
+
     @Override
     MappingAttribute getMappingNode() {
         return (MappingAttribute) super.getMappingNode();
+    }
+    
+    @Override
+    public MappingAttributeImpl clone() {
+        return new MappingAttributeImpl((MappingAttribute) getMappingNode().clone());
     }
 
     @Override
