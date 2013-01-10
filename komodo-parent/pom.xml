@@ -13,10 +13,75 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>Komodo Parent</name>
     <packaging>pom</packaging>
+    <url>http://http://www.jboss.org/teiiddesigner</url>
+    <description>Komodo is a tool used to interact with a Teiid server.</description>
+    <inceptionYear>2013</inceptionYear>
+
+    <organization>
+        <name>JBoss, a division of Red Hat</name>
+        <url>http://www.jboss.org</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License</name>
+            <url>http://repository.jboss.org/licenses/lgpl-2.1.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git://github.com/Teiid-Designer/teiid-designer.git</connection>
+        <developerConnection>scm:git:git@github.com:Teiid-Designer/teiid-designer.git</developerConnection>
+        <url>http://github.com/Teiid-Designer/teiid-designer</url>
+    </scm>
+
+    <issueManagement>
+        <system>jira</system>
+        <url>http://issues.jboss.org/browse/TEIIDDES</url>
+    </issueManagement>
+
+    <developers>
+        <developer>
+            <name>Barry LaFond</name>
+            <id>bmlafond</id>
+            <email>blafond@redhat.com</email>
+            <organization>JBoss, a division of Red Hat</organization>
+            <roles>
+                <role>Project Lead</role> 
+                <role>Developer</role>
+            </roles>
+            <timezone>-6</timezone>
+        </developer>
+        <developer>
+            <name>Ted Jones</name>
+            <id>tejones</id>
+            <email>tejones@redhat.com</email>
+            <organization>JBoss, a division of Red Hat</organization>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>-6</timezone>
+        </developer>
+        <developer>
+            <name>Daniel Florian</name>
+            <id>danflo</id>
+            <email>dflorian@redhat.com</email>
+            <organization>JBoss, a division of Red Hat</organization>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>-5</timezone>
+        </developer>
+    </developers>
 
     <properties>
+        <javax.servlet.version>2.5</javax.servlet.version>
         <junit.version>4.10</junit.version>
+        <komodo.java.version>1.6</komodo.java.version>
         <log4j.version>1.2.16</log4j.version>
+        <resteasy.version>2.3.4.Final</resteasy.version>
         <slf4j.api.version>1.6.1</slf4j.api.version>
         <slf4j.log4j.version>1.6.1</slf4j.log4j.version>
         <s-ramp.version>0.0.3-SNAPSHOT</s-ramp.version>
@@ -25,20 +90,12 @@
     <dependencyManagement>
         <dependencies>
             <!--
-                Komodo ========================================================
+                Komodo
             -->
             <dependency>
                 <groupId>org.komodo</groupId>
                 <artifactId>komodo-common</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.komodo</groupId>
-                <artifactId>komodo-common</artifactId>
-                <version>${project.version}</version>
-                <classifier>tests</classifier>
-                <scope>test</scope>
             </dependency>
 
             <dependency>
@@ -54,8 +111,20 @@
             </dependency>
 
             <!--
-                S-RAMP =======================================================
+                S-RAMP
             -->
+            <dependency>
+                <groupId>org.overlord.sramp</groupId>
+                <artifactId>s-ramp-core</artifactId>
+                <version>${s-ramp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.overlord.sramp</groupId>
+                <artifactId>s-ramp-client</artifactId>
+                <version>${s-ramp.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.overlord.sramp</groupId>
                 <artifactId>s-ramp-repository-jcr</artifactId>
@@ -69,14 +138,21 @@
                 <classifier>tests</classifier>
             </dependency>
 
+            <dependency>
+                <groupId>org.overlord.sramp</groupId>
+                <artifactId>s-ramp-atom</artifactId>
+                <version>${s-ramp.version}</version>
+                <classifier>classes</classifier>
+            </dependency>
+
             <!--
-                Logging =======================================================
+                Logging
             -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.api.version}</version>
-                <scope>test</scope>
+                <scope>compile</scope>
             </dependency>
 
             <dependency>
@@ -94,7 +170,7 @@
             </dependency>
  
             <!--
-                Testing =======================================================
+                Testing
             -->
             <dependency>
                 <groupId>junit</groupId>
@@ -102,6 +178,49 @@
                 <scope>test</scope>
                 <version>${junit.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>tjws</artifactId>
+                <version>${resteasy.version}</version>
+                <scope>test</scope>
+            </dependency>
+ 
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>${javax.servlet.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <!-- Specify the compiler options and settings -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${komodo.java.version}</source>
+                    <target>${komodo.java.version}</target>
+                    <showDeprecation>false</showDeprecation>
+                    <showWarnings>false</showWarnings>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>test-jar</id>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

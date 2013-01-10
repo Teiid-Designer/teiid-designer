@@ -21,6 +21,59 @@ import org.komodo.common.util.StringUtil;
 public class Schema extends VdbAdminObject {
 
     /**
+     * The VDB manifest (<code>vdb.xml</code>) identifiers related to schema/model elements.
+     */
+    public interface ManifestId {
+
+        /**
+         * The schema/model element attribute identifiers.
+         */
+        interface Attributes {
+
+            /**
+             * The schema/model name attribute identifier.
+             */
+            String NAME = "name"; //$NON-NLS-1$
+
+            /**
+             * The schema/model type attribute identifier.
+             */
+            String TYPE = "type"; //$NON-NLS-1$
+
+            /**
+             * The schema/model visible attribute identifier.
+             */
+            String VISIBLE = "visible"; //$NON-NLS-1$
+        }
+
+        /**
+         * The schema/model metadata element attribute identifiers.
+         */
+        interface MetadataAttributes {
+
+            /**
+             * The schema/model metadata type attribute identifier.
+             */
+            String TYPE = "type"; //$NON-NLS-1$
+        }
+
+        /**
+         * The VDB schema/model description element identifier. The description is optional.
+         */
+        String DESCRIPTION = "description"; //$NON-NLS-1$
+
+        /**
+         * The VDB schema/model metadata element identifier. The metadata is optional.
+         */
+        String METADATA = "metadata"; //$NON-NLS-1$
+
+        /**
+         * The schema/model property element identifier. Zero or more VDB model properties are allowed.
+         */
+        String PROPERTY = "property"; //$NON-NLS-1$
+    }
+
+    /**
      * VDB model property names.
      */
     public interface PropertyName extends VdbAdminObject.PropertyName {
