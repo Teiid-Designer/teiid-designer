@@ -20,6 +20,68 @@ import org.komodo.common.util.Precondition;
 public class Vdb extends VdbAdminObject {
 
     /**
+     * The VDB manifest (<code>vdb.xml</code>) VDB-related identifiers.
+     */
+    public interface ManifestId {
+
+        /**
+         * The VDB element attribute identifiers.
+         */
+        interface Attributes {
+
+            /**
+             * The VDB name attribute identifier.
+             */
+            String NAME = "name"; //$NON-NLS-1$
+
+            /**
+             * The VDB version attribute identifier.
+             */
+            String VERSION = "version"; //$NON-NLS-1$
+        }
+
+        /**
+         * The VDB data role element identifier. Zero or more data roles are allowed.
+         */
+        String DATA_POLICY = "data-role"; //$NON-NLS-1$
+
+        /**
+         * The VDB description element identifier. The description is optional.
+         */
+        String DESCRIPTION = "description"; //$NON-NLS-1$
+
+        /**
+         * The VDB entry element identifier. Zero or more VDB entries are allowed.
+         */
+        String ENTRY = "entry"; //$NON-NLS-1$
+
+        /**
+         * The import VDB element identifier. Zero or more import VDB names are allowed.
+         */
+        String IMPORT_VDB = "import-vdb"; //$NON-NLS-1$
+
+        /**
+         * The VDB property element identifier. Zero or more VDB properties are allowed.
+         */
+        String PROPERTY = "property"; //$NON-NLS-1$
+
+        /**
+         * The VDB schema/model element identifier. Zero or more VDB models are allowed.
+         */
+        String SCHEMA = "model"; //$NON-NLS-1$
+
+        /**
+         * The VDB translator element identifier. Zero or more VDB translators are allowed.
+         */
+        String TRANSLATOR = "translator"; //$NON-NLS-1$
+
+        /**
+         * The VDB element identifier that is the one and only child element under <code>xs:schema</code>.
+         */
+        String VDB_ELEMENT = "vdb"; //$NON-NLS-1$
+    }
+
+    /**
      * VDB property names.
      */
     public interface PropertyName extends VdbAdminObject.PropertyName {
@@ -55,6 +117,11 @@ public class Vdb extends VdbAdminObject {
         String VERSION = Vdb.class.getSimpleName() + ".version"; //$NON-NLS-1$
     }
 
+    /**
+     * The default version number for a VDB. Value is {@value}.
+     */
+    public static final int DEFAULT_VERSION = 1;
+
     private static final List<DataPolicy> NO_DATA_POLICIES = Collections.emptyList();
     private static final List<Entry> NO_ENTRIES = Collections.emptyList();
     private static final List<ImportVdb> NO_IMPORT_VDBS = Collections.emptyList();
@@ -66,7 +133,7 @@ public class Vdb extends VdbAdminObject {
     private List<ImportVdb> importVdbs;
     private List<Schema> models;
     private List<Translator> translators;
-    private int version = 1;
+    private int version = DEFAULT_VERSION;
 
     /**
      * Generates a property change event if the collection of data policies is changed.

@@ -12,4 +12,5 @@ package org.komodo.teiid.model;
  */
 public interface ModelObject {
 
+    
 }

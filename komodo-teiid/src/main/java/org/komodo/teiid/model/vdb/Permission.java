@@ -15,6 +15,47 @@ import org.komodo.common.util.HashCode;
 public class Permission extends VdbObject {
 
     /**
+     * The VDB manifest (<code>vdb.xml</code>) identifiers related to data policy permission elements.
+     */
+    public interface ManifestId {
+
+        /**
+         * The allow alter element identifier.
+         */
+        String ALTERABLE = "allow-alter"; //$NON-NLS-1$
+
+        /**
+         * The allow create element identifier.
+         */
+        String CREATABLE = "allow-create"; //$NON-NLS-1$
+
+        /**
+         * The allow delete element identifier.
+         */
+        String DELETABLE = "allow-delete"; //$NON-NLS-1$
+
+        /**
+         * The allow execute element identifier.
+         */
+        String EXECUTABLE = "allow-execute"; //$NON-NLS-1$
+
+        /**
+         * The allow read element identifier.
+         */
+        String READABLE = "allow-read"; //$NON-NLS-1$
+
+        /**
+         * The resource name element identifier.
+         */
+        String RESOURCE_NAME = "resource-name"; //$NON-NLS-1$
+
+        /**
+         * The allow update element identifier.
+         */
+        String UPDATABLE = "allow-update"; //$NON-NLS-1$
+    }
+
+    /**
      * Data permission property names.
      */
     public interface PropertyName extends VdbObject.PropertyName {
@@ -84,7 +125,7 @@ public class Permission extends VdbObject {
      * @see org.komodo.teiid.model.vdb.VdbObject#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object that) {
+    public boolean equals(final Object that) {
         if (super.equals(that)) {
             final Permission thatPermission = (Permission)that;
 

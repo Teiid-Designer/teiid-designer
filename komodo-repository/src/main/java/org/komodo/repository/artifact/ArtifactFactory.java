@@ -8,6 +8,7 @@
 package org.komodo.repository.artifact;
 
 import org.komodo.common.util.Precondition;
+import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactEnum;
 import org.s_ramp.xmlns._2010.s_ramp.UserDefinedArtifactType;
 
 /**
@@ -16,38 +17,21 @@ import org.s_ramp.xmlns._2010.s_ramp.UserDefinedArtifactType;
 public class ArtifactFactory {
 
     /**
-     * @param fullName the name of the artifact including the parent path (cannot be <code>null</code> or empty)
-     * @param artifactType the artifact type (cannot be <code>null</code> or empty)
-     * @return the VDB artifact (never <code>null</code>)
+     * @param artifactType the type of the artifact to create (cannot be <code>null</code>)
+     * @return the created artifact (never <code>null</code>)
      */
-    public static VdbArtifact create(String fullName,
-                                     String artifactType) {
-        Precondition.notEmpty(fullName, "fullName"); //$NON-NLS-1$
-        Precondition.notEmpty(artifactType, "artifactType"); //$NON-NLS-1$
+    public static UserDefinedArtifactType create(final Artifact.Type artifactType) {
+        Precondition.notNull(artifactType, "artifactType"); //$NON-NLS-1$
 
-        if (VdbArtifact.ARTIFACT_TYPE.equals(artifactType)) {
-            return new VdbArtifact(Artifact.Utils.getSimpleName(fullName), Artifact.Utils.getParentPath(fullName));
-        }
+        final UserDefinedArtifactType artifact = new UserDefinedArtifactType();
+        artifact.setArtifactType(BaseArtifactEnum.USER_DEFINED_ARTIFACT_TYPE);
+        artifact.setUserType(artifactType.getName());
 
-        return null;
+        return artifact;
     }
 
     /**
-     * @param delegate the S-RAMP artifact being used to create the Teiid artifact (cannot be <code>null</code>)
-     * @return the VDB artifact (never <code>null</code>)
-     */
-    public static VdbArtifact create(UserDefinedArtifactType delegate) {
-        Precondition.notNull(delegate, "delegate"); //$NON-NLS-1$
-
-        if (VdbArtifact.ARTIFACT_TYPE.equals(delegate.getUserType())) {
-            return new VdbArtifact(delegate);
-        }
-
-        return null;
-    }
-
-    /**
-     * Don't allow construction.
+     * Don't allow public construction.
      */
     private ArtifactFactory() {
         // nothing to do

@@ -22,6 +22,38 @@ import org.komodo.teiid.model.Describable;
 public class DataPolicy extends VdbObject implements Describable {
 
     /**
+     * The VDB manifest (<code>vdb.xml</code>) identifiers related to data policy elements.
+     */
+    public interface ManifestId {
+
+        /**
+         * The VDB data policy element attribute identifiers.
+         */
+        interface Attributes {
+
+            /**
+             * The any authenticated attribute identifier.
+             */
+            String ANY_AUTHENTICATED = "any-authenticated"; //$NON-NLS-1$
+
+            /**
+             * The data policy name attribute identifier.
+             */
+            String NAME = "name"; //$NON-NLS-1$
+
+            /**
+             * The allow create temporary tables attribute identifier.
+             */
+            String TEMP_TABLE_CREATABLE = "allow-create-temporary-tables"; //$NON-NLS-1$
+        }
+
+        /**
+         * The mapped role name element identifier.
+         */
+        String ROLE_NAME = "mapped-role-name"; //$NON-NLS-1$
+    }
+
+    /**
      * Data policy property names.
      */
     public interface PropertyName extends VdbObject.PropertyName {

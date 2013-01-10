@@ -17,6 +17,23 @@ public class Precondition {
     private static final String MISSING_IDENTIFIER = "{*** missing identifier ***}"; //$NON-NLS-1$
 
     /**
+     * @param objectBeingChecked the object being checked (can be <code>null</code>)
+     * @param identifier the identifier used in the error message (cannot be <code>null</code> or empty)
+     * @throws IllegalArgumentException if the object is <em>not</em> <code>null</code>
+     */
+    public static void isNull(final Object objectBeingChecked,
+                              String identifier) {
+        if (objectBeingChecked != null) {
+            if (StringUtil.isEmpty(identifier)) {
+                identifier = MISSING_IDENTIFIER;
+            }
+
+            assert ((identifier != null) && !identifier.isEmpty()) : "the argument identifier is empty"; //$NON-NLS-1$
+            throw new IllegalArgumentException(MessageFormat.format("\"{0}\" is not null", identifier)); //$NON-NLS-1$
+        }
+    }
+
+    /**
      * @param actual the value being checked (can be <code>null</code> or empty)
      * @param expected the expected value (can be <code>null</code> or empty)
      * @param identifier the identifier used in the error message (cannot be <code>null</code> or empty)
@@ -36,7 +53,7 @@ public class Precondition {
         }
 
         if (!matches) {
-            throw new IllegalArgumentException(MessageFormat.format("'{0}' does not exactly match", identifier)); //$NON-NLS-1$
+            throw new IllegalArgumentException(MessageFormat.format("\"{0}\" does not exactly match", identifier)); //$NON-NLS-1$
         }
     }
 
@@ -52,7 +69,7 @@ public class Precondition {
                 identifier = MISSING_IDENTIFIER;
             }
 
-            throw new IllegalArgumentException(MessageFormat.format("'{0}' is empty", identifier)); //$NON-NLS-1$
+            throw new IllegalArgumentException(MessageFormat.format("\"{0}\" is empty", identifier)); //$NON-NLS-1$
         }
     }
 
@@ -69,7 +86,7 @@ public class Precondition {
             }
 
             assert ((identifier != null) && !identifier.isEmpty()) : "the argument identifier is empty"; //$NON-NLS-1$
-            throw new IllegalArgumentException(MessageFormat.format("'{0}' is null", identifier)); //$NON-NLS-1$
+            throw new IllegalArgumentException(MessageFormat.format("\"{0}\" is null", identifier)); //$NON-NLS-1$
         }
     }
 

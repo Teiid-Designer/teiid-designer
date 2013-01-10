@@ -7,98 +7,58 @@
 */
 package org.komodo.repository.artifact;
 
-import org.komodo.common.util.Precondition;
-import org.komodo.common.util.StringUtil;
-import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
-
 /**
  * Represents a Komodo artifact.
  */
 public interface Artifact {
 
     /**
-     * Utilities for use with artifacts.
+     * The Komodo S-RAMP artifact types.
      */
-    public class Utils {
-
-        private static final String PATH_SEPARATOR = "/"; //$NON-NLS-1$
+    enum Type {
 
         /**
-         * @param simpleName the artifact's simple name (cannot be <code>null</code> or empty)
-         * @param parentPath the artifact's parent path (can be <code>null</code> or empty)
-         * @return the artifact's full name/path (never <code>null</code> or empty)
+         * The S-RAMP artifact type for a VDB data policy.
          */
-        public static String constructFullName(final String simpleName,
-                                               final String parentPath) {
-            Precondition.notEmpty(simpleName, "simpleName"); //$NON-NLS-1$
+        DATA_POLICY("DATA_POLICY"), //$NON-NLS-1$
 
-            if (!StringUtil.isEmpty(parentPath)) {
-                String fullName = parentPath;
+        /**
+         * The S-RAMP artifact type for a VDB entry.
+         */
+        ENTRY("ENTRY"), //$NON-NLS-1$
 
-                if (!fullName.endsWith(PATH_SEPARATOR)) {
-                    fullName += PATH_SEPARATOR;
-                }
+        /**
+         * The S-RAMP artifact type for a VDB data permission.
+         */
+        PERMISSION("PERMISSION"), //$NON-NLS-1$
 
-                fullName += simpleName;
-                return fullName;
-            }
+        /**
+         * The S-RAMP artifact type for a VDB schema/model.
+         */
+        SCHEMA("SCHEMA"), //$NON-NLS-1$
 
-            return simpleName;
+        /**
+         * The S-RAMP artifact type for a VDB translator.
+         */
+        TRANSLATOR("TRANSLATOR"), //$NON-NLS-1$
+
+        /**
+         * The S-RAMP artifact type for a VDB artifact.
+         */
+        VDB("VDB"); //$NON-NLS-1$
+
+        private final String name;
+
+        private Type(final String name) {
+            this.name = "Teiid_" + name; //$NON-NLS-1$
         }
 
         /**
-         * @param fullName the name including the parent path (cannot be <code>null</code> ore empty)
-         * @return the parent path or <code>null</code> if doesn't exist
+         * @return the artifact type name (never <code>null</code>)
          */
-        public static String getParentPath(final String fullName) {
-            Precondition.notEmpty(fullName, "fullName"); //$NON-NLS-1$
-            final int index = fullName.lastIndexOf(PATH_SEPARATOR);
-            return ((index == -1) ? null : fullName.substring(0, index));
-        }
-
-        /**
-         * @param fullName the name including the parent path (cannot be <code>null</code> ore empty)
-         * @return the simple name (never <code>null</code> or empty)
-         * @throws IllegalArgumentException if a simple name cannot be found
-         */
-        public static String getSimpleName(final String fullName) {
-            Precondition.notEmpty(fullName, "fullName"); //$NON-NLS-1$
-            final int index = fullName.lastIndexOf(PATH_SEPARATOR);
-
-            if (index == -1) {
-                return fullName;
-            }
-
-            if (fullName.endsWith(PATH_SEPARATOR)) {
-                throw new IllegalArgumentException("Artifact name of '" + fullName + "' does not have a simple name"); // TODO i18n
-            }
-
-            return fullName.substring(index + 1);
+        public String getName() {
+            return this.name;
         }
     }
 
-    /**
-     * @return the S-RAMP artifact (never <code>null</code>)
-     */
-    BaseArtifactType getDelegate();
-
-    /**
-     * @return the artifact name including the parent path (never <code>null</code> or empty)
-     */
-    String getFullName();
-
-    /**
-     * @return the parent path (can be <code>null</code> or empty)
-     */
-    String getParentPath();
-
-    /**
-     * @return the name without the parent path (never <code>null</code>)
-     */
-    String getSimpleName();
-
-    /**
-     * @return the artifact type (never <code>null</code> or empty)
-     */
-    String getType();
 }
