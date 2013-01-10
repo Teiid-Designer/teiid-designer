@@ -25,6 +25,7 @@ public class Messages extends NLS {
 	public static String relationalModelFactory_creatingIndexes;
 	public static String relationalModelFactory_replacingModelObject;
 	public static String relationalModelFactory_creatingModelChild;
+	public static String relationalModelFactory_error_setting_extension_props_on_0;
 	
 	public static String validationOkCreateObject;
 	public static String validate_error_nameCannotBeNullOrEmpty;

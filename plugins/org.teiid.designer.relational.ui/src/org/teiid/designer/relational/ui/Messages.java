@@ -28,9 +28,8 @@ public class Messages extends NLS {
     public static String editLabel;
     public static String fkNameLabel;
     public static String descriptionLabel;
-    //public static String xxxxx;
-    //public static String xxxxx;
-    //public static String xxxxx;
+    public static String nativeQueryLabel;
+    public static String sqlLabel;
 
     public static String baseTableActionText;
     public static String createRelationalTableTitle;
@@ -38,11 +37,24 @@ public class Messages extends NLS {
     public static String createRelationalTableExceptionMessage;
     public static String createRelationalTableHelpText;
     
+
+    public static String viewActionText;
+    public static String createRelationalViewTitle;
+    public static String createRelationalViewInitialMessage;
+    public static String createRelationalViewExceptionMessage;
+    public static String createRelationalViewHelpText;
+    
     public static String createRelationalProcedureActionText;
     public static String createRelationalProcedureTitle;
     public static String createRelationalProcedureInitialMessage;
     public static String createRelationalProcedureExceptionMessage;
     public static String createRelationalProcedureHelpText;
+    
+    public static String nativeQueryHelpText;
+    public static String nativeQueryNotSupportedForViews;
+    public static String foreignKeysNotSupportedForViews;
+    public static String primaryKeysNotSupportedForViews;
+    public static String uniqueConstraintsNotSupportedForViews;
 
     public static String modelFileLabel;
 

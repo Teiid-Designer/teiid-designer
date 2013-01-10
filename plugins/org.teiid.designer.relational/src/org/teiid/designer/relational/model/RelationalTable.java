@@ -49,6 +49,7 @@ public class RelationalTable extends RelationalReference {
     private RelationalUniqueConstraint uniqueContraint;
     private Collection<RelationalAccessPattern> accessPatterns;
     private Collection<RelationalForeignKey> foreignKeys;
+    private String nativeQuery;
     
     
     public RelationalTable() {
@@ -145,6 +146,31 @@ public class RelationalTable extends RelationalReference {
     	if( this.system != system ) {
 	        this.system = system;
 	        handleInfoChanged();
+    	}
+    }
+    
+    /**
+     * @return nativeQuery may be null
+     */
+    public String getNativeQuery() {
+        return nativeQuery;
+    }
+    /**
+     * @param newQuery sets nativeQuery to the specified value. may be null
+     */
+    public void setNaviteQuery( String newQuery ) {
+    	boolean changed = false;
+    	if( this.nativeQuery == null && newQuery == null ) {
+    		changed = true;
+    	} else if( this.nativeQuery == null || newQuery == null ) {
+    		changed = true;
+    		this.nativeQuery = newQuery;
+    	} else if( this.nativeQuery.equalsIgnoreCase(nativeQuery)) {
+	        this.nativeQuery = newQuery;
+    	}
+    	
+    	if( changed ) {
+    		 handleInfoChanged();
     	}
     }
 

@@ -243,6 +243,7 @@ public class RelationalModelFactory implements RelationalConstants {
             case TYPES.TABLE: {
                 EObject baseTable = createBaseTable(obj, modelResource);
                 modelResource.getEmfResource().getContents().add(baseTable);
+                applyTableExtensionProperties((RelationalTable)obj, (BaseTable)baseTable);
             } break;
             case TYPES.VIEW: {
                 EObject view = createView(obj, modelResource);
@@ -674,11 +675,7 @@ public class RelationalModelFactory implements RelationalConstants {
 
         }
         EObject datatype = this.datatypeProcessor.findDatatype(dType);
-//                                                           dType, 
-//                                                           parameterRef.getLength(),
-//                                                           parameterRef.getPrecision(), 
-//                                                           parameterRef.getScale(), 
-//                                                           new ArrayList());
+
         if( datatype != null ) {
             parameter.setType(datatype);
             String dTypeName = ModelerCore.getModelEditor().getName(datatype);
@@ -695,7 +692,23 @@ public class RelationalModelFactory implements RelationalConstants {
         return parameter;
     }
     
-    public void applyProcedureExtensionProperties(RelationalProcedure procedureRef, Procedure procedure) {
+    private void applyTableExtensionProperties(RelationalTable tableRef, BaseTable baseTable) {
+        // Set Extension Properties here
+        final RelationalModelExtensionAssistant assistant = getExtensionAssistant();
+        if( assistant != null ) {
+        	try {
+				assistant.setPropertyValue(baseTable, 
+						BASE_TABLE_EXT_PROPERTIES.NATIVE_QUERY, 
+						tableRef.getNativeQuery() );
+
+			} catch (Exception ex) {
+				RelationalPlugin.Util.log(IStatus.ERROR, 
+	                	NLS.bind(Messages.relationalModelFactory_error_setting_extension_props_on_0, tableRef.getName()));
+			}
+        }
+    }
+    
+    private void applyProcedureExtensionProperties(RelationalProcedure procedureRef, Procedure procedure) {
         // Set Extension Properties here
         final RelationalModelExtensionAssistant assistant = getExtensionAssistant();
         if( assistant != null ) {
@@ -735,8 +748,8 @@ public class RelationalModelFactory implements RelationalConstants {
 					}
 				}
 			} catch (Exception ex) {
-				// TODO Auto-generated catch block
-				ex.printStackTrace();
+				RelationalPlugin.Util.log(IStatus.ERROR, 
+	                	NLS.bind(Messages.relationalModelFactory_error_setting_extension_props_on_0, procedureRef.getName()));
 			}
         }
     }

@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.teiid.designer.relational.model.RelationalProcedure;
 import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.model.RelationalTable;
+import org.teiid.designer.relational.model.RelationalView;
 import org.teiid.designer.relational.ui.Messages;
 
 /**
@@ -47,7 +48,9 @@ public class RelationalObjectEditorFactory {
 	 * @return the initial edit dialog message
 	 */
 	public static String getInitialMessage(RelationalReference relationalObject) {
-        if( relationalObject instanceof RelationalTable ) {
+		if( relationalObject instanceof RelationalView ) {
+			return Messages.createRelationalViewInitialMessage;
+		} else if( relationalObject instanceof RelationalTable ) {
         	return Messages.createRelationalTableInitialMessage;
         } else if( relationalObject instanceof RelationalProcedure ) {
         	return Messages.createRelationalProcedureInitialMessage;
@@ -61,10 +64,28 @@ public class RelationalObjectEditorFactory {
 	 * @return the initial edit dialog message
 	 */
 	public static String getDialogTitle(RelationalReference relationalObject) {
-        if( relationalObject instanceof RelationalTable ) {
+		if( relationalObject instanceof RelationalView ) {
+			return Messages.createRelationalViewTitle;
+		} else if( relationalObject instanceof RelationalTable ) {
         	return Messages.createRelationalTableTitle;
         } else if( relationalObject instanceof RelationalProcedure ) {
         	return Messages.createRelationalProcedureTitle;
+        }
+        
+        return NLS.bind(Messages.unsupportedObjectType, relationalObject.getClass().toString());
+	}
+	
+	/**
+	 * @param relationalObject the object to edit
+	 * @return the initial edit dialog message
+	 */
+	public static String getHelpText(RelationalReference relationalObject) {
+		if( relationalObject instanceof RelationalView ) {
+			return Messages.createRelationalViewHelpText;
+		} else if( relationalObject instanceof RelationalTable ) {
+        	return Messages.createRelationalTableHelpText;
+        } else if( relationalObject instanceof RelationalProcedure ) {
+        	return Messages.createRelationalProcedureHelpText;
         }
         
         return NLS.bind(Messages.unsupportedObjectType, relationalObject.getClass().toString());

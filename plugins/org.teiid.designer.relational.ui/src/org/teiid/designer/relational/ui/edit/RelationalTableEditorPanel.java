@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -62,6 +63,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -74,6 +76,7 @@ import org.teiid.designer.relational.model.RelationalForeignKey;
 import org.teiid.designer.relational.model.RelationalPrimaryKey;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalUniqueConstraint;
+import org.teiid.designer.relational.model.RelationalView;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
@@ -102,16 +105,22 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	TabItem primaryKeyTab;
 	TabItem uniqueConstraintTab;
 	TabItem foreignKeysTab;
+	TabItem nativeQueryTab;
 	
 	// table property widgets
 	Button materializedCB, supportsUpdateCB, isSystemTableCB, includePrimaryKeyCB, includeUniqueConstraintCB;
 	Button findTableReferenceButton;
 	Label materializedTableLabel;
-	Text modelNameText, nameText, nameInSourceText, 
+	Text helpText, modelNameText, nameText, nameInSourceText, 
 		cardinalityText, materializedTableText, 
 		primaryKeyNameText, uniqueConstraintNameText,
-		primaryKeyNISText, uniqueConstraintNISText;
+		primaryKeyNISText, uniqueConstraintNISText,
+		nativeQueryHelpText,
+		fkHelpText,
+		ucHelpText,
+		pkHelpText;
 	StyledTextEditor descriptionTextEditor;
+	StyledTextEditor nativeQueryTextEditor;
 	
 	// column widgets
 	Button addColumnButton, deleteColumnButton, upColumnButton, downColumnButton;
@@ -121,7 +130,15 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	
 	boolean synchronizing = false;
 	boolean processingChecks = false;
+	
+	boolean finishedStartup = false;
 
+	/**
+	 * @param parent the parent panel
+	 * @param table the table object
+	 * @param modelFile the model file
+	 * @param statusListener the status listener
+	 */
 	public RelationalTableEditorPanel(Composite parent, RelationalTable table, IFile modelFile, IDialogStatusListener statusListener) {
 		super(parent, table, modelFile, statusListener);
 		this.table = table;
@@ -141,15 +158,17 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		// Spacer label
 		new Label(parent, SWT.NONE);
 		{
-	    	Text helpText = new Text(parent, SWT.WRAP | SWT.READ_ONLY);
+	    	helpText = new Text(parent, SWT.WRAP | SWT.READ_ONLY);
 	    	helpText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 	    	helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 	    	helpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 	    	((GridData)helpText.getLayoutData()).horizontalSpan = 1;
 	    	((GridData)helpText.getLayoutData()).heightHint = 40;
 	    	((GridData)helpText.getLayoutData()).widthHint = 360;
-	    	helpText.setText(Messages.createRelationalTableHelpText);
 		}
+		
+		createNameGroup(parent);
+		
 		tabFolder = new TabFolder(parent, SWT.TOP | SWT.BORDER);
 		tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
@@ -158,13 +177,76 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		createPrimaryKeyTab(tabFolder);
 		createUniqueConstraintTab(tabFolder);
 		createForeignKeysTab(tabFolder);
+		createNativeQueryTab(tabFolder);
 		
+		finishedStartup = true;
+		
+	}
+	
+	Composite createNameGroup(Composite parent) {
+		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 3);
+		thePanel.setLayout(new GridLayout(2, false));
+		GridData panelGD = new GridData(GridData.FILL_BOTH);
+		//panelGD.heightHint = 300;
+    	thePanel.setLayoutData(panelGD);
+    	
+        Label label = new Label(thePanel, SWT.NONE);
+        label.setText(Messages.modelFileLabel);
+        
+        this.modelNameText =  new Text(thePanel, SWT.BORDER | SWT.SINGLE);
+        this.modelNameText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        this.modelNameText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        this.modelNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        if( getModelFile() != null ) {
+        	modelNameText.setText(getModelFile().getName());
+        }
+        
+        label = new Label(thePanel, SWT.NONE);
+        label.setText(Messages.nameLabel);
+        
+        this.nameText =  new Text(thePanel, SWT.BORDER | SWT.SINGLE);
+        this.nameText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        this.nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        this.nameText.addModifyListener(new ModifyListener() {
+    		@Override
+			public void modifyText( final ModifyEvent event ) {
+    			String value = nameText.getText();
+    			if( value == null ) {
+    				value = EMPTY_STRING;
+    			}
+    			
+    			table.setName(value);
+    			handleInfoChanged();
+    		}
+        });
+        
+        
+        label = new Label(thePanel, SWT.NONE);
+        label.setText(Messages.nameInSourceLabel);
+        
+        this.nameInSourceText =  new Text(thePanel, SWT.BORDER | SWT.SINGLE);
+        this.nameInSourceText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        this.nameInSourceText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        this.nameInSourceText.addModifyListener(new ModifyListener() {
+    		@Override
+			public void modifyText( final ModifyEvent event ) {
+    			String value = nameInSourceText.getText();
+    			if( value == null ) {
+    				value = EMPTY_STRING;
+    			}
+    			
+    			table.setNameInSource(value);
+    			handleInfoChanged();
+    		}
+        });
+        
+        return thePanel;
 	}
 	
 	
 	void createGeneralPropertiesTab(TabFolder folderParent) {
         // build the SELECT tab
-		Composite thePanel = createTablePanel(folderParent);
+		Composite thePanel = createPropertiesPanel(folderParent);
 
         this.generalPropertiesTab = new TabItem(folderParent, SWT.NONE);
         this.generalPropertiesTab.setControl(thePanel);
@@ -214,6 +296,16 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         this.foreignKeysTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.FK, ModelType.PHYSICAL, Status.OK_STATUS));
 	}
 	
+	void createNativeQueryTab(TabFolder folderParent) {
+        Composite thePanel = createNativeQueryPanel(folderParent);
+        
+        this.nativeQueryTab = new TabItem(folderParent, SWT.NONE);
+        this.nativeQueryTab.setControl(thePanel);
+        this.nativeQueryTab.setText(Messages.nativeQueryLabel);
+        //this.nativeQueryTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.PK, ModelType.PHYSICAL, Status.OK_STATUS));
+
+	}
+	
 	@Override
 	protected void synchronizeUI() {
 		if( synchronizing ) {
@@ -232,6 +324,16 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 			if( WidgetUtil.widgetValueChanged(this.nameText, EMPTY_STRING) ) {
 				this.nameText.setText(EMPTY_STRING);
 			}
+		}
+		
+    	this.helpText.setText(RelationalObjectEditorFactory.getHelpText(table));
+    	
+		if( table.getDescription() != null ) {
+			if( !StringUtilities.equals(this.descriptionTextEditor.getText(), table.getDescription()) ) {
+				this.descriptionTextEditor.setText(table.getDescription());
+			}
+		} else {
+			this.descriptionTextEditor.setText(EMPTY_STRING);
 		}
 		
 		if( table.getNameInSource() != null ) {
@@ -262,7 +364,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		if( WidgetUtil.widgetValueChanged(isSystemTableCB, this.table.isSystem())) {
 			this.isSystemTableCB.setSelection(this.table.isSystem());
 		}
-		generalPropertiesTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.TABLE, table.getModelType(), table.getStatus()));
+		generalPropertiesTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.TABLE, table.getModelType(), Status.OK_STATUS));
 		
     	this.columnsViewer.getTable().removeAll();
     	IStatus maxStatus = Status.OK_STATUS;
@@ -350,7 +452,14 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         	this.uniqueConstraintNISText.setEnabled(true);
         	if( this.table.getUniqueContraint().getNameInSource() != null && WidgetUtil.widgetValueChanged(uniqueConstraintNISText, this.table.getUniqueContraint().getNameInSource())) {
         		this.uniqueConstraintNISText.setText(this.table.getUniqueContraint().getName());
-        	}
+        	}		if( table.getDescription() != null ) {
+    			if( !StringUtilities.equals(this.descriptionTextEditor.getText(), table.getDescription()) ) {
+    				this.descriptionTextEditor.setText(table.getDescription());
+    			}
+    		} else {
+    			this.descriptionTextEditor.setText(EMPTY_STRING);
+    		}
+    		
         	this.ucColumnsViewer.getTable().removeAll();
         	if( !this.table.getUniqueContraint().getColumns().isEmpty() ) {
         		for( RelationalColumn column : this.table.getUniqueContraint().getColumns() ) {
@@ -361,78 +470,77 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         	uniqueConstraintTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.UC, table.getModelType(), this.table.getUniqueContraint().getStatus()));
         }
         
+		if( table.getNativeQuery() != null ) {
+			if( !StringUtilities.equals(this.nativeQueryTextEditor.getText(), table.getNativeQuery()) ) {
+				this.nativeQueryTextEditor.setText(table.getNativeQuery());
+			}
+		} else {
+			this.nativeQueryTextEditor.setText(EMPTY_STRING);
+		}
+		
+        
         if( table.getModelType() == ModelType.PHYSICAL ) {
         	this.materializedCB.setVisible(false);
         	this.materializedTableLabel.setVisible(false);
         	this.materializedTableText.setVisible(false);
         	this.findTableReferenceButton.setVisible(false);
         }
+        
+        if( finishedStartup ) {
+	        setNativeQueryEnablement( !(table instanceof RelationalView) );
+	        setKeyTabsEnablement(!(table instanceof RelationalView));
+        }
 
 		synchronizing = false;
 	}
 	
+	private void setNativeQueryEnablement(boolean enable) {
+		this.nativeQueryTab.getControl().setEnabled(enable);
+		if( enable ) {
+			this.nativeQueryHelpText.setText(Messages.nativeQueryHelpText);
+		} else {
+			this.nativeQueryHelpText.setText(Messages.nativeQueryNotSupportedForViews);
+		}
+		this.nativeQueryHelpText.setEnabled(enable);
+		this.nativeQueryTextEditor.getTextWidget().setEnabled(enable);
+		if( enable ) {
+			nativeQueryTextEditor.getTextWidget().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		} else {
+			nativeQueryTextEditor.getTextWidget().setBackground(nativeQueryTextEditor.getTextWidget().getParent().getBackground());
+		}
+	}
+	
+	private void setKeyTabsEnablement(boolean enable) {
+		this.foreignKeysTab.getControl().setEnabled(enable);
+		this.primaryKeyTab.getControl().setEnabled(enable);
+		this.uniqueConstraintTab.getControl().setEnabled(enable);
+		addFKButton.setEnabled(enable);
+		editFKButton.setEnabled(enable);
+		deleteFKButton.setEnabled(enable);
+		includePrimaryKeyCB.setEnabled(enable);
+		includeUniqueConstraintCB.setEnabled(enable);
+		
+		if( enable ) {
+			fkHelpText.setText(EMPTY_STRING);
+			pkHelpText.setText(EMPTY_STRING);
+			ucHelpText.setText(EMPTY_STRING);
+			
+		} else {
+	    	fkHelpText.setText(Messages.foreignKeysNotSupportedForViews);
+	    	pkHelpText.setText(Messages.primaryKeysNotSupportedForViews);
+	    	ucHelpText.setText(Messages.uniqueConstraintsNotSupportedForViews);
+		}
+	}
+	
 	@SuppressWarnings("unused")
-	Composite createTablePanel(Composite parent) {
+	Composite createPropertiesPanel(Composite parent) {
 		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 3);
 		thePanel.setLayout(new GridLayout(3, false));
 		GridData panelGD = new GridData(GridData.FILL_BOTH);
-		panelGD.heightHint = 300;
+//		panelGD.heightHint = 300;
     	thePanel.setLayoutData(panelGD);
     	
         Label label = new Label(thePanel, SWT.NONE);
-        label.setText(Messages.modelFileLabel);
-        
-        this.modelNameText =  new Text(thePanel, SWT.BORDER | SWT.SINGLE);
-        this.modelNameText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-        this.modelNameText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-        this.modelNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        if( this.modelFile != null ) {
-        	modelNameText.setText(this.modelFile.getName());
-        }
-        addSpacerLabels(thePanel, 1);
-        
-        label = new Label(thePanel, SWT.NONE);
-        label.setText(Messages.nameLabel);
-        
-        this.nameText =  new Text(thePanel, SWT.BORDER | SWT.SINGLE);
-        this.nameText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-        this.nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        this.nameText.addModifyListener(new ModifyListener() {
-    		@Override
-			public void modifyText( final ModifyEvent event ) {
-    			String value = nameText.getText();
-    			if( value == null ) {
-    				value = EMPTY_STRING;
-    			}
-    			
-    			table.setName(value);
-    			handleInfoChanged();
-    		}
-        });
-        addSpacerLabels(thePanel, 1);
-        
-        
-        label = new Label(thePanel, SWT.NONE);
-        label.setText(Messages.nameInSourceLabel);
-        
-        this.nameInSourceText =  new Text(thePanel, SWT.BORDER | SWT.SINGLE);
-        this.nameInSourceText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-        this.nameInSourceText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        this.nameInSourceText.addModifyListener(new ModifyListener() {
-    		@Override
-			public void modifyText( final ModifyEvent event ) {
-    			String value = nameInSourceText.getText();
-    			if( value == null ) {
-    				value = EMPTY_STRING;
-    			}
-    			
-    			table.setNameInSource(value);
-    			handleInfoChanged();
-    		}
-        });
-        addSpacerLabels(thePanel, 1);
-        
-        label = new Label(thePanel, SWT.NONE);
         label.setText(Messages.cardinalityLabel);
         
         this.cardinalityText =  new Text(thePanel, SWT.BORDER | SWT.SINGLE);
@@ -459,26 +567,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
     		}
         });
         addSpacerLabels(thePanel, 1);
-        
-        DESCRIPTION_GROUP: {
-            final Group descGroup = WidgetFactory.createGroup(thePanel, Messages.descriptionLabel, GridData.FILL_HORIZONTAL, 3);
-            descriptionTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
-            final GridData descGridData = new GridData(GridData.FILL_BOTH);
-            descGridData.horizontalSpan = 1;
-            descGridData.heightHint = 80;
-            descGridData.minimumHeight = 30;
-            descGridData.grabExcessVerticalSpace = true;
-            descriptionTextEditor.setLayoutData(descGridData);
-            descriptionTextEditor.setText(""); //$NON-NLS-1$
-            descriptionTextEditor.getTextWidget().addModifyListener(new ModifyListener() {
-				
-				@Override
-				public void modifyText(ModifyEvent e) {
-					table.setDescription(descriptionTextEditor.getText());
-				}
-			});
-        }
-        
         
         this.supportsUpdateCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
         this.supportsUpdateCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
@@ -514,7 +602,27 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         
         addSpacerLabels(thePanel, 2);
         
-        {
+        
+        DESCRIPTION_GROUP: {
+            final Group descGroup = WidgetFactory.createGroup(thePanel, Messages.descriptionLabel, GridData.FILL_BOTH, 3);
+            descriptionTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+            final GridData descGridData = new GridData(GridData.FILL_BOTH);
+            descGridData.horizontalSpan = 1;
+            descGridData.heightHint = 100;
+            descGridData.minimumHeight = 30;
+            descGridData.grabExcessVerticalSpace = true;
+            descriptionTextEditor.setLayoutData(descGridData);
+            descriptionTextEditor.setText(""); //$NON-NLS-1$
+            descriptionTextEditor.getTextWidget().addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					table.setDescription(descriptionTextEditor.getText());
+				}
+			});
+        }
+        
+        MATERIALIZED_GROUP : {
 	        this.materializedCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
 	        this.materializedCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	        this.materializedCB.setText(Messages.materializedLabel);
@@ -553,11 +661,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 				
 			});
         }
-
-
-        addSpacerLabels(thePanel, 3);
-        addSpacerLabels(thePanel, 3);
-        
+   
         return thePanel;
 	}
 	
@@ -568,6 +672,17 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
 		thePanel.setLayout(new GridLayout(2, false));
     	thePanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+    	
+		new Label(parent, SWT.NONE);
+		{
+	    	pkHelpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
+	    	pkHelpText.setBackground(parent.getBackground());
+	    	pkHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+	    	pkHelpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+	    	((GridData)pkHelpText.getLayoutData()).horizontalSpan = 2;
+	    	((GridData)pkHelpText.getLayoutData()).heightHint = 20;
+	    	((GridData)pkHelpText.getLayoutData()).widthHint = 360;
+		}
     	
         this.includePrimaryKeyCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
         GridData theGridData = new GridData();
@@ -701,6 +816,17 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
 		thePanel.setLayout(new GridLayout(2, false));
     	thePanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+    	
+		new Label(parent, SWT.NONE);
+		{
+	    	ucHelpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
+	    	ucHelpText.setBackground(parent.getBackground());
+	    	ucHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+	    	ucHelpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+	    	((GridData)ucHelpText.getLayoutData()).horizontalSpan = 2;
+	    	((GridData)ucHelpText.getLayoutData()).heightHint = 20;
+	    	((GridData)ucHelpText.getLayoutData()).widthHint = 360;
+		}
     	
         this.includeUniqueConstraintCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
         GridData theGridData = new GridData();
@@ -838,6 +964,18 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		thePanel.setLayout(new GridLayout(2, false));
     	thePanel.setLayoutData(new GridData(GridData.FILL_BOTH));
     	
+		new Label(parent, SWT.NONE);
+		{
+	    	fkHelpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
+	    	fkHelpText.setBackground(parent.getBackground());
+	    	fkHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+	    	fkHelpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+	    	((GridData)fkHelpText.getLayoutData()).horizontalSpan = 2;
+	    	((GridData)fkHelpText.getLayoutData()).heightHint = 20;
+	    	((GridData)fkHelpText.getLayoutData()).widthHint = 360;
+		}
+    	
+    	
     	// Create 1 panels
     	// Top is just a Table of current FK with Add/Edit/Delete buttons
     	
@@ -949,6 +1087,50 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         }
         
         return thePanel;
+	}
+	
+	/*
+	 * Simple panel containing name, name in source values as well as a list of primary key columns from this table
+	 */
+	@SuppressWarnings("unused")
+	Composite createNativeQueryPanel(Composite parent) {
+		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 3);
+		thePanel.setLayout(new GridLayout(2, false));
+		GridData panelGD = new GridData(GridData.FILL_BOTH);
+		//panelGD.heightHint = 300;
+    	thePanel.setLayoutData(panelGD);
+    	
+		new Label(parent, SWT.NONE);
+		{
+	    	nativeQueryHelpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
+	    	nativeQueryHelpText.setBackground(parent.getBackground());//Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+	    	nativeQueryHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+	    	nativeQueryHelpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+	    	((GridData)nativeQueryHelpText.getLayoutData()).horizontalSpan = 1;
+	    	((GridData)nativeQueryHelpText.getLayoutData()).heightHint = 50;
+	    	((GridData)nativeQueryHelpText.getLayoutData()).widthHint = 360;
+	    	nativeQueryHelpText.setText(Messages.nativeQueryHelpText);
+		}
+    	
+        NATIVE_QUERY_GROUP: {
+            final Group descGroup = WidgetFactory.createGroup(thePanel, Messages.sqlLabel, GridData.FILL_BOTH, 3);
+            nativeQueryTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+            final GridData theGridData = new GridData(GridData.FILL_BOTH);
+            theGridData.horizontalSpan = 1;
+            theGridData.grabExcessVerticalSpace = true;
+            nativeQueryTextEditor.setLayoutData(theGridData);
+            nativeQueryTextEditor.setText(""); //$NON-NLS-1$
+            nativeQueryTextEditor.getTextWidget().addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					table.setNaviteQuery(nativeQueryTextEditor.getText());
+					handleInfoChanged();
+				}
+			});
+        }
+    	
+    	return thePanel;
 	}
 	
 	private void addSpacerLabels(Composite parent, int numSpacers) {
@@ -2198,32 +2380,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         
         @Override
         protected void okPressed() {
-//        	for( TableItem item : keyViewer.getTable().getItems() ) {
-//        		if( item.getChecked() ) {
-//        			EObject selectedKey = (EObject)item.getData();
-//        			if( selectedKey instanceof UniqueConstraint ) {
-//        				this.selectedTableName = ((UniqueConstraint)selectedKey).getTable().getName();
-//        				this.selectedKeyOrConstraint = ((UniqueConstraint)selectedKey).getName();
-//        			} else {
-//        				this.selectedTableName = ((PrimaryKey)selectedKey).getTable().getName();
-//        				this.selectedKeyOrConstraint = ((PrimaryKey)selectedKey).getName();
-//        			}
-//        			this.editedFK.setUniqueKeyName(this.selectedKeyOrConstraint);
-//        			this.editedFK.setUniqueKeyTableName(this.selectedTableName);
-//        		}
-//        	}
-//        	
-//          	for( TableItem item : theColumnDataViewer.getTable().getItems() ) {
-//        		if( item.getChecked() ) {
-//        			editedFK.addColumn((RelationalColumn)item.getData());
-//        		}
-//        	}
-//          	if( this.foreignKeyMultiCombo.getText() != null ) {
-//          		editedFK.setForeignKeyMultiplicity(this.foreignKeyMultiCombo.getText());
-//          	}
-//          	if( this.uniqueKeyMultiCombo.getText() != null ) {
-//          		editedFK.setPrimaryKeyMultiplicity(this.uniqueKeyMultiCombo.getText());
-//          	}
           	if( isEdit ) {
           		this.originalFK.inject(editedFK);
           	}

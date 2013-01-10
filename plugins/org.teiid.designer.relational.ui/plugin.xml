@@ -89,4 +89,21 @@
             name="org.teiid.designer.relational.ui.actions.CreateRelationalProcedureAction">
       </class>
    </extension>
+   <extension
+         id="newChildRelationalViewAction"
+         name="%newChildRelationalViewAction"
+         point="org.teiid.designer.ui.newChildAction">
+      <class
+            name="org.teiid.designer.relational.ui.actions.CreateRelationalViewAction">
+      </class>
+   </extension>
+
+   <extension
+         id="newSiblingRelationalViewAction"
+         name="%newSiblingRelationalViewAction"
+         point="org.teiid.designer.ui.newSiblingAction">
+      <class
+            name="org.teiid.designer.relational.ui.actions.CreateRelationalViewAction">
+      </class>
+   </extension>
 </plugin>

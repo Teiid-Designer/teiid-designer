@@ -60,4 +60,11 @@ public abstract class RelationalEditorPanel {
 	public final RelationalReference getRelationalReference() {
 		return this.relationalObject;
 	}
+	
+	/**
+	 * @return the model file
+	 */
+	public final IFile getModelFile() {
+		return this.modelFile;
+	}
 }

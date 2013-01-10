@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -30,6 +31,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalModelFactory;
 import org.teiid.designer.relational.model.RelationalTable;
+import org.teiid.designer.relational.model.RelationalView;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
@@ -43,23 +45,23 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-
 /**
- * @since 8.0
+ *
  */
-public class CreateRelationalTableAction extends Action implements INewChildAction, INewSiblingAction {
+public class CreateRelationalViewAction  extends Action implements INewChildAction, INewSiblingAction {
 	private IFile selectedModel;
+	
 	/**
 	 * 
 	 */
-	public static final String TITLE = Messages.baseTableActionText;
+	public static final String TITLE = Messages.viewActionText;
 	 
 	private Collection<String> datatypes;
 	 
 	/**
 	 * 
 	 */
-	public CreateRelationalTableAction() {
+	public CreateRelationalViewAction() {
 		super(TITLE);
 		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor( UiConstants.Images.NEW_TABLE_ICON));
 		
@@ -140,7 +142,7 @@ public class CreateRelationalTableAction extends Action implements INewChildActi
 	        ModelResource mr = ModelUtilities.getModelResource(selectedModel);
 	        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
 	        
-	        RelationalTable table = new RelationalTable();
+	        RelationalView table = new RelationalView();
 	        table.setSupportsUpdate(true);
 	        
 	        // Hand the table off to the generic edit dialog
@@ -155,8 +157,8 @@ public class CreateRelationalTableAction extends Action implements INewChildActi
 		
 	}
 
-    private void createTableInTxn(ModelResource modelResource, RelationalTable table) {
-        boolean requiredStart = ModelerCore.startTxn(true, true, Messages.createRelationalTableTitle, this);
+    private void createTableInTxn(ModelResource modelResource, RelationalView view) {
+        boolean requiredStart = ModelerCore.startTxn(true, true, Messages.createRelationalViewTitle, this);
         boolean succeeded = false;
         try {
             ModelEditor editor = ModelEditorManager.getModelEditorForFile((IFile)modelResource.getCorrespondingResource(), true);
@@ -166,7 +168,7 @@ public class CreateRelationalTableAction extends Action implements INewChildActi
                 RelationalModelFactory factory = new RelationalModelFactory();
                 
                 RelationalModel relModel = new RelationalModel("dummy"); //$NON-NLS-1$
-                relModel.addChild(table);
+                relModel.addChild(view);
                 
                 factory.build(modelResource, relModel, new NullProgressMonitor());
     	        //factory.buildObject(table, modelResource, new NullProgressMonitor());
@@ -177,8 +179,8 @@ public class CreateRelationalTableAction extends Action implements INewChildActi
                 succeeded = true;
             }
         } catch (Exception e) {
-        	MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.createRelationalTableExceptionMessage, e.getMessage());
-            IStatus status = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, Messages.createRelationalTableExceptionMessage, e);
+        	MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.createRelationalViewExceptionMessage, e.getMessage());
+            IStatus status = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, Messages.createRelationalViewExceptionMessage, e);
             UiConstants.Util.log(status);
 
             return;
@@ -194,3 +196,4 @@ public class CreateRelationalTableAction extends Action implements INewChildActi
         }
     }
 }
+
