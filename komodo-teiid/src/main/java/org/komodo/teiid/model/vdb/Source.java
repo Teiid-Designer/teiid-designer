@@ -16,6 +16,33 @@ import org.komodo.common.util.StringUtil;
 public class Source extends VdbObject {
 
     /**
+     * The VDB manifest (<code>vdb.xml</code>) identifiers related to schema/model source elements.
+     */
+    public interface ManifestId {
+
+        /**
+         * The VDB schema/model source element attribute identifiers.
+         */
+        interface Attributes {
+
+            /**
+             * The schema/model source JNDI name attribute identifier.
+             */
+            String JNDI_NAME = "connection-jndi-name"; //$NON-NLS-1$
+
+            /**
+             * The translator name attribute identifier.
+             */
+            String NAME = "name"; //$NON-NLS-1$
+
+            /**
+             * The schema/model source translator name attribute identifier.
+             */
+            String TRANSLATOR_NAME = "translator-name"; //$NON-NLS-1$
+        }
+    }
+
+    /**
      * VDB model source property names.
      */
     public interface PropertyName extends VdbObject.PropertyName {

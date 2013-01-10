@@ -6,9 +6,11 @@
         <groupId>org.komodo</groupId>
         <artifactId>komodo-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../komodo-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>komodo-teiid</artifactId>
+    <packaging>jar</packaging>
     <name>Komodo Teiid</name>
     <description>Komodo Teiid project-related module</description>
 
@@ -17,11 +19,18 @@
   		    <groupId>org.komodo</groupId>
   		    <artifactId>komodo-common</artifactId>
   	    </dependency>
- 
+
         <dependency>
             <groupId>org.komodo</groupId>
             <artifactId>komodo-common</artifactId>
-            <classifier>tests</classifier>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.komodo</groupId>
+            <artifactId>komodo-common</artifactId>
         </dependency>
 
         <dependency>

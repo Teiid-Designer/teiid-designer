@@ -6,35 +6,82 @@
         <groupId>org.komodo</groupId>
         <artifactId>komodo-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../komodo-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>komodo-repository</artifactId>
+    <packaging>jar</packaging>
     <name>Komodo Repository</name>
     <description>Komodo repository module</description>
 
     <dependencies>
+        <!--
+            Komodo dependencies
+        -->
         <dependency>
             <groupId>org.komodo</groupId>
             <artifactId>komodo-common</artifactId>
         </dependency>
 
         <dependency>
-             <groupId>org.overlord.sramp</groupId>
-             <artifactId>s-ramp-repository-jcr</artifactId>
+            <groupId>org.komodo</groupId>
+            <artifactId>komodo-common</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
 
-        <!-- needed to pull in separate test jar -->
+        <dependency>
+            <groupId>org.komodo</groupId>
+            <artifactId>komodo-teiid</artifactId>
+        </dependency>
+
+        <!--
+            S-RAMP dependencies
+        -->
+        <dependency>
+             <groupId>org.overlord.sramp</groupId>
+             <artifactId>s-ramp-core</artifactId>
+        </dependency>
+
+        <dependency>
+             <groupId>org.overlord.sramp</groupId>
+             <artifactId>s-ramp-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.overlord.sramp</groupId>
+            <artifactId>s-ramp-atom</artifactId>
+            <classifier>classes</classifier>
+        </dependency>
+
         <dependency>
             <groupId>org.overlord.sramp</groupId>
             <artifactId>s-ramp-repository-jcr</artifactId>
             <classifier>tests</classifier>
         </dependency>
 
+        <!--
+            Testing dependencies
+        -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>tjws</artifactId>
+        </dependency>
+ 
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </dependency>
+
+        <!--
+            Logging dependencies
+        -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>

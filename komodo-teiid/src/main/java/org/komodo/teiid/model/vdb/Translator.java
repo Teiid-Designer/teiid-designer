@@ -16,6 +16,38 @@ import org.komodo.common.util.StringUtil;
 public class Translator extends VdbAdminObject {
 
     /**
+     * The VDB manifest (<code>vdb.xml</code>) identifiers related to translator elements.
+     */
+    public interface ManifestId {
+
+        /**
+         * The VDB translator element attribute identifiers.
+         */
+        interface Attributes {
+
+            /**
+             * The translator description attribute identifier.
+             */
+            String DESCRIPTION = "description"; //$NON-NLS-1$
+
+            /**
+             * The translator name attribute identifier.
+             */
+            String NAME = "name"; //$NON-NLS-1$
+
+            /**
+             * The translator type attribute identifier.
+             */
+            String TYPE = "type"; //$NON-NLS-1$
+        }
+
+        /**
+         * The VDB translator property element identifier. Zero or more VDB translator properties are allowed.
+         */
+        String PROPERTY = "property"; //$NON-NLS-1$
+    }
+
+    /**
      * Translator property names.
      */
     public interface PropertyName extends VdbObject.PropertyName {
