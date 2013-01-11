@@ -15,22 +15,22 @@ public interface RepositoryConstants {
     /**
      * Constants related to the S-RAMP database.
      */
-    interface Sramp {
+    public interface Sramp {
 
         /**
          * The root node path in the S-RAMP database. Value is {@value}.
          */
-        String ROOT_PATH = "/s-ramp/"; //$NON-NLS-1$
+        String ROOT_PATH = "/s-ramp"; //$NON-NLS-1$
 
         /**
          * The root node path in the S-RAMP database for document artifacts. Value is {@value}.
          */
-        String DOCUMENT_ARTIFACT_PATH = ROOT_PATH + "core/Document"; //$NON-NLS-1$
+        String DOCUMENT_ARTIFACT_PATH = ROOT_PATH + "/core/Document"; //$NON-NLS-1$
 
         /**
          * The root node path in the S-RAMP database for user-defined artifacts. Value is {@value}.
          */
-        String USER_DEFINED_ARTIFACT_PATH = ROOT_PATH + "user/"; //$NON-NLS-1$
+        String USER_DEFINED_ARTIFACT_PATH = ROOT_PATH + "/user"; //$NON-NLS-1$
     }
 
 }
