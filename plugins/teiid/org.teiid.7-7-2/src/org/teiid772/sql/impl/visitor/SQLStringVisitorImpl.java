@@ -19,6 +19,7 @@ public class SQLStringVisitorImpl implements ISQLStringVisitor {
 
     @Override
     public String getSQLString(ILanguageObject languageObject) {
+        if(languageObject==null) return ""; //$NON-NLS-1$
         LanguageObjectImpl languageObjectImpl = (LanguageObjectImpl) languageObject;
         return SQLStringVisitor.getSQLString(languageObjectImpl.getDelegate());
     }
