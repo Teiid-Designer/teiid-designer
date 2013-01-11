@@ -7,17 +7,43 @@
 */
 package org.komodo.repository;
 
+import org.jboss.resteasy.test.EmbeddedContainer;
+import org.overlord.sramp.repository.PersistenceFactory;
+import org.overlord.sramp.repository.jcr.JCRRepositoryCleaner;
 
 /**
- * A repository manager that can delete all content.
+ * A repository manager that uses the S-RAMP atom interface that can be used for testing.
  */
-public interface CleanableRepositoryManager extends RepositoryManager {
+public class CleanableRepositoryManager extends AtomRepositoryManager implements Cleanable {
+
+    private final JCRRepositoryCleaner cleaner = new JCRRepositoryCleaner();
 
     /**
-     *  Cleans/clears out repository content.
-     *  
-     * @throws Exception if there is a problem cleaning the repository
+     * Constructs a default s-ramp jetty/atom repository manager using localhost and default port.
      */
-    void clean() throws Exception;
+    public CleanableRepositoryManager() {
+        super(String.format("%s:%d", "http://localhost", 8081)); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.komodo.repository.Cleanable#clean()
+     */
+    @Override
+    public void clean() throws Exception {
+        this.cleaner.clean();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.komodo.repository.RepositoryManager#shutdown()
+     */
+    @Override
+    public void shutdown() throws Exception {
+        EmbeddedContainer.stop();
+        PersistenceFactory.newInstance().shutdown();
+    }
 
 }

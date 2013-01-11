@@ -10,10 +10,10 @@ package org.komodo.repository;
 import java.io.InputStream;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.komodo.common.util.Precondition;
 import org.overlord.sramp.repository.jcr.JCRRepository;
+import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 
 /**
  * The base class for Komodo repository artifact tests.
@@ -21,13 +21,16 @@ import org.overlord.sramp.repository.jcr.JCRRepository;
 @SuppressWarnings( {"javadoc", "nls"} )
 public abstract class RepositoryTest implements RepositoryConstants {
 
-    private static RepositoryManager _repoMgr;
+    protected static RepositoryManager _repoMgr;
     private static boolean _started;
 
     @BeforeClass
-    public static void setupEnvironment() {
+    public static void setupEnvironment() throws Exception {
         System.setProperty(RepositoryManager.MODESHAPE_CONFIG_URL, "classpath://" + JCRRepository.class.getName()
                                                                    + "/META-INF/modeshape-configs/inmemory-sramp-config.json");
+        _repoMgr = new CleanableRepositoryManager();
+        _repoMgr.start();
+        _started = true;
     }
 
     @AfterClass
@@ -38,6 +41,15 @@ public abstract class RepositoryTest implements RepositoryConstants {
         }
     }
 
+    protected void assertNumberOfDerivedArtifacts(final BaseArtifactType artifact,
+                                                  final int expected) throws Exception {
+        final long actual = _repoMgr.getDerivedArtifacts(artifact).size();
+
+        if (actual != expected) {
+            throw new AssertionError("Expected <" + expected + "> but got <" + actual + ">");
+        }
+    }
+
     /**
      * Clean repo after each test method.
      */
@@ -45,15 +57,10 @@ public abstract class RepositoryTest implements RepositoryConstants {
     public final void cleanRepository() throws Exception {
         Precondition.notNull(_repoMgr, "_repoMgr");
 
-        if (_repoMgr instanceof CleanableRepositoryManager) {
-            ((CleanableRepositoryManager)getRepositoryManager()).clean();
+        if (_repoMgr instanceof Cleanable) {
+            ((Cleanable)_repoMgr).clean();
         }
     }
-
-    /**
-     * @return the repository manager (can be <code>null</code>)
-     */
-    protected abstract RepositoryManager getRepositoryManager();
 
     /**
      * Obtains the content of a file resource.
@@ -63,18 +70,6 @@ public abstract class RepositoryTest implements RepositoryConstants {
      */
     protected InputStream getResourceAsStream(final String fileName) {
         return getClass().getClassLoader().getResourceAsStream(fileName);
-    }
-
-    @Before
-    public final void startRepository() throws Exception {
-        if (!_started) {
-            final RepositoryManager repoMgr = getRepositoryManager();
-            Precondition.notNull(repoMgr, "repoManager");
-
-            _repoMgr = repoMgr;
-            _repoMgr.start();
-            _started = true;
-        }
     }
 
 }

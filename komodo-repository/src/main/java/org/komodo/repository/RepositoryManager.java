@@ -8,7 +8,7 @@
 package org.komodo.repository;
 
 import java.io.InputStream;
-import org.komodo.teiid.model.vdb.Vdb;
+import org.overlord.sramp.client.query.QueryResultSet;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 
 /**
@@ -34,25 +34,18 @@ public interface RepositoryManager {
                             final String fileName) throws Exception;
 
     /**
-     * Adds a VDB to the repository. Sets artifact properties based on the VDB parameter. Caller should ensure stream is closed. 
-     * The file name is used to determine mime type.
-     * 
-     * @param vdb the VDB whose content being added as an artifact (cannot be <code>null</code> or empty)
-     * @param content the resource content (cannot be <code>null</code>)
-     * @param fileName the file name associated with the content (cannot be <code>null</code> or empty)
-     * @return the artifact (never <code>null</code>)
-     * @throws Exception if there is a problem creating the artifact in the repository
+     * @param uuid the UUID of the artifact being requested (cannot be <code>null</code> or empty)
+     * @return the artifact or <code>null</code> if not found
+     * @throws Exception if there is a problem trying to obtain the artifact
      */
-    BaseArtifactType addVdb(final Vdb vdb,
-                            final InputStream content,
-                            final String fileName) throws Exception;
+    BaseArtifactType get(final String uuid) throws Exception;
 
     /**
-     * @param query the query to execute (cannot be <code>null</code> or empty)
-     * @return the results (never <code>null</code>)
-     * @throws Exception if there is a problem running the specified query
+     * @param artifact the artifact whose derived artifacts are being requested (cannot be <code>null</code>)
+     * @return the derived artifacts (never <code>null</code>)
+     * @throws Exception if there is a problem obtaining the derived artifacts
      */
-    //    QueryResultSet query(final String query) throws Exception;
+    QueryResultSet getDerivedArtifacts(final BaseArtifactType artifact) throws Exception;
 
     /**
      * @throws Exception if there is a problem shutting down the repository
