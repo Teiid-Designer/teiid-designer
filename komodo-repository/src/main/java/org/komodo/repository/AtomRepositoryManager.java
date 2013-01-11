@@ -13,8 +13,8 @@ import org.jboss.resteasy.spi.ResteasyDeployment;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.jboss.resteasy.test.EmbeddedContainer;
 import org.komodo.common.util.Precondition;
-import org.komodo.repository.artifact.Artifact;
-import org.komodo.teiid.model.vdb.Vdb;
+import org.komodo.repository.artifact.Artifact.Type;
+import org.komodo.repository.deriver.DeriverUtil;
 import org.overlord.sramp.ArtifactType;
 import org.overlord.sramp.atom.providers.HttpResponseProvider;
 import org.overlord.sramp.atom.providers.OntologyProvider;
@@ -26,35 +26,27 @@ import org.overlord.sramp.atom.services.OntologyResource;
 import org.overlord.sramp.atom.services.QueryResource;
 import org.overlord.sramp.atom.services.ServiceDocumentResource;
 import org.overlord.sramp.client.SrampAtomApiClient;
-import org.overlord.sramp.repository.PersistenceFactory;
-import org.overlord.sramp.repository.jcr.JCRRepositoryCleaner;
+import org.overlord.sramp.client.query.ArtifactSummary;
+import org.overlord.sramp.client.query.QueryResultSet;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * A repository manager that uses the S-RAMP atom interface.
  */
-public class AtomRepositoryManager implements CleanableRepositoryManager {
+public class AtomRepositoryManager implements RepositoryManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AtomRepositoryManager.class);
 
-    private final JCRRepositoryCleaner cleaner = new JCRRepositoryCleaner();
     private final SrampAtomApiClient client;
-
-    /**
-     * Constructs a default s-ramp jetty/atom repository manager using localhost and default port.
-     */
-    public AtomRepositoryManager() {
-        this(String.format("%s:%d", "http://localhost", 8081)); //$NON-NLS-1$ //$NON-NLS-2$
-    }
 
     /**
      * @param url the URL to the S-RAMP server (cannot be <code>null</code> or empty)
      */
     public AtomRepositoryManager(final String url) {
         Precondition.notEmpty(url, "url"); //$NON-NLS-1$
-        LOGGER.debug("Constructing repository manager with url \"" + url + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        LOGGER.debug("Constructing repository manager with url '{}'", url); //$NON-NLS-1$
         this.client = new SrampAtomApiClient(url);
     }
 
@@ -66,36 +58,40 @@ public class AtomRepositoryManager implements CleanableRepositoryManager {
     @Override
     public BaseArtifactType addVdb(final InputStream content,
                                    final String fileName) throws Exception {
-        final ArtifactType artifact = ArtifactType.valueOf(Artifact.Type.VDB.getName());
-        LOGGER.debug("Adding VDB with file name \"" + fileName + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        final ArtifactType artifact = ArtifactType.valueOf(Type.VDB.getName());
+        LOGGER.debug("Adding VDB with file name '{}'", fileName); //$NON-NLS-1$
         return this.client.uploadArtifact(artifact, content, fileName);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see org.komodo.repository.RepositoryManager#addVdb(org.komodo.teiid.model.vdb.Vdb, java.io.InputStream, java.lang.String)
+     * @see org.komodo.repository.RepositoryManager#get(java.lang.String)
      */
     @Override
-    public BaseArtifactType addVdb(final Vdb vdb,
-                                   final InputStream content,
-                                   final String fileName) throws Exception {
-        final BaseArtifactType vdbArtifact = addVdb(content, fileName);
-        vdbArtifact.setDescription(vdb.getDescription());
-        vdbArtifact.setName(vdb.getId());
-        vdbArtifact.setVersion(Integer.toString(vdb.getVersion()));
+    public BaseArtifactType get(final String uuid) throws Exception {
+        Precondition.notEmpty(uuid, "uuid"); //$NON-NLS-1$
+        final QueryResultSet result = this.client.query(DeriverUtil.getUuidQueryString(uuid));
 
-        return vdbArtifact;
+        if (result.size() == 1) {
+            final ArtifactSummary summary = result.get(0);
+            return this.client.getArtifactMetaData(summary.getType(), uuid);
+        }
+
+        return null;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see org.komodo.repository.CleanableRepositoryManager#clean()
+     * @see org.komodo.repository.RepositoryManager#getDerivedArtifacts(org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType)
      */
     @Override
-    public void clean() throws Exception {
-        this.cleaner.clean();
+    public QueryResultSet getDerivedArtifacts(final BaseArtifactType artifact) throws Exception {
+        Precondition.notNull(artifact, "artifact"); //$NON-NLS-1$
+        LOGGER.debug("Getting derived artifacts using query: '{}'", //$NON-NLS-1$
+                     DeriverUtil.getDerivedArtifactsQueryString(artifact.getUuid()));
+        return this.client.query(DeriverUtil.getDerivedArtifactsQueryString(artifact.getUuid()));
     }
 
     /**
@@ -105,8 +101,7 @@ public class AtomRepositoryManager implements CleanableRepositoryManager {
      */
     @Override
     public void shutdown() throws Exception {
-        EmbeddedContainer.stop();
-        PersistenceFactory.newInstance().shutdown();
+        // TODO figure out what to do here
     }
 
     /**

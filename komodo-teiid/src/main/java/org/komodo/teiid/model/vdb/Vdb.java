@@ -35,6 +35,11 @@ public class Vdb extends VdbAdminObject {
             String NAME = "name"; //$NON-NLS-1$
 
             /**
+             * The VDB property value attribute identifier.
+             */
+            String VALUE = "value"; //$NON-NLS-1$
+
+            /**
              * The VDB version attribute identifier.
              */
             String VERSION = "version"; //$NON-NLS-1$

@@ -7,6 +7,7 @@
 */
 package org.komodo.repository.artifact;
 
+import java.util.UUID;
 import org.komodo.common.util.Precondition;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactEnum;
 import org.s_ramp.xmlns._2010.s_ramp.UserDefinedArtifactType;
@@ -26,6 +27,7 @@ public class ArtifactFactory {
         final UserDefinedArtifactType artifact = new UserDefinedArtifactType();
         artifact.setArtifactType(BaseArtifactEnum.USER_DEFINED_ARTIFACT_TYPE);
         artifact.setUserType(artifactType.getName());
+        artifact.setUuid(UUID.randomUUID().toString());
 
         return artifact;
     }

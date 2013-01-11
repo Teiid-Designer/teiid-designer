@@ -14,8 +14,12 @@ import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 import java.io.InputStream;
 import org.junit.Test;
-import org.komodo.repository.AtomRepositoryTest;
+import org.komodo.repository.RepositoryTest;
 import org.komodo.repository.artifact.Artifact;
+import org.komodo.teiid.model.vdb.Translator;
+import org.overlord.sramp.ArtifactType;
+import org.overlord.sramp.SrampModelUtils;
+import org.overlord.sramp.client.query.ArtifactSummary;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 import org.s_ramp.xmlns._2010.s_ramp.UserDefinedArtifactType;
 
@@ -23,52 +27,47 @@ import org.s_ramp.xmlns._2010.s_ramp.UserDefinedArtifactType;
  * A test class for a {@link VdbDeriver}.
  */
 @SuppressWarnings( {"javadoc", "nls"} )
-public class VdbDeriverTest extends AtomRepositoryTest {
+public class VdbDeriverTest extends RepositoryTest {
 
     @Test
-    public void shouldDeriveTwitterVdb() throws Exception {
+    public void shouldAddTwitterVdb() throws Exception {
         final InputStream vdbStream = VdbDeriverTest.class.getClassLoader().getResourceAsStream("vdb/twitterVdb.xml");
         assertThat(vdbStream, is(not(nullValue())));
 
-        BaseArtifactType artifact = getRepositoryManager().addVdb(vdbStream, "twitterVdb.xml");
-        assertThat(artifact, is(instanceOf(UserDefinedArtifactType.class)));
-        assertThat(((UserDefinedArtifactType)artifact).getUserType(), is(Artifact.Type.VDB.getName()));
+        // verify VDB artifact exists and has correct properties
+        final BaseArtifactType vdbArtifact = _repoMgr.addVdb(vdbStream, "twitterVdb.xml");
+        assertThat(vdbArtifact, is(instanceOf(UserDefinedArtifactType.class)));
+        assertThat(((UserDefinedArtifactType)vdbArtifact).getUserType(), is(Artifact.Type.VDB.getName()));
+        assertThat(vdbArtifact.getName(), is("twitter"));
+        assertThat(vdbArtifact.getVersion(), is("1"));
+        assertThat(vdbArtifact.getDescription(), is("Shows how to call Web Services"));
+        assertThat(SrampModelUtils.getCustomProperty(vdbArtifact, "UseConnectorMetadata"), is("cached"));
     }
-    //
-    //    private static void queryForDerivedArtifacts(final SrampAtomApiClient client,
-    //                                                 final String vdbArtifactUuid) throws Exception {
-    //        // Check that we can query for the VDB artifact
-    //        String query = String.format("/s-ramp/user/" + VdbArtifact.ARTIFACT_TYPE + "[@uuid = '%1$s']", vdbArtifactUuid);
-    //        QueryResultSet resultSet = client.query(query);
-    //
-    //        if (resultSet.size() != 1) {
-    //            throw new Exception("Error querying for vdb/twitterVdb.xml artifact!");
-    //        }
-    //
-    //        // Find all derived artifacts by querying by the relatedDocument relationship
-    //        query = String.format("/s-ramp/user[relatedDocument[@uuid = '%1$s']]", vdbArtifactUuid);
-    //        resultSet = client.query(query);
-    //
-    //        if (resultSet.size() != 12) {
-    //            throw new Exception("Expected 12 derived artifacts but found only " + resultSet.size() + "!");
-    //        }
-    //
-    //        for (final ArtifactSummary arty : resultSet) {
-    //            final ArtifactType type = arty.getType();
-    //            System.out.println("\t" + type.getType() + " (" + arty.getName() + ")");
-    //        }
-    //    }
-    //
-    //    @Test
-    //    public void testDeriver() throws Exception {
-    //        final SrampAtomApiClient client = new SrampAtomApiClient(generateURL("/s-ramp"));
-    //
-    //        // First, add the demo/sample web.xml to the repository.
-    //        final String uuid = addVdbToRepository(client);
-    //
-    //        // Now, do some queries to make sure that the derived artifacts were properly
-    //        // created and linked (via S-RAMP relationships) to the original artifact.
-    //        queryForDerivedArtifacts(client, uuid);
-    //    }
+
+    @Test
+    public void shouldDeriveTwitterVdbArtifacts() throws Exception {
+        final InputStream vdbStream = VdbDeriverTest.class.getClassLoader().getResourceAsStream("vdb/twitterVdb.xml");
+        assertThat(vdbStream, is(not(nullValue())));
+
+        // add VDB
+        final BaseArtifactType vdbArtifact = _repoMgr.addVdb(vdbStream, "twitterVdb.xml");
+
+        // verify derived artifacts
+        assertNumberOfDerivedArtifacts(vdbArtifact, 1);
+
+        // get derived artifacts
+        for (ArtifactSummary summary : _repoMgr.getDerivedArtifacts(vdbArtifact)) {
+            // these are lightweight artifacts
+            ArtifactType artifact = summary.getType();
+            assertThat(artifact.getType(), is(Artifact.Type.TRANSLATOR.getName()));
+
+            // materialize entire artifact
+            BaseArtifactType translatorArtifact = _repoMgr.get(summary.getUuid());
+            assertThat(translatorArtifact.getName(), is("rest"));
+            assertThat(SrampModelUtils.getCustomProperty(translatorArtifact, Translator.PropertyName.TYPE), is("ws"));
+            assertThat(SrampModelUtils.getCustomProperty(translatorArtifact, "DefaultBinding"), is("HTTP"));
+            assertThat(SrampModelUtils.getCustomProperty(translatorArtifact, "DefaultServiceMode"), is("MESSAGE"));
+        }
+    }
 
 }
