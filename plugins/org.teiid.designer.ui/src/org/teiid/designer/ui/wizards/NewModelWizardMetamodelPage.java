@@ -468,6 +468,7 @@ public class NewModelWizardMetamodelPage extends WizardPage
             case (STATUS_OK):
             default:
                 updateStatus(panelMessage);
+                setMessage(Util.getString("NewModelWizard.specifyModelDesc"), IStatus.OK); //$NON-NLS-1$
                 break;
         }
     }
@@ -523,8 +524,9 @@ public class NewModelWizardMetamodelPage extends WizardPage
             return false;
         }
         
-        if( metamodelCombo.getSelectionIndex() == 6) {
-        	// WARN USER OF EXTENSION MODEL DEPRECATION
+        String metaModelType = getMetamodelType();
+        // If selected Metamodel type is Model Extension, warn user of deprecation
+        if( metaModelType!=null && metaModelType.startsWith(ModelUtil.MODEL_CLASS_MODEL_EXTENSION) ) {
         	currentStatus = STATUS_DEPRECATED_EXTENSION_METAMODEL;
         	return true;
         }
