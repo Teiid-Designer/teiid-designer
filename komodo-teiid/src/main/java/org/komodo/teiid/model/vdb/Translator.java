@@ -39,17 +39,7 @@ public class Translator extends VdbAdminObject {
              * The translator type attribute identifier.
              */
             String TYPE = "type"; //$NON-NLS-1$
-
-            /**
-             * The translator property value attribute identifier.
-             */
-            String VALUE = "value"; //$NON-NLS-1$
         }
-
-        /**
-         * The VDB translator property element identifier. Zero or more VDB translator properties are allowed.
-         */
-        String PROPERTY = "property"; //$NON-NLS-1$
     }
 
     /**

@@ -15,6 +15,33 @@ import java.util.Map;
 public interface Propertied {
 
     /**
+     * The VDB manifest (<code>vdb.xml</code>) identifiers related to property elements.
+     */
+    public interface ManifestId {
+
+        /**
+         * The property element attribute identifiers.
+         */
+        interface Attributes {
+
+            /**
+             * The property name attribute identifier.
+             */
+            String NAME = "name"; //$NON-NLS-1$
+
+            /**
+             * The property value attribute identifier.
+             */
+            String VALUE = "value"; //$NON-NLS-1$
+        }
+
+        /**
+         * The property element identifier.
+         */
+        String PROPERTY = "property"; //$NON-NLS-1$
+    }
+
+    /**
      * The name of the property for the additional properties.
      */
     String PROPERTIES = Propertied.class.getSimpleName() + ".properties"; //$NON-NLS-1$
