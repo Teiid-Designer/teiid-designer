@@ -32,11 +32,6 @@ public class Entry extends VdbAdminObject {
          * The VDB entry description element identifier. The description is optional.
          */
         String DESCRIPTION = "description"; //$NON-NLS-1$
-
-        /**
-         * The VDB entry property element identifier. Zero or more VDB entry properties are allowed.
-         */
-        String PROPERTY = "property"; //$NON-NLS-1$
     }
 
     /**

@@ -18,39 +18,49 @@ public interface Artifact {
     enum Type {
 
         /**
-         * The S-RAMP artifact type for a VDB data policy.
+         * The S-RAMP artifact type for a data policy artifact.
          */
-        DATA_POLICY("DATA_POLICY"), //$NON-NLS-1$
+        DATA_POLICY("DataPolicy"), //$NON-NLS-1$
 
         /**
          * The S-RAMP artifact type for a VDB entry.
          */
-        ENTRY("ENTRY"), //$NON-NLS-1$
+        ENTRY("Entry"), //$NON-NLS-1$
 
         /**
-         * The S-RAMP artifact type for a VDB data permission.
+         * The S-RAMP artifact type for a import VDB artifact.
          */
-        PERMISSION("PERMISSION"), //$NON-NLS-1$
+        IMPORT_VDB("ImportVdb"), //$NON-NLS-1$
 
         /**
-         * The S-RAMP artifact type for a VDB schema/model.
+         * The S-RAMP artifact type for a data permission artifact.
          */
-        SCHEMA("SCHEMA"), //$NON-NLS-1$
+        PERMISSION("Permission"), //$NON-NLS-1$
 
         /**
-         * The S-RAMP artifact type for a VDB translator.
+         * The S-RAMP artifact type for a schema/model artifact.
          */
-        TRANSLATOR("TRANSLATOR"), //$NON-NLS-1$
+        SCHEMA("Schema"), //$NON-NLS-1$
+
+        /**
+         * The S-RAMP artifact type for a schema data source artifact.
+         */
+        SOURCE("Source"), //$NON-NLS-1$
+
+        /**
+         * The S-RAMP artifact type for a translator artifact.
+         */
+        TRANSLATOR("Translator"), //$NON-NLS-1$
 
         /**
          * The S-RAMP artifact type for a VDB artifact.
          */
-        VDB("VDB"); //$NON-NLS-1$
+        VDB("Vdb"); //$NON-NLS-1$
 
         private final String name;
 
         private Type(final String name) {
-            this.name = "Teiid_" + name; //$NON-NLS-1$
+            this.name = "Teiid" + name; //$NON-NLS-1$
         }
 
         /**

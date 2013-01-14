@@ -48,6 +48,16 @@ public class DataPolicy extends VdbObject implements Describable {
         }
 
         /**
+         * The data policy description element identifier.
+         */
+        String DESCRIPTION = "description"; //$NON-NLS-1$
+
+        /**
+         * The data permission element identifier.
+         */
+        String PERMISSION = "permission"; //$NON-NLS-1$
+
+        /**
          * The mapped role name element identifier.
          */
         String ROLE_NAME = "mapped-role-name"; //$NON-NLS-1$

@@ -15,6 +15,33 @@ import org.komodo.common.util.HashCode;
 public class ImportVdb extends VdbObject {
 
     /**
+     * The VDB manifest (<code>vdb.xml</code>) identifiers related to translator elements.
+     */
+    public interface ManifestId {
+
+        /**
+         * The VDB translator element attribute identifiers.
+         */
+        interface Attributes {
+
+            /**
+             * The translator name and property name attribute identifier.
+             */
+            String NAME = "name"; //$NON-NLS-1$
+
+            /**
+             * The import VDB import data policies attribute identifier.
+             */
+            String IMPORT_DATA_POLICIES = "import-data-policies"; //$NON-NLS-1$
+
+            /**
+             * The Import VDB version attribute identifier.
+             */
+            String VERSION = "version"; //$NON-NLS-1$
+        }
+    }
+
+    /**
      * Import VDB property names.
      */
     public interface PropertyName extends VdbObject.PropertyName {
@@ -30,7 +57,12 @@ public class ImportVdb extends VdbObject {
         String VERSION = ImportVdb.class.getSimpleName() + ".version"; //$NON-NLS-1$
     }
 
-    private boolean importDataPolicies = true;
+    /**
+     * The default import data policies setting. Value is {@value}.
+     */
+    public static final boolean DEFAULT_IMPORT_DATA_POLICIES = true;
+
+    private boolean importDataPolicies = DEFAULT_IMPORT_DATA_POLICIES;
     private int version = 1;
 
     /**
