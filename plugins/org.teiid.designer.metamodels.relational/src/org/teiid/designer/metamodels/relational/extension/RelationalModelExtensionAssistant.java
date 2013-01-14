@@ -44,7 +44,9 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
         NON_PREPARED(getPropertyId("non-prepared")), //$NON-NLS-1$
         USES_DISTINCT_ROWS(getPropertyId("uses-distinct-rows")), //$NON-NLS-1$
         VARARGS(getPropertyId("varargs")), //$NON-NLS-1$
-        NULL_ON_NULL(getPropertyId("null-on-null")); //$NON-NLS-1$
+        NULL_ON_NULL(getPropertyId("null-on-null")), //$NON-NLS-1$
+        JAVA_CLASS(getPropertyId("java-class")), //$NON-NLS-1$
+        JAVA_METHOD(getPropertyId("java-method")); //$NON-NLS-1$
 
         public static boolean same(final PropertyName propName,
                                    final String value) {
@@ -78,7 +80,7 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
             final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(model);
 
             if (modelResource != null && !modelResource.isReadOnly()) {
-                if ((ModelType.PHYSICAL_LITERAL == modelResource.getModelType())
+                if ((ModelType.PHYSICAL_LITERAL == modelResource.getModelType() || ModelType.VIRTUAL_LITERAL == modelResource.getModelType())
                     && RelationalPackage.eNS_URI.equals(modelResource.getPrimaryMetamodelUri()) && !supportsMyNamespace(model)) {
                     saveModelExtensionDefinition(model);
                 }
@@ -100,9 +102,12 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
         final ModelExtensionPropertyDefinition propDefn = super.getPropertyDefinition(modelObject, propId);
 
         if (propDefn != null) {
+        	boolean isPhysical = ModelUtil.isPhysical(modelObject);
+        	boolean isFunction = ((Procedure)modelObject).isFunction();
+        	
             // must be a table or a procedure in a physical model to have these properties
             if (PropertyName.same(PropertyName.NATIVE_QUERY, propId)) {
-                if (((modelObject instanceof Table) || (modelObject instanceof Procedure)) && ModelUtil.isPhysical(modelObject)) {
+                if (((modelObject instanceof Table) || (modelObject instanceof Procedure)) && isPhysical) {
                     return propDefn;
                 }
 
@@ -119,10 +124,24 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
                 // EObject should not have these property definitions
                 return null;
             }
+            
+            // must be a procedure in a physical model to have these properties
+            if (PropertyName.same(PropertyName.JAVA_CLASS, propId) || PropertyName.same(PropertyName.JAVA_METHOD, propId)) {
+                if ((modelObject instanceof Procedure) && !isPhysical && isFunction) {
+                    return propDefn;
+                }
+                
+                // make sure model object does not have these extension properties for when function is false
+                removeProperty(modelObject, PropertyName.JAVA_CLASS.toString());
+                removeProperty(modelObject, PropertyName.JAVA_METHOD.toString());
+
+                // EObject should not have these property definitions
+                return null;
+            }
 
             // must be a procedure in a physical model and have function property set to true to have these properties
             if (PropertyName.same(PropertyName.DETERMINISTIC, propId)) {
-                if ((modelObject instanceof Procedure) && ModelUtil.isPhysical(modelObject) && ((Procedure)modelObject).isFunction()) {
+                if ((modelObject instanceof Procedure) && isFunction) {
                     return propDefn;
                 }
 
@@ -135,8 +154,8 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
 
             // must have function set to true to have aggregate property
             if (PropertyName.same(PropertyName.AGGREGATE, propId)) {
-                if ((modelObject instanceof Procedure) && ModelUtil.isPhysical(modelObject)) {
-                    if (((Procedure)modelObject).isFunction()) {
+                if ((modelObject instanceof Procedure) ) {
+                    if (isFunction) {
                         return propDefn;
                     }
 
@@ -157,7 +176,7 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
             || PropertyName.same(PropertyName.USES_DISTINCT_ROWS, propId)
             || PropertyName.same(PropertyName.ALLOWS_DISTINCT, propId)
             || PropertyName.same(PropertyName.DECOMPOSABLE, propId)) {
-                if ((modelObject instanceof Procedure) && ModelUtil.isPhysical(modelObject)) {
+                if ((modelObject instanceof Procedure) ) {
                     // aggregate must be true to have the above properties
                     final String isAggregate = getPropertyValue(modelObject, PropertyName.AGGREGATE.toString());
 
@@ -180,7 +199,7 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
             if( PropertyName.same(PropertyName.VARARGS, propId)
             	|| PropertyName.same(PropertyName.NULL_ON_NULL, propId)) {
                 if ((modelObject instanceof Procedure) && ModelUtil.isPhysical(modelObject)) {
-                    if (((Procedure)modelObject).isFunction()) {
+                    if (isFunction) {
                         return propDefn;
                     }
                     removeProperty(modelObject, PropertyName.VARARGS.toString());

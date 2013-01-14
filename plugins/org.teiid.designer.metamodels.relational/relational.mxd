@@ -37,6 +37,14 @@
             <p:description locale="en_US">indicates that the function will return null.</p:description>
             <p:display locale="en_US">Returns null on null</p:display>
         </p:property>
+        <p:property advanced="false" index="true" masked="false" name="invocationClass" required="false" type="string">
+            <p:description locale="en_US">The java class containing the user defined function</p:description>
+            <p:display locale="en_US">Java Class</p:display>
+        </p:property>
+        <p:property advanced="false" index="true" masked="false" name="invocationMethod" required="false" type="string">
+            <p:description locale="en_US">The java method defining the user defined function</p:description>
+            <p:display locale="en_US">Java Method</p:display>
+        </p:property>
     </p:extendedMetaclass>
     <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.BaseTableImpl">
         <p:property advanced="false" index="true" masked="false" name="native-query" required="false" type="string">
