@@ -68,9 +68,25 @@ public class Schema extends VdbAdminObject {
         String METADATA = "metadata"; //$NON-NLS-1$
 
         /**
-         * The schema/model property element identifier. Zero or more VDB model properties are allowed.
+         * The VDB schema/model data source element identifier.
          */
-        String PROPERTY = "property"; //$NON-NLS-1$
+        String SOURCE = "source"; //$NON-NLS-1$
+    }
+
+    /**
+     * The schema/model types.
+     */
+    public enum Type {
+
+        /**
+         * A physical schema/model type.
+         */
+        PHYSICAL,
+
+        /**
+         * A virtual/view schema/model type.
+         */
+        VIRTUAL
     }
 
     /**
@@ -97,6 +113,11 @@ public class Schema extends VdbAdminObject {
          * The model type (like physical or virtual).
          */
         String TYPE = Schema.class.getSimpleName() + ".type"; //$NON-NLS-1$
+
+        /**
+         * Indicates if the schema/model is visible for user queries.
+         */
+        String VISIBLE = Schema.class.getSimpleName() + ".visible"; //$NON-NLS-1$
     }
 
     /**
@@ -104,12 +125,23 @@ public class Schema extends VdbAdminObject {
      */
     public static final String DEFAULT_METADATA_TYPE = "DDL"; //$NON-NLS-1$
 
+    /**
+     * The default schema/model type. Value is {@value}.
+     */
+    public static final String DEFAULT_TYPE = Type.PHYSICAL.name();
+
+    /**
+     * The default schema visibility. Value is {@value}.
+     */
+    public static final boolean DEFAULT_VISIBLE = true;
+
     private static final List<Source> NO_SOURCES = Collections.emptyList();
 
     private String metadata; // model definition written in DDL
-    private String metadataType;
+    private String metadataType = DEFAULT_METADATA_TYPE;
     private List<Source> sources;
-    private String type;
+    private String type = DEFAULT_TYPE;
+    private boolean visible = DEFAULT_VISIBLE;
 
     /**
      * Generates a property change event if the collection of schema/model sources is changed.
@@ -192,6 +224,13 @@ public class Schema extends VdbAdminObject {
     }
 
     /**
+     * @return <code>true</code> if schema is availble for use in user queries
+     */
+    public boolean isVisible() {
+        return this.visible;
+    }
+
+    /**
      * Generates a property change event if the collection of schema/model sources is changed.
      * 
      * @param sourceToDelete the schema/model source being deleted (cannot be <code>null</code>)
@@ -257,6 +296,22 @@ public class Schema extends VdbAdminObject {
 
             assert StringUtil.matches(this.type, newType);
             assert !StringUtil.matches(this.type, oldValue);
+        }
+    }
+
+    /**
+     * Generates a property change event if the schema/model visibility is changed.
+     * 
+     * @param newVisible the new schema/model visibility
+     */
+    public void setVisible(final boolean newVisible) {
+        if (this.visible != newVisible) {
+            final boolean oldValue = this.visible;
+            this.visible = newVisible;
+            firePropertyChangeEvent(PropertyName.VISIBLE, oldValue, this.visible);
+
+            assert (this.visible == newVisible);
+            assert (this.visible != oldValue);
         }
     }
 
