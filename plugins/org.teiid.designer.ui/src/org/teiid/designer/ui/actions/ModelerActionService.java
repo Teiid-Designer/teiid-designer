@@ -634,47 +634,48 @@ public final class ModelerActionService extends AbstractActionService
                             Resource resource = modelResource.getEmfResource();
                             descriptors = ModelerCore.getModelEditor().getNewRootObjectCommands(resource);
                             boolean isReadOnly = ModelUtil.isIResourceReadOnly((IResource)obj);
+                            boolean addedExtension = false;
 
-                            if ((descriptors == null) || (descriptors.isEmpty())) {
+                            // we need to sort the actions alphabetically, so put them all in a HashMap
+                            HashMap actionMap = new HashMap();
+                            Iterator iter = descriptors.iterator();
+                            while (iter.hasNext()) {
+                            	Command nextCommand = (Command)iter.next();
+                            	if( !nextCommand.getLabel().equalsIgnoreCase("schema")  //$NON-NLS-1$
+                            			&& !nextCommand.getLabel().equalsIgnoreCase("catalog") ) { //$NON-NLS-1$
+                                    NewChildAction action = new NewChildAction(resource, nextCommand);
+                                    actionMap.put(action.getText(), action);
+                                    action.selectionChanged(getWorkbenchWindow().getPartService().getActivePart(), theSelection);
+
+                                    // disable if read-only. obj should be EObject or an IResource.
+                                    action.setEnabled(!isReadOnly);
+                            	}
+                            }
+
+                            // sort the keys of the actionMap to put them in alphabetical order
+                            TreeSet set = new TreeSet(actionMap.keySet());
+                            iter = set.iterator();
+                            while (iter.hasNext()) {
+                                // add each action to the menu
+                                menu.add((IAction)actionMap.get(iter.next()));
+                            }
+                            
+                            // get the NewChildAction extensions and populate with any actions
+                            // Note: these should not be sorted - they always go on the bottom of the menu
+                            for (int i = 0; i < getNewChildExtensions().length; ++i) {
+                                INewChildAction action = getNewChildExtensions()[i];
+                                if( i == 0 ) {
+                                	menu.add(new Separator());
+                                }
+                                if (action.canCreateChild((IFile)obj)) {
+                                	addedExtension = true;
+                                    menu.add(action);
+                                    action.setEnabled(!isReadOnly);
+                                }
+                            }
+
+                            if( (descriptors.isEmpty()) && !addedExtension ) {
                                 menu.add(new NewChildAction());
-                            } else {
-                                // we need to sort the actions alphabetically, so put them all in a HashMap
-                                HashMap actionMap = new HashMap();
-                                Iterator iter = descriptors.iterator();
-                                while (iter.hasNext()) {
-                                	Command nextCommand = (Command)iter.next();
-                                	if( !nextCommand.getLabel().equalsIgnoreCase("schema")  //$NON-NLS-1$
-                                			&& !nextCommand.getLabel().equalsIgnoreCase("catalog") ) { //$NON-NLS-1$
-	                                    NewChildAction action = new NewChildAction(resource, nextCommand);
-	                                    actionMap.put(action.getText(), action);
-	                                    action.selectionChanged(getWorkbenchWindow().getPartService().getActivePart(), theSelection);
-	
-	                                    // disable if read-only. obj should be EObject or an IResource.
-	                                    action.setEnabled(!isReadOnly);
-                                	}
-                                }
-
-                                // sort the keys of the actionMap to put them in alphabetical order
-                                TreeSet set = new TreeSet(actionMap.keySet());
-                                iter = set.iterator();
-                                while (iter.hasNext()) {
-                                    // add each action to the menu
-                                    menu.add((IAction)actionMap.get(iter.next()));
-                                }
-                                
-                                // get the NewChildAction extensions and populate with any actions
-                                // Note: these should not be sorted - they always go on the bottom of the menu
-                                for (int i = 0; i < getNewChildExtensions().length; ++i) {
-                                    INewChildAction action = getNewChildExtensions()[i];
-                                    if( i == 0 ) {
-                                    	menu.add(new Separator());
-                                    }
-                                    if (action.canCreateChild((IFile)obj)) {
-                                        menu.add(action);
-                                        action.setEnabled(!isReadOnly);
-                                    }
-                                }
-
                             }
                         } else {
                             menu.add(new NewChildAction());
@@ -718,44 +719,46 @@ public final class ModelerActionService extends AbstractActionService
             try {
                 // descriptors are Commands
                 Collection commands = ModelerCore.getModelEditor().getNewSiblingCommands(eObj);
+                boolean addedExtension = false;
 
-                if ((commands != null) && (!commands.isEmpty())) {
+                // we need to sort the actions alphabetically, so put them all in a HashMap
+                if( commands != null ) {
+	                HashMap actionMap = new HashMap();
+	                Iterator iter = commands.iterator();
+	
+	                while (iter.hasNext()) {
+	                    Command cmd = (Command)iter.next();
+	                    NewSiblingAction action = new NewSiblingAction(eObj, cmd);
+	                    actionMap.put(action.getText(), action);
+	                    action.selectionChanged(getWorkbenchWindow().getPartService().getActivePart(), theSelection);
+	                    // disable if read-only
+	                    action.setEnabled(!isReadOnly);
+	                }
+	
+	                // sort the keys of the actionMap to put them in alphabetical order
+	                TreeSet set = new TreeSet(actionMap.keySet());
+	                iter = set.iterator();
+	                while (iter.hasNext()) {
+	                    // add each action to the menu
+	                    menu.add((IAction)actionMap.get(iter.next()));
+	                }
+                }
 
-                    // we need to sort the actions alphabetically, so put them all in a HashMap
-                    HashMap actionMap = new HashMap();
-                    Iterator iter = commands.iterator();
-
-                    while (iter.hasNext()) {
-                        Command cmd = (Command)iter.next();
-                        NewSiblingAction action = new NewSiblingAction(eObj, cmd);
-                        actionMap.put(action.getText(), action);
-                        action.selectionChanged(getWorkbenchWindow().getPartService().getActivePart(), theSelection);
-                        // disable if read-only
+                // get the NewSiblingAction extensions and populate with any actions
+                // Note: these should not be sorted - they always go on the bottom of the menu
+                for (int i = 0; i < getNewSiblingExtensions().length; ++i) {
+                    INewSiblingAction action = getNewSiblingExtensions()[i];
+                    if (action.canCreateSibling(eObj)) {
+                        if( i == 0 ) {
+                        	menu.add(new Separator());
+                        }
+                        menu.add(action);
+                        addedExtension = true;
                         action.setEnabled(!isReadOnly);
                     }
+                }
 
-                    // sort the keys of the actionMap to put them in alphabetical order
-                    TreeSet set = new TreeSet(actionMap.keySet());
-                    iter = set.iterator();
-                    while (iter.hasNext()) {
-                        // add each action to the menu
-                        menu.add((IAction)actionMap.get(iter.next()));
-                    }
-
-                    // get the NewSiblingAction extensions and populate with any actions
-                    // Note: these should not be sorted - they always go on the bottom of the menu
-                    for (int i = 0; i < getNewSiblingExtensions().length; ++i) {
-                        INewSiblingAction action = getNewSiblingExtensions()[i];
-                        if (action.canCreateSibling(eObj)) {
-                            if( i == 0 ) {
-                            	menu.add(new Separator());
-                            }
-                            menu.add(action);
-                            action.setEnabled(!isReadOnly);
-                        }
-                    }
-
-                } else {
+                if( commands.isEmpty() && !addedExtension ) {
                     menu.add(new NewSiblingAction());
                 }
             } catch (ModelerCoreException theException) {

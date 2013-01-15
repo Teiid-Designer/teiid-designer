@@ -76,16 +76,20 @@ public class RelationalForeignKey extends RelationalReference {
     	return clonedFK;
     }
     
-    public void inject(RelationalForeignKey originalFK) {
-    	setName(originalFK.getName());
-    	setNameInSource(originalFK.getNameInSource());
-    	setDescription(originalFK.getDescription());
-    	setForeignKeyMultiplicity(originalFK.getForeignKeyMultiplicity());
-    	setPrimaryKeyMultiplicity(originalFK.getPrimaryKeyMultiplicity());
-    	setUniqueKeyName(originalFK.getUniqueKeyName());
-    	setUniqueKeyTableName(originalFK.getUniqueKeyTableName());
-    	setModelType(originalFK.getModelType());
-    	for( RelationalColumn col : originalFK.getColumns() ) {
+    @Override
+    public void inject(RelationalReference originalFK) {
+    	super.inject(originalFK);
+    	RelationalForeignKey theFK = (RelationalForeignKey)originalFK;
+    	setName(theFK.getName());
+    	setNameInSource(theFK.getNameInSource());
+    	setDescription(theFK.getDescription());
+    	setForeignKeyMultiplicity(theFK.getForeignKeyMultiplicity());
+    	setPrimaryKeyMultiplicity(theFK.getPrimaryKeyMultiplicity());
+    	setUniqueKeyName(theFK.getUniqueKeyName());
+    	setUniqueKeyTableName(theFK.getUniqueKeyTableName());
+    	setModelType(theFK.getModelType());
+    	getColumns().clear();
+    	for( RelationalColumn col : theFK.getColumns() ) {
     		addColumn(col);
     	}
     }

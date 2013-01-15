@@ -106,4 +106,21 @@
             name="org.teiid.designer.relational.ui.actions.CreateRelationalViewAction">
       </class>
    </extension>
+   <extension
+         id="newChildRelationalIndexAction"
+         name="%newChildRelationalIndexAction"
+         point="org.teiid.designer.ui.newChildAction">
+      <class
+            name="org.teiid.designer.relational.ui.actions.CreateRelationalIndexAction">
+      </class>
+   </extension>
+
+   <extension
+         id="newSiblingRelationalIndexAction"
+         name="%newSiblingRelationalIndexAction"
+         point="org.teiid.designer.ui.newSiblingAction">
+      <class
+            name="org.teiid.designer.relational.ui.actions.CreateRelationalIndexAction">
+      </class>
+   </extension>
 </plugin>

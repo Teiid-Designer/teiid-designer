@@ -30,6 +30,16 @@ public class Messages extends NLS {
     public static String descriptionLabel;
     public static String nativeQueryLabel;
     public static String sqlLabel;
+    public static String autoUpdateLabel;
+    public static String nullableLabel;
+    public static String uniqueLabel;
+    public static String filterConditionLabel;
+    public static String referencedColumnsLabel;
+    public static String indexesLabel;
+    public static String indexLabel;
+    public static String tableSelectionTitle;
+    public static String selectExistingTableForIndexInitialMessage;
+    public static String noTableSelectedMessage;
 
     public static String baseTableActionText;
     public static String createRelationalTableTitle;
@@ -50,11 +60,19 @@ public class Messages extends NLS {
     public static String createRelationalProcedureExceptionMessage;
     public static String createRelationalProcedureHelpText;
     
+    public static String createRelationalIndexActionText;
+    public static String createRelationalIndexTitle;
+    public static String createRelationalIndexInitialMessage;
+    public static String createRelationalIndexExceptionMessage;
+    public static String createRelationalIndexHelpText;
+    public static String browseModelToSelectTableForIndexTooltipText;
+
     public static String nativeQueryHelpText;
     public static String nativeQueryNotSupportedForViews;
     public static String foreignKeysNotSupportedForViews;
     public static String primaryKeysNotSupportedForViews;
     public static String uniqueConstraintsNotSupportedForViews;
+    public static String indexesNotSupportedForViews;
 
     public static String modelFileLabel;
 
@@ -102,6 +120,10 @@ public class Messages extends NLS {
 	public static String cardinalityErrorTitle;
 	public static String cardinalityMustBeAnInteger;
 	public static String unsupportedObjectType;
+	public static String selectColumnReferencesForIndex;
+	public static String newIndexMessage;
+	public static String createIndexTitle;
+	public static String editIndexTitle;
     		
     static {
         NLS.initializeMessages("org.teiid.designer.relational.ui.messages", Messages.class); //$NON-NLS-1$

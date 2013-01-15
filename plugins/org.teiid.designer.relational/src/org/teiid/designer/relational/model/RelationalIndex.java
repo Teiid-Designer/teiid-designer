@@ -11,7 +11,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
+import org.teiid.designer.relational.Messages;
+import org.teiid.designer.relational.RelationalPlugin;
 
 
 
@@ -20,8 +25,10 @@ import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStr
  *
  * @since 8.0
  */
+@SuppressWarnings("javadoc")
 public class RelationalIndex extends RelationalReference {
-    public static final String KEY_AUTO_UPDATE = "AUTOUPDATE"; //$NON-NLS-1$
+
+	public static final String KEY_AUTO_UPDATE = "AUTOUPDATE"; //$NON-NLS-1$
     public static final String KEY_FILTER_CONDITION = "FILTERCONDITION"; //$NON-NLS-1$
     public static final String KEY_NULLABLE = "NULLABLE"; //$NON-NLS-1$
     public static final String KEY_UNIQUE = "UNIQUE"; //$NON-NLS-1$
@@ -37,6 +44,12 @@ public class RelationalIndex extends RelationalReference {
     private boolean nullable;
     private boolean unique;
     
+    private boolean existingTable;
+    private RelationalTable relationalTable;
+    
+    /**
+     * 
+     */
     public RelationalIndex() {
         super();
         setType(TYPES.INDEX);
@@ -45,13 +58,47 @@ public class RelationalIndex extends RelationalReference {
     }
     
     /**
-     * @param name
+     * @param name the index name
      */
     public RelationalIndex( String name ) {
         super(name);
         setType(TYPES.INDEX);
         this.columns = new ArrayList<RelationalColumn>();
         setNameValidator(new RelationalStringNameValidator(false, true));
+    }
+    
+    @Override
+	public RelationalIndex clone() {
+    	RelationalIndex clonedIndex = new RelationalIndex(getName());
+    	clonedIndex.setNameInSource(getNameInSource());
+    	clonedIndex.setDescription(getDescription());
+    	clonedIndex.setModelType(getModelType());
+    	clonedIndex.setUnique(isUnique());
+    	clonedIndex.setAutoUpdate(isAutoUpdate());
+    	clonedIndex.setFilterCondition(getFilterCondition());
+    	clonedIndex.setNullable(isNullable());
+    	for( RelationalColumn col : getColumns() ) {
+    		clonedIndex.addColumn(col);
+    	}
+    	return clonedIndex;
+    }
+    
+    @Override
+    public void inject(RelationalReference originalIndex) {
+    	super.inject(originalIndex);
+    	RelationalIndex theIndex = (RelationalIndex)originalIndex;
+    	setName(theIndex.getName());
+    	setNameInSource(theIndex.getNameInSource());
+    	setDescription(theIndex.getDescription());
+    	setModelType(theIndex.getModelType());
+    	setFilterCondition(theIndex.getFilterCondition());
+    	setNullable(theIndex.isNullable());
+    	setAutoUpdate(theIndex.isAutoUpdate());
+    	setUnique(theIndex.isUnique());
+    	getColumns().clear();
+    	for( RelationalColumn col : theIndex.getColumns() ) {
+    		addColumn(col);
+    	}
     }
     
     /**
@@ -61,6 +108,9 @@ public class RelationalIndex extends RelationalReference {
         return columns;
     }
 
+    /**
+     * @param column the collumn
+     */
     public void addColumn( RelationalColumn column ) {
         this.columns.add(column);
     }
@@ -112,6 +162,38 @@ public class RelationalIndex extends RelationalReference {
     public void setUnique( boolean unique ) {
         this.unique = unique;
     }
+    
+    /**
+	 * @return the existingTable
+	 */
+	public boolean usesExistingTable() {
+		return this.existingTable;
+	}
+
+	/**
+	 * @param existingTable the existingTable to set
+	 */
+	public void setUsesExistingTable(boolean usesExistingTable) {
+		this.existingTable = usesExistingTable;
+	}
+
+	/**
+	 * @return the relationalTable
+	 */
+	public RelationalTable getRelationalTable() {
+		return this.relationalTable;
+	}
+
+	/**
+	 * @param relationalTable the relationalTable to set
+	 */
+	public void setRelationalTable(RelationalTable relationalTable) {
+		this.relationalTable = relationalTable;
+	}
+
+	/**
+     * @param props the properties
+     */
     public void setProperties(Properties props) {
         for( Object key : props.keySet() ) {
             String keyStr = (String)key;
@@ -138,4 +220,42 @@ public class RelationalIndex extends RelationalReference {
             }
         }
     }
+    
+	@Override
+	public void validate() {
+		// Walk through the properties for the table and set the status
+		super.validate();
+		
+		if( getStatus().getSeverity() == IStatus.ERROR ) {
+			return;
+		}
+		
+		
+		
+		// Check Column Status values
+		for( RelationalColumn col : getColumns() ) {
+			if( col.getStatus().getSeverity() == IStatus.ERROR ) {
+				setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, col.getStatus().getMessage() ));
+				return;
+			}
+		}
+		
+		// Check Column Status values
+		for( RelationalColumn outerColumn : getColumns() ) {
+			for( RelationalColumn innerColumn : getColumns() ) {
+				if( outerColumn != innerColumn ) {
+					if( outerColumn.getName().equalsIgnoreCase(innerColumn.getName())) {
+						setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, 
+								NLS.bind(Messages.validate_error_duplicateColumnNamesReferencedInIndex, getName())));
+					}
+				}
+			}
+		}
+		
+		if( this.getColumns().isEmpty() ) {
+			setStatus(new Status(IStatus.WARNING, RelationalPlugin.PLUGIN_ID, 
+					NLS.bind(Messages.validate_warning_noColumnReferencesDefined, getName()) ));
+		}
+		
+	}
 }

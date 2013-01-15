@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.ModelerCoreException;
@@ -78,6 +79,11 @@ public class RelationalModelFactory implements RelationalConstants {
      */
     public static final RelationalFactory FACTORY = RelationalFactory.eINSTANCE;
     
+    /**
+     * 
+     */
+    public static RelationalModelFactory INSTANCE = new RelationalModelFactory();
+    
     private DatatypeProcessor datatypeProcessor;
     
     private Map<RelationalForeignKey, BaseTable> fkTableMap = new HashMap<RelationalForeignKey, BaseTable>();
@@ -130,10 +136,10 @@ public class RelationalModelFactory implements RelationalConstants {
     /**
      * Creates a relational model given a <code>IContainer</code> location (Project or Folder) and a model name
      * 
-     * @param container
-     * @param modelName
-     * @return
-     * @throws ModelWorkspaceException
+     * @param container the resource container
+     * @param modelName the model name
+     * @return the model resource
+     * @throws ModelWorkspaceException if problems creating model
      */
     public ModelResource createRelationalModel( IContainer container, String modelName) throws ModelWorkspaceException {
         IProject project = container.getProject();
@@ -148,6 +154,11 @@ public class RelationalModelFactory implements RelationalConstants {
     }
     
     
+    /**
+     * @param modelResource the model resource
+     * @param model the relational model structure
+     * @param progressMonitor progress monitor
+     */
     public void build(ModelResource modelResource, RelationalModel model, IProgressMonitor progressMonitor) {
 
         try {
@@ -169,7 +180,12 @@ public class RelationalModelFactory implements RelationalConstants {
         }
     }
     
-    
+    /**
+     * @param model the relational model structure
+     * @param modelResource the model resource
+     * @param progressMonitor progress monitor
+     * @throws ModelerCoreException if problems building model
+     */
     public void buildFullModel(RelationalModel model, ModelResource modelResource, IProgressMonitor progressMonitor) throws ModelerCoreException {
         
         progressMonitor.setTaskName(Messages.relationalModelFactory_creatingModelChildren);
@@ -226,6 +242,13 @@ public class RelationalModelFactory implements RelationalConstants {
         }
     }
     
+    /**
+     * @param obj the relational model object
+     * @param modelResource the model resource
+     * @param progressMonitor progress monitor
+     * @return the new model object
+     * @throws ModelWorkspaceException if problems building model
+     */
     public EObject buildObject( RelationalReference obj, ModelResource modelResource, IProgressMonitor progressMonitor) throws ModelWorkspaceException {
         EObject newEObject = null;
         
@@ -244,6 +267,13 @@ public class RelationalModelFactory implements RelationalConstants {
                 EObject baseTable = createBaseTable(obj, modelResource);
                 modelResource.getEmfResource().getContents().add(baseTable);
                 applyTableExtensionProperties((RelationalTable)obj, (BaseTable)baseTable);
+                
+                // In the case of the new object wizards, users can create Indexes while creating a table
+                // So just walk these and add them to the model too
+                for( RelationalIndex index : ((RelationalTable)obj).getIndexes() ) {
+                	EObject newIndex = createIndex(index, modelResource);
+                	modelResource.getEmfResource().getContents().add(newIndex);
+                }
             } break;
             case TYPES.VIEW: {
                 EObject view = createView(obj, modelResource);
@@ -269,6 +299,11 @@ public class RelationalModelFactory implements RelationalConstants {
     }
     
     
+    /**
+     * @param ref the relational model object
+     * @param modelResource the model resource
+     * @return the new object
+     */
     public EObject createBaseTable( final RelationalReference ref, ModelResource modelResource) {
         CoreArgCheck.isInstanceOf(RelationalTable.class, ref);
 
@@ -316,6 +351,11 @@ public class RelationalModelFactory implements RelationalConstants {
         return baseTable;
     }
     
+    /**
+     * @param ref the relational model object
+     * @param modelResource the model resource
+     * @return the new object
+     */
     public EObject createView( final RelationalReference ref, ModelResource modelResource) {
         CoreArgCheck.isInstanceOf(RelationalView.class, ref);
 
@@ -346,6 +386,12 @@ public class RelationalModelFactory implements RelationalConstants {
         return view;
     }
     
+    /**
+     * @param ref the relational model object
+     * @param baseTable the table
+     * @param modelResource the model resource
+     * @return the new object
+     */
     public EObject createColumn( RelationalReference ref, Table baseTable, ModelResource modelResource) {
         CoreArgCheck.isInstanceOf(RelationalColumn.class, ref);
         
@@ -395,6 +441,12 @@ public class RelationalModelFactory implements RelationalConstants {
         return column;
     }
     
+    /**
+     * @param ref the relational object
+     * @param procedureResult the procedure result set
+     * @param modelResource the model resource
+     * @return the new object
+     */
     public EObject createColumn( RelationalReference ref, ProcedureResult procedureResult, ModelResource modelResource) {
         CoreArgCheck.isInstanceOf(RelationalColumn.class, ref);
         
@@ -433,11 +485,7 @@ public class RelationalModelFactory implements RelationalConstants {
 
         }
         EObject datatype = this.datatypeProcessor.findDatatype(dType);
-//                        dType, 
-//                        columnRef.getLength(),
-//                        columnRef.getPrecision(), 
-//                        columnRef.getScale(), 
-//                        new ArrayList());
+
         if( datatype != null ) {
             column.setType(datatype);
             
@@ -622,6 +670,11 @@ public class RelationalModelFactory implements RelationalConstants {
     }
     
     
+    /**
+     * @param ref the procedure object
+     * @param modelResource the  model resource
+     * @return the object
+     */
     public EObject createProcedure( final RelationalReference ref, ModelResource modelResource) {
         CoreArgCheck.isInstanceOf(RelationalProcedure.class, ref);
 
@@ -653,6 +706,12 @@ public class RelationalModelFactory implements RelationalConstants {
         return procedure;
     }
     
+    /**
+     * @param ref the parameter object
+     * @param procedure the parent procedure
+     * @param modelResource the  model resource
+     * @return the object
+     */
     public EObject createParameter( RelationalReference ref, Procedure procedure, ModelResource modelResource) {
         CoreArgCheck.isInstanceOf(RelationalParameter.class, ref);
         
@@ -754,6 +813,12 @@ public class RelationalModelFactory implements RelationalConstants {
         }
     }
     
+    /**
+     * @param ref the result set object
+     * @param procedure the parent procedure
+     * @param modelResource the model resource
+     * @return the object
+     */
     public EObject createResultSet( RelationalReference ref, Procedure procedure, ModelResource modelResource) {
         CoreArgCheck.isInstanceOf(RelationalProcedureResultSet.class, ref);
         
@@ -777,6 +842,11 @@ public class RelationalModelFactory implements RelationalConstants {
         return result;
     }
     
+    /**
+     * @param ref the relational index object
+     * @param modelResource the model resource
+     * @return the index object
+     */
     public EObject createIndex( RelationalReference ref, ModelResource modelResource) {
         CoreArgCheck.isInstanceOf(RelationalIndex.class, ref);
         
@@ -785,6 +855,10 @@ public class RelationalModelFactory implements RelationalConstants {
         Index index = FACTORY.createIndex();
         index.setName(indexRef.getName());
         index.setNameInSource(index.getNameInSource());
+        index.setFilterCondition(indexRef.getFilterCondition());
+        index.setAutoUpdate(indexRef.isAutoUpdate());
+        index.setNullable(indexRef.isNullable());
+        index.setUnique(indexRef.isUnique());
         
         // Set Description
         if( indexRef.getDescription() != null ) {
@@ -856,6 +930,11 @@ public class RelationalModelFactory implements RelationalConstants {
         return MultiplicityKind.UNSPECIFIED_LITERAL;
     }
     
+    /**
+     * @param eObject the target object
+     * @param description the description
+     * @param modelResource the model resource
+     */
     public void createAnnotation( EObject eObject, String description, ModelResource modelResource ) {
         if (description != null && description.trim().length() > 0) {
             try {
@@ -887,5 +966,80 @@ public class RelationalModelFactory implements RelationalConstants {
             }
 
         }
+    }
+    
+    // TODO: 
+    public RelationalReference getRelationalObject(EObject eObject) {
+    	
+    	if( eObject instanceof BaseTable) {
+    		BaseTable theTable = (BaseTable)eObject;
+    		
+    		String name = ModelerCore.getModelEditor().getName(eObject);
+    		
+    		RelationalTable relTable = new RelationalTable(name);
+    		
+    		relTable.setSupportsUpdate(theTable.isSupportsUpdate());
+    		relTable.setMaterialized(theTable.isMaterialized());
+    		relTable.setNameInSource(theTable.getNameInSource());
+    		relTable.setSystem(theTable.isSystem());
+    		relTable.setCardinality(theTable.getCardinality());
+    		
+    		final EList<EObject> tableColumns = theTable.getColumns();
+            for( EObject column : tableColumns) {
+            	relTable.addColumn((RelationalColumn)getRelationalObject(column));
+            }
+    		
+    		transferDescription(theTable, relTable);
+    		
+    		return relTable;
+    	} else if( eObject instanceof View ) {
+    		
+    	} else if( eObject instanceof Procedure ) {
+    		
+    	} else if( eObject instanceof Index ) {
+    		Index theIndex = (Index)eObject;
+    		
+    		String name = ModelerCore.getModelEditor().getName(eObject);
+    		
+    		RelationalIndex relIndex = new RelationalIndex(name);
+    		relIndex.setNameInSource(theIndex.getNameInSource());
+    		relIndex.setFilterCondition(theIndex.getFilterCondition());
+    		relIndex.setAutoUpdate(theIndex.isAutoUpdate());
+    		relIndex.setNullable(theIndex.isNullable());
+    		relIndex.setUnique(theIndex.isUnique());
+            
+    		transferDescription(theIndex, relIndex);
+            
+            // Add the columns in the correct order
+            final EList<EObject> indexColumns = theIndex.getColumns();
+            for (EObject column : indexColumns ) {
+                relIndex.addColumn((RelationalColumn)getRelationalObject(column));
+            }
+    		
+    		return relIndex;
+    	} else if( eObject instanceof Column) {
+    		Column theColumn = (Column)eObject;
+    		
+        	String name = ModelerCore.getModelEditor().getName(theColumn);
+        	RelationalColumn relColumn = new RelationalColumn(name);
+            
+        	transferDescription(theColumn, relColumn);
+        	
+        	return relColumn;
+    	}
+		return null;
+    }
+    
+    private void transferDescription(EObject eObject, RelationalReference relationalRef) {
+        try {
+			// Set Description
+			String desc = ModelerCore.getModelEditor().getDescription(eObject);
+			if( desc != null ) {
+				relationalRef.setDescription(desc);
+			}
+		} catch (ModelerCoreException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
     }
 }

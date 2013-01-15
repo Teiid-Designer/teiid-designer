@@ -24,8 +24,9 @@ import org.teiid.designer.relational.RelationalPlugin;
  *
  * @since 8.0
  */
+@SuppressWarnings("javadoc")
 public class RelationalReference implements RelationalConstants {
-    public static final String KEY_NAME = "NAME"; //$NON-NLS-1$
+	public static final String KEY_NAME = "NAME"; //$NON-NLS-1$
     public static final String KEY_NAME_IN_SOURCE = "NAMEINSOURCE"; //$NON-NLS-1$
     public static final String KEY_DESCRIPTION = "DESCRIPTION"; //$NON-NLS-1$
     
@@ -48,21 +49,40 @@ public class RelationalReference implements RelationalConstants {
     
     private StringNameValidator nameValidator = new StringNameValidator();
     
+    /**
+     * 
+     */
     public RelationalReference() {
         super();
         this.processType = CREATE_ANYWAY;
         this.currentStatus = Status.OK_STATUS; 
     }
     /**
-     * @param name
+     * @param name the name of the object
      */
     public RelationalReference( String name ) {
         super();
         this.name = name;
         this.processType = CREATE_ANYWAY;
     }
+    
 
-    /**
+
+    /* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+	
+	/**
+	 * @param obj
+	 */
+	public void inject(RelationalReference obj) {
+		
+	}
+	/**
      * @return parent
      */
     public RelationalReference getParent() {
@@ -113,7 +133,7 @@ public class RelationalReference implements RelationalConstants {
         return description;
     }
     /**
-     * @param name Sets name to the specified value.
+     * @param description Sets description to the specified value.
      */
     public void setDescription( String description ) {
     	if( !StringUtilities.equals(this.description, description) ) {
@@ -122,10 +142,16 @@ public class RelationalReference implements RelationalConstants {
     	} 
     }
     
+    /**
+     * @return the model type
+     */
     public int getModelType() {
         return this.modelType;
     }
     
+    /**
+     * @param value the model type
+     */
     public void setModelType(int value) {
         this.modelType = value;
     }
@@ -144,30 +170,54 @@ public class RelationalReference implements RelationalConstants {
         
     }
     
+    /**
+     * @return the process type
+     */
     public int getProcessType() {
         return this.processType;
     }
-    
+
+    /**
+     * @param value the type of processing
+     * 
+     */
     public void setDoProcessType(int value) {
         this.processType = value;
     }
-    
+
+    /**
+     * @return the display name
+     */
     public String getDisplayName() {
     	return TYPE_NAMES[getType()];
     }
-    
+
+    /**
+     * @param status the status
+     * 
+     */
     public void setStatus(IStatus status) {
     	this.currentStatus = status;
     }
-    
+
+    /**
+     * @return the current status
+     */
     public IStatus getStatus() {
     	return this.currentStatus;
     }
-    
+
+    /**
+     * @return the string name validator
+     */
     public StringNameValidator getNameValidator() {
     	return this.nameValidator;
     }
-    
+
+    /**
+     * @param nameValidator the name validator
+     * 
+     */
     public void setNameValidator(StringNameValidator nameValidator) {
     	CoreArgCheck.isNotNull(nameValidator, "nameValidator"); //$NON-NLS-1$
     	this.nameValidator = nameValidator;
@@ -176,7 +226,10 @@ public class RelationalReference implements RelationalConstants {
     protected void handleInfoChanged() {
     	validate();
     }
-    
+
+    /**
+     * 
+     */
     public void validate() {
 		if( this.getName() == null || this.getName().trim().length() == 0 ) {
 			setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, 

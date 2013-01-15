@@ -178,11 +178,11 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 		}
 		
 		if( procedure.getNameInSource() != null ) {
-			if( WidgetUtil.widgetValueChanged(this.nameText, procedure.getNameInSource()) ) {
+			if( WidgetUtil.widgetValueChanged(this.nameInSourceText, procedure.getNameInSource()) ) {
 				this.nameInSourceText.setText(procedure.getNameInSource());
 			}
 		} else {
-			if( WidgetUtil.widgetValueChanged(this.nameText, EMPTY_STRING) ) {
+			if( WidgetUtil.widgetValueChanged(this.nameInSourceText, EMPTY_STRING) ) {
 				this.nameInSourceText.setText(EMPTY_STRING);
 			}
 		}

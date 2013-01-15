@@ -52,6 +52,7 @@ public interface RelationalConstants {
     	"Primary Key", //$NON-NLS-1$
     	"Foreign Key", //$NON-NLS-1$
     	"Unique Constraint", //$NON-NLS-1$
+    	"Access Pattern", //$NON-NLS-1$
     	"Result Set", //$NON-NLS-1$
     	"Index" //$NON-NLS-1$
     };

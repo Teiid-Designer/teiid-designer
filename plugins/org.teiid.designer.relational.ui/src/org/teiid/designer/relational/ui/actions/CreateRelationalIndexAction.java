@@ -7,11 +7,6 @@
 */
 package org.teiid.designer.relational.ui.actions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -28,14 +23,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.relational.model.RelationalIndex;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalModelFactory;
-import org.teiid.designer.relational.model.RelationalView;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.relational.ui.edit.EditRelationalObjectDialog;
-import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.actions.INewChildAction;
 import org.teiid.designer.ui.actions.INewSiblingAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -47,32 +41,19 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  *
  */
-public class CreateRelationalViewAction  extends Action implements INewChildAction, INewSiblingAction {
+public class CreateRelationalIndexAction  extends Action implements INewChildAction, INewSiblingAction {
 	private IFile selectedModel;
-	
 	/**
 	 * 
 	 */
-	public static final String TITLE = Messages.viewActionText;
-	 
-	private Collection<String> datatypes;
+	public static final String TITLE = Messages.createRelationalIndexActionText;
 	 
 	/**
 	 * 
 	 */
-	public CreateRelationalViewAction() {
+	public CreateRelationalIndexAction() {
 		super(TITLE);
-		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor( UiConstants.Images.NEW_TABLE_ICON));
-		
-		IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
-		Set<String> unsortedDatatypes = service.getAllDataTypeNames();
-		datatypes = new ArrayList<String>();
-		
-		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);
-		Arrays.sort(sortedStrings);
-		for( String dType : sortedStrings ) {
-			datatypes.add(dType);
-		}
+		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor( UiConstants.Images.NEW_INDEX_ICON));
 	}
 	
     /* (non-Javadoc)
@@ -115,8 +96,8 @@ public class CreateRelationalViewAction  extends Action implements INewChildActi
     }
     
 	/**
-	 * @param selection the current selection
-	 * @return true if applicable to the selection, else false
+	 * @param selection the selection
+	 * @return true if selection applicable
 	 */
 	public boolean isApplicable(ISelection selection) {
 		boolean result = false;
@@ -124,8 +105,7 @@ public class CreateRelationalViewAction  extends Action implements INewChildActi
 			Object obj = SelectionUtilities.getSelectedObject(selection);
 			if (obj instanceof IResource) {
 				IResource iRes = (IResource) obj;
-				if (ModelIdentifier.isRelationalSourceModel(iRes)
-						|| ModelIdentifier.isRelationshipModel(iRes)) {
+				if (ModelIdentifier.isRelationalSourceModel(iRes)) {
 					this.selectedModel = (IFile) obj;
 					result = true;
 				}
@@ -141,23 +121,22 @@ public class CreateRelationalViewAction  extends Action implements INewChildActi
 	        ModelResource mr = ModelUtilities.getModelResource(selectedModel);
 	        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
 	        
-	        RelationalView table = new RelationalView();
-	        table.setSupportsUpdate(true);
+	        RelationalIndex index = new RelationalIndex();
 	        
 	        // Hand the table off to the generic edit dialog
-	        EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, table, selectedModel);
+	        EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, index, selectedModel);
 	        
 	        dialog.open();
 	        
 	        if (dialog.getReturnCode() == Window.OK) {
-	        	createTableInTxn(mr, table);
+	        	createIndexInTxn(mr, index);
 	        }
 		}
 		
 	}
 
-    private void createTableInTxn(ModelResource modelResource, RelationalView view) {
-        boolean requiredStart = ModelerCore.startTxn(true, true, Messages.createRelationalViewTitle, this);
+    private void createIndexInTxn(ModelResource modelResource, RelationalIndex index) {
+        boolean requiredStart = ModelerCore.startTxn(true, true, Messages.createRelationalProcedureTitle, this);
         boolean succeeded = false;
         try {
             ModelEditor editor = ModelEditorManager.getModelEditorForFile((IFile)modelResource.getCorrespondingResource(), true);
@@ -167,10 +146,9 @@ public class CreateRelationalViewAction  extends Action implements INewChildActi
                 RelationalModelFactory factory = new RelationalModelFactory();
                 
                 RelationalModel relModel = new RelationalModel("dummy"); //$NON-NLS-1$
-                relModel.addChild(view);
+                relModel.addChild(index);
                 
                 factory.build(modelResource, relModel, new NullProgressMonitor());
-    	        //factory.buildObject(table, modelResource, new NullProgressMonitor());
 
                 if (!isDirty && editor.isDirty()) {
                     editor.doSave(new NullProgressMonitor());
@@ -178,8 +156,8 @@ public class CreateRelationalViewAction  extends Action implements INewChildActi
                 succeeded = true;
             }
         } catch (Exception e) {
-        	MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.createRelationalViewExceptionMessage, e.getMessage());
-            IStatus status = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, Messages.createRelationalViewExceptionMessage, e);
+        	MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.createRelationalIndexExceptionMessage, e.getMessage());
+            IStatus status = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, Messages.createRelationalIndexExceptionMessage, e);
             UiConstants.Util.log(status);
 
             return;
@@ -195,4 +173,3 @@ public class CreateRelationalViewAction  extends Action implements INewChildActi
         }
     }
 }
-

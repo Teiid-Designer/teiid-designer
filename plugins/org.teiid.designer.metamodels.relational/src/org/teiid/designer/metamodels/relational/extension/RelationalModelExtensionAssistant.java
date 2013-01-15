@@ -103,7 +103,10 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
 
         if (propDefn != null) {
         	boolean isPhysical = ModelUtil.isPhysical(modelObject);
-        	boolean isFunction = ((Procedure)modelObject).isFunction();
+        	boolean isFunction = false;
+        	if( modelObject instanceof Procedure ) {
+        		isFunction = ((Procedure)modelObject).isFunction();
+        	}
         	
             // must be a table or a procedure in a physical model to have these properties
             if (PropertyName.same(PropertyName.NATIVE_QUERY, propId)) {

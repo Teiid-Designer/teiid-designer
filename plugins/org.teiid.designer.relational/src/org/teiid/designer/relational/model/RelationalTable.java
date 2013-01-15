@@ -49,6 +49,7 @@ public class RelationalTable extends RelationalReference {
     private RelationalUniqueConstraint uniqueContraint;
     private Collection<RelationalAccessPattern> accessPatterns;
     private Collection<RelationalForeignKey> foreignKeys;
+    private Collection<RelationalIndex> indexes;
     private String nativeQuery;
     
     
@@ -70,6 +71,7 @@ public class RelationalTable extends RelationalReference {
         this.columns = new ArrayList<RelationalColumn>();
         this.accessPatterns = new ArrayList<RelationalAccessPattern>();
         this.foreignKeys = new ArrayList<RelationalForeignKey>();
+        this.indexes = new ArrayList<RelationalIndex>();
         setNameValidator(new RelationalStringNameValidator(true, true));
     }
     
@@ -268,6 +270,36 @@ public class RelationalTable extends RelationalReference {
     
     public boolean removeForeignKey(RelationalForeignKey fk) {
     	if( this.foreignKeys.remove(fk) ) {
+    		handleInfoChanged();
+    		return true;
+    	}
+    	return false;
+    }
+    
+    /**
+     * @return indexes
+     */
+    public Collection<RelationalIndex> getIndexes() {
+        return indexes;
+    }
+
+    /**
+     * @param index the index
+     */
+    public void addIndex(RelationalIndex index) {
+    	if( this.indexes.add(index) ) {
+    		// NOTE: indexes are children of a schema so set parent to table's parent
+    		index.setParent(this.getParent());
+    		handleInfoChanged();
+    	}
+    }
+    
+    /**
+     * @param index the index
+     * @return if index was removed
+     */
+    public boolean removeIndex(RelationalIndex index) {
+    	if( this.indexes.remove(index) ) {
     		handleInfoChanged();
     		return true;
     	}

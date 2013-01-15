@@ -41,6 +41,8 @@ public class Messages extends NLS {
 	public static String validate_warning_noParametersDefined;
 	public static String validate_error_invalidParameterDirectionInFunction;
 	public static String validate_error_tooManyResultParametersInFunction;
+	public static String validate_error_duplicateColumnNamesReferencedInIndex;
+	public static String validate_warning_noColumnReferencesDefined;
 
     static {
         NLS.initializeMessages("org.teiid.designer.relational.messages", Messages.class); //$NON-NLS-1$

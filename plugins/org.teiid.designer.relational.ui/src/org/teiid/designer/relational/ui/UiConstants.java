@@ -91,6 +91,7 @@ public interface UiConstants {
         String VIRTUAL_RESULT_SET_ICON = OBJ16 + "virtual-result-set.png"; //$NON-NLS-1$
         String VIRTUAL_RESULT_SET_ERROR_ICON = OBJ16 + "virtual-result-set-error.png"; //$NON-NLS-1$
         String VIRTUAL_RESULT_SET_WARNING_ICON = OBJ16 + "virtual-result-set-warning.png"; //$NON-NLS-1$
+        String NEW_INDEX_ICON = OBJ16 + "new-relational-index.png"; //$NON-NLS-1$
         String INDEX_ICON = OBJ16 + "index.png"; //$NON-NLS-1$
         String INDEX_ERROR_ICON = OBJ16 + "index-error.png"; //$NON-NLS-1$
         String INDEX_WARNING_ICON = OBJ16 + "index-warning.png"; //$NON-NLS-1$

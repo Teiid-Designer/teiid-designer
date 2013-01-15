@@ -31,7 +31,6 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalModelFactory;
 import org.teiid.designer.relational.model.RelationalProcedure;
-import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
@@ -114,6 +113,10 @@ public class CreateRelationalProcedureAction extends Action implements INewChild
     	return false;
     }
     
+	/**
+	 * @param selection the selected object
+	 * @return if applicable to selection
+	 */
 	public boolean isApplicable(ISelection selection) {
 		boolean result = false;
 		if (!SelectionUtilities.isMultiSelection(selection)) {
