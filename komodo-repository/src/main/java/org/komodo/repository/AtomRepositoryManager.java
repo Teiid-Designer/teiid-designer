@@ -8,23 +8,11 @@
 package org.komodo.repository;
 
 import java.io.InputStream;
-import org.jboss.resteasy.spi.Registry;
-import org.jboss.resteasy.spi.ResteasyDeployment;
-import org.jboss.resteasy.spi.ResteasyProviderFactory;
-import org.jboss.resteasy.test.EmbeddedContainer;
 import org.komodo.common.util.Precondition;
+import org.komodo.common.util.StringUtil;
 import org.komodo.repository.artifact.Artifact.Type;
 import org.komodo.repository.deriver.DeriverUtil;
 import org.overlord.sramp.ArtifactType;
-import org.overlord.sramp.atom.providers.HttpResponseProvider;
-import org.overlord.sramp.atom.providers.OntologyProvider;
-import org.overlord.sramp.atom.providers.SrampAtomExceptionProvider;
-import org.overlord.sramp.atom.services.ArtifactResource;
-import org.overlord.sramp.atom.services.BatchResource;
-import org.overlord.sramp.atom.services.FeedResource;
-import org.overlord.sramp.atom.services.OntologyResource;
-import org.overlord.sramp.atom.services.QueryResource;
-import org.overlord.sramp.atom.services.ServiceDocumentResource;
 import org.overlord.sramp.client.SrampAtomApiClient;
 import org.overlord.sramp.client.query.ArtifactSummary;
 import org.overlord.sramp.client.query.QueryResultSet;
@@ -35,19 +23,36 @@ import org.slf4j.LoggerFactory;
 /**
  * A repository manager that uses the S-RAMP atom interface.
  */
-public class AtomRepositoryManager implements RepositoryManager {
+class AtomRepositoryManager implements RepositoryManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AtomRepositoryManager.class);
 
     private final SrampAtomApiClient client;
 
+    private String name;
+
+    private final String url;
+
     /**
      * @param url the URL to the S-RAMP server (cannot be <code>null</code> or empty)
+     * @throws Exception if there is a problem connecting to the server
      */
-    public AtomRepositoryManager(final String url) {
+    AtomRepositoryManager(final String url) throws Exception {
+        this(url, true);
+    }
+
+    /**
+     * @param url the URL to the S-RAMP server (cannot be <code>null</code> or empty)
+     * @param connect <code>true</code> if a connection to the repository should be made at construction
+     * @throws Exception if there is a problem connecting to the server
+     */
+    AtomRepositoryManager(final String url,
+                          final boolean connect) throws Exception {
         Precondition.notEmpty(url, "url"); //$NON-NLS-1$
         LOGGER.debug("Constructing repository manager with url '{}'", url); //$NON-NLS-1$
-        this.client = new SrampAtomApiClient(url);
+
+        this.client = new SrampAtomApiClient(url, connect);
+        this.url = url;
     }
 
     /**
@@ -96,34 +101,34 @@ public class AtomRepositoryManager implements RepositoryManager {
 
     /**
      * {@inheritDoc}
+     * <p>
+     * Returns URL if no name is set.
      *
-     * @see org.komodo.repository.RepositoryManager#shutdown()
+     * @see org.komodo.repository.RepositoryManager#getName()
      */
     @Override
-    public void shutdown() throws Exception {
-        // TODO figure out what to do here
+    public String getName() {
+        return (StringUtil.isEmpty(this.name) ? this.url : this.name);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see org.komodo.repository.RepositoryManager#start()
+     * @see org.komodo.repository.RepositoryManager#getUrl()
      */
     @Override
-    public void start() throws Exception {
-        final ResteasyDeployment deployment = EmbeddedContainer.start();
-        final Registry registry = deployment.getRegistry();
-        registry.addPerRequestResource(ServiceDocumentResource.class);
-        registry.addPerRequestResource(ArtifactResource.class);
-        registry.addPerRequestResource(FeedResource.class);
-        registry.addPerRequestResource(QueryResource.class);
-        registry.addPerRequestResource(BatchResource.class);
-        registry.addPerRequestResource(OntologyResource.class);
+    public String getUrl() {
+        return this.url;
+    }
 
-        final ResteasyProviderFactory providerFactory = deployment.getProviderFactory();
-        providerFactory.registerProvider(SrampAtomExceptionProvider.class);
-        providerFactory.registerProvider(HttpResponseProvider.class);
-        providerFactory.registerProvider(OntologyProvider.class);
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.komodo.repository.RepositoryManager#setName(java.lang.String)
+     */
+    @Override
+    public void setName(String newName) {
+        this.name = newName;
     }
 
 }
