@@ -33,13 +33,13 @@
    </requires>
 
    <plugin
-         id="org.teiid.8-2"
+         id="org.teiid.8.2.x"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="org.teiid.7-7-2"
+         id="org.teiid.7.7.x"
          download-size="0"
          install-size="0"
          version="0.0.0"/>

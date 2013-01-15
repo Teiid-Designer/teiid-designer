@@ -13,8 +13,8 @@
 	<version>0.0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
-		<module>org.teiid.8-2</module>
-		<module>org.teiid.7-7-2</module>
+		<module>org.teiid.7.7.x</module>
+		<module>org.teiid.8.2.x</module>
 	</modules>
 </project>
 	
