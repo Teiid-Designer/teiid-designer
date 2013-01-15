@@ -10,11 +10,25 @@ package org.komodo.repository;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import java.io.InputStream;
+import org.jboss.resteasy.spi.Registry;
+import org.jboss.resteasy.spi.ResteasyDeployment;
+import org.jboss.resteasy.spi.ResteasyProviderFactory;
+import org.jboss.resteasy.test.EmbeddedContainer;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.komodo.common.util.Precondition;
 import org.overlord.sramp.SrampModelUtils;
+import org.overlord.sramp.atom.providers.HttpResponseProvider;
+import org.overlord.sramp.atom.providers.OntologyProvider;
+import org.overlord.sramp.atom.providers.SrampAtomExceptionProvider;
+import org.overlord.sramp.atom.services.ArtifactResource;
+import org.overlord.sramp.atom.services.BatchResource;
+import org.overlord.sramp.atom.services.FeedResource;
+import org.overlord.sramp.atom.services.OntologyResource;
+import org.overlord.sramp.atom.services.QueryResource;
+import org.overlord.sramp.atom.services.ServiceDocumentResource;
+import org.overlord.sramp.repository.PersistenceFactory;
 import org.overlord.sramp.repository.jcr.JCRRepository;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 
@@ -25,22 +39,40 @@ import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 public abstract class RepositoryTest implements RepositoryConstants {
 
     protected static RepositoryManager _repoMgr;
-    private static boolean _started;
 
     @BeforeClass
-    public static void setupEnvironment() throws Exception {
-        System.setProperty(RepositoryManager.MODESHAPE_CONFIG_URL, "classpath://" + JCRRepository.class.getName()
-                                                                   + "/META-INF/modeshape-configs/inmemory-sramp-config.json");
+    public static void startRepository() throws Exception {
+        System.setProperty(CleanableRepositoryManager.MODESHAPE_CONFIG_URL_SYS_PROP,
+                           "classpath://" + JCRRepository.class.getName()
+                           + "/META-INF/modeshape-configs/inmemory-sramp-config.json");
+
+        if (System.getProperty(CleanableRepositoryManager.SERVER_PORT_SYS_PROP) == null) {
+            System.setProperty(CleanableRepositoryManager.SERVER_PORT_SYS_PROP,
+                               Integer.toString(CleanableRepositoryManager.DEFAULT_SERVER_PORT));
+        }
+
+        final ResteasyDeployment deployment = EmbeddedContainer.start();
+        final Registry registry = deployment.getRegistry();
+        registry.addPerRequestResource(ServiceDocumentResource.class);
+        registry.addPerRequestResource(ArtifactResource.class);
+        registry.addPerRequestResource(FeedResource.class);
+        registry.addPerRequestResource(QueryResource.class);
+        registry.addPerRequestResource(BatchResource.class);
+        registry.addPerRequestResource(OntologyResource.class);
+
+        final ResteasyProviderFactory providerFactory = deployment.getProviderFactory();
+        providerFactory.registerProvider(SrampAtomExceptionProvider.class);
+        providerFactory.registerProvider(HttpResponseProvider.class);
+        providerFactory.registerProvider(OntologyProvider.class);
+
         _repoMgr = new CleanableRepositoryManager();
-        _repoMgr.start();
-        _started = true;
     }
 
     @AfterClass
     public static void shutdownRepository() throws Exception {
-        if (_started) {
-            _repoMgr.shutdown();
-            _started = false;
+        if (_repoMgr != null) {
+            EmbeddedContainer.stop();
+            PersistenceFactory.newInstance().shutdown();
         }
     }
 
