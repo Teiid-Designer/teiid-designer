@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid772.runtime;
+package org.teiid82.runtime;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -29,7 +29,6 @@ import org.teiid.adminapi.Translator;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
-import org.teiid772.runtime.TeiidTranslator;
 
 /**
  * 
@@ -347,8 +346,8 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldBeEqualWhenSameNameSameServer() {
         // setup
-    	Translator thisBinding = MockObjectFactory.createTranslator(TRANSLATOR_NAME, TRANSLATOR_TYPE_NAME);
-    	Translator thatBinding = MockObjectFactory.createTranslator(TRANSLATOR_NAME, TRANSLATOR_TYPE_NAME);
+        Translator thisBinding = MockObjectFactory.createTranslator(TRANSLATOR_NAME, TRANSLATOR_TYPE_NAME);
+        Translator thatBinding = MockObjectFactory.createTranslator(TRANSLATOR_NAME, TRANSLATOR_TYPE_NAME);
 
         ITeiidTranslator thisTranslator = new TeiidTranslator(thisBinding, PROP_DEFS, teiidServer);
         ITeiidTranslator thatTranslator = new TeiidTranslator(thatBinding, PROP_DEFS, teiidServer);
@@ -383,8 +382,8 @@ public class TeiidTranslatorTest {
     @Test
     public void shouldHaveSameHashcodeIfEquals() {
         // setup
-    	Translator thisBinding = MockObjectFactory.createTranslator(TRANSLATOR_NAME, TRANSLATOR_TYPE_NAME);
-    	Translator thatBinding = MockObjectFactory.createTranslator(TRANSLATOR_NAME, TRANSLATOR_TYPE_NAME);
+        Translator thisBinding = MockObjectFactory.createTranslator(TRANSLATOR_NAME, TRANSLATOR_TYPE_NAME);
+        Translator thatBinding = MockObjectFactory.createTranslator(TRANSLATOR_NAME, TRANSLATOR_TYPE_NAME);
 
         ITeiidTranslator thisTranslator = new TeiidTranslator(thisBinding, PROP_DEFS, teiidServer);
         ITeiidTranslator thatTranslator = new TeiidTranslator(thatBinding, PROP_DEFS, teiidServer);

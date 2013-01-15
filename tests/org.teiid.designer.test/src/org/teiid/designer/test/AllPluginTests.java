@@ -10,17 +10,16 @@ package org.teiid.designer.test;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Enumeration;
-
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+import org.mockito.configuration.MockitoConfiguration;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.teiid.designer.test.AllPluginTests.PluginTestGatherer;
@@ -35,6 +34,10 @@ public class AllPluginTests {
 
     public static class PluginTestGatherer extends TestSuite {
         public static Test suite() {
+            
+            // Turn off mockito's objenesis cache as it can return the
+            // wrong Admin interface in the runtime client tests
+            MockitoConfiguration.setEnableClassCache(false);
 
             TestSuite aggregateSuite = new TestSuite(ALL_PLUGIN_TESTS);
 
