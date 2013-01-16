@@ -86,12 +86,12 @@ public class DataPolicy extends VdbObject implements Describable {
         /**
          * A collection of role names.
          */
-        String ROLE_NAMES = DataPolicy.class.getSimpleName() + ".anyAuthenticated"; //$NON-NLS-1$
+        String ROLE_NAMES = DataPolicy.class.getSimpleName() + ".roleNames"; //$NON-NLS-1$
 
         /**
          * Indicates if data policy can create temp tables.
          */
-        String TEMP_TABLE_CREATABLE = DataPolicy.class.getSimpleName() + ".anyAuthenticated"; //$NON-NLS-1$
+        String TEMP_TABLE_CREATABLE = DataPolicy.class.getSimpleName() + ".tempTableCreatable"; //$NON-NLS-1$
     }
 
     private static final List<Permission> NO_PERMISSIONS = Collections.emptyList();

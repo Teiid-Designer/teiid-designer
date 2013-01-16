@@ -8,6 +8,7 @@
 package org.komodo.teiid.model.vdb;
 
 import org.komodo.common.util.HashCode;
+import org.komodo.common.util.StringUtil;
 
 /**
  * The Teiid data policy permission business object.
@@ -25,6 +26,11 @@ public class Permission extends VdbObject {
         String ALTERABLE = "allow-alter"; //$NON-NLS-1$
 
         /**
+         * The condition element identifier.
+         */
+        String CONDITION = "condition"; //$NON-NLS-1$
+
+        /**
          * The allow create element identifier.
          */
         String CREATABLE = "allow-create"; //$NON-NLS-1$
@@ -38,6 +44,11 @@ public class Permission extends VdbObject {
          * The allow execute element identifier.
          */
         String EXECUTABLE = "allow-execute"; //$NON-NLS-1$
+
+        /**
+         * The allow language element identifier.
+         */
+        String LANGUAGABLE = "allow-language"; //$NON-NLS-1$
 
         /**
          * The allow read element identifier.
@@ -66,6 +77,11 @@ public class Permission extends VdbObject {
         String ALTERABLE = Permission.class.getSimpleName() + ".alterable"; //$NON-NLS-1$
 
         /**
+         * The optional permission condition.
+         */
+        String CONDITION = Permission.class.getSimpleName() + ".condition"; //$NON-NLS-1$
+
+        /**
          * Indicates if the permission resource is creatable.
          */
         String CREATABLE = Permission.class.getSimpleName() + ".creatable"; //$NON-NLS-1$
@@ -81,6 +97,11 @@ public class Permission extends VdbObject {
         String EXECUTABLE = Permission.class.getSimpleName() + ".executable"; //$NON-NLS-1$
 
         /**
+         * Indicates if the permission resource allows language.
+         */
+        String LANGUAGABLE = Permission.class.getSimpleName() + ".languagable"; //$NON-NLS-1$
+
+        /**
          * Indicates if the permission resource is readable.
          */
         String READABLE = Permission.class.getSimpleName() + ".readable"; //$NON-NLS-1$
@@ -92,9 +113,11 @@ public class Permission extends VdbObject {
     }
 
     private boolean alterable;
+    private String condition;
     private boolean creatable;
     private boolean deletable;
     private boolean executable;
+    private boolean languagable;
     private boolean readable;
     private boolean updatable;
 
@@ -131,9 +154,11 @@ public class Permission extends VdbObject {
 
             // @formatter:off
             return ((this.alterable == thatPermission.alterable)
+                   && (StringUtil.matches(this.condition, thatPermission.condition))
                    && (this.creatable == thatPermission.creatable)
                    && (this.deletable == thatPermission.deletable)
                    && (this.executable == thatPermission.executable)
+                   && (this.languagable == thatPermission.languagable)
                    && (this.readable == thatPermission.readable)
                    && (this.updatable == thatPermission.updatable));
             // @formatter:on
@@ -147,6 +172,13 @@ public class Permission extends VdbObject {
      */
     public boolean executable() {
         return this.executable;
+    }
+
+    /**
+     * @return the condition (can be <code>null</code> or empty)
+     */
+    public String getCondition() {
+        return this.condition;
     }
 
     /**
@@ -166,11 +198,20 @@ public class Permission extends VdbObject {
     public int hashCode() {
         return HashCode.compute(super.hashCode(),
                                 this.alterable,
+                                this.condition,
                                 this.creatable,
                                 this.deletable,
+                                this.languagable,
                                 this.executable,
                                 this.readable,
                                 this.updatable);
+    }
+
+    /**
+     * @return <code>true</code> if permission resource allows language
+     */
+    public boolean languagable() {
+        return this.languagable;
     }
 
     /**
@@ -193,6 +234,22 @@ public class Permission extends VdbObject {
 
             assert (this.alterable == newAlterable);
             assert (this.alterable != oldValue);
+        }
+    }
+
+    /**
+     * Generates a property change event if the condition is changed.
+     * 
+     * @param newCondition the new condition (can be <code>null</code> or empty)
+     */
+    public void setCondition(final String newCondition) {
+        if (!StringUtil.matches(this.condition, newCondition)) {
+            final String oldValue = this.condition;
+            this.condition = newCondition;
+            firePropertyChangeEvent(PropertyName.CONDITION, oldValue, this.condition);
+
+            assert StringUtil.matches(this.condition, newCondition);
+            assert !StringUtil.matches(this.condition, oldValue);
         }
     }
 
@@ -241,6 +298,22 @@ public class Permission extends VdbObject {
 
             assert (this.executable == newExecutable);
             assert (this.executable != oldValue);
+        }
+    }
+
+    /**
+     * Generates a property change event if the allows language flag is changed.
+     * 
+     * @param newLanguagable the new allows language value
+     */
+    public void setLanguagable(final boolean newLanguagable) {
+        if (this.languagable != newLanguagable) {
+            final boolean oldValue = this.languagable;
+            this.languagable = newLanguagable;
+            firePropertyChangeEvent(PropertyName.LANGUAGABLE, oldValue, this.languagable);
+
+            assert (this.languagable == newLanguagable);
+            assert (this.languagable != oldValue);
         }
     }
 

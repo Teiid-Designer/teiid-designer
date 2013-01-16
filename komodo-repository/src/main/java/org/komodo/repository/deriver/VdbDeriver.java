@@ -112,17 +112,8 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                     SrampModelUtils.setCustomProperty(dataPolicyArtifact, DataPolicy.PropertyName.TEMP_TABLE_CREATABLE, creatable);
                 }
 
-                { // description
-                    final Element element = (Element)query(xpath,
-                                                           dataPolicy,
-                                                           DeriverUtil.getElementQueryString(DataPolicy.ManifestId.DESCRIPTION),
-                                                           XPathConstants.NODE);
-
-                    if (element != null) {
-                        final String description = element.getTextContent();
-                        dataPolicyArtifact.setDescription(description);
-                    }
-                }
+                // description
+                setDescriptionFromElementValue(dataPolicy, DataPolicy.ManifestId.DESCRIPTION, dataPolicyArtifact, xpath);
 
                 { // mapped role names
                     final NodeList roleNames = (NodeList)query(xpath,
@@ -179,54 +170,74 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                                      dataPolicyArtifact.getName());
 
                         for (int permissionIndex = 0, numPermissions = permissions.getLength(); permissionIndex < numPermissions; ++permissionIndex) {
-                            final Element permisson = (Element)permissions.item(permissionIndex);
+                            final Element permission = (Element)permissions.item(permissionIndex);
                             final UserDefinedArtifactType permissionArtifact = ArtifactFactory.create(Artifact.Type.PERMISSION);
                             derivedArtifacts.add(permissionArtifact);
 
                             { // resource name
-                                final String resourceName = permisson.getAttribute(Permission.ManifestId.RESOURCE_NAME);
+                                final Element element = (Element)query(xpath,
+                                                                       permission,
+                                                                       DeriverUtil.getElementQueryString(Permission.ManifestId.RESOURCE_NAME),
+                                                                       XPathConstants.NODE);
+                                final String resourceName = element.getTextContent();
                                 permissionArtifact.setName(resourceName);
                             }
 
-                            { // alterable
-                                final String alterable = permisson.getAttribute(Permission.ManifestId.ALTERABLE);
-                                SrampModelUtils.setCustomProperty(permissionArtifact,
-                                                                  Permission.PropertyName.ALTERABLE,
-                                                                  alterable);
-                            }
+                            // alterable
+                            setPropertyFromElementValue(permission,
+                                                        Permission.ManifestId.ALTERABLE,
+                                                        permissionArtifact,
+                                                        Permission.PropertyName.ALTERABLE,
+                                                        xpath);
 
-                            { // creatable
-                                final String creatable = permisson.getAttribute(Permission.ManifestId.CREATABLE);
-                                SrampModelUtils.setCustomProperty(permissionArtifact,
-                                                                  Permission.PropertyName.CREATABLE,
-                                                                  creatable);
-                            }
+                            // condition
+                            setPropertyFromElementValue(permission,
+                                                        Permission.ManifestId.CONDITION,
+                                                        permissionArtifact,
+                                                        Permission.PropertyName.CONDITION,
+                                                        xpath);
 
-                            { // deletable
-                                final String deletable = permisson.getAttribute(Permission.ManifestId.DELETABLE);
-                                SrampModelUtils.setCustomProperty(permissionArtifact,
-                                                                  Permission.PropertyName.DELETABLE,
-                                                                  deletable);
-                            }
+                            // creatable
+                            setPropertyFromElementValue(permission,
+                                                        Permission.ManifestId.CREATABLE,
+                                                        permissionArtifact,
+                                                        Permission.PropertyName.CREATABLE,
+                                                        xpath);
 
-                            { // executable
-                                final String executable = permisson.getAttribute(Permission.ManifestId.EXECUTABLE);
-                                SrampModelUtils.setCustomProperty(permissionArtifact,
-                                                                  Permission.PropertyName.EXECUTABLE,
-                                                                  executable);
-                            }
+                            // deletable
+                            setPropertyFromElementValue(permission,
+                                                        Permission.ManifestId.DELETABLE,
+                                                        permissionArtifact,
+                                                        Permission.PropertyName.DELETABLE,
+                                                        xpath);
 
-                            { // readable
-                                final String readable = permisson.getAttribute(Permission.ManifestId.READABLE);
-                                SrampModelUtils.setCustomProperty(permissionArtifact, Permission.PropertyName.READABLE, readable);
-                            }
+                            // executable
+                            setPropertyFromElementValue(permission,
+                                                        Permission.ManifestId.EXECUTABLE,
+                                                        permissionArtifact,
+                                                        Permission.PropertyName.EXECUTABLE,
+                                                        xpath);
 
-                            { // updatable
-                                final String updatable = permisson.getAttribute(Permission.ManifestId.UPDATABLE);
-                                SrampModelUtils.setCustomProperty(permissionArtifact,
-                                                                  Permission.PropertyName.UPDATABLE,
-                                                                  updatable);
-                            }
+                            // languagable
+                            setPropertyFromElementValue(permission,
+                                                        Permission.ManifestId.LANGUAGABLE,
+                                                        permissionArtifact,
+                                                        Permission.PropertyName.LANGUAGABLE,
+                                                        xpath);
+
+                            // readable
+                            setPropertyFromElementValue(permission,
+                                                        Permission.ManifestId.READABLE,
+                                                        permissionArtifact,
+                                                        Permission.PropertyName.READABLE,
+                                                        xpath);
+
+                            // updatable
+                            setPropertyFromElementValue(permission,
+                                                        Permission.ManifestId.UPDATABLE,
+                                                        permissionArtifact,
+                                                        Permission.PropertyName.UPDATABLE,
+                                                        xpath);
 
                             if (LOGGER.isDebugEnabled()) {
                                 LOGGER.debug("permission resource name '{}'", permissionArtifact.getName()); //$NON-NLS-1$
@@ -273,10 +284,8 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                     entryArtifact.setName(path);
                 }
 
-                { // description
-                    final String description = entry.getAttribute(Entry.ManifestId.DESCRIPTION);
-                    entryArtifact.setDescription(description);
-                }
+                // description
+                setDescriptionFromElementValue(entry, Entry.ManifestId.DESCRIPTION, entryArtifact, xpath);
 
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug("entry path '{}'", entryArtifact.getName()); //$NON-NLS-1$
@@ -338,17 +347,8 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                     schemaArtifact.setName(path);
                 }
 
-                { // description
-                    final Element element = (Element)query(xpath,
-                                                           schema,
-                                                           DeriverUtil.getElementQueryString(Schema.ManifestId.DESCRIPTION),
-                                                           XPathConstants.NODE);
-
-                    if (element != null) {
-                        final String description = element.getTextContent();
-                        schemaArtifact.setDescription(description);
-                    }
-                }
+                // description
+                setDescriptionFromElementValue(schema, Schema.ManifestId.DESCRIPTION, schemaArtifact, xpath);
 
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug("schema name '{}'", schemaArtifact.getName()); //$NON-NLS-1$
@@ -357,7 +357,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
                 { // visible
                     final String visible = schema.getAttribute(Schema.ManifestId.Attributes.VISIBLE);
-                    SrampModelUtils.setCustomProperty(schemaArtifact, Schema.PropertyName.TYPE, visible);
+                    SrampModelUtils.setCustomProperty(schemaArtifact, Schema.PropertyName.VISIBLE, visible);
                 }
 
                 { // type
@@ -371,19 +371,15 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                 }
 
                 { // metadata
-                    final Element element = (Element)query(xpath,
-                                                           schema,
-                                                           DeriverUtil.getElementQueryString(Schema.ManifestId.METADATA),
-                                                           XPathConstants.NODE);
+                    final Element element = setPropertyFromElementValue(schema,
+                                                                        Schema.ManifestId.METADATA,
+                                                                        schemaArtifact,
+                                                                        Schema.PropertyName.METADATA,
+                                                                        xpath);
 
                     if (element != null) {
-                        final String metadata = element.getTextContent();
-                        SrampModelUtils.setCustomProperty(schemaArtifact, Schema.PropertyName.METADATA, metadata);
-
-                        { // metadata type
-                            final String metadataType = element.getAttribute(Schema.ManifestId.MetadataAttributes.TYPE);
-                            SrampModelUtils.setCustomProperty(schemaArtifact, Schema.PropertyName.METADATA_TYPE, metadataType);
-                        }
+                        final String metadataType = element.getAttribute(Schema.ManifestId.MetadataAttributes.TYPE);
+                        SrampModelUtils.setCustomProperty(schemaArtifact, Schema.PropertyName.METADATA_TYPE, metadataType);
                     }
                 }
 
@@ -493,38 +489,16 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
             vdbArtifact.setName(name);
         }
 
-        { // description
-            final Element element = (Element)query(xpath,
-                                                   vdb,
-                                                   DeriverUtil.getElementQueryString(Vdb.ManifestId.DESCRIPTION),
-                                                   XPathConstants.NODE);
+        // description
+        setDescriptionFromElementValue(vdb, Vdb.ManifestId.DESCRIPTION, vdbArtifact, xpath);
 
-            if (element != null) {
-                final String description = element.getTextContent();
-                vdbArtifact.setDescription(description);
-            }
-        }
-
-        { // version
-            String version = vdb.getAttribute(Vdb.ManifestId.Attributes.VERSION);
-
-            if (StringUtil.isEmpty(version)) {
-                version = Integer.toString(Vdb.DEFAULT_VERSION);
-            } else {
-                try {
-                    Integer.parseInt(version);
-                } catch (final Exception e) {
-                    version = Integer.toString(Vdb.DEFAULT_VERSION);
-                }
-            }
-
-            vdbArtifact.setVersion(version);
-        }
+        // version
+        setVersionFromAttribueValue(vdb, Vdb.ManifestId.Attributes.VERSION, vdbArtifact, xpath);
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("VDB name '{}'", vdbArtifact.getName()); //$NON-NLS-1$
             LOGGER.debug("VDB description '{}'", vdbArtifact.getDescription()); //$NON-NLS-1$
-            LOGGER.debug("VDB verson '{}'", vdbArtifact.getVersion()); //$NON-NLS-1$
+            LOGGER.debug("VDB version '{}'", vdbArtifact.getVersion()); //$NON-NLS-1$
         }
 
         processProperties(vdbArtifact, vdb, xpath);
@@ -559,24 +533,16 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                     vdbImportArtifact.setName(name);
                 }
 
-                { // version
-                    String version = vdbImport.getAttribute(ImportVdb.ManifestId.Attributes.VERSION);
-
-                    if (StringUtil.isEmpty(version)) {
-                        version = Integer.toString(Vdb.DEFAULT_VERSION);
-                    } else {
-                        try {
-                            Integer.parseInt(version);
-                        } catch (final Exception e) {
-                            version = Integer.toString(Vdb.DEFAULT_VERSION);
-                        }
-                    }
-
-                    vdbImportArtifact.setVersion(version);
-                }
+                // version
+                setVersionFromAttribueValue(vdbImport, ImportVdb.ManifestId.Attributes.VERSION, vdbImportArtifact, xpath);
 
                 { // import data policies
-                    final String importDataPolicies = vdbImport.getAttribute(ImportVdb.ManifestId.Attributes.IMPORT_DATA_POLICIES);
+                    String importDataPolicies = vdbImport.getAttribute(ImportVdb.ManifestId.Attributes.IMPORT_DATA_POLICIES);
+
+                    if (StringUtil.isEmpty(importDataPolicies)) {
+                        importDataPolicies = Boolean.toString(ImportVdb.DEFAULT_IMPORT_DATA_POLICIES);
+                    }
+
                     SrampModelUtils.setCustomProperty(vdbImportArtifact,
                                                       ImportVdb.PropertyName.IMPORT_DATA_POLICIES,
                                                       importDataPolicies);
@@ -584,7 +550,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug("Import VDB name '{}'", vdbImportArtifact.getName()); //$NON-NLS-1$
-                    LOGGER.debug("Import VDB verson '{}'", vdbImportArtifact.getVersion()); //$NON-NLS-1$
+                    LOGGER.debug("Import VDB version '{}'", vdbImportArtifact.getVersion()); //$NON-NLS-1$
 
                     // properties
                     for (final Property prop : vdbImportArtifact.getProperty()) {
@@ -607,6 +573,52 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                            final QName returnType) throws XPathExpressionException {
         LOGGER.debug("executing query '{}'", query); //$NON-NLS-1$
         return super.query(xpath, context, query, returnType);
+    }
+
+    private void setDescriptionFromElementValue(final Element parent,
+                                                final String elementName,
+                                                final BaseArtifactType artifact,
+                                                final XPath xpath) throws Exception {
+        final Element element = (Element)query(xpath, parent, DeriverUtil.getElementQueryString(elementName), XPathConstants.NODE);
+
+        if (element != null) {
+            final String description = element.getTextContent();
+            artifact.setDescription(description);
+        }
+    }
+
+    private Element setPropertyFromElementValue(final Element parent,
+                                                final String elementName,
+                                                final BaseArtifactType artifact,
+                                                final String propertyName,
+                                                final XPath xpath) throws Exception {
+        final Element element = (Element)query(xpath, parent, DeriverUtil.getElementQueryString(elementName), XPathConstants.NODE);
+
+        if (element != null) {
+            final String value = element.getTextContent();
+            SrampModelUtils.setCustomProperty(artifact, propertyName, value);
+        }
+
+        return element;
+    }
+
+    private void setVersionFromAttribueValue(final Element element,
+                                             final String attributeName,
+                                             final BaseArtifactType artifact,
+                                             final XPath xpath) throws Exception {
+        String version = element.getAttribute(attributeName);
+
+        if (StringUtil.isEmpty(version)) {
+            version = Integer.toString(Vdb.DEFAULT_VERSION);
+        } else {
+            try {
+                Integer.parseInt(version);
+            } catch (final Exception e) {
+                version = Integer.toString(Vdb.DEFAULT_VERSION);
+            }
+        }
+
+        artifact.setVersion(version);
     }
 
 }

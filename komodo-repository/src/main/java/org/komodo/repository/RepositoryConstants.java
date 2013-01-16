@@ -7,6 +7,8 @@
 */
 package org.komodo.repository;
 
+import org.komodo.common.util.StringUtil;
+
 /**
  * Constants used when working with the S-RAMP database and Teiid artifacts.
  */
@@ -28,6 +30,11 @@ public interface RepositoryConstants {
         PERMISSION_DATA_POLICY("PermissionDataPolicy"), //$NON-NLS-1$
 
         /**
+         * A relationship between a derived artifact and the document artifact. This is created by S-RAMP deriver framework.
+         */
+        RELATED_DOCUMENT("relatedDocument"), //$NON-NLS-1$
+
+        /**
          * A relationship between a schema/model and its sources.
          */
         SCHEMA_SOURCES("SchemaSources"), //$NON-NLS-1$
@@ -38,9 +45,9 @@ public interface RepositoryConstants {
         SOURCE_SCHEMA("SourceSchema"); //$NON-NLS-1$
 
         private final String name;
-        
+
         private RelationshipType(String name) {
-            this.name = name + "-relationship"; //$NON-NLS-1$
+            this.name = (StringUtil.matches(name, "relatedDocument") ? name : (name + "Relationship")); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         /**

@@ -8,6 +8,7 @@
 package org.komodo.repository;
 
 import java.io.InputStream;
+import org.komodo.common.util.HashCode;
 import org.komodo.common.util.Precondition;
 import org.komodo.common.util.StringUtil;
 import org.komodo.repository.artifact.Artifact.Type;
@@ -71,6 +72,25 @@ class AtomRepositoryManager implements RepositoryManager {
     /**
      * {@inheritDoc}
      *
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if ((obj == null) || !getClass().equals(obj.getClass())) {
+            return false;
+        }
+
+        final AtomRepositoryManager that = (AtomRepositoryManager)obj;
+        return this.url.equals(that.url);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see org.komodo.repository.RepositoryManager#get(java.lang.String)
      */
     @Override
@@ -124,10 +144,20 @@ class AtomRepositoryManager implements RepositoryManager {
     /**
      * {@inheritDoc}
      *
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return HashCode.compute(this.url);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see org.komodo.repository.RepositoryManager#setName(java.lang.String)
      */
     @Override
-    public void setName(String newName) {
+    public void setName(final String newName) {
         this.name = newName;
     }
 
