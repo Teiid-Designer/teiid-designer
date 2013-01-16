@@ -17,11 +17,6 @@ import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 public interface RepositoryManager {
 
     /**
-     * The name of the property whose value is the JSON ModeShape repository configuration file.
-     */
-    String MODESHAPE_CONFIG_URL = "sramp.modeshape.config.url"; //$NON-NLS-1$
-
-    /**
      * Adds a VDB to the repository. Caller should set additional artifact properties based on the VDB business object created
      * from this artifact. Caller should ensure stream is closed. The file name is used to determine mime type.
      * 
@@ -48,13 +43,18 @@ public interface RepositoryManager {
     QueryResultSet getDerivedArtifacts(final BaseArtifactType artifact) throws Exception;
 
     /**
-     * @throws Exception if there is a problem shutting down the repository
+     * @return the repository name (may be <code>null</code> or empty)
      */
-    void shutdown() throws Exception;
+    String getName();
 
     /**
-     * @throws Exception if there is a problem starting the repository
+     * @param newName the new name of the repository manager (can be <code>null</code> or empty)
      */
-    void start() throws Exception;
+    void setName(String newName);
+
+    /**
+     * @return the repository URL (never <code>null</code> or empty)
+     */
+    String getUrl();
 
 }

@@ -12,14 +12,18 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import java.io.InputStream;
 import org.junit.Test;
 import org.komodo.repository.RepositoryTest;
 import org.komodo.repository.artifact.Artifact;
+import org.komodo.teiid.model.vdb.Schema;
+import org.komodo.teiid.model.vdb.Source;
 import org.komodo.teiid.model.vdb.Translator;
 import org.overlord.sramp.ArtifactType;
 import org.overlord.sramp.SrampModelUtils;
 import org.overlord.sramp.client.query.ArtifactSummary;
+import org.overlord.sramp.client.query.QueryResultSet;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 import org.s_ramp.xmlns._2010.s_ramp.UserDefinedArtifactType;
 
@@ -53,21 +57,63 @@ public class VdbDeriverTest extends RepositoryTest {
         final BaseArtifactType vdbArtifact = _repoMgr.addVdb(vdbStream, "twitterVdb.xml");
 
         // verify derived artifacts
-        assertNumberOfDerivedArtifacts(vdbArtifact, 1);
+        final QueryResultSet results = _repoMgr.getDerivedArtifacts(vdbArtifact);
+        assertThat(results.size(), is(4L));
 
-        // get derived artifacts
-        for (ArtifactSummary summary : _repoMgr.getDerivedArtifacts(vdbArtifact)) {
-            // these are lightweight artifacts
-            ArtifactType artifact = summary.getType();
-            assertThat(artifact.getType(), is(Artifact.Type.TRANSLATOR.getName()));
+        // verify derived artifacts
+        boolean foundTranslator = false;
+        boolean foundPhysicalModel = false;
+        boolean foundViewModel = false;
+        boolean foundDataSource = false;
 
-            // materialize entire artifact
-            BaseArtifactType translatorArtifact = _repoMgr.get(summary.getUuid());
-            assertThat(translatorArtifact.getName(), is("rest"));
-            assertThat(SrampModelUtils.getCustomProperty(translatorArtifact, Translator.PropertyName.TYPE), is("ws"));
-            assertThat(SrampModelUtils.getCustomProperty(translatorArtifact, "DefaultBinding"), is("HTTP"));
-            assertThat(SrampModelUtils.getCustomProperty(translatorArtifact, "DefaultServiceMode"), is("MESSAGE"));
+        for (final ArtifactSummary summary : results) {
+            final ArtifactType artifact = summary.getType(); // lightweight artifact
+            final String userType = artifact.getUserType();
+            final BaseArtifactType derivedArtifact = _repoMgr.get(summary.getUuid()); // materialize entire artifact
+            final String artifactName = derivedArtifact.getName();
+
+            if (!foundTranslator && Artifact.Type.TRANSLATOR.getName().equals(userType)) {
+                foundTranslator = true;
+                assertThat(artifactName, is("rest"));
+                assertPropertyValue(derivedArtifact, Translator.PropertyName.TYPE, "ws");
+                assertPropertyValue(derivedArtifact, "DefaultBinding", "HTTP");
+                assertPropertyValue(derivedArtifact, "DefaultServiceMode", "MESSAGE");
+            } else if (Artifact.Type.SCHEMA.getName().equals(userType)) {
+                if (!foundPhysicalModel && "twitter".equals(artifactName)) {
+                    foundPhysicalModel = true;
+                    assertPropertyValue(derivedArtifact, Schema.PropertyName.TYPE, Schema.Type.PHYSICAL.name());
+                } else if (!foundViewModel && "twitterview".equals(artifactName)) {
+                    foundViewModel = true;
+                    assertPropertyValue(derivedArtifact, Schema.PropertyName.TYPE, Schema.Type.VIRTUAL.name());
+                    assertPropertyValue(derivedArtifact, Schema.PropertyName.METADATA_TYPE, Schema.DEFAULT_METADATA_TYPE);
+                    final String expected = "\n             CREATE VIRTUAL PROCEDURE getTweets(query varchar) RETURNS (created_on varchar(25), from_user varchar(25), to_user varchar(25),\n"
+                                            + "                 profile_image_url varchar(25), source varchar(25), text varchar(140)) AS\n"
+                                            + "                select tweet.* from\n"
+                                            + "                    (call twitter.invokeHTTP(action => 'GET', endpoint =>querystring('',query as \"q\"))) w,\n"
+                                            + "                    XMLTABLE('results' passing JSONTOXML('myxml', w.result) columns\n"
+                                            + "                    created_on string PATH 'created_at',\n"
+                                            + "                    from_user string PATH 'from_user',\n"
+                                            + "                    to_user string PATH 'to_user',\n"
+                                            + "                    profile_image_url string PATH 'profile_image_url',\n"
+                                            + "                    source string PATH 'source',\n"
+                                            + "                    text string PATH 'text') tweet;\n"
+                                            + "                CREATE VIEW Tweet AS select * FROM twitterview.getTweets;\n"
+                                            + "         ";
+                    assertPropertyValue(derivedArtifact, Schema.PropertyName.METADATA, expected);
+                } else {
+                    fail("unexpected schema artifact '" + artifactName + '\'');
+                }
+            } else if (!foundDataSource && Artifact.Type.SOURCE.getName().equals(userType)) {
+                foundDataSource = true;
+                assertThat(artifactName, is("twitter"));
+                assertPropertyValue(derivedArtifact, Source.PropertyName.TRANSLATOR_NAME, "rest");
+                assertPropertyValue(derivedArtifact, Source.PropertyName.JNDI_NAME, "java:/twitterDS");
+            } else {
+                fail("unexpected artifact type '" + userType + +'\'');
+            }
         }
+
+        assertThat((foundTranslator && foundPhysicalModel && foundViewModel && foundDataSource), is(true));
     }
 
 }

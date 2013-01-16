@@ -7,8 +7,6 @@
 */
 package org.komodo.repository;
 
-import org.jboss.resteasy.test.EmbeddedContainer;
-import org.overlord.sramp.repository.PersistenceFactory;
 import org.overlord.sramp.repository.jcr.JCRRepositoryCleaner;
 
 /**
@@ -16,13 +14,29 @@ import org.overlord.sramp.repository.jcr.JCRRepositoryCleaner;
  */
 public class CleanableRepositoryManager extends AtomRepositoryManager implements Cleanable {
 
+    /**
+     * The default port for the server running S-RAMP. Value is ({@value}.
+     */
+    public static final int DEFAULT_SERVER_PORT = 8081;
+
+    /**
+     * The name of the system property whose value is the JSON ModeShape repository configuration file.
+     */
+    public static final String MODESHAPE_CONFIG_URL_SYS_PROP = "sramp.modeshape.config.url"; //$NON-NLS-1$
+
+    /**
+     * The name of the system property whose value is the configured port of the server running S-RAMP.
+     */
+    public static final String SERVER_PORT_SYS_PROP = "org.jboss.resteasy.port"; //$NON-NLS-1$
+
     private final JCRRepositoryCleaner cleaner = new JCRRepositoryCleaner();
 
     /**
      * Constructs a default s-ramp jetty/atom repository manager using localhost and default port.
+     * @throws Exception if there is a problem constructing repository manager
      */
-    public CleanableRepositoryManager() {
-        super(String.format("%s:%d", "http://localhost", 8081)); //$NON-NLS-1$ //$NON-NLS-2$
+    public CleanableRepositoryManager() throws Exception {
+        super(String.format("%s:%s", "http://localhost", System.getProperty(SERVER_PORT_SYS_PROP))); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -33,17 +47,6 @@ public class CleanableRepositoryManager extends AtomRepositoryManager implements
     @Override
     public void clean() throws Exception {
         this.cleaner.clean();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see org.komodo.repository.RepositoryManager#shutdown()
-     */
-    @Override
-    public void shutdown() throws Exception {
-        EmbeddedContainer.stop();
-        PersistenceFactory.newInstance().shutdown();
     }
 
 }
