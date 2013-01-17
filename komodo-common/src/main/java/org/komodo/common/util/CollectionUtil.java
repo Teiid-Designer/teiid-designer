@@ -18,6 +18,14 @@ import java.util.Map.Entry;
 public class CollectionUtil {
 
     /**
+     * @param map the map being checked (can be <code>null</code> or empty)
+     * @return <code>true</code> if <code>null</code> or empty
+     */
+    public static boolean isEmpty(final Map<?, ?> map) {
+        return ((map == null) || map.isEmpty());
+    }
+
+    /**
      * @param collection the collection being checked (can be <code>null</code> or empty)
      * @return <code>true</code> if <code>null</code> or empty
      */

@@ -13,4 +13,27 @@
     <packaging>jar</packaging>
     <name>Komodo Common</name>
     <description>Komodo common utilities module</description>
+
+    <dependencies>
+        <!--
+            Testing dependencies
+        -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+
+        <!--
+            Logging dependencies
+        -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+ 
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+    </dependencies>
 </project>

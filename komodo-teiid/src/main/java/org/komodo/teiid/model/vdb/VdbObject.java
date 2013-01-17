@@ -11,10 +11,12 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import org.komodo.common.i18n.I18n;
 import org.komodo.common.util.CollectionUtil;
 import org.komodo.common.util.HashCode;
 import org.komodo.common.util.Precondition;
 import org.komodo.common.util.StringUtil;
+import org.komodo.teiid.TeiidI18n;
 import org.komodo.teiid.model.ModelObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,7 +153,7 @@ public abstract class VdbObject implements Comparable<VdbObject>, ModelObject {
                 try {
                     l.propertyChange(event);
                 } catch (final Exception e) {
-                    this.logger.error("Exception in property change listener. Listener is now unregistered", e);
+                    this.logger.error(I18n.bind(TeiidI18n.propertyChangeListenerProblem, l.getClass().getName()), e);
                 }
             }
         }
