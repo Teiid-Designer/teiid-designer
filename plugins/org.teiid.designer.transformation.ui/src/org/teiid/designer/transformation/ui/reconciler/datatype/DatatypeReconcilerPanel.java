@@ -7,10 +7,14 @@
  */
 package org.teiid.designer.transformation.ui.reconciler.datatype;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -18,12 +22,11 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -31,34 +34,23 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect;
-import org.teiid.designer.query.sql.lang.IExpression;
-import org.teiid.designer.query.sql.lang.ILanguageObject;
-import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
-import org.teiid.designer.query.sql.symbol.IAliasSymbol;
-import org.teiid.designer.query.sql.symbol.IConstant;
-import org.teiid.designer.query.sql.symbol.IElementSymbol;
-import org.teiid.designer.query.sql.symbol.IExpressionSymbol;
+import org.eclipse.swt.widgets.Text;
+import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.PluginConstants;
-import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.reconciler.Binding;
-import org.teiid.designer.transformation.ui.reconciler.BindingLabelProvider;
 import org.teiid.designer.transformation.ui.reconciler.BindingList;
 import org.teiid.designer.transformation.ui.reconciler.ColorManager;
-import org.teiid.designer.transformation.util.RuntimeTypeConverter;
 import org.teiid.designer.transformation.util.TransformationHelper;
-import org.teiid.designer.transformation.util.TransformationSqlHelper;
+import org.teiid.designer.transformation.util.TransformationMappingHelper;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
-import org.teiid.designer.ui.common.table.TableSizeAdapter;
+import org.teiid.designer.ui.common.table.CheckBoxEditingSupport;
 import org.teiid.designer.ui.common.util.WidgetFactory;
-import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.viewsupport.DatatypeSelectionDialog;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
@@ -70,70 +62,37 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  */
 public class DatatypeReconcilerPanel extends SashForm implements ISelectionChangedListener, PluginConstants.Images {
 
-    private static final String BINDINGS_TABLE_TITLE_TEXT = UiConstants.Util.getString("DatatypeReconciler.table.title"); //$NON-NLS-1$
-    private static final String BINDINGS_TABLE_ATTR_COL_TEXT = UiConstants.Util.getString("DatatypeReconciler.table.attrCol.title"); //$NON-NLS-1$
-    private static final String BINDINGS_TABLE_SQL_COL_TEXT = UiConstants.Util.getString("DatatypeReconciler.table.sqlCol.title"); //$NON-NLS-1$
-    private static final String DIALOG_STATUS_TITLE = UiConstants.Util.getString("DatatypeReconciler.statusTitle"); //$NON-NLS-1$
-
-    private static final String RESOLVE_ATTR_GROUP_NAME = UiConstants.Util.getString("DatatypeReconciler.resolveAttr.groupName"); //$NON-NLS-1$
-    private static final String RESOLVE_ATTR_GROUP_LOCKED_NAME = UiConstants.Util.getString("DatatypeReconciler.resolveAttr.groupLockedName"); //$NON-NLS-1$
-    private static final String RESOLVE_SQL_GROUP_NAME = UiConstants.Util.getString("DatatypeReconciler.resolveSql.groupName"); //$NON-NLS-1$
-
-    private static final String CONVERT_ALL_ATTR_BUTTON = UiConstants.Util.getString("DatatypeReconciler.convertAllAttrButton.text"); //$NON-NLS-1$
-    private static final String CONVERT_ALL_SQL_BUTTON = UiConstants.Util.getString("DatatypeReconciler.convertAllSqlButton.text"); //$NON-NLS-1$
-    private static final String CONVERT_SELECTED_ATTR_BUTTON = UiConstants.Util.getString("DatatypeReconciler.convertSelectedAttrButton.text"); //$NON-NLS-1$
-    private static final String CONVERT_SELECTED_SQL_BUTTON = UiConstants.Util.getString("DatatypeReconciler.convertSelectedSqlButton.text"); //$NON-NLS-1$
-
-    private static final String ALL_RESOLVED_MESSAGE = UiConstants.Util.getString("DatatypeReconciler.statusMessage.allResolved"); //$NON-NLS-1$
-    private static final String ONE_OR_MORE_UNRESOLVED_MESSAGE = UiConstants.Util.getString("DatatypeReconciler.statusMessage.unresolved"); //$NON-NLS-1$
-
-    private static final String EDIT_TXT = UiConstants.Util.getString("DatatypeReconciler.edit.text"); //$NON-NLS-1$
-    private static final String VIRTUAL_TARGET_ATTRIBUTE_TXT = UiConstants.Util.getString("DatatypeReconciler.virtualTargetAttribute.text"); //$NON-NLS-1$
-    private static final String RUNTIME_TYPE_TXT = UiConstants.Util.getString("DatatypeReconciler.runtimeType.text"); //$NON-NLS-1$
-    private static final String SQL_SYMBOL_TXT = UiConstants.Util.getString("DatatypeReconciler.sqlSymbol.text"); //$NON-NLS-1$
-    private static final String CONVERTED_SYMBOL_TXT = UiConstants.Util.getString("DatatypeReconciler.convertedSymbol.text"); //$NON-NLS-1$
-
-    // Set the table column property names
-    private final String ATTRIBUTE_COLUMN = "attribute"; //$NON-NLS-1$
-    private final String SQL_COLUMN = "sql"; //$NON-NLS-1$
-    // Set column names
-    private String[] columnNames = new String[] {ATTRIBUTE_COLUMN, SQL_COLUMN};
-
     private DatatypeReconcilerDialog datatypeReconcilerDialog = null;
 
     // Original BindingList that was passed in
     private BindingList originalBindingList;
 
     // Working Binding List - includes type info
-    BindingList bindingList;
+    /**
+	 * 
+	 */
+	private BindingTableInput bindingListInput;
 
     private boolean targetLocked;
 
     private ColorManager colorManager;
     private Table table;
-    private TableViewer tableViewer;
+    private TableViewer bindingTableViewer;
 
     // Push Buttons
-    private Button convertAllAttrsButton, convertAllSqlButton;
-    private Button convertSelectedAttrButton, convertSelectedSqlButton;
-    private Button showDatatypeDialogButton;
-
-    private CLabel attributeLabel;
-    private CLabel attrRuntimeTypeLabel;
-    private CLabel sqlSymbolLabel;
-    private CLabel symbolRuntimeTypeLabel;
-    private CLabel symbolConversionLabel;
-    private CLabel attrDatatypeLabel;
-    private CLabel symbolWarningLabel;
-
-    private EObject chooserDatatype = null;
-    private Group attrGroup = null;
-    private Group sqlGroup = null;
+    Button changeAllColumnDatatypesButton, convertAllSqlSymbolsButton;
+    Text helpText;
+    
+    private BindingContentProvider bindingContentProvider;
 
     /**
      * Constructor.
      * 
      * @param parent Parent of this control
+     * @param dialog the dialog
+     * @param bindingList the datatype binding list
+     * @param targetLocked boolean defining if target table is locked (read-only)
+     * @param colorManager the color manager for error/warning status
      */
     public DatatypeReconcilerPanel( Composite parent,
                                     DatatypeReconcilerDialog dialog,
@@ -163,30 +122,19 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         this.setLayoutData(gridData);
 
         // Init the symbol arrays from bindings
-        this.bindingList = createBindingList(originalBindingList);
+        this.bindingListInput = new BindingTableInput(createBindingList(originalBindingList));
 
         // ----------------------------------
         // Create the Table Viewer Panel
         // ----------------------------------
         createTableViewerPanel(this);
 
-        // ------------------------------------------
-        // Create Attribute and SQL Control Panels
-        // ------------------------------------------
-        createControlsPanel(this);
-
-        // --------------------------------------------------
-        // Init the weighting for the top and bottom panels
-        // --------------------------------------------------
-        int[] wts = {5, 8};
-        this.setWeights(wts);
-
         // Initialize the message area at the top of the dialog
-        datatypeReconcilerDialog.setTitle(DIALOG_STATUS_TITLE);
+        datatypeReconcilerDialog.setTitle(Messages.datatypeReconciler_statusTitle);
         updateMessageArea();
 
         // Listen for TableSelection from the Tables
-        tableViewer.addSelectionChangedListener(this);
+        bindingTableViewer.addSelectionChangedListener(this);
         selectFirstTypeConflict();
     }
 
@@ -214,9 +162,9 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
      */
     private void updateMessageArea() {
         int statusType = IMessageProvider.NONE;
-        String message = ALL_RESOLVED_MESSAGE;
-        if (this.bindingList.hasTypeConflict()) {
-            message = ONE_OR_MORE_UNRESOLVED_MESSAGE;
+        String message = Messages.datatypeReconciler_allResolvedMessage;
+        if (this.bindingListInput.getBindingList().hasTypeConflict()) {
+            message = Messages.datatypeReconciler_someUnresolvedConflicts;
             statusType = IMessageProvider.ERROR;
         }
         datatypeReconcilerDialog.setMessage(message, statusType);
@@ -225,7 +173,8 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
     /**
      * Create the tableViewer Panel
      */
-    private void createTableViewerPanel( Composite theParent ) {
+    @SuppressWarnings("unused")
+	private void createTableViewerPanel( Composite theParent ) {
         Composite tablePanel = new Composite(theParent, SWT.NONE);
 
         // Set the layout
@@ -234,230 +183,118 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
 
         GridData gridData = new GridData(GridData.FILL_BOTH);
         tablePanel.setLayoutData(gridData);
-
-        // Table Header Label
-        WidgetFactory.createLabel(tablePanel, GridData.HORIZONTAL_ALIGN_BEGINNING, BINDINGS_TABLE_TITLE_TEXT);
-
-        // Create the table
-        createTable(tablePanel);
-
-        // Create and setup the TableViewer
-        tableViewer = new TableViewer(table);
-        tableViewer.setUseHashlookup(true);
-
-        tableViewer.setColumnProperties(columnNames);
-        tableViewer.setContentProvider(new BindingContentProvider());
-        tableViewer.setLabelProvider(new BindingLabelProvider(true));
-        // The input for the table viewer is the instance of BindingList
-        tableViewer.setInput(bindingList);
-        updateRowColors();
-    }
-
-    /**
-     * Create the Table
-     */
-    private void createTable( Composite parent ) {
-        int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION;
-
-        table = new Table(parent, style);
-        TableLayout layout = new TableLayout();
-        table.setLayout(layout);
-
-        GridData gridData = new GridData(GridData.FILL_BOTH);
-        gridData.horizontalSpan = 2;
-        table.setLayoutData(gridData);
-
-        table.setLinesVisible(true);
-        table.setHeaderVisible(true);
-
-        // 1st column with attribute
-        TableColumn column1 = new TableColumn(table, SWT.LEFT, 0);
-        column1.setText(BINDINGS_TABLE_ATTR_COL_TEXT);
-        ColumnWeightData weight = new ColumnWeightData(1);
-        layout.addColumnData(weight);
-
-        // 2nd column with sql
-        TableColumn column2 = new TableColumn(table, SWT.LEFT, 1);
-        column2.setText(BINDINGS_TABLE_SQL_COL_TEXT);
-        weight = new ColumnWeightData(1);
-        layout.addColumnData(weight);
-
-        // add a listener to keep the table sized to it's container
-        new TableSizeAdapter(table, 10);
-    }
-
-    private void createControlsPanel( Composite theParent ) {
-        ScrolledComposite scroller = new ScrolledComposite(theParent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
-
-        GridLayout scrolledLayout = new GridLayout();
-        scrolledLayout.marginLeft = 5;
-        scrolledLayout.marginRight = 5;
-        scroller.setLayout(scrolledLayout);
-
-        scroller.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        scroller.setExpandHorizontal(true);
-        scroller.setExpandVertical(true);
-        scroller.setMinWidth(900);
-        scroller.setMinHeight(270);
-
-        Group controlsGroup = WidgetFactory.createGroup(scroller, EDIT_TXT);
-        GridLayout controlsLayout = new GridLayout();
-        controlsLayout.marginLeft = 0;
-        controlsLayout.marginRight = 0;
-        controlsGroup.setLayout(controlsLayout);
-        controlsGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        createResolveAttributePanel(controlsGroup);
-        createResolveSqlPanel(controlsGroup);
-
-        scroller.setContent(controlsGroup);
-    }
-
-    private void createResolveAttributePanel( Composite parent ) {
-        if (this.targetLocked) {
-            attrGroup = WidgetFactory.createGroup(parent, RESOLVE_ATTR_GROUP_LOCKED_NAME);
-        } else {
-            attrGroup = WidgetFactory.createGroup(parent, RESOLVE_ATTR_GROUP_NAME);
+        
+        // Add header panel
+        
+        HEADER_PANEL: {
+	        Composite headerPanel = WidgetFactory.createPanel(tablePanel);
+			// ------------------------------
+			// Set layout for the Composite
+			// ------------------------------
+			headerPanel.setLayout(new GridLayout());
+			((GridLayout)headerPanel.getLayout()).numColumns = 3;
+			headerPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+			((GridData)headerPanel.getLayoutData()).grabExcessHorizontalSpace = true;
+	        
+			// Add general info/instructions text box
+			{
+		    	helpText = new Text(headerPanel, SWT.WRAP | SWT.READ_ONLY);
+		    	helpText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		    	helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+		    	helpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		    	((GridData)helpText.getLayoutData()).horizontalSpan = 3;
+		    	((GridData)helpText.getLayoutData()).heightHint = 40;
+		    	((GridData)helpText.getLayoutData()).widthHint = 360;
+		    	
+		    	helpText.setText(Messages.datatypeReconciler_helpText);
+			}
+			
+			
+			
+			// Add button bar containing:
+			// [CHANGE ALL COLUMN DATATYPES] - or - [CONVERT ALL SQL SYMBOLS]
+			this.changeAllColumnDatatypesButton =  
+					WidgetFactory.createButton(headerPanel, Messages.datatypeReconciler_convertAllColumnDatatypesLabel);
+			this.changeAllColumnDatatypesButton.setToolTipText(Messages.datatypeReconciler_convertAllColumnDatatypesTooltip);
+			this.changeAllColumnDatatypesButton.setEnabled(false);
+	        this.changeAllColumnDatatypesButton.addSelectionListener(new SelectionAdapter() {
+	            @Override
+	            public void widgetSelected( final SelectionEvent event ) {
+	            	changeAllColumnDatatypesPressed();
+	            }
+	        });
+			
+			WidgetFactory.createLabel(headerPanel, "   - or -   "); //$NON-NLS-1$
+			
+			this.convertAllSqlSymbolsButton =  
+					WidgetFactory.createButton(headerPanel, Messages.datatypeReconciler_convertAllSqlSymbolsLabel);
+			this.convertAllSqlSymbolsButton.setToolTipText(Messages.datatypeReconciler_convertAllSqlSymbolsTooltip);
+			
+			this.convertAllSqlSymbolsButton.addSelectionListener(new SelectionAdapter() {
+	            @Override
+	            public void widgetSelected( final SelectionEvent event ) {
+	            	changeAllColumnDatatypesButtonPressed();
+	            }
+	        });
+			
         }
-        GridLayout gridLayout = new GridLayout();
-        attrGroup.setLayout(gridLayout);
-        gridLayout.numColumns = 4;
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
-        gridLayout.marginLeft = 5;
-        gridLayout.marginBottom = 5;
-        GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-        attrGroup.setLayoutData(gridData);
+        
+        BINDING_TABLE : {
+	    	table = new Table(tablePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
+	        table.setHeaderVisible(true);
+	        table.setLinesVisible(true);
+	        table.setLayout(new TableLayout());
+	    	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+	    	gd.heightHint = 200;
+	    	table.setLayoutData(gd);
+	
+	        this.bindingTableViewer = new TableViewer(table);
+	        this.bindingTableViewer.getControl().setLayoutData(gd);
+	        
+	        this.bindingContentProvider = new BindingContentProvider();
+	        
+	        // create columns
+	        
+	        // {"", "Target Column", "Matched Type", "Change Type", "", "Source SQL Symbol"};
+	        // COLUMN 0 :  FIX Button
+	        TableViewerColumn column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
+	        column.getColumn().setText(getSpaces(20));
+	        column.setLabelProvider(new TheBindingColumnLabelProvider(0));
+	        column.setEditingSupport(new ChangeDatatypeEditingSupport(this.bindingTableViewer));
+	        column.getColumn().pack();
+	        
+	        // COLUMN 1 :  Target Column Definition
+	        column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
+	        column.getColumn().setText(Messages.datatypeReconciler_targetColumnLabel + getSpaces(25));
+	        column.setLabelProvider(new TheBindingColumnLabelProvider(1));
+	        column.getColumn().pack();
+	        
+	        // COLUMN 2 :  Matched Datatype
+	        column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
+	        column.getColumn().setText(Messages.datatypeReconciler_matchedTypeLabel + getSpaces(60));
+	        column.setLabelProvider(new TheBindingColumnLabelProvider(2));
+	        column.setEditingSupport(new ChangeProposedDatatypeEditingSupport(this.bindingTableViewer));
+	        column.getColumn().pack();
+	        
+	        // COLUMN 4 :  CONVERT Button
+	        column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
+	        column.getColumn().setText(getSpaces(20));
+	        column.setLabelProvider(new TheBindingColumnLabelProvider(3));
+	        column.setEditingSupport(new ConvertSymbolEditingSupport(this.bindingTableViewer));
+	        column.getColumn().pack();
+	        
+	        // COLUMN 5 :  Source SQL Symbol Definition
+	        column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
+	        column.getColumn().setText(Messages.datatypeReconciler_sourceSqlSymbolLabel + getSpaces(60));
+	        column.setLabelProvider(new TheBindingColumnLabelProvider(4));
+	        column.getColumn().pack();
+	        
+	        bindingTableViewer.setUseHashlookup(true);
+	        bindingTableViewer.setContentProvider(this.bindingContentProvider);
+	        bindingTableViewer.setInput(this.bindingListInput);
 
-        Binding binding = bindingList.get(0);
-        Object attr = binding.getAttribute();
-        // Attribute Datatype Label
-        EObject datatype = null;
-        attr = binding.getAttribute();
-        if (TransformationHelper.isSqlColumn(attr)) {
-            datatype = TransformationHelper.getSqlColumnDatatype((EObject)attr);
+	        updateRowColors();
         }
-        String datatypeText = getDatatypeText(datatype);
-        Image datatypeImage = getDatatypeImage(datatype);
-
-        attrGroup.setText(VIRTUAL_TARGET_ATTRIBUTE_TXT);
-
-        // --------------------------------------
-        // SQL Symbol Label
-        // --------------------------------------
-        attributeLabel = WidgetFactory.createLabel(attrGroup, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"); //$NON-NLS-1$
-        GridData attrGD = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING, GridData.VERTICAL_ALIGN_FILL, false, false, 4, 1);
-        attributeLabel.setLayoutData(attrGD);
-        attributeLabel.setForeground(getDisplay().getSystemColor(SWT.COLOR_BLUE));
-
-        Label rtTypeLabel = WidgetFactory.createLabel(attrGroup, RUNTIME_TYPE_TXT);
-        GridData gdRT = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING, GridData.VERTICAL_ALIGN_BEGINNING, false, false, 2, 1);
-        rtTypeLabel.setLayoutData(gdRT);
-        WidgetFactory.createLabel(attrGroup, CoreStringUtil.Constants.EMPTY_STRING);
-
-        // --------------------------------------
-        // Attribute RuntimeType Label
-        // --------------------------------------
-        attrRuntimeTypeLabel = WidgetFactory.createLabel(attrGroup,
-                                                         datatypeText,
-                                                         datatypeImage,
-                                                         GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.GRAB_HORIZONTAL);
-
-        // --------------------------------------
-        // Attribute Type Chooser Panel
-        // --------------------------------------
-        // Create the changeSelectedAttribute Button
-        this.convertSelectedAttrButton = WidgetFactory.createButton(attrGroup,
-                                                                    CONVERT_SELECTED_ATTR_BUTTON,
-                                                                    GridData.HORIZONTAL_ALIGN_BEGINNING);
-        this.convertSelectedAttrButton.setEnabled(false);
-        this.convertSelectedAttrButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-                convertSelectedAttrPressed();
-            }
-        });
-
-        // Create the changeAllAttributes Button
-        this.convertAllAttrsButton = WidgetFactory.createButton(attrGroup,
-                                                                CONVERT_ALL_ATTR_BUTTON,
-                                                                GridData.HORIZONTAL_ALIGN_BEGINNING);
-        this.convertAllAttrsButton.setEnabled(false);
-        this.convertAllAttrsButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-                convertAllAttrsPressed();
-            }
-        });
-
-        // Create the showDatatypeDialog Button
-        this.showDatatypeDialogButton = WidgetFactory.createButton(attrGroup, "Change", GridData.HORIZONTAL_ALIGN_END); //$NON-NLS-1$
-        this.showDatatypeDialogButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-                showDatatypeDialogPressed();
-            }
-        });
-
-        attrDatatypeLabel = WidgetFactory.createLabel(attrGroup, "xxxxxxxxxxxxxxxxxxxxxxx", datatypeImage, //$NON-NLS-1$
-                                                      GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.GRAB_HORIZONTAL);
-        if (this.targetLocked) {
-            this.showDatatypeDialogButton.setEnabled(false);
-        } else {
-            this.showDatatypeDialogButton.setEnabled(true);
-        }
-    }
-
-    private EObject getChooserDatatype() {
-        return this.chooserDatatype;
-    }
-
-    private void setChooserDatatype( EObject datatype ) {
-        this.chooserDatatype = datatype;
-
-        // Update the data label text and image
-        attrDatatypeLabel.setText(getDatatypeText(chooserDatatype));
-        attrDatatypeLabel.setImage(getDatatypeImage(chooserDatatype));
-    }
-
-    private String getLabelText( Object object ) {
-        StringBuffer sb = new StringBuffer();
-        if (object != null) {
-            // Get Name String
-            if (object instanceof EObject) {
-                sb.append(getAttributeShortName(object));
-            } else if (object instanceof ILanguageObject && ((ILanguageObject) object).isExpression()) {
-                String shortName = TransformationSqlHelper.getSingleElementSymbolShortName((IExpression)object, false);
-                sb.append(shortName);
-            } else if (object instanceof Binding) {
-                sb.append(((Binding)object).getCurrentAttrName());
-            }
-        }
-        return sb.toString();
-    }
-
-    private String getTypeText( Object object ) {
-        StringBuffer sb = new StringBuffer();
-        if (object != null) {
-            if (object instanceof Binding) {
-                sb.append(getRuntimeTypeString(((Binding)object).getCurrentAttrDatatype()));
-            } else {
-                sb.append(getRuntimeTypeString(object));
-            }
-        }
-        return sb.toString();
-    }
-
-    private Image getLabelImage( Object object ) {
-        Image result = null;
-        if (object != null) {
-            if (object instanceof EObject) {
-                result = ModelUtilities.getEMFLabelProvider().getImage(object);
-            } else if (object instanceof ILanguageObject && ((ILanguageObject) object).isExpression()) {
-                result = getImageForSymbol((IExpression)object);
-            }
-        }
-        return result;
     }
 
     private String getDatatypeText( Object object ) {
@@ -468,167 +305,6 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
             }
         }
         return result;
-    }
-
-    private Image getDatatypeImage( Object object ) {
-        Image result = null;
-        if (object != null) {
-            if (object instanceof EObject) {
-                result = ModelUtilities.getEMFLabelProvider().getImage(object);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Get the Image for the SingleElementSymbol
-     */
-    private Image getImageForSymbol( IExpression seSymbol ) {
-        Image result = null;
-
-        // If symbol is AliasSymbol, get underlying symbol
-        if (seSymbol != null && seSymbol instanceof IAliasSymbol) {
-            seSymbol = ((IAliasSymbol)seSymbol).getSymbol();
-        }
-        // ElementSymbol
-        if ((seSymbol instanceof IElementSymbol)) {
-            result = UiPlugin.getDefault().getImage(SYMBOL_ICON);
-            // AggregateSymbol
-        } else if (seSymbol instanceof IAggregateSymbol) {
-            result = UiPlugin.getDefault().getImage(FUNCTION_ICON);
-            // ExpressionSymbol
-        } else if (seSymbol instanceof IExpressionSymbol) {
-            IExpression expression = ((IExpressionSymbol)seSymbol).getExpression();
-            if (expression != null && expression instanceof IConstant) {
-                result = UiPlugin.getDefault().getImage(CONSTANT_ICON);
-            } else if (expression != null && expression.isFunction()) {
-                result = UiPlugin.getDefault().getImage(FUNCTION_ICON);
-            }
-        }
-        // Undefined
-        if (result == null) {
-            result = UiPlugin.getDefault().getImage(UNDEFINED_ICON);
-        }
-
-        return result;
-    }
-
-    private String getRuntimeTypeString( Object object ) {
-        String typeStr = null;
-        if (object != null) {
-            typeStr = RuntimeTypeConverter.getRuntimeType(object);
-        }
-        if (typeStr == null) {
-            typeStr = "unknown"; //$NON-NLS-1$
-        }
-        return typeStr;
-    }
-
-    /**
-     * get the attribute short Name.
-     * 
-     * @param attribute the attribute, may be String or EObject
-     * @return the attribute short name
-     */
-    private String getAttributeShortName( Object attribute ) {
-        String name = null;
-        if (attribute != null) {
-            if (attribute instanceof String) {
-                return (String)attribute;
-            } else if (attribute instanceof EObject) {
-                EObject eObj = (EObject)attribute;
-                if (org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper.isColumn(eObj)) {
-                    SqlColumnAspect columnAspect = (SqlColumnAspect)org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper.getSqlAspect(eObj);
-                    name = columnAspect.getName(eObj);
-                }
-            }
-        }
-        return name;
-    }
-
-    /**
-     * Create the Panel for resolving sql symbols
-     */
-    private void createResolveSqlPanel( Composite parent ) {
-        Group newGroup = WidgetFactory.createGroup(parent, RESOLVE_SQL_GROUP_NAME);
-        GridLayout gridLayout = new GridLayout();
-        newGroup.setLayout(gridLayout);
-        gridLayout.numColumns = 3;
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
-        gridLayout.marginLeft = 5;
-        gridLayout.marginBottom = 5;
-        GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-        newGroup.setLayoutData(gridData);
-        newGroup.setText(SQL_SYMBOL_TXT);
-        // SQL Symbol Label
-        // --------------------------------------
-        sqlSymbolLabel = WidgetFactory.createLabel(newGroup, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"); //$NON-NLS-1$
-        GridData gdSSL = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING, GridData.VERTICAL_ALIGN_FILL, false, false, 3, 1);
-        sqlSymbolLabel.setLayoutData(gdSSL);
-        sqlSymbolLabel.setForeground(getDisplay().getSystemColor(SWT.COLOR_BLUE));
-
-        // Symbol RuntimeType Label
-        // --------------------------------------
-        Label rtTypeLabel = WidgetFactory.createLabel(newGroup, RUNTIME_TYPE_TXT);
-        GridData gdRT = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING, GridData.VERTICAL_ALIGN_FILL, false, false, 2, 1);
-        rtTypeLabel.setLayoutData(gdRT);
-        // WidgetFactory.createLabel(newGroup, "");
-
-        Binding binding = bindingList.get(0);
-        Object symbol = binding.getCurrentSymbol();
-        String text = getLabelText(symbol);
-        symbolRuntimeTypeLabel = WidgetFactory.createLabel(newGroup, text, GridData.HORIZONTAL_ALIGN_BEGINNING
-                                                                           | GridData.GRAB_HORIZONTAL);
-
-        // Available Conversion Title Label
-        // --------------------------------------
-        Label cvLabel = WidgetFactory.createLabel(newGroup, GridData.HORIZONTAL_ALIGN_BEGINNING, CONVERTED_SYMBOL_TXT);
-        GridData gdCV = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING, GridData.VERTICAL_ALIGN_FILL, false, false, 2, 1);
-        cvLabel.setLayoutData(gdCV);
-
-        // Available Sql Conversion Text
-        // --------------------------------------
-
-        String convertedSymbol = binding.getSqlConversionText();
-        int lossOfPrecIndex = convertedSymbol.indexOf('\n');
-        String warningText = CoreStringUtil.Constants.EMPTY_STRING;
-        if (lossOfPrecIndex > -1) {
-            warningText = convertedSymbol.substring(lossOfPrecIndex + 1, convertedSymbol.length());
-            convertedSymbol = convertedSymbol.substring(0, lossOfPrecIndex);
-        }
-
-        symbolConversionLabel = WidgetFactory.createLabel(newGroup, convertedSymbol, GridData.FILL_BOTH);
-
-        symbolWarningLabel = WidgetFactory.createLabel(newGroup, warningText, GridData.FILL_BOTH);
-        GridData gdWarning = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING, GridData.VERTICAL_ALIGN_FILL, false, false, 3, 1);
-        symbolWarningLabel.setLayoutData(gdWarning);
-
-        // Conversion Buttons Panel
-        // --------------------------------------
-
-        // Create the changeSelectedSql Button
-        this.convertSelectedSqlButton = WidgetFactory.createButton(newGroup,
-                                                                   CONVERT_SELECTED_SQL_BUTTON,
-                                                                   GridData.HORIZONTAL_ALIGN_BEGINNING);
-        this.convertSelectedSqlButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-                convertSelectedSqlPressed();
-            }
-        });
-
-        // Create the changeAllSql Button
-        this.convertAllSqlButton = WidgetFactory.createButton(newGroup,
-                                                              CONVERT_ALL_SQL_BUTTON,
-                                                              GridData.HORIZONTAL_ALIGN_BEGINNING);
-        this.convertAllSqlButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-                convertAllSqlPressed();
-            }
-        });
-        sqlGroup = newGroup;
     }
 
     /**
@@ -650,29 +326,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
      * @param binding the selected Binding
      */
     private void updateAttributeConversionPanel( Binding binding ) {
-        if (binding != null) {
-            // get the attribute from the binding
-            Object attr = binding.getAttribute();
-
-            // Update the runtimeType label text and image
-            attrRuntimeTypeLabel.setText(getTypeText(binding));
-            attributeLabel.setImage(getLabelImage(attr));
-
-            String nameStr = getLabelText(attr);
-            String labelStr = nameStr;
-            attributeLabel.setText(labelStr);
-
-            // Update Datatype Chooser
-            EObject dtype = binding.getCurrentAttrDatatype();
-            if (dtype != null) {
-                setChooserDatatype(dtype);
-            }
-        }
-
         updateAttributeConversionPanelButtons(binding);
-
-        // chooserPanel.layout();
-        attrGroup.layout();
     }
 
     /**
@@ -680,34 +334,18 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
      */
     private void updateAttributeConversionPanelButtons( Binding binding ) {
         // ------------------------------------------
-        // Set the Apply Button Enabled State
-        // ------------------------------------------
-        boolean enableApply = false;
-        if (binding != null && !this.targetLocked) {
-            // Set the Apply button enabled state. Enable if the datatypes are different.
-            EObject chooserDatatype = getChooserDatatype();
-            EObject bindingDatatype = binding.getCurrentAttrDatatype();
-            if (chooserDatatype != null && bindingDatatype != null) {
-                if (!chooserDatatype.equals(bindingDatatype)) {
-                    enableApply = true;
-                }
-            }
-        }
-        // Set Apply Button enabled state
-        convertSelectedAttrButton.setEnabled(enableApply);
-
-        // ------------------------------------------
         // Set the ConvertAll Button Enabled State
         // ------------------------------------------
         // Enable ConvertAll Button if any Binding has Conflict and target group not locked
         boolean enableConvertAll = false;
 
         // Enable ConvertAll Button if any Binding has Conflict
-        boolean hasTypeConflict = bindingList.hasTypeConflict();
+        boolean hasTypeConflict = bindingListInput.getBindingList().hasTypeConflict();
         if (hasTypeConflict && !this.targetLocked) {
             enableConvertAll = true;
         }
-        convertAllAttrsButton.setEnabled(enableConvertAll);
+
+        changeAllColumnDatatypesButton.setEnabled(enableConvertAll);
     }
 
     /**
@@ -716,29 +354,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
      * @param binding the selected Binding
      */
     private void updateSymbolConversionPanel( Binding binding ) {
-        if (binding != null) {
-            // Update the runtimeType label text and image
-            Object symbol = binding.getCurrentSymbol();
-            if (symbol != null) {
-                symbolRuntimeTypeLabel.setText(getTypeText(symbol));
-                sqlSymbolLabel.setImage(getLabelImage(symbol));
-                sqlSymbolLabel.setText(symbol.toString());
-            }
-            // Update the available conversion label
-            String convertedSymbol = binding.getSqlConversionText();
-            int lossOfPrecIndex = convertedSymbol.indexOf('\n');
-            String warningText = CoreStringUtil.Constants.EMPTY_STRING;
-            if (lossOfPrecIndex > -1) {
-                warningText = convertedSymbol.substring(lossOfPrecIndex + 1, convertedSymbol.length());
-                convertedSymbol = convertedSymbol.substring(0, lossOfPrecIndex);
-            }
-            symbolConversionLabel.setText(convertedSymbol);
-            symbolWarningLabel.setText(warningText);
-        }
-
         updateSymbolConversionPanelButtons(binding);
-
-        sqlGroup.layout();
     }
 
     /**
@@ -753,19 +369,23 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
             // Enable Apply Button if current Binding has Conflict
             enableApply = binding.canConvertSqlSymbol();
         }
-        // Set Apply Button enabled state
-        convertSelectedSqlButton.setEnabled(enableApply);
 
         // ------------------------------------------
         // Set the ConvertAll Button Enabled State
         // ------------------------------------------
         // If any binding has conflict, enable
         boolean enableConvertAll = false;
-        if (bindingList.hasTypeConflict()) {
+        if (bindingListInput.getBindingList().hasTypeConflict()) {
             enableConvertAll = true;
         }
+        
+        if( enableConvertAll && enableApply ) {
+        	enableConvertAll = true;
+        } else {
+        	enableConvertAll = false;
+        }
         // Set ConvertAll Enabled State
-        convertAllSqlButton.setEnabled(enableConvertAll);
+        convertAllSqlSymbolsButton.setEnabled(enableConvertAll);
     }
 
     /**
@@ -775,7 +395,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         int rows = table.getItemCount();
         for (int i = 0; i < rows; i++) {
             TableItem item = table.getItem(i);
-            Binding binding = bindingList.get(i);
+            Binding binding = bindingListInput.getBindingList().get(i);
             if (!binding.isBound() || binding.hasTypeConflict()) {
                 item.setBackground(colorManager.getColor(ColorManager.UNBOUND_BACKGROUND));
             } else {
@@ -788,17 +408,19 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
     /**
      * handler for convertAll Attributes Button pressed
      */
-    void convertAllAttrsPressed() {
-        for (int i = 0; i < bindingList.size(); i++) {
-            Binding binding = bindingList.get(i);
+    void changeAllColumnDatatypesPressed() {
+        for (int i = 0; i < bindingListInput.getBindingList().size(); i++) {
+            Binding binding = bindingListInput.getBindingList().get(i);
             if (binding.hasTypeConflict() && binding.hasAttributeConversion()) {
                 // accept the default attribute type
                 binding.acceptAttributeConversion();
             }
         }
+        
+        bindingListInput.datatypeChanged();
 
         // Refresh
-        tableViewer.refresh(true);
+        bindingTableViewer.refresh(true);
         updateRowColors();
         updateMessageArea();
 
@@ -808,18 +430,20 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
     /**
      * handler for convertAll Sql Button pressed
      */
-    void convertAllSqlPressed() {
-        for (int i = 0; i < bindingList.size(); i++) {
-            Binding binding = bindingList.get(i);
+    void changeAllColumnDatatypesButtonPressed() {
+        for (int i = 0; i < bindingListInput.getBindingList().size(); i++) {
+            Binding binding = bindingListInput.getBindingList().get(i);
             // If there is a type conflict, and available conversion, use it
             if (binding.hasTypeConflict() && binding.canConvertSqlSymbol()) {
                 // accept the available Sql Conversion
                 binding.acceptSqlConversion();
             }
         }
+        
+        bindingListInput.datatypeChanged();
 
         // Refresh
-        tableViewer.refresh(true);
+        bindingTableViewer.refresh(true);
         updateRowColors();
         updateMessageArea();
 
@@ -833,13 +457,15 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         // Get the selected binding - table only allows single select
         Binding binding = getSelectedBinding();
         // Set datatype on the binding
-        binding.setNewAttrDatatype(getChooserDatatype());
+        binding.setNewAttrDatatype(bindingListInput.getTargetDatatype(binding));
 
         // Update the AttrConversion Panel
         updateAttributeConversionPanel(binding);
 
+        bindingListInput.datatypeChanged();
+        
         // Refresh
-        tableViewer.refresh(true);
+        bindingTableViewer.refresh(true);
         updateRowColors();
         updateMessageArea();
 
@@ -859,54 +485,16 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         // Update the SqlConversion Panel
         updateSymbolConversionPanel(binding);
 
+        
+        bindingListInput.datatypeChanged();
         // Refresh table and message area
-        tableViewer.refresh(true);
+        bindingTableViewer.refresh(true);
         updateRowColors();
         updateMessageArea();
 
         selectBinding(binding);
     }
 
-    /**
-     * handler for Datatype chooser dialog
-     */
-    void showDatatypeDialogPressed() {
-        Binding binding = getSelectedBinding();
-        if (binding != null) {
-            Object attr = binding.getAttribute();
-            if (TransformationHelper.isSqlColumn(attr)) {
-                Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
-                DatatypeSelectionDialog dialog = new DatatypeSelectionDialog(shell, (EObject)attr, "string"); //$NON-NLS-1$
-                Object originalValue = this.chooserDatatype;
-                Object[] selection = new Object[] {originalValue};
-                selection[0] = originalValue;
-                dialog.setInitialSelections(selection);
-
-                int status = dialog.open();
-                EObject newDatatype = (EObject)originalValue;
-                if (status == Window.OK) {
-                    Object[] result = dialog.getResult();
-                    if (result.length == 0) {
-                        // null out the value
-                        newDatatype = null;
-                    } else {
-                        // return the selected value
-                        newDatatype = (EObject)result[0];
-                    }
-                }
-                // If different datatype was chosen, set it on the binding
-                if (newDatatype!=null && !newDatatype.equals(originalValue)) {
-                    setChooserDatatype(newDatatype);
-                    updateAttributeConversionPanelButtons(binding);
-                }
-            }
-            attrGroup.layout();
-            // chooserPanel.layout();
-            tableViewer.refresh(true);
-            updateRowColors();
-            updateMessageArea();
-        }
-    }
 
     /**
      * Handler for Table Selection changed
@@ -934,7 +522,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
      */
     public Binding getSelectedBinding() {
         Binding selectedBinding = null;
-        IStructuredSelection selection = (IStructuredSelection)tableViewer.getSelection();
+        IStructuredSelection selection = (IStructuredSelection)bindingTableViewer.getSelection();
         if (selection != null) {
             Object elem = selection.getFirstElement();
             if (elem != null && elem instanceof Binding) {
@@ -949,7 +537,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
      */
     private void selectBinding( Binding binding ) {
         if (binding != null) {
-            tableViewer.setSelection(new StructuredSelection(binding), true);
+            bindingTableViewer.setSelection(new StructuredSelection(binding), true);
         }
     }
 
@@ -957,9 +545,9 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
      * Select the first Binding in the binding list
      */
     private void selectFirstBinding() {
-        if (bindingList.size() > 0) {
-            Binding binding = bindingList.get(0);
-            tableViewer.setSelection(new StructuredSelection(binding), true);
+        if (bindingListInput.getBindingList().size() > 0) {
+            Binding binding = bindingListInput.getBindingList().get(0);
+            bindingTableViewer.setSelection(new StructuredSelection(binding), true);
         }
     }
 
@@ -967,25 +555,14 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
      * Select the first Binding in the binding list which has a type conflict
      */
     private void selectFirstTypeConflict() {
-        Binding nextSelection = bindingList.getFirstTypeConflict();
+        Binding nextSelection = bindingListInput.getBindingList().getFirstTypeConflict();
         if (nextSelection != null) {
-            tableViewer.setSelection(new StructuredSelection(nextSelection), true);
+            bindingTableViewer.setSelection(new StructuredSelection(nextSelection), true);
         } else {
             selectFirstBinding();
         }
     }
 
-    /**
-     * Select the next Binding which has a type conflict
-     * 
-     * @param binding the supplied binding
-     */
-    // private void selectNextTypeConflict(Binding binding) {
-    // Binding nextSelection = bindingList.getNextTypeConflict(binding);
-    // if(nextSelection!=null) {
-    // tableViewer.setSelection(new StructuredSelection(nextSelection),true);
-    // }
-    // }
     /**
      * Check whether there are any modifications to the SQL Symbols
      * 
@@ -994,8 +571,8 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
     public boolean hasSqlSymbolModifications() {
         boolean result = false;
         // If any of the newSymbols is non-null, there are type modifications
-        for (int i = 0; i < bindingList.size(); i++) {
-            Binding binding = bindingList.get(i);
+        for (int i = 0; i < bindingListInput.getBindingList().size(); i++) {
+            Binding binding = bindingListInput.getBindingList().get(i);
             if (binding.sqlSymbolWasConverted()) {
                 result = true;
                 break;
@@ -1012,8 +589,8 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
     public boolean hasAttributeTypeModifications() {
         boolean result = false;
         // If any of the newSymbols is non-null, there are type modifications
-        for (int i = 0; i < bindingList.size(); i++) {
-            Binding binding = bindingList.get(i);
+        for (int i = 0; i < bindingListInput.getBindingList().size(); i++) {
+            Binding binding = bindingListInput.getBindingList().get(i);
             if (binding.hasAttrTypeModification()) {
                 result = true;
                 break;
@@ -1040,9 +617,9 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
      */
     public void applyBindingTypeModifications() {
         // If any of the newSymbols is non-null, there are type modifications
-        for (int i = 0; i < bindingList.size(); i++) {
+        for (int i = 0; i < bindingListInput.getBindingList().size(); i++) {
             Binding originalBinding = originalBindingList.get(i);
-            Binding binding = bindingList.get(i);
+            Binding binding = bindingListInput.getBindingList().get(i);
             // Change the Attribute Types if required
             if (binding.hasAttrTypeModification()) {
                 originalBinding.setNewAttrDatatype(binding.getCurrentAttrDatatype());
@@ -1059,8 +636,8 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
      */
     public void clearBindingTypeModifications() {
         // If any of the newSymbols is non-null, there are type modifications
-        for (int i = 0; i < bindingList.size(); i++) {
-            Binding binding = bindingList.get(i);
+        for (int i = 0; i < bindingListInput.getBindingList().size(); i++) {
+            Binding binding = bindingListInput.getBindingList().get(i);
             // Change the Attribute Types if required
             if (binding.hasAttrTypeModification()) {
                 binding.setNewAttrDatatype(null);
@@ -1070,6 +647,14 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
                 binding.undoSqlConversion();
             }
         }
+    }
+    
+    private String getSpaces(int nSpaces) {
+    	StringBuffer sb = new StringBuffer(nSpaces);
+    	for( int i=0; i<nSpaces; i++ ) {
+    		sb.append(StringUtilities.SPACE);
+    	}
+    	return sb.toString();
     }
 
     /**
@@ -1091,7 +676,231 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         // Return the bindings as an array of Objects
         @Override
 		public Object[] getElements( Object parent ) {
-            return bindingList.getAll().toArray();
+            return bindingListInput.getBindingList().getAll().toArray();
         }
     }
+    
+    class BindingTableInput {
+    	BindingList bindingList;
+    	Map<Binding, EObject> targetDatatypeMap = new HashMap<Binding, EObject>();
+    	Map<Binding, Boolean> reconciledList = new HashMap<Binding, Boolean>();
+    	
+    	public BindingTableInput(BindingList bindingList) {
+    		super();
+    		this.bindingList = bindingList;
+    		
+    		for( Object obj : bindingList.getAll().toArray() ) {
+    			Binding binding = (Binding)obj;
+    			
+	            String runtimeType = binding.getCurrentSymbolRuntimeType();
+	            // Get default datatype for it
+	            EObject datatype = TransformationMappingHelper.getDefaultDatatypeForRuntimeTypeName(runtimeType);
+	            targetDatatypeMap.put(binding, datatype);
+    		}
+    		
+    		datatypeChanged();
+    	}
+    	
+    	public BindingList getBindingList() {
+    		return this.bindingList;
+    	}
+    	
+    	public void datatypeChanged() {
+    		for( Object obj : bindingList.getAll().toArray() ) {
+    			Binding binding = (Binding)obj;
+
+	            reconciledList.put(binding, Boolean.valueOf(!binding.hasTypeConflict()));
+    		}
+    	}
+    	
+    	public EObject getTargetDatatype(Binding binding) {
+    		return targetDatatypeMap.get(binding);
+    	}
+    	
+    	public boolean isReconciled(Binding binding) {
+    		return reconciledList.get(binding).booleanValue();
+    	}
+    	
+    	public void setTargetDatatype(Binding binding, EObject dType) {
+    		targetDatatypeMap.put(binding, dType);
+    		datatypeChanged();
+    	}
+    	
+    	public void setDatatypeOnBinding(Binding binding) {
+    		binding.setNewAttrDatatype(getTargetDatatype(binding));
+    		datatypeChanged();
+    	}
+    }
+    
+	class TheBindingColumnLabelProvider extends ColumnLabelProvider {
+
+		private final int columnNumber;
+
+		public TheBindingColumnLabelProvider(int columnNumber) {
+			this.columnNumber = columnNumber;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+		 */
+		@Override
+		public String getText(Object element) {
+			
+	        String result = PluginConstants.EMPTY_STRING;
+	        Binding binding = (Binding) element;
+	        switch (this.columnNumber) {
+	        	// columnNames = new String[] {"", "Target Column", "Matched Type", "Change Type", "", "Source SQL Symbol"};
+	            case 0:  // FIX COLUMN
+	                break;
+	            case 1 : // TARGET COLUMN
+	                result = binding.getAttributeText(true);
+	                break;
+	            case 2 : // MATCHED TYPE
+	                Object attr = binding.getAttribute();
+	                // Attribute Datatype Label
+	                EObject datatype = null;
+	                attr = binding.getAttribute();
+	                if (TransformationHelper.isSqlColumn(attr)) {
+	                    datatype = bindingListInput.getTargetDatatype(binding);
+	                }
+	                result = getDatatypeText(datatype);
+	                break;
+	            case 3 : // CONVERT BUTTON
+	                //result = binding.getSqlSymbolText(true);
+	                break;
+	            case 4 : // SQL Symbol Column
+	                result = binding.getSqlSymbolText(true);
+	                break;
+
+	            default :
+	                break;  
+	        }
+	        return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
+		 */
+		@Override
+		public String getToolTipText(Object element) {
+			return PluginConstants.EMPTY_STRING;
+		}
+
+		@Override
+		public Image getImage(Object element) {
+            Image image = null;
+	        Binding binding = (Binding) element;
+	        switch (this.columnNumber) {
+	        	case 0:  // FIX BUTTON
+	            	if( bindingListInput.isReconciled(binding) ) {
+	            		image = UiPlugin.getDefault().getImage(PluginConstants.Images.CHANGED_BUTTON_DISABLED_ICON);
+	            	} else {
+	            		image = UiPlugin.getDefault().getImage(PluginConstants.Images.CHANGED_BUTTON_ICON);
+	            	}
+	        	break;
+	            case 1:  // TARGET COLUMN
+	                break;
+	            case 2:  // MATCHED TYPE
+	            	image = UiPlugin.getDefault().getImage(PluginConstants.Images.ELIPSIS_LONG_BUTTON_ICON);
+	                break;
+	            case 3:  // Attribute Column
+	            	if( bindingListInput.isReconciled(binding) ) {
+	            		image = UiPlugin.getDefault().getImage(PluginConstants.Images.CONVERT_BUTTON_DISABLED_ICON);
+	            	} else {
+	            		image = UiPlugin.getDefault().getImage(PluginConstants.Images.CONVERT_BUTTON_ICON);
+	            	}
+	        	break;
+	            default :
+	                break;  
+	        }
+	        return image;
+		}
+	}
+	
+	class ChangeDatatypeEditingSupport extends CheckBoxEditingSupport {
+
+		public ChangeDatatypeEditingSupport(ColumnViewer viewer) {
+			super(viewer);
+		}
+
+		@Override
+		protected void setElementValue(Object element, Object newValue) {
+			if (element instanceof Binding && newValue instanceof Boolean) {
+				convertSelectedAttrPressed();
+			}
+		}
+
+	}
+	
+	class ConvertSymbolEditingSupport extends CheckBoxEditingSupport {
+
+		public ConvertSymbolEditingSupport(ColumnViewer viewer) {
+			super(viewer);
+		}
+
+		@Override
+		protected void setElementValue(Object element, Object newValue) {
+			if (element instanceof Binding && newValue instanceof Boolean) {
+				convertSelectedSqlPressed();
+			}
+		}
+
+	}
+	
+	// 
+	class ChangeProposedDatatypeEditingSupport extends CheckBoxEditingSupport {
+
+		public ChangeProposedDatatypeEditingSupport(ColumnViewer viewer) {
+			super(viewer);
+		}
+
+		@Override
+		protected void setElementValue(Object element, Object newValue) {
+			if (element instanceof Binding && newValue instanceof Boolean) {
+		        Binding binding = (Binding)element;
+
+	            Object attr = binding.getAttribute();
+	            
+	            if (TransformationHelper.isSqlColumn(attr)) {
+	                Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+	                DatatypeSelectionDialog dialog = new DatatypeSelectionDialog(shell, (EObject)attr, "string"); //$NON-NLS-1$
+	                Object originalValue = bindingListInput.getTargetDatatype(binding);
+	                
+	                Object[] selection = new Object[] {originalValue};
+	                
+	                selection[0] = originalValue;
+	                dialog.setInitialSelections(selection);
+
+	                int status = dialog.open();
+	                EObject newDatatype = (EObject)originalValue;
+	                if (status == Window.OK) {
+	                    Object[] result = dialog.getResult();
+	                    if (result.length == 0) {
+	                        // null out the value
+	                        newDatatype = null;
+	                    } else {
+	                        // return the selected value
+	                        newDatatype = (EObject)result[0];
+	                    }
+	                }
+	                // If different datatype was chosen, set it on the binding
+	                if (newDatatype!=null && !newDatatype.equals(originalValue)) {
+	                    bindingListInput.setTargetDatatype(binding, newDatatype);
+	                    updateAttributeConversionPanelButtons(binding);
+	                }
+	            }
+
+	            // chooserPanel.layout();
+	            bindingTableViewer.refresh(true);
+	            updateRowColors();
+	            updateMessageArea();
+
+			}
+		}
+
+	}
 }

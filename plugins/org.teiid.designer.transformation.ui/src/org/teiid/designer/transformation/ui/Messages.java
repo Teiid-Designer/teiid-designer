@@ -12,6 +12,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @since 8.0
  */
+@SuppressWarnings("javadoc")
 public class Messages extends NLS {
     public static String Browse;
     public static String Edit;
@@ -94,6 +95,19 @@ public class Messages extends NLS {
     public static String DefaultUpdateMessageAmbigious;
     public static String DefaultUpdateMessageOverride;
     
+    // Datatype Reconciler Panel
+    public static String datatypeReconciler_helpText;
+
+	public static String datatypeReconciler_convertAllColumnDatatypesLabel;
+    public static String datatypeReconciler_convertAllColumnDatatypesTooltip;
+    public static String datatypeReconciler_convertAllSqlSymbolsLabel;
+    public static String datatypeReconciler_convertAllSqlSymbolsTooltip;
+    public static String datatypeReconciler_targetColumnLabel;
+    public static String datatypeReconciler_matchedTypeLabel;
+    public static String datatypeReconciler_sourceSqlSymbolLabel;
+    public static String datatypeReconciler_statusTitle;
+    public static String datatypeReconciler_allResolvedMessage;
+    public static String datatypeReconciler_someUnresolvedConflicts;
     
     static {
         NLS.initializeMessages("org.teiid.designer.transformation.ui.messages", Messages.class); //$NON-NLS-1$

@@ -54,6 +54,13 @@ public interface PluginConstants {
         
         String CHECKED_BOX_ICON = "icons/full/cview16/checked_box.png"; //$NON-NLS-1$
         String UNCHECKED_BOX_ICON = "icons/full/cview16/unchecked_box.png"; //$NON-NLS-1$
+        
+        String CHANGED_BUTTON_ICON = "icons/full/wizban/change-button.png"; //$NON-NLS-1$
+        String CHANGED_BUTTON_DISABLED_ICON = "icons/full/wizban/change-button-disabled.png"; //$NON-NLS-1$
+        String CONVERT_BUTTON_ICON = "icons/full/wizban/convert-button.png"; //$NON-NLS-1$
+        String CONVERT_BUTTON_DISABLED_ICON = "icons/full/wizban/convert-button-disabled.png"; //$NON-NLS-1$
+        String ELIPSIS_BUTTON_ICON = "icons/full/wizban/elipsis-button.png"; //$NON-NLS-1$
+        String ELIPSIS_LONG_BUTTON_ICON = "icons/full/wizban/elipsis-long-button.png"; //$NON-NLS-1$
     }
 
     interface Prefs {
