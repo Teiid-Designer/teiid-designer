@@ -13,8 +13,10 @@ import javax.xml.namespace.QName;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import org.komodo.common.i18n.I18n;
 import org.komodo.common.util.StringUtil;
 import org.komodo.repository.RepositoryConstants;
+import org.komodo.repository.RepositoryI18n;
 import org.komodo.repository.artifact.Artifact;
 import org.komodo.repository.artifact.ArtifactFactory;
 import org.komodo.teiid.model.Propertied;
@@ -61,7 +63,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
         if (!(artifact instanceof UserDefinedArtifactType)
             || !Artifact.Type.VDB.getName().equals(((UserDefinedArtifactType)artifact).getUserType())) {
-            throw new IllegalArgumentException("Artifact is not a VDB"); // TODO i18n this
+            throw new IllegalArgumentException(I18n.bind(RepositoryI18n.notVdbArtifact, artifact.getName()));
         }
 
         final UserDefinedArtifactType vdbArtifact = (UserDefinedArtifactType)artifact;
@@ -69,7 +71,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
         try {
             // root element should be the VDB element
             if (!Vdb.ManifestId.VDB_ELEMENT.equals(rootElement.getLocalName())) {
-                throw new IllegalArgumentException("The vdb.xml file is malformed. It does not have a 'vdb' root element."); // TODO i18n this
+                throw new IllegalArgumentException(I18n.bind(RepositoryI18n.missingVdbRootElement, artifact.getName()));
             }
 
             processVdb(derivedArtifacts, vdbArtifact, rootElement, xpath);
