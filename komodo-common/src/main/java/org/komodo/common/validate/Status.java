@@ -7,6 +7,9 @@
 */
 package org.komodo.common.validate;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.komodo.common.util.CollectionUtil;
 import org.komodo.common.util.HashCode;
 import org.komodo.common.util.Precondition;
 
@@ -42,6 +45,7 @@ public class Status implements Comparable<Status> {
     }
 
     private final int code;
+    private List<Object> contexts;
     private String message;
     private final Severity severity;
 
@@ -69,12 +73,33 @@ public class Status implements Comparable<Status> {
     }
 
     /**
+     * Contexts are not added if they already exist.
+     *  
+     * @param newContexts the new status contexts (cannot be <code>null</code>)
+     */
+    public void addContext(final Object... newContexts) {
+        Precondition.notNull(newContexts, "newContexts"); //$NON-NLS-1$
+
+        if (this.contexts == null) {
+            this.contexts = new ArrayList<Object>(3);
+        }
+
+        for (final Object context : newContexts) {
+            Precondition.notNull(context, "context"); //$NON-NLS-1$
+
+            if (this.contexts.contains(context)) {
+                this.contexts.add(context);
+            }
+        }
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
-    public int compareTo(Status that) {
+    public int compareTo(final Status that) {
         if (this == that) {
             return 0;
         }
@@ -86,11 +111,11 @@ public class Status implements Comparable<Status> {
         if (this.severity == Severity.ERROR) {
             return -1;
         }
-        
+
         if (this.severity == Severity.WARNNING) {
             return ((that.severity == Severity.ERROR) ? 1 : -1);
         }
-        
+
         if (this.severity == Severity.INFO) {
             return ((that.severity == Severity.OK)) ? -1 : 1;
         }
@@ -105,7 +130,7 @@ public class Status implements Comparable<Status> {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -115,7 +140,8 @@ public class Status implements Comparable<Status> {
         }
 
         final Status that = (Status)obj;
-        return ((this.code == that.code) && (this.severity == that.severity));
+        return ((this.code == that.code) && (this.severity == that.severity) && CollectionUtil.matches(this.contexts,
+                                                                                                       that.contexts));
     }
 
     /**
@@ -123,6 +149,13 @@ public class Status implements Comparable<Status> {
      */
     public int getCode() {
         return this.code;
+    }
+
+    /**
+     * @return the status contexts (can be <code>null</code>)
+     */
+    public List<Object> getContexts() {
+        return this.contexts;
     }
 
     /**
@@ -146,7 +179,7 @@ public class Status implements Comparable<Status> {
      */
     @Override
     public int hashCode() {
-        return HashCode.compute(this.code, this.severity);
+        return HashCode.compute(this.code, this.contexts, this.severity);
     }
 
     /**
@@ -154,13 +187,6 @@ public class Status implements Comparable<Status> {
      */
     public boolean isError() {
         return (this.severity == Severity.ERROR);
-    }
-
-    /**
-     * @return <code>true</code> if status severity is {@link Severity#WARNNING}
-     */
-    public boolean isWarning() {
-        return (this.severity == Severity.WARNNING);
     }
 
     /**
@@ -178,9 +204,16 @@ public class Status implements Comparable<Status> {
     }
 
     /**
+     * @return <code>true</code> if status severity is {@link Severity#WARNNING}
+     */
+    public boolean isWarning() {
+        return (this.severity == Severity.WARNNING);
+    }
+
+    /**
      * @param newMessage the new message (can be <code>null</code> or empty)
      */
-    public void setMessage(String newMessage) {
+    public void setMessage(final String newMessage) {
         this.message = newMessage;
     }
 }

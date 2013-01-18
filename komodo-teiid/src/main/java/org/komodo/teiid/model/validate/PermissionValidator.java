@@ -7,8 +7,10 @@
 */
 package org.komodo.teiid.model.validate;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.komodo.common.util.Precondition;
+import org.komodo.common.util.StringUtil;
 import org.komodo.common.validate.Status;
 import org.komodo.teiid.model.ModelObject;
 import org.komodo.teiid.model.vdb.Permission;
@@ -27,7 +29,20 @@ class PermissionValidator implements Validator {
     public List<Status> validate(final ModelObject modelObject) throws IllegalArgumentException {
         Precondition.instanceOf(modelObject, "modelObject", Permission.class); //$NON-NLS-1$
 
-        return null;
+        final Permission permission = (Permission)modelObject;
+        final List<Status> errors = new ArrayList<Status>(3);
+
+        // make sure resource name is not empty
+        if (StringUtil.isEmpty(permission.getId())) {
+            final Status error = Error.EMPTY_PERMISSION_RESOURCE_NAME.createStatus();
+            error.addContext(permission);
+            errors.add(error);
+        } else {
+            // make sure resource name is valid
+            // TODO implement source name validation
+        }
+
+        return errors;
     }
 
 }

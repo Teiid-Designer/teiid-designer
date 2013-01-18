@@ -183,7 +183,7 @@ public class VdbDeriverTest extends RepositoryTest {
                     assertPropertyValue(derivedArtifact, Schema.PropertyName.TYPE, Schema.Type.VIRTUAL.name());
                     assertPropertyValue(derivedArtifact, Schema.PropertyName.VISIBLE, "true");
                     assertPropertyValue(derivedArtifact, "model-prop", "model-value");
-                    assertPropertyValue(derivedArtifact, Schema.PropertyName.METADATA_TYPE, Schema.DEFAULT_METADATA_TYPE);
+                    assertPropertyValue(derivedArtifact, Schema.PropertyName.METADATA_TYPE, Schema.DEFAULT_METADATA_TYPE.name());
                     assertPropertyValue(derivedArtifact, Schema.PropertyName.METADATA, "DDL Here");
 
                     // sources and related document relationships
@@ -403,7 +403,7 @@ public class VdbDeriverTest extends RepositoryTest {
                 } else if (!foundViewModel && "twitterview".equals(artifactName)) {
                     foundViewModel = true;
                     assertPropertyValue(derivedArtifact, Schema.PropertyName.TYPE, Schema.Type.VIRTUAL.name());
-                    assertPropertyValue(derivedArtifact, Schema.PropertyName.METADATA_TYPE, Schema.DEFAULT_METADATA_TYPE);
+                    assertPropertyValue(derivedArtifact, Schema.PropertyName.METADATA_TYPE, Schema.DEFAULT_METADATA_TYPE.name());
                     final String expected = "\n             CREATE VIRTUAL PROCEDURE getTweets(query varchar) RETURNS (created_on varchar(25), from_user varchar(25), to_user varchar(25),\n"
                                             + "                 profile_image_url varchar(25), source varchar(25), text varchar(140)) AS\n"
                                             + "                select tweet.* from\n"

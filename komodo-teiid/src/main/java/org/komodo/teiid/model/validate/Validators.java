@@ -27,6 +27,11 @@ import org.komodo.teiid.model.vdb.Vdb;
  */
 public class Validators implements Validator {
 
+    /**
+     * A validator that can be shared.
+     */
+    public final static Validators SHARED = new Validators();
+
     private final ConcurrentMap<String, Validator> validators = new ConcurrentHashMap<String, Validator>();
 
     /**
