@@ -76,7 +76,7 @@ public interface RepositoryConstants {
         /**
          * The root node path in the S-RAMP database for user-defined artifacts. Value is {@value}.
          */
-        String USER_DEFINED_ARTIFACT_PATH = ROOT_PATH + "/user"; //$NON-NLS-1$
+        String USER_DEFINED_ARTIFACT_PATH = ROOT_PATH + "/ext"; //$NON-NLS-1$
     }
 
 }

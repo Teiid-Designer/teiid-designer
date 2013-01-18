@@ -28,12 +28,12 @@ import org.komodo.teiid.model.vdb.Schema;
 import org.komodo.teiid.model.vdb.Source;
 import org.komodo.teiid.model.vdb.Translator;
 import org.komodo.teiid.model.vdb.Vdb;
-import org.overlord.sramp.SrampModelUtils;
-import org.overlord.sramp.derived.AbstractXmlDeriver;
-import org.overlord.sramp.derived.ArtifactDeriver;
+import org.overlord.sramp.common.SrampModelUtils;
+import org.overlord.sramp.common.derived.AbstractXmlDeriver;
+import org.overlord.sramp.common.derived.ArtifactDeriver;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
+import org.s_ramp.xmlns._2010.s_ramp.ExtendedArtifactType;
 import org.s_ramp.xmlns._2010.s_ramp.Property;
-import org.s_ramp.xmlns._2010.s_ramp.UserDefinedArtifactType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -52,7 +52,9 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
     public static final char ROLE_NAME_DELIMETER = ',';
 
     /**
-     * @see org.overlord.sramp.derived.AbstractXmlDeriver#derive(java.util.Collection, org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType, org.w3c.dom.Element, javax.xml.xpath.XPath)
+     * {@inheritDoc}
+     *
+     * @see org.overlord.sramp.common.derived.AbstractXmlDeriver#derive(java.util.Collection, org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType, org.w3c.dom.Element, javax.xml.xpath.XPath)
      */
     @Override
     protected void derive(final Collection<BaseArtifactType> derivedArtifacts,
@@ -61,12 +63,12 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                           final XPath xpath) throws IOException {
         LOGGER.debug("derive:root element='{}'", rootElement.getLocalName()); //$NON-NLS-1$
 
-        if (!(artifact instanceof UserDefinedArtifactType)
-            || !Artifact.Type.VDB.getName().equals(((UserDefinedArtifactType)artifact).getUserType())) {
+        if (!(artifact instanceof ExtendedArtifactType)
+            || !Artifact.Type.VDB.getName().equals(((ExtendedArtifactType)artifact).getExtendedType())) {
             throw new IllegalArgumentException(I18n.bind(RepositoryI18n.notVdbArtifact, artifact.getName()));
         }
 
-        final UserDefinedArtifactType vdbArtifact = (UserDefinedArtifactType)artifact;
+        final ExtendedArtifactType vdbArtifact = (ExtendedArtifactType)artifact;
 
         try {
             // root element should be the VDB element
@@ -94,7 +96,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
             for (int dataPolicyIndex = 0, numDataPolicies = dataPolicies.getLength(); dataPolicyIndex < numDataPolicies; ++dataPolicyIndex) {
                 final Element dataPolicy = (Element)dataPolicies.item(dataPolicyIndex);
-                final UserDefinedArtifactType dataPolicyArtifact = ArtifactFactory.create(Artifact.Type.DATA_POLICY);
+                final ExtendedArtifactType dataPolicyArtifact = ArtifactFactory.create(Artifact.Type.DATA_POLICY);
                 derivedArtifacts.add(dataPolicyArtifact);
 
                 { // name
@@ -173,7 +175,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
                         for (int permissionIndex = 0, numPermissions = permissions.getLength(); permissionIndex < numPermissions; ++permissionIndex) {
                             final Element permission = (Element)permissions.item(permissionIndex);
-                            final UserDefinedArtifactType permissionArtifact = ArtifactFactory.create(Artifact.Type.PERMISSION);
+                            final ExtendedArtifactType permissionArtifact = ArtifactFactory.create(Artifact.Type.PERMISSION);
                             derivedArtifacts.add(permissionArtifact);
 
                             { // resource name
@@ -278,7 +280,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
             for (int entryIndex = 0, numEntries = entries.getLength(); entryIndex < numEntries; ++entryIndex) {
                 final Element entry = (Element)entries.item(entryIndex);
-                final UserDefinedArtifactType entryArtifact = ArtifactFactory.create(Artifact.Type.ENTRY);
+                final ExtendedArtifactType entryArtifact = ArtifactFactory.create(Artifact.Type.ENTRY);
                 derivedArtifacts.add(entryArtifact);
 
                 { // name
@@ -300,7 +302,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
         }
     }
 
-    private void processProperties(final UserDefinedArtifactType artifact,
+    private void processProperties(final ExtendedArtifactType artifact,
                                    final Element element,
                                    final XPath xpath) throws Exception {
         final NodeList props = (NodeList)query(xpath,
@@ -341,7 +343,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
             for (int schemaIndex = 0, numSchemas = schemas.getLength(); schemaIndex < numSchemas; ++schemaIndex) {
                 final Element schema = (Element)schemas.item(schemaIndex);
-                final UserDefinedArtifactType schemaArtifact = ArtifactFactory.create(Artifact.Type.SCHEMA);
+                final ExtendedArtifactType schemaArtifact = ArtifactFactory.create(Artifact.Type.SCHEMA);
                 derivedArtifacts.add(schemaArtifact);
 
                 { // name
@@ -399,7 +401,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
                     for (int sourceIndex = 0, numSources = sources.getLength(); sourceIndex < numSources; ++sourceIndex) {
                         final Element source = (Element)sources.item(sourceIndex);
-                        final UserDefinedArtifactType sourceArtifact = ArtifactFactory.create(Artifact.Type.SOURCE);
+                        final ExtendedArtifactType sourceArtifact = ArtifactFactory.create(Artifact.Type.SOURCE);
                         derivedArtifacts.add(sourceArtifact);
 
                         { // name
@@ -453,7 +455,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
             for (int translatorIndex = 0, numTranslators = translators.getLength(); translatorIndex < numTranslators; ++translatorIndex) {
                 final Element translator = (Element)translators.item(translatorIndex);
-                final UserDefinedArtifactType translatorArtifact = ArtifactFactory.create(Artifact.Type.TRANSLATOR);
+                final ExtendedArtifactType translatorArtifact = ArtifactFactory.create(Artifact.Type.TRANSLATOR);
                 derivedArtifacts.add(translatorArtifact);
 
                 { // name
@@ -483,7 +485,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
     }
 
     private void processVdb(final Collection<BaseArtifactType> derivedArtifacts,
-                            final UserDefinedArtifactType vdbArtifact,
+                            final ExtendedArtifactType vdbArtifact,
                             final Element vdb,
                             final XPath xpath) throws Exception {
         { // name
@@ -527,7 +529,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
             for (int vdbImportIndex = 0, numVdbImports = vdbImports.getLength(); vdbImportIndex < numVdbImports; ++vdbImportIndex) {
                 final Element vdbImport = (Element)vdbImports.item(vdbImportIndex);
-                final UserDefinedArtifactType vdbImportArtifact = ArtifactFactory.create(Artifact.Type.IMPORT_VDB);
+                final ExtendedArtifactType vdbImportArtifact = ArtifactFactory.create(Artifact.Type.IMPORT_VDB);
                 derivedArtifacts.add(vdbImportArtifact);
 
                 { // name
@@ -566,7 +568,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
     /**
      * {@inheritDoc}
      *
-     * @see org.overlord.sramp.derived.AbstractXmlDeriver#query(javax.xml.xpath.XPath, org.w3c.dom.Element, java.lang.String, javax.xml.namespace.QName)
+     * @see org.overlord.sramp.common.derived.AbstractXmlDeriver#query(javax.xml.xpath.XPath, org.w3c.dom.Element, java.lang.String, javax.xml.namespace.QName)
      */
     @Override
     protected Object query(final XPath xpath,

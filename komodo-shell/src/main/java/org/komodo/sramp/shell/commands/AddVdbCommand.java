@@ -18,8 +18,7 @@ package org.komodo.sramp.shell.commands;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.overlord.sramp.client.shell.AbstractShellCommand;
+import org.overlord.sramp.shell.AbstractShellCommand;
 
 /**
  * Adds a VDB to the repository.  
@@ -33,16 +32,40 @@ public class AddVdbCommand extends AbstractShellCommand {
     }
 
     /**
-     * @see org.overlord.sramp.client.shell.ShellCommand#printUsage()
+     * {@inheritDoc}
+     *
+     * @see org.overlord.sramp.shell.ShellCommand#execute()
      */
     @Override
-    public void printUsage() {
-        print("jvm:status [<statusType>]");
-        print("\tValid statusTypes: all (default), memory, threads");
+    public void execute() throws Exception {
+        String statusType = optionalArgument(0);
+        if (statusType == null) {
+            statusType = "all";
+        }
+        if ("all".equals(statusType) || "memory".equals(statusType)) {
+            final int mb = 1024 * 1024;
+            final Runtime runtime = Runtime.getRuntime();
+            print("##### Heap utilization statistics [MB] #####");
+            print("Used Memory:  %1$d MB", (runtime.totalMemory() - runtime.freeMemory()) / mb);
+            print("Free Memory:  %1$d MB", runtime.freeMemory() / mb);
+            print("Total Memory: %1$d MB", runtime.totalMemory() / mb);
+            print("Max Memory:   %1$d MB", runtime.maxMemory() / mb);
+        }
+        if ("all".equals(statusType) || "threads".equals(statusType)) {
+            print("##### Current Threads #####");
+            final Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
+            int count = 0;
+            for (final Entry<Thread, StackTraceElement[]> entry : allStackTraces.entrySet()) {
+                final Thread t = entry.getKey();
+                print("Thread %1$d : %2$s", count++, t.getName());
+            }
+        }
     }
 
     /**
-     * @see org.overlord.sramp.client.shell.ShellCommand#printHelp()
+     * {@inheritDoc}
+     *
+     * @see org.overlord.sramp.shell.ShellCommand#printHelp()
      */
     @Override
     public void printHelp() {
@@ -56,14 +79,29 @@ public class AddVdbCommand extends AbstractShellCommand {
     }
 
     /**
-     * @see org.overlord.sramp.client.shell.AbstractShellCommand#tabCompletion(java.lang.String, java.util.List)
+     * {@inheritDoc}
+     *
+     * @see org.overlord.sramp.shell.ShellCommand#printUsage()
      */
     @Override
-    public int tabCompletion(String lastArgument, List<CharSequence> candidates) {
+    public void printUsage() {
+        print("jvm:status [<statusType>]");
+        print("\tValid statusTypes: all (default), memory, threads");
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.overlord.sramp.shell.AbstractShellCommand#tabCompletion(java.lang.String, java.util.List)
+     */
+    @Override
+    public int tabCompletion(String lastArgument,
+                             final List<CharSequence> candidates) {
         // This is the first argument!
         if (getArguments().isEmpty()) {
-            if (lastArgument == null)
+            if (lastArgument == null) {
                 lastArgument = "";
+            }
             if ("all".startsWith(lastArgument)) {
                 candidates.add("all");
             } else if ("memory".startsWith(lastArgument)) {
@@ -76,35 +114,6 @@ public class AddVdbCommand extends AbstractShellCommand {
         } else {
             // There are no more arguments - this command only accepts one argument.
             return -1;
-        }
-    }
-
-    /**
-     * @see org.overlord.sramp.client.shell.ShellCommand#execute()
-     */
-    @Override
-    public void execute() throws Exception {
-        String statusType = optionalArgument(0);
-        if (statusType == null) {
-            statusType = "all";
-        }
-        if ("all".equals(statusType) || "memory".equals(statusType)) {
-            int mb = 1024*1024;
-            Runtime runtime = Runtime.getRuntime();
-            print("##### Heap utilization statistics [MB] #####");
-            print("Used Memory:  %1$d MB", (runtime.totalMemory() - runtime.freeMemory()) / mb);
-            print("Free Memory:  %1$d MB", runtime.freeMemory() / mb);
-            print("Total Memory: %1$d MB", runtime.totalMemory() / mb);
-            print("Max Memory:   %1$d MB", runtime.maxMemory() / mb);
-        }
-        if ("all".equals(statusType) || "threads".equals(statusType)) {
-            print("##### Current Threads #####");
-            Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
-            int count = 0;
-            for (Entry<Thread, StackTraceElement[]> entry : allStackTraces.entrySet()) {
-                Thread t = entry.getKey();
-                print("Thread %1$d : %2$s", count++, t.getName());
-            }
         }
     }
 }

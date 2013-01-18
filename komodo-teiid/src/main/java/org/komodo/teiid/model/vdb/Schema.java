@@ -74,22 +74,6 @@ public class Schema extends VdbAdminObject {
     }
 
     /**
-     * The schema/model types.
-     */
-    public enum Type {
-
-        /**
-         * A physical schema/model type.
-         */
-        PHYSICAL,
-
-        /**
-         * A virtual/view schema/model type.
-         */
-        VIRTUAL
-    }
-
-    /**
      * VDB model property names.
      */
     public interface PropertyName extends VdbAdminObject.PropertyName {
@@ -118,6 +102,22 @@ public class Schema extends VdbAdminObject {
          * Indicates if the schema/model is visible for user queries.
          */
         String VISIBLE = Schema.class.getSimpleName() + ".visible"; //$NON-NLS-1$
+    }
+
+    /**
+     * The schema/model types.
+     */
+    public enum Type {
+
+        /**
+         * A physical schema/model type.
+         */
+        PHYSICAL,
+
+        /**
+         * A virtual/view schema/model type.
+         */
+        VIRTUAL
     }
 
     /**
@@ -235,7 +235,7 @@ public class Schema extends VdbAdminObject {
      * 
      * @param sourceToDelete the schema/model source being deleted (cannot be <code>null</code>)
      */
-    public void removeSource(final Entry sourceToDelete) {
+    public void removeSource(final Source sourceToDelete) {
         Precondition.notNull(sourceToDelete, "sourceToDelete"); //$NON-NLS-1$
 
         if (this.sources != null) {

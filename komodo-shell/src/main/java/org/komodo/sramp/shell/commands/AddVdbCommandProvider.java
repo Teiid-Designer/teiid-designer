@@ -17,14 +17,11 @@ package org.komodo.sramp.shell.commands;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import org.overlord.sramp.client.shell.ShellCommand;
-import org.overlord.sramp.client.shell.ShellCommandProvider;
+import org.overlord.sramp.shell.ShellCommand;
+import org.overlord.sramp.shell.ShellCommandProvider;
 
 /**
- * Demonstrates how to contribute custom commands to the S-RAMP interactive shell.
  *
- * @author eric.wittmann@redhat.com
  */
 public class AddVdbCommandProvider implements ShellCommandProvider {
 
@@ -35,7 +32,9 @@ public class AddVdbCommandProvider implements ShellCommandProvider {
     }
 
     /**
-     * @see org.overlord.sramp.client.shell.ShellCommandProvider#getNamespace()
+     * {@inheritDoc}
+     *
+     * @see org.overlord.sramp.shell.ShellCommandProvider#getNamespace()
      */
     @Override
     public String getNamespace() {
@@ -43,11 +42,13 @@ public class AddVdbCommandProvider implements ShellCommandProvider {
     }
 
     /**
-     * @see org.overlord.sramp.client.shell.ShellCommandProvider#provideCommands()
+     * {@inheritDoc}
+     *
+     * @see org.overlord.sramp.shell.ShellCommandProvider#provideCommands()
      */
     @Override
     public Map<String, Class<? extends ShellCommand>> provideCommands() {
-        Map<String, Class<? extends ShellCommand>> rval = new HashMap<String, Class<? extends ShellCommand>>();
+        final Map<String, Class<? extends ShellCommand>> rval = new HashMap<String, Class<? extends ShellCommand>>();
         rval.put("status", AddVdbCommand.class);
         return rval;
     }

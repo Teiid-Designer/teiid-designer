@@ -245,7 +245,7 @@ public class DataPolicy extends VdbObject implements Describable {
      * 
      * @param roleNameToDelete the mapped role name being deleted (cannot be <code>null</code>)
      */
-    public void removeRoleName(final Entry roleNameToDelete) {
+    public void removeRoleName(final String roleNameToDelete) {
         Precondition.notNull(roleNameToDelete, "dataPolicyToDelete"); //$NON-NLS-1$
 
         if (this.roleNames != null) {
