@@ -115,7 +115,7 @@
             -->
             <dependency>
                 <groupId>org.overlord.sramp</groupId>
-                <artifactId>s-ramp-core</artifactId>
+                <artifactId>s-ramp-common</artifactId>
                 <version>${s-ramp.version}</version>
             </dependency>
 
@@ -143,6 +143,20 @@
                 <artifactId>s-ramp-atom</artifactId>
                 <version>${s-ramp.version}</version>
                 <classifier>classes</classifier>
+            </dependency>
+
+            <dependency>
+                <groupId>org.overlord.sramp</groupId>
+                <artifactId>s-ramp-server</artifactId>
+                <version>${s-ramp.version}</version>
+                <classifier>classes</classifier>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.overlord.sramp</groupId>
+                <artifactId>s-ramp-shell</artifactId>
+                <version>${s-ramp.version}</version>
             </dependency>
 
             <!--

@@ -338,7 +338,7 @@ public class Vdb extends VdbAdminObject {
      * 
      * @param dataPolicyToDelete the data policy being deleted (cannot be <code>null</code>)
      */
-    public void removeDataPolicy(final Entry dataPolicyToDelete) {
+    public void removeDataPolicy(final DataPolicy dataPolicyToDelete) {
         Precondition.notNull(dataPolicyToDelete, "dataPolicyToDelete"); //$NON-NLS-1$
 
         if (this.dataPolicies != null) {

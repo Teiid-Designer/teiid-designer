@@ -18,18 +18,18 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.komodo.common.util.Precondition;
-import org.overlord.sramp.SrampModelUtils;
 import org.overlord.sramp.atom.providers.HttpResponseProvider;
 import org.overlord.sramp.atom.providers.OntologyProvider;
 import org.overlord.sramp.atom.providers.SrampAtomExceptionProvider;
-import org.overlord.sramp.atom.services.ArtifactResource;
-import org.overlord.sramp.atom.services.BatchResource;
-import org.overlord.sramp.atom.services.FeedResource;
-import org.overlord.sramp.atom.services.OntologyResource;
-import org.overlord.sramp.atom.services.QueryResource;
-import org.overlord.sramp.atom.services.ServiceDocumentResource;
+import org.overlord.sramp.common.SrampModelUtils;
 import org.overlord.sramp.repository.PersistenceFactory;
 import org.overlord.sramp.repository.jcr.JCRRepository;
+import org.overlord.sramp.server.atom.services.ArtifactResource;
+import org.overlord.sramp.server.atom.services.BatchResource;
+import org.overlord.sramp.server.atom.services.FeedResource;
+import org.overlord.sramp.server.atom.services.OntologyResource;
+import org.overlord.sramp.server.atom.services.QueryResource;
+import org.overlord.sramp.server.atom.services.ServiceDocumentResource;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 
 /**

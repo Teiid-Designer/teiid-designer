@@ -13,12 +13,12 @@ import org.komodo.common.util.Precondition;
 import org.komodo.common.util.StringUtil;
 import org.komodo.common.validate.Status;
 import org.komodo.teiid.model.ModelObject;
-import org.komodo.teiid.model.vdb.Translator;
+import org.komodo.teiid.model.vdb.Source;
 
 /**
- * A validator for a Teiid {@link Translator translator}.
+ * A validator for a Teiid {@link Source source}.
  */
-class TranslatorValidator implements Validator {
+class SourceValidator implements Validator {
 
     /**
      * {@inheritDoc}
@@ -27,27 +27,21 @@ class TranslatorValidator implements Validator {
      */
     @Override
     public List<Status> validate(final ModelObject modelObject) throws IllegalArgumentException {
-        Precondition.instanceOf(modelObject, "modelObject", Translator.class); //$NON-NLS-1$
+        Precondition.instanceOf(modelObject, "modelObject", Source.class); //$NON-NLS-1$
 
-        final Translator translator = (Translator)modelObject;
+        final Source source = (Source)modelObject;
         final List<Status> errors = new ArrayList<Status>(3);
 
         // make sure name is not empty
-        if (StringUtil.isEmpty(translator.getId())) {
-            errors.add(EMPTY_TRANSLATOR_NAME);
+        if (StringUtil.isEmpty(source.getId())) {
+            errors.add(EMPTY_SOURCE_NAME);
         }
 
-        // make sure type is not empty
-        if (StringUtil.isEmpty(translator.getType())) {
-            errors.add(EMPTY_TRANSLATOR_TYPE);
-        }
-
-        // make sure properties is not empty
-        if (translator.getProperties().isEmpty()) {
-            errors.add(NO_TRANSLATOR_PROPERTIES);
+        // make sure translator name is not empty
+        if (StringUtil.isEmpty(source.getTranslatorName())) {
+            errors.add(EMPTY_SOURCE_TRANSLATOR_NAME);
         }
 
         return errors;
     }
-
 }

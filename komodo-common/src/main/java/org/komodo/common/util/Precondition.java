@@ -14,7 +14,22 @@ import java.text.MessageFormat;
  */
 public class Precondition {
 
-    private static final String MISSING_IDENTIFIER = "{*** missing identifier ***}"; //$NON-NLS-1$
+    /**
+     * @param objectBeingChecked the object whose class is being checked (cannot be null)
+     * @param identifier the identifier used in the error message (cannot be <code>null</code> or empty)
+     * @param requiredClass the class the object must be an <code>instanceof</code> (cannot be <code>null</code>)
+     */
+    public static void instanceOf(final Object objectBeingChecked,
+                                  String identifier,
+                                  final Class requiredClass) {
+        assert !StringUtil.isEmpty(identifier) : "identifier cannot be empty"; //$NON-NLS-1$
+        Precondition.notNull(objectBeingChecked, "objectBeingChecked"); //$NON-NLS-1$
+        Precondition.notNull(requiredClass, "requiredClass"); //$NON-NLS-1$
+
+        if (!requiredClass.isInstance(objectBeingChecked)) {
+            throw new IllegalArgumentException(MessageFormat.format("\"{0}\" is not null", identifier)); //$NON-NLS-1$
+        }
+    }
 
     /**
      * @param objectBeingChecked the object being checked (can be <code>null</code>)
@@ -23,12 +38,9 @@ public class Precondition {
      */
     public static void isNull(final Object objectBeingChecked,
                               String identifier) {
-        if (objectBeingChecked != null) {
-            if (StringUtil.isEmpty(identifier)) {
-                identifier = MISSING_IDENTIFIER;
-            }
+        assert !StringUtil.isEmpty(identifier) : "identifier cannot be empty"; //$NON-NLS-1$
 
-            assert ((identifier != null) && !identifier.isEmpty()) : "the argument identifier is empty"; //$NON-NLS-1$
+        if (objectBeingChecked != null) {
             throw new IllegalArgumentException(MessageFormat.format("\"{0}\" is not null", identifier)); //$NON-NLS-1$
         }
     }
@@ -39,9 +51,10 @@ public class Precondition {
      * @param identifier the identifier used in the error message (cannot be <code>null</code> or empty)
      * @throws IllegalArgumentException if the actual text does not exactly match the expected text
      */
-    public static void matchesExactly(String actual,
-                                      String expected,
-                                      String identifier) {
+    public static void matchesExactly(final String actual,
+                                      final String expected,
+                                      final String identifier) {
+        assert !StringUtil.isEmpty(identifier) : "identifier cannot be empty"; //$NON-NLS-1$
         boolean matches = true;
 
         if (actual == null) {
@@ -64,11 +77,9 @@ public class Precondition {
      */
     public static void notEmpty(final String textBeingChecked,
                                 String identifier) {
-        if (StringUtil.isEmpty(textBeingChecked)) {
-            if (StringUtil.isEmpty(identifier)) {
-                identifier = MISSING_IDENTIFIER;
-            }
+        assert !StringUtil.isEmpty(identifier) : "identifier cannot be empty"; //$NON-NLS-1$
 
+        if (StringUtil.isEmpty(textBeingChecked)) {
             throw new IllegalArgumentException(MessageFormat.format("\"{0}\" is empty", identifier)); //$NON-NLS-1$
         }
     }
@@ -80,12 +91,9 @@ public class Precondition {
      */
     public static void notNull(final Object objectBeingChecked,
                                String identifier) {
-        if (objectBeingChecked == null) {
-            if (StringUtil.isEmpty(identifier)) {
-                identifier = MISSING_IDENTIFIER;
-            }
+        assert !StringUtil.isEmpty(identifier) : "identifier cannot be empty"; //$NON-NLS-1$
 
-            assert ((identifier != null) && !identifier.isEmpty()) : "the argument identifier is empty"; //$NON-NLS-1$
+        if (objectBeingChecked == null) {
             throw new IllegalArgumentException(MessageFormat.format("\"{0}\" is null", identifier)); //$NON-NLS-1$
         }
     }

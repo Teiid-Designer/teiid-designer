@@ -24,13 +24,13 @@ import org.komodo.teiid.model.vdb.Permission;
 import org.komodo.teiid.model.vdb.Schema;
 import org.komodo.teiid.model.vdb.Source;
 import org.komodo.teiid.model.vdb.Translator;
-import org.overlord.sramp.ArtifactType;
-import org.overlord.sramp.SrampModelUtils;
 import org.overlord.sramp.client.query.ArtifactSummary;
 import org.overlord.sramp.client.query.QueryResultSet;
+import org.overlord.sramp.common.ArtifactType;
+import org.overlord.sramp.common.SrampModelUtils;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
+import org.s_ramp.xmlns._2010.s_ramp.ExtendedArtifactType;
 import org.s_ramp.xmlns._2010.s_ramp.Relationship;
-import org.s_ramp.xmlns._2010.s_ramp.UserDefinedArtifactType;
 
 /**
  * A test class for a {@link VdbDeriver}.
@@ -45,8 +45,8 @@ public class VdbDeriverTest extends RepositoryTest {
 
         // verify VDB artifact exists and has correct properties
         final BaseArtifactType vdbArtifact = _repoMgr.addVdb(vdbStream, "parser-test-vdb.xml");
-        assertThat(vdbArtifact, is(instanceOf(UserDefinedArtifactType.class)));
-        assertThat(((UserDefinedArtifactType)vdbArtifact).getUserType(), is(Artifact.Type.VDB.getName()));
+        assertThat(vdbArtifact, is(instanceOf(ExtendedArtifactType.class)));
+        assertThat(((ExtendedArtifactType)vdbArtifact).getExtendedType(), is(Artifact.Type.VDB.getName()));
         assertThat(vdbArtifact.getName(), is("myVDB"));
         assertThat(vdbArtifact.getVersion(), is("1"));
         assertThat(vdbArtifact.getDescription(), is("vdb description"));
@@ -61,8 +61,8 @@ public class VdbDeriverTest extends RepositoryTest {
 
         // verify VDB artifact exists and has correct properties
         final BaseArtifactType vdbArtifact = _repoMgr.addVdb(vdbStream, "twitterVdb.xml");
-        assertThat(vdbArtifact, is(instanceOf(UserDefinedArtifactType.class)));
-        assertThat(((UserDefinedArtifactType)vdbArtifact).getUserType(), is(Artifact.Type.VDB.getName()));
+        assertThat(vdbArtifact, is(instanceOf(ExtendedArtifactType.class)));
+        assertThat(((ExtendedArtifactType)vdbArtifact).getExtendedType(), is(Artifact.Type.VDB.getName()));
         assertThat(vdbArtifact.getName(), is("twitter"));
         assertThat(vdbArtifact.getVersion(), is("1"));
         assertThat(vdbArtifact.getDescription(), is("Shows how to call Web Services"));
@@ -128,7 +128,7 @@ public class VdbDeriverTest extends RepositoryTest {
 
         for (final ArtifactSummary summary : results) {
             final ArtifactType artifact = summary.getType(); // lightweight artifact
-            final String userType = artifact.getUserType();
+            final String userType = artifact.getExtendedType();
             final BaseArtifactType derivedArtifact = _repoMgr.get(summary.getUuid()); // materialize entire artifact
             final String artifactName = derivedArtifact.getName();
 
@@ -386,7 +386,7 @@ public class VdbDeriverTest extends RepositoryTest {
 
         for (final ArtifactSummary summary : results) {
             final ArtifactType artifact = summary.getType(); // lightweight artifact
-            final String userType = artifact.getUserType();
+            final String userType = artifact.getExtendedType();
             final BaseArtifactType derivedArtifact = _repoMgr.get(summary.getUuid()); // materialize entire artifact
             final String artifactName = derivedArtifact.getName();
 

@@ -9,7 +9,7 @@ package org.komodo.repository.deriver;
 
 import org.komodo.common.util.Precondition;
 import org.komodo.repository.RepositoryConstants;
-import org.overlord.sramp.SrampModelUtils;
+import org.overlord.sramp.common.SrampModelUtils;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 
 /**
@@ -63,7 +63,7 @@ public class DeriverUtil implements RepositoryConstants {
      * @return the query string (never <code>null</code>)
      */
     public static String getDerivedArtifactsQueryString(final String uuid) {
-        Precondition.notEmpty(uuid, "qualifiedName"); //$NON-NLS-1$
+        Precondition.notEmpty(uuid, "uuid"); //$NON-NLS-1$
         return String.format(DERIVED_ARTIFACTS_PATTERN, uuid);
     }
 
