@@ -41,7 +41,7 @@
         -->
         <dependency>
              <groupId>org.overlord.sramp</groupId>
-             <artifactId>s-ramp-core</artifactId>
+             <artifactId>s-ramp-common</artifactId>
         </dependency>
 
         <dependency>
@@ -59,6 +59,12 @@
             <groupId>org.overlord.sramp</groupId>
             <artifactId>s-ramp-repository-jcr</artifactId>
             <classifier>tests</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.overlord.sramp</groupId>
+            <artifactId>s-ramp-server</artifactId>
+            <classifier>classes</classifier>
         </dependency>
 
         <!--
