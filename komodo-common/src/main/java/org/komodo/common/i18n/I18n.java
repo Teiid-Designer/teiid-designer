@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class I18n {
 
-    class I18nProperties extends Properties {
+    private class I18nProperties extends Properties {
 
         private static final long serialVersionUID = 297271848138379264L;
 
@@ -71,8 +71,6 @@ public abstract class I18n {
 
     }
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     /**
      * @param pattern the message pattern (cannot be <code>null</code> or empty)
      * @param args the arguments being used to replace placeholders in the message (can be <code>null</code> or empty)
@@ -83,6 +81,8 @@ public abstract class I18n {
         Precondition.notEmpty(pattern, "pattern"); //$NON-NLS-1$
         return String.format(pattern, args);
     }
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Should be called in a <code>static</code> block to load the properties file and assign values to the class string fields.
@@ -113,7 +113,7 @@ public abstract class I18n {
 
         // load properties file
         InputStream stream = null;
-        IllegalStateException problem =  null;
+        IllegalStateException problem = null;
 
         try {
             final Class thisClass = getClass();
@@ -126,7 +126,7 @@ public abstract class I18n {
             props.load(stream);
 
             // log errors for any properties keys that don't have fields
-            for (String error : errors) {
+            for (final String error : errors) {
                 if (problem == null) {
                     problem = new IllegalStateException(error);
                 }

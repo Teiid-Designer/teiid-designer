@@ -121,9 +121,20 @@ public class Schema extends VdbAdminObject {
     }
 
     /**
+     * The type of metadata definition language.
+     */
+    public enum MetadataType {
+
+        /**
+         * DDL is the default model definition metadata type. Value is {@value}.
+         */
+        DDL
+    }
+
+    /**
      * The default model definition metadata type. Value is {@value}.
      */
-    public static final String DEFAULT_METADATA_TYPE = "DDL"; //$NON-NLS-1$
+    public static final MetadataType DEFAULT_METADATA_TYPE =  MetadataType.DDL;
 
     /**
      * The default schema/model type. Value is {@value}.
@@ -138,7 +149,7 @@ public class Schema extends VdbAdminObject {
     private static final List<Source> NO_SOURCES = Collections.emptyList();
 
     private String metadata; // model definition written in DDL
-    private String metadataType = DEFAULT_METADATA_TYPE;
+    private String metadataType = DEFAULT_METADATA_TYPE.name();
     private List<Source> sources;
     private String type = DEFAULT_TYPE;
     private boolean visible = DEFAULT_VISIBLE;

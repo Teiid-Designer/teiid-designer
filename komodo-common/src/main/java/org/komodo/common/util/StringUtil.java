@@ -20,7 +20,7 @@ public class StringUtil {
     /**
      * A empty string array constant.
      */
-    public static final String[] EMPTY_STRING_ARRAY = {};
+    public static final String[] EMPTY_ARRAY = {};
 
     /**
      * @param text the string being checked (can be <code>null</code> or empty)
@@ -37,11 +37,7 @@ public class StringUtil {
      */
     public static boolean matches(final String thisString,
                                   final String thatString) {
-        if (thisString == null) {
-            return (thatString == null);
-        }
-
-        return thisString.equals(thatString);
+        return ObjectUtil.matches(thisString, thatString);
     }
 
     /**

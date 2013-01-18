@@ -7,6 +7,7 @@
 */
 package org.komodo.teiid.model.validate;
 
+import static org.junit.matchers.JUnitMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
@@ -48,22 +49,32 @@ public class SourceValidatorTest {
         this.source.setId(StringUtil.EMPTY_STRING);
         this.source.setTranslatorName(StringUtil.EMPTY_STRING);
         final List<Status> errors = _validator.validate(this.source);
-        assertThat(errors, hasItem(Errors.EMPTY_SOURCE_NAME));
-        assertThat(errors, hasItem(Errors.EMPTY_SOURCE_TRANSLATOR_NAME));
+
+        final Status error1 = Error.EMPTY_SOURCE_NAME.createStatus();
+        error1.addContext(this.source);
+
+        final Status error2 = Error.EMPTY_SOURCE_TRANSLATOR_NAME.createStatus();
+        error2.addContext(this.source);
+
+        assertThat(errors, hasItems(new Status[] {error1, error2}));
     }
 
     @Test
     public void emptyNameShouldBeAnError() {
         this.source.setId(StringUtil.EMPTY_STRING);
         final List<Status> errors = _validator.validate(this.source);
-        assertThat(errors, hasItem(Errors.EMPTY_SOURCE_NAME));
+        final Status error = Error.EMPTY_SOURCE_NAME.createStatus();
+        error.addContext(this.source);
+        assertThat(errors, hasItem(error));
     }
 
     @Test
     public void emptyTranslatorNameShouldBeAnError() {
         this.source.setTranslatorName(StringUtil.EMPTY_STRING);
         final List<Status> errors = _validator.validate(this.source);
-        assertThat(errors, hasItem(Errors.EMPTY_SOURCE_TRANSLATOR_NAME));
+        final Status error = Error.EMPTY_SOURCE_TRANSLATOR_NAME.createStatus();
+        error.addContext(this.source);
+        assertThat(errors, hasItem(error));
     }
 
     @Test
@@ -71,30 +82,46 @@ public class SourceValidatorTest {
         this.source.setId(null);
         this.source.setTranslatorName(null);
         final List<Status> errors = _validator.validate(this.source);
-        assertThat(errors, hasItem(Errors.EMPTY_SOURCE_NAME));
-        assertThat(errors, hasItem(Errors.EMPTY_SOURCE_TRANSLATOR_NAME));
+
+        final Status error1 = Error.EMPTY_SOURCE_NAME.createStatus();
+        error1.addContext(this.source);
+
+        final Status error2 = Error.EMPTY_SOURCE_TRANSLATOR_NAME.createStatus();
+        error2.addContext(this.source);
+
+        assertThat(errors, hasItems(new Status[] {error1, error2}));
     }
 
     @Test
     public void nullNameShouldBeAnError() {
         this.source.setId(null);
         final List<Status> errors = _validator.validate(this.source);
-        assertThat(errors, hasItem(Errors.EMPTY_SOURCE_NAME));
+        final Status error = Error.EMPTY_SOURCE_NAME.createStatus();
+        error.addContext(this.source);
+        assertThat(errors, hasItem(error));
     }
 
     @Test
     public void nullTranslatorNameShouldBeAnError() {
         this.source.setTranslatorName(null);
         final List<Status> errors = _validator.validate(this.source);
-        assertThat(errors, hasItem(Errors.EMPTY_SOURCE_TRANSLATOR_NAME));
+        final Status error = Error.EMPTY_SOURCE_TRANSLATOR_NAME.createStatus();
+        error.addContext(this.source);
+        assertThat(errors, hasItem(error));
     }
 
     @Test
     public void shouldHaveErrorsAfterConstruction() {
         final Source source = new Source();
         final List<Status> errors = _validator.validate(source);
-        assertThat(errors, hasItem(Errors.EMPTY_SOURCE_NAME));
-        assertThat(errors, hasItem(Errors.EMPTY_SOURCE_TRANSLATOR_NAME));
+
+        final Status error1 = Error.EMPTY_SOURCE_NAME.createStatus();
+        error1.addContext(this.source);
+
+        final Status error2 = Error.EMPTY_SOURCE_TRANSLATOR_NAME.createStatus();
+        error2.addContext(this.source);
+
+        assertThat(errors, hasItems(new Status[] {error1, error2}));
     }
 
     public void validTranslatorShouldNotHaveErrors() {

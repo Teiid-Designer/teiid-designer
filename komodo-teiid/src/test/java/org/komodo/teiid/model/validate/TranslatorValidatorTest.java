@@ -47,35 +47,45 @@ public class TranslatorValidatorTest {
     public void emptyNameShouldBeAnError() {
         this.translator.setId(StringUtil.EMPTY_STRING);
         final List<Status> errors = _validator.validate(this.translator);
-        assertThat(errors, hasItem(Errors.EMPTY_TRANSLATOR_NAME));
+        final Status error = Error.EMPTY_TRANSLATOR_NAME.createStatus();
+        error.addContext(this.translator);
+        assertThat(errors, hasItem(error));
     }
 
     @Test
     public void emptyTypeShouldBeAnError() {
         this.translator.setType(StringUtil.EMPTY_STRING);
         final List<Status> errors = _validator.validate(this.translator);
-        assertThat(errors, hasItem(Errors.EMPTY_TRANSLATOR_TYPE));
+        final Status error = Error.EMPTY_TRANSLATOR_TYPE.createStatus();
+        error.addContext(this.translator);
+        assertThat(errors, hasItem(error));
     }
 
     @Test
     public void noPropertiesShouldBeAnError() {
         this.translator.removeProperty(PROP);
         final List<Status> errors = _validator.validate(this.translator);
-        assertThat(errors, hasItem(Errors.NO_TRANSLATOR_PROPERTIES));
+        final Status error = Error.NO_TRANSLATOR_PROPERTIES.createStatus();
+        error.addContext(this.translator);
+        assertThat(errors, hasItem(error));
     }
 
     @Test
     public void nullIdShouldBeAnError() {
         this.translator.setId(null);
         final List<Status> errors = _validator.validate(this.translator);
-        assertThat(errors, hasItem(Errors.EMPTY_TRANSLATOR_NAME));
+        final Status error = Error.EMPTY_TRANSLATOR_NAME.createStatus();
+        error.addContext(this.translator);
+        assertThat(errors, hasItem(error));
     }
 
     @Test
     public void nullTypeShouldBeAnError() {
         this.translator.setType(null);
         final List<Status> errors = _validator.validate(this.translator);
-        assertThat(errors, hasItem(Errors.EMPTY_TRANSLATOR_TYPE));
+        final Status error = Error.EMPTY_TRANSLATOR_TYPE.createStatus();
+        error.addContext(this.translator);
+        assertThat(errors, hasItem(error));
     }
 
     @Test
@@ -83,8 +93,17 @@ public class TranslatorValidatorTest {
         final Translator newTranslator = new Translator();
         final List<Status> errors = _validator.validate(newTranslator);
         assertThat(errors.size(), is(3));
-        assertThat(errors, hasItems(new Status[] {Errors.EMPTY_TRANSLATOR_NAME, Errors.EMPTY_TRANSLATOR_TYPE,
-            Errors.NO_TRANSLATOR_PROPERTIES}));
+
+        final Status error1 = Error.EMPTY_TRANSLATOR_NAME.createStatus();
+        error1.addContext(newTranslator);
+
+        final Status error2 = Error.EMPTY_TRANSLATOR_TYPE.createStatus();
+        error2.addContext(newTranslator);
+
+        final Status error3 = Error.NO_TRANSLATOR_PROPERTIES.createStatus();
+        error3.addContext(newTranslator);
+
+        assertThat(errors, hasItems(new Status[] {error1, error2, error3}));
     }
 
     @Test
