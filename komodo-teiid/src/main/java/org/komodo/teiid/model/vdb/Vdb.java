@@ -99,7 +99,7 @@ public class Vdb extends VdbAdminObject {
         /**
          * A collection of models.
          */
-        String MODELS = Vdb.class.getSimpleName() + ".models"; //$NON-NLS-1$
+        String SCHEMAS = Vdb.class.getSimpleName() + ".schemas"; //$NON-NLS-1$
 
         /**
          * A collection of translators.
@@ -120,13 +120,13 @@ public class Vdb extends VdbAdminObject {
     private static final List<DataPolicy> NO_DATA_POLICIES = Collections.emptyList();
     private static final List<Entry> NO_ENTRIES = Collections.emptyList();
     private static final List<ImportVdb> NO_IMPORT_VDBS = Collections.emptyList();
-    private static final List<Schema> NO_MODELS = Collections.emptyList();
+    private static final List<Schema> NO_SCHEMAS = Collections.emptyList();
     private static final List<Translator> NO_TRANSLATORS = Collections.emptyList();
 
     private List<DataPolicy> dataPolicies;
     private List<Entry> entries;
     private List<ImportVdb> importVdbs;
-    private List<Schema> models;
+    private List<Schema> schemas;
     private List<Translator> translators;
     private int version = DEFAULT_VERSION;
 
@@ -194,23 +194,23 @@ public class Vdb extends VdbAdminObject {
     }
 
     /**
-     * Generates a property change event if the collection of models is changed.
+     * Generates a property change event if the collection of schemas is changed.
      * 
-     * @param newModel the model being added (cannot be <code>null</code>)
+     * @param newSchema the schema being added (cannot be <code>null</code>)
      */
-    public void addModel(final Schema newModel) {
-        Precondition.notNull(newModel, "newModel"); //$NON-NLS-1$
+    public void addSchema(final Schema newSchema) {
+        Precondition.notNull(newSchema, "schema"); //$NON-NLS-1$
 
-        if (this.models == null) {
-            this.models = new ArrayList<Schema>();
+        if (this.schemas == null) {
+            this.schemas = new ArrayList<Schema>();
         }
 
-        final List<Schema> oldValue = getModels();
+        final List<Schema> oldValue = getSchemas();
 
-        if (this.models.add(newModel)) {
-            firePropertyChangeEvent(PropertyName.MODELS, oldValue, getModels());
-        } else if (this.models.isEmpty()) {
-            this.models = null;
+        if (this.schemas.add(newSchema)) {
+            firePropertyChangeEvent(PropertyName.SCHEMAS, oldValue, getSchemas());
+        } else if (this.schemas.isEmpty()) {
+            this.schemas = null;
         }
     }
 
@@ -248,8 +248,8 @@ public class Vdb extends VdbAdminObject {
             return ((this.version == thatVdb.version) && CollectionUtil.matches(this.dataPolicies, thatVdb.dataPolicies)
                     && CollectionUtil.matches(this.entries, thatVdb.entries)
                     && CollectionUtil.matches(this.importVdbs, thatVdb.importVdbs)
-                    && CollectionUtil.matches(this.models, thatVdb.models) && CollectionUtil.matches(this.translators,
-                                                                                                     thatVdb.translators));
+                    && CollectionUtil.matches(this.schemas, thatVdb.schemas) && CollectionUtil.matches(this.translators,
+                                                                                                       thatVdb.translators));
         }
 
         return false;
@@ -289,14 +289,14 @@ public class Vdb extends VdbAdminObject {
     }
 
     /**
-     * @return an unmodifiable collection of models (never <code>null</code> but can be empty)
+     * @return an unmodifiable collection of schemas (never <code>null</code> but can be empty)
      */
-    public List<Schema> getModels() {
-        if (this.models == null) {
-            return NO_MODELS;
+    public List<Schema> getSchemas() {
+        if (this.schemas == null) {
+            return NO_SCHEMAS;
         }
 
-        return Collections.unmodifiableList(this.models);
+        return Collections.unmodifiableList(this.schemas);
     }
 
     /**
@@ -328,7 +328,7 @@ public class Vdb extends VdbAdminObject {
                                 this.dataPolicies,
                                 this.entries,
                                 this.importVdbs,
-                                this.models,
+                                this.schemas,
                                 this.translators,
                                 this.version);
     }
@@ -395,21 +395,22 @@ public class Vdb extends VdbAdminObject {
     }
 
     /**
-     * Generates a property change event if the collection of models is changed.
-     * @param modelToDelete the model being deleted (cannot be <code>null</code>)
+     * Generates a property change event if the collection of schemas is changed.
+     * 
+     * @param schemaToDelete the schema being deleted (cannot be <code>null</code>)
      */
-    public void removeModel(final Schema modelToDelete) {
-        Precondition.notNull(modelToDelete, "modelToDelete"); //$NON-NLS-1$
+    public void removeSchema(final Schema schemaToDelete) {
+        Precondition.notNull(schemaToDelete, "schemaToDelete"); //$NON-NLS-1$
 
-        if (this.models != null) {
-            final List<Schema> oldValue = getModels();
+        if (this.schemas != null) {
+            final List<Schema> oldValue = getSchemas();
 
-            if (this.models.remove(modelToDelete)) {
-                if (this.models.isEmpty()) {
-                    this.models = null;
+            if (this.schemas.remove(schemaToDelete)) {
+                if (this.schemas.isEmpty()) {
+                    this.schemas = null;
                 }
 
-                firePropertyChangeEvent(PropertyName.MODELS, oldValue, getModels());
+                firePropertyChangeEvent(PropertyName.SCHEMAS, oldValue, getSchemas());
             }
         }
     }

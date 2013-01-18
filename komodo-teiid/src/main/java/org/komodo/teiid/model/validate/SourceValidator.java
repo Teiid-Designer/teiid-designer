@@ -34,12 +34,22 @@ class SourceValidator implements Validator {
 
         // make sure name is not empty
         if (StringUtil.isEmpty(source.getId())) {
-            errors.add(EMPTY_SOURCE_NAME);
+            final Status error = Error.EMPTY_SOURCE_NAME.createStatus();
+            error.addContext(source);
+            errors.add(error);
+        } else {
+            // make sure name is valid
+            // TODO implement source name validation
         }
 
         // make sure translator name is not empty
         if (StringUtil.isEmpty(source.getTranslatorName())) {
-            errors.add(EMPTY_SOURCE_TRANSLATOR_NAME);
+            final Status error = Error.EMPTY_SOURCE_TRANSLATOR_NAME.createStatus();
+            error.addContext(source);
+            errors.add(error);
+        } else {
+            // make sure translator name is valid
+            // TODO implement source translator name validation
         }
 
         return errors;

@@ -14,7 +14,7 @@ import org.komodo.teiid.model.ModelObject;
 /**
  * A Teiid model object validator.
  */
-public interface Validator extends Errors {
+public interface Validator {
 
     /**
      * @param modelObject the model object whose state is being validated (cannot be <code>null</code>)
