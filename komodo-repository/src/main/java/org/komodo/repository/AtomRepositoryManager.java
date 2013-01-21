@@ -8,12 +8,17 @@
 package org.komodo.repository;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import org.komodo.common.util.CollectionUtil;
 import org.komodo.common.util.HashCode;
 import org.komodo.common.util.Precondition;
 import org.komodo.common.util.StringUtil;
 import org.komodo.repository.artifact.Artifact.Type;
 import org.komodo.repository.deriver.DeriverUtil;
 import org.overlord.sramp.client.SrampAtomApiClient;
+import org.overlord.sramp.client.SrampClientQuery;
 import org.overlord.sramp.client.query.ArtifactSummary;
 import org.overlord.sramp.client.query.QueryResultSet;
 import org.overlord.sramp.common.ArtifactType;
@@ -27,6 +32,7 @@ import org.slf4j.LoggerFactory;
 class AtomRepositoryManager implements RepositoryManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AtomRepositoryManager.class);
+    private static final List<ArtifactType> NO_RESULTS = Collections.emptyList();
 
     private final SrampAtomApiClient client;
 
@@ -149,6 +155,57 @@ class AtomRepositoryManager implements RepositoryManager {
     @Override
     public int hashCode() {
         return HashCode.compute(this.url);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.komodo.repository.RepositoryManager#query(org.komodo.repository.RepositoryManager.QuerySettings)
+     */
+    @Override
+    public List<ArtifactType> query(final QuerySettings settings) throws Exception {
+        final String query = DeriverUtil.buildQuery(settings);
+        LOGGER.debug("query built from settings '{}'", query); //$NON-NLS-1$
+
+        final SrampClientQuery clientQuery = this.client.buildQuery(query);
+
+        if (settings.ascending) {
+            clientQuery.ascending();
+        } else {
+            clientQuery.descending();
+        }
+
+        if (settings.count != -1) {
+            clientQuery.count(settings.count);
+        }
+
+        if (!StringUtil.isEmpty(settings.orderBy)) {
+            clientQuery.orderBy(settings.orderBy);
+        }
+
+        if (settings.startIndex != -1) {
+            clientQuery.startIndex(settings.startIndex);
+        }
+
+        if (!CollectionUtil.isEmpty(settings.resultColumns)) {
+            for (final String column : settings.resultColumns) {
+                clientQuery.propertyName(column);
+            }
+        }
+
+        final QueryResultSet results = clientQuery.query();
+
+        if (results.size() == 0) {
+            return NO_RESULTS;
+        }
+
+        final List<ArtifactType> artifacts = new ArrayList<ArtifactType>((int)results.size());
+
+        for (final ArtifactSummary summary : results) {
+            artifacts.add(summary.getType());
+        }
+
+        return artifacts;
     }
 
     /**
