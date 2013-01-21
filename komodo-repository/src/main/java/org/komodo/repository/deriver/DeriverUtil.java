@@ -7,8 +7,12 @@
 */
 package org.komodo.repository.deriver;
 
+import java.util.Map;
+import org.komodo.common.util.CollectionUtil;
 import org.komodo.common.util.Precondition;
 import org.komodo.repository.RepositoryConstants;
+import org.komodo.repository.RepositoryManager;
+import org.komodo.repository.artifact.Artifact;
 import org.overlord.sramp.common.SrampModelUtils;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 
@@ -16,6 +20,8 @@ import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
  * Utilities for use with derivers.
  */
 public class DeriverUtil implements RepositoryConstants {
+
+    private static final String ARTIFACT_QUERY_PATTERN = "%s[%s]"; //$NON-NLS-1$
 
     private static final String ATTRIBUTE_QUERY_PATTERN = "string(./%s)"; //$NON-NLS-1$
 
@@ -35,8 +41,8 @@ public class DeriverUtil implements RepositoryConstants {
      */
     public static void addRelationship(final BaseArtifactType sourceArtifact,
                                        final BaseArtifactType targetArtifact,
-                                       final RelationshipType relationshipType,
-                                       final RelationshipType inverseRelationshipType) {
+                                       final Artifact.RelationshipType relationshipType,
+                                       final Artifact.RelationshipType inverseRelationshipType) {
         Precondition.notNull(sourceArtifact, "sourceArtifact"); //$NON-NLS-1$
         Precondition.notNull(targetArtifact, "targetArtifact"); //$NON-NLS-1$
         Precondition.notNull(relationshipType, "relationshipType"); //$NON-NLS-1$
@@ -44,6 +50,42 @@ public class DeriverUtil implements RepositoryConstants {
 
         SrampModelUtils.addGenericRelationship(sourceArtifact, relationshipType.getName(), targetArtifact.getUuid());
         SrampModelUtils.addGenericRelationship(targetArtifact, inverseRelationshipType.getName(), sourceArtifact.getUuid());
+    }
+
+    /**
+     * @param settings the settings used to build query (cannot be <code>null</code> and must have parameters)
+     * @return the query string (never <code>null</code> or empty)
+     */
+    public static String buildQuery(final RepositoryManager.QuerySettings settings) {
+        Precondition.notNull(settings, "settings"); //$NON-NLS-1$
+
+        // construct query path
+        String path = Sramp.USER_DEFINED_ARTIFACT_PATH;
+
+        if (settings.artifactType != null) {
+            path += '/' + settings.artifactType.getName();
+        }
+
+        if (CollectionUtil.isEmpty(settings.params)) {
+            return path;
+        }
+
+        // construct parameters
+        final StringBuilder params = new StringBuilder();
+        final int numParams = settings.params.size();
+        int i = 1;
+
+        for (final Map.Entry<String, String> entry : settings.params.entrySet()) {
+            params.append('@').append(entry.getKey()).append(" = '").append(entry.getValue()).append('\''); //$NON-NLS-1$
+
+            if (i != numParams) {
+                params.append(" and "); //$NON-NLS-1$
+            }
+
+            ++i;
+        }
+
+        return String.format(ARTIFACT_QUERY_PATTERN, path, params.toString());
     }
 
     /**

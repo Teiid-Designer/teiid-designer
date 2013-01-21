@@ -7,10 +7,56 @@
 */
 package org.komodo.repository.artifact;
 
+import org.komodo.common.util.StringUtil;
+
 /**
  * Represents a Komodo artifact.
  */
 public interface Artifact {
+
+    /**
+     * Common artifact relationship types.
+     */
+    public enum RelationshipType {
+
+        /**
+         * A relationship between a data policy and its permissions.
+         */
+        DATA_POLICY_PERMISSIONS("DataPolicyPermissions"), //$NON-NLS-1$
+
+        /**
+         * A relationship between a permission and its data policy.
+         */
+        PERMISSION_DATA_POLICY("PermissionDataPolicy"), //$NON-NLS-1$
+
+        /**
+         * A relationship between a derived artifact and the document artifact. This is created by S-RAMP deriver framework.
+         */
+        RELATED_DOCUMENT("relatedDocument"), //$NON-NLS-1$
+
+        /**
+         * A relationship between a schema/model and its sources.
+         */
+        SCHEMA_SOURCES("SchemaSources"), //$NON-NLS-1$
+
+        /**
+         * A relationship between a source and its schema/model.
+         */
+        SOURCE_SCHEMA("SourceSchema"); //$NON-NLS-1$
+
+        private final String name;
+
+        private RelationshipType(final String name) {
+            this.name = (StringUtil.matches(name, "relatedDocument") ? name : (name + "Relationship")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        /**
+         * @return the relationship type name (never <code>null</code> or empty)
+         */
+        public String getName() {
+            return this.name;
+        }
+    }
 
     /**
      * The Komodo S-RAMP artifact types.

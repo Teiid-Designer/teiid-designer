@@ -257,8 +257,8 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                             // add the relationships
                             DeriverUtil.addRelationship(dataPolicyArtifact,
                                                         permissionArtifact,
-                                                        RelationshipType.DATA_POLICY_PERMISSIONS,
-                                                        RelationshipType.PERMISSION_DATA_POLICY);
+                                                        Artifact.RelationshipType.DATA_POLICY_PERMISSIONS,
+                                                        Artifact.RelationshipType.PERMISSION_DATA_POLICY);
                         }
                     }
                 }
@@ -433,8 +433,8 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                         // add the relationships
                         DeriverUtil.addRelationship(schemaArtifact,
                                                     sourceArtifact,
-                                                    RelationshipType.SCHEMA_SOURCES,
-                                                    RelationshipType.SOURCE_SCHEMA);
+                                                    Artifact.RelationshipType.SCHEMA_SOURCES,
+                                                    Artifact.RelationshipType.SOURCE_SCHEMA);
                     }
                 }
             }
