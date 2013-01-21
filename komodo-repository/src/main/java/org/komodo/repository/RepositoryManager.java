@@ -8,13 +8,58 @@
 package org.komodo.repository;
 
 import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+import org.komodo.repository.artifact.Artifact;
 import org.overlord.sramp.client.query.QueryResultSet;
+import org.overlord.sramp.common.ArtifactType;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 
 /**
  * Manages the interaction with the artifact repository.
  */
 public interface RepositoryManager {
+
+    /**
+     * The settings to use for querying.
+     */
+    public class QuerySettings {
+
+        /**
+         * The type of artifacts being queried for (can be <code>null</code>)
+         */
+        public Artifact.Type artifactType;
+
+        /**
+         * Indicates if the results should be sorted in ascending order.
+         */
+        public boolean ascending = true;
+
+        /**
+         * The max number of results to return.
+         */
+        public int count = -1;
+
+        /**
+         * The property the results should be sorted by (can be <code>null</code> or empty).
+         */
+        public String orderBy;
+
+        /**
+         * The property criteria of the artifacts to be returned in the results (can be <code>null</code> or empty).
+         */
+        public Map<String, String> params;
+
+        /**
+         * The properties to return in the results (can be <code>null</code> or empty).
+         */
+        public List<String> resultColumns;
+
+        /**
+         * The start index.
+         */
+        public int startIndex = -1;
+    }
 
     /**
      * Adds a VDB to the repository. Caller should set additional artifact properties based on the VDB business object created
@@ -48,13 +93,20 @@ public interface RepositoryManager {
     String getName();
 
     /**
-     * @param newName the new name of the repository manager (can be <code>null</code> or empty)
-     */
-    void setName(String newName);
-
-    /**
      * @return the repository URL (never <code>null</code> or empty)
      */
     String getUrl();
+
+    /**
+     * @param settings the query settings (cannot be <code>null</code>)
+     * @return the lightweight artifact query results (never <code>null</code>)
+     * @throws Exception if there is a problem running query
+     */
+    List<ArtifactType> query(final QuerySettings settings) throws Exception;
+
+    /**
+     * @param newName the new name of the repository manager (can be <code>null</code> or empty)
+     */
+    void setName(final String newName);
 
 }

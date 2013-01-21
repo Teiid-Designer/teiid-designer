@@ -22,6 +22,14 @@ public class CommonI18n extends I18n {
     public static String problemLoadingI18nClass;
     public static String problemLoadingI18nProperties;
 
+    public static String objectIsNotInstanceOf;
+    public static String objectIsNotNull;
+    public static String stringsDoNotMatchExactly;
+    public static String collectionIsEmpty;
+    public static String mapIsEmpty;
+    public static String stringIsEmpty;
+    public static String objectIsNull;
+
     static {
         final CommonI18n i18n = new CommonI18n();
         i18n.initialize();
