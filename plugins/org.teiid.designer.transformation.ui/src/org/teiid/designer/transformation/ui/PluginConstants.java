@@ -78,7 +78,6 @@ public interface PluginConstants {
         String ARROW_RIGHT_BUTTON_DISABLED_ICON = "icons/full/cview20/arrow-20x20-disabled.png"; //$NON-NLS-1$
         String ARROW_LEFT_BUTTON_ICON = "icons/full/cview20/arrow-left-20x20.png"; //$NON-NLS-1$
         String ARROW_LEFT_BUTTON_DISABLED_ICON = "icons/full/cview20/arrow-left-20x20-disabled.png"; //$NON-NLS-1$
-        String ELIPSIS_ICON = "icons/full/cview20/elipsis-20x20.png"; //$NON-NLS-1$
         String WARNING_BUTTON_ICON = "icons/full/cview20/warning-20x20.png"; //$NON-NLS-1$
         String ARROW_LEFT_ICON = "icons/full/cview20/arrow-only-left-20x20.png"; //$NON-NLS-1$
         String ARROW_RIGHT_ICON = "icons/full/cview20/arrow-only-20x20.png"; //$NON-NLS-1$
