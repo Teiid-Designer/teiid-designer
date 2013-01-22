@@ -108,6 +108,10 @@ public class Messages extends NLS {
     public static String datatypeReconciler_statusTitle;
     public static String datatypeReconciler_allResolvedMessage;
     public static String datatypeReconciler_someUnresolvedConflicts;
+    public static String datatypeReconciler_selectionPanelInfoLabel;
+    public static String datatypeReconciler_changeTargetDatatypeTooltip;
+    public static String datatypeReconciler_matchedDatatypeTooltip;
+    public static String datatypeReconciler_convertSourceDatatypeTooltip;
     
     static {
         NLS.initializeMessages("org.teiid.designer.transformation.ui.messages", Messages.class); //$NON-NLS-1$

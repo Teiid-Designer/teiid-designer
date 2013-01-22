@@ -35,10 +35,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.PluginConstants;
@@ -75,9 +77,11 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
 
     private boolean targetLocked;
 
-    private ColorManager colorManager;
-    private Table table;
-    private TableViewer bindingTableViewer;
+    ColorManager colorManager;
+    Table table;
+    TableViewer bindingTableViewer;
+    Label symbolConversionLabel;
+    Label symbolWarningLabel;
 
     // Push Buttons
     Button changeAllColumnDatatypesButton, convertAllSqlSymbolsButton;
@@ -136,6 +140,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         // Listen for TableSelection from the Tables
         bindingTableViewer.addSelectionChangedListener(this);
         selectFirstTypeConflict();
+        bindingListInput.datatypeChanged();
     }
 
     /**
@@ -194,7 +199,8 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
 			headerPanel.setLayout(new GridLayout());
 			((GridLayout)headerPanel.getLayout()).numColumns = 3;
 			headerPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
-			((GridData)headerPanel.getLayoutData()).grabExcessHorizontalSpace = true;
+			((GridData)headerPanel.getLayoutData()).minimumHeight = 80;
+			//((GridData)headerPanel.getLayoutData()).grabExcessHorizontalSpace = true;
 	        
 			// Add general info/instructions text box
 			{
@@ -213,27 +219,29 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
 			
 			// Add button bar containing:
 			// [CHANGE ALL COLUMN DATATYPES] - or - [CONVERT ALL SQL SYMBOLS]
-			this.changeAllColumnDatatypesButton =  
-					WidgetFactory.createButton(headerPanel, Messages.datatypeReconciler_convertAllColumnDatatypesLabel);
-			this.changeAllColumnDatatypesButton.setToolTipText(Messages.datatypeReconciler_convertAllColumnDatatypesTooltip);
-			this.changeAllColumnDatatypesButton.setEnabled(false);
-	        this.changeAllColumnDatatypesButton.addSelectionListener(new SelectionAdapter() {
-	            @Override
-	            public void widgetSelected( final SelectionEvent event ) {
-	            	changeAllColumnDatatypesPressed();
-	            }
-	        });
-			
-			WidgetFactory.createLabel(headerPanel, "   - or -   "); //$NON-NLS-1$
-			
 			this.convertAllSqlSymbolsButton =  
 					WidgetFactory.createButton(headerPanel, Messages.datatypeReconciler_convertAllSqlSymbolsLabel);
 			this.convertAllSqlSymbolsButton.setToolTipText(Messages.datatypeReconciler_convertAllSqlSymbolsTooltip);
+			this.convertAllSqlSymbolsButton.setImage(UiPlugin.getDefault().getImage(PluginConstants.Images.ARROW_LEFT_ICON));
 			
 			this.convertAllSqlSymbolsButton.addSelectionListener(new SelectionAdapter() {
 	            @Override
 	            public void widgetSelected( final SelectionEvent event ) {
 	            	changeAllColumnDatatypesButtonPressed();
+	            }
+	        });
+			
+			WidgetFactory.createLabel(headerPanel, "   - or -   "); //$NON-NLS-1$
+			
+			this.changeAllColumnDatatypesButton =  
+					WidgetFactory.createButton(headerPanel, Messages.datatypeReconciler_convertAllColumnDatatypesLabel);
+			this.changeAllColumnDatatypesButton.setToolTipText(Messages.datatypeReconciler_convertAllColumnDatatypesTooltip);
+			this.changeAllColumnDatatypesButton.setImage(UiPlugin.getDefault().getImage(PluginConstants.Images.ARROW_RIGHT_ICON));
+			this.changeAllColumnDatatypesButton.setEnabled(false);
+	        this.changeAllColumnDatatypesButton.addSelectionListener(new SelectionAdapter() {
+	            @Override
+	            public void widgetSelected( final SelectionEvent event ) {
+	            	changeAllColumnDatatypesPressed();
 	            }
 	        });
 			
@@ -255,38 +263,48 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
 	        
 	        // create columns
 	        
-	        // {"", "Target Column", "Matched Type", "Change Type", "", "Source SQL Symbol"};
-	        // COLUMN 0 :  FIX Button
+	        // | status icon | Source SQL Symbol | <-- | Matched Datatype | ->  | Target Column
+	        
+	        // COLUMN 0 :  STATUS ICON Button
 	        TableViewerColumn column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
-	        column.getColumn().setText(getSpaces(20));
 	        column.setLabelProvider(new TheBindingColumnLabelProvider(0));
-	        column.setEditingSupport(new ChangeDatatypeEditingSupport(this.bindingTableViewer));
+	        column.getColumn().setText(getSpaces(8));
 	        column.getColumn().pack();
 	        
-	        // COLUMN 1 :  Target Column Definition
+	        // COLUMN 1 : SOURCE SQL SYMBOL
 	        column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
-	        column.getColumn().setText(Messages.datatypeReconciler_targetColumnLabel + getSpaces(25));
+	        column.getColumn().setText(Messages.datatypeReconciler_sourceSqlSymbolLabel + getSpaces(100));
 	        column.setLabelProvider(new TheBindingColumnLabelProvider(1));
 	        column.getColumn().pack();
 	        
-	        // COLUMN 2 :  Matched Datatype
+	        // COLUMN 2 :  LEFT ARROW Button
 	        column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
-	        column.getColumn().setText(Messages.datatypeReconciler_matchedTypeLabel + getSpaces(60));
+	        column.getColumn().setText(getSpaces(8));
 	        column.setLabelProvider(new TheBindingColumnLabelProvider(2));
-	        column.setEditingSupport(new ChangeProposedDatatypeEditingSupport(this.bindingTableViewer));
-	        column.getColumn().pack();
-	        
-	        // COLUMN 4 :  CONVERT Button
-	        column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
-	        column.getColumn().setText(getSpaces(20));
-	        column.setLabelProvider(new TheBindingColumnLabelProvider(3));
 	        column.setEditingSupport(new ConvertSymbolEditingSupport(this.bindingTableViewer));
 	        column.getColumn().pack();
+	        column.getColumn().setToolTipText(Messages.datatypeReconciler_convertSourceDatatypeTooltip);
 	        
-	        // COLUMN 5 :  Source SQL Symbol Definition
+	        // COLUMN 3 : Matched datatype
 	        column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
-	        column.getColumn().setText(Messages.datatypeReconciler_sourceSqlSymbolLabel + getSpaces(60));
+	        column.getColumn().setText(Messages.datatypeReconciler_matchedTypeLabel + getSpaces(60));
+	        column.setLabelProvider(new TheBindingColumnLabelProvider(3));
+	        column.setEditingSupport(new ChangeProposedDatatypeEditingSupport(this.bindingTableViewer));
+	        column.getColumn().pack();
+	        column.getColumn().setToolTipText(Messages.datatypeReconciler_matchedDatatypeTooltip);
+	        
+	        // COLUMN 4 : RIGHT ARROW Button
+	        column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
+	        column.getColumn().setText(getSpaces(8));
 	        column.setLabelProvider(new TheBindingColumnLabelProvider(4));
+	        column.setEditingSupport(new ChangeDatatypeEditingSupport(this.bindingTableViewer));
+	        column.getColumn().pack();
+	        column.getColumn().setToolTipText(Messages.datatypeReconciler_changeTargetDatatypeTooltip);
+
+	        // COLUMN 5 :  Target Column Definition
+	        column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
+	        column.getColumn().setText(Messages.datatypeReconciler_targetColumnLabel + getSpaces(25));
+	        column.setLabelProvider(new TheBindingColumnLabelProvider(5));
 	        column.getColumn().pack();
 	        
 	        bindingTableViewer.setUseHashlookup(true);
@@ -295,7 +313,36 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
 
 	        updateRowColors();
         }
+        
+        // Panel to display selection details
+        SELECTION_STATUS_PANEL : {
+	        Composite selectionPanel = WidgetFactory.createGroup(tablePanel, Messages.datatypeReconciler_selectionPanelInfoLabel);
+			// ------------------------------
+			// Set layout for the Composite
+			// ------------------------------
+	        selectionPanel.setLayout(new GridLayout());
+			((GridLayout)selectionPanel.getLayout()).numColumns = 2;
+			selectionPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+			((GridData)selectionPanel.getLayoutData()).minimumHeight = 80;
+			
+//			Label selectedSymbolLabel = new Label(selectionPanel, SWT.NONE);
+//			selectedSymbolLabel.setText("Selected Symbol: ");
+			
+			symbolConversionLabel = new Label(selectionPanel, SWT.NONE);
+			symbolConversionLabel.setText(PluginConstants.EMPTY_STRING);
+			symbolConversionLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			symbolConversionLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+			
+			Label messageLabel = new Label(selectionPanel, SWT.NONE);
+//			messageLabel.setText("Status: ");
+			
+			symbolWarningLabel = new Label(selectionPanel, SWT.NONE);
+			symbolWarningLabel.setText(PluginConstants.EMPTY_STRING);
+			symbolWarningLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			symbolWarningLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        }
     }
+    
 
     private String getDatatypeText( Object object ) {
         String result = null;
@@ -354,6 +401,15 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
      * @param binding the selected Binding
      */
     private void updateSymbolConversionPanel( Binding binding ) {
+    	boolean canConvert = bindingListInput.canConvert(binding);
+    	
+    	if( canConvert ) {
+    		symbolConversionLabel.setText(bindingListInput.getConvertedSymbol(binding));
+    	} else {
+    		symbolConversionLabel.setText(PluginConstants.EMPTY_STRING);
+    	}
+        symbolWarningLabel.setText(bindingListInput.getWarningText(binding));
+        
         updateSymbolConversionPanelButtons(binding);
     }
 
@@ -362,30 +418,14 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
      */
     private void updateSymbolConversionPanelButtons( Binding binding ) {
         // ------------------------------------------
-        // Set the Apply Button Enabled State
-        // ------------------------------------------
-        boolean enableApply = false;
-        if (binding != null) {
-            // Enable Apply Button if current Binding has Conflict
-            enableApply = binding.canConvertSqlSymbol();
-        }
-
-        // ------------------------------------------
         // Set the ConvertAll Button Enabled State
         // ------------------------------------------
-        // If any binding has conflict, enable
-        boolean enableConvertAll = false;
-        if (bindingListInput.getBindingList().hasTypeConflict()) {
-            enableConvertAll = true;
-        }
+        // If any binding has conflict and can convert then enable
         
-        if( enableConvertAll && enableApply ) {
-        	enableConvertAll = true;
-        } else {
-        	enableConvertAll = false;
-        }
         // Set ConvertAll Enabled State
-        convertAllSqlSymbolsButton.setEnabled(enableConvertAll);
+        convertAllSqlSymbolsButton.setEnabled(bindingListInput.hasConflictsAndCanConvert());
+        
+        
     }
 
     /**
@@ -721,6 +761,51 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
     		return reconciledList.get(binding).booleanValue();
     	}
     	
+    	public String getWarningText(Binding binding) {
+            String convertedSymbol = binding.getSqlConversionText();
+            int lossOfPrecIndex = convertedSymbol.indexOf('\n');
+            String warningText = CoreStringUtil.Constants.EMPTY_STRING;
+            if (lossOfPrecIndex > -1) {
+                warningText = convertedSymbol.substring(lossOfPrecIndex + 1, convertedSymbol.length());
+            }
+            
+            return warningText;
+    	}
+    	
+    	public String getConvertedSymbol(Binding binding) {
+            String convertedSymbol = binding.getSqlConversionText();
+            int lossOfPrecIndex = convertedSymbol.indexOf('\n');
+            if (lossOfPrecIndex > -1) {
+                convertedSymbol = convertedSymbol.substring(0, lossOfPrecIndex);
+            }
+            
+            return convertedSymbol;
+    	}
+    	
+    	public boolean canConvert(Binding binding) {
+            String convertedSymbol = binding.getSqlConversionText();
+            int lossOfPrecIndex = convertedSymbol.indexOf('\n');
+            if (lossOfPrecIndex > -1) {
+                convertedSymbol = convertedSymbol.substring(0, lossOfPrecIndex);
+            }
+            if( convertedSymbol.toUpperCase().startsWith("CONVERT SQL SYMBOL")) { //$NON-NLS-1$
+            	return false;
+            }
+            return true;
+    	}
+    	
+    	public boolean hasConflictsAndCanConvert() {
+    		if( bindingList.hasTypeConflict() ) {
+        		for( Object obj : bindingList.getAll().toArray() ) {
+        			Binding binding = (Binding)obj;
+        			if( canConvert(binding) ) {
+        				return true;
+        			}
+        		}
+    		}
+    		return false;
+    	}
+    	
     	public void setTargetDatatype(Binding binding, EObject dType) {
     		targetDatatypeMap.put(binding, dType);
     		datatypeChanged();
@@ -751,13 +836,15 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
 	        String result = PluginConstants.EMPTY_STRING;
 	        Binding binding = (Binding) element;
 	        switch (this.columnNumber) {
-	        	// columnNames = new String[] {"", "Target Column", "Matched Type", "Change Type", "", "Source SQL Symbol"};
-	            case 0:  // FIX COLUMN
+	        	// | status icon | Source SQL Symbol | <-- | Matched Datatype | ->  | Target Column
+	            case 0:
 	                break;
-	            case 1 : // TARGET COLUMN
-	                result = binding.getAttributeText(true);
+	            case 1: 
+	            	result = binding.getSqlSymbolText(true);
 	                break;
-	            case 2 : // MATCHED TYPE
+	            case 2: 
+	                break;
+	            case 3:
 	                Object attr = binding.getAttribute();
 	                // Attribute Datatype Label
 	                EObject datatype = null;
@@ -767,11 +854,10 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
 	                }
 	                result = getDatatypeText(datatype);
 	                break;
-	            case 3 : // CONVERT BUTTON
-	                //result = binding.getSqlSymbolText(true);
+	            case 4:
 	                break;
-	            case 4 : // SQL Symbol Column
-	                result = binding.getSqlSymbolText(true);
+	            case 5:
+	            	result = binding.getAttributeText(true);
 	                break;
 
 	            default :
@@ -795,28 +881,42 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
             Image image = null;
 	        Binding binding = (Binding) element;
 	        switch (this.columnNumber) {
-	        	case 0:  // FIX BUTTON
-	            	if( bindingListInput.isReconciled(binding) ) {
-	            		image = UiPlugin.getDefault().getImage(PluginConstants.Images.CHANGED_BUTTON_DISABLED_ICON);
-	            	} else {
-	            		image = UiPlugin.getDefault().getImage(PluginConstants.Images.CHANGED_BUTTON_ICON);
+	        	// | status icon | Source SQL Symbol | <-- | Matched Datatype | ->  | Target Column
+		        case 0: { // Status Column
+	            	if( ! bindingListInput.isReconciled(binding) ) {
+		            	String warning = bindingListInput.getWarningText(binding);
+		            	boolean hasWarning = warning.length() > 0;
+		            	
+		            	if( hasWarning ) {
+		            		image = UiPlugin.getDefault().getImage(PluginConstants.Images.WARNING_BUTTON_ICON);
+		            	}
 	            	}
-	        	break;
-	            case 1:  // TARGET COLUMN
+		        } break;
+	            case 1:  // SOURCE SQL COLUMN
 	                break;
-	            case 2:  // MATCHED TYPE
-	            	image = UiPlugin.getDefault().getImage(PluginConstants.Images.ELIPSIS_LONG_BUTTON_ICON);
-	                break;
-	            case 3:  // Attribute Column
-	            	if( bindingListInput.isReconciled(binding) ) {
-	            		image = UiPlugin.getDefault().getImage(PluginConstants.Images.CONVERT_BUTTON_DISABLED_ICON);
+	            case 2: { // CONVERT LEFT ARROW
+	            	if( bindingListInput.isReconciled(binding) || !bindingListInput.canConvert(binding) ) {
+	            		image = UiPlugin.getDefault().getImage(PluginConstants.Images.ARROW_LEFT_BUTTON_DISABLED_ICON);
 	            	} else {
-	            		image = UiPlugin.getDefault().getImage(PluginConstants.Images.CONVERT_BUTTON_ICON);
+	            		image = UiPlugin.getDefault().getImage(PluginConstants.Images.ARROW_LEFT_BUTTON_ICON);
 	            	}
-	        	break;
-	            default :
-	                break;  
-	        }
+	            } break;
+	            case 3: { // MATCHED TYPE
+	            	//image = UiPlugin.getDefault().getImage(PluginConstants.Images.ELIPSIS_ICON);
+	            } break;
+	            
+	        	case 4:  { // CHANGE RIGHT ARROW 
+	            	if( bindingListInput.isReconciled(binding) ) {
+	            		image = UiPlugin.getDefault().getImage(PluginConstants.Images.ARROW_RIGHT_BUTTON_DISABLED_ICON);
+	            	} else {
+	            		image = UiPlugin.getDefault().getImage(PluginConstants.Images.ARROW_RIGHT_BUTTON_ICON);
+	            	}
+	        	} break;
+		        case 5:  // SOURCE SQL COLUMN
+		               break;
+		        default :
+		                break;  
+		        }
 	        return image;
 		}
 	}

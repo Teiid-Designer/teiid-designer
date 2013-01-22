@@ -19,9 +19,21 @@ public interface PluginConstants {
     // ============================================================================================================================
     // Constants
 
+    /**
+     * 
+     */
     public static final String TRANSFORMATION_DIAGRAM_TYPE_ID = "transformationDiagramType"; //$NON-NLS-1$
+    /**
+     * 
+     */
     public static final String DEPENDENCY_DIAGRAM_TYPE_ID = "dependencyDiagramType"; //$NON-NLS-1$
+    /**
+     * 
+     */
     public static final String EMPTY_STRING = ""; //$NON-NLS-1$
+    /**
+     * 
+     */
     public static final String TRANSFORMATION_EDITOR_ID = "org.teiid.designer.transformation.ui.editors.TransformationObjectEditorPage"; //$NON-NLS-1$
 
     // ============================================================================================================================
@@ -61,8 +73,20 @@ public interface PluginConstants {
         String CONVERT_BUTTON_DISABLED_ICON = "icons/full/wizban/convert-button-disabled.png"; //$NON-NLS-1$
         String ELIPSIS_BUTTON_ICON = "icons/full/wizban/elipsis-button.png"; //$NON-NLS-1$
         String ELIPSIS_LONG_BUTTON_ICON = "icons/full/wizban/elipsis-long-button.png"; //$NON-NLS-1$
+        
+        String ARROW_RIGHT_BUTTON_ICON = "icons/full/cview20/arrow-20x20.png"; //$NON-NLS-1$
+        String ARROW_RIGHT_BUTTON_DISABLED_ICON = "icons/full/cview20/arrow-20x20-disabled.png"; //$NON-NLS-1$
+        String ARROW_LEFT_BUTTON_ICON = "icons/full/cview20/arrow-left-20x20.png"; //$NON-NLS-1$
+        String ARROW_LEFT_BUTTON_DISABLED_ICON = "icons/full/cview20/arrow-left-20x20-disabled.png"; //$NON-NLS-1$
+        String ELIPSIS_ICON = "icons/full/cview20/elipsis-20x20.png"; //$NON-NLS-1$
+        String WARNING_BUTTON_ICON = "icons/full/cview20/warning-20x20.png"; //$NON-NLS-1$
+        String ARROW_LEFT_ICON = "icons/full/cview20/arrow-only-left-20x20.png"; //$NON-NLS-1$
+        String ARROW_RIGHT_ICON = "icons/full/cview20/arrow-only-20x20.png"; //$NON-NLS-1$
     }
 
+    /**
+     *
+     */
     interface Prefs {
 
         // Appearance Preferences
