@@ -232,7 +232,13 @@ public class RelationalProcedure extends RelationalReference {
      * @param resultSet Sets resultSet to the specified value.
      */
     public void setResultSet( RelationalProcedureResultSet resultSet ) {
+    	if( this.resultSet != null ) {
+    		this.resultSet.setParent(null);
+    	}
         this.resultSet = resultSet;
+        if( this.resultSet != null) {
+        	this.resultSet.setParent(this);
+        }
     }
     /**
      * @return parameters
@@ -404,6 +410,24 @@ public class RelationalProcedure extends RelationalReference {
 					} else {
 						foundResultParam = true;
 					}
+				}
+			}
+			
+			if( getResultSet() != null ) {
+				setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID,
+						Messages.validate_noResultSetAllowedInFunction ));
+				return;
+			}
+		} else {
+			if( getResultSet() != null ) {
+				if( getResultSet().getStatus().getSeverity() == IStatus.ERROR ) {
+					setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, getResultSet().getStatus().getMessage() ));
+					return;
+				}
+				
+				if( getResultSet().getStatus().getSeverity() == IStatus.WARNING ) {
+					setStatus(new Status(IStatus.WARNING, RelationalPlugin.PLUGIN_ID, getResultSet().getStatus().getMessage() ));
+					return;
 				}
 			}
 		}

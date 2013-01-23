@@ -34,6 +34,7 @@ public class Messages extends NLS {
 	public static String validate_error_ucNoColumnsDefined;
 	public static String validate_error_materializedTableHasNoTableDefined;
 	public static String validate_warning_noColumnsDefined;
+	public static String validate_warning_noColumnsDefinedForResultSet;
 	public static String validate_error_fKUniqueKeyNameIsUndefined;
 	public static String validate_error_fKReferencedUniqueKeyTableIsUndefined;
 	public static String validate_error_duplicateColumnNamesInTable;
@@ -41,6 +42,7 @@ public class Messages extends NLS {
 	public static String validate_warning_noParametersDefined;
 	public static String validate_error_invalidParameterDirectionInFunction;
 	public static String validate_error_tooManyResultParametersInFunction;
+	public static String validate_noResultSetAllowedInFunction;
 	public static String validate_error_duplicateColumnNamesReferencedInIndex;
 	public static String validate_warning_noColumnReferencesDefined;
 

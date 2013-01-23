@@ -453,14 +453,22 @@ public class RelationalTable extends RelationalReference {
 					if( outerColumn.getName().equalsIgnoreCase(innerColumn.getName())) {
 						setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, 
 								NLS.bind(Messages.validate_error_duplicateColumnNamesInTable, getName())));
+						return;
 					}
 				}
 			}
 		}
 		
 		if( this.getColumns().isEmpty() ) {
-			setStatus(new Status(IStatus.WARNING, RelationalPlugin.PLUGIN_ID, 
+			if( this.getParent() != null && this.getParent() instanceof RelationalProcedure ) {
+				setStatus(new Status(IStatus.WARNING, RelationalPlugin.PLUGIN_ID, 
+						Messages.validate_warning_noColumnsDefinedForResultSet ));
+				return;
+			} else {
+				setStatus(new Status(IStatus.WARNING, RelationalPlugin.PLUGIN_ID, 
 					Messages.validate_warning_noColumnsDefined ));
+				return;
+			}
 		}
 		
 	}
