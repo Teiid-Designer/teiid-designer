@@ -87,6 +87,7 @@ public class Messages extends NLS {
     public static String columnsLabel;
     public static String uniqueConstraintLabel;
     public static String columnNameLabel;
+    public static String parameterNameLabel;
     public static String dataTypeLabel;
     public static String lengthLabel;
 	public static String isFunctionLabel;
@@ -105,6 +106,7 @@ public class Messages extends NLS {
 	public static String usesDistinctRowsLabel;
 	public static String functionPropertiesLabel;
 	public static String aggregatePropertiesLabel;
+	public static String resultSetLabel;
 
 	public static String validationOkCreateObject;
 	public static String selectColumnsTitle;
