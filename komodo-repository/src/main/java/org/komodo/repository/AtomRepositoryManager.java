@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A repository manager that uses the S-RAMP atom interface.
  */
-class AtomRepositoryManager implements RepositoryManager {
+public class AtomRepositoryManager implements RepositoryManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AtomRepositoryManager.class);
     private static final List<ArtifactType> NO_RESULTS = Collections.emptyList();
@@ -53,7 +53,7 @@ class AtomRepositoryManager implements RepositoryManager {
      * @param connect <code>true</code> if a connection to the repository should be made at construction
      * @throws Exception if there is a problem connecting to the server
      */
-    AtomRepositoryManager(final String url,
+    public AtomRepositoryManager(final String url,
                           final boolean connect) throws Exception {
         Precondition.notEmpty(url, "url"); //$NON-NLS-1$
         LOGGER.debug("Constructing repository manager with url '{}'", url); //$NON-NLS-1$

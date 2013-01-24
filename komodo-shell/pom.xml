@@ -18,14 +18,7 @@
         <dependency>
             <groupId>org.komodo</groupId>
             <artifactId>komodo-repository</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.komodo</groupId>
-            <artifactId>komodo-repository</artifactId>
             <version>${project.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
         </dependency>
 
         <dependency>

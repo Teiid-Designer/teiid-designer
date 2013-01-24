@@ -10,21 +10,25 @@ package org.komodo.sramp.shell.commands;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
 
 import org.komodo.repository.AtomRepositoryManager;
+import org.komodo.repository.RepositoryManager;
+import org.komodo.repository.artifact.Artifact;
 import org.komodo.sramp.shell.util.ShellConstants;
+import org.overlord.sramp.common.ArtifactType;
 import org.overlord.sramp.shell.AbstractShellCommand;
-import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 
 /**
  * Adds a VDB to the repository.  
  */
-public class AddVdbCommand extends AbstractShellCommand implements ShellConstants {
+public class QueryForVdbCommand extends AbstractShellCommand implements ShellConstants {
 
     /**
      * Constructor.
      */
-    public AddVdbCommand() {
+    public QueryForVdbCommand() {
     }
 
     /**
@@ -34,17 +38,14 @@ public class AddVdbCommand extends AbstractShellCommand implements ShellConstant
      */
     @Override
     public void execute() throws Exception {
-        String fileName = requiredArgument(0, "Path to VDB is required.");
-        String vdbName = requiredArgument(1, "VDB Name is required.");
+        String vdbName = requiredArgument(0, "VDB Name is required.");
+        String version = requiredArgument(1, "VDB Version is required.");
         
-        InputStream vdbStream = null;
-        
-        try {
-        	vdbStream = getResourceAsStream(fileName);
-    	}catch(Exception e){
-    		print(e.getMessage());
-			return;
-    	}
+        final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
+        settings.artifactType = Artifact.Type.VDB;
+        settings.params = new HashMap<String, String>();
+        settings.params.put("version", version);
+        settings.params.put("name", vdbName);
         
         Object obj = this.getContext().getVariable(KOMODO_CLIENT_QNAME);
         
@@ -54,12 +55,12 @@ public class AddVdbCommand extends AbstractShellCommand implements ShellConstant
         }
         
         AtomRepositoryManager repo = (AtomRepositoryManager) obj;
-        BaseArtifactType baseArtifact = repo.addVdb(vdbStream, vdbName);
+        List<ArtifactType> artifactList = repo.query(settings);
         
-        if (baseArtifact == null){
-        	print("Add VDB failed.");
+        if (artifactList.isEmpty()){
+        	print("VDB " + vdbName + " with version " + version + " not found");
         }else{
-        	print("Add VDB successful.");
+        	print("Found VDB " + vdbName + " with version " + version);
         }
         
       }
@@ -71,10 +72,10 @@ public class AddVdbCommand extends AbstractShellCommand implements ShellConstant
      */
     @Override
     public void printHelp() {
-        print("The 'addVdb' command adds a VDB to the Komodo repository.");
+        print("The 'getVdb' queries for a VDB and version in a Komodo repository.");
         print("");
         print("Example usage:");
-        print(">  komodo:addVdb {Path to VDB} {VDB Name}");
+        print(">  komodo:getVdb {VDB Name} {VDB Version}");
     }
 
     /**
@@ -84,7 +85,7 @@ public class AddVdbCommand extends AbstractShellCommand implements ShellConstant
      */
     @Override
     public void printUsage() {
-        print("komodo:addVdb {Path to VDB} {VDB Name}");
+        print("komodo:getVdb {VDB Name} {VDB Version}");
     }
     
     /**
