@@ -27,7 +27,7 @@ public class Vdb extends VdbAdminObject {
         /**
          * The VDB element attribute identifiers.
          */
-        interface Attributes {
+        interface Attribute {
 
             /**
              * The VDB name attribute identifier.

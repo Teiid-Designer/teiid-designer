@@ -15,6 +15,47 @@ import org.komodo.common.util.StringUtil;
 public interface Artifact {
 
     /**
+     * Names of default properties for use in queries.
+     */
+    public interface Property {
+
+        /**
+         * The 'created by' property name. Value is {@value};
+         */
+        String CREATED_BY = "createdBy"; //$NON-NLS-1$
+
+        /**
+         * The 'created timestamp' property name. Value is {@value};
+         */
+        String CREATED_TIMESTAMP = "createdTimestamp"; //$NON-NLS-1$
+
+        /**
+         * The 'last modified by' property name. Value is {@value};
+         */
+        String LAST_MODIFIED_BY = "lastModifiedBy"; //$NON-NLS-1$
+
+        /**
+         * The 'last modified timestamp' property name. Value is {@value};
+         */
+        String LAST_MODIFIED_TIMESTAMP = "lastModifiedTimestamp"; //$NON-NLS-1$
+
+        /**
+         * The 'name' property name. Value is {@value};
+         */
+        String NAME = "name"; //$NON-NLS-1$
+
+        /**
+         * The 'UUID' property name. Value is {@value};
+         */
+        String UUID = "uuid"; //$NON-NLS-1$
+
+        /**
+         * The 'version' property name. Value is {@value};
+         */
+        String VERSION = "version"; //$NON-NLS-1$
+    }
+
+    /**
      * Common artifact relationship types.
      */
     public enum RelationshipType {

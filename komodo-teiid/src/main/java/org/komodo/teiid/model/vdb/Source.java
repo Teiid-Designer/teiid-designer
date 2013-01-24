@@ -23,7 +23,7 @@ public class Source extends VdbObject {
         /**
          * The VDB schema/model source element attribute identifiers.
          */
-        interface Attributes {
+        interface Attribute {
 
             /**
              * The schema/model source JNDI name attribute identifier.

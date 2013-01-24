@@ -75,8 +75,8 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
         final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
         settings.artifactType = Artifact.Type.VDB;
         settings.params = new HashMap<String, String>();
-        settings.params.put("version", "1");
-        settings.params.put("name", "twitter");
+        settings.params.put(Artifact.Property.VERSION, "1");
+        settings.params.put(Artifact.Property.NAME, "twitter");
         assertThat(_repoMgr.query(settings).size(), is(1));
     }
 
@@ -86,8 +86,8 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
         final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
         settings.artifactType = Artifact.Type.VDB;
         settings.params = new HashMap<String, String>();
-        settings.params.put("version", "2"); // wrong version
-        settings.params.put("name", "twitter");
+        settings.params.put(Artifact.Property.VERSION, "2"); // wrong version
+        settings.params.put(Artifact.Property.NAME, "twitter");
         assertThat(_repoMgr.query(settings).size(), is(0));
     }
 
@@ -97,7 +97,7 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
         final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
         settings.artifactType = Artifact.Type.VDB;
         settings.params = new HashMap<String, String>();
-        settings.params.put("version", "1");
+        settings.params.put(Artifact.Property.VERSION, "1");
         assertThat(_repoMgr.query(settings).size(), is(2));
     }
 
@@ -107,7 +107,7 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
         final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
         settings.artifactType = Artifact.Type.TRANSLATOR;
         settings.params = new HashMap<String, String>();
-        settings.params.put("name", "rest");
+        settings.params.put(Artifact.Property.NAME, "rest");
         settings.params.put("DefaultBinding", "HTTP"); // wrong version
         assertThat(_repoMgr.query(settings).size(), is(1));
     }

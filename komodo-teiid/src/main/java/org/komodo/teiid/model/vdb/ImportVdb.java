@@ -20,19 +20,19 @@ public class ImportVdb extends VdbObject {
     public interface ManifestId {
 
         /**
-         * The VDB translator element attribute identifiers.
+         * The Import VDB element attribute identifiers.
          */
-        interface Attributes {
-
-            /**
-             * The translator name and property name attribute identifier.
-             */
-            String NAME = "name"; //$NON-NLS-1$
+        interface Attribute {
 
             /**
              * The import VDB import data policies attribute identifier.
              */
             String IMPORT_DATA_POLICIES = "import-data-policies"; //$NON-NLS-1$
+
+            /**
+             * The Import VDB name and property name attribute identifier.
+             */
+            String NAME = "name"; //$NON-NLS-1$
 
             /**
              * The Import VDB version attribute identifier.
@@ -47,7 +47,7 @@ public class ImportVdb extends VdbObject {
     public interface PropertyName extends VdbObject.PropertyName {
 
         /**
-         * Indicates if data policies should be imported.
+         * Indicates if Import VDB's data policies should be imported.
          */
         String IMPORT_DATA_POLICIES = ImportVdb.class.getSimpleName() + ".importDataPolicies"; //$NON-NLS-1$
 
