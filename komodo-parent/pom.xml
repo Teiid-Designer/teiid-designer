@@ -110,6 +110,19 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.komodo</groupId>
+                <artifactId>komodo-repository</artifactId>
+                <version>${project.version}</version>
+                <classifier>tests</classifier>
+            </dependency>
+
+            <dependency>
+                <groupId>org.komodo</groupId>
+                <artifactId>komodo-shell</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!--
                 S-RAMP
             -->
