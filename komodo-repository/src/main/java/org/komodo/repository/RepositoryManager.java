@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import org.komodo.repository.artifact.Artifact;
 import org.overlord.sramp.client.query.QueryResultSet;
-import org.overlord.sramp.common.ArtifactType;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 
 /**
@@ -82,7 +81,7 @@ public interface RepositoryManager {
 
     /**
      * @param artifact the artifact whose derived artifacts are being requested (cannot be <code>null</code>)
-     * @return the derived artifacts (never <code>null</code>)
+     * @return the query results containing the derived artifacts (never <code>null</code>)
      * @throws Exception if there is a problem obtaining the derived artifacts
      */
     QueryResultSet getDerivedArtifacts(final BaseArtifactType artifact) throws Exception;
@@ -99,10 +98,10 @@ public interface RepositoryManager {
 
     /**
      * @param settings the query settings (cannot be <code>null</code>)
-     * @return the lightweight artifact query results (never <code>null</code>)
+     * @return the query results containing the artifacts (never <code>null</code>)
      * @throws Exception if there is a problem running query
      */
-    List<ArtifactType> query(final QuerySettings settings) throws Exception;
+    QueryResultSet query(final QuerySettings settings) throws Exception;
 
     /**
      * @param newName the new name of the repository manager (can be <code>null</code> or empty)

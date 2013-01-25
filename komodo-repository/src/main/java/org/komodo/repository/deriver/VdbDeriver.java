@@ -25,6 +25,7 @@ import org.komodo.teiid.model.vdb.Entry;
 import org.komodo.teiid.model.vdb.ImportVdb;
 import org.komodo.teiid.model.vdb.Permission;
 import org.komodo.teiid.model.vdb.Schema;
+import org.komodo.teiid.model.vdb.Schema.ManifestId.Attribute;
 import org.komodo.teiid.model.vdb.Source;
 import org.komodo.teiid.model.vdb.Translator;
 import org.komodo.teiid.model.vdb.Vdb;
@@ -100,19 +101,19 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                 derivedArtifacts.add(dataPolicyArtifact);
 
                 { // name
-                    final String name = dataPolicy.getAttribute(DataPolicy.ManifestId.Attributes.NAME);
+                    final String name = dataPolicy.getAttribute(DataPolicy.ManifestId.Attribute.NAME);
                     dataPolicyArtifact.setName(name);
                 }
 
                 { // any authenticated
-                    final String anyAuthenticated = dataPolicy.getAttribute(DataPolicy.ManifestId.Attributes.ANY_AUTHENTICATED);
+                    final String anyAuthenticated = dataPolicy.getAttribute(DataPolicy.ManifestId.Attribute.ANY_AUTHENTICATED);
                     SrampModelUtils.setCustomProperty(dataPolicyArtifact,
                                                       DataPolicy.PropertyName.ANY_AUTHENTICATED,
                                                       anyAuthenticated);
                 }
 
                 { // create temp tables
-                    final String creatable = dataPolicy.getAttribute(DataPolicy.ManifestId.Attributes.TEMP_TABLE_CREATABLE);
+                    final String creatable = dataPolicy.getAttribute(DataPolicy.ManifestId.Attribute.TEMP_TABLE_CREATABLE);
                     SrampModelUtils.setCustomProperty(dataPolicyArtifact, DataPolicy.PropertyName.TEMP_TABLE_CREATABLE, creatable);
                 }
 
@@ -284,7 +285,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                 derivedArtifacts.add(entryArtifact);
 
                 { // name
-                    final String path = entry.getAttribute(Entry.ManifestId.Attributes.PATH);
+                    final String path = entry.getAttribute(Entry.ManifestId.Attribute.PATH);
                     entryArtifact.setName(path);
                 }
 
@@ -347,7 +348,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                 derivedArtifacts.add(schemaArtifact);
 
                 { // name
-                    final String path = schema.getAttribute(Schema.ManifestId.Attributes.NAME);
+                    final String path = schema.getAttribute(Schema.ManifestId.Attribute.NAME);
                     schemaArtifact.setName(path);
                 }
 
@@ -360,12 +361,12 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                 }
 
                 { // visible
-                    final String visible = schema.getAttribute(Schema.ManifestId.Attributes.VISIBLE);
+                    final String visible = schema.getAttribute(Schema.ManifestId.Attribute.VISIBLE);
                     SrampModelUtils.setCustomProperty(schemaArtifact, Schema.PropertyName.VISIBLE, visible);
                 }
 
                 { // type
-                    String type = schema.getAttribute(Schema.ManifestId.Attributes.TYPE);
+                    String type = schema.getAttribute(Schema.ManifestId.Attribute.TYPE);
 
                     if (StringUtil.isEmpty(type)) {
                         type = Schema.DEFAULT_TYPE;
@@ -382,7 +383,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                                                                         xpath);
 
                     if (element != null) {
-                        final String metadataType = element.getAttribute(Schema.ManifestId.MetadataAttributes.TYPE);
+                        final String metadataType = element.getAttribute(Attribute.METADATA_TYPE);
                         SrampModelUtils.setCustomProperty(schemaArtifact, Schema.PropertyName.METADATA_TYPE, metadataType);
                     }
                 }
@@ -405,17 +406,17 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                         derivedArtifacts.add(sourceArtifact);
 
                         { // name
-                            final String name = source.getAttribute(Source.ManifestId.Attributes.NAME);
+                            final String name = source.getAttribute(Source.ManifestId.Attribute.NAME);
                             sourceArtifact.setName(name);
                         }
 
                         { // JNDI name
-                            final String jndiName = source.getAttribute(Source.ManifestId.Attributes.JNDI_NAME);
+                            final String jndiName = source.getAttribute(Source.ManifestId.Attribute.JNDI_NAME);
                             SrampModelUtils.setCustomProperty(sourceArtifact, Source.PropertyName.JNDI_NAME, jndiName);
                         }
 
                         { // translator
-                            final String translatorName = source.getAttribute(Source.ManifestId.Attributes.TRANSLATOR_NAME);
+                            final String translatorName = source.getAttribute(Source.ManifestId.Attribute.TRANSLATOR_NAME);
                             SrampModelUtils.setCustomProperty(sourceArtifact, Source.PropertyName.TRANSLATOR_NAME, translatorName);
                         }
 
@@ -459,12 +460,12 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                 derivedArtifacts.add(translatorArtifact);
 
                 { // name
-                    final String name = translator.getAttribute(Translator.ManifestId.Attributes.NAME);
+                    final String name = translator.getAttribute(Translator.ManifestId.Attribute.NAME);
                     translatorArtifact.setName(name);
                 }
 
                 { // description
-                    final String description = translator.getAttribute(Translator.ManifestId.Attributes.DESCRIPTION);
+                    final String description = translator.getAttribute(Translator.ManifestId.Attribute.DESCRIPTION);
                     translatorArtifact.setDescription(description);
                 }
 
@@ -474,7 +475,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                 }
 
                 { // type
-                    final String type = translator.getAttribute(Translator.ManifestId.Attributes.TYPE);
+                    final String type = translator.getAttribute(Translator.ManifestId.Attribute.TYPE);
                     SrampModelUtils.setCustomProperty(translatorArtifact, Translator.PropertyName.TYPE, type);
                 }
 
@@ -489,7 +490,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                             final Element vdb,
                             final XPath xpath) throws Exception {
         { // name
-            final String name = vdb.getAttribute(Vdb.ManifestId.Attributes.NAME);
+            final String name = vdb.getAttribute(Vdb.ManifestId.Attribute.NAME);
             vdbArtifact.setName(name);
         }
 
@@ -497,7 +498,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
         setDescriptionFromElementValue(vdb, Vdb.ManifestId.DESCRIPTION, vdbArtifact, xpath);
 
         // version
-        setVersionFromAttribueValue(vdb, Vdb.ManifestId.Attributes.VERSION, vdbArtifact, xpath);
+        setVersionFromAttribueValue(vdb, Vdb.ManifestId.Attribute.VERSION, vdbArtifact, xpath);
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("VDB name '{}'", vdbArtifact.getName()); //$NON-NLS-1$
@@ -533,15 +534,15 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                 derivedArtifacts.add(vdbImportArtifact);
 
                 { // name
-                    final String name = vdbImport.getAttribute(ImportVdb.ManifestId.Attributes.NAME);
+                    final String name = vdbImport.getAttribute(ImportVdb.ManifestId.Attribute.NAME);
                     vdbImportArtifact.setName(name);
                 }
 
                 // version
-                setVersionFromAttribueValue(vdbImport, ImportVdb.ManifestId.Attributes.VERSION, vdbImportArtifact, xpath);
+                setVersionFromAttribueValue(vdbImport, ImportVdb.ManifestId.Attribute.VERSION, vdbImportArtifact, xpath);
 
                 { // import data policies
-                    String importDataPolicies = vdbImport.getAttribute(ImportVdb.ManifestId.Attributes.IMPORT_DATA_POLICIES);
+                    String importDataPolicies = vdbImport.getAttribute(ImportVdb.ManifestId.Attribute.IMPORT_DATA_POLICIES);
 
                     if (StringUtil.isEmpty(importDataPolicies)) {
                         importDataPolicies = Boolean.toString(ImportVdb.DEFAULT_IMPORT_DATA_POLICIES);

@@ -15,15 +15,68 @@
     <description>Komodo shell module</description>
 
     <dependencies>
+         <dependency>
+            <groupId>org.komodo</groupId>
+            <artifactId>komodo-common</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.komodo</groupId>
             <artifactId>komodo-repository</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.overlord.sramp</groupId>
             <artifactId>s-ramp-shell</artifactId>
+        </dependency>
+
+        <!--
+            Testing dependencies
+        -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.komodo</groupId>
+            <artifactId>komodo-repository</artifactId>
+            <classifier>tests</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.overlord.sramp</groupId>
+            <artifactId>s-ramp-atom</artifactId>
+            <classifier>classes</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.overlord.sramp</groupId>
+            <artifactId>s-ramp-server</artifactId>
+            <classifier>classes</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>tjws</artifactId>
+        </dependency>
+ 
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </dependency>
+
+        <!--
+            Logging dependencies
+        -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+ 
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
         </dependency>
     </dependencies>
 </project>

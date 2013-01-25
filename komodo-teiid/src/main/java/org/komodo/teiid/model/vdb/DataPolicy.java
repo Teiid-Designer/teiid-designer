@@ -29,7 +29,7 @@ public class DataPolicy extends VdbObject implements Describable {
         /**
          * The VDB data policy element attribute identifiers.
          */
-        interface Attributes {
+        interface Attribute {
 
             /**
              * The any authenticated attribute identifier.
@@ -79,7 +79,7 @@ public class DataPolicy extends VdbObject implements Describable {
         String DESCRIPTION = Describable.DESCRIPTION;
 
         /**
-         * A collection of data permisions.
+         * A collection of data permissions.
          */
         String PERMISSIONS = DataPolicy.class.getSimpleName() + ".anyAuthenticated"; //$NON-NLS-1$
 

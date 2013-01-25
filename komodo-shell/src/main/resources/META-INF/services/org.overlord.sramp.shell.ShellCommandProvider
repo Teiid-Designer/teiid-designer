@@ -1,1 +1,1 @@
-org.komodo.sramp.shell.commands.KomodoCommandProvider
+org.komodo.shell.command.KomodoCommandProvider

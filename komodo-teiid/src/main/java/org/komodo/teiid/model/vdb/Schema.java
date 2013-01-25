@@ -20,6 +20,8 @@ import org.komodo.common.util.StringUtil;
  */
 public class Schema extends VdbAdminObject {
 
+    // TODO verify model does not require validation errors or model path
+
     /**
      * The VDB manifest (<code>vdb.xml</code>) identifiers related to schema/model elements.
      */
@@ -28,7 +30,12 @@ public class Schema extends VdbAdminObject {
         /**
          * The schema/model element attribute identifiers.
          */
-        interface Attributes {
+        interface Attribute {
+
+            /**
+             * The schema/model metadata type attribute identifier.
+             */
+            String METADATA_TYPE = "type"; //$NON-NLS-1$
 
             /**
              * The schema/model name attribute identifier.
@@ -47,17 +54,6 @@ public class Schema extends VdbAdminObject {
         }
 
         /**
-         * The schema/model metadata element attribute identifiers.
-         */
-        interface MetadataAttributes {
-
-            /**
-             * The schema/model metadata type attribute identifier.
-             */
-            String TYPE = "type"; //$NON-NLS-1$
-        }
-
-        /**
          * The VDB schema/model description element identifier. The description is optional.
          */
         String DESCRIPTION = "description"; //$NON-NLS-1$
@@ -71,6 +67,17 @@ public class Schema extends VdbAdminObject {
          * The VDB schema/model data source element identifier.
          */
         String SOURCE = "source"; //$NON-NLS-1$
+    }
+
+    /**
+     * The type of metadata definition language.
+     */
+    public enum MetadataType {
+
+        /**
+         * DDL is the default model definition metadata type. Value is {@value}.
+         */
+        DDL
     }
 
     /**
@@ -121,20 +128,9 @@ public class Schema extends VdbAdminObject {
     }
 
     /**
-     * The type of metadata definition language.
-     */
-    public enum MetadataType {
-
-        /**
-         * DDL is the default model definition metadata type. Value is {@value}.
-         */
-        DDL
-    }
-
-    /**
      * The default model definition metadata type. Value is {@value}.
      */
-    public static final MetadataType DEFAULT_METADATA_TYPE =  MetadataType.DDL;
+    public static final MetadataType DEFAULT_METADATA_TYPE = MetadataType.DDL;
 
     /**
      * The default schema/model type. Value is {@value}.

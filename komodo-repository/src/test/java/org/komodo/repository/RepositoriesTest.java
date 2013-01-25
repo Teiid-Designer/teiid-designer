@@ -11,11 +11,9 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsSame.sameInstance;
 import static org.junit.Assert.assertThat;
-import java.net.ConnectException;
 import org.junit.Before;
 import org.junit.Test;
 import org.komodo.common.util.StringUtil;
-import org.overlord.sramp.client.SrampClientException;
 
 /**
  * A test class for a {@link Repositories}.
@@ -47,13 +45,9 @@ public class RepositoriesTest {
         assertThat(actual, is(sameInstance(this.repos.get(url))));
     }
 
-    @Test( expected = ConnectException.class )
-    public void shouldFailWhenTryingToConnectUsingValidUrlButNotConnected() throws Throwable {
-        try {
-            this.repos.get("http://localhost:8081");
-        } catch (final SrampClientException e) {
-            throw e.getCause();
-        }
+    @Test( expected = Exception.class )
+    public void shouldFailWhenTryingToConnectToUnknowHost() throws Throwable {
+        this.repos.get("http://unknownHostUrl/sramp");
     }
 
     @Test( expected = Exception.class )
