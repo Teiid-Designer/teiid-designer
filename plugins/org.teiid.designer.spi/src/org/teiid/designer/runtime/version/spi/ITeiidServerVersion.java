@@ -75,4 +75,11 @@ public interface ITeiidServerVersion {
      * @return true if the otherVersion is considered equivalent
      */
     boolean compareTo(ITeiidServerVersion otherVersion);
+    
+    /**
+     * Is this a 7 server?
+     * 
+     * @return true is version is 7
+     */
+    boolean isSevenServer();
 }

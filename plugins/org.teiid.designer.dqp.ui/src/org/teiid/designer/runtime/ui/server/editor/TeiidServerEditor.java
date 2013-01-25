@@ -49,7 +49,6 @@ import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
@@ -249,7 +248,7 @@ public class TeiidServerEditor extends EditorPart {
         if (teiidServer == null)
             return false;
         
-        return ITeiidServerVersion.SEVEN.equals(teiidServer.getServerVersion().getMajor());
+        return teiidServer.getServerVersion().isSevenServer();
     }
 
     /**

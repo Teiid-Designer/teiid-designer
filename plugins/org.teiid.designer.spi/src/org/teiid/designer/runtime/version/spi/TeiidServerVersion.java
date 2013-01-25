@@ -155,4 +155,8 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         return true;
     }
     
+    @Override
+    public boolean isSevenServer() {
+        return ITeiidServerVersion.SEVEN.equals(getMajor());
+    }
 }
