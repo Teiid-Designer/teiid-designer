@@ -14,7 +14,7 @@ import org.teiid.designer.query.sql.symbol.IElementSymbol;
 /**
  *
  */
-public interface IElementCollectorVisitor {
+public interface IElementCollectorVisitor<LO extends ILanguageObject, ES extends IElementSymbol> {
 
     /**
      * Helper to quickly get the elements from obj in a collection.  The
@@ -22,10 +22,9 @@ public interface IElementCollectorVisitor {
      * filtered out.
      * 
      * @param obj Language object
-     * @param removeDuplicates True to remove duplicates
      * @return Collection of {@link IElementSymbol}
      */
-    Collection<IElementSymbol> getElements(ILanguageObject obj, boolean removeDuplicates);
+    Collection<? super ES> findElements(LO obj);
     
     /**
      * Helper to quickly get the elements from obj in a collection.  The
@@ -33,13 +32,12 @@ public interface IElementCollectorVisitor {
      * filtered out.
      * 
      * @param obj Language object
-     * @param removeDuplicates True to remove duplicates
      * @param useDeepIteration indicates whether or not to iterate into nested
      *                 subqueries of the query 
      * 
      * @return Collection of {@link IElementSymbol}
      */
-    Collection<IElementSymbol> getElements(ILanguageObject obj, boolean removeDuplicates, boolean useDeepIteration);
+    Collection<? super ES> findElements(LO obj, boolean useDeepIteration);
     
     /**
      * Helper to quickly get the elements from obj in a collection.  The
@@ -47,12 +45,11 @@ public interface IElementCollectorVisitor {
      * filtered out.
      * 
      * @param obj Language object
-     * @param removeDuplicates True to remove duplicates
      * @param useDeepIteration indicates whether or not to iterate into nested
      *                 subqueries of the query 
      * @param aggsOnly
      * 
      * @return Collection of {@link IElementSymbol}
      */
-    Collection<IElementSymbol> getElements(ILanguageObject obj, boolean removeDuplicates, boolean useDeepIteration, boolean aggsOnly);
+    Collection<? super ES> findElements(LO obj, boolean useDeepIteration, boolean aggsOnly);
 }

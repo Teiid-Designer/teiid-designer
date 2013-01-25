@@ -7,13 +7,14 @@
 */
 package org.teiid.designer.query.sql.lang;
 
-
+import org.teiid.designer.query.sql.ILanguageVisitor;
 
 
 /**
  *
  */
-public interface ISubqueryCompareCriteria extends IPredicateCriteria, ISubqueryContainer<IQueryCommand> {
+public interface ISubqueryCompareCriteria<LV extends ILanguageVisitor, C extends ICommand>
+    extends IPredicateCriteria<LV>, ISubqueryContainer<C>{
 
     /** "Some" predicate quantifier (equivalent to "Any") */
     public static final int SOME = 2;

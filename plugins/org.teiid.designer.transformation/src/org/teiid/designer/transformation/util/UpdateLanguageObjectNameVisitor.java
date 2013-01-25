@@ -17,7 +17,6 @@ import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;
 import org.teiid.designer.query.AbstractLanguageVisitor;
 import org.teiid.designer.query.IQueryService;
-import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.query.sql.symbol.ISymbol;
@@ -45,38 +44,31 @@ public class UpdateLanguageObjectNameVisitor extends AbstractLanguageVisitor {
         this.oldToNewObjects = oldToNewObjects;
     }
 
-    /** 
-     * @see IElementSymbol
-     * @since 4.2
-     */
     @Override
-    public void visit(ILanguageObject obj) {
+    public void visit(IElementSymbol obj) {
+        String fullName = obj.getShortName();
+        if (obj.getGroupSymbol() != null) {
+            fullName = obj.getGroupSymbol().getDefinition() + ISymbol.SEPARATOR + fullName;
+            visit(obj.getGroupSymbol());
+        }
 
-        if (obj instanceof IElementSymbol) {
-            IElementSymbol elementSymbol = (IElementSymbol) obj;
-            String fullName = elementSymbol.getShortName();
-            if (elementSymbol.getGroupSymbol() != null) {
-                fullName = elementSymbol.getGroupSymbol().getDefinition() + ISymbol.SEPARATOR + fullName;
-                visit(elementSymbol.getGroupSymbol());
-            }
+        String newName = getNewName(fullName);
+        if (newName != null) {
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            obj.setShortName(queryService.getSymbolShortName(newName));
+        }
+    }
+    
+    @Override
+    public void visit(IGroupSymbol obj) {
+        String fullName = obj.getDefinition();
 
-            String newName = getNewName(fullName);
-            if (newName != null) {
-                IQueryService queryService = ModelerCore.getTeiidQueryService();
-                elementSymbol.setShortName(queryService.getSymbolShortName(newName));
-            }
-        } 
-        else if (obj instanceof IGroupSymbol) {
-            IGroupSymbol groupSymbol = (IGroupSymbol) obj;
-            String fullName = groupSymbol.getDefinition();
-
-            String newName = getNewName(fullName);
-            if (newName != null) {
-                if (groupSymbol.getDefinition() == null) {
-                    groupSymbol.setName(newName);
-                } else {
-                    groupSymbol.setDefinition(newName);
-                }
+        String newName = getNewName(fullName);
+        if (newName != null) {
+            if (obj.getDefinition() == null) {
+                obj.setName(newName);
+            } else {
+                obj.setDefinition(newName);
             }
         }
     }

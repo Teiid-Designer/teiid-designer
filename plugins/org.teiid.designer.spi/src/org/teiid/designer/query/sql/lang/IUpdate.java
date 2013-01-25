@@ -7,11 +7,15 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+
+
 
 /**
  *
  */
-public interface IUpdate extends ICommand {
+public interface IUpdate<E extends IExpression, LV extends ILanguageVisitor>
+    extends ITranslatableProcedureContainer<E, LV>{
 
     
 }

@@ -7,13 +7,16 @@
 */
 package org.teiid.designer.query.sql.symbol;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.IExpression;
-import org.teiid.designer.query.sql.lang.IQueryCommand;
 import org.teiid.designer.query.sql.lang.ISubqueryContainer;
+
 
 /**
  *
  */
-public interface IScalarSubquery extends IExpression, ISubqueryContainer<IQueryCommand> {
+public interface IScalarSubquery<LV extends ILanguageVisitor, C extends ICommand>
+    extends IExpression<LV>, ISubqueryContainer<C> {
 
 }

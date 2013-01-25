@@ -14,7 +14,7 @@ import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 /**
  *
  */
-public interface IQueryResolver {
+public interface IQueryResolver<C extends ICommand, GS extends IGroupSymbol> {
 
     /**
      * @param command
@@ -23,9 +23,6 @@ public interface IQueryResolver {
      * @param metadata
      * @throws Exception 
      */
-    void resolveCommand(ICommand command,
-                        IGroupSymbol gSymbol,
-                        int teiidCommandType,
-                        IQueryMetadataInterface metadata) throws Exception;
+    void resolveCommand(C command, GS gSymbol, int teiidCommandType, IQueryMetadataInterface metadata) throws Exception;
 
 }

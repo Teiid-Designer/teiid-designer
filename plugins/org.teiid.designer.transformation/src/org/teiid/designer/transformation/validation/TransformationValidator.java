@@ -825,7 +825,7 @@ public class TransformationValidator implements QueryValidator {
         IQueryService queryService = ModelerCore.getTeiidQueryService();
         IReferenceCollectorVisitor referenceCollectorVisitor = queryService.getReferenceCollectorVisitor();
         
-        Collection references = referenceCollectorVisitor.getReferences(command);
+        Collection references = referenceCollectorVisitor.findReferences(command);
         if (!references.isEmpty()) {
             statusList = statusList != null ? statusList : new ArrayList<IStatus>(1);
             IStatus status = new Status(

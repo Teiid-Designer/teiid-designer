@@ -496,7 +496,7 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         } else {
             IQueryService queryService = ModelerCore.getTeiidQueryService();
             ISQLStringVisitor visitor = queryService.getSQLStringVisitor();
-            displayText = visitor.getSQLString(command);
+            displayText = visitor.returnSQLString(command);
         }
         subquerySQLText.setText(displayText);
     }

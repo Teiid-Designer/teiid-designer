@@ -14,8 +14,9 @@ import org.teiid.designer.query.sql.lang.ILanguageObject;
 
 /**
  *
+ * @param <L> 
  */
-public interface IValidator {
+public interface IValidator<L extends ILanguageObject> {
     
     /**
      *
@@ -52,6 +53,6 @@ public interface IValidator {
      * @return report of validation
      * @throws Exception 
      */
-    IValidatorReport validate(ILanguageObject languageObject, IQueryMetadataInterface queryMetadata) throws Exception;
+    IValidatorReport validate(L languageObject, IQueryMetadataInterface queryMetadata) throws Exception;
 
 }

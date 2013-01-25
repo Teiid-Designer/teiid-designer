@@ -44,7 +44,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.query.sql.lang.IExpression;
-import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.util.TransformationMappingHelper;
 import org.teiid.designer.transformation.util.TransformationSqlHelper;
@@ -281,7 +280,7 @@ public class SqlTablePanel extends Composite {
                             label.setData("_TABLEITEM", item); //$NON-NLS-1$
                             Object data = item.getData();
                             String tipText = null;
-                            if (data instanceof ILanguageObject && ((ILanguageObject) data).isExpression()) {
+                            if (data instanceof IExpression) {
                                 IQueryService queryService = ModelerCore.getTeiidQueryService();
                                 tipText = queryService.getSymbolName(((IExpression)data));
                             }

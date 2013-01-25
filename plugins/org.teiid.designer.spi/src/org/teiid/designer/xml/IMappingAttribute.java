@@ -10,7 +10,7 @@ package org.teiid.designer.xml;
 /**
  *
  */
-public interface IMappingAttribute extends IMappingNode {
+public interface IMappingAttribute<N extends IMappingNode> extends IMappingNode<N> {
 
     /**
      * The XML Schema namespace for attribute instances

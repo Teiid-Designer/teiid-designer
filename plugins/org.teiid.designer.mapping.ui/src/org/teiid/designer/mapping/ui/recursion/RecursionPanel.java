@@ -523,7 +523,7 @@ public class RecursionPanel extends SashForm implements SelectionListener, UiCon
             ILanguageObject newCriteria = builder.getLanguageObject();
             IQueryService queryService = ModelerCore.getTeiidQueryService();
             ISQLStringVisitor visitor = queryService.getSQLStringVisitor();
-            String sCriteriaString = visitor.getSQLString(newCriteria);
+            String sCriteriaString = visitor.returnSQLString(newCriteria);
             // this: updateCriteriaForSelectedRow( criteriaString );
             docRecursionConditionCriteria.set(sCriteriaString);
 

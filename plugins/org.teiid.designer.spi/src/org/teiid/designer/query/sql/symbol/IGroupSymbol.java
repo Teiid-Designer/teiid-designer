@@ -7,11 +7,13 @@
 */
 package org.teiid.designer.query.sql.symbol;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+
 
 /**
  *
  */
-public interface IGroupSymbol extends ISymbol {
+public interface IGroupSymbol<LV extends ILanguageVisitor> extends ISymbol<LV>{
 
 
     /**

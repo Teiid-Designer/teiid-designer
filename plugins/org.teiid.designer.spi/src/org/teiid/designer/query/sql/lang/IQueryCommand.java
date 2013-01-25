@@ -7,30 +7,34 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+
+
 
 /**
  *
  */
-public interface IQueryCommand extends ICommand {
+public interface IQueryCommand<O extends IOrderBy, Q extends IQuery, E extends IExpression, LV extends ILanguageVisitor>
+    extends ICommand<E, LV> {
 
     /**
      * Get the order by clause for the query.
      * 
      * @return order by clause
      */
-    IOrderBy getOrderBy();
+    O getOrderBy();
     
     /**
      * Set the order by clause for the query.
      * 
      * @param orderBy New order by clause
      */
-    void setOrderBy(IOrderBy orderBy);
+    void setOrderBy(O orderBy);
     
     /**
      * Get the query
      * 
      * @return query
      */
-    IQuery getProjectedQuery();
+    Q getProjectedQuery();
 }

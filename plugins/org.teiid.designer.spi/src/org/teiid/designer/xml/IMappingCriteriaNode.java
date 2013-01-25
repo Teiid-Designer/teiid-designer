@@ -10,6 +10,6 @@ package org.teiid.designer.xml;
 /**
  *
  */
-public interface IMappingCriteriaNode extends IMappingNode {
+public interface IMappingCriteriaNode<N extends IMappingNode> extends IMappingNode<N> {
 
 }

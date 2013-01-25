@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.lang.IExpression;
 import org.teiid.designer.query.sql.lang.ILanguageObject;
 
 /**
@@ -174,7 +175,7 @@ public class DisplayNode implements DisplayNodeConstants {
     public DisplayNode getExpression() {
         DisplayNode parentNode = this;
         while (parentNode != null) {
-            if (parentNode.languageObject != null && parentNode.languageObject.isExpression()) {
+            if (parentNode.languageObject != null && parentNode.languageObject instanceof IExpression) {
                 return parentNode;
             }
             parentNode = parentNode.getParent();

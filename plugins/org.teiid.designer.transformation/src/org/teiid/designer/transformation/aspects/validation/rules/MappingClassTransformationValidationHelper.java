@@ -37,7 +37,6 @@ import org.teiid.designer.query.sql.IGroupsUsedByElementsVisitor;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.ICriteria;
 import org.teiid.designer.query.sql.lang.IQuery;
-import org.teiid.designer.query.sql.lang.IQueryCommand;
 import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.transformation.TransformationPlugin;
@@ -101,7 +100,7 @@ public class MappingClassTransformationValidationHelper {
                    final ValidationResult validationResult ) {
         boolean hasInputParamInCriteria = false;
         ValidationProblem inputCriteriaProblem = null;
-        for (IQueryCommand query : setQuery.getQueryCommands()) {
+        for (Object query : setQuery.getQueryCommands()) {
             if (query instanceof ISetQuery) {
                 validate((ISetQuery)query, mappingClass, validationResult);
                 return;
@@ -133,7 +132,7 @@ public class MappingClassTransformationValidationHelper {
             boolean foundInParam = false;
             ICriteria criteriaClause = query.getCriteria();
             if (criteriaClause != null) {
-                Set<IGroupSymbol> groups = groupsUsedByElementsVisitor.getGroups(criteriaClause);
+                Set<IGroupSymbol> groups = groupsUsedByElementsVisitor.findGroups(criteriaClause);
                 if (groups.contains(factory.createGroupSymbol("INPUT")) //$NON-NLS-1$
                 || groups.contains(factory.createGroupSymbol("INPUTS"))) { //$NON-NLS-1$
                     foundInParam = true;

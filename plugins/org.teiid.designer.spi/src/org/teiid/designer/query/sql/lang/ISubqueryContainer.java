@@ -8,23 +8,25 @@
 package org.teiid.designer.query.sql.lang;
 
 
+
 /**
  * This interface defines a common interface for all SQL objects 
  * that contain subqueries. 
  * 
- * @param <T> 
+ * @param <C> 
+ * @param <LV> 
  */
-public interface ISubqueryContainer<T extends ICommand> extends ILanguageObject {
+public interface ISubqueryContainer<C extends ICommand> {
 
     /**
      * Returns the subquery Command object
      * @return the subquery Command object
      */
-    T getCommand();
+    C getCommand();
     
     /**
      * Sets the subquery Command object
      * @param command the subquery Command object
      */
-    void setCommand(T command);
+    void setCommand(C command);
 }

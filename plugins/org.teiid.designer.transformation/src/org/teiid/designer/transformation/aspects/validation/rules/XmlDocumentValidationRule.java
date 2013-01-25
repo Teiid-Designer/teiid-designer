@@ -973,7 +973,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
         IQueryService queryService = ModelerCore.getTeiidQueryService();
         IGroupsUsedByElementsVisitor groupsUsedByElementsVisitor = queryService.getGroupsUsedByElementsVisitor();
         
-        Set<IGroupSymbol> groups = groupsUsedByElementsVisitor.getGroups(criteria);
+        Set<IGroupSymbol> groups = groupsUsedByElementsVisitor.findGroups(criteria);
         for (IGroupSymbol groupSymbol : groups) {
             queryService.resolveGroup(groupSymbol, metadata);
         }

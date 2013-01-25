@@ -15,7 +15,7 @@ import org.teiid.designer.validator.IValidator.IValidatorReport;
 /**
  *
  */
-public interface IUpdateValidator {
+public interface IUpdateValidator<C extends ICommand, ES extends IElementSymbol> {
 
     /**
      * Update type enumerator
@@ -38,7 +38,7 @@ public interface IUpdateValidator {
      * @param elemSymbols
      * @throws Exception 
      */
-    void validate(ICommand command, List<IElementSymbol> elemSymbols) throws Exception;
+    void validate(C command, List<ES> elemSymbols) throws Exception;
 
     /**
      * @return insert report

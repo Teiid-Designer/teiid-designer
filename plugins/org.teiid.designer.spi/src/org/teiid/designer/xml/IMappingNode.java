@@ -7,15 +7,10 @@
 */
 package org.teiid.designer.xml;
 
-
-
-
-
-
 /**
  *
  */
-public interface IMappingNode {
+public interface IMappingNode<N extends IMappingNode> {
     
     /** The default build in type */
     String DEFAULT_BUILT_IN_TYPE = ""; //$NON-NLS-1$
@@ -55,7 +50,7 @@ public interface IMappingNode {
      * 
      * @return added node
      */
-    IMappingNode addChild(IMappingNode node);
+    void addChild(N node);
 
     /**
      * @param excludeFromDocument

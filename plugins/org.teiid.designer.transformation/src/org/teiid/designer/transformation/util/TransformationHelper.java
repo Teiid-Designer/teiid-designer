@@ -3307,7 +3307,7 @@ public class TransformationHelper implements ISQLConstants {
                                                                      ISetQuery unionQry ) {
         List sourceAttributes = new ArrayList();
         IQueryService queryService = ModelerCore.getTeiidQueryService();
-        IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor();
+        IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor(true);
         
         if (unionQry != null && unionQry.getOperation() == ISetQuery.Operation.UNION
             && unionQry.isResolved()) {
@@ -3339,7 +3339,7 @@ public class TransformationHelper implements ISQLConstants {
                     if (index < projSymbols.size()) {
                     	IExpression seSymbol = (IExpression)projSymbols.get(index);
                         // Get the ElementSymbols / corresponding EObjs
-                        Collection elemSymbols = elementCollectorVisitor.getElements(seSymbol, true);
+                        Collection elemSymbols = elementCollectorVisitor.findElements(seSymbol);
                         Collection elemEObjs = TransformationSqlHelper.getElementSymbolEObjects(elemSymbols, query);
                         sourceAttributes.addAll(elemEObjs);
                     }

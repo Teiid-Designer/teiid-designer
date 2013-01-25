@@ -10,12 +10,12 @@ package org.teiid.designer.xml;
 /**
  *
  */
-public interface IMappingDocument extends IMappingNode {
+public interface IMappingDocument<N extends IMappingNode> extends IMappingNode<N> {
 
     /**
-     * @return the root element
+     * @return the root node
      */
-    IMappingNode getRootElement();
+    N getRootNode();
 
     /**
      * Generate a string from the mapping stream

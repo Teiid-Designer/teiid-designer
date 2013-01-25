@@ -7,33 +7,30 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+
+
 
 
 /**
  *
  */
-public interface ISubquerySetCriteria extends IPredicateCriteria, ISubqueryContainer<IQueryCommand> {
+public interface ISubquerySetCriteria<E extends IExpression, LV extends ILanguageVisitor, C extends ICommand>
+    extends IPredicateCriteria<LV>, ISubqueryContainer<C> {
 
     /**
      * Get the expression
      * 
      * @return expression
      */
-    IExpression getExpression();
+    E getExpression();
 
     /**
      * Set the expression
      * 
      * @param expression
      */
-    void setExpression(IExpression expression);
-
-    /**
-     * Set the subquery command (either a SELECT or a procedure execution).
-     *
-     * @param command Command to execute to get the values for the criteria
-     */
-    void setCommand(IQueryCommand command);
+    void setExpression(E expression);
 
     /**
      * Sets the negation flag for this criteria.

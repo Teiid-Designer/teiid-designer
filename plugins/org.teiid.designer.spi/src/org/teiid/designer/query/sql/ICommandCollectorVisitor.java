@@ -13,7 +13,7 @@ import org.teiid.designer.query.sql.lang.ICommand;
 /**
  *
  */
-public interface ICommandCollectorVisitor {
+public interface ICommandCollectorVisitor<C extends ICommand> {
 
     /**
      * Retrieve the commands from the given command
@@ -22,5 +22,5 @@ public interface ICommandCollectorVisitor {
      * 
      * @return list of all sub commands
      */
-    List<ICommand> getCommands(ICommand command);
+    List<C> findCommands(C command);
 }

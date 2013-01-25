@@ -9,6 +9,7 @@ package org.teiid.designer.webservice.ui.util;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -147,11 +148,11 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
                                                           factory.createElementSymbol(getQualifiedInputVariableName(node.getName())),
                                                           DatatypeConstants.RuntimeTypeNames.STRING);
         
-        IFunction function = factory.createFunction(WebServiceUtil.XPATHVALUE, 
-                                                               new IExpression[] {
-                                                                            factory.createElementSymbol(name),
-                                                                            factory.createConstant(WebServiceUtil.createXPath(node))
-                                                                            });
+        List<IExpression> expressions = Arrays.asList(
+                                                      factory.createElementSymbol(name),
+                                                      factory.createConstant(WebServiceUtil.createXPath(node)));
+        
+        IFunction function = factory.createFunction(WebServiceUtil.XPATHVALUE, expressions);
         statement.setValue(function);
 
         return statement;

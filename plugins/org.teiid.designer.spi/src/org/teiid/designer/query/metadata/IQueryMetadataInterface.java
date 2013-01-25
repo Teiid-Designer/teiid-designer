@@ -21,7 +21,10 @@ import org.teiid.designer.xml.IMappingNode;
  * of these methods take or return things of type "Object".  Typically, these 
  * objects represent a metadata-implementation-specific metadata ID.  
  */
-public interface IQueryMetadataInterface {
+public interface IQueryMetadataInterface<F extends IFunctionLibrary, 
+                                                                      S extends IStoredProcedureInfo, 
+                                                                      Q extends IQueryNode, 
+                                                                      M extends IMappingNode> {
 
 //    /**
 //     * Unknown cardinality.
@@ -504,7 +507,7 @@ public interface IQueryMetadataInterface {
      * 
      * @throws Exception 
      */
-    Collection<Object> getXMLTempGroups(Object groupID) throws Exception;
+    <T> Collection<T> getXMLTempGroups(Object groupID) throws Exception;
 
     /**
      * Return the cardinality for this group
@@ -620,7 +623,7 @@ public interface IQueryMetadataInterface {
      * 
      * @return true if it does
      */
-    boolean hasProcedure(String procedureName);
+    boolean hasProcedure(String procedureName) throws Exception;
 
     /**
      * Gets the resource paths of all the resources in the VDB. 

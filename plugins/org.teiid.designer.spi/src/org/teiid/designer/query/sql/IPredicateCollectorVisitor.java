@@ -14,7 +14,7 @@ import org.teiid.designer.query.sql.lang.ILanguageObject;
 /**
  *
  */
-public interface IPredicateCollectorVisitor {
+public interface IPredicateCollectorVisitor<LO extends ILanguageObject, C extends ICriteria> {
     
     /**
      * Get the predicates from obj
@@ -23,6 +23,6 @@ public interface IPredicateCollectorVisitor {
      * 
      * @return collection of criteria 
      */
-    Collection<ICriteria> getPredicates(ILanguageObject obj);
+    Collection<C> findPredicates(LO obj);
 
 }

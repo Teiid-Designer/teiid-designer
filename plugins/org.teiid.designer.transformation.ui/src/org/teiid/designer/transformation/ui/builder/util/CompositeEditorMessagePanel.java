@@ -18,9 +18,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.query.sql.symbol.IConstant;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.query.sql.symbol.IReference;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.builder.ILanguageObjectEditor;
@@ -127,7 +127,7 @@ public class CompositeEditorMessagePanel extends Composite implements UiConstant
     }
 
     private boolean isFunction() {
-        return (langObj == null) ? false : (langObj instanceof ILanguageObject && ((ILanguageObject) langObj).isFunction());
+        return (langObj == null) ? false : (langObj instanceof IFunction);
     }
 
     private boolean isReference() {

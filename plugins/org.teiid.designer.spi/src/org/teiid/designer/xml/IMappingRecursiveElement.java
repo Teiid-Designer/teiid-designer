@@ -10,7 +10,8 @@ package org.teiid.designer.xml;
 /**
  *
  */
-public interface IMappingRecursiveElement extends IMappingElement {
+public interface IMappingRecursiveElement<A extends IMappingAttribute, N extends IMappingNode>
+    extends IMappingElement<A, N> {
 
     /**
      * @param recursionCriteria

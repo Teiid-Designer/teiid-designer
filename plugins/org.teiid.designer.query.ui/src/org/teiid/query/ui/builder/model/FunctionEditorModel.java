@@ -161,10 +161,10 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
         }
 
         int numArgs = argValues.size();
-        IExpression[] args = new IExpression[numArgs];
+        List<IExpression> args = new ArrayList<IExpression>();
 
         for (int i = 0; i < numArgs; i++) {
-            args[i] = (IExpression)argValues.get(i);
+            args.add((IExpression)argValues.get(i));
         }
 
         IQueryService service = ModelerCore.getTeiidQueryService();

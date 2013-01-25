@@ -920,7 +920,7 @@ public class ChoicePanel extends SashForm
             
             IQueryService queryService = ModelerCore.getTeiidQueryService();
             ISQLStringVisitor visitor = queryService.getSQLStringVisitor();
-            final String sqlCriteria = visitor.getSQLString(newCriteria);
+            final String sqlCriteria = visitor.returnSQLString(newCriteria);
             // Recreate the query object so that the references within the new criteria (that the user entered in the criteria
             // builder dialog) get resolved. Can't just persist the command since the command is created as a result of the
             // validation process, not the other way around.

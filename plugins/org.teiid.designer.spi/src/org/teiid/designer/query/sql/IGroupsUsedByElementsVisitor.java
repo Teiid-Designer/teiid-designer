@@ -7,6 +7,7 @@
 */
 package org.teiid.designer.query.sql;
 
+import java.util.Collection;
 import java.util.Set;
 import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
@@ -14,15 +15,28 @@ import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 /**
  *
  */
-public interface IGroupsUsedByElementsVisitor {
+public interface IGroupsUsedByElementsVisitor<LO extends ILanguageObject, GS extends IGroupSymbol> {
 
     /**
-     * Helper to quickly get the groups from obj in a collection.  Duplicates
-     * are removed.
+     * Find the groups containd in the given object.
      * 
-     * @param obj Language object
+     * Duplicates are removed.
+     * 
+     * @param object Language object
      * 
      * @return Collection of {@link IGroupSymbol}
      */
-    Set<IGroupSymbol> getGroups(ILanguageObject obj);
+    Set<GS> findGroups(LO object);
+    
+    
+    /**
+     * Find the groups contains in the collection of given objects.
+     * 
+     * Duplicates are removed.
+     * 
+     * @param objects Collection of language objects
+     * 
+     * @return Collection of {@link IGroupSymbol}
+     */
+    <T extends LO> Set<GS> findGroups(Collection<T> objects);
 }

@@ -8,11 +8,16 @@
 package org.teiid.designer.query.sql.lang;
 
 import java.util.List;
+import org.teiid.designer.query.sql.ILanguageVisitor;
 
 /**
  *
  */
-public interface ISetQuery extends IQueryCommand {
+public interface ISetQuery<QC extends IQueryCommand, 
+                                                O extends IOrderBy,
+                                                Q extends IQuery,
+                                                E extends IExpression, 
+                                                LV extends ILanguageVisitor> extends IQueryCommand<O, Q, E, LV> {
 
     /**
      * Enumerator of types of operation
@@ -52,32 +57,32 @@ public interface ISetQuery extends IQueryCommand {
      * 
      * @return left part of query
      */
-    IQueryCommand getLeftQuery();
+    QC getLeftQuery();
 
     /**
      * Set the left side of the query
      * 
      * @param query
      */
-    void setLeftQuery(IQueryCommand query);
+    void setLeftQuery(QC query);
 
     /**
      * Get right side of the query
      * 
      * @return right part of query
      */
-    IQueryCommand getRightQuery();
+    QC getRightQuery();
 
     /**
      * Set the right side of the query
      * 
      * @param query
      */
-    void setRightQuery(IQueryCommand query);
+    void setRightQuery(QC query);
 
     /**
      * @return the left and right queries as a list.  This list cannot be modified.
      */
-    List<IQueryCommand> getQueryCommands();
+    List<QC> getQueryCommands();
 
 }

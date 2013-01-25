@@ -520,9 +520,9 @@ public class TransformationMappingHelper implements ISQLConstants {
 
         IQueryService queryService = ModelerCore.getTeiidQueryService();
         IQueryFactory factory = queryService.createQueryFactory();
-        IFunctionCollectorVisitor functionCollectorVisitor = queryService.getFunctionCollectorVisitor();
+        IFunctionCollectorVisitor functionCollectorVisitor = queryService.getFunctionCollectorVisitor(true);
         
-        Collection<IFunction> functions = functionCollectorVisitor.getFunctions(command, true, true);
+        Collection<IFunction> functions = functionCollectorVisitor.findFunctions(command, true);
 
         // Get the SqlAliases for the mapping
         List mappingAliases = TransformationHelper.getAllSqlAliases(transMappingRoot);

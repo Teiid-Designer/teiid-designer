@@ -15,16 +15,13 @@ import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 /**
  *
  */
-public interface IResolverVisitor {
+public interface IResolverVisitor<LO extends ILanguageObject, GS extends IGroupSymbol> {
     
     public static final String SHORT_NAME = "shortName"; //$NON-NLS-1$
     
     void setProperty(String propertyName, Object value);
 
-    void resolveLanguageObject(ILanguageObject obj,
-                               IQueryMetadataInterface metadata) throws Exception;
+    void resolveLanguageObject(LO obj, IQueryMetadataInterface metadata) throws Exception;
 
-    void resolveLanguageObject(ILanguageObject obj,
-                               Collection<IGroupSymbol> groups,
-                               IQueryMetadataInterface metadata) throws Exception;
+    void resolveLanguageObject(LO obj, Collection<GS> groups, IQueryMetadataInterface metadata) throws Exception;
 }

@@ -1151,7 +1151,7 @@ public class SqlEditorPanel extends SashForm
             ILanguageObject langObj = builder.getLanguageObject();
             IQueryService queryService = ModelerCore.getTeiidQueryService();
             ISQLStringVisitor visitor = queryService.getSQLStringVisitor();
-            String langString = visitor.getSQLString(langObj);
+            String langString = visitor.returnSQLString(langObj);
 
             // ------------------
             // Replace Mode
@@ -1270,7 +1270,7 @@ public class SqlEditorPanel extends SashForm
             ILanguageObject newCriteria = builder.getLanguageObject();
             IQueryService queryService = ModelerCore.getTeiidQueryService();
             ISQLStringVisitor visitor = queryService.getSQLStringVisitor();
-            String criteriaString = visitor.getSQLString(newCriteria);
+            String criteriaString = visitor.returnSQLString(newCriteria);
             // ------------------
             // Replace Mode
             // ------------------

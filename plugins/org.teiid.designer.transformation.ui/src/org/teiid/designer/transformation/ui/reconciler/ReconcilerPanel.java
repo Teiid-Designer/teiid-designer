@@ -679,7 +679,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
 
                 // Need to crate an Expression Symbol (constant = NULL) name = "expr"
                 List symbolsList = new ArrayList(1);
-                if (langObj != null && langObj.isExpression()) {
+                if (langObj != null && langObj instanceof IExpression) {
                     IQueryService queryService = ModelerCore.getTeiidQueryService();
                     IQueryFactory factory = queryService.createQueryFactory();
                     IExpressionSymbol newExpression = factory.createExpressionSymbol(EXPRESSION, (IExpression)langObj);
@@ -742,7 +742,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
 		public void removeBinding( Binding binding ) {
             // Put the bound symbol back on the unmatched symbols list
             Object sqlSymbol = binding.getCurrentSymbol();
-            if (sqlSymbol instanceof ILanguageObject && ((ILanguageObject) sqlSymbol).isExpression()) {
+            if (sqlSymbol instanceof IExpression) {
             	IExpression seSymbol = (IExpression)sqlSymbol;
                 sqlListPanel.addSymbol(seSymbol);
             }
@@ -760,7 +760,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
             for (int i = 0; i < bindings.length; i++) {
                 Binding binding = (Binding)bindings[i];
                 Object sqlSymbol = binding.getCurrentSymbol();
-                if (sqlSymbol instanceof ILanguageObject && ((ILanguageObject) sqlSymbol).isExpression()) {
+                if (sqlSymbol instanceof IExpression) {
                 	IExpression seSymbol = (IExpression)sqlSymbol;
                     sqlListPanel.addSymbol(seSymbol);
                 }

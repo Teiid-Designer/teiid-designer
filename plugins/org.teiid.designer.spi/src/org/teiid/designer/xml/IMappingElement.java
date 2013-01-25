@@ -7,10 +7,12 @@
 */
 package org.teiid.designer.xml;
 
+
 /**
  *
  */
-public interface IMappingElement extends IMappingNode {
+public interface IMappingElement<A extends IMappingAttribute, N extends IMappingNode>
+    extends IMappingNode<N> {
 
     /**
      * @param minOccurrences
@@ -70,7 +72,7 @@ public interface IMappingElement extends IMappingNode {
     /**
      * @param attribute
      */
-    void addAttribute(IMappingAttribute attribute);
+    void addAttribute(A attribute);
 
     /**
      * @param text

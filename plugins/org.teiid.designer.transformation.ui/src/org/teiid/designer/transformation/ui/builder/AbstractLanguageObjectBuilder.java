@@ -459,7 +459,7 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
         IQueryService queryService = ModelerCore.getTeiidQueryService();
         ISQLStringVisitor visitor = queryService.getSQLStringVisitor();
         
-        currentSql.setText(visitor.getSQLString(theLangObj));
+        currentSql.setText(visitor.returnSQLString(theLangObj));
     }
 
     protected void setEditorLanguageObject( ILanguageObject theEditorLangObj ) {
@@ -541,7 +541,7 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
         IQueryService queryService = ModelerCore.getTeiidQueryService();
         ISQLStringVisitor visitor = queryService.getSQLStringVisitor();
         
-        originalSql.setText(visitor.getSQLString(theLangObj));
+        originalSql.setText(visitor.returnSQLString(theLangObj));
     }
 
 }

@@ -7,12 +7,15 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+
+
 
 
 /**
  *
  */
-public interface IFromClause extends ILanguageObject {
+public interface IFromClause<LV extends ILanguageVisitor> extends ILanguageObject<LV> {
 
     /**
      * Is the clause optional

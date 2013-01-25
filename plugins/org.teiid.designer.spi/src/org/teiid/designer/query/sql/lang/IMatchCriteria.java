@@ -7,16 +7,19 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+
 
 /**
  *
  */
-public interface IMatchCriteria extends IPredicateCriteria {
+public interface IMatchCriteria<E extends IExpression, LV extends ILanguageVisitor>
+    extends IPredicateCriteria<LV> {
 
     /** The internal null escape character */
     public static final char NULL_ESCAPE_CHAR = 0;
 
-    public enum Mode {
+    public enum MatchMode {
         LIKE,
         SIMILAR,
         /**
@@ -30,28 +33,28 @@ public interface IMatchCriteria extends IPredicateCriteria {
      * 
      * @return expression
      */
-    IExpression getLeftExpression();
+    E getLeftExpression();
     
     /**
      * Set the left expression
      * 
      * @param expression
      */
-    void setLeftExpression(IExpression expression);
+    void setLeftExpression(E expression);
 
     /**
      * Get the right expression
      * 
      * @return expression
      */
-    IExpression getRightExpression();
+    E getRightExpression();
     
     /**
      * Set the right expression
      * 
      * @param expression
      */
-    void setRightExpression(IExpression expression);
+    void setRightExpression(E expression);
 
     /**
      * Get the escape character
@@ -86,6 +89,6 @@ public interface IMatchCriteria extends IPredicateCriteria {
      * 
      * @return mode
      */
-    Mode getMode();
+    MatchMode getMode();
     
 }

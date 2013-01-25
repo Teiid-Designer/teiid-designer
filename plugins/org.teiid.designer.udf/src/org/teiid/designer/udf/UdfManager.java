@@ -330,7 +330,7 @@ public final class UdfManager implements IResourceChangeListener {
      * 
      * @return implementation of {@link IFunctionLibrary}
      */
-    public IFunctionLibrary getSystemFunctionLibrary() {
+    public IFunctionLibrary<IFunctionForm, IFunctionDescriptor> getSystemFunctionLibrary() {
         IQueryService queryService = ModelerCore.getTeiidQueryService();
         
     	if( this.systemFunctionLibrary == null ) {
@@ -340,7 +340,7 @@ public final class UdfManager implements IResourceChangeListener {
     	return this.systemFunctionLibrary;
     }
     
-    public synchronized IFunctionLibrary getFunctionLibrary() {
+    public synchronized IFunctionLibrary<IFunctionForm, IFunctionDescriptor> getFunctionLibrary() {
     	//System.out.println("UdfManger.getFunctionLibrary()");
     	if( !changed && this.cachedFunctionLibrary != null ) {
     		return this.cachedFunctionLibrary;

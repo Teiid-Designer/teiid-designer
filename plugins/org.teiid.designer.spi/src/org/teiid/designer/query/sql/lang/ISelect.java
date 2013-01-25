@@ -8,32 +8,34 @@
 package org.teiid.designer.query.sql.lang;
 
 import java.util.List;
+import org.teiid.designer.query.sql.ILanguageVisitor;
 
 /**
  *
  */
-public interface ISelect extends ILanguageObject {
+public interface ISelect<E extends ILanguageObject, LV extends ILanguageVisitor> 
+    extends ILanguageObject<LV> {
 
     /**
      * Returns an ordered list of the symbols in the select.
      * 
      * @return list of SelectSymbol in SELECT
      */
-    List<IExpression> getSymbols();
+    List<E> getSymbols();
 
     /**
      * Sets an ordered list of the symbols in the select.
      * 
      * @param symbols list of SelectSymbol in SELECT
      */
-    void setSymbols(List<? extends IExpression> symbols);
+    void setSymbols(List<? extends E> symbols);
     
     /**
      * Add a symbol to this select
      * 
      * @param expression
      */
-    void addSymbol(IExpression expression);
+    void addSymbol(E expression);
 
     /**
      * Is the select a 'SELECT *'

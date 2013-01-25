@@ -7,13 +7,15 @@
 */
 package org.teiid.designer.query.sql.symbol;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.IExpression;
 import org.teiid.designer.udf.IFunctionDescriptor;
 
 /**
  *
  */
-public interface IFunction extends IExpression {
+public interface IFunction<F extends IFunctionDescriptor, LV extends ILanguageVisitor>
+    extends IExpression<LV> {
 
     /**
      * Get name of function
@@ -50,14 +52,14 @@ public interface IFunction extends IExpression {
      * 
      * @return descriptor
      */
-    IFunctionDescriptor getFunctionDescriptor();
+    F getFunctionDescriptor();
 
     /**
      * Set the function descriptor
      * 
      * @param fd
      */
-    void setFunctionDescriptor(IFunctionDescriptor fd);
+    void setFunctionDescriptor(F fd);
 
     /**
      * Set type of function

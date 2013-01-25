@@ -7,25 +7,27 @@
 */
 package org.teiid.designer.query.sql.symbol;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.IExpression;
 
 /**
  *
  */
-public interface IExpressionSymbol extends ISymbol, IExpression {
+public interface IExpressionSymbol<E extends IExpression, LV extends ILanguageVisitor>
+    extends ISymbol<LV>, IExpression<LV> {
 
     /**
      * Get the expression represented by this symbol
      * 
      * @return expression
      */
-    IExpression getExpression();
+    E getExpression();
     
     /**
      * Set the expression represented by this symbol.
      * 
      * @param expression Expression for this expression symbol
      */
-    void setExpression(IExpression expression);
+    void setExpression(E expression);
 
 }

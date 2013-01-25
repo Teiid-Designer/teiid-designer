@@ -7,25 +7,28 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+
 
 /**
  *
  */
-public interface IOrderByItem extends ILanguageObject {
+public interface IOrderByItem<E extends IExpression, LV extends ILanguageVisitor> 
+    extends ILanguageObject<LV> {
 
     /**
      * Get the symbol value
      * 
      * @return symbol value
      */
-    IExpression getSymbol();
+    E getSymbol();
     
     /**
      * Set the symbol value
      * 
      * @param symbol
      */
-    void setSymbol(IExpression symbol);
+    void setSymbol(E symbol);
 
     /**
      * Is the order ascending

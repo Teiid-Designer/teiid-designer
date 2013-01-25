@@ -8,25 +8,27 @@
 package org.teiid.designer.query.sql.lang;
 
 import java.util.Collection;
+import org.teiid.designer.query.sql.ILanguageVisitor;
 
 /**
  *
  */
-public interface ISetCriteria extends IPredicateCriteria {
+public interface ISetCriteria<E extends IExpression, LV extends ILanguageVisitor>
+    extends IPredicateCriteria<LV> {
 
     /**
      * Get the expression
      * 
      * @return expression
      */
-    IExpression getExpression();
+    E getExpression();
 
     /**
      * Set the expression
      * 
      * @param expression
      */
-    void setExpression(IExpression expression);
+    void setExpression(E expression);
 
     /**
      * Returns the set of values.  Returns an empty collection if there are

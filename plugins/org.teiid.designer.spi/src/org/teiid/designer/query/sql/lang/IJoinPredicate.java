@@ -7,69 +7,43 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+
+
 
 
 /**
  *
  */
-public interface IJoinPredicate extends IFromClause {
+public interface IJoinPredicate<T extends IFromClause, LV extends ILanguageVisitor> extends IFromClause<LV> {
 
-    /**
-     * Enumeration of join types
-     */
-    enum JoinType {
-        /** Represents an inner join:  a INNER JOIN b */
-        JOIN_INNER,
-
-        /** Represents a right outer join:  a RIGHT OUTER JOIN b */
-        JOIN_RIGHT_OUTER,
-
-        /** Represents a left outer join:  a LEFT OUTER JOIN b */
-        JOIN_LEFT_OUTER,
-
-        /** Represents a full outer join:  a FULL OUTER JOIN b */
-        JOIN_FULL_OUTER,
-
-        /** Represents a cross join:  a CROSS JOIN b */
-        JOIN_CROSS,
-
-        /** Represents a union join:  a UNION JOIN b - not used after rewrite */
-        JOIN_UNION,
-
-        /** internal SEMI Join type */
-        JOIN_SEMI,
-
-        /** internal ANTI SEMI Join type */
-        JOIN_ANTI_SEMI
-    }
-   
     /**
      * Get left clause
      * 
      * @return Left clause
      */
-    IFromClause getLeftClause();
+    T getLeftClause();
     
     /**
      * Set left clause 
      * 
      * @param fromClause Left clause to set
      */
-    void setLeftClause(IFromClause fromClause);
+    void setLeftClause(T fromClause);
    
     /**
      * Get right clause
      * 
      * @return Right clause
      */
-    IFromClause getRightClause();
+    T getRightClause();
     
     /**
      * Set right clause 
      * 
      * @param fromClause Right clause to set
      */
-    void setRightClause(IFromClause fromClause);
+    void setRightClause(T fromClause);
     
     
 }

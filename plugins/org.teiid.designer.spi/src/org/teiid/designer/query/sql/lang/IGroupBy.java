@@ -8,12 +8,14 @@
 package org.teiid.designer.query.sql.lang;
 
 import java.util.List;
+import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 
 /**
  *
  */
-public interface IGroupBy extends ILanguageObject {
+public interface IGroupBy<E extends IExpression, LV extends ILanguageVisitor> 
+    extends ILanguageObject<LV>{
 
     /**
      * Returns the number of symbols in the GROUP BY
@@ -27,12 +29,12 @@ public interface IGroupBy extends ILanguageObject {
      * 
      * @return List of {@link IElementSymbol}s
      */
-    List<IExpression> getSymbols();
+    List<E> getSymbols();
     
     /**
      * Adds a new symbol to the list of symbols
      * .
      * @param symbol Symbol to add to GROUP BY
      */
-    void addSymbol(IExpression symbol);
+    void addSymbol(E symbol);
 }

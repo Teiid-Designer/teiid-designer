@@ -7,14 +7,17 @@
 */
 package org.teiid.designer.query.sql.symbol;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.IExpression;
+
 
 /**
  *
  */
-public interface IElementSymbol extends ISymbol, IExpression {
+public interface IElementSymbol<G extends IGroupSymbol, LV extends ILanguageVisitor>
+    extends ISymbol<LV>, IExpression<LV> {
 
-    public enum ESDisplayMode {
+    public enum DisplayMode {
 
         // symbol name
         FULLY_QUALIFIED,
@@ -29,12 +32,12 @@ public interface IElementSymbol extends ISymbol, IExpression {
     /**
      * @return
      */
-    IGroupSymbol getGroupSymbol();
+    G getGroupSymbol();
 
     /**
      * @param groupSymbol
      */
-    void setGroupSymbol(IGroupSymbol groupSymbol);
+    void setGroupSymbol(G groupSymbol);
 
     /**
      * @return
@@ -50,12 +53,17 @@ public interface IElementSymbol extends ISymbol, IExpression {
      * 
      * @return
      */
-    ESDisplayMode getDisplayMode();
+    DisplayMode getDisplayMode();
+    
+    /**
+     * @param outputName
+     */
+    void setDisplayMode(DisplayMode outputName);
     
     /**
      * @param targetType
      */
-    void setType(Class<?> targetType);
+    void setType(Class<Object> targetType);
     
     /**
      * Get the metadata ID that this group symbol resolves to.  If

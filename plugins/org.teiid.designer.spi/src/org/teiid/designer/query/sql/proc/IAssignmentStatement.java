@@ -7,13 +7,15 @@
 */
 package org.teiid.designer.query.sql.proc;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.IExpression;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 
 /**
  *
  */
-public interface IAssignmentStatement extends IExpressionStatement {
+public interface IAssignmentStatement<E extends IExpression, LV extends ILanguageVisitor>
+    extends IStatement<LV>, IExpressionStatement<E> {
 
     /**
      * Get the expression giving the value that is assigned to the variable.
@@ -23,9 +25,14 @@ public interface IAssignmentStatement extends IExpressionStatement {
     IElementSymbol getVariable();
     
     /**
+     * Get the value of the statement
+     */
+    E getValue();
+    
+    /**
      * Set the value of the statement
      * 
      * @param value
      */
-    void setValue(IExpression value);
+    void setValue(E value);
 }

@@ -15,7 +15,6 @@ import org.teiid.designer.query.sql.lang.IBetweenCriteria;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.ICompareCriteria;
 import org.teiid.designer.query.sql.lang.ICompoundCriteria;
-import org.teiid.designer.query.sql.lang.ICompoundCriteria.LogicalOperator;
 import org.teiid.designer.query.sql.lang.ICriteria;
 import org.teiid.designer.query.sql.lang.IDelete;
 import org.teiid.designer.query.sql.lang.IExistsCriteria;
@@ -26,6 +25,8 @@ import org.teiid.designer.query.sql.lang.IGroupBy;
 import org.teiid.designer.query.sql.lang.IInsert;
 import org.teiid.designer.query.sql.lang.IIsNullCriteria;
 import org.teiid.designer.query.sql.lang.IJoinPredicate;
+import org.teiid.designer.query.sql.lang.IJoinType;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.query.sql.lang.IMatchCriteria;
 import org.teiid.designer.query.sql.lang.INotCriteria;
 import org.teiid.designer.query.sql.lang.IOption;
@@ -51,7 +52,7 @@ import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
 import org.teiid.designer.query.sql.proc.IDeclareStatement;
 import org.teiid.designer.query.sql.proc.IRaiseStatement;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
-import org.teiid.designer.query.sql.symbol.IAggregateSymbol.AggregateType;
+import org.teiid.designer.query.sql.symbol.IAggregateSymbol.Type;
 import org.teiid.designer.query.sql.symbol.IAliasSymbol;
 import org.teiid.designer.query.sql.symbol.IConstant;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
@@ -65,7 +66,18 @@ import org.teiid.designer.query.sql.symbol.IScalarSubquery;
 /**
  *
  */
-public interface IQueryFactory {
+public interface IQueryFactory<E extends IExpression, 
+                                                      SES extends IExpression /* SingleElementSymbol */,
+                                                      F extends IFromClause,
+                                                      ES extends IElementSymbol,
+                                                      C extends ICommand,
+                                                      QC extends IQueryCommand,
+                                                      CR extends ICriteria,
+                                                      CO extends IConstant,
+                                                      B extends IBlock,
+                                                      SS extends ILanguageObject /* SelectSymbol */,
+                                                      GS extends IGroupSymbol,
+                                                      JT extends IJoinType> {
     
     /**
      * Create a new function
@@ -75,7 +87,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link IFunction}
      */
-    IFunction createFunction(String name, IExpression[] arguments);
+    IFunction createFunction(String name, List<? extends E> arguments);
     
     /**
      * Create a new aggregate symbol
@@ -87,7 +99,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link IAggregateSymbol}
      */
-    IAggregateSymbol createAggregateSymbol(String functionName, AggregateType functionType, boolean isDistinct, IExpression expression);
+    IAggregateSymbol createAggregateSymbol(String functionName, Type functionType, boolean isDistinct, E expression);
     
     /**
      * Create a new element symbol
@@ -112,11 +124,11 @@ public interface IQueryFactory {
      * Create an alias symbol
      * 
      * @param name
-     * @param expression
+     * @param symbol
      * 
      * @return instance of {@link IAliasSymbol}
      */
-    IAliasSymbol createAliasSymbol(String name, IExpression expression);
+    IAliasSymbol createAliasSymbol(String name, SES symbol);
     
     /**
      * Create a new group symbol
@@ -145,7 +157,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link IExpressionSymbol}
      */
-    IExpressionSymbol createExpressionSymbol(String name, IExpression expression);
+    IExpressionSymbol createExpressionSymbol(String name, E expression);
     
     /**
      * Create an multiple element symbol
@@ -171,7 +183,7 @@ public interface IQueryFactory {
      * 
      * @return instance of  {@link IDeclareStatement}
      */
-    IDeclareStatement createDeclareStatement(IElementSymbol variable, String valueType);
+    IDeclareStatement createDeclareStatement(ES variable, String valueType);
     
     /**
      * Create a command statement
@@ -180,7 +192,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link ICommandStatement}
      */
-    ICommandStatement createCommandStatement(ICommand command);
+    ICommandStatement createCommandStatement(C command);
     
     /**
      * Create a raise statement
@@ -189,7 +201,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link IRaiseStatement}
      */
-    IRaiseStatement createRaiseStatement(IExpression expression);
+    IRaiseStatement createRaiseStatement(E expression);
     
     /**
      * Create a query
@@ -210,8 +222,8 @@ public interface IQueryFactory {
      */
     ISetQuery createSetQuery(Operation operation, 
                                               boolean all, 
-                                              IQueryCommand leftQuery, 
-                                              IQueryCommand rightQuery);
+                                              QC leftQuery, 
+                                              QC rightQuery);
 
     /**
      * Create a set query
@@ -238,9 +250,9 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link ICompareCriteria}
      */
-    ICompareCriteria createCompareCriteria(IExpression expression1, 
+    ICompareCriteria createCompareCriteria(E expression1, 
                                                                    int operator, 
-                                                                   IExpression expression2);
+                                                                   E expression2);
     
     /**
      * Create an is null criteria
@@ -256,7 +268,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link IIsNullCriteria}
      */
-    IIsNullCriteria createIsNullCriteria(IExpression expression);
+    IIsNullCriteria createIsNullCriteria(E expression);
     
     /**
      * Create a not criteria
@@ -272,7 +284,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link INotCriteria}
      */
-    INotCriteria createNotCriteria(ICriteria criteria);
+    INotCriteria createNotCriteria(CR criteria);
     
     /**
      * Create a match criteria
@@ -303,7 +315,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link ISubquerySetCriteria}
      */
-    ISubquerySetCriteria createSubquerySetCriteria(IExpression expression, IQueryCommand command);
+    ISubquerySetCriteria createSubquerySetCriteria(E expression, QC command);
     
     /**
      * Create a subquery compare criteria
@@ -315,7 +327,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link ISubqueryCompareCriteria}
      */
-    ISubqueryCompareCriteria createSubqueryCompareCriteria(IExpression leftExpression, IQueryCommand command, int operator, int predicateQuantifier);
+    ISubqueryCompareCriteria createSubqueryCompareCriteria(E leftExpression, QC command, int operator, int predicateQuantifier);
     
     /**
      * Create a scalar sub query
@@ -324,7 +336,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link IScalarSubquery}
      */
-    IScalarSubquery createScalarSubquery(IQueryCommand queryCommand);
+    IScalarSubquery createScalarSubquery(QC queryCommand);
     
     /**
      * Create an in-between criteria
@@ -335,9 +347,9 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link IBetweenCriteria}
      */
-    IBetweenCriteria createBetweenCriteria(IElementSymbol elementSymbol,
-                                                                   IConstant constant1,
-                                                                   IConstant constant2);
+    IBetweenCriteria createBetweenCriteria(ES elementSymbol,
+                                                                   CO constant1,
+                                                                   CO constant2);
 
     /**
      * Create a compound criteria
@@ -347,7 +359,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link ICompoundCriteria}
      */
-    ICompoundCriteria createCompoundCriteria(LogicalOperator operator, ICriteria... criteria);
+    ICompoundCriteria createCompoundCriteria(int operator, List<? extends CR> criteria);
 
     /**
      * Create an exists criteria
@@ -356,7 +368,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link IExistsCriteria}
      */
-    IExistsCriteria createExistsCriteria(IQueryCommand queryCommand);
+    IExistsCriteria createExistsCriteria(QC queryCommand);
     
     /**
      * Create a block
@@ -372,7 +384,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link ICreateProcedureCommand}
      */
-    ICreateProcedureCommand createCreateProcedureCommand(IBlock block);
+    ICreateProcedureCommand createCreateProcedureCommand(B block);
 
     /**
      * Create an assignment statement
@@ -382,7 +394,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link IAssignmentStatement}
      */
-    IAssignmentStatement createAssignmentStatement(IElementSymbol elementSymbol, IExpression expression);
+    IAssignmentStatement createAssignmentStatement(ES elementSymbol, E expression);
 
     /**
      * Create an assignment statement
@@ -392,7 +404,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link IAssignmentStatement}
      */
-    IAssignmentStatement createAssignmentStatement(IElementSymbol elementSymbol, IQueryCommand queryCommand);
+    IAssignmentStatement createAssignmentStatement(ES elementSymbol, QC queryCommand);
 
     /**
      * Create a select
@@ -408,7 +420,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link ISelect}
      */
-    ISelect createSelect(List<? extends IExpression> symbols);
+    ISelect createSelect(List<? extends SS> symbols);
 
     /**
      * Create a from
@@ -424,7 +436,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link IFrom}
      */
-    IFrom createFrom(List<? extends IFromClause> fromClauses);
+    IFrom createFrom(List<? extends F> fromClauses);
     
     /**
      * Create a unary from clause
@@ -433,7 +445,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link IUnaryFromClause}
      */
-    IUnaryFromClause createUnaryFromClause(IGroupSymbol symbol);
+    IUnaryFromClause createUnaryFromClause(GS symbol);
 
     /**
      * Create a subquery from clause
@@ -443,8 +455,18 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link ISubqueryFromClause}
      */
-    ISubqueryFromClause createSubqueryFromClause(String name, ICommand command);
+    ISubqueryFromClause createSubqueryFromClause(String name, QC command);
 
+
+    /**
+     * Create a join type
+     * 
+     * @param joinType 
+     * 
+     * @return instance of {@link IJoinType}
+     */
+    IJoinType getJoinType(IJoinType.Types joinType);
+    
     /**
      * Create a join predicate
      * 
@@ -454,9 +476,9 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link IJoinPredicate}
      */
-    IJoinPredicate createJoinPredicate(IFromClause leftClause,
-                                                         IFromClause rightClause, 
-                                                         IJoinPredicate.JoinType joinType);
+    IJoinPredicate createJoinPredicate(F leftClause,
+                                                         F rightClause, 
+                                                         JT joinType);
     /**
      * Create a join predicate
      * 
@@ -467,10 +489,10 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link IJoinPredicate}
      */    
-    IJoinPredicate createJoinPredicate(IFromClause leftClause, 
-                                                         IFromClause rightClause,
-                                                         IJoinPredicate.JoinType joinType,
-                                                         List<ICriteria> criteria);
+    IJoinPredicate createJoinPredicate(F leftClause, 
+                                                         F rightClause,
+                                                         JT joinType,
+                                                         List<CR> criteria);
     
     /**
      * Create a group by
@@ -529,7 +551,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link ISPParameter}
      */
-    ISPParameter createSPParameter(int index, IExpression expression);
+    ISPParameter createSPParameter(int index, E expression);
 
     /**
      * Create a stored procedure parameter
@@ -559,7 +581,7 @@ public interface IQueryFactory {
      * 
      * @return instance of {@link IMetadataID}
      */
-    IMetadataID createMetadataID(String upperCase, Class<?> clazz);
+    IMetadataID createMetadataID(String upperCase, Class clazz);
 
     /**
      * Create a stored procedure info

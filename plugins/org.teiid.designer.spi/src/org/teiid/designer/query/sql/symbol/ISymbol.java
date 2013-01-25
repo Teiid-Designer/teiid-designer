@@ -7,12 +7,14 @@
 */
 package org.teiid.designer.query.sql.symbol;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.ILanguageObject;
+
 
 /**
  *
  */
-public interface ISymbol extends ILanguageObject {
+public interface ISymbol <LV extends ILanguageVisitor> extends ILanguageObject<LV> {
 
     /**
      * Character used to delimit name components in a symbol

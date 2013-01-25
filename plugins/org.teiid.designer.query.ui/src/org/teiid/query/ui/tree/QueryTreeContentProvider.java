@@ -96,7 +96,7 @@ public class QueryTreeContentProvider implements ITreeContentProvider {
         } else if ( obj instanceof ICriteria ) {
             IQueryService queryService = ModelerCore.getTeiidQueryService();
             IValueIteratorProviderCollectorVisitor visitor = queryService.getValueIteratorProviderCollectorVisitor();
-            List<ISubqueryContainer<?>> containers = visitor.getValueIteratorProviders((ICriteria)obj);
+            List<ISubqueryContainer<?>> containers = visitor.findValueIteratorProviders((ICriteria)obj);
             List<ICommand> commands = new ArrayList<ICommand>();
             
             for (ISubqueryContainer container : containers) {

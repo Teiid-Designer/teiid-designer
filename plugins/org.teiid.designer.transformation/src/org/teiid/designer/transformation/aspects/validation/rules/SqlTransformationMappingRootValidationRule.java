@@ -102,7 +102,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
      */
     public SqlTransformationMappingRootValidationRule() {
         IQueryService queryService = ModelerCore.getTeiidQueryService();
-        groupCollectorVisitor = queryService.getGroupCollectorVisitor();
+        groupCollectorVisitor = queryService.getGroupCollectorVisitor(true);
     }
     
     
@@ -415,7 +415,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         // get all the sub commands and iterate through them
         IQueryService queryService = ModelerCore.getTeiidQueryService();
         ICommandCollectorVisitor commandCollectorVisitor = queryService.getCommandCollectorVisitor();
-        final Collection commands = commandCollectorVisitor.getCommands(command);
+        final Collection commands = commandCollectorVisitor.findCommands(command);
         // get the target for the transformation
         EObject target = transRoot.getTarget();
         for (final Iterator cmdIter = commands.iterator(); cmdIter.hasNext();) {
@@ -512,7 +512,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                                     final EObject target ) {
         String targetName = TransformationHelper.getSqlEObjectFullName(target);
         String targetUUID = TransformationHelper.getSqlEObjectUUID(target);
-        for (final Iterator grpIter = groupCollectorVisitor.getGroups(command, true).iterator(); grpIter.hasNext();) {
+        for (final Iterator grpIter = groupCollectorVisitor.findGroups(command).iterator(); grpIter.hasNext();) {
             IGroupSymbol group = (IGroupSymbol)grpIter.next();
             if (group.getName().equalsIgnoreCase(targetUUID) || group.getName().equalsIgnoreCase(targetName)) {
                 return true;
@@ -633,8 +633,8 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         }
         
         IQueryService queryService = ModelerCore.getTeiidQueryService();
-        IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor();
-        return elementCollectorVisitor.getElements(obj, true, true);
+        IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor(true);
+        return elementCollectorVisitor.findElements(obj, true);
     }
 
     /**
@@ -790,8 +790,8 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             int pref = context.getPreferenceStatus(ValidationPreferences.CORE_STRING_FUNCTIONS_ONE_BASED, IStatus.WARNING);
             if (pref != IStatus.OK) {
                 IQueryService queryService = ModelerCore.getTeiidQueryService();
-                IFunctionCollectorVisitor functionCollectorVisitor = queryService.getFunctionCollectorVisitor();
-                Collection<IFunction> functions = functionCollectorVisitor.getFunctions(command, true, true);
+                IFunctionCollectorVisitor functionCollectorVisitor = queryService.getFunctionCollectorVisitor(true);
+                Collection<IFunction> functions = functionCollectorVisitor.findFunctions(command, true);
                 
                 Iterator iter = functions.iterator();
                 while (iter.hasNext()) {
@@ -820,12 +820,12 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                                 final ValidationResult validationResult ) {
         IQueryService queryService = ModelerCore.getTeiidQueryService();
         IQueryFactory factory = queryService.createQueryFactory();
-        IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor();
+        IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor(true);
         IPredicateCollectorVisitor predicateCollectorVisitor = queryService.getPredicateCollectorVisitor();
         
         // apply additional validation checks for queries
-        Collection predicates = predicateCollectorVisitor.getPredicates(query);
-        Collection groups = groupCollectorVisitor.getGroups(query, true);
+        Collection predicates = predicateCollectorVisitor.findPredicates(query);
+        Collection groups = groupCollectorVisitor.findGroups(query);
         if (predicates.isEmpty() && groups.size() > 1) {
             // There are no predicates but there are groups
             // (this is the trivial case)
@@ -851,7 +851,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                     ICompareCriteria compare = (ICompareCriteria)predicate;
                     // collect all the groups involved in this join
                     Collection groupsInJoin = new HashSet();
-                    for (final Iterator elementIter = elementCollectorVisitor.getElements(compare, true).iterator(); elementIter.hasNext();) {
+                    for (final Iterator elementIter = elementCollectorVisitor.findElements(compare).iterator(); elementIter.hasNext();) {
                         IElementSymbol element = (IElementSymbol)elementIter.next();
                         IGroupSymbol group = element.getGroupSymbol();
                         if (group == null && element.isExternalReference()) {
@@ -873,7 +873,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                         IExpression rightExpression = compare.getRightExpression();
                         // in case of CAST/CONVERT functions get the elementsymbol in the function
                         // and compare types
-                        if (leftExpression != null && leftExpression.isFunction()) {
+                        if (leftExpression != null && leftExpression instanceof IFunction) {
                             IFunction leftFunction = (IFunction)leftExpression;
                             String descriptorName = leftFunction.getFunctionDescriptor().getName();
                             if (leftFunction.isImplicit()
@@ -884,7 +884,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                                 leftExpression = leftFunction.getArg(0);
                             }
                         }
-                        if (rightExpression != null && rightExpression.isFunction()) {
+                        if (rightExpression != null && rightExpression instanceof IFunction) {
                             IFunction rightFunction = (IFunction)rightExpression;
                             String descriptorName = rightFunction.getFunctionDescriptor().getName();
                             if (rightFunction.isImplicit()
@@ -1093,7 +1093,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         if (option == null || !option.isNoCache()) {
             return;
         }
-        Collection groups = groupCollectorVisitor.getGroups(command, true);
+        Collection groups = groupCollectorVisitor.findGroups(command);
         // names of groups specified in NO cACHE clause
         Collection<String> noCacheGroups = option.getNoCacheGroups();
         boolean hasMaterializedGroups = false;

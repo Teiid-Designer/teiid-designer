@@ -173,7 +173,7 @@ public class CriteriaBuilder extends AbstractLanguageObjectBuilder {
                 notAction.setEnabled(true);
 
                 if (!getTreeViewer().hasUndefinedChild(theLangObj)) {
-                    if (crit.getOperator() == ICompoundCriteria.LogicalOperator.AND) {
+                    if (crit.getOperator() == ICompoundCriteria.AND) {
                         andAction.setEnabled(true);
                         orAction.setEnabled(false);
                     } else {

@@ -82,7 +82,7 @@ public interface ISPParameter {
      * 
      * @return Parameter type
      */
-    ParameterInfo getParameterType();
+    int getParameterType();
     
     /**
      * Set parameter type according to class constants.

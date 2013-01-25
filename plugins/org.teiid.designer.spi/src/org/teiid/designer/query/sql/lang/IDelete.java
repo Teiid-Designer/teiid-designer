@@ -7,40 +7,44 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 
 
 /**
  *
  */
-public interface IDelete extends ICommand {
+public interface IDelete<C extends ICriteria, 
+                                           G extends IGroupSymbol,
+                                           E extends IExpression,
+                                           LV extends ILanguageVisitor> extends ITranslatableProcedureContainer<E, LV> {
 
     /**
      * Returns the group being deleted from
      * 
      * @return Group symbol
      */
-    IGroupSymbol getGroup();
+    G getGroup();
     
     /**
      * Set the group for this Delete command
      * 
      * @param group Group to be associated with this command
      */
-    void setGroup(IGroupSymbol group);
+    void setGroup(G group);
     
     /**
      * Returns the criteria object for this command.
      * 
      * @return criteria
      */
-    ICriteria getCriteria();
+    C getCriteria();
     
     /**
      * Set the criteria for this Delete command
      * 
      * @param criteria Criteria to be associated with this command
      */
-    void setCriteria(ICriteria criteria);
+    void setCriteria(C criteria);
     
 }

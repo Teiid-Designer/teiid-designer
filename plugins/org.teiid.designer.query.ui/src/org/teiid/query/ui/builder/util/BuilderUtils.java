@@ -97,7 +97,7 @@ public final class BuilderUtils implements UiConstants {
 
         ILanguageObject result = theLangObj;
 
-        if (theLangObj != null && theLangObj.isFunction() && ((IFunction)theLangObj).isImplicit()) {
+        if (theLangObj != null && theLangObj instanceof IFunction && ((IFunction)theLangObj).isImplicit()) {
             // according to Alex, all implicit functions are conversions and
             // the first argument is what is being converted
             result = getBuilderLanguageObject(((IFunction)theLangObj).getArgs()[0]);

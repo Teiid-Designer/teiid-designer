@@ -7,10 +7,12 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+
 
 /**
  *
  */
-public interface ILogicalCriteria extends ICriteria {
+public interface ILogicalCriteria<LV extends ILanguageVisitor> extends ICriteria<LV> {
 
 }

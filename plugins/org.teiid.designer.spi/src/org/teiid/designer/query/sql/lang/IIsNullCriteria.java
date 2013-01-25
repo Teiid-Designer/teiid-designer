@@ -7,24 +7,27 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+
 /**
  *
  */
-public interface IIsNullCriteria extends IPredicateCriteria {
+public interface IIsNullCriteria<E extends IExpression, LV extends ILanguageVisitor>
+    extends IPredicateCriteria<LV> {
 
     /**
      * Get the expression
      * 
      * @return expression
      */
-    IExpression getExpression();
+    E getExpression();
 
     /**
      * Set the expression
      * 
      * @param expression
      */
-    void setExpression(IExpression expression);
+    void setExpression(E expression);
 
     /**
      * Has this been negated

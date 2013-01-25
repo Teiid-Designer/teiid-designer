@@ -163,7 +163,7 @@ public class SqlIndexLocator {
         if (primaryLanguageObject != null && primaryLanguageObject instanceof IQuery) {
             IQueryService queryService = ModelerCore.getTeiidQueryService();
             ICommandCollectorVisitor commandCollectorVisitor = queryService.getCommandCollectorVisitor();
-        	List subCommands = commandCollectorVisitor.getCommands((IQuery)primaryLanguageObject);
+        	List subCommands = commandCollectorVisitor.findCommands((IQuery)primaryLanguageObject);
             return !subCommands.isEmpty();
         }
 

@@ -938,8 +938,8 @@ public class ReconcilerObject {
         // Let's get list of all Element symbols...
 
         IQueryService queryService = ModelerCore.getTeiidQueryService();
-        IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor();
-        Collection referencedElementSymbols = elementCollectorVisitor.getElements(originalCommand, true, true);
+        IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor(true);
+        Collection referencedElementSymbols = elementCollectorVisitor.findElements(originalCommand, true);
 
         Iterator iter = referencedElementSymbols.iterator();
         while (iter.hasNext()) {

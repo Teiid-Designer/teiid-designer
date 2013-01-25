@@ -8,13 +8,14 @@
 package org.teiid.designer.query.sql.lang;
 
 import java.util.List;
-import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.ILanguageVisitor;
 
 
 /**
  *
  */
-public interface IOrderBy extends ILanguageObject {
+public interface IOrderBy<E extends IExpression, O extends IOrderByItem, LV extends ILanguageVisitor> 
+    extends ILanguageObject<LV> {
 
     /** Constant for the ascending value */
     public static final boolean ASC = true;
@@ -34,14 +35,14 @@ public interface IOrderBy extends ILanguageObject {
      * 
      * @return list of order by items
      */
-    List<IOrderByItem> getOrderByItems();
+    List<O> getOrderByItems();
     
     /**
      * Adds a new variable to the list of order by elements.
      * 
      * @param expression to add
      */
-    void addVariable(IExpression expression);
+    void addVariable(E expression);
 
     /**
      * Adds a new variable to the list of order by elements
@@ -49,5 +50,5 @@ public interface IOrderBy extends ILanguageObject {
      * @param element
      * @param orderType
      */
-    void addVariable(IElementSymbol element, boolean orderType);
+    void addVariable(E element, boolean orderType);
 }

@@ -9,6 +9,7 @@ package org.teiid.designer.query.sql.lang;
 
 import java.util.Collection;
 import java.util.List;
+import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 
@@ -16,42 +17,46 @@ import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 /**
  *
  */
-public interface IInsert extends ICommand {
+public interface IInsert<ES extends IElementSymbol,
+                                           E extends IExpression, 
+                                           G extends IGroupSymbol, 
+                                           Q extends IQueryCommand,
+                                           LV extends ILanguageVisitor> extends IProcedureContainer<E, LV> {
 
     /**
      * Returns the group being inserted into
      * 
      * @return Group being inserted into
      */
-    IGroupSymbol getGroup();
+    G getGroup();
     
     /**
      * Set the group for this insert statement
      * 
      * @param group Group to be inserted into
      */
-    void setGroup(IGroupSymbol group);
+    void setGroup(G group);
     
     /**
      * Return an ordered List of variables, may be null if no columns were specified
      * 
      * @return List of {@link IElementSymbol}
      */
-    List<IElementSymbol> getVariables();
+    List<ES> getVariables();
     
     /**
      * Add a variable to end of list
      * 
-     * @param symbols Variable to add to the list
+     * @param symbol Variable to add to the list
      */
-    void addVariable(IElementSymbol symbols);
+    void addVariable(ES symbol);
     
     /**
      * Add a collection of variables to end of list
      * 
      * @param symbols Variables to add to the list - collection of ElementSymbol
      */
-    void addVariables(Collection<IElementSymbol> symbols);
+    void addVariables(Collection<ES> symbols);
     
     /**
      * Returns a list of values to insert
@@ -73,19 +78,20 @@ public interface IInsert extends ICommand {
      * 
      * @param vars Variables to be set on this object (ElementSymbols)
      */
-    void setVariables(Collection<IElementSymbol> vars);
+    void setVariables(Collection<ES> vars);
 
     /**
      * Get the query expression
      * 
      * @return query expression
      */
-    IQueryCommand getQueryExpression();
+    Q getQueryExpression();
 
     /**
-     * Does this insert has a tuple source
+     * Does this insert have a tuple source
      * 
      * @return true if there is a tuple source
      */
     boolean hasTupleSource();
+    
 }

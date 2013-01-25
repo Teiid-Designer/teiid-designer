@@ -7,11 +7,13 @@
 */
 package org.teiid.designer.query.sql.proc;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.ILanguageObject;
+
 
 /**
  *
  */
-public interface IStatement extends ILanguageObject {
+public interface IStatement<LV extends ILanguageVisitor> extends ILanguageObject<LV> {
 
 }

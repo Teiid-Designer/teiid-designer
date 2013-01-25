@@ -35,6 +35,7 @@ import org.teiid.designer.query.sql.lang.IGroupBy;
 import org.teiid.designer.query.sql.lang.IInsert;
 import org.teiid.designer.query.sql.lang.IIsNullCriteria;
 import org.teiid.designer.query.sql.lang.IJoinPredicate;
+import org.teiid.designer.query.sql.lang.IJoinType;
 import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.query.sql.lang.IMatchCriteria;
 import org.teiid.designer.query.sql.lang.INotCriteria;
@@ -180,6 +181,20 @@ public class TestDisplayNodeFactory extends TestCase {
         factory = queryService.createQueryFactory();
         parser = queryService.getQueryParser();
     }
+    
+    /**
+     * Convert array to list
+     * 
+     * @param criteria
+     * @return
+     */
+    private List<? extends ICriteria> createList(ICriteria ...criteria) {
+        return Arrays.asList(criteria);
+    }
+    
+    private List<? extends IExpression> createList(IExpression ... expressions) {
+        return Arrays.asList(expressions);
+    }
 
     // ################################## TEST HELPERS ################################
 
@@ -299,7 +314,8 @@ public class TestDisplayNodeFactory extends TestCase {
             ICompareCriteria cc = factory.createCompareCriteria(factory.createElementSymbol("m.g.c1"), //$NON-NLS-1$
                                                                 ICompareCriteria.EQ,
                                                                 factory.createConstant("abc")); //$NON-NLS-1$
-            ICompoundCriteria comp = factory.createCompoundCriteria(ICompoundCriteria.LogicalOperator.AND, cc);
+            
+            ICompoundCriteria comp = factory.createCompoundCriteria(ICompoundCriteria.AND, createList(cc));
 
             helpTest(comp, "m.g.c1 = 'abc'"); //$NON-NLS-1$
         }
@@ -314,7 +330,7 @@ public class TestDisplayNodeFactory extends TestCase {
             ICompareCriteria cc2 = factory.createCompareCriteria(factory.createElementSymbol("m.g.c2"), //$NON-NLS-1$
                                                                  ICompareCriteria.EQ,
                                                                  factory.createConstant("abc")); //$NON-NLS-1$
-            ICompoundCriteria comp = factory.createCompoundCriteria(ICompoundCriteria.LogicalOperator.AND, cc1, cc2);
+            ICompoundCriteria comp = factory.createCompoundCriteria(ICompoundCriteria.AND, createList(cc1, cc2));
 
             helpTest(comp, "(m.g.c1 = 'abc') AND (m.g.c2 = 'abc')"); //$NON-NLS-1$
         }
@@ -332,7 +348,7 @@ public class TestDisplayNodeFactory extends TestCase {
             ICompareCriteria cc3 = factory.createCompareCriteria(factory.createElementSymbol("m.g.c3"), //$NON-NLS-1$
                                                                  ICompareCriteria.EQ,
                                                                  factory.createConstant("abc")); //$NON-NLS-1$
-            ICompoundCriteria comp = factory.createCompoundCriteria(ICompoundCriteria.LogicalOperator.OR, cc1, cc2, cc3);
+            ICompoundCriteria comp = factory.createCompoundCriteria(ICompoundCriteria.OR, createList(cc1, cc2, cc3));
 
             helpTest(comp, "(m.g.c1 = 'abc') OR (m.g.c2 = 'abc') OR (m.g.c3 = 'abc')"); //$NON-NLS-1$
         }
@@ -344,7 +360,7 @@ public class TestDisplayNodeFactory extends TestCase {
             ICompareCriteria cc1 = factory.createCompareCriteria(factory.createElementSymbol("m.g.c1"), //$NON-NLS-1$
                                                                  ICompareCriteria.EQ,
                                                                  factory.createConstant("abc")); //$NON-NLS-1$
-            ICompoundCriteria comp = factory.createCompoundCriteria(ICompoundCriteria.LogicalOperator.OR, cc1, null);
+            ICompoundCriteria comp = factory.createCompoundCriteria(ICompoundCriteria.OR, createList(cc1, null));
 
             helpTest(comp, "(m.g.c1 = 'abc') OR (<undefined>)"); //$NON-NLS-1$
         }
@@ -356,7 +372,7 @@ public class TestDisplayNodeFactory extends TestCase {
             ICompareCriteria cc1 = factory.createCompareCriteria(factory.createElementSymbol("m.g.c1"), //$NON-NLS-1$
                                                                  ICompareCriteria.EQ,
                                                                  factory.createConstant("abc")); //$NON-NLS-1$
-            ICompoundCriteria comp = factory.createCompoundCriteria(ICompoundCriteria.LogicalOperator.OR, null, cc1);
+            ICompoundCriteria comp = factory.createCompoundCriteria(ICompoundCriteria.OR, createList(null, cc1));
 
             helpTest(comp, "(<undefined>) OR (m.g.c1 = 'abc')"); //$NON-NLS-1$
         }
@@ -368,7 +384,7 @@ public class TestDisplayNodeFactory extends TestCase {
             ICompareCriteria cc1 = factory.createCompareCriteria(factory.createElementSymbol("m.g.c1"), //$NON-NLS-1$
                                                                  ICompareCriteria.EQ,
                                                                  factory.createConstant("abc")); //$NON-NLS-1$
-            ICompoundCriteria comp = factory.createCompoundCriteria(ICompoundCriteria.LogicalOperator.OR, cc1, null);
+            ICompoundCriteria comp = factory.createCompoundCriteria(ICompoundCriteria.OR, createList(cc1, null));
 
             helpTest(comp, "(m.g.c1 = 'abc') OR (<undefined>)"); //$NON-NLS-1$
         }
@@ -415,7 +431,7 @@ public class TestDisplayNodeFactory extends TestCase {
             from.addClause(factory.createUnaryFromClause(factory.createGroupSymbol("m.g1"))); //$NON-NLS-1$
             from.addClause(factory.createJoinPredicate(factory.createUnaryFromClause(factory.createGroupSymbol("m.g2")), //$NON-NLS-1$
                                                        factory.createUnaryFromClause(factory.createGroupSymbol("m.g3")), //$NON-NLS-1$
-                                                       IJoinPredicate.JoinType.JOIN_CROSS));
+                                                       factory.getJoinType(IJoinType.Types.JOIN_CROSS)));
 
             helpTest(from, "FROM\n\tm.g1, m.g2 CROSS JOIN m.g3"); //$NON-NLS-1$
         }
@@ -505,7 +521,7 @@ public class TestDisplayNodeFactory extends TestCase {
             setDefaultServerVersion(version);
             IJoinPredicate jp = factory.createJoinPredicate(factory.createUnaryFromClause(factory.createGroupSymbol("m.g2")), //$NON-NLS-1$
                                                             factory.createUnaryFromClause(factory.createGroupSymbol("m.g3")), //$NON-NLS-1$
-                                                            IJoinPredicate.JoinType.JOIN_CROSS);
+                                                            factory.getJoinType(IJoinType.Types.JOIN_CROSS));
 
             helpTest(jp, "m.g2 CROSS JOIN m.g3"); //$NON-NLS-1$
         }
@@ -516,7 +532,7 @@ public class TestDisplayNodeFactory extends TestCase {
             setDefaultServerVersion(version);
             IJoinPredicate jp = factory.createJoinPredicate(factory.createUnaryFromClause(factory.createGroupSymbol("m.g2")), //$NON-NLS-1$
                                                             factory.createUnaryFromClause(factory.createGroupSymbol("m.g3")), //$NON-NLS-1$
-                                                            IJoinPredicate.JoinType.JOIN_CROSS);
+                                                            factory.getJoinType(IJoinType.Types.JOIN_CROSS));
             jp.setOptional(true);
             helpTest(jp, "/*+ optional */ (m.g2 CROSS JOIN m.g3)"); //$NON-NLS-1$
         }
@@ -529,7 +545,7 @@ public class TestDisplayNodeFactory extends TestCase {
             crits.add(factory.createCompareCriteria(factory.createElementSymbol("m.g2.e1"), ICompareCriteria.EQ, factory.createElementSymbol("m.g3.e1"))); //$NON-NLS-1$ //$NON-NLS-2$
             IJoinPredicate jp = factory.createJoinPredicate(factory.createUnaryFromClause(factory.createGroupSymbol("m.g2")), //$NON-NLS-1$
                                                             factory.createUnaryFromClause(factory.createGroupSymbol("m.g3")), //$NON-NLS-1$
-                                                            IJoinPredicate.JoinType.JOIN_INNER,
+                                                            factory.getJoinType(IJoinType.Types.JOIN_INNER),
                                                             crits);
 
             helpTest(jp, "m.g2 INNER JOIN m.g3 ON m.g2.e1 = m.g3.e1"); //$NON-NLS-1$
@@ -544,7 +560,7 @@ public class TestDisplayNodeFactory extends TestCase {
             crits.add(factory.createCompareCriteria(factory.createElementSymbol("m.g2.e2"), ICompareCriteria.EQ, factory.createElementSymbol("m.g3.e2"))); //$NON-NLS-1$ //$NON-NLS-2$
             IJoinPredicate jp = factory.createJoinPredicate(factory.createUnaryFromClause(factory.createGroupSymbol("m.g2")), //$NON-NLS-1$
                                                             factory.createUnaryFromClause(factory.createGroupSymbol("m.g3")), //$NON-NLS-1$
-                                                            IJoinPredicate.JoinType.JOIN_INNER,
+                                                            factory.getJoinType(IJoinType.Types.JOIN_INNER),
                                                             crits);
 
             helpTest(jp, "m.g2 INNER JOIN m.g3 ON m.g2.e1 = m.g3.e1 AND m.g2.e2 = m.g3.e2"); //$NON-NLS-1$
@@ -558,12 +574,12 @@ public class TestDisplayNodeFactory extends TestCase {
             crits.add(factory.createCompareCriteria(factory.createElementSymbol("m.g2.e1"), ICompareCriteria.EQ, factory.createElementSymbol("m.g3.e1"))); //$NON-NLS-1$ //$NON-NLS-2$
             IJoinPredicate jp = factory.createJoinPredicate(factory.createUnaryFromClause(factory.createGroupSymbol("m.g2")), //$NON-NLS-1$
                                                             factory.createUnaryFromClause(factory.createGroupSymbol("m.g3")), //$NON-NLS-1$
-                                                            IJoinPredicate.JoinType.JOIN_INNER,
+                                                            factory.getJoinType(IJoinType.Types.JOIN_INNER),
                                                             crits);
 
             IJoinPredicate jp2 = factory.createJoinPredicate(jp,
                                                              factory.createUnaryFromClause(factory.createGroupSymbol("m.g1")), //$NON-NLS-1$
-                                                             IJoinPredicate.JoinType.JOIN_CROSS);
+                                                             factory.getJoinType(IJoinType.Types.JOIN_CROSS));
 
             helpTest(jp2, "(m.g2 INNER JOIN m.g3 ON m.g2.e1 = m.g3.e1) CROSS JOIN m.g1"); //$NON-NLS-1$
         }
@@ -576,7 +592,7 @@ public class TestDisplayNodeFactory extends TestCase {
             crits.add(factory.createNotCriteria(factory.createCompareCriteria(factory.createElementSymbol("m.g2.e1"), ICompareCriteria.EQ, factory.createElementSymbol("m.g3.e1")))); //$NON-NLS-1$ //$NON-NLS-2$
             IJoinPredicate jp = factory.createJoinPredicate(factory.createUnaryFromClause(factory.createGroupSymbol("m.g2")), //$NON-NLS-1$
                                                             factory.createUnaryFromClause(factory.createGroupSymbol("m.g3")), //$NON-NLS-1$
-                                                            IJoinPredicate.JoinType.JOIN_INNER,
+                                                            factory.getJoinType(IJoinType.Types.JOIN_INNER),
                                                             crits);
 
             helpTest(jp, "m.g2 INNER JOIN m.g3 ON NOT (m.g2.e1 = m.g3.e1)"); //$NON-NLS-1$
@@ -591,7 +607,7 @@ public class TestDisplayNodeFactory extends TestCase {
             IIsNullCriteria inc = factory.createIsNullCriteria();
             inc.setExpression(factory.createElementSymbol("m.g.e1")); //$NON-NLS-1$
 
-            ICompoundCriteria compCrit = factory.createCompoundCriteria(ICompoundCriteria.LogicalOperator.OR, inc, comprCrit2);
+            ICompoundCriteria compCrit = factory.createCompoundCriteria(ICompoundCriteria.OR, createList(inc, comprCrit2));
 
             ArrayList crits2 = new ArrayList();
             crits2.add(comprCrit1);
@@ -599,7 +615,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
             IJoinPredicate jp = factory.createJoinPredicate(factory.createUnaryFromClause(factory.createGroupSymbol("m.g2")), //$NON-NLS-1$
                                                             factory.createUnaryFromClause(factory.createGroupSymbol("m.g3")), //$NON-NLS-1$
-                                                            IJoinPredicate.JoinType.JOIN_LEFT_OUTER,
+                                                            factory.getJoinType(IJoinType.Types.JOIN_LEFT_OUTER),
                                                             crits2);
 
             helpTest(jp, "m.g2 LEFT OUTER JOIN m.g3 ON m.g2.e1 = m.g3.e1 AND ((m.g.e1 IS NULL) OR (m.g2.e2 = m.g3.e2))"); //$NON-NLS-1$
@@ -1146,7 +1162,7 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testAggregateSymbol1() {
         for (ITeiidServerVersion version : serverVersions) {    
             setDefaultServerVersion(version);
-            IAggregateSymbol agg = factory.createAggregateSymbol("abc", IAggregateSymbol.AggregateType.COUNT, false, factory.createConstant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
+            IAggregateSymbol agg = factory.createAggregateSymbol("abc", IAggregateSymbol.Type.COUNT, false, factory.createConstant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
             helpTest(agg, getExpectedResult("testAggregateSymbol1", version)); //$NON-NLS-1$
         }
     }
@@ -1154,7 +1170,7 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testAggregateSymbol2() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IAggregateSymbol agg = factory.createAggregateSymbol("abc", IAggregateSymbol.AggregateType.COUNT, true, factory.createConstant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
+            IAggregateSymbol agg = factory.createAggregateSymbol("abc", IAggregateSymbol.Type.COUNT, true, factory.createConstant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
             helpTest(agg, getExpectedResult("testAggregateSymbol2", version)); //$NON-NLS-1$
         }
     }
@@ -1162,7 +1178,7 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testAggregateSymbol3() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IAggregateSymbol agg = factory.createAggregateSymbol("abc", IAggregateSymbol.AggregateType.COUNT, false, null); //$NON-NLS-1$
+            IAggregateSymbol agg = factory.createAggregateSymbol("abc", IAggregateSymbol.Type.COUNT, false, null); //$NON-NLS-1$
             helpTest(agg, getExpectedResult("testAggregateSymbol3", version)); //$NON-NLS-1$
         }
     }
@@ -1170,7 +1186,7 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testAggregateSymbol4() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IAggregateSymbol agg = factory.createAggregateSymbol("abc", IAggregateSymbol.AggregateType.AVG, false, factory.createConstant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
+            IAggregateSymbol agg = factory.createAggregateSymbol("abc", IAggregateSymbol.Type.AVG, false, factory.createConstant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
             helpTest(agg, getExpectedResult("testAggregateSymbol4", version)); //$NON-NLS-1$
         }
     }
@@ -1178,7 +1194,7 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testAggregateSymbol5() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IAggregateSymbol agg = factory.createAggregateSymbol("abc", IAggregateSymbol.AggregateType.SUM, false, factory.createConstant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
+            IAggregateSymbol agg = factory.createAggregateSymbol("abc", IAggregateSymbol.Type.SUM, false, factory.createConstant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
             helpTest(agg, getExpectedResult("testAggregateSymbol5", version)); //$NON-NLS-1$
         }
     }
@@ -1186,7 +1202,7 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testAggregateSymbol6() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IAggregateSymbol agg = factory.createAggregateSymbol("abc", IAggregateSymbol.AggregateType.MIN, false, factory.createConstant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
+            IAggregateSymbol agg = factory.createAggregateSymbol("abc", IAggregateSymbol.Type.MIN, false, factory.createConstant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
             helpTest(agg, getExpectedResult("testAggregateSymbol6", version)); //$NON-NLS-1$
         }
     }
@@ -1194,7 +1210,7 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testAggregateSymbol7() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IAggregateSymbol agg = factory.createAggregateSymbol("abc", IAggregateSymbol.AggregateType.MAX, false, factory.createConstant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
+            IAggregateSymbol agg = factory.createAggregateSymbol("abc", IAggregateSymbol.Type.MAX, false, factory.createConstant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
             helpTest(agg, getExpectedResult("testAggregateSymbol7", version)); //$NON-NLS-1$
         }
     }
@@ -1369,9 +1385,8 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testFunction1() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IFunction func = factory.createFunction("concat", new IExpression[] { //$NON-NLS-1$
-                                                    factory.createConstant("a"), null //$NON-NLS-1$
-                                                    });
+            List<? extends IExpression> expressions = Arrays.asList(factory.createConstant("a"), null);
+            IFunction func = factory.createFunction("concat", expressions);
             helpTest(func, "concat('a', <undefined>)"); //$NON-NLS-1$
         }
     }
@@ -1379,7 +1394,7 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testFunction2() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IFunction func = factory.createFunction("now", new IExpression[] {}); //$NON-NLS-1$
+            IFunction func = factory.createFunction("now", new ArrayList<IExpression>()); //$NON-NLS-1$
             helpTest(func, "now()"); //$NON-NLS-1$
         }
     }
@@ -1387,7 +1402,7 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testFunction3() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IFunction func = factory.createFunction("concat", new IExpression[] {null, null}); //$NON-NLS-1$
+            IFunction func = factory.createFunction("concat", createList(null, null)); //$NON-NLS-1$
             helpTest(func, "concat(<undefined>, <undefined>)"); //$NON-NLS-1$
         }
     }
@@ -1395,13 +1410,13 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testFunction4() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IFunction func1 = factory.createFunction("power", new IExpression[] { //$NON-NLS-1$
+            IFunction func1 = factory.createFunction("power", createList( //$NON-NLS-1$
                                                      factory.createConstant(new Integer(5)),
-                                                         factory.createConstant(new Integer(3))});
-            IFunction func2 = factory.createFunction("power", new IExpression[] { //$NON-NLS-1$
-                                                     func1, factory.createConstant(new Integer(3))});
-            IFunction func3 = factory.createFunction("+", new IExpression[] { //$NON-NLS-1$
-                                                     factory.createConstant(new Integer(1000)), func2});
+                                                         factory.createConstant(new Integer(3))));
+            IFunction func2 = factory.createFunction("power", createList( //$NON-NLS-1$
+                                                     func1, factory.createConstant(new Integer(3))));
+            IFunction func3 = factory.createFunction("+", createList( //$NON-NLS-1$
+                                                     factory.createConstant(new Integer(1000)), func2));
             helpTest(func3, "(1000 + power(power(5, 3), 3))"); //$NON-NLS-1$
         }
     }
@@ -1409,12 +1424,12 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testFunction5() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IFunction func1 = factory.createFunction("concat", new IExpression[] { //$NON-NLS-1$
+            IFunction func1 = factory.createFunction("concat", createList( //$NON-NLS-1$
                                                      factory.createElementSymbol("elem2"), //$NON-NLS-1$
-                                                         null});
-            IFunction func2 = factory.createFunction("concat", new IExpression[] { //$NON-NLS-1$
+                                                         null));
+            IFunction func2 = factory.createFunction("concat", createList( //$NON-NLS-1$
                                                      factory.createElementSymbol("elem1"), //$NON-NLS-1$
-                                                         func1});
+                                                         func1));
             helpTest(func2, "concat(elem1, concat(elem2, <undefined>))"); //$NON-NLS-1$
         }
     }
@@ -1422,10 +1437,10 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testConvertFunction1() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IFunction func = factory.createFunction("convert", new IExpression[] { //$NON-NLS-1$
+            IFunction func = factory.createFunction("convert", createList( //$NON-NLS-1$
                                                     factory.createConstant("5"), //$NON-NLS-1$
                                                         factory.createConstant("integer") //$NON-NLS-1$
-                                                    });
+                                                    ));
             helpTest(func, "convert('5', integer)"); //$NON-NLS-1$
         }
     }
@@ -1433,9 +1448,9 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testConvertFunction2() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IFunction func = factory.createFunction("convert", new IExpression[] { //$NON-NLS-1$
+            IFunction func = factory.createFunction("convert", createList( //$NON-NLS-1$
                                                     null, factory.createConstant("integer") //$NON-NLS-1$
-                                                    });
+                                                    ));
             helpTest(func, "convert(<undefined>, integer)"); //$NON-NLS-1$
         }
     }
@@ -1443,9 +1458,9 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testConvertFunction3() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IFunction func = factory.createFunction("convert", new IExpression[] { //$NON-NLS-1$
+            IFunction func = factory.createFunction("convert", createList( //$NON-NLS-1$
                                                     factory.createConstant(null), factory.createConstant("integer") //$NON-NLS-1$
-                                                    });
+                                                    ));
             helpTest(func, "convert(null, integer)"); //$NON-NLS-1$
         }
     }
@@ -1461,7 +1476,7 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testConvertFunction6() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IFunction func = factory.createFunction("convert", new IExpression[0]); //$NON-NLS-1$
+            IFunction func = factory.createFunction("convert", new ArrayList<IExpression>()); //$NON-NLS-1$
             helpTest(func, "convert()"); //$NON-NLS-1$
         }
     }
@@ -1469,10 +1484,10 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testCastFunction1() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IFunction func = factory.createFunction("cast", new IExpression[] { //$NON-NLS-1$
+            IFunction func = factory.createFunction("cast", createList( //$NON-NLS-1$
                                                     factory.createConstant("5"), //$NON-NLS-1$
                                                         factory.createConstant("integer") //$NON-NLS-1$
-                                                    });
+                                                    ));
             helpTest(func, "cast('5' AS integer)"); //$NON-NLS-1$
         }
     }
@@ -1480,9 +1495,9 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testCastFunction2() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IFunction func = factory.createFunction("cast", new IExpression[] { //$NON-NLS-1$
+            IFunction func = factory.createFunction("cast", createList( //$NON-NLS-1$
                                                     null, factory.createConstant("integer") //$NON-NLS-1$
-                                                    });
+                                                    ));
             helpTest(func, "cast(<undefined> AS integer)"); //$NON-NLS-1$
         }
     }
@@ -1490,9 +1505,9 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testCastFunction3() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IFunction func = factory.createFunction("cast", new IExpression[] { //$NON-NLS-1$
+            IFunction func = factory.createFunction("cast", createList( //$NON-NLS-1$
                                                     factory.createConstant(null), factory.createConstant("integer") //$NON-NLS-1$
-                                                    });
+                                                    ));
             helpTest(func, "cast(null AS integer)"); //$NON-NLS-1$
         }
     }
@@ -1500,9 +1515,9 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testArithemeticFunction1() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            IFunction func = factory.createFunction("-", new IExpression[] { //$NON-NLS-1$
+            IFunction func = factory.createFunction("-", createList( //$NON-NLS-1$
                                                     factory.createConstant(new Integer(-2)),
-                                                        factory.createConstant(new Integer(-1))});
+                                                        factory.createConstant(new Integer(-1))));
             helpTest(func, "(-2 - -1)"); //$NON-NLS-1$
         }
     }
@@ -1898,7 +1913,7 @@ public class TestDisplayNodeFactory extends TestCase {
             f2.addGroup(factory.createGroupSymbol("m.g2")); //$NON-NLS-1$
             ICriteria left = factory.createSubqueryCompareCriteria(factory.createElementSymbol("e3"), q1, ICompareCriteria.GE, ISubqueryCompareCriteria.ANY); //$NON-NLS-1$
             ICriteria right = factory.createExistsCriteria(q1);
-            ICriteria outer = factory.createCompoundCriteria(ICompoundCriteria.LogicalOperator.AND, left, right);
+            ICriteria outer = factory.createCompoundCriteria(ICompoundCriteria.AND, createList(left, right));
             IQuery q2 = factory.createQuery();
             q2.setSelect(s2);
             q2.setFrom(f2);
@@ -2003,7 +2018,7 @@ public class TestDisplayNodeFactory extends TestCase {
             fromClause1.setMakeDep(true);
             IFrom from = factory.createFrom(Arrays.asList(factory.createJoinPredicate(fromClause,
                                                                                       fromClause1,
-                                                                                      IJoinPredicate.JoinType.JOIN_CROSS)));
+                                                                                      factory.getJoinType(IJoinType.Types.JOIN_CROSS))));
             query.setSelect(select);
             query.setFrom(from);
             helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\t/*+ MAKENOTDEP */ a CROSS JOIN /*+ MAKEDEP */ b"); //$NON-NLS-1$ 

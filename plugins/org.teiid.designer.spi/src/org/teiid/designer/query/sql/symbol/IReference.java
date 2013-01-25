@@ -7,12 +7,14 @@
 */
 package org.teiid.designer.query.sql.symbol;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.IExpression;
+
 
 /**
  *
  */
-public interface IReference extends IExpression {
+public interface IReference<LV extends ILanguageVisitor> extends IExpression<LV> {
 
     /**
      * @return

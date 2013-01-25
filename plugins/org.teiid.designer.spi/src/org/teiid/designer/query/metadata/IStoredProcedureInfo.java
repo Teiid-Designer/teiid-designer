@@ -15,7 +15,7 @@ import org.teiid.designer.query.sql.lang.ISPParameter;
 * and the QueryResolver via the facades
 */
 
-public interface IStoredProcedureInfo {
+public interface IStoredProcedureInfo<P extends ISPParameter, Q extends IQueryNode> {
 
     String getProcedureCallableName();
     
@@ -29,11 +29,11 @@ public interface IStoredProcedureInfo {
     
     void setProcedureID(Object procedureID);
     
-    List<ISPParameter> getParameters();
+    List<P> getParameters();
     
-    void setParameters(List<ISPParameter> parameters);
+    void setParameters(List<P> parameters);
     
-    void addParameter(ISPParameter parameter);
+    void addParameter(P parameter);
 
     boolean returnsResultSet();
 
@@ -43,6 +43,6 @@ public interface IStoredProcedureInfo {
 
     void setUpdateCount(int updateCount);
 
-    void setQueryPlan(IQueryNode queryNode);
+    void setQueryPlan(Q queryNode);
     
 }

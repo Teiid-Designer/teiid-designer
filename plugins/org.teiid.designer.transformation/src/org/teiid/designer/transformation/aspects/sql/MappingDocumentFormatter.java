@@ -698,7 +698,7 @@ public class MappingDocumentFormatter {
         // When creating the mapping node tree the server assumes that attributes
         // of an element are added before its child elements. The order below must
         // not be changed.
-        IMappingNode rootNode = doc.getRootElement();
+        IMappingNode rootNode = doc.getRootNode();
         processNamespaces(xmlRoot.getDeclaredNamespaces(), rootNode, nsContext, rootElementInfo);
         processChildren(xmlRoot.getAttributes(), rootNode, nsContext, rootElementInfo);
         processChildren(xmlRoot.getComments(), rootNode, nsContext, rootElementInfo);
@@ -846,15 +846,17 @@ public class MappingDocumentFormatter {
 
         IMappingNode seqNode = null;
         if (compositor instanceof XmlSequence)
-            seqNode = parent.addChild(getFactory().createMappingSequenceNode());
+            seqNode = getFactory().createMappingSequenceNode();
         else if (compositor instanceof XmlAll)
-            seqNode = parent.addChild(getFactory().createMappingAllNode());
-        if(seqNode!=null) {
+            seqNode = getFactory().createMappingAllNode();
+        
+        if(seqNode != null) {
+            parent.addChild(seqNode);
             seqNode.setExclude(compositor.isExcludeFromDocument());
             seqNode.setSource(getSource(compositor));
-
             seqNode.addStagingTable(getStagingTable(compositor));
         }
+        
         return seqNode;
     }
 

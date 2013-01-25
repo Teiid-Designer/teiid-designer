@@ -89,7 +89,7 @@ public class AttributeMappingHelper {
             List attrs = TransformationHelper.getTransformationTargetAttributes((EObject)transMappingRoot);       
             
             IQueryService queryService = ModelerCore.getTeiidQueryService();
-            IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor();
+            IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor(true);
             
             // Iterate attributes, setting each mapping
             Iterator iter = attrs.iterator();
@@ -107,7 +107,7 @@ public class AttributeMappingHelper {
                     IExpression seSymbol = getSymbolWithName(projectedSymbols,colName);
                     if(seSymbol!=null) {
                         // Get the ElementSymbols / corresponding EObjs
-                        Collection elemSymbols = elementCollectorVisitor.getElements(seSymbol,true);
+                        Collection elemSymbols = elementCollectorVisitor.findElements(seSymbol);
                         Collection<EObject> elemEObjs = TransformationSqlHelper.getElementSymbolEObjects(elemSymbols,command);
                         // Set Elem EObjs as inputs for attr Mapping
                         changed = setAttributeMapping(transMappingRoot,attr,elemEObjs,txnSource) || changed;

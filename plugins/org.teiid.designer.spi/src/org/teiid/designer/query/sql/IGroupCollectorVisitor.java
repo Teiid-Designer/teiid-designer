@@ -14,7 +14,7 @@ import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 /**
  *
  */
-public interface IGroupCollectorVisitor {
+public interface IGroupCollectorVisitor<LO extends ILanguageObject, GS extends IGroupSymbol> {
 
     /**
      * Get the groups from obj in a collection.  The
@@ -22,10 +22,9 @@ public interface IGroupCollectorVisitor {
      * filtered out.
      * 
      * @param obj Language object
-     * @param removeDuplicates True to remove duplicates
      * @return Collection of {@link IGroupSymbol}
      */
-    Collection<IGroupSymbol> getGroups(ILanguageObject obj, boolean removeDuplicates);
+    Collection<GS> findGroups(LO obj);
     
     /**
      * Get the groups from obj in a collection.  The 
@@ -33,8 +32,7 @@ public interface IGroupCollectorVisitor {
      * filtered out.
      * 
      * @param obj Language object
-     * @param removeDuplicates True to remove duplicates
      * @return Collection of {@link IGroupSymbol}
      */
-    Collection<IGroupSymbol> getGroupsIgnoreInlineViews(ILanguageObject obj, boolean removeDuplicates);
+    Collection<GS> findGroupsIgnoreInlineViews(LO obj);
 }

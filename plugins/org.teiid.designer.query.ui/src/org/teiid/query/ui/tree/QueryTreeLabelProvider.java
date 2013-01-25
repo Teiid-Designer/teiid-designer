@@ -11,6 +11,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.query.sql.lang.IExpression;
 import org.teiid.designer.query.sql.lang.IFrom;
 import org.teiid.designer.query.sql.lang.IJoinPredicate;
 import org.teiid.designer.query.sql.lang.ILanguageObject;
@@ -103,7 +104,7 @@ public class QueryTreeLabelProvider implements ILabelProvider, UiConstants {
                 return FROM_ICON;
             } else if ( element instanceof IJoinPredicate ) {
                 return JOIN_ICON;
-            } else if ( ((ILanguageObject) element).isExpression() ) {
+            } else if ( element instanceof IExpression ) {
                 if ( element instanceof IExpressionSymbol) {
                     return EXPRESSION_ICON;
                 }

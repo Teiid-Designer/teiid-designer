@@ -7,11 +7,16 @@
 */
 package org.teiid.designer.query.sql.proc;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+import org.teiid.designer.query.sql.lang.IExpression;
+
+
 
 /**
  *
  */
-public interface IDeclareStatement extends IAssignmentStatement {
+public interface IDeclareStatement<E extends IExpression, LV extends ILanguageVisitor> 
+    extends IAssignmentStatement<E, LV> {
 
     /**
      * Get the type of this variable declared in this statement.

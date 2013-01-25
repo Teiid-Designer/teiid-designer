@@ -7,10 +7,14 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+
+
 /**
  *
  */
-public interface ICompareCriteria extends IPredicateCriteria {
+public interface ICompareCriteria<E extends IExpression, LV extends ILanguageVisitor>
+    extends IPredicateCriteria<LV> {
 
     /** Constant indicating the two operands are equal. */
     int EQ = 1;
@@ -54,27 +58,27 @@ public interface ICompareCriteria extends IPredicateCriteria {
      * Get left expression.
      * @return Left expression
      */
-    IExpression getLeftExpression();
+    E getLeftExpression();
 
     /**
      * Set the left expression
      * 
      * @param expression
      */
-    void setLeftExpression(IExpression expression);
+    void setLeftExpression(E expression);
     
     /**
      * Get right expression.
      * 
      * @return Right expression
      */
-    IExpression getRightExpression();
+    E getRightExpression();
 
     /**
      * Set the right expression
      * 
      * @param expression
      */
-    void setRightExpression(IExpression expression);
+    void setRightExpression(E expression);
     
 }

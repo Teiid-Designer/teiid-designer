@@ -7,12 +7,13 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 
 /**
  *
  */
-public interface IInto extends ILanguageObject {
+public interface IInto <LV extends ILanguageVisitor> extends ILanguageObject<LV> {
 
     /**
      * Get group held by clause

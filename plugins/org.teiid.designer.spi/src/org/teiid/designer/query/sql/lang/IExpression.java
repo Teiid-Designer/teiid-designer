@@ -7,15 +7,18 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+
+
 /**
  *
  */
-public interface IExpression extends ILanguageObject {
+public interface IExpression<LV extends ILanguageVisitor> extends ILanguageObject<LV> {
 
     /**
      * Get the return type of this expression. 
      * @return Java class may be null prior to being resolved
      */
-    Class<?> getType();
+    <T> Class<T> getType();
 
 }

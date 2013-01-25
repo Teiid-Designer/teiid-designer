@@ -138,7 +138,7 @@ public class DisplayNodeFactory {
         } else if (obj instanceof ICompoundCriteria) {
             CompoundCriteriaDisplayNode node = new CompoundCriteriaDisplayNode(parentNode, (ICompoundCriteria)obj);
             return node;
-        } else if (obj instanceof ILanguageObject && ((ILanguageObject) obj).isFunction()) {
+        } else if (obj instanceof IFunction) {
              // ---------------------------------------------------------------------
             // Constant, Function, Expression Nodes
             // ---------------------------------------------------------------------

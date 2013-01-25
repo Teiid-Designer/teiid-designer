@@ -8,18 +8,20 @@
 package org.teiid.designer.query.sql.symbol;
 
 import java.util.List;
-import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.ILanguageVisitor;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
 
 /**
  *
  */
-public interface IMultipleElementSymbol extends IExpression {
+public interface IMultipleElementSymbol<E extends IElementSymbol, LV extends ILanguageVisitor>
+    extends ILanguageObject<LV> {
 
     /**
      * Get the element symbols referred to by this multiple element symbol
      * 
      * @return List of {@link ElementSymbol}s, may be null
      */
-    List<IElementSymbol> getElementSymbols();
+    List<E> getElementSymbols();
 
 }

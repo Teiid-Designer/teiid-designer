@@ -7,13 +7,18 @@
 */
 package org.teiid.designer.query.sql.symbol;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+import org.teiid.designer.query.sql.lang.IExpression;
+
+
 
 /**
  *
  */
-public interface IAggregateSymbol extends IFunction {
+public interface IAggregateSymbol<LV extends ILanguageVisitor>
+    extends IExpression<LV> {
 
-    public enum AggregateType {
+    public enum Type {
         COUNT,
         SUM,
         AVG,
@@ -41,7 +46,7 @@ public interface IAggregateSymbol extends IFunction {
      * 
      * @return Aggregate function type
      */
-    AggregateType getAggregateFunction();
+    Type getAggregateFunction();
     
     /**
      * Set the aggregate function.  If the aggregate function is an invalid value, an
@@ -49,6 +54,6 @@ public interface IAggregateSymbol extends IFunction {
      * 
      * @param aggregateFunction Aggregate function type
      */
-    void setAggregateFunction(AggregateType aggregateFunction);
+    void setAggregateFunction(Type aggregateFunction);
     
 }

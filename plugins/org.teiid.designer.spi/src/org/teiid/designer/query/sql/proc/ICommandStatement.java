@@ -7,11 +7,15 @@
 */
 package org.teiid.designer.query.sql.proc;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.ISubqueryContainer;
+
 
 /**
  *
  */
-public interface ICommandStatement extends IStatement, ISubqueryContainer {
+public interface ICommandStatement <LV extends ILanguageVisitor, C extends ICommand>
+    extends IStatement<LV>, ISubqueryContainer<C> {
 
 }

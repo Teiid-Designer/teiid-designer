@@ -14,7 +14,7 @@ import org.teiid.designer.query.sql.symbol.IFunction;
 /**
  *
  */
-public interface IFunctionCollectorVisitor {
+public interface IFunctionCollectorVisitor<LO extends ILanguageObject, F extends IFunction> {
 
     /**
      * Get the functions from the given language object
@@ -25,5 +25,5 @@ public interface IFunctionCollectorVisitor {
      * 
      * @return collection of functions
      */
-    Collection<IFunction> getFunctions(ILanguageObject obj, boolean removeDuplicates, boolean deep);
+    Collection<F> findFunctions(LO obj, boolean deep);
 }

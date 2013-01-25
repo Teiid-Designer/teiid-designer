@@ -14,7 +14,7 @@ import org.teiid.designer.query.sql.lang.ISubqueryContainer;
 /**
  *
  */
-public interface IValueIteratorProviderCollectorVisitor {
+public interface IValueIteratorProviderCollectorVisitor<LO extends ILanguageObject, SC extends ISubqueryContainer<?>> {
 
     /**
      * Get the ValueIteratorProvider instances from obj
@@ -23,5 +23,5 @@ public interface IValueIteratorProviderCollectorVisitor {
      * 
      * @return List of found ValueIteratorProvider
      */
-    List<ISubqueryContainer<?>> getValueIteratorProviders(ILanguageObject obj);
+    List<SC> findValueIteratorProviders(LO obj);
 }

@@ -8,11 +8,12 @@
 package org.teiid.designer.query.sql.lang;
 
 import java.util.Collection;
+import org.teiid.designer.query.sql.ILanguageVisitor;
 
 /**
  *
  */
-public interface IOption extends ILanguageObject {
+public interface IOption <LV extends ILanguageVisitor> extends ILanguageObject<LV> {
 
     /**
      * @return

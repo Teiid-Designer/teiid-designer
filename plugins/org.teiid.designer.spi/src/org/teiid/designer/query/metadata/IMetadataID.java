@@ -12,7 +12,7 @@ import java.util.List;
 /**
  *
  */
-public interface IMetadataID {
+public interface IMetadataID<M extends IMetadataID> {
     
     /**
      * Get ID value 
@@ -31,7 +31,7 @@ public interface IMetadataID {
      * 
      * @return List of TempMetadataID for groups, null for elements
      */
-    List<IMetadataID> getElements();
+    List<M> getElements();
     
     /**
      * Get type - only valid for elements

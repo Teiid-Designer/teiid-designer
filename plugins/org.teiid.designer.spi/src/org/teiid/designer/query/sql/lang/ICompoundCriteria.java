@@ -8,44 +8,28 @@
 package org.teiid.designer.query.sql.lang;
 
 import java.util.List;
+import org.teiid.designer.query.sql.ILanguageVisitor;
 
 
 
 /**
  *
  */
-public interface ICompoundCriteria extends ICriteria {
+public interface ICompoundCriteria<C extends ICriteria, LV extends ILanguageVisitor> 
+    extends ILogicalCriteria<LV> {
 
-    /**
-     * Logical operators for comparing criteria
-     */
-    public enum LogicalOperator {
-        /** Constant indicating the logical "or" of two or more criteria. */
-        OR(1),
+    /** Constant indicating the logical "or" of two or more criteria. */
+    int OR = 1;
 
-        /** Constant indicating the logical "and" of two or more criteria.*/
-        AND(0);
+    /** Constant indicating the logical "and" of two or more criteria.*/
+    int AND = 0;
         
-        private int index;
-
-        LogicalOperator(int index) {
-            this.index = index;
-        }
-        
-        /**
-         * @return the enumerator index
-         */
-        public int index() {
-            return index;
-        }
-    }
-    
     /**
      * Returns the list of criteria.
      * 
      * @return List of {@link ICriteria}
      */
-    List<ICriteria> getCriteria();
+    List<C> getCriteria();
     
     /**
      * Get the number of {@link ICriteria}
@@ -61,20 +45,20 @@ public interface ICompoundCriteria extends ICriteria {
      * 
      * @return criteria
      */
-    ICriteria getCriteria(int index);
+    C getCriteria(int index);
 
     /**
      * Add a criteria
      * 
      * @param criteria
      */
-    void addCriteria(ICriteria criteria);
+    void addCriteria(C criteria);
     
     /**
      * Get the logical operator
      * 
-     * @return enum from {@link LogicalOperator}
+     * @return int of either AND or OR
      */
-    LogicalOperator getOperator();
+    int getOperator();
 
 }

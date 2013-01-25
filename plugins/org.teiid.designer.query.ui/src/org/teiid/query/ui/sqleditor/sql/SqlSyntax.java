@@ -18,6 +18,7 @@ import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid.designer.udf.IFunctionDescriptor;
 import org.teiid.designer.udf.IFunctionForm;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.designer.udf.UdfManager;
@@ -89,7 +90,7 @@ public class SqlSyntax {
 		Iterator iter;
 		try {
 			// FUNCTION NAMES List
-			IFunctionLibrary functionLib = UdfManager.getInstance().getSystemFunctionLibrary();
+			IFunctionLibrary<IFunctionForm, IFunctionDescriptor> functionLib = UdfManager.getInstance().getSystemFunctionLibrary();
 			List<String> allCategories = functionLib.getFunctionCategories();
 			for (String category : allCategories) {
 			    for (IFunctionForm fForm : functionLib.getFunctionForms(category)) {

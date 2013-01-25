@@ -12,12 +12,12 @@ import org.teiid.designer.query.sql.lang.IExpression;
 /**
  *
  */
-public interface IExpressionStatement extends IStatement {
+public interface IExpressionStatement<E extends IExpression> {
 
     /**
      * Get the statement's expression
      * 
      * @return the expression
      */
-    IExpression getExpression();
+    E getExpression();
 }

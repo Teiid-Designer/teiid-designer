@@ -7,11 +7,13 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+
 
 /**
  *
  */
-public interface IBetweenCriteria extends IPredicateCriteria {
+public interface IBetweenCriteria<LV extends ILanguageVisitor> extends IPredicateCriteria<LV> {
 
     /**
      * Has this been negated

@@ -10,9 +10,10 @@ package org.teiid.designer.query.sql.lang;
 import org.teiid.designer.query.sql.ILanguageVisitor;
 
 /**
+ * @param <LV> 
  *
  */
-public interface ILanguageObject {
+public interface ILanguageObject<LV extends ILanguageVisitor> {
 
     /**
      * Clone this language object
@@ -24,16 +25,6 @@ public interface ILanguageObject {
     /**
      * @param visitor
      */
-    void acceptVisitor(ILanguageVisitor visitor);
-    
-    /**
-     * Is this object a function
-     */
-    boolean isFunction();
-    
-    /**
-     * Is this object an expression
-     */
-    boolean isExpression();
+    void acceptVisitor(LV visitor);
 
 }

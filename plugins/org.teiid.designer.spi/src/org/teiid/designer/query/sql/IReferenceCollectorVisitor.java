@@ -14,7 +14,7 @@ import org.teiid.designer.query.sql.symbol.IReference;
 /**
  *
  */
-public interface IReferenceCollectorVisitor {
+public interface IReferenceCollectorVisitor<LO extends ILanguageObject, R extends IReference> {
 
     /**
      * Get the references from obj in a collection.
@@ -23,5 +23,5 @@ public interface IReferenceCollectorVisitor {
      * 
      * @return List of {@link IReference}
      */
-    List<IReference> getReferences(ILanguageObject obj);
+    List<R> findReferences(LO obj);
 }

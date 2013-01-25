@@ -7,6 +7,9 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+
+
 
 
 
@@ -14,7 +17,8 @@ package org.teiid.designer.query.sql.lang;
 /**
  *
  */
-public interface ISubqueryFromClause extends IFromClause, ISubqueryContainer<ICommand> {
+public interface ISubqueryFromClause<LV extends ILanguageVisitor, C extends ICommand>
+    extends IFromClause<LV>, ISubqueryContainer<C> {
 
     /**
      * Get name of this clause.

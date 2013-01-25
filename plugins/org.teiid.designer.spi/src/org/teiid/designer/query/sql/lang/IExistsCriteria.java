@@ -7,11 +7,14 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+
 
 /**
  *
  */
-public interface IExistsCriteria extends IPredicateCriteria, ISubqueryContainer<IQueryCommand> {
+public interface IExistsCriteria<LV extends ILanguageVisitor, C extends ICommand>
+    extends IPredicateCriteria<LV>, ISubqueryContainer<C> {
 
     /**
      * Has this been negated

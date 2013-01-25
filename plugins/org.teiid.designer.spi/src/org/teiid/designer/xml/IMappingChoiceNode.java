@@ -10,12 +10,13 @@ package org.teiid.designer.xml;
 /**
  *
  */
-public interface IMappingChoiceNode extends IMappingNode {
+public interface IMappingChoiceNode<CN extends IMappingCriteriaNode, N extends IMappingNode>
+    extends IMappingNode<N> {
 
     /**
      * @param criteria
      */
-    void addCriteriaNode(IMappingCriteriaNode criteria);
+    void addCriteriaNode(CN criteria);
 
     /**
      * @param excludeFromDocument

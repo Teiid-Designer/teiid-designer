@@ -176,9 +176,11 @@ public interface IQueryService {
      * different collections will give you different collection properties - for instance,
      * using a Set will remove duplicates.
      * 
+     * @param removeDuplicates 
+     * 
      * @return instance of {@link IGroupCollectorVisitor}
      */
-    IGroupCollectorVisitor getGroupCollectorVisitor();
+    IGroupCollectorVisitor getGroupCollectorVisitor(boolean removeDuplicates);
 
     /**
      * Get the visitor the retrieves the groups used by elements
@@ -194,9 +196,11 @@ public interface IQueryService {
      * different collections will give you different collection properties - for instance,
      * using a Set will remove duplicates.
      * 
+     * @param removeDuplicates 
+     * 
      * @return instance of {@link IElementCollectorVisitor}
      */
-    IElementCollectorVisitor getElementCollectorVisitor();
+    IElementCollectorVisitor getElementCollectorVisitor(boolean removeDuplicates);
 
     /**
     * This visitor class will traverse a language object tree and collect all sub-commands 
@@ -213,10 +217,12 @@ public interface IQueryService {
      * using a Set will remove duplicates.</p>
      * 
      * <p>This visitor can optionally collect functions of only a specific name</p>
+     * 
+     * @param removeDuplicates 
      *
      * @return instance of {@link IFunctionCollectorVisitor}
      */
-    IFunctionCollectorVisitor getFunctionCollectorVisitor();
+    IFunctionCollectorVisitor getFunctionCollectorVisitor(boolean removeDuplicates);
 
     /**
      * <p>Walk a tree of language objects and collect any predicate criteria that are found.

@@ -14,7 +14,6 @@ import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.query.IQueryFactory;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.query.sql.lang.IExpression;
-import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.query.sql.symbol.IAliasSymbol;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.query.sql.symbol.IExpressionSymbol;
@@ -465,7 +464,7 @@ public class Binding {
             if (sqlSymbol instanceof IAliasSymbol) {
                 sqlSymbol = ((IAliasSymbol)sqlSymbol).getSymbol();
             }
-            if (sqlSymbol instanceof ILanguageObject && ((ILanguageObject) sqlSymbol).isExpression()) {
+            if (sqlSymbol instanceof IExpression) {
                 String symbolName = TransformationSqlHelper.getSingleElementSymbolShortName((IExpression)sqlSymbol, true);
                 // show aliased if necessary
                 if (!isInputParamBinding()) {
