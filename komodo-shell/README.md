@@ -12,8 +12,8 @@ First clone https://github.com/Governance/s-ramp-distro locally and then run:
 
     $ mvn clean package
 
-This will create an S-RAMP distribution zip in the target folder of the s-ramp-distro project. Unzip
-this file and you will see a 'bin' folder that contains the s-ramp.sh script.
+This will create an S-RAMP distribution zip in the target folder of the s-ramp-distro-assembly project. Unzip
+this file to a location of your choice and you will see a 'bin' folder in that contains the s-ramp.sh script.
 
 Now in the komodo root, run:
 
