@@ -20,7 +20,7 @@
         <module>komodo-common</module>
         <module>komodo-teiid</module>
         <module>komodo-repository</module>
-		<module>komodo-shell</module>
+        <module>komodo-shell</module>
     </modules>
 </project>
 

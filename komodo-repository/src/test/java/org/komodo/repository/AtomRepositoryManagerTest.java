@@ -75,9 +75,9 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
         final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
         settings.artifactType = Artifact.Type.VDB;
         settings.params = new HashMap<String, String>();
-        settings.params.put("version", "1");
-        settings.params.put("name", "twitter");
-        assertThat(_repoMgr.query(settings).size(), is(1));
+        settings.params.put(Artifact.Property.VERSION, "1");
+        settings.params.put(Artifact.Property.NAME, "twitter");
+        assertThat(_repoMgr.query(settings).size(), is(1L));
     }
 
     @Test
@@ -86,9 +86,9 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
         final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
         settings.artifactType = Artifact.Type.VDB;
         settings.params = new HashMap<String, String>();
-        settings.params.put("version", "2"); // wrong version
-        settings.params.put("name", "twitter");
-        assertThat(_repoMgr.query(settings).size(), is(0));
+        settings.params.put(Artifact.Property.VERSION, "2"); // wrong version
+        settings.params.put(Artifact.Property.NAME, "twitter");
+        assertThat(_repoMgr.query(settings).size(), is(0L));
     }
 
     @Test
@@ -97,8 +97,8 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
         final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
         settings.artifactType = Artifact.Type.VDB;
         settings.params = new HashMap<String, String>();
-        settings.params.put("version", "1");
-        assertThat(_repoMgr.query(settings).size(), is(2));
+        settings.params.put(Artifact.Property.VERSION, "1");
+        assertThat(_repoMgr.query(settings).size(), is(2L));
     }
 
     @Test
@@ -107,9 +107,9 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
         final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
         settings.artifactType = Artifact.Type.TRANSLATOR;
         settings.params = new HashMap<String, String>();
-        settings.params.put("name", "rest");
+        settings.params.put(Artifact.Property.NAME, "rest");
         settings.params.put("DefaultBinding", "HTTP"); // wrong version
-        assertThat(_repoMgr.query(settings).size(), is(1));
+        assertThat(_repoMgr.query(settings).size(), is(1L));
     }
 
     @Test
@@ -117,6 +117,6 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
         addArtifacts();
         final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
         settings.artifactType = Artifact.Type.VDB;
-        assertThat(_repoMgr.query(settings).size(), is(2));
+        assertThat(_repoMgr.query(settings).size(), is(2L));
     }
 }

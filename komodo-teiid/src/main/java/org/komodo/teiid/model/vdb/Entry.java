@@ -20,7 +20,7 @@ public class Entry extends VdbAdminObject {
         /**
          * The VDB entry element attribute identifiers.
          */
-        interface Attributes {
+        interface Attribute {
 
             /**
              * The resource path identifier.

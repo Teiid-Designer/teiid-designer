@@ -8,9 +8,6 @@
 package org.komodo.repository;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import org.komodo.common.util.CollectionUtil;
 import org.komodo.common.util.HashCode;
 import org.komodo.common.util.Precondition;
@@ -32,7 +29,6 @@ import org.slf4j.LoggerFactory;
 public class AtomRepositoryManager implements RepositoryManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AtomRepositoryManager.class);
-    private static final List<ArtifactType> NO_RESULTS = Collections.emptyList();
 
     private final SrampAtomApiClient client;
 
@@ -54,7 +50,7 @@ public class AtomRepositoryManager implements RepositoryManager {
      * @throws Exception if there is a problem connecting to the server
      */
     public AtomRepositoryManager(final String url,
-                          final boolean connect) throws Exception {
+                                 final boolean connect) throws Exception {
         Precondition.notEmpty(url, "url"); //$NON-NLS-1$
         LOGGER.debug("Constructing repository manager with url '{}'", url); //$NON-NLS-1$
 
@@ -71,8 +67,10 @@ public class AtomRepositoryManager implements RepositoryManager {
     public BaseArtifactType addVdb(final InputStream content,
                                    final String fileName) throws Exception {
         final ArtifactType artifact = ArtifactType.valueOf(Type.VDB.getName());
-        LOGGER.debug("Adding VDB with file name '{}'", fileName); //$NON-NLS-1$
-        return this.client.uploadArtifact(artifact, content, fileName);
+        LOGGER.debug("RepositoryManager:Adding VDB with file name '{}'", fileName); //$NON-NLS-1$
+        final BaseArtifactType newArtifact = this.client.uploadArtifact(artifact, content, fileName);
+        LOGGER.debug("RepositoryManager:VDB artifact with name '{}' was created", newArtifact.getName()); //$NON-NLS-1$
+        return newArtifact;
     }
 
     /**
@@ -120,7 +118,7 @@ public class AtomRepositoryManager implements RepositoryManager {
     @Override
     public QueryResultSet getDerivedArtifacts(final BaseArtifactType artifact) throws Exception {
         Precondition.notNull(artifact, "artifact"); //$NON-NLS-1$
-        LOGGER.debug("Getting derived artifacts using query: '{}'", //$NON-NLS-1$
+        LOGGER.debug("RepositoryManager:Getting derived artifacts using query: '{}'", //$NON-NLS-1$
                      DeriverUtil.getDerivedArtifactsQueryString(artifact.getUuid()));
         return this.client.query(DeriverUtil.getDerivedArtifactsQueryString(artifact.getUuid()));
     }
@@ -163,9 +161,9 @@ public class AtomRepositoryManager implements RepositoryManager {
      * @see org.komodo.repository.RepositoryManager#query(org.komodo.repository.RepositoryManager.QuerySettings)
      */
     @Override
-    public List<ArtifactType> query(final QuerySettings settings) throws Exception {
+    public QueryResultSet query(final QuerySettings settings) throws Exception {
         final String query = DeriverUtil.buildQuery(settings);
-        LOGGER.debug("query built from settings '{}'", query); //$NON-NLS-1$
+        LOGGER.debug("RepositoryManager:query built from settings '{}'", query); //$NON-NLS-1$
 
         final SrampClientQuery clientQuery = this.client.buildQuery(query);
 
@@ -193,19 +191,7 @@ public class AtomRepositoryManager implements RepositoryManager {
             }
         }
 
-        final QueryResultSet results = clientQuery.query();
-
-        if (results.size() == 0) {
-            return NO_RESULTS;
-        }
-
-        final List<ArtifactType> artifacts = new ArrayList<ArtifactType>((int)results.size());
-
-        for (final ArtifactSummary summary : results) {
-            artifacts.add(summary.getType());
-        }
-
-        return artifacts;
+        return clientQuery.query();
     }
 
     /**

@@ -23,7 +23,7 @@ public class Translator extends VdbAdminObject {
         /**
          * The VDB translator element attribute identifiers.
          */
-        interface Attributes {
+        interface Attribute {
 
             /**
              * The translator description attribute identifier.
