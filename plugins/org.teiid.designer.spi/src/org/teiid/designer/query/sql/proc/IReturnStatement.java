@@ -7,9 +7,13 @@
  */
 package org.teiid.designer.query.sql.proc;
 
+import org.teiid.designer.query.sql.ILanguageVisitor;
+import org.teiid.designer.query.sql.lang.IExpression;
+
 /**
  *
  */
-public interface IReturnStatement {
+public interface IReturnStatement<E extends IExpression, LV extends ILanguageVisitor>
+    extends IAssignmentStatement<E, LV> {
 
 }
