@@ -14,6 +14,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1494,5 +1496,16 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
 
     public Map getNamespacePrefixes( String name ) {
         return schemaModel.getNamespacePrefixes();
+    }
+
+    public ResultSet getPseudoColumns(String catalog,
+                                      String schemaPattern,
+                                      String tableNamePattern,
+                                      String columnNamePattern) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    public boolean generatedKeyAlwaysReturned() throws SQLException {
+        return false;
     }
 }

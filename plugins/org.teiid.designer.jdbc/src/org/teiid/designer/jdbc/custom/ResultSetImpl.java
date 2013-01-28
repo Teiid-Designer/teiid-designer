@@ -21,6 +21,7 @@ import java.sql.Ref;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.RowId;
+import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.SQLXML;
 import java.sql.Statement;
@@ -1614,6 +1615,16 @@ public class ResultSetImpl implements ResultSet {
     @Override
     public <T> T unwrap( Class<T> iface ) {
 
+        return null;
+    }
+    
+    public <T> T getObject(int columnIndex,
+                           Class<T> type) throws SQLException {
+        return null;
+    }
+    
+    public <T> T getObject(String columnLabel,
+                           Class<T> type) throws SQLException {
         return null;
     }
 }
