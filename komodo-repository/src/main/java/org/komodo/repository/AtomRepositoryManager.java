@@ -12,7 +12,7 @@ import org.komodo.common.util.CollectionUtil;
 import org.komodo.common.util.HashCode;
 import org.komodo.common.util.Precondition;
 import org.komodo.common.util.StringUtil;
-import org.komodo.repository.artifact.Artifact.Type;
+import org.komodo.repository.artifact.VdbArtifact;
 import org.komodo.repository.deriver.DeriverUtil;
 import org.overlord.sramp.client.SrampAtomApiClient;
 import org.overlord.sramp.client.SrampClientQuery;
@@ -61,14 +61,14 @@ public class AtomRepositoryManager implements RepositoryManager {
     /**
      * {@inheritDoc}
      *
-     * @see org.komodo.repository.RepositoryManager#addVdb(java.io.InputStream, java.lang.String)
+     * @see org.komodo.repository.RepositoryManager#addVdb(java.io.InputStream)
      */
     @Override
-    public BaseArtifactType addVdb(final InputStream content,
-                                   final String fileName) throws Exception {
-        final ArtifactType artifact = ArtifactType.valueOf(Type.VDB.getName());
-        LOGGER.debug("RepositoryManager:Adding VDB with file name '{}'", fileName); //$NON-NLS-1$
-        final BaseArtifactType newArtifact = this.client.uploadArtifact(artifact, content, fileName);
+    public BaseArtifactType addVdb(final InputStream content) throws Exception {
+        final ArtifactType artifact = ArtifactType.valueOf(VdbArtifact.TYPE.getId());
+        artifact.setMimeType("application/xml"); //$NON-NLS-1$
+        LOGGER.debug("RepositoryManager:Adding VDB ..."); //$NON-NLS-1$
+        final BaseArtifactType newArtifact = this.client.uploadArtifact(artifact, content, null);
         LOGGER.debug("RepositoryManager:VDB artifact with name '{}' was created", newArtifact.getName()); //$NON-NLS-1$
         return newArtifact;
     }

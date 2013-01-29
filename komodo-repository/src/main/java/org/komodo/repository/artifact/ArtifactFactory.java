@@ -26,7 +26,7 @@ public class ArtifactFactory {
 
         final ExtendedArtifactType artifact = new ExtendedArtifactType();
         artifact.setArtifactType(BaseArtifactEnum.EXTENDED_ARTIFACT_TYPE);
-        artifact.setExtendedType(artifactType.getName());
+        artifact.setExtendedType(artifactType.getId());
         artifact.setUuid(UUID.randomUUID().toString());
 
         return artifact;

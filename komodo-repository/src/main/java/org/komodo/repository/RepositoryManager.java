@@ -62,15 +62,13 @@ public interface RepositoryManager {
 
     /**
      * Adds a VDB to the repository. Caller should set additional artifact properties based on the VDB business object created
-     * from this artifact. Caller should ensure stream is closed. The file name is used to determine mime type.
+     * from this artifact. Caller should ensure stream is closed.
      * 
      * @param content the resource content (cannot be <code>null</code>)
-     * @param fileName the file name associated with the content (cannot be <code>null</code> or empty)
      * @return the artifact (never <code>null</code>)
      * @throws Exception if there is a problem creating the artifact in the repository
      */
-    BaseArtifactType addVdb(final InputStream content,
-                            final String fileName) throws Exception;
+    BaseArtifactType addVdb(final InputStream content) throws Exception;
 
     /**
      * @param uuid the UUID of the artifact being requested (cannot be <code>null</code> or empty)

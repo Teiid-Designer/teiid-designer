@@ -130,6 +130,23 @@ public class Precondition {
     }
 
     /**
+     * @param collection the collection whose size is being checked (cannot be <code>null</code>)
+     * @param expected the expected size
+     * @param identifier the identifier used in the error message (cannot be <code>null</code> or empty)
+     * @throws IllegalArgumentException if the collection size is is not what is expected or if the collection is <code>null</code>
+     */
+    public static void sizeIs(final Object[] collection,
+                              final int expected,
+                              final String identifier) {
+        assert !StringUtil.isEmpty(identifier) : "identifier cannot be empty"; //$NON-NLS-1$
+        Precondition.notNull(collection, "collection"); //$NON-NLS-1$
+
+        if (collection.length != expected) {
+            throw new IllegalArgumentException(I18n.bind(CommonI18n.objectIsNull, identifier));
+        }
+    }
+
+    /**
      * Don't allow construction.
      */
     private Precondition() {

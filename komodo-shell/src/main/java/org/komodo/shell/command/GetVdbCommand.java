@@ -12,6 +12,7 @@ import org.komodo.common.i18n.I18n;
 import org.komodo.common.util.Precondition;
 import org.komodo.repository.RepositoryManager;
 import org.komodo.repository.artifact.Artifact;
+import org.komodo.repository.artifact.VdbArtifact;
 import org.komodo.shell.ShellI18n;
 import org.overlord.sramp.client.query.QueryResultSet;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public class GetVdbCommand extends KomodoCommand {
         LOGGER.debug("Executing GetVdbCommand.doExcecute with VDB name '{}' and version '{}'", vdbName, version); //$NON-NLS-1$
 
         final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
-        settings.artifactType = Artifact.Type.VDB;
+        settings.artifactType = VdbArtifact.TYPE;
         settings.params = new HashMap<String, String>();
         settings.params.put(Artifact.Property.NAME, vdbName);
         settings.params.put(Artifact.Property.VERSION, version);

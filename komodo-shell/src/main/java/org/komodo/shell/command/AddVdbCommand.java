@@ -36,12 +36,11 @@ public class AddVdbCommand extends KomodoCommand {
     @Override
     protected void doExecute(final String... args) throws Exception {
         Precondition.notNull(args, "args"); //$NON-NLS-1$
+        Precondition.sizeIs(args, 1, "args"); //$NON-NLS-1$
         Precondition.notEmpty(args[0], "fileName"); //$NON-NLS-1$
-        Precondition.notEmpty(args[1], "vdbName"); //$NON-NLS-1$
 
         final String fileName = args[0];
-        final String vdbName = args[1];
-        LOGGER.debug("Executing AddVdbCommand.doExcecute with file name '{}' and VDB name '{}'", fileName, vdbName); //$NON-NLS-1$
+        LOGGER.debug("Executing AddVdbCommand.doExcecute with file name '{}'", fileName); //$NON-NLS-1$
 
         InputStream vdbStream = null;
 
@@ -60,12 +59,12 @@ public class AddVdbCommand extends KomodoCommand {
             return;
         }
 
-        final BaseArtifactType baseArtifact = repoMgr.addVdb(vdbStream, vdbName);
+        final BaseArtifactType vdbArtifact = repoMgr.addVdb(vdbStream);
 
-        if (baseArtifact == null) {
-            print(I18n.bind(ShellI18n.vdbArtifactMissingAfterAdd, vdbName));
+        if (vdbArtifact == null) {
+            print(I18n.bind(ShellI18n.vdbArtifactMissingAfterAdd, fileName));
         } else {
-            print(I18n.bind(ShellI18n.vdbAddedToRepository, vdbName));
+            print(I18n.bind(ShellI18n.vdbAddedToRepository, vdbArtifact.getName()));
         }
     }
 

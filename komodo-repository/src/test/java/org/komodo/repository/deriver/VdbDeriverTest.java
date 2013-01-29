@@ -16,7 +16,13 @@ import java.io.InputStream;
 import java.util.List;
 import org.junit.Test;
 import org.komodo.repository.RepositoryTest;
-import org.komodo.repository.artifact.Artifact;
+import org.komodo.repository.artifact.DataPolicyArtifact;
+import org.komodo.repository.artifact.EntryArtifact;
+import org.komodo.repository.artifact.ImportVdbArtifact;
+import org.komodo.repository.artifact.PermissionArtifact;
+import org.komodo.repository.artifact.SchemaArtifact;
+import org.komodo.repository.artifact.SourceArtifact;
+import org.komodo.repository.artifact.TranslatorArtifact;
 import org.komodo.teiid.model.vdb.DataPolicy;
 import org.komodo.teiid.model.vdb.ImportVdb;
 import org.komodo.teiid.model.vdb.Permission;
@@ -41,7 +47,7 @@ public class VdbDeriverTest extends RepositoryTest {
         assertThat(vdbStream, is(not(nullValue())));
 
         // add VDB
-        final BaseArtifactType vdbArtifact = _repoMgr.addVdb(vdbStream, "parser-test-vdb.xml");
+        final BaseArtifactType vdbArtifact = _repoMgr.addVdb(vdbStream);
 
         // verify derived artifacts
         final QueryResultSet results = _repoMgr.getDerivedArtifacts(vdbArtifact);
@@ -98,20 +104,20 @@ public class VdbDeriverTest extends RepositoryTest {
             final BaseArtifactType derivedArtifact = _repoMgr.get(summary.getUuid()); // materialize entire artifact
             final String artifactName = derivedArtifact.getName();
 
-            if (!foundImportVdb && Artifact.Type.IMPORT_VDB.getName().equals(userType)) {
+            if (!foundImportVdb && ImportVdbArtifact.TYPE.getId().equals(userType)) {
                 foundImportVdb = true;
                 assertThat(artifactName, is("x"));
                 assertThat(derivedArtifact.getVersion(), is("2"));
                 assertPropertyValue(derivedArtifact, ImportVdb.PropertyName.IMPORT_DATA_POLICIES, "true");
                 assertThat(derivedArtifact.getProperty().size(), is(1));
-            } else if (!foundTranslator && Artifact.Type.TRANSLATOR.getName().equals(userType)) {
+            } else if (!foundTranslator && TranslatorArtifact.TYPE.getId().equals(userType)) {
                 foundTranslator = true;
                 assertThat(artifactName, is("oracleOverride"));
                 assertThat(derivedArtifact.getDescription(), is("hello world"));
                 assertPropertyValue(derivedArtifact, Translator.PropertyName.TYPE, "oracle");
                 assertPropertyValue(derivedArtifact, "my-property", "my-value");
                 assertThat(derivedArtifact.getProperty().size(), is(2));
-            } else if (Artifact.Type.ENTRY.getName().equals(userType)) {
+            } else if (EntryArtifact.TYPE.getId().equals(userType)) {
                 if (!foundEntry1 && "/path-one".equals(artifactName)) {
                     foundEntry1 = true;
                     assertThat(derivedArtifact.getDescription(), is("path one description"));
@@ -123,7 +129,7 @@ public class VdbDeriverTest extends RepositoryTest {
                 } else {
                     fail("unexpected entry: " + artifactName);
                 }
-            } else if (Artifact.Type.SCHEMA.getName().equals(userType)) {
+            } else if (SchemaArtifact.TYPE.getId().equals(userType)) {
                 if (!foundPhysicalModel && "model-one".equals(artifactName)) {
                     foundPhysicalModel = true;
                     physicalModelUuid = derivedArtifact.getUuid();
@@ -137,7 +143,7 @@ public class VdbDeriverTest extends RepositoryTest {
                     final List<Relationship> relationships = derivedArtifact.getRelationship();
                     assertThat(relationships.size(), is(2));
 
-                    if (Artifact.RelationshipType.SCHEMA_SOURCES.getName().equals(relationships.get(0).getRelationshipType())) {
+                    if (SchemaArtifact.SOURCES_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
                         physicalSourceTargetUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
                     } else {
                         physicalSourceTargetUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
@@ -156,7 +162,7 @@ public class VdbDeriverTest extends RepositoryTest {
                     final List<Relationship> relationships = derivedArtifact.getRelationship();
                     assertThat(relationships.size(), is(2));
 
-                    if (Artifact.RelationshipType.SCHEMA_SOURCES.getName().equals(relationships.get(0).getRelationshipType())) {
+                    if (SchemaArtifact.SOURCES_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
                         virtualSource1TargetUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
                         virtualSource2TargetUuid = relationships.get(0).getRelationshipTarget().get(1).getValue();
                     } else {
@@ -166,7 +172,7 @@ public class VdbDeriverTest extends RepositoryTest {
                 } else {
                     fail("unexpected model: " + artifactName);
                 }
-            } else if (Artifact.Type.SOURCE.getName().equals(userType)) {
+            } else if (SourceArtifact.TYPE.getId().equals(userType)) {
                 if (!foundSource1 && "s1".equals(artifactName)) {
                     foundSource1 = true;
                     source1Uuid = derivedArtifact.getUuid();
@@ -179,7 +185,7 @@ public class VdbDeriverTest extends RepositoryTest {
                     final List<Relationship> relationships = derivedArtifact.getRelationship();
                     assertThat(relationships.size(), is(2));
 
-                    if (Artifact.RelationshipType.SOURCE_SCHEMA.getName().equals(relationships.get(0).getRelationshipType())) {
+                    if (SourceArtifact.SCHEMA_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
                         source1SchemaUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
                     } else {
                         source1SchemaUuid = relationships.get(1).getRelationshipTarget().get(0).getValue();
@@ -196,7 +202,7 @@ public class VdbDeriverTest extends RepositoryTest {
                     final List<Relationship> relationships = derivedArtifact.getRelationship();
                     assertThat(relationships.size(), is(2));
 
-                    if (Artifact.RelationshipType.SOURCE_SCHEMA.getName().equals(relationships.get(0).getRelationshipType())) {
+                    if (SourceArtifact.SCHEMA_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
                         source2SchemaUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
                     } else {
                         source2SchemaUuid = relationships.get(1).getRelationshipTarget().get(0).getValue();
@@ -213,7 +219,7 @@ public class VdbDeriverTest extends RepositoryTest {
                     final List<Relationship> relationships = derivedArtifact.getRelationship();
                     assertThat(relationships.size(), is(2));
 
-                    if (Artifact.RelationshipType.SOURCE_SCHEMA.getName().equals(relationships.get(0).getRelationshipType())) {
+                    if (SourceArtifact.SCHEMA_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
                         source3SchemaUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
                     } else {
                         source3SchemaUuid = relationships.get(1).getRelationshipTarget().get(0).getValue();
@@ -221,7 +227,7 @@ public class VdbDeriverTest extends RepositoryTest {
                 } else {
                     fail("unexpected source: " + artifactName);
                 }
-            } else if (!foundDataRole && Artifact.Type.DATA_POLICY.getName().equals(userType)) {
+            } else if (!foundDataRole && DataPolicyArtifact.TYPE.getId().equals(userType)) {
                 foundDataRole = true;
                 dataPolicyUuid = derivedArtifact.getUuid();
 
@@ -236,7 +242,7 @@ public class VdbDeriverTest extends RepositoryTest {
                 final List<Relationship> relationships = derivedArtifact.getRelationship();
                 assertThat(relationships.size(), is(2));
 
-                if (Artifact.RelationshipType.DATA_POLICY_PERMISSIONS.getName().equals(relationships.get(0).getRelationshipType())) {
+                if (DataPolicyArtifact.PERMISSIONS_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
                     dataPolicyTarget1Uuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
                     dataPolicyTarget2Uuid = relationships.get(0).getRelationshipTarget().get(1).getValue();
                     dataPolicyTarget3Uuid = relationships.get(0).getRelationshipTarget().get(2).getValue();
@@ -245,7 +251,7 @@ public class VdbDeriverTest extends RepositoryTest {
                     dataPolicyTarget2Uuid = relationships.get(1).getRelationshipTarget().get(1).getValue();
                     dataPolicyTarget3Uuid = relationships.get(1).getRelationshipTarget().get(2).getValue();
                 }
-            } else if (Artifact.Type.PERMISSION.getName().equals(userType)) {
+            } else if (PermissionArtifact.TYPE.getId().equals(userType)) {
                 if (!foundPermission1 && "myTable.T1".equals(artifactName)) {
                     foundPermission1 = true;
                     permission1Uuid = derivedArtifact.getUuid();
@@ -257,7 +263,7 @@ public class VdbDeriverTest extends RepositoryTest {
                     final List<Relationship> relationships = derivedArtifact.getRelationship();
                     assertThat(relationships.size(), is(2));
 
-                    if (Artifact.RelationshipType.PERMISSION_DATA_POLICY.getName().equals(relationships.get(0).getRelationshipType())) {
+                    if (PermissionArtifact.DATA_POLICY_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
                         permission1TargetUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
                     } else {
                         permission1TargetUuid = relationships.get(1).getRelationshipTarget().get(0).getValue();
@@ -279,7 +285,7 @@ public class VdbDeriverTest extends RepositoryTest {
                     final List<Relationship> relationships = derivedArtifact.getRelationship();
                     assertThat(relationships.size(), is(2));
 
-                    if (Artifact.RelationshipType.PERMISSION_DATA_POLICY.getName().equals(relationships.get(0).getRelationshipType())) {
+                    if (PermissionArtifact.DATA_POLICY_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
                         permission2TargetUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
                     } else {
                         permission2TargetUuid = relationships.get(1).getRelationshipTarget().get(0).getValue();
@@ -295,7 +301,7 @@ public class VdbDeriverTest extends RepositoryTest {
                     final List<Relationship> relationships = derivedArtifact.getRelationship();
                     assertThat(relationships.size(), is(2));
 
-                    if (Artifact.RelationshipType.PERMISSION_DATA_POLICY.getName().equals(relationships.get(0).getRelationshipType())) {
+                    if (PermissionArtifact.DATA_POLICY_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
                         permission3TargetUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
                     } else {
                         permission3TargetUuid = relationships.get(1).getRelationshipTarget().get(0).getValue();
@@ -338,7 +344,7 @@ public class VdbDeriverTest extends RepositoryTest {
         assertThat(vdbStream, is(not(nullValue())));
 
         // add VDB
-        final BaseArtifactType vdbArtifact = _repoMgr.addVdb(vdbStream, "twitterVdb.xml");
+        final BaseArtifactType vdbArtifact = _repoMgr.addVdb(vdbStream);
 
         // verify derived artifacts
         final QueryResultSet results = _repoMgr.getDerivedArtifacts(vdbArtifact);
@@ -356,13 +362,13 @@ public class VdbDeriverTest extends RepositoryTest {
             final BaseArtifactType derivedArtifact = _repoMgr.get(summary.getUuid()); // materialize entire artifact
             final String artifactName = derivedArtifact.getName();
 
-            if (!foundTranslator && Artifact.Type.TRANSLATOR.getName().equals(userType)) {
+            if (!foundTranslator && TranslatorArtifact.TYPE.getId().equals(userType)) {
                 foundTranslator = true;
                 assertThat(artifactName, is("rest"));
                 assertPropertyValue(derivedArtifact, Translator.PropertyName.TYPE, "ws");
                 assertPropertyValue(derivedArtifact, "DefaultBinding", "HTTP");
                 assertPropertyValue(derivedArtifact, "DefaultServiceMode", "MESSAGE");
-            } else if (Artifact.Type.SCHEMA.getName().equals(userType)) {
+            } else if (SchemaArtifact.TYPE.getId().equals(userType)) {
                 if (!foundPhysicalModel && "twitter".equals(artifactName)) {
                     foundPhysicalModel = true;
                     assertPropertyValue(derivedArtifact, Schema.PropertyName.TYPE, Schema.Type.PHYSICAL.name());
@@ -387,7 +393,7 @@ public class VdbDeriverTest extends RepositoryTest {
                 } else {
                     fail("unexpected schema artifact '" + artifactName + '\'');
                 }
-            } else if (!foundDataSource && Artifact.Type.SOURCE.getName().equals(userType)) {
+            } else if (!foundDataSource && SourceArtifact.TYPE.getId().equals(userType)) {
                 foundDataSource = true;
                 assertThat(artifactName, is("twitter"));
                 assertPropertyValue(derivedArtifact, Source.PropertyName.TRANSLATOR_NAME, "rest");

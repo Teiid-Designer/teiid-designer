@@ -16,6 +16,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import org.junit.Test;
 import org.komodo.repository.artifact.Artifact;
+import org.komodo.repository.artifact.TranslatorArtifact;
+import org.komodo.repository.artifact.VdbArtifact;
 import org.overlord.sramp.common.SrampModelUtils;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 import org.s_ramp.xmlns._2010.s_ramp.ExtendedArtifactType;
@@ -29,12 +31,12 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
     private void addArtifacts() throws Exception {
         { // add parser-test-vdb.xml
             final InputStream vdbStream = getResourceAsStream("vdb/parser-test-vdb.xml");
-            _repoMgr.addVdb(vdbStream, "parser-test-vdb.xml");
+            _repoMgr.addVdb(vdbStream);
         }
 
         { // twitterVdb.xml
             final InputStream vdbStream = getResourceAsStream("vdb/twitterVdb.xml");
-            _repoMgr.addVdb(vdbStream, "twitterVdb.xml");
+            _repoMgr.addVdb(vdbStream);
         }
     }
 
@@ -44,9 +46,9 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
         assertThat(vdbStream, is(not(nullValue())));
 
         // verify VDB artifact exists and has correct properties
-        final BaseArtifactType vdbArtifact = _repoMgr.addVdb(vdbStream, "parser-test-vdb.xml");
+        final BaseArtifactType vdbArtifact = _repoMgr.addVdb(vdbStream);
         assertThat(vdbArtifact, is(instanceOf(ExtendedArtifactType.class)));
-        assertThat(((ExtendedArtifactType)vdbArtifact).getExtendedType(), is(Artifact.Type.VDB.getName()));
+        assertThat(((ExtendedArtifactType)vdbArtifact).getExtendedType(), is(VdbArtifact.TYPE.getId()));
         assertThat(vdbArtifact.getName(), is("myVDB"));
         assertThat(vdbArtifact.getVersion(), is("1"));
         assertThat(vdbArtifact.getDescription(), is("vdb description"));
@@ -60,9 +62,9 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
         assertThat(vdbStream, is(not(nullValue())));
 
         // verify VDB artifact exists and has correct properties
-        final BaseArtifactType vdbArtifact = _repoMgr.addVdb(vdbStream, "twitterVdb.xml");
+        final BaseArtifactType vdbArtifact = _repoMgr.addVdb(vdbStream);
         assertThat(vdbArtifact, is(instanceOf(ExtendedArtifactType.class)));
-        assertThat(((ExtendedArtifactType)vdbArtifact).getExtendedType(), is(Artifact.Type.VDB.getName()));
+        assertThat(((ExtendedArtifactType)vdbArtifact).getExtendedType(), is(VdbArtifact.TYPE.getId()));
         assertThat(vdbArtifact.getName(), is("twitter"));
         assertThat(vdbArtifact.getVersion(), is("1"));
         assertThat(vdbArtifact.getDescription(), is("Shows how to call Web Services"));
@@ -73,7 +75,7 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
     public void shouldGetTwitterVdbWhenNameVersionParamsSet() throws Exception {
         addArtifacts();
         final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
-        settings.artifactType = Artifact.Type.VDB;
+        settings.artifactType = VdbArtifact.TYPE;
         settings.params = new HashMap<String, String>();
         settings.params.put(Artifact.Property.VERSION, "1");
         settings.params.put(Artifact.Property.NAME, "twitter");
@@ -84,7 +86,7 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
     public void shouldNotGetResultsWhenNoMatchingVdb() throws Exception {
         addArtifacts();
         final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
-        settings.artifactType = Artifact.Type.VDB;
+        settings.artifactType = VdbArtifact.TYPE;
         settings.params = new HashMap<String, String>();
         settings.params.put(Artifact.Property.VERSION, "2"); // wrong version
         settings.params.put(Artifact.Property.NAME, "twitter");
@@ -95,7 +97,7 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
     public void shouldQueryByVersion() throws Exception {
         addArtifacts();
         final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
-        settings.artifactType = Artifact.Type.VDB;
+        settings.artifactType = VdbArtifact.TYPE;
         settings.params = new HashMap<String, String>();
         settings.params.put(Artifact.Property.VERSION, "1");
         assertThat(_repoMgr.query(settings).size(), is(2L));
@@ -105,7 +107,7 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
     public void shouldQueryWithCustomProperty() throws Exception {
         addArtifacts();
         final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
-        settings.artifactType = Artifact.Type.TRANSLATOR;
+        settings.artifactType = TranslatorArtifact.TYPE;
         settings.params = new HashMap<String, String>();
         settings.params.put(Artifact.Property.NAME, "rest");
         settings.params.put("DefaultBinding", "HTTP"); // wrong version
@@ -116,7 +118,7 @@ public class AtomRepositoryManagerTest extends RepositoryTest {
     public void whenNoParamsShouldGetAllVdbs() throws Exception {
         addArtifacts();
         final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
-        settings.artifactType = Artifact.Type.VDB;
+        settings.artifactType = VdbArtifact.TYPE;
         assertThat(_repoMgr.query(settings).size(), is(2L));
     }
 }

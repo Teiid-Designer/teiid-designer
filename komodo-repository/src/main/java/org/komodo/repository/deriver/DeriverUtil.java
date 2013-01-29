@@ -48,8 +48,8 @@ public class DeriverUtil implements RepositoryConstants {
         Precondition.notNull(relationshipType, "relationshipType"); //$NON-NLS-1$
         Precondition.notNull(inverseRelationshipType, "inverseRelationshipType"); //$NON-NLS-1$
 
-        SrampModelUtils.addGenericRelationship(sourceArtifact, relationshipType.getName(), targetArtifact.getUuid());
-        SrampModelUtils.addGenericRelationship(targetArtifact, inverseRelationshipType.getName(), sourceArtifact.getUuid());
+        SrampModelUtils.addGenericRelationship(sourceArtifact, relationshipType.getId(), targetArtifact.getUuid());
+        SrampModelUtils.addGenericRelationship(targetArtifact, inverseRelationshipType.getId(), sourceArtifact.getUuid());
     }
 
     /**
@@ -63,7 +63,7 @@ public class DeriverUtil implements RepositoryConstants {
         String path = Sramp.USER_DEFINED_ARTIFACT_PATH;
 
         if (settings.artifactType != null) {
-            path += '/' + settings.artifactType.getName();
+            path += '/' + settings.artifactType.getId();
         }
 
         if (CollectionUtil.isEmpty(settings.params)) {

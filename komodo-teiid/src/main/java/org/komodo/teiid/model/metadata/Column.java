@@ -12,7 +12,7 @@ import org.komodo.teiid.model.ModelObject;
 /**
  * The Teiid relational column metadata business object.
  */
-public class Column implements ModelObject {
+public class Column extends ModelObject {
 
     // TODO implement
 
