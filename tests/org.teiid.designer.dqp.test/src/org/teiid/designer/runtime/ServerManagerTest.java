@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
+import org.eclipse.wst.server.core.IServerListener;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,6 +85,16 @@ public class ServerManagerTest {
         @Override
         public void addServerLifecycleListener(IServerLifecycleListener serversListener) {
             // do nothing
+        }
+        
+        @Override
+        public void addServerStateListener(IServerListener serverStateListener) {
+         // do nothing
+        }
+        
+        @Override
+        public void removeServerStateListener(IServerListener serverStateListener) {
+         // do nothing
         }
     }
 

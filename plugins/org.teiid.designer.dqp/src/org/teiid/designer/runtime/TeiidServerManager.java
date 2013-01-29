@@ -30,17 +30,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerLifecycleListener;
-import org.eclipse.wst.server.core.IServerListener;
-import org.eclipse.wst.server.core.ServerEvent;
-import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 import org.teiid.core.designer.util.Base64;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
-import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
-import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.spi.EventManager;
@@ -211,118 +205,6 @@ public final class TeiidServerManager implements EventManager {
      * The status of this manager.
      */
     private RuntimeState state = RuntimeState.INVALID;
-    
-    private IServerListener serverStateListener = new IServerListener() {
-
-        @Override
-        public void serverChanged(ServerEvent event) {
-            if (event == null) return;
-
-            int eventKind = event.getKind();
-            if ((eventKind & ServerEvent.SERVER_CHANGE) == 0) return;
-
-            // server change event
-            if ((eventKind & ServerEvent.STATE_CHANGE) == 0) return;
-
-            int state = event.getState();
-            IServer parentServer = event.getServer();
-            TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
-            ITeiidServer teiidServer = null;
-
-            for (ITeiidServer tServer : getServers()) {
-                if (tServer.getParent().equals(parentServer)) {
-                    teiidServer = tServer;
-                    break;
-                }
-            }
-            
-            if (teiidServer != null && (state == IServer.STATE_STOPPING || state == IServer.STATE_STOPPED)) {
-                teiidServer.disconnect();
-            } else if (state == IServer.STATE_STARTED) {
-
-                if (teiidServer != null && teiidServer.isParentConnected()) {
-                    /*
-                    * Update all the settings since the server has been started and a 
-                    * proper set of queries can take place.
-                    */
-                    ITeiidServer queryServer = factory.adaptServer(parentServer,
-                                                                   ServerOptions.NO_CHECK_SERVER_REGISTRY);
-                    
-                    teiidServer.update(queryServer);
-
-                    try {
-                        teiidServer.reconnect();
-                    } catch (Exception ex) {
-                        Util.log(ex);
-                    }
-                    
-                }
-                else {
-                    /*
-                     * This is a parent that we know nothing about.
-                     * Could be irrelevant or could have a teiid server
-                     * that has not been connected to yet.
-                     */
-                    teiidServer = factory.adaptServer(parentServer,
-                                                      ServerOptions.ADD_TO_REGISTRY,
-                                                      ServerOptions.CONNECT);
-                }
-            }
-        }
-    };
-    
-    /**
-     * Listener for removing teiid servers if there parent server is removed
-     */
-    private IServerLifecycleListener serverLifeCycleListener = new ServerLifecycleAdapter() {
-        
-        @Override
-        public void serverAdded(IServer server) {
-            server.addServerListener(serverStateListener);
-            
-            TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
-            factory.adaptServer(server, ServerOptions.ADD_TO_REGISTRY);
-        }
-        
-        @Override
-        public void serverChanged(IServer server) {
-            TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
-            
-            for (ITeiidServer teiidServer : getServers()) {
-                if (! server.equals(teiidServer.getParent()))
-                    continue;
-                
-                ITeiidServer newTeiidServer = factory.adaptServer(server, ServerOptions.NO_CHECK_SERVER_REGISTRY, ServerOptions.NO_CHECK_CONNECTION);
-                
-                // Cannot use updateServer as it replaces rather than modified the existing server
-                // and references in editor will thus hang on to the old defunct version
-                teiidServer.update(newTeiidServer);
-                teiidServer.notifyRefresh();
-                
-                return;
-            }
-            
-            /*
-             * We have a parent server with no teiid server attached
-             * This may be intentional if the parent server is not teiid
-             * enabled but should check just in case.
-             */
-            factory.adaptServer(server, ServerOptions.ADD_TO_REGISTRY);
-        }
-       
-        @Override
-        public void serverRemoved(IServer server) {
-            server.removeServerListener(serverStateListener);
-            
-            // Tidy up the server manager by removing the related teiid server
-            for (ITeiidServer teiidServer : getServers()) {
-                if (server.equals(teiidServer.getParent())) {
-                    removeServer(teiidServer);
-                    break;
-                }
-            }
-        }      
-    };
 
     /**
      * The provider used for accessing the collection of available {@link IServer}s
@@ -370,27 +252,11 @@ public final class TeiidServerManager implements EventManager {
 
         this.previewManager = tempPreviewManager;
         this.state = RuntimeState.STARTED;
-        
-        parentServersProvider.addServerLifecycleListener(serverLifeCycleListener);
-        for (IServer server : parentServersProvider.getServers()) {
-            server.addServerListener(serverStateListener);
-        }
     }
 
     // ===========================================================================================================================
     // Methods
     // ===========================================================================================================================
-
-    /**
-     * Get the {@link IServerLifecycleListener} referenced by this
-     * manager
-     * 
-     * @return {@link IServerLifecycleListener}
-     */
-    public IServerLifecycleListener getServerLifeCycleListener() {
-        return serverLifeCycleListener;
-    }
-    
 
     /**
      * Get the implementation of the {@link ISecureStorageProvider} used by
@@ -931,9 +797,6 @@ public final class TeiidServerManager implements EventManager {
      * @throws Exception 
      */
     public void shutdown( IProgressMonitor monitor ) throws Exception {
-        
-        parentServersProvider.removeServerLifecycleListener(serverLifeCycleListener);
-        
         // return if already being shutdown
         if ((this.state == RuntimeState.SHUTTING_DOWN) || (this.state == RuntimeState.SHUTDOWN)) return;
 

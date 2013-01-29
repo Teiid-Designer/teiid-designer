@@ -9,6 +9,7 @@ package org.teiid.designer.runtime;
 
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
+import org.eclipse.wst.server.core.IServerListener;
 import org.eclipse.wst.server.core.ServerCore;
 
 /**
@@ -33,6 +34,20 @@ public class DefaultServersProvider implements IServersProvider {
     @Override
     public IServer[] getServers() {
         return ServerCore.getServers();
+    }
+    
+    @Override
+    public void addServerStateListener(IServerListener serverStateListener) {
+        for (IServer server : getServers()) {
+            server.addServerListener(serverStateListener);
+        }
+    }
+    
+    @Override
+    public void removeServerStateListener(IServerListener serverStateListener) {
+        for (IServer server : getServers()) {
+            server.removeServerListener(serverStateListener);
+        }
     }
 
 }

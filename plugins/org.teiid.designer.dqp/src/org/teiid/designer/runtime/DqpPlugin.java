@@ -100,6 +100,8 @@ public class DqpPlugin extends Plugin {
      */
     private IPasswordProvider passwordProvider;
 
+    private TeiidParentServerListener serverStateListener;
+
     /**
      * Obtains the current plubin preferences values. <strong>This method should be used instead of
      * {@link Plugin#getPluginPreferences()}.</strong>
@@ -287,6 +289,10 @@ public class DqpPlugin extends Plugin {
             }
         };
         ModelWorkspaceManager.getModelWorkspaceManager().addNotificationListener(this.workspaceListener);
+        
+        // Initialize teiid parent server state listener
+        getServersProvider().addServerStateListener(TeiidParentServerListener.getInstance());
+        getServersProvider().addServerLifecycleListener(TeiidParentServerListener.getInstance());
     }
 
     /**
@@ -299,6 +305,9 @@ public class DqpPlugin extends Plugin {
      */
     @Override
     public void stop( final BundleContext context ) throws Exception {
+        getServersProvider().removeServerStateListener(TeiidParentServerListener.getInstance());
+        getServersProvider().removeServerLifecycleListener(TeiidParentServerListener.getInstance());
+        
         try {
             if (serverMgr != null) {
                 this.serverMgr.shutdown(null);

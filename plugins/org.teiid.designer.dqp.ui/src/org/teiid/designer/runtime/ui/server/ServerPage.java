@@ -35,6 +35,7 @@ import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.TeiidParentServerListener;
 import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
@@ -169,12 +170,11 @@ public final class ServerPage extends WizardPage {
                 // Need to stop the server manager from adding a teiid server
                 // since this page is in charge of that in this case.
                 
-                IServerLifecycleListener serverLifecycleListener = getServerManager().getServerLifeCycleListener();
-                DqpPlugin.getInstance().getServersProvider().removeServerLifecycleListener(serverLifecycleListener);
+                TeiidParentServerListener.getInstance().sleep();
                 
                 ServerUIUtil.showNewServerWizard(ServerPage.this.getShell(), null, null, null);
                 
-                DqpPlugin.getInstance().getServersProvider().addServerLifecycleListener(serverLifecycleListener);
+                TeiidParentServerListener.getInstance().wake();
             }
         });
     }
@@ -301,6 +301,9 @@ public final class ServerPage extends WizardPage {
          * the server is started will the settings be updated correctly.
          */
         teiidServer = factory.adaptServer(server, ServerOptions.NO_CHECK_CONNECTION);
+        if (teiidServer != null) {
+            teiidServer.getParent().addServerListener(TeiidParentServerListener.getInstance());
+        }
 
         display.asyncExec(new Runnable() {
             
