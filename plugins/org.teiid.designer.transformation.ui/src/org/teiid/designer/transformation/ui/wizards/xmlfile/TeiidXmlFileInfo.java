@@ -540,7 +540,10 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
     	
     	String string_2 = S_QUOTE + getDataFile().getName() + S_QUOTE;
     	if( isUrl() ) {
-    		string_2 = S_QUOTE + GET + S_QUOTE + COMMA + SPACE + NULL + COMMA + SPACE + S_QUOTE + getXmlFileUrl() + S_QUOTE;
+    		string_2 = S_QUOTE + GET + S_QUOTE
+    				+ COMMA + SPACE + NULL
+    				+ COMMA + SPACE + S_QUOTE + getXmlFileUrl() + S_QUOTE
+    				+ COMMA + SPACE + S_QUOTE + TRUE + S_QUOTE;
     	}
     	
     	String namespaceStr = getNamespaceString();
