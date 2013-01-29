@@ -9,6 +9,8 @@ package org.teiid.designer.runtime;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
+
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -24,7 +26,14 @@ import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.event.IChangeNotifier;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
+import org.teiid.designer.core.workspace.ModelWorkspaceNotification;
+import org.teiid.designer.core.workspace.ModelWorkspaceNotificationAdapter;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
+import org.teiid.designer.runtime.extension.rest.RestModelExtensionAssistant;
+import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants;
 
 
 /**
@@ -60,6 +69,9 @@ public class DqpPlugin extends Plugin {
      */
     public static PluginUtil Util = new PluginUtilImpl(PLUGIN_ID, I18N_NAME, ResourceBundle.getBundle(I18N_NAME));
 
+
+    private ModelWorkspaceNotificationAdapter workspaceListener = null;
+    
     /**
      * The shared instance.
      */
@@ -250,6 +262,31 @@ public class DqpPlugin extends Plugin {
 
         // initialize preferences
         initializeDefaultPreferences();
+        
+        // register to receive workspace model events
+        this.workspaceListener = new ModelWorkspaceNotificationAdapter() {
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.core.workspace.ModelWorkspaceNotificationAdapter#notifyReloaded(org.teiid.designer.core.workspace.ModelWorkspaceNotification)
+             */
+            @Override
+            public void notifyReloaded(ModelWorkspaceNotification notification) {
+                handleNewModelEvent(notification);
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.core.workspace.ModelWorkspaceNotificationAdapter#notifyAdd(org.teiid.designer.core.workspace.ModelWorkspaceNotification)
+             */
+            @Override
+            public void notifyAdd(ModelWorkspaceNotification notification) {
+                handleNewModelEvent(notification);
+            }
+        };
+        ModelWorkspaceManager.getModelWorkspaceManager().addNotificationListener(this.workspaceListener);
     }
 
     /**
@@ -268,6 +305,27 @@ public class DqpPlugin extends Plugin {
             }
         } finally {
             super.stop(context);
+        }
+    }
+    
+    /**
+     * @param notification the notification being handled (never <code>null</code>)
+     */
+    void handleNewModelEvent(final ModelWorkspaceNotification notification) {
+        if (notification.isPostChange()) {
+            final IResource model = (IResource)notification.getNotifier();
+
+            if (model != null) {
+                final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+                final String prefix = RestModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
+                final RestModelExtensionAssistant assistant = (RestModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
+
+                try {
+                    assistant.applyMedIfNecessary(model);
+                } catch (Exception e) {
+                    Util.log(e);
+                }
+            }
         }
     }
 
