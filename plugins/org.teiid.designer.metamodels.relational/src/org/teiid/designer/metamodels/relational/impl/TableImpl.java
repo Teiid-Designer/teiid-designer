@@ -82,7 +82,7 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
      * @generated
      * @ordered
      */
-    protected static final int CARDINALITY_EDEFAULT = 0;
+    protected static final int CARDINALITY_EDEFAULT = -1;
 
     /**
      * The cached value of the '{@link #getCardinality() <em>Cardinality</em>}' attribute.

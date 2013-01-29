@@ -31,7 +31,7 @@ public class RelationalTable extends RelationalReference {
     public static final String KEY_SUPPORTS_UPDATE = "SUPPORTSUPDATE"; //$NON-NLS-1$
     public static final String KEY_SYSTEM = "SYSTEM"; //$NON-NLS-1$
     
-    public static final String DEFAULT_CARDINALITY = null;
+    public static final int DEFAULT_CARDINALITY = -1;
     public static final boolean DEFAULT_MATERIALIZED = false;
     public static final String DEFAULT_MATERIALIZED_TABLE = null; 
     public static final boolean DEFAULT_SUPPORTS_UPDATE = true; 
@@ -39,11 +39,11 @@ public class RelationalTable extends RelationalReference {
     
     public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
 
-    private int  cardinality;
-    private boolean materialized;
-    private RelationalReference   materializedTable;
-    private boolean supportsUpdate;
-    private boolean system;
+    private int  cardinality = DEFAULT_CARDINALITY;
+    private boolean materialized = DEFAULT_MATERIALIZED;
+    private RelationalReference materializedTable;
+    private boolean supportsUpdate = DEFAULT_SUPPORTS_UPDATE;
+    private boolean system = DEFAULT_SYSTEM;
     private Collection<RelationalColumn> columns;
     private RelationalPrimaryKey primaryKey;
     private RelationalUniqueConstraint uniqueContraint;

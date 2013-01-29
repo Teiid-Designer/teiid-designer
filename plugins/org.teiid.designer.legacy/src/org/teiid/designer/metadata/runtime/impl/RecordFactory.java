@@ -122,11 +122,19 @@ public class RecordFactory {
      * @release 5.0
      */
     public static final int PROCEDURE_UPDATE_COUNT_VERSION = 9;
+    
+    /**
+     * The version number that is associated with the change made to set -1 as the default 
+     * table cardinality and that 0 is an allowed value 01/29/2013 (BML).
+     * @release 5.0
+     */
+    public static final int TABLE_CARDINALITY_MINUS_ONE_VERSION = 10;
+
 
     /**
      * The version number that is encoded with all newly created index records
      */
-    public static final int CURRENT_INDEX_VERSION = PROCEDURE_UPDATE_COUNT_VERSION;
+    public static final int CURRENT_INDEX_VERSION = TABLE_CARDINALITY_MINUS_ONE_VERSION;
 
     // ==================================================================================
     //                      P U B L I C   M E T H O D S
@@ -1157,6 +1165,10 @@ public class RecordFactory {
     
     private static boolean includeProcedureUpdateCount(final int indexVersionNumber) {
         return (indexVersionNumber >= PROCEDURE_UPDATE_COUNT_VERSION);
+    }
+    
+    private static boolean includeTableCardinalityOfMinusOne(final int indexVersionNumber) {
+        return (indexVersionNumber >= TABLE_CARDINALITY_MINUS_ONE_VERSION);
     }
 
     public static int getCurrentIndexVersionNumber() {
