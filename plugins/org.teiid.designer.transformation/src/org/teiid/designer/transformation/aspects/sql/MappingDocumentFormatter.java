@@ -72,6 +72,7 @@ import org.teiid.designer.metamodels.xml.util.XmlNamespaceComparator;
 import org.teiid.designer.metamodels.xsd.XsdUtil;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.xml.IMappingAttribute;
+import org.teiid.designer.xml.IMappingBaseNode;
 import org.teiid.designer.xml.IMappingChoiceNode;
 import org.teiid.designer.xml.IMappingCriteriaNode;
 import org.teiid.designer.xml.IMappingDocument;
@@ -642,18 +643,18 @@ public class MappingDocumentFormatter {
         }
     }
 
-    private IMappingNode createChoiceNode( IMappingNode parent,
+    private IMappingBaseNode createChoiceNode( IMappingBaseNode parent,
                                             final XmlChoice choice,
                                             final ElementInfo elementInfo ) {
         final IMappingCriteriaNode criteria = createCriteriaNode(choice);
         if (parent != null && parent instanceof IMappingChoiceNode && criteria != null)
-            ((IMappingChoiceNode)parent).addCriteriaNode(criteria);
+            parent.addChildNode(criteria);
 
         final IMappingChoiceNode choiceNode = getFactory().createMappingChoiceNode(choice.getDefaultErrorMode().getValue() == ChoiceErrorMode.THROW);
         choiceNode.setExclude(choice.isExcludeFromDocument());
         choiceNode.setSource(getSource(choice));
         if(parent != null)
-            parent.addChild(choiceNode);
+            parent.addChildNode(choiceNode);
 
         choiceNode.addStagingTable(getStagingTable(choice));
         return choiceNode;
@@ -692,13 +693,13 @@ public class MappingDocumentFormatter {
         
         IMappingDocument doc = getFactory().createMappingDocument(xmlDoc.getEncoding(), xmlDoc.isFormatted());
         IMappingElement node = processElementNode(xmlRoot, rootElementInfo, mappingContext);
-        doc.addChild(node);
+        doc.addChildNode(node);
         
         // Create the rest of the mapping node tree.
         // When creating the mapping node tree the server assumes that attributes
         // of an element are added before its child elements. The order below must
         // not be changed.
-        IMappingNode rootNode = doc.getRootNode();
+        IMappingBaseNode rootNode = doc.getRootNode();
         processNamespaces(xmlRoot.getDeclaredNamespaces(), rootNode, nsContext, rootElementInfo);
         processChildren(xmlRoot.getAttributes(), rootNode, nsContext, rootElementInfo);
         processChildren(xmlRoot.getComments(), rootNode, nsContext, rootElementInfo);
@@ -712,17 +713,17 @@ public class MappingDocumentFormatter {
      * @param rootMappingNode
      * @param rootElement
      */
-    private IMappingNode createElementNode( IMappingNode parent,
+    private IMappingBaseNode createElementNode( IMappingBaseNode parent,
                                              final XmlElement element,
                                              final ElementInfo elementInfo,
                                              final MappingContext mappingContext ) {
         final IMappingCriteriaNode criteria = createCriteriaNode(element);
         if (parent != null && parent instanceof IMappingChoiceNode && criteria != null) 
-            ((IMappingChoiceNode) parent).addCriteriaNode(criteria);
+            parent.addChildNode(criteria);
 
         final IMappingElement node = processElementNode(element, elementInfo, mappingContext);
         if (parent != null)
-            parent.addChild(node);
+            parent.addChildNode(node);
         
         return node;
     }
@@ -757,13 +758,13 @@ public class MappingDocumentFormatter {
      * @param context the namespace context for this entity ...
      */
     private void createMapping( final XmlDocumentEntity entity,
-                                  final IMappingNode parent,
+                                  final IMappingBaseNode parent,
                                   final NamespaceContext namespaceContext,
                                   final MappingContext mappingContext,
                                   final ElementInfo parentInfo ) {
         // 
         final int classifierId = entity.eClass().getClassifierID();
-        IMappingNode entityMappingNode = null;
+        IMappingBaseNode entityMappingNode = null;
         ElementInfo entityInfo = parentInfo;
         NamespaceContext entityNamespaceContext = namespaceContext;
         switch (classifierId) {
@@ -837,21 +838,21 @@ public class MappingDocumentFormatter {
      * @param rootMappingNode
      * @param rootElement
      */
-    private IMappingNode createSequenceNode( IMappingNode parent,
+    private IMappingBaseNode createSequenceNode( IMappingBaseNode parent,
                                               final XmlContainerNode compositor,
                                               final ElementInfo elementInfo ) {
         final IMappingCriteriaNode criteria = createCriteriaNode(compositor);
         if (parent != null && parent instanceof IMappingChoiceNode && criteria != null)
-            ((IMappingChoiceNode)parent).addCriteriaNode(criteria);
+            parent.addChildNode(criteria);
 
-        IMappingNode seqNode = null;
+        IMappingBaseNode seqNode = null;
         if (compositor instanceof XmlSequence)
             seqNode = getFactory().createMappingSequenceNode();
         else if (compositor instanceof XmlAll)
             seqNode = getFactory().createMappingAllNode();
         
         if(seqNode != null) {
-            parent.addChild(seqNode);
+            parent.addChildNode(seqNode);
             seqNode.setExclude(compositor.isExcludeFromDocument());
             seqNode.setSource(getSource(compositor));
             seqNode.addStagingTable(getStagingTable(compositor));
@@ -1109,7 +1110,7 @@ public class MappingDocumentFormatter {
     }
 
     private void processChildren( final List children,
-                                    final IMappingNode parentMappingNode,
+                                    final IMappingBaseNode parentMappingNode,
                                     final NamespaceContext namespaceContext,
                                     final ElementInfo parentInfo ) {
         final Iterator iter = children.iterator();
@@ -1188,7 +1189,7 @@ public class MappingDocumentFormatter {
     }
 
     private void processNamespaces( final List children,
-                                      final IMappingNode parentMappingNode,
+                                      final IMappingBaseNode parentMappingNode,
                                       final NamespaceContext namespaceContext,
                                       final ElementInfo parentInfo ) {
         final List orderedNamespaces = new LinkedList(children);

@@ -10,7 +10,7 @@ package org.teiid.designer.xml;
 /**
  *
  */
-public interface IMappingNode<N extends IMappingNode> {
+public interface IMappingNode {
     
     /** The default build in type */
     String DEFAULT_BUILT_IN_TYPE = ""; //$NON-NLS-1$
@@ -41,31 +41,12 @@ public interface IMappingNode<N extends IMappingNode> {
     String NORMALIZE_TEXT_COLLAPSE = "collapse"; //$NON-NLS-1$
     
     /** The default value for normalize text */
-    String DEFAULT_NORMALIZE_TEXT = NORMALIZE_TEXT_PRESERVE;
-    
-    
-    
-    /**
-     * @param node
-     * 
-     * @return added node
-     */
-    void addChild(N node);
+    String DEFAULT_NORMALIZE_TEXT = NORMALIZE_TEXT_PRESERVE; 
 
     /**
      * @param excludeFromDocument
      */
     void setExclude(boolean excludeFromDocument);
-
-    /**
-     * @param source
-     */
-    void setSource(String source);
-
-    /**
-     * @param stagingTable
-     */
-    void addStagingTable(String stagingTable);
 
     /**
      * @return

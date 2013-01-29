@@ -12,27 +12,12 @@ package org.teiid.designer.xml;
  *
  */
 public interface IMappingElement<A extends IMappingAttribute, N extends IMappingNode>
-    extends IMappingNode<N> {
-
-    /**
-     * @param minOccurrences
-     */
-    void setMinOccurrs(int minOccurrences);
-
-    /**
-     * @param maxOccurrences
-     */
-    void setMaxOccurrs(int maxOccurrences);
+    extends IMappingBaseNode<N> {
 
     /**
      * @param nameInSource
      */
     void setNameInSource(String nameInSource);
-
-    /**
-     * @param source
-     */
-    void setSource(String source);
 
     /**
      * @param defaultValue
@@ -50,11 +35,6 @@ public interface IMappingElement<A extends IMappingAttribute, N extends IMapping
     void setNillable(boolean nillable);
 
     /**
-     * @param excludeFromDocument
-     */
-    void setExclude(boolean excludeFromDocument);
-
-    /**
      * @param buitInType
      */
     void setType(String buitInType);
@@ -63,11 +43,6 @@ public interface IMappingElement<A extends IMappingAttribute, N extends IMapping
      * @param xsiTypeTextNormalization
      */
     void setNormalizeText(String xsiTypeTextNormalization);
-
-    /**
-     * @param stagingTable
-     */
-    void addStagingTable(String stagingTable);
 
     /**
      * @param attribute
