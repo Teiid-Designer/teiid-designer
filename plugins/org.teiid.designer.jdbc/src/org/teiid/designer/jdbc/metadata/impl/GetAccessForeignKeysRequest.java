@@ -52,12 +52,13 @@ public class GetAccessForeignKeysRequest extends MetadataRequest {
         // Override to optimize ...
         final Connection connection = (Connection)this.getTarget();
         IStatus status = null;
+        ResultSet foreignKeys = null;
         try {
             final String catalogPattern = (String)getParameters()[0];
             final String schemaPattern = (String)getParameters()[1];
             final String tablePattern = (String)getParameters()[2];
             Statement stmt = connection.createStatement();
-            ResultSet foreignKeys = stmt.executeQuery("SELECT szRelationship, szReferencedObject, szColumn, szReferencedColumn FROM MSysRelationships WHERE szObject like '" + tablePattern + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+            foreignKeys = stmt.executeQuery("SELECT szRelationship, szReferencedObject, szColumn, szReferencedColumn FROM MSysRelationships WHERE szObject like '" + tablePattern + "'"); //$NON-NLS-1$ //$NON-NLS-2$
             while (foreignKeys.next()) {
                 String fkName = foreignKeys.getString(1);// FK_NAME
                 // if FK has no name - make it up (use tablename instead)
@@ -82,10 +83,18 @@ public class GetAccessForeignKeysRequest extends MetadataRequest {
                 row.add("Primary key"); //$NON-NLS-1$
                 row.add(null);
                 results.addRecord(row);
-            }
+            } 
 
         } catch (SQLException e) {
             status = JdbcUtil.createIStatus(e, e.getLocalizedMessage());
+        } finally {
+            if (foreignKeys != null) {
+                try {
+                	foreignKeys.close();
+                } catch (SQLException e) {
+                    JdbcPlugin.Util.log(e);
+                }
+            }
         }
         return status;
     }

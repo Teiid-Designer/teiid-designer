@@ -555,6 +555,18 @@ public class PreviewDataWorker {
         planRs.next();
         executionPlan = planRs.getString("PLAN_XML"); //$NON-NLS-1$
         
+        try {
+        	stmt.close();
+        } catch (SQLException e) {
+            DqpPlugin.Util.log(e);
+        }
+        
+        try {
+        	planRs.close();
+        } catch (SQLException e) {
+            DqpPlugin.Util.log(e);
+        }
+        
         return executionPlan;
     }
 

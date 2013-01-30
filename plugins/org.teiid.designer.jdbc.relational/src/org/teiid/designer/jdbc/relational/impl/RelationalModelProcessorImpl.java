@@ -64,6 +64,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.jdbc.CaseConversion;
 import org.teiid.designer.jdbc.JdbcException;
 import org.teiid.designer.jdbc.JdbcImportSettings;
+import org.teiid.designer.jdbc.JdbcPlugin;
 import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.jdbc.SourceNames;
 import org.teiid.designer.jdbc.data.Request;
@@ -2649,7 +2650,15 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
 	                                              org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants.PLUGIN_ID, 0,
 	                                              msg, ex);
 	            problems.add(status);
-			}
+			}  finally {
+				if (cats != null) {
+	                try {
+	                    cats.close();
+	                } catch (SQLException e) {
+	                    JdbcPlugin.Util.log(e);
+	                }
+				}
+            }
 	    }
         
         return finalName;

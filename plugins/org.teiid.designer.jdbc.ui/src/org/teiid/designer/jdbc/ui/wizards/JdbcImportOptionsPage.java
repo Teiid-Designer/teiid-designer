@@ -9,6 +9,7 @@ package org.teiid.designer.jdbc.ui.wizards;
 
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -485,6 +486,11 @@ public class JdbcImportOptionsPage extends WizardPage implements
                     if( catalogName.length() > 0 ) {
                         supportsCatalogs = true;
                     }
+                } 
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    JdbcPlugin.Util.log(e);
                 }
                 
                 if( supportsCatalogs ) {
