@@ -9,6 +9,7 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -100,9 +101,10 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 			// Includes a radio button and description for 
 			//  1) Generate Default Procedures and 
 			//  2) Customize Request & Response
-			Group group = WidgetFactory.createGroup(pnlMain, Messages.ProcedureGenerationOptions, SWT.NONE | SWT.BORDER, 1);
-			group.setLayout(new GridLayout(1, false));
-			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			Group group = WidgetFactory.createGroup(pnlMain, 
+			                                        Messages.ProcedureGenerationOptions, 
+			                                        GridData.HORIZONTAL_ALIGN_FILL, 
+			                                        1);
 			
 			generateCustomProceduresButton = WidgetFactory.createRadioButton(group, Messages.CustomProcedures, true);
 			generateCustomProceduresButton.addSelectionListener(new SelectionListener() {
@@ -120,10 +122,12 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 			Text customProceduresHelpText = new Text(group, SWT.WRAP | SWT.READ_ONLY);
 			customProceduresHelpText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
 			customProceduresHelpText.setForeground(WidgetUtil.getDarkBlueColor());
-			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-			gd.heightHint = 40;
-			customProceduresHelpText.setLayoutData(gd);
 			customProceduresHelpText.setText(Messages.OptionDefineCustomProcures);
+			GridDataFactory.swtDefaults()
+                                        .hint(400, SWT.DEFAULT)
+                                        .align(SWT.FILL,SWT.FILL)
+                                        .grab(true, true)
+                                        .applyTo(customProceduresHelpText);
 			
 			generateDefaultProceduresButton = WidgetFactory.createRadioButton(group, Messages.DefaultProcedures, false);
 			generateDefaultProceduresButton.addSelectionListener(new SelectionListener() {
@@ -141,10 +145,12 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 			Text defaultProceduresHelpText = new Text(group, SWT.WRAP | SWT.READ_ONLY);
 			defaultProceduresHelpText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
 			defaultProceduresHelpText.setForeground(WidgetUtil.getDarkBlueColor());
-			gd = new GridData(GridData.FILL_VERTICAL);
-			gd.heightHint = 40;
-			defaultProceduresHelpText.setLayoutData(gd);
 			defaultProceduresHelpText.setText(Messages.OptionDefineDefaultProcedures);
+			GridDataFactory.swtDefaults()
+			                            .hint(400, SWT.DEFAULT)
+			                            .align(SWT.FILL,SWT.FILL)
+			                            .grab(true, true)
+			                            .applyTo(defaultProceduresHelpText);
 		}
 	}
 	
