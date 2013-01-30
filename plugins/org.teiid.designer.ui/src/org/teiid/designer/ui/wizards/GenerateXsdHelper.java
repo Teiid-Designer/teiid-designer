@@ -429,8 +429,11 @@ public class GenerateXsdHelper {
                 index++;
 
             }
-
-            newSql.append(TransformationHelper.getSqlEObjectFullName(source));
+            if( source instanceof ProcedureResult) { 
+            	newSql.append(TransformationHelper.getSqlEObjectFullName(((ProcedureResult)source).getProcedure()));
+            } else {
+            	newSql.append(TransformationHelper.getSqlEObjectFullName(source));
+            }
 
             // Handle the input sets for the non-flat scenario
             if (!ops.isFlat()) {
