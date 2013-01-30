@@ -7,22 +7,33 @@
  */
 package org.teiid.designer.ui.wizards;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-
+import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.datatools.sqltools.editor.core.connection.ISQLEditorConnectionInfo;
+import org.eclipse.datatools.sqltools.internal.sqlscrapbook.SqlscrapbookPlugin;
+import org.eclipse.datatools.sqltools.internal.sqlscrapbook.editor.SQLScrapbookEditor;
+import org.eclipse.datatools.sqltools.internal.sqlscrapbook.util.SQLFileUtil;
+import org.eclipse.datatools.sqltools.sqleditor.SQLEditorConnectionInfo;
+import org.eclipse.datatools.sqltools.sqleditor.SQLEditorStorage;
+import org.eclipse.datatools.sqltools.sqleditor.SQLEditorStorageEditorInput;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -37,6 +48,9 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
@@ -54,13 +68,17 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceFilter;
@@ -83,6 +101,7 @@ import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
@@ -99,6 +118,24 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 public final class ExportDdlWizard extends AbstractWizard
     implements FileUtils.Constants, IExportWizard, InternalUiConstants.Widgets, PluginConstants.Images, CoreStringUtil.Constants,
     UiConstants {
+
+    private enum ExportChoice {
+        CLIPBOARD(getString("clipboardChoiceLabel")), //$NON-NLS-1$
+
+        FILE(getString("fileChoiceLabel")), //$NON-NLS-1$
+
+        SQL(getString("sqlChoiceLabel")); //$NON-NLS-1$
+
+        private final String label;
+
+        private ExportChoice(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+    }
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ExportDdlWizard.class);
 
@@ -128,12 +165,15 @@ public final class ExportDdlWizard extends AbstractWizard
     private static final String INVALID_SELECTION_INITIAL_MESSAGE = getString("initialMessageInvalidSelection"); //$NON-NLS-1$
     private static final String NO_SELECTIONS_MESSAGE = getString("noSelectionsMessage"); //$NON-NLS-1$
     private static final String NO_TYPE_MESSAGE = getString("noTypeMessage"); //$NON-NLS-1$
+    private static final String NO_EXPORT_TO_CHOICE_MESSAGE = getString("noExportChoiceMessage");  //$NON-NLS-1$
     private static final String NO_FILE_MESSAGE = getString("noFileMessage"); //$NON-NLS-1$
     private static final String INVALID_FILE_MESSAGE = getString("invalidFileMessage"); //$NON-NLS-1$
     private static final String EXPORT_ERROR_MESSAGE = getString("exportErrorMessage"); //$NON-NLS-1$
 
     private static final String DDL_EXTENSION = FILE_EXTENSION_SEPARATOR + "ddl"; //$NON-NLS-1$
 
+    private static Clipboard CLIPBOARD;
+    
     /**
      * @since 4.0
      */
@@ -141,11 +181,12 @@ public final class ExportDdlWizard extends AbstractWizard
         return Util.getString(I18N_PREFIX + id);
     }
 
-    DdlWriter writer;
-    ModelWorkspaceSelections selections;
+    private DdlWriter writer;
+    private ModelWorkspaceSelections selections;
     private ModelWorkspaceSelectionFilter selectionFilter;
+    private ExportChoice exportChoice;
     private File file;
-    IStatus status;
+    private IStatus status;
     private IStructuredSelection selection;
 
     private WizardPage pg;
@@ -154,7 +195,6 @@ public final class ExportDdlWizard extends AbstractWizard
     private Button useNamesInSourceCheckBox, useNativeTypeCheckBox, enforceUniqueNamesCheckBox;
     private Combo typeCombo, fileCombo;
     
-    //private String invalidSelectionMessage;
     private boolean invalidSelection;
 
     /**
@@ -163,6 +203,91 @@ public final class ExportDdlWizard extends AbstractWizard
     public ExportDdlWizard() {
         super(UiPlugin.getDefault(), TITLE, IMAGE);
     }
+    
+    /*
+     * Write the DDL to the given output stream
+     */
+    private void writeToStream(final OutputStream stream) throws Exception {
+        new ProgressMonitorDialog(getShell()).run(false, true, new IRunnableWithProgress() {
+            @Override
+            public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
+                try {
+                    status = ExportDdlWizard.this.writer.write(ExportDdlWizard.this.selections,
+                                                                                    stream,
+                                                                                    monitor);
+                } catch (final Exception err) {
+                    throw new InvocationTargetException(err);
+                } finally {
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
+                        Util.log(e);
+                    }
+                    monitor.done();
+                }
+            }
+        });
+
+        if (!status.isOK()) {
+            Util.log(status);
+            WidgetUtil.showError(EXPORT_ERROR_MESSAGE);
+        }
+    }
+
+    private void exportToFile() throws Exception {
+        if (file == null || (file.exists() && !WidgetUtil.confirmOverwrite(file))) {
+            return;
+        }
+
+        writeToStream(new FileOutputStream(file));
+    }
+
+    private void exportToClipboard() throws Exception {
+        if (CLIPBOARD == null || CLIPBOARD.isDisposed())
+            WidgetUtil.showError(EXPORT_ERROR_MESSAGE);
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        writeToStream(stream);
+        CLIPBOARD.setContents(new Object[] { stream.toString() }, new Transfer[] { TextTransfer.getInstance() });
+    }
+
+    private void exportToSQLWorkbook() throws Exception {
+        String scrap = StringUtilities.EMPTY_STRING;
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        writeToStream(stream);
+
+        ISQLEditorConnectionInfo editorConnectionInfo = new SQLEditorConnectionInfo(null, scrap, scrap);
+        SQLEditorStorageEditorInput editorStorageEditorInput = new SQLEditorStorageEditorInput(scrap, scrap);
+
+        editorStorageEditorInput.setStorage(new SQLEditorStorage(stream.toString()));
+        editorStorageEditorInput.setConnectionInfo(SQLFileUtil.getConnectionInfo4Scrapbook(editorConnectionInfo));
+
+        IWorkbenchWindow window = UiUtil.getWorkbenchWindow();
+
+        // the name will show as the title of the editor
+        IEditorReference[] editors = window.getActivePage().getEditorReferences();
+        int suffix = 0;
+        List editorNameList = new ArrayList();
+        for (int i = 0; i < editors.length; i++) {
+            editorNameList.add(editors[i].getName());
+        }
+
+        for (;;) {
+            String name = "SQL Scrapbook" + Integer.toString(suffix); //$NON-NLS-1$
+            if (!editorNameList.contains(name)) {
+                editorStorageEditorInput.setName(name);
+                try {
+                    window.getActivePage().openEditor(editorStorageEditorInput,
+                            SQLScrapbookEditor.EDITOR_ID);
+                } catch (PartInitException e) {
+                    SqlscrapbookPlugin.log(e);
+                }
+                break;
+            }
+            suffix++;
+        }
+    }
 
     /**
      * @see org.eclipse.jface.wizard.IWizard#performFinish()
@@ -170,34 +295,19 @@ public final class ExportDdlWizard extends AbstractWizard
      */
     @Override
     public boolean finish() {
-        if (this.file.exists() && !WidgetUtil.confirmOverwrite(this.file)) {
-            return false;
-        }
+
         try {
-            final FileOutputStream stream = new FileOutputStream(this.file);
-            new ProgressMonitorDialog(getShell()).run(false, true, new IRunnableWithProgress() {
-                @Override
-				public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
-                    try {
-                        ExportDdlWizard.this.status = ExportDdlWizard.this.writer.write(ExportDdlWizard.this.selections,
-                                                                                        stream,
-                                                                                        monitor);
-                    } catch (final Exception err) {
-                        throw new InvocationTargetException(err);
-                    } finally {
-                        try {
-                            stream.close();
-                        } catch (IOException e) {
-                            Util.log(e);
-                        }
-                        monitor.done();
-                    }
-                }
-            });
-            if (!this.status.isOK()) {
-                Util.log(this.status);
-                WidgetUtil.showError(EXPORT_ERROR_MESSAGE);
+            switch (exportChoice) {
+                case FILE:
+                    exportToFile();
+                    break;
+                case CLIPBOARD:
+                    exportToClipboard();
+                    break;
+                case SQL:
+                    exportToSQLWorkbook();
             }
+
             // Save settings for next time wizard is run
             final IDialogSettings settings = getDialogSettings();
             settings.put(TYPE_LABEL, typeCombo.getText());
@@ -228,6 +338,11 @@ public final class ExportDdlWizard extends AbstractWizard
     @Override
 	public void init( final IWorkbench workbench,
                       final IStructuredSelection selection ) {
+
+        if (CLIPBOARD == null) {
+            CLIPBOARD = new Clipboard(workbench.getDisplay());
+        }
+
     	invalidSelection = false;
     	//invalidSelectionMessage = null;
     	// Check for selection to be a single Relational Model
@@ -263,6 +378,80 @@ public final class ExportDdlWizard extends AbstractWizard
 
         this.pg.setPageComplete(false);
         addPage(pg);
+    }
+
+    private void createExportToSection(final Composite pg, final IDialogSettings settings) {
+        Group exportToGroup = WidgetFactory.createGroup(pg, FILE_GROUP, GridData.FILL_HORIZONTAL, 1, 1);
+
+        Composite buttonComposite = new Composite(exportToGroup, SWT.NONE);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonComposite);
+        GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 10).applyTo(buttonComposite);
+
+        final Composite exportToFilePanel = new Composite(exportToGroup, SWT.NONE);
+        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 50).applyTo(exportToFilePanel);
+        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(exportToFilePanel);
+
+        /* Contents of button composite */
+
+        Button clipboardButton = WidgetFactory.createButton(buttonComposite,
+                                                            ExportChoice.CLIPBOARD.getLabel(),
+                                                            GridData.HORIZONTAL_ALIGN_CENTER | GridData.GRAB_HORIZONTAL, 
+                                                            1, SWT.RADIO);
+        clipboardButton.setToolTipText(getString("clipboardTooltip")); //$NON-NLS-1$
+        clipboardButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                exportChoice = ExportChoice.CLIPBOARD;
+                validatePage();
+                exportToFilePanel.setVisible(false);
+            }
+        });
+
+        Button fileButton = WidgetFactory.createButton(buttonComposite,
+                                                           ExportChoice.FILE.getLabel(),
+                                                           GridData.HORIZONTAL_ALIGN_CENTER | GridData.GRAB_HORIZONTAL,
+                                                           1, SWT.RADIO);
+        fileButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                exportChoice = ExportChoice.FILE;
+                validatePage();
+                exportToFilePanel.setVisible(true);
+            }
+        });
+
+        Button sqlButton = WidgetFactory.createButton(buttonComposite,
+                                                          ExportChoice.SQL.getLabel(),
+                                                          GridData.HORIZONTAL_ALIGN_CENTER | GridData.GRAB_HORIZONTAL, 
+                                                          1, SWT.RADIO);
+        sqlButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                exportChoice = ExportChoice.SQL;
+                validatePage();
+                exportToFilePanel.setVisible(false);
+            }
+        });
+
+        /* Contents of export file panel */
+
+        WidgetFactory.createLabel(exportToFilePanel, FILE_LABEL);
+        this.fileCombo = WidgetFactory.createCombo(exportToFilePanel, SWT.NONE, GridData.FILL_HORIZONTAL, settings.getArray(FILE_LABEL));
+        this.fileCombo.addModifyListener(new ModifyListener() {
+            @Override
+            public void modifyText(final ModifyEvent event) {
+                fileModified();
+            }
+        });
+
+        WidgetFactory.createButton(exportToFilePanel, FILE_BUTTON).addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+                fileButtonSelected();
+            }
+        });
+
+        exportToFilePanel.setVisible(false);
     }
 
     /**
@@ -522,28 +711,15 @@ public final class ExportDdlWizard extends AbstractWizard
             
 
         }
-        group = WidgetFactory.createGroup(pg, FILE_GROUP, GridData.FILL_HORIZONTAL, 1, 3);
-        {
-            WidgetFactory.createLabel(group, FILE_LABEL);
-            this.fileCombo = WidgetFactory.createCombo(group, SWT.NONE, GridData.FILL_HORIZONTAL, settings.getArray(FILE_LABEL));
-            this.fileCombo.addModifyListener(new ModifyListener() {
-                @Override
-				public void modifyText( final ModifyEvent event ) {
-                    fileModified();
-                }
-            });
-            WidgetFactory.createButton(group, FILE_BUTTON).addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                    fileButtonSelected();
-                }
-            });
-        }
+
+        /* ### EXPORT TO SECTION ### */
+        createExportToSection(pg, settings);
+
         // Initialize widgets
         if (this.selection != null && !invalidSelection) {
             final ArrayList objs = new ArrayList(this.selection.size());
             final Iterator iter = this.selection.iterator();
-            for (int ndx = 0; iter.hasNext(); ++ndx) {
+            while(iter.hasNext()) {
                 final Object obj = iter.next();
                 final IPath path = (obj instanceof IResource ? ((IResource)obj).getFullPath() : view.getPath(obj));
                 try {
@@ -577,7 +753,7 @@ public final class ExportDdlWizard extends AbstractWizard
      * 
      * @since 4.0
      */
-    void infoCommentsCheckBoxSelected() {
+    private void infoCommentsCheckBoxSelected() {
         this.writer.getOptions().setGenerateInfoComments(this.infoCommentsCheckBox.getSelection());
     }
 
@@ -587,7 +763,7 @@ public final class ExportDdlWizard extends AbstractWizard
      * 
      * @since 4.0
      */
-    void tableCommentsCheckBoxSelected() {
+    private void tableCommentsCheckBoxSelected() {
         this.writer.getOptions().setGenerateTableComments(this.tableCommentsCheckBox.getSelection());
     }
     
@@ -597,7 +773,7 @@ public final class ExportDdlWizard extends AbstractWizard
      * 
      * @since 4.0
      */
-    void columnCommentsCheckBoxSelected() {
+    private void columnCommentsCheckBoxSelected() {
         this.writer.getOptions().setGenerateColumnComments(this.columnCommentsCheckBox.getSelection());
     }
     /**
@@ -606,7 +782,7 @@ public final class ExportDdlWizard extends AbstractWizard
      * 
      * @since 4.0
      */
-    void dropStatementsCheckBoxSelected() {
+    private void dropStatementsCheckBoxSelected() {
         this.writer.getOptions().setGenerateDropStatements(this.dropStatementsCheckBox.getSelection());
     }
 
@@ -616,7 +792,7 @@ public final class ExportDdlWizard extends AbstractWizard
      * 
      * @since 4.0
      */
-    void useNamesInSourceCheckBoxSelected() {
+    private void useNamesInSourceCheckBoxSelected() {
         this.writer.getOptions().setNameInSourceUsed(this.useNamesInSourceCheckBox.getSelection());
     }
 
@@ -626,7 +802,7 @@ public final class ExportDdlWizard extends AbstractWizard
      * 
      * @since 4.0
      */
-    void useNativeTypeCheckBoxSelected() {
+    private void useNativeTypeCheckBoxSelected() {
         this.writer.getOptions().setNativeTypeUsed(this.useNativeTypeCheckBox.getSelection());
     }
 
@@ -636,7 +812,7 @@ public final class ExportDdlWizard extends AbstractWizard
      * 
      * @since 4.0
      */
-    void enforceUniqueNamesCheckBoxSelected() {
+    private void enforceUniqueNamesCheckBoxSelected() {
         this.writer.getOptions().setUniqueNamesEnforced(this.enforceUniqueNamesCheckBox.getSelection());
     }
 
@@ -646,7 +822,7 @@ public final class ExportDdlWizard extends AbstractWizard
      * 
      * @since 4.0
      */
-    void fileButtonSelected() {
+    private void fileButtonSelected() {
         // Display file dialog for user to choose libraries
         final FileDialog dlg = new FileDialog(getShell(), SWT.SAVE | SWT.SINGLE);
         dlg.setFilterExtensions(new String[] {"*.ddl", "*.sql", "*.*"}); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
@@ -668,7 +844,7 @@ public final class ExportDdlWizard extends AbstractWizard
      * 
      * @since 4.0
      */
-    void fileModified() {
+    private void fileModified() {
         String file = this.fileCombo.getText();
         if( file != null && file.length() > 0 ) {
 	        final char lastChr = file.charAt(file.length() - 1);
@@ -686,7 +862,7 @@ public final class ExportDdlWizard extends AbstractWizard
      * 
      * @since 4.0
      */
-    void mouseClicked( final MouseEvent event ) {
+    private void mouseClicked( final MouseEvent event ) {
         // Return if not left-click
         if (event.button != 1) {
             return;
@@ -710,7 +886,7 @@ public final class ExportDdlWizard extends AbstractWizard
      * 
      * @since 4.0
      */
-    void nodeDoubleClicked( final DoubleClickEvent event ) {
+    private void nodeDoubleClicked( final DoubleClickEvent event ) {
         final Object node = ((IStructuredSelection)event.getSelection()).getFirstElement();
         this.viewer.setExpandedState(node, !this.viewer.getExpandedState(node));
     }
@@ -721,7 +897,7 @@ public final class ExportDdlWizard extends AbstractWizard
      * 
      * @since 4.0
      */
-    void nodeExpanded( final TreeExpansionEvent event ) {
+    private void nodeExpanded( final TreeExpansionEvent event ) {
         nodeExpandedOrCollapsed(event);
         updateCheckBoxes(this.viewer.getTree().getSelection()[0].getItems());
     }
@@ -732,7 +908,7 @@ public final class ExportDdlWizard extends AbstractWizard
      * 
      * @since 4.0
      */
-    void nodeExpandedOrCollapsed( final TreeExpansionEvent event ) {
+    private void nodeExpandedOrCollapsed( final TreeExpansionEvent event ) {
         this.viewer.setSelection(new StructuredSelection(event.getElement()));
     }
 
@@ -742,7 +918,7 @@ public final class ExportDdlWizard extends AbstractWizard
      * 
      * @since 4.0
      */
-    void schemasCheckBoxSelected() {
+    private void schemasCheckBoxSelected() {
         this.writer.getOptions().setGenerateSchema(this.schemaCheckBox.getSelection());
     }
 
@@ -752,7 +928,7 @@ public final class ExportDdlWizard extends AbstractWizard
      * 
      * @since 4.0
      */
-    void typeModified() {
+    private void typeModified() {
         final Style style = DdlPlugin.getStyleRegistry().getStyle(this.typeCombo.getText());
         this.writer.getOptions().setStyle(style);
         if (style != null) {
@@ -829,12 +1005,16 @@ public final class ExportDdlWizard extends AbstractWizard
             WizardUtil.setPageComplete(this.pg, NO_SELECTIONS_MESSAGE, IMessageProvider.ERROR);
         } else if (this.writer.getOptions().getStyle() == null) {
             WizardUtil.setPageComplete(this.pg, NO_TYPE_MESSAGE, IMessageProvider.ERROR);
-        } else if (this.file == null) {
-            WizardUtil.setPageComplete(this.pg, NO_FILE_MESSAGE, IMessageProvider.ERROR);
-        } else if (this.file.isDirectory()) {
-            WizardUtil.setPageComplete(this.pg, INVALID_FILE_MESSAGE, IMessageProvider.ERROR);
-        } else if (this.file.exists()) {
-            WizardUtil.setPageComplete(this.pg, WidgetUtil.getFileExistsMessage(this.file), IMessageProvider.WARNING);
+        } else if (exportChoice == null) {
+            WizardUtil.setPageComplete(this.pg, NO_EXPORT_TO_CHOICE_MESSAGE, IMessageProvider.ERROR);
+        } else if (ExportChoice.FILE.equals(exportChoice)) {
+            if (this.file == null) {
+                WizardUtil.setPageComplete(this.pg, NO_FILE_MESSAGE, IMessageProvider.ERROR);
+            } else if (this.file.isDirectory()) {
+                WizardUtil.setPageComplete(this.pg, INVALID_FILE_MESSAGE, IMessageProvider.ERROR);
+            } else if (this.file.exists()) {
+                WizardUtil.setPageComplete(this.pg, WidgetUtil.getFileExistsMessage(this.file), IMessageProvider.WARNING);
+            }
         } else {
             WizardUtil.setPageComplete(this.pg);
         }
