@@ -10,19 +10,17 @@ package org.komodo.shell.command;
 import java.util.HashMap;
 import org.komodo.common.i18n.I18n;
 import org.komodo.common.util.Precondition;
+import org.komodo.common.util.StringUtil;
 import org.komodo.repository.RepositoryManager;
 import org.komodo.repository.artifact.Artifact;
+import org.komodo.repository.artifact.VdbArtifact;
 import org.komodo.shell.ShellI18n;
 import org.overlord.sramp.client.query.QueryResultSet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A shell command that finds all VDBs in a repository with a matching name and version. 
  */
 public class GetVdbCommand extends KomodoCommand {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(GetVdbCommand.class);
 
     /**
      * The unqualified name of the get VDB command. Value is {@value}.
@@ -30,22 +28,33 @@ public class GetVdbCommand extends KomodoCommand {
     public static final String NAME = "getVdb"; //$NON-NLS-1$
 
     /**
-     * {@inheritDoc}
-     *
-     * @see org.komodo.shell.command.KomodoCommand#doExecute(java.lang.String[])
+     * Constructs a non-cancelable command.
      */
+    public GetVdbCommand() {
+        super();
+    }
+
+    /**
+     * @param cancelable indicates if the command is cancelable
+     */
+    public GetVdbCommand(final boolean cancelable) {
+        super(cancelable);
+    }
+
     @Override
-    void doExecute(final String... args) throws Exception {
+    protected Object doExecute(final String... args) throws Exception {
         Precondition.notNull(args, "args"); //$NON-NLS-1$
         Precondition.notEmpty(args[0], "vdbName"); //$NON-NLS-1$
         Precondition.notEmpty(args[1], "version"); //$NON-NLS-1$
 
+        this.logger.debug("executing '{}' with cancelable '{}' and params '{}'", new Object[] {getClass().getSimpleName(), //$NON-NLS-1$
+            isCancelable(), StringUtil.createDelimitedString(args)});
+
         final String vdbName = args[0];
         final String version = args[1];
-        LOGGER.debug("Executing GetVdbCommand.doExcecute with VDB name '{}' and version '{}'", vdbName, version); //$NON-NLS-1$
 
         final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
-        settings.artifactType = Artifact.Type.VDB;
+        settings.artifactType = VdbArtifact.TYPE;
         settings.params = new HashMap<String, String>();
         settings.params.put(Artifact.Property.NAME, vdbName);
         settings.params.put(Artifact.Property.VERSION, version);
@@ -54,7 +63,7 @@ public class GetVdbCommand extends KomodoCommand {
 
         if (repoMgr == null) {
             print(ShellI18n.connectionNotFound);
-            return;
+            return ERROR;
         }
 
         final QueryResultSet results = repoMgr.query(settings);
@@ -64,12 +73,14 @@ public class GetVdbCommand extends KomodoCommand {
         } else {
             print(I18n.bind(ShellI18n.matchingVdbsFoundInRepository, results.size(), vdbName, version));
         }
+
+        return results;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see org.overlord.sramp.shell.ShellCommand#printHelp()
+     * @see org.overlord.sramp.shell.api.ShellCommand#printHelp()
      */
     @Override
     public void printHelp() {
@@ -79,7 +90,7 @@ public class GetVdbCommand extends KomodoCommand {
     /**
      * {@inheritDoc}
      *
-     * @see org.overlord.sramp.shell.ShellCommand#printUsage()
+     * @see org.overlord.sramp.shell.api.ShellCommand#printUsage()
      */
     @Override
     public void printUsage() {

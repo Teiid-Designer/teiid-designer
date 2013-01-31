@@ -7,11 +7,12 @@
 */
 package org.komodo.shell.command;
 
-import java.util.HashMap;
-import static org.junit.Assert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import java.util.HashMap;
 import org.junit.Test;
 import org.komodo.repository.artifact.Artifact;
+import org.komodo.repository.artifact.VdbArtifact;
 
 /**
  * A test class of a {@link GetVdbCommand}.
@@ -39,13 +40,13 @@ public class GetVdbCommandTest extends ShellCommandTest {
     public void shouldObtainOneTwitterVdb() throws Exception {
         final AddVdbCommand addCmd = new AddVdbCommand();
         addCmd.setContext(this.context);
-        addCmd.doExecute(getFileName("vdb/twitterVdb.xml"), "twitterVdb.xml");
+        addCmd.doExecute(getFileName("vdb/twitterVdb.xml"));
 
         final String vdbName = "twitter";
         final String version = "1";
         this.command.doExecute(vdbName, version);
 
-        this.settings.artifactType = Artifact.Type.VDB;
+        this.settings.artifactType = VdbArtifact.TYPE;
         this.settings.params = new HashMap<String, String>();
         this.settings.params.put(Artifact.Property.NAME, vdbName);
         this.settings.params.put(Artifact.Property.VERSION, version);
@@ -55,21 +56,20 @@ public class GetVdbCommandTest extends ShellCommandTest {
     @Test
     public void shouldObtainTwoTwitterVdbs() throws Exception {
         { // add VDBs to repo
-            final String vdbName = "twitterVdb.xml";
             final String fileName = getFileName("vdb/twitterVdb.xml");
             final AddVdbCommand addCmd = new AddVdbCommand();
             addCmd.setContext(this.context);
-            addCmd.doExecute(fileName, vdbName);
-            addCmd.doExecute(fileName, vdbName);
+            addCmd.doExecute(fileName);
+            addCmd.doExecute(fileName);
         }
 
-        final String name = "twitter";
+        final String vdbName = "twitter";
         final String version = "1";
-        this.command.doExecute(name, "1");
+        this.command.doExecute(vdbName, "1");
 
-        this.settings.artifactType = Artifact.Type.VDB;
+        this.settings.artifactType = VdbArtifact.TYPE;
         this.settings.params = new HashMap<String, String>();
-        this.settings.params.put(Artifact.Property.NAME, name);
+        this.settings.params.put(Artifact.Property.NAME, vdbName);
         this.settings.params.put(Artifact.Property.VERSION, version);
         assertThat(_repoMgr.query(this.settings).size(), is(2L));
     }

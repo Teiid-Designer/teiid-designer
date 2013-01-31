@@ -10,9 +10,7 @@ package org.komodo.shell.command;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import org.junit.Test;
-import org.komodo.repository.artifact.Artifact;
-import org.komodo.shell.command.AddVdbCommand;
-import org.komodo.shell.command.KomodoCommand;
+import org.komodo.repository.artifact.VdbArtifact;
 
 /**
  * A test class of a {@link AddVdbCommand}.
@@ -38,8 +36,8 @@ public class AddVdbCommandTest extends ShellCommandTest {
 
     @Test
     public void shouldAddTwitterVdb() throws Exception {
-        this.command.doExecute(getFileName("vdb/twitterVdb.xml"), "twitterVdb.xml");
-        this.settings.artifactType = Artifact.Type.VDB;
+        this.command.doExecute(getFileName("vdb/twitterVdb.xml"));
+        this.settings.artifactType = VdbArtifact.TYPE;
         assertThat(_repoMgr.query(this.settings).size(), is(1L));
     }
 

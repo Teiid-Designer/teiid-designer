@@ -9,7 +9,7 @@ package org.komodo.repository.deriver;
 
 import java.util.Collections;
 import java.util.Map;
-import org.komodo.repository.artifact.Artifact;
+import org.komodo.repository.artifact.VdbArtifact;
 import org.overlord.sramp.common.derived.ArtifactDeriver;
 import org.overlord.sramp.common.derived.DeriverProvider;
 
@@ -26,7 +26,7 @@ public class VdbDeriverProvider implements DeriverProvider {
      */
     @Override
     public Map<String, ArtifactDeriver> createArtifactDerivers() {
-        return Collections.singletonMap(Artifact.Type.VDB.getName(), (ArtifactDeriver)new VdbDeriver());
+        return Collections.singletonMap(VdbArtifact.TYPE.getId(), (ArtifactDeriver)new VdbDeriver());
     }
 
 }
