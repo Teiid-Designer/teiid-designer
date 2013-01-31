@@ -7,11 +7,27 @@
 */
 package org.komodo.repository.artifact;
 
-
 /**
  * A VDB artifact.
  */
 public class VdbArtifact implements Artifact {
+
+    /**
+     * A relationship between a VDB artifact and its derived artifacts.
+     */
+    public static final RelationshipType DERIVED_RELATIONSHIP = new RelationshipType() {
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.komodo.repository.artifact.Artifact.RelationshipType#getId()
+         */
+        @Override
+        public String getId() {
+            return "VdbDerivedArtifacts"; //$NON-NLS-1$
+        }
+
+    };
 
     /**
      * The S-RAMP artifact type for a VDB artifact.

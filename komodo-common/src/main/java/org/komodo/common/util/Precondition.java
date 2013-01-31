@@ -78,6 +78,20 @@ public class Precondition {
      * @param identifier the identifier used in the error message (cannot be <code>null</code> or empty)
      * @throws IllegalArgumentException if the collection is <code>null</code> or empty
      */
+    public static void notEmpty(final Object[] collectionBeingChecked,
+                                final String identifier) {
+        assert !StringUtil.isEmpty(identifier) : "identifier cannot be empty"; //$NON-NLS-1$
+
+        if (CollectionUtil.isEmpty(collectionBeingChecked)) {
+            throw new IllegalArgumentException(I18n.bind(CommonI18n.collectionIsEmpty, identifier));
+        }
+    }
+
+    /**
+     * @param collectionBeingChecked the collection being checked (can be <code>null</code> or empty)
+     * @param identifier the identifier used in the error message (cannot be <code>null</code> or empty)
+     * @throws IllegalArgumentException if the collection is <code>null</code> or empty
+     */
     public static void notEmpty(final Collection<?> collectionBeingChecked,
                                 final String identifier) {
         assert !StringUtil.isEmpty(identifier) : "identifier cannot be empty"; //$NON-NLS-1$

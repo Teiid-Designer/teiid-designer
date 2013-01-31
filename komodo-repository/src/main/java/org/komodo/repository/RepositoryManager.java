@@ -102,6 +102,13 @@ public interface RepositoryManager {
     QueryResultSet query(final QuerySettings settings) throws Exception;
 
     /**
+     * @param srampQuery the query statement (cannot be <code>null</code> or empty)
+     * @return the query results containing the artifacts (never <code>null</code>)
+     * @throws Exception if there is a problem running query
+     */
+    QueryResultSet query(final String srampQuery) throws Exception;
+
+    /**
      * @param newName the new name of the repository manager (can be <code>null</code> or empty)
      */
     void setName(final String newName);

@@ -23,6 +23,7 @@ import org.komodo.repository.artifact.PermissionArtifact;
 import org.komodo.repository.artifact.SchemaArtifact;
 import org.komodo.repository.artifact.SourceArtifact;
 import org.komodo.repository.artifact.TranslatorArtifact;
+import org.komodo.repository.artifact.VdbArtifact;
 import org.komodo.teiid.model.vdb.DataPolicy;
 import org.komodo.teiid.model.vdb.ImportVdb;
 import org.komodo.teiid.model.vdb.Permission;
@@ -68,35 +69,16 @@ public class VdbDeriverTest extends RepositoryTest {
         boolean foundPermission2 = false;
         boolean foundPermission3 = false;
 
-        String physicalModelUuid = null;
-        String physicalSourceTargetUuid = null;
-
-        String virtualModelUuid = null;
-        String virtualSource1TargetUuid = null;
-        String virtualSource2TargetUuid = null;
-
-        String source1Uuid = null;
-        String source1SchemaUuid = null;
-
-        String source2Uuid = null;
-        String source2SchemaUuid = null;
-
-        String source3Uuid = null;
-        String source3SchemaUuid = null;
-
-        String dataPolicyUuid = null;
-        String dataPolicyTarget1Uuid = null;
-        String dataPolicyTarget2Uuid = null;
-        String dataPolicyTarget3Uuid = null;
-
-        String permission1Uuid = null;
-        String permission1TargetUuid = null;
-
-        String permission2Uuid = null;
-        String permission2TargetUuid = null;
-
-        String permission3Uuid = null;
-        String permission3TargetUuid = null;
+        // hold on to artifacts to test relationships
+        BaseArtifactType physicalModel = null;
+        BaseArtifactType virtualModel = null;
+        BaseArtifactType source1 = null;
+        BaseArtifactType source2 = null;
+        BaseArtifactType source3 = null;
+        BaseArtifactType dataPolicy = null;
+        BaseArtifactType permission1 = null;
+        BaseArtifactType permission2 = null;
+        BaseArtifactType permission3 = null;
 
         for (final ArtifactSummary summary : results) {
             final ArtifactType artifact = summary.getType(); // lightweight artifact
@@ -110,202 +92,180 @@ public class VdbDeriverTest extends RepositoryTest {
                 assertThat(derivedArtifact.getVersion(), is("2"));
                 assertPropertyValue(derivedArtifact, ImportVdb.PropertyName.IMPORT_DATA_POLICIES, "true");
                 assertThat(derivedArtifact.getProperty().size(), is(1));
+
+                // related documents relationship
+                final List<Relationship> relationships = derivedArtifact.getRelationship();
+                assertThat(relationships.size(), is(1));
+
+                // make sure VDB contains import VDB
+                assertRelationshipTargetUuid(vdbArtifact, VdbArtifact.DERIVED_RELATIONSHIP, derivedArtifact.getUuid());
             } else if (!foundTranslator && TranslatorArtifact.TYPE.getId().equals(userType)) {
                 foundTranslator = true;
                 assertThat(artifactName, is("oracleOverride"));
                 assertThat(derivedArtifact.getDescription(), is("hello world"));
+                assertThat(derivedArtifact.getProperty().size(), is(2));
                 assertPropertyValue(derivedArtifact, Translator.PropertyName.TYPE, "oracle");
                 assertPropertyValue(derivedArtifact, "my-property", "my-value");
-                assertThat(derivedArtifact.getProperty().size(), is(2));
+
+                // related documents relationship
+                final List<Relationship> relationships = derivedArtifact.getRelationship();
+                assertThat(relationships.size(), is(1));
+
+                // make sure VDB contains translator
+                assertRelationshipTargetUuid(vdbArtifact, VdbArtifact.DERIVED_RELATIONSHIP, derivedArtifact.getUuid());
             } else if (EntryArtifact.TYPE.getId().equals(userType)) {
                 if (!foundEntry1 && "/path-one".equals(artifactName)) {
                     foundEntry1 = true;
                     assertThat(derivedArtifact.getDescription(), is("path one description"));
                     assertPropertyValue(derivedArtifact, "entryone", "1");
                     assertThat(derivedArtifact.getProperty().size(), is(1));
+
+                    // related documents relationship
+                    final List<Relationship> relationships = derivedArtifact.getRelationship();
+                    assertThat(relationships.size(), is(1));
+
+                    // make sure VDB contains entry
+                    assertRelationshipTargetUuid(vdbArtifact, VdbArtifact.DERIVED_RELATIONSHIP, derivedArtifact.getUuid());
                 } else if (!foundEntry2 && "/path-two".equals(artifactName)) {
                     foundEntry2 = true;
                     assertThat(derivedArtifact.getProperty().isEmpty(), is(true));
+
+                    // related documents relationship
+                    final List<Relationship> relationships = derivedArtifact.getRelationship();
+                    assertThat(relationships.size(), is(1));
+
+                    // make sure VDB contains entry
+                    assertRelationshipTargetUuid(vdbArtifact, VdbArtifact.DERIVED_RELATIONSHIP, derivedArtifact.getUuid());
                 } else {
                     fail("unexpected entry: " + artifactName);
                 }
             } else if (SchemaArtifact.TYPE.getId().equals(userType)) {
                 if (!foundPhysicalModel && "model-one".equals(artifactName)) {
                     foundPhysicalModel = true;
-                    physicalModelUuid = derivedArtifact.getUuid();
+                    physicalModel = derivedArtifact;
 
-                    assertPropertyValue(derivedArtifact, Schema.PropertyName.TYPE, Schema.Type.PHYSICAL.name());
-                    assertPropertyValue(derivedArtifact, Schema.PropertyName.VISIBLE, "false");
-                    assertThat(derivedArtifact.getDescription(), is("model description"));
-                    assertPropertyValue(derivedArtifact, "model-prop", "model-value-override");
+                    assertPropertyValue(physicalModel, Schema.PropertyName.TYPE, Schema.Type.PHYSICAL.name());
+                    assertPropertyValue(physicalModel, Schema.PropertyName.VISIBLE, "false");
+                    assertThat(physicalModel.getDescription(), is("model description"));
+                    assertPropertyValue(physicalModel, "model-prop", "model-value-override");
 
                     // sources and related documents relationships
-                    final List<Relationship> relationships = derivedArtifact.getRelationship();
+                    final List<Relationship> relationships = physicalModel.getRelationship();
                     assertThat(relationships.size(), is(2));
 
-                    if (SchemaArtifact.SOURCES_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
-                        physicalSourceTargetUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
-                    } else {
-                        physicalSourceTargetUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
-                    }
+                    // make sure VDB contains physical model
+                    assertRelationshipTargetUuid(vdbArtifact, VdbArtifact.DERIVED_RELATIONSHIP, physicalModel.getUuid());
                 } else if (!foundVirtualModel && "model-two".equals(artifactName)) {
                     foundVirtualModel = true;
-                    virtualModelUuid = derivedArtifact.getUuid();
+                    virtualModel = derivedArtifact;
 
-                    assertPropertyValue(derivedArtifact, Schema.PropertyName.TYPE, Schema.Type.VIRTUAL.name());
-                    assertPropertyValue(derivedArtifact, Schema.PropertyName.VISIBLE, "true");
-                    assertPropertyValue(derivedArtifact, "model-prop", "model-value");
-                    assertPropertyValue(derivedArtifact, Schema.PropertyName.METADATA_TYPE, Schema.DEFAULT_METADATA_TYPE.name());
-                    assertPropertyValue(derivedArtifact, Schema.PropertyName.METADATA, "DDL Here");
+                    assertPropertyValue(virtualModel, Schema.PropertyName.TYPE, Schema.Type.VIRTUAL.name());
+                    assertPropertyValue(virtualModel, Schema.PropertyName.VISIBLE, "true");
+                    assertPropertyValue(virtualModel, "model-prop", "model-value");
+                    assertPropertyValue(virtualModel, Schema.PropertyName.METADATA_TYPE, Schema.DEFAULT_METADATA_TYPE.name());
+                    assertPropertyValue(virtualModel, Schema.PropertyName.METADATA, "DDL Here");
 
                     // sources and related document relationships
-                    final List<Relationship> relationships = derivedArtifact.getRelationship();
+                    final List<Relationship> relationships = virtualModel.getRelationship();
                     assertThat(relationships.size(), is(2));
 
-                    if (SchemaArtifact.SOURCES_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
-                        virtualSource1TargetUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
-                        virtualSource2TargetUuid = relationships.get(0).getRelationshipTarget().get(1).getValue();
-                    } else {
-                        virtualSource1TargetUuid = relationships.get(1).getRelationshipTarget().get(0).getValue();
-                        virtualSource2TargetUuid = relationships.get(1).getRelationshipTarget().get(1).getValue();
-                    }
+                    // make sure VDB contains virtual model
+                    assertRelationshipTargetUuid(vdbArtifact, VdbArtifact.DERIVED_RELATIONSHIP, virtualModel.getUuid());
                 } else {
                     fail("unexpected model: " + artifactName);
                 }
             } else if (SourceArtifact.TYPE.getId().equals(userType)) {
                 if (!foundSource1 && "s1".equals(artifactName)) {
                     foundSource1 = true;
-                    source1Uuid = derivedArtifact.getUuid();
+                    source1 = derivedArtifact;
 
-                    assertPropertyValue(derivedArtifact, Source.PropertyName.TRANSLATOR_NAME, "translator");
-                    assertPropertyValue(derivedArtifact, Source.PropertyName.JNDI_NAME, "java:binding-one");
-                    assertThat(derivedArtifact.getProperty().size(), is(2));
+                    assertPropertyValue(source1, Source.PropertyName.TRANSLATOR_NAME, "translator");
+                    assertPropertyValue(source1, Source.PropertyName.JNDI_NAME, "java:binding-one");
+                    assertThat(source1.getProperty().size(), is(2));
 
                     // schema and related document relationships
-                    final List<Relationship> relationships = derivedArtifact.getRelationship();
+                    final List<Relationship> relationships = source1.getRelationship();
                     assertThat(relationships.size(), is(2));
-
-                    if (SourceArtifact.SCHEMA_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
-                        source1SchemaUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
-                    } else {
-                        source1SchemaUuid = relationships.get(1).getRelationshipTarget().get(0).getValue();
-                    }
                 } else if (!foundSource2 && "s2".equals(artifactName)) {
                     foundSource2 = true;
-                    source2Uuid = derivedArtifact.getUuid();
+                    source2 = derivedArtifact;
 
-                    assertPropertyValue(derivedArtifact, Source.PropertyName.TRANSLATOR_NAME, "translator");
-                    assertPropertyValue(derivedArtifact, Source.PropertyName.JNDI_NAME, "java:binding-two");
-                    assertThat(derivedArtifact.getProperty().size(), is(2));
+                    assertPropertyValue(source2, Source.PropertyName.TRANSLATOR_NAME, "translator");
+                    assertPropertyValue(source2, Source.PropertyName.JNDI_NAME, "java:binding-two");
+                    assertThat(source2.getProperty().size(), is(2));
 
                     // schema and related document relationships
-                    final List<Relationship> relationships = derivedArtifact.getRelationship();
+                    final List<Relationship> relationships = source2.getRelationship();
                     assertThat(relationships.size(), is(2));
-
-                    if (SourceArtifact.SCHEMA_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
-                        source2SchemaUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
-                    } else {
-                        source2SchemaUuid = relationships.get(1).getRelationshipTarget().get(0).getValue();
-                    }
                 } else if (!foundSource3 && "s3".equals(artifactName)) {
                     foundSource3 = true;
-                    source3Uuid = derivedArtifact.getUuid();
+                    source3 = derivedArtifact;
 
-                    assertPropertyValue(derivedArtifact, Source.PropertyName.TRANSLATOR_NAME, "translator");
-                    assertPropertyValue(derivedArtifact, Source.PropertyName.JNDI_NAME, "java:mybinding");
-                    assertThat(derivedArtifact.getProperty().size(), is(2));
+                    assertPropertyValue(source3, Source.PropertyName.TRANSLATOR_NAME, "translator");
+                    assertPropertyValue(source3, Source.PropertyName.JNDI_NAME, "java:mybinding");
+                    assertThat(source3.getProperty().size(), is(2));
 
                     // schema and related document relationships
-                    final List<Relationship> relationships = derivedArtifact.getRelationship();
+                    final List<Relationship> relationships = source3.getRelationship();
                     assertThat(relationships.size(), is(2));
-
-                    if (SourceArtifact.SCHEMA_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
-                        source3SchemaUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
-                    } else {
-                        source3SchemaUuid = relationships.get(1).getRelationshipTarget().get(0).getValue();
-                    }
                 } else {
                     fail("unexpected source: " + artifactName);
                 }
             } else if (!foundDataRole && DataPolicyArtifact.TYPE.getId().equals(userType)) {
                 foundDataRole = true;
-                dataPolicyUuid = derivedArtifact.getUuid();
+                dataPolicy = derivedArtifact;
 
                 assertThat(artifactName, is("roleOne"));
-                assertThat(derivedArtifact.getDescription(), is("roleOne described"));
-                assertPropertyValue(derivedArtifact, DataPolicy.PropertyName.ANY_AUTHENTICATED, "false");
-                assertPropertyValue(derivedArtifact, DataPolicy.PropertyName.TEMP_TABLE_CREATABLE, "true");
-                assertPropertyValue(derivedArtifact, DataPolicy.PropertyName.ROLE_NAMES, "ROLE1,ROLE2");
-                assertThat(derivedArtifact.getProperty().size(), is(3));
+                assertThat(dataPolicy.getDescription(), is("roleOne described"));
+                assertPropertyValue(dataPolicy, DataPolicy.PropertyName.ANY_AUTHENTICATED, "false");
+                assertPropertyValue(dataPolicy, DataPolicy.PropertyName.TEMP_TABLE_CREATABLE, "true");
+                assertPropertyValue(dataPolicy, DataPolicy.PropertyName.ROLE_NAMES, "ROLE1,ROLE2");
+                assertThat(dataPolicy.getProperty().size(), is(3));
+                assertRelationshipTargetUuid(vdbArtifact, VdbArtifact.DERIVED_RELATIONSHIP, dataPolicy.getUuid());
 
-                // permissions and related document relationship
-                final List<Relationship> relationships = derivedArtifact.getRelationship();
+                // permissions and related document relationships
+                final List<Relationship> relationships = dataPolicy.getRelationship();
                 assertThat(relationships.size(), is(2));
 
-                if (DataPolicyArtifact.PERMISSIONS_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
-                    dataPolicyTarget1Uuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
-                    dataPolicyTarget2Uuid = relationships.get(0).getRelationshipTarget().get(1).getValue();
-                    dataPolicyTarget3Uuid = relationships.get(0).getRelationshipTarget().get(2).getValue();
-                } else {
-                    dataPolicyTarget1Uuid = relationships.get(1).getRelationshipTarget().get(0).getValue();
-                    dataPolicyTarget2Uuid = relationships.get(1).getRelationshipTarget().get(1).getValue();
-                    dataPolicyTarget3Uuid = relationships.get(1).getRelationshipTarget().get(2).getValue();
-                }
+                // make sure VDB contains virtual data policy
+                assertRelationshipTargetUuid(vdbArtifact, VdbArtifact.DERIVED_RELATIONSHIP, dataPolicy.getUuid());
             } else if (PermissionArtifact.TYPE.getId().equals(userType)) {
                 if (!foundPermission1 && "myTable.T1".equals(artifactName)) {
                     foundPermission1 = true;
-                    permission1Uuid = derivedArtifact.getUuid();
+                    permission1 = derivedArtifact;
 
-                    assertPropertyValue(derivedArtifact, Permission.PropertyName.READABLE, "true");
-                    assertThat(derivedArtifact.getProperty().size(), is(1));
+                    assertPropertyValue(permission1, Permission.PropertyName.READABLE, "true");
+                    assertThat(permission1.getProperty().size(), is(1));
 
                     // data policy and related document relationships
-                    final List<Relationship> relationships = derivedArtifact.getRelationship();
+                    final List<Relationship> relationships = permission1.getRelationship();
                     assertThat(relationships.size(), is(2));
-
-                    if (PermissionArtifact.DATA_POLICY_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
-                        permission1TargetUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
-                    } else {
-                        permission1TargetUuid = relationships.get(1).getRelationshipTarget().get(0).getValue();
-                    }
                 } else if (!foundPermission2 && "myTable.T2".equals(artifactName)) {
                     foundPermission2 = true;
-                    permission2Uuid = derivedArtifact.getUuid();
+                    permission2 = derivedArtifact;
 
-                    assertPropertyValue(derivedArtifact, Permission.PropertyName.CREATABLE, "true");
-                    assertPropertyValue(derivedArtifact, Permission.PropertyName.READABLE, "false");
-                    assertPropertyValue(derivedArtifact, Permission.PropertyName.UPDATABLE, "true");
-                    assertPropertyValue(derivedArtifact, Permission.PropertyName.DELETABLE, "true");
-                    assertPropertyValue(derivedArtifact, Permission.PropertyName.EXECUTABLE, "true");
-                    assertPropertyValue(derivedArtifact, Permission.PropertyName.ALTERABLE, "true");
-                    assertPropertyValue(derivedArtifact, Permission.PropertyName.CONDITION, "col1 = user()");
-                    assertThat(derivedArtifact.getProperty().size(), is(7));
+                    assertPropertyValue(permission2, Permission.PropertyName.CREATABLE, "true");
+                    assertPropertyValue(permission2, Permission.PropertyName.READABLE, "false");
+                    assertPropertyValue(permission2, Permission.PropertyName.UPDATABLE, "true");
+                    assertPropertyValue(permission2, Permission.PropertyName.DELETABLE, "true");
+                    assertPropertyValue(permission2, Permission.PropertyName.EXECUTABLE, "true");
+                    assertPropertyValue(permission2, Permission.PropertyName.ALTERABLE, "true");
+                    assertPropertyValue(permission2, Permission.PropertyName.CONDITION, "col1 = user()");
+                    assertThat(permission2.getProperty().size(), is(7));
 
                     // data policy and related document relationships
-                    final List<Relationship> relationships = derivedArtifact.getRelationship();
+                    final List<Relationship> relationships = permission2.getRelationship();
                     assertThat(relationships.size(), is(2));
-
-                    if (PermissionArtifact.DATA_POLICY_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
-                        permission2TargetUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
-                    } else {
-                        permission2TargetUuid = relationships.get(1).getRelationshipTarget().get(0).getValue();
-                    }
                 } else if (!foundPermission3 && "javascript".equals(artifactName)) {
                     foundPermission3 = true;
-                    permission3Uuid = derivedArtifact.getUuid();
+                    permission3 = derivedArtifact;
 
-                    assertPropertyValue(derivedArtifact, Permission.PropertyName.LANGUAGABLE, "true");
+                    assertPropertyValue(permission3, Permission.PropertyName.LANGUAGABLE, "true");
                     assertThat(derivedArtifact.getProperty().size(), is(1));
 
                     // data policy and related document relationships
-                    final List<Relationship> relationships = derivedArtifact.getRelationship();
+                    final List<Relationship> relationships = permission3.getRelationship();
                     assertThat(relationships.size(), is(2));
-
-                    if (PermissionArtifact.DATA_POLICY_RELATIONSHIP.getId().equals(relationships.get(0).getRelationshipType())) {
-                        permission3TargetUuid = relationships.get(0).getRelationshipTarget().get(0).getValue();
-                    } else {
-                        permission3TargetUuid = relationships.get(1).getRelationshipTarget().get(0).getValue();
-                    }
                 } else {
                     fail("unexpected permission: " + artifactName);
                 }
@@ -324,18 +284,18 @@ public class VdbDeriverTest extends RepositoryTest {
                    is(true));
 
         // relationships
-        assertThat(physicalSourceTargetUuid, is(source3Uuid));
-        assertThat(virtualSource1TargetUuid, is(source1Uuid));
-        assertThat(virtualSource2TargetUuid, is(source2Uuid));
-        assertThat(source3SchemaUuid, is(physicalModelUuid));
-        assertThat(source1SchemaUuid, is(virtualModelUuid));
-        assertThat(source2SchemaUuid, is(virtualModelUuid));
-        assertThat(permission1TargetUuid, is(dataPolicyUuid));
-        assertThat(permission2TargetUuid, is(dataPolicyUuid));
-        assertThat(permission3TargetUuid, is(dataPolicyUuid));
-        assertThat(dataPolicyTarget1Uuid, is(permission1Uuid));
-        assertThat(dataPolicyTarget2Uuid, is(permission2Uuid));
-        assertThat(dataPolicyTarget3Uuid, is(permission3Uuid));
+        assertRelationshipTargetUuid(physicalModel, SchemaArtifact.SOURCES_RELATIONSHIP, source3.getUuid());
+        assertRelationshipTargetUuid(virtualModel, SchemaArtifact.SOURCES_RELATIONSHIP, source1.getUuid());
+        assertRelationshipTargetUuid(virtualModel, SchemaArtifact.SOURCES_RELATIONSHIP, source2.getUuid());
+        assertRelationshipTargetUuid(source3, SourceArtifact.SCHEMA_RELATIONSHIP, physicalModel.getUuid());
+        assertRelationshipTargetUuid(source1, SourceArtifact.SCHEMA_RELATIONSHIP, virtualModel.getUuid());
+        assertRelationshipTargetUuid(source2, SourceArtifact.SCHEMA_RELATIONSHIP, virtualModel.getUuid());
+        assertRelationshipTargetUuid(permission1, PermissionArtifact.DATA_POLICY_RELATIONSHIP, dataPolicy.getUuid());
+        assertRelationshipTargetUuid(permission2, PermissionArtifact.DATA_POLICY_RELATIONSHIP, dataPolicy.getUuid());
+        assertRelationshipTargetUuid(permission3, PermissionArtifact.DATA_POLICY_RELATIONSHIP, dataPolicy.getUuid());
+        assertRelationshipTargetUuid(dataPolicy, DataPolicyArtifact.PERMISSIONS_RELATIONSHIP, permission1.getUuid());
+        assertRelationshipTargetUuid(dataPolicy, DataPolicyArtifact.PERMISSIONS_RELATIONSHIP, permission2.getUuid());
+        assertRelationshipTargetUuid(dataPolicy, DataPolicyArtifact.PERMISSIONS_RELATIONSHIP, permission3.getUuid());
     }
 
     @Test
@@ -368,10 +328,12 @@ public class VdbDeriverTest extends RepositoryTest {
                 assertPropertyValue(derivedArtifact, Translator.PropertyName.TYPE, "ws");
                 assertPropertyValue(derivedArtifact, "DefaultBinding", "HTTP");
                 assertPropertyValue(derivedArtifact, "DefaultServiceMode", "MESSAGE");
+                assertRelationshipTargetUuid(vdbArtifact, VdbArtifact.DERIVED_RELATIONSHIP, summary.getUuid());
             } else if (SchemaArtifact.TYPE.getId().equals(userType)) {
                 if (!foundPhysicalModel && "twitter".equals(artifactName)) {
                     foundPhysicalModel = true;
                     assertPropertyValue(derivedArtifact, Schema.PropertyName.TYPE, Schema.Type.PHYSICAL.name());
+                    assertRelationshipTargetUuid(vdbArtifact, VdbArtifact.DERIVED_RELATIONSHIP, summary.getUuid());
                 } else if (!foundViewModel && "twitterview".equals(artifactName)) {
                     foundViewModel = true;
                     assertPropertyValue(derivedArtifact, Schema.PropertyName.TYPE, Schema.Type.VIRTUAL.name());
@@ -390,6 +352,7 @@ public class VdbDeriverTest extends RepositoryTest {
                                             + "                CREATE VIEW Tweet AS select * FROM twitterview.getTweets;\n"
                                             + "         ";
                     assertPropertyValue(derivedArtifact, Schema.PropertyName.METADATA, expected);
+                    assertRelationshipTargetUuid(vdbArtifact, VdbArtifact.DERIVED_RELATIONSHIP, summary.getUuid());
                 } else {
                     fail("unexpected schema artifact '" + artifactName + '\'');
                 }

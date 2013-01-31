@@ -69,7 +69,9 @@ public class AtomRepositoryManager implements RepositoryManager {
         artifact.setMimeType("application/xml"); //$NON-NLS-1$
         LOGGER.debug("RepositoryManager:Adding VDB ..."); //$NON-NLS-1$
         final BaseArtifactType newArtifact = this.client.uploadArtifact(artifact, content, null);
-        LOGGER.debug("RepositoryManager:VDB artifact with name '{}' was created", newArtifact.getName()); //$NON-NLS-1$
+        LOGGER.debug("RepositoryManager:VDB artifact with name '{}' and UUID '{}' was created", //$NON-NLS-1$
+                     newArtifact.getName(),
+                     newArtifact.getUuid());
         return newArtifact;
     }
 
@@ -100,7 +102,7 @@ public class AtomRepositoryManager implements RepositoryManager {
     @Override
     public BaseArtifactType get(final String uuid) throws Exception {
         Precondition.notEmpty(uuid, "uuid"); //$NON-NLS-1$
-        final QueryResultSet result = this.client.query(DeriverUtil.getUuidQueryString(uuid));
+        final QueryResultSet result = query(DeriverUtil.getUuidQueryString(uuid));
 
         if (result.size() == 1) {
             final ArtifactSummary summary = result.get(0);
@@ -120,7 +122,7 @@ public class AtomRepositoryManager implements RepositoryManager {
         Precondition.notNull(artifact, "artifact"); //$NON-NLS-1$
         LOGGER.debug("RepositoryManager:Getting derived artifacts using query: '{}'", //$NON-NLS-1$
                      DeriverUtil.getDerivedArtifactsQueryString(artifact.getUuid()));
-        return this.client.query(DeriverUtil.getDerivedArtifactsQueryString(artifact.getUuid()));
+        return query(DeriverUtil.getDerivedArtifactsQueryString(artifact.getUuid()));
     }
 
     /**
@@ -194,6 +196,16 @@ public class AtomRepositoryManager implements RepositoryManager {
         return clientQuery.query();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.komodo.repository.RepositoryManager#query(java.lang.String)
+     */
+    @Override
+    public QueryResultSet query(String statement) throws Exception {
+        Precondition.notNull(statement, "statement"); //$NON-NLS-1$
+        return this.client.query(statement);
+    }
     /**
      * {@inheritDoc}
      *

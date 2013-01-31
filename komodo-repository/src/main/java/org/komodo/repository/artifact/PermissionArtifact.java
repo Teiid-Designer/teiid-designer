@@ -13,7 +13,7 @@ package org.komodo.repository.artifact;
 public class PermissionArtifact implements Artifact {
 
     /**
-     * A relationship between a permission and its data policy.
+     * A relationship between a permission artifact and its data policy artifact.
      */
     public static final RelationshipType DATA_POLICY_RELATIONSHIP = new RelationshipType() {
 

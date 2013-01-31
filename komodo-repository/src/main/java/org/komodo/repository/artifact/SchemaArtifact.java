@@ -13,7 +13,7 @@ package org.komodo.repository.artifact;
 public class SchemaArtifact implements Artifact {
 
     /**
-     * A relationship between a schema/model and its sources.
+     * A relationship between a schema/model artifact and its source artifacts.
      */
     public static final RelationshipType SOURCES_RELATIONSHIP = new RelationshipType() {
 

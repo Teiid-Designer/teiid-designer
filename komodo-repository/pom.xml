@@ -26,9 +26,7 @@
         <dependency>
             <groupId>org.komodo</groupId>
             <artifactId>komodo-common</artifactId>
-            <version>${project.version}</version>
             <type>test-jar</type>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -51,16 +49,15 @@
 
         <dependency>
             <groupId>org.overlord.sramp</groupId>
-            <artifactId>s-ramp-atom</artifactId>
-            <classifier>classes</classifier>
-        </dependency>
+            <artifactId>s-ramp-repository-jcr-modeshape</artifactId>
+            <classifier>tests</classifier>
+        </dependency> 
 
         <dependency>
-            <groupId>org.overlord.sramp</groupId>
-            <artifactId>s-ramp-repository-jcr</artifactId>
-            <classifier>tests</classifier>
-        </dependency>
-
+            <groupId>org.modeshape</groupId>
+            <artifactId>modeshape-jcr</artifactId>
+        </dependency> 
+ 
         <dependency>
             <groupId>org.overlord.sramp</groupId>
             <artifactId>s-ramp-server</artifactId>

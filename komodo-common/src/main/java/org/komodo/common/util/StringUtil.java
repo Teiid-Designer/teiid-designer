@@ -13,14 +13,53 @@ package org.komodo.common.util;
 public class StringUtil {
 
     /**
-     * A empty string constant.
+     * The default delimiter used when combining strings. Value is {@value}.
      */
-    public static final String EMPTY_STRING = ""; //$NON-NLS-1$
+    public static final String DEFAULT_DELIMITER = ","; //$NON-NLS-1$
 
     /**
      * A empty string array constant.
      */
     public static final String[] EMPTY_ARRAY = {};
+
+    /**
+     * A empty string constant.
+     */
+    public static final String EMPTY_STRING = ""; //$NON-NLS-1$
+
+    /**
+     * @param strings the strings being joined (cannot be <code>null</code> or empty)
+     * @return a string combining all input values separated by the default delimiter
+     */
+    public static String createDelimitedString(final String... strings) {
+        return createDelimitedString(DEFAULT_DELIMITER, strings);
+    }
+
+    /**
+     * @param delimiter the string to use to separate the values (cannot be <code>null</code> or empty)
+     * @param strings the strings being joined (cannot be <code>null</code> or empty)
+     * @return a string combining all input values separated by the specified delimiter
+     */
+    public static String createDelimitedString(final String delimiter,
+                                               final String... strings) {
+        Precondition.notEmpty(delimiter, "delimiter"); //$NON-NLS-1$
+        Precondition.notEmpty(strings, "strings"); //$NON-NLS-1$
+
+        final StringBuilder result = new StringBuilder();
+        boolean firstTime = true;
+
+        for (final String string : strings) {
+            if (firstTime) {
+                firstTime = false;
+            } else {
+                result.append(delimiter);
+            }
+
+            result.append(string);
+        }
+
+        return result.toString();
+    }
 
     /**
      * @param text the string being checked (can be <code>null</code> or empty)

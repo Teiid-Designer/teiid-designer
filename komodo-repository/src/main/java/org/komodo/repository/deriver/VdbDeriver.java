@@ -104,7 +104,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
             for (int dataPolicyIndex = 0, numDataPolicies = dataPolicies.getLength(); dataPolicyIndex < numDataPolicies; ++dataPolicyIndex) {
                 final Element dataPolicy = (Element)dataPolicies.item(dataPolicyIndex);
-                final ExtendedArtifactType dataPolicyArtifact = ArtifactFactory.create(DataPolicyArtifact.TYPE);
+                final BaseArtifactType dataPolicyArtifact = ArtifactFactory.create(DataPolicyArtifact.TYPE);
                 derivedArtifacts.add(dataPolicyArtifact);
 
                 { // name
@@ -183,7 +183,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
                         for (int permissionIndex = 0, numPermissions = permissions.getLength(); permissionIndex < numPermissions; ++permissionIndex) {
                             final Element permission = (Element)permissions.item(permissionIndex);
-                            final ExtendedArtifactType permissionArtifact = ArtifactFactory.create(PermissionArtifact.TYPE);
+                            final BaseArtifactType permissionArtifact = ArtifactFactory.create(PermissionArtifact.TYPE);
                             derivedArtifacts.add(permissionArtifact);
 
                             { // resource name
@@ -270,6 +270,9 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                         }
                     }
                 }
+
+                // add the relationship from VDB to data policy (inverse is created by deriver framework)
+                DeriverUtil.addRelationship(vdbArtifact, dataPolicyArtifact, VdbArtifact.DERIVED_RELATIONSHIP);
             }
         }
     }
@@ -288,7 +291,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
             for (int entryIndex = 0, numEntries = entries.getLength(); entryIndex < numEntries; ++entryIndex) {
                 final Element entry = (Element)entries.item(entryIndex);
-                final ExtendedArtifactType entryArtifact = ArtifactFactory.create(EntryArtifact.TYPE);
+                final BaseArtifactType entryArtifact = ArtifactFactory.create(EntryArtifact.TYPE);
                 derivedArtifacts.add(entryArtifact);
 
                 { // name
@@ -306,11 +309,14 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
                 // properties
                 processProperties(entryArtifact, entry, xpath);
+
+                // add the relationship from VDB to entry (inverse is created by deriver framework)
+                DeriverUtil.addRelationship(vdbArtifact, entryArtifact, VdbArtifact.DERIVED_RELATIONSHIP);
             }
         }
     }
 
-    private void processProperties(final ExtendedArtifactType artifact,
+    private void processProperties(final BaseArtifactType artifact,
                                    final Element element,
                                    final XPath xpath) throws Exception {
         final NodeList props = (NodeList)query(xpath,
@@ -351,7 +357,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
             for (int schemaIndex = 0, numSchemas = schemas.getLength(); schemaIndex < numSchemas; ++schemaIndex) {
                 final Element schema = (Element)schemas.item(schemaIndex);
-                final ExtendedArtifactType schemaArtifact = ArtifactFactory.create(SchemaArtifact.TYPE);
+                final BaseArtifactType schemaArtifact = ArtifactFactory.create(SchemaArtifact.TYPE);
                 derivedArtifacts.add(schemaArtifact);
 
                 { // name
@@ -409,7 +415,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
                     for (int sourceIndex = 0, numSources = sources.getLength(); sourceIndex < numSources; ++sourceIndex) {
                         final Element source = (Element)sources.item(sourceIndex);
-                        final ExtendedArtifactType sourceArtifact = ArtifactFactory.create(SourceArtifact.TYPE);
+                        final BaseArtifactType sourceArtifact = ArtifactFactory.create(SourceArtifact.TYPE);
                         derivedArtifacts.add(sourceArtifact);
 
                         { // name
@@ -445,6 +451,9 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                                                     SourceArtifact.SCHEMA_RELATIONSHIP);
                     }
                 }
+
+                // add the relationship from VDB to schema (inverse is created by deriver framework)
+                DeriverUtil.addRelationship(vdbArtifact, schemaArtifact, VdbArtifact.DERIVED_RELATIONSHIP);
             }
         }
     }
@@ -463,7 +472,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
             for (int translatorIndex = 0, numTranslators = translators.getLength(); translatorIndex < numTranslators; ++translatorIndex) {
                 final Element translator = (Element)translators.item(translatorIndex);
-                final ExtendedArtifactType translatorArtifact = ArtifactFactory.create(TranslatorArtifact.TYPE);
+                final BaseArtifactType translatorArtifact = ArtifactFactory.create(TranslatorArtifact.TYPE);
                 derivedArtifacts.add(translatorArtifact);
 
                 { // name
@@ -488,6 +497,9 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
                 // properties
                 processProperties(translatorArtifact, translator, xpath);
+
+                // add the relationship from VDB to translator (inverse is created by deriver framework)
+                DeriverUtil.addRelationship(vdbArtifact, translatorArtifact, VdbArtifact.DERIVED_RELATIONSHIP);
             }
         }
     }
@@ -537,7 +549,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
 
             for (int vdbImportIndex = 0, numVdbImports = vdbImports.getLength(); vdbImportIndex < numVdbImports; ++vdbImportIndex) {
                 final Element vdbImport = (Element)vdbImports.item(vdbImportIndex);
-                final ExtendedArtifactType vdbImportArtifact = ArtifactFactory.create(ImportVdbArtifact.TYPE);
+                final BaseArtifactType vdbImportArtifact = ArtifactFactory.create(ImportVdbArtifact.TYPE);
                 derivedArtifacts.add(vdbImportArtifact);
 
                 { // name
@@ -569,6 +581,9 @@ public class VdbDeriver extends AbstractXmlDeriver implements RepositoryConstant
                         LOGGER.debug("Import VDB property '{}' with value '{}'", prop.getPropertyName(), prop.getPropertyValue()); //$NON-NLS-1$
                     }
                 }
+
+                // add the relationship from VDB to import VDB (inverse is created by deriver framework)
+                DeriverUtil.addRelationship(vdbArtifact, vdbImportArtifact, VdbArtifact.DERIVED_RELATIONSHIP);
             }
         }
     }

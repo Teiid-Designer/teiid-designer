@@ -10,6 +10,7 @@ package org.komodo.repository.artifact;
 import java.util.UUID;
 import org.komodo.common.util.Precondition;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactEnum;
+import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 import org.s_ramp.xmlns._2010.s_ramp.ExtendedArtifactType;
 
 /**
@@ -21,7 +22,7 @@ public class ArtifactFactory {
      * @param artifactType the type of the artifact to create (cannot be <code>null</code>)
      * @return the created artifact (never <code>null</code>)
      */
-    public static ExtendedArtifactType create(final Artifact.Type artifactType) {
+    public static BaseArtifactType create(final Artifact.Type artifactType) {
         Precondition.notNull(artifactType, "artifactType"); //$NON-NLS-1$
 
         final ExtendedArtifactType artifact = new ExtendedArtifactType();
