@@ -177,8 +177,8 @@ public class TextTableFunctionOptionsDialog  extends TitleAreaDialog {
 				public void modifyText( final ModifyEvent event ) {
 	            	if( !synchronizing ) {
 		            	if( !quoteText.getText().isEmpty()) {
-		            		if( quoteText.getText().charAt(0) != dataFileInfo.getQuote() ) {
-		            			dataFileInfo.setQuote(quoteText.getText().charAt(0));
+		            		if( ! quoteText.getText().substring(0, 1).equals(dataFileInfo.getQuote()) ) {
+		            			dataFileInfo.setQuote(quoteText.getText().substring(0, 1));
 		            			synchronizeUI();
 		            		}
 		            		setErrorMessage(null);
@@ -217,8 +217,8 @@ public class TextTableFunctionOptionsDialog  extends TitleAreaDialog {
 				public void modifyText( final ModifyEvent event ) {
 	            	if( !synchronizing ) {
 		            	if( !escapeText.getText().isEmpty()) {
-		            		if( escapeText.getText().charAt(0) != dataFileInfo.getEscape() ) {
-		            			dataFileInfo.setEscape(escapeText.getText().charAt(0));
+		            		if( ! escapeText.getText().substring(0, 1).equals(dataFileInfo.getEscape()) ) {
+		            			dataFileInfo.setEscape(escapeText.getText().substring(0, 1));
 		            			synchronizeUI();
 		            		}
 		            		setErrorMessage(null);

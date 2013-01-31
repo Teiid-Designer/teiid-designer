@@ -8,9 +8,9 @@
 package org.teiid.designer.transformation.ui.wizards.file;
 
 import java.io.File;
-
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.query.proc.ITeiidFileInfo;
 
 
 /**
@@ -19,7 +19,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
  *
  * @since 8.0
  */
-public abstract class TeiidFileInfo {
+public abstract class TeiidFileInfo implements ITeiidFileInfo {
 	boolean isFlatFile = false;
 	
 	/**

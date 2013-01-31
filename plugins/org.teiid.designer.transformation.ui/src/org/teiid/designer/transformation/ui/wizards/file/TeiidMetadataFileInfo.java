@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.StringTokenizer;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -20,6 +21,8 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
+import org.teiid.designer.query.proc.ITeiidColumnInfo;
+import org.teiid.designer.query.proc.ITeiidMetadataFileInfo;
 import org.teiid.designer.transformation.ui.UiConstants;
 
 /**
@@ -29,27 +32,9 @@ import org.teiid.designer.transformation.ui.UiConstants;
  * @since 8.0
  */
 @SuppressWarnings("javadoc")
-public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants {
+public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants, ITeiidMetadataFileInfo {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataFileInfo.class);
 	
-	public static final char DOT = '.';
-	public static final char DEFAULT_DELIMITER = ',';
-	public static final char COMMA = ',';
-	public static final char SPACE = ' ';
-	public static final char SEMICOLON = ':';
-	public static final char TAB = '\t';
-	public static final char BAR = '|';
-	public static final char DEFAULT_QUOTE= '"';
-	public static final char DEFAULT_ESCAPE= '\\';
-	public static final int DEFAULT_HEADER_LINE_NUMBER = 1;
-    public static final char S_QUOTE = '\'';
-    public static final String HEADER = "HEADER"; //$NON-NLS-1$
-    public static final String SKIP = "SKIP"; //$NON-NLS-1$
-    public static final String WIDTH = "width"; //$NON-NLS-1$
-    public static final String CR_1 = "\\r\\n"; //$NON-NLS-1$
-    public static final String CR_2 = "\\n"; //$NON-NLS-1$
-    public static final String EMPTY_STR = ""; //$NON-NLS-1$
-
 	private static final StringNameValidator validator = new RelationalStringNameValidator(false, true);
 	
     private static String getString( final String id ) {
@@ -117,21 +102,21 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
      * (never <code>null</code> or empty)
      * 
      */
-	private char delimiter = DEFAULT_DELIMITER;
+	private String delimiter = DEFAULT_DELIMITER;
 	
 	/**
      * The unique quote character used in the Teiid metadata file to surround complex column data values.
      * (never <code>null</code> or empty)
      * 
      */
-	private char quote = DEFAULT_QUOTE;
+	private String quote = DEFAULT_QUOTE;
 	
 	/**
      * The unique escape character used in the Teiid metadata file to surround complex column data values.
      * (never <code>null</code> or empty)
      * 
      */
-	private char escape = DEFAULT_ESCAPE;
+	private String escape = DEFAULT_ESCAPE;
 	
 	/**
      * indicator that the data file contains columns with fixed widths.
@@ -156,7 +141,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	/**
 	 * The  <code>Collection</code> of <code>TeiidColumnInfo</code> objects parsed from the defined header information.
 	 */
-	private Collection<TeiidColumnInfo> columnInfoList;
+	private List<ITeiidColumnInfo> columnInfoList;
 	
 	private boolean ignoreReload = false;
  
@@ -230,8 +215,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 		this.includeNoTrim = info.doIncludeNoTrim();
 		this.cachedFirstLines = info.cachedFirstLines;
 		this.numberOfLinesInFile = info.getNumberOfLinesInFile();
-		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
-		for( TeiidColumnInfo colInfo : info.getColumnInfoList() ) {
+		this.columnInfoList = new ArrayList<ITeiidColumnInfo>();
+		for( ITeiidColumnInfo colInfo : info.getColumnInfoList() ) {
 			this.columnInfoList.add(new TeiidColumnInfo(colInfo.getSymbolName(), colInfo.getDatatype(), colInfo.getWidth()));
 		}
 		
@@ -245,7 +230,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	private void initialize() {
 		setStatus(Status.OK_STATUS);
 		this.cachedFirstLines = new String[0];
-		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
+		this.columnInfoList = new ArrayList<ITeiidColumnInfo>();
 		
 		loadHeader();
 		
@@ -260,7 +245,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return headerLineNumber the data file's line number containing the header info
 	 */
-	public int getHeaderLineNumber() {
+	@Override
+    public int getHeaderLineNumber() {
 		return this.headerLineNumber;
 	}
 
@@ -284,7 +270,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return firstDataRow the line number of first data row
 	 */
-	public int getFirstDataRow() {
+	@Override
+    public int getFirstDataRow() {
 		return this.firstDataRow;
 	}
 
@@ -302,7 +289,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return the data file's delimiter character 
 	 */
-	public char getDelimiter() {
+	@Override
+    public String getDelimiter() {
 		return this.delimiter;
 	}
 
@@ -310,10 +298,10 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @param delimiter the data file's delimiter character 
 	 */
-	public void setDelimiter(char delimiter) {
+	public void setDelimiter(String delimiter) {
 		CoreArgCheck.isNotEmpty("" + delimiter, "delimiter is null"); //$NON-NLS-1$ //$NON-NLS-2$
 		
-		if( this.delimiter == delimiter ) {
+		if( delimiter.equals(this.delimiter) ) {
 			return;
 		}
 		
@@ -330,7 +318,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @param quote the data file's quote character
 	 */
-	public void setQuote(char quote) {
+	public void setQuote(String quote) {
 		CoreArgCheck.isNotEmpty("" + quote, "quote is null"); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		this.quote = quote;
@@ -340,7 +328,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return the data file's quote character
 	 */
-	public char getQuote() {
+	@Override
+    public String getQuote() {
 		return this.quote;
 	}
 	
@@ -348,7 +337,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @param escape the data file's escape character
 	 */
-	public void setEscape(char escape) {
+	public void setEscape(String escape) {
 		CoreArgCheck.isNotEmpty("" + escape, "escape is null"); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		this.escape = escape;
@@ -358,14 +347,16 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return the data file's escape character
 	 */
-	public char getEscape() {
+	@Override
+    public String getEscape() {
 		return this.escape;
 	}
 	
 	/**
 	 * @return the header string
 	 */
-	public String getHeaderString() {
+	@Override
+    public String getHeaderString() {
 		if( cachedFirstLines.length == 0 ) {
 			return null;
 		}
@@ -467,7 +458,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return cachedFirstLines the <code>String[]</code> array from the data file
 	 */
-	public String[] getCachedFirstLines() {
+	@Override
+    public String[] getCachedFirstLines() {
 		return this.cachedFirstLines;
 	}
 	
@@ -475,11 +467,12 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return columnInfoList the <code>TeiidColumnInfo[]</code> array parsed from the header in the data file
 	 */
-	public TeiidColumnInfo[] getColumnInfoList() {
-		return this.columnInfoList.toArray(new TeiidColumnInfo[this.columnInfoList.size()]);
+	@Override
+    public List<ITeiidColumnInfo> getColumnInfoList() {
+		return this.columnInfoList;
 	}
 	
-	public void removeColumn(TeiidColumnInfo theInfo) {
+	public void removeColumn(ITeiidColumnInfo theInfo) {
 		this.columnInfoList.remove(theInfo);
 		validate();
 	}
@@ -567,7 +560,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return doProcess the boolean indicator that the user wishes to create view table from this object
 	 */
-	public boolean doProcess() {
+	@Override
+    public boolean doProcess() {
 		return this.doProcess;
 	}
 	
@@ -583,7 +577,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return includeHeader the boolean indicator that the generated view table SQL should include the HEADER parameter
 	 */
-	public boolean doIncludeHeader() {
+	@Override
+    public boolean doIncludeHeader() {
 		return this.includeHeader;
 	}
 	
@@ -599,7 +594,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return includeSkip the boolean indicator that the generated view table SQL should include the SKIP parameter
 	 */
-	public boolean doIncludeSkip() {
+	@Override
+    public boolean doIncludeSkip() {
 		return this.includeSkip;
 	}
 	
@@ -623,7 +619,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return includeEscape the boolean indicator that the generated view table SQL should include the SKIP parameter
 	 */
-	public boolean doIncludeEscape() {
+	@Override
+    public boolean doIncludeEscape() {
 		return this.includeEscape;
 	}
 	
@@ -646,7 +643,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return includeQuote the boolean indicator that the generated view table SQL should include the QUOTE parameter
 	 */
-	public boolean doIncludeQuote() {
+	@Override
+    public boolean doIncludeQuote() {
 		return this.includeQuote;
 	}
 	
@@ -662,7 +660,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return includeNoTrim the boolean indicator that the generated view table SQL should include the NO TRIM parameter
 	 */
-	public boolean doIncludeNoTrim() {
+	@Override
+    public boolean doIncludeNoTrim() {
 		return this.includeNoTrim;
 	}
 	
@@ -680,7 +679,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * @return useHeader the boolean indicator that the data file contains a header with column names and should 
 	 * be used to load column names
 	 */
-	public boolean doUseHeaderForColumnNames() {
+	@Override
+    public boolean doUseHeaderForColumnNames() {
 		return this.useHeaderForColumnNames;
 	}
 	/**
@@ -708,7 +708,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return fixedWidthColumns the boolean indicator that the data file contains a header with column names
 	 */
-	public boolean isFixedWidthColumns() {
+	@Override
+    public boolean isFixedWidthColumns() {
 		return this.fixedWidthColumns;
 	}
 	
@@ -730,7 +731,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return numberOfFixedWidthColumns the number of fixed with columns
 	 */
-	public int getNumberOfFixedWidthColumns() {
+	@Override
+    public int getNumberOfFixedWidthColumns() {
 		return this.numberOfFixedWidthColumns;
 	}
 
@@ -753,7 +755,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return delimitedColumns the boolean indicator that the data file contains columns separated by a delimiter
 	 */
-	public boolean doUseDelimitedColumns() {
+	@Override
+    public boolean doUseDelimitedColumns() {
 		return this.delimitedColumns;
 	}
 	
@@ -770,7 +773,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return numberOfCachedLines the number of cached lines from data file
 	 */
-	public int getNumberOfCachedFileLines() {
+	@Override
+    public int getNumberOfCachedFileLines() {
 		return this.numberOfCachedLines;
 	}
 	
@@ -778,7 +782,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * 
 	 * @return numberOfCachedLines the total number of lines from data file
 	 */
-	public int getNumberOfLinesInFile() {
+	@Override
+    public int getNumberOfLinesInFile() {
 		return this.numberOfLinesInFile;
 	}
 	
@@ -788,13 +793,13 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 		// 
 		if( startIndex > 0 ) {
 			// Make Copy of List & get columnInfo of startIndex-1
-			TeiidColumnInfo priorInfo = getColumnInfoList()[startIndex-1];
-			TeiidColumnInfo[] infos = getColumnInfoList();
+			ITeiidColumnInfo priorInfo = getColumnInfoList().get(startIndex-1);
+			ITeiidColumnInfo[] infos = getColumnInfoList().toArray(new ITeiidColumnInfo[0]);
 			infos[startIndex-1] = columnInfo;
 			infos[startIndex] = priorInfo;
 			
-			Collection<TeiidColumnInfo> colInfos = new ArrayList<TeiidColumnInfo>(infos.length);
-			for( TeiidColumnInfo info : infos) {
+			List<ITeiidColumnInfo> colInfos = new ArrayList<ITeiidColumnInfo>(infos.length);
+			for( ITeiidColumnInfo info : infos) {
 				colInfos.add(info);
 			}
 			
@@ -804,15 +809,15 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	
 	public void moveColumnDown(TeiidColumnInfo columnInfo) {
 		int startIndex = getColumnIndex(columnInfo);
-		if( startIndex < (getColumnInfoList().length-1) ) {
+		if( startIndex < (getColumnInfoList().size()-1) ) {
 			// Make Copy of List & get columnInfo of startIndex-1
-			TeiidColumnInfo afterInfo = getColumnInfoList()[startIndex+1];
-			TeiidColumnInfo[] infos = getColumnInfoList();
+			ITeiidColumnInfo afterInfo = getColumnInfoList().get(startIndex+1);
+			ITeiidColumnInfo[] infos = getColumnInfoList().toArray(new ITeiidColumnInfo[0]);
 			infos[startIndex+1] = columnInfo;
 			infos[startIndex] = afterInfo;
 			
-			Collection<TeiidColumnInfo> colInfos = new ArrayList<TeiidColumnInfo>(infos.length);
-			for( TeiidColumnInfo info : infos) {
+			List<ITeiidColumnInfo> colInfos = new ArrayList<ITeiidColumnInfo>(infos.length);
+			for( ITeiidColumnInfo info : infos) {
 				colInfos.add(info);
 			}
 			
@@ -820,17 +825,17 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 		}
 	}
 	
-	public boolean canMoveUp(TeiidColumnInfo columnInfo) {
+	public boolean canMoveUp(ITeiidColumnInfo columnInfo) {
 		return getColumnIndex(columnInfo) > 0;
 	}
 	
-	public boolean canMoveDown(TeiidColumnInfo columnInfo) {
-		return getColumnIndex(columnInfo) < getColumnInfoList().length-1;
+	public boolean canMoveDown(ITeiidColumnInfo columnInfo) {
+		return getColumnIndex(columnInfo) < getColumnInfoList().size()-1;
 	}
 	
-	private int getColumnIndex(TeiidColumnInfo columnInfo) {
+	private int getColumnIndex(ITeiidColumnInfo columnInfo) {
 		int i=0;
-		for( TeiidColumnInfo colInfo : getColumnInfoList() ) {
+		for( ITeiidColumnInfo colInfo : getColumnInfoList() ) {
 			if( colInfo == columnInfo) {
 				return i;
 			}
@@ -868,7 +873,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
     	Collection<String> values = new ArrayList<String>();
     	String leftOver = rowString;
 		if( this.fixedWidthColumns ) {
-			for( TeiidColumnInfo columnInfo : getColumnInfoList()) {
+			for( ITeiidColumnInfo columnInfo : getColumnInfoList()) {
 				int width = columnInfo.getWidth();
 				if( leftOver.length() >= width ) {
 					String value = leftOver.substring(0, width-1);
@@ -901,10 +906,12 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * Returns the current generated SQL string based on an unknown relational model name
 	 * @return the generated SQL string
 	 */
+    @Override
     public String getSqlStringTemplate() {
     	return getSqlString("myRelModel"); //$NON-NLS-1$
     }
     
+    @Override
     public String getSqlString(String relationalModelName) {
     	/*
     	 * 

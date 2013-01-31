@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Set;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.query.proc.ITeiidColumnInfo;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 
@@ -40,7 +41,7 @@ public class DatatypeEditingSupport extends ComboBoxEditingSupport {
 
     @Override
     protected String getElementValue( Object element ) {
-    	return ((TeiidColumnInfo)element).getDatatype();
+    	return ((ITeiidColumnInfo)element).getDatatype();
     }
 
     @Override

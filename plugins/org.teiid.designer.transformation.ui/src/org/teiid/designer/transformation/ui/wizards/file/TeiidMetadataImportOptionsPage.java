@@ -49,6 +49,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.query.proc.ITeiidColumnInfo;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlTextViewer;
@@ -249,12 +250,12 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     	this.headerLineNumberText.setEnabled(this.dataFileInfo.doUseHeaderForColumnNames());
 
     	this.delimitedColumnsViewer.getTable().removeAll();
-        for( TeiidColumnInfo row : dataFileInfo.getColumnInfoList() ) {
+        for( ITeiidColumnInfo row : dataFileInfo.getColumnInfoList() ) {
         	this.delimitedColumnsViewer.add(row);
         }
         
     	this.fixedColumnsViewer.getTable().removeAll();
-        for( TeiidColumnInfo row : dataFileInfo.getColumnInfoList() ) {
+        for( ITeiidColumnInfo row : dataFileInfo.getColumnInfoList() ) {
         	this.fixedColumnsViewer.add(row);
         }
     	
@@ -588,7 +589,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
         column.getColumn().pack();
     	
         if( this.dataFileInfo != null ) {
-	        for( TeiidColumnInfo row : this.dataFileInfo.getColumnInfoList() ) {
+	        for( ITeiidColumnInfo row : this.dataFileInfo.getColumnInfoList() ) {
 	        	this.delimitedColumnsViewer.add(row);
 	        }
         }
@@ -613,12 +614,12 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TeiidColumnInfo info = null;
+				ITeiidColumnInfo info = null;
 				
 				IStructuredSelection selection = (IStructuredSelection)delimitedColumnsViewer.getSelection();
 				for( Object obj : selection.toArray()) {
-					if( obj instanceof TeiidColumnInfo ) {
-						info =  (TeiidColumnInfo) obj;
+					if( obj instanceof ITeiidColumnInfo ) {
+						info =  (ITeiidColumnInfo) obj;
 						break;
 					}
 				}
@@ -643,7 +644,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 				
 				IStructuredSelection selection = (IStructuredSelection)delimitedColumnsViewer.getSelection();
 				for( Object obj : selection.toArray()) {
-					if( obj instanceof TeiidColumnInfo ) {
+					if( obj instanceof ITeiidColumnInfo ) {
 						info =  (TeiidColumnInfo) obj;
 						break;
 					}
@@ -672,7 +673,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 				
 				IStructuredSelection selection = (IStructuredSelection)delimitedColumnsViewer.getSelection();
 				for( Object obj : selection.toArray()) {
-					if( obj instanceof TeiidColumnInfo ) {
+					if( obj instanceof ITeiidColumnInfo ) {
 						info =  (TeiidColumnInfo) obj;
 						break;
 					}
@@ -702,13 +703,13 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 				} else {
 					boolean enable = true;
 					Object[] objs = sel.toArray();
-					TeiidColumnInfo columnInfo = null;
+					ITeiidColumnInfo columnInfo = null;
 					for( Object obj : objs) {
-						if(  !(obj instanceof TeiidColumnInfo)) {
+						if(  !(obj instanceof ITeiidColumnInfo)) {
 							enable = false;
 							break;
 						} else {
-							columnInfo = (TeiidColumnInfo)obj;
+							columnInfo = (ITeiidColumnInfo)obj;
 						}
 					} 
 					if( objs.length == 0 ) {
@@ -898,12 +899,12 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TeiidColumnInfo info = null;
+				ITeiidColumnInfo info = null;
 				
 				IStructuredSelection selection = (IStructuredSelection)fixedColumnsViewer.getSelection();
 				for( Object obj : selection.toArray()) {
-					if( obj instanceof TeiidColumnInfo ) {
-						info =  (TeiidColumnInfo) obj;
+					if( obj instanceof ITeiidColumnInfo ) {
+						info =  (ITeiidColumnInfo) obj;
 						break;
 					}
 				}
@@ -928,7 +929,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 				
 				IStructuredSelection selection = (IStructuredSelection)fixedColumnsViewer.getSelection();
 				for( Object obj : selection.toArray()) {
-					if( obj instanceof TeiidColumnInfo ) {
+					if( obj instanceof ITeiidColumnInfo ) {
 						info =  (TeiidColumnInfo) obj;
 						break;
 					}
@@ -957,7 +958,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 				
 				IStructuredSelection selection = (IStructuredSelection)fixedColumnsViewer.getSelection();
 				for( Object obj : selection.toArray()) {
-					if( obj instanceof TeiidColumnInfo ) {
+					if( obj instanceof ITeiidColumnInfo ) {
 						info =  (TeiidColumnInfo) obj;
 						break;
 					}
@@ -1014,7 +1015,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
         
     	
         if( this.dataFileInfo != null ) {
-	        for( TeiidColumnInfo row : this.dataFileInfo.getColumnInfoList() ) {
+	        for( ITeiidColumnInfo row : this.dataFileInfo.getColumnInfoList() ) {
 	        	this.fixedColumnsViewer.add(row);
 	        }
         }
@@ -1032,13 +1033,13 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 				} else {
 					boolean enable = true;
 					Object[] objs = sel.toArray();
-					TeiidColumnInfo columnInfo = null;
+					ITeiidColumnInfo columnInfo = null;
 					for( Object obj : objs) {
-						if(  !(obj instanceof TeiidColumnInfo)) {
+						if(  !(obj instanceof ITeiidColumnInfo)) {
 							enable = false;
 							break;
 						} else {
-							columnInfo = (TeiidColumnInfo)obj;
+							columnInfo = (ITeiidColumnInfo)obj;
 						}
 					} 
 					if( objs.length == 0 ) {
@@ -1195,13 +1196,13 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 //    }
     
     private void createColumn() {
-    	String newName = "column_" + (dataFileInfo.getColumnInfoList().length + 1); //$NON-NLS-1$
+    	String newName = "column_" + (dataFileInfo.getColumnInfoList().size() + 1); //$NON-NLS-1$
     	int length = 10;
     	if( selectedTextLengthText.getText().length() > 0 ) {
     		int textLength = Integer.parseInt(selectedTextLengthText.getText());
     		length = textLength > 0 ? textLength : length;
     	}
-    	TeiidColumnInfo newColumn = new TeiidColumnInfo(newName, TeiidColumnInfo.DEFAULT_DATATYPE, length);
+    	TeiidColumnInfo newColumn = new TeiidColumnInfo(newName, ITeiidColumnInfo.DEFAULT_DATATYPE, length);
 		dataFileInfo.addColumn(newColumn);
 		
 		handleInfoChanged(false);
@@ -1246,12 +1247,12 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     	}
 
     	this.delimitedColumnsViewer.getTable().removeAll();
-        for( TeiidColumnInfo row : dataFileInfo.getColumnInfoList() ) {
+        for( ITeiidColumnInfo row : dataFileInfo.getColumnInfoList() ) {
         	this.delimitedColumnsViewer.add(row);
         }
         
     	this.fixedColumnsViewer.getTable().removeAll();
-        for( TeiidColumnInfo row : dataFileInfo.getColumnInfoList() ) {
+        for( ITeiidColumnInfo row : dataFileInfo.getColumnInfoList() ) {
         	this.fixedColumnsViewer.add(row);
         }
         
@@ -1297,16 +1298,16 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		 */
 		@Override
 		public String getText(Object element) {
-			if( element instanceof TeiidColumnInfo ) {
+			if( element instanceof ITeiidColumnInfo ) {
 				switch (this.columnNumber) {
 					case 0: {
-						return ((TeiidColumnInfo)element).getName();
+						return ((ITeiidColumnInfo)element).getName();
 					}
 					case 1: {
-						return ((TeiidColumnInfo)element).getDatatype();
+						return ((ITeiidColumnInfo)element).getDatatype();
 					}
 					case 2: {
-						return Integer.toString(((TeiidColumnInfo)element).getWidth());
+						return Integer.toString(((ITeiidColumnInfo)element).getWidth());
 					}
 				}
 			}
@@ -1384,8 +1385,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		 */
 		@Override
 		protected Object getValue(Object element) {
-			if( element instanceof TeiidColumnInfo ) {
-				return ((TeiidColumnInfo)element).getName();
+			if( element instanceof ITeiidColumnInfo ) {
+				return ((ITeiidColumnInfo)element).getName();
 			}
 			return 0;
 		}
@@ -1398,8 +1399,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		 */
 		@Override
 		protected void setValue(Object element, Object value) {
-			if( element instanceof TeiidColumnInfo ) {
-				String oldValue = ((TeiidColumnInfo)element).getName();
+			if( element instanceof ITeiidColumnInfo ) {
+				String oldValue = ((ITeiidColumnInfo)element).getName();
 				String newValue = (String)value;
 				if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
 					((TeiidColumnInfo)element).setName(newValue);
@@ -1452,8 +1453,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		 */
 		@Override
 		protected Object getValue(Object element) {
-			if( element instanceof TeiidColumnInfo ) {
-				return Integer.toString(((TeiidColumnInfo)element).getWidth());
+			if( element instanceof ITeiidColumnInfo ) {
+				return Integer.toString(((ITeiidColumnInfo)element).getWidth());
 			}
 			return 0;
 		}
@@ -1466,8 +1467,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		 */
 		@Override
 		protected void setValue(Object element, Object value) {
-			if( element instanceof TeiidColumnInfo ) {
-				int oldValue = ((TeiidColumnInfo)element).getWidth();
+			if( element instanceof ITeiidColumnInfo ) {
+				int oldValue = ((ITeiidColumnInfo)element).getWidth();
 				int newValue = oldValue;
 				try {
 					newValue = Integer.parseInt((String)value);

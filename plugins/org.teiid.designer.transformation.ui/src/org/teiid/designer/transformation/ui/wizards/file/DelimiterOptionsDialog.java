@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.query.proc.ITeiidMetadataFileInfo;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.UiConstants.Images;
@@ -178,7 +179,7 @@ public class DelimiterOptionsDialog  extends TitleAreaDialog {
     		setErrorMessage(null);
         	if( this.otherDelimiterRB.getSelection() ) {
 	        	if( !this.otherDelimiterText.getText().isEmpty()) {
-		    		this.fileInfo.setDelimiter(this.otherDelimiterText.getText().charAt(0));
+		    		this.fileInfo.setDelimiter(this.otherDelimiterText.getText().substring(0, 1));
 		    	} else {
 		    		setErrorMessage(getString("delimiterCannotBeNull")); //$NON-NLS-1$
 		    		return;
@@ -186,18 +187,18 @@ public class DelimiterOptionsDialog  extends TitleAreaDialog {
         	}
         	
         	if( this.commaRB.getSelection() ) {
-        		fileInfo.setDelimiter(TeiidMetadataFileInfo.COMMA);
+        		fileInfo.setDelimiter(ITeiidMetadataFileInfo.COMMA);
         	} else if( this.spaceRB.getSelection() ) {
-        		fileInfo.setDelimiter(TeiidMetadataFileInfo.SPACE);
+        		fileInfo.setDelimiter(ITeiidMetadataFileInfo.SPACE);
         	} else if ( this.tabRB.getSelection() ) {
-        		fileInfo.setDelimiter(TeiidMetadataFileInfo.TAB);
+        		fileInfo.setDelimiter(ITeiidMetadataFileInfo.TAB);
         	} else if ( this.semicolonRB.getSelection() ) {
-        		fileInfo.setDelimiter(TeiidMetadataFileInfo.SEMICOLON);
+        		fileInfo.setDelimiter(ITeiidMetadataFileInfo.SEMI_COLON);
         	} else if ( this.barRB.getSelection()  ) {
-        		fileInfo.setDelimiter(TeiidMetadataFileInfo.BAR);
+        		fileInfo.setDelimiter(ITeiidMetadataFileInfo.BAR);
         	} else {
         		if( !this.otherDelimiterText.getText().isEmpty()) {
-    	    		this.fileInfo.setDelimiter(this.otherDelimiterText.getText().charAt(0));
+    	    		this.fileInfo.setDelimiter(this.otherDelimiterText.getText().substring(0, 1));
     	    	}
         	}
     	}
@@ -220,16 +221,16 @@ public class DelimiterOptionsDialog  extends TitleAreaDialog {
     	this.otherDelimiterRB.setSelection(false);
     	this.otherDelimiterText.setEnabled(false);
     	
-    	char delimiter = fileInfo.getDelimiter();
-    	if( delimiter == TeiidMetadataFileInfo.COMMA) {
+    	String delimiter = fileInfo.getDelimiter();
+    	if( ITeiidMetadataFileInfo.COMMA.equals(delimiter)) {
     		this.commaRB.setSelection(true);
-    	} else if( delimiter == TeiidMetadataFileInfo.SEMICOLON) {
+    	} else if( ITeiidMetadataFileInfo.SEMI_COLON.equals(delimiter)) {
     		this.semicolonRB.setSelection(true);
-    	} else if( delimiter == TeiidMetadataFileInfo.BAR) {
+    	} else if( ITeiidMetadataFileInfo.BAR.equals(delimiter)) {
     		this.barRB.setSelection(true);
-    	} else if( delimiter == TeiidMetadataFileInfo.SPACE) {
+    	} else if( ITeiidMetadataFileInfo.SPACE.equals(delimiter)) {
     		this.spaceRB.setSelection(true);
-    	} else if( delimiter == TeiidMetadataFileInfo.TAB) {
+    	} else if( ITeiidMetadataFileInfo.TAB.equals(delimiter)) {
     		this.tabRB.setSelection(true);
     	} else {
     		// Assume OTHER

@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.query.proc.ITeiidMetadataFileInfo;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo;
 
@@ -350,7 +351,7 @@ public class TeiidMetadataImportInfo implements UiConstants {
 				return;
 			}
 			boolean noneProcessed = true;
-			for( TeiidMetadataFileInfo info : fileInfoMap.values()) {
+			for( ITeiidMetadataFileInfo info : fileInfoMap.values()) {
 				if( info.doProcess() ) {
 					noneProcessed = false;
 				}

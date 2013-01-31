@@ -1,5 +1,6 @@
 package org.teiid.designer.transformation.ui.wizards.file;
 
+import java.util.List;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ListViewer;
@@ -10,6 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.teiid.designer.query.proc.ITeiidColumnInfo;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.UiConstants.Images;
@@ -96,11 +98,11 @@ public class ParsedDataRowDialog extends TitleAreaDialog {
         this.columnDataViewer.getControl().setLayoutData(data);
         
         String[] parsedColumns = fileInfo.parseRow(stringToParse);
-        TeiidColumnInfo[] infos = fileInfo.getColumnInfoList();
+        List<ITeiidColumnInfo> infos = fileInfo.getColumnInfoList();
         int i=0;
         for( String row : parsedColumns ) {
-        	if( row != null && i < infos.length) {
-        		String value = infos[i++].getName() + "  :  " + row;  //$NON-NLS-1$
+        	if( row != null && i < infos.size()) {
+        		String value = infos.get(i++).getName() + "  :  " + row;  //$NON-NLS-1$
         		this.columnDataViewer.add(value);
         	}
         }

@@ -16,6 +16,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.query.IQueryFactory;
 import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.proc.ITeiidColumnInfo;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.XmlAttribute;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.XmlElement;
@@ -26,12 +27,7 @@ import org.teiid.designer.transformation.ui.wizards.xmlfile.XmlElement;
  *
  * @since 8.0
  */
-public class TeiidColumnInfo {
-	public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
-	public static final String INTEGER_DATATYPE = "integer"; //$NON-NLS-1$
-	
-	public static final int DEFAULT_WIDTH = 10;
-	
+public class TeiidColumnInfo implements ITeiidColumnInfo {
 	private static final IPath EMPTY_PATH = new Path(StringUtilities.EMPTY_STRING);
 	
     /**
@@ -161,7 +157,8 @@ public class TeiidColumnInfo {
 	 * 
 	 * @return name the column name
 	 */
-	public String getSymbolName() {
+	@Override
+    public String getSymbolName() {
 		return this.nameSymbol.toString();
 	}
 	
@@ -172,7 +169,8 @@ public class TeiidColumnInfo {
      * 
      * @return the column name sans quotes.
      */
-	public String getName() {
+	@Override
+    public String getName() {
 	    String name = this.nameSymbol.toString();
 	    return name.replaceAll("\"", ""); //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -192,7 +190,8 @@ public class TeiidColumnInfo {
 	 * 
 	 * @return datatype the column datatype
 	 */
-	public String getDatatype() {
+	@Override
+    public String getDatatype() {
 		return this.datatype;
 	}
 
@@ -210,7 +209,8 @@ public class TeiidColumnInfo {
 	 * 
 	 * @return name the column name
 	 */
-	public int getWidth() {
+	@Override
+    public int getWidth() {
 		return this.width;
 	}
 
@@ -228,7 +228,8 @@ public class TeiidColumnInfo {
 	 * 
 	 * @return defaultValue the column defaultValue
 	 */
-	public String getDefaultValue() {
+	@Override
+    public String getDefaultValue() {
 		return this.defaultValue;
 	}
 	
@@ -261,7 +262,8 @@ public class TeiidColumnInfo {
 	 * 
 	 * @return xmlPath the column xmlPath
 	 */
-	public String getRelativePath() {
+	@Override
+    public String getRelativePath() {
 		if( this.xmlElement != null ) {
 			// Get difference between the xmlElement full path minus the root (if applicable)
 			String fullPath = getFullXmlPath();
@@ -370,7 +372,8 @@ public class TeiidColumnInfo {
 	 * 
 	 * @return forOrdinality the column forOrdinality
 	 */
-	public boolean getOrdinality() {
+	@Override
+    public boolean getOrdinality() {
 		return this.forOrdinality;
 	}
 
@@ -387,7 +390,8 @@ public class TeiidColumnInfo {
 	 * 
 	 * @return status the <code>IStatus</code> representing the validity of the data in this info object
 	 */
-	public IStatus getStatus() {
+	@Override
+    public IStatus getStatus() {
 		return this.status;
 	}
 

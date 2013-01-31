@@ -220,7 +220,7 @@ public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements
             			if( delimitedColumnsRB.getSelection() != dataFileInfo.doUseDelimitedColumns() ) {
 			            	dataFileInfo.setUseDelimitedColumns(delimitedColumnsRB.getSelection());
 	            			dataFileInfo.setFixedWidthColumns(!delimitedColumnsRB.getSelection());
-	            			if( dataFileInfo.getColumnInfoList().length > 0 ) {
+	            			if( dataFileInfo.getColumnInfoList().size() > 0 ) {
 	            				boolean result = MessageDialog.openQuestion(getShell(),
 		            					getString("formatChangedTitle"), //$NON-NLS-1$
 		            					getString("formateChangedMessage")); //$NON-NLS-1$
@@ -246,7 +246,7 @@ public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements
             			if( fixedWidthColumnsRB.getSelection() != dataFileInfo.isFixedWidthColumns() ) {
 			            	dataFileInfo.setFixedWidthColumns(fixedWidthColumnsRB.getSelection());
 			            	dataFileInfo.setUseDelimitedColumns(!fixedWidthColumnsRB.getSelection());
-	            			if( dataFileInfo.getColumnInfoList().length > 0 ) {
+	            			if( dataFileInfo.getColumnInfoList().size() > 0 ) {
 	            				boolean result = MessageDialog.openQuestion(getShell(), 
 	            					getString("formatChangedTitle"), //$NON-NLS-1$
 	            					getString("formateChangedMessage")); //$NON-NLS-1$

@@ -14,11 +14,14 @@ package org.teiid.designer.query.sql;
  */
 public interface ISQLConstants {
 
+    String EMPTY_STR = ""; //$NON-NLS-1$
     String TAB = "\t"; //$NON-NLS-1$
     String TAB2 = "\t\t"; //$NON-NLS-1$
     String TAB3 = "\t\t\t"; //$NON-NLS-1$
     String TAB4 = "\t\t\t\t"; //$NON-NLS-1$
     String CR = "\n"; //$NON-NLS-1$
+    String CR_1 = "\\r\\n"; //$NON-NLS-1$
+    String CR_2 = "\\n"; //$NON-NLS-1$
     String BLANK = ""; //$NON-NLS-1$
     String DBL_SPACE = "  "; //$NON-NLS-1$
     String SPACE = " "; //$NON-NLS-1$
@@ -30,14 +33,15 @@ public interface ISQLConstants {
     String FROM = "FROM"; //$NON-NLS-1$
     String WHERE = "WHERE"; //$NON-NLS-1$
     String HAVING = "HAVING"; //$NON-NLS-1$
-	char DOT = '.';
-	char STAR = '*';
-    char L_PAREN = '(';
-    char R_PAREN = ')';
-    char S_QUOTE = '\'';
-    char D_QUOTE = '\"';
-    char SEMI_COLON = ';';
-    char COLON = ':';
+	String DOT = "."; //$NON-NLS-1$
+	String STAR = "*"; //$NON-NLS-1$
+    String L_PAREN = "("; //$NON-NLS-1$
+    String R_PAREN = ")"; //$NON-NLS-1$
+    String S_QUOTE = "\'"; //$NON-NLS-1$
+    String D_QUOTE = "\""; //$NON-NLS-1$
+    String SEMI_COLON = ";"; //$NON-NLS-1$
+    String COLON = ":"; //$NON-NLS-1$
+    String BAR = "|"; //$NON-NLS-1$
     String AS = "AS"; //$NON-NLS-1$
     String COLUMNS = "COLUMNS"; //$NON-NLS-1$
     String BEGIN = "BEGIN"; //$NON-NLS-1$
@@ -84,5 +88,14 @@ public interface ISQLConstants {
     String CHANGING = "CHANGING"; //$NON-NLS-1$
     String VARIABLES = "VARIABLES"; //$NON-NLS-1$
     String DVARS = "DVARS"; //$NON-NLS-1$
+    
+    String DEFAULT_DELIMITER = ",";
+    String DEFAULT_QUOTE = "'";
+    String DEFAULT_ESCAPE = "\\";
+    
+    String HEADER = "HEADER"; //$NON-NLS-1$
+    String SKIP = "SKIP"; //$NON-NLS-1$
+    String WIDTH = "width"; //$NON-NLS-1$
+    
     
 }
