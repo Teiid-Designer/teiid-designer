@@ -11,9 +11,8 @@ import org.junit.Before;
 import org.komodo.repository.RepositoryManager;
 import org.komodo.repository.RepositoryTest;
 import org.komodo.shell.ShellConstants;
-import org.komodo.shell.command.KomodoCommand;
-import org.overlord.sramp.shell.ShellContext;
-import org.overlord.sramp.shell.ShellContextImpl;
+import org.overlord.sramp.shell.api.ShellContext;
+import org.overlord.sramp.shell.api.SimpleShellContext;
 
 /**
  * The base class for Komodo S-RAMP shell command tests.
@@ -34,8 +33,9 @@ public abstract class ShellCommandTest extends RepositoryTest implements ShellCo
     public void setupContext() {
         this.settings = new RepositoryManager.QuerySettings();
 
-        this.context = new ShellContextImpl();
+        this.context = new SimpleShellContext();
         this.context.setVariable(KOMODO_CLIENT_QNAME, _repoMgr);
         getCommand().setContext(this.context);
     }
+
 }

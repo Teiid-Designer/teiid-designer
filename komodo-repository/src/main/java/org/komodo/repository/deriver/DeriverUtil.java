@@ -32,7 +32,24 @@ public class DeriverUtil implements RepositoryConstants {
     private static final String UUID_QUERY_PATTERN = Sramp.ROOT_PATH + "[@uuid = '%s']"; //$NON-NLS-1$
 
     /**
-     * Creates the relationships if necessary.
+     * Creates a one way relationship. Creates the relationship instance if necessary.
+     * 
+     * @param sourceArtifact the artifact where the relationship starts (cannot be <code>null</code>)
+     * @param targetArtifact the artifact where the relationship ends (cannot be <code>null</code>)
+     * @param relationshipType the relationship type (cannot be <code>null</code>)
+     */
+    public static void addRelationship(final BaseArtifactType sourceArtifact,
+                                       final BaseArtifactType targetArtifact,
+                                       final Artifact.RelationshipType relationshipType) {
+        Precondition.notNull(sourceArtifact, "sourceArtifact"); //$NON-NLS-1$
+        Precondition.notNull(targetArtifact, "targetArtifact"); //$NON-NLS-1$
+        Precondition.notNull(relationshipType, "relationshipType"); //$NON-NLS-1$
+
+        SrampModelUtils.addGenericRelationship(sourceArtifact, relationshipType.getId(), targetArtifact.getUuid());
+    }
+
+    /**
+     * Creates a two way relationship. Creates the relationship instance if necessary.
      * 
      * @param sourceArtifact the artifact where the relationship starts (cannot be <code>null</code>)
      * @param targetArtifact the artifact where the relationship ends (cannot be <code>null</code>)
@@ -48,8 +65,8 @@ public class DeriverUtil implements RepositoryConstants {
         Precondition.notNull(relationshipType, "relationshipType"); //$NON-NLS-1$
         Precondition.notNull(inverseRelationshipType, "inverseRelationshipType"); //$NON-NLS-1$
 
-        SrampModelUtils.addGenericRelationship(sourceArtifact, relationshipType.getName(), targetArtifact.getUuid());
-        SrampModelUtils.addGenericRelationship(targetArtifact, inverseRelationshipType.getName(), sourceArtifact.getUuid());
+        SrampModelUtils.addGenericRelationship(sourceArtifact, relationshipType.getId(), targetArtifact.getUuid());
+        SrampModelUtils.addGenericRelationship(targetArtifact, inverseRelationshipType.getId(), sourceArtifact.getUuid());
     }
 
     /**
@@ -63,7 +80,7 @@ public class DeriverUtil implements RepositoryConstants {
         String path = Sramp.USER_DEFINED_ARTIFACT_PATH;
 
         if (settings.artifactType != null) {
-            path += '/' + settings.artifactType.getName();
+            path += '/' + settings.artifactType.getId();
         }
 
         if (CollectionUtil.isEmpty(settings.params)) {

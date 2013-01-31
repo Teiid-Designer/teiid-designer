@@ -27,7 +27,12 @@
 
         <dependency>
             <groupId>org.overlord.sramp</groupId>
-            <artifactId>s-ramp-shell</artifactId>
+            <artifactId>s-ramp-shell-api</artifactId>
+        </dependency>
+
+        <dependency>
+             <groupId>org.overlord.sramp</groupId>
+             <artifactId>s-ramp-client</artifactId>
         </dependency>
 
         <!--
@@ -42,12 +47,6 @@
             <groupId>org.komodo</groupId>
             <artifactId>komodo-repository</artifactId>
             <classifier>tests</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>org.overlord.sramp</groupId>
-            <artifactId>s-ramp-atom</artifactId>
-            <classifier>classes</classifier>
         </dependency>
 
         <dependency>

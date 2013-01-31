@@ -10,8 +10,8 @@ package org.komodo.shell.command;
 import java.util.HashMap;
 import java.util.Map;
 import org.komodo.shell.ShellConstants;
-import org.overlord.sramp.shell.ShellCommand;
-import org.overlord.sramp.shell.ShellCommandProvider;
+import org.overlord.sramp.shell.api.ShellCommand;
+import org.overlord.sramp.shell.api.ShellCommandProvider;
 
 /**
  * Provides the Komodo commands used by the shell.
@@ -21,7 +21,7 @@ public class KomodoCommandProvider implements ShellCommandProvider {
     /**
      * {@inheritDoc}
      *
-     * @see org.overlord.sramp.shell.ShellCommandProvider#getNamespace()
+     * @see org.overlord.sramp.shell.api.ShellCommandProvider#getNamespace()
      */
     @Override
     public String getNamespace() {
@@ -31,7 +31,7 @@ public class KomodoCommandProvider implements ShellCommandProvider {
     /**
      * {@inheritDoc}
      *
-     * @see org.overlord.sramp.shell.ShellCommandProvider#provideCommands()
+     * @see org.overlord.sramp.shell.api.ShellCommandProvider#provideCommands()
      */
     @Override
     public Map<String, Class<? extends ShellCommand>> provideCommands() {

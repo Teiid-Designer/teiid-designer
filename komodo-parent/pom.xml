@@ -81,10 +81,11 @@
         <junit.version>4.10</junit.version>
         <komodo.java.version>1.6</komodo.java.version>
         <log4j.version>1.2.16</log4j.version>
+        <modeshape.version>3.1.0.Final</modeshape.version>
         <resteasy.version>2.3.4.Final</resteasy.version>
         <slf4j.api.version>1.6.1</slf4j.api.version>
         <slf4j.log4j.version>1.6.1</slf4j.log4j.version>
-        <s-ramp.version>0.0.3-SNAPSHOT</s-ramp.version>
+        <s-ramp.version>0.1.0-SNAPSHOT</s-ramp.version>
     </properties>
  
     <dependencyManagement>
@@ -96,6 +97,14 @@
                 <groupId>org.komodo</groupId>
                 <artifactId>komodo-common</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.komodo</groupId>
+                <artifactId>komodo-common</artifactId>
+                <version>${project.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
             </dependency>
 
             <dependency>
@@ -146,16 +155,9 @@
 
             <dependency>
                 <groupId>org.overlord.sramp</groupId>
-                <artifactId>s-ramp-repository-jcr</artifactId>
+                <artifactId>s-ramp-repository-jcr-modeshape</artifactId>
                 <version>${s-ramp.version}</version>
                 <classifier>tests</classifier>
-            </dependency>
-
-            <dependency>
-                <groupId>org.overlord.sramp</groupId>
-                <artifactId>s-ramp-atom</artifactId>
-                <version>${s-ramp.version}</version>
-                <classifier>classes</classifier>
             </dependency>
 
             <dependency>
@@ -168,8 +170,17 @@
 
             <dependency>
                 <groupId>org.overlord.sramp</groupId>
-                <artifactId>s-ramp-shell</artifactId>
+                <artifactId>s-ramp-shell-api</artifactId>
                 <version>${s-ramp.version}</version>
+            </dependency>
+
+            <!--
+                ModeShape
+            -->
+            <dependency>
+                <groupId>org.modeshape</groupId>
+                <artifactId>modeshape-jcr</artifactId>
+                <version>${modeshape.version}</version>
             </dependency>
 
             <!--

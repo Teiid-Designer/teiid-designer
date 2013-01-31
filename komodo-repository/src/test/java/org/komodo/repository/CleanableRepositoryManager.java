@@ -7,7 +7,9 @@
 */
 package org.komodo.repository;
 
-import org.overlord.sramp.repository.jcr.JCRRepositoryCleaner;
+import org.overlord.sramp.repository.jcr.modeshape.JCRRepositoryCleaner;
+
+
 
 /**
  * A repository manager that uses the S-RAMP atom interface that can be used for testing.

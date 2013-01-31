@@ -10,6 +10,7 @@ package org.komodo.repository;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import java.io.InputStream;
+import java.util.List;
 import org.jboss.resteasy.spi.Registry;
 import org.jboss.resteasy.spi.ResteasyDeployment;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
@@ -17,7 +18,9 @@ import org.jboss.resteasy.test.EmbeddedContainer;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.komodo.common.util.CollectionUtil;
 import org.komodo.common.util.Precondition;
+import org.komodo.repository.artifact.Artifact;
 import org.overlord.sramp.atom.providers.HttpResponseProvider;
 import org.overlord.sramp.atom.providers.OntologyProvider;
 import org.overlord.sramp.atom.providers.SrampAtomExceptionProvider;
@@ -31,6 +34,8 @@ import org.overlord.sramp.server.atom.services.OntologyResource;
 import org.overlord.sramp.server.atom.services.QueryResource;
 import org.overlord.sramp.server.atom.services.ServiceDocumentResource;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
+import org.s_ramp.xmlns._2010.s_ramp.Relationship;
+import org.s_ramp.xmlns._2010.s_ramp.Target;
 
 /**
  * The base class for Komodo repository artifact tests.
@@ -39,6 +44,14 @@ import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 public abstract class RepositoryTest implements RepositoryConstants {
 
     protected static RepositoryManager _repoMgr;
+
+    @AfterClass
+    public static void shutdownRepository() throws Exception {
+        if (_repoMgr != null) {
+            EmbeddedContainer.stop();
+            PersistenceFactory.newInstance().shutdown();
+        }
+    }
 
     @BeforeClass
     public static void startRepository() throws Exception {
@@ -66,14 +79,6 @@ public abstract class RepositoryTest implements RepositoryConstants {
         providerFactory.registerProvider(OntologyProvider.class);
 
         _repoMgr = new CleanableRepositoryManager();
-    }
-
-    @AfterClass
-    public static void shutdownRepository() throws Exception {
-        if (_repoMgr != null) {
-            EmbeddedContainer.stop();
-            PersistenceFactory.newInstance().shutdown();
-        }
     }
 
     /**
@@ -104,6 +109,51 @@ public abstract class RepositoryTest implements RepositoryConstants {
 
         final String actual = SrampModelUtils.getCustomProperty(artifact, customPropertyName);
         assertThat(actual, is(expected));
+    }
+
+    protected void assertRelationshipTargetUuid(final BaseArtifactType artifact,
+                                                final Artifact.RelationshipType relationshipType,
+                                                final String targetArtifactUuid) {
+        assert (artifact != null);
+        assert (relationshipType != null);
+        assert ((targetArtifactUuid != null) && !targetArtifactUuid.isEmpty());
+
+        final List<Relationship> relationships = artifact.getRelationship();
+
+        if (CollectionUtil.isEmpty(relationships)) {
+            throw new AssertionError("No relationships found for artifact '" + artifact.getName() + '\'');
+        }
+
+        final String relationshipId = relationshipType.getId();
+        boolean relationshipFound = false;
+        boolean targetFound = false;
+
+        for (final Relationship relationship : relationships) {
+            if (relationship.getRelationshipType().equals(relationshipId)) {
+                relationshipFound = true;
+                final List<Target> targets = relationship.getRelationshipTarget();
+
+                if (CollectionUtil.isEmpty(targets)) {
+                    throw new AssertionError("No targets found for relationship '" + relationshipId + "' and artifact '"
+                                             + artifact.getName() + '\'');
+                }
+
+                for (final Target target : targets) {
+                    if (targetArtifactUuid.equals(target.getValue())) {
+                        targetFound = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!relationshipFound) {
+            throw new AssertionError("Relationship '" + relationshipId + "' was not found for artifact '" + artifact.getName()
+                                     + '\'');
+        } else if (!targetFound) {
+            throw new AssertionError("Target '" + targetArtifactUuid + ", for relationship '" + relationshipId
+                                     + "' and artifact '" + artifact.getName() + "' was not found");
+        }
     }
 
     /**

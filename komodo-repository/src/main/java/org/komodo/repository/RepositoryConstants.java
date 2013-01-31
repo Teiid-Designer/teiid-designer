@@ -7,6 +7,7 @@
 */
 package org.komodo.repository;
 
+import org.komodo.repository.artifact.Artifact.RelationshipType;
 
 /**
  * Constants used when working with the S-RAMP database and Teiid artifacts.
@@ -27,6 +28,23 @@ public interface RepositoryConstants {
          * The root node path in the S-RAMP database for document artifacts. Value is {@value}.
          */
         String DOCUMENT_ARTIFACT_PATH = ROOT_PATH + "/core/Document"; //$NON-NLS-1$
+
+        /**
+         * A relationship between a derived artifact and the document artifact. This is created by S-RAMP deriver framework.
+         */
+        RelationshipType RELATED_DOCUMENT_RELATIONSHIP = new RelationshipType() {
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.komodo.repository.artifact.Artifact.RelationshipType#getId()
+             */
+            @Override
+            public String getId() {
+                return "relatedDocument"; //$NON-NLS-1$
+            }
+
+        };
 
         /**
          * The root node path in the S-RAMP database for user-defined artifacts. Value is {@value}.

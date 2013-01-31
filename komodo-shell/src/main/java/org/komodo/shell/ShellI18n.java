@@ -17,10 +17,10 @@ public class ShellI18n extends I18n {
 
     public static String addVdbCommandHelp;
     public static String addVdbCommandUsage;
+    public static String commandError;
     public static String connectionNotFound;
     public static String connectKomodoCommandHelp;
     public static String connectKomodoCommandUsage;
-    public static String failedConnection;
     public static String failedToOpenStream;
     public static String getVdbCommandHelp;
     public static String getVdbCommandUsage;
