@@ -16,7 +16,8 @@ import java.util.Map;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.teiid.designer.DesignerSPIPlugin;
+import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.Messages;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.runtime.spi.IExecutionAdmin;
 import org.teiid.designer.runtime.spi.IExecutionAdminFactory;
@@ -112,8 +113,7 @@ public class TeiidRuntimeRegistry {
     public IDataTypeManagerService getDataTypeManagerService(ITeiidServerVersion teiidServerVersion) throws Exception {
         IExecutionAdminFactory factory = search(teiidServerVersion);
         if (factory == null)
-            throw new Exception(DesignerSPIPlugin.Util.getString(
-                                                                 getClass().getSimpleName() + ".NoExecutionAdminFactory", teiidServerVersion)); //$NON-NLS-1$
+            throw new Exception(NLS.bind(Messages.NoExecutionAdminFactory, teiidServerVersion));
         
         return factory.getDataTypeManagerService();
     }
@@ -129,8 +129,7 @@ public class TeiidRuntimeRegistry {
     public IQueryService getQueryService(ITeiidServerVersion teiidServerVersion) throws Exception {
         IExecutionAdminFactory factory = search(teiidServerVersion);
         if (factory == null)
-            throw new Exception(DesignerSPIPlugin.Util.getString(
-                                                                 getClass().getSimpleName() + ".NoExecutionAdminFactory", teiidServerVersion)); //$NON-NLS-1$
+            throw new Exception(NLS.bind(Messages.NoExecutionAdminFactory, teiidServerVersion));
         
         return factory.getQueryService();
     }
@@ -140,7 +139,6 @@ public class TeiidRuntimeRegistry {
      * @return
      */
     private IExecutionAdminFactory search(ITeiidServerVersion serverVersion) {
-        final String WILDCARD = ITeiidServerVersion.WILDCARD;
         
         IExecutionAdminFactory factory = factories.get(serverVersion);
         if (factory != null)

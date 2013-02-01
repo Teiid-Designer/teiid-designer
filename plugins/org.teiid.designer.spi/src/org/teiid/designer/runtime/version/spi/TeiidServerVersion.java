@@ -7,7 +7,8 @@
 */
 package org.teiid.designer.runtime.version.spi;
 
-import org.teiid.core.designer.util.CoreArgCheck;
+import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.Messages;
 
 
 /**
@@ -44,9 +45,14 @@ public class TeiidServerVersion implements ITeiidServerVersion {
      * @param micro
      */
     public TeiidServerVersion(String major, String minor, String micro) {
-        CoreArgCheck.isNotNull(major);
-        CoreArgCheck.isNotNull(minor);
-        CoreArgCheck.isNotNull(micro);
+        if (major == null)
+            throw new IllegalArgumentException(NLS.bind(Messages.valueCannotBeNull, "major")); //$NON-NLS-1$
+        
+        if (minor == null)
+            throw new IllegalArgumentException(NLS.bind(Messages.valueCannotBeNull, "minor")); //$NON-NLS-1$
+        
+        if (micro == null)
+            throw new IllegalArgumentException(NLS.bind(Messages.valueCannotBeNull, "micro")); //$NON-NLS-1$
         
         this.majorVersion = major;
         this.minorVersion = minor;

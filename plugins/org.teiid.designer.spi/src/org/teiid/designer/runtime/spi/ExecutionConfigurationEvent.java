@@ -7,8 +7,8 @@
  */
 package org.teiid.designer.runtime.spi;
 
-import static org.teiid.designer.DesignerSPIPlugin.Util;
-import org.teiid.core.designer.util.CoreArgCheck;
+import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.Messages;
 
 
 /**
@@ -72,7 +72,9 @@ public final class ExecutionConfigurationEvent {
                                          TargetType targetType,
                                          Object target ) {
         this(eventType, targetType, target, null);
-        CoreArgCheck.isNotNull(target, "target"); //$NON-NLS-1$
+        if (target == null) {
+            throw new IllegalArgumentException(NLS.bind(Messages.valueCannotBeNull, "target")); //$NON-NLS-1$
+        }
     }
 
     private ExecutionConfigurationEvent( EventType eventType,
@@ -103,7 +105,7 @@ public final class ExecutionConfigurationEvent {
      */
     public ITeiidDataSource getDataSource() {
         if (this.targetType != TargetType.DATA_SOURCE) {
-            throw new IllegalStateException(Util.getString("invalidTargetTypeForGetDataSourceMethod", //$NON-NLS-1$
+            throw new IllegalStateException(NLS.bind(Messages.invalidTargetTypeForGetDataSourceMethod, 
                                                            this.targetType,
                                                            TargetType.DATA_SOURCE));
         }
@@ -126,7 +128,7 @@ public final class ExecutionConfigurationEvent {
      */
     public ITeiidServer getServer() {
         if (this.targetType != TargetType.SERVER) {
-            throw new IllegalStateException(Util.getString("invalidTargetTypeForGetServerMethod", //$NON-NLS-1$
+            throw new IllegalStateException(NLS.bind(Messages.invalidTargetTypeForGetServerMethod,
                                                            this.targetType,
                                                            TargetType.SERVER));
         }
@@ -147,7 +149,7 @@ public final class ExecutionConfigurationEvent {
      */
     public ITeiidTranslator getTranslator() {
         if (this.targetType != TargetType.TRANSLATOR) {
-            throw new IllegalStateException(Util.getString("invalidTargetTypeForGetTranslatorMethod", //$NON-NLS-1$
+            throw new IllegalStateException(NLS.bind(Messages.invalidTargetTypeForGetTranslatorMethod,
                                                            this.targetType,
                                                            TargetType.TRANSLATOR));
         }
@@ -163,7 +165,7 @@ public final class ExecutionConfigurationEvent {
      */
     public ITeiidServer getUpdatedServer() {
         if (this.targetType != TargetType.SERVER) {
-            throw new IllegalStateException(Util.getString("invalidTargetTypeForGetUpdatedServerMethod", //$NON-NLS-1$
+            throw new IllegalStateException(NLS.bind(Messages.invalidTargetTypeForGetUpdatedServerMethod,
                                                            this.targetType,
                                                            TargetType.SERVER));
         }
