@@ -30,7 +30,7 @@ public class FunctionModelExtensionAssistant extends EmfModelObjectExtensionAssi
     }
 
     private enum PropertyName {
-
+        UDF_JAR_PATH(getPropertyId("udfJarPath")), //$NON-NLS-1$
         AGGREGATE(getPropertyId("aggregate")), //$NON-NLS-1$
         ALLOWS_ORDER_BY(getPropertyId("allows-orderby")), //$NON-NLS-1$
         ALLOWS_DISTINCT(getPropertyId("allows-distinct")), //$NON-NLS-1$

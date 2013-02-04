@@ -55,6 +55,11 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
  */
 public final class UdfManager implements IResourceChangeListener {
     
+    public static final String RELATIONAL_EXT_PROP_PREFIX = "relational:"; //$NON-NLS-1$
+    public static final String FUNCTION_CATEGORY_PROP = "relational:function-category"; //$NON-NLS-1$
+    public static final String JAVA_CLASS_PROP = "relational:java-class"; //$NON-NLS-1$
+    public static final String JAVA_METHOD_PROP = "relational:java-method"; //$NON-NLS-1$
+
     private static UdfManager INSTANCE;
     
     private ModelObjectAnnotationHelper ANNOTATION_HELPER = new ModelObjectAnnotationHelper();
@@ -126,7 +131,8 @@ public final class UdfManager implements IResourceChangeListener {
         
         // register as a listener for when the default server version is modified
         ModelerCore.addTeiidServerVersionListener(teiidServerVersionListener);
-        
+
+        // Register ModelResources that 1) are type function model or 2) are type relational, containing a procedure with function=true
         Collection<IResource> allResources = WorkspaceResourceFinderUtil.getAllWorkspaceResources();
         try {
             for( IResource next : allResources ) {
@@ -135,9 +141,15 @@ public final class UdfManager implements IResourceChangeListener {
                 }
                 ModelResource mr = ModelUtil.getModelResource((IFile)next, true);
 
-                if( mr.getModelType().getValue() == ModelType.FUNCTION) {
+                int theModelType = mr.getModelType().getValue();
+                if( theModelType == ModelType.FUNCTION) {
                     registerFunctionModel(mr, false);
-                } 
+                } else if(theModelType == ModelType.PHYSICAL || theModelType==ModelType.VIRTUAL) {
+                    Collection<Procedure> functionProcs = getFunctions(mr);
+                    if(!functionProcs.isEmpty()) {
+                        registerFunctionModel(mr,false);
+                    }
+                }
             }
         } catch (Exception err) {
             UdfPlugin.UTIL.log(err);
@@ -340,6 +352,10 @@ public final class UdfManager implements IResourceChangeListener {
     	return this.systemFunctionLibrary;
     }
     
+    /**
+     * Get the FunctionLibrary
+     * @return the FunctionLibrary
+     */
     public synchronized IFunctionLibrary<IFunctionForm, IFunctionDescriptor> getFunctionLibrary() {
     	//System.out.println("UdfManger.getFunctionLibrary()");
     	if( !changed && this.cachedFunctionLibrary != null ) {
@@ -413,15 +429,21 @@ public final class UdfManager implements IResourceChangeListener {
         	}
         }
         
-        // Now walk "Source relational models" to search for new Procedures that have FUNCTION = true set
+        // Now walk "Relational models" to search for new Procedures that have FUNCTION = true set
+        // -- Source procedures will be the pushdown functions
+        // -- View procedures will be the user-defined functions
         
-        for( ModelResource sourceModel : getSourceRelationalModels() ) {
+        for( ModelResource sourceModel : getRelationalModels() ) {
         	
     		IMarker[] markers = getMarkers(sourceModel);
     		
     		String schema = FileUtils.getFilenameWithoutExtension(sourceModel.getItemName());
     		
-    		for( Procedure procedure : getPushdownFunctions(sourceModel) ) {
+    		for( Procedure procedure : getFunctions(sourceModel) ) {
+    		    
+    		    // Determine if working with a Source or View Model
+    		    boolean isPhysical = ModelUtil.isPhysical(procedure);
+    		    
     			// Also the Function's input parameters AND it's return parameter (if non-null) need to be error free
     			
     			ProcedureWrapper wrappedProcedure = new ProcedureWrapper(procedure);
@@ -460,18 +482,26 @@ public final class UdfManager implements IResourceChangeListener {
     			String returnParamName = ModelerCore.getModelEditor().getName(wrappedProcedure.getReturnParameter());
     			FunctionParameterDescriptor outputParam = new FunctionParameterDescriptor(returnParamName, dTypeName); 
     			
-    			// Set the category name as the Model Name
-    			String category = sourceModel.getItemName();
-    			if( category.endsWith(".xmi")) { //$NON-NLS-1$
-    				category = category.replaceAll(".xmi", StringUtilities.EMPTY_STRING); //$NON-NLS-1$
-    			}
+    			String category = wrappedProcedure.getCategory();
+                String javaClass = wrappedProcedure.getJavaClass();
+                String javaMethod = wrappedProcedure.getJavaMethod();
+
+                boolean javaClassAndMethodEmpty = (javaClass==null && javaMethod==null) ? true : false;
+                
+    			// For source pushdown function, set the category name as the Model Name
+                if(isPhysical && javaClassAndMethodEmpty) {
+                    category = sourceModel.getItemName();
+                    if( category.endsWith(".xmi")) { //$NON-NLS-1$
+                        category = category.replaceAll(".xmi", StringUtilities.EMPTY_STRING); //$NON-NLS-1$
+                    }
+                }
     			
     			FunctionMethodDescriptor fMethodDescriptor = new FunctionMethodDescriptor(procedure,
     			                                                                            wrappedProcedure.getName(), 
     			                                                                            description, 
     			                                                                            category, 
-    			                                                                            null, 
-    			                                                                            null,
+    			                                                                            javaClass, 
+    			                                                                            javaMethod,
     			                                                                            fParams.toArray(new FunctionParameterDescriptor[0]),
     			                                                                            outputParam,
     			                                                                            schema);
@@ -491,12 +521,15 @@ public final class UdfManager implements IResourceChangeListener {
         return this.cachedFunctionLibrary;
     }
     
-    private Collection<Procedure> getPushdownFunctions(ModelResource sourceModel) {
+    /*
+     * Get all procedures from the supplied model, where FUNCTION=true
+     */
+    private Collection<Procedure> getFunctions(ModelResource relationalModel) {
     	Collection<Procedure> functions = new ArrayList<Procedure>();
     	
     	try {
         	
-        	final ModelObjectCollector moc = new ModelObjectCollector(sourceModel.getEmfResource());
+        	final ModelObjectCollector moc = new ModelObjectCollector(relationalModel.getEmfResource());
             for( Object eObj : moc.getEObjects()){
             	if( eObj instanceof Procedure ) {
             		if( ((Procedure)eObj).isFunction()) {
@@ -510,17 +543,16 @@ public final class UdfManager implements IResourceChangeListener {
     	return functions;
     }
     
-    private Collection<ModelResource> getSourceRelationalModels() {
-    	Collection<ModelResource> sources = new ArrayList<ModelResource>();
+    private Collection<ModelResource> getRelationalModels() {
+    	Collection<ModelResource> relationalMdls = new ArrayList<ModelResource>();
     	
     	try {
 			ModelResource[] allModels = ModelWorkspaceManager.getModelWorkspaceManager().getModelWorkspace().getModelResources();
 			
 			for( ModelResource model : allModels ) {
 				String uri = model.getPrimaryMetamodelUri();
-				if( RelationalPackage.eNS_URI.equalsIgnoreCase(uri) &&
-					model.getModelType() == ModelType.PHYSICAL_LITERAL ) {
-					sources.add(model);
+				if( RelationalPackage.eNS_URI.equalsIgnoreCase(uri) ) {
+				    relationalMdls.add(model);
 				}
 			}
 			
@@ -529,7 +561,7 @@ public final class UdfManager implements IResourceChangeListener {
 		}
     	
     	
-    	return sources;
+    	return relationalMdls;
     }
     
     private ScalarFunction[] getScalarFunctions(ModelResource mr) {
@@ -584,6 +616,9 @@ public final class UdfManager implements IResourceChangeListener {
     	ProcedureParameter returnParam;
     	Collection<ProcedureParameter> inputParams;
     	boolean deterministic = false;
+    	String category;
+    	String javaClass;
+    	String javaMethod;
     	
     	public ProcedureWrapper(Procedure procedure) {
     		super();
@@ -601,14 +636,30 @@ public final class UdfManager implements IResourceChangeListener {
     				returnParam = param;
     			}
     		}
+
     		try {
-				Properties props = ANNOTATION_HELPER.getExtendedProperties(procedure);
+    		    Properties relationalProps = ANNOTATION_HELPER.getProperties(procedure, UdfManager.RELATIONAL_EXT_PROP_PREFIX);
+				Properties extProps = ANNOTATION_HELPER.getExtendedProperties(procedure);
 				
-				if( props != null && props.size() > 0 ) {
-					Object determValue = props.get(PushdownFunctionData.DETERMINISTIC_PROPERTY_KEY);
+				if( extProps != null && extProps.size() > 0 ) {
+					Object determValue = extProps.get(PushdownFunctionData.DETERMINISTIC_PROPERTY_KEY);
 					if( determValue != null ) {
 						deterministic = Boolean.valueOf((String)determValue);
 					}
+				}
+				if(relationalProps!=null && relationalProps.size()>0) {
+					Object categoryValue = relationalProps.get(UdfManager.FUNCTION_CATEGORY_PROP);
+					if(categoryValue!=null && !((String)categoryValue).isEmpty()) {
+					    category = (String)categoryValue;
+					}
+                    Object javaClassValue = relationalProps.get(UdfManager.JAVA_CLASS_PROP);
+                    if(javaClassValue!=null && !((String)javaClassValue).isEmpty()) {
+                        javaClass = (String)javaClassValue;
+                    }
+                    Object javaMethodValue = relationalProps.get(UdfManager.JAVA_METHOD_PROP);
+                    if(javaMethodValue!=null && !((String)javaMethodValue).isEmpty()) {
+                        javaMethod = (String)javaMethodValue;
+                    }
 				}
 			} catch (ModelerCoreException ex) {
 				UdfPlugin.UTIL.log(ex);
@@ -630,5 +681,26 @@ public final class UdfManager implements IResourceChangeListener {
     	public boolean isDeterministic() {
     		return this.deterministic;
     	}
+    	
+    	/*
+    	 * Get the category.  Will only be set for view function - will be null for source
+    	 */
+    	public String getCategory() {
+    	    return category;
+    	}
+    	
+        /*
+         * Get the java class.  Will only be set for view function - will be null for source
+         */
+        public String getJavaClass() {
+            return javaClass;
+        }
+        
+        /*
+         * Get the java method.  Will only be set for view function - will be null for source
+         */
+        public String getJavaMethod() {
+            return javaMethod;
+        }
     }
 }

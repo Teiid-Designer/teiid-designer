@@ -1,19 +1,65 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Relational"
-                  namespaceUri="http://www.teiid.org/ext/relational/2012"
-                  namespacePrefix="relational"
-                  xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012"
-                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd"
-                  version="1">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="relational" namespaceUri="http://www.teiid.org/ext/relational/2012" version="3" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
     <p:description>Relational metamodel extension properties</p:description>
     <p:modelType>PHYSICAL</p:modelType>
-
+    <p:modelType>VIRTUAL</p:modelType>
     <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ProcedureImpl">
-        <p:property name="deterministic" type="boolean" defaultValue="false" index="true">
-            <p:description locale="en_US">Specifies that the source function will always returns the same result for a specific input value</p:description>
-            <p:display locale="en_US">Deterministic</p:display>
+        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="deterministic" required="false" type="boolean">
+            <p:description locale="en">Specifies that the source function will always return the same result for a specific input value</p:description>
+            <p:display locale="en">Deterministic</p:display>
+        </p:property>
+        <p:property advanced="false" index="true" masked="false" name="native-query" required="false" type="string">
+            <p:display locale="en">Native Query</p:display>
+        </p:property>
+        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="non-prepared" required="false" type="boolean">
+            <p:display locale="en">Non-Prepared</p:display>
+        </p:property>
+        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="aggregate" required="true" type="boolean">
+            <p:display locale="en">Aggregate</p:display>
+        </p:property>
+        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="analytic" required="false" type="boolean">
+            <p:display locale="en">Analytic</p:display>
+        </p:property>
+        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="allows-orderby" required="false" type="boolean">
+            <p:display locale="en">Allows Order-by</p:display>
+        </p:property>
+        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="uses-distinct-rows" required="false" type="boolean">
+            <p:display locale="en">Uses Distinct Rows</p:display>
+        </p:property>
+        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="allows-distinct" required="false" type="boolean">
+            <p:display locale="en">Allows Distinct</p:display>
+        </p:property>
+        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="decomposable" required="false" type="boolean">
+            <p:display locale="en">Decomposable</p:display>
+        </p:property>
+        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="varargs" required="false" type="boolean">
+            <p:description locale="en_US">Indicates that the last arg may be repeated a variable number of times.</p:description>
+            <p:display locale="en_US">Variable Arguments</p:display>
+        </p:property>
+        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="null-on-null" required="false" type="boolean">
+            <p:description locale="en_US">indicates that the function will return null.</p:description>
+            <p:display locale="en_US">Returns null on null</p:display>
+        </p:property>
+        <p:property advanced="false" index="true" masked="false" name="function-category" required="false" type="string">
+            <p:description locale="en_US">The category for function procedures</p:description>
+            <p:display locale="en_US">Function Category</p:display>
+        </p:property>
+        <p:property advanced="false" index="true" masked="false" name="java-class" required="false" type="string">
+            <p:description locale="en_US">The java class containing the user defined function</p:description>
+            <p:display locale="en_US">Java Class</p:display>
+        </p:property>
+        <p:property advanced="false" index="true" masked="false" name="java-method" required="false" type="string">
+            <p:description locale="en_US">The java method defining the user defined function</p:description>
+            <p:display locale="en_US">Java Method</p:display>
+        </p:property>
+        <p:property advanced="false" defaultValue="" index="false" masked="false" name="udfJarPath" required="false" type="string">
+            <p:description locale="en_US">The project-relative path where the UDF jar is located</p:description>
+            <p:display locale="en">UDF Jar Path</p:display>
         </p:property>
     </p:extendedMetaclass>
-
-</p:modelExtension>
+    <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.BaseTableImpl">
+        <p:property advanced="false" index="true" masked="false" name="native-query" required="false" type="string">
+            <p:display locale="en">Native Query</p:display>
+        </p:property>
+    </p:extendedMetaclass>
+</modelExtension>

@@ -33,9 +33,11 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.util.CoreStringUtil;
@@ -46,11 +48,19 @@ import org.teiid.designer.core.index.Index;
 import org.teiid.designer.core.index.IndexUtil;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
-import org.teiid.designer.vdb.manifest.ImportVdbElement;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
+import org.teiid.designer.metamodels.function.FunctionPlugin;
+import org.teiid.designer.metamodels.function.ScalarFunction;
+import org.teiid.designer.metamodels.function.extension.FunctionModelExtensionConstants;
+import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.RelationalPlugin;
+import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionConstants;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
@@ -83,6 +93,7 @@ public final class VdbModelEntry extends VdbEntry {
     private final CopyOnWriteArraySet<VdbModelEntry> imports = new CopyOnWriteArraySet<VdbModelEntry>();
     private final CopyOnWriteArraySet<VdbModelEntry> importedBy = new CopyOnWriteArraySet<VdbModelEntry>();
     private final CopyOnWriteArraySet<String> importVdbNames = new CopyOnWriteArraySet<String>();
+    private final CopyOnWriteArraySet<VdbFileEntry> udfJars = new CopyOnWriteArraySet<VdbFileEntry>();
     private final String modelClass;
     private final boolean builtIn;
     private final String type;
@@ -148,6 +159,77 @@ public final class VdbModelEntry extends VdbEntry {
         }
     }
 
+    private void updateUdfJars(Resource model) {
+        if(model==null) return;
+        
+        udfJars.clear();
+        
+        // Find available udf jar resources in the project
+        final ModelResource mdlResrc = ModelerCore.getModelEditor().findModelResource(model);
+        IProject project = mdlResrc.getModelProject().getProject();
+        List<IResource> jarResources = VdbHelper.getUdfJarResources(project);
+        
+        // Get all scalar functions in the Model, then update the jarPaths
+        List<EObject> children = model.getContents();
+        for(EObject eObj: children) {
+            // Look for ScalarFunctions and Procedure in View Model with function=true
+            String udfJarPath = null;
+            if(eObj instanceof ScalarFunction) {
+                udfJarPath = getUdfJarPath((ScalarFunction)eObj);
+            } else if(eObj instanceof Procedure && ((Procedure)eObj).isFunction()) {
+                udfJarPath = getUdfJarPath((Procedure)eObj);
+            }
+            if(udfJarPath!=null && udfJarPath.trim().length()!=0) {
+                // Go thru available jar resources
+                for(IResource jarResource: jarResources) {
+                    if(jarResource instanceof IFile) {
+                        IPath path = ((IFile)jarResource).getProjectRelativePath();
+                        if(path.toString().equals(udfJarPath)) {
+                            udfJars.add(new VdbFileEntry(getVdb(), jarResource.getFullPath(), VdbFileEntry.FileEntryType.UDFJar, new NullProgressMonitor()));
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
+     * Get the Udf jarPath property from the supplied ScalarFunction
+     * @param scalarFunc the supplied ScalarFunction
+     * @return the Udf jarPath property value
+     */
+    public static String getUdfJarPath(final ScalarFunction scalarFunc) {
+        String udfJarPath = null;
+        ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(FunctionModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix());
+        if(assistant!=null) {
+            try {
+                udfJarPath = assistant.getPropertyValue(scalarFunc, FunctionModelExtensionConstants.PropertyIds.UDF_JAR_PATH);
+            } catch (Exception ex) {
+                ModelerCore.Util.log(IStatus.ERROR,ex,FunctionPlugin.Util.getString("FunctionUtil.ErrorGettingJarPath", scalarFunc.getName())); //$NON-NLS-1$
+            }
+        }
+        return udfJarPath;
+    }
+    
+    /**
+     * Get the Udf jarPath property from the supplied ScalarFunction
+     * @param proc the supplied Procedure
+     * @return the Udf jarPath property value
+     */
+    public static String getUdfJarPath(final Procedure proc) {
+        String udfJarPath = null;
+        ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(RelationalModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix());
+        if(assistant!=null) {
+            try {
+                udfJarPath = assistant.getPropertyValue(proc, RelationalModelExtensionConstants.PropertyIds.UDF_JAR_PATH);
+            } catch (Exception ex) {
+                String msg = RelationalPlugin.Util.getString("ProcedureVirtualFunctionRule.errorGettingJarPath", proc.getName());  //$NON-NLS-1$
+                RelationalPlugin.Util.log(IStatus.ERROR,ex,msg);
+            }
+        }
+        return udfJarPath;
+    }
+    
     VdbModelEntry( final Vdb vdb,
                    final ModelElement element,
                    final IProgressMonitor monitor ) {
@@ -166,6 +248,9 @@ public final class VdbModelEntry extends VdbEntry {
             this.translator.set(EMPTY_STR);
             // this.jndiName.set(EMPTY_STR);
             // this.source.set(EMPTY_STR);
+        }
+        if(VdbUtil.FUNCTION.equals(type) || VdbUtil.VIRTUAL.equals(type) || VdbUtil.PHYSICAL.equals(type)) {
+            updateUdfJars(findModel());
         }
         for (final ProblemElement problem : element.getProblems())
             problems.add(new Problem(problem));
@@ -186,6 +271,8 @@ public final class VdbModelEntry extends VdbEntry {
         this.modelClass = modelClass;
         
         getVdb().registerImportVdbs(importVdbNames, this.getName().toString(), monitor);
+        
+        getVdb().synchronizeUdfJars(udfJars);
     }
 
     private void clean() {
@@ -259,6 +346,43 @@ public final class VdbModelEntry extends VdbEntry {
     }
 
     /**
+     * Determine if the resource for this entry contains any User-Defined functions.  Currently this includes:
+     * 1) FunctionModel with ScalarFunctions and 2) Relational Procedures where function=true
+     * @return 'true' if the Model resource contains a User-Defined function, 'false' if not.
+     */
+    public final boolean containsUdf() {
+        boolean hasUdf = false;
+        
+        // If its a FunctionModel it has ScalarFunctions/Udfs in it
+        if(VdbUtil.FUNCTION.equals(getType())) {
+            hasUdf = true;
+        // If its a relational View Model, see if it has any procedures with function=true
+        } else {
+            Resource modelResc = findModel();
+            boolean isRelational = false;
+            try {
+                isRelational = ModelUtil.getModelClass(modelResc).equals(ModelUtil.MODEL_CLASS_RELATIONAL);
+            } catch (ModelWorkspaceException ex) {
+            }
+            if(isRelational) {
+                try {
+                    final ModelResource mr = ModelerCore.getModelEditor().findModelResource(modelResc);
+                    List<EObject> eObjs = mr.getEObjects();
+                    for(EObject eObj: eObjs) {
+                        if(eObj instanceof Procedure && ((Procedure)eObj).isFunction()) {
+                            hasUdf = true;
+                            break;
+                        }
+                    }
+                } catch (ModelWorkspaceException ex) {
+                }
+            }
+        }
+
+        return hasUdf;
+    }
+    
+    /**
      * @return the immutable set of model entries that import this model entry
      */
     public final Set<VdbModelEntry> getImportedBy() {
@@ -277,6 +401,13 @@ public final class VdbModelEntry extends VdbEntry {
      */
     public final Set<String> getImportVdbNames() {
         return Collections.unmodifiableSet(importVdbNames);
+    }
+    
+    /**
+     * @return the immutable set of VDB Udf File entries used by this model entry
+     */
+    public final Set<VdbFileEntry> getUdfJars() {
+        return Collections.unmodifiableSet(udfJars);
     }
 
 
@@ -526,6 +657,9 @@ public final class VdbModelEntry extends VdbEntry {
                 	updateTranslatorOverrides(translatorProps);
                 }
             }
+            if (containsUdf()) {
+                updateUdfJars(model);
+            }
 
             // Build model if necessary
             // Get Index File and check time/date to see if we need to rebuild or not
@@ -586,6 +720,8 @@ public final class VdbModelEntry extends VdbEntry {
                 // Process for any import VDBs
                 // if list is empty, then there may be import VDB's that need to get removed from the VDB
                 getVdb().registerImportVdbs(importVdbNames, this.getName().toString(), monitor);
+                
+                getVdb().synchronizeUdfJars(udfJars);
             }
             // Copy snapshot of workspace file index to VDB folder
             // TODO: If index name of workspace file can change (?), we have to delete the old index and update our index name
@@ -595,65 +731,7 @@ public final class VdbModelEntry extends VdbEntry {
             throw CoreModelerPlugin.toRuntimeException(error);
         }
     }
-
-    /*
-     * Get the IFile for the supplied Resource.  Avoid the conversion between the EMF URI and java.net.URI
-     */
-    private IFile getFile(Resource resource) {
-        IFile resultFile = null;
-        if (resource != null)
-        {
-            // Get the list of names of projects in the workspace
-            IProject[] allProj = ModelerCore.getWorkspace().getRoot().getProjects();
-            List<String> projNameList = new ArrayList();
-            for(int i=0; i<allProj.length; i++) {
-                projNameList.add(allProj[i].getName());
-            }
-
-            // Find the IFile for the supplied Resource
-            URI uri = resource.getURI();   // URI of the resource
-            uri = validateURI(uri,projNameList);  // Validate the URI - ensure it starts at the project
-            String fileString = URI.decode(uri.path());
-            
-            // Find the IFile resource in the workspace
-            IResource iResc = ModelerCore.getWorkspace().getRoot().findMember(new Path(fileString));
-            if(iResc instanceof IFile) {
-                resultFile = (IFile)iResc;
-            }
-        }
-        return resultFile;
-    }
     
-    /*
-     * Validate method, verifies that the supplied URI starts with the modelProject segment.  If not, the leading
-     * segments are stripped off until it starts with the modelProject.
-     * @param uri the supplied uri
-     * @param projectNames the existing project names in the workspace
-     * @return the rewritten uri
-     */
-    private URI validateURI(URI uri, List<String> projectNames) {
-        // Get all URI segments
-        String[] segments = uri.segments();
-        // valid segments should be 2 or more - project plus model
-        if(segments.length<2) return uri;
-        
-        // Create new URI with all segments removed
-        URI newUri = uri.trimSegments(segments.length);
-        
-        // start with first segment, looking for project
-        // If the first segment is not a project, strip it
-        if(!projectNames.contains(segments[0])) {
-            for(int i=1; i<segments.length; i++) {
-                newUri = newUri.appendSegment(segments[i]);
-            }
-            // recursively strips until it gets to the project
-            return validateURI(newUri,projectNames);
-        // If the first segment is a project, URI is valid - return original
-        } else {
-            return uri;
-        }
-    }
-
     /**
      * {@inheritDoc}
      * 

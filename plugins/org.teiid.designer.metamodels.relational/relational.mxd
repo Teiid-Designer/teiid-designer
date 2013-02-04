@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="relational" namespaceUri="http://www.teiid.org/ext/relational/2012" version="2" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
+<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="relational" namespaceUri="http://www.teiid.org/ext/relational/2012" version="3" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
     <p:description>Relational metamodel extension properties</p:description>
     <p:modelType>PHYSICAL</p:modelType>
     <p:modelType>VIRTUAL</p:modelType>
@@ -7,6 +7,9 @@
         <p:property advanced="false" defaultValue="false" index="true" masked="false" name="deterministic" required="false" type="boolean">
             <p:description locale="en">Specifies that the source function will always return the same result for a specific input value</p:description>
             <p:display locale="en">Deterministic</p:display>
+        </p:property>
+        <p:property advanced="false" index="true" masked="false" name="native-query" required="false" type="string">
+            <p:display locale="en">Native Query</p:display>
         </p:property>
         <p:property advanced="false" defaultValue="false" index="true" masked="false" name="non-prepared" required="false" type="boolean">
             <p:display locale="en">Non-Prepared</p:display>
@@ -37,13 +40,21 @@
             <p:description locale="en_US">indicates that the function will return null.</p:description>
             <p:display locale="en_US">Returns null on null</p:display>
         </p:property>
-        <p:property advanced="false" index="true" masked="false" name="invocationClass" required="false" type="string">
+        <p:property advanced="false" index="true" masked="false" name="function-category" required="false" type="string">
+            <p:description locale="en_US">The category for function procedures</p:description>
+            <p:display locale="en_US">Function Category</p:display>
+        </p:property>
+        <p:property advanced="false" index="true" masked="false" name="java-class" required="false" type="string">
             <p:description locale="en_US">The java class containing the user defined function</p:description>
             <p:display locale="en_US">Java Class</p:display>
         </p:property>
-        <p:property advanced="false" index="true" masked="false" name="invocationMethod" required="false" type="string">
+        <p:property advanced="false" index="true" masked="false" name="java-method" required="false" type="string">
             <p:description locale="en_US">The java method defining the user defined function</p:description>
             <p:display locale="en_US">Java Method</p:display>
+        </p:property>
+        <p:property advanced="false" defaultValue="" index="false" masked="false" name="udfJarPath" required="false" type="string">
+            <p:description locale="en_US">The project-relative path where the UDF jar is located</p:description>
+            <p:display locale="en">UDF Jar Path</p:display>
         </p:property>
     </p:extendedMetaclass>
     <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.BaseTableImpl">
