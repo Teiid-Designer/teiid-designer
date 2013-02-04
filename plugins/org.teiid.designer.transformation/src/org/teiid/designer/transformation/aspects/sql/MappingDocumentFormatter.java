@@ -586,8 +586,6 @@ public class MappingDocumentFormatter {
 
     private boolean newlines;
 
-    private IMappingDocumentFactory mappingDocumentFactory;
-
     /**
      * Construct an instance of MappingDocumentFormatter.
      */
@@ -607,12 +605,8 @@ public class MappingDocumentFormatter {
     }
     
     private IMappingDocumentFactory getFactory() {
-        if (mappingDocumentFactory == null) {
-            IQueryService queryService = ModelerCore.getTeiidQueryService();
-            mappingDocumentFactory = queryService.getMappingDocumentFactory();
-        }
-        
-        return mappingDocumentFactory;
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        return queryService.getMappingDocumentFactory();
     }
 
     private void createAttributeNode( final IMappingElement parent,
