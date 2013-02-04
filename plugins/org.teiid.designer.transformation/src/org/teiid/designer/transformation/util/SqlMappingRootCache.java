@@ -30,6 +30,8 @@ import org.teiid.designer.metamodels.transformation.SqlTransformation;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.validation.SqlTransformationResult;
 import org.teiid.designer.transformation.validation.TransformationValidator;
@@ -53,6 +55,27 @@ public class SqlMappingRootCache implements ISQLConstants {
 
     private static final SqlMappingRootCache INSTANCE = new SqlMappingRootCache();
 
+    private static ITeiidServerVersionListener teiidServerVersionListener;
+    
+    static {
+        teiidServerVersionListener = new ITeiidServerVersionListener() {
+            
+            @Override
+            public void versionChanged(ITeiidServerVersion version) {
+                /*
+                 * Invalidate the cache since the models are no longer valid due to the change
+                 * of server version. The models contain LanguageObjects which are not common
+                 * between runtime clients.
+                 */
+                invalidateCache();
+            }
+        };
+        
+        ModelerCore.addTeiidServerVersionListener(teiidServerVersionListener);
+    }
+    
+    
+    
     /**
      * Get the SqlMappingRootCache instance for this VM.
      * @return the singleton instance for this VM; never null

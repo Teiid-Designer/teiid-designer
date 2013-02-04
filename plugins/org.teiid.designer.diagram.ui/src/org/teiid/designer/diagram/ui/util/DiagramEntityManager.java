@@ -24,6 +24,8 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.diagram.ui.DiagramUiConstants;
 import org.teiid.designer.metamodels.diagram.AbstractDiagramEntity;
 import org.teiid.designer.metamodels.diagram.Diagram;
+import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.event.ModelResourceEvent;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
@@ -42,6 +44,7 @@ public class DiagramEntityManager  {
     private static final String MMUUID = "mmuuid"; //$NON-NLS-1$
     private static boolean clearingStaleDiagrams = false;
     private static EventObjectListener eventObjectListener;
+    private static ITeiidServerVersionListener teiidServerVersionListener;
     private static boolean debugPrint = false;
     
     static {
@@ -57,6 +60,18 @@ public class DiagramEntityManager  {
         } catch (EventSourceException e) {
             DiagramUiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
         }
+
+        teiidServerVersionListener = new ITeiidServerVersionListener() {
+
+            @Override
+            public void versionChanged(ITeiidServerVersion version) {
+                // Clear the diagram cache since the diagrams are invalid given the server version
+                if (diagramMap != null)
+                    diagramMap.clear();
+            }
+        };
+
+        ModelerCore.addTeiidServerVersionListener(teiidServerVersionListener);
 
     }
 

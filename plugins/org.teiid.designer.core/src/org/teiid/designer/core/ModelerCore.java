@@ -42,6 +42,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMLMapImpl;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.xsd.XSDPlugin;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
@@ -2130,7 +2133,19 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @param defaultServer
      */
     public static void setDefaultServer(ITeiidServer defaultServer) {
+        if (defaultServer == null)
+            return;
+        
+        if (defaultTeiidServer != null && defaultTeiidServer.equals(defaultServer))
+            return;
+        
         defaultTeiidServer = defaultServer;
+        
+        for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+            for (IWorkbenchPage page : window.getPages()) {
+                page.closeAllEditors(true);
+            }
+        }
         
         if (teiidServerVersionListeners == null)
             return;
