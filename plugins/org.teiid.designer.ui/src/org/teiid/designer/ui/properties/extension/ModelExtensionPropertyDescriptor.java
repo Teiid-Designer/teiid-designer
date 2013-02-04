@@ -155,6 +155,12 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
         // editor is open so create editable cell editor
         final String[] allowedValues = this.propDefn.getAllowedValues();
 
+        // Special case of udfJarPath property
+        if(this.propDefn.getId().equalsIgnoreCase("function:udfJarPath") ||      //$NON-NLS-1$
+           this.propDefn.getId().equalsIgnoreCase("relational:udfJarPath")) {    //$NON-NLS-1$
+            return new UdfJarDialogCellEditor(parent,this.eObject);
+        }
+        
         // use combobox editor if there are allowed values
         if ((allowedValues != null) && (allowedValues.length != 0)) {
             editor = new ComboBoxCellEditor(parent, allowedValues, SWT.READ_ONLY);

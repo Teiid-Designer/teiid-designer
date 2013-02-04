@@ -10,6 +10,8 @@ package org.teiid.designer.runtime.preview.jobs;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import java.io.ByteArrayInputStream;
+import java.util.HashSet;
+import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -26,6 +28,8 @@ import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbFileEntry;
+import org.teiid.designer.vdb.VdbModelEntry;
 
 /**
  * The <code>CreatePreviewVdbJob</code> creates a Preview VDB in the Eclipse workspace if it doesn't already exist. The Preview
@@ -157,17 +161,28 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
             this.pvdbFile.setHidden(true);
 
             Vdb pvdb = new Vdb(this.pvdbFile, true, monitor);
-
+            boolean resourceContainsUdf = false;
+            
             // don't do if a project PVDB
             if (resource instanceof IFile) {
                 // don't add if already in the PVDB (only one model per PVDB)
                 if (pvdb.getModelEntries().isEmpty()) {
                     pvdb.addModelEntry(this.model.getFullPath(), monitor);
                 }
+                // Determine if the vdb contains a FunctionModel or Relational ViewMdl with procedure source
+                Set<VdbModelEntry> entries = pvdb.getModelEntries();
+                for(VdbModelEntry modelEntry: entries) {
+                    resourceContainsUdf = modelEntry.containsUdf();
+                    if(resourceContainsUdf) {
+                        break;
+                    }
+                }
+                // Make sure the pVdb udfJars are synchronized
+                pvdb.synchronizeUdfJars(new HashSet<VdbFileEntry>());
             }
 
             // this will trigger an resource change event which will eventually get an update job to run
-            if (isNew || pvdb.isModified()) {
+            if (isNew || pvdb.isModified() || resourceContainsUdf) {
                 pvdb.save(monitor);
             }
         } catch (Exception e) {

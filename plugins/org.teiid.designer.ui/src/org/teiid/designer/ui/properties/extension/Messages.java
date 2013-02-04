@@ -27,7 +27,26 @@ public class Messages extends NLS {
 	public static String unexpectedPropertyValueType;
 	public static String valueIsNotAnAllowedValue;
 	public static String workspaceFileNotFound;
+	
+    public static String selectedFileNotAJarDialogTitle;
+    public static String selectedFileNotAJarDialogMessage;
 
+    public static String chooseFileFromWorkspaceDialogUdfTitle;
+    public static String chooseFileFromWorkspaceDialogUdfMessage;
+    public static String chooseFileFromWorkspaceDialogFileTitle;
+    public static String chooseFileFromWorkspaceDialogFileMessage;
+
+    public static String chooseUdfFromWorkspaceRadioText;
+    public static String chooseUdfFromFileSystemRadioText;
+    public static String chooseFileFromWorkspaceRadioText;
+    public static String chooseFileFromFileSystemRadioText;
+    public static String copyToWorkspaceCheckboxText;
+    public static String workspaceOrFileSystemDialogUdfTitle;
+    public static String workspaceOrFileSystemDialogFileTitle;
+    public static String workspaceOrFileSystemDialogUdfMessage;
+    public static String workspaceOrFileSystemDialogFileMessage;
+    public static String workspaceOptionIsDisabledMessage;
+    	
     static {
         NLS.initializeMessages("org.teiid.designer.ui.properties.extension.messages", Messages.class); //$NON-NLS-1$
     }

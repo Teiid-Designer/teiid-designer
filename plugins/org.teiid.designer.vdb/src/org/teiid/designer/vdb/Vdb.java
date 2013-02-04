@@ -54,6 +54,7 @@ import org.teiid.core.designer.util.OperationUtil.Unreliable;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.VdbModelBuilder;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.manifest.DataRoleElement;
@@ -209,13 +210,17 @@ public final class Vdb {
                                 }
                             } else assert false;
                         }
-                        for (final EntryElement element : manifest.getEntries())
-                            entries.add(new VdbEntry(Vdb.this, element, monitor));
-                        for (final ModelElement element : manifest.getModels())
+                        for (final EntryElement element : manifest.getEntries()) {
+                            entries.add(new VdbFileEntry(Vdb.this, element, monitor));
+                        }
+                        
+                        for (final ModelElement element : manifest.getModels()) 
                             modelEntries.add(new VdbModelEntry(Vdb.this, element, monitor));
+
                         // Initialize model entry imports only after all model entries have been created
-                        for (final VdbModelEntry entry : modelEntries)
+                        for (final VdbModelEntry entry : modelEntries) {
                             entry.initializeImports();
+                        }
                         
                         // Vdb Import entries
                         for (final ImportVdbElement element : manifest.getImportVdbEntries()) {
@@ -278,6 +283,18 @@ public final class Vdb {
     public final VdbEntry addEntry( final IPath name,
                                     final IProgressMonitor monitor ) {
         return addEntry(new VdbEntry(this, name, monitor), entries, monitor);
+    }
+    
+    /**
+     * @param name
+     * @param entryType the type of file entry being added
+     * @param monitor
+     * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
+     */
+    public final VdbEntry addFileEntry( final IPath name,
+                                        final VdbFileEntry.FileEntryType entryType,
+                                        final IProgressMonitor monitor ) {
+        return addEntry(new VdbFileEntry(this, name, entryType, monitor), entries, monitor);
     }
 
     private <T extends VdbEntry> T addEntry( final T entry,
@@ -344,6 +361,61 @@ public final class Vdb {
     }
 
     /**
+     * Synchronize the Vdb file entries.  The supplied entries must be included - it's VdbModelEntry
+     * may not exist in the vdb yet.
+     * @param newJarEntries the supplied new entries which must exist 
+     */
+    public final void synchronizeUdfJars(Set<VdbFileEntry> newJarEntries) {
+        // Init list of all required Udf jars with supplied list
+        Set<VdbFileEntry> allRequiredUdfJars = new HashSet<VdbFileEntry>(newJarEntries);
+        
+        // Add other Udf jars used by current Model entries
+        for(VdbModelEntry entry: modelEntries) {
+            Set<VdbFileEntry> jarEntries = entry.getUdfJars();
+            allRequiredUdfJars.addAll(jarEntries);
+        }
+        
+        // Create map of required jarName to its jar entry
+        Map<String,VdbFileEntry> allRequiredJarsMap = new HashMap<String,VdbFileEntry>();
+        for(VdbFileEntry fileEntry: allRequiredUdfJars) {
+            allRequiredJarsMap.put(fileEntry.getName().toString(), fileEntry);
+        }
+        
+        // Get the current Udf jar names for this vdb
+        Set<String> currentUdfJarNames = getUdfJarNames();
+        
+        boolean jarsAdded = false;
+        // Add any missing Udf jars to the vdb that are required
+        for(VdbFileEntry modelUdfJar: allRequiredUdfJars) {
+            if(!currentUdfJarNames.contains(modelUdfJar.getName().toString())) {
+                entries.add(modelUdfJar);
+                jarsAdded = true;
+            }
+        }
+        
+        // Remove any Udf jars that are no longer needed
+        boolean jarsRemoved = false;
+        currentUdfJarNames = getUdfJarNames();
+        for(String currentJarName: currentUdfJarNames) {
+            Set<String> allRequiredJarNames = allRequiredJarsMap.keySet();
+            if(!allRequiredJarNames.contains(currentJarName)) {
+                for(VdbEntry entry: entries) {
+                    String entryName = entry.getName().toString();
+                    if(entryName!=null && entryName.equals(currentJarName)) {
+                        entries.remove(entry);
+                        break;
+                    }
+                }
+                jarsRemoved = true;
+            }
+        }
+        
+        if(jarsAdded || jarsRemoved) {
+            setModified(this, Event.UDF_JARS_MODIFIED, null, null);
+        }
+    }
+    
+    /**
      * 
      */
     public final void close() {
@@ -378,6 +450,79 @@ public final class Vdb {
      */
     public final Set<VdbEntry> getEntries() {
         return Collections.unmodifiableSet(entries);
+    }
+
+    /**
+     * Get the current set of UDF jar entries.  These are the current entries that begin with the UDF path prefix
+     * @return the set of VdbEntry UDF jar objects
+     */
+    public final Set<VdbEntry> getUdfJarEntries() {
+        // Get all non-model entries
+        final Set<VdbEntry> entries = getEntries();
+        Set<VdbEntry> udfJarEntries = new HashSet<VdbEntry>();
+        
+        // The list of UserFiles are those that begin with the UDF path prefix
+        for(VdbEntry entry: entries) {
+            // Name of VDB entry
+            String zipName = entry.getName().toString();
+            // Strip off any leading delimiter if it exists.
+            if(zipName!=null && zipName.startsWith("/") ) { //$NON-NLS-1$
+                zipName = zipName.substring(1, zipName.length());
+            }
+            if(zipName.startsWith(VdbHelper.UDF_FOLDER)) {
+                udfJarEntries.add(entry);
+            }
+        }
+        return Collections.unmodifiableSet(udfJarEntries);
+    }
+    
+    /**
+     * Get the current set of UDF jar entries.  These are the current entries that begin with the UDF path prefix
+     * @return the set of VdbEntry UDF jar objects
+     */
+    public final Set<String> getUdfJarNames() {
+        // Get all non-model entries
+        final Set<VdbEntry> entries = getEntries();
+        Set<String> udfJarNames = new HashSet<String>();
+        
+        // The list of UserFiles are those that begin with the UDF path prefix
+        for(VdbEntry entry: entries) {
+            // Name of VDB entry
+            String entryName = entry.getName().toString();
+            String entryShortenedName = entryName;
+            // Strip off any leading delimiter if it exists.
+            if(entryName!=null && entryName.startsWith("/") ) { //$NON-NLS-1$
+                entryShortenedName = entryName.substring(1, entryName.length());
+            }
+            if(entryShortenedName.startsWith(VdbHelper.UDF_FOLDER)) {
+                udfJarNames.add(entryName);
+            }
+        }
+        return Collections.unmodifiableSet(udfJarNames);
+    }
+
+    /**
+     * Get the current set of UserFile entries.  These are the current entries that begin with the UserFile path prefix
+     * @return the set of VdbEntry userFile objects
+     */
+    public final Set<VdbEntry> getUserFileEntries() {
+        // Get all non-model entries
+        final Set<VdbEntry> entries = getEntries();
+        Set<VdbEntry> userFileEntries = new HashSet<VdbEntry>();
+        
+        // Narrow list of UserFiles based on path prefix in the VDB
+        for(VdbEntry entry: entries) {
+            // Name of VDB entry
+            String zipName = entry.getName().toString();
+            // Strip off any leading delimiter if it exists.
+            if(zipName!=null && zipName.startsWith("/") ) { //$NON-NLS-1$
+                zipName = zipName.substring(1, zipName.length());
+            }
+            if(zipName.startsWith(VdbHelper.OTHER_FILES_FOLDER)) {
+                userFileEntries.add(entry);
+            }
+        }
+        return userFileEntries;
     }
 
     /**
@@ -587,6 +732,8 @@ public final class Vdb {
         	String entryName = entry.getName().toString();
         	modelEntries.remove(entry);
         	
+            synchronizeUdfJars(new HashSet<VdbFileEntry>());
+
         	handleRemovedVdbModelEntry(entryName);
         }
         else entries.remove(entry);
@@ -636,8 +783,6 @@ public final class Vdb {
     /**
      * Remove the given {@link VdbImportVdbEntry entry} from this VDB
      * 
-     * @param entry
-     * @param monitor
      */
     public final void removeAllImportVdbs() {
     	Collection<VdbImportVdbEntry> entries = new ArrayList(this.importModelEntries);
@@ -897,6 +1042,12 @@ public final class Vdb {
          */
         public static final String IMPORT_VDB_ENTRY_ADDED = "importVdbEntryAdded"; //$NON-NLS-1$
         
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a 
+         * VDBs udf jar entries are changed.
+         */
+        public static final String UDF_JARS_MODIFIED = "udfJarsModified"; //$NON-NLS-1$
+
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when an
          * import VDB entry is removed.
