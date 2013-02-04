@@ -29,6 +29,7 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.diagram.Diagram;
 import org.teiid.designer.metamodels.diagram.PresentationEntity;
+import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.ui.UiConstants;
 
 
@@ -144,6 +145,10 @@ final public class ModelObjectContentProvider
             return result;
         }
         
+        if(isViewProcedureFunction(parentElement)) {
+            return result;
+        }
+        
         final boolean startedTxn = ModelerCore.startTxn(false, true, null, theInstance);          
         boolean succeeded = false;
         try{
@@ -194,6 +199,19 @@ final public class ModelObjectContentProvider
         }
             
         return false;
+    }
+    
+    private static boolean isViewProcedureFunction(final Object obj) {
+        boolean isViewProcFunction = false;
+        if(obj == null || !(obj instanceof Procedure) ) {
+            return isViewProcFunction;
+        }
+        
+        if(ModelUtil.isVirtual(obj) && ((Procedure)obj).isFunction()) {
+            isViewProcFunction = true;
+        }
+        
+        return isViewProcFunction;
     }
     
     // ===========================================

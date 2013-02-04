@@ -46,7 +46,9 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
         VARARGS(getPropertyId("varargs")), //$NON-NLS-1$
         NULL_ON_NULL(getPropertyId("null-on-null")), //$NON-NLS-1$
         JAVA_CLASS(getPropertyId("java-class")), //$NON-NLS-1$
-        JAVA_METHOD(getPropertyId("java-method")); //$NON-NLS-1$
+        JAVA_METHOD(getPropertyId("java-method")), //$NON-NLS-1$
+        FUNCTION_CATEGORY(getPropertyId("function-category")), //$NON-NLS-1$
+        UDF_JAR_PATH(getPropertyId("udfJarPath")); //$NON-NLS-1$
 
         public static boolean same(final PropertyName propName,
                                    final String value) {
@@ -128,15 +130,18 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
                 return null;
             }
             
-            // must be a procedure in a physical model to have these properties
-            if (PropertyName.same(PropertyName.JAVA_CLASS, propId) || PropertyName.same(PropertyName.JAVA_METHOD, propId)) {
-                if ((modelObject instanceof Procedure) && !isPhysical && isFunction) {
+            // 'UDF' properties are supported in physical or virtual models now, when function=true
+            if (  PropertyName.same(PropertyName.JAVA_CLASS, propId) || PropertyName.same(PropertyName.JAVA_METHOD, propId) 
+               || PropertyName.same(PropertyName.FUNCTION_CATEGORY, propId) || PropertyName.same(PropertyName.UDF_JAR_PATH, propId)) {
+                if ((modelObject instanceof Procedure) && isFunction) {
                     return propDefn;
                 }
                 
                 // make sure model object does not have these extension properties for when function is false
                 removeProperty(modelObject, PropertyName.JAVA_CLASS.toString());
                 removeProperty(modelObject, PropertyName.JAVA_METHOD.toString());
+                removeProperty(modelObject, PropertyName.FUNCTION_CATEGORY.toString());
+                removeProperty(modelObject, PropertyName.UDF_JAR_PATH.toString());
 
                 // EObject should not have these property definitions
                 return null;

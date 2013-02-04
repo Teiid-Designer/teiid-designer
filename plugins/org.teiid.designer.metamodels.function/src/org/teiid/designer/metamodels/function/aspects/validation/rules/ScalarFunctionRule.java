@@ -7,12 +7,15 @@
  */
 package org.teiid.designer.metamodels.function.aspects.validation.rules;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.core.validation.ObjectValidationRule;
 import org.teiid.designer.core.validation.ValidationContext;
 import org.teiid.designer.core.validation.ValidationProblem;
@@ -20,12 +23,16 @@ import org.teiid.designer.core.validation.ValidationProblemImpl;
 import org.teiid.designer.core.validation.ValidationResult;
 import org.teiid.designer.core.validation.ValidationResultImpl;
 import org.teiid.designer.core.validation.rules.CoreValidationRulesUtil;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.metamodels.core.Annotation;
 import org.teiid.designer.metamodels.function.FunctionPlugin;
 import org.teiid.designer.metamodels.function.PushDownType;
 import org.teiid.designer.metamodels.function.ReturnParameter;
 import org.teiid.designer.metamodels.function.ScalarFunction;
 import org.teiid.designer.metamodels.function.aspects.validation.FunctionEntityAspect;
+import org.teiid.designer.metamodels.function.extension.FunctionModelExtensionConstants;
 
 
 /**
@@ -71,6 +78,9 @@ public class ScalarFunctionRule implements ObjectValidationRule {
         } else {
             validateJavaIdentifier(invocationMethod, FunctionPlugin.Util.getString("ScalarFunctionRule.Invocation_Method_4"), false, result); //$NON-NLS-1$
         }
+        
+        // validate jarPath property
+        validateUdfJarPath(sFunction,result);
 
         // validate function category
         String category = sFunction.getCategory();
@@ -163,5 +173,52 @@ public class ScalarFunctionRule implements ObjectValidationRule {
             result.addProblem(problem);
         }
     }
+    
+    /**
+     * Validate the udfJarPath property.
+     * - the path must be set
+     * - the specified jar must be located in the workspace project
+     * @param scalarFunc the Scalar Function to validate
+     * @param result the ValidationResult
+     */
+    private final void validateUdfJarPath(ScalarFunction scalarFunc, ValidationResult result) {
+        String udfJarPath = getUdfJarPath(scalarFunc);
 
+        if(udfJarPath!=null) {
+            if (CoreStringUtil.isEmpty(udfJarPath.trim())) {
+                String message = FunctionPlugin.Util.getString("ScalarFunctionRule.udfJarPathNotSet"); //$NON-NLS-1$
+                ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR ,message); 
+                result.addProblem(problem);
+            } else {
+                final ModelResource resrc = ModelerCore.getModelWorkspace().findModelResource(scalarFunc);
+                IProject project = resrc.getModelProject().getProject();
+                IFolder libFolder = VdbHelper.getFolder(project,VdbHelper.UDF_FOLDER);
+                boolean found = VdbHelper.isFileInFolder(libFolder,udfJarPath);
+                if(!found) {
+                    String message = FunctionPlugin.Util.getString("ScalarFunctionRule.udfJarNotFound",udfJarPath); //$NON-NLS-1$
+                    ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR ,message); 
+                    result.addProblem(problem);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Get the Udf jarPath property from the supplied ScalarFunction
+     * @param scalarFunc the supplied ScalarFunction
+     * @return the Udf jarPath property value
+     */
+    private static String getUdfJarPath(final ScalarFunction scalarFunc) {
+        String udfJarPath = null;
+        ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(FunctionModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix());
+        if(assistant!=null) {
+            try {
+                udfJarPath = assistant.getPropertyValue(scalarFunc, FunctionModelExtensionConstants.PropertyIds.UDF_JAR_PATH);
+            } catch (Exception ex) {
+                ModelerCore.Util.log(IStatus.ERROR,ex,FunctionPlugin.Util.getString("FunctionUtil.ErrorGettingJarPath", scalarFunc.getName())); //$NON-NLS-1$
+            }
+        }
+        return udfJarPath;
+    }
+    
 }

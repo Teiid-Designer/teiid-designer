@@ -694,6 +694,14 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
 
         // validate further only if transformation is valid
         if (!transformResult.isValid()) {
+            
+            //If the target is virtual procedure, and isFunction - we dont need a transformation - so ignore transformation problems
+            if(target instanceof Procedure) {
+                if( ((Procedure)target).isFunction() ) {
+                    return;
+                }
+            }
+            
             Collection statuses = null;
             // if has a invalid select collect status
             SqlTransformationResult selectResult = transformResult.getSelectResult();

@@ -50,6 +50,7 @@ public interface FunctionModelExtensionConstants {
         /**
          * The property definition identifer for the deterministic boolean property.
          */
+        String UDF_JAR_PATH = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "udfJarPath"); //$NON-NLS-1$
         String AGGREGATE = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "aggregate"); //$NON-NLS-1$
         String ANALYTIC = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "analytic"); //$NON-NLS-1$
         String ALLOWS_ORDERBY = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "allows-orderby"); //$NON-NLS-1$

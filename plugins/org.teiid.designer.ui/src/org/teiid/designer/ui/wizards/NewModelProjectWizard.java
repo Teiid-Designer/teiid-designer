@@ -188,31 +188,31 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
             if( designerProperties != null ) {
                 DesignerPropertiesUtil.setSourcesFolderName(designerProperties, optionsPage.sourcesStr);
             }
-    		createFolder(project, optionsPage.sourcesStr);
+    		FolderUtil.createFolder(getShell(), project, optionsPage.sourcesStr);
     	}
     	if( optionsPage.createViews ) {
             if( designerProperties != null ) {
                 DesignerPropertiesUtil.setViewsFolderName(designerProperties, optionsPage.viewsStr);
             }
-    		createFolder(project, optionsPage.viewsStr);
+            FolderUtil.createFolder(getShell(), project, optionsPage.viewsStr);
     	}
     	if( optionsPage.createSchema ) {
             if( designerProperties != null ) {
                 DesignerPropertiesUtil.setSchemaFolderName(designerProperties, optionsPage.schemaStr);
             }
-    		createFolder(project, optionsPage.schemaStr);
+            FolderUtil.createFolder(getShell(), project, optionsPage.schemaStr);
     	}
     	if( optionsPage.createWebServices ) {
             if( designerProperties != null ) {
                 DesignerPropertiesUtil.setWebServiceFolderName(designerProperties, optionsPage.webServicesStr);
             }
-    		createFolder(project, optionsPage.webServicesStr);
+            FolderUtil.createFolder(getShell(), project, optionsPage.webServicesStr);
     	}
     	if( optionsPage.createFunctions ) {
-    		createFolder(project, optionsPage.functionsStr);
+    	    FolderUtil.createFolder(getShell(), project, optionsPage.functionsStr);
     	}
     	if( optionsPage.createExtensions ) {
-    		createFolder(project, optionsPage.extensionsStr);
+    	    FolderUtil.createFolder(getShell(), project, optionsPage.extensionsStr);
     	}
     }
     
@@ -256,71 +256,6 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
             ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR, reservedProjMsg);
             result.addProblem(problem);
         }
-    }
-    
-    private void createFolder(IProject project, String name) {
-		final IPath containerPath = project.getFullPath();
-		IPath newFolderPath = containerPath.append(name);
-		final IFolder newFolderHandle = ModelerCore.getWorkspace().getRoot().getFolder(newFolderPath);
-		
-		IRunnableWithProgress op = new IRunnableWithProgress() {
-			@Override
-			public void run(IProgressMonitor monitor) {
-				AbstractOperation op;
-				op = new CreateFolderOperation(
-					newFolderHandle, null, false, null,
-					getString("errorCreatingNewFolderTitle")); //$NON-NLS-1$
-				try {
-					// see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=219901
-					// directly execute the operation so that the undo state is
-					// not preserved.  Making this undoable can result in accidental
-					// folder (and file) deletions.
-					op.execute(monitor, WorkspaceUndoUtil
-						.getUIInfoAdapter(getShell()));
-				} catch (final ExecutionException e) {
-					getShell().getDisplay().syncExec(
-							new Runnable() {
-								@Override
-								public void run() {
-									if (e.getCause() instanceof CoreException) {
-										ErrorDialog
-												.openError(getShell(), // Was Utilities.getFocusShell()
-														getString("internalErrorCreatingNewFolderTitle"), //$NON-NLS-1$
-														null, // no special message
-														((CoreException) e
-																.getCause())
-																.getStatus());
-									} else {
-										UiConstants.Util.log(IStatus.ERROR, e, e.getCause().getMessage());
-										MessageDialog
-												.openError(getShell(),
-														getString("internalErrorCreatingNewFolderTitle"), //$NON-NLS-1$
-														UiConstants.Util.getString("internalErrorMsg", //$NON-NLS-1$
-																		e
-																				.getCause()
-																				.getMessage()));
-									}
-								}
-							});
-				}
-			}
-		};
-
-		try {
-			new ProgressMonitorDialog(getShell()).run(true, true, op);
-		} catch (InterruptedException e) {
-			return;
-		} catch (InvocationTargetException e) {
-			// ExecutionExceptions are handled above, but unexpected runtime
-			// exceptions and errors may still occur.
-			UiConstants.Util.log(IStatus.ERROR, e, e.getTargetException().getMessage()); 
-			MessageDialog
-					.open(MessageDialog.ERROR,getShell(),
-							getString("internalErrorCreatingNewFolderTitle"), //$NON-NLS-1$
-							getString("internalErrorMsg", //$NON-NLS-1$,
-											e.getTargetException().getMessage()), SWT.SHEET);
-		}
-
     }
     
     @Override

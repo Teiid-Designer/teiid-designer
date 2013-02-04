@@ -23,6 +23,7 @@ import org.teiid.designer.metamodels.relational.aspects.validation.rules.Missing
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.MissingColumnPrecisionRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.MissingNameInSourceRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.ProcedureParametersRule;
+import org.teiid.designer.metamodels.relational.aspects.validation.rules.ProcedureFunctionRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.RelationalStringNameRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.SiblingNameInSourceRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.SourceProcedureUniquenessRule;
@@ -53,6 +54,7 @@ public abstract class RelationalEntityAspect extends AbstractValidationAspect {
     public static final ValidationRule COLUMN_DATATYPE_RULE = new ColumnDatatypeRule(RelationalPackage.COLUMN__TYPE);
     public static final ValidationRule TABLE_MATERIALIZED_RULE = new TableMaterializedRule(RelationalPackage.TABLE__MATERIALIZED);
     public static final ValidationRule PROC_PARAM_RULE = new ProcedureParametersRule();
+    public static final ValidationRule PROC_FUNCTION_RULE = new ProcedureFunctionRule();
     public static final ValidationRule SOURCE_PROC_UNIQUENESS_RULE = new SourceProcedureUniquenessRule();
     public static final ValidationRule INDEX_REF_MULTIPLE_TABLES = new IndexReferenceOneTableRule();
     public static final ValidationRule EMPTY_COLUMN_NATIVE_TYPE_RULE = new ColumnNativeTypeRule();

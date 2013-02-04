@@ -46,7 +46,7 @@ import org.teiid.designer.vdb.manifest.PropertyElement;
 public class VdbEntry {
 	private static final String EMPTY_STR = StringUtilities.EMPTY_STRING;
 	
-    private final IPath name;
+    private IPath name;
     private final Vdb vdb;
     private final AtomicReference<Synchronization> synchronization = new AtomicReference<Synchronization>(
                                                                                                           Synchronization.NotApplicable);
@@ -202,6 +202,14 @@ public class VdbEntry {
      */
     public final IPath getName() {
         return name;
+    }
+    
+    /**
+     * Allows reset of the entry name, for VdbFileEntry
+     * @param name the name path
+     */
+    public void setName(IPath name) {
+        this.name=name;
     }
 
     /**
