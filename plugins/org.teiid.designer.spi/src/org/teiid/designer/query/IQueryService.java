@@ -304,5 +304,12 @@ public interface IQueryService {
      * @return instance of {@link IQueryResolver}
      */
     IQueryResolver getQueryResolver();
+    
+    /**
+     * Get the procedure service
+     * 
+     * @return instance of {@link IProcedureService}
+     */
+    IProcedureService getProcedureService();
 
 }

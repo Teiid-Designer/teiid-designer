@@ -19,8 +19,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
+import org.teiid.designer.query.IProcedureService;
+import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.query.proc.ITeiidColumnInfo;
 import org.teiid.designer.query.proc.ITeiidMetadataFileInfo;
 import org.teiid.designer.transformation.ui.UiConstants;
@@ -913,99 +916,10 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
     
     @Override
     public String getSqlString(String relationalModelName) {
-    	/*
-    	 * 
-    	 * TEXTTABLE(expression COLUMNS <COLUMN>, ... [DELIMITER char] [(QUOTE|ESCAPE) char] [HEADER [integer]] [SKIP integer]) AS name
-    	 * 
-    	 * DELIMITER sets the field delimiter character to use. Defaults to ','.
-    	 * 
-    	 * QUOTE sets the quote, or qualifier, character used to wrap field values. Defaults to '"'.
-    	 * 
-    	 * ESCAPE sets the escape character to use if no quoting character is in use. This is used in situations where the delimiter or new line characters are escaped with a preceding character, e.g. \
-    	 * 
-    	 * 
-			SELECT A.lastName, A.firstName, A.middleName, A.AId FROM
-        (EXEC EmployeeData.getTextFiles('EmployeeData.txt')) AS f, TEXTTABLE(file COLUMNS lastName string, firstName string, middleName string, HEADER 3) AS A
-    	 
-    	 *
-    	 * SELECT {0} FROM (EXEC {1}.getTextFiles({2})) AS f, TEXTTABLE(file COLUMNS {3}  HEADER {4}) AS {5}
-    	 */
-    	String alias = "A"; //$NON-NLS-1$
-    	StringBuffer sb = new StringBuffer();
-    	int i=0;
-    	int nColumns = getColumnInfoList().length;
-    	for( TeiidColumnInfo columnStr : getColumnInfoList()) {
-    		sb.append(alias).append(DOT).append(columnStr.getSymbolName());
-    		
-    		if(i < (nColumns-1)) {
-    			sb.append(COMMA).append(SPACE);
-    		}
-    		i++;
-    	}
-    	String string_0 = sb.toString();
-    	
-    	sb = new StringBuffer();
-    	i=0;
-    	for( TeiidColumnInfo columnStr : getColumnInfoList()) {
-    		sb.append(columnStr.getSymbolName()).append(SPACE).append(columnStr.getDatatype());
-			if( isFixedWidthColumns()) {
-				sb.append(SPACE).append(WIDTH).append(SPACE).append(Integer.toString(columnStr.getWidth()));
-			}
-    		if(i < (nColumns-1)) {
-    			sb.append(COMMA).append(SPACE);
-    		}
-
-    		i++;
-    	}
-    	String string_2 = S_QUOTE + getDataFile().getName() + S_QUOTE;
-    	String string_3 = sb.toString();
-    	
-    	sb = new StringBuffer();
-    	
-    	if( doUseDelimitedColumns() && getDelimiter() != TeiidMetadataFileInfo.DEFAULT_DELIMITER ) {
-    		sb.append("DELIMITER"); //$NON-NLS-1$
-    		sb.append(SPACE).append('\'').append(getDelimiter()).append('\'');
-    	}
-    	
-    	if( doIncludeQuote() ) {
-    		if( getQuote() != TeiidMetadataFileInfo.DEFAULT_QUOTE) {
-	    		sb.append("QUOTE"); //$NON-NLS-1$
-	    		sb.append(SPACE).append('\'').append(getQuote()).append('\'');
-    		}
-    	} else if(doIncludeEscape() ) {
-    		if( getEscape() != TeiidMetadataFileInfo.DEFAULT_ESCAPE) {
-	    		sb.append("ESCAPE"); //$NON-NLS-1$
-	    		sb.append(SPACE).append('\'').append(getEscape()).append('\'');
-    		}
-    	}
-    	
-    	if( doIncludeHeader() ) {
-    		sb.append(SPACE).append("HEADER"); //$NON-NLS-1$
-    		if( getHeaderLineNumber() > 1 ) {
-    			sb.append(SPACE).append(Integer.toString(getHeaderLineNumber()));
-    		}
-    	}
-    	if( getFirstDataRow() > 1 && (doIncludeSkip() || this.isFixedWidthColumns()) ) {
-    		sb.append(SPACE).append("SKIP"); //$NON-NLS-1$
-    		sb.append(SPACE).append(Integer.toString(getFirstDataRow()-1));
-    	}
-    	
-    	if( doIncludeNoTrim() && getFirstDataRow() > 1 ) {
-    		sb.append(SPACE).append("NO TRIM"); //$NON-NLS-1$
-    	}
-    	String string_4 = sb.toString();
-    	
-    	String finalSQLString = UiConstants.Util.getString(
-    			"TeiidMetadataFileInfo.textTableSqlTemplate", //$NON-NLS-1$
-    			string_0,
-    			relationalModelName,
-    			string_2,
-    			string_3,
-    			string_4,
-    			alias);
-    	
-    	return finalSQLString;
-    	
+        
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IProcedureService procedureService = queryService.getProcedureService();
+        return procedureService.getSQLStatement(this, relationalModelName);
     }
     
     public String getCharset() {
