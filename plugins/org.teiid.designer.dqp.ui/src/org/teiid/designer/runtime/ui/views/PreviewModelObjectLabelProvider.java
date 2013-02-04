@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
@@ -79,6 +80,10 @@ public class PreviewModelObjectLabelProvider implements ILightweightLabelDecorat
     public void decorate( Object eObject,
                           IDecoration decoration ) {
 
+        // Ensure the server manager has been initialised, which ensures the teiid
+        // server version has been correctly set.
+        DqpPlugin.getInstance().getServerManager();
+        
         boolean isPreviewable = ModelObjectUtilities.isExecutable((EObject)eObject);
         if (isPreviewable) {
             decoration.addOverlay(UiPlugin.getDefault().getPreviewableDecoratorImage(), IDecoration.BOTTOM_RIGHT);

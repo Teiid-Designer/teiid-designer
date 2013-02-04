@@ -9,7 +9,6 @@ package org.teiid.designer.runtime;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -19,6 +18,9 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWindowListener;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.osgi.framework.BundleContext;
@@ -293,6 +295,41 @@ public class DqpPlugin extends Plugin {
         // Initialize teiid parent server state listener
         getServersProvider().addServerStateListener(TeiidParentServerListener.getInstance());
         getServersProvider().addServerLifecycleListener(TeiidParentServerListener.getInstance());
+
+        /*
+         * Window listener that will initialise the server manager if it has not already been.
+         * This means it is not up to the TeiidServerProvider, which may never be called if
+         * the Servers view is not displayed. The most important point of this is to ensure 
+         * that the default server has been set in ModelerCore in order to ensure the correct
+         * runtime client is used.
+         */
+        PlatformUI.getWorkbench().addWindowListener(new IWindowListener() {
+            @Override
+            public void windowActivated(IWorkbenchWindow window) {
+                if (serverMgr != null)
+                    return;
+
+                Display display = PlatformUI.getWorkbench().getDisplay();
+                display.asyncExec(new Runnable() {
+                    @Override
+                    public void run() {
+                        getServerManager();
+                    }
+                });
+            }
+
+            @Override
+            public void windowOpened(IWorkbenchWindow window) {
+            }
+
+            @Override
+            public void windowDeactivated(IWorkbenchWindow window) {
+            }
+
+            @Override
+            public void windowClosed(IWorkbenchWindow window) {
+            }
+        });
     }
 
     /**
