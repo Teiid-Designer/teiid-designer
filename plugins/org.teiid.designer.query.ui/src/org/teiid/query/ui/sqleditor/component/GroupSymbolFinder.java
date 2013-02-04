@@ -29,7 +29,6 @@ import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 public class GroupSymbolFinder {
     SqlIndexLocator locator;
     Collection externalGroups;
-    private final IGroupCollectorVisitor visitor;
     
     /** 
      * Constructor
@@ -44,10 +43,13 @@ public class GroupSymbolFinder {
             externalGroups = Collections.EMPTY_LIST;
         else
             this.externalGroups = new ArrayList(exGroups);
-        
-        IQueryService queryService = ModelerCore.getTeiidQueryService();
-        visitor = queryService.getGroupCollectorVisitor(true);
     }
+    
+    private IGroupCollectorVisitor getGroupVisitor() {
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        return queryService.getGroupCollectorVisitor(true);
+    }
+    
     
     /**
      * Method returns any group symbols in scope for populating the attribute tree in builders 
@@ -82,14 +84,15 @@ public class GroupSymbolFinder {
     }
     
     private List getGroupsForCriteria() {
+        IGroupCollectorVisitor groupVisitor = getGroupVisitor();
         Set groups = new HashSet();
         if( locator.isSelectScopeSelected() || locator.isWhereSelected() ) {
-            groups.addAll(visitor.findGroups(locator.getPrimaryLanguageObject()));
+            groups.addAll(groupVisitor.findGroups(locator.getPrimaryLanguageObject()));
             List groupsInScope = locator.collectCriteriaParentQueries(locator.isSelectScopeSelected());
             DisplayNode dNode = null;
             for( Iterator iter = groupsInScope.iterator(); iter.hasNext(); ) {
                 dNode = (DisplayNode)iter.next();
-                groups.addAll(visitor.findGroups(dNode.getLanguageObject()));
+                groups.addAll(groupVisitor.findGroups(dNode.getLanguageObject()));
             }
         }
         
@@ -97,9 +100,10 @@ public class GroupSymbolFinder {
     }
     
     private List getGroupsForSubQuery() {
+        IGroupCollectorVisitor groupVisitor = getGroupVisitor();
         Set allGroups = new HashSet();
         // Get this commands groupSymbols
-        allGroups.addAll(visitor.findGroups(locator.getPrimaryLanguageObject()));
+        allGroups.addAll(groupVisitor.findGroups(locator.getPrimaryLanguageObject()));
         // Get parent node, keep going up until parent is null
         if( !locator.isUnionSegmentSelected() ) {
             DisplayNode parentNode = locator.getCommandDisplayNode().getParent();
@@ -111,14 +115,14 @@ public class GroupSymbolFinder {
                     parentNode = null;
                 
                 if(parentNode != null && parentLangObj instanceof ICommand) {
-                    allGroups.addAll(visitor.findGroups(parentLangObj));
+                    allGroups.addAll(groupVisitor.findGroups(parentLangObj));
                 }
             }
             // Now let's add for the real selected Select query
             if( locator.isSelectScopeSelected() ) {
                 DisplayNode selectedSelectQueryNode = locator.getSelectedSelectQuery();
                 if( selectedSelectQueryNode != null )
-                    allGroups.addAll(visitor.findGroups(selectedSelectQueryNode.getLanguageObject()));
+                    allGroups.addAll(groupVisitor.findGroups(selectedSelectQueryNode.getLanguageObject()));
             }
             if( locator.isCriteriaQuerySelected() ) {
                 allGroups.addAll(getGroupsForCriteria());
@@ -131,7 +135,7 @@ public class GroupSymbolFinder {
     
     private List getGroupsForUnionSegment() {
         Set allGroups = new HashSet();
-        allGroups.addAll(visitor.findGroups(locator.getPrimaryLanguageObject()));
+        allGroups.addAll(getGroupVisitor().findGroups(locator.getPrimaryLanguageObject()));
         return new ArrayList(allGroups);
     }
     
@@ -144,7 +148,7 @@ public class GroupSymbolFinder {
         
             // make sure no duplicates before adding in external groups
             
-            Collection groups = visitor.findGroupsIgnoreInlineViews(langObj);
+            Collection groups = getGroupVisitor().findGroupsIgnoreInlineViews(langObj);
             
             Collection clonedGrps = new ArrayList(groups.size());
             Iterator grpIter = groups.iterator();

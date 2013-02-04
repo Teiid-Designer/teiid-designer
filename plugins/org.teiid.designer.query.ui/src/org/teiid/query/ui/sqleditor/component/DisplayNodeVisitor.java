@@ -29,7 +29,6 @@ public final class DisplayNodeVisitor implements ISQLStringVisitorCallback {
     private final boolean dontAppend;
     private int indentLevel;
     private int originalLevel;
-    private final ISQLStringVisitor delegate;
 
     DisplayNodeVisitor(DisplayNode node,
                        boolean dontAppend,
@@ -38,9 +37,6 @@ public final class DisplayNodeVisitor implements ISQLStringVisitorCallback {
         this.dontAppend = dontAppend;
         this.indentLevel = indentLevel;
         this.originalLevel = indentLevel;
-
-        IQueryService queryService = ModelerCore.getTeiidQueryService();
-        delegate = queryService.getCallbackSQLStringVisitor(this);
     }
 
     @Override
@@ -51,6 +47,8 @@ public final class DisplayNodeVisitor implements ISQLStringVisitorCallback {
         }
 
         if ((obj instanceof IExpressionSymbol && !(obj instanceof IAggregateSymbol))) {
+            IQueryService queryService = ModelerCore.getTeiidQueryService();
+            ISQLStringVisitor delegate = queryService.getCallbackSQLStringVisitor(this);
             obj.acceptVisitor(delegate);
             return;
         }
