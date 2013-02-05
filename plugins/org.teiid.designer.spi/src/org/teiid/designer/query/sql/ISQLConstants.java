@@ -97,5 +97,7 @@ public interface ISQLConstants {
     String SKIP = "SKIP"; //$NON-NLS-1$
     String WIDTH = "width"; //$NON-NLS-1$
     
+    String NULL = "null"; //$NON-NLS-1$
+    
     
 }

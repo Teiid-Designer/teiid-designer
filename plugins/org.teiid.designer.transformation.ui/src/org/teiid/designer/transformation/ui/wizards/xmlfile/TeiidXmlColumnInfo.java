@@ -17,6 +17,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.query.IQueryFactory;
 import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.proc.ITeiidXmlColumnInfo;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
@@ -25,11 +26,7 @@ import org.teiid.designer.transformation.ui.UiConstants;
 /**
  * @since 8.0
  */
-public class TeiidXmlColumnInfo {
-	public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
-	public static final String INTEGER_DATATYPE = "integer"; //$NON-NLS-1$
-	
-	public static final int DEFAULT_WIDTH = 10;
+public class TeiidXmlColumnInfo implements ITeiidXmlColumnInfo {
 	
 	private static final IPath EMPTY_PATH = new Path(StringUtilities.EMPTY_STRING);
 	private static final String TEXT_SEGMENT = "text()"; //$NON-NLS-1$

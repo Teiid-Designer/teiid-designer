@@ -16,12 +16,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.query.IProcedureService;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.proc.ITeiidXmlColumnInfo;
+import org.teiid.designer.query.proc.ITeiidXmlFileInfo;
 import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidFileInfo;
@@ -34,11 +38,10 @@ import org.xml.sax.helpers.LocatorImpl;
  *
  * @since 8.0
  */
-public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQLConstants {
+public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQLConstants, ITeiidXmlFileInfo<TeiidXmlColumnInfo> {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidXmlFileInfo.class);
 	
 
-    public static final String NULL = "null"; //$NON-NLS-1$
     private static final String XSI_NAMESPACE_PREFIX = "xsi"; //$NON-NLS-1$
 	
     private static String getString( final String id ) {
@@ -85,9 +88,9 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 	private String[] cachedFirstLines;
 	
 	/**
-	 * The  <code>Collection</code> of <code>TeiidXmlColumnInfo</code> objects parsed from the defined header information.
+	 * The  <code>List</code> of <code>TeiidXmlColumnInfo</code> objects parsed from the defined header information.
 	 */
-	private Collection<TeiidXmlColumnInfo> columnInfoList;
+	private List<TeiidXmlColumnInfo> columnInfoList;
  	
 	
 	private XmlElement rootNode;
@@ -133,7 +136,9 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 		this.numberOfLinesInFile = info.getNumberOfLinesInFile();
 		this.rootPath = info.getRootPath(); 
 		this.columnInfoList = new ArrayList<TeiidXmlColumnInfo>();
-		for( TeiidXmlColumnInfo colInfo : info.getColumnInfoList() ) {
+		for( ITeiidXmlColumnInfo iColInfo : info.getColumnInfoList() ) {
+		    TeiidXmlColumnInfo colInfo = (TeiidXmlColumnInfo) iColInfo;
+		    
 			this.columnInfoList.add(new TeiidXmlColumnInfo(
 						colInfo.getXmlElement(),
 						colInfo.getXmlAttribute(),
@@ -176,7 +181,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 		this.isUrl = value;
 	}
 	
-	public boolean isUrl() {
+	@Override
+    public boolean isUrl() {
 		return this.isUrl;
 	}
 	
@@ -184,7 +190,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 		this.xmlFileUrl = theUrlValue;
 	}
 	
-	public String getXmlFileUrl() {
+	@Override
+    public String getXmlFileUrl() {
 		return this.xmlFileUrl;
 	}
 	
@@ -192,7 +199,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 	 * 
 	 * @return rootPath the root path xquery expression
 	 */
-	public String getRootPath() {
+	@Override
+    public String getRootPath() {
 		return this.rootPath;
 	}
 
@@ -204,7 +212,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 		this.rootPath = path;
 		
 		// Need to walk through the ColumnInfo objects and have them re-set their paths
-		for( TeiidXmlColumnInfo colInfo : getColumnInfoList() ) {
+		for( TeiidXmlColumnInfo colInfo : columnInfoList ) {
 			colInfo.setRootPath(this.rootPath);
 		}
 		
@@ -254,7 +262,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 	 * 
 	 * @return cachedFirstLines the <code>String[]</code> array from the data file
 	 */
-	public String[] getCachedFirstLines() {
+	@Override
+    public String[] getCachedFirstLines() {
 		return this.cachedFirstLines;
 	}
 	
@@ -262,8 +271,9 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 	 * 
 	 * @return columnInfoList the <code>TeiidXmlColumnInfo[]</code> array parsed from the header in the data file
 	 */
-	public TeiidXmlColumnInfo[] getColumnInfoList() {
-		return this.columnInfoList.toArray(new TeiidXmlColumnInfo[this.columnInfoList.size()]);
+	@Override
+    public List<TeiidXmlColumnInfo> getColumnInfoList() {
+		return this.columnInfoList;
 	}
 	
 	public void addNewColumn(Object obj) {
@@ -277,16 +287,16 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 		validate();
 	}
 
-	public void removeColumn(TeiidXmlColumnInfo theInfo) {
+	public void removeColumn(ITeiidXmlColumnInfo theInfo) {
 		this.columnInfoList.remove(theInfo);
 		validate();
 	}
 	
-	public void columnChanged(TeiidXmlColumnInfo columnInfo) {
+	public void columnChanged(ITeiidXmlColumnInfo columnInfo) {
 		validate();
 	}
 	
-	@Override
+    @Override
 	public void validate() {
 		// Validate XQuery Root Path Expression
 		if( this.getRootPath() == null || this.getRootPath().length() == 0 ) {
@@ -303,14 +313,14 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 		
 		// Validate Column names
 		// Check for ERRORS FIRST
-		for( TeiidXmlColumnInfo info : this.getColumnInfoList()) {
+		for( ITeiidXmlColumnInfo info : this.getColumnInfoList()) {
 			if( info.getStatus().getSeverity() == IStatus.ERROR ) {
 				this.setStatus(info.getStatus());
 				return;
 			}
 		}
 		
-		for( TeiidXmlColumnInfo info : this.getColumnInfoList()) {
+		for( ITeiidXmlColumnInfo info : this.getColumnInfoList()) {
 			if( info.getStatus().getSeverity() != IStatus.OK ) {
 				this.setStatus(info.getStatus());
 				return;
@@ -319,9 +329,9 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 		
 		// Check for duplicate column names
 		// Walk through list of columns and cache the names
-		Collection<String> toUpperNames = new ArrayList<String>(this.getColumnInfoList().length);
+		Collection<String> toUpperNames = new ArrayList<String>(this.getColumnInfoList().size());
 		
-		for( TeiidXmlColumnInfo info : this.getColumnInfoList()) {
+		for( ITeiidXmlColumnInfo info : this.getColumnInfoList()) {
 			if( toUpperNames.contains(info.getName().toUpperCase()) ) {
 				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("status.duplicateColumnNames", info.getName()))); //$NON-NLS-1$
 				return;
@@ -366,7 +376,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 	 * 
 	 * @return numberOfCachedLines the number of cached lines from data file
 	 */
-	public int getNumberOfCachedFileLines() {
+	@Override
+    public int getNumberOfCachedFileLines() {
 		return this.numberOfCachedLines;
 	}
 	
@@ -374,7 +385,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 	 * 
 	 * @return numberOfCachedLines the total number of lines from data file
 	 */
-	public int getNumberOfLinesInFile() {
+	@Override
+    public int getNumberOfLinesInFile() {
 		return this.numberOfLinesInFile;
 	}
 	
@@ -394,8 +406,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 				}
 			}
 			
-			if( ! columnInfo.getDatatype().equalsIgnoreCase(TeiidXmlColumnInfo.INTEGER_DATATYPE) ) {
-				columnInfo.setDatatype(TeiidXmlColumnInfo.INTEGER_DATATYPE);
+			if( ! columnInfo.getDatatype().equalsIgnoreCase(ITeiidXmlColumnInfo.INTEGER_DATATYPE) ) {
+				columnInfo.setDatatype(ITeiidXmlColumnInfo.INTEGER_DATATYPE);
 			}
 			columnInfo.setOrdinality(true);
 		}
@@ -409,12 +421,12 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 		// 
 		if( startIndex > 0 ) {
 			// Make Copy of List & get columnInfo of startIndex-1
-			TeiidXmlColumnInfo priorInfo = getColumnInfoList()[startIndex-1];
-			TeiidXmlColumnInfo[] infos = getColumnInfoList();
+			TeiidXmlColumnInfo priorInfo = getColumnInfoList().get(startIndex-1);
+            TeiidXmlColumnInfo[] infos = getColumnInfoList().toArray(new TeiidXmlColumnInfo[0]);
 			infos[startIndex-1] = columnInfo;
 			infos[startIndex] = priorInfo;
 			
-			Collection<TeiidXmlColumnInfo> colInfos = new ArrayList<TeiidXmlColumnInfo>(infos.length);
+			List<TeiidXmlColumnInfo> colInfos = new ArrayList<TeiidXmlColumnInfo>(infos.length);
 			for( TeiidXmlColumnInfo info : infos) {
 				colInfos.add(info);
 			}
@@ -425,14 +437,14 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 	
 	public void moveColumnDown(TeiidXmlColumnInfo columnInfo) {
 		int startIndex = getColumnIndex(columnInfo);
-		if( startIndex < (getColumnInfoList().length-1) ) {
+		if( startIndex < (getColumnInfoList().size()-1) ) {
 			// Make Copy of List & get columnInfo of startIndex-1
-			TeiidXmlColumnInfo afterInfo = getColumnInfoList()[startIndex+1];
-			TeiidXmlColumnInfo[] infos = getColumnInfoList();
+			TeiidXmlColumnInfo afterInfo = getColumnInfoList().get(startIndex+1);
+            TeiidXmlColumnInfo[] infos = getColumnInfoList().toArray(new TeiidXmlColumnInfo[0]);
 			infos[startIndex+1] = columnInfo;
 			infos[startIndex] = afterInfo;
 			
-			Collection<TeiidXmlColumnInfo> colInfos = new ArrayList<TeiidXmlColumnInfo>(infos.length);
+			List<TeiidXmlColumnInfo> colInfos = new ArrayList<TeiidXmlColumnInfo>(infos.length);
 			for( TeiidXmlColumnInfo info : infos) {
 				colInfos.add(info);
 			}
@@ -441,17 +453,17 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 		}
 	}
 	
-	public boolean canMoveUp(TeiidXmlColumnInfo columnInfo) {
+	public boolean canMoveUp(ITeiidXmlColumnInfo columnInfo) {
 		return getColumnIndex(columnInfo) > 0;
 	}
 	
-	public boolean canMoveDown(TeiidXmlColumnInfo columnInfo) {
-		return getColumnIndex(columnInfo) < getColumnInfoList().length-1;
+	public boolean canMoveDown(ITeiidXmlColumnInfo columnInfo) {
+		return getColumnIndex(columnInfo) < getColumnInfoList().size()-1;
 	}
 	
-	private int getColumnIndex(TeiidXmlColumnInfo columnInfo) {
+	private int getColumnIndex(ITeiidXmlColumnInfo columnInfo) {
 		int i=0;
-		for( TeiidXmlColumnInfo colInfo : getColumnInfoList() ) {
+		for( ITeiidXmlColumnInfo colInfo : getColumnInfoList() ) {
 			if( colInfo == columnInfo) {
 				return i;
 			}
@@ -482,6 +494,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 	 * Returns the current generated SQL string based on an unknown relational model name
 	 * @return the generated SQL string
 	 */
+    @Override
     public String getSqlStringTemplate() {
     	return getSqlString("myRelModel"); //$NON-NLS-1$
     }
@@ -490,6 +503,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
 	 * Returns the current generated SQL string based on an unknown relational model name
 	 * @return the generated SQL string based on the values stored on this instance
 	 */
+    @Override
     public String getSqlString(String relationalModelName) {
     	/*
     	##  SELECT
@@ -625,15 +639,18 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
     	return this.rootNode;
     }
     
+    @Override
     public String getCommonRootPath() {
     	return this.commonRootPath;
     }
     
+    @Override
     public IStatus getParsingStatus() {
     	return this.parsingStatus;
     }
     
-    private String getNamespaceString() {
+    @Override
+    public String getNamespaceString() {
     	//
     	// EXAMPLE:  XMLNAMESPACES('http://www.kaptest.com/schema/1.0/party' AS pty)
     	//
@@ -662,6 +679,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
     	return sb.toString();
     }
 
+    @Override
     public IStatus parseXmlFile() {
 		XmlParser xmlParser = new XmlParser();
 		XmlFileContentHandler contentHandler = new XmlFileContentHandler();

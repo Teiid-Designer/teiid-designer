@@ -25,6 +25,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.teiid.designer.query.proc.ITeiidXmlFileInfo;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
@@ -179,7 +180,7 @@ public class XmlFileContentsGroup {
     }
 	
     Object[] getNodeChildren( Object element ) {
-        if (element instanceof TeiidXmlFileInfo) {
+        if (element instanceof ITeiidXmlFileInfo) {
             return new Object[] {getFileInfo().getRootNode()};
         }
 

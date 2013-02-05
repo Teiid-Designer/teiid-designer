@@ -916,7 +916,6 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
     
     @Override
     public String getSqlString(String relationalModelName) {
-        
         IQueryService queryService = ModelerCore.getTeiidQueryService();
         IProcedureService procedureService = queryService.getProcedureService();
         return procedureService.getSQLStatement(this, relationalModelName);

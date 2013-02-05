@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.query.proc.ITeiidXmlColumnInfo;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlColumnInfo;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo;
@@ -128,7 +129,7 @@ public class ColumnsInfoPanel {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TeiidXmlColumnInfo info = editColumnsPanel.getSelectedColumn();
+				ITeiidXmlColumnInfo info = editColumnsPanel.getSelectedColumn();
 				if( info != null ) {
 					getFileInfo().removeColumn(info);
 					deleteButton.setEnabled(false);
@@ -200,13 +201,13 @@ public class ColumnsInfoPanel {
 				} else {
 					boolean enable = true;
 					Object[] objs = sel.toArray();
-					TeiidXmlColumnInfo columnInfo = null;
+					ITeiidXmlColumnInfo columnInfo = null;
 					for( Object obj : objs) {
-						if(  !(obj instanceof TeiidXmlColumnInfo)) {
+						if(  !(obj instanceof ITeiidXmlColumnInfo)) {
 							enable = false;
 							break;
 						} else {
-							columnInfo = (TeiidXmlColumnInfo)obj;
+							columnInfo = (ITeiidXmlColumnInfo)obj;
 						}
 					} 
 					if( objs.length == 0 ) {

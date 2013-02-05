@@ -28,6 +28,7 @@ import org.teiid.designer.metamodels.relational.RelationalFactory;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.metamodels.transformation.TransformationFactory;
+import org.teiid.designer.query.proc.ITeiidXmlColumnInfo;
 import org.teiid.designer.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.util.TransformationMappingHelper;
@@ -111,7 +112,7 @@ public class XmlFileViewModelFactory  extends FlatFileRelationalModelFactory {
     private void createColumns(TeiidXmlFileInfo info, BaseTable baseTable) throws ModelerCoreException {
     	EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
     	
-    	for (TeiidXmlColumnInfo columnInfo : info.getColumnInfoList()) {
+    	for (ITeiidXmlColumnInfo columnInfo : info.getColumnInfoList()) {
     		Column column = factory.createColumn();
     		column.setName(columnInfo.getName());
     		column.setNameInSource(columnInfo.getSymbolName());
