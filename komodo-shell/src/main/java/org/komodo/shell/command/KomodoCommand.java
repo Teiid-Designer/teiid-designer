@@ -18,7 +18,7 @@ import java.util.concurrent.FutureTask;
 import org.komodo.common.i18n.I18n;
 import org.komodo.common.util.Precondition;
 import org.komodo.common.util.StringUtil;
-import org.komodo.repository.RepositoryManager;
+import org.komodo.repository.SoaRepository;
 import org.komodo.shell.ShellConstants;
 import org.komodo.shell.ShellI18n;
 import org.overlord.sramp.shell.api.AbstractShellCommand;
@@ -117,8 +117,8 @@ public abstract class KomodoCommand extends AbstractShellCommand implements Shel
         }
     }
 
-    protected final RepositoryManager getRepositoryManager() {
-        return (RepositoryManager)getContext().getVariable(KOMODO_CLIENT_QNAME);
+    protected final SoaRepository getRepository() {
+        return (SoaRepository)getContext().getVariable(KOMODO_REPOSITORY_QNAME);
     }
 
     /**

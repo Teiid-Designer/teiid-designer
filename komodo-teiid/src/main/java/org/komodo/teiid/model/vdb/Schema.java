@@ -203,6 +203,13 @@ public class Schema extends VdbAdminObject {
     }
 
     /**
+     * @return the type the model/schema type (can be <code>null</code> or empty)
+     */
+    public String getSchemaType() {
+        return this.type;
+    }
+
+    /**
      * @return an unmodifiable collection of model sources (never <code>null</code> but can be empty)
      */
     public List<Source> getSources() {
@@ -211,13 +218,6 @@ public class Schema extends VdbAdminObject {
         }
 
         return Collections.unmodifiableList(this.sources);
-    }
-
-    /**
-     * @return the type the model/schema type (can be <code>null</code> or empty)
-     */
-    public String getType() {
-        return this.type;
     }
 
     /**

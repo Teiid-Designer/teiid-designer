@@ -7,6 +7,9 @@
 */
 package org.komodo.common.util;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Utilities for use with string types.
  */
@@ -18,14 +21,19 @@ public class StringUtil {
     public static final String DEFAULT_DELIMITER = ","; //$NON-NLS-1$
 
     /**
-     * A empty string array constant.
+     * An empty string array constant.
      */
     public static final String[] EMPTY_ARRAY = {};
 
     /**
-     * A empty string constant.
+     * An empty string constant.
      */
     public static final String EMPTY_STRING = ""; //$NON-NLS-1$
+
+    /**
+     * An empty string list constant.
+     */
+    public static final List<String> EMPTY_LIST = Collections.emptyList();
 
     /**
      * @param strings the strings being joined (cannot be <code>null</code> or empty)
