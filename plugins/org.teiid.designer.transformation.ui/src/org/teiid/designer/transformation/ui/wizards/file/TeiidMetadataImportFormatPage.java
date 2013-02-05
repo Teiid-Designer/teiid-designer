@@ -177,6 +177,12 @@ public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements
 	private void synchronizeUI() {
 		synchronizing = true;
 
+		String charset = this.info.getFileInfo(this.dataFileInfo.getDataFile()).getCharset();
+		if (!charset.equals(this.dataFileInfo.getCharset())) {
+		    this.dataFileInfo = this.info.getFileInfo(this.dataFileInfo.getDataFile());
+		    loadFileContentsViewers();
+		}
+
 		selectedFileText.setText(dataFileInfo.getDataFile().getName());
 
 		boolean isDelimitedOption = this.dataFileInfo.doUseDelimitedColumns();

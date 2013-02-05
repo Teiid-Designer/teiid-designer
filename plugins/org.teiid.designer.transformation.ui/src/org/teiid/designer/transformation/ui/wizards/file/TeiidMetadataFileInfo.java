@@ -9,11 +9,11 @@ package org.teiid.designer.transformation.ui.wizards.file;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.StringTokenizer;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -159,7 +159,9 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	private Collection<TeiidColumnInfo> columnInfoList;
 	
 	private boolean ignoreReload = false;
-
+ 
+	private String charset = "UTF-8";  //$NON-NLS-1$
+	
 	/**
 	 * 
 	 * @param dataFile the Teiid-formatted data file
@@ -169,6 +171,22 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 		CoreArgCheck.isNotNull(dataFile, "dataFile is null"); //$NON-NLS-1$
 
 		initialize();
+	}
+	
+	/**
+	 * 
+	 * @param dataFile the Teiid-formatted data file
+	 * @param charset charset
+	 */
+	public TeiidMetadataFileInfo(File dataFile, String charset) {
+	    super(dataFile, true);
+
+	    CoreArgCheck.isNotNull(dataFile, "dataFile is null"); //$NON-NLS-1$
+	    if(charset != null && charset.length() > 0) {
+	        this.charset = charset;
+	    }
+	    
+	    initialize();
 	}
 	
 	/**
@@ -363,13 +381,15 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 		Collection<String> lines = new ArrayList<String>(7);
 		
         if(getDataFile() != null && getDataFile().exists()){
-            FileReader fr=null;
+            FileInputStream stream = null;
+            InputStreamReader reader = null;
             BufferedReader in=null;
 
             try{
             	int iLines = 0;
-                fr=new FileReader(getDataFile());
-                in = new BufferedReader(fr);
+                stream = new FileInputStream(getDataFile());
+                reader = new InputStreamReader(stream, this.charset);
+                in = new BufferedReader(reader);                
                 String str;
                 while ((str = in.readLine()) != null) {
                 	Collection<String> strings = getRowsFromLine(str);
@@ -387,12 +407,14 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
             }
             finally{
                 try{
-                    fr.close();
+                    stream.close();
+                }catch(java.io.IOException e){}
+                try{
+                    reader.close();
                 }catch(java.io.IOException e){}
                 try{
                     in.close();
                 }catch(java.io.IOException e){}
-
             }
         }
         
@@ -978,4 +1000,9 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
     	return finalSQLString;
     	
     }
+    
+    public String getCharset() {
+        return this.charset;
+    }
+    
 }
