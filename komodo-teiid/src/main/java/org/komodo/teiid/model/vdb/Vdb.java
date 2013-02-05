@@ -13,6 +13,7 @@ import java.util.List;
 import org.komodo.common.util.CollectionUtil;
 import org.komodo.common.util.HashCode;
 import org.komodo.common.util.Precondition;
+import org.komodo.common.util.StringUtil;
 
 /**
  * The Teiid VDB business object.
@@ -113,9 +114,9 @@ public class Vdb extends VdbAdminObject {
     }
 
     /**
-     * The default version number for a VDB. Value is {@value}.
+     * The default version for a VDB. Value is {@value}.
      */
-    public static final int DEFAULT_VERSION = 1;
+    public static final String DEFAULT_VERSION = "1"; //$NON-NLS-1$
 
     private static final List<DataPolicy> NO_DATA_POLICIES = Collections.emptyList();
     private static final List<Entry> NO_ENTRIES = Collections.emptyList();
@@ -128,7 +129,7 @@ public class Vdb extends VdbAdminObject {
     private List<ImportVdb> importVdbs;
     private List<Schema> schemas;
     private List<Translator> translators;
-    private int version = DEFAULT_VERSION;
+    private String version = DEFAULT_VERSION;
 
     /**
      * Generates a property change event if the collection of data policies is changed.
@@ -313,7 +314,7 @@ public class Vdb extends VdbAdminObject {
     /**
      * @return the version
      */
-    public int getVersion() {
+    public String getVersion() {
         return this.version;
     }
 
@@ -356,6 +357,7 @@ public class Vdb extends VdbAdminObject {
 
     /**
      * Generates a property change event if the collection of entries is changed.
+     * 
      * @param entryToDelete the entry being deleted (cannot be <code>null</code>)
      */
     public void removeEntry(final Entry entryToDelete) {
@@ -376,6 +378,7 @@ public class Vdb extends VdbAdminObject {
 
     /**
      * Generates a property change event if the collection of import VDBs is changed.
+     * 
      * @param importVdbToDelete the import VDB being deleted (cannot be <code>null</code>)
      */
     public void removeImportVdb(final ImportVdb importVdbToDelete) {
@@ -417,6 +420,7 @@ public class Vdb extends VdbAdminObject {
 
     /**
      * Generates a property change event if the collection of translators is changed.
+     * 
      * @param translatorToDelete the translator being deleted (cannot be <code>null</code>)
      */
     public void removeTranslator(final Translator translatorToDelete) {
@@ -437,11 +441,12 @@ public class Vdb extends VdbAdminObject {
 
     /**
      * Generates a property change event if the version is changed.
+     * 
      * @param newVersion the new version
      */
-    public void setVersion(final int newVersion) {
-        if (this.version != newVersion) {
-            final int oldValue = this.version;
+    public void setVersion(final String newVersion) {
+        if (!StringUtil.matches(this.version, newVersion)) {
+            final String oldValue = this.version;
             this.version = newVersion;
             firePropertyChangeEvent(PropertyName.VERSION, oldValue, this.version);
 

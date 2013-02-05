@@ -48,9 +48,9 @@ class VdbValidator implements Validator {
         }
 
         // make sure version is valid
-        final int version = vdb.getVersion();
+        final String version = vdb.getVersion();
 
-        if (version < 0) {
+        if (StringUtil.isEmpty(version)) {
             final Status error = Error.INVALID_VDB_VERSION.createStatus();
             error.addContext(vdb);
             errors.add(error);

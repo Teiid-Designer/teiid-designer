@@ -7,15 +7,14 @@
 */
 package org.komodo.shell.command;
 
-import java.util.HashMap;
 import org.komodo.common.i18n.I18n;
 import org.komodo.common.util.Precondition;
 import org.komodo.common.util.StringUtil;
-import org.komodo.repository.RepositoryManager;
+import org.komodo.repository.SoaRepository;
 import org.komodo.repository.artifact.Artifact;
-import org.komodo.repository.artifact.VdbArtifact;
+import org.komodo.repository.artifact.ArtifactResultSet;
+import org.komodo.repository.artifact.teiid.VdbArtifact;
 import org.komodo.shell.ShellI18n;
-import org.overlord.sramp.client.query.QueryResultSet;
 
 /**
  * A shell command that finds all VDBs in a repository with a matching name and version. 
@@ -53,20 +52,19 @@ public class GetVdbCommand extends KomodoCommand {
         final String vdbName = args[0];
         final String version = args[1];
 
-        final RepositoryManager.QuerySettings settings = new RepositoryManager.QuerySettings();
+        final SoaRepository.QuerySettings settings = new SoaRepository.QuerySettings();
         settings.artifactType = VdbArtifact.TYPE;
-        settings.params = new HashMap<String, String>();
         settings.params.put(Artifact.Property.NAME, vdbName);
         settings.params.put(Artifact.Property.VERSION, version);
 
-        final RepositoryManager repoMgr = getRepositoryManager();
+        final SoaRepository repository = getRepository();
 
-        if (repoMgr == null) {
+        if (repository == null) {
             print(ShellI18n.connectionNotFound);
             return ERROR;
         }
 
-        final QueryResultSet results = repoMgr.query(settings);
+        final ArtifactResultSet results = repository.query(settings);
 
         if (results.size() == 0) {
             print(I18n.bind(ShellI18n.noMatchingVdbsFoundInRepository, vdbName, version));

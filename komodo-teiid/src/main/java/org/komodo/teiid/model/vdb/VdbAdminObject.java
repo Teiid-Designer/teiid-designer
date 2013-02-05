@@ -38,9 +38,9 @@ public abstract class VdbAdminObject extends VdbObject implements Describable, P
         String PROPERTIES = Propertied.PROPERTIES;
     }
 
-    protected String description;
+    private String description;
 
-    protected Map<String, String> props;
+    private Map<String, String> props;
 
     /**
      * {@inheritDoc}

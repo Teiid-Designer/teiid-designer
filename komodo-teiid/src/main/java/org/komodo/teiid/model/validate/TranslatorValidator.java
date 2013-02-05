@@ -44,7 +44,7 @@ class TranslatorValidator implements Validator {
         }
 
         // make sure type is not empty
-        if (StringUtil.isEmpty(translator.getType())) {
+        if (StringUtil.isEmpty(translator.getTranslatorType())) {
             final Status error = Error.EMPTY_TRANSLATOR_TYPE.createStatus();
             error.addContext(translator);
             errors.add(error);

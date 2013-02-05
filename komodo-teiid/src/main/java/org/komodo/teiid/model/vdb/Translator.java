@@ -72,7 +72,7 @@ public class Translator extends VdbAdminObject {
     /**
      * @return the type the translator type (can be <code>null</code> or empty)
      */
-    public String getType() {
+    public String getTranslatorType() {
         return this.type;
     }
 

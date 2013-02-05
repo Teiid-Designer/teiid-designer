@@ -7,21 +7,13 @@
 */
 package org.komodo.repository.artifact;
 
+import org.komodo.teiid.model.Describable;
+import org.komodo.teiid.model.Propertied;
+
 /**
  * Represents a Komodo artifact.
  */
-public interface Artifact {
-
-    /**
-     * A Komodo S-RAMP artifact type identifier.
-     */
-    public interface Type {
-
-        /**
-         * @return a unique artifact type identifier (cannot be <code>null</code> or empty)
-         */
-        String getId();
-    }
+public interface Artifact extends Describable, Propertied {
 
     /**
      * Names of default properties for use in queries.
@@ -37,6 +29,11 @@ public interface Artifact {
          * The 'created timestamp' property name. Value is {@value}.
          */
         String CREATED_TIMESTAMP = "createdTimestamp"; //$NON-NLS-1$
+
+        /**
+         * The 'description' property name. Value is {@value}.
+         */
+        String DESCRIPTION = "description"; //$NON-NLS-1$
 
         /**
          * The 'last modified by' property name. Value is {@value}.
@@ -74,5 +71,36 @@ public interface Artifact {
          */
         String getId();
     }
+
+    /**
+     * A Komodo S-RAMP artifact type identifier.
+     */
+    public interface Type {
+
+        /**
+         * @return a unique artifact type identifier (cannot be <code>null</code> or empty)
+         */
+        String getId();
+    }
+
+    /**
+     * @return the artifact name (can be <code>null</code> or empty)
+     */
+    String getArtifactName();
+
+    /**
+     * @return the artifact type (never <code>null</code>)
+     */
+    Type getArtifactType();
+
+    /**
+     * @return the artifact UUID (never <code>null</code> or empty)
+     */
+    String getArtifactUuid();
+
+    /**
+     * @return the artifact version (never <code>null</code> or empty)
+     */
+    String getArtifactVersion();
 
 }

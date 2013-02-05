@@ -13,8 +13,8 @@ public interface ShellConstants {
     String NAMESPACE = "komodo"; //$NON-NLS-1$ 
 
     /**
-     * The shell context variable name for the command's client.
+     * The shell context variable name for the command's repository.
      */
-    QName KOMODO_CLIENT_QNAME = new QName(NAMESPACE, "s-ramp-client"); //$NON-NLS-1$
+    QName KOMODO_REPOSITORY_QNAME = new QName(NAMESPACE, "soa-repository"); //$NON-NLS-1$
 
 }

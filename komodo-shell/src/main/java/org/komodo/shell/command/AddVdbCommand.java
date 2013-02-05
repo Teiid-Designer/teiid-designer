@@ -11,9 +11,10 @@ import java.io.InputStream;
 import org.komodo.common.i18n.I18n;
 import org.komodo.common.util.Precondition;
 import org.komodo.common.util.StringUtil;
-import org.komodo.repository.RepositoryManager;
+import org.komodo.repository.SoaRepository;
+import org.komodo.repository.artifact.Artifact;
+import org.komodo.repository.artifact.teiid.VdbArtifact;
 import org.komodo.shell.ShellI18n;
-import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 
 /**
  * A shell command that adds a VDB to the repository.  
@@ -61,21 +62,21 @@ public class AddVdbCommand extends KomodoCommand {
             return ERROR;
         }
 
-        final RepositoryManager repoMgr = getRepositoryManager();
+        final SoaRepository repository = getRepository();
 
-        if (repoMgr == null) {
+        if (repository == null) {
             print(ShellI18n.connectionNotFound);
             return ERROR;
         }
 
-        final BaseArtifactType vdbArtifact = repoMgr.addVdb(vdbStream);
+        final Artifact vdbArtifact = repository.add(vdbStream, VdbArtifact.TYPE);
 
         if (vdbArtifact == null) {
             print(I18n.bind(ShellI18n.vdbArtifactMissingAfterAdd, fileName));
             return ERROR;
         }
 
-        print(I18n.bind(ShellI18n.vdbAddedToRepository, vdbArtifact.getName()));
+        print(I18n.bind(ShellI18n.vdbAddedToRepository, vdbArtifact.getArtifactName()));
 
         return vdbArtifact;
     }

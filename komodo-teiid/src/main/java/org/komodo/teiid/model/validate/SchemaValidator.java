@@ -45,13 +45,13 @@ class SchemaValidator implements Validator {
         }
 
         // make sure type is not empty
-        if (StringUtil.isEmpty(schema.getType())) {
+        if (StringUtil.isEmpty(schema.getSchemaType())) {
             final Status error = Error.EMPTY_SCHEMA_TYPE.createStatus();
             error.addContext(schema);
             errors.add(error);
         } else {
             // make sure type is valid
-            final String type = schema.getType();
+            final String type = schema.getSchemaType();
             boolean valid = false;
 
             for (final Schema.Type validType : Schema.Type.values()) {
