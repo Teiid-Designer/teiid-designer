@@ -95,16 +95,17 @@ import org.teiid.designer.udf.UdfManager;
  */
 public class SqlTransformationMappingRootValidationRule implements ObjectValidationRule {
 
-    private final IGroupCollectorVisitor groupCollectorVisitor;
-    
-    /**
-     * 
-     */
-    public SqlTransformationMappingRootValidationRule() {
-        IQueryService queryService = ModelerCore.getTeiidQueryService();
-        groupCollectorVisitor = queryService.getGroupCollectorVisitor(true);
+    private IQueryService getQueryService() {
+        return ModelerCore.getTeiidQueryService();
     }
     
+    private IQueryFactory getQueryFactory() {
+        return getQueryService().createQueryFactory();
+    }
+    
+    private IGroupCollectorVisitor getGroupCollectorVisitor() {
+        return getQueryService().getGroupCollectorVisitor(true);
+    }
     
     /*
      * @See org.teiid.designer.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
@@ -413,8 +414,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         // the super command
         boolean foundDesiredSubCmd = false;
         // get all the sub commands and iterate through them
-        IQueryService queryService = ModelerCore.getTeiidQueryService();
-        ICommandCollectorVisitor commandCollectorVisitor = queryService.getCommandCollectorVisitor();
+        ICommandCollectorVisitor commandCollectorVisitor = getQueryService().getCommandCollectorVisitor();
         final Collection commands = commandCollectorVisitor.findCommands(command);
         // get the target for the transformation
         EObject target = transRoot.getTarget();
@@ -512,7 +512,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                                     final EObject target ) {
         String targetName = TransformationHelper.getSqlEObjectFullName(target);
         String targetUUID = TransformationHelper.getSqlEObjectUUID(target);
-        for (final Iterator grpIter = groupCollectorVisitor.findGroups(command).iterator(); grpIter.hasNext();) {
+        for (final Iterator grpIter = getGroupCollectorVisitor().findGroups(command).iterator(); grpIter.hasNext();) {
             IGroupSymbol group = (IGroupSymbol)grpIter.next();
             if (group.getName().equalsIgnoreCase(targetUUID) || group.getName().equalsIgnoreCase(targetName)) {
                 return true;
@@ -632,8 +632,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             return Collections.EMPTY_LIST;
         }
         
-        IQueryService queryService = ModelerCore.getTeiidQueryService();
-        IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor(true);
+        IElementCollectorVisitor elementCollectorVisitor = getQueryService().getElementCollectorVisitor(true);
         return elementCollectorVisitor.findElements(obj, true);
     }
 
@@ -797,8 +796,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             // if there is a string function (SUBSTRING, LOCATE, and INSERT), warn the user that it is one based
             int pref = context.getPreferenceStatus(ValidationPreferences.CORE_STRING_FUNCTIONS_ONE_BASED, IStatus.WARNING);
             if (pref != IStatus.OK) {
-                IQueryService queryService = ModelerCore.getTeiidQueryService();
-                IFunctionCollectorVisitor functionCollectorVisitor = queryService.getFunctionCollectorVisitor(true);
+                IFunctionCollectorVisitor functionCollectorVisitor = getQueryService().getFunctionCollectorVisitor(true);
                 Collection<IFunction> functions = functionCollectorVisitor.findFunctions(command, true);
                 
                 Iterator iter = functions.iterator();
@@ -826,14 +824,13 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
     private void validateQuery( final IQuery query,
                                 final SqlTransformationMappingRoot transRoot,
                                 final ValidationResult validationResult ) {
-        IQueryService queryService = ModelerCore.getTeiidQueryService();
-        IQueryFactory factory = queryService.createQueryFactory();
-        IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor(true);
-        IPredicateCollectorVisitor predicateCollectorVisitor = queryService.getPredicateCollectorVisitor();
+        
+        IElementCollectorVisitor elementCollectorVisitor = getQueryService().getElementCollectorVisitor(true);
+        IPredicateCollectorVisitor predicateCollectorVisitor = getQueryService().getPredicateCollectorVisitor();
         
         // apply additional validation checks for queries
         Collection predicates = predicateCollectorVisitor.findPredicates(query);
-        Collection groups = groupCollectorVisitor.findGroups(query);
+        Collection groups = getGroupCollectorVisitor().findGroups(query);
         if (predicates.isEmpty() && groups.size() > 1) {
             // There are no predicates but there are groups
             // (this is the trivial case)
@@ -866,7 +863,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                             String elementFullName = element.getName();
                             int grpIndex = elementFullName.indexOf(element.getShortName());
                             String groupName = elementFullName.substring(0, grpIndex - 1);
-                            group = factory.createGroupSymbol(groupName);
+                            group = getQueryFactory().createGroupSymbol(groupName);
                         }
                         if (group != null) {
                             groupsInJoin.add(group);
@@ -1101,7 +1098,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         if (option == null || !option.isNoCache()) {
             return;
         }
-        Collection groups = groupCollectorVisitor.findGroups(command);
+        Collection groups = getGroupCollectorVisitor().findGroups(command);
         // names of groups specified in NO cACHE clause
         Collection<String> noCacheGroups = option.getNoCacheGroups();
         boolean hasMaterializedGroups = false;
