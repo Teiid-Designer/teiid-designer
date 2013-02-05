@@ -11,7 +11,8 @@ import java.util.List;
 import org.komodo.common.i18n.I18n;
 import org.komodo.common.util.Precondition;
 import org.komodo.common.util.StringUtil;
-import org.komodo.repository.AtomRepositoryManager;
+import org.komodo.repository.SoaRepositories;
+import org.komodo.repository.SoaRepository;
 import org.komodo.shell.ShellI18n;
 
 /**
@@ -57,10 +58,11 @@ public class ConnectKomodoCommand extends KomodoCommand {
             endpointUrlArg = "http://" + endpointUrlArg; //$NON-NLS-1$
         }
 
-        final AtomRepositoryManager client = new AtomRepositoryManager(endpointUrlArg, true);
-        getContext().setVariable(KOMODO_CLIENT_QNAME, client);
+        final SoaRepositories repositories = new SoaRepositories();
+        final SoaRepository repository = repositories.get(endpointUrlArg);
+        getContext().setVariable(KOMODO_REPOSITORY_QNAME, repository);
         print(I18n.bind(ShellI18n.successfulConnection, endpointUrlArg));
-        return client;
+        return repository;
     }
 
     /**

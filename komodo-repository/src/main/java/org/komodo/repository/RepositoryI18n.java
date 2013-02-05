@@ -17,6 +17,7 @@ public class RepositoryI18n extends I18n {
 
     public static String missingVdbRootElement;
     public static String notVdbArtifact;
+    public static String repositoryConnectionFailure;
 
     static {
         final RepositoryI18n i18n = new RepositoryI18n();

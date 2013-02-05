@@ -81,7 +81,7 @@ public class ImportVdb extends VdbObject {
     }
 
     /**
-     * @return the version
+     * @return the VDB version
      */
     public int getVersion() {
         return this.version;

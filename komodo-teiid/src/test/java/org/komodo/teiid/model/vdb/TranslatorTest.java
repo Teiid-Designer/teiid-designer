@@ -125,24 +125,24 @@ public class TranslatorTest {
         {
             final String type = StringUtil.EMPTY_STRING;
             this.translator.setType(type);
-            assertThat(this.translator.getType(), is(type));
+            assertThat(this.translator.getTranslatorType(), is(type));
         }
 
         {
             final String newType = "newType";
             this.translator.setType(newType);
-            assertThat(this.translator.getType(), is(newType));
+            assertThat(this.translator.getTranslatorType(), is(newType));
         }
 
         {
             this.translator.setType(null);
-            assertThat(this.translator.getType(), is(nullValue()));
+            assertThat(this.translator.getTranslatorType(), is(nullValue()));
         }
     }
 
     @Test
     public void typeShouldBeNullAfterConstruction() {
-        assertThat(this.translator.getType(), is(nullValue()));
+        assertThat(this.translator.getTranslatorType(), is(nullValue()));
     }
 
 }

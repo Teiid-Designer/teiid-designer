@@ -43,8 +43,8 @@ public abstract class VdbObject extends ModelObject implements Comparable<VdbObj
             return 0;
         }
 
-        final String thisClass = getClass().getSimpleName();
-        final String thatClass = that.getClass().getSimpleName();
+        final String thisClass = getClass().getName();
+        final String thatClass = that.getClass().getName();
         final int result = thisClass.compareTo(thatClass);
 
         if (result < 0) {

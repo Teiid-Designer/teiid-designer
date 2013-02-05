@@ -8,8 +8,8 @@
 package org.komodo.shell.command;
 
 import org.junit.Before;
-import org.komodo.repository.RepositoryManager;
-import org.komodo.repository.RepositoryTest;
+import org.komodo.repository.SoaRepository;
+import org.komodo.repository.sramp.SrampTest;
 import org.komodo.shell.ShellConstants;
 import org.overlord.sramp.shell.api.ShellContext;
 import org.overlord.sramp.shell.api.SimpleShellContext;
@@ -18,10 +18,10 @@ import org.overlord.sramp.shell.api.SimpleShellContext;
  * The base class for Komodo S-RAMP shell command tests.
  */
 @SuppressWarnings( {"javadoc"} )
-public abstract class ShellCommandTest extends RepositoryTest implements ShellConstants {
+public abstract class ShellCommandTest extends SrampTest implements ShellConstants {
 
     protected ShellContext context;
-    protected RepositoryManager.QuerySettings settings;
+    protected SoaRepository.QuerySettings settings;
 
     protected abstract KomodoCommand getCommand();
 
@@ -31,10 +31,10 @@ public abstract class ShellCommandTest extends RepositoryTest implements ShellCo
 
     @Before
     public void setupContext() {
-        this.settings = new RepositoryManager.QuerySettings();
+        this.settings = new SoaRepository.QuerySettings();
 
         this.context = new SimpleShellContext();
-        this.context.setVariable(KOMODO_CLIENT_QNAME, _repoMgr);
+        this.context.setVariable(KOMODO_REPOSITORY_QNAME, _repository);
         getCommand().setContext(this.context);
     }
 
