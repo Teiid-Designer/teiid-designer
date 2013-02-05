@@ -56,10 +56,13 @@ import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.relational.ui.util.RelationalUiUtil;
 import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid.designer.ui.common.UILabelUtil;
+import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.properties.extension.VdbFileDialogUtil;
 
 /**
  *
@@ -75,11 +78,12 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 	TabItem parametersTab;
 	TabItem resultSetTab;
 	TabItem descriptionTab;
+	TabItem nativeQueryTab;
 	
 	// table property widgets
-	Button isFunctionCB, nonPreparedCB, deterministicCB, returnsNullCB, variableArgsCB, aggregateCB,
+	Button nonPreparedCB, deterministicCB, returnsNullCB, variableArgsCB, aggregateCB,
 		allowsDistinctCB, allowsOrderByCB, analyticCB, decomposableCB, useDistinctRowsCB, includeResultSetCB;
-	Text modelNameText, nameText, nameInSourceText, resultSetNameText;
+	Text modelNameText, nameText, nameInSourceText, resultSetNameText, nativeQueryHelpText;
 	StyledTextEditor descriptionTextEditor;
 	
 	// parameter widgets
@@ -88,6 +92,9 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 	Combo updateCountCombo;
 	TableViewer parametersViewer;
 	TableViewer columnsViewer;
+	StyledTextEditor nativeQueryTextEditor;
+	Text javaClassText, javaMethodText, functionCategoryText, udfJarPathText; 
+	Button udfJarPathBrowse;
 	
 	boolean synchronizing = false;
 	boolean processingChecks = false;
@@ -110,11 +117,18 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 	
 	@Override
 	protected void createPanel(Composite parent) {
+		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 1);
+		thePanel.setLayout(new GridLayout(1, false));
+		GridData panelGD = new GridData(GridData.FILL_BOTH);
+		panelGD.heightHint = 550;
+		panelGD.widthHint = 550;
+    	thePanel.setLayoutData(panelGD);
+		
 		this.procedure = (RelationalProcedure)getRelationalReference();
 		// Spacer label
-		new Label(parent, SWT.NONE);
+		new Label(thePanel, SWT.NONE);
 		{
-	    	Text helpText = new Text(parent, SWT.WRAP | SWT.READ_ONLY);
+	    	Text helpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
 	    	helpText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 	    	helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 	    	helpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -123,15 +137,22 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 	    	((GridData)helpText.getLayoutData()).widthHint = 360;
 	    	helpText.setText(Messages.createRelationalProcedureHelpText);
 		}
-		createNameGroup(parent);
+		createNameGroup(thePanel);
 		
-		tabFolder = new TabFolder(parent, SWT.TOP | SWT.BORDER);
+		tabFolder = new TabFolder(thePanel, SWT.TOP | SWT.BORDER);
 		tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
+		((GridData)tabFolder.getLayoutData()).minimumHeight = 360;
+		((GridData)tabFolder.getLayoutData()).grabExcessVerticalSpace = true;
 
 		createGeneralPropertiesTab(tabFolder);
 		createParametersTab(tabFolder);
-		createResultSetTab(tabFolder);
+		if( !this.procedure.isSourceFunction() ) {
+			createResultSetTab(tabFolder);
+		}
 		createDescriptionTab(tabFolder);
+		if( !this.procedure.isFunction() ) {
+			createNativeQueryTab(tabFolder);
+		}
 		
 	}
 	
@@ -142,7 +163,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 
         this.generalPropertiesTab = new TabItem(folderParent, SWT.NONE);
         this.generalPropertiesTab.setControl(thePanel);
-        this.generalPropertiesTab.setText(Messages.propertiesLabel);
+        this.generalPropertiesTab.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.PROPERTIES));
         this.generalPropertiesTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.PROCEDURE, ModelType.PHYSICAL, Status.OK_STATUS));
 	}
 	
@@ -151,7 +172,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 
         this.descriptionTab = new TabItem(folderParent, SWT.NONE);
         this.descriptionTab.setControl(thePanel);
-        this.descriptionTab.setText(Messages.descriptionLabel);
+        this.descriptionTab.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DESCRIPTION));
 	}
 	
 	
@@ -170,6 +191,15 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
         this.resultSetTab = new TabItem(folderParent, SWT.NONE);
         this.resultSetTab.setControl(thePanel);
         this.resultSetTab.setText(Messages.resultSetLabel);
+	}
+	
+	void createNativeQueryTab(TabFolder folderParent) {
+        Composite thePanel = createNativeQueryPanel(folderParent);
+        
+        this.nativeQueryTab = new TabItem(folderParent, SWT.NONE);
+        this.nativeQueryTab.setControl(thePanel);
+        this.nativeQueryTab.setText(Messages.nativeQueryLabel);
+
 	}
 	
 	@Override
@@ -215,36 +245,45 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
         parametersTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.PARAMETER, procedure.getModelType(), maxStatus));
         
         // Result Set Tab
-        if( this.procedure.getResultSet() == null ) {
-        	if( WidgetUtil.widgetValueChanged(includeResultSetCB, false)) {
-        		this.includeResultSetCB.setSelection(false);
-        	}
-        	
-        	this.resultSetNameText.setEnabled(false);
-        	if( WidgetUtil.widgetValueChanged(resultSetNameText, EMPTY_STRING)) {
-        		this.resultSetNameText.setText(EMPTY_STRING);
-        	}
-        	
-        	this.columnsViewer.getTable().removeAll();
-        	this.columnsViewer.getTable().setEnabled(false);
-        	this.resultSetTab.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.TABLE_ICON));
-        } else {
-        	this.columnsViewer.getTable().setEnabled(true);
-        	if( WidgetUtil.widgetValueChanged(includeResultSetCB, true)) {
-        		this.includeResultSetCB.setSelection(true);
-        	}
-        	this.resultSetNameText.setEnabled(true);
-        	if( this.procedure.getResultSet().getName() != null && WidgetUtil.widgetValueChanged(resultSetNameText, this.procedure.getResultSet().getName())) {
-        		this.resultSetNameText.setText(this.procedure.getResultSet().getName());
-        	}
-
-        	this.columnsViewer.getTable().removeAll();
-        	if( !this.procedure.getResultSet().getColumns().isEmpty() ) {
-        		for( RelationalColumn column : this.procedure.getResultSet().getColumns() ) {
-        			this.columnsViewer.add(column);
-        		}
-        	}
-        	resultSetTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.TABLE, procedure.getResultSet().getModelType(), this.procedure.getResultSet().getStatus()));
+        if( !this.procedure.isSourceFunction() ) {
+	        if( this.procedure.getResultSet() == null ) {
+	        	if( WidgetUtil.widgetValueChanged(includeResultSetCB, false)) {
+	        		this.includeResultSetCB.setSelection(false);
+	        	}
+	        	
+	        	this.resultSetNameText.setEnabled(false);
+	        	if( WidgetUtil.widgetValueChanged(resultSetNameText, EMPTY_STRING)) {
+	        		this.resultSetNameText.setText(EMPTY_STRING);
+	        	}
+	        	
+	        	this.columnsViewer.getTable().removeAll();
+	        	this.columnsViewer.getTable().setEnabled(false);
+	        	this.resultSetTab.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.TABLE_ICON));
+	        } else {
+	        	this.columnsViewer.getTable().setEnabled(true);
+	        	if( WidgetUtil.widgetValueChanged(includeResultSetCB, true)) {
+	        		this.includeResultSetCB.setSelection(true);
+	        	}
+	        	this.resultSetNameText.setEnabled(true);
+	        	if( this.procedure.getResultSet().getName() != null && WidgetUtil.widgetValueChanged(resultSetNameText, this.procedure.getResultSet().getName())) {
+	        		this.resultSetNameText.setText(this.procedure.getResultSet().getName());
+	        	}
+	
+	        	this.columnsViewer.getTable().removeAll();
+	        	if( !this.procedure.getResultSet().getColumns().isEmpty() ) {
+	        		for( RelationalColumn column : this.procedure.getResultSet().getColumns() ) {
+	        			this.columnsViewer.add(column);
+	        		}
+	        	}
+	        	resultSetTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.TABLE, procedure.getResultSet().getModelType(), this.procedure.getResultSet().getStatus()));
+	        }
+	        
+	        if( this.procedure.isFunction() ) {
+	        	// Assume UDF
+	        	if( this.procedure.getUdfJarPath() != null ) {
+	        		this.udfJarPathText.setText(this.procedure.getUdfJarPath());
+	        	}
+	        }
         }
 
 		synchronizing = false;
@@ -275,7 +314,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
         }
         
         label = new Label(thePanel, SWT.NONE);
-        label.setText(Messages.nameLabel);
+        label.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.NAME));
         
         this.nameText =  new Text(thePanel, SWT.BORDER | SWT.SINGLE);
         this.nameText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
@@ -326,7 +365,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
     	thePanel.setLayoutData(panelGD);
     	
         DESCRIPTION_GROUP: {
-            final Group descGroup = WidgetFactory.createGroup(thePanel, Messages.descriptionLabel, GridData.FILL_BOTH, 3);
+            final Group descGroup = WidgetFactory.createGroup(thePanel, UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DESCRIPTION), GridData.FILL_BOTH, 3);
             descriptionTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
             final GridData descGridData = new GridData(GridData.FILL_BOTH);
             descGridData.horizontalSpan = 1;
@@ -358,7 +397,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
         GridData theGridData = new GridData();
         theGridData.horizontalSpan = 2;
         this.includeResultSetCB.setLayoutData(theGridData);
-        this.includeResultSetCB.setText(Messages.includeLabel);
+        this.includeResultSetCB.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.INCLUDE));
         this.includeResultSetCB.addSelectionListener(new SelectionAdapter() {
             /**            		
              * {@inheritDoc}
@@ -388,7 +427,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 		namePanel.setLayoutData(panelGD);
 
         Label label = new Label(namePanel, SWT.NONE | SWT.RIGHT);
-        label.setText(Messages.nameLabel);
+        label.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.NAME));
         label.setLayoutData(new GridData());
         
         this.resultSetNameText =  new Text(namePanel, SWT.BORDER | SWT.SINGLE);
@@ -417,7 +456,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 	  	buttonPanel.setLayoutData(panelGD);
 	  	
     	addColumnButton = new Button(buttonPanel, SWT.PUSH);
-    	addColumnButton.setText(Messages.addLabel);
+    	addColumnButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ADD));
     	addColumnButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	addColumnButton.addSelectionListener(new SelectionAdapter() {
 
@@ -430,7 +469,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 		});
     	
     	deleteColumnButton = new Button(buttonPanel, SWT.PUSH);
-    	deleteColumnButton.setText(Messages.deleteLabel);
+    	deleteColumnButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DELETE));
     	deleteColumnButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	deleteColumnButton.setEnabled(false);
     	deleteColumnButton.addSelectionListener(new SelectionAdapter() {
@@ -456,7 +495,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 		});
     	
     	upColumnButton = new Button(buttonPanel, SWT.PUSH);
-    	upColumnButton.setText(Messages.moveUpLabel);
+    	upColumnButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.MOVE_UP));
     	upColumnButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	upColumnButton.setEnabled(false);
     	upColumnButton.addSelectionListener(new SelectionAdapter() {
@@ -486,7 +525,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 		});
     	
     	downColumnButton = new Button(buttonPanel, SWT.PUSH);
-    	downColumnButton.setText(Messages.moveDownLabel);
+    	downColumnButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.MOVE_DOWN));
     	downColumnButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	downColumnButton.setEnabled(false);
     	downColumnButton.addSelectionListener(new SelectionAdapter() {
@@ -521,6 +560,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
     	columnTable.setLayout(new TableLayout());
     	GridData tgd = new GridData(SWT.FILL, SWT.FILL, true, true);
     	tgd.horizontalSpan = 2;
+    	tgd.heightHint = 300;
     	columnTable.setLayoutData(tgd);
     	
         this.columnsViewer = new TableViewer(columnTable);
@@ -598,7 +638,11 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
 		thePanel.setLayout(new GridLayout(2, false));
 		GridData panelGD = new GridData(GridData.FILL_BOTH);
-		panelGD.heightHint = 300;
+		if( this.procedure.isFunction() ) {
+			panelGD.heightHint = 300;
+		} else {
+			panelGD.heightHint = 400;
+		}
     	thePanel.setLayoutData(panelGD);
         
         Label label = new Label(thePanel, SWT.NONE);
@@ -629,171 +673,264 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
         addSpacerLabels(thePanel, 1);
         
 
-    	
-        FUNCTION_GROUP: {
-        	final Group functionGroup = WidgetFactory.createGroup(thePanel, Messages.functionPropertiesLabel, GridData.FILL_HORIZONTAL, 2, 3);
-        	
-            this.isFunctionCB = new Button(functionGroup, SWT.CHECK | SWT.RIGHT);
-            this.isFunctionCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            this.isFunctionCB.setText(Messages.isFunctionLabel);
-            this.isFunctionCB.addSelectionListener(new SelectionAdapter() {
-                /**            		
-                 * {@inheritDoc}
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                	procedure.setFunction(isFunctionCB.getSelection());
-                    handleInfoChanged();
-                }
-            });
-            addSpacerLabels(functionGroup, 2);
-
-            this.deterministicCB = new Button(functionGroup, SWT.CHECK | SWT.RIGHT);
-            this.deterministicCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            this.deterministicCB.setText(Messages.deterministicLabel);
-            this.deterministicCB.addSelectionListener(new SelectionAdapter() {
-                /**            		
-                 * {@inheritDoc}
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                	procedure.setDeterministic(deterministicCB.getSelection());
-                    handleInfoChanged();
-                }
-            });
-            //addSpacerLabels(functionGroup, 1);
-
-            this.returnsNullCB = new Button(functionGroup, SWT.CHECK | SWT.RIGHT);
-            this.returnsNullCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            this.returnsNullCB.setText(Messages.returnsNullOnNullLabel);
-            this.returnsNullCB.addSelectionListener(new SelectionAdapter() {
-                /**            		
-                 * {@inheritDoc}
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                	procedure.setReturnsNullOnNull(returnsNullCB.getSelection());
-                    handleInfoChanged();
-                }
-            });
-            //addSpacerLabels(functionGroup, 1);
-
-            this.variableArgsCB = new Button(functionGroup, SWT.CHECK | SWT.RIGHT);
-            this.variableArgsCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            this.variableArgsCB.setText(Messages.variableArgumentsLabel);
-            this.variableArgsCB.addSelectionListener(new SelectionAdapter() {
-                /**            		
-                 * {@inheritDoc}
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                	procedure.setVariableArguments(variableArgsCB.getSelection());
-                    handleInfoChanged();
-                }
-            });
-            //addSpacerLabels(functionGroup, 1);
-
-
-            
-            AGGREGATE_GROUP: {
-            	final Group aggregateGroup = WidgetFactory.createGroup(functionGroup, Messages.aggregatePropertiesLabel, GridData.FILL_HORIZONTAL, 3, 3);
-            	
-                this.aggregateCB = new Button(aggregateGroup, SWT.CHECK | SWT.RIGHT);
-                this.aggregateCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-                this.aggregateCB.setText(Messages.aggregateLabel);
-                this.aggregateCB.addSelectionListener(new SelectionAdapter() {
-                    /**            		
-                     * {@inheritDoc}
-                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected( SelectionEvent e ) {
-                    	procedure.setAggregate(aggregateCB.getSelection());
-                        handleInfoChanged();
-                    }
-                });
-                addSpacerLabels(aggregateGroup, 2);
-            	
-                this.allowsDistinctCB = new Button(aggregateGroup, SWT.CHECK | SWT.RIGHT);
-                this.allowsDistinctCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-                this.allowsDistinctCB.setText(Messages.allowsDistinctLabel);
-                this.allowsDistinctCB.addSelectionListener(new SelectionAdapter() {
-                    /**            		
-                     * {@inheritDoc}
-                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected( SelectionEvent e ) {
-                    	procedure.setAllowsDistinct(allowsDistinctCB.getSelection());
-                        handleInfoChanged();
-                    }
-                });
-
-                this.allowsOrderByCB = new Button(aggregateGroup, SWT.CHECK | SWT.RIGHT);
-                this.allowsOrderByCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-                this.allowsOrderByCB.setText(Messages.allowsOrderByLabel);
-                this.allowsOrderByCB.addSelectionListener(new SelectionAdapter() {
-                    /**            		
-                     * {@inheritDoc}
-                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected( SelectionEvent e ) {
-                    	procedure.setAllowsOrderBy(allowsOrderByCB.getSelection());
-                        handleInfoChanged();
-                    }
-                });
-
-                this.analyticCB = new Button(aggregateGroup, SWT.CHECK | SWT.RIGHT);
-                this.analyticCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-                this.analyticCB.setText(Messages.analyticLabel);
-                this.analyticCB.addSelectionListener(new SelectionAdapter() {
-                    /**            		
-                     * {@inheritDoc}
-                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected( SelectionEvent e ) {
-                    	procedure.setAnalytic(analyticCB.getSelection());
-                        handleInfoChanged();
-                    }
-                });
-
-                this.decomposableCB = new Button(aggregateGroup, SWT.CHECK | SWT.RIGHT);
-                this.decomposableCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-                this.decomposableCB.setText(Messages.decomposableLabel);
-                this.decomposableCB.addSelectionListener(new SelectionAdapter() {
-                    /**            		
-                     * {@inheritDoc}
-                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected( SelectionEvent e ) {
-                    	procedure.setDecomposable(decomposableCB.getSelection());
-                        handleInfoChanged();
-                    }
-                });
-
-                this.useDistinctRowsCB = new Button(aggregateGroup, SWT.CHECK | SWT.RIGHT);
-                this.useDistinctRowsCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-                this.useDistinctRowsCB.setText(Messages.usesDistinctRowsLabel);
-                this.useDistinctRowsCB.addSelectionListener(new SelectionAdapter() {
-                    /**            		
-                     * {@inheritDoc}
-                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected( SelectionEvent e ) {
-                    	procedure.setUseDistinctRows(useDistinctRowsCB.getSelection());
-                        handleInfoChanged();
-                    }
-                });
-            }
-
+        if( this.procedure.isFunction() ) {
+	        FUNCTION_GROUP: {
+	        	final Group functionGroup = WidgetFactory.createGroup(thePanel, Messages.functionPropertiesLabel, GridData.FILL_HORIZONTAL, 2, 3);
+	        	
+	        	if( !this.procedure.isSourceFunction() ) {
+	        		// Add java class and method fields
+	        		label = new Label(functionGroup, SWT.NONE);
+	                label.setText(Messages.functionCategoryLabel);
+	                
+	                this.functionCategoryText =  new Text(functionGroup, SWT.BORDER | SWT.SINGLE);
+	                this.functionCategoryText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+	                this.functionCategoryText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	                ((GridData)this.functionCategoryText.getLayoutData()).horizontalSpan = 2;
+	                this.functionCategoryText.addModifyListener(new ModifyListener() {
+	            		@Override
+	        			public void modifyText( final ModifyEvent event ) {
+	            			String value = functionCategoryText.getText();
+	            			if( value == null ) {
+	            				value = EMPTY_STRING;
+	            			}
+	            			
+	            			procedure.setFunctionCategory(value);
+	            			handleInfoChanged();
+	            		}
+	                });
+		                
+	                label = new Label(functionGroup, SWT.NONE);
+	                label.setText(Messages.javaClassLabel);
+	                
+	                this.javaClassText =  new Text(functionGroup, SWT.BORDER | SWT.SINGLE);
+	                this.javaClassText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+	                this.javaClassText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	                ((GridData)this.javaClassText.getLayoutData()).horizontalSpan = 2;
+	                this.javaClassText.addModifyListener(new ModifyListener() {
+	            		@Override
+	        			public void modifyText( final ModifyEvent event ) {
+	            			String value = javaClassText.getText();
+	            			if( value == null ) {
+	            				value = EMPTY_STRING;
+	            			}
+	            			
+	            			procedure.setJavaClassName(value);
+	            			handleInfoChanged();
+	            		}
+	                });
+	                
+	                label = new Label(functionGroup, SWT.NONE);
+	                label.setText(Messages.javaMethodLabel);
+	                
+	                this.javaMethodText =  new Text(functionGroup, SWT.BORDER | SWT.SINGLE);
+	                this.javaMethodText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+	                this.javaMethodText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	                ((GridData)this.javaMethodText.getLayoutData()).horizontalSpan = 2;
+	                this.javaMethodText.addModifyListener(new ModifyListener() {
+	            		@Override
+	        			public void modifyText( final ModifyEvent event ) {
+	            			String value = javaMethodText.getText();
+	            			if( value == null ) {
+	            				value = EMPTY_STRING;
+	            			}
+	            			
+	            			procedure.setJavaMethodName(value);
+	            			handleInfoChanged();
+	            		}
+	                });
+	                
+	        		label = new Label(functionGroup, SWT.NONE);
+	                label.setText(Messages.udfJarPathLabel);
+	                
+	                this.udfJarPathText =  new Text(functionGroup, SWT.BORDER | SWT.SINGLE);
+	                this.udfJarPathText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+	                this.udfJarPathText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	                this.udfJarPathText.addModifyListener(new ModifyListener() {
+	            		@Override
+	        			public void modifyText( final ModifyEvent event ) {
+	            			String value = udfJarPathText.getText();
+	            			if( value == null ) {
+	            				value = EMPTY_STRING;
+	            			}
+	            			
+	            			procedure.setUdfJarPath(value);
+	            			if( !synchronizing ) {
+	            				handleInfoChanged();
+	            			}
+	            		}
+	                });
+	                
+	                this.udfJarPathBrowse = new Button(functionGroup, SWT.PUSH | SWT.RIGHT);
+	                this.udfJarPathBrowse.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ELIPSIS));
+		            this.udfJarPathBrowse.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		            this.udfJarPathBrowse.addSelectionListener(new SelectionAdapter() {
+		                /**            		
+		                 * {@inheritDoc}
+		                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+		                 */
+		                @Override
+		                public void widgetSelected( SelectionEvent e ) {
+		                	// Open dialog and get file
+		                	String selectedFile = VdbFileDialogUtil.selectUdfOrFile(udfJarPathBrowse.getShell(), getModelFile().getProject(), true);
+		                	procedure.setUdfJarPath(selectedFile);
+		                    handleInfoChanged();
+		                }
+		            });
+		            
+		            
+	        	}
+	        	INNER_FUNCTION_PANEL : {
+		    		Composite innerPanel = WidgetFactory.createPanel(functionGroup, SWT.NONE, GridData.FILL_HORIZONTAL, 3);
+		    		innerPanel.setLayout(new GridLayout(3, false));
+		    		innerPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+		    		 ((GridData)innerPanel.getLayoutData()).horizontalSpan = 3;
+		        	
+		            this.deterministicCB = new Button(innerPanel, SWT.CHECK | SWT.RIGHT);
+		            this.deterministicCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		            this.deterministicCB.setText(Messages.deterministicLabel);
+		            this.deterministicCB.addSelectionListener(new SelectionAdapter() {
+		                /**            		
+		                 * {@inheritDoc}
+		                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+		                 */
+		                @Override
+		                public void widgetSelected( SelectionEvent e ) {
+		                	procedure.setDeterministic(deterministicCB.getSelection());
+		                    handleInfoChanged();
+		                }
+		            });
+		            //addSpacerLabels(functionGroup, 1);
+		
+		            this.returnsNullCB = new Button(innerPanel, SWT.CHECK | SWT.RIGHT);
+		            this.returnsNullCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		            this.returnsNullCB.setText(Messages.returnsNullOnNullLabel);
+		            this.returnsNullCB.addSelectionListener(new SelectionAdapter() {
+		                /**            		
+		                 * {@inheritDoc}
+		                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+		                 */
+		                @Override
+		                public void widgetSelected( SelectionEvent e ) {
+		                	procedure.setReturnsNullOnNull(returnsNullCB.getSelection());
+		                    handleInfoChanged();
+		                }
+		            });
+		            //addSpacerLabels(innerPanel, 1);
+		
+		            this.variableArgsCB = new Button(innerPanel, SWT.CHECK | SWT.RIGHT);
+		            this.variableArgsCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		            this.variableArgsCB.setText(Messages.variableArgumentsLabel);
+		            this.variableArgsCB.addSelectionListener(new SelectionAdapter() {
+		                /**            		
+		                 * {@inheritDoc}
+		                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+		                 */
+		                @Override
+		                public void widgetSelected( SelectionEvent e ) {
+		                	procedure.setVariableArguments(variableArgsCB.getSelection());
+		                    handleInfoChanged();
+		                }
+		            });
+		            //addSpacerLabels(innerPanel, 1);
+	        	}
+	
+	            
+	            AGGREGATE_GROUP: {
+	            	final Group aggregateGroup = WidgetFactory.createGroup(functionGroup, Messages.aggregatePropertiesLabel, GridData.FILL_HORIZONTAL, 2, 3);
+	            	
+	                this.aggregateCB = new Button(aggregateGroup, SWT.CHECK | SWT.RIGHT);
+	                this.aggregateCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+	                this.aggregateCB.setText(Messages.aggregateLabel);
+	                this.aggregateCB.addSelectionListener(new SelectionAdapter() {
+	                    /**            		
+	                     * {@inheritDoc}
+	                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+	                     */
+	                    @Override
+	                    public void widgetSelected( SelectionEvent e ) {
+	                    	procedure.setAggregate(aggregateCB.getSelection());
+	                        handleInfoChanged();
+	                    }
+	                });
+	                addSpacerLabels(aggregateGroup, 2);
+	            	
+	                this.allowsDistinctCB = new Button(aggregateGroup, SWT.CHECK | SWT.RIGHT);
+	                this.allowsDistinctCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+	                this.allowsDistinctCB.setText(Messages.allowsDistinctLabel);
+	                this.allowsDistinctCB.addSelectionListener(new SelectionAdapter() {
+	                    /**            		
+	                     * {@inheritDoc}
+	                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+	                     */
+	                    @Override
+	                    public void widgetSelected( SelectionEvent e ) {
+	                    	procedure.setAllowsDistinct(allowsDistinctCB.getSelection());
+	                        handleInfoChanged();
+	                    }
+	                });
+	
+	                this.allowsOrderByCB = new Button(aggregateGroup, SWT.CHECK | SWT.RIGHT);
+	                this.allowsOrderByCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+	                this.allowsOrderByCB.setText(Messages.allowsOrderByLabel);
+	                this.allowsOrderByCB.addSelectionListener(new SelectionAdapter() {
+	                    /**            		
+	                     * {@inheritDoc}
+	                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+	                     */
+	                    @Override
+	                    public void widgetSelected( SelectionEvent e ) {
+	                    	procedure.setAllowsOrderBy(allowsOrderByCB.getSelection());
+	                        handleInfoChanged();
+	                    }
+	                });
+	
+	                this.analyticCB = new Button(aggregateGroup, SWT.CHECK | SWT.RIGHT);
+	                this.analyticCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+	                this.analyticCB.setText(Messages.analyticLabel);
+	                this.analyticCB.addSelectionListener(new SelectionAdapter() {
+	                    /**            		
+	                     * {@inheritDoc}
+	                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+	                     */
+	                    @Override
+	                    public void widgetSelected( SelectionEvent e ) {
+	                    	procedure.setAnalytic(analyticCB.getSelection());
+	                        handleInfoChanged();
+	                    }
+	                });
+	
+	                this.decomposableCB = new Button(aggregateGroup, SWT.CHECK | SWT.RIGHT);
+	                this.decomposableCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+	                this.decomposableCB.setText(Messages.decomposableLabel);
+	                this.decomposableCB.addSelectionListener(new SelectionAdapter() {
+	                    /**            		
+	                     * {@inheritDoc}
+	                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+	                     */
+	                    @Override
+	                    public void widgetSelected( SelectionEvent e ) {
+	                    	procedure.setDecomposable(decomposableCB.getSelection());
+	                        handleInfoChanged();
+	                    }
+	                });
+	
+	                this.useDistinctRowsCB = new Button(aggregateGroup, SWT.CHECK | SWT.RIGHT);
+	                this.useDistinctRowsCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+	                this.useDistinctRowsCB.setText(Messages.usesDistinctRowsLabel);
+	                this.useDistinctRowsCB.addSelectionListener(new SelectionAdapter() {
+	                    /**            		
+	                     * {@inheritDoc}
+	                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+	                     */
+	                    @Override
+	                    public void widgetSelected( SelectionEvent e ) {
+	                    	procedure.setUseDistinctRows(useDistinctRowsCB.getSelection());
+	                        handleInfoChanged();
+	                    }
+	                });
+	            }
+	
+	        }
         }
         
         setUiState();
@@ -819,7 +956,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 	  	buttonPanel.setLayoutData(panelGD);
 	  	
     	addParameterButton = new Button(buttonPanel, SWT.PUSH);
-    	addParameterButton.setText(Messages.addLabel);
+    	addParameterButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ADD));
     	addParameterButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	addParameterButton.addSelectionListener(new SelectionAdapter() {
 
@@ -832,7 +969,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 		});
     	
     	deleteParameterButton = new Button(buttonPanel, SWT.PUSH);
-    	deleteParameterButton.setText(Messages.deleteLabel);
+    	deleteParameterButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DELETE));
     	deleteParameterButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	deleteParameterButton.setEnabled(false);
     	deleteParameterButton.addSelectionListener(new SelectionAdapter() {
@@ -858,7 +995,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 		});
     	
     	upParameterButton = new Button(buttonPanel, SWT.PUSH);
-    	upParameterButton.setText(Messages.moveUpLabel);
+    	upParameterButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.MOVE_UP));
     	upParameterButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	upParameterButton.setEnabled(false);
     	upParameterButton.addSelectionListener(new SelectionAdapter() {
@@ -888,7 +1025,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 		});
     	
     	downParameterButton = new Button(buttonPanel, SWT.PUSH);
-    	downParameterButton.setText(Messages.moveDownLabel);
+    	downParameterButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.MOVE_DOWN));
     	downParameterButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	downParameterButton.setEnabled(false);
     	downParameterButton.addSelectionListener(new SelectionAdapter() {
@@ -922,6 +1059,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
     	columnTable.setLinesVisible(true);
     	columnTable.setLayout(new TableLayout());
     	columnTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+    	((GridData)columnTable.getLayoutData()).minimumHeight = 350;
     	
         this.parametersViewer = new TableViewer(columnTable);
         
@@ -999,22 +1137,68 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
         return thePanel;
     }
 	
-	void setUiState() {
-        boolean functionState = this.isFunctionCB.getSelection();
-        this.deterministicCB.setEnabled(functionState);
-        this.returnsNullCB.setEnabled(functionState);
-        this.variableArgsCB.setEnabled(functionState);
-        this.aggregateCB.setEnabled(functionState);
-        
-        boolean aggregateState = functionState;
-        if( aggregateState ) {
-        	aggregateState = aggregateCB.getSelection();
+	/*
+	 * Simple panel containing name, name in source values as well as a list of primary key columns from this table
+	 */
+	@SuppressWarnings("unused")
+	Composite createNativeQueryPanel(Composite parent) {
+		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 3);
+		thePanel.setLayout(new GridLayout(2, false));
+		GridData panelGD = new GridData(GridData.FILL_BOTH);
+		//panelGD.heightHint = 300;
+    	thePanel.setLayoutData(panelGD);
+    	
+		new Label(parent, SWT.NONE);
+		{
+	    	nativeQueryHelpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
+	    	nativeQueryHelpText.setBackground(parent.getBackground());
+	    	nativeQueryHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+	    	nativeQueryHelpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+	    	((GridData)nativeQueryHelpText.getLayoutData()).horizontalSpan = 1;
+	    	((GridData)nativeQueryHelpText.getLayoutData()).heightHint = 50;
+	    	((GridData)nativeQueryHelpText.getLayoutData()).widthHint = 360;
+	    	nativeQueryHelpText.setText(Messages.nativeQueryHelpText);
+		}
+    	
+        NATIVE_QUERY_GROUP: {
+            final Group descGroup = WidgetFactory.createGroup(thePanel, Messages.sqlLabel, GridData.FILL_BOTH, 3);
+            nativeQueryTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+            final GridData theGridData = new GridData(GridData.FILL_BOTH);
+            theGridData.horizontalSpan = 1;
+            theGridData.grabExcessVerticalSpace = true;
+            nativeQueryTextEditor.setLayoutData(theGridData);
+            nativeQueryTextEditor.setText(""); //$NON-NLS-1$
+            nativeQueryTextEditor.getTextWidget().addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					procedure.setNativeQuery(nativeQueryTextEditor.getText());
+					handleInfoChanged();
+				}
+			});
         }
-    	this.allowsDistinctCB.setEnabled(aggregateState);
-        this.allowsOrderByCB.setEnabled(aggregateState);
-        this.analyticCB.setEnabled(aggregateState);
-        this.decomposableCB.setEnabled(aggregateState);
-        this.useDistinctRowsCB.setEnabled(aggregateState);
+    	
+    	return thePanel;
+	}
+	
+	void setUiState() {
+		if( procedure.isFunction()) {
+	        boolean functionState = true;
+	        this.deterministicCB.setEnabled(functionState);
+	        this.returnsNullCB.setEnabled(functionState);
+	        this.variableArgsCB.setEnabled(functionState);
+	        this.aggregateCB.setEnabled(functionState);
+	        
+	        boolean aggregateState = functionState;
+	        if( aggregateState ) {
+	        	aggregateState = aggregateCB.getSelection();
+	        }
+	    	this.allowsDistinctCB.setEnabled(aggregateState);
+	        this.allowsOrderByCB.setEnabled(aggregateState);
+	        this.analyticCB.setEnabled(aggregateState);
+	        this.decomposableCB.setEnabled(aggregateState);
+	        this.useDistinctRowsCB.setEnabled(aggregateState);
+		}
 	}
 	
 	void handleInfoChanged() {
@@ -1313,6 +1497,9 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 
         @Override
         protected String[] refreshItems( Object element ) {
+        	if( procedure.isSourceFunction() ) {
+        		return DIRECTION.AS_ARRAY_SOURCE_FUNCTION_OPTIONS;
+        	}
             return DIRECTION.AS_ARRAY;
         }
 

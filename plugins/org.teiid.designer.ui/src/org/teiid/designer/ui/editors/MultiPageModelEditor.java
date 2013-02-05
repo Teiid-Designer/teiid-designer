@@ -443,13 +443,15 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
                     @Override
 					public void run() {
                         CTabItem item = (CTabItem)e.item;
-                        IEditorPart editor = (IEditorPart)item.getData();
-                        // see if this tab's IEditorPart has been initialized
-                        if (!hasInitialized(editor)) {
-                            initializePage(editor, item);
+                        if( !item.isDisposed() ) {
+	                        IEditorPart editor = (IEditorPart)item.getData();
+	                        // see if this tab's IEditorPart has been initialized
+	                        if (!hasInitialized(editor)) {
+	                            initializePage(editor, item);
+	                        }
+	                        int newPageIndex = tabFolder.indexOf(item);
+	                        pageChange(newPageIndex);
                         }
-                        int newPageIndex = tabFolder.indexOf(item);
-                        pageChange(newPageIndex);
                     }
                 });
             }

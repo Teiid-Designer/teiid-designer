@@ -71,6 +71,8 @@ import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.relational.ui.util.RelationalUiUtil;
 import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid.designer.ui.common.UILabelUtil;
+import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -195,7 +197,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         }
         
         label = new Label(thePanel, SWT.NONE);
-        label.setText(Messages.nameLabel);
+        label.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.NAME));
         
         this.nameText =  new Text(thePanel, SWT.BORDER | SWT.SINGLE);
         this.nameText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
@@ -243,7 +245,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 
         this.generalPropertiesTab = new TabItem(folderParent, SWT.NONE);
         this.generalPropertiesTab.setControl(thePanel);
-        this.generalPropertiesTab.setText(Messages.propertiesLabel);
+        this.generalPropertiesTab.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.PROPERTIES));
         this.generalPropertiesTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.TABLE, ModelType.PHYSICAL, Status.OK_STATUS));
 	}
 	
@@ -621,7 +623,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         
         
         DESCRIPTION_GROUP: {
-            final Group descGroup = WidgetFactory.createGroup(thePanel, Messages.descriptionLabel, GridData.FILL_BOTH, 3);
+            final Group descGroup = WidgetFactory.createGroup(thePanel, UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DESCRIPTION), GridData.FILL_BOTH, 3);
             descriptionTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
             final GridData descGridData = new GridData(GridData.FILL_BOTH);
             descGridData.horizontalSpan = 1;
@@ -668,7 +670,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	        this.materializedTableText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	        
 	        this.findTableReferenceButton = new Button(thePanel, SWT.PUSH);
-	        this.findTableReferenceButton.setText(Messages.elipsisLabel);
+	        this.findTableReferenceButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ELIPSIS));
 	        this.findTableReferenceButton.setLayoutData(new GridData());
 	        this.findTableReferenceButton.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -705,7 +707,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         GridData theGridData = new GridData();
         theGridData.horizontalSpan = 2;
         this.includePrimaryKeyCB.setLayoutData(theGridData);
-        this.includePrimaryKeyCB.setText(Messages.includeLabel);
+        this.includePrimaryKeyCB.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.INCLUDE));
         this.includePrimaryKeyCB.addSelectionListener(new SelectionAdapter() {
             /**            		
              * {@inheritDoc}
@@ -729,7 +731,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         });
         
         Label label = new Label(thePanel, SWT.NONE | SWT.RIGHT);
-        label.setText(Messages.nameLabel);
+        label.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.NAME));
         label.setLayoutData(new GridData());
         
         this.primaryKeyNameText =  new Text(thePanel, SWT.BORDER | SWT.SINGLE);
@@ -779,7 +781,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	  	leftToolbarPanel.setLayoutData(ltpGD);
 	  	
 	  	this.changePkColumnsButton = new Button(leftToolbarPanel, SWT.PUSH);
-    	this.changePkColumnsButton.setText(Messages.changeLabel);
+    	this.changePkColumnsButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.CHANGE_ELIPSIS));
     	this.changePkColumnsButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	this.changePkColumnsButton.addSelectionListener(new SelectionAdapter() {
 
@@ -849,7 +851,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         GridData theGridData = new GridData();
         theGridData.horizontalSpan = 2;
         this.includeUniqueConstraintCB.setLayoutData(theGridData);
-        this.includeUniqueConstraintCB.setText(Messages.includeLabel);
+        this.includeUniqueConstraintCB.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.INCLUDE));
         this.includeUniqueConstraintCB.addSelectionListener(new SelectionAdapter() {
             /**            		
              * {@inheritDoc}
@@ -873,7 +875,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         });
         
         Label label = new Label(thePanel, SWT.NONE | SWT.RIGHT);
-        label.setText(Messages.nameLabel);
+        label.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.NAME));
         label.setLayoutData(new GridData());
         
         this.uniqueConstraintNameText =  new Text(thePanel, SWT.BORDER | SWT.SINGLE);
@@ -925,7 +927,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	  	leftToolbarPanel.setLayoutData(ltpGD);
 	  	
     	this.changeUcColumnsButton = new Button(leftToolbarPanel, SWT.PUSH);
-    	this.changeUcColumnsButton.setText(Messages.changeLabel);
+    	this.changeUcColumnsButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.CHANGE_ELIPSIS));
     	this.changeUcColumnsButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	this.changeUcColumnsButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1005,7 +1007,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	  	leftToolbarPanel.setLayoutData(ltpGD);
 	  	
     	this.addFKButton = new Button(leftToolbarPanel, SWT.PUSH);
-    	this.addFKButton.setText(Messages.addLabel);
+    	this.addFKButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ADD));
     	this.addFKButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	this.addFKButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1013,7 +1015,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 			public void widgetSelected(SelectionEvent e) {
 				RelationalForeignKey newFK = new RelationalForeignKey();
 				
-				EditForeignKeyDialog dialog = new EditForeignKeyDialog(tabFolder.getShell(), modelFile, table, newFK, false);
+				EditForeignKeyDialog dialog = new EditForeignKeyDialog(tabFolder.getShell(), getModelFile(), table, newFK, false);
 	        	
 	        	int result = dialog.open();
 	        	if( result == Window.OK) {
@@ -1025,7 +1027,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		});
     	
     	this.editFKButton = new Button(leftToolbarPanel, SWT.PUSH);
-    	this.editFKButton.setText(Messages.editLabel);
+    	this.editFKButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.EDIT_ELIPSIS));
     	this.editFKButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	this.editFKButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1042,7 +1044,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 				}
 				if( fk != null ) {
 					
-					EditForeignKeyDialog dialog = new EditForeignKeyDialog(tabFolder.getShell(), modelFile, table, fk, true);
+					EditForeignKeyDialog dialog = new EditForeignKeyDialog(tabFolder.getShell(), getModelFile(), table, fk, true);
 		        	
 		        	int result = dialog.open();
 		        	if( result == Window.OK) {
@@ -1055,7 +1057,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		});
     	
     	this.deleteFKButton = new Button(leftToolbarPanel, SWT.PUSH);
-    	this.deleteFKButton.setText(Messages.deleteLabel);
+    	this.deleteFKButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DELETE));
     	this.deleteFKButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	this.deleteFKButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1129,7 +1131,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	  	leftToolbarPanel.setLayoutData(ltpGD);
 	  	
     	this.addIndexButton = new Button(leftToolbarPanel, SWT.PUSH);
-    	this.addIndexButton.setText(Messages.addLabel);
+    	this.addIndexButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ADD));
     	this.addIndexButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	this.addIndexButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1149,7 +1151,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		});
     	
     	this.editIndexButton = new Button(leftToolbarPanel, SWT.PUSH);
-    	this.editIndexButton.setText(Messages.editLabel);
+    	this.editIndexButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.EDIT_ELIPSIS));
     	this.editIndexButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	this.editIndexButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1179,7 +1181,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		});
     	
     	this.deleteIndexButton = new Button(leftToolbarPanel, SWT.PUSH);
-    	this.deleteIndexButton.setText(Messages.deleteLabel);
+    	this.deleteIndexButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DELETE));
     	this.deleteIndexButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	this.deleteIndexButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1267,7 +1269,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 				
 				@Override
 				public void modifyText(ModifyEvent e) {
-					table.setNaviteQuery(nativeQueryTextEditor.getText());
+					table.setNativeQuery(nativeQueryTextEditor.getText());
 					handleInfoChanged();
 				}
 			});
@@ -1296,7 +1298,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	  	buttonPanel.setLayoutData(panelGD);
 	  	
     	addColumnButton = new Button(buttonPanel, SWT.PUSH);
-    	addColumnButton.setText(Messages.addLabel);
+    	addColumnButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ADD));
     	addColumnButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	addColumnButton.addSelectionListener(new SelectionAdapter() {
 
@@ -1309,7 +1311,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		});
     	
     	deleteColumnButton = new Button(buttonPanel, SWT.PUSH);
-    	deleteColumnButton.setText(Messages.deleteLabel);
+    	deleteColumnButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DELETE));
     	deleteColumnButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	deleteColumnButton.setEnabled(false);
     	deleteColumnButton.addSelectionListener(new SelectionAdapter() {
@@ -1335,7 +1337,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		});
     	
     	upColumnButton = new Button(buttonPanel, SWT.PUSH);
-    	upColumnButton.setText(Messages.moveUpLabel);
+    	upColumnButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.MOVE_UP));
     	upColumnButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	upColumnButton.setEnabled(false);
     	upColumnButton.addSelectionListener(new SelectionAdapter() {
@@ -1365,7 +1367,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		});
     	
     	downColumnButton = new Button(buttonPanel, SWT.PUSH);
-    	downColumnButton.setText(Messages.moveDownLabel);
+    	downColumnButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.MOVE_DOWN));
     	downColumnButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	downColumnButton.setEnabled(false);
     	downColumnButton.addSelectionListener(new SelectionAdapter() {

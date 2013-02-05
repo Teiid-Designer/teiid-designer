@@ -56,6 +56,12 @@ public class RelationalObjectEditorFactory {
 		} else if( relationalObject instanceof RelationalTable ) {
         	return Messages.createRelationalTableInitialMessage;
         } else if( relationalObject instanceof RelationalProcedure ) {
+        	RelationalProcedure procedure = (RelationalProcedure)relationalObject;
+        	if( procedure.isSourceFunction() ) {
+        		return Messages.createRelationalSourceFunctionInitialMessage;
+        	} else if( procedure.isFunction() ) {
+        		return Messages.createRelationalUserDefinedFunctionInitialMessage;
+        	}
         	return Messages.createRelationalProcedureInitialMessage;
         } else if( relationalObject instanceof RelationalIndex ) {
         	return Messages.createRelationalIndexInitialMessage;
@@ -74,6 +80,12 @@ public class RelationalObjectEditorFactory {
 		} else if( relationalObject instanceof RelationalTable ) {
         	return Messages.createRelationalTableTitle;
         } else if( relationalObject instanceof RelationalProcedure ) {
+        	RelationalProcedure procedure = (RelationalProcedure)relationalObject;
+        	if( procedure.isSourceFunction() ) {
+        		return Messages.createRelationalSourceFunctionTitle;
+        	} else if( procedure.isFunction() ) {
+        		return Messages.createRelationalUserDefinedFunctionTitle;
+        	}
         	return Messages.createRelationalProcedureTitle;
         } else if( relationalObject instanceof RelationalIndex ) {
         	return Messages.createRelationalIndexTitle;

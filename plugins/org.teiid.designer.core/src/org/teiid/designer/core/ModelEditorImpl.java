@@ -461,14 +461,13 @@ public class ModelEditorImpl implements ModelEditor {
                     URI nsUri = eObject.eClass().eResource().getURI();
                     List rootClasses = Arrays.asList(ModelerCore.getMetamodelRegistry().getMetamodelRootClasses(nsUri));
 
-                    boolean isVirtual = ModelUtil.isVirtual(eObject);
                     Collection filteredClasses = new ArrayList(rootClasses.size());
                     for( Object obj : rootClasses ) {
                     	String className = ((MetamodelRootClass)obj).getEClass().getName();
                     	boolean ignore = className.equalsIgnoreCase("BaseTable") || //$NON-NLS-1$
-                    	 (!isVirtual && (className.equalsIgnoreCase("Procedure") || //$NON-NLS-1$
-                    					 className.equalsIgnoreCase("View") || 		//$NON-NLS-1$
-                    					 className.equalsIgnoreCase("Index")) ); 	//$NON-NLS-1$
+                    					 className.equalsIgnoreCase("Procedure") || //$NON-NLS-1$
+                    					 className.equalsIgnoreCase("Index") 	 || //$NON-NLS-1$
+                    					 className.equalsIgnoreCase("View"); 	//$NON-NLS-1$
                     	if( !ignore ) { 
                     		filteredClasses.add(obj);
                     	}
@@ -3642,15 +3641,13 @@ public class ModelEditorImpl implements ModelEditor {
         final EFactory eFactory = ePackage.getEFactoryInstance();
         final Collection rootClasses = Arrays.asList(ModelerCore.getMetamodelRegistry().getMetamodelRootClasses(nsUri));
         
-        boolean isVirtual = ModelUtil.isVirtual(rsrc);
-        
         Collection filteredClasses = new ArrayList(rootClasses.size());
         for( Object obj : rootClasses ) {
         	String className = ((MetamodelRootClass)obj).getEClass().getName();
         	boolean ignore = className.equalsIgnoreCase("BaseTable") || //$NON-NLS-1$
-        	 (!isVirtual && (className.equalsIgnoreCase("Procedure") || //$NON-NLS-1$
- 						     className.equalsIgnoreCase("View") || 		//$NON-NLS-1$
- 						     className.equalsIgnoreCase("Index") ) ); 	//$NON-NLS-1$
+					 className.equalsIgnoreCase("Procedure") || //$NON-NLS-1$
+					 className.equalsIgnoreCase("Index") 	 || //$NON-NLS-1$
+					 className.equalsIgnoreCase("View"); 	//$NON-NLS-1$
 		 	if( !ignore ) { 
 		 		filteredClasses.add(obj);
 		 	}

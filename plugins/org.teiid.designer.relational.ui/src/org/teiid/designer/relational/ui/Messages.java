@@ -15,19 +15,7 @@ import org.eclipse.osgi.util.NLS;
 @SuppressWarnings("javadoc")
 public class Messages extends NLS {
 	
-	
-	public static String elipsisLabel;
-	public static String addLabel;
-	public static String deleteLabel;
-	public static String moveUpLabel;
-	public static String moveDownLabel;
-    public static String nameLabel;
-    public static String includeLabel;
-    public static String propertiesLabel;
-    public static String changeLabel;
-    public static String editLabel;
     public static String fkNameLabel;
-    public static String descriptionLabel;
     public static String nativeQueryLabel;
     public static String sqlLabel;
     public static String autoUpdateLabel;
@@ -54,11 +42,24 @@ public class Messages extends NLS {
     public static String createRelationalViewExceptionMessage;
     public static String createRelationalViewHelpText;
     
+    public static String procedureLabel;
+    public static String sourceFunctionLabel;
+    public static String userDefinedFunctionLabel;
+    public static String selectProcedureTypeDialogSubTitle;
+    public static String selectProcedureTypeDialogTitle;
+    public static String createRelationalProcedureDescription;
+    public static String createRelationalSourceFunctionDescription;
+    public static String createRelationalUserDefinedFunctionDescription;
     public static String createRelationalProcedureActionText;
     public static String createRelationalProcedureTitle;
     public static String createRelationalProcedureInitialMessage;
     public static String createRelationalProcedureExceptionMessage;
     public static String createRelationalProcedureHelpText;
+    
+    public static String createRelationalSourceFunctionInitialMessage;
+    public static String createRelationalUserDefinedFunctionInitialMessage;
+    public static String createRelationalSourceFunctionTitle;
+    public static String createRelationalUserDefinedFunctionTitle;
     
     public static String createRelationalIndexActionText;
     public static String createRelationalIndexTitle;
@@ -107,6 +108,10 @@ public class Messages extends NLS {
 	public static String functionPropertiesLabel;
 	public static String aggregatePropertiesLabel;
 	public static String resultSetLabel;
+	public static String javaClassLabel;
+	public static String javaMethodLabel;
+	public static String udfJarPathLabel;
+	public static String functionCategoryLabel;
 
 	public static String validationOkCreateObject;
 	public static String selectColumnsTitle;

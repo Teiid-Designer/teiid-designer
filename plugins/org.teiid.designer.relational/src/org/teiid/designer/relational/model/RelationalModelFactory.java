@@ -775,6 +775,9 @@ public class RelationalModelFactory implements RelationalConstants {
 				assistant.setPropertyValue(procedure, 
 						PROCEDURE_EXT_PROPERTIES.NON_PREPARED, 
 						Boolean.toString(procedureRef.isNonPrepared()));
+				assistant.setPropertyValue(procedure, 
+						PROCEDURE_EXT_PROPERTIES.NATIVE_QUERY, 
+						procedureRef.getNativeQuery() );
 				if( procedureRef.isFunction() ) {
 					assistant.setPropertyValue(procedure, 
 							PROCEDURE_EXT_PROPERTIES.DETERMINISTIC, 
@@ -804,6 +807,20 @@ public class RelationalModelFactory implements RelationalConstants {
 						assistant.setPropertyValue(procedure, 
 								PROCEDURE_EXT_PROPERTIES.USES_DISTINCT_ROWS, 
 								Boolean.toString(procedureRef.isUseDistinctRows()));
+					}
+					if( !procedureRef.isSourceFunction() ) {
+						assistant.setPropertyValue(procedure, 
+								PROCEDURE_EXT_PROPERTIES.JAVA_CLASS, 
+								procedureRef.getJavaClassName() );
+						assistant.setPropertyValue(procedure, 
+								PROCEDURE_EXT_PROPERTIES.JAVA_METHOD, 
+								procedureRef.getJavaMethodName() );
+						assistant.setPropertyValue(procedure, 
+								PROCEDURE_EXT_PROPERTIES.UDF_JAR_PATH, 
+								procedureRef.getUdfJarPath() );
+						assistant.setPropertyValue(procedure, 
+								PROCEDURE_EXT_PROPERTIES.FUNCTION_CATEGORY, 
+								procedureRef.getUdfJarPath() );
 					}
 				}
 			} catch (Exception ex) {

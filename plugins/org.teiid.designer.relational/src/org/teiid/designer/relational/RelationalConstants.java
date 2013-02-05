@@ -125,6 +125,7 @@ public interface RelationalConstants {
         public static final String RETURN = "RETURN"; //$NON-NLS-1$
         public static final String UNKNOWN = "UNKNOWN"; //$NON-NLS-1$
         public static final String[] AS_ARRAY = {IN, IN_OUT, OUT, RETURN, UNKNOWN};
+        public static final String[] AS_ARRAY_SOURCE_FUNCTION_OPTIONS = {IN, RETURN};
         public static final String DEFAULT_VALUE = IN;
     }
     
@@ -144,6 +145,10 @@ public interface RelationalConstants {
         public static final String USES_DISTINCT_ROWS = "relational:uses-distinct-rows"; //$NON-NLS-1$
         public static final String VARARGS = "relational:varargs"; //$NON-NLS-1$
         public static final String NULL_ON_NULL = "relational:null-on-null"; //$NON-NLS-1$
+        public static final String JAVA_CLASS = "relational:java-class"; //$NON-NLS-1$
+        public static final String JAVA_METHOD = "relational:java-method"; //$NON-NLS-1$
+        public static final String UDF_JAR_PATH = "relational:udfJarPath"; //$NON-NLS-1$
+        public static final String FUNCTION_CATEGORY = "relational:function-category"; //$NON-NLS-1$
     }
 
 }

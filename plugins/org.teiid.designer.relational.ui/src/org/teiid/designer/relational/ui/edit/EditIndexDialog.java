@@ -44,6 +44,8 @@ import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
+import org.teiid.designer.ui.common.UILabelUtil;
+import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
@@ -156,7 +158,7 @@ public class EditIndexDialog extends TitleAreaDialog {
 		composite.setLayoutData(gridData);
 
 		Label label = new Label(composite, SWT.NONE | SWT.RIGHT);
-		label.setText(Messages.nameLabel);
+		label.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.NAME));
 		label.setLayoutData(new GridData());
 
 		final Text indexNameText = new Text(composite, SWT.BORDER | SWT.SINGLE);
@@ -355,7 +357,7 @@ public class EditIndexDialog extends TitleAreaDialog {
 		}
 		
         DESCRIPTION_GROUP: {
-            final Group descGroup = WidgetFactory.createGroup(dialogComposite, Messages.descriptionLabel, GridData.FILL_BOTH, 3);
+            final Group descGroup = WidgetFactory.createGroup(dialogComposite, UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DESCRIPTION), GridData.FILL_BOTH, 3);
             descriptionTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
             final GridData descGridData = new GridData(GridData.FILL_BOTH);
             descGridData.horizontalSpan = 1;

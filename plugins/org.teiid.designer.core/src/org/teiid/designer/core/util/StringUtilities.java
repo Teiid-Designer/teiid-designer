@@ -91,6 +91,17 @@ public class StringUtilities {
 
         return sb.toString();
     }
+    
+    /**
+     * @param string1 may be <code>null</code>
+     * @param string2 may be <code>null</code>
+     * @return <code>true</code> if the supplied strings are different.
+     */
+    public static boolean areDifferent( final String string1,
+                                     final String string2 ) {
+    	if (string1 == null) return string2 != null;
+        return !string1.equals(string2);
+    }
 
     /**
      * @param string1 may be <code>null</code>

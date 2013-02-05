@@ -59,6 +59,8 @@ import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
+import org.teiid.designer.ui.common.UILabelUtil;
+import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
@@ -177,7 +179,7 @@ public class EditForeignKeyDialog extends TitleAreaDialog {
         composite.setLayoutData(gridData);
         
         Label label = new Label(composite, SWT.NONE | SWT.RIGHT);
-        label.setText(Messages.nameLabel);
+        label.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.NAME));
         label.setLayoutData(new GridData());
         
         final Text fkNameText =  new Text(composite, SWT.BORDER | SWT.SINGLE);

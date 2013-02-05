@@ -14,6 +14,7 @@ import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalPlugin;
@@ -160,19 +161,10 @@ public class RelationalTable extends RelationalReference {
     /**
      * @param newQuery sets nativeQuery to the specified value. may be null
      */
-    public void setNaviteQuery( String newQuery ) {
-    	boolean changed = false;
-    	if( this.nativeQuery == null && newQuery == null ) {
-    		changed = true;
-    	} else if( this.nativeQuery == null || newQuery == null ) {
-    		changed = true;
+    public void setNativeQuery( String newQuery ) {
+    	if( StringUtilities.areDifferent(this.nativeQuery, newQuery) ) {
     		this.nativeQuery = newQuery;
-    	} else if( this.nativeQuery.equalsIgnoreCase(nativeQuery)) {
-	        this.nativeQuery = newQuery;
-    	}
-    	
-    	if( changed ) {
-    		 handleInfoChanged();
+    		handleInfoChanged();
     	}
     }
 

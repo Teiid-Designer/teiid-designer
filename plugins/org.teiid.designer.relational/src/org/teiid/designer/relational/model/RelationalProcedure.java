@@ -14,6 +14,7 @@ import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalPlugin;
@@ -26,12 +27,25 @@ import org.teiid.designer.relational.RelationalPlugin;
  * @since 8.0
  */
 public class RelationalProcedure extends RelationalReference {
+    /**
+     * 
+     */
     public static final String KEY_FUNCTION = "FUNCTION"; //$NON-NLS-1$
-    public static final String KEY_UPDATE_COUNT = "UPDATECOUNT"; //$NON-NLS-1$
-    
+    /**
+     * 
+     */
+	public static final String KEY_UPDATE_COUNT = "UPDATECOUNT"; //$NON-NLS-1$
+	/**
+     * 
+     */
     public static final boolean DEFAULT_FUNCTION = false;
+    /**
+     * 
+     */
     public static final String DEFAULT_UPDATE_COUNT = "AUTO"; //$NON-NLS-1$
-    
+    /**
+     * 
+     */
     public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
     
     private boolean function;
@@ -45,12 +59,21 @@ public class RelationalProcedure extends RelationalReference {
     private boolean analytic;
     private boolean decomposable;
     private boolean useDistinctRows;
+    private String nativeQuery;
+    private String javaClass;
+    private String javaMethod;
+    private String udfJarPath;
+    private String functionCategory;
+    boolean sourceFunction;
     
     private String  updateCount;
     private Collection<RelationalParameter> parameters;
     private RelationalProcedureResultSet resultSet;
     
     
+    /**
+     * 
+     */
     public RelationalProcedure() {
         super();
         setType(TYPES.PROCEDURE);
@@ -58,7 +81,7 @@ public class RelationalProcedure extends RelationalReference {
         setNameValidator(new RelationalStringNameValidator(true, true));
     }
     /**
-     * @param name
+     * @param name the procedure name
      */
     public RelationalProcedure( String name ) {
         super(name);
@@ -222,6 +245,106 @@ public class RelationalProcedure extends RelationalReference {
     public void setUseDistinctRows( boolean useDistinctRows ) {
         this.useDistinctRows = useDistinctRows;
     }
+    
+    /**
+     * @return is source function
+     */
+    public boolean isSourceFunction() {
+        return sourceFunction;
+    }
+    /**
+     * @param isSourceFunction Sets sourceFunction to the specified value.
+     */
+    public void setSourceFunction( boolean isSourceFunction ) {
+        this.sourceFunction = isSourceFunction;
+    }
+    
+    /**
+     * @return java class name for function may be null
+     */
+    public String getJavaClassName() {
+        return javaClass;
+    }
+    
+    /**
+     * @param javaClassName sets java class name to the specified value. may be null
+     */
+    public void setJavaClassName( String javaClassName ) {
+    	if( StringUtilities.areDifferent(this.javaClass, javaClassName) ) {
+	        this.javaClass = javaClassName;
+    		 handleInfoChanged();
+    	}
+    }
+    
+    /**
+     * @return java class name for function may be null
+     */
+    public String getJavaMethodName() {
+        return javaMethod;
+    }
+    
+    /**
+     * @param javaMethodName sets java method name to the specified value. may be null
+     */
+    public void setJavaMethodName( String javaMethodName ) {
+    	if( StringUtilities.areDifferent(this.javaMethod, javaMethodName) ) {
+	        this.javaMethod = javaMethodName;
+    		 handleInfoChanged();
+    	}
+    }
+    
+    /**
+     * @return udf jar path
+     */
+    public String getUdfJarPath() {
+        return udfJarPath;
+    }
+    
+    /**
+     * @param udfJarPath sets relative udf jar path. may be null
+     */
+    public void setUdfJarPath( String udfJarPath ) {
+    	if( StringUtilities.areDifferent(this.udfJarPath, udfJarPath) ) {
+	        this.udfJarPath = udfJarPath;
+    		 handleInfoChanged();
+    	}
+    }
+    
+    /**
+     * @return function category
+     */
+    public String getFunctionCategory() {
+        return functionCategory;
+    }
+    
+    /**
+     * @param category sets user defined function category. may be null
+     */
+    public void setFunctionCategory( String category ) {
+    	if( StringUtilities.areDifferent(this.functionCategory, category) ) {
+	        this.functionCategory = category;
+    		 handleInfoChanged();
+    	}
+    }
+    
+    /**
+     * @return nativeQuery may be null
+     */
+    public String getNativeQuery() {
+        return nativeQuery;
+    }
+    
+    /**
+     * @param newQuery sets nativeQuery to the specified value. may be null
+     */
+    public void setNativeQuery( String newQuery ) {
+    	if( StringUtilities.areDifferent(this.nativeQuery, newQuery) ) {
+    		this.nativeQuery = newQuery;
+    		handleInfoChanged();
+    	}
+    }
+    
+    
     /**
      * @return resultSet
      */
@@ -247,6 +370,9 @@ public class RelationalProcedure extends RelationalReference {
         return this.parameters;
     }
     
+    /**
+     * @param parameter the new parameter
+     */
     public void addParameter(RelationalParameter parameter) {
         if( this.parameters.add(parameter) ) {
         	parameter.setParent(this);
@@ -254,6 +380,10 @@ public class RelationalProcedure extends RelationalReference {
         }
     }
     
+    /**
+     * @param parameter the parameter to remove
+     * @return if parameter was removed or not
+     */
     public boolean removeParameter(RelationalParameter parameter) {
     	if( this.parameters.remove(parameter) ) {
     		handleInfoChanged();
@@ -262,14 +392,28 @@ public class RelationalProcedure extends RelationalReference {
     	return false;
     }
     
+    /**
+     * @return the new RelationalParameter
+     */
     public RelationalParameter createParameter() {
     	return createParameter(DEFAULT_DATATYPE, RelationalParameter.DEFAULT_STRING_LENGTH);
     }
     
+    /**
+     * @param datatype the datatype name
+     * @param length the datatype length
+     * @return the new RelationalParameter
+     */
     public RelationalParameter createParameter(String datatype, int length) {
     	return createParameter("newParameter_" + (getParameters().size() + 1), datatype, length); //$NON-NLS-1$
     }
     
+    /**
+     * @param name the name of the parameter
+     * @param datatype the datatype name
+     * @param length the datatype length
+     * @return the new RelationalParameter
+     */
     public RelationalParameter createParameter(String name, String datatype, int length) {
     	RelationalParameter newParameter = new RelationalParameter(name);
     	newParameter.setDatatype(datatype);
@@ -278,10 +422,18 @@ public class RelationalProcedure extends RelationalReference {
     	return newParameter;
     }
     
+	/**
+	 * @param parameter the parameter
+	 * @return if parameter can be moved up in child list
+	 */
 	public boolean canMoveParameterUp(RelationalParameter parameter) {
 		return getParameterIndex(parameter) > 0;
 	}
 	
+	/**
+	 * @param parameter the parameter
+	 * @return if parameter can be moved down in child list
+	 */
 	public boolean canMoveParameterDown(RelationalParameter parameter) {
 		return getParameterIndex(parameter) < getParameters().size()-1;
 	}
@@ -299,6 +451,9 @@ public class RelationalProcedure extends RelationalReference {
 		return -1;
 	}
 	
+	/**
+	 * @param theParameter the parameter
+	 */
 	public void moveParameterUp(RelationalParameter theParameter) {
 		int startIndex = getParameterIndex(theParameter);
 		if( startIndex > 0 ) {
@@ -317,6 +472,9 @@ public class RelationalProcedure extends RelationalReference {
 		}
 	}
 	
+	/**
+	 * @param theParameter the parameter
+	 */
 	public void moveParameterDown(RelationalParameter theParameter) {
 		int startIndex = getParameterIndex(theParameter);
 		if( startIndex < (getParameters().size()-1) ) {
@@ -335,6 +493,9 @@ public class RelationalProcedure extends RelationalReference {
 		}
 	}
     
+    /**
+     * @param props the properties
+     */
     public void setProperties(Properties props) {
         for( Object key : props.keySet() ) {
             String keyStr = (String)key;
@@ -413,10 +574,27 @@ public class RelationalProcedure extends RelationalReference {
 				}
 			}
 			
-			if( getResultSet() != null ) {
+			if( getResultSet() != null && this.isSourceFunction() ) {
 				setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID,
 						Messages.validate_noResultSetAllowedInFunction ));
 				return;
+			} else {
+				// Check for null category, class or method name
+				if( this.javaClass == null || this.javaClass.trim().length() == 0 ) {
+					setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID,
+							Messages.validate_categoryUndefinedForUDF ));
+					return;
+				}
+				if( this.javaClass == null || this.javaClass.trim().length() == 0 ) {
+					setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID,
+							Messages.validate_javaClassUndefinedForUDF ));
+					return;
+				}
+				if( this.javaClass == null || this.javaClass.trim().length() == 0 ) {
+					setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID,
+							Messages.validate_javaMethodUndefinedForUDF ));
+					return;
+				}
 			}
 		} else {
 			if( getResultSet() != null ) {

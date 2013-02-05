@@ -106,7 +106,7 @@ public class RelationalReference implements RelationalConstants {
      * @param name Sets name to the specified value.
      */
     public void setName( String name ) {
-    	if( !StringUtilities.equals(this.name, name) ) {
+    	if( StringUtilities.areDifferent(this.name, name) ) {
     		this.name = name;
     		handleInfoChanged();
     	}
@@ -121,7 +121,7 @@ public class RelationalReference implements RelationalConstants {
      * @param nameInSource Sets nameInSource to the specified value.
      */
     public void setNameInSource( String nameInSource ) {
-    	if( !StringUtilities.equals(this.nameInSource, nameInSource) ) {
+    	if( StringUtilities.areDifferent(this.nameInSource, nameInSource) ) {
     		this.nameInSource = nameInSource;
     		handleInfoChanged();
     	} 
@@ -136,7 +136,7 @@ public class RelationalReference implements RelationalConstants {
      * @param description Sets description to the specified value.
      */
     public void setDescription( String description ) {
-    	if( !StringUtilities.equals(this.description, description) ) {
+    	if( StringUtilities.areDifferent(this.description, description) ) {
     		this.description = description;
     		handleInfoChanged();
     	} 

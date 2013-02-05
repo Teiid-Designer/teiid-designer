@@ -53,6 +53,8 @@ import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.relational.ui.util.RelationalUiUtil;
+import org.teiid.designer.ui.common.UILabelUtil;
+import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -137,7 +139,7 @@ public class RelationalIndexEditorPanel  extends RelationalEditorPanel implement
 
         this.generalPropertiesTab = new TabItem(folderParent, SWT.NONE);
         this.generalPropertiesTab.setControl(thePanel);
-        this.generalPropertiesTab.setText(Messages.propertiesLabel);
+        this.generalPropertiesTab.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.PROPERTIES));
         this.generalPropertiesTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.INDEX, ModelType.PHYSICAL, Status.OK_STATUS));
 	}
 	
@@ -146,7 +148,7 @@ public class RelationalIndexEditorPanel  extends RelationalEditorPanel implement
 
         this.descriptionTab = new TabItem(folderParent, SWT.NONE);
         this.descriptionTab.setControl(thePanel);
-        this.descriptionTab.setText(Messages.descriptionLabel);
+        this.descriptionTab.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DESCRIPTION));
 	}
 	
 	
@@ -241,7 +243,7 @@ public class RelationalIndexEditorPanel  extends RelationalEditorPanel implement
         }
         
         label = new Label(thePanel, SWT.NONE);
-        label.setText(Messages.nameLabel);
+        label.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.NAME));
         
         this.nameText =  new Text(thePanel, SWT.BORDER | SWT.SINGLE);
         this.nameText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
@@ -291,7 +293,7 @@ public class RelationalIndexEditorPanel  extends RelationalEditorPanel implement
     	thePanel.setLayoutData(panelGD);
     	
         DESCRIPTION_GROUP: {
-            final Group descGroup = WidgetFactory.createGroup(thePanel, Messages.descriptionLabel, GridData.FILL_BOTH, 3);
+            final Group descGroup = WidgetFactory.createGroup(thePanel, UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DESCRIPTION), GridData.FILL_BOTH, 3);
             descriptionTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
             final GridData descGridData = new GridData(GridData.FILL_BOTH);
             descGridData.horizontalSpan = 1;
@@ -406,7 +408,7 @@ public class RelationalIndexEditorPanel  extends RelationalEditorPanel implement
         this.tableReferenceText.setEditable(false);
         this.tableReferenceText.setBackground(label.getBackground());
         
-        this.browseForTableButton = WidgetFactory.createButton(thePanel, Messages.elipsisLabel);
+        this.browseForTableButton = WidgetFactory.createButton(thePanel, UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ELIPSIS));
         this.browseForTableButton.setToolTipText(Messages.browseModelToSelectTableForIndexTooltipText);
         this.browseForTableButton.setEnabled(true);
         this.browseForTableButton.setLayoutData(new GridData(SWT.CENTER, SWT.NONE, false, false));
