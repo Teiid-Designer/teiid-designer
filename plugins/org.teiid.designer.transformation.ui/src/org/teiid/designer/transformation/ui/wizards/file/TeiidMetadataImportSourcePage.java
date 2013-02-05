@@ -132,6 +132,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	private static final String INCLCOLUMNNAME = "INCLCOLUMNNAME"; //$NON-NLS-1$
 	private static final String VALUE_YES = "YES"; //$NON-NLS-1$
 	private static final String VALUE_COMMA = "COMMA"; //$NON-NLS-1$
+	private static final String CHARSET = "CHARSET"; //$NON-NLS-1$
 	
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	private static final String DOT_XML = ".XML"; //$NON-NLS-1$
@@ -139,7 +140,6 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	private static final String DOT_CSV = ".CSV"; //$NON-NLS-1$
 	private static final String DOT_XML_LOWER = ".xml"; //$NON-NLS-1$
 	
-	private static final String DEFAULT_EXTENSION = ".xmi"; //$NON-NLS-1$
 	private static final String GET_TEXT_FILES = "getTextFiles"; //$NON-NLS-1$
 
 	private static final String ODA_FLAT_FILE_ID = "org.eclipse.datatools.connectivity.oda.flatfile"; //$NON-NLS-1$
@@ -185,6 +185,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     IConnectionInfoHelper connectionInfoHelper;
 
 	/**
+	 * @param info the TeiidMetadataImportInfo
 	 * @since 4.0
 	 */
 	public TeiidMetadataImportSourcePage(TeiidMetadataImportInfo info) {
@@ -192,6 +193,8 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	}
 
 	/**
+	 * @param selection the selection
+	 * @param info the TeiidMetadataImportInfo
 	 * @since 4.0
 	 */
 	public TeiidMetadataImportSourcePage(Object selection,	TeiidMetadataImportInfo info) {
@@ -507,6 +510,10 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 						this.dataFileFolderText.setText(location);
 						this.dataFileFolderText.setToolTipText(home);
 					}
+					String charset = (String) props.get(CHARSET);
+					if (charset != null) {
+					    this.profileInfo.charset = charset;
+					}					
 					clearFileListViewer();
 					loadFileListViewer();
 					
@@ -567,9 +574,9 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 						if (data != null && data instanceof File) {
 							File theFile = (File) data;
 							if (!theFile.isDirectory()) {
-								if (this.info.getFileInfo(theFile) == null) {
-									TeiidMetadataFileInfo fileInfo = new TeiidMetadataFileInfo(theFile);
-									this.info.addFileInfo(fileInfo);
+								TeiidMetadataFileInfo fileInfo = this.info.getFileInfo(theFile);
+								if (fileInfo == null || !fileInfo.getCharset().equals(this.profileInfo.charset)) {
+								    this.info.addFileInfo(new TeiidMetadataFileInfo(theFile, this.profileInfo.charset));
 								}
 								this.info.validate();
 							}
@@ -663,7 +670,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
      * If the path begins with a "/", we need to strip off since this will be changed to an underscore and create an invalid model
      * name. Also, we need to remove any periods.
      * 
-     * @param newUrl
+     * @param newUrl the file url
      * @return filePath - reformatted string used for generating the new file name
      */
     public static String formatPath( URL newUrl ) {
@@ -1189,6 +1196,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     	public boolean columnsInFirstLine = false;
     	public String home;
     	public String delimiterType = VALUE_COMMA;
+    	public String charset="UTF-8";  //$NON-NLS-1$
     }
 
 /**
