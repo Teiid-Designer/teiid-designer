@@ -8,6 +8,7 @@
 package org.teiid.designer.query;
 
 import org.teiid.designer.query.proc.ITeiidMetadataFileInfo;
+import org.teiid.designer.query.proc.ITeiidXmlFileInfo;
 
 /**
  * Provides getters for sql syntax strings that differ between runtime client versions
@@ -24,5 +25,13 @@ public interface IProcedureService {
      */
     String getSQLStatement(ITeiidMetadataFileInfo metadataFileInfo, String relationalModelName);
 
-    
+    /**
+     * Prepare an SQL statement for the given xml-based metdata
+     * 
+     * @param xmlFileInfo
+     * @param relationalModelName 
+     * 
+     * @return SQL statement based on the given metadata information
+     */
+    String getSQLStatement(ITeiidXmlFileInfo xmlFileInfo, String relationalModelName);
 }
