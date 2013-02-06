@@ -49,7 +49,7 @@ public class SoaRepositories {
             this.providers = new ConcurrentHashMap<String, RepositoryProvider>();
 
             // load repository providers
-            for (final RepositoryProvider provider : ServiceLoader.load(RepositoryProvider.class)) {
+            for (final RepositoryProvider provider : ServiceLoader.load(RepositoryProvider.class, getClass().getClassLoader())) {
                 this.providers.putIfAbsent(provider.getType(), provider);
                 LOGGER.debug("Added repository provider with type '{}' and class '{}'", provider.getType(), provider.getClass()); //$NON-NLS-1$
             }
