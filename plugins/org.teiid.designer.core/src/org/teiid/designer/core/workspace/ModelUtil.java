@@ -55,7 +55,6 @@ import org.teiid.designer.core.xmi.XMIHeader;
 import org.teiid.designer.core.xmi.XMIHeaderReader;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
-import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;
 import org.teiid.designer.metamodels.core.CoreMetamodelPlugin;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.core.extension.ExtensionPackage;
@@ -92,6 +91,7 @@ public class ModelUtil {
     public static final String MODEL_CLASS_WEB_SERVICE = "Web Service"; //$NON-NLS-1$
     public static final String MODEL_CLASS_FUNCTION = "Function (Deprecated)"; //$NON-NLS-1$
     public static final String MODEL_CLASS_MODEL_EXTENSION = "Model Extension (Deprecated)"; //$NON-NLS-1$
+    public static final String MODEL_CLASS_UNKNOWN = "Unknown"; //$NON-NLS-1$
     
     public static final String URI_XML_VIEW_MODEL = "http://www.metamatrix.com/metamodels/XmlDocument"; //$NON-NLS-1$
     public static final String URI_WEB_SERVICES_VIEW_MODEL = "http://www.metamatrix.com/metamodels/WebService"; //$NON-NLS-1$
@@ -271,15 +271,17 @@ public class ModelUtil {
     	
     	if( mr != null ) {
     		String mmURI = mr.getPrimaryMetamodelUri();
-    		if( mmURI.equals(URI_RELATIONAL_MODEL) ) return MODEL_CLASS_RELATIONAL;
-    		if( mmURI.equals(URI_FUNCTION_MODEL) ) return MODEL_CLASS_FUNCTION;
-    		if( mmURI.equals(URI_EXTENSION_MODEL) ) return MODEL_CLASS_MODEL_EXTENSION;
-    		if( mmURI.equals(URI_XML_VIEW_MODEL) ) return MODEL_CLASS_XML;
-    		if( mmURI.equals(URI_WEB_SERVICES_VIEW_MODEL) ) return MODEL_CLASS_WEB_SERVICE;
-    		if( mmURI.equals(URI_XML_SCHEMA_MODEL) ) return MODEL_CLASS_XML_SCHEMA;
+            if (mmURI != null) {
+                if (mmURI.equals(URI_RELATIONAL_MODEL)) return MODEL_CLASS_RELATIONAL;
+                if (mmURI.equals(URI_FUNCTION_MODEL)) return MODEL_CLASS_FUNCTION;
+                if (mmURI.equals(URI_EXTENSION_MODEL)) return MODEL_CLASS_MODEL_EXTENSION;
+                if (mmURI.equals(URI_XML_VIEW_MODEL)) return MODEL_CLASS_XML;
+                if (mmURI.equals(URI_WEB_SERVICES_VIEW_MODEL)) return MODEL_CLASS_WEB_SERVICE;
+                if (mmURI.equals(URI_XML_SCHEMA_MODEL)) return MODEL_CLASS_XML_SCHEMA;
+            }	
     	}
     	
-    	return null;
+    	return MODEL_CLASS_UNKNOWN;
     }
 
     /**
