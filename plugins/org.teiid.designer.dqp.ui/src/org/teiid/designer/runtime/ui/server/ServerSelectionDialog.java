@@ -7,9 +7,9 @@
  */
 package org.teiid.designer.runtime.ui.server;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -36,9 +36,11 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 
 	private static final String PREFIX = I18nUtil.getPropertyPrefix(ServerSelectionDialog.class);
 
-	ITeiidServer selectedServer;
+	private ITeiidServer selectedServer;
 	
-	Combo serversCombo;
+	private Combo serversCombo;
+	
+	private Map<String, ITeiidServer> serverMap = new HashMap<String, ITeiidServer>();
 
 	/**
 	 * @since 5.5.3
@@ -86,6 +88,9 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 		Composite panel = new Composite(pnlOuter, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
+		gridLayout.marginTop = 25;
+		gridLayout.marginLeft = 10;
+		gridLayout.marginRight = 10;
 		panel.setLayout(gridLayout);
 		panel.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -93,14 +98,10 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 		setTitle(UTIL.getString(PREFIX + "title")); //$NON-NLS-1$
 		setMessage(UTIL.getString(PREFIX + "initialMessage")); //$NON-NLS-1$
 
-//		Group serversGroup = WidgetFactory.createGroup(panel, UTIL.getString(PREFIX + "teiidServers"), GridData.FILL_BOTH, 2, 2); //$NON-NLS-1$
-//		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-//		gd.horizontalSpan = 2;
-//		serversGroup.setLayoutData(gd);
-
 		ACTION_COMBO: {
 			serversCombo = new Combo(panel, SWT.NONE | SWT.READ_ONLY);
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+			
 			gd.horizontalSpan = 2;
 			serversCombo.setLayoutData(gd);
 
@@ -108,25 +109,18 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 				@Override
 				public void widgetSelected(SelectionEvent ev) {
 					selectedServer = null;
-					String serverName = serversCombo.getItem(serversCombo.getSelectionIndex());
 					
-					Collection<ITeiidServer> teiidServers = DqpPlugin.getInstance().getServerManager().getServers();
-					for( ITeiidServer teiidServer : teiidServers ) {
-						if( teiidServer.getCustomLabel().equalsIgnoreCase(serverName) ) {
-							selectedServer = teiidServer;
-							break;
-						}
-					}
+					String serverName = serversCombo.getItem(serversCombo.getSelectionIndex());
+					selectedServer = serverMap.get(serverName);
 					
 					updateState();
 				}
 			});
 			Collection<ITeiidServer> teiidServers = DqpPlugin.getInstance().getServerManager().getServers();
-			List<String> nameList = new ArrayList<String>();
 			for( ITeiidServer teiidServer : teiidServers ) {
-				nameList.add(teiidServer.getCustomLabel());
+                serverMap.put(teiidServer.toString(), teiidServer);
 			}
-			WidgetUtil.setComboItems(serversCombo, nameList, null, true);
+			WidgetUtil.setComboItems(serversCombo, serverMap.keySet(), null, true);
 		}
 
 		return panel;

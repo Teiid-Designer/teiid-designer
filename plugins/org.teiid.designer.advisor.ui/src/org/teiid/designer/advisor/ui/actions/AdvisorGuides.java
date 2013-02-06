@@ -93,6 +93,7 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		infoList = new ArrayList<AdvisorActionInfo>();
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.NEW_TEIID_SERVER));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EDIT_TEIID_SERVER));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.SET_DEFAULT_TEIID_SERVER));
 
         infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
 		actionInfoMap.put(TEIID_SERVER_ACTIONS, infoArray);
