@@ -13,6 +13,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.runtime.TeiidServerManager;
@@ -45,7 +48,6 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
     private ITeiidServer selectedServer;
 
     /**
-     * @param shell the parent shell used to display the dialog
      * @param teiidServerManager the server manager to use when creating and editing servers
      */
     public SetDefaultServerAction( TeiidServerManager teiidServerManager ) {
@@ -71,18 +73,58 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
      */
     @Override
     public void run() {
-    	boolean disconnectOldDefault = false;
-    	if( this.teiidServerManager.getDefaultServer().isConnected() ) {
+        
+        /*
+         * Since this action can now be run from the RuntimeAssistant then
+         * selectedServer may be null. In which case, need to ask the user
+         * which server to be selected
+         */
+        if( this.selectedServer == null) {
+            this.selectedServer = RuntimeAssistant.selectServer(getShell());
+        }
+        
+        if (selectedServer == null)
+            return;
+        
+        ITeiidServer currentDefaultServer = this.teiidServerManager.getDefaultServer();
+        
+        /*
+         * If a server version change is occurring then tell the user and ask them if its
+         * alright to continue since this will close any open editors.
+         */
+        boolean continueChangingServer = false;
+        if (changeOfServerVersion() && hasOpenEditors()) {
+            continueChangingServer = MessageDialog.openQuestion(getShell(), 
+                                       UTIL.getString("setDefaultServerActionVersionChangeTitle"),  //$NON-NLS-1$
+                                       UTIL.getString("setDefaultServerActionVersionChangeMessage")); //$NON-NLS-1$
+            
+            if (! continueChangingServer)
+                return;
+        }
+        
+        /*
+         * If old default server is connected, ask user if they wish to disconnect it.
+         */
+        boolean disconnectOldDefault = false;
+        if( currentDefaultServer.isConnected() ) {
 	    	disconnectOldDefault = MessageDialog.openQuestion(getShell(), 
 	    			UTIL.getString("setDefaultServerActionDisconnectOldTitle"),  //$NON-NLS-1$
-	    			UTIL.getString("setDefaultServerActionDisconnectOldMessage", this.teiidServerManager.getDefaultServer().getUrl())); //$NON-NLS-1$
+	    			UTIL.getString("setDefaultServerActionDisconnectOldMessage", currentDefaultServer.getUrl())); //$NON-NLS-1$
     	}
     	if( disconnectOldDefault ) {
-    		this.teiidServerManager.getDefaultServer().disconnect();
-    		
+    		currentDefaultServer.disconnect();
     	}
+    	
+    	/*
+    	 * Set the default teiid server
+    	 */
         this.teiidServerManager.setDefaultServer(this.selectedServer);
-        if( !this.selectedServer.isConnected() ) {
+        
+        /*
+         * If the new default server is connected then reconnect it to 
+         * clear out any caches.
+         */
+        if( this.selectedServer.isConnected() ) {
         	final ITeiidServer theNewDefaultServer = this.selectedServer;
             UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
 
@@ -96,6 +138,24 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
                 }
             });
         }
+    }
+
+    private boolean hasOpenEditors() {
+        for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+            for (IWorkbenchPage page : window.getPages()) {
+                if (page.getEditorReferences().length > 0)
+                    return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean changeOfServerVersion() {
+        ITeiidServer currentDefaultServer = this.teiidServerManager.getDefaultServer();
+        if (currentDefaultServer == null)
+            return true;
+        
+        return ! currentDefaultServer.getServerVersion().equals(selectedServer.getServerVersion());
     }
 
     /**

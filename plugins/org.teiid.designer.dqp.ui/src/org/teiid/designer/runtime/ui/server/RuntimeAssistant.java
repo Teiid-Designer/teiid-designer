@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.prefs.BackingStoreException;
 import org.teiid.core.designer.util.I18nUtil;
@@ -160,6 +161,14 @@ public final class RuntimeAssistant {
         EditServerAction action = new EditServerAction(shell, getServerManager());
         action.run();
     }
+    
+    /**
+     * Run the set default server action
+     */
+    public static void runSetDefaultServerAction () {
+        SetDefaultServerAction action = new SetDefaultServerAction(getServerManager());
+        action.run();
+    }
 
     /**
      * @param shell the shell where the dialog is displayed if necessary
@@ -214,6 +223,31 @@ public final class RuntimeAssistant {
      */
     private RuntimeAssistant() {
         // nothing to do
+    }
+
+    /**
+     * Can display a dialog, allowing the user to select a server should there
+     * be more than one or return the single server in the event of only one.
+     * 
+     * @param shell 
+     * 
+     * @return a selected {@link ITeiidServer}
+     */
+    public static ITeiidServer selectServer(Shell shell) {
+        ITeiidServer selectedServer = null;
+
+        if (getServerManager().getServers().size() == 1) {
+            selectedServer = getServerManager().getServers().iterator().next();
+        } else if (getServerManager().getServers().size() > 1) {
+            ServerSelectionDialog dialog = new ServerSelectionDialog(shell);
+            dialog.open();
+
+            if (dialog.getReturnCode() == Window.OK) {
+                selectedServer = dialog.getServer();
+            }
+        }
+
+        return selectedServer;
     }
 
 }
