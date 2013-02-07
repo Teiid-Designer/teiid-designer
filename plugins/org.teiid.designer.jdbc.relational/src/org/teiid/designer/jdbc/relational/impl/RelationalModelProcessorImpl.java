@@ -2009,6 +2009,9 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             resource.getContents().add(index);
         }
         setNameAndNameInSource(index, spec.indexName, tableNode, context, problems);
+        String quoteStr = getQuoteString(context, problems);
+        String nis = index.getNameInSource() + '.' + quoteStr + spec.indexName + quoteStr;
+        index.setNameInSource(nis);
         index.setUnique(!spec.nonUnique);
         index.getColumns().addAll(spec.columns);
         index.setFilterCondition(spec.filterCondition);

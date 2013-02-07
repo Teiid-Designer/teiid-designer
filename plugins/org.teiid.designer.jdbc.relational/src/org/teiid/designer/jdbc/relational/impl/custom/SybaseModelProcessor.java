@@ -94,7 +94,7 @@ public class SybaseModelProcessor extends RelationalModelProcessorImpl {
             final PrimaryKey pk = theTable.getPrimaryKey();
             if (pk != null) {
                 final String pkName = pk.getName();
-                if (pkName == null || pkName.trim().length() != 0) {
+                if (pkName == null || pkName.trim().length() == 0) {
                     final List pkColumns = pk.getColumns();
 
                     // Iterate over the indexes for the table ...

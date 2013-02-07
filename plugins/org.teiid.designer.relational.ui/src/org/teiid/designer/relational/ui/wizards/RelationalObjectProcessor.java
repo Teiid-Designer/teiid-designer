@@ -427,19 +427,19 @@ public class RelationalObjectProcessor extends AbstractObjectProcessor {
      * handler for Create Relationships Model Button pressed
      */
     private ModelResource createRelationalModel(IResource targetRes, String sNewRelationshipModelName ) {
-        ModelResource mrRelationshipModel = constructRelationalModel(targetRes , sNewRelationshipModelName );
+        ModelResource mr = constructRelationalModel(targetRes , sNewRelationshipModelName );
         
         // Save Relationship Model
         try {
-            if( mrRelationshipModel != null ) {
-                mrRelationshipModel.save( null, false );
+            if( mr != null ) {
+            	mr.save( null, false );
                 
             }
         } catch (ModelWorkspaceException mwe) {
         	UiConstants.Util.log( mwe );
         }
         
-        return mrRelationshipModel;
+        return mr;
     }
     
     /**
