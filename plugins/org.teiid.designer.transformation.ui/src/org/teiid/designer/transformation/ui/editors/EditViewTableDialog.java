@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.relational.model.RelationalReference;
+import org.teiid.designer.relational.ui.edit.IDialogStatusListener;
 import org.teiid.designer.transformation.model.RelationalViewTable;
 import org.teiid.designer.transformation.ui.Messages;
 
@@ -30,7 +31,7 @@ import org.teiid.designer.transformation.ui.Messages;
  */
 public class EditViewTableDialog extends TitleAreaDialog implements IDialogStatusListener {
 
-    private final String TITLE = Messages.createRelationalViewTitle;
+    private final String TITLE = Messages.createRelationalViewTableTitle;
     
     private RelationalReference relationalObject;
     private IFile modelFile;
@@ -61,7 +62,7 @@ public class EditViewTableDialog extends TitleAreaDialog implements IDialogStatu
         ((GridLayout)mainPanel.getLayout()).marginHeight=10;
         ((GridLayout)mainPanel.getLayout()).marginWidth=10;
         this.setTitle(TITLE);
-        this.setMessage(Messages.createRelationalViewInitialMessage);
+        this.setMessage(Messages.createRelationalViewTableInitialMessage);
         
         new ViewTableEditorPanel(parent, (RelationalViewTable)relationalObject, modelFile, this);
 

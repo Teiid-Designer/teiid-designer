@@ -320,5 +320,41 @@
             name="org.teiid.designer.transformation.ui.actions.CreateViewTableAction">
       </class>
    </extension>
+   
+   <extension
+         id="newChildViewProcedureAction"
+         name="%newChildViewProcedureAction"
+         point="org.teiid.designer.ui.newChildAction">
+      <class
+            name="org.teiid.designer.transformation.ui.actions.CreateViewProcedureAction">
+      </class>
+   </extension>
+
+   <extension
+         id="newSiblingViewProcedureAction"
+         name="%newSiblingViewProcedureAction"
+         point="org.teiid.designer.ui.newSiblingAction">
+      <class
+            name="org.teiid.designer.transformation.ui.actions.CreateViewProcedureAction">
+      </class>
+   </extension>
+   
+      <extension
+         id="newChildViewIndexAction"
+         name="%newChildViewIndexAction"
+         point="org.teiid.designer.ui.newChildAction">
+      <class
+            name="org.teiid.designer.transformation.ui.actions.CreateViewIndexAction">
+      </class>
+   </extension>
+
+   <extension
+         id="newSiblingViewIndexAction"
+         name="%newSiblingViewIndexAction"
+         point="org.teiid.designer.ui.newSiblingAction">
+      <class
+            name="org.teiid.designer.transformation.ui.actions.CreateViewIndexAction">
+      </class>
+   </extension>
   
 </plugin>

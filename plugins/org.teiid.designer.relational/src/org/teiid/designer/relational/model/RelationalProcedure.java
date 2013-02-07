@@ -574,10 +574,12 @@ public class RelationalProcedure extends RelationalReference {
 				}
 			}
 			
-			if( getResultSet() != null && this.isSourceFunction() ) {
-				setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID,
-						Messages.validate_noResultSetAllowedInFunction ));
-				return;
+			if( this.isSourceFunction() ) {
+				if( getResultSet() != null ) {
+					setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID,
+							Messages.validate_noResultSetAllowedInFunction ));
+					return;
+				}
 			} else {
 				// Check for null category, class or method name
 				if( this.javaClass == null || this.javaClass.trim().length() == 0 ) {

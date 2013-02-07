@@ -9,6 +9,7 @@ package org.teiid.designer.relational.ui.edit;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -29,8 +30,7 @@ public class EditRelationalObjectDialog extends TitleAreaDialog implements IDial
     private RelationalReference relationalObject;
     private IFile modelFile;
 
-//    private Button OKButton;
-//    private boolean isControlComplete = false;
+    private RelationalEditorPanel editorPanel;
     
     /**
      * @param parentShell the parent shell
@@ -62,7 +62,7 @@ public class EditRelationalObjectDialog extends TitleAreaDialog implements IDial
         this.setTitle(RelationalObjectEditorFactory.getDialogTitle(relationalObject));
         this.setMessage(RelationalObjectEditorFactory.getInitialMessage(relationalObject));
         
-        RelationalObjectEditorFactory.getEditorPanel(this, mainPanel, relationalObject, modelFile);
+        editorPanel = RelationalObjectEditorFactory.getEditorPanel(this, mainPanel, relationalObject, modelFile);
         
         return mainPanel;
     }
@@ -80,5 +80,21 @@ public class EditRelationalObjectDialog extends TitleAreaDialog implements IDial
     			setErrorMessage(status.getMessage());
     		}
     	}
+    	
+    	setOkEnabled(editorPanel.canFinish());
+    }
+    
+    /* (non-Javadoc)
+	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#createContents(org.eclipse.swt.widgets.Composite)
+	 */
+	@Override
+	protected Control createContents(Composite parent) {
+		Control control = super.createContents(parent);
+		setOkEnabled(editorPanel.canFinish());
+		return control;
+	}
+    
+    private void setOkEnabled( boolean enabled ) {
+        getButton(IDialogConstants.OK_ID).setEnabled(enabled);
     }
 }

@@ -104,6 +104,13 @@ public class RelationalObjectEditorFactory {
 		} else if( relationalObject instanceof RelationalTable ) {
         	return Messages.createRelationalTableHelpText;
         } else if( relationalObject instanceof RelationalProcedure ) {
+        	RelationalProcedure procedure = (RelationalProcedure)relationalObject;
+        	if( procedure.isSourceFunction() ) {
+        		return Messages.createRelationalSourceFunctionHelpText;
+        	} else if( procedure.isFunction() ) {
+        		return Messages.createRelationalUserDefinedFunctionHelpText;
+        	}
+
         	return Messages.createRelationalProcedureHelpText;
         } else if( relationalObject instanceof RelationalIndex ) {
         	return Messages.createRelationalIndexHelpText;

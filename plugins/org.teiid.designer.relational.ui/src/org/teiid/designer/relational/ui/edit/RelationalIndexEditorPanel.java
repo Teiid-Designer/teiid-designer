@@ -78,7 +78,7 @@ public class RelationalIndexEditorPanel  extends RelationalEditorPanel implement
 	
 	// table property widgets
 	Button autoUpdateCB, nullableCB, uniqueCB;
-	Text modelNameText, nameText, nameInSourceText, filterConditionText;
+	Text helpText, modelNameText, nameText, nameInSourceText, filterConditionText;
 	Text tableReferenceText;
 	Button browseForTableButton;
 	StyledTextEditor descriptionTextEditor;
@@ -112,14 +112,13 @@ public class RelationalIndexEditorPanel  extends RelationalEditorPanel implement
 		// Spacer label
 		new Label(parent, SWT.NONE);
 		{
-	    	Text helpText = new Text(parent, SWT.WRAP | SWT.READ_ONLY);
+	    	helpText = new Text(parent, SWT.WRAP | SWT.READ_ONLY);
 	    	helpText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 	    	helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 	    	helpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 	    	((GridData)helpText.getLayoutData()).horizontalSpan = 1;
-	    	((GridData)helpText.getLayoutData()).heightHint = 40;
+	    	((GridData)helpText.getLayoutData()).heightHint = 20;
 	    	((GridData)helpText.getLayoutData()).widthHint = 360;
-	    	helpText.setText(Messages.createRelationalIndexHelpText);
 		}
 		createNameGroup(parent);
 		
@@ -170,6 +169,8 @@ public class RelationalIndexEditorPanel  extends RelationalEditorPanel implement
 			this.index = (RelationalIndex)getRelationalReference();
 		}
 		synchronizing = true;
+		
+    	helpText.setText(RelationalObjectEditorFactory.getHelpText(index));
 		
 		if( index.getName() != null ) {
 			if( WidgetUtil.widgetValueChanged(this.nameText, index.getName()) ) {
@@ -520,6 +521,8 @@ public class RelationalIndexEditorPanel  extends RelationalEditorPanel implement
 	@Override
 	protected void validate() {
 		this.index.validate();
+		
+		setCanFinish(this.index.nameIsValid());
 		
 		IStatus currentStatus = this.index.getStatus();
 		if( currentStatus.isOK() ) {

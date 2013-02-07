@@ -266,7 +266,7 @@ public class RelationalModelFactory implements RelationalConstants {
             case TYPES.TABLE: {
                 EObject baseTable = createBaseTable(obj, modelResource);
                 modelResource.getEmfResource().getContents().add(baseTable);
-                applyTableExtensionProperties((RelationalTable)obj, (BaseTable)baseTable);
+                applyTableExtensionProperties((RelationalTable)obj, (BaseTable)baseTable, false);
                 
                 // In the case of the new object wizards, users can create Indexes while creating a table
                 // So just walk these and add them to the model too
@@ -282,7 +282,7 @@ public class RelationalModelFactory implements RelationalConstants {
             case TYPES.PROCEDURE: {
                 EObject procedure = createProcedure(obj, modelResource);
                 modelResource.getEmfResource().getContents().add(procedure);
-                applyProcedureExtensionProperties((RelationalProcedure)obj,(Procedure) procedure);
+                applyProcedureExtensionProperties((RelationalProcedure)obj,(Procedure) procedure, false);
             } break;
             case TYPES.INDEX: {
                 indexes.add((RelationalIndex)obj);
@@ -751,7 +751,9 @@ public class RelationalModelFactory implements RelationalConstants {
         return parameter;
     }
     
-    private void applyTableExtensionProperties(RelationalTable tableRef, BaseTable baseTable) {
+    protected void applyTableExtensionProperties(RelationalTable tableRef, BaseTable baseTable, boolean isVirtual) {
+    	if( isVirtual ) return;
+    	
         // Set Extension Properties here
         final RelationalModelExtensionAssistant assistant = getExtensionAssistant();
         if( assistant != null ) {
@@ -767,17 +769,19 @@ public class RelationalModelFactory implements RelationalConstants {
         }
     }
     
-    private void applyProcedureExtensionProperties(RelationalProcedure procedureRef, Procedure procedure) {
+    protected void applyProcedureExtensionProperties(RelationalProcedure procedureRef, Procedure procedure, boolean isVirtual) {
         // Set Extension Properties here
         final RelationalModelExtensionAssistant assistant = getExtensionAssistant();
         if( assistant != null ) {
         	try {
-				assistant.setPropertyValue(procedure, 
-						PROCEDURE_EXT_PROPERTIES.NON_PREPARED, 
-						Boolean.toString(procedureRef.isNonPrepared()));
-				assistant.setPropertyValue(procedure, 
-						PROCEDURE_EXT_PROPERTIES.NATIVE_QUERY, 
-						procedureRef.getNativeQuery() );
+        		if( !isVirtual )  {
+					assistant.setPropertyValue(procedure, 
+							PROCEDURE_EXT_PROPERTIES.NON_PREPARED, 
+							Boolean.toString(procedureRef.isNonPrepared()));
+					assistant.setPropertyValue(procedure, 
+							PROCEDURE_EXT_PROPERTIES.NATIVE_QUERY, 
+							procedureRef.getNativeQuery() );
+        		}
 				if( procedureRef.isFunction() ) {
 					assistant.setPropertyValue(procedure, 
 							PROCEDURE_EXT_PROPERTIES.DETERMINISTIC, 

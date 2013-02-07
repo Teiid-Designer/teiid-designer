@@ -50,7 +50,7 @@ public interface UiConstants {
      * 
      * @since 4.0
      */
-	interface Images {
+	interface Images extends org.teiid.designer.ui.common.UiConstants.Images{
 		class PC {
 			private static final String FULL = "icons/full/"; //$NON-NLS-1$
 			//            private static final String CVIEW = FULL + "cview20/"; //$NON-NLS-1$
@@ -78,7 +78,7 @@ public interface UiConstants {
 		String SAVE_DISABLED = PC.DVIEW16 + "save.gif"; //$NON-NLS-1$
 
 		String IMPORT_TEIID_METADATA = PC.WIZBAN + "importTeiidMetadataWiz.gif"; //$NON-NLS-1$
-		String COLUMN_ICON = PC.OBJ16 + "Column.gif"; //$NON-NLS-1$
+		String COLUMN_ICON = OBJ16 + "column.png"; //$NON-NLS-1$
 
 		String CRITERIA_BUILDER = PC.CVIEW16 + "launch_criteria_builder.gif"; //$NON-NLS-1$
 		String EXPRESSION_BUILDER = PC.CVIEW16

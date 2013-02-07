@@ -24,11 +24,15 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.metamodels.core.ModelType;
-import org.teiid.designer.relational.Messages;
+import org.teiid.designer.metamodels.relational.BaseTable;
+import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.relational.RelationalPlugin;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalModelFactory;
+import org.teiid.designer.relational.model.RelationalProcedure;
 import org.teiid.designer.relational.model.RelationalReference;
+import org.teiid.designer.relational.model.RelationalTable;
+import org.teiid.designer.transformation.Messages;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.TransformationHelper;
 
@@ -40,6 +44,9 @@ import org.teiid.designer.transformation.util.TransformationHelper;
  */
 public class RelationalViewModelFactory extends RelationalModelFactory {
 
+    /**
+     * 
+     */
     public RelationalViewModelFactory() {
         super();
     }
@@ -47,10 +54,10 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
     /**
      * Creates a relational view model given a <code>IPath</code> location and a model name
      * 
-     * @param location
-     * @param modelName
-     * @return
-     * @throws ModelWorkspaceException
+     * @param location the workspace location of the new model
+     * @param modelName the model name
+     * @return the new model resource
+     * @throws ModelWorkspaceException error thrown when problem creating new model
      */
     public ModelResource createRelationalViewModel( IPath location, String modelName) throws ModelWorkspaceException {
         ModelWorkspaceItem mwItem = null;
@@ -75,10 +82,10 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
     /**
      * Creates a relational view model given a <code>IContainer</code> location (Project or Folder) and a model name
      * 
-     * @param container
-     * @param modelName
-     * @return
-     * @throws ModelWorkspaceException
+     * @param container the workspace container of the new model
+     * @param modelName  the model name
+     * @return the new model resource
+     * @throws ModelWorkspaceException  error thrown when problem creating new model
      */
     public ModelResource createRelationalViewModel( IContainer container, String modelName) throws ModelWorkspaceException {
         IProject project = container.getProject();
@@ -123,17 +130,16 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
             }
                 break;
             case TYPES.SCHEMA: {
-                // NOOP. Shouldn't get here
+            	throw new UnsupportedOperationException(Messages.virtualSchemaUnsupportedMessage);
             }
-                break;
             case TYPES.CATALOG: {
-                // NOOP. Shouldn't get here
+            	throw new UnsupportedOperationException(Messages.virtualCatalogUnsupportedMessage);
             }
-                break;
             case TYPES.TABLE: {
                 // Create the Table
                 EObject baseTable = createBaseTable(obj, modelResource);
                 modelResource.getEmfResource().getContents().add(baseTable);
+                applyTableExtensionProperties((RelationalTable)obj, (BaseTable)baseTable, false);
 
                 // Set the transformation SQL
                 RelationalViewTable viewTable = (RelationalViewTable)obj;
@@ -141,15 +147,8 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
             }
                 break;
             case TYPES.VIEW: {
-                // Create the View
-                EObject view = createView(obj, modelResource);
-                modelResource.getEmfResource().getContents().add(view);
-
-                // Set the transformation SQL
-                RelationalViewView viewView = (RelationalViewView)obj;
-                TransformationHelper.createTransformation(view, viewView.getTransformationSQL());
+                throw new UnsupportedOperationException(Messages.virtualViewUnsupportedMessage);
             }
-                break;
             case TYPES.PROCEDURE: {
                 EObject procedure = createProcedure(obj, modelResource);
                 modelResource.getEmfResource().getContents().add(procedure);
@@ -157,17 +156,19 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
                 // Set the transformation SQL
                 RelationalViewProcedure viewProc = (RelationalViewProcedure)obj;
                 TransformationHelper.createTransformation(procedure, viewProc.getTransformationSQL());
+                
+                applyProcedureExtensionProperties((RelationalProcedure)obj,(Procedure) procedure, true);
             }
                 break;
             case TYPES.INDEX: {
-                // NOOP. Shouldn't get here
+                super.buildObject(obj, modelResource, progressMonitor);
             }
                 break;
 
             case TYPES.UNDEFINED:
             default: {
                 RelationalPlugin.Util.log(IStatus.WARNING,
-                                          NLS.bind(Messages.relationalModelFactory_unknown_object_type_0_cannot_be_processed,
+                                          NLS.bind(org.teiid.designer.relational.Messages.relationalModelFactory_unknown_object_type_0_cannot_be_processed,
                                                    obj.getName()));
             }
                 break;

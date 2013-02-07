@@ -60,6 +60,8 @@ public class Messages extends NLS {
     public static String createRelationalUserDefinedFunctionInitialMessage;
     public static String createRelationalSourceFunctionTitle;
     public static String createRelationalUserDefinedFunctionTitle;
+    public static String createRelationalSourceFunctionHelpText;
+    public static String createRelationalUserDefinedFunctionHelpText;
     
     public static String createRelationalIndexActionText;
     public static String createRelationalIndexTitle;

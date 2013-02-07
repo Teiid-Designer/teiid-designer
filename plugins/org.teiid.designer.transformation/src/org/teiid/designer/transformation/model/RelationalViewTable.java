@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.transformation.model;
 
+import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.relational.model.RelationalTable;
 
 /**
@@ -20,6 +21,7 @@ public class RelationalViewTable extends RelationalTable {
 
     public RelationalViewTable() {
         super();
+        setModelType(ModelType.VIRTUAL);
     }
     /**
      * @param name

@@ -60,7 +60,7 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
     
     Button selectRB, selectJoinRB, unionRB, flatFileSourceRB;
     Button xmlFileLocalSourceRB, xmlFileUrlSourceRB;
-    Button insertDefaultProcRB, updateDefaultProcRB, deleteDefaultProcRB, 
+    Button simpleDefaultProcRB, insertDefaultProcRB, updateDefaultProcRB, deleteDefaultProcRB, 
     	soapCreateProcRB, soapExtractProcRB, restProcedureRB;
 
     //=============================================================
@@ -274,11 +274,24 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
         thePanel.setLayoutData(panelGD);
 
         // Default Insert Procedure SQL
+        this.simpleDefaultProcRB = WidgetFactory.createRadioButton(thePanel,
+                                                                   Messages.sqlTemplateDialogSimpleDefaultProcLabel,
+                                                                   SWT.NONE,
+                                                                   1,
+                                                                   true);
+        this.simpleDefaultProcRB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                setSQLTemplateArea();
+            }
+        });
+        
+        // Default Insert Procedure SQL
         this.insertDefaultProcRB = WidgetFactory.createRadioButton(thePanel,
                                                                    Messages.sqlTemplateDialogInsDefaultProcLabel,
                                                                    SWT.NONE,
                                                                    1,
-                                                                   true);
+                                                                   false);
         this.insertDefaultProcRB.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
@@ -377,7 +390,9 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
 
         // Procedure Template buttons
         if (this.tabFolder.getSelection()[0] == procedureTemplatesTab) {
-            if (this.insertDefaultProcRB.getSelection()) {
+        	if (this.simpleDefaultProcRB.getSelection()) {
+                sqlTextViewer.getDocument().set(SQLTemplates.PROC_SIMPLE);
+            } else if (this.insertDefaultProcRB.getSelection()) {
                 sqlTextViewer.getDocument().set(SQLTemplates.PROC_INSERT_DEFAULT);
             } else if (this.updateDefaultProcRB.getSelection()) {
                 sqlTextViewer.getDocument().set(SQLTemplates.PROC_UPDATE_DEFAULT);

@@ -44,6 +44,9 @@ public class SQLTemplates {
     // ----------------------------------------
     // Templates valid for Procedure Targets
     // ----------------------------------------
+    public static String PROC_SIMPLE = "CREATE VIRTUAL PROCEDURE\nBEGIN\n" //$NON-NLS-1$
+            + "\tSELECT * FROM [TABLEA];\nEND"; //$NON-NLS-1$
+    
     public static String PROC_INSERT_DEFAULT = "FOR EACH ROW BEGIN ATOMIC " //$NON-NLS-1$
                                                + "INSERT INTO [TABLEA] ([COL1], [COL2], [COL3]) VALUES (NEW.[COL1], NEW.[COL2], NEW.[COL3]); END"; //$NON-NLS-1$
 

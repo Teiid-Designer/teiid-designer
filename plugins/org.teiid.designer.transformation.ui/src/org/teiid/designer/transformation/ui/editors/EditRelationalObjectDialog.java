@@ -14,30 +14,32 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.ui.edit.IDialogStatusListener;
-import org.teiid.designer.transformation.model.RelationalViewProcedure;
+import org.teiid.designer.relational.ui.edit.RelationalEditorPanel;
 import org.teiid.designer.transformation.ui.Messages;
-
 
 /**
  * @since 8.0
  */
-public class EditViewProcedureDialog extends TitleAreaDialog implements IDialogStatusListener {
+public class EditRelationalObjectDialog extends TitleAreaDialog implements IDialogStatusListener {
 
-    private final String TITLE = Messages.createRelationalViewProcedureTitle;
+    private final String TITLE = Messages.createRelationalViewTableTitle;
     
     private RelationalReference relationalObject;
     private IFile modelFile;
 
-    /*
-     * Constructor
+    private RelationalEditorPanel editorPanel;
+    
+    /**
+     * @param parentShell the parent shell
+     * @param relationalObject the relation object to edit
+     * @param file the target relational model file
      */
-    public EditViewProcedureDialog(Shell parentShell, RelationalReference relationalObject, IFile file) {
+    public EditRelationalObjectDialog(Shell parentShell, RelationalReference relationalObject, IFile file) {
         super(parentShell);
         this.setTitle(TITLE);
         this.relationalObject = relationalObject;
@@ -48,7 +50,7 @@ public class EditViewProcedureDialog extends TitleAreaDialog implements IDialogS
     @Override
     protected void configureShell( Shell shell ) {
         super.configureShell(shell);
-        shell.setText(TITLE);
+        shell.setText(RelationalObjectEditorFactory.getDialogTitle(relationalObject));
     }
     
     /* (non-Javadoc)
@@ -59,30 +61,42 @@ public class EditViewProcedureDialog extends TitleAreaDialog implements IDialogS
         Composite mainPanel = (Composite)super.createDialogArea(parent);
         ((GridLayout)mainPanel.getLayout()).marginHeight=10;
         ((GridLayout)mainPanel.getLayout()).marginWidth=10;
-        this.setTitle(TITLE);
-        this.setMessage(Messages.createRelationalViewProcedureInitialMessage);
+        this.setTitle(RelationalObjectEditorFactory.getDialogTitle(relationalObject));
+        this.setMessage(RelationalObjectEditorFactory.getInitialMessage(relationalObject));
         
-        //new ViewProcedureEditorPanel(parent, (RelationalViewProcedure)relationalObject, modelFile, this);
-
+        editorPanel = RelationalObjectEditorFactory.getEditorPanel(this, mainPanel, relationalObject, modelFile);
+        
         return mainPanel;
     }
     
     @Override
 	public void notifyStatusChanged(IStatus status) {
-        Button okButton = getButton(IDialogConstants.OK_ID);
     	if( status.isOK() ) {
     		setErrorMessage(null);
     		setMessage(Messages.validationOkCreateObject);
-            if (okButton != null) okButton.setEnabled(true);
     	} else {
     		if( status.getSeverity() == IStatus.WARNING ) {
     			setErrorMessage(null);
     			setMessage(status.getMessage(), IMessageProvider.WARNING);
-                if (okButton != null) okButton.setEnabled(true);
     		} else {
     			setErrorMessage(status.getMessage());
-                if (okButton != null) okButton.setEnabled(false);
     		}
     	}
+    	
+    	setOkEnabled(editorPanel.canFinish());
+    }
+    
+    /* (non-Javadoc)
+	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#createContents(org.eclipse.swt.widgets.Composite)
+	 */
+	@Override
+	protected Control createContents(Composite parent) {
+		Control control = super.createContents(parent);
+		setOkEnabled(editorPanel.canFinish());
+		return control;
+	}
+
+	private void setOkEnabled( boolean enabled ) {
+        getButton(IDialogConstants.OK_ID).setEnabled(enabled);
     }
 }

@@ -33,8 +33,8 @@ import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.editors.EditRelationalObjectDialog;
+import org.teiid.designer.transformation.model.RelationalViewIndex;
 import org.teiid.designer.transformation.model.RelationalViewModelFactory;
-import org.teiid.designer.transformation.model.RelationalViewTable;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.actions.INewChildAction;
@@ -46,29 +46,28 @@ import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-
 /**
- * @since 8.0
+ *
  */
-public class CreateViewTableAction extends Action implements INewChildAction, INewSiblingAction {
+public class CreateViewIndexAction  extends Action implements INewChildAction, INewSiblingAction {
 	private IFile selectedModel;
     /**
      * 
      */
-    public static final String TITLE = Messages.createRelationalViewTableActionText;
+    public static final String TITLE = Messages.createRelationalViewIndexActionText;
 	 
 	private Collection<String> datatypes;
     private Properties designerProperties;
     
-    private EObject newViewTable;
-    private RelationalViewTable relationalViewTable;
+    private EObject newViewIndex;
+    private RelationalViewIndex relationalViewIndex;
 	 
 	/**
 	 * 
 	 */
-	public CreateViewTableAction() {
+	public CreateViewIndexAction() {
 		super(TITLE);
-		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor( UiConstants.Images.NEW_VIRTUAL_TABLE_ICON));
+		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor( UiConstants.Images.NEW_INDEX_ICON));
 		
 		IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
 		Set<String> unsortedDatatypes = service.getAllDataTypeNames();
@@ -82,9 +81,9 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
 	}
 	
     /**
-     * @param properties the initial designer properties
+     * @param properties the initial properties
      */
-    public CreateViewTableAction( Properties properties ) {
+    public CreateViewIndexAction( Properties properties ) {
         this();
         this.designerProperties = properties;
     }
@@ -131,7 +130,7 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
     
 	/**
 	 * @param selection the selection
-	 * @return if selection is applicable for this action
+	 * @return if action is applicable to selection
 	 */
 	public boolean isApplicable(ISelection selection) {
 		boolean result = false;
@@ -160,29 +159,28 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
 	        ModelResource mr = ModelUtilities.getModelResource(selectedModel);
 	        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
 	        
-            relationalViewTable = new RelationalViewTable();
-            relationalViewTable.setSupportsUpdate(true);
+            relationalViewIndex = new RelationalViewIndex();
 	        
 	        // Hand the table off to the generic edit dialog
-            //EditViewTableDialog dialog = new EditViewTableDialog(shell, relationalViewTable, selectedModel);
-            EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, relationalViewTable, selectedModel);
+            //EditViewProcedureDialog dialog = new EditViewProcedureDialog(shell, relationalViewIndex, selectedModel);
+            EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, relationalViewIndex, selectedModel);
 
 	        dialog.open();
 	        
 	        if (dialog.getReturnCode() == Window.OK) {
-	        	this.newViewTable = createViewTableInTxn(mr, relationalViewTable);
+	        	this.newViewIndex = createViewIndexInTxn(mr, relationalViewIndex);
 	        } else {
-	        	this.relationalViewTable = null;
-	        	this.newViewTable = null;
+	        	this.newViewIndex = null;
+	        	this.relationalViewIndex = null;
 	        }
 		}
 		
 	}
 
-    private EObject createViewTableInTxn( ModelResource modelResource, RelationalViewTable viewTable ) {
+    private EObject createViewIndexInTxn( ModelResource modelResource, RelationalViewIndex viewIndex ) {
     	EObject newTable = null;
     	
-        boolean requiredStart = ModelerCore.startTxn(true, true, Messages.createRelationalViewTableTitle, this);
+        boolean requiredStart = ModelerCore.startTxn(true, true, Messages.createRelationalViewIndexTitle, this);
         boolean succeeded = false;
         try {
             ModelEditor editor = ModelEditorManager.getModelEditorForFile((IFile)modelResource.getCorrespondingResource(), true);
@@ -192,10 +190,9 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
                 RelationalViewModelFactory factory = new RelationalViewModelFactory();
                 
                 RelationalModel relModel = new RelationalModel("dummy"); //$NON-NLS-1$
-                relModel.addChild(viewTable);
+                relModel.addChild(viewIndex);
                 
                 factory.build(modelResource, relModel, new NullProgressMonitor());
-    	        //factory.buildObject(table, modelResource, new NullProgressMonitor());
 
                 if (!isDirty && editor.isDirty()) {
                     editor.doSave(new NullProgressMonitor());
@@ -204,7 +201,7 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
                 
                 for( Object child : modelResource.getEObjects() ) {
                 	EObject eObj = (EObject)child;
-                	if( ModelerCore.getModelEditor().getName(eObj).equalsIgnoreCase(this.relationalViewTable.getName()) ) {
+                	if( ModelerCore.getModelEditor().getName(eObj).equalsIgnoreCase(this.relationalViewIndex.getName()) ) {
                 		newTable = eObj;
                 		break;
                 	}
@@ -212,9 +209,9 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
             }
         } catch (Exception e) {
             MessageDialog.openError(Display.getCurrent().getActiveShell(),
-                                    Messages.createRelationalViewTableExceptionMessage,
+                                    Messages.createRelationalViewIndexExceptionMessage,
                                     e.getMessage());
-            IStatus status = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, Messages.createRelationalViewTableExceptionMessage, e);
+            IStatus status = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, Messages.createRelationalViewIndexExceptionMessage, e);
             UiConstants.Util.log(status);
 
             return null;
@@ -233,9 +230,9 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
     }
     
     /**
-     * @return the new view table EObject
+     * @return the newly created Index EObject
      */
-    public EObject getNewViewTable() {
-    	return this.newViewTable;
+    public EObject getNewViewIndex() {
+    	return this.newViewIndex;
     }
 }

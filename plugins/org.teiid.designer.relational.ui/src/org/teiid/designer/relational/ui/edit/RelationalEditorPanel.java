@@ -22,6 +22,8 @@ public abstract class RelationalEditorPanel {
 	IStatus currentStatus;
 	
 	IDialogStatusListener statusListener;
+	
+	boolean canFinish;
 
 	/**
 	 * @param parent the parent panel
@@ -66,5 +68,20 @@ public abstract class RelationalEditorPanel {
 	 */
 	public final IFile getModelFile() {
 		return this.modelFile;
+	}
+	
+	/**
+	 * @param value if dialog can finish or not
+	 */
+	public final void setCanFinish(boolean value) {
+		this.canFinish = value;
+	}
+	
+
+	/**
+	 * @return if dialog can finish
+	 */
+	public final boolean canFinish() {
+		return this.canFinish;
 	}
 }

@@ -33,22 +33,58 @@ public class Messages extends NLS {
     public static String SetAsRootPath;
     public static String InvalidPathWarning;
     
-    public static String createRelationalViewActionText;
-    public static String createRelationalViewTitle;
-    public static String createRelationalViewInitialMessage;
-    public static String createRelationalViewExceptionMessage;
-    public static String createRelationalViewHelpText;
+    public static String createRelationalViewTableActionText;
+    public static String createRelationalViewTableTitle;
+    public static String createRelationalViewTableInitialMessage;
+    public static String createRelationalViewTableExceptionMessage;
+    public static String createRelationalViewTableHelpText;
+    
+    public static String userDefinedFunctionLabel;
+    public static String selectProcedureTypeDialogSubTitle;
+    public static String selectProcedureTypeDialogTitle;
+    public static String createRelationalViewProcedureDescription;
+    public static String createRelationalViewUserDefinedFunctionDescription;
     
     public static String createRelationalViewProcedureActionText;
     public static String createRelationalViewProcedureTitle;
     public static String createRelationalViewProcedureInitialMessage;
     public static String createRelationalViewProcedureExceptionMessage;
     public static String createRelationalViewProcedureHelpText;
+    
+    public static String createRelationalViewIndexActionText;
+    public static String createRelationalViewIndexTitle;
+    public static String createRelationalViewIndexInitialMessage;
+    public static String createRelationalViewIndexExceptionMessage;
+    public static String createRelationalViewIndexHelpText;
+    
+    public static String createRelationalViewUserDefinedFunctionInitialMessage;
+    public static String createRelationalViewUserDefinedFunctionTitle;
+    public static String createRelationalViewUserDefinedFunctionHelpText;
 
     public static String sqlLabel;
+    public static String transformationSqlLabel;
     public static String sqlDescriptionLabel;
     public static String sqlTemplateLabel;
     public static String sqlGroupLabel;
+    
+    public static String fkNameLabel;
+    public static String autoUpdateLabel;
+    public static String nullableLabel;
+    public static String uniqueLabel;
+    public static String filterConditionLabel;
+    public static String referencedColumnsLabel;
+    public static String indexesLabel;
+    public static String indexLabel;
+    public static String tableSelectionTitle;
+    public static String selectExistingTableForIndexInitialMessage;
+    public static String noTableSelectedMessage;
+    
+    public static String materializedLabel;
+    public static String tableReferenceLabel;
+    public static String systemTableLabel;
+    public static String foreignKeysLabel;
+    public static String primaryKeyLabel;
+    public static String uniqueConstraintLabel;
 
     public static String nameLabel;
     public static String propertiesLabel;
@@ -56,7 +92,7 @@ public class Messages extends NLS {
     public static String deleteLabel;
     public static String moveUpLabel;
     public static String moveDownLabel;
-
+    public static String includeLabel;
     public static String description;
     public static String modelFileLabel;
     public static String nameInSourceLabel;
@@ -66,11 +102,50 @@ public class Messages extends NLS {
     public static String columnNameLabel;
     public static String dataTypeLabel;
     public static String lengthLabel;
+    public static String procedureLabel;
     public static String parametersLabel;
     public static String parameterNameLabel;
-    public static String cardinalityErrorTitle;
-    public static String cardinalityMustBeAnInteger;
-    public static String validationOkCreateObject;
+	public static String isFunctionLabel;
+	public static String directionLabel;
+	public static String updateCountLabel;
+	public static String nonPreparedLabel;
+	public static String deterministicLabel;
+	public static String returnsNullOnNullLabel;
+	public static String variableArgumentsLabel;
+	public static String aggregateLabel;
+	public static String allowsDistinctLabel;
+	public static String allowsOrderByLabel;
+	public static String analyticLabel;
+	public static String decomposableLabel;
+	public static String usesDistinctRowsLabel;
+	public static String functionPropertiesLabel;
+	public static String aggregatePropertiesLabel;
+	public static String resultSetLabel;
+	public static String javaClassLabel;
+	public static String javaMethodLabel;
+	public static String udfJarPathLabel;
+	public static String functionCategoryLabel;
+	public static String selectSQLTemplateLabel;
+	public static String sqlDefinitionLabel;
+	
+	public static String validationOkCreateObject;
+	public static String selectColumnsTitle;
+	public static String selectColumnsSubTitle;
+	public static String selectColumnsMessage;
+	public static String createForeignKeyTitle;
+	public static String editForeignKeyTitle;
+	public static String foreignKeyMultiplicity;
+	public static String uniqueKeyMultiplicity;
+	public static String selectPrimaryKeyOrUniqueConstraint;
+	public static String selectColumnReferencesToFK;
+	public static String newForeignKeyMessage;
+	public static String cardinalityErrorTitle;
+	public static String cardinalityMustBeAnInteger;
+	public static String unsupportedObjectType;
+	public static String selectColumnReferencesForIndex;
+	public static String newIndexMessage;
+	public static String createIndexTitle;
+	public static String editIndexTitle;
 
     public static String sqlTemplateDialogTitle;
     public static String sqlTemplateDialogTitleMessage;
@@ -81,6 +156,7 @@ public class Messages extends NLS {
     public static String sqlTemplateDialogFlatFileSrcLabel;
     public static String sqlTemplateDialogXmlFileLocalSrcLabel;
     public static String sqlTemplateDialogXmlFileUrlSrcLabel;
+    public static String sqlTemplateDialogSimpleDefaultProcLabel;
     public static String sqlTemplateDialogInsDefaultProcLabel;
     public static String sqlTemplateDialogUpdDefaultProcLabel;
     public static String sqlTemplateDialogDelDefaultProcLabel;

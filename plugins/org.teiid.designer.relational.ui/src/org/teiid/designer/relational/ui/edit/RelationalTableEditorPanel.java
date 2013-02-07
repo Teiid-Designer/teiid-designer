@@ -157,7 +157,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	    	helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 	    	helpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 	    	((GridData)helpText.getLayoutData()).horizontalSpan = 1;
-	    	((GridData)helpText.getLayoutData()).heightHint = 40;
+	    	((GridData)helpText.getLayoutData()).heightHint = 20;
 	    	((GridData)helpText.getLayoutData()).widthHint = 360;
 		}
 		
@@ -1484,6 +1484,8 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	@Override
 	protected void validate() {
 		this.table.validate();
+		
+		setCanFinish(this.table.nameIsValid());
 		
 		IStatus currentStatus = this.table.getStatus();
 		if( currentStatus.isOK() ) {

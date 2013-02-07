@@ -226,12 +226,24 @@ public class RelationalReference implements RelationalConstants {
     protected void handleInfoChanged() {
     	validate();
     }
+    
+    public final boolean nameIsValid() {
+		if( this.getName() == null || this.getName().length() == 0 ) {
+			return false;
+		}
+		// Validate non-null string
+		String errorMessage = getNameValidator().checkValidName(this.getName());
+		if( errorMessage != null && !errorMessage.isEmpty() ) {
+			return false;
+		}
+		return true;
+    }
 
     /**
      * 
      */
     public void validate() {
-		if( this.getName() == null || this.getName().trim().length() == 0 ) {
+		if( this.getName() == null || this.getName().length() == 0 ) {
 			setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, 
 						NLS.bind(Messages.validate_error_nameCannotBeNullOrEmpty, getDisplayName())));
 			return;
