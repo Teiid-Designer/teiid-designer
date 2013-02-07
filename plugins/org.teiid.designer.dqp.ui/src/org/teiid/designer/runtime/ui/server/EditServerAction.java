@@ -9,7 +9,6 @@ package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.TeiidServerManager;
@@ -76,17 +75,7 @@ public final class EditServerAction extends BaseSelectionListenerAction {
     	// if serverBeingEdited == NULL need to query user to select one in order to continue
     	
     	if( this.serverBeingEdited == null) {
-    	    if (teiidServerManager.getServers().size() == 1) {
-    	        this.serverBeingEdited = teiidServerManager.getServers().iterator().next();
-    	    }
-    	    else if (teiidServerManager.getServers().size() > 1) {
-    	        ServerSelectionDialog dialog = new ServerSelectionDialog(this.shell);
-    	        dialog.open();
-    		
-    	        if (dialog.getReturnCode() == Window.OK) {
-    	            this.serverBeingEdited = dialog.getServer();
-    	        }
-    	    }
+    	    this.serverBeingEdited = RuntimeAssistant.selectServer(shell);
     	}
     	
     	if( this.serverBeingEdited == null ) return;

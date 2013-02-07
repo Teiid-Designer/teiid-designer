@@ -10,6 +10,7 @@ package org.teiid.designer.advisor.ui;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages  extends NLS {
+    
     public static String ActionLibrary;
     public static String ActionSets;
     
@@ -150,6 +151,8 @@ public class Messages  extends NLS {
     public static String SelectActionsGroup;
     public static String SelectCategory;
     public static String Server;
+    public static String SetDefaultTeiidServer;
+    public static String SetDefaultTeiidServer_Short;
     public static String SourceModeling;
     
     public static String TeiidActionsManager;

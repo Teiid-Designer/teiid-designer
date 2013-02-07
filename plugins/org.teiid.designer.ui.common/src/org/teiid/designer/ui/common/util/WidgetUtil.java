@@ -11,13 +11,13 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
@@ -811,7 +811,7 @@ public final class WidgetUtil implements
      * @since 4.0
      */
     public static void setComboItems(final Combo combo,
-                                     final List items,
+                                     final Collection items,
                                      final ILabelProvider provider,
                                      final boolean sort) {
         CoreArgCheck.isNotNull(combo);
@@ -822,7 +822,7 @@ public final class WidgetUtil implements
      * @since 4.1
      */
     public static void setComboItems(final Combo combo,
-                                     final List items,
+                                     final Collection items,
                                      final ILabelProvider provider,
                                      final boolean sort,
                                      final String selection) {

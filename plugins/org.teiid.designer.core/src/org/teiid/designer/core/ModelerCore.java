@@ -2139,7 +2139,21 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         if (defaultTeiidServer != null && defaultTeiidServer.equals(defaultServer))
             return;
         
+        ITeiidServerVersion oldServerVersion = defaultTeiidServer != null ? defaultTeiidServer.getServerVersion() : null;
+        ITeiidServerVersion newServerVersion = defaultServer.getServerVersion();
+        
         defaultTeiidServer = defaultServer;
+        
+        /* 
+         * Compare the versions of the server.
+         * 
+         * Only if the server version has changed should the model editors be closed
+         * and server version listeners notified.
+         */
+        if (oldServerVersion != null && oldServerVersion.equals(newServerVersion))
+            return;
+        
+        // Server version change has occurred so close all editors and notify server version listeners
         
         for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
             for (IWorkbenchPage page : window.getPages()) {

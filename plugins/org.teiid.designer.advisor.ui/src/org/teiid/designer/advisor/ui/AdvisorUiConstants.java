@@ -8,7 +8,6 @@
 package org.teiid.designer.advisor.ui;
 
 import java.util.ResourceBundle;
-
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
 
@@ -186,6 +185,7 @@ public interface AdvisorUiConstants {
 		String NEW_TEIID_SERVER = "org.teiid.designer.runtime.newTeiidServer"; //$NON-NLS-1$
 		String EDIT_TEIID_SERVER = "org.teiid.designer.runtime.editTeiidServer"; //$NON-NLS-1$
 		String CREATE_DATA_SOURCE = "org.teiid.designer.runtime.createDataSource"; //$NON-NLS-1$
+		String SET_DEFAULT_TEIID_SERVER = "org.teiid.designer.runtime.setDefaultTeiidServer";  //$NON-NLS-1$
 		
 	}
 	
@@ -249,7 +249,7 @@ public interface AdvisorUiConstants {
 		String NEW_TEIID_SERVER = "Create new Teiid server"; //$NON-NLS-1$
 		String EDIT_TEIID_SERVER = "Edit the properties of an existing Teiid server"; //$NON-NLS-1$
 		String CREATE_DATA_SOURCE = "Create a data source (i.e. -ds.xml) on your Teiid server from source models or source connections in your workspace"; //$NON-NLS-1$
-		
+		String SET_DEFAULT_TEIID_SERVER = "Select a teiid server as the default server, used to select the correct runtime client and for previewing models"; //$NON-NLS-1$
 	}
 	
 	interface COMMAND_LABELS {
@@ -306,6 +306,7 @@ public interface AdvisorUiConstants {
 		String NEW_TEIID_SERVER = Messages.NewTeiidServer;
 		String EDIT_TEIID_SERVER = Messages.EditTeiidServer;
 		String CREATE_DATA_SOURCE = Messages.CreateDataSource;
+		String SET_DEFAULT_TEIID_SERVER = Messages.SetDefaultTeiidServer;
 	}
 	
 	interface COMMAND_LABELS_SHORT {
@@ -361,6 +362,7 @@ public interface AdvisorUiConstants {
 		String NEW_TEIID_SERVER = Messages.NewTeiidServer_Short;
 		String EDIT_TEIID_SERVER = Messages.EditTeiidServer_Short;
 		String CREATE_DATA_SOURCE = Messages.CreateDataSource;
+		String SET_DEFAULT_TEIID_SERVER = Messages.SetDefaultTeiidServer_Short;
 	}
 
 	interface MODEL_IDS {
@@ -435,6 +437,7 @@ public interface AdvisorUiConstants {
 	    
 	    String NEW_TEIID_SERVER = CTOOL16 + "new-teiid-server.png"; //$NON-NLS-1$
 	    String EDIT_TEIID_SERVER = CTOOL16 + "edit-teiid-server.png"; //$NON-NLS-1$
+	    String SET_DEFAULT_TEIID_SERVER = CTOOL16 + "default_server.gif"; //$NON-NLS-1$
 	    
 	    String DATA_SOURCE_EXPLORER_VIEW = CTOOL16 + "data-source-explorer-view.gif";  //$NON-NLS-1$
 	    String NEW_CONNECTION_PROFILE = CTOOL16 + "new-connection-profile.gif";  //$NON-NLS-1$
