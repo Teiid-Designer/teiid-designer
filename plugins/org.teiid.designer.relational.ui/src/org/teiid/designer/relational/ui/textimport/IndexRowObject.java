@@ -53,7 +53,7 @@ public class IndexRowObject extends AbstractRowObject {
         String rowString = getDataString();
         valid = false;
         // Extract the index name
-        if (rowString != null && rowString.length() > 8) {
+        if (rowString != null && rowString.length() > 0) {
             try {
                 String segment = null;
                 // NAME

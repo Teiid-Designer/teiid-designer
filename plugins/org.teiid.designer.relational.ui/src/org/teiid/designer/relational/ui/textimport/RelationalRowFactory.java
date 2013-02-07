@@ -69,11 +69,11 @@ public class RelationalRowFactory {
 
         switch (objectType) {
             case CATALOG: {
-                newRowObject = new CatalogRowObject(restOfRow);
+                //newRowObject = new CatalogRowObject(restOfRow);
             }
                 break;
             case SCHEMA: {
-                newRowObject = new SchemaRowObject(restOfRow);
+                //newRowObject = new SchemaRowObject(restOfRow);
             }
                 break;
             case BASE_TABLE: {

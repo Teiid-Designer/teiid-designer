@@ -36,9 +36,13 @@ public class CatalogRowObject extends AbstractRowObject {
     		String seg = null;
     		String restOfRow = null;
     		boolean lastSegment = false;
-	        if( row != null && row.length() > 8 ) {
+	        if( row != null && row.length() > 0 ) {
 	        	int commaIndex = row.indexOf(COMMA); // Name should not have double quotes
-	        	seg = row.substring(0, commaIndex).trim();
+	        	if( commaIndex > -1 ) {
+	        		seg = row.substring(0, commaIndex).trim();
+	        	} else {
+	        		seg = row.trim();
+	        	}
 
 	        	segments.add(seg);
 	        	
@@ -102,7 +106,7 @@ public class CatalogRowObject extends AbstractRowObject {
     public void parseRow() {
     	String rowString = getDataString();
     	try {
-	        if( rowString != null && rowString.length() > 8 ) {
+	        if( rowString != null && rowString.length() > 0 ) {
 	            List segments = parseIntoSegments();
 	        	int nSegs = segments.size();
 	            if( nSegs > 0 ) {

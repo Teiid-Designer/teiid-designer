@@ -37,8 +37,11 @@ public class SchemaRowObject extends AbstractRowObject {
     		boolean lastSegment = false;
 	        if( row != null && row.length() > 0 ) {
 	        	int commaIndex = row.indexOf(COMMA); // Name should not have double quotes
-	        	seg = row.substring(0, commaIndex).trim();
-	        	segments.add(seg);
+	        	if( commaIndex > -1 ) {
+	        		seg = row.substring(0, commaIndex).trim();
+	        	} else {
+	        		seg = row.trim();
+	        	}
 	        	
 	        	// Description is Optional
 	        	if( commaIndex == -1 )
@@ -99,7 +102,7 @@ public class SchemaRowObject extends AbstractRowObject {
     public void parseRow() {
     	String rowString = getDataString();
     	try {
-	        if( rowString != null && rowString.length() > 8 ) {
+	        if( rowString != null && rowString.length() > 0 ) {
 	            List segments = parseIntoSegments();
 	        	int nSegs = segments.size();
 	            if( nSegs > 0 ) {
