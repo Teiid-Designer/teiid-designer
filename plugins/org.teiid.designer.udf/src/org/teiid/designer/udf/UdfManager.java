@@ -46,6 +46,7 @@ import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.relational.util.PushdownFunctionData;
 import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
@@ -81,6 +82,11 @@ public final class UdfManager implements IResourceChangeListener {
 
     private ITeiidServerVersionListener teiidServerVersionListener = new ITeiidServerVersionListener() {
         
+        @Override
+        public void serverChanged(ITeiidServer server) {
+            // Nothing to do
+        }
+
         @Override
         public void versionChanged(ITeiidServerVersion version) {
             systemFunctionLibrary = null;

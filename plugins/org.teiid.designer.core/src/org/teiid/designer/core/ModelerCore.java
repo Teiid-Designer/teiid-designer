@@ -2133,17 +2133,20 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @param defaultServer
      */
     public static void setDefaultServer(ITeiidServer defaultServer) {
-        if (defaultServer == null)
-            return;
-        
         if (defaultTeiidServer != null && defaultTeiidServer.equals(defaultServer))
             return;
-        
+
         ITeiidServerVersion oldServerVersion = defaultTeiidServer != null ? defaultTeiidServer.getServerVersion() : null;
-        ITeiidServerVersion newServerVersion = defaultServer.getServerVersion();
-        
+        ITeiidServerVersion newServerVersion = defaultServer != null ? defaultServer.getServerVersion() : null;
+
         defaultTeiidServer = defaultServer;
-        
+
+        if (teiidServerVersionListeners != null) {
+            for (ITeiidServerVersionListener listener : teiidServerVersionListeners) {
+                listener.serverChanged(defaultServer);
+            }
+        }
+
         /* 
          * Compare the versions of the server.
          * 
@@ -2152,20 +2155,19 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
          */
         if (oldServerVersion != null && oldServerVersion.equals(newServerVersion))
             return;
-        
+
         // Server version change has occurred so close all editors and notify server version listeners
-        
         for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
             for (IWorkbenchPage page : window.getPages()) {
                 page.closeAllEditors(true);
             }
         }
-        
+
         if (teiidServerVersionListeners == null)
             return;
-        
+
         for (ITeiidServerVersionListener listener : teiidServerVersionListeners) {
-            listener.versionChanged(defaultServer.getServerVersion());
+            listener.versionChanged(getTeiidServerVersion());
         }
     }
     

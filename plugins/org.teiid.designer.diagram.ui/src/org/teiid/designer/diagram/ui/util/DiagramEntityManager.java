@@ -24,6 +24,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.diagram.ui.DiagramUiConstants;
 import org.teiid.designer.metamodels.diagram.AbstractDiagramEntity;
 import org.teiid.designer.metamodels.diagram.Diagram;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.ui.UiPlugin;
@@ -62,6 +63,11 @@ public class DiagramEntityManager  {
         }
 
         teiidServerVersionListener = new ITeiidServerVersionListener() {
+
+            @Override
+            public void serverChanged(ITeiidServer server) {
+                // Nothing to do
+            }
 
             @Override
             public void versionChanged(ITeiidServerVersion version) {

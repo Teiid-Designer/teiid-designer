@@ -38,6 +38,8 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
@@ -57,9 +59,11 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IActionDelegate;
@@ -69,10 +73,17 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.OpenFileAction;
 import org.eclipse.ui.actions.RefreshAction;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.PluginTransfer;
@@ -86,6 +97,9 @@ import org.teiid.core.designer.event.EventSourceException;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
@@ -222,6 +236,31 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     private MenuManager menuMgr; // context menu
     private IPartListener partListener;
 
+    private FormToolkit toolkit;
+    private Section defaultServerSection;
+    private Composite defaultServerSectionBody;
+    private Hyperlink defaultServerLink;
+    private Label defaultServerVersionLabel;
+
+    private ITeiidServerVersionListener teiidServerVersionListener = new ITeiidServerVersionListener() {
+
+        @Override
+        public void serverChanged(ITeiidServer server) {
+            if (defaultServerLink == null)
+                return;
+
+            setDefaultServerText(server);
+        }
+
+        @Override
+        public void versionChanged(ITeiidServerVersion version) {
+            if (defaultServerVersionLabel == null)
+                return;
+
+            setDefaultServerVersionText(version);
+        }
+    };
+
     /**
      * Construct an instance of ModelExplorerResourceNavigator.
      */
@@ -235,7 +274,23 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
      */
     @Override
     public void createPartControl( final Composite parent ) {
-        super.createPartControl(parent);
+        /* Set the parent's layout to grid layout to allow the two components */
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(parent);
+        GridLayoutFactory.fillDefaults().applyTo(parent);
+
+        toolkit = new FormToolkit(parent.getDisplay());
+
+        /* Panel to hold the viewer and server status panel */
+        Composite panel = new Composite(parent, SWT.NONE);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(panel);
+        GridLayoutFactory.fillDefaults().applyTo(panel);
+
+        /* Create viewer */
+        super.createPartControl(panel);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(getTreeViewer().getTree());
+
+        /* Create status panel */
+        createServerStatusPanel(panel);
 
         // Create selection helper
         new ModelExplorerSelectionHelper(getTreeViewer());
@@ -378,6 +433,86 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     }
 
     /**
+     * @param parent
+     * @param toolkit
+     */
+    private void createServerStatusPanel(Composite parent) {
+        defaultServerSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
+        Color bkgdColor = toolkit.getColors().getBackground();
+        defaultServerSection.setText(getString("defaultServerTitle")); //$NON-NLS-1$
+        defaultServerSection.setTitleBarForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(defaultServerSection);
+
+        defaultServerSectionBody = new Composite(defaultServerSection, SWT.NONE);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(defaultServerSectionBody);
+        GridLayoutFactory.fillDefaults().numColumns(2).applyTo(defaultServerSectionBody);
+        defaultServerSectionBody.setBackground(bkgdColor);
+
+        setDefaultServerText(ModelerCore.getDefaultServer());
+        setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
+
+        defaultServerSection.setClient(defaultServerSectionBody);
+
+        ModelerCore.addTeiidServerVersionListener(teiidServerVersionListener);
+    }
+
+    private void setDefaultServerText(ITeiidServer defaultServer) {
+        String defaultName = defaultServer != null ? defaultServer.getDisplayName() : getString("noDefaultServer"); //$NON-NLS-1$
+        String linkText =  defaultName;
+
+        if (defaultServerLink == null) {
+            toolkit.createLabel(defaultServerSectionBody, getString("defaultServerPrefix")); //$NON-NLS-1$
+
+            defaultServerLink = toolkit.createHyperlink(defaultServerSectionBody, linkText, SWT.NONE);
+            GridDataFactory.fillDefaults().grab(true, false).applyTo(defaultServerLink);
+
+            defaultServerLink.addHyperlinkListener(new HyperlinkAdapter() {
+
+                @Override
+                public void linkActivated(HyperlinkEvent e) {
+                    //open the servers view
+                    IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                    try {
+                        window.getActivePage().showView("org.eclipse.wst.server.ui.ServersView"); //$NON-NLS-1$
+                    } catch (PartInitException ex) {
+                        UiConstants.Util.log(ex);
+                    }
+                }
+            });
+
+        } else {
+            Display display = defaultServerSectionBody.getDisplay();
+            final String hyperlinkText = linkText;
+            display.asyncExec(new Runnable() {
+
+                @Override
+                public void run() {
+                    defaultServerLink.setText(hyperlinkText);
+                }
+            });
+        }
+    }
+
+    private void setDefaultServerVersionText(ITeiidServerVersion teiidServerVersion) {
+        String defaultVersionValue = teiidServerVersion.toString();
+        final String labelText = getString("defaultServerVersionPrefix") + defaultVersionValue; //$NON-NLS-1$
+
+        if (defaultServerVersionLabel == null) {
+            defaultServerVersionLabel = toolkit.createLabel(defaultServerSectionBody, labelText);
+            GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(defaultServerVersionLabel);
+        } else {
+            Display display = defaultServerSectionBody.getDisplay();
+            display.asyncExec(new Runnable() {
+
+                @Override
+                public void run() {
+                    defaultServerVersionLabel.setText(labelText);
+                }
+            });
+        }
+    }
+
+    /**
      * Created this protected method so the VdbView can override it. There were TWO resource event processors in Dimension and
      * Siperian kits and we only need to wire ONE of them up.
      * 
@@ -487,6 +622,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     @Override
     public void dispose() {
         // Remove listeners
+        ModelerCore.removeTeiidServerVersionListener(teiidServerVersionListener);
+
         // unhook the selection listeners from the seleciton service
         getViewSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(getModelObjectSelectionListener());
 
