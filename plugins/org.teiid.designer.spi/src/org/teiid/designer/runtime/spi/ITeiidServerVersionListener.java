@@ -15,6 +15,13 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 public interface ITeiidServerVersionListener {
 
     /**
+     * Server has been changed
+     *
+     * @param server
+     */
+    void serverChanged(ITeiidServer server);
+
+    /**
      * Version of teiid server has been changed
      * 
      * @param version

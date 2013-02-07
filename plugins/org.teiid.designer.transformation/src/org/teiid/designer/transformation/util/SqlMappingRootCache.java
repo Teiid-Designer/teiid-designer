@@ -30,6 +30,7 @@ import org.teiid.designer.metamodels.transformation.SqlTransformation;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.transformation.TransformationPlugin;
@@ -60,6 +61,11 @@ public class SqlMappingRootCache implements ISQLConstants {
     static {
         teiidServerVersionListener = new ITeiidServerVersionListener() {
             
+            @Override
+            public void serverChanged(ITeiidServer server) {
+                // Nothing to do
+            }
+
             @Override
             public void versionChanged(ITeiidServerVersion version) {
                 /*
