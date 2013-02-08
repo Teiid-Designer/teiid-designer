@@ -101,7 +101,7 @@ public class ImportWsdlValidationPage extends AbstractWizardPage
      */
     List wsdlValidationMessages;
 
-    private boolean wsdlsHaveErrors = true;
+    private boolean wsdlsHaveErrors = false;
 
     /**
      * Constructs a <code>WsdlValidationPage</code> using the specified builder.
@@ -143,8 +143,10 @@ public class ImportWsdlValidationPage extends AbstractWizardPage
      */
     @Override
     public boolean canFlipToNextPage() {
-        // if no WSDLs identified don't let the next page show
-        return !wsdlsHaveErrors && super.canFlipToNextPage();
+        // if no WSDLs identified don't let the next page show. Only prevent navigation if an error
+    	// exist. 
+    	
+    	return !wsdlsHaveErrors && super.canFlipToNextPage();
     }
 
     /**
@@ -458,6 +460,27 @@ public class ImportWsdlValidationPage extends AbstractWizardPage
     public boolean hasValidationMessages() {
         return wsdlValidationMessages.size() > 0;
     }
+    
+    /**
+     * Check to see if there are any validation error (not just warning) messages for display.
+     * 
+     * @return boolean
+     * @since 8.1
+     */
+    public boolean hasValidationErrors() {
+    	wsdlsHaveErrors = false;
+    	Iterator messageIter = wsdlValidationMessages.listIterator();
+	    while (messageIter.hasNext()){
+	    	IValidationMessage message = (IValidationMessage)messageIter.next();
+	    	if (message.getSeverity() == IValidationMessage.SEV_ERROR){
+	    		wsdlsHaveErrors = true;
+	    	}
+	    }
+    	    
+		return wsdlsHaveErrors;
+    }
+    
+   
 
     /**
      * Setter for wsdl validation messages related to currently selected wsdl files.
@@ -504,12 +527,13 @@ public class ImportWsdlValidationPage extends AbstractWizardPage
      */
     private void validatePage() {
         /*
-         * Check to see if any WSDLs have any validation messages.
+         * Check to see if any WSDLs have any validation errors and/or warnings.
          */
-        if (hasValidationMessages()) {
+        if (hasValidationErrors()) {
             WizardUtil.setPageComplete(this, getString("One_or_more_selected_WSDL_files_have_errors"), IMessageProvider.ERROR); //$NON-NLS-1$
+        }else if(hasValidationMessages()){
+        	WizardUtil.setPageComplete(this, getString("One_or_more_selected_WSDL_files_have_warnings"), IMessageProvider.WARNING); //$NON-NLS-1$
         }
-
     }
 
     Image getStatusImage( final int severity ) {
