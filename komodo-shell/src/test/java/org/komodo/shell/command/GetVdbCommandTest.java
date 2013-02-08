@@ -11,15 +11,16 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.komodo.repository.artifact.Artifact;
-import org.komodo.repository.artifact.teiid.VdbArtifact;
+import org.komodo.repository.artifact.ArtifactResultSet;
+import org.komodo.teiid.model.vdb.Vdb;
 
 /**
  * A test class of a {@link GetVdbCommand}.
  */
 @SuppressWarnings( {"javadoc", "nls"} )
-public class GetVdbCommandTest extends ShellCommandTest {
+public class GetVdbCommandTest extends ShellCommandTest<ArtifactResultSet> {
 
-    private KomodoCommand command;
+    private GetVdbCommand command;
 
     /**
      * {@inheritDoc}
@@ -27,7 +28,7 @@ public class GetVdbCommandTest extends ShellCommandTest {
      * @see org.komodo.shell.command.ShellCommandTest#getCommand()
      */
     @Override
-    protected KomodoCommand getCommand() {
+    protected GetVdbCommand getCommand() {
         if (this.command == null) {
             this.command = new GetVdbCommand();
         }
@@ -36,19 +37,52 @@ public class GetVdbCommandTest extends ShellCommandTest {
     }
 
     @Test
-    public void shouldObtainOneTwitterVdb() throws Exception {
+    public void shouldAllowOnlyOneArg() throws Exception {
+        // add VDB to repo
         final AddVdbCommand addCmd = new AddVdbCommand();
         addCmd.setContext(this.context);
         addCmd.doExecute(getFileName("vdb/twitterVdb.xml"));
 
+        // run command
+        final String vdbName = "twitter";
+        final ArtifactResultSet resultSet = this.command.doExecute(vdbName);
+
+        // verify results
+        assertThat(resultSet.size(), is(1));
+
+        final Artifact vdbArtifact = resultSet.next();
+        assertThat(vdbArtifact.getArtifactName(), is(vdbName));
+        assertThat(vdbArtifact.getArtifactVersion(), is(Vdb.DEFAULT_VERSION));
+    }
+
+    @Test( expected = InvalidNumberArgsException.class )
+    public void shouldHaveErrorIfMoreThanTwoArgs() throws Exception {
+        this.command.doExecute("arg1", "arg2", "arg3");
+    }
+
+    @Test( expected = InvalidNumberArgsException.class )
+    public void shouldHaveErrorIfNoArgs() throws Exception {
+        this.command.doExecute();
+    }
+
+    @Test
+    public void shouldObtainOneTwitterVdb() throws Exception {
+        // add VDB to repo
+        final AddVdbCommand addCmd = new AddVdbCommand();
+        addCmd.setContext(this.context);
+        addCmd.doExecute(getFileName("vdb/twitterVdb.xml"));
+
+        // run command
         final String vdbName = "twitter";
         final String version = "1";
-        this.command.doExecute(vdbName, version);
+        final ArtifactResultSet resultSet = this.command.doExecute(vdbName, version);
 
-        this.settings.artifactType = VdbArtifact.TYPE;
-        this.settings.params.put(Artifact.Property.NAME, vdbName);
-        this.settings.params.put(Artifact.Property.VERSION, version);
-        assertThat(_repository.query(this.settings).size(), is(1));
+        // verify results
+        assertThat(resultSet.size(), is(1));
+
+        final Artifact vdbArtifact = resultSet.next();
+        assertThat(vdbArtifact.getArtifactName(), is(vdbName));
+        assertThat(vdbArtifact.getArtifactVersion(), is(version));
     }
 
     @Test
@@ -61,14 +95,25 @@ public class GetVdbCommandTest extends ShellCommandTest {
             addCmd.doExecute(fileName);
         }
 
+        // run command
         final String vdbName = "twitter";
         final String version = "1";
-        this.command.doExecute(vdbName, "1");
+        final ArtifactResultSet resultSet = this.command.doExecute(vdbName, version);
 
-        this.settings.artifactType = VdbArtifact.TYPE;
-        this.settings.params.put(Artifact.Property.NAME, vdbName);
-        this.settings.params.put(Artifact.Property.VERSION, version);
-        assertThat(_repository.query(this.settings).size(), is(2));
+        // verify results
+        assertThat(resultSet.size(), is(2));
+
+        { // first VDB
+            final Artifact vdbArtifact = resultSet.next();
+            assertThat(vdbArtifact.getArtifactName(), is(vdbName));
+            assertThat(vdbArtifact.getArtifactVersion(), is(version));
+        }
+
+        { // second VDB
+            final Artifact vdbArtifact = resultSet.next();
+            assertThat(vdbArtifact.getArtifactName(), is(vdbName));
+            assertThat(vdbArtifact.getArtifactVersion(), is(version));
+        }
     }
 
 }

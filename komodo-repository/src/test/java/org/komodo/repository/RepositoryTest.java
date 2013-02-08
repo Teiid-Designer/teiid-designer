@@ -15,11 +15,13 @@ import org.komodo.common.util.Precondition;
 import org.komodo.repository.artifact.Artifact;
 
 /**
- * The base class for Komodo repository artifact tests. The static SOA repository must be set by the subclass.
+ * The base class for Komodo repository artifact tests. Both the static {@link SoaRepositories} and the static {@link SoaRepository}
+ * <em>must</em> be constructed by subclasses.
  */
 @SuppressWarnings( {"javadoc", "nls"} )
 public abstract class RepositoryTest {
 
+    protected static SoaRepositories _repositories;
     protected static SoaRepository _repository;
 
     /**

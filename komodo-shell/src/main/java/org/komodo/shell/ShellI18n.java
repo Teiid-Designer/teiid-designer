@@ -17,15 +17,19 @@ public class ShellI18n extends I18n {
 
     public static String addVdbCommandHelp;
     public static String addVdbCommandUsage;
+    public static String commandCanceled;
     public static String commandError;
-    public static String connectionNotFound;
     public static String connectKomodoCommandHelp;
     public static String connectKomodoCommandUsage;
+    public static String errorAddingVdb;
     public static String failedToOpenStream;
     public static String getVdbCommandHelp;
     public static String getVdbCommandUsage;
+    public static String invalidNumberCommandArgs;
     public static String matchingVdbsFoundInRepository;
     public static String noMatchingVdbsFoundInRepository;
+    public static String repositoryCacheNotFound;
+    public static String repositoryNotFound;
     public static String successfulConnection;
     public static String vdbAddedToRepository;
     public static String vdbArtifactMissingAfterAdd;
