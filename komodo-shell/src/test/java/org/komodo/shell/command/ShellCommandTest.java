@@ -18,12 +18,12 @@ import org.overlord.sramp.shell.api.SimpleShellContext;
  * The base class for Komodo S-RAMP shell command tests.
  */
 @SuppressWarnings( {"javadoc"} )
-public abstract class ShellCommandTest extends SrampTest implements ShellConstants {
+public abstract class ShellCommandTest<T> extends SrampTest implements ShellConstants {
 
     protected ShellContext context;
     protected SoaRepository.QuerySettings settings;
 
-    protected abstract KomodoCommand getCommand();
+    protected abstract KomodoCommand<T> getCommand();
 
     protected String getFileName(final String projectRelativePathToResource) {
         return getClass().getClassLoader().getResource(projectRelativePathToResource).getFile();
@@ -34,7 +34,9 @@ public abstract class ShellCommandTest extends SrampTest implements ShellConstan
         this.settings = new SoaRepository.QuerySettings();
 
         this.context = new SimpleShellContext();
-        this.context.setVariable(KOMODO_REPOSITORY_QNAME, _repository);
+        this.context.setVariable(SOA_REPOSITORIES, _repositories);
+        this.context.setVariable(CONNECTED_SOA_REPOSITORY, _repository);
+        this.context.setVariable(DEFAULT_REPOSITORY_URL, _repository.getUrl());
         getCommand().setContext(this.context);
     }
 

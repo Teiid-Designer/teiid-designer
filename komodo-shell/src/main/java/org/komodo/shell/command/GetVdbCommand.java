@@ -8,18 +8,19 @@
 package org.komodo.shell.command;
 
 import org.komodo.common.i18n.I18n;
-import org.komodo.common.util.Precondition;
+import org.komodo.common.util.CollectionUtil;
 import org.komodo.common.util.StringUtil;
 import org.komodo.repository.SoaRepository;
 import org.komodo.repository.artifact.Artifact;
 import org.komodo.repository.artifact.ArtifactResultSet;
 import org.komodo.repository.artifact.teiid.VdbArtifact;
 import org.komodo.shell.ShellI18n;
+import org.komodo.teiid.model.vdb.Vdb;
 
 /**
  * A shell command that finds all VDBs in a repository with a matching name and version. 
  */
-public class GetVdbCommand extends KomodoCommand {
+public class GetVdbCommand extends KomodoCommand<ArtifactResultSet> {
 
     /**
      * The unqualified name of the get VDB command. Value is {@value}.
@@ -40,15 +41,29 @@ public class GetVdbCommand extends KomodoCommand {
         super(cancelable);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.komodo.shell.command.KomodoCommand#doExecute(java.lang.String[])
+     */
     @Override
-    protected Object doExecute(final String... args) throws Exception {
-        Precondition.notNull(args, "args"); //$NON-NLS-1$
-        Precondition.notEmpty(args[0], "vdbName"); //$NON-NLS-1$
-        Precondition.notEmpty(args[1], "version"); //$NON-NLS-1$
+    protected ArtifactResultSet doExecute(String... args) throws Exception {
+        // check for incorrect number of args
+        if (CollectionUtil.isEmpty(args) || (args.length > 2)) {
+            throw new InvalidNumberArgsException(this, (CollectionUtil.isEmpty(args) ? 0 : args.length));
+        }
+
+        // add in default version if necessary
+        if (args.length == 1) {
+            args = new String[] {args[0], Vdb.DEFAULT_VERSION};
+        }
+
+        assert (args.length == 2);
 
         this.logger.debug("executing '{}' with cancelable '{}' and params '{}'", new Object[] {getClass().getSimpleName(), //$NON-NLS-1$
             isCancelable(), StringUtil.createDelimitedString(args)});
 
+        final SoaRepository repository = getRepository();
         final String vdbName = args[0];
         final String version = args[1];
 
@@ -56,13 +71,6 @@ public class GetVdbCommand extends KomodoCommand {
         settings.artifactType = VdbArtifact.TYPE;
         settings.params.put(Artifact.Property.NAME, vdbName);
         settings.params.put(Artifact.Property.VERSION, version);
-
-        final SoaRepository repository = getRepository();
-
-        if (repository == null) {
-            print(ShellI18n.connectionNotFound);
-            return ERROR;
-        }
 
         final ArtifactResultSet results = repository.query(settings);
 

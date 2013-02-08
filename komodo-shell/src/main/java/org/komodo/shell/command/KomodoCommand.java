@@ -16,8 +16,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import org.komodo.common.i18n.I18n;
+import org.komodo.common.io.NullWriter;
 import org.komodo.common.util.Precondition;
 import org.komodo.common.util.StringUtil;
+import org.komodo.repository.SoaRepositories;
 import org.komodo.repository.SoaRepository;
 import org.komodo.shell.ShellConstants;
 import org.komodo.shell.ShellI18n;
@@ -28,28 +30,20 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A base class for Komodo commands.
+ * 
+ * @param <T> the result type
  */
-public abstract class KomodoCommand extends AbstractShellCommand implements ShellConstants {
-
-    /**
-     * A result indicating the command was successfully canceled.
-     */
-    public static final Object CANCELED = new Object();
+public abstract class KomodoCommand<T> extends AbstractShellCommand implements ShellConstants {
 
     protected static final long DEFAULT_WAIT_TIME = 1000;
-
-    /**
-     * A result indicating the command had an unexpected error.
-     */
-    public static final Object ERROR = new Object();
 
     private final boolean cancelable;
     protected boolean canceled;
     private ExecutorService executor;
     protected final Logger logger;
-    protected Object result;
+    protected T result;
     protected boolean stop;
-    private FutureTask<Object> task;
+    private FutureTask<T> task;
     private long waitTime = DEFAULT_WAIT_TIME;
 
     /**
@@ -60,11 +54,18 @@ public abstract class KomodoCommand extends AbstractShellCommand implements Shel
     }
 
     /**
+     * If cancelable, ignores all command print statements.
+     * 
      * @param cancelable indicates if the command is cancelable
      */
     protected KomodoCommand(final boolean cancelable) {
         this.logger = LoggerFactory.getLogger(getClass());
         this.cancelable = cancelable;
+
+        // ignore print statements
+        if (this.cancelable) {
+            setOutput(NullWriter.SHARED);
+        }
     }
 
     /**
@@ -72,7 +73,7 @@ public abstract class KomodoCommand extends AbstractShellCommand implements Shel
      * @return the command result (can be <code>null</code>)
      * @throws Exception if there is a problem executing the command
      */
-    protected abstract Object doExecute(final String... args) throws Exception;
+    protected abstract T doExecute(final String... args) throws Exception;
 
     /**
      * {@inheritDoc}
@@ -96,9 +97,9 @@ public abstract class KomodoCommand extends AbstractShellCommand implements Shel
         final String[] args = (((arguments == null) || arguments.isEmpty()) ? StringUtil.EMPTY_ARRAY : arguments.toArray(new String[arguments.size()]));
 
         if (this.cancelable) {
-            final KomodoCommand thisCommand = this;
+            final KomodoCommand<T> thisCommand = this;
             this.executor = Executors.newFixedThreadPool(1);
-            this.task = new FutureTask<Object>(new Callable<Object>() {
+            this.task = new FutureTask<T>(new Callable<T>() {
 
                 /**
                  * {@inheritDoc}
@@ -106,19 +107,52 @@ public abstract class KomodoCommand extends AbstractShellCommand implements Shel
                  * @see java.util.concurrent.Callable#call()
                  */
                 @Override
-                public Object call() throws Exception {
+                public T call() throws Exception {
                     return thisCommand.doExecute(args);
                 }
             });
 
             this.executor.execute(this.task);
         } else {
-            this.result = doExecute(args);
+            try {
+                this.result = doExecute(args);
+            } catch (final Exception e) {
+                print(e.getLocalizedMessage());
+                this.logger.debug(e.getLocalizedMessage(), e);
+
+                if (e instanceof InvalidNumberArgsException) {
+                    printUsage();
+                }
+            }
         }
     }
 
-    protected final SoaRepository getRepository() {
-        return (SoaRepository)getContext().getVariable(KOMODO_REPOSITORY_QNAME);
+    /**
+     * @return the SOA repository cache (never <code>null</code>)
+     * @throws CommandException if SOA repositories cache is not found
+     */
+    protected final SoaRepositories getRepositories() throws CommandException {
+        final SoaRepositories repositories = (SoaRepositories)getContext().getVariable(SOA_REPOSITORIES);
+
+        if (repositories == null) {
+            throw new CommandException(this, I18n.bind(ShellI18n.repositoryCacheNotFound, getClass().getSimpleName()));
+        }
+
+        return repositories;
+    }
+
+    /**
+     * @return the SOA repository the shell is connected to (never <code>null</code>)
+     * @throws RepositoryNotFoundException if the shell is not connected to a SOA repository
+     */
+    protected final SoaRepository getRepository() throws RepositoryNotFoundException {
+        final SoaRepository repository = (SoaRepository)getContext().getVariable(CONNECTED_SOA_REPOSITORY);
+
+        if (repository == null) {
+            throw new RepositoryNotFoundException(this);
+        }
+
+        return repository;
     }
 
     /**
@@ -126,7 +160,7 @@ public abstract class KomodoCommand extends AbstractShellCommand implements Shel
      * 
      * @param fileName the file name relative to the calling class (cannot be <code>null</code> or empty)
      * @return the input stream to the content; may be <code>null</code> if the resource does not exist
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException if the file does not exist
      */
     protected InputStream getResourceAsStream(final String fileName) throws FileNotFoundException {
         Precondition.notEmpty(fileName, "fileName"); //$NON-NLS-1$
@@ -134,62 +168,52 @@ public abstract class KomodoCommand extends AbstractShellCommand implements Shel
     }
 
     /**
-     * @return the results of the command (can be <code>null</code>)
+     * @return the results of the command (can be <code>null</code> if command has never been executed or the result has not be set)
+     * @throws InterruptedException if the command was canceled
+     * @throws Exception if there is a problem obtaining the result
      */
-    public Object getResult() {
+    public T getResult() throws Exception {
         if (this.cancelable) {
-            while (!this.task.isDone()) {
-                if (this.stop) {
-                    this.canceled = this.task.cancel(true);
+            try {
+                while (!this.task.isDone()) {
+                    try {
+                        Thread.sleep(this.waitTime);
+                    } catch (final Exception e) {
+                        if (e instanceof InterruptedException) {
+                            this.canceled = true;
+                            this.task.cancel(true);
+                        }
 
-                    if (this.canceled) {
-                        this.result = CANCELED;
-                    } else {
-                        this.result = ERROR;
+                        throw e;
                     }
 
-                    break;
-                }
-
-                try {
-                    Thread.sleep(this.waitTime);
-                } catch (final InterruptedException e) {
-                    this.canceled = this.task.cancel(true);
-
-                    if (this.canceled) {
-                        this.result = CANCELED;
-                    } else {
-                        this.result = ERROR;
-                        print(e.getMessage());
+                    if (!this.task.isDone() && this.stop) {
+                        this.canceled = true;
+                        this.task.cancel(true);
+                        throw new InterruptedException(I18n.bind(ShellI18n.commandCanceled, getClass().getSimpleName()));
                     }
-
-                    break;
                 }
-            }
 
-            if (!this.task.isCancelled()) {
+                assert (!this.canceled && this.task.isDone());
+
                 try {
                     this.result = this.task.get();
                 } catch (final Exception e) {
                     if ((e instanceof InterruptedException) || (e instanceof CancellationException)) {
-                        this.canceled = this.task.cancel(true);
-
-                        if (this.canceled) {
-                            this.result = CANCELED;
-                        } else {
-                            this.result = ERROR;
-                            print(e.getMessage());
-                        }
-                    } else {
-                        this.result = ERROR;
-                        this.logger.error(I18n.bind(ShellI18n.commandError, getClass().getSimpleName()), e);
-                        print(e.getMessage());
+                        this.canceled = true;
+                        this.task.cancel(true);
                     }
+
+                    throw e;
+                }
+            } catch (final Exception e) {
+                this.logger.debug(e.getLocalizedMessage(), e);
+                throw e;
+            } finally {
+                if (this.executor != null) {
+                    this.executor.shutdownNow();
                 }
             }
-
-            this.executor.shutdown();
-            return this.result;
         }
 
         return this.result;

@@ -17,7 +17,7 @@ import org.junit.Test;
 @SuppressWarnings( {"javadoc"} )
 public class KomodoCommandTest extends ShellCommandTest {
 
-    private class TestCommand extends KomodoCommand {
+    private class TestCommand extends KomodoCommand<Boolean> {
 
         TestCommand() {
             super();
@@ -33,7 +33,7 @@ public class KomodoCommandTest extends ShellCommandTest {
          * @see org.komodo.shell.command.KomodoCommand#doExecute(java.lang.String[])
          */
         @Override
-        protected Object doExecute(final String... args) throws Exception {
+        protected Boolean doExecute(final String... args) throws Exception {
             if (isCancelable()) {
                 Thread.sleep(1000);
             }
@@ -63,7 +63,7 @@ public class KomodoCommandTest extends ShellCommandTest {
 
     }
 
-    private static final Object RESULT = new Object();
+    private static final Boolean RESULT = Boolean.TRUE;
 
     private KomodoCommand command;
 
@@ -81,13 +81,13 @@ public class KomodoCommandTest extends ShellCommandTest {
         return this.command;
     }
 
-    @Test
+    @Test( expected = InterruptedException.class )
     public void shouldHaveCanceledResultWhenStopped() throws Exception {
         final KomodoCommand cmd = new TestCommand(true);
         cmd.setWaitTime(20L);
         cmd.execute();
         cmd.stop();
-        assertThat(cmd.getResult(), is(KomodoCommand.CANCELED));
+        cmd.getResult();
     }
 
     @Test
@@ -97,7 +97,7 @@ public class KomodoCommandTest extends ShellCommandTest {
 
     @Test
     public void shouldHaveExpectedResultWhenNotStopped() throws Exception {
-        final KomodoCommand cmd = new TestCommand(true);
+        final TestCommand cmd = new TestCommand(true);
         cmd.setWaitTime(20L);
         cmd.execute();
         assertThat(cmd.getResult(), is(RESULT));

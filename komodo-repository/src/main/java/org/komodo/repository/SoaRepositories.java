@@ -22,7 +22,7 @@ public class SoaRepositories {
     private static final Logger LOGGER = LoggerFactory.getLogger(SoaRepositories.class);
 
     private ConcurrentMap<String, RepositoryProvider> providers;
-    private ConcurrentMap<String, SoaRepository> repositories;
+    protected ConcurrentMap<String, SoaRepository> repositories;
 
     /**
      * If a repository is created, a connection to the repository is attempted.
