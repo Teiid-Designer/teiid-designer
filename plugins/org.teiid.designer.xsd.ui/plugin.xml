@@ -50,14 +50,6 @@
       </class>
    </extension>  
    <extension
-         id="datatypeUiTextImporter"
-         name="%datatypeUiTextImporter"
-         point="org.teiid.designer.tools.textimport.ui.textImportContributor">
-      <class
-        name="org.teiid.designer.xsd.ui.wizards.ImportDatatypesMainPage">
-      </class>
-   </extension>
-   <extension
          point="org.eclipse.ui.importWizards">
       <wizard
             name="%xsdFileSystemImportWizard.name"
