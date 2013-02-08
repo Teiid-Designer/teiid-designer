@@ -26,7 +26,7 @@ public interface ImportVdbArtifact extends Artifact {
          */
         @Override
         public String getId() {
-            return "TeiidVdbEntry"; //$NON-NLS-1$
+            return "TeiidImportVdb"; //$NON-NLS-1$
         }
 
     };

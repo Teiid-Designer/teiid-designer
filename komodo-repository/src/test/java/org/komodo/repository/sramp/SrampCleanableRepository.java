@@ -7,7 +7,9 @@
 */
 package org.komodo.repository.sramp;
 
+import org.jboss.resteasy.test.EmbeddedContainer;
 import org.komodo.repository.Cleanable;
+import org.overlord.sramp.repository.PersistenceFactory;
 import org.overlord.sramp.repository.jcr.modeshape.JCRRepositoryCleaner;
 
 /**
@@ -43,6 +45,17 @@ public class SrampCleanableRepository extends SrampRepository implements Cleanab
     @Override
     public void clean() throws Exception {
         this.cleaner.clean();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.komodo.repository.sramp.SrampRepository#disconnect()
+     */
+    @Override
+    public void disconnect() throws Exception {
+        EmbeddedContainer.stop();
+        PersistenceFactory.newInstance().shutdown();
     }
 
 }

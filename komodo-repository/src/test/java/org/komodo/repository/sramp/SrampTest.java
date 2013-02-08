@@ -19,13 +19,13 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.komodo.common.util.CollectionUtil;
 import org.komodo.repository.RepositoryTest;
+import org.komodo.repository.RepositoryTestCache;
 import org.komodo.repository.SoaRepository;
 import org.komodo.repository.artifact.Artifact;
 import org.overlord.sramp.atom.providers.HttpResponseProvider;
 import org.overlord.sramp.atom.providers.OntologyProvider;
 import org.overlord.sramp.atom.providers.SrampAtomExceptionProvider;
 import org.overlord.sramp.common.SrampModelUtils;
-import org.overlord.sramp.repository.PersistenceFactory;
 import org.overlord.sramp.repository.jcr.JCRRepository;
 import org.overlord.sramp.server.atom.services.ArtifactResource;
 import org.overlord.sramp.server.atom.services.BatchResource;
@@ -47,8 +47,7 @@ public abstract class SrampTest extends RepositoryTest implements SrampRepositor
     @AfterClass
     public static void shutdownRepository() throws Exception {
         if (_repository != null) {
-            EmbeddedContainer.stop();
-            PersistenceFactory.newInstance().shutdown();
+            _repository.disconnect();
         }
     }
 
@@ -77,6 +76,7 @@ public abstract class SrampTest extends RepositoryTest implements SrampRepositor
         providerFactory.registerProvider(OntologyProvider.class);
 
         _repository = new SrampCleanableRepository();
+        _repositories = new RepositoryTestCache(_repository);
     }
 
     /**

@@ -37,7 +37,7 @@ public class KomodoCommandProvider implements ShellCommandProvider {
     public Map<String, Class<? extends ShellCommand>> provideCommands() {
         final Map<String, Class<? extends ShellCommand>> commands = new HashMap<String, Class<? extends ShellCommand>>();
         commands.put(AddVdbCommand.NAME, AddVdbCommand.class);
-        commands.put(ConnectKomodoCommand.NAME, ConnectKomodoCommand.class);
+        commands.put(ConnectCommand.NAME, ConnectCommand.class);
         commands.put(GetVdbCommand.NAME, GetVdbCommand.class);
         return commands;
     }

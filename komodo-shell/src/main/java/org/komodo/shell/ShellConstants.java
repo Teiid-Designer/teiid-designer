@@ -13,8 +13,18 @@ public interface ShellConstants {
     String NAMESPACE = "komodo"; //$NON-NLS-1$ 
 
     /**
-     * The shell context variable name for the command's repository.
+     * The shell context variable name used for obtaining the SOA repository the shell is connected to.
      */
-    QName KOMODO_REPOSITORY_QNAME = new QName(NAMESPACE, "soa-repository"); //$NON-NLS-1$
+    QName CONNECTED_SOA_REPOSITORY = new QName(NAMESPACE, "connected-soa-repository"); //$NON-NLS-1$
+
+    /**
+     * The shell context variable name used for obtaining the default SOA repository URL.
+     */
+    QName DEFAULT_REPOSITORY_URL = new QName(NAMESPACE, "default-soa-repository-url"); //$NON-NLS-1$
+
+    /**
+     * The shell context variable name used for obtaining the command's SOA repository cache.
+     */
+    QName SOA_REPOSITORIES = new QName(NAMESPACE, "soa-repositories"); //$NON-NLS-1$
 
 }

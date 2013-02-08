@@ -9,7 +9,7 @@ package org.komodo.shell.command;
 
 import java.util.List;
 import org.komodo.common.i18n.I18n;
-import org.komodo.common.util.Precondition;
+import org.komodo.common.util.CollectionUtil;
 import org.komodo.common.util.StringUtil;
 import org.komodo.repository.SoaRepositories;
 import org.komodo.repository.SoaRepository;
@@ -18,7 +18,12 @@ import org.komodo.shell.ShellI18n;
 /**
  * Connects to an s-ramp server using a Komodo client.
  */
-public class ConnectKomodoCommand extends KomodoCommand {
+public class ConnectCommand extends KomodoCommand<SoaRepository> {
+
+    /**
+     * Used if one is not set in the shelll context. Value is {@value}.
+     */
+    private static final String DEFAULT_HOST = "http://localhost:8080/s-ramp-server"; //$NON-NLS-1$
 
     /**
      * The unqualified name of the connect to Komodo server command. Value is {@value}.
@@ -28,14 +33,14 @@ public class ConnectKomodoCommand extends KomodoCommand {
     /**
      * Constructs a non-cancelable command.
      */
-    public ConnectKomodoCommand() {
+    public ConnectCommand() {
         super();
     }
 
     /**
      * @param cancelable indicates if the command is cancelable
      */
-    public ConnectKomodoCommand(final boolean cancelable) {
+    public ConnectCommand(final boolean cancelable) {
         super(cancelable);
     }
 
@@ -45,9 +50,18 @@ public class ConnectKomodoCommand extends KomodoCommand {
      * @see org.komodo.shell.command.KomodoCommand#doExecute(java.lang.String[])
      */
     @Override
-    protected Object doExecute(final String... args) throws Exception {
-        Precondition.notNull(args, "args"); //$NON-NLS-1$
-        Precondition.notEmpty(args[0], "S-RAMP URL"); //$NON-NLS-1$
+    protected SoaRepository doExecute(String... args) throws Exception {
+        // check for incorrect number of args
+        if (!CollectionUtil.isEmpty(args) && (args.length > 1)) {
+            throw new InvalidNumberArgsException(this, args.length);
+        }
+
+        // add in default host if necessary
+        if (CollectionUtil.isEmpty(args)) {
+            args = new String[] {getDefaultUrl()};
+        }
+
+        assert (args.length == 1);
 
         this.logger.debug("executing '{}' with cancelable '{}' and params '{}'", new Object[] {getClass().getSimpleName(), //$NON-NLS-1$
             isCancelable(), StringUtil.createDelimitedString(args)});
@@ -58,11 +72,17 @@ public class ConnectKomodoCommand extends KomodoCommand {
             endpointUrlArg = "http://" + endpointUrlArg; //$NON-NLS-1$
         }
 
-        final SoaRepositories repositories = new SoaRepositories();
+        final SoaRepositories repositories = getRepositories();
         final SoaRepository repository = repositories.get(endpointUrlArg);
-        getContext().setVariable(KOMODO_REPOSITORY_QNAME, repository);
+        getContext().setVariable(CONNECTED_SOA_REPOSITORY, repository);
         print(I18n.bind(ShellI18n.successfulConnection, endpointUrlArg));
+
         return repository;
+    }
+
+    private String getDefaultUrl() {
+        final String defaultUrl = (String)getContext().getVariable(DEFAULT_REPOSITORY_URL);
+        return (StringUtil.isEmpty(defaultUrl) ? DEFAULT_HOST : defaultUrl);
     }
 
     /**
@@ -94,7 +114,7 @@ public class ConnectKomodoCommand extends KomodoCommand {
     public int tabCompletion(final String lastArgument,
                              final List<CharSequence> candidates) {
         if (getArguments().isEmpty()) {
-            candidates.add("http://localhost:8080/s-ramp-server"); //$NON-NLS-1$
+            candidates.add(getDefaultUrl());
             return 0;
         }
 
