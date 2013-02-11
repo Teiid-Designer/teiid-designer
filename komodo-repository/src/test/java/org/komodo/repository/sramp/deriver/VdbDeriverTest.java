@@ -342,6 +342,9 @@ public class VdbDeriverTest extends SrampTest {
         boolean foundViewModel = false;
         boolean foundDataSource = false;
 
+        BaseArtifactType sourceArtifact = null;
+        BaseArtifactType translatorArtifact = null;
+
         for (final Artifact derivedArtifact : results) {
             assertSrampArtifact(derivedArtifact);
 
@@ -350,6 +353,8 @@ public class VdbDeriverTest extends SrampTest {
 
             if (!foundTranslator && isExtendedType(srampArtifact, TranslatorArtifact.TYPE)) {
                 foundTranslator = true;
+                translatorArtifact = srampArtifact.getDelegate();
+
                 assertThat(artifactName, is("rest"));
                 assertPropertyValue(derivedArtifact, Translator.PropertyName.TYPE, "ws");
                 assertPropertyValue(derivedArtifact, "DefaultBinding", "HTTP");
@@ -390,6 +395,7 @@ public class VdbDeriverTest extends SrampTest {
                 }
             } else if (!foundDataSource && isExtendedType(srampArtifact, SourceArtifact.TYPE)) {
                 foundDataSource = true;
+                sourceArtifact = srampArtifact.getDelegate();
                 assertThat(artifactName, is("twitter"));
                 assertPropertyValue(derivedArtifact, Source.PropertyName.TRANSLATOR_NAME, "rest");
                 assertPropertyValue(derivedArtifact, Source.PropertyName.JNDI_NAME, "java:/twitterDS");
@@ -399,6 +405,8 @@ public class VdbDeriverTest extends SrampTest {
         }
 
         assertThat((foundTranslator && foundPhysicalModel && foundViewModel && foundDataSource), is(true));
+        assertRelationshipTargetUuid(sourceArtifact, SourceArtifact.TRANSLATOR_RELATIONSHIP, translatorArtifact.getUuid());
+        assertRelationshipTargetUuid(translatorArtifact, TranslatorArtifact.SOURCES_RELATIONSHIP, sourceArtifact.getUuid());
     }
 
 }

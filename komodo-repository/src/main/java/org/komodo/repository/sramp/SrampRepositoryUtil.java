@@ -16,7 +16,7 @@ import org.overlord.sramp.common.SrampModelUtils;
 import org.s_ramp.xmlns._2010.s_ramp.BaseArtifactType;
 
 /**
- * Utilities for use with derivers.
+ * Utilities for use with S-RAMP repositories and derivers.
  */
 public class SrampRepositoryUtil implements SrampRepositoryConstants {
 
