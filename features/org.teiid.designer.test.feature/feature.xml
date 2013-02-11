@@ -2,7 +2,7 @@
 <feature
       id="org.teiid.designer.test.feature"
       label="Teiid Designer Test"
-      version="8.0.0.qualifier"
+      version="8.1.0.qualifier"
       provider-name="%providerName"
       plugin="org.teiid.designer"
       image="feature.gif">
@@ -23,23 +23,23 @@
       <import plugin="org.mockito" version="1.8.4" match="compatible"/>
       <import plugin="org.eclipse.core.resources" version="3.8.0" match="compatible"/>
       <import plugin="org.eclipse.core.runtime" version="3.8.0" match="compatible"/>
-      <import plugin="org.teiid.core.designer" version="8.0.0" match="compatible"/>
+      <import plugin="org.teiid.core.designer" version="8.1.0" match="compatible"/>
       <import plugin="org.junit4" version="4.8.1" match="compatible"/>
-      <import plugin="org.teiid.designer.core" version="8.0.0" match="compatible"/>
-      <import plugin="org.teiid.core.designer.test.framework" version="8.0.0" match="compatible"/>
-      <import plugin="org.teiid.designer.sdt" version="8.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.core" version="8.1.0" match="compatible"/>
+      <import plugin="org.teiid.core.designer.test.framework" version="8.1.0" match="compatible"/>
+      <import plugin="org.teiid.designer.sdt" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.designer.compare"/>
       <import plugin="org.eclipse.emf.ecore" version="2.8.0" match="compatible"/>
       <import plugin="org.eclipse.emf.mapping" version="2.7.0" match="compatible"/>
-      <import plugin="org.teiid.8.2.x" version="8.0.0" match="compatible"/>
-      <import plugin="org.teiid.designer.metamodels.core" version="8.0.0" match="compatible"/>
+      <import plugin="org.teiid.8.2.x" version="8.1.0" match="compatible"/>
+      <import plugin="org.teiid.designer.metamodels.core" version="8.1.0" match="compatible"/>
       <import plugin="org.eclipse.xsd" version="2.8.0" match="compatible"/>
-      <import plugin="org.teiid.designer.legacy" version="8.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.legacy" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.designer.core.xslt"/>
       <import plugin="org.eclipse.emf.ecore.xmi" version="2.8.0" match="compatible"/>
-      <import plugin="org.teiid.designer.jdbc" version="8.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.jdbc" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.designer.mapping.ui"/>
-      <import plugin="org.teiid.designer.core.test.framework" version="8.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.core.test.framework" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.designer.metamodels.relational"/>
       <import plugin="org.teiid.designer.metamodels.transformation"/>
       <import plugin="org.teiid.designer.metamodels.wsdl"/>
@@ -47,7 +47,7 @@
       <import plugin="org.teiid.designer.modelgenerator.salesforce"/>
       <import plugin="org.teiid.designer.modelgenerator"/>
       <import plugin="org.teiid.designer.modelgenerator.wsdl"/>
-      <import plugin="org.teiid.7.7.x" version="8.0.0" match="compatible"/>
+      <import plugin="org.teiid.7.7.x" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.designer.query.ui"/>
       <import plugin="org.teiid.designer.schema.tools"/>
       <import plugin="org.teiid.designer.transformation"/>
@@ -60,11 +60,11 @@
       <import plugin="org.teiid.designer.extension"/>
       <import plugin="org.teiid.designer.ddl.importer"/>
       <import plugin="org.teiid.designer.dqp"/>
-      <import plugin="org.teiid.designer.jdbc.test.framework" version="8.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.jdbc.test.framework" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.designer.jdbc.relational"/>
       <import plugin="org.teiid.designer.vdb"/>
       <import plugin="org.eclipse.ui" version="3.103.0" match="compatible"/>
-      <import plugin="org.teiid.designer.ui.common" version="8.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.ui.common" version="8.1.0" match="compatible"/>
    </requires>
 
    <plugin

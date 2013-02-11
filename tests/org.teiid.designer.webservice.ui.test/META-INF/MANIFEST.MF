@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.teiid.designer.webservice.ui.test;singleton:=true
-Bundle-Version: 8.0.0.qualifier
+Bundle-Version: 8.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.designer.webservice.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit4;bundle-version="[4.8.1,5.0.0)",
- org.teiid.designer.sdt;bundle-version="[8.0.0,9.0.0)",
- org.teiid.core.designer.test.framework;bundle-version="[8.0.0,9.0.0)"
+ org.teiid.designer.sdt;bundle-version="[8.1.0,9.0.0)",
+ org.teiid.core.designer.test.framework;bundle-version="[8.1.0,9.0.0)"
 Bundle-Localization: plugin

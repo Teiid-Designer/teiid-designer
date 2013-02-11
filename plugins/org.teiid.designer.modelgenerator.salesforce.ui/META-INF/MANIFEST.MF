@@ -2,32 +2,32 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.modelgenerator.salesforce.ui;singleton:=true
-Bundle-Version: 8.0.0.qualifier
+Bundle-Version: 8.1.0.qualifier
 Bundle-Activator: org.teiid.designer.modelgenerator.salesforce.ui.Activator
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.designer.modelgenerator.salesforce;bundle-version="[8.0.0,9.0.0)",
+Require-Bundle: org.teiid.designer.modelgenerator.salesforce;bundle-version="[8.1.0,9.0.0)",
  org.eclipse.ui;bundle-version="[3.103.0,4.0.0)",
  org.eclipse.core.runtime;bundle-version="[3.8.0,4.0.0)",
  org.eclipse.core.resources;bundle-version="[3.8.0,4.0.0)",
  org.eclipse.ui.ide;bundle-version="[3.8.0,4.0.0)",
- org.teiid.designer.ui.common;bundle-version="[8.0.0,9.0.0)",
- org.teiid.designer.metamodels.core;bundle-version="[8.0.0,9.0.0)",
- org.teiid.designer.metamodels.relational;bundle-version="[8.0.0,9.0.0)",
- org.teiid.designer.core;bundle-version="[8.0.0,9.0.0)",
- org.teiid.designer.ui;bundle-version="[8.0.0,9.0.0)",
+ org.teiid.designer.ui.common;bundle-version="[8.1.0,9.0.0)",
+ org.teiid.designer.metamodels.core;bundle-version="[8.1.0,9.0.0)",
+ org.teiid.designer.metamodels.relational;bundle-version="[8.1.0,9.0.0)",
+ org.teiid.designer.core;bundle-version="[8.1.0,9.0.0)",
+ org.teiid.designer.ui;bundle-version="[8.1.0,9.0.0)",
  org.apache.xerces;bundle-version="[2.9.0,3.0.0)",
- org.teiid.designer.metamodels.builder;bundle-version="[8.0.0,9.0.0)",
- org.teiid.core.designer;bundle-version="[8.0.0,9.0.0)",
- org.teiid.designer.compare.ui;bundle-version="[8.0.0,9.0.0)",
- org.teiid.designer.compare;bundle-version="[8.0.0,9.0.0)",
+ org.teiid.designer.metamodels.builder;bundle-version="[8.1.0,9.0.0)",
+ org.teiid.core.designer;bundle-version="[8.1.0,9.0.0)",
+ org.teiid.designer.compare.ui;bundle-version="[8.1.0,9.0.0)",
+ org.teiid.designer.compare;bundle-version="[8.1.0,9.0.0)",
  org.eclipse.emf.ecore;bundle-version="[2.8.0,3.0.0)",
  org.eclipse.datatools.connectivity;bundle-version="[1.2.5,2.0.0)",
  org.eclipse.datatools.connectivity.ui;bundle-version="[1.2.3,2.0.0)",
- org.teiid.designer.datatools.ui;bundle-version="[8.0.0,9.0.0)",
- org.teiid.designer.metamodels.function;bundle-version="[8.0.0,9.0.0)",
+ org.teiid.designer.datatools.ui;bundle-version="[8.1.0,9.0.0)",
+ org.teiid.designer.metamodels.function;bundle-version="[8.1.0,9.0.0)",
  org.eclipse.datatools.help;bundle-version="[1.5.0,2.0.0)",
- org.teiid.designer.extension;bundle-version="[8.0.0,9.0.0)"
+ org.teiid.designer.extension;bundle-version="[8.1.0,9.0.0)"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.teiid.designer.modelgenerator.salesforce.ui,
  org.teiid.designer.modelgenerator.salesforce.ui.actions,

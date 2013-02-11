@@ -2,7 +2,7 @@
 <feature
       id="org.teiid.designer.teiid.client.feature"
       label="teiid client"
-      version="8.0.0.qualifier"
+      version="8.1.0.qualifier"
       provider-name="%providerName">
 
    <description url="www.jboss.org/projects/teiiddesigner">
@@ -21,7 +21,7 @@
       <import plugin="org.jdom" version="1.1.1" match="compatible"/>
       <import plugin="org.jbosstools.locus.sf.saxon" version="9.2.1" match="compatible"/>
       <import plugin="org.hamcrest.core" version="1.1.0" match="compatible"/>
-      <import plugin="org.teiid.designer.spi" version="8.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.spi" version="8.1.0" match="compatible"/>
       <import plugin="org.eclipse.core.runtime" version="3.8.0" match="compatible"/>
       <import plugin="org.eclipse.core.resources" version="3.8.0" match="compatible"/>
       <import plugin="org.eclipse.wst.server.core" version="1.4.0" match="compatible"/>
