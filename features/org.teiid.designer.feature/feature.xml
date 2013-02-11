@@ -26,6 +26,21 @@
       %license
    </license>
 
+   <includes
+         id="org.jbosstools.locus.sf.saxon.feature"
+         version="9.2.1"/>
+
+   <includes
+         id="org.jbosstools.locus.apache.poi.feature"
+         version="2.5.1"/>
+   <includes
+         id="org.jbosstools.locus.jcip.annotations.feature"
+         version="1.0.0"/>
+
+   <includes
+         id="org.jbosstools.locus.mockito.feature"
+         version="1.9.5"/>
+
    <requires>
       <import plugin="org.eclipse.ui.cheatsheets" version="3.4.200" match="compatible"/>
       <import plugin="org.eclipse.ui.ide" version="3.8.0" match="compatible"/>
