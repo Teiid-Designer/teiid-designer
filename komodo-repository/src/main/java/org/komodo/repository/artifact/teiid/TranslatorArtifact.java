@@ -15,6 +15,23 @@ import org.komodo.repository.artifact.Artifact;
 public interface TranslatorArtifact extends Artifact {
 
     /**
+     * A relationship between a translator artifact and the source artifacts that reference it.
+     */
+    public static final RelationshipType SOURCES_RELATIONSHIP = new RelationshipType() {
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.komodo.repository.artifact.Artifact.RelationshipType#getId()
+         */
+        @Override
+        public String getId() {
+            return "TranslatorSources"; //$NON-NLS-1$
+        }
+
+    };
+
+    /**
      * The artifact type for a translator artifact.
      */
     public static final Type TYPE = new Type() {

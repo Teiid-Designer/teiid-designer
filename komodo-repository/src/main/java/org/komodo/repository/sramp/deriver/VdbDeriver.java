@@ -8,6 +8,7 @@
 package org.komodo.repository.sramp.deriver;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 import javax.xml.namespace.QName;
@@ -15,6 +16,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import org.komodo.common.i18n.I18n;
+import org.komodo.common.util.CollectionUtil;
 import org.komodo.common.util.Precondition;
 import org.komodo.common.util.StringUtil;
 import org.komodo.repository.RepositoryI18n;
@@ -78,6 +80,9 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
         return artifact;
     }
 
+    private final Collection<BaseArtifactType> sources = new ArrayList<BaseArtifactType>();
+    private final Collection<BaseArtifactType> translators = new ArrayList<BaseArtifactType>();
+
     /**
      * {@inheritDoc}
      *
@@ -88,7 +93,9 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                           final BaseArtifactType artifact,
                           final Element rootElement,
                           final XPath xpath) throws IOException {
-        LOGGER.debug("derive:root element='{}'", rootElement.getLocalName()); //$NON-NLS-1$
+        LOGGER.debug("deriver:root element='{}'", rootElement.getLocalName()); //$NON-NLS-1$
+        this.sources.clear();
+        this.translators.clear();
 
         if (!(artifact instanceof ExtendedArtifactType)
             || !VdbArtifact.TYPE.getId().equals(((ExtendedArtifactType)artifact).getExtendedType())) {
@@ -104,8 +111,33 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
             }
 
             processVdb(derivedArtifacts, vdbArtifact, rootElement, xpath);
+            postProcess(derivedArtifacts, vdbArtifact);
         } catch (final Exception e) {
             throw new IOException(e);
+        }
+    }
+
+    private void postProcess(final Collection<BaseArtifactType> derivedArtifacts,
+                             final ExtendedArtifactType vdbArtifact) {
+        // setup relationships between sources and translators
+        if (!CollectionUtil.isEmpty(this.sources) && !CollectionUtil.isEmpty(this.translators)) {
+            for (final BaseArtifactType sourceArtifact : this.sources) {
+                final String translatorName = SrampModelUtils.getCustomProperty(sourceArtifact,
+                                                                                Source.PropertyName.TRANSLATOR_NAME);
+                if (!StringUtil.isEmpty(translatorName)) {
+                    for (final BaseArtifactType translatorArtifact : this.translators) {
+                        if (translatorName.equals(translatorArtifact.getName())) {
+                            LOGGER.debug("deriver:adding relationships between source '{}' and translator '{}'", //$NON-NLS-1$
+                                         sourceArtifact.getName(),
+                                         translatorArtifact.getName());
+                            SrampRepositoryUtil.addRelationship(sourceArtifact,
+                                                                translatorArtifact,
+                                                                SourceArtifact.TRANSLATOR_RELATIONSHIP,
+                                                                TranslatorArtifact.SOURCES_RELATIONSHIP);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -119,7 +151,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                                                       XPathConstants.NODESET);
 
         if (dataPolicies.getLength() != 0) {
-            LOGGER.debug("processing '{}' data policies", dataPolicies.getLength()); //$NON-NLS-1$
+            LOGGER.debug("deriver:processing '{}' data policies", dataPolicies.getLength()); //$NON-NLS-1$
 
             for (int dataPolicyIndex = 0, numDataPolicies = dataPolicies.getLength(); dataPolicyIndex < numDataPolicies; ++dataPolicyIndex) {
                 final Element dataPolicy = (Element)dataPolicies.item(dataPolicyIndex);
@@ -153,7 +185,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                                                                XPathConstants.NODESET);
 
                     if (roleNames.getLength() != 0) {
-                        LOGGER.debug("processing '{}' mapped role names for data policy '{}'", //$NON-NLS-1$
+                        LOGGER.debug("deriver:processing '{}' mapped role names for data policy '{}'", //$NON-NLS-1$
                                      roleNames.getLength(),
                                      dataPolicyArtifact.getName());
 
@@ -170,7 +202,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                             mappedNames.append(name);
 
                             if (LOGGER.isDebugEnabled()) {
-                                LOGGER.debug("found mapped role name '{}' for data policy '{}'", dataPolicyArtifact.getName()); //$NON-NLS-1$
+                                LOGGER.debug("deriver:found mapped role name '{}' for data policy '{}'", dataPolicyArtifact.getName()); //$NON-NLS-1$
                             }
                         }
 
@@ -181,11 +213,13 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                 }
 
                 if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("data policy name '{}'", dataPolicyArtifact.getName()); //$NON-NLS-1$
-                    LOGGER.debug("data policy description '{}'", dataPolicyArtifact.getDescription()); //$NON-NLS-1$                  
+                    LOGGER.debug("deriver:data policy name '{}'", dataPolicyArtifact.getName()); //$NON-NLS-1$
+                    LOGGER.debug("deriver:data policy description '{}'", dataPolicyArtifact.getDescription()); //$NON-NLS-1$                  
 
                     for (final Property prop : dataPolicyArtifact.getProperty()) {
-                        LOGGER.debug("data policy property '{}' with value '{}'", prop.getPropertyName(), prop.getPropertyValue()); //$NON-NLS-1$
+                        LOGGER.debug("deriver:data policy property '{}' with value '{}'", //$NON-NLS-1$
+                                     prop.getPropertyName(),
+                                     prop.getPropertyValue());
                     }
                 }
 
@@ -196,7 +230,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                                                                  XPathConstants.NODESET);
 
                     if (permissions.getLength() != 0) {
-                        LOGGER.debug("processing '{}' data permissions for data policy '{}'", //$NON-NLS-1$
+                        LOGGER.debug("deriver:processing '{}' data permissions for data policy '{}'", //$NON-NLS-1$
                                      permissions.getLength(),
                                      dataPolicyArtifact.getName());
 
@@ -271,11 +305,11 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                                                         xpath);
 
                             if (LOGGER.isDebugEnabled()) {
-                                LOGGER.debug("permission resource name '{}'", permissionArtifact.getName()); //$NON-NLS-1$
+                                LOGGER.debug("deriver:permission resource name '{}'", permissionArtifact.getName()); //$NON-NLS-1$
 
                                 // properties
                                 for (final Property prop : permissionArtifact.getProperty()) {
-                                    LOGGER.debug("Source property '{}' with value '{}'", //$NON-NLS-1$
+                                    LOGGER.debug("deriver:Source property '{}' with value '{}'", //$NON-NLS-1$
                                                  prop.getPropertyName(),
                                                  prop.getPropertyValue());
                                 }
@@ -306,7 +340,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                                                  XPathConstants.NODESET);
 
         if (entries.getLength() != 0) {
-            LOGGER.debug("processing '{}' entries", entries.getLength()); //$NON-NLS-1$
+            LOGGER.debug("deriver:processing '{}' entries", entries.getLength()); //$NON-NLS-1$
 
             for (int entryIndex = 0, numEntries = entries.getLength(); entryIndex < numEntries; ++entryIndex) {
                 final Element entry = (Element)entries.item(entryIndex);
@@ -322,8 +356,8 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                 setDescriptionFromElementValue(entry, Entry.ManifestId.DESCRIPTION, entryArtifact, xpath);
 
                 if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("entry path '{}'", entryArtifact.getName()); //$NON-NLS-1$
-                    LOGGER.debug("entry description '{}'", entryArtifact.getDescription()); //$NON-NLS-1$
+                    LOGGER.debug("deriver:entry path '{}'", entryArtifact.getName()); //$NON-NLS-1$
+                    LOGGER.debug("deriver:entry description '{}'", entryArtifact.getDescription()); //$NON-NLS-1$
                 }
 
                 // properties
@@ -344,7 +378,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                                                XPathConstants.NODESET);
 
         if (props.getLength() != 0) {
-            LOGGER.debug("processing '{}' properties", props.getLength()); //$NON-NLS-1$
+            LOGGER.debug("deriver:processing '{}' properties", props.getLength()); //$NON-NLS-1$
 
             for (int propIndex = 0, numProps = props.getLength(); propIndex < numProps; ++propIndex) {
                 final Element prop = (Element)props.item(propIndex);
@@ -355,7 +389,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
 
             if (LOGGER.isDebugEnabled()) {
                 for (final Property prop : artifact.getProperty()) {
-                    LOGGER.debug("artifact '{}' has property '{}' with value '{}'", //$NON-NLS-1$
+                    LOGGER.debug("deriver:artifact '{}' has property '{}' with value '{}'", //$NON-NLS-1$
                                  new Object[] {artifact.getName(), prop.getPropertyName(), prop.getPropertyValue()});
                 }
             }
@@ -372,7 +406,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                                                  XPathConstants.NODESET);
 
         if (schemas.getLength() != 0) {
-            LOGGER.debug("processing '{}' schemas", schemas.getLength()); //$NON-NLS-1$
+            LOGGER.debug("deriver:processing '{}' schemas", schemas.getLength()); //$NON-NLS-1$
 
             for (int schemaIndex = 0, numSchemas = schemas.getLength(); schemaIndex < numSchemas; ++schemaIndex) {
                 final Element schema = (Element)schemas.item(schemaIndex);
@@ -388,8 +422,8 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                 setDescriptionFromElementValue(schema, Schema.ManifestId.DESCRIPTION, schemaArtifact, xpath);
 
                 if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("schema name '{}'", schemaArtifact.getName()); //$NON-NLS-1$
-                    LOGGER.debug("schema description '{}'", schemaArtifact.getDescription()); //$NON-NLS-1$
+                    LOGGER.debug("deriver:schema name '{}'", schemaArtifact.getName()); //$NON-NLS-1$
+                    LOGGER.debug("deriver:schema description '{}'", schemaArtifact.getDescription()); //$NON-NLS-1$
                 }
 
                 { // visible
@@ -430,12 +464,13 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                                                          XPathConstants.NODESET);
 
                 if (sources.getLength() != 0) {
-                    LOGGER.debug("processing '{}' sources for schema '{}'", sources.getLength(), schemaArtifact.getName()); //$NON-NLS-1$
+                    LOGGER.debug("deriver:processing '{}' sources for schema '{}'", sources.getLength(), schemaArtifact.getName()); //$NON-NLS-1$
 
                     for (int sourceIndex = 0, numSources = sources.getLength(); sourceIndex < numSources; ++sourceIndex) {
                         final Element source = (Element)sources.item(sourceIndex);
                         final BaseArtifactType sourceArtifact = VdbDeriver.create(SourceArtifact.TYPE);
                         derivedArtifacts.add(sourceArtifact);
+                        this.sources.add(sourceArtifact);
 
                         { // name
                             final String name = source.getAttribute(Source.ManifestId.Attribute.NAME);
@@ -453,11 +488,11 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                         }
 
                         if (LOGGER.isDebugEnabled()) {
-                            LOGGER.debug("schema source name '{}'", sourceArtifact.getName()); //$NON-NLS-1$
+                            LOGGER.debug("deriver:schema source name '{}'", sourceArtifact.getName()); //$NON-NLS-1$
 
                             // properties
                             for (final Property prop : sourceArtifact.getProperty()) {
-                                LOGGER.debug("Source property '{}' with value '{}'", //$NON-NLS-1$
+                                LOGGER.debug("deriver:Source property '{}' with value '{}'", //$NON-NLS-1$
                                              prop.getPropertyName(),
                                              prop.getPropertyValue());
                             }
@@ -487,12 +522,13 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                                                      XPathConstants.NODESET);
 
         if (translators.getLength() != 0) {
-            LOGGER.debug("processing '{}' translators", translators.getLength()); //$NON-NLS-1$
+            LOGGER.debug("deriver:processing '{}' translators", translators.getLength()); //$NON-NLS-1$
 
             for (int translatorIndex = 0, numTranslators = translators.getLength(); translatorIndex < numTranslators; ++translatorIndex) {
                 final Element translator = (Element)translators.item(translatorIndex);
                 final BaseArtifactType translatorArtifact = VdbDeriver.create(TranslatorArtifact.TYPE);
                 derivedArtifacts.add(translatorArtifact);
+                this.translators.add(translatorArtifact);
 
                 { // name
                     final String name = translator.getAttribute(Translator.ManifestId.Attribute.NAME);
@@ -505,8 +541,8 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                 }
 
                 if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("translator name '{}'", translatorArtifact.getName()); //$NON-NLS-1$
-                    LOGGER.debug("translator description '{}'", translatorArtifact.getDescription()); //$NON-NLS-1$
+                    LOGGER.debug("deriver:translator name '{}'", translatorArtifact.getName()); //$NON-NLS-1$
+                    LOGGER.debug("deriver:translator description '{}'", translatorArtifact.getDescription()); //$NON-NLS-1$
                 }
 
                 { // type
@@ -539,9 +575,9 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
         setVersionFromAttribueValue(vdb, Vdb.ManifestId.Attribute.VERSION, vdbArtifact, xpath);
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("VDB name '{}'", vdbArtifact.getName()); //$NON-NLS-1$
-            LOGGER.debug("VDB description '{}'", vdbArtifact.getDescription()); //$NON-NLS-1$
-            LOGGER.debug("VDB version '{}'", vdbArtifact.getVersion()); //$NON-NLS-1$
+            LOGGER.debug("deriver:VDB name '{}'", vdbArtifact.getName()); //$NON-NLS-1$
+            LOGGER.debug("deriver:VDB description '{}'", vdbArtifact.getDescription()); //$NON-NLS-1$
+            LOGGER.debug("deriver:VDB version '{}'", vdbArtifact.getVersion()); //$NON-NLS-1$
         }
 
         processProperties(vdbArtifact, vdb, xpath);
@@ -564,7 +600,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                                                     XPathConstants.NODESET);
 
         if (vdbImports.getLength() != 0) {
-            LOGGER.debug("processing '{}' VDB imports", vdbImports.getLength()); //$NON-NLS-1$
+            LOGGER.debug("deriver:processing '{}' VDB imports", vdbImports.getLength()); //$NON-NLS-1$
 
             for (int vdbImportIndex = 0, numVdbImports = vdbImports.getLength(); vdbImportIndex < numVdbImports; ++vdbImportIndex) {
                 final Element vdbImport = (Element)vdbImports.item(vdbImportIndex);
@@ -592,12 +628,14 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                 }
 
                 if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Import VDB name '{}'", vdbImportArtifact.getName()); //$NON-NLS-1$
-                    LOGGER.debug("Import VDB version '{}'", vdbImportArtifact.getVersion()); //$NON-NLS-1$
+                    LOGGER.debug("deriver:Import VDB name '{}'", vdbImportArtifact.getName()); //$NON-NLS-1$
+                    LOGGER.debug("deriver:Import VDB version '{}'", vdbImportArtifact.getVersion()); //$NON-NLS-1$
 
                     // properties
                     for (final Property prop : vdbImportArtifact.getProperty()) {
-                        LOGGER.debug("Import VDB property '{}' with value '{}'", prop.getPropertyName(), prop.getPropertyValue()); //$NON-NLS-1$
+                        LOGGER.debug("deriver:Import VDB property '{}' with value '{}'", //$NON-NLS-1$
+                                     prop.getPropertyName(),
+                                     prop.getPropertyValue());
                     }
                 }
 
@@ -617,7 +655,7 @@ public class VdbDeriver extends AbstractXmlDeriver implements SrampRepositoryCon
                            final Element context,
                            final String query,
                            final QName returnType) throws XPathExpressionException {
-        LOGGER.debug("executing query '{}'", query); //$NON-NLS-1$
+        LOGGER.debug("deriver:executing query '{}'", query); //$NON-NLS-1$
         return super.query(xpath, context, query, returnType);
     }
 

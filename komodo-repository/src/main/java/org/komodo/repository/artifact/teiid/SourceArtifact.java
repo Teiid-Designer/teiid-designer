@@ -32,6 +32,23 @@ public interface SourceArtifact extends Artifact {
     };
 
     /**
+     * A relationship between a source artifact and its translator artifact.
+     */
+    public static final RelationshipType TRANSLATOR_RELATIONSHIP = new RelationshipType() {
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.komodo.repository.artifact.Artifact.RelationshipType#getId()
+         */
+        @Override
+        public String getId() {
+            return "SourceTranslator"; //$NON-NLS-1$
+        }
+
+    };
+
+    /**
      * The artifact type for a schema data source artifact.
      */
     public static final Type TYPE = new Type() {
