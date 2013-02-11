@@ -10,7 +10,7 @@
 	<groupId>org.jboss.tools.teiid.plugins</groupId>
 	<artifactId>teiid</artifactId>
 	<name>teiid.plugins.teiid</name>
-	<version>8.1.0-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>org.teiid.7.7.x</module>
