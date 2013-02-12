@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
@@ -32,12 +33,14 @@ import org.eclipse.ui.navigator.ICommonActionConstants;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
@@ -57,6 +60,71 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
  */
 public class TeiidServerActionProvider extends CommonActionProvider {
 
+    /**
+     * Prefix for language NLS properties
+     */
+    private static final String PREFIX = I18nUtil.getPropertyPrefix(TeiidServerActionProvider.class);
+    
+    /**
+     * A <code>ViewerFilter</code> that hides the translators.
+     */
+    private static final ViewerFilter TRANSLATORS_FILTER = new ViewerFilter() {
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+         */
+        @Override
+        public boolean select(Viewer viewer,
+                              Object parentElement,
+                              Object element) {
+            ITeiidTranslator teiidTranslator = RuntimeAssistant.adapt(element, ITeiidTranslator.class);
+            if (teiidTranslator != null) return false;
+
+            return true;
+        }
+    };
+
+    /**
+     * A <code>ViewerFilter</code> that hides Preview Data Sources.
+     */
+    private static final ViewerFilter PREVIEW_DATA_SOURCE_FILTER = new ViewerFilter() {
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+         */
+        @Override
+        public boolean select(Viewer viewer,
+                              Object parentElement,
+                              Object element) {
+            ITeiidDataSource dataSource = RuntimeAssistant.adapt(element, ITeiidDataSource.class);
+            if (dataSource != null && dataSource.isPreview()) return false;
+
+            return true;
+        }
+    };
+
+    /**
+     * A <code>ViewerFilter</code> that hides Preview VDBs.
+     */
+    private static final ViewerFilter PREVIEW_VDB_FILTER = new ViewerFilter() {
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+         */
+        @Override
+        public boolean select(Viewer viewer,
+                              Object parentElement,
+                              Object element) {
+            ITeiidVdb vdb = RuntimeAssistant.adapt(element, ITeiidVdb.class);
+            if (vdb != null && vdb.isPreviewVdb()) return false;
+
+            return true;
+        }
+    };
+    
     /**
      * Memento info for saving and restoring menu state from session to session
      */
@@ -168,11 +236,11 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     }
     
     private String getString( final String stringId ) {
-        return DqpUiConstants.UTIL.getString(TeiidView.PREFIX + stringId);
+        return DqpUiConstants.UTIL.getString(PREFIX + stringId);
     }
     
     private String getString( final String stringId, final Object param ) {
-        return DqpUiConstants.UTIL.getString(TeiidView.PREFIX + stringId, param);
+        return DqpUiConstants.UTIL.getString(PREFIX + stringId, param);
     }
     
     private List<Object> getSelectedObjects() {
@@ -206,15 +274,15 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         List<ViewerFilter> filters = new ArrayList<ViewerFilter>(3);
 
         if (!this.showPreviewDataSources) {
-            filters.add(TeiidView.PREVIEW_DATA_SOURCE_FILTER);
+            filters.add(PREVIEW_DATA_SOURCE_FILTER);
         }
 
         if (!this.showPreviewVdbs) {
-            filters.add(TeiidView.PREVIEW_VDB_FILTER);
+            filters.add(PREVIEW_VDB_FILTER);
         }
         
         if (!this.showTranslators) {
-            filters.add(TeiidView.TRANSLATORS_FILTER);
+            filters.add(TRANSLATORS_FILTER);
         }
 
         // set new content filters
