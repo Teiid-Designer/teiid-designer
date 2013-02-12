@@ -353,7 +353,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     	Group theGroup = WidgetFactory.createGroup(parent, "Format Options", SWT.NONE, 1, 2); //$NON-NLS-1$
     	theGroup.setLayout(new GridLayout(2, false));
 	  	GridData groupGD = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
-	  	groupGD.heightHint=GROUP_HEIGHT_190;
+	  	groupGD.heightHint=210;
 	  	theGroup.setLayoutData(groupGD);
     	
     	// Create Bottom Composite

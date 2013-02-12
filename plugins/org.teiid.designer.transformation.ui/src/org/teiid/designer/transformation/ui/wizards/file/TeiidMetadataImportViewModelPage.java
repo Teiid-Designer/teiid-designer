@@ -437,6 +437,11 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 			setThisPageComplete(getString("viewTableAlreadyExists", fileInfo.getViewTableName()), ERROR); //$NON-NLS-1$
 			return false;
 		}
+		
+		if( fileInfo.getViewTableName() == null || fileInfo.getViewTableName().length() == 0) {
+			setThisPageComplete(getString("viewTableNameNullOrEmpty"), ERROR); //$NON-NLS-1$
+			return false;
+		}
 
 		setThisPageComplete(StringUtilities.EMPTY_STRING, NONE);
 
@@ -518,7 +523,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
             final String viewTableName = this.fileInfo.getViewTableName();
 
             if (viewTableName != null) {
-                if (!viewTableName.equals(viewTableName)) {
+                if (!StringUtilities.equalsIgnoreCase(viewTableName, this.viewTableNameText.getText())) {
                     this.viewTableNameText.setText(viewTableName);
                 }
             } else {

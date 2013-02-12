@@ -903,13 +903,23 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         // Get selected Data file
         if( this.info.isFlatFileMode() ) {
         	String fileName = EMPTY_STRING;
+        	String fileName_wo_extension = null;
         	for(TeiidMetadataFileInfo tmFileInfo : this.info.getFileInfos() ) {
         		if( tmFileInfo.doProcess() ) {
         			fileName = tmFileInfo.getDataFile().getName();
+        			IPath path = new Path(fileName);
+        			fileName_wo_extension = path.removeFileExtension().toString();
+        			
         			break;
         		}
         	}
         	this.selectedFileText.setText(fileName);
+        	if( fileName_wo_extension != null && (this.info.getSourceModelName() == null || this.info.getSourceModelName().length() == 0) ) {
+        		this.info.setSourceModelName(fileName_wo_extension + "_source");
+        	}
+        	if( fileName_wo_extension != null && (this.info.getViewModelName() == null || this.info.getViewModelName().length() == 0) ) {
+        		this.info.setViewModelName(fileName_wo_extension + "_view");
+        	}
         } else {
         	String fileName = EMPTY_STRING;
         	for(TeiidXmlFileInfo xmlFileInfo : this.info.getXmlFileInfos() ) {
