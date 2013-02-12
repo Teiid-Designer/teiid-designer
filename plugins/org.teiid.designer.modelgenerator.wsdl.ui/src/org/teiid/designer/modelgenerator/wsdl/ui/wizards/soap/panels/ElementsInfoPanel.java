@@ -25,6 +25,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.AttributeInfo;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ColumnInfo;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
+import org.teiid.designer.query.proc.wsdl.IWsdlAttributeInfo;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
@@ -131,7 +132,7 @@ public class ElementsInfoPanel {
 						editElementsPanel.refresh();
 						notifyColumnDataChanged();
 					}
-				} else if( selectedObject instanceof AttributeInfo) {
+				} else if( selectedObject instanceof IWsdlAttributeInfo) {
 					AttributeInfo info = (AttributeInfo)selectedObject;
 					if (info != null) {
 						ColumnInfo parentColumnInfo = info.getColumnInfo();
@@ -235,7 +236,7 @@ public class ElementsInfoPanel {
 	    						downButton.setEnabled(procedureInfo.canMoveHeaderColumnDown(columnInfo));
 							}
 						}
-					} else if( objs[0] instanceof AttributeInfo) {
+					} else if( objs[0] instanceof IWsdlAttributeInfo) {
 						deleteButton.setEnabled(true);
 					}
 

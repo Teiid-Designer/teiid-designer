@@ -7,61 +7,36 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.model;
 
+import org.teiid.designer.query.proc.wsdl.model.IPort;
+
 /**
  * This class represents a port as defined in a WSDL
  *
  * @since 8.0
  */
-public interface Port extends WSDLElement {
-	
-	public static final String HTTP = "HTTP"; //$NON-NLS-1$
-    public static final String SOAP11 = "SOAP11"; //$NON-NLS-1$
-    public static final String SOAP12 = "SOAP12"; //$NON-NLS-1$
-	
-	public static final String HTTP_TRANSPORT_URI = "http://schemas.xmlsoap.org/wsdl/http/"; //$NON-NLS-1$
-	public static final String SOAP11_TRANSPORT_URI = "http://schemas.xmlsoap.org/wsdl/soap/"; //$NON-NLS-1$
-	public static final String SOAP12_TRANSPORT_URI = "http://schemas.xmlsoap.org/wsdl/soap12/"; //$NON-NLS-1$
+public interface Port extends IPort, WSDLElement {
 
-    /**
-     * @return a binding defined in this port
-     */
-    public Binding getBinding();
+    @Override
+    Binding getBinding();
 
     /**
      * @param binding the binding that is defined by this port
      */
-    public void setBinding( Binding binding );
+    void setBinding( Binding binding );
 
-    /**
-     * @return the service that defines this port
-     */
-    public Service getService();
+    @Override
+    Service getService();
 
     /**
      * @param uri - the location attribute of the <soap:address> element. The endpoint URL for the port.
      */
-    public void setLocationURI( String uri );
+    void setLocationURI( String uri );
     
     /**
      * @param uri - the binding namespace URI attribute of the <soap:address> element. 
      */
-    public void setBindingTypeURI( String uri );
+    void setBindingTypeURI( String uri );
     
-    /**
-     * @param uri - the binding type (SOAP11, SOAP12 or HTTP). 
-     */
-    public String getBindingType( );
-    
-    /**
-     * @param uri - the binding namespace URI attribute of the <soap:address> element. 
-     */
-    public String getBindingTypeURI();
-
-    /**
-     * @return the location attribute of the <soap:address> element. The endpoint URL for the port.
-     */
-    public String getLocationURI();
-
-    public String getNamespaceURI();
-
+    @Override
+    Port copy();
 }

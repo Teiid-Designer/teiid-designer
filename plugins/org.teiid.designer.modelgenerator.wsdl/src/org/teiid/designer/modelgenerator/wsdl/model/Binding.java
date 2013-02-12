@@ -7,47 +7,40 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.model;
 
+import org.teiid.designer.query.proc.wsdl.model.IBinding;
+
 /**
  * This class represents a Binding as defined in a WSDL
  *
  * @since 8.0
  */
-public interface Binding extends WSDLElement {
+public interface Binding extends IBinding, WSDLElement {
 
     /**
      * @return returns the operations defined within the Binding
      */
-    public Operation[] getOperations();
+    Operation[] getOperations();
 
     /**
      * @return the port that contains this binding
      */
-    public Port getPort();
+    Port getPort();
 
     /**
      * @param operations the array of operations this binding contains
      */
-    public void setOperations( Operation[] operations );
+    void setOperations( Operation[] operations );
 
     /**
      * @param uri the URI for the SOAP Binding
      */
-    public void setTransportURI( String uri );
-
-    /**
-     * @return uri the URI for the SOAP Binding
-     */
-    public String getTransportURI();
+    void setTransportURI( String uri );
 
     /**
      * @param style the style for the SOAP web service
      */
-    public void setStyle( String style );
-
-    /**
-     * This returns the style information returned by the SOAP binding (RPC or DOC)
-     * 
-     * @return the style for the SOAP web service
-     */
-    public String getStyle();
+    void setStyle( String style );
+    
+    @Override
+    Binding copy();
 }

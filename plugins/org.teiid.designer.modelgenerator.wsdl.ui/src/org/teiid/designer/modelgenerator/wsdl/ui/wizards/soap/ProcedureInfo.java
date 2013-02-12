@@ -12,12 +12,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
+import org.teiid.designer.query.proc.wsdl.IWsdlColumnInfo;
+import org.teiid.designer.query.proc.wsdl.IWsdlProcedureInfo;
 import org.teiid.designer.query.sql.ISQLConstants;
 
 
@@ -25,16 +26,8 @@ import org.teiid.designer.query.sql.ISQLConstants;
 /**
  * @since 8.0
  */
-public abstract class ProcedureInfo implements ISQLConstants {
+public abstract class ProcedureInfo implements IWsdlProcedureInfo, ISQLConstants  {
 
-    public static final String SQL_BEGIN = "CREATE VIRTUAL PROCEDURE\nBEGIN\n"; //$NON-NLS-1$
-    public static final String SQL_END = "\nEND"; //$NON-NLS-1$
-    public static final String XSI_NAMESPACE_PREFIX = "xsi"; //$NON-NLS-1$
-    
-    public static final int REQUEST = 0;
-    public static final int RESPONSE = 1;
-    public static final int TYPE_BODY = 0;
-    public static final int TYPE_HEADER = 1;
     
     private StringNameValidator nameValidator;
     
@@ -69,13 +62,13 @@ public abstract class ProcedureInfo implements ISQLConstants {
      */
 	private String rootPath = StringUtilities.EMPTY_STRING;
 	
-	private int type;
+	private ProcedureType type;
 	
 	private boolean changed;
 	
 	private boolean initializing;
 
-	public ProcedureInfo(Operation operation, int type, ProcedureGenerator generator) {
+	public ProcedureInfo(Operation operation, ProcedureType type, ProcedureGenerator generator) {
 		super();
 		this.initializing = true;
 		this.operation = operation;
@@ -88,10 +81,16 @@ public abstract class ProcedureInfo implements ISQLConstants {
 		this.initializing = false;
 	}
 	
+	@Override
 	public abstract String getDefaultProcedureName();
 	
 	protected ProcedureGenerator getGenerator() {
 		return this.generator;
+	}
+	
+	@Override
+	public ProcedureGenerator getWrapperProcedure() {
+	    return generator;
 	}
 	
 	public SchemaTreeModel getTreeModel() {
@@ -118,14 +117,17 @@ public abstract class ProcedureInfo implements ISQLConstants {
 		setChanged(true);
 	}
 	
+	@Override
 	public Map<String, String> getNamespaceMap() {
 		return this.namespaceMap;
 	}
 	
-	public int getType() {
+	@Override
+	public ProcedureType getType() {
 		return this.type;
 	}
 
+	@Override
 	public ColumnInfo[] getBodyColumnInfoList() {
 		return this.bodyColumnInfoList.toArray(new ColumnInfo[this.bodyColumnInfoList.size()]);
 	}
@@ -203,6 +205,7 @@ public abstract class ProcedureInfo implements ISQLConstants {
 		return -1;
 	}
 	
+	@Override
 	public ColumnInfo[] getHeaderColumnInfoList() {
 		return this.headerColumnInfoList.toArray(new ColumnInfo[this.headerColumnInfoList.size()]);
 	}
@@ -300,14 +303,15 @@ public abstract class ProcedureInfo implements ISQLConstants {
 				}
 			}
 			
-			if( ! columnInfo.getDatatype().equalsIgnoreCase(ColumnInfo.INTEGER_DATATYPE) ) {
-				columnInfo.setDatatype(ColumnInfo.INTEGER_DATATYPE);
+			if( ! columnInfo.getDatatype().equalsIgnoreCase(IWsdlColumnInfo.INTEGER_DATATYPE) ) {
+				columnInfo.setDatatype(IWsdlColumnInfo.INTEGER_DATATYPE);
 			}
 			columnInfo.setOrdinality(true);
 		}
 		setChanged(true);
 	}
 	
+    @Override
     public String getProcedureName() {
 		return this.procedureName;
 	}
@@ -316,6 +320,7 @@ public abstract class ProcedureInfo implements ISQLConstants {
 	 * 
 	 * @return rootPath the root path xquery expression
 	 */
+	@Override
 	public String getRootPath() {
 		return this.getGenerator().getImportManager().isMessageServiceMode() ? ResponseInfo.SOAPENVELOPE_ROOTPATH: this.rootPath;
 	}
@@ -345,6 +350,7 @@ public abstract class ProcedureInfo implements ISQLConstants {
 		setChanged(true);
 	}
 
+	@Override
 	public Operation getOperation() {
 		return this.operation;
 	}
@@ -353,6 +359,7 @@ public abstract class ProcedureInfo implements ISQLConstants {
 		return Status.OK_STATUS;
 	}
 	
+	@Override
 	public String getUniqueBodyColumnName(String proposedName) {
 		for( ColumnInfo info : getBodyColumnInfoList()) {
 			this.nameValidator.addExistingName(info.getName());
@@ -364,6 +371,7 @@ public abstract class ProcedureInfo implements ISQLConstants {
 		
 	}
 	
+	@Override
 	public String getUniqueHeaderColumnName(String proposedName) {
 		for( ColumnInfo info : getHeaderColumnInfoList()) {
 			this.nameValidator.addExistingName(info.getName());

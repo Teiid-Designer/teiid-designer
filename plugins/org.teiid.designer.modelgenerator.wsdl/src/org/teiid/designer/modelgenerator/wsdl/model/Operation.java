@@ -8,6 +8,7 @@
 package org.teiid.designer.modelgenerator.wsdl.model;
 
 import org.teiid.designer.modelgenerator.wsdl.SoapBindingInfo;
+import org.teiid.designer.query.proc.wsdl.model.IOperation;
 
 /**
  * This class represents an Operation as defined in the WSDL It does not contain any information about the messages that are used
@@ -15,66 +16,50 @@ import org.teiid.designer.modelgenerator.wsdl.SoapBindingInfo;
  *
  * @since 8.0
  */
-public interface Operation extends WSDLElement {
+public interface Operation extends WSDLElement, IOperation {
 
-    /**
-     * @return the binding that contains this operation
-     */
-    public Binding getBinding();
+    @Override
+    Binding getBinding();
 
-    /**
-     * @return the name of the input message
-     */
-    public Message getInputMessage();
+    @Override
+    Message getInputMessage();
 
     /**
      * @param inputMsg the name of the input message
      */
-    public void setInputMessage( Message inputMsg );
+    void setInputMessage( Message inputMsg );
 
-    /**
-     * @return the name of the output message
-     */
-    public Message getOutputMessage();
+    @Override
+    Message getOutputMessage();
 
     /**
      * @param outputMsg the name of the output message
      */
-    public void setOutputMessage( Message outputMsg );
-
-    /**
-     * @return the style of the operation
-     */
-    public String getStyle();
+    void setOutputMessage( Message outputMsg );
 
     /**
      * @param style the style of the operation
      */
-    public void setStyle( String style );
+    void setStyle( String style );
 
-    /**
-     * @return an array of the names of possible faults
-     */
-    public Fault[] getFaults();
+    @Override
+    Fault[] getFaults();
 
     /**
      * @param faults an array of the names of the possible faults
      */
-    public void setFaults( Fault[] faults );
+    void setFaults( Fault[] faults );
 
-    public void setSOAPAction( String action );
+    void setSOAPAction( String action );
 
-    public String getSOAPAction();
+    void setCanModel( boolean canModel );
 
-    public boolean canModel();
+    void addProblemMessage( String message );
 
-    public void setCanModel( boolean canModel );
+    SoapBindingInfo getSoapBindingInfo();
 
-    public void addProblemMessage( String message );
-
-    public String[] getProblemMessages();
-
-    public SoapBindingInfo getSoapBindingInfo();
-
-    public void setSoapBindingInfo( SoapBindingInfo info );
+    void setSoapBindingInfo( SoapBindingInfo info );
+    
+    @Override
+    Operation copy();
 }

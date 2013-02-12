@@ -7,36 +7,32 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.model;
 
+import org.teiid.designer.query.proc.wsdl.model.IMessage;
+
 /**
  * @since 8.0
  */
-public interface Message extends WSDLElement {
+public interface Message extends IMessage, WSDLElement {
 	
-	public Part[] getParts();	
-	public void setParts(Part[] parts);
+	@Override
+    Part[] getParts();	
 	
+	void setParts(Part[] parts);
 	
-	public int REQUEST_TYPE = 0x00;
-	public int RESPONSE_TYPE = 0x02;
-	public int FAULT_TYPE = 0x04;
+	@Override
+    Operation getOperation();
 	
-	public Operation getOperation();
-	public Fault getFault();
+	@Override
+    Fault getFault();
 	
-	public boolean isRequest();
-	public boolean isResponse();
-	public boolean isFault();
-	
-	public void setType(int Type);
-	public int getType();
+	void setType(int Type);
 
-	public String getUse();
-	public void setUse(String use);
+	void setUse(String use);
+
+	void setNamespaceURI(String ns);
 	
-	public String getNamespaceURI();
-	public void setNamespaceURI(String ns);
-	
-	public void setEncodingStyle(String style);
-	public String getEncodingStyle();
-	
+	void setEncodingStyle(String style);
+
+	@Override
+	Message copy();
 }

@@ -9,13 +9,11 @@ package org.teiid.designer.modelgenerator.wsdl.model.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import org.teiid.designer.modelgenerator.wsdl.SoapBindingInfo;
 import org.teiid.designer.modelgenerator.wsdl.model.Binding;
 import org.teiid.designer.modelgenerator.wsdl.model.Fault;
 import org.teiid.designer.modelgenerator.wsdl.model.Message;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
-import org.teiid.designer.modelgenerator.wsdl.model.WSDLElement;
 
 
 /**
@@ -46,7 +44,7 @@ public class OperationImpl extends WSDLElementImpl implements Operation {
     }
 
     @Override
-	public WSDLElement copy() {
+	public Operation copy() {
         Operation oper = new OperationImpl(getBinding());
         oper.setName(getName());
         oper.setId(getId());

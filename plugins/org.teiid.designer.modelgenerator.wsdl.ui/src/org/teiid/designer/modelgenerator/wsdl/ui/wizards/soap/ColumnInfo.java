@@ -21,17 +21,16 @@ import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.query.IQueryFactory;
 import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.proc.wsdl.IWsdlAttributeInfo;
+import org.teiid.designer.query.proc.wsdl.IWsdlColumnInfo;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 
 
 /**
  * @since 8.0
  */
-public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
-	public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
-	public static final String INTEGER_DATATYPE = "integer"; //$NON-NLS-1$
+public class ColumnInfo implements IWsdlColumnInfo, ModelGeneratorWsdlUiConstants {
 	
-	public static final int DEFAULT_WIDTH = 10;
 	private static final char SEPARATOR = '/';
 
     /** Constant value indicating no segments */
@@ -384,7 +383,7 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
 		validate();
 	}
 	
-	public AttributeInfo[] getAttributeInfoArray() {
+	public IWsdlAttributeInfo[] getAttributeInfoArray() {
 		return this.attributeInfoList.toArray(new AttributeInfo[this.attributeInfoList.size()]);
 	}
 	
@@ -393,13 +392,13 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
 		validate();
 	}
 	
-	public void removeAttributeInfo(AttributeInfo theInfo) {
+	public void removeAttributeInfo(IWsdlAttributeInfo theInfo) {
 		this.attributeInfoList.remove(theInfo);
 		validate();
 	}
 	
 	public String getUniqueAttributeName(String proposedName) {
-		for( AttributeInfo info : getAttributeInfoArray()) {
+		for( IWsdlAttributeInfo info : getAttributeInfoArray()) {
 			ColumnInfo.nameValidator.addExistingName(info.getName());
 		}
 		String changedName = ColumnInfo.nameValidator.createUniqueName(proposedName);

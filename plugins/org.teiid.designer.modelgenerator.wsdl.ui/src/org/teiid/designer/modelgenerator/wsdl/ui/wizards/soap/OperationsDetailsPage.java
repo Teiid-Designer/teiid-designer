@@ -10,7 +10,6 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -59,13 +58,13 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ElementsInf
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.RequestSchemaContentsGroup;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ResponseSchemaContentsGroup;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.WrapperProcedurePanel;
+import org.teiid.designer.query.proc.wsdl.IWsdlConstants.ProcedureType;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlTextViewer;
 import org.teiid.designer.ui.common.graphics.ColorManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
-
 
 /**
  * @since 8.0
@@ -84,10 +83,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 	/** <code>IDialogSetting</code>s key for saved dialog Y position. */
 	private static final String DIALOG_Y = "dialogY"; //$NON-NLS-1$
-
-	private static final int REQUEST = ProcedureInfo.REQUEST;
-	private static final int RESPONSE = ProcedureInfo.RESPONSE;
-	private static final int BOTH = 2;
 
 	/** The import manager. */
 	WSDLImportWizardManager importManager;
@@ -181,8 +176,8 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.overwriteExistingCB.setSelection(this.procedureGenerator.doOverwriteExistingProcedures());
 		this.overwriteExistingCB.setEnabled(this.importManager.viewModelExists());
 
-		updateSqlText(BOTH);
-		updateSchemaTree(BOTH);
+		updateSqlText(ProcedureType.BOTH);
+		updateSchemaTree(ProcedureType.BOTH);
 		
 		updateStatus();
 	}
@@ -198,7 +193,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.responseBodyColumnsInfoPanel.refresh();
 		this.responseHeaderColumnsInfoPanel.refresh();
 		
-		updateSqlText(BOTH);
+		updateSqlText(ProcedureType.BOTH);
 		this.wrapperPanel.notifyOperationChanged(this.getProcedureGenerator().getOperation());
 
 		updateStatus();
@@ -585,39 +580,48 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		}
 	}
 
-	void updateSqlText(int type) {
+	void updateSqlText(ProcedureType type) {
 		if (this.procedureGenerator != null) {
-			if (type == REQUEST) {
-				requestSqlTextViewer.getDocument().set(this.procedureGenerator.getRequestInfo().getSqlString(new Properties()));
-			} else if (type == RESPONSE) {
-				responseSqlTextViewer.getDocument().set(this.procedureGenerator.getResponseInfo().getSqlString(new Properties()));
-			} else if (type == BOTH) {
+		    
+		    switch (type) {
+		        case REQUEST:
+		            requestSqlTextViewer.getDocument().set(this.procedureGenerator.getRequestInfo().getSqlString(new Properties()));
+		            break;
+		        case RESPONSE:
+		            responseSqlTextViewer.getDocument().set(this.procedureGenerator.getResponseInfo().getSqlString(new Properties()));
+		            break;
+		        case BOTH:
 				requestSqlTextViewer.getDocument().set(this.procedureGenerator.getRequestInfo().getSqlString(new Properties()));
 				responseSqlTextViewer.getDocument().set(this.procedureGenerator.getResponseInfo().getSqlString(new Properties()));
 			}
 		}
 	}
 
-	void updateSchemaTree(int type) {
-		if (type == REQUEST) {
-			SchemaNodeWrapper nodeInput = new SchemaNodeWrapper(getSchemaForSelectedOperation(REQUEST));
-			requestBodySchemaContentsGroup.setInput(nodeInput);
-			requestHeaderSchemaContentsGroup.setInput(nodeInput);
-		} else if (type == RESPONSE) {
-			SchemaNodeWrapper nodeInput = new SchemaNodeWrapper(getSchemaForSelectedOperation(RESPONSE));
-			responseBodySchemaContentsGroup.setInput(nodeInput);
-			responseHeaderSchemaContentsGroup.setInput(nodeInput);
-		} else {
-			SchemaNodeWrapper nodeInput = new SchemaNodeWrapper(getSchemaForSelectedOperation(REQUEST));
-			requestBodySchemaContentsGroup.setInput(nodeInput);
-			requestHeaderSchemaContentsGroup.setInput(nodeInput);
-			nodeInput = new SchemaNodeWrapper(getSchemaForSelectedOperation(RESPONSE));
-			responseBodySchemaContentsGroup.setInput(nodeInput);
-			responseHeaderSchemaContentsGroup.setInput(nodeInput);
+	void updateSchemaTree(ProcedureType type) {
+	    SchemaNodeWrapper nodeInput;
+	    
+		switch (type) {
+		    case REQUEST:
+		        nodeInput = new SchemaNodeWrapper(getSchemaForSelectedOperation(ProcedureType.REQUEST));
+			    requestBodySchemaContentsGroup.setInput(nodeInput);
+			    requestHeaderSchemaContentsGroup.setInput(nodeInput);
+			    break;
+		    case RESPONSE:
+		        nodeInput = new SchemaNodeWrapper(getSchemaForSelectedOperation(ProcedureType.RESPONSE));
+		        responseBodySchemaContentsGroup.setInput(nodeInput);
+		        responseHeaderSchemaContentsGroup.setInput(nodeInput);
+		        break;
+		    case BOTH:
+		        nodeInput = new SchemaNodeWrapper(getSchemaForSelectedOperation(ProcedureType.REQUEST));
+		        requestBodySchemaContentsGroup.setInput(nodeInput);
+		        requestHeaderSchemaContentsGroup.setInput(nodeInput);
+		        nodeInput = new SchemaNodeWrapper(getSchemaForSelectedOperation(ProcedureType.RESPONSE));
+		        responseBodySchemaContentsGroup.setInput(nodeInput);
+		        responseHeaderSchemaContentsGroup.setInput(nodeInput);
 		}
 	}
 	
-	private List<SchemaNode> getSchemaForSelectedOperation(int type) {
+	private List<SchemaNode> getSchemaForSelectedOperation(ProcedureType type) {
 		return this.schemaHandler.getSchemaForSelectedOperation(type, this.procedureGenerator);
 	}
 

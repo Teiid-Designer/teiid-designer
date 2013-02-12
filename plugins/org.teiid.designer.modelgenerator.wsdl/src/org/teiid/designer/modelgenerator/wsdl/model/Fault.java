@@ -7,13 +7,22 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.model;
 
+import org.teiid.designer.query.proc.wsdl.model.IFault;
+
 /**
  * @since 8.0
  */
-public interface Fault extends WSDLElement {
+public interface Fault extends IFault, WSDLElement {
 	
-	public void setMessage(Message message);
-	public Message getMessage();
-	public Operation getOperation();
+	void setMessage(Message message);
+	
+	@Override
+    Message getMessage();
+	
+	@Override
+    Operation getOperation();
+	
+	@Override
+    Fault copy();
 
 }

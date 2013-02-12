@@ -40,6 +40,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.AttributeInfo;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ColumnInfo;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
+import org.teiid.designer.query.proc.wsdl.IWsdlAttributeInfo;
 
 
 /**
@@ -242,7 +243,7 @@ public class EditElementsPanel {
 		public Image getImage(Object element) {
 			if (element instanceof ColumnInfo) {
 				return XSD_ELEMENT_ICON_IMG;
-			} else if( element instanceof AttributeInfo ) {
+			} else if( element instanceof IWsdlAttributeInfo ) {
 				return XSD_ATTRIBUTE_ICON_IMG;
 			}
 			return null;
@@ -252,8 +253,8 @@ public class EditElementsPanel {
 		public String getText(Object element) {
 			if (element instanceof ColumnInfo) {
 				return ((ColumnInfo) element).getName();
-			} else if( element instanceof AttributeInfo ) {
-				return ((AttributeInfo) element).getSignature();
+			} else if( element instanceof IWsdlAttributeInfo ) {
+				return ((IWsdlAttributeInfo) element).getSignature();
 			}
 			return null;
 		}
@@ -287,8 +288,8 @@ public class EditElementsPanel {
         String name = null;
         if( obj instanceof ColumnInfo ) {
         	name = ((ColumnInfo)obj).getName();
-        } else if( obj instanceof AttributeInfo ) {
-        	name = ((AttributeInfo)obj).getAlias();
+        } else if( obj instanceof IWsdlAttributeInfo ) {
+        	name = ((IWsdlAttributeInfo)obj).getAlias();
         }
         if (name != null) {
             textEditor.setText(name);
@@ -411,7 +412,7 @@ public class EditElementsPanel {
         final String newName = textEditor.getText();
         if( obj instanceof ColumnInfo) {
         	((ColumnInfo)obj).setName(newName);
-        } else if( obj instanceof AttributeInfo) {
+        } else if( obj instanceof IWsdlAttributeInfo) {
         	((AttributeInfo)obj).setAlias(newName);
         }
         

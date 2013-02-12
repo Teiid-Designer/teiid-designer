@@ -10,7 +10,6 @@ package org.teiid.designer.modelgenerator.wsdl.model.impl;
 import org.teiid.designer.modelgenerator.wsdl.model.Binding;
 import org.teiid.designer.modelgenerator.wsdl.model.Port;
 import org.teiid.designer.modelgenerator.wsdl.model.Service;
-import org.teiid.designer.modelgenerator.wsdl.model.WSDLElement;
 
 /**
  * @since 8.0
@@ -54,7 +53,7 @@ public class PortImpl extends WSDLElementImpl implements Port {
 	}
 
 	@Override
-	public WSDLElement copy() {
+	public Port copy() {
 		PortImpl impl = new PortImpl(getService());
 		impl.setName(getName());
 		impl.setId(getId());

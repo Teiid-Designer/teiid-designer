@@ -8,20 +8,21 @@
 package org.teiid.designer.modelgenerator.wsdl.model;
 
 import java.util.Map;
-
 import org.eclipse.xsd.XSDSchema;
 import org.jdom.Namespace;
+import org.teiid.designer.query.proc.wsdl.model.IModel;
 
 /**
  * This class represents the model hierarchy as defined by a give WSDL
  *
  * @since 8.0
  */
-public interface Model {
+public interface Model extends IModel {
 
     /**
      * @return an array of the services defined in the WSDL
      */
+    @Override
     public Service[] getServices();
 
     /**
@@ -39,7 +40,8 @@ public interface Model {
      */
     public void setSchemas( XSDSchema[] schemas );
 
-    public Map getNamespaces();
+    @Override
+    public Map<String, String> getNamespaces();
 
     public void setNamespaces( Map namespaceMap );
 
@@ -50,13 +52,18 @@ public interface Model {
 
     public void addNamespaceToMap( String namespaceURI );
 
+    @Override
     public Service getService( String name );
 
+    @Override
     public Port getPort( String name );
 
+    @Override
     public Operation getOperation( String name );
     
+    @Override
     public Operation[] getModelableOperations(String portName);
     
+    @Override
     public String[] getModelablePortNames();
 }

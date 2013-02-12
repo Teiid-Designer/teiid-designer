@@ -17,13 +17,14 @@ import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.query.IQueryFactory;
 import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.proc.wsdl.IWsdlAttributeInfo;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 
 
 /**
  * @since 8.0
  */
-public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
+public class AttributeInfo implements ModelGeneratorWsdlUiConstants, IWsdlAttributeInfo {
 	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false, true);
 	
     /**
@@ -85,6 +86,7 @@ public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
      * 
      * @return the column name sans quotes.
      */
+    @Override
     public String getName() {
         String name = this.nameSymbol.toString();
         return name.replaceAll("\"", ""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -96,6 +98,7 @@ public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
      *
      * @return name the column name
      */    
+    @Override
     public String getSymbolName() {
         return this.nameSymbol.toString();
     }
@@ -114,7 +117,8 @@ public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
 	 * 
 	 * @return name the attribute alias
 	 */
-	public String getAlias() {
+	@Override
+    public String getAlias() {
 		return this.alias;
 	}
 
@@ -128,7 +132,8 @@ public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
 		validate();
 	}
 	
-	public String getSignature() {
+	@Override
+    public String getSignature() {
 		StringBuffer sb = new StringBuffer();
 		sb.append(getAlias()).append(" [").append(getName()).append(']'); //$NON-NLS-1$
 		return sb.toString();
@@ -158,7 +163,8 @@ public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
 	 * 
 	 * @return status the <code>IStatus</code> representing the validity of the data in this info object
 	 */
-	public IStatus getStatus() {
+	@Override
+    public IStatus getStatus() {
 		return this.status;
 	}
 

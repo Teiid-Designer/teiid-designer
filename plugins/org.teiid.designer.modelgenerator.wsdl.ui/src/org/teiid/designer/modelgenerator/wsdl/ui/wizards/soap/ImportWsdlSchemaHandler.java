@@ -11,7 +11,6 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
@@ -46,6 +45,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
+import org.teiid.designer.query.proc.wsdl.IWsdlConstants.ProcedureType;
 import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.schema.tools.model.schema.SchemaModel;
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
@@ -96,12 +96,12 @@ public class ImportWsdlSchemaHandler {
 		this.operationsDetailsPage = operationsDetailsPage;
 	}
 
-	public List<SchemaNode> getSchemaForSelectedOperation(final int type,
+	public List<SchemaNode> getSchemaForSelectedOperation(ProcedureType type,
 			ProcedureGenerator generator) {
 
 		Model wsdlModel = null;
 		Object elementDeclaration = null;
-		if (type == ProcedureInfo.REQUEST) {
+		if (ProcedureType.REQUEST.equals(type)) {
 			this.requestSchemaTreeModel = new SchemaTreeModel();
 		}else{
 			this.responseSchemaTreeModel = new SchemaTreeModel();
@@ -120,7 +120,7 @@ public class ImportWsdlSchemaHandler {
 		String partElementName = null;
 		Part[] partArray = null;
 
-		if (type == ProcedureInfo.REQUEST) {
+		if (ProcedureType.REQUEST.equals(type)) {
 			if (selectedOperation.getInputMessage() != null) {
 				partArray = selectedOperation.getInputMessage().getParts();
 			}
@@ -136,7 +136,7 @@ public class ImportWsdlSchemaHandler {
 		        partElementName = getPartElementName(part);
 		        String namespace = part.getElementNamespace();
 
-		        if (type == ProcedureInfo.REQUEST) {
+		        if (ProcedureType.REQUEST.equals(type)) {
 		            this.requestSchemaTreeModel.setDefaultNamespace(namespace);
 		        }else{
 		            this.responseSchemaTreeModel.setDefaultNamespace(namespace);
@@ -160,7 +160,7 @@ public class ImportWsdlSchemaHandler {
 
 		                    foundElement = true;
 		                    try {
-		                        if (type == ProcedureInfo.REQUEST) {
+		                        if (ProcedureType.REQUEST.equals(type)) {
 		                            this.requestSchemaTreeModel = describe(schema,
 		                                                                   elementName,
 		                                                                   element,
@@ -212,7 +212,7 @@ public class ImportWsdlSchemaHandler {
 		                        elementDeclaration = xsdType;
 		                        foundElement = true;
 		                        try {
-		                            if (type == ProcedureInfo.REQUEST){
+		                            if (ProcedureType.REQUEST.equals(type)){
 		                                this.requestSchemaTreeModel = describe(schema, elementName, null, requestSchemaTreeModel);
 		                            }else{
 		                                this.responseSchemaTreeModel = describe(schema, elementName, null, responseSchemaTreeModel);
@@ -238,7 +238,7 @@ public class ImportWsdlSchemaHandler {
 		}
 
 		Collection<SchemaNode> nodeList = new ArrayList<SchemaNode>();
-		if (type == ProcedureInfo.REQUEST){
+		if (ProcedureType.REQUEST.equals(type)){
 			nodeList = this.requestSchemaTreeModel.getNodeList();
 		}else{
 			nodeList = this.responseSchemaTreeModel.getNodeList();

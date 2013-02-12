@@ -7,31 +7,25 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.model;
 
+import org.teiid.designer.query.proc.wsdl.model.IPart;
+
 /**
  * @since 8.0
  */
-public interface Part extends WSDLElement {
-	
-	public String getElementName();
+public interface Part extends IPart, WSDLElement {
 
-	public void setElementName(String name);
+	void setElementName(String name);
 	
-	public String getElementNamespace();
+	void setElementNamespace(String namespace);
 	
-	public void setElementNamespace(String namespace);
+	void setTypeName(String name);
 	
-	public String getTypeName();
+	void setTypeNamespace(String namespace);
 	
-	public void setTypeName(String name);
+	@Override
+    Message getMessage();
 	
-	public String getTypeNamespace();
-	
-	public void setTypeNamespace(String namespace);
-	
-	public Message getMessage();
-	
-	public boolean isType();
-	
-	public boolean isElement();
+	@Override
+	Part copy();
 	
 }

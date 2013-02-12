@@ -10,7 +10,6 @@ package org.teiid.designer.modelgenerator.wsdl.model.impl;
 import org.teiid.designer.modelgenerator.wsdl.model.Model;
 import org.teiid.designer.modelgenerator.wsdl.model.Port;
 import org.teiid.designer.modelgenerator.wsdl.model.Service;
-import org.teiid.designer.modelgenerator.wsdl.model.WSDLElement;
 
 /**
  * @since 8.0
@@ -34,7 +33,7 @@ public class ServiceImpl extends WSDLElementImpl implements Service {
     }
 
     @Override
-	public WSDLElement copy() {
+	public Service copy() {
         ServiceImpl newImpl = new ServiceImpl();
         newImpl.setId(getId());
         newImpl.setName(getName());

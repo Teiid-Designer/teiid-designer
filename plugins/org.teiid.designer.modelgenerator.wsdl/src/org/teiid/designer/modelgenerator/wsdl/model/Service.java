@@ -7,27 +7,28 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.model;
 
+import org.teiid.designer.query.proc.wsdl.model.IService;
+
 /**
  * This class represents a services as defined by as WSDL
  *
  * @since 8.0
  */
-public interface Service extends WSDLElement {
+public interface Service extends IService, WSDLElement {
 
-    /**
-     * @return an array of ports defined by the service
-     */
-    public Port[] getPorts();
+    @Override
+    Port[] getPorts();
 
     /**
      * @param ports the ports that this service defines
      */
-    public void setPorts( Port[] ports );
+    void setPorts( Port[] ports );
 
-    public void setModel( Model theModel );
+    void setModel( Model theModel );
 
-    public Model getModel();
-
-    public String getNamespaceURI();
-
+    @Override
+    Model getModel();
+    
+    @Override
+    Service copy();
 }

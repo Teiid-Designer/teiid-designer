@@ -9,7 +9,6 @@ package org.teiid.designer.modelgenerator.wsdl.model.impl;
 
 import org.teiid.designer.modelgenerator.wsdl.model.Message;
 import org.teiid.designer.modelgenerator.wsdl.model.Part;
-import org.teiid.designer.modelgenerator.wsdl.model.WSDLElement;
 
 /**
  * @since 8.0
@@ -84,7 +83,7 @@ public class PartImpl extends WSDLElementImpl implements Part {
 	}
 
 	@Override
-	public WSDLElement copy() {
+	public Part copy() {
 		PartImpl newImpl = new PartImpl(getMessage());
 		newImpl.setName(getName());
 		newImpl.setId(getId());

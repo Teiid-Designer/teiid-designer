@@ -50,6 +50,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
+import org.teiid.designer.query.proc.wsdl.IWsdlAttributeInfo;
 import org.teiid.designer.transformation.model.RelationalViewModelFactory;
 import org.teiid.designer.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
 import org.teiid.designer.transformation.util.SqlMappingRootCache;
@@ -412,7 +413,7 @@ public class ImportWsdlProcessor {
     			parameter.setLength(DEFAULT_STRING_LENGTH);
     		}
     		parameter.setProcedure(procedure);
-    		for( AttributeInfo attrInfo : columnInfo.getAttributeInfoArray() ) {
+    		for( IWsdlAttributeInfo attrInfo : columnInfo.getAttributeInfoArray() ) {
         		ProcedureParameter attributeParam = factory.createProcedureParameter();
         		attributeParam.setName(attrInfo.getName());
         		attributeParam.setType(STRING_DATATYPE);
@@ -526,7 +527,7 @@ public class ImportWsdlProcessor {
     		}
     		parameter.setProcedure(procedure);
     		
-    		for( AttributeInfo attrInfo : columnInfo.getAttributeInfoArray() ) {
+    		for( IWsdlAttributeInfo attrInfo : columnInfo.getAttributeInfoArray() ) {
         		ProcedureParameter attributeParam = factory.createProcedureParameter();
         		attributeParam.setName(attrInfo.getName());
         		attributeParam.setType(STRING_DATATYPE);

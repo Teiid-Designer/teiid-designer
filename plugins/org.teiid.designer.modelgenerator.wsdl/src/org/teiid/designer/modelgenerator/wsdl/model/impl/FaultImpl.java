@@ -11,7 +11,6 @@ package org.teiid.designer.modelgenerator.wsdl.model.impl;
 import org.teiid.designer.modelgenerator.wsdl.model.Fault;
 import org.teiid.designer.modelgenerator.wsdl.model.Message;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
-import org.teiid.designer.modelgenerator.wsdl.model.WSDLElement;
 
 /**
  * @since 8.0
@@ -41,7 +40,7 @@ public class FaultImpl extends WSDLElementImpl implements Fault {
 	}
 
 	@Override
-	public WSDLElement copy() {
+	public Fault copy() {
 		FaultImpl fault = new FaultImpl(getOperation());
 		fault.setMessage(getMessage());
 		fault.setName(getName());

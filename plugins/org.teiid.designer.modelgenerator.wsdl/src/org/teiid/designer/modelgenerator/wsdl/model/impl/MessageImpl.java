@@ -11,7 +11,6 @@ import org.teiid.designer.modelgenerator.wsdl.model.Fault;
 import org.teiid.designer.modelgenerator.wsdl.model.Message;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
 import org.teiid.designer.modelgenerator.wsdl.model.Part;
-import org.teiid.designer.modelgenerator.wsdl.model.WSDLElement;
 
 /**
  * @since 8.0
@@ -81,7 +80,7 @@ public class MessageImpl extends WSDLElementImpl implements Message {
 	
 	
 	@Override
-	public WSDLElement copy() {
+	public Message copy() {
 		Message message;
 		if(m_operation != null) {
 			message = new MessageImpl(getOperation());
