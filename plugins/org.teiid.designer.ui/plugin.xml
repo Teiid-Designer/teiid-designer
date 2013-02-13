@@ -568,6 +568,12 @@
          <actionSet
                id="RefactorActionSet">
          </actionSet>
+         <view
+               id="org.eclipse.wst.server.ui.ServersView"
+               minimized="false"
+               relationship="stack"
+               relative="org.eclipse.ui.views.ProblemView">
+         </view>
       </perspectiveExtension>
    </extension>
 <!-- Model Explorer decorator -->

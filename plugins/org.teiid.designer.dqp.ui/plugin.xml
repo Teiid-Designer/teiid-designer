@@ -11,20 +11,6 @@
 
      <extension-point id="vdbEditorUtil" name="%vdbEditorUtil" schema="schema/vdbEditorUtil.exsd"/>
 
-  <extension
-    point="org.eclipse.ui.views">
-      <category
-            name="%category.name.0"
-            id="org.teiid.designer.runtime.ui">
-      </category>
-      <view
-            name="%connectorsView"
-            icon="icons/full/obj16/connectorBinding.gif"
-            category="org.teiid.designer.ui"
-            class="org.teiid.designer.runtime.ui.views.TeiidView"
-            id="org.teiid.designer.runtime.ui.views.Teiid">
-      </view>
-  </extension>
    <!-- Extension to allow plugins to contribute to the Modeler Perspective. -->
    <extension
          id="teiidPerspectiveContributor"
@@ -295,9 +281,6 @@
                <instanceof
                      value="org.teiid.designer.runtime.ui.views.content.TeiidErrorNode">
                </instanceof>
-               <instanceof
-                     value="org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode">
-               </instanceof>
             </or>
          </enablement>
       </actionProvider>
@@ -310,7 +293,7 @@
          <command
                commandId="org.teiid.designer.dqp.ui.newServerAction"
                icon="icons/full/ctool16/new-teiid-server.png"
-               label="New Jboss Teiid Server"
+               label="%newJbossTeiidServerCommand.label"
                style="push">
          </command>
       </menuContribution>
@@ -319,9 +302,9 @@
          point="org.eclipse.ui.commands">
       <command
             defaultHandler="org.teiid.designer.runtime.ui.server.NewServerAction"
-            description="Show wizard for configuring new Jboss Teiid Server"
+            description="%newTeiidServerAction.description"
             id="org.teiid.designer.dqp.ui.newServerAction"
-            name="New Jboss Teiid Server">
+            name="%newJbossTeiidServerCommand.label">
       </command>
    </extension>
    <extension point="org.eclipse.ui.editors">
@@ -331,7 +314,7 @@
             extensions="teiidserver"
             icon="icons/full/obj16/connectorBinding.gif"
             id="org.teiid.designer.runtime.ui.server.editor.TeiidServerEditor"
-            name="Teiid Server"/>
+            name="%teiidServerEditor.title"/>
    </extension>
    <extension point="org.eclipse.ui.elementFactories">
   <factory id="org.teiid.designer.runtime.ui.server.editor.input.factory"
@@ -411,9 +394,6 @@
             </instanceof>
             <instanceof
                   value="org.teiid.designer.runtime.ui.views.content.TeiidDataNode">
-            </instanceof>
-            <instanceof
-                  value="org.teiid.designer.runtime.ui.views.content.TeiidEmptyNode">
             </instanceof>
             <instanceof
                   value="org.teiid.designer.runtime.ui.views.content.TeiidErrorNode">
