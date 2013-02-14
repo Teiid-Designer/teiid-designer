@@ -13,6 +13,7 @@ import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.osgi.util.NLS;
@@ -327,6 +328,30 @@ public interface ModelExtensionPropertyDefinition extends Cloneable, PropertyDef
         TIME("time"), //$NON-NLS-1$
         TIMESTAMP("timestamp"), //$NON-NLS-1$
         XML("xml"); //$NON-NLS-1$
+
+        /**
+         * @return a collection, without duplicates, of the first letter of each runtime type (never <code>null</code> or empty)
+         */
+        public static char[] getFirstChars() {
+            if (_firstChars == null) {
+                final Set<Character> temp = new HashSet<Character>();
+                String chars = ""; //$NON-NLS-1$
+
+                for (Type type : values()) {
+                    char c = type.getRuntimeType().charAt(0);
+
+                    if (temp.add(c)) {
+                        chars += c;
+                    }
+                }
+
+                _firstChars = chars.toCharArray();
+            }
+
+            return _firstChars;
+        }
+
+        private static char[] _firstChars;
 
         /**
          * The Teiid runtime type (never <code>null</code> or empty).

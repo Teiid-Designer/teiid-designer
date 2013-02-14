@@ -97,6 +97,7 @@ public class EditTranslationDialog extends FormDialog {
      * @param translationType a word describing what the translation represents (description, display name, etc.) (cannot be
      *            <code>null</code> or empty)
      * @param existingTranslations the existing translations (can be <code>null</code> or empty)
+     * @param translationBeingEdited the translation being edited (cannot be <code>null</code>)
      */
     public EditTranslationDialog( Shell parentShell,
                                   String title,
@@ -211,6 +212,9 @@ public class EditTranslationDialog extends FormDialog {
                     handleLocaleChanged(locales.get(index));
                 }
             });
+
+            final LocaleProposalProvider proposalProvider = new LocaleProposalProvider(cbxLocales);
+            proposalProvider.init();
         }
 
         TRANSLATION: {

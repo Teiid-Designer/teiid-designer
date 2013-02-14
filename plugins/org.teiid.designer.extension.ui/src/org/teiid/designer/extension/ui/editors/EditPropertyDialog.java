@@ -13,12 +13,10 @@ import static org.teiid.designer.extension.ui.UiConstants.Form.SECTION_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.TEXT_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.VIEWER_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -76,7 +74,6 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.forms.FormUtil;
 import org.teiid.designer.ui.forms.MessageFormDialog;
 
-
 /**
  * The <code>EditPropertyDialog</code> is used to create or edit a property definition.
  */
@@ -129,10 +126,10 @@ final class EditPropertyDialog extends FormDialog {
     private final ErrorMessage simpleIdError;
     private final ErrorMessage typeError;
 
-    public EditPropertyDialog( Shell shell,
-                               NamespaceProvider namespaceProvider,
-                               String metaclassName,
-                               Collection<String> existingPropIds ) {
+    public EditPropertyDialog(Shell shell,
+                              NamespaceProvider namespaceProvider,
+                              String metaclassName,
+                              Collection<String> existingPropIds) {
         super(shell);
 
         CoreArgCheck.isNotEmpty(metaclassName, "metaclassName is empty"); //$NON-NLS-1$
@@ -160,11 +157,11 @@ final class EditPropertyDialog extends FormDialog {
         this.typeError = new ErrorMessage();
     }
 
-    public EditPropertyDialog( Shell shell,
-                               NamespaceProvider namespaceProvider,
-                               String metaclassName,
-                               Collection<String> existingPropIds,
-                               ModelExtensionPropertyDefinition propDefnBeingEdited ) {
+    public EditPropertyDialog(Shell shell,
+                              NamespaceProvider namespaceProvider,
+                              String metaclassName,
+                              Collection<String> existingPropIds,
+                              ModelExtensionPropertyDefinition propDefnBeingEdited) {
         this(shell, namespaceProvider, metaclassName, existingPropIds);
         this.propDefnBeingEdited = propDefnBeingEdited;
 
@@ -198,7 +195,7 @@ final class EditPropertyDialog extends FormDialog {
         }
     }
 
-    private void addMessage( ErrorMessage errorMsg ) {
+    private void addMessage(ErrorMessage errorMsg) {
         if (errorMsg.isOk()) {
             this.scrolledForm.getMessageManager().removeMessage(errorMsg.getKey(), errorMsg.getControl());
         } else {
@@ -207,10 +204,10 @@ final class EditPropertyDialog extends FormDialog {
         }
     }
 
-    private void configureColumn( TableViewerColumn viewerColumn,
-                                  String headerText,
-                                  String headerToolTip,
-                                  boolean resizable ) {
+    private void configureColumn(TableViewerColumn viewerColumn,
+                                 String headerText,
+                                 String headerToolTip,
+                                 boolean resizable) {
         TableColumn column = viewerColumn.getColumn();
         column.setText(headerText);
         column.setToolTipText(headerToolTip);
@@ -225,7 +222,7 @@ final class EditPropertyDialog extends FormDialog {
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
-    protected void configureShell( Shell newShell ) {
+    protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
 
         if (isEditMode()) {
@@ -241,10 +238,10 @@ final class EditPropertyDialog extends FormDialog {
      * @see org.eclipse.jface.dialogs.MessageDialog#createButton(org.eclipse.swt.widgets.Composite, int, java.lang.String, boolean)
      */
     @Override
-    protected Button createButton( Composite parent,
-                                   int id,
-                                   String label,
-                                   boolean defaultButton ) {
+    protected Button createButton(Composite parent,
+                                  int id,
+                                  String label,
+                                  boolean defaultButton) {
         Button btn = super.createButton(parent, id, label, defaultButton);
 
         if (id == IDialogConstants.OK_ID) {
@@ -256,24 +253,24 @@ final class EditPropertyDialog extends FormDialog {
         return btn;
     }
 
-    @SuppressWarnings("unused")
-    private Section createDescriptionSection( Composite body,
-                                              FormToolkit toolkit ) {
+    @SuppressWarnings( "unused" )
+    private Section createDescriptionSection(Composite body,
+                                             FormToolkit toolkit) {
         final Section finalSection;
 
         SECTION: {
             Section section = FormUtil.createSection(this.managedForm, toolkit, body,
                                                      Messages.editPropertyDialogDescriptionSectionTitle,
-                                                     Messages.editPropertyDialogDescriptionSectionDescription, SECTION_STYLE, true);
+                                                     Messages.editPropertyDialogDescriptionSectionDescription, SECTION_STYLE,   true);
             section.setExpanded(false);
             finalSection = section;
 
             // configure section toolbar
             Button[] buttons = FormUtil.createSectionToolBar(finalSection, toolkit,
                                                              new Image[] {
-                                                                     Activator.getDefault().getImage(ImageIds.ADD_DESCRIPTION),
-                                                                     Activator.getDefault().getImage(ImageIds.EDIT_DESCRIPTION),
-                                                                     Activator.getDefault().getImage(ImageIds.REMOVE_DESCRIPTION) });
+                                                                 Activator.getDefault().getImage(ImageIds.ADD_DESCRIPTION),
+                                                                 Activator.getDefault().getImage(ImageIds.EDIT_DESCRIPTION),
+                                                                 Activator.getDefault().getImage(ImageIds.REMOVE_DESCRIPTION)});
 
             // configure add button
             buttons[0].addSelectionListener(new SelectionAdapter() {
@@ -284,7 +281,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleAddDescription();
                 }
             });
@@ -300,7 +297,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleEditDescription();
                 }
             });
@@ -317,7 +314,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleRemoveDescription();
                 }
             });
@@ -366,7 +363,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
                  */
                 @Override
-                public Object[] getElements( Object inputElement ) {
+                public Object[] getElements(Object inputElement) {
                     return getPropertyDefinition().getDescriptions().toArray();
                 }
 
@@ -377,9 +374,9 @@ final class EditPropertyDialog extends FormDialog {
                  *      java.lang.Object)
                  */
                 @Override
-                public void inputChanged( Viewer viewer,
-                                          Object oldInput,
-                                          Object newInput ) {
+                public void inputChanged(Viewer viewer,
+                                         Object oldInput,
+                                         Object newInput) {
                     // nothing to do
                 }
             });
@@ -392,7 +389,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
                  */
                 @Override
-                public void doubleClick( DoubleClickEvent event ) {
+                public void doubleClick(DoubleClickEvent event) {
                     handleEditDescription();
                 }
             });
@@ -404,7 +401,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
                  */
                 @Override
-                public void selectionChanged( SelectionChangedEvent event ) {
+                public void selectionChanged(SelectionChangedEvent event) {
                     handleDescriptionSelected();
                 }
             });
@@ -427,9 +424,9 @@ final class EditPropertyDialog extends FormDialog {
         return finalSection;
     }
 
-    @SuppressWarnings("unused")
-    private Section createDisplayNameSection( Composite body,
-                                              FormToolkit toolkit ) {
+    @SuppressWarnings( "unused" )
+    private Section createDisplayNameSection(Composite body,
+                                             FormToolkit toolkit) {
         final Section finalSection;
 
         SECTION: {
@@ -443,9 +440,9 @@ final class EditPropertyDialog extends FormDialog {
             Button[] buttons = FormUtil.createSectionToolBar(finalSection,
                                                              toolkit,
                                                              new Image[] {
-                                                                     Activator.getDefault().getImage(ImageIds.ADD_DISPLAY_NAME),
-                                                                     Activator.getDefault().getImage(ImageIds.EDIT_DISPLAY_NAME),
-                                                                     Activator.getDefault().getImage(ImageIds.REMOVE_DISPLAY_NAME) });
+                                                                 Activator.getDefault().getImage(ImageIds.ADD_DISPLAY_NAME),
+                                                                 Activator.getDefault().getImage(ImageIds.EDIT_DISPLAY_NAME),
+                                                                 Activator.getDefault().getImage(ImageIds.REMOVE_DISPLAY_NAME)});
 
             // configure add button
             buttons[0].addSelectionListener(new SelectionAdapter() {
@@ -456,7 +453,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleAddDisplayName();
                 }
             });
@@ -472,7 +469,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleEditDisplayName();
                 }
             });
@@ -489,7 +486,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleRemoveDisplayName();
                 }
             });
@@ -536,7 +533,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
                  */
                 @Override
-                public Object[] getElements( Object inputElement ) {
+                public Object[] getElements(Object inputElement) {
                     return getPropertyDefinition().getDisplayNames().toArray();
                 }
 
@@ -547,9 +544,9 @@ final class EditPropertyDialog extends FormDialog {
                  *      java.lang.Object)
                  */
                 @Override
-                public void inputChanged( Viewer viewer,
-                                          Object oldInput,
-                                          Object newInput ) {
+                public void inputChanged(Viewer viewer,
+                                         Object oldInput,
+                                         Object newInput) {
                     // nothing to do
                 }
             });
@@ -562,7 +559,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
                  */
                 @Override
-                public void doubleClick( DoubleClickEvent event ) {
+                public void doubleClick(DoubleClickEvent event) {
                     handleEditDisplayName();
                 }
             });
@@ -574,7 +571,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
                  */
                 @Override
-                public void selectionChanged( SelectionChangedEvent event ) {
+                public void selectionChanged(SelectionChangedEvent event) {
                     handleDisplayNameSelected();
                 }
             });
@@ -602,9 +599,9 @@ final class EditPropertyDialog extends FormDialog {
      * 
      * @see org.eclipse.ui.forms.FormDialog#createFormContent(org.eclipse.ui.forms.IManagedForm)
      */
-    @SuppressWarnings("unused")
+    @SuppressWarnings( "unused" )
     @Override
-    protected void createFormContent( IManagedForm managedForm ) {
+    protected void createFormContent(IManagedForm managedForm) {
         this.managedForm = managedForm;
 
         FORM: {
@@ -631,7 +628,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
                  */
                 @Override
-                public void controlResized( ControlEvent e ) {
+                public void controlResized(ControlEvent e) {
                     super.controlResized(e);
                 }
             });
@@ -656,7 +653,7 @@ final class EditPropertyDialog extends FormDialog {
              * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
              */
             @Override
-            public void propertyChange( PropertyChangeEvent e ) {
+            public void propertyChange(PropertyChangeEvent e) {
                 handlePropertyChanged(e);
             }
         });
@@ -665,9 +662,9 @@ final class EditPropertyDialog extends FormDialog {
         validateAll();
     }
 
-    @SuppressWarnings("unused")
-    private Section createInfoSection( Composite body,
-                                       FormToolkit toolkit ) {
+    @SuppressWarnings( "unused" )
+    private Section createInfoSection(Composite body,
+                                      FormToolkit toolkit) {
         final Section finalSection;
 
         SECTION: {
@@ -720,7 +717,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
                  */
                 @Override
-                public void modifyText( ModifyEvent e ) {
+                public void modifyText(ModifyEvent e) {
                     handleSimpleIdChanged(((Text)e.widget).getText());
                 }
             });
@@ -765,10 +762,13 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
                  */
                 @Override
-                public void modifyText( ModifyEvent e ) {
+                public void modifyText(ModifyEvent e) {
                     handleRuntimeTypeChanged(((CCombo)e.widget).getText());
                 }
             });
+
+            final RuntimeTypeProposalProvider proposalProvider = new RuntimeTypeProposalProvider(cbxRuntimeType);
+            proposalProvider.init();
         }
 
         FLAGS: {
@@ -787,7 +787,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleAdvancedChanged(((Button)e.widget).getSelection());
                 }
             });
@@ -806,7 +806,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleIndexedChanged(((Button)e.widget).getSelection());
                 }
             });
@@ -815,9 +815,9 @@ final class EditPropertyDialog extends FormDialog {
         return finalSection;
     }
 
-    @SuppressWarnings("unused")
-    private Section createPropertyValueSection( Composite body,
-                                                FormToolkit toolkit ) {
+    @SuppressWarnings( "unused" )
+    private Section createPropertyValueSection(Composite body,
+                                               FormToolkit toolkit) {
         Section section = FormUtil.createSection(this.managedForm, toolkit, body,
                                                  Messages.editPropertyDialogPropertyValueSectionTitle,
                                                  Messages.editPropertyDialogPropertyValueSectionDescription, SECTION_STYLE, true);
@@ -845,7 +845,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleRequiredChanged(((Button)e.widget).getSelection());
                 }
             });
@@ -862,7 +862,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleMaskedChanged(((Button)e.widget).getSelection());
                 }
             });
@@ -896,7 +896,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleAllowedValueSelected();
                 }
             });
@@ -910,7 +910,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleHasAllowedValuesSelected();
                 }
             });
@@ -935,7 +935,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleAddAllowedValue();
                 }
             });
@@ -952,7 +952,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleEditAllowedValue();
                 }
             });
@@ -969,7 +969,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleRemoveAllowedValue();
                 }
             });
@@ -1008,7 +1008,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleHasInitialValueSelected();
                 }
             });
@@ -1023,7 +1023,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
                  */
                 @Override
-                public void modifyText( ModifyEvent e ) {
+                public void modifyText(ModifyEvent e) {
                     handleInitialValueChanged(((Text)e.widget).getText());
                 }
             });
@@ -1039,7 +1039,7 @@ final class EditPropertyDialog extends FormDialog {
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
+                public void widgetSelected(SelectionEvent e) {
                     handleHasFixedValueSelected();
                 }
             });
@@ -1064,7 +1064,7 @@ final class EditPropertyDialog extends FormDialog {
         return section;
     }
 
-    private String getMetaclassShortName( String metaclass ) {
+    private String getMetaclassShortName(String metaclass) {
         String elemString = metaclass.toString();
         // This extracts the name between ".impl." and "Impl" from the metaclass name
         if (!CoreStringUtil.isEmpty(elemString)) {
@@ -1095,7 +1095,7 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     void handleAddAllowedValue() {
-        EditAllowedValueDialog dialog = new EditAllowedValueDialog(getShell(),
+        EditAllowedValueDialog dialog = new EditAllowedValueDialog(getShell(), 
                                                                    this.propDefn.getType(),
                                                                    this.propDefn.getAllowedValues());
         dialog.create();
@@ -1114,7 +1114,7 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     void handleAddDescription() {
-        EditTranslationDialog dialog = new EditTranslationDialog(getShell(),
+        EditTranslationDialog dialog = new EditTranslationDialog(getShell(), 
                                                                  Messages.addPropertyDescriptionDialogTitle,
                                                                  org.teiid.designer.extension.Messages.propertyDescription,
                                                                  this.propDefn.getDescriptions());
@@ -1135,7 +1135,7 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     void handleAddDisplayName() {
-        EditTranslationDialog dialog = new EditTranslationDialog(getShell(),
+        EditTranslationDialog dialog = new EditTranslationDialog(getShell(), 
                                                                  Messages.addPropertyDisplayNameDialogTitle,
                                                                  org.teiid.designer.extension.Messages.propertyDisplayName,
                                                                  this.propDefn.getDisplayNames());
@@ -1154,7 +1154,7 @@ final class EditPropertyDialog extends FormDialog {
         }
     }
 
-    void handleAdvancedChanged( boolean newValue ) {
+    void handleAdvancedChanged(boolean newValue) {
         this.propDefn.setAdvanced(newValue);
     }
 
@@ -1199,9 +1199,9 @@ final class EditPropertyDialog extends FormDialog {
     void handleEditAllowedValue() {
         String selectedAllowedValue = getSelectedAllowedValue();
         assert (selectedAllowedValue != null) : "Edit allowed value button is enabled and shouldn't be"; //$NON-NLS-1$
-        EditAllowedValueDialog dialog = new EditAllowedValueDialog(getShell(),
+        EditAllowedValueDialog dialog = new EditAllowedValueDialog(getShell(), 
                                                                    this.propDefn.getType(),
-                                                                   this.propDefn.getAllowedValues(),
+                                                                   this.propDefn.getAllowedValues(), 
                                                                    selectedAllowedValue);
         dialog.create();
         sizeDialog(dialog.getShell(), getShell());
@@ -1224,10 +1224,10 @@ final class EditPropertyDialog extends FormDialog {
     void handleEditDescription() {
         assert (getSelectedDescription() != null) : "Edit description button is enabled and shouldn't be"; //$NON-NLS-1$
         Translation selectedDescription = getSelectedDescription();
-        EditTranslationDialog dialog = new EditTranslationDialog(getShell(),
+        EditTranslationDialog dialog = new EditTranslationDialog(getShell(), 
                                                                  Messages.editPropertyDescriptionDialogTitle,
                                                                  org.teiid.designer.extension.Messages.propertyDescription,
-                                                                 this.propDefn.getDescriptions(),
+                                                                 this.propDefn.getDescriptions(), 
                                                                  selectedDescription);
         dialog.create();
         sizeDialog(dialog.getShell(), getShell());
@@ -1243,10 +1243,10 @@ final class EditPropertyDialog extends FormDialog {
     void handleEditDisplayName() {
         assert (getSelectedDisplayName() != null) : "Edit display name button is enabled and shouldn't be"; //$NON-NLS-1$
         Translation selectedDisplayName = getSelectedDisplayName();
-        EditTranslationDialog dialog = new EditTranslationDialog(getShell(),
+        EditTranslationDialog dialog = new EditTranslationDialog(getShell(), 
                                                                  Messages.editPropertyDescriptionDialogTitle,
                                                                  org.teiid.designer.extension.Messages.propertyDisplayName,
-                                                                 this.propDefn.getDisplayNames(),
+                                                                 this.propDefn.getDisplayNames(), 
                                                                  selectedDisplayName);
         dialog.create();
         sizeDialog(dialog.getShell(), getShell());
@@ -1347,11 +1347,11 @@ final class EditPropertyDialog extends FormDialog {
         updateState();
     }
 
-    void handleIndexedChanged( boolean newValue ) {
+    void handleIndexedChanged(boolean newValue) {
         this.propDefn.setIndex(newValue);
     }
 
-    void handleInitialValueChanged( String newValue ) {
+    void handleInitialValueChanged(String newValue) {
         boolean shouldHaveInitialValue = this.btnInitialValue.getSelection();
 
         if (shouldHaveInitialValue) {
@@ -1368,11 +1368,11 @@ final class EditPropertyDialog extends FormDialog {
         }
     }
 
-    void handleMaskedChanged( boolean newValue ) {
+    void handleMaskedChanged(boolean newValue) {
         this.propDefn.setMasked(newValue);
     }
 
-    void handlePropertyChanged( PropertyChangeEvent e ) {
+    void handlePropertyChanged(PropertyChangeEvent e) {
         String propName = e.getPropertyName();
 
         if (PropertyName.ADVANCED.toString().equals(propName)) {
@@ -1465,11 +1465,11 @@ final class EditPropertyDialog extends FormDialog {
         }
     }
 
-    void handleRequiredChanged( boolean newValue ) {
+    void handleRequiredChanged(boolean newValue) {
         this.propDefn.setRequired(newValue);
     }
 
-    void handleRuntimeTypeChanged( String newValue ) {
+    void handleRuntimeTypeChanged(String newValue) {
         Type newType = null;
 
         try {
@@ -1481,7 +1481,7 @@ final class EditPropertyDialog extends FormDialog {
         }
     }
 
-    void handleSimpleIdChanged( String newValue ) {
+    void handleSimpleIdChanged(String newValue) {
         this.propDefn.setSimpleId(newValue);
     }
 
@@ -1489,8 +1489,8 @@ final class EditPropertyDialog extends FormDialog {
         return (this.propDefnBeingEdited != null);
     }
 
-    private void sizeDialog( Shell dialogShell,
-                             Shell parentShell ) {
+    private void sizeDialog(Shell dialogShell,
+                            Shell parentShell) {
         dialogShell.pack();
 
         Point dialogSize = dialogShell.getSize();
@@ -1583,8 +1583,8 @@ final class EditPropertyDialog extends FormDialog {
         addMessage(this.indexedError);
     }
 
-    private void validateInitialValue( boolean shouldHaveInitialValue,
-                                       boolean valueIsFixed ) {
+    private void validateInitialValue(boolean shouldHaveInitialValue,
+                                      boolean valueIsFixed) {
         if (shouldHaveInitialValue) {
             if (valueIsFixed) {
                 this.initialValueError.setStatus(ModelExtensionDefinitionValidator.validatePropertyFixedValue(this.propDefn.getRuntimeType(),
@@ -1650,7 +1650,7 @@ final class EditPropertyDialog extends FormDialog {
 
         private final int columnIndex;
 
-        public TranslationLabelProvider( final int columnIndex ) {
+        public TranslationLabelProvider(final int columnIndex) {
             this.columnIndex = columnIndex;
         }
 
@@ -1660,7 +1660,7 @@ final class EditPropertyDialog extends FormDialog {
          * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
          */
         @Override
-        public Image getImage( Object element ) {
+        public Image getImage(Object element) {
             return null;
         }
 
@@ -1670,7 +1670,7 @@ final class EditPropertyDialog extends FormDialog {
          * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
          */
         @Override
-        public String getText( Object element ) {
+        public String getText(Object element) {
             Translation translation = (Translation)element;
 
             if (ColumnIndexes.LOCALE == this.columnIndex) {
