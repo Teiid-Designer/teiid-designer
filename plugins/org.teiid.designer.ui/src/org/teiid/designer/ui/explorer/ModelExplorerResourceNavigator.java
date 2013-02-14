@@ -97,6 +97,8 @@ import org.teiid.core.designer.event.EventSourceException;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
+import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -242,6 +244,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     private Hyperlink defaultServerLink;
     private Label defaultServerVersionLabel;
 
+    /* Listen for change in default server */
     private ITeiidServerVersionListener teiidServerVersionListener = new ITeiidServerVersionListener() {
 
         @Override
@@ -250,6 +253,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                 return;
 
             setDefaultServerText(server);
+            addExecutionConfigurationListener(server);
         }
 
         @Override
@@ -258,6 +262,16 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                 return;
 
             setDefaultServerVersionText(version);
+        }
+    };
+
+    /* Listen for configuration changes to existing default server */
+    private IExecutionConfigurationListener execConfigurationListener = new IExecutionConfigurationListener() {
+
+        @Override
+        public void configurationChanged(ExecutionConfigurationEvent event) {
+            setDefaultServerText(ModelerCore.getDefaultServer());
+            setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
         }
     };
 
@@ -448,12 +462,28 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         GridLayoutFactory.fillDefaults().numColumns(2).applyTo(defaultServerSectionBody);
         defaultServerSectionBody.setBackground(bkgdColor);
 
-        setDefaultServerText(ModelerCore.getDefaultServer());
+        ITeiidServer defaultServer = ModelerCore.getDefaultServer();
+        setDefaultServerText(defaultServer);
         setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
 
         defaultServerSection.setClient(defaultServerSectionBody);
 
+        /* Listen for changes to the default server */
         ModelerCore.addTeiidServerVersionListener(teiidServerVersionListener);
+        addExecutionConfigurationListener(defaultServer);
+    }
+
+    /**
+     * Add the configuration listener to the given {@link ITeiidServer}'s event manager,
+     * which is normally the TeiidServerManager
+     *
+     * @param teiidServer
+     */
+    private void addExecutionConfigurationListener(ITeiidServer teiidServer) {
+        if (teiidServer == null)
+            return;
+
+        teiidServer.getEventManager().addListener(execConfigurationListener);
     }
 
     private void setDefaultServerText(ITeiidServer defaultServer) {
