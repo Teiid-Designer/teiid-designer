@@ -224,4 +224,19 @@ public interface IExecutionAdmin {
      * @throws Exception 
       */
      Driver getTeiidDriver(String driverClass) throws Exception;
+     
+     /**
+      * @param sourceVdbName (excluding .vdb extension) the name of the VDB being merged into the target VDB
+      * @param sourceVdbVersion the version of the source VDB
+      * @param targetVdbName (excluding .vdb extension) the name of the VDB being merged into
+      * @param targetVdbVersion the version of the target VDB
+      * 
+      * @throws Exception if there is a problem with the merge
+      * 
+      * @deprecated This is only provided for backward compatibility with teiid 7.7.1 and should not
+      *                          be used for new code.
+      */
+     @Deprecated
+    void mergeVdbs( String sourceVdbName, int sourceVdbVersion, 
+                                 String targetVdbName, int targetVdbVersion ) throws Exception;
 }
