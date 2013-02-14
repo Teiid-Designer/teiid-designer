@@ -645,4 +645,12 @@ public class TeiidServer implements ITeiidServer {
         getTeiidAdminInfo().setAll(otherServer.getTeiidAdminInfo());
         getTeiidJdbcInfo().setAll(otherServer.getTeiidJdbcInfo());  
     }
+    
+    @Deprecated
+    @Override
+    public void mergeVdbs( String sourceVdbName, int sourceVdbVersion, 
+                    String targetVdbName, int targetVdbVersion ) throws Exception {
+        connect();
+        admin.mergeVdbs(sourceVdbName, sourceVdbVersion, targetVdbName, targetVdbVersion);
+    }
 }
