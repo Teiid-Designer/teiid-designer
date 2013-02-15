@@ -369,7 +369,9 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 			this.sourceModelContainerText.setText(sourceLocation.getFullPath().makeRelative().toString());
 		}
 		if( this.importManager.getSourceModelName() != null ) {
-			this.sourceModelFileText.setText(this.importManager.getSourceModelName());
+		    if (!this.sourceModelFileText.getText().equals(this.importManager.getSourceModelName())) {
+		        this.sourceModelFileText.setText(this.importManager.getSourceModelName());
+		    }
 		}
 		
 		IContainer viewLocation = this.importManager.getViewModelLocation();
@@ -377,7 +379,9 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 			this.viewModelContainerText.setText(viewLocation.getFullPath().makeRelative().toString());
 		}
 		if( this.importManager.getViewModelName() != null ) {
-			this.viewModelFileText.setText(this.importManager.getViewModelName());
+            if (!this.viewModelFileText.getText().equals(this.importManager.getViewModelName())) {
+                this.viewModelFileText.setText(this.importManager.getViewModelName());
+            }
 		}
 		
 //		// source model info is complete so go ahead and set message for user
