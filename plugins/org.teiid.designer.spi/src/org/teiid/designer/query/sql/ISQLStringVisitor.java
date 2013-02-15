@@ -12,7 +12,7 @@ import org.teiid.designer.query.sql.lang.ILanguageObject;
 /**
  *
  */
-public interface ISQLStringVisitor<LO extends ILanguageObject> extends ILanguageVisitor, ISQLConstants {
+public interface ISQLStringVisitor<LO extends ILanguageObject> extends ILanguageVisitor {
 
     /**
      * Should the visitor fail to evaluate then this

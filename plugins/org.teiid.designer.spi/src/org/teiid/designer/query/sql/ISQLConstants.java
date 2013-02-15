@@ -57,6 +57,7 @@ public interface ISQLConstants {
     String TABLE = "TABLE"; //$NON-NLS-1$
     String EXEC = "EXEC"; //$NON-NLS-1$
     String CONVERT = "CONVERT"; //$NON-NLS-1$
+    String NULL = "NULL"; //$NON-NLS-1$
     
     String ENVELOPE_NS = "http://schemas.xmlsoap.org/soap/envelope/"; //$NON-NLS-1$
     String ENVELOPE_NS_ALIAS = "soap"; //$NON-NLS-1$
@@ -96,8 +97,5 @@ public interface ISQLConstants {
     String HEADER = "HEADER"; //$NON-NLS-1$
     String SKIP = "SKIP"; //$NON-NLS-1$
     String WIDTH = "width"; //$NON-NLS-1$
-    
-    String NULL = "null"; //$NON-NLS-1$
-    
-    
+
 }
