@@ -182,6 +182,13 @@
             default="ignore"
             category="Relational">
       </preference>
+      <preference
+            toolTip="Possible cross-join of groups in transformation queries ?"
+            name="possibleCrossJoin"
+            label="%possibleCrossJoin"
+            default="warning"
+            category="Relational">
+      </preference>
    </extension>
    <extension
          point="org.teiid.designer.extension.modelExtensionProvider">

@@ -163,6 +163,12 @@ public interface ValidationPreferences {
      * Preference name for incompatible element/mapping class column datatypes.
      */
     String XML_INCOMPATIBLE_ELEMENT_COLUMN_DATATYPE = "xmlPreferences.incompatibleElementColumnDatatypes"; //$NON-NLS-1$
+    
+    /**
+     * Preference name for ignoring cross-join warnings.
+     */
+    String POSSIBLE_CROSS_JOIN = "relationalPreferences.possibleCrossJoin"; //$NON-NLS-1$
+    
     /**
      * Get all the validation descriptors defines in the plugin.
      * @return list of validation descriptors.

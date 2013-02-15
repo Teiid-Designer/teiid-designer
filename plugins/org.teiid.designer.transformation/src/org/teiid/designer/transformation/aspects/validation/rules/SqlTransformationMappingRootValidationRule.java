@@ -112,7 +112,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
      */
     @Override
 	public void validate( final EObject eObject,
-                          final ValidationContext context ) {
+                          final ValidationContext validationContext ) {
         CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
         SqlTransformationMappingRoot transRoot = (SqlTransformationMappingRoot)eObject;
 
@@ -133,14 +133,14 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         validateUpdatability(transRoot, validationResult);
 
         // valid sqltransformation in the mapping root
-        final TransformationValidator validator = new TransformationValidator(transRoot, context, true, true);
-        validateSqlTransformation(transRoot, validationResult, validator, context);
+        final TransformationValidator validator = new TransformationValidator(transRoot, validationContext, true, true);
+        validateSqlTransformation(transRoot, validationResult, validator, validationContext);
 
         // if target is web service (Operation), validate input document's root element does not have a mapping class
         validateInputDocumentForWebService(transRoot, validationResult);
 
         // add the result to the context
-        context.addResult(validationResult);
+        validationContext.addResult(validationResult);
     }
 
     private void validateInputDocumentForWebService( final SqlTransformationMappingRoot transRoot,
@@ -356,7 +356,8 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
      */
     private void validateUpdateProcedures( final TransformationValidationResult transformResult,
                                            final SqlTransformationMappingRoot transRoot,
-                                           final ValidationResult validationResult ) {
+                                           final ValidationResult validationResult,
+                                           final ValidationContext validationContext) {
         if (validationResult.isFatalObject(transRoot)) {
             return;
         }
@@ -374,7 +375,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             ICommand insertCommand = transformResult.getInsertResult().getCommand();
             if (insertCommand != null) {
                 // check if any of the commands are of type insert
-                validateSubCommands(insertCommand, ICommand.TYPE_INSERT, transRoot, validationResult);
+                validateSubCommands(insertCommand, ICommand.TYPE_INSERT, transRoot, validationResult, validationContext);
             }
         }
 
@@ -383,7 +384,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             ICommand updateCommand = transformResult.getUpdateResult().getCommand();
             if (updateCommand != null) {
                 // check if any of the commands are of type update
-                validateSubCommands(updateCommand, ICommand.TYPE_UPDATE, transRoot, validationResult);
+                validateSubCommands(updateCommand, ICommand.TYPE_UPDATE, transRoot, validationResult, validationContext);
             }
         }
 
@@ -392,7 +393,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             ICommand deleteCommand = transformResult.getDeleteResult().getCommand();
             if (deleteCommand != null) {
                 // check if any of the commands are of type delete
-                validateSubCommands(deleteCommand, ICommand.TYPE_DELETE, transRoot, validationResult);
+                validateSubCommands(deleteCommand, ICommand.TYPE_DELETE, transRoot, validationResult, validationContext);
             }
         }
     }
@@ -407,7 +408,8 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
     private void validateSubCommands( final ICommand command,
                                       final int subCmdType,
                                       final SqlTransformationMappingRoot transRoot,
-                                      final ValidationResult validationResult ) {
+                                      final ValidationResult validationResult,
+                                      final ValidationContext validationContext) {
         ValidationProblem typeProblem = null;
 
         // flag sets to true, if desired type of cmd is found for
@@ -428,7 +430,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             switch (currentCmdType) {
                 case ICommand.TYPE_QUERY:
                     if (subCommand instanceof IQuery) {
-                        validateQuery((IQuery)subCommand, transRoot, validationResult);
+                        validateQuery((IQuery)subCommand, transRoot, validationResult, validationContext);
                     }
                     break;
                 case ICommand.TYPE_INSERT:
@@ -469,7 +471,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                 return;
             }
             // for each of the subcommand, validate its subcommands
-            validateSubCommands(subCommand, ICommand.TYPE_UNKNOWN, transRoot, validationResult);
+            validateSubCommands(subCommand, ICommand.TYPE_UNKNOWN, transRoot, validationResult, validationContext);
         }
 
         // if we do care abpout the subcommand type for the super command
@@ -682,7 +684,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
     private void validateSqlTransformation( final SqlTransformationMappingRoot transRoot,
                                             final ValidationResult validationResult,
                                             final TransformationValidator validator,
-                                            final ValidationContext context ) {
+                                            final ValidationContext validationContext ) {
         if (validationResult.isFatalObject(transRoot)) {
             return;
         }
@@ -766,7 +768,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             // no Insert/Update/Delete transform but the table is updatable
 
             // furthur validation checks on the update procedure.
-            validateUpdateProcedures(transformResult, transRoot, validationResult);
+            validateUpdateProcedures(transformResult, transRoot, validationResult, validationContext);
         }
 
         SqlTransformationResult selectResult = transformResult.getSelectResult();
@@ -775,9 +777,9 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             ICommand command = selectResult.getCommand();
             if (command != null) {
                 if (command instanceof IQuery) {
-                    validateQuery((IQuery)command, transRoot, validationResult);
+                    validateQuery((IQuery)command, transRoot, validationResult, validationContext);
                 }
-                validateSubCommands(command, ICommand.TYPE_UNKNOWN, transRoot, validationResult);
+                validateSubCommands(command, ICommand.TYPE_UNKNOWN, transRoot, validationResult, validationContext);
             }
 
             if (!validationResult.isFatalObject(transRoot)) {
@@ -794,7 +796,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             }
 
             // if there is a string function (SUBSTRING, LOCATE, and INSERT), warn the user that it is one based
-            int pref = context.getPreferenceStatus(ValidationPreferences.CORE_STRING_FUNCTIONS_ONE_BASED, IStatus.WARNING);
+            int pref = validationContext.getPreferenceStatus(ValidationPreferences.CORE_STRING_FUNCTIONS_ONE_BASED, IStatus.WARNING);
             if (pref != IStatus.OK) {
                 IFunctionCollectorVisitor functionCollectorVisitor = getQueryService().getFunctionCollectorVisitor(true);
                 Collection<IFunction> functions = functionCollectorVisitor.findFunctions(command, true);
@@ -808,7 +810,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                                                                                             0,
                                                                                             pref,
                                                                                             TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.STRING_BASED_FUNCTION_ONE_BASED")); //$NON-NLS-1$
-                        stringFunctionWarning.setHasPreference(context.hasPreferences());
+                        stringFunctionWarning.setHasPreference(validationContext.hasPreferences());
                         validationResult.addProblem(stringFunctionWarning);
                         break;
                     }
@@ -823,7 +825,8 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
      */
     private void validateQuery( final IQuery query,
                                 final SqlTransformationMappingRoot transRoot,
-                                final ValidationResult validationResult ) {
+                                final ValidationResult validationResult,
+                                final ValidationContext validationContext) {
         
         IElementCollectorVisitor elementCollectorVisitor = getQueryService().getElementCollectorVisitor(true);
         IPredicateCollectorVisitor predicateCollectorVisitor = getQueryService().getPredicateCollectorVisitor();
@@ -834,13 +837,18 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         if (predicates.isEmpty() && groups.size() > 1) {
             // There are no predicates but there are groups
             // (this is the trivial case)
-            ValidationProblem warningProblem = new ValidationProblemImpl(
+
+            /* Check whether this validation problem should be ignored */
+            int pref = validationContext.getPreferenceStatus(ValidationPreferences.POSSIBLE_CROSS_JOIN, IStatus.WARNING);
+            if (pref != IStatus.OK) {
+                ValidationProblem warningProblem = new ValidationProblemImpl(
                                                                          0,
-                                                                         IStatus.WARNING,
+                                                                         pref,
                                                                          TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.6", getNamesForGroupSymbols(groups))); //$NON-NLS-1$
-            validationResult.addProblem(warningProblem);
-            // added to append xml document parent info.
-            appendDocumentLocation(transRoot, validationResult);
+                validationResult.addProblem(warningProblem);
+                // added to append xml document parent info.
+                appendDocumentLocation(transRoot, validationResult);
+            }
         } else if (groups.size() > 1) {
             // Make sure that all the groups appear in at least one join predicate,
             // (note there might be predicates that are not join predicates).
