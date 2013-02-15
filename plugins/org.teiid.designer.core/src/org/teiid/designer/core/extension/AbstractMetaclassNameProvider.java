@@ -31,7 +31,6 @@ public abstract class AbstractMetaclassNameProvider implements ExtendableMetacla
     private static final String RELATIONAL_COLUMN = "org.teiid.designer.metamodels.relational.impl.ColumnImpl"; //$NON-NLS-1$
     private static final String RELATIONAL_PRIMARY_KEY = "org.teiid.designer.metamodels.relational.impl.PrimaryKeyImpl"; //$NON-NLS-1$
     private static final String RELATIONAL_FOREIGN_KEY = "org.teiid.designer.metamodels.relational.impl.ForeignKeyImpl"; //$NON-NLS-1$
-    private static final String RELATIONAL_VIEW = "org.teiid.designer.metamodels.relational.impl.ViewImpl"; //$NON-NLS-1$
     private static final String RELATIONAL_PROCEDURE = "org.teiid.designer.metamodels.relational.impl.ProcedureImpl"; //$NON-NLS-1$
     private static final String RELATIONAL_INDEX = "org.teiid.designer.metamodels.relational.impl.IndexImpl"; //$NON-NLS-1$
     private static final String RELATIONAL_PROCEDURE_PARAMETER = "org.teiid.designer.metamodels.relational.impl.ProcedureParameterImpl"; //$NON-NLS-1$
@@ -86,11 +85,6 @@ public abstract class AbstractMetaclassNameProvider implements ExtendableMetacla
             children.add(RELATIONAL_ACCESS_PATTERN);
             children.add(RELATIONAL_UNIQUE_CONSTRAINT);
             this.parentChildMap.put(RELATIONAL_BASE_TABLE, children);
-            // View
-            children = new ArrayList<String>();
-            children.add(RELATIONAL_COLUMN);
-            children.add(RELATIONAL_ACCESS_PATTERN);
-            this.parentChildMap.put(RELATIONAL_VIEW, children);
             // Procedure
             children = new ArrayList<String>();
             children.add(RELATIONAL_PROCEDURE_RESULT);
@@ -150,11 +144,7 @@ public abstract class AbstractMetaclassNameProvider implements ExtendableMetacla
 	public String[] getExtendableMetaclassRoots() {
         String[] resultArray = new String[0];
         if (RELATIONAL_URI.equals(this.metamodelUri)) {
-            resultArray = new String[4];
-            resultArray[0] = RELATIONAL_BASE_TABLE;
-            resultArray[1] = RELATIONAL_VIEW;
-            resultArray[2] = RELATIONAL_PROCEDURE;
-            resultArray[3] = RELATIONAL_INDEX;
+            resultArray = new String[] {RELATIONAL_BASE_TABLE, RELATIONAL_PROCEDURE, RELATIONAL_INDEX};
         } else if (SOURCE_FUNCTION_URI.equals(this.metamodelUri)) {
             resultArray = new String[1];
             resultArray[0] = FUNCTION_SCALAR_FUNCTION;

@@ -58,6 +58,7 @@ import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ExtendableMetaclassNameProvider;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
+import org.teiid.designer.extension.definition.ValidationStatus;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
@@ -92,6 +93,9 @@ public class PropertiesEditorPage extends MedEditorPage {
     private static final String MC_PREFIX = ".impl."; //$NON-NLS-1$
     private static final String MC_SUFFIX = "Impl"; //$NON-NLS-1$
 
+    /**
+     * @param medEditor the MED editor this page belongs to (cannot be <code>null</code>)
+     */
     public PropertiesEditorPage( ModelExtensionDefinitionEditor medEditor ) {
         super(medEditor, MED_PROPERTIES_PAGE, Messages.medEditorPropertiesPageTitle);
 
@@ -103,6 +107,29 @@ public class PropertiesEditorPage extends MedEditorPage {
 
     MedEditorPage accessPage() {
         return this;
+    }
+
+    private boolean confirmMetaclass(final String metaclassBeingValidated,
+                                     final ExtendableMetaclassNameProvider provider,
+                                     final String validMetaclass) {
+        if (metaclassBeingValidated.equals(validMetaclass)) {
+            return true;
+        }
+
+        final String[] kids = provider.getExtendableMetaclassChildren(validMetaclass);
+        boolean confirmed = false;
+
+        if ((kids != null) && (kids.length != 0)) {
+            for (final String kid : kids) {
+                confirmed = confirmMetaclass(metaclassBeingValidated, provider, kid);
+
+                if (confirmed) {
+                    break;
+                }
+            }
+        }
+
+        return confirmed;
     }
 
     /**
@@ -864,8 +891,30 @@ public class PropertiesEditorPage extends MedEditorPage {
     }
 
     private void validateMetaclasses() {
-        this.metaclassError.setStatus(ModelExtensionDefinitionValidator.validateMetaclassNames(getMed().getExtendedMetaclasses(),
-                                                                                               true));
+        final String[] metaclasses = getMed().getExtendedMetaclasses();
+
+        // validate with MED validator
+        ValidationStatus status = ModelExtensionDefinitionValidator.validateMetaclassNames(metaclasses, true);
+
+        if (!status.isError()) {
+            // validate against metamodel
+            final ExtendableMetaclassNameProvider provider = ExtensionPlugin.getInstance().getMetaclassNameProvider(getMed().getMetamodelUri());
+
+            OUTER: for (final String metaclass : metaclasses) {
+                INNER: for (final String metaclassRoot : provider.getExtendableMetaclassRoots()) {
+                    boolean confirmed = confirmMetaclass(metaclass, provider, metaclassRoot);
+
+                    if (confirmed) {
+                        break INNER;
+                    } else {
+                        status = ValidationStatus.createErrorMessage(NLS.bind(Messages.metaclassNotFoundByProvider, metaclass));
+                        break OUTER;
+                    }
+                }
+            }
+        }
+
+        this.metaclassError.setStatus(status);
         updateMessage(this.metaclassError);
         validatePropertyDefinitions(); // need to do this to catch when a new metaclass is added
     }

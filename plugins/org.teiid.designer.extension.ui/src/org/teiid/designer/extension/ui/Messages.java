@@ -357,6 +357,8 @@ public class Messages extends NLS {
     public static String medNodeLabel;
     public static String missingPropertyIdNodeLabel;
 
+    public static String metaclassNotFoundByProvider;
+
     static {
         NLS.initializeMessages("org.teiid.designer.extension.ui.messages", Messages.class); //$NON-NLS-1$
     }
