@@ -10,6 +10,7 @@ package org.teiid.designer.runtime.ui.actions;
 import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PROVIDER;
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
@@ -54,7 +56,6 @@ import org.teiid.designer.runtime.ui.wizards.webservices.util.RestProcedure;
 import org.teiid.designer.ui.actions.ISelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
-import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
 
@@ -332,9 +333,30 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
         return uri;
     }
 
+    private static String getCharset( Procedure procedure ) {
+        String charset = null;
+
+        try {
+            // try new way first
+            ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
+                                                                                                    .getRegistry()
+                                                                                                    .getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
+            charset = assistant.getPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.CHARSET);
+
+            if (CoreStringUtil.isEmpty(charset)) {
+                charset = (String)ANNOTATION_HELPER.getPropertyValueAnyCase(procedure,
+                                                                        ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE
+                                                                                + "CHARSET"); //$NON-NLS-1$
+            }
+        } catch (Exception e) {
+            UTIL.log(e);
+        }
+
+        return charset;
+    }
+    
     /**
      * @param eObject
-     * @return
      * @throws ModelerCoreException
      */
     private static void createRestProcedureCollection( Procedure procedure,
@@ -345,7 +367,11 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
         if (restMethod != null) {
             String uri = getUri(procedure);
-
+            String charSet = getCharset(procedure);
+            if (charSet==null){
+            	charSet=Charset.defaultCharset().name();
+            }
+            
             // the procedure is not eligible for REST exposure with a URI defined
             if (uri != null) {
                 boolean hasReturn = false;
@@ -372,6 +398,8 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                         uriParameterCount++;
                     }
                 }
+                
+                restProcedure.setCharSet(charSet);
                 restProcedure.setRestMethod(restMethod);
                 restProcedure.setUri(uri);
                 restProcedure.setProcedureName(name);
@@ -379,6 +407,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
                 // Create JSON version
                 RestProcedure jsonRestProcedure = new RestProcedure();
+                jsonRestProcedure.setCharSet(charSet);
                 jsonRestProcedure.setFullyQualifiedProcedureName(restProcedure.getFullyQualifiedProcedureName());
                 jsonRestProcedure.setModelName(restProcedure.getModelName());
                 jsonRestProcedure.setProcedureName(restProcedure.getProcedureName());
@@ -397,8 +426,8 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                 }
 
                 if (hasReturn) {
-                    restProcedure.setProducesAnnotation("@Produces( MediaType.APPLICATION_XML )"); //$NON-NLS-1$
-                    jsonRestProcedure.setProducesAnnotation("@Produces( MediaType.APPLICATION_JSON )"); //$NON-NLS-1$
+                    restProcedure.setProducesAnnotation("@Produces( MediaType.APPLICATION_XML+"+"\"; charset="+charSet+"\")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    jsonRestProcedure.setProducesAnnotation("@Produces( MediaType.APPLICATION_JSON+"+"\"; charset="+charSet+"\")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 }
 
                 restfulProcedureArray.add(restProcedure);

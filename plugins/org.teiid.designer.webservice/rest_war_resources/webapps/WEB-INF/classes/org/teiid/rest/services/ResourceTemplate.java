@@ -54,7 +54,7 @@ import org.w3c.dom.NodeList;
 ${path}
 public class ${className}{
 
-    org.teiid.rest.services.TeiidRSProvider teiidProvider = new org.teiid.rest.services.TeiidRSProvider();
+    ${TeiidRSProvider} teiidProvider = new ${TeiidRSProvider}();
     Map<String, String> parameterMap = new LinkedHashMap<String, String>();
     private static Properties properties = new Properties();
     private static Logger logger = Logger.getLogger("org.teiid.rest"); //$NON-NLS-1$
@@ -91,10 +91,10 @@ public class ${className}{
         return (Element)node;
     }
 
-    protected Map<String, String> getJSONInputs( InputStream is ) {
+    protected Map<String, String> getJSONInputs( InputStream is, String charset ) {
         Map parameters;
         try {
-            String jsonString = convertStreamToString(is);
+            String jsonString = convertStreamToString(is, charset);
 
             // Do this to validate the JSON string. If we don't blow up, then we are good.
             new JSONObject(jsonString);
@@ -106,7 +106,7 @@ public class ${className}{
         return parameters;
     }
 
-    public String convertStreamToString( InputStream is ) throws IOException {
+    public String convertStreamToString( InputStream is, String charset) {
         /*
          * To convert the InputStream to String we use the
          * Reader.read(char[] buffer) method. 
@@ -116,13 +116,21 @@ public class ${className}{
 
             char[] buffer = new char[1024];
             try {
-                Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8")); //$NON-NLS-1$
+                Reader reader = new BufferedReader(new InputStreamReader(is, charset)); //$NON-NLS-1$
                 int n;
                 while ((n = reader.read(buffer)) != -1) {
                     writer.write(buffer, 0, n);
                 }
-            } finally {
-                is.close();
+            }catch(Exception ioe){
+            	throw new WebApplicationException(ioe, Response.Status.INTERNAL_SERVER_ERROR);	
+            }
+            
+            finally {
+            	try {
+            		is.close();
+            	}catch(Exception e){
+            		//Nothing to do here
+            	}
             }
             return writer.toString();
         }
