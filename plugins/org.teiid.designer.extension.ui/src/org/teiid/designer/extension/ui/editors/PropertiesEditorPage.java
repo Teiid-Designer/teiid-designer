@@ -907,15 +907,19 @@ public class PropertiesEditorPage extends MedEditorPage {
             }
 
             OUTER: for (final String metaclass : metaclasses) {
+                boolean confirmed = false;
+
                 INNER: for (final String metaclassRoot : provider.getExtendableMetaclassRoots()) {
-                    boolean confirmed = confirmMetaclass(metaclass, provider, metaclassRoot);
+                    confirmed = confirmMetaclass(metaclass, provider, metaclassRoot);
 
                     if (confirmed) {
                         break INNER;
-                    } else {
-                        status = ValidationStatus.createErrorMessage(NLS.bind(Messages.metaclassNotFoundByProvider, metaclass));
-                        break OUTER;
                     }
+                }
+
+                if (!confirmed) {
+                    status = ValidationStatus.createErrorMessage(NLS.bind(Messages.metaclassNotFoundByProvider, metaclass));
+                    break OUTER;
                 }
             }
         }
