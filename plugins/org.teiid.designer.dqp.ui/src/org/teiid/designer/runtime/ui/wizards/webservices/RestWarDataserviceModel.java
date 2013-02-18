@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import org.eclipse.core.resources.IFile;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.ui.wizards.webservices.util.RestProcedure;
 import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilderConstants;
 
@@ -29,6 +30,9 @@ public class RestWarDataserviceModel {
     private String contextNameDefault;
     private String jndiNameDefault;
     private boolean includeJarsDefault;
+    private boolean version82_OrGreater;
+    private String engineJarLocation;
+    private String commonCoreJarLocation;
 
     private IFile theVdb;
     private Map<String, List<RestProcedure>> restProcedureMap;
@@ -264,7 +268,58 @@ public class RestWarDataserviceModel {
         properties.put(WebArchiveBuilderConstants.PROPERTY_VDB_FILE_NAME, this.getVdbFile().getLocation().toOSString());
         properties.put(WebArchiveBuilderConstants.PROPERTY_INCLUDE_RESTEASY_JARS, this.isIncludeJars());
         properties.put(WebArchiveBuilderConstants.PROPERTY_VDB_REST_PROCEDURES, this.getRestProcedureMap());
+        properties.put(WebArchiveBuilderConstants.PROPERTY_8_2_OR_HIGHER, this.isVersion82_OrGreater());
+        properties.put(WebArchiveBuilderConstants.PROPERTY_ENGINE_JAR, this.getEngineJarLocation());
+        properties.put(WebArchiveBuilderConstants.PROPERTY_COMMON_CORE_JAR, this.getCommonCoreJarLocation());
 
         return properties;
     }
+
+	/**
+	 * @return the version82_OrGreater
+	 * @since 8.1
+	 */
+	public boolean isVersion82_OrGreater() {
+		return version82_OrGreater;
+	}
+
+	/**
+	 * @param version82_OrGreater the version82_OrGreater to set
+	 * @since 8.1
+	 */
+	public void setVersion82_OrGreater(boolean version82_OrGreater) {
+		this.version82_OrGreater = version82_OrGreater;
+	}
+
+	/**
+	 * @return the engineJarLocation
+	 * @since 8.1
+	 */
+	public String getEngineJarLocation() {
+		return engineJarLocation == null ? StringUtilities.EMPTY_STRING : engineJarLocation;
+	}
+
+	/**
+	 * @param engineJarLocation the engineJarLocation to set
+	 * @since 8.1
+	 */
+	public void setEngineJarLocation(String engineJarLocation) {
+		this.engineJarLocation = engineJarLocation;
+	}
+
+	/**
+	 * @return the commonCoreJarLocation
+	 * @since 8.1
+	 */
+	public String getCommonCoreJarLocation() {
+		return commonCoreJarLocation == null ? StringUtilities.EMPTY_STRING : commonCoreJarLocation;
+	}
+
+	/**
+	 * @param commonCoreJarLocation the commonCoreJarLocation to set
+	 * @since 8.1
+	 */
+	public void setCommonCoreJarLocation(String commonCoreJarLocation) {
+		this.commonCoreJarLocation = commonCoreJarLocation;
+	}
 }

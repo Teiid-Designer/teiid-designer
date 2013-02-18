@@ -72,6 +72,12 @@ public interface RestModelExtensionConstants {
          * The property definition identifier for the URI.
          */
         String URI = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "uri"); //$NON-NLS-1$
+        
+        /**
+         * The property definition identifier for the CHARSET.
+         * @since 8.1
+         */
+        String CHARSET = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "charset"); //$NON-NLS-1$
     }
 
 }

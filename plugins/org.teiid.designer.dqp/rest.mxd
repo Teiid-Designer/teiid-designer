@@ -1,29 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Relational"
-                  namespaceUri="http://www.jboss.org/teiiddesigner/ext/rest/2012"
-	              namespacePrefix="rest"
-                  xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012"
-	              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd"
-	              version="1">
-	<p:description>REST extended virtual procedure properties</p:description>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="rest" namespaceUri="http://www.jboss.org/teiiddesigner/ext/rest/2012" version="1" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
+    <p:description>REST extended virtual procedure properties</p:description>
     <p:modelType>VIRTUAL</p:modelType>
-
-	<p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ProcedureImpl">
-		<p:property name="restMethod" type="string" defaultValue=" " index="false">
-			<p:description locale="en_US">The REST method to map this procedure to. Supported methods are
+    <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ProcedureImpl">
+        <p:property advanced="false" defaultValue=" " index="false" masked="false" name="restMethod" required="false" type="string">
+            <p:description locale="en_US">The REST method to map this procedure to. Supported methods are
 				GET/PUT/POST/DELETE.</p:description>
-			<p:display locale="en_US">Rest Method</p:display>
-			<p:allowedValue> </p:allowedValue>
-			<p:allowedValue>GET</p:allowedValue>
-			<p:allowedValue>PUT</p:allowedValue>
-			<p:allowedValue>POST</p:allowedValue>
-			<p:allowedValue>DELETE</p:allowedValue>
-		</p:property>
-		<p:property name="uri" type="string" required="false" index="false">
-			<p:description locale="en_US">The relative URI to map this procedure to.</p:description>
-			<p:display locale="en_US">URI</p:display>
-		</p:property>
-	</p:extendedMetaclass>
-
-</p:modelExtension>
+            <p:display locale="en_US">Rest Method</p:display>
+            <p:allowedValue>POST</p:allowedValue>
+            <p:allowedValue> </p:allowedValue>
+            <p:allowedValue>GET</p:allowedValue>
+            <p:allowedValue>DELETE</p:allowedValue>
+            <p:allowedValue>PUT</p:allowedValue>
+        </p:property>
+        <p:property advanced="false" index="false" masked="false" name="uri" required="false" type="string">
+            <p:description locale="en_US">The relative URI to map this procedure to.</p:description>
+            <p:display locale="en_US">URI</p:display>
+        </p:property>
+        <p:property advanced="false" index="false" masked="false" name="charset" required="false" type="string">
+            <p:description locale="en_US">Optional property for procedures that return a Blob with content type that is text-based. This character set to used to convert the data. </p:description>
+            <p:display locale="en_US">CHARSET</p:display>
+            <p:allowedValue>UTF-8</p:allowedValue>
+            <p:allowedValue>US-ASCII</p:allowedValue>
+        </p:property>
+    </p:extendedMetaclass>
+</modelExtension>

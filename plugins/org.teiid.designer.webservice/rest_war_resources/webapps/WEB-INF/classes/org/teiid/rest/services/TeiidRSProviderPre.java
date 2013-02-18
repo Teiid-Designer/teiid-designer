@@ -27,13 +27,10 @@ import javax.xml.ws.WebServiceContext;
 
 import org.teiid.rest.RestPlugin;
 
-public class TeiidRSProvider {
+public class TeiidRSProviderPre {
 
     protected WebServiceContext webServiceContext;
-    private Connection conn;
-    private PreparedStatement statement;
-    private ResultSet set;
-
+   
     private static Logger logger = Logger.getLogger("org.teiid.rest"); //$NON-NLS-1$
 
     private static Properties properties = new Properties();
@@ -53,10 +50,15 @@ public class TeiidRSProvider {
         return ds;
     }
 
-    public String execute( String procedureName,
-                           Map<String, String> parameterMap ) throws WebApplicationException {
+    public InputStream execute( String procedureName,
+                           Map<String, String> parameterMap, String charset ) throws WebApplicationException {
 
-        // Load
+        
+    	Connection conn = null;
+    	PreparedStatement statement = null;
+    	ResultSet set = null;
+    	
+    	// Load
         try {
             // Get the inputStream
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream("teiidrest.properties"); //$NON-NLS-1$
@@ -70,7 +72,7 @@ public class TeiidRSProvider {
             createWebApplicationException(e1, e1.getMessage());
         }
 
-        String responseString = null;
+        InputStream responseStream = null;
 
         try {
 
@@ -106,7 +108,7 @@ public class TeiidRSProvider {
                      * is not appropriate for a Data Service.
                      */
                     SQLXML sqlXml = (SQLXML)set.getObject(1);
-                    responseString = sqlXml.getString();
+                    responseStream = sqlXml.getBinaryStream();
                 } else {
                     logger.log(Level.WARNING, RestPlugin.Util.getString("TeiidRSProvider.8") //$NON-NLS-1$
                                               + procedureName);
@@ -149,7 +151,7 @@ public class TeiidRSProvider {
             }
         }
 
-        return responseString;
+        return responseStream;
     }
 
     protected String createParmString( Map<String, String> parameterMap ) {

@@ -89,4 +89,8 @@ public interface InternalModelerWarUiConstants {
     public static int VALIDATEROLE = 7;
     public static int VALIDATEUSERNAME = 8;
     public static int VALIDATEPASSWORD = 9;
+    /**
+	 * @since 8.1
+	 */
+	public static int VALIDATEJARLOCATION = 10;
 }
