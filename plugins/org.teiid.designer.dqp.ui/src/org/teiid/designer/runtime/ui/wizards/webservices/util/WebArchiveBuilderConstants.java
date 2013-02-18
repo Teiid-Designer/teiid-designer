@@ -101,6 +101,22 @@ public class WebArchiveBuilderConstants {
      */
     public static final String PROPERTY_VDB_REST_PROCEDURES = "RESTProcedures"; //$NON-NLS-1$
 
+    /**
+     * Property indicating if the targeted version is Teiid 8.2 or higher
+     */
+    public static final String PROPERTY_8_2_OR_HIGHER = "82_OrHigher"; //$NON-NLS-1$
+
+    /**
+     * Property indicating if the location of the Teiid Engine JAR for the targeted version
+     */
+    public static final String PROPERTY_ENGINE_JAR = "engineJarLocation"; //$NON-NLS-1$
+
+    /**
+     * Property indicating if the location of the Teiid Common Core JAR for the targeted version
+     */
+    public static final String PROPERTY_COMMON_CORE_JAR = "commonCoreJarLocation"; //$NON-NLS-1$
+
+    
     /********** STATUS CODES **********/
 
     /**

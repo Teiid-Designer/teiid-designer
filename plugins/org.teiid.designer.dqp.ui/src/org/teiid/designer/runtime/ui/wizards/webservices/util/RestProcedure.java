@@ -22,6 +22,7 @@ public class RestProcedure {
     private String producesAnnotation;
     private String uri;
     private String modelName;
+    private String charSet;
 
     /**
      * @return consumesAnnotation
@@ -52,6 +53,22 @@ public class RestProcedure {
     }
 
     /**
+	 * @return the charSet
+     * @since 8.1
+	 */
+	public String getCharSet() {
+		return this.charSet;
+	}
+
+	/**
+	 * @param charSet the charSet to set
+	 * @since 8.1
+	 */
+	public void setCharSet(String charSet) {
+		this.charSet = charSet;
+	}
+
+	/**
      * @return modelName
      */
     public String getModelName() {
