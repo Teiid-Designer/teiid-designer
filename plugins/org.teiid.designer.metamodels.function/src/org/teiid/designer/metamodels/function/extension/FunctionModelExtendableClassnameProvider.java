@@ -11,17 +11,25 @@ import org.teiid.designer.core.extension.AbstractMetaclassNameProvider;
 import org.teiid.designer.metamodels.function.FunctionPackage;
 
 /**
- * 
+ * Provides extendable metaclass names for the Function metamodel.
  *
  * @since 8.0
  */
 public class FunctionModelExtendableClassnameProvider extends AbstractMetaclassNameProvider {
 
     /**
-     * 
+     * Constructs a provider.
      */
     public FunctionModelExtendableClassnameProvider() {
         super(FunctionPackage.eNS_URI);
+
+        final String scalarFunction = "org.teiid.designer.metamodels.function.impl.ScalarFunctionImpl"; //$NON-NLS-1$
+        final String functionParameter = "org.teiid.designer.metamodels.function.impl.FunctionParameterImpl"; //$NON-NLS-1$
+        final String returnParamater = "org.teiid.designer.metamodels.function.impl.ReturnParameterImpl"; //$NON-NLS-1$
+
+        addMetaclass(scalarFunction, NO_PARENTS);
+        addMetaclass(functionParameter, scalarFunction);
+        addMetaclass(returnParamater, scalarFunction);
     }
 
 }

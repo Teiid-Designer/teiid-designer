@@ -54,6 +54,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.teiid.core.designer.util.ArrayUtil;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.designer.core.extension.AbstractMetaclassNameProvider;
+import org.teiid.designer.core.extension.ModelTypeMetaclassNameFactory;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ExtendableMetaclassNameProvider;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
@@ -89,9 +91,6 @@ public class PropertiesEditorPage extends MedEditorPage {
 
     private final ErrorMessage metaclassError;
     private final ErrorMessage propertyError;
-
-    private static final String MC_PREFIX = ".impl."; //$NON-NLS-1$
-    private static final String MC_SUFFIX = "Impl"; //$NON-NLS-1$
 
     /**
      * @param medEditor the MED editor this page belongs to (cannot be <code>null</code>)
@@ -366,13 +365,7 @@ public class PropertiesEditorPage extends MedEditorPage {
     }
 
     private String getMetaclassShortName( String metaclassName ) {
-        // This extracts the name between ".impl." and "Impl" from the metaclass name
-        if (!CoreStringUtil.isEmpty(metaclassName)) {
-            int indx1 = metaclassName.indexOf(MC_PREFIX);
-            int indx2 = metaclassName.indexOf(MC_SUFFIX);
-            return metaclassName.substring(indx1 + MC_PREFIX.length(), indx2);
-        }
-        return null;
+        return AbstractMetaclassNameProvider.getLabel(metaclassName);
     }
 
     @SuppressWarnings("unused")
@@ -618,6 +611,11 @@ public class PropertiesEditorPage extends MedEditorPage {
         // Get the metaclass name provider for the med's metamodelUri
         ExtendableMetaclassNameProvider metaclassNameProvider = ExtensionPlugin.getInstance()
                                                                                .getMetaclassNameProvider(getMed().getMetamodelUri());
+
+        if (metaclassNameProvider instanceof ModelTypeMetaclassNameFactory) {
+            metaclassNameProvider = ((ModelTypeMetaclassNameFactory)metaclassNameProvider).getProvider(getMed().getSupportedModelTypes());
+        }
+
         // Current metaclasses extended by the MED
         List<String> currentlyExtendedMetaclasses = Arrays.asList(getMed().getExtendedMetaclasses());
 
@@ -644,6 +642,10 @@ public class PropertiesEditorPage extends MedEditorPage {
         String metamodelUri = getMed().getMetamodelUri();
         ExtendableMetaclassNameProvider metaclassNameProvider = ExtensionPlugin.getInstance()
                                                                                .getMetaclassNameProvider(metamodelUri);
+
+        if (metaclassNameProvider instanceof ModelTypeMetaclassNameFactory) {
+            metaclassNameProvider = ((ModelTypeMetaclassNameFactory)metaclassNameProvider).getProvider(getMed().getSupportedModelTypes());
+        }
 
         // Current metaclasses extended by the MED
         List<String> currentlyExtendedMetaclasses = Arrays.asList(getMed().getExtendedMetaclasses());
@@ -898,7 +900,11 @@ public class PropertiesEditorPage extends MedEditorPage {
 
         if (!status.isError()) {
             // validate against metamodel
-            final ExtendableMetaclassNameProvider provider = ExtensionPlugin.getInstance().getMetaclassNameProvider(getMed().getMetamodelUri());
+            ExtendableMetaclassNameProvider provider = ExtensionPlugin.getInstance().getMetaclassNameProvider(getMed().getMetamodelUri());
+
+            if (provider instanceof ModelTypeMetaclassNameFactory) {
+                provider = ((ModelTypeMetaclassNameFactory)provider).getProvider(getMed().getSupportedModelTypes());
+            }
 
             OUTER: for (final String metaclass : metaclasses) {
                 INNER: for (final String metaclassRoot : provider.getExtendableMetaclassRoots()) {
