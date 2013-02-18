@@ -73,7 +73,6 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.OpenFileAction;
@@ -84,6 +83,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.PluginTransfer;
@@ -486,7 +486,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         teiidServer.getEventManager().addListener(execConfigurationListener);
     }
 
-    private void setDefaultServerText(ITeiidServer defaultServer) {
+    private void setDefaultServerText(final ITeiidServer defaultServer) {
         String defaultName = defaultServer != null ? defaultServer.getDisplayName() : getString("noDefaultServer"); //$NON-NLS-1$
         String linkText =  defaultName;
 
@@ -504,7 +504,14 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                     IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
                     try {
                         window.getActivePage().showView("org.eclipse.wst.server.ui.ServersView"); //$NON-NLS-1$
-                    } catch (PartInitException ex) {
+
+                        if (defaultServer == null) {
+                            // No default server so most likely no servers at all so open the new server wizard
+                            IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+                            handlerService.executeCommand("org.teiid.designer.dqp.ui.newServerAction", null); //$NON-NLS-1$
+                        }
+
+                    } catch (Exception ex) {
                         UiConstants.Util.log(ex);
                     }
                 }
