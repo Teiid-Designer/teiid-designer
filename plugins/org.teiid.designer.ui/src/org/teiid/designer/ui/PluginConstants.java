@@ -9,6 +9,7 @@ package org.teiid.designer.ui;
 
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.ui.common.PreferenceKeyAndDefaultValue;
 import org.teiid.designer.ui.common.UiConstants;
 
@@ -139,7 +140,8 @@ public interface PluginConstants {
                 new PreferenceKeyAndDefaultValue(AUTO_OPEN_PERSPECTIVE_WHEN_MODEL_EDITOR_OPENED, MessageDialogWithToggle.PROMPT),
                 new PreferenceKeyAndDefaultValue(AUTO_UPDATE_IMPORTS_ON_SAVE, new Boolean(true)),
                 new PreferenceKeyAndDefaultValue(SHOW_NON_MODELS_IN_MODEL_EXPLORER, new Boolean(true)),
-                new PreferenceKeyAndDefaultValue(SHOW_IMPORTS_IN_MODEL_EXPLORER, new Boolean(true))};
+                new PreferenceKeyAndDefaultValue(SHOW_IMPORTS_IN_MODEL_EXPLORER, new Boolean(true)),
+                new PreferenceKeyAndDefaultValue(ModelerCore.DEFAULT_TEIID_SERVER_VERSION_ID, ITeiidServerVersion.DEFAULT_TEIID_8_SERVER_ID)};
         }
     }
 

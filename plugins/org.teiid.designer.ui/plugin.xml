@@ -987,6 +987,11 @@
             id="autoOpenPerspectiveContributor"
             categoryId="modeler.ui.modelCategory"
             class="org.teiid.designer.ui.preferences.AutoOpenPerspectivePreferenceContributor">
+      </preference>
+      <preference
+            categoryId="modeler.ui.modelCategory"
+            class="org.teiid.designer.ui.preferences.DefaultTeiidServerPreferenceContributor"
+            id="defaultServerVersionPreferenceContributor">
       </preference>      
 	</extension>
 

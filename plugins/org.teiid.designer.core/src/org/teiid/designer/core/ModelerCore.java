@@ -113,6 +113,11 @@ import org.teiid.designer.type.IDataTypeManagerService;
 public class ModelerCore extends Plugin implements DeclarativeTransactionManager {
 
 	/**
+     * Default server version property id
+     */
+    public static final String DEFAULT_TEIID_SERVER_VERSION_ID = "defaultTeiidServerVersion"; //$NON-NLS-1$
+
+    /**
 	 * Options for whether to register an item with this class' registry
 	 */
 	public static enum RegistryOption {
@@ -2095,7 +2100,12 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      */
     public static ITeiidServerVersion getTeiidServerVersion() {
         if (defaultTeiidServer == null) {
-            return TeiidServerVersion.DEFAULT_TEIID_8_SERVER;
+            // Preference is stored in the ui plugin which we do not have a dependency on so have to
+            // get at the preference in this way. Not great but alternative is to try and save the property
+            // in this plugin's properties and not really worth it.
+            IEclipsePreferences preferences = getPreferences("org.teiid.designer.ui");
+            String versionString = preferences.get(DEFAULT_TEIID_SERVER_VERSION_ID, ITeiidServerVersion.DEFAULT_TEIID_8_SERVER_ID);
+            return new TeiidServerVersion(versionString);
         }
         
         return defaultTeiidServer.getServerVersion();
