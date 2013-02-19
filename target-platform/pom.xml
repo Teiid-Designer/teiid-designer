@@ -57,7 +57,7 @@
 					<plugin>
 						<groupId>org.jboss.tools.tycho-plugins</groupId>
 						<artifactId>target-platform-utils</artifactId>
-						<version>0.0.1-SNAPSHOT</version>
+						<version>0.16.0-SNAPSHOT</version>
 						<executions>
 							<execution>
 								<phase>generate-resources</phase>
@@ -67,9 +67,10 @@
 								<configuration>
 									<sourceTargetArtifacts>
 										<item>
-											<groupId>org.jboss.tools.target-platforms.soatools</groupId>
-											<artifactId>multiple</artifactId>
-											<version>4.2.1.a-SNAPSHOT</version>
+											<groupId>org.jboss.tools.integration-stack</groupId>
+											<artifactId>target-platform</artifactId>
+											<version>4.0.0-SNAPSHOT</version>
+											<classifier>base</classifier>
 										</item>
 									</sourceTargetArtifacts>
 									<sourceTargetFiles>
