@@ -59,6 +59,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.designer.core.extension.AbstractMetaclassNameProvider;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
 import org.teiid.designer.extension.definition.ValidationStatus;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
@@ -78,9 +79,6 @@ import org.teiid.designer.ui.forms.MessageFormDialog;
  * The <code>EditPropertyDialog</code> is used to create or edit a property definition.
  */
 final class EditPropertyDialog extends FormDialog {
-
-    private static final String MC_PREFIX = ".impl."; //$NON-NLS-1$
-    private static final String MC_SUFFIX = "Impl"; //$NON-NLS-1$
 
     private final String metaclassName;
     private final NamespaceProvider namespaceProvider;
@@ -1065,14 +1063,7 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     private String getMetaclassShortName(String metaclass) {
-        String elemString = metaclass.toString();
-        // This extracts the name between ".impl." and "Impl" from the metaclass name
-        if (!CoreStringUtil.isEmpty(elemString)) {
-            int indx1 = elemString.indexOf(MC_PREFIX);
-            int indx2 = elemString.indexOf(MC_SUFFIX);
-            return elemString.substring(indx1 + MC_PREFIX.length(), indx2);
-        }
-        return elemString;
+        return AbstractMetaclassNameProvider.getLabel(metaclassName);
     }
 
     ModelExtensionPropertyDefinition getPropertyDefinition() {
