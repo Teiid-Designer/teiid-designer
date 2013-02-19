@@ -20,6 +20,7 @@ import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.relational.Table;
+import org.teiid.designer.metamodels.relational.View;
 
 /**
  * @since 8.0
@@ -104,7 +105,12 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
         final ModelExtensionPropertyDefinition propDefn = super.getPropertyDefinition(modelObject, propId);
 
         if (propDefn != null) {
-        	boolean isPhysical = ModelUtil.isPhysical(modelObject);
+            // View objects in virtual models should not have extension properties
+            if (ModelUtil.isVirtual(modelObject) && (modelObject instanceof View)) {
+                return null;
+            }
+
+            boolean isPhysical = ModelUtil.isPhysical(modelObject);
         	boolean isFunction = false;
         	if( modelObject instanceof Procedure ) {
         		isFunction = ((Procedure)modelObject).isFunction();
