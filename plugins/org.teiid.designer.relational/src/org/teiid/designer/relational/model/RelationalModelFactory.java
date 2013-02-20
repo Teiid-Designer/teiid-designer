@@ -763,7 +763,7 @@ public class RelationalModelFactory implements RelationalConstants {
 						tableRef.getNativeQuery() );
 
 			} catch (Exception ex) {
-				RelationalPlugin.Util.log(IStatus.ERROR, 
+				RelationalPlugin.Util.log(IStatus.ERROR, ex, 
 	                	NLS.bind(Messages.relationalModelFactory_error_setting_extension_props_on_0, tableRef.getName()));
 			}
         }
@@ -828,7 +828,7 @@ public class RelationalModelFactory implements RelationalConstants {
 					}
 				}
 			} catch (Exception ex) {
-				RelationalPlugin.Util.log(IStatus.ERROR, 
+				RelationalPlugin.Util.log(IStatus.ERROR, ex, 
 	                	NLS.bind(Messages.relationalModelFactory_error_setting_extension_props_on_0, procedureRef.getName()));
 			}
         }
