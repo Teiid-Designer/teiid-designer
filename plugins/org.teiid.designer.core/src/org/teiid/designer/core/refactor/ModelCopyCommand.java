@@ -43,6 +43,7 @@ import org.w3c.dom.Element;
 import org.teiid.core.designer.id.IDGenerator;
 import org.teiid.core.designer.plugin.PluginUtilities;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.builder.ModelBuildUtil;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.util.ConcurrentModelVisitorProcessor;
@@ -619,7 +620,8 @@ public class ModelCopyCommand implements RefactorCommand {
         }
 
         // Save the resulting target resource
-        try {
+        try {            
+            ModelBuildUtil.rebuildImports(target, true);
             modelResource.save(monitor, true);
         } catch (Throwable e) {
             final Object[] params = new Object[] {modelResource};

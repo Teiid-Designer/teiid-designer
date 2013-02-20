@@ -13,6 +13,7 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.search.ui.ISearchResultViewPart;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.designer.core.ModelerCore;
@@ -68,6 +69,10 @@ public class AddTransformationSourceAction extends TransformationAction {
     // CONSTRUCTORS
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * @param transformationEObject the SQL transformation root (cannot be <code>null</code>)
+     * @param diagram the diagram where this action is installed (cannot be <code>null</code>)
+     */
     public AddTransformationSourceAction(EObject transformationEObject, Diagram diagram) {
         super(transformationEObject, diagram);
         setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(UiConstants.Images.ADD_SOURCES));
@@ -81,28 +86,33 @@ public class AddTransformationSourceAction extends TransformationAction {
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(IWorkbenchPart, ISelection)
      */
     @Override
-    public void selectionChanged(IWorkbenchPart thePart, ISelection theSelection) {
-        // Save off current selection to old if part is ModelEditor and selection == null
-        // This indicates a focus change and part activation.
-        if (thePart != null && thePart instanceof ModelEditor) {
-            oldSelection = getSelection();
-        }
-        
+    public void selectionChanged(final IWorkbenchPart thePart,
+                                 ISelection theSelection) {
         ISelection selection = theSelection;
-        // Now we see if the selection is from Search Results?
-        List searchResults = SearchPageUtil.getEObjectsFromSearchSelection(theSelection);
-        if( searchResults != null ) {
-            if( searchResults.isEmpty() ) {
-                selection = new StructuredSelection();
+
+        if (wasToolBarItemSelected()) {
+            if (!(thePart instanceof ModelEditor)) {
+                selection = this.focusedSelection;
+            }
+        } else {
+            if (thePart instanceof ISearchResultViewPart) {
+                final List searchResults = SearchPageUtil.getEObjectsFromSearchSelection(theSelection);
+
+                if (searchResults != null) {
+                    if (searchResults.isEmpty()) {
+                        selection = StructuredSelection.EMPTY;
+                    } else {
+                        selection = new StructuredSelection(searchResults);
+                    }
+                }
+
+                this.focusedSelection = selection;
             } else {
-                selection = new StructuredSelection(searchResults);
+                this.focusedSelection = theSelection;
             }
         }
-        // initialize abstract base class info
+
         super.selectionChanged(thePart, selection);
-        
-        setFocusedSelection();
-        
         setEnabled(shouldEnable());
     }
 
@@ -241,7 +251,7 @@ public class AddTransformationSourceAction extends TransformationAction {
                 }
             }
         }
-        
+
         return enable;
     }
     
@@ -278,7 +288,7 @@ public class AddTransformationSourceAction extends TransformationAction {
         return transOEP;
     }
     
-    public boolean wasToolBarItemSelected() {
+    private boolean wasToolBarItemSelected() {
         if( toolBarManager != null ) {
             if( toolBarManager.getFocusedToolItem() != null && thisToolItem != null ) {
                 if( thisToolItem.equals(toolBarManager.getFocusedToolItem()))
@@ -289,6 +299,9 @@ public class AddTransformationSourceAction extends TransformationAction {
         return false;
     }
     
+    /**
+     * @param aci the contribution item associated with this action (cannot be <code>null</code>)
+     */
     public void setItem(ActionContributionItem aci) {
         if( toolBarManager != null ) {
             thisToolItem = aci;
@@ -301,27 +314,29 @@ public class AddTransformationSourceAction extends TransformationAction {
         }else {
             focusedSelection = getSelection();
         }
+
+        setEnabled(shouldEnable());
     }
     
+    /**
+     * @param tbManager the toolbar where this action is installed (cannot be <code>null</code>)
+     */
     public void setToolBarManager(DiagramToolBarManager tbManager) {
         toolBarManager = tbManager;
     }
     
-    /**
-     * Gets a string representation of the properties of the given <code>Notification</code>.
-     * @param theNotification the notification being processed
-     * @return the string representation
-     */
-    public String getActionString() {
-
-        return new StringBuffer()
-        .append("\n       Action State ---------------------------------------------- = ") //$NON-NLS-1$
-        .append("\n       oldSelection           = ").append(oldSelection) //$NON-NLS-1$
-        .append("\n       focusedSelection       = ").append(focusedSelection) //$NON-NLS-1$
-        .append("\n       currentSelection       = ").append(getSelection()) //$NON-NLS-1$
-        .append("\n       enabled                = ").append(this.isEnabled()) //$NON-NLS-1$
-        .append("\n       -----------------------------------------------------------") //$NON-NLS-1$
-        .toString();
-    }
+//    private String getActionString() {
+//
+//        return new StringBuffer()
+//        .append("\n       Action State ---------------------------------------------- = ") //$NON-NLS-1$
+//        .append("\n       oldSelection           = ").append(oldSelection) //$NON-NLS-1$
+//        .append("\n       focusedSelection       = ").append(focusedSelection) //$NON-NLS-1$
+//        .append("\n       currentSelection       = ").append(getSelection()) //$NON-NLS-1$
+//        .append("\n       enabled                = ").append(this.isEnabled()) //$NON-NLS-1$
+//        .append("\n       shouldEnable           = ").append(shouldEnable()) //$NON-NLS-1$
+//        .append("\n       wasToolBarItemSelected = ").append(wasToolBarItemSelected()) //$NON-NLS-1$
+//        .append("\n       -----------------------------------------------------------") //$NON-NLS-1$
+//        .toString();
+//    }
 
 }
