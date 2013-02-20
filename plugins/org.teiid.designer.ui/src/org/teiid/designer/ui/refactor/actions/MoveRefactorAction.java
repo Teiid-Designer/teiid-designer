@@ -26,9 +26,9 @@ import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.viewsupport.JobUtils;
 import org.teiid.designer.ui.editors.ModelEditorManager;
-import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.refactor.FileFolderMoveDialog;
 import org.teiid.designer.ui.refactor.RefactorCommandProcessorDialog;
+import org.teiid.designer.ui.refactor.SingleProjectModelContentProvider;
 import org.teiid.designer.ui.viewsupport.OrganizeImportHandlerDialog;
 
 
@@ -88,7 +88,7 @@ public class MoveRefactorAction extends RefactorAction {
             = new FileFolderMoveDialog( UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(), 
                                         rmcCommand,
                                         resSelectedResource,
-                                        new ModelExplorerContentProvider() );
+                                        new SingleProjectModelContentProvider(resSelectedResource.getProject()) );
             
         // launch the dialog
         ffmdDialog.open();
@@ -100,6 +100,14 @@ public class MoveRefactorAction extends RefactorAction {
             // add the user's selected destination to the command
             this.dest = (IContainer)oSelectedObjects[0];
             rmcCommand.setDestination(this.dest);
+            
+            // moving a file will change the vdb.xml content if the model exists in the vdb
+            // Close all open VDBs
+            // TODO: Uncomment out the if() statement below
+//            if( ! RefactorModelExtensionManager.preProcess(RefactorResourceEvent.TYPE_MOVE, 
+//            		resSelectedResource, new NullProgressMonitor()) ) {
+//            	return;
+//            }
             
             // Let's cache the auto-build and reset after.  We don't want auto-building before the refactoring is complete
             boolean autoBuildOn = ModelerCore.getWorkspace().isAutoBuilding();
@@ -147,9 +155,9 @@ public class MoveRefactorAction extends RefactorAction {
             final ModelEditor editor = ModelerCore.getModelEditor();
 
             // defect 16527 - check that a resource is a file before casting
-            IResource res = this.dest.findMember(MoveRefactorAction.this.resSelectedResource.getName());
-            if (res instanceof IFile) {
-                final IFile file = (IFile) res;
+            IResource movedResource = this.dest.findMember(MoveRefactorAction.this.resSelectedResource.getName());
+            if (movedResource instanceof IFile) {
+                final IFile file = (IFile) movedResource;
                 ModelResource model = editor.findModelResource(file);
                 if (model != null) {
                     if (model.getEmfResource().isModified()) {
@@ -182,6 +190,9 @@ public class MoveRefactorAction extends RefactorAction {
                     }
                 }
             }
+            
+            // TODO: uncomment out the changes below
+            //RefactorModelExtensionManager.postProcess(RefactorResourceEvent.TYPE_MOVE, movedResource, new NullProgressMonitor());
         } catch (final ModelWorkspaceException err) {
             ModelerCore.Util.log(err);
         }

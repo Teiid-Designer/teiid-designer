@@ -65,15 +65,16 @@ public class FileFolderMoveDialog extends ElementTreeSelectionDialog {
 
     /**
      * Construct an instance of FileFolderMoveDialog.  This constructor defaults to the resource root.
-     * @param propertiedObject the EObject to display in this
-     * @param parent the shell
+     * @param parent the parent shell
+     * @param command the command
+     * @param resource the resource being moved
      *
      *
      */
     public FileFolderMoveDialog( Shell parent, ResourceMoveCommand command, IResource resource ) {
         super( parent,
                new ModelExplorerLabelProvider(),
-               new ModelExplorerContentProvider() );
+               new SingleProjectModelContentProvider(resource.getProject()) );
         this.command = command;
         this.resource = resource;
 
@@ -82,8 +83,10 @@ public class FileFolderMoveDialog extends ElementTreeSelectionDialog {
 
     /**
      * Construct an instance of FileFolderMoveDialog.  This constructor defaults to the resource root.
-     * @param propertiedObject the EObject to display in this
      * @param parent the shell
+     * @param command the move command
+     * @param resource the resource being moved
+     * @param cpContentProvider the content provider for the dialog
      *
      *
      */
@@ -100,9 +103,10 @@ public class FileFolderMoveDialog extends ElementTreeSelectionDialog {
 
     /**
      * Construct an instance of FileFolderMoveDialog.  This constructor builds the tree from the supplied root.
-     * @param propertiedObject the EObject to display in this
-     * @param parent
+     * @param parent the parent shell
+     * @param contentProvider the content provider for the dialog
      * @param root a workspace root
+     * @param command the move command
      */
     public FileFolderMoveDialog( Shell parent,
                                  ITreeContentProvider contentProvider,
