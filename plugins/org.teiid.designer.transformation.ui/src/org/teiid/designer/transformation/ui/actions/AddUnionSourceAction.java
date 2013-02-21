@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.search.ui.ISearchResultViewPart;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.designer.core.ModelerCore;
@@ -28,6 +30,7 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelObjectEditorPage;
 import org.teiid.designer.ui.editors.MultiPageModelEditor;
+import org.teiid.designer.ui.search.SearchPageUtil;
 import org.teiid.designer.ui.undo.ModelerUndoManager;
 
 /**
@@ -68,6 +71,10 @@ public class AddUnionSourceAction extends TransformationAction {
     // CONSTRUCTORS
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * @param transformationEObject the SQL transformation root (cannot be <code>null</code>)
+     * @param diagram the diagram where this action is installed (cannot be <code>null</code>)
+     */
     public AddUnionSourceAction(EObject transformationEObject, Diagram diagram) {
         super(transformationEObject, diagram);
         setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(UiConstants.Images.ADD_UNION_SOURCES));
@@ -82,17 +89,31 @@ public class AddUnionSourceAction extends TransformationAction {
      */
     @Override
     public void selectionChanged(IWorkbenchPart thePart, ISelection theSelection) {
-        // Save off current selection to old if part is ModelEditor and selection == null
-        // This indicates a focus change and part activation.
-        if (thePart != null && thePart instanceof ModelEditor) {
-            oldSelection = getSelection();
+        ISelection selection = theSelection;
+
+        if (wasToolBarItemSelected()) {
+            if (!(thePart instanceof ModelEditor)) {
+                selection = this.focusedSelection;
+            }
+        } else {
+            if (thePart instanceof ISearchResultViewPart) {
+                final List searchResults = SearchPageUtil.getEObjectsFromSearchSelection(theSelection);
+
+                if (searchResults != null) {
+                    if (searchResults.isEmpty()) {
+                        selection = StructuredSelection.EMPTY;
+                    } else {
+                        selection = new StructuredSelection(searchResults);
+                    }
+                }
+
+                this.focusedSelection = selection;
+            } else {
+                this.focusedSelection = theSelection;
+            }
         }
-        
-        // initialize abstract base class info
-        super.selectionChanged(thePart, theSelection);
-        
-        setFocusedSelection();
-        
+
+        super.selectionChanged(thePart, selection);
         setEnabled(shouldEnable());
     }
 
@@ -282,7 +303,7 @@ public class AddUnionSourceAction extends TransformationAction {
         return transOEP;
     }
     
-    public boolean wasToolBarItemSelected() {
+    private boolean wasToolBarItemSelected() {
         if( toolBarManager != null ) {
             if( toolBarManager.getFocusedToolItem() != null && thisToolItem != null ) {
                 if( thisToolItem.equals(toolBarManager.getFocusedToolItem()))
@@ -293,6 +314,9 @@ public class AddUnionSourceAction extends TransformationAction {
         return false;
     }
     
+    /**
+     * @param aci the contribution item associated with this action (cannot be <code>null</code>)
+     */
     public void setItem(ActionContributionItem aci) {
         if( toolBarManager != null ) {
             thisToolItem = aci;
@@ -304,27 +328,34 @@ public class AddUnionSourceAction extends TransformationAction {
             focusedSelection = oldSelection;
         else
             focusedSelection = getSelection();
+
+        setEnabled(shouldEnable());
     }
     
+    /**
+     * @param tbManager the toolbar where this action is installed (cannot be <code>null</code>)
+     */
     public void setToolBarManager(DiagramToolBarManager tbManager) {
         toolBarManager = tbManager;
     }
-    
+
     /**
      * Gets a string representation of the properties of the given <code>Notification</code>.
      * @param theNotification the notification being processed
      * @return the string representation
      */
-    public String getActionString() {
-
-        return new StringBuffer()
-        .append("\n       Action State ---------------------------------------------- = ") //$NON-NLS-1$
-        .append("\n       oldSelection           = ").append(oldSelection) //$NON-NLS-1$
-        .append("\n       focusedSelection       = ").append(focusedSelection) //$NON-NLS-1$
-        .append("\n       currentSelection       = ").append(getSelection()) //$NON-NLS-1$
-        .append("\n       enabled                = ").append(this.isEnabled()) //$NON-NLS-1$
-        .append("\n       -----------------------------------------------------------") //$NON-NLS-1$
-        .toString();
-    }
+//    private String getActionString() {
+//
+//        return new StringBuffer()
+//        .append("\n       Action State ---------------------------------------------- = ") //$NON-NLS-1$
+//        .append("\n       oldSelection           = ").append(oldSelection) //$NON-NLS-1$
+//        .append("\n       focusedSelection       = ").append(focusedSelection) //$NON-NLS-1$
+//        .append("\n       currentSelection       = ").append(getSelection()) //$NON-NLS-1$
+//        .append("\n       enabled                = ").append(this.isEnabled()) //$NON-NLS-1$
+//        .append("\n       shouldEnable           = ").append(shouldEnable()) //$NON-NLS-1$
+//        .append("\n       wasToolBarItemSelected = ").append(wasToolBarItemSelected()) //$NON-NLS-1$
+//        .append("\n       -----------------------------------------------------------") //$NON-NLS-1$
+//        .toString();
+//    }
 
 }

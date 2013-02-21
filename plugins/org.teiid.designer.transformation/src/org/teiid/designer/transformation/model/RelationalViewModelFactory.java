@@ -139,7 +139,7 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
                 // Create the Table
                 EObject baseTable = createBaseTable(obj, modelResource);
                 modelResource.getEmfResource().getContents().add(baseTable);
-                applyTableExtensionProperties((RelationalTable)obj, (BaseTable)baseTable, false);
+                applyTableExtensionProperties((RelationalTable)obj, (BaseTable)baseTable, true);
 
                 // Set the transformation SQL
                 RelationalViewTable viewTable = (RelationalViewTable)obj;
