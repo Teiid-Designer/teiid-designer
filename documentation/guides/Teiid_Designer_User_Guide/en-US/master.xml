@@ -57,5 +57,4 @@
   <xi:include href="teiid_runtime_metadata.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="preferences.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="ui-reference.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-  <xi:include href="teiid-server-management.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 </book>

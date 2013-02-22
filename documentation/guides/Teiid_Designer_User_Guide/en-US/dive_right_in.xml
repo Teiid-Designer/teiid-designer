@@ -13,6 +13,13 @@
     introduce the following concepts:
     </para>	
 	<itemizedlist>
+        <listitem>
+            <para><emphasis role="bold">Targeting the Teiid Server</emphasis></para>
+            <para>The Teiid Server is the destination for Designer's modelling. It is essential to define the correct server version
+            that models will be deployed to. This is achieved either by setting the server version preference or defining a teiid
+            server in the Servers View.
+            </para>
+        </listitem>
 		<listitem>
 		    <para><emphasis role="bold">Guides</emphasis></para>
 		    <para>The <emphasis role="bold">Guides View</emphasis> is a good starting point for many common modeling tasks. The view includes categorized Modeling Actions 
@@ -30,12 +37,80 @@
     concepts and actions.
     </para> 
 	
-	<!-- ####### GUIDE EXAMPLES SECTION ######################################## -->
-	
+	<!-- ####### TEIID SERVER SECTION ######################################## -->
+
+    <section id="targeting-the-teiid-server-section">
+        <title>Targeting the Teiid Server</title>
+        <para>In this section, the setting of the teiid server version is demonstrated. This can be achieved by either 
+        setting a preference or by defining a teiid server.</para>
+        <section id="server-version-preference">
+            <title>Server Version Preference</title>
+            <para>The default server version preference allows the target server version to be changed without actually having
+            to define a teiid server in Designer. The preference's list of possible values is determined by which teiid
+            runtime client plugins have been installed into the application.</para>
+            <figure id="default-server-preference-figure">
+                <title>Default Server Version Preference</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/default-server-version-preference.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </section>            
+        <section id="server-version-definition">
+            <title>Defining a Teiid Server</title>
+            <para>The defining of a Teiid Server is encouraged since it allows for models to be previewed and their deployment
+                tested. There is no limit to the number of servers that can be defined. However, the default server will always
+                be used for previewing and deployment, unless using the context menu actions in the <xref linkend="server-view"/>.    
+            </para>
+            <para>
+                The Guides View provides the following Teiid Server actions.
+            </para>
+            <figure id="guides-view-teiid-server-figure">
+                <title>Teiid Server Category in the Guides View</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/guides-view-teiid-server-category.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <para>
+                The <emphasis>New Teiid Server</emphasis> action will display the wizard outlined in 
+                <xref linkend="ui-reference-new-teiid-instance-dialog-image"/> and steps through the process of creating both the
+                Teiid Server and its parent JBoss server in the Server View.
+            </para>
+            <para>
+                Should more than one Teiid Server be defined in the Server View then the <emphasis>Set the Default Server</emphasis>
+                action allows for the default server to be changed appropriately. If a Teiid Server is currently selected in the
+                Server View then this will be selected as the default server. However, should nothing be selected then a dialog will
+                be displayed inviting the user to choose which server they wish to select.
+            </para>
+            <note>
+                <para>The version of the defined Teiid server always takes precedence over the <xref linkend="server-version-preference"/></para>
+            </note>
+        </section>
+        <section id="server-version-status-panel">
+            <title>Server Version Status Panel</title>
+            <para>Whether the server version preference has been modified or a server defined, the server and server target
+            version will be updated in the default server status panel. This will always reflect the current server
+            version being targeted and the server being used to preview or deploy against.</para>
+            <figure id="default-server-status-panel-figure">
+                <title>Default Server Status Panel</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/default-server-status-panel.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </section>
+    </section>	
+
+    <!-- ####### GUIDE EXAMPLES SECTION ######################################## -->
+    
 	<section id="guide-examples-section">
 		<title>Guide Example</title>
-		<para>In this section, we introduce the <emphasis role="bold">Guides View</emphasis> by walking through a simple example.  For this example, we will follow
-		the <emphasis role="bold">Model JDBC Source</emphasis> Action Set.  The actions appear in the following order:
+		<para>In this section, the <emphasis role="bold">Guides View</emphasis> is demonstrated in detail by walking through a simple example. For this 
+        example, we will follow the <emphasis role="bold">Model JDBC Source</emphasis> Action Set.  The actions appear in the following order:
 		</para>
         <orderedlist>
             <listitem><emphasis role="bold">Define Teiid Model Project</emphasis></listitem>
@@ -227,7 +302,7 @@
                 <para><emphasis role="bold">Preview Data</emphasis></para>
                 <para>
                     All execution capabilities in Designer (Preview Data, VDB execution) require you to connect to a 
-                    running Teiid Server.  See <xref linkend="teiid-view" /> for instructions on establishing a Teiid Server connection.
+                    running Teiid Server.  See <xref linkend="servers-view" /> for instructions on establishing a Teiid Server connection.
                     Once you are connected to a Teiid Server, you can proceed with the following steps.   
                 </para>
                 <para>
@@ -372,7 +447,10 @@
                         </imageobject>
                     </mediaobject>
                 </figure>
-                <para>Note that each section of the sheet has basic instructions outlining what to do at each step.  
+                <note>
+                <para>Each section of the sheet has basic instructions outlining what to do at each step.</para>
+                </note>
+                <para>
                 Click 
                 <inlinemediaobject>
                     <imageobject>

@@ -75,6 +75,20 @@ sub process_pom {
   my @contents = (<INF>);
   close(INF);
 
+  # It is possible that a directory has been
+  # caught up in the pom modification process
+  # and we don't want to change their version
+  # numbers.
+  #
+  # Directories have a packaging type of pom
+  # so check for this and bail out
+  #
+  foreach $line (@contents) {
+    if ($line =~ m/<packaging>pom<\/packaging>/) {
+      return 0;
+    }
+  }
+
   # Prepare to modify the pom
   open(OUF, ">$_") or die "Cannot open $!";
  

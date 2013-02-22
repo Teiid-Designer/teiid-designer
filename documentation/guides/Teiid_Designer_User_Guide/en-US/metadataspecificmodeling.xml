@@ -78,10 +78,13 @@
       OK</emphasis>.</para>
       <para>This wizard is designed to provide feedback as to the 
       completeness of the relational table information as well as the 
-      validation state of the table and it&apos;s components. Note that 
-      although errors may be displayed during editing, the wizard is 
-      designed to allow finishing with the construction of an 
-      incomplete table containing errors.</para>
+      validation state of the table and it&apos;s components.</para>
+      <note>
+        <para>Although errors may be displayed during editing, the wizard is 
+            designed to allow finishing with the construction of an 
+            incomplete table containing errors.
+        </para>
+      </note>
       <para>The first tab labeled <emphasis role="bold">
       Properties</emphasis> contains the input for the simple table 
       properties including name, name in source, cardinality, supports 
@@ -125,11 +128,13 @@
       <para>To create a new <emphasis role="bold">Foreign 
       Key</emphasis>, select the <emphasis role="bold">Add</emphasis> 
       button and enter/select the properties, key references in the 
-      tables shown below. Note the <emphasis role="bold">Select Primary 
+      tables shown below.</para>
+      <note><para>The <emphasis role="bold">Select Primary 
       Key</emphasis> or <emphasis role="bold">Unique 
       Constraint</emphasis> table will display any PK/UC existing in 
       the selected relational model. If no tables in that model contain 
       a PK or UC, then the table will be empty.</para>
+      </note>
       <figure>
         <title>Create Foreign Key Dialog</title>
         <mediaobject><imageobject>
@@ -149,8 +154,12 @@
       materialized view option by setting the <emphasis role="bold">
       Materialized</emphasis> property to TRUE and setting the 
       <emphasis role="bold">Materialized Table</emphasis> reference, as 
-      shown in the figure below. Note that you are required to have 
-      already created your relational tables.</para>
+      shown in the figure below.</para>
+      <note>
+        <para>
+            You are required to have already created your relational tables.
+        </para>
+      </note>
       <figure>
         <title>Materialized Table Properties</title>
         <mediaobject><imageobject>
@@ -234,10 +243,13 @@
       OK</emphasis>.</para>
       <para>This wizard is designed to provide feedback as to the 
       completeness of the relational view table information, as well as 
-      the validation state of the table and it&apos;s components. Note 
-      that although errors or warnings may be displayed during editing, 
-      the wizard is designed to allow finishing even if the table 
-      definition is incomplete.</para>
+      the validation state of the table and it&apos;s components.</para>
+      <note>
+        <para>Although errors or warnings may be displayed during editing, 
+            the wizard is designed to allow finishing even if the table 
+            definition is incomplete.
+        </para>
+      </note>
       <para>The first tab labeled <emphasis role="bold">
       Properties</emphasis> contains the input for the simple table 
       properties including name and supports update.</para>
@@ -683,7 +695,8 @@
             <para><mediaobject><imageobject>
             <imagedata fileref="images/screencaps/rest-properties.png"/>
             </imageobject></mediaobject></para>
-            <para>Note that the generated URI will have the model name 
+            <note>
+            <para>The generated URI will have the model name 
             included as part of the path, so full URL would look like 
             this: <emphasis role="bold">
             http://{host}:{port}/{war_context}/{model_name}/books/123</emphasis>. 
@@ -693,7 +706,9 @@
             <emphasis role="bold">&apos;books&apos;</emphasis> (or 
             whatever you want) and the URL would be 
             <emphasis role="bold">
-            http://{host}:{port}/{war_context}/{model_name}/books</emphasis>.</para>
+            http://{host}:{port}/{war_context}/{model_name}/books</emphasis>.
+            </para>
+            </note>
             <para>Once you have added all of your procedures along with 
             the required extended properties, be sure and add the model 
             to your VDB or synchronize if it&apos;s already included in 
