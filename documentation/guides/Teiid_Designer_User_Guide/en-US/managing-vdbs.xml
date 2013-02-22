@@ -27,9 +27,11 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-		<para>Note that a VDB is scoped to be aware of models and files within the same model project as the VDB. You 
-			will not be allowed to add models to a VDB that exist in a different project.
-		</para>
+        <note>
+		      <para>A VDB is scoped to be aware of models and files within the same model project as the VDB. You 
+			     will not be allowed to add models to a VDB that exist in a different project.
+		      </para>
+        </note>
 	</section>
 	
 	<section id="edit-vdb">
@@ -144,14 +146,10 @@
 			<listitem>
 				<para><emphasis role="bold">Step 4 </emphasis> - On the 3rd page, titled 
 					<emphasis role="bold">Select Database Objects</emphasis>, select a single schema to use to 
-					create as VDB source model.
-					<itemizedlist>
-				    	<listitem>
-   						    <para>Note the schema names are the names of the visible models in your deployed VDB.
-   							</para>
-   						</listitem>
-   					</itemizedlist>
-				</para>
+					create as VDB source model.</para>
+                <note>
+                    <para>The schema names are the names of the visible models in your deployed VDB.</para>
+                </note>
 				<mediaobject>
 					<imageobject>
 						<imagedata fileref="images/screencaps/jdbc-import-page-3-vdb-source-error.png"/>

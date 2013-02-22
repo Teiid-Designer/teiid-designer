@@ -295,7 +295,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         toolkit = new FormToolkit(parent.getDisplay());
 
         /* Panel to hold the viewer and server status panel */
-        Composite panel = new Composite(parent, SWT.NONE);
+        Composite panel = toolkit.createComposite(parent);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(panel);
         GridLayoutFactory.fillDefaults().applyTo(panel);
 

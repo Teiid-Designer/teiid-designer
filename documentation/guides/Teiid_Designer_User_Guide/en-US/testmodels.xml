@@ -26,7 +26,7 @@
 			Development perspective will be available to use as your import source. From these import wizards you can also create 
 			new connection profiles or edit existing connection profiles without leaving the wizard. 
 		</para>
-		<para>The <xref linkend="teiid-view" /> provides access to running Teiid instances and shows data source
+		<para>The <xref linkend="servers-view" /> provides access to running Teiid instances and shows data source
 			and VDB artifacts deployed there.  The "Create Data Source" action available on this view utilizes the available 
 			and applicable connection profiles.
 		</para>
@@ -53,7 +53,9 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
-			<para>Note that if a source model has no associated connection profile the following dialog will be displayed.</para>
+            <note>
+			<para>If a source model has no associated connection profile the following dialog will be displayed.</para>
+            </note>
 			<figure>
 				<title>No Connection Info Dialog</title>
 				<mediaobject>
@@ -105,10 +107,12 @@
 			Model objects that can be previewed include:  relational tables and views (including
 			tables involving access patterns), relational procedures, Web service operations and
 			XML document staging tables.</para>
-		<para> Note that any virtual table, view or procedure is previewable as
+        <note>
+		<para>Any virtual table, view or procedure is previewable as
 			long as all "physical" source models reference sufficient connection info.
-			(See <!--<xref linkend="teiid-view" />-->
-			   <xref linkend="teiid-view" /> view)</para>
+			(See <!--<xref linkend="servers-view" />-->
+			   <xref linkend="servers-view" /> view)</para>
+        </note>
 		
 		<para>After selecting the Preview Data action, Designer will insure that all source models are 
 			associated with connection profiles and that all required passwords are set.</para>
@@ -145,9 +149,11 @@
 				</inlinemediaobject>.</para>
 		<para>You can change your transformation SQL, re-validate and preview your the data for your modified SQL.</para>
 		
-		<para>The following sections provide steps for previewing your data. Note that all steps assume that all
+		<para>The following sections provide steps for previewing your data.</para>
+        <note><para>All steps assume that all
 			source models referenced by your models, either directly or through dependencies, are bound to connector
 			bindings.</para>
+        </note>
 		
 		<!-- ####### PREVIEW DATA - RELATIONAL TABLE OR VIEW ######################################### -->
 		
@@ -211,10 +217,12 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - A column input dialog is presented. Select
-									each access pattern and enter a value for each required column. Note that if data entered does
+									each access pattern and enter a value for each required column.</para>I
+                                <note><para>If data entered does
 									not match the column datatype (String, integer, etc...), an error message will be displayed 
 									in the dialog header. When all required values are entered, click the
 									<emphasis role="bold">OK</emphasis> button to execute the query.</para>
+                                </note>
 								<figure>
 									<title>Access Pattern Column Input Dialog</title>
 									<mediaobject>
@@ -262,10 +270,12 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - An input parameter input dialog is presented. Enter
-									a valid value for each parameter. Note that if data entered does
+									a valid value for each parameter.</para>
+                                <note><para>If data entered does
 									not match the parameter datatype (String, integer, etc...), an error message will be displayed 
 									in the dialog header. When all required values are entered, click the
 									<emphasis role="bold">OK</emphasis> button to execute the query.</para>
+                                </note>
 								<figure>
 									<title>Procedure Parameter Input Dialog</title>
 									<mediaobject>
@@ -313,10 +323,12 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis>: An input parameter input dialog is presented. Enter
-									a valid value for each parameter. Note that if data entered does
+									a valid value for each parameter.</para>
+                                <note><para>If data entered does
 									not match the parameter datatype (String, integer, etc...), an error message will be displayed 
 									in the dialog header. When all required values are entered, click the
 									<emphasis role="bold">OK</emphasis> button to execute the query.</para>
+                                </note>
 								<figure>
 									<title>Procedure Parameter Input Dialog</title>
 									<mediaobject>
@@ -340,9 +352,12 @@
 		
 		<section id="preview-results-section">
 			<title>Sample SQL Results for Preview Data</title>
-			<para>Preview Data results are displayed in the Eclipse Datatools SQL Results view as shown below.
-				Note there are a number of display preference and filter options for this view via toolbar buttons and the dropdown menu.			
-			</para>
+			<para>Preview Data results are displayed in the Eclipse Datatools SQL Results view as shown below.</para>
+            <note>
+                <para>
+				    There are a number of display preference and filter options for this view via toolbar buttons and the dropdown menu.			
+                </para>
+            </note>
 				<figure>
 					<title>SQL Results View</title>
 					<mediaobject>
@@ -404,7 +419,7 @@
 				that source model in your workspace and select the <emphasis role="bold">Modeling &gt; Create Data Source</emphasis> action. 
 				This will extract the connection profile data from your source model and create a corresponding data source 
 				on your default Teiid server.</para>
-			<para>You can also create data sources from the Teiid view. Select a Teiid server instance in the Teiid view 
+			<para>You can also create data sources from the Servers view. Select a Teiid server instance in the Servers view 
 				and right-click select the <emphasis role="bold">Create Data Source</emphasis> action. This will launch the 
 				Create Data Source Dialog shown below.</para>
 				<figure>
@@ -427,7 +442,7 @@
 			<para></para>
 			<itemizedlist>
 				<listitem>
-					<para>If you have a Teiid instance defined and connected in your Teiid view you can:
+					<para>If you have a Teiid instance defined and connected in your Servers view you can:
 						<itemizedlist>
 							<listitem>
 								<para><emphasis role="bold">Step 1 </emphasis>: Right-click a VDB in your Model Explorer 
@@ -480,7 +495,7 @@
 		<section id="deploy-vdb-from-model-explorer">
 			<title>Deploy VDB from Model Explorer</title>
 			<para>You can also deploy your VDB first by selecting it in the Model Explorer 
-				and dragging/dropping it onto a connected Teiid instance in the Teiid view, 
+				and dragging/dropping it onto a connected Teiid instance in the Servers view, 
 				or right-click select <emphasis role="bold">Modeling &gt; Deploy</emphasis> action.
 			</para>
 			<para>Once deployed, you can select the VDB in the Teiid View and 
@@ -488,10 +503,12 @@
 				create a Teiid Connection Profile specific for that VDB, open the 
 				Database Development perspective and create a connection to your VDB. 
 				Continue with Step's 2 and 3 above.</para>
-			<para>Note that if you do not have a Teiid instance defined or your default 
+            <note>
+			     <para>If you do not have a Teiid instance defined or your default 
 					Teiid instance is disconnected, the following dialog will be displayed 
 					if the <emphasis role="bold">Modeling &gt; Deploy</emphasis> action is launched.
-			</para>
+			     </para>
+            </note>
 			<figure>
 				<title>No Teiid Instance Defined</title>
 				<mediaobject>
