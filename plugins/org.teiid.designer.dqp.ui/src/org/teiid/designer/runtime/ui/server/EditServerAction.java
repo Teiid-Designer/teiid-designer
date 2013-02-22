@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
@@ -78,7 +79,12 @@ public final class EditServerAction extends BaseSelectionListenerAction {
     	    this.serverBeingEdited = RuntimeAssistant.selectServer(shell);
     	}
     	
-    	if( this.serverBeingEdited == null ) return;
+    	if( this.serverBeingEdited == null ) {
+    	    String title = UTIL.getString("noServerAvailableTitle"); //$NON-NLS-1$
+    	    String message = UTIL.getString("noServerAvailableMessage"); //$NON-NLS-1$
+    	    MessageDialog.openError(shell, title, message);
+    	    return;
+    	}
     	    
     	DqpUiPlugin.editTeiidServer(serverBeingEdited);
     }

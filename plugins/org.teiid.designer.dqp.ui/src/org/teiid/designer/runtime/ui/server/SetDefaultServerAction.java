@@ -83,8 +83,12 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
             this.selectedServer = RuntimeAssistant.selectServer(getShell());
         }
         
-        if (selectedServer == null)
+        if (selectedServer == null) {
+            String title = UTIL.getString("noServerAvailableTitle"); //$NON-NLS-1$
+            String message = UTIL.getString("noServerAvailableMessage"); //$NON-NLS-1$
+            MessageDialog.openError(getShell(), title, message);
             return;
+        }
         
         ITeiidServer currentDefaultServer = this.teiidServerManager.getDefaultServer();
         
@@ -109,7 +113,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
         if( currentDefaultServer.isConnected() ) {
 	    	disconnectOldDefault = MessageDialog.openQuestion(getShell(), 
 	    			UTIL.getString("setDefaultServerActionDisconnectOldTitle"),  //$NON-NLS-1$
-	    			UTIL.getString("setDefaultServerActionDisconnectOldMessage", currentDefaultServer.getUrl())); //$NON-NLS-1$
+	    			UTIL.getString("setDefaultServerActionDisconnectOldMessage", currentDefaultServer.getDisplayName())); //$NON-NLS-1$
     	}
     	if( disconnectOldDefault ) {
     		currentDefaultServer.disconnect();
@@ -138,6 +142,10 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
                 }
             });
         }
+        
+        String title = UTIL.getString("defaultServerChangedTitle"); //$NON-NLS-1$
+        String message = UTIL.getString("defaultServerChangedMessage", currentDefaultServer.getDisplayName()); //$NON-NLS-1$
+        MessageDialog.openInformation(getShell(), title, message);
     }
 
     private boolean hasOpenEditors() {
