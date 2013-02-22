@@ -6,10 +6,12 @@
         The matrix indicates for a given data source how a model can be created (Desginer Import Option) and how the data source is 
         integrated (Translator) for data access.
     </para>
+    <note>
     <para>
-        NOTE: The DDL Import option is an available option to build a source model for any data source. Its only indicated below 
+        The DDL Import option is an available option to build a source model for any data source. Its only indicated below 
         when there's no specific importer created  for that specific data source type.
     </para>
+    </note>
     <para>
         <table frame="border" rules="all">
             <title>Teiid Designer Supported Data Sources</title>

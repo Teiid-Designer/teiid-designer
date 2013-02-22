@@ -23,11 +23,29 @@
 		<title>Teiid Designer Preferences</title>
 		<para>General Teiid Designer preferences include.</para>
 		<itemizedlist>
+            <listitem>
+                <para><emphasis role="bold">Enable auto-creating of a source model's data source on Teiid Server</emphasis> - 
+                    indicates if data sources that match the default name should be auto-created if they do not exist on Teiid server.
+                </para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Enable Preview</emphasis> - If the Designer Runtime feature is installed and a Teiid 
+                    Instance is defined, Teiid Designer will automatically keep the preview artifacts 
+                    (VDBs) in sync with the workspace models. Unchecking this preference will disable 
+                    preview feature and not create preview artifacts.</para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Enable Preview Teiid Cleanup</emphasis> - If operating Designer with Enable 
+                    Preview = TRUE, then this preference will result in automatic 
+                    clean-up of your preview artifacts from your Teiid servers. Any preview 
+                    VDBs or preview data sources will be undeployed from your servers as part of 
+                    Eclipse's shut-down process.</para>
+            </listitem>
 			<listitem>
 				<para><emphasis role="bold">Always open editor without prompting</emphasis> To change/edit a model, 
-				it must be opened for editing. Checking this box will automatically open the model in an editor if 
-				the user attempts to perform a change in a model. If unchecked, the user will be informed that an 
-				editor will be opened before the operation is completed.</para>
+				    it must be opened for editing. Checking this box will automatically open the model in an editor if 
+				    the user attempts to perform a change in a model. If unchecked, the user will be informed that an 
+				    editor will be opened before the operation is completed.</para>
 			</listitem>
 			<listitem>
 				<para><emphasis role="bold">Open Designer perspective when model is opened</emphasis> - If a model is opened via importing projects, 
@@ -38,27 +56,21 @@
 					open the Teiid Designer perspective.</para>
 			</listitem>
 			<listitem>
-				<para><emphasis role="bold">Check and update imports during save</emphasis> occasionally editing 
-				a model may add or remove objects in one model that reference objects in another model. 
-				Model Imports keep track of these dependencies within each model. A validation error or 
-				warning may appear during a build. Checking this box will automatically check and update 
-				imports during the save process. This will result in any unneeded imports being removed 
-				from the model or any required imports added to the model. If unchecked, no updating of 
-				imports will be performed.</para>
+				<para><emphasis role="bold">Check and update imports during save</emphasis> - occasionally editing 
+				    a model may add or remove objects in one model that reference objects in another model. 
+				    Model Imports keep track of these dependencies within each model. A validation error or 
+				    warning may appear during a build. Checking this box will automatically check and update 
+				    imports during the save process. This will result in any unneeded imports being removed 
+				    from the model or any required imports added to the model. If unchecked, no updating of 
+				    imports will be performed.</para>
 			</listitem>
-			<listitem>
-				<para><emphasis role="bold">Enable Preview</emphasis> - If the Designer Runtime feature is installed and a Teiid 
-					Instance is defined, Teiid Designer will automatically keep the preview artifacts 
-					(VDBs) in sync with the workspace models. Unchecking this preference will disable 
-					preview feature and not create preview artifacts.</para>
-			</listitem>
-			<listitem>
-				<para><emphasis role="bold">Enable Preview Teiid Cleanup</emphasis> - If operating Designer with Enable 
-					Preview = TRUE, then this preference will result in automatic 
-					clean-up of your preview artifacts from your Teiid servers. Any preview 
-					VDBs or preview data sources will be undeployed from your servers as part of 
-					Eclipse's shut-down process.</para>
-			</listitem>
+            <listitem>
+                <para><emphasis role="bold">Default Teiid Server Version</emphasis> - determines what version of
+                    server modelling will be targeted at, <emphasis role="bold">if no teiid server has been defined
+                    in the Servers View</emphasis>. Thus, it is possible to still design models without the need to
+                    define and connect to a server. However, possible values are confined to the teiid runtime clients
+                    installed.</para>
+            </listitem>
 		</itemizedlist>
 		<figure>
 			<title>General Teiid Designer Preferences Panel</title>

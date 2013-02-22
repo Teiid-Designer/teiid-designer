@@ -110,7 +110,10 @@
 								connection profile from the drop-down selector or press <emphasis role="bold">New...</emphasis> button to launch 
 								the <emphasis role="bold">New Connection Profile</emphasis> dialog (See Eclispe Data Tools documentation) 
 								or <emphasis role="bold">Edit...</emphasis> to modify/change an existing connection profile prior to selection.
-								Note that the Connection Profile selection list will be populated with only JDBC Database connections.</para>
+                             </para>
+                             <note>
+								<para> the Connection Profile selection list will be populated with only JDBC Database connections.</para>
+                             </note>
 							<figure>
 								<title>Select JDBC Source Configuration Dialog</title>
 								<mediaobject>
@@ -267,16 +270,23 @@ FROM
 								connection profile from the drop-down selector or press <guibutton>New...</guibutton> button to launch 
 								the <guilabel>New Connection Profile</guilabel> dialog (See Eclispe Data Tools documentation) 
 								or <guibutton>Edit...</guibutton> to modify/change an existing connection profile prior to selection.
-								Note that the Flat File Source selection list will be populated with only Flat File connection
+                            </para>
+                            <note>
+								<para>The Flat File Source selection list will be populated with only Flat File connection
 								profiles.</para>
+                            </note>
 							<para>After selecting a <emphasis role="bold">Connection Profile</emphasis>, 
 								the file contents of the folder defined in the connection profile will be displayed in the <emphasis role="bold">Available Data Files</emphasis> panel. 
 								Check the the data file you wish to process. The data from this file, along with your custom import options, will be used to construct a view table containing 
 								the required SQL transformation for retrieving your data and returning a result set.</para>
 							<para>Lastly enter or unique source model name in the <emphasis role="bold">Source Model Definition</emphasis> section at the bottom of the page or
-								select an existing source model using the browse button. Note the <emphasis role="bold">Model Status</emphasis> section which will
+								select an existing source model using the browse button.
+                            </para>
+                            <note>
+                                <para>The <emphasis role="bold">Model Status</emphasis> section which will
 								indicate the validity of the model name, whether the model exists or not and whether the model already contains the getTextFiles()
 								procedure. In this case, the source model nor the procedure will be generated.</para>
+                            </note>
 							<para>When finished with this page, click <emphasis role="bold">Next></emphasis>.</para>
 							<figure>
 								<title>Data File Source Selection Page</title>
@@ -360,9 +370,14 @@ FROM
 						<listitem> 
 							<para><emphasis role="bold">Step 6 </emphasis> - On the <emphasis role="bold">View Model Definition</emphasis>
 								page, select the target folder location where your new view model will be created. You can also select an existing 
-								model for your new view tables. Note the <emphasis role="bold">Model Status</emphasis> section which will
-								indicate the validity of the model name, whether the model exists or not. Lastly, enter a unique, valid view table name.
-								Press <emphasis role="bold">Finish</emphasis> to generate your models and finish the wizard.</para>
+								model for your new view tables.
+                            </para>
+                            <note>
+                                <para>The <emphasis role="bold">Model Status</emphasis> section which will
+								    indicate the validity of the model name, whether the model exists or not. Lastly, enter a unique, valid view table name.
+                                </para>
+                            </note>
+                            <para>Press <emphasis role="bold">Finish</emphasis> to generate your models and finish the wizard.</para>
 							<figure>
 								<title>View Model Definition Page</title>
 								<mediaobject>
@@ -487,9 +502,13 @@ FROM
 								will be used to construct a view table containing 
 								the required SQL transformation for retrieving your data and returning a result set.</para>
 							<para>Lastly enter or unique source model name in the <emphasis role="bold">Source Model Definition</emphasis> section at the bottom of the page or
-								select an existing source model using the browse button. Note the <emphasis role="bold">Model Status</emphasis> section which will
+								select an existing source model using the browse button.
+                            </para>
+                            <note>
+                                <para>The <emphasis role="bold">Model Status</emphasis> section which will
 								indicate the validity of the model name, whether the model exists or not and whether the model already contains the getTextFiles()
 								procedure. In this case, the source model nor the procedure will be generated.</para>
+                            </note>
 							<para>When finished with this page, click <emphasis role="bold">Next></emphasis>.</para>
 							<figure>
 								<title>XML Data File Source Selection Page</title>
@@ -511,9 +530,12 @@ FROM
 							   column</guibutton> button. You can also modify or create custom columns, by 
 							   using the <guibutton>ADD</guibutton>, <guibutton>DELETE</guibutton>, 
 							   <guibutton>UP</guibutton>, <guibutton>DOWN</guibutton> to manage the column info in your SQL.</para>
-							<para>Note that the <guibutton>Path</guibutton> property value for a column is the selected element's path relative to the
-							   defined root path. If no root path is defined all paths are absolute.  Each column entry requires a datatype and an optional
-							   default value. See the Teiid User's Guide for details on the XMLTABLE() function.</para>
+							<note>
+                                <para>The <guibutton>Path</guibutton> property value for a column is the selected element's path relative to the
+							         defined root path. If no root path is defined all paths are absolute.  Each column entry requires a datatype and an optional
+							         default value. See the Teiid User's Guide for details on the XMLTABLE() function.
+                                </para>
+                            </note>
 							<para>When finished with this page, click <emphasis role="bold">Next></emphasis>.</para>
 							<figure>
 								<title>XML File Delimited Columns Options Page</title>
@@ -527,9 +549,14 @@ FROM
 						<listitem> 
 							<para><emphasis role="bold">Step 6 </emphasis> - On the <emphasis role="bold">View Model Definition</emphasis>
 								page, select the target folder location where your new view model will be created. You can also select an existing 
-								model for your new view tables. Note the <emphasis role="bold">Model Status</emphasis> section which will
+								model for your new view tables.
+                            </para>
+                            <note>
+                                <para>The <emphasis role="bold">Model Status</emphasis> section which will
 								indicate the validity of the model name, whether the model exists or not. Lastly, enter a unique, valid view table name.
-								Press <emphasis role="bold">Finish</emphasis> to generate your models and finish the wizard.</para>
+                                </para>
+                            </note>
+						    <para>Press <emphasis role="bold">Finish</emphasis> to generate your models and finish the wizard.</para>
 							<figure>
 								<title>View Model Definition Page</title>
 								<mediaobject>
@@ -575,7 +602,10 @@ FROM
 								connection profile from the drop-down selector or press <guibutton>New...</guibutton> button to launch 
 								the <guilabel>New Connection Profile</guilabel> dialog (See Eclispe Data Tools documentation) 
 								or <guibutton>Edit...</guibutton> to modify/change an existing connection profile prior to selection.
-								Note that the Connection Profile selection list will be populated with only Salesforce connection profiles.</para>
+                            </para>
+                            <note>
+								<para>The Connection Profile selection list will be populated with only Salesforce connection profiles.</para>
+                            </note>
 							<figure>
 								<title>Select Salesforce Credentials Dialog</title>
 								<mediaobject>
@@ -718,7 +748,6 @@ FROM
 		
 		<section id="relational-model-xml-text-import-section">
 			<title>Import Relational Model (XML Format)</title>
-			<para>A </para>
 			<itemizedlist>
 				<listitem>
 					<para>To create relational tables from imported xml text file metadata:
@@ -743,9 +772,13 @@ FROM
 									Perform <emphasis role="bold">Steps 4 </emphasis> - On the next page, select the XML file on your
 									local file system via the <guibutton>Browse...</guibutton> button. Select a target model to which the imported
 									relational objects will be added via the second <guibutton>Browse...</guibutton> button. The dialog allows selecting 
-									an existing relational model or creating a new model. Note the contents of your selected XML file
-									will be display in the File Contents viewer. Click <emphasis role="bold">Finish</emphasis> to create your new
-								</para>
+									an existing relational model or creating a new model.
+                                </para>
+                                <note>
+                                    <para>The contents of your selected XML file will be display in the File Contents viewer.</para>
+                                </note>
+                                <para>Click <emphasis role="bold">Finish</emphasis> to create your new model.</para>
+                                
 								<figure>
 									<title>Select Source Text File and Target Relational Model Page</title>
 									<mediaobject>
@@ -1025,10 +1058,13 @@ FROM
 							the details of your request and response structures.</para>
 							<para>In the Request tab, select and double-click the schema elements you wish to be input parameters 
 							for your request. These will be added to the Element Info panel and the resulting 
-							generated SQL statement will be updated to reflect the new element. 
-							Note the BODY and HEADER tabs which exist on both the Request and Response tabs. 
+							generated SQL statement will be updated to reflect the new element.</para>
+                            <note>
+                            <para>
+							The BODY and HEADER tabs which exist on both the Request and Response tabs. 
 							If the selected service mode for this procedure is set to MESSAGE, the HEADER tab will be 
 							enabled and allow you to define the SOAP header variables utilizing the same schema tree.</para>
+                            </note>
 							<para>Select the Response tab and create the response procedures result set columns in the same way.</para>
 							<para>Repeat this process for all operations by changing the selection target operation via the
 							<emphasis role="bold">Operations</emphasis> selector at the top.</para>

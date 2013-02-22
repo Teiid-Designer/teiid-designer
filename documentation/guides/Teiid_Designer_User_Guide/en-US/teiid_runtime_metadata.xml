@@ -9,7 +9,7 @@
     <para>
         <table frame="border" rules="all">
             <title>Data Usage for Tables</title>
-            <tgroup align="left" cols="3">
+            <tgroup align="left" cols="6">
                 <colspec colname="objectColumn"/>
                 <colspec colname="typeColumn"/>
                 <colspec colname="inDesignerColumn"/>
@@ -27,81 +27,81 @@
                     </row>
                 </thead>
                 <tbody valign="top">
-<row><entry>FullName</entry>			<entry>String</entry>		<entry>Yes</entry>	<entry>Yes</entry>						<entry>Yes</entry>	<entry>Name of the Table</entry></row>
-<row><entry>NameInSource</entry>		<entry>String</entry>		<entry>Yes</entry>	<entry>Yes</entry>						<entry>Yes</entry>	<entry>Name of Table in the source system, for view this can be empty, also used on variety of use cases</entry>                    </row>
-<row><entry>Cardinality</entry>			<entry>Integer</entry>		<entry>Yes</entry>	<entry>Yes</entry>						<entry>Yes</entry>	<entry>Cardinality is used to calculate the cost of source node access</entry></row>
-<row><entry>TableType</entry>			<entry>Integer</entry>		<entry>Yes</entry>	<entry>Yes</entry>						<entry>Yes</entry>	<entry>Table,View,Document,XmlMappingClass,XmlStagingTable,MaterializedTable</entry></row>
-<row><entry>IsVirtual</entry>			<entry>Boolean</entry>		<entry>Yes</entry>	<entry>Yes</entry>						<entry>Yes</entry>	<entry>Used to find if this is source table Vs view</entry></row>
-<row><entry>IsSystem</entry>			<entry>Boolean</entry>		<entry>Yes</entry>	<entry>Yes</entry>						<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>IsMaterialized</entry>		<entry>Boolean</entry>		<entry>Yes</entry>	<entry>Yes</entry>						<entry>Yes</entry>	<entry>To identify that the table is materialized</entry></row>
-<row><entry>SupportsUpdate</entry>		<entry>Boolean</entry>		<entry>Yes</entry>	<entry>Yes</entry>						<entry>Yes</entry>	<entry>To allow updates on the table</entry></row>
-<row><entry>PrimaryKeyID</entry>		<entry>String</entry>		<entry>Yes</entry>	<entry>KeyRecord</entry>				<entry>Yes</entry>	<entry>Used for creating indexes on temp tables and to create default update/delete procedures</entry></row>
-<row><entry>ForeignKeyIDs</entry>		<entry>Collection</entry>	<entry>Yes</entry>	<entry>List&lt;ForeignKey&gt;</entry>	<entry>Yes</entry>	<entry>Used in Planning of query (rule raise access)</entry></row>
-<row><entry>IndexIDs</entry>			<entry>Collection</entry>	<entry>Yes</entry>	<entry>List&lt;KeyRecord&gt;</entry>	<entry>Yes</entry>	<entry>Used for creating indexes on temp tables and in planning (estimate predicate cost)</entry></row>
-<row><entry>UniqueKeyIDs</entry>		<entry>Collection</entry>	<entry>Yes</entry>	<entry>List&lt;KeyRecord&gt;</entry>	<entry>Yes</entry>	<entry>Used for query planning</entry></row>
-<row><entry>AccessPatternIDs</entry>	<entry>Collection</entry>	<entry>Yes</entry>	<entry>List&lt;KeyRecord&gt;</entry>	<entry>Yes</entry>	<entry>Used for enforcing the criteria on query</entry></row>
-<row><entry>MaterializedTableID</entry>	<entry>String</entry>		<entry>Yes</entry>	<entry>Table</entry>					<entry>Yes</entry>	<entry>Reference to Materialization table</entry></row>
-<row><entry>insertEnabled</entry>		<entry>Boolean</entry>		<entry>**</entry>	<entry>Yes</entry>						<entry>Yes</entry>	<entry>Flag for checking insert procedure is enabled for view</entry></row>
-<row><entry>deleteEnabled</entry>		<entry>Boolean</entry>		<entry>**</entry>	<entry>Yes</entry>						<entry>Yes</entry>	<entry>Flag for checking delete procedure is enabled for view</entry></row>
-<row><entry>updateEnabled</entry>		<entry>Boolean</entry>		<entry>**</entry>	<entry>Yes</entry>						<entry>Yes</entry>	<entry>Flag for checking update procedure is enabled for view</entry></row>
-<row><entry>Select Transformation</entry>	<entry>String</entry>	<entry>**</entry>	<entry>Yes</entry>						<entry>Yes</entry>	<entry>Transformation for Select in case of View</entry></row>
-<row><entry>Insert Plan</entry>			<entry>String</entry>		<entry>**</entry>	<entry>Yes</entry>						<entry>Yes</entry>	<entry>Transformation for Insert in case of View</entry></row>
-<row><entry>Update Plan</entry>			<entry>String</entry>		<entry>**</entry>	<entry>Yes</entry>						<entry>Yes</entry>	<entry>Transformation for Update in case of View</entry></row>
-<row><entry>Delete Plan</entry>			<entry>String</entry>		<entry>**</entry>	<entry>Yes</entry>						<entry>Yes</entry>	<entry>Transformation for Delete in case of View</entry></row>
-<row><entry>Bindings</entry>			<entry>Collection</entry>	<entry>**</entry>	<entry>Yes</entry>						<entry>Yes</entry>	<entry>XML Document</entry></row>
-<row><entry>SchemaPaths</entry>			<entry>Collection</entry>	<entry>**</entry>	<entry>Yes</entry>						<entry>Yes</entry>	<entry>XML Document</entry></row>
+<row><entry>FullName</entry>            <entry>String</entry>       <entry>Yes</entry>  <entry>Yes</entry>                      <entry>Yes</entry>  <entry>Name of the Table</entry></row>
+<row><entry>NameInSource</entry>        <entry>String</entry>       <entry>Yes</entry>  <entry>Yes</entry>                      <entry>Yes</entry>  <entry>Name of Table in the source system, for view this can be empty, also used on variety of use cases</entry></row>
+<row><entry>Cardinality</entry>         <entry>Integer</entry>      <entry>Yes</entry>  <entry>Yes</entry>                      <entry>Yes</entry>  <entry>Cardinality is used to calculate the cost of source node access</entry></row>
+<row><entry>TableType</entry>           <entry>Integer</entry>      <entry>Yes</entry>  <entry>Yes</entry>                      <entry>Yes</entry>  <entry>Table,View,Document,XmlMappingClass,XmlStagingTable,MaterializedTable</entry></row>
+<row><entry>IsVirtual</entry>           <entry>Boolean</entry>      <entry>Yes</entry>  <entry>Yes</entry>                      <entry>Yes</entry>  <entry>Used to find if this is source table Vs view</entry></row>
+<row><entry>IsSystem</entry>            <entry>Boolean</entry>      <entry>Yes</entry>  <entry>Yes</entry>                      <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>IsMaterialized</entry>      <entry>Boolean</entry>      <entry>Yes</entry>  <entry>Yes</entry>                      <entry>Yes</entry>  <entry>To identify that the table is materialized</entry></row>
+<row><entry>SupportsUpdate</entry>      <entry>Boolean</entry>      <entry>Yes</entry>  <entry>Yes</entry>                      <entry>Yes</entry>  <entry>To allow updates on the table</entry></row>
+<row><entry>PrimaryKeyID</entry>        <entry>String</entry>       <entry>Yes</entry>  <entry>KeyRecord</entry>                <entry>Yes</entry>  <entry>Used for creating indexes on temp tables and to create default update/delete procedures</entry></row>
+<row><entry>ForeignKeyIDs</entry>       <entry>Collection</entry>   <entry>Yes</entry>  <entry>List&lt;ForeignKey&gt;</entry>   <entry>Yes</entry>  <entry>Used in Planning of query (rule raise access)</entry></row>
+<row><entry>IndexIDs</entry>            <entry>Collection</entry>   <entry>Yes</entry>  <entry>List&lt;KeyRecord&gt;</entry>    <entry>Yes</entry>  <entry>Used for creating indexes on temp tables and in planning (estimate predicate cost)</entry></row>
+<row><entry>UniqueKeyIDs</entry>        <entry>Collection</entry>   <entry>Yes</entry>  <entry>List&lt;KeyRecord&gt;</entry>    <entry>Yes</entry>  <entry>Used for query planning</entry></row>
+<row><entry>AccessPatternIDs</entry>    <entry>Collection</entry>   <entry>Yes</entry>  <entry>List&lt;KeyRecord&gt;</entry>    <entry>Yes</entry>  <entry>Used for enforcing the criteria on query</entry></row>
+<row><entry>MaterializedTableID</entry> <entry>String</entry>       <entry>Yes</entry>  <entry>Table</entry>                    <entry>Yes</entry>  <entry>Reference to Materialization table</entry></row>
+<row><entry>insertEnabled</entry>       <entry>Boolean</entry>      <entry>**</entry>   <entry>Yes</entry>                      <entry>Yes</entry>  <entry>Flag for checking insert procedure is enabled for view</entry></row>
+<row><entry>deleteEnabled</entry>       <entry>Boolean</entry>      <entry>**</entry>   <entry>Yes</entry>                      <entry>Yes</entry>  <entry>Flag for checking delete procedure is enabled for view</entry></row>
+<row><entry>updateEnabled</entry>       <entry>Boolean</entry>      <entry>**</entry>   <entry>Yes</entry>                      <entry>Yes</entry>  <entry>Flag for checking update procedure is enabled for view</entry></row>
+<row><entry>Select Transformation</entry>   <entry>String</entry>   <entry>**</entry>   <entry>Yes</entry>                      <entry>Yes</entry>  <entry>Transformation for Select in case of View</entry></row>
+<row><entry>Insert Plan</entry>         <entry>String</entry>       <entry>**</entry>   <entry>Yes</entry>                      <entry>Yes</entry>  <entry>Transformation for Insert in case of View</entry></row>
+<row><entry>Update Plan</entry>         <entry>String</entry>       <entry>**</entry>   <entry>Yes</entry>                      <entry>Yes</entry>  <entry>Transformation for Update in case of View</entry></row>
+<row><entry>Delete Plan</entry>         <entry>String</entry>       <entry>**</entry>   <entry>Yes</entry>                      <entry>Yes</entry>  <entry>Transformation for Delete in case of View</entry></row>
+<row><entry>Bindings</entry>            <entry>Collection</entry>   <entry>**</entry>   <entry>Yes</entry>                      <entry>Yes</entry>  <entry>XML Document</entry></row>
+<row><entry>SchemaPaths</entry>         <entry>Collection</entry>   <entry>**</entry>   <entry>Yes</entry>                      <entry>Yes</entry>  <entry>XML Document</entry></row>
                 </tbody>
             </tgroup>
         </table>    
     </para>               
     <para>
         <table frame="border" rules="all">
-            <title>ata Usage for Columns</title>
-            <tgroup align="left" cols="3">
+            <title>Data Usage for Columns</title>
+            <tgroup align="left" cols="6">
                 <colspec colname="objectColumn"/>
                 <colspec colname="typeColumn"/>
                 <colspec colname="inDesignerColumn"/>
                 <colspec colname="inMetadataApiColumn"/>
                 <colspec colname="requiredColumn"/>
-                <colspec colname="descriptionColulmn"/>
+                <colspec colname="descriptionColumn"/>
                 <thead>
                     <row>
                         <entry align="center"><emphasis role="strong">COLUMN</emphasis></entry>
                         <entry align="center"><emphasis role="strong">Type</emphasis></entry>
-                        <entry align="cent er"><emphasis role="strong">In Designer</emphasis></entry>
+                        <entry align="center"><emphasis role="strong">In Designer</emphasis></entry>
                         <entry align="center"><emphasis role="strong">In Metadata API</emphasis></entry>
                         <entry align="center"><emphasis role="strong">Required</emphasis></entry>
                         <entry align="center"><emphasis role="strong">Description</emphasis></entry>
                     </row>
                 </thead>
-			<tbody valign="top">
-<row><entry>FullName</entry>			<entry>String</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>Yes</entry>	<entry>Yes</entry>	<entry>Name of the column</entry></row>
-<row><entry>NameInSource</entry>		<entry>String</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>Yes</entry>	<entry>Yes</entry>	<entry>Name of the column in source system</entry></row>
-<row><entry>IsSelectable</entry>		<entry>Boolean</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>Yes</entry>	<entry>Column is allowed in select</entry></row>
-<row><entry>IsUpdatable</entry>			<entry>Boolean</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>Yes</entry>	<entry>Column is allowed in Update/Insert/Delete</entry></row>
-<row><entry>NullType</entry>			<entry>Integer</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>Yes</entry>	<entry>Used for validation if null value allowed</entry></row>
-<row><entry>IsAutoIncrementable</entry>	<entry>Boolean</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>Yes</entry>	<entry>During insert used to validate if a value is required or not</entry></row>
-<row><entry>IsCaseSensitive</entry>		<entry>Boolean</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>??</entry>	<entry>??</entry></row>
-<row><entry>IsSigned</entry>			<entry>Boolean</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>??</entry>	<entry>Used in System Metadata</entry></row>
-<row><entry>IsCurrency</entry>			<entry>Boolean</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>IsFixedLength</entry>		<entry>Boolean</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>IsTranformationInputParameter</entry>	<entry>Boolean</entry>	<entry>Yes</entry>		<entry>??</entry>	<entry>??</entry>	<entry>??</entry></row>
-<row><entry>SearchType</entry>			<entry>Integer</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>Yes</entry>	<entry>Used for defining the capability of the source</entry></row>
-<row><entry>Length</entry>				<entry>Integer</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>??</entry>	<entry>Used in System Metadata</entry></row>
-<row><entry>Scale</entry>				<entry>Integer</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>??</entry>	<entry>Used in System Metadata</entry></row>
-<row><entry>Precision</entry>			<entry>Integer</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>??</entry>	<entry>Used in System Metadata</entry></row>
-<row><entry>CharOctetLength</entry>		<entry>Integer</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>No</entry>	<entry>only used for System metadata</entry></row>
-<row><entry>Radix</entry>				<entry>Integer</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>??</entry>	<entry>Used in System Metadata</entry></row>
-<row><entry>DistinctValues</entry>		<entry>Integer</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>Yes</entry>	<entry>Used for cost calculations, System metadata</entry></row>
-<row><entry>NullValues</entry>			<entry>Integer</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>Yes</entry>	<entry>Used for cost calculations, System metadata</entry></row>
-<row><entry>MinValue</entry>			<entry>String</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>Yes</entry>	<entry>Used for cost calculations, System metadata</entry></row>
-<row><entry>MaxValue</entry>			<entry>String</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>Yes</entry>	<entry>Used for cost calculations, System metadata</entry></row>
-<row><entry>Format</entry>				<entry>String</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>RuntimeType</entry>			<entry>String</entry>		<entry>Yes</entry>		<entry>DataType</entry>	<entry>Yes</entry>	<entry>Data Type</entry></row>
-<row><entry>NativeType</entry>			<entry>String</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>Yes</entry>	<entry>Translators can use this field to further plan</entry></row>
-<row><entry>DatatypeObjectID</entry>	<entry>String</entry>		<entry>Yes</entry>		<entry>??</entry>		<entry>??</entry>   <entry></entry></row>
-<row><entry>DefaultValue</entry>		<entry>String</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>Yes</entry>	<entry>Used for Insert and procedure execute operations when the values are not supplied</entry></row>
-<row><entry>Position</entry>			<entry>Integer</entry>		<entry>Yes</entry>		<entry>Yes</entry>		<entry>Yes</entry>	<entry>Used in the index calculations</entry></row>
+            <tbody valign="top">
+<row><entry>FullName</entry>            <entry>String</entry>       <entry>Yes</entry>      <entry>Yes</entry>      <entry>Yes</entry>  <entry>Name of the column</entry></row>
+<row><entry>NameInSource</entry>        <entry>String</entry>       <entry>Yes</entry>      <entry>Yes</entry>      <entry>Yes</entry>  <entry>Name of the column in source system</entry></row>
+<row><entry>IsSelectable</entry>        <entry>Boolean</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>Yes</entry>  <entry>Column is allowed in select</entry></row>
+<row><entry>IsUpdatable</entry>         <entry>Boolean</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>Yes</entry>  <entry>Column is allowed in Update/Insert/Delete</entry></row>
+<row><entry>NullType</entry>            <entry>Integer</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>Yes</entry>  <entry>Used for validation if null value allowed</entry></row>
+<row><entry>IsAutoIncrementable</entry> <entry>Boolean</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>Yes</entry>  <entry>During insert used to validate if a value is required or not</entry></row>
+<row><entry>IsCaseSensitive</entry>     <entry>Boolean</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>??</entry>   <entry>??</entry></row>
+<row><entry>IsSigned</entry>            <entry>Boolean</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>??</entry>   <entry>Used in System Metadata</entry></row>
+<row><entry>IsCurrency</entry>          <entry>Boolean</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>IsFixedLength</entry>       <entry>Boolean</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>IsTranformationInputParameter</entry>   <entry>Boolean</entry>  <entry>Yes</entry>      <entry>??</entry>   <entry>??</entry>   <entry>??</entry></row>
+<row><entry>SearchType</entry>          <entry>Integer</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>Yes</entry>  <entry>Used for defining the capability of the source</entry></row>
+<row><entry>Length</entry>              <entry>Integer</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>??</entry>   <entry>Used in System Metadata</entry></row>
+<row><entry>Scale</entry>               <entry>Integer</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>??</entry>   <entry>Used in System Metadata</entry></row>
+<row><entry>Precision</entry>           <entry>Integer</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>??</entry>   <entry>Used in System Metadata</entry></row>
+<row><entry>CharOctetLength</entry>     <entry>Integer</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>No</entry>   <entry>only used for System metadata</entry></row>
+<row><entry>Radix</entry>               <entry>Integer</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>??</entry>   <entry>Used in System Metadata</entry></row>
+<row><entry>DistinctValues</entry>      <entry>Integer</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>Yes</entry>  <entry>Used for cost calculations, System metadata</entry></row>
+<row><entry>NullValues</entry>          <entry>Integer</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>Yes</entry>  <entry>Used for cost calculations, System metadata</entry></row>
+<row><entry>MinValue</entry>            <entry>String</entry>       <entry>Yes</entry>      <entry>Yes</entry>      <entry>Yes</entry>  <entry>Used for cost calculations, System metadata</entry></row>
+<row><entry>MaxValue</entry>            <entry>String</entry>       <entry>Yes</entry>      <entry>Yes</entry>      <entry>Yes</entry>  <entry>Used for cost calculations, System metadata</entry></row>
+<row><entry>Format</entry>              <entry>String</entry>       <entry>Yes</entry>      <entry>Yes</entry>      <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>RuntimeType</entry>         <entry>String</entry>       <entry>Yes</entry>      <entry>DataType</entry> <entry>Yes</entry>  <entry>Data Type</entry></row>
+<row><entry>NativeType</entry>          <entry>String</entry>       <entry>Yes</entry>      <entry>Yes</entry>      <entry>Yes</entry>  <entry>Translators can use this field to further plan</entry></row>
+<row><entry>DatatypeObjectID</entry>    <entry>String</entry>       <entry>Yes</entry>      <entry>??</entry>       <entry>??</entry>   <entry></entry></row>
+<row><entry>DefaultValue</entry>        <entry>String</entry>       <entry>Yes</entry>      <entry>Yes</entry>      <entry>Yes</entry>  <entry>Used for Insert and procedure execute operations when the values are not supplied</entry></row>
+<row><entry>Position</entry>            <entry>Integer</entry>      <entry>Yes</entry>      <entry>Yes</entry>      <entry>Yes</entry>  <entry>Used in the index calculations</entry></row>
                 </tbody>
             </tgroup>
         </table>    
@@ -109,7 +109,7 @@
     <para>
         <table frame="border" rules="all">
             <title>Data Usage for Primary Keys</title>
-            <tgroup align="left" cols="3">
+            <tgroup align="left" cols="6">
                 <colspec colname="objectColumn"/>
                 <colspec colname="typeColumn"/>
                 <colspec colname="inDesignerColumn"/>
@@ -127,10 +127,10 @@
                     </row>
                 </thead>
                 <tbody valign="top">  
-<row><entry>FullName</entry>		<entry>String</entry>		<entry></entry>		<entry></entry>	<entry></entry>	<entry>See the KeyRecord, See Table</entry></row>
-<row><entry>NameInSource</entry>	<entry>String</entry>		<entry></entry>		<entry></entry>	<entry></entry>	<entry></entry></row>
-<row><entry>ColumnIDs</entry>		<entry>Collection</entry>	<entry></entry>		<entry></entry>	<entry></entry>	<entry></entry></row>
-<row><entry>ForeignKeyIDs</entry>	<entry>Collection</entry>	<entry></entry>		<entry></entry>	<entry></entry>	<entry>Extends KeyRecord</entry></row>
+<row><entry>FullName</entry>        <entry>String</entry>       <entry></entry>     <entry></entry> <entry></entry> <entry>See the KeyRecord, See Table</entry></row>
+<row><entry>NameInSource</entry>    <entry>String</entry>       <entry></entry>     <entry></entry> <entry></entry> <entry></entry></row>
+<row><entry>ColumnIDs</entry>       <entry>Collection</entry>   <entry></entry>     <entry></entry> <entry></entry> <entry></entry></row>
+<row><entry>ForeignKeyIDs</entry>   <entry>Collection</entry>   <entry></entry>     <entry></entry> <entry></entry> <entry>Extends KeyRecord</entry></row>
                 </tbody>
             </tgroup>
         </table>
@@ -138,7 +138,7 @@
     <para>
         <table frame="border" rules="all">
             <title>Data Usage for Unique Keys </title>
-            <tgroup align="left" cols="3">     
+            <tgroup align="left" cols="6">     
                 <colspec colname="objectColumn"/>
                 <colspec colname="typeColumn"/>
                 <colspec colname="inDesignerColumn"/>
@@ -156,10 +156,10 @@
                     </row>
                 </thead>
                 <tbody valign="top">  
-<row><entry>FullName</entry>		<entry>String</entry>		<entry></entry>		<entry></entry>	<entry></entry>	<entry>See the KeyRecord, See Table</entry></row>
-<row><entry>NameInSource</entry>	<entry>String</entry>		<entry></entry>		<entry></entry>	<entry></entry>	<entry></entry></row>
-<row><entry>ColumnIDs</entry>		<entry>Collection</entry>	<entry></entry>		<entry></entry>	<entry></entry>	<entry></entry></row>
-<row><entry>ForeignKeyIDs</entry>	<entry>Collection</entry>	<entry></entry>		<entry></entry>	<entry></entry>	<entry></entry></row>
+<row><entry>FullName</entry>        <entry>String</entry>       <entry></entry>     <entry></entry> <entry></entry> <entry>See the KeyRecord, See Table</entry></row>
+<row><entry>NameInSource</entry>    <entry>String</entry>       <entry></entry>     <entry></entry> <entry></entry> <entry></entry></row>
+<row><entry>ColumnIDs</entry>       <entry>Collection</entry>   <entry></entry>     <entry></entry> <entry></entry> <entry></entry></row>
+<row><entry>ForeignKeyIDs</entry>   <entry>Collection</entry>   <entry></entry>     <entry></entry> <entry></entry> <entry></entry></row>
                 </tbody>
             </tgroup>
         </table>
@@ -167,7 +167,7 @@
     <para>
         <table frame="border" rules="all">
             <title>Data Usage for Indexes </title>
-            <tgroup align="left" cols="3">
+            <tgroup align="left" cols="6">
                 <colspec colname="objectColumn"/>
                 <colspec colname="typeColumn"/>
                 <colspec colname="inDesignerColumn"/>
@@ -185,9 +185,9 @@
                     </row>
                 </thead>
                 <tbody valign="top">  
-<row><entry>FullName</entry>		<entry>String</entry>		<entry></entry>		<entry></entry>	<entry></entry>	<entry>See the KeyRecord, See Table</entry></row>
-<row><entry>NameInSource</entry>	<entry>String</entry>		<entry></entry>		<entry></entry>	<entry></entry>	<entry></entry></row>
-<row><entry>ColumnIDs</entry>		<entry>Collection</entry>	<entry></entry>		<entry></entry>	<entry></entry>	<entry></entry></row>
+<row><entry>FullName</entry>        <entry>String</entry>       <entry></entry>     <entry></entry> <entry></entry> <entry>See the KeyRecord, See Table</entry></row>
+<row><entry>NameInSource</entry>    <entry>String</entry>       <entry></entry>     <entry></entry> <entry></entry> <entry></entry></row>
+<row><entry>ColumnIDs</entry>       <entry>Collection</entry>   <entry></entry>     <entry></entry> <entry></entry> <entry></entry></row>
                 </tbody>
             </tgroup>
         </table>
@@ -195,7 +195,7 @@
     <para>
         <table frame="border" rules="all">
             <title>Data Usage for Access Patterns</title>
-            <tgroup align="left" cols="3">
+            <tgroup align="left" cols="6">
                 <colspec colname="objectColumn"/>
                 <colspec colname="typeColumn"/>
                 <colspec colname="inDesignerColumn"/>
@@ -213,9 +213,9 @@
                     </row>
                 </thead>
                 <tbody valign="top">  
-<row><entry>FullName</entry>		<entry>String</entry>		<entry></entry>		<entry></entry>	<entry></entry>	<entry>See the KeyRecord, See Table</entry></row>
-<row><entry>NameInSource</entry>	<entry>String</entry>		<entry></entry>		<entry></entry>	<entry></entry>	<entry></entry></row>
-<row><entry>ColumnIDs</entry>		<entry>Collection</entry>	<entry></entry>		<entry></entry>	<entry></entry>	<entry></entry></row>
+<row><entry>FullName</entry>        <entry>String</entry>       <entry></entry>     <entry></entry> <entry></entry> <entry>See the KeyRecord, See Table</entry></row>
+<row><entry>NameInSource</entry>    <entry>String</entry>       <entry></entry>     <entry></entry> <entry></entry> <entry></entry></row>
+<row><entry>ColumnIDs</entry>       <entry>Collection</entry>   <entry></entry>     <entry></entry> <entry></entry> <entry></entry></row>
                 </tbody>
             </tgroup>
         </table>
@@ -223,7 +223,7 @@
     <para>
         <table frame="border" rules="all">
             <title>Data Usage for Result Sets</title>
-            <tgroup align="left" cols="3">
+            <tgroup align="left" cols="6">
                 <colspec colname="objectColumn"/>
                 <colspec colname="typeColumn"/>
                 <colspec colname="inDesignerColumn"/>
@@ -241,9 +241,9 @@
                     </row>
                 </thead>
                 <tbody valign="top">  
-<row><entry>FullName</entry>		<entry>String</entry>		<entry></entry>		<entry></entry>	<entry></entry>	<entry>See DataType</entry></row>
-<row><entry>NameInSource</entry>	<entry>String</entry>		<entry></entry>		<entry></entry>	<entry></entry>	<entry></entry></row>
-<row><entry>ColumnIDs</entry>		<entry>Collection</entry>	<entry></entry>		<entry></entry>	<entry></entry>	<entry></entry></row>
+<row><entry>FullName</entry>        <entry>String</entry>       <entry></entry>     <entry></entry> <entry></entry> <entry>See DataType</entry></row>
+<row><entry>NameInSource</entry>    <entry>String</entry>       <entry></entry>     <entry></entry> <entry></entry> <entry></entry></row>
+<row><entry>ColumnIDs</entry>       <entry>Collection</entry>   <entry></entry>     <entry></entry> <entry></entry> <entry></entry></row>
                 </tbody>
             </tgroup>
         </table>
@@ -251,7 +251,7 @@
     <para>
         <table frame="border" rules="all">
             <title>Data Usage for Foreign Keys</title>
-            <tgroup align="left" cols="3">
+            <tgroup align="left" cols="6">
                 <colspec colname="objectColumn"/>
                 <colspec colname="typeColumn"/>
                 <colspec colname="inDesignerColumn"/>
@@ -269,10 +269,10 @@
                     </row>
                 </thead>
                 <tbody valign="top">  
-<row><entry>FullName</entry>		<entry>String</entry>		<entry></entry>		<entry></entry>	<entry></entry>	<entry>See the KeyRecord, See Table</entry></row>
-<row><entry>NameInSource</entry>	<entry>String</entry>		<entry></entry>		<entry></entry>	<entry></entry>	<entry></entry></row>
-<row><entry>ColumnIDs</entry>		<entry>Collection</entry>	<entry></entry>		<entry></entry>	<entry></entry>	<entry></entry></row>
-<row><entry>UniqueKeyID</entry>		<entry>String</entry>		<entry></entry>		<entry></entry>	<entry></entry>	<entry></entry></row>
+<row><entry>FullName</entry>        <entry>String</entry>       <entry></entry>     <entry></entry> <entry></entry> <entry>See the KeyRecord, See Table</entry></row>
+<row><entry>NameInSource</entry>    <entry>String</entry>       <entry></entry>     <entry></entry> <entry></entry> <entry></entry></row>
+<row><entry>ColumnIDs</entry>       <entry>Collection</entry>   <entry></entry>     <entry></entry> <entry></entry> <entry></entry></row>
+<row><entry>UniqueKeyID</entry>     <entry>String</entry>       <entry></entry>     <entry></entry> <entry></entry> <entry></entry></row>
                 </tbody>
             </tgroup>
         </table>
@@ -280,7 +280,7 @@
     <para>
         <table frame="border" rules="all">
             <title>Data Usage for Data Types</title>
-            <tgroup align="left" cols="3">
+            <tgroup align="left" cols="6">
                 <colspec colname="objectColumn"/>
                 <colspec colname="typeColumn"/>
                 <colspec colname="inDesignerColumn"/>
@@ -298,25 +298,25 @@
                     </row>
                 </thead>
                 <tbody valign="top">  
-<row><entry>FullName</entry>			<entry>String</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>NameInSource</entry>		<entry>String</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>Length</entry>				<entry>Integer</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>PrecisionLength</entry>		<entry>Integer</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>Scale</entry>				<entry>Integer</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>Radix</entry>				<entry>Integer</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>IsSigned</entry>			<entry>Boolean</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>IsAutoIncrement</entry>		<entry>Boolean</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>IsCaseSensitive</entry>		<entry>Boolean</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>Type</entry>				<entry>Integer</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>SearchType</entry>			<entry>Integer</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>NullType</entry>			<entry>Integer</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>JavaClassName</entry>		<entry>String</entry>		<entry></entry>		<entry></entry>	<entry>Yes</entry>	<entry>Maps to runtime type based on java class name</entry></row>
-<row><entry>RuntimeTypeName</entry>		<entry>String</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>DatatypeID</entry>			<entry>String</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>BaseTypeID</entry>			<entry>String</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>PrimitiveTypeID</entry>		<entry>String</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>VarietyType</entry>			<entry>Integer</entry>		<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
-<row><entry>VarietyProps</entry>		<entry>Collection</entry>	<entry></entry>		<entry></entry>	<entry>No</entry>	<entry>Only used for System metadata</entry></row>
+<row><entry>FullName</entry>            <entry>String</entry>       <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>NameInSource</entry>        <entry>String</entry>       <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>Length</entry>              <entry>Integer</entry>      <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>PrecisionLength</entry>     <entry>Integer</entry>      <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>Scale</entry>               <entry>Integer</entry>      <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>Radix</entry>               <entry>Integer</entry>      <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>IsSigned</entry>            <entry>Boolean</entry>      <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>IsAutoIncrement</entry>     <entry>Boolean</entry>      <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>IsCaseSensitive</entry>     <entry>Boolean</entry>      <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>Type</entry>                <entry>Integer</entry>      <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>SearchType</entry>          <entry>Integer</entry>      <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>NullType</entry>            <entry>Integer</entry>      <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>JavaClassName</entry>       <entry>String</entry>       <entry></entry>     <entry></entry> <entry>Yes</entry>  <entry>Maps to runtime type based on java class name</entry></row>
+<row><entry>RuntimeTypeName</entry>     <entry>String</entry>       <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>DatatypeID</entry>          <entry>String</entry>       <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>BaseTypeID</entry>          <entry>String</entry>       <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>PrimitiveTypeID</entry>     <entry>String</entry>       <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>VarietyType</entry>         <entry>Integer</entry>      <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
+<row><entry>VarietyProps</entry>        <entry>Collection</entry>   <entry></entry>     <entry></entry> <entry>No</entry>   <entry>Only used for System metadata</entry></row>
 
                 </tbody>
             </tgroup>
@@ -325,7 +325,7 @@
     <para>
         <table frame="border" rules="all">
             <title>Data Usage for Procedures </title>
-            <tgroup align="left" cols="3">
+            <tgroup align="left" cols="6">
                 <colspec colname="objectColumn"/>
                 <colspec colname="typeColumn"/>
                 <colspec colname="inDesignerColumn"/>
@@ -343,13 +343,13 @@
                     </row>
                 </thead>
                 <tbody valign="top">  
-<row><entry>FullName</entry>		<entry>String</entry>		<entry>Yes</entry>	<entry>Yes</entry>	<entry>Yes</entry>	<entry>Name of the column</entry></row>
-<row><entry>NameInSource</entry>	<entry>String</entry> 		<entry>Yes</entry>	<entry>Yes</entry>	<entry>Yes</entry>	<entry>Name of the column in source system</entry></row>
-<row><entry>IsFunction</entry>		<entry>Boolean</entry> 		<entry></entry>		<entry>Yes</entry>	<entry>Yes</entry>	<entry>Determines if this function</entry></row>
-<row><entry>IsVirtual</entry>		<entry>Boolean</entry>		<entry></entry>		<entry>Yes</entry>	<entry>Yes</entry>	<entry>If Function then UDF else stored procedure</entry></row>
-<row><entry>ParametersIDs</entry>	<entry>Collection</entry>	<entry></entry>		<entry>Yes</entry>	<entry>Yes</entry>	<entry>Parameter List</entry></row>
-<row><entry>ResultSetID</entry>		<entry>String</entry>		<entry></entry>		<entry>Yes</entry>	<entry>Yes</entry>	<entry>Result set columns</entry></row>
-<row><entry>UpdateCount</entry>		<entry>Integer</entry>		<entry></entry>		<entry>Yes</entry>	<entry>Yes</entry>	<entry>Update count defines the number of sources being updated, only applicable for virtual procedures</entry></row>
+<row><entry>FullName</entry>        <entry>String</entry>       <entry>Yes</entry>  <entry>Yes</entry>  <entry>Yes</entry>  <entry>Name of the column</entry></row>
+<row><entry>NameInSource</entry>    <entry>String</entry>       <entry>Yes</entry>  <entry>Yes</entry>  <entry>Yes</entry>  <entry>Name of the column in source system</entry></row>
+<row><entry>IsFunction</entry>      <entry>Boolean</entry>      <entry></entry>     <entry>Yes</entry>  <entry>Yes</entry>  <entry>Determines if this function</entry></row>
+<row><entry>IsVirtual</entry>       <entry>Boolean</entry>      <entry></entry>     <entry>Yes</entry>  <entry>Yes</entry>  <entry>If Function then UDF else stored procedure</entry></row>
+<row><entry>ParametersIDs</entry>   <entry>Collection</entry>   <entry></entry>     <entry>Yes</entry>  <entry>Yes</entry>  <entry>Parameter List</entry></row>
+<row><entry>ResultSetID</entry>     <entry>String</entry>       <entry></entry>     <entry>Yes</entry>  <entry>Yes</entry>  <entry>Result set columns</entry></row>
+<row><entry>UpdateCount</entry>     <entry>Integer</entry>      <entry></entry>     <entry>Yes</entry>  <entry>Yes</entry>  <entry>Update count defines the number of sources being updated, only applicable for virtual procedures</entry></row>
 
                 </tbody>
             </tgroup>
@@ -358,8 +358,8 @@
     <para>
         <table frame="border" rules="all">
             <title>Data Usage for Procedure Parameters</title>
-            <tgroup align="left" cols="3">
-            //TABLE	Type	In Designer	In Metadata API	Required By Runtime	Description
+            <tgroup align="left" cols="6">
+            //TABLE Type    In Designer In Metadata API Required By Runtime Description
             
                 <colspec colname="objectColumn"/>
                 <colspec colname="typeColumn"/>
@@ -378,20 +378,20 @@
                     </row>
                 </thead>
                 <tbody valign="top">  
-<row><entry>ObjectID</entry>			<entry>String</entry>		<entry></entry>	<entry></entry>	<entry></entry>	<entry>Same as Column</entry></row>
-<row><entry>FullName</entry>			<entry>String</entry>		<entry></entry>	<entry></entry>	<entry></entry>	<entry>Same as Column</entry></row>
-<row><entry>nameInSource</entry>		<entry>String</entry>		<entry></entry>	<entry></entry>	<entry></entry>	<entry>Same as Column</entry></row>
-<row><entry>defaultValue</entry>		<entry>String</entry>		<entry></entry>	<entry></entry>	<entry></entry>	<entry>Same as Column</entry></row>
-<row><entry>RuntimeType</entry>			<entry>String</entry>		<entry></entry>	<entry></entry>	<entry></entry>	<entry>Same as Column</entry></row>
-<row><entry>DatatypeObjectID</entry>	<entry>String</entry>		<entry></entry>	<entry></entry>	<entry></entry>	<entry>Same as Column</entry></row>
-<row><entry>Length</entry>				<entry>Integer</entry>		<entry></entry>	<entry></entry>	<entry></entry>	<entry>Same as Column</entry></row>
-<row><entry>Radix</entry>				<entry>Integer</entry>		<entry></entry>	<entry></entry>	<entry></entry>	<entry>Same as Column</entry></row>
-<row><entry>Scale</entry>				<entry>Integer</entry>		<entry></entry>	<entry></entry>	<entry></entry>	<entry>Same as Column</entry></row>
-<row><entry>NullType</entry>			<entry>Integer</entry>		<entry></entry>	<entry></entry>	<entry></entry>	<entry>Same as Column</entry></row>
-<row><entry>Precision</entry>			<entry>Integer</entry>		<entry></entry>	<entry></entry>	<entry></entry>	<entry>Same as Column</entry></row>
-<row><entry>Position</entry>			<entry>Integer</entry>		<entry></entry>	<entry></entry>	<entry></entry>	<entry>Same as Column</entry></row>
-<row><entry>Type</entry>				<entry>String</entry>		<entry></entry>	<entry></entry>	<entry>Yes</entry>	<entry>Defines parameter is IN/OUT/RETURN</entry></row>
-<row><entry>Optional</entry>			<entry>Boolean</entry>		<entry></entry>	<entry></entry>	<entry>No</entry>	<entry>Defines if the parameter is optional or not, only used system metadata</entry></row>
+<row><entry>ObjectID</entry>            <entry>String</entry>       <entry></entry> <entry></entry> <entry></entry> <entry>Same as Column</entry></row>
+<row><entry>FullName</entry>            <entry>String</entry>       <entry></entry> <entry></entry> <entry></entry> <entry>Same as Column</entry></row>
+<row><entry>nameInSource</entry>        <entry>String</entry>       <entry></entry> <entry></entry> <entry></entry> <entry>Same as Column</entry></row>
+<row><entry>defaultValue</entry>        <entry>String</entry>       <entry></entry> <entry></entry> <entry></entry> <entry>Same as Column</entry></row>
+<row><entry>RuntimeType</entry>         <entry>String</entry>       <entry></entry> <entry></entry> <entry></entry> <entry>Same as Column</entry></row>
+<row><entry>DatatypeObjectID</entry>    <entry>String</entry>       <entry></entry> <entry></entry> <entry></entry> <entry>Same as Column</entry></row>
+<row><entry>Length</entry>              <entry>Integer</entry>      <entry></entry> <entry></entry> <entry></entry> <entry>Same as Column</entry></row>
+<row><entry>Radix</entry>               <entry>Integer</entry>      <entry></entry> <entry></entry> <entry></entry> <entry>Same as Column</entry></row>
+<row><entry>Scale</entry>               <entry>Integer</entry>      <entry></entry> <entry></entry> <entry></entry> <entry>Same as Column</entry></row>
+<row><entry>NullType</entry>            <entry>Integer</entry>      <entry></entry> <entry></entry> <entry></entry> <entry>Same as Column</entry></row>
+<row><entry>Precision</entry>           <entry>Integer</entry>      <entry></entry> <entry></entry> <entry></entry> <entry>Same as Column</entry></row>
+<row><entry>Position</entry>            <entry>Integer</entry>      <entry></entry> <entry></entry> <entry></entry> <entry>Same as Column</entry></row>
+<row><entry>Type</entry>                <entry>String</entry>       <entry></entry> <entry></entry> <entry>Yes</entry>  <entry>Defines parameter is IN/OUT/RETURN</entry></row>
+<row><entry>Optional</entry>            <entry>Boolean</entry>      <entry></entry> <entry></entry> <entry>No</entry>   <entry>Defines if the parameter is optional or not, only used system metadata</entry></row>
 
                 </tbody>
             </tgroup>
@@ -400,8 +400,8 @@
     <para>
         <table frame="border" rules="all">
             <title>Data Usage for SQL Transformations</title>
-            <tgroup align="left" cols="3">
-            //TABLE	Type	In Designer	In Metadata API	Required By Runtime	Description
+            <tgroup align="left" cols="6">
+            //TABLE Type    In Designer In Metadata API Required By Runtime Description
             
                 <colspec colname="objectColumn"/>
                 <colspec colname="typeColumn"/>
@@ -420,12 +420,12 @@
                     </row>
                 </thead>
                 <tbody valign="top">  
-<row><entry>VirtualGroupName</entry>		<entry>String</entry>	<entry>Yes</entry>	<entry>No</entry>	<entry>Yes</entry>	<entry>See Table, the properties defined on Table</entry></row>
-<row><entry>TransformedObjectID</entry>		<entry>String</entry>	<entry>Yes</entry>	<entry>No</entry>	<entry>Yes</entry>	<entry>See Table, the properties defined on Table</entry></row>
-<row><entry>TransformationObjectID</entry>	<entry>String</entry>	<entry>Yes</entry>	<entry>No</entry>	<entry>Yes</entry>	<entry>See Table, the properties defined on Table</entry></row>
-<row><entry>TransformationSql</entry>		<entry>String</entry>	<entry>Yes</entry>	<entry>No</entry>	<entry>Yes</entry>	<entry>See Table, the properties defined on Table</entry></row>
-<row><entry>Bindings</entry>			<entry>Collection</entry>	<entry>Yes</entry>	<entry>No</entry>	<entry>Yes</entry>	<entry>See Table, the properties defined on Table</entry></row>
-<row><entry>SchemaPaths</entry>			<entry>Collection</entry>	<entry>Yes</entry>	<entry>No</entry>	<entry>Yes</entry>	<entry>See Table, the properties defined on Table</entry></row>
+<row><entry>VirtualGroupName</entry>        <entry>String</entry>   <entry>Yes</entry>  <entry>No</entry>   <entry>Yes</entry>  <entry>See Table, the properties defined on Table</entry></row>
+<row><entry>TransformedObjectID</entry>     <entry>String</entry>   <entry>Yes</entry>  <entry>No</entry>   <entry>Yes</entry>  <entry>See Table, the properties defined on Table</entry></row>
+<row><entry>TransformationObjectID</entry>  <entry>String</entry>   <entry>Yes</entry>  <entry>No</entry>   <entry>Yes</entry>  <entry>See Table, the properties defined on Table</entry></row>
+<row><entry>TransformationSql</entry>       <entry>String</entry>   <entry>Yes</entry>  <entry>No</entry>   <entry>Yes</entry>  <entry>See Table, the properties defined on Table</entry></row>
+<row><entry>Bindings</entry>            <entry>Collection</entry>   <entry>Yes</entry>  <entry>No</entry>   <entry>Yes</entry>  <entry>See Table, the properties defined on Table</entry></row>
+<row><entry>SchemaPaths</entry>         <entry>Collection</entry>   <entry>Yes</entry>  <entry>No</entry>   <entry>Yes</entry>  <entry>See Table, the properties defined on Table</entry></row>
 
                 </tbody>
             </tgroup>
@@ -434,8 +434,8 @@
     <para>
         <table frame="border" rules="all">
             <title>Data Usage for VDBs</title>
-            <tgroup align="left" cols="3">
-            //TABLE	Type	In Designer	In Metadata API	Required By Runtime	Description
+            <tgroup align="left" cols="6">
+            //TABLE Type    In Designer In Metadata API Required By Runtime Description
             
                 <colspec colname="objectColumn"/>
                 <colspec colname="typeColumn"/>
@@ -454,17 +454,17 @@
                     </row>
                 </thead>
                 <tbody valign="top">  
-<row><entry>FullName</entry>		<entry>String</entry>		<entry>Yes</entry>	<entry>vdb.xml</entry>	<entry>Yes</entry>	<entry>Name of the VDB</entry></row>
-<row><entry>NameInSource</entry>	<entry>String</entry>		<entry>??</entry>	<entry>No</entry>		<entry>No</entry>	<entry>Not required</entry></row>
-<row><entry>Version</entry>			<entry>String</entry>		<entry>Yes</entry>	<entry>vdb.xml</entry>	<entry>Yes</entry>	<entry>VDB version</entry></row>
-<row><entry>Identifier</entry>		<entry>String</entry>		<entry>Yes</entry>	<entry>No</entry>		<entry>No</entry>	<entry>Not required</entry></row>
-<row><entry>Description</entry>		<entry>String</entry>		<entry>Yes</entry>	<entry>vdb.xml</entry>	<entry>No</entry>	<entry>Used by System metadata</entry></row>
-<row><entry>ProducerName</entry>	<entry>String</entry>		<entry>Yes</entry>	<entry>No</entry>		<entry>No</entry>	<entry>Not required</entry></row>
-<row><entry>ProducerVersion</entry>	<entry>String</entry>		<entry>Yes</entry>	<entry>No</entry>		<entry>No</entry>	<entry>Not required</entry></row>
-<row><entry>Provider</entry>		<entry>String</entry>		<entry>Yes</entry>	<entry>No</entry>		<entry>No</entry>	<entry>Not required</entry></row>
-<row><entry>TimeLastChanged</entry>	<entry>String</entry>		<entry>Yes</entry>	<entry>No</entry>		<entry>No</entry>	<entry>Not required</entry></row>
-<row><entry>TimeLastProduced</entry> <entry>String</entry>		<entry>Yes</entry>	<entry>No</entry>		<entry>No</entry>	<entry>Not required</entry></row>
-<row><entry>ModelIDs</entry>		<entry>Collection</entry>	<entry>Yes</entry>	<entry>vdb.xml</entry>	<entry>Yes</entry>	<entry>Defines the model list in a VDB</entry></row>
+<row><entry>FullName</entry>        <entry>String</entry>       <entry>Yes</entry>  <entry>vdb.xml</entry>  <entry>Yes</entry>  <entry>Name of the VDB</entry></row>
+<row><entry>NameInSource</entry>    <entry>String</entry>       <entry>??</entry>   <entry>No</entry>       <entry>No</entry>   <entry>Not required</entry></row>
+<row><entry>Version</entry>         <entry>String</entry>       <entry>Yes</entry>  <entry>vdb.xml</entry>  <entry>Yes</entry>  <entry>VDB version</entry></row>
+<row><entry>Identifier</entry>      <entry>String</entry>       <entry>Yes</entry>  <entry>No</entry>       <entry>No</entry>   <entry>Not required</entry></row>
+<row><entry>Description</entry>     <entry>String</entry>       <entry>Yes</entry>  <entry>vdb.xml</entry>  <entry>No</entry>   <entry>Used by System metadata</entry></row>
+<row><entry>ProducerName</entry>    <entry>String</entry>       <entry>Yes</entry>  <entry>No</entry>       <entry>No</entry>   <entry>Not required</entry></row>
+<row><entry>ProducerVersion</entry> <entry>String</entry>       <entry>Yes</entry>  <entry>No</entry>       <entry>No</entry>   <entry>Not required</entry></row>
+<row><entry>Provider</entry>        <entry>String</entry>       <entry>Yes</entry>  <entry>No</entry>       <entry>No</entry>   <entry>Not required</entry></row>
+<row><entry>TimeLastChanged</entry> <entry>String</entry>       <entry>Yes</entry>  <entry>No</entry>       <entry>No</entry>   <entry>Not required</entry></row>
+<row><entry>TimeLastProduced</entry> <entry>String</entry>      <entry>Yes</entry>  <entry>No</entry>       <entry>No</entry>   <entry>Not required</entry></row>
+<row><entry>ModelIDs</entry>        <entry>Collection</entry>   <entry>Yes</entry>  <entry>vdb.xml</entry>  <entry>Yes</entry>  <entry>Defines the model list in a VDB</entry></row>
 
                 </tbody>
             </tgroup>
@@ -473,8 +473,8 @@
     <para>
         <table frame="border" rules="all">
             <title>Data Usage for Annotations</title>
-            <tgroup align="left" cols="3">
-            //TABLE	Type	In Designer	In Metadata API	Required By Runtime	Description
+            <tgroup align="left" cols="6">
+            //TABLE Type    In Designer In Metadata API Required By Runtime Description
             
                 <colspec colname="objectColumn"/>
                 <colspec colname="typeColumn"/>
@@ -493,11 +493,12 @@
                     </row>
                 </thead>
                 <tbody valign="top">  
-<row><entry>FullName</entry>		<entry>String</entry>	<entry>Yes</entry>	<entry>Yes</entry>	<entry>No</entry>	<entry>System metadata, as description on procedure parameter</entry></row>
-<row><entry>NameInSource</entry>	<entry>String</entry>	<entry>Yes</entry>	<entry>No</entry>	<entry>No</entry>	<entry>Not required</entry></row>
-<row><entry>Description</entry>		<entry>String</entry>	<entry>Yes</entry>	<entry>No</entry>	<entry>No</entry>	<entry>Not required</entry></row>
+<row><entry>FullName</entry>        <entry>String</entry>   <entry>Yes</entry>  <entry>Yes</entry>  <entry>No</entry>   <entry>System metadata, as description on procedure parameter</entry></row>
+<row><entry>NameInSource</entry>    <entry>String</entry>   <entry>Yes</entry>  <entry>No</entry>   <entry>No</entry>   <entry>Not required</entry></row>
+<row><entry>Description</entry>     <entry>String</entry>   <entry>Yes</entry>  <entry>No</entry>   <entry>No</entry>   <entry>Not required</entry></row>
                 </tbody>
             </tgroup>
         </table>
     </para>
+
 </appendix>

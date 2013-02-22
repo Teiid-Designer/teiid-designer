@@ -151,10 +151,11 @@
 				one type of metadata or another. For more information about difference
 				   between Source and View metadata, (see <xref linkend="source-view-metadata" />).
 			</para>
-			<para> 
-				<emphasis role="italic">NOTE: For detailed information about creating models from your
-					metadata, see <xref linkend="models-101-section" /></emphasis>
-			</para>
+            <note>
+			     <para> 
+				    For detailed information about creating models from your metadata, see <xref linkend="models-101-section" />
+			     </para>
+            </note>
 		</section>
 		<section id="business-technical-metadata">
 			<title>Business and Technical Metadata</title>
@@ -179,14 +180,15 @@
 					</listitem>
 				</itemizedlist>
 			</para>
-			<para>
-				Note that the terms <emphasis role="bold">technical and business metadata,</emphasis> refer to the
-				content of the metadata, namely what type of information is contained
-				in the metadata. Don’t confuse these with the terms “physical” and
-				“view” metadata that indicate what the metadata represents. For more
-				information, (see <xref linkend="source-view-metadata" />).
-			</para>
-			
+            <note>
+			     <para>
+				    The terms <emphasis role="bold">technical and business metadata,</emphasis> refer to the
+				    content of the metadata, namely what type of information is contained
+				    in the metadata. Don’t confuse these with the terms “physical” and
+				    “view” metadata that indicate what the metadata represents. For more
+				    information, (see <xref linkend="source-view-metadata" />).
+			     </para>
+			</note>
 			<para><emphasis role="bold">Technical Metadata</emphasis></para>
 
 			<para>
@@ -246,7 +248,7 @@
 			<title>Design-Time and Runtime Metadata</title>
 			<para> Teiid Designer software distinguishes between design-time metadata
 				and run-time metadata. This distinction becomes important if you use 
-				the Teiid Designer Server. Design-time data
+				Teiid Designer Server. Design-time data
 				is laden with details and representations that help the user
 				understand and efficiently organize metadata. Much of that detail is
 				unnecessary to the underlying system that runs the Virtual Database
@@ -259,7 +261,7 @@
 			<para>
 				Design-time metadata refers to data within
 				your local directory that you have created or have imported. You can
-				model this metadata in the Teiid Designer, adding
+				model this metadata in Teiid Designer, adding
 				<emphasis role="bold">Source</emphasis>
 				and
 				<emphasis role="bold">View</emphasis>
@@ -272,14 +274,14 @@
 				systems, including the necessary technical metadata that describes
 				the physical structure of your sources, you can use the metadata for
 				data access.</para>
-			<para> To prepare the metadata for use in the Teiid Designer Server, you
-				take a snapshot of a metadata model for the Teiid Designer Server to use
+			<para> To prepare the metadata for use in Teiid Designer Server, you
+				take a snapshot of a metadata model for Teiid Designer Server to use
 				when resolving queries from your client applications. This run-time
 				metadata represents a static version of design-time metadata you
 				created or imported. This snapshot is in the form of a <emphasis role="bold">Virtual
 				Database</emphasis> definition, or <emphasis role="bold">VDB</emphasis>.</para>
 			<para>
-				As you create this <emphasis role="bold">runtime metadata</emphasis>, the Teiid Designer:
+				As you create this <emphasis role="bold">runtime metadata</emphasis>, Teiid Designer:
 				<itemizedlist>
 					<listitem>
 						<para>derives the runtime metadata from a consistent set of
@@ -497,7 +499,7 @@
 		  <note>
 		  <para> Model files should never be modified "by hand". While it is
 			possible to do so, there is the possibility that you may corrupt the
-			file such that it cannot be used within the Teiid Designer system.</para>
+			file such that it cannot be used within Teiid Designer system.</para>
 		  </note>
 		  <para> The fundamental models in Teiid Designer define the structural and
 			data characteristics of the information contained in data sources.
@@ -578,6 +580,34 @@
                 <listitem>Modelling from a Remote XML File Source</listitem>
                 <listitem>Connecting to a Teiid Server</listitem>
             </itemizedlist>
+        </section>
+        
+        <section id="intro-to-multiple-teiid-clients">
+            <title>Targeting the Right Teiid Server</title>
+            <para>
+                Like Teiid Designer, the Teiid server is under continuous development and as such
+                multiple versions have been and are being released. Due to changes in both its
+                code and the underlying JBoss server, the versions are not always backward 
+                compatible. To mitigate this situation, Teiid Designer now provides multiple 
+                implementations of Teiid's runtime client, allowing connection to different 
+                versions of the server. New models must be compatible with their targeted server
+                version hence the correct server version must be selected prior to creating them.
+            </para>
+            <para>
+                To aid with selection of the correct server version, two changes have been made 
+                to Teiid Designer:
+                <itemizedlist>
+                    <listitem>
+                        A <emphasis role="bold">preference</emphasis> for the targeted server 
+                        version that new models will be based on;
+                    </listitem>
+                    <listitem>
+                        The concept of the <emphasis role="bold">default server</emphasis> has 
+                        been extended so that it will determine the targeted server version of
+                        new models (superceding the preference).
+                    </listitem>
+                </itemizedlist>
+            </para>
         </section>
         
         <section id="model-classes-and-types">
@@ -676,9 +706,10 @@
 						<para> import VDB references</para>
 					</listitem>
 				</itemizedlist>
-				<para>The <emphasis role="bold">vdb.xml</emphasis> file example below highlights the basic model information. Note the VIRTUAL and 
-					PHYSICAL &lt;model&gt; elements containing property references to the INDEX files as well as the 
+				<para>The <emphasis role="bold">vdb.xml</emphasis> file example below highlights the basic model information.</para>
+                <note><para>The VIRTUAL and PHYSICAL &lt;model&gt; elements containing property references to the INDEX files as well as the 
 					&lt;source&gt; element info for the PHYSICAL (aka source) model EU_CustomerAccounts.xmi.</para>
+                </note>
 				<synopsis>
 &lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
 &lt;vdb version="1" name="Financials"&gt;
@@ -715,11 +746,13 @@
 			checks that all inter-model dependencies are present and resolvable.</para>
 		  <para>Models must always be validated when they are deployed in a VDB for data 
 			access purposes.</para>
-		  <para>Teiid Designer will automatically validate your models 
-			whenever the user Saves ( Note: the "Project > Build Automatically" menu option 
-			must be checked). When editing models, the editor tabs will display a "*" 
+		  <para>Teiid Designer will automatically validate all models 
+			whenever they are saved.</para>
+          <note><para>
+            The "Project > Build Automatically" menu option 
+			must be checked. When editing models, the editor tabs will display a "*" 
 			to indicate that the model has unsaved changes.
-		  </para>
+		  </para></note>
         </section>
         
         <section id="testing-your-models">
@@ -732,13 +765,13 @@
 			information described by any object, whether it's a physical table or a
 			virtual view. In other words, you can test the views with actual data
 			by simply selecting the table, view, procedure or XML document. The
-			preview functionality insures that data access behavior in the Teiid Designer will
+			preview functionality insures that data access behavior in Teiid Designer will
 			reliably match when the VDB is deployed to the Server. 
 			( See:  <xref linkend="teiid-designer-server-section"/> for details)</para> 
 			
 			<para> Previewing information is a fast and easy way to sample the data. Of course, to
 			run more complicated queries like what your application likely uses,
-			simply execute the VDB in the Teiid Designer and type in any query or SQL
+			simply execute the VDB in Teiid Designer and type in any query or SQL
 			statement.</para>
 		  <para> After creating your models, you can test them by using the
 			<emphasis role="bold">Preview Data</emphasis> action <inlinemediaobject>
