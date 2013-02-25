@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -516,7 +517,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             /*Create a diagnostic controller, which holds the compilation problems*/
             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
             ArrayList<String> options = new ArrayList<String>();
-            options.add("-g");
+
             CompilationTask task = compilerTool.getTask(null, fileManager, diagnostics, options, null, compilationUnits);
             task.call();
             List<Diagnostic<? extends JavaFileObject>> diagnosticList = diagnostics.getDiagnostics();
@@ -569,7 +570,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
                                   RestProcedure restProcedure ) {
         commonRestMethodLogic(sb, restProcedure, ""); //$NON-NLS-1$
         if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
-            sb.append("\tparameterMap = getInputs(is, \""+restProcedure.getCharSet()+ "\");" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            sb.append("\tparameterMap = getInputs(is);" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         // Gen return and execute
@@ -625,8 +626,22 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
                 sb.append(", "); //$NON-NLS-1$
             }
         }
+        //Now check for query parameters
+        LinkedList<String> queryParamList = new LinkedList<String>();
+        if (pathParamCount==0 && (restProcedure.getQueryParameterList() != null && restProcedure.getQueryParameterList().size()>0)){
+        	int queryParamCount = 0;
+        	queryParamList = restProcedure.getQueryParameterList();
+            for (String param : queryParamList) {
+            	queryParamCount++;
+                sb.append("@QueryParam( \"" + param + "\" ) String " + param); //$NON-NLS-1$ //$NON-NLS-2$
+                if (queryParamCount < queryParamList.size()) {
+                    sb.append(", "); //$NON-NLS-1$
+                }
+            }
+            	
+        }
         if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
-            if (pathParams.size() > 0) {
+            if (pathParams.size() > 0 || queryParamList.size() > 0 ) {
                 sb.append(", "); //$NON-NLS-1$
             }
             sb.append(" InputStream is ) { " + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -637,6 +652,11 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
         sb.append("\tparameterMap.clear();" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
         if (pathParams.size() > 0) {
             for (String param : pathParams) {
+                sb.append("\tparameterMap.put(\"" + param + "\", " + param + ");" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            }
+        }
+        if (queryParamList.size() > 0) {
+            for (String param : queryParamList) {
                 sb.append("\tparameterMap.put(\"" + param + "\", " + param + ");" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             }
         }

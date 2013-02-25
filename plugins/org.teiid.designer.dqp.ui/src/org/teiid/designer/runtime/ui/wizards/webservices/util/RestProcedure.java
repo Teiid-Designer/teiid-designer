@@ -7,6 +7,8 @@
  */
 package org.teiid.designer.runtime.ui.wizards.webservices.util;
 
+import java.util.LinkedList;
+
 /**
  * Domain class that defines a procedure to be exposed RESTFully. This class is used to generate the REST resource class in the
  * generated REST war.
@@ -23,6 +25,7 @@ public class RestProcedure {
     private String uri;
     private String modelName;
     private String charSet;
+    private LinkedList<String> queryParameterList;
 
     /**
      * @return consumesAnnotation
@@ -137,5 +140,21 @@ public class RestProcedure {
     public void setUri( String uri ) {
         this.uri = uri;
     }
+
+	/**
+	 * @return the queryParameterList
+	 * @since 8.1
+	 */
+	public LinkedList<String> getQueryParameterList() {
+		return queryParameterList;
+	}
+
+	/**
+	 * @param queryParameterList the queryParameterList to set
+	 * @since 8.1
+	 */
+	public void setQueryParameterList(LinkedList<String> queryParameterList) {
+		this.queryParameterList = queryParameterList;
+	}
 
 }
