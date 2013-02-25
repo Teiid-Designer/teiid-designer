@@ -464,7 +464,7 @@ public final class PreviewManager extends JobChangeAdapter
      * {@inheritDoc}
      * 
      * @see org.teiid.designer.runtime.preview.PreviewContext#ensureConnectionInfoIsValid(org.teiid.designer.vdb.Vdb,
-     *      org.teiid.designer.runtime.TeiidServer)
+     *      org.teiid.designer.runtime.spi.ITeiidServer)
      */
     @Override
     public IStatus ensureConnectionInfoIsValid( Vdb previewVdb,
@@ -638,7 +638,7 @@ public final class PreviewManager extends JobChangeAdapter
     }
     
     private String getFullDeployedVdbName(ITeiidVdb deployedVdb) { 
-        String fullVdbName = deployedVdb.getPropertyValue("deployment-name");;
+        String fullVdbName = deployedVdb.getPropertyValue("deployment-name"); //$NON-NLS-1$
         if (!fullVdbName.endsWith(Vdb.FILE_EXTENSION)) {
             fullVdbName = fullVdbName + Vdb.FILE_EXTENSION;
         }
@@ -646,6 +646,12 @@ public final class PreviewManager extends JobChangeAdapter
     	
     }
 
+    /**
+     * @param model the model file
+     * @param jndiName the jndi name
+     * @return the ITeiidDataSource instance
+     * @throws Exception if issues result from getting data source
+     */
     public ITeiidDataSource getOrCreateDataSource( IFile model, String jndiName ) throws Exception {
         TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
         return factory.createDataSource(getPreviewServer(), model, jndiName, true, this.passwordProvider);
@@ -1180,6 +1186,11 @@ public final class PreviewManager extends JobChangeAdapter
         }
     }
 
+    /**
+     * @param objectToPreview the object to preview
+     * @param monitor the progress monitor
+     * @throws Exception if issues with setting up preview vdbs for project
+     */
     @SuppressWarnings( "unused" )
     public void previewSetup( final Object objectToPreview,
                               IProgressMonitor monitor ) throws Exception {
@@ -1266,7 +1277,7 @@ public final class PreviewManager extends JobChangeAdapter
         }
 
         // collection for PVDBs that will be deployed and merged into the project PVDB
-        List<IFile> pvdbsToRemove = new ArrayList<IFile>(projectPvdbsToDeploy.size());
+        List<IFile> affectedPreviewVDBs = new ArrayList<IFile>(projectPvdbsToDeploy.size());
 
         // deploy any project PVDBs if necessary
         for (IFile projectPvdbFile : projectPvdbsToDeploy) {
@@ -1293,7 +1304,7 @@ public final class PreviewManager extends JobChangeAdapter
                         throw new CoreException(status);
                     }
                     
-                    pvdbsToRemove.add(projectPvdbFile);
+                    affectedPreviewVDBs.add(projectPvdbFile);
                 } 
 
                 if (!error) {
@@ -1332,7 +1343,7 @@ public final class PreviewManager extends JobChangeAdapter
                         }
 
                         // make sure this PVDB does not get merged since it didn't get deployed
-                        pvdbsToRemove.remove(projectPvdbFile);
+                        affectedPreviewVDBs.remove(projectPvdbFile);
                     }
 
                     if (monitor.isCanceled()) {
@@ -1354,28 +1365,56 @@ public final class PreviewManager extends JobChangeAdapter
         	}
         }
         
-        localPreviewVdbs.removeAll(pvdbsToRemove);
+        localPreviewVdbs.removeAll(affectedPreviewVDBs);
         
         // merge into project PVDB
         MERGE_TASK: {
             monitor.subTask(NLS.bind(Messages.PreviewSetupMergeTask, projectPreviewVdbName));
 
-            if (projectVdbIFile != null) {
-            	ITeiidVdb deployedProjectVdb = getPreviewServer().getVdb(projectPreviewVdbName);
-            	Vdb localProjectVdb = new Vdb(projectVdbIFile, new NullProgressMonitor());
-            	localProjectVdb.removeAllImportVdbs();
-            	// Add imports for all preview vdbs under project
-                addPreviewVdbImports(localProjectVdb, localPreviewVdbs);
-                // Add imports for all VDB source models within this project
-                addPreviewSourceVdbImports(localProjectVdb, currentModelProject);
-                
-                if( deployedProjectVdb != null ) {
-	                String fullProjectVdbName = getFullDeployedVdbName(deployedProjectVdb);
-                	getPreviewServer().undeployVdb(fullProjectVdbName);
-                }
-                localProjectVdb.save(null);
-                localProjectVdb.getFile().refreshLocal(IResource.DEPTH_INFINITE, null);
-                getPreviewServer().deployVdb(localProjectVdb.getFile()); 
+            if( getPreviewServer().getServerVersion().isSevenServer()) {
+	            VERSION_7_7_MERGE: {
+	                // merge into project PVDB
+            		affectedPreviewVDBs.add(pvdbFile); // add in model being previewed
+            		
+	                for (IFile pvdbToMerge : affectedPreviewVDBs) {
+                        String name = getResourceNameForPreviewVdb(pvdbToMerge);
+                        monitor.subTask(NLS.bind(Messages.PreviewSetupMergeTask, name));
+
+                        // REMOVE the .vdb extension for the source vdb
+                        String sourceVdbName = pvdbToMerge.getFullPath().removeFileExtension().lastSegment().toString();
+                        String projectPreviewVdbName = getPreviewProjectVdbName(modelToPreview.getProject());
+
+                        if (!sourceVdbName.equals(projectPreviewVdbName)) {
+                        	getPreviewServer().mergeVdbs(sourceVdbName, PreviewManager.getPreviewVdbVersion(pvdbToMerge), projectPreviewVdbName, 1);
+                        }
+
+                        monitor.worked(1);
+
+                        if (monitor.isCanceled()) {
+                            throw new InterruptedException();
+                        }
+                    }
+	            }
+            } else {
+            	VERSION_8_8_DEPLOY : {
+		            if (projectVdbIFile != null) {
+		            	ITeiidVdb deployedProjectVdb = getPreviewServer().getVdb(projectPreviewVdbName);
+		            	Vdb localProjectVdb = new Vdb(projectVdbIFile, new NullProgressMonitor());
+		            	localProjectVdb.removeAllImportVdbs();
+		            	// Add imports for all preview vdbs under project
+		                addPreviewVdbImports(localProjectVdb, localPreviewVdbs);
+		                // Add imports for all VDB source models within this project
+		                addPreviewSourceVdbImports(localProjectVdb, currentModelProject);
+		                
+		                if( deployedProjectVdb != null ) {
+			                String fullProjectVdbName = getFullDeployedVdbName(deployedProjectVdb);
+		                	getPreviewServer().undeployVdb(fullProjectVdbName);
+		                }
+		                localProjectVdb.save(null);
+		                localProjectVdb.getFile().refreshLocal(IResource.DEPTH_INFINITE, null);
+		                getPreviewServer().deployVdb(localProjectVdb.getFile()); 
+		            }
+	            }
             }
 
             monitor.worked(1);
@@ -1504,6 +1543,9 @@ public final class PreviewManager extends JobChangeAdapter
         }
     }
 
+    /**
+     * @param passwordProvider the password provider
+     */
     public void setPasswordProvider( IPasswordProvider passwordProvider ) {
         this.passwordProvider = passwordProvider;
     }
@@ -1594,6 +1636,7 @@ public final class PreviewManager extends JobChangeAdapter
      * Shutdowns the <code>PreviewManager</code>. This will remove any Preview VDBs from the default Teiid server.
      * 
      * @param monitor the progress monitor (may be <code>null</code>)
+     * @throws Exception if issues result from shutting down this class
      */
     public void shutdown( IProgressMonitor monitor ) throws Exception {
         try {
