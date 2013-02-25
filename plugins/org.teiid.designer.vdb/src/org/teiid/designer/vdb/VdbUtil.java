@@ -22,11 +22,20 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.vdb.Vdb.Xml;
 import org.teiid.designer.vdb.manifest.ModelElement;
@@ -225,4 +234,161 @@ public class VdbUtil {
 
         return ModelType.get(vdbModelType);
     }
+
+	/**
+	 * Simple check to see if the model file is in the vdb
+	 * 
+	 * @param theVdb
+	 * @param theModelFile
+	 * @return true if model exists by name in vdb
+	 */
+	public static boolean modelInVdb(final IFile theVdb, final IFile theModelFile) {
+		if (theVdb.exists()) {
+			VdbElement manifest = VdbUtil.getVdbManifest(theVdb);
+			if (manifest != null) {
+				for (ModelElement model : manifest.getModels()) {
+					String modelName = model.getName()+ ModelUtil.DOT_EXTENSION_XMI;
+					if (modelName.equalsIgnoreCase(theModelFile.getName())) {
+						// We found the model, now replace the path
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Simple check to see if the model file is in the vdb
+	 * 
+	 * @param theVdb
+	 @return true if model exists by name in vdb
+	 */
+	public static MultiStatus validateVdbModelsInWorkspace(final IFile theVdb) {
+		Collection<IStatus> statuses = new ArrayList<IStatus>();
+		IProject theProject = theVdb.getProject();
+		MultiStatus finalStatus = new MultiStatus(VdbConstants.PLUGIN_ID, 0, VdbPlugin.UTIL.getString("vdbValidationOK"), null); //$NON-NLS-1$
+		
+		if (theVdb.exists()) {
+			VdbElement manifest = VdbUtil.getVdbManifest(theVdb);
+			if (manifest != null) {
+				for (ModelElement model : manifest.getModels()) {
+					String modelName = model.getName()+ ModelUtil.DOT_EXTENSION_XMI;
+					// Check if model with that name exists in project
+					IResource[] resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
+					if( resources.length != 1 ) {
+						statuses.add(new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID, 
+								VdbPlugin.UTIL.getString("vdbValidationWarning_noModelInWorkspace", modelName,theVdb.getName()))); //$NON-NLS-1$
+					} else if( resources.length == 1 ) {
+						String path = model.getPath();
+						IResource matchingResource = resources[0];
+						// Check IPath
+						IPath iPath = new Path(path);
+						IResource resource = ModelerCore.getWorkspace().getRoot().findMember(iPath);
+						
+						if( resource == null ) {
+							statuses.add(new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
+									VdbPlugin.UTIL.getString("vdbValidationWarning_modelExistsInDifferentLocation", //$NON-NLS-1$
+									modelName, theVdb.getName(), matchingResource.getFullPath()))); 
+						}
+					}
+				}
+			}
+		} else {
+			statuses.add(new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID, "ERROR : VDB " + theVdb.getName() + " does not exist")); //$NON-NLS-1$  //$NON-NLS-2$
+		}
+		
+		if( ! statuses.isEmpty() ) {
+	        final IStatus[] result = new IStatus[statuses.size()];
+	        statuses.toArray(result);
+			finalStatus = new MultiStatus(VdbConstants.PLUGIN_ID, 0, result, "ERROR : VDB " + theVdb.getName() + " has problems", null); //$NON-NLS-1$  //$NON-NLS-2$
+		}
+		
+		return finalStatus;
+	}
+	
+	/**
+	 * Method which returns a list of models in your workspace that have the wrong path defined in the specified VDB
+	 * 
+	 * @param theVdb the vdb
+	 * @return the list of models with wrong paths in VDB
+	 */
+	public static Collection<IFile> getModelsWithWrongPaths(final IFile theVdb) {
+		Collection<IFile> misMatchedResources = new ArrayList<IFile>();
+		
+		if (theVdb.exists()) {
+			IProject theProject = theVdb.getProject();
+
+			VdbElement manifest = VdbUtil.getVdbManifest(theVdb);
+			if (manifest != null) {
+				for (ModelElement model : manifest.getModels()) {
+					String modelName = model.getName()+ ModelUtil.DOT_EXTENSION_XMI;
+					IResource[] resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
+					if( resources.length == 1 ) {
+						String path = model.getPath();
+						IResource matchingResource = resources[0];
+						// Check IPath
+						IPath iPath = new Path(path);
+						IResource resource = ModelerCore.getWorkspace().getRoot().findMember(iPath);
+						
+						if( resource == null ) {
+							misMatchedResources.add((IFile)matchingResource);
+						}
+					}
+				}
+			}
+		}
+		
+		return misMatchedResources;
+	}
+	
+	
+	/**
+	 * Updates a given VDB for change in the model path of the given model
+	 * @param theVdb the target VDB
+	 * @param theModelFile the target model file
+	 */
+	public static void updateVdbModelPath(final IFile theVdb, final IFile theModelFile) {
+	 	
+	    if( modelInVdb(theVdb, theModelFile) ) {
+	    	Vdb actualVDB = new Vdb(theVdb, true, new NullProgressMonitor());
+	 		for( VdbModelEntry modelEntry : actualVDB.getModelEntries()) {
+				if( modelEntry.getName().lastSegment().equalsIgnoreCase(theModelFile.getName()) ) {
+	 				actualVDB.removeEntry(modelEntry);
+	 				actualVDB.addModelEntry(theModelFile.getFullPath(), new NullProgressMonitor());
+	 			}
+	 		}
+	 		
+	 		actualVDB.save(new NullProgressMonitor());
+	    }
+	}
+	 
+	/**
+	 * @param theVdb the VDB
+	 */
+	public static void updateVdbModelPaths(final IFile theVdb) {
+		if (theVdb.exists()) {
+			IProject theProject = theVdb.getProject();
+
+			VdbElement manifest = VdbUtil.getVdbManifest(theVdb);
+			if (manifest != null) {
+				for (ModelElement model : manifest.getModels()) {
+					String modelName = model.getName()+ ModelUtil.DOT_EXTENSION_XMI;
+					IResource[] resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
+					if( resources.length == 1 ) {
+						String path = model.getPath();
+						IResource matchingResource = resources[0];
+						// Check IPath
+						IPath iPath = new Path(path);
+						IResource resource = ModelerCore.getWorkspace().getRoot().findMember(iPath);
+						
+						if( resource == null ) {
+							updateVdbModelPath(theVdb, (IFile)matchingResource);
+						}
+					}
+				}
+			}
+		}
+			
+	}
 }

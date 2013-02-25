@@ -45,9 +45,12 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
  * @since 8.0
  */
 public class RefactorModelExtensionManager {
-    public final static String ID = "refactorModelHandler"; //$NON-NLS-1$
-    public final static     String REFACTOR_HANDLER_TAG = "refactorHandler"; //$NON-NLS-1$
-    public final static     String CLASSNAME = "name"; //$NON-NLS-1$
+    @SuppressWarnings("javadoc")
+	public final static String ID = "refactorModelHandler"; //$NON-NLS-1$
+    @SuppressWarnings("javadoc")
+    public final static String REFACTOR_HANDLER_TAG = "refactorHandler"; //$NON-NLS-1$
+    @SuppressWarnings("javadoc")
+    public final static String CLASSNAME = "name"; //$NON-NLS-1$
 
 	private static Collection<IRefactorModelHandler> handlers;
 	private static boolean handlersLoaded = false;
@@ -111,6 +114,14 @@ public class RefactorModelExtensionManager {
 		}
 	}
 
+    /**
+	 * @param type the type of the refactor operations (see <code>IRefactorModelHandler</code>
+	 * @param refactoredResource the dependent model
+	 * @param refactoredPaths a Map containing original and new model paths
+	 * @param monitor the ProgressMonitor
+     * @see org.teiid.designer.core.refactor.IRefactorNonModelResourceHandler#processNonModel(int, org.eclipse.core.resources.IResource, java.util.Map, 
+     * 	org.eclipse.core.runtime.IProgressMonitor)
+     */
     public static void helpUpdateNonModelResource( int type,
                                                    IResource refactoredResource,
                                                    Map refactoredPaths,
@@ -133,10 +144,12 @@ public class RefactorModelExtensionManager {
 	/**
 	 * Method which delegates to all handlers the ability to update or perform internal refactoring for the refactored models
 	 * 
-	 * @param type
-	 * @param refactoredModelResource
-	 * @param refactoredPaths
-	 * @param monitor
+	 * @param type the type of the refactor operations (see <code>IRefactorModelHandler</code>
+	 * @param refactoredModelResource the dependent model
+	 * @param refactoredPaths a Map containing original and new model paths
+	 * @param monitor the ProgressMonitor
+     * @see org.teiid.designer.core.refactor.IRefactorModelHandler#helpUpdateModelContents(int, org.teiid.designer.core.workspace.ModelResource, java.util.Map, 
+     *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public static void helpUpdateModelContents(int type, ModelResource refactoredModelResource, Map refactoredPaths, IProgressMonitor monitor) {
 		if( !handlersLoaded ) {
@@ -154,6 +167,14 @@ public class RefactorModelExtensionManager {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param deletedResourcePaths a collection of deleted resource paths
+	 * @param directDependentResources collection of direct dependent resources
+	 * @param monitor the process monitor
+	 * @see org.teiid.designer.core.refactor.IRefactorModelHandler#helpUpdateModelContentsForDelete(
+	 * 		java.util.Collection, java.util.Collection, org.eclipse.core.runtime.IProgressMonitor)
+	 */
 	public static void helpUpdateModelContentsForDelete(Collection<Object> deletedResourcePaths, Collection<Object> directDependentResources, IProgressMonitor monitor) {
 		if( !handlersLoaded ) {
 			loadExtensions();
@@ -178,6 +199,45 @@ public class RefactorModelExtensionManager {
             } catch (final ModelWorkspaceException theException) {
             	ModelerCore.Util.log(IStatus.ERROR, theException, theException.getMessage());
             }
+		}
+	}
+	
+    /**
+     * 
+	 * @param refactorType the refactor type
+     * @param refactoredResource the refactored resource
+     * @param monitor the progress monitor
+     * @return if all handlers approve of refactoring
+     * @see org.teiid.designer.core.refactor.IRefactorModelHandler#preProcess(int, org.eclipse.core.resources.IResource, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	public static boolean preProcess(final int refactorType, final IResource refactoredResource, IProgressMonitor monitor) {
+		if( !handlersLoaded ) {
+			loadExtensions();
+		}
+		
+		for( IRefactorModelHandler handler : handlers) {
+			if( ! handler.preProcess(refactorType, refactoredResource, monitor) ) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+    /**
+     * 
+	 * @param refactorType the refactor type
+     * @param refactoredResource the refactored resource
+     * @param monitor the progress monitor
+     * @see org.teiid.designer.core.refactor.IRefactorModelHandler#postProcess(int, org.eclipse.core.resources.IResource, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	public static void postProcess(final int refactorType, final IResource refactoredResource, IProgressMonitor monitor) {
+		if( !handlersLoaded ) {
+			loadExtensions();
+		}
+		
+		for( IRefactorModelHandler handler : handlers) {
+			handler.postProcess(refactorType, refactoredResource, monitor);
 		}
 	}
 }

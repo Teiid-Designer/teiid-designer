@@ -222,6 +222,50 @@ public class WorkspaceResourceFinderUtil {
 
         return result;
     }
+    
+    /**
+     * Return the array of IResource instances that match the specified name. The name must consist of only one path segment and may
+     * or may not have a file extension. If no IResource instances are found that match this name an empty array is returned.
+     * 
+     * @param name the name of the IResource
+     * @param project the target project
+     * @return the IResource[]
+     */
+    public static IResource[] findIResourceInProjectByName( final String name, final IProject project) {
+        if (name == null || name.length() == 0 || getWorkspace() == null) return EMPTY_IRESOURCE_ARRAY;
+
+        // Collect all IResources within all IProjects
+        final FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor();
+        if (getWorkspace() != null && getWorkspace().getRoot() != null) {
+            try {
+                project.accept(visitor);
+            } catch (final CoreException e) {
+                // do nothing
+            }
+        }
+
+        // Try to match the specified resource name with one of the IResource instances
+        final boolean removeExtension = (name.indexOf('.') == -1);
+        final IFile[] fileResources = visitor.getFileResources();
+        final ArrayList tmp = new ArrayList();
+        for (final IFile fileResource : fileResources)
+            if (fileResource != null) {
+                IPath path = fileResource.getFullPath();
+                // Do not process file names staring with '.' since these
+                // are considered reserved for Eclipse specific files
+                if (path.lastSegment().charAt(0) == '.') continue;
+                if (removeExtension) path = path.removeFileExtension();
+                if (name.equalsIgnoreCase(path.lastSegment())) tmp.add(fileResource);
+            }
+
+        // If no matching resources are found return an empty array
+        if (tmp.size() == 0) return EMPTY_IRESOURCE_ARRAY;
+
+        final IResource[] result = new IResource[tmp.size()];
+        tmp.toArray(result);
+
+        return result;
+    }
 
     /**
      * Return the IResource instance that matches the specified path. The path is the relative path in the workspace. If no

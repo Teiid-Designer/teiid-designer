@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -195,4 +196,24 @@ public class MappingRefactorModelHandler implements IRefactorModelHandler {
 		// TODO Auto-generated method stub
 	}
 
+    
+    /**
+     * {@inheritDoc}
+     * 
+    * @see org.teiid.designer.core.refactor.IRefactorModelHandler#preProcess(int, org.eclipse.core.resources.IResource, org.eclipse.core.runtime.IProgressMonitor)
+    */
+   @Override
+   public boolean preProcess(int refactoryType, IResource refactoredResource, IProgressMonitor monitor) {
+   	return true;
+   }
+   
+    /**
+     * {@inheritDoc}
+     * 
+    * @see org.teiid.designer.core.refactor.IRefactorModelHandler#postProcess(int, org.eclipse.core.resources.IResource, org.eclipse.core.runtime.IProgressMonitor)
+    */
+   @Override
+   public void postProcess(int refactoryType, IResource refactoredResource, IProgressMonitor monitor) {
+   	// No Op
+   }
 }

@@ -172,6 +172,7 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
         // builders get executed in reverse order
         addToBuildSpec(ModelerCore.BUILDER_ID);
         addToBuildSpec(ExtensionConstants.MED_BUILDER_ID); 
+        addToBuildSpec(ModelerCore.VDB_BUILDER_ID);
     }
 
     /**
@@ -184,6 +185,7 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
 	public void deconfigure() throws CoreException {
         removeFromBuildSpec(ModelerCore.BUILDER_ID);
         removeFromBuildSpec(ExtensionConstants.MED_BUILDER_ID);
+        removeFromBuildSpec(ModelerCore.VDB_BUILDER_ID);
     }
 
     /**

@@ -10,6 +10,7 @@ package org.teiid.designer.core.refactor;
 import java.util.Collection;
 import java.util.Map;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.teiid.designer.core.workspace.ModelResource;
 
@@ -23,8 +24,11 @@ import org.teiid.designer.core.workspace.ModelResource;
  * @since 8.0
  */
 public interface IRefactorModelHandler {
+	@SuppressWarnings("javadoc")
 	public final static int RENAME = 0;
+	@SuppressWarnings("javadoc")
 	public final static int MOVE = 1;
+	@SuppressWarnings("javadoc")
 	public final static int DELETE = 2;
 	
 	/**
@@ -47,6 +51,31 @@ public interface IRefactorModelHandler {
 	 */
 	void helpUpdateModelContents(int type, ModelResource refactoredModelResource, Map refactoredPaths, IProgressMonitor monitor);
 	
+	/**
+	 * Method which delegates to all handlers the ability to update or perform internal refactoring for the deleted models
+	 * 
+	 * @param deletedResourcePaths
+	 * @param directDependentResources
+	 * @param monitor
+	 */
 	void helpUpdateModelContentsForDelete(Collection<Object> deletedResourcePaths, Collection<Object> directDependentResources, IProgressMonitor monitor);
 	
+	/**
+	 * Method to allow approving the refactoring before execution.
+	 * 
+	 * @param refactorType
+	 * @param refactoredResource
+	 * @param monitor
+	 * @return true if preprocessing confirms that refactoring should continue
+	 */
+	boolean preProcess(final int refactorType, final IResource refactoredResource, IProgressMonitor monitor);
+	
+	/**
+	 * Method to allow post-processing after refactoring
+	 * 
+	 * @param refactorType
+	 * @param refactoredResource
+	 * @param monitor
+	 */
+	void postProcess(final int refactorType, final IResource refactoredResource, IProgressMonitor monitor);
 }

@@ -157,6 +157,8 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * The identifier for the model builder (value <code>"org.teiid.designer.core.modelBuilder"</code>).
      */
     public static final String BUILDER_ID = PLUGIN_ID + ".modelBuilder"; //$NON-NLS-1$
+    
+    public static final String VDB_BUILDER_ID = "org.teiid.designer.vdb.ui.vdbBuilder"; //$NON-NLS-1$
 
     /**
      * The identifier for the Modeling nature (value <code>"org.teiid.designer.core.modelnature"</code>). The presence of this

@@ -172,4 +172,25 @@ public class DiagramRefactorModelHandler implements IRefactorModelHandler {
 		
 		return false;
 	}
+	
+    
+    /**
+     * {@inheritDoc}
+     * 
+    * @see org.teiid.designer.core.refactor.IRefactorModelHandler#preProcess(int, org.eclipse.core.resources.IResource, org.eclipse.core.runtime.IProgressMonitor)
+    */
+   @Override
+   public boolean preProcess(int refactoryType, IResource refactoredResource, IProgressMonitor monitor) {
+   	return true;
+   }
+   
+    /**
+     * {@inheritDoc}
+     * 
+    * @see org.teiid.designer.core.refactor.IRefactorModelHandler#postProcess(int, org.eclipse.core.resources.IResource, org.eclipse.core.runtime.IProgressMonitor)
+    */
+   @Override
+   public void postProcess(int refactoryType, IResource refactoredResource, IProgressMonitor monitor) {
+   	// No Op
+   }
 }

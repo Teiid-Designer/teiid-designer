@@ -62,5 +62,45 @@
         point="org.teiid.designer.ui.common.editorPreferences">
         <editorPreferenceComponent class="org.teiid.designer.vdb.ui.preferences.VdbPreferencePage" />
    </extension>   
-
+   
+<!-- VDB Validation - Builder -->
+   <extension
+         id="vdbBuilder"
+         name="%vdbBuilder.name"
+         point="org.eclipse.core.resources.builders">
+      <builder
+         callOnEmptyDelta="false"
+         hasNature="true"
+         isConfigurable="false"
+         supportsConfigurations="false">
+         <run
+            class="org.teiid.designer.vdb.ui.build.VdbBuilder">
+            <parameter name="optimize" value="true"/>
+            <parameter name="comment" value="%vdbBuilder.name"/>
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="vdbMarker"
+         name="%vdbMarker"
+         point="org.eclipse.core.resources.markers">
+         <super type="org.eclipse.core.resources.problemmarker" />
+         <persistent value="true" />
+   </extension>
+   
+<!-- QuickFix extension to reset invalid model path after moving model -->
+	<extension point="org.eclipse.ui.ide.markerResolution"> 
+	   <markerResolutionGenerator 
+	      class="org.teiid.designer.vdb.ui.build.VdbMarkerResolutionGenerator" 
+	      markerType="org.teiid.designer.vdb.ui.vdbMarker"> 
+          <attribute name="wrongPath" value="true"/>	   
+       </markerResolutionGenerator> 
+	</extension> 
+	
+	  <extension
+         point="org.teiid.designer.core.refactorModelHandler">
+      <refactorHandler
+            name="org.teiid.designer.vdb.ui.util.VdbUiRefactorHandler">
+      </refactorHandler>
+   </extension> 
 </plugin>

@@ -50,6 +50,13 @@ public interface VdbUiConstants {
         String VDB_EDITOR_ID = "org.teiid.designer.vdb.ui.editor.vdbEditor"; //$NON-NLS-1$
         String PROBLEMS_TAB_ID = Util.getString("VdbEditorProblemPage.title"); //$NON-NLS-1$
     }
+    
+    /**
+     * IDs constant for VDB builder problem markers
+     */
+    interface VdbIds {
+        String PROBLEM_MARKER = PLUGIN_ID + ".vdbMarker"; //$NON-NLS-1$";
+    }
 
     /**
      * Keys for images and image descriptors stored in the image registry.

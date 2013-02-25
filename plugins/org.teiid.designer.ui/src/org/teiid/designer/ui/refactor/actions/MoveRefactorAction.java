@@ -14,11 +14,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.window.Window;
 import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.refactor.RefactorCommand;
+import org.teiid.designer.core.refactor.RefactorModelExtensionManager;
+import org.teiid.designer.core.refactor.RefactorResourceEvent;
 import org.teiid.designer.core.refactor.ResourceMoveCommand;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -82,6 +85,13 @@ public class MoveRefactorAction extends RefactorAction {
         if (!checkDependentStatus(rmcCommand, resSelectedResource)) {
             return;
         }
+        
+        // moving a file will change the vdb.xml content if the model exists in the vdb
+        // Close all open VDBs
+        if( ! RefactorModelExtensionManager.preProcess(RefactorResourceEvent.TYPE_MOVE, 
+        		resSelectedResource, new NullProgressMonitor()) ) {
+        	return;
+        }
 
         // create the dialog
         FileFolderMoveDialog ffmdDialog 
@@ -101,13 +111,6 @@ public class MoveRefactorAction extends RefactorAction {
             this.dest = (IContainer)oSelectedObjects[0];
             rmcCommand.setDestination(this.dest);
             
-            // moving a file will change the vdb.xml content if the model exists in the vdb
-            // Close all open VDBs
-            // TODO: Uncomment out the if() statement below
-//            if( ! RefactorModelExtensionManager.preProcess(RefactorResourceEvent.TYPE_MOVE, 
-//            		resSelectedResource, new NullProgressMonitor()) ) {
-//            	return;
-//            }
             
             // Let's cache the auto-build and reset after.  We don't want auto-building before the refactoring is complete
             boolean autoBuildOn = ModelerCore.getWorkspace().isAutoBuilding();
