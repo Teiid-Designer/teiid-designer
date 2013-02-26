@@ -638,7 +638,8 @@ public final class PreviewManager extends JobChangeAdapter
     }
     
     private String getFullDeployedVdbName(ITeiidVdb deployedVdb) { 
-        String fullVdbName = deployedVdb.getPropertyValue("deployment-name"); //$NON-NLS-1$
+        String fullVdbName = deployedVdb.getDeployedName();
+
         if (!fullVdbName.endsWith(Vdb.FILE_EXTENSION)) {
             fullVdbName = fullVdbName + Vdb.FILE_EXTENSION;
         }

@@ -31,6 +31,11 @@ public interface ITeiidVdb {
     String getName();
 
     /**
+     * @return deployed name
+     */
+    String getDeployedName();
+
+    /**
      * @return the version
      */
     int getVersion();
