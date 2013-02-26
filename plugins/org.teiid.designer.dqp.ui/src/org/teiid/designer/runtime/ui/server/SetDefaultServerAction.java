@@ -144,7 +144,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
         }
         
         String title = UTIL.getString("defaultServerChangedTitle"); //$NON-NLS-1$
-        String message = UTIL.getString("defaultServerChangedMessage", currentDefaultServer.getDisplayName()); //$NON-NLS-1$
+        String message = UTIL.getString("defaultServerChangedMessage", selectedServer.getDisplayName()); //$NON-NLS-1$
         MessageDialog.openInformation(getShell(), title, message);
     }
 
