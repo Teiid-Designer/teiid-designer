@@ -93,6 +93,7 @@ import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbUtil;
@@ -1192,7 +1193,7 @@ public final class PreviewManager extends JobChangeAdapter
      * @param monitor the progress monitor
      * @throws Exception if issues with setting up preview vdbs for project
      */
-    @SuppressWarnings( "unused" )
+    @SuppressWarnings( {"unused", "deprecation"} )
     public void previewSetup( final Object objectToPreview,
                               IProgressMonitor monitor ) throws Exception {
         assert isPreviewEnabled() : "previewSetup should not be called if preview is disabled"; //$NON-NLS-1$
@@ -1551,9 +1552,68 @@ public final class PreviewManager extends JobChangeAdapter
         this.passwordProvider = passwordProvider;
     }
 
+    /**
+     * Cycles through all projects in the workspace and creates
+     * jobs to delete each preview vdb and re-create it.
+     *
+     * @return list of jobs for processing the preview vdbs
+     */
+    private Collection<Job> rebuildPreviewVdbs() {
+        List<Job> jobs = new ArrayList<Job>();
+
+        /*
+         * Loop through all the projects and find their preview vdbs
+         */
+        for (IProject project : getAllProjects()) {
+            List<IPath> pvdbPaths = new ArrayList<IPath>();
+            try {
+                if (project.isOpen() && ModelerCore.hasModelNature(project)) {
+                    findPvdbs(project, pvdbPaths);
+                }
+            } catch (Exception ex) {
+                Util.log(ex);
+            }
+
+            /*
+             * For each preview vdb, create a delete preview job
+             * for the file
+             */
+            boolean previewVdbsDeleted = false;
+            for (IPath pvdbPath : pvdbPaths) {
+                IPath path = pvdbPath.removeFirstSegments(1);
+                IFile modelFile = project.getFile(path);
+
+                DeletePreviewVdbJob deletePvdbJob;
+                try {
+                    deletePvdbJob = new DeletePreviewVdbJob(modelFile, context);
+                    jobs.add(deletePvdbJob);
+                    previewVdbsDeleted = true;
+                } catch (Exception ex) {
+                    Util.log(ex);
+                }
+            }
+
+            /*
+             * If any preview vdbs of this project are to be deleted then they also
+             * need to be recreated against the new default server so add an appropriate job.
+             */
+            if (previewVdbsDeleted) {
+                try {
+                    ModelProjectOpenedJob job = new ModelProjectOpenedJob(project, context);
+                    jobs.add(job);
+                } catch (Exception ex) {
+                    Util.log(ex);
+                }
+            }
+        }
+
+        return jobs;
+    }
+
     private void setPreviewServer( ITeiidServer teiidServer ) {
         final PreviewContext previewContext = this.context;
         final ITeiidServer oldServer = getPreviewServer();
+        final ITeiidServerVersion oldServerVersion = oldServer == null ? null : oldServer.getServerVersion();
 
         // set new server
         this.previewServer.set(teiidServer);
@@ -1563,72 +1623,70 @@ public final class PreviewManager extends JobChangeAdapter
         // mark all PVDBs as needing to be deployed
         resetAllDeployedStatuses();
 
+        // If the server is being deleted, then we need to set up a job listener so we can close the server when ALL
+        // delete jobs are completed. This removes any "sessions" via the adminAPI objects
+        Collection<Job> jobs = new ArrayList<Job>();
+
         // cleanup old server if it can be reached
-        if ((oldServer != null)) {
-            if (oldServer.isConnected()) {
-                PreviewContext oldContext = new PreviewContext() {
+        if ((oldServer != null && oldServer.isConnected())) {
+            PreviewContext oldContext = new PreviewContext() {
 
-                    @Override
-                    public IStatus ensureConnectionInfoIsValid( Vdb previewVdb,
-                                                                ITeiidServer previewServer ) throws Exception {
-                        return previewContext.ensureConnectionInfoIsValid(previewVdb, oldServer);
-                    }
+                @Override
+                public IStatus ensureConnectionInfoIsValid( Vdb previewVdb,
+                                                            ITeiidServer previewServer ) throws Exception {
+                    return previewContext.ensureConnectionInfoIsValid(previewVdb, oldServer);
+                }
 
-                    @Override
-                    public IFile getPreviewVdb( IResource projectOrModel ) {
-                        return previewContext.getPreviewVdb(projectOrModel);
-                    }
+                @Override
+                public IFile getPreviewVdb( IResource projectOrModel ) {
+                    return previewContext.getPreviewVdb(projectOrModel);
+                }
 
-                    @Override
-                    public String getPreviewVdbDeployedName( IPath pvdbPath ) {
-                        return previewContext.getPreviewVdbDeployedName(pvdbPath);
-                    }
+                @Override
+                public String getPreviewVdbDeployedName( IPath pvdbPath ) {
+                    return previewContext.getPreviewVdbDeployedName(pvdbPath);
+                }
 
-                    @Override
-                    public String getPreviewVdbJndiName( IPath pvdbPath ) {
-                        return previewContext.getPreviewVdbJndiName(pvdbPath);
-                    }
-                };
+                @Override
+                public String getPreviewVdbJndiName( IPath pvdbPath ) {
+                    return previewContext.getPreviewVdbJndiName(pvdbPath);
+                }
+            };
 
-                // If the server is being deleted, then we need to set up a job listener so we can close the server when ALL
-                // delete jobs are completed. This removes any "sessions" via the adminAPI objects
-                Collection<Job> jobs = new ArrayList<Job>();
-
-                // delete all Preview VDBs on old server
-                for (IProject project : getAllProjects()) {
-                    for (IFile pvdbFile : findProjectPvdbs(project, false)) {
-                        Job deleteDeployedPvdbJob = new DeleteDeployedPreviewVdbJob(getPreviewVdbDeployedName(pvdbFile),
+            // delete all Preview VDBs on old server
+            for (IProject project : getAllProjects()) {
+                for (IFile pvdbFile : findProjectPvdbs(project, false)) {
+                    Job deleteDeployedPvdbJob = new DeleteDeployedPreviewVdbJob(getPreviewVdbDeployedName(pvdbFile),
                                                                                     getPreviewVdbVersion(pvdbFile),
                                                                                     getPreviewVdbJndiName(pvdbFile), oldContext,
                                                                                     oldServer);
-                        jobs.add(deleteDeployedPvdbJob);
-                    }
+                    jobs.add(deleteDeployedPvdbJob);
+                }
+            }
+        }
+
+        /*
+         * If the change in the preview server has resulted in a server version
+         * change then all preview vdbs need to be erased and rebuilt since
+         * they may contain non-compatible metadata.
+         */
+        if (! teiidServer.getServerVersion().equals(oldServerVersion)) {
+            jobs.addAll(rebuildPreviewVdbs());
+        }
+
+        if (! jobs.isEmpty()) {
+            try {
+                CountDownLatch latch = new CountDownLatch(jobs.size());
+                IJobChangeListener shutdownJobListener = new ServerDeleteJobListener(latch, oldServer, serverDeleted);
+                for (Job job : jobs) {
+                    job.addJobChangeListener(shutdownJobListener);
+                    job.schedule();
                 }
 
-                if (jobs.isEmpty()) {
-                    oldServer.disconnect();
-                } else {
-                    try {
-                        CountDownLatch latch = new CountDownLatch(jobs.size());
-                        IJobChangeListener shutdownJobListener = new ServerDeleteJobListener(latch, oldServer, serverDeleted);
-                        for (Job job : jobs) {
-                            job.addJobChangeListener(shutdownJobListener);
-                            job.schedule();
-                        }
-
-                        // wait for at most 10 seconds plus a quarter second per job
-                        latch.await(10 + (int)(jobs.size() / 4.0), TimeUnit.SECONDS);
-                    } catch (InterruptedException e) {
-                        // Make sure we close the old server
-                        if (serverDeleted) {
-                            oldServer.disconnect();
-                        }
-                    }
-                }
-            } else {
-                if (serverDeleted) {
-                    oldServer.disconnect();
-                }
+                // wait for at most 10 seconds plus a quarter second per job
+                latch.await(10 + (int)(jobs.size() / 4.0), TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Util.log(e);
             }
         }
     }
