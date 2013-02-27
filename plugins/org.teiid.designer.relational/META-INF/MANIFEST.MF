@@ -1,6 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
+Bundle-Vendor: %Plugin-Provider
 Bundle-SymbolicName: org.teiid.designer.relational
 Bundle-Version: 8.1.0.qualifier
 Bundle-Activator: org.teiid.designer.relational.RelationalPlugin
