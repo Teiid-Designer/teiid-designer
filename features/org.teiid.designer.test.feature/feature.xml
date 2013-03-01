@@ -19,6 +19,10 @@
       %license
    </license>
 
+   <includes
+         id="org.jbosstools.locus.mockito.feature"
+         version="0.0.0"/>
+
    <requires>
       <import plugin="org.jbosstools.locus.mockito" version="1.9.5" match="compatible"/>
       <import plugin="org.hamcrest" version="1.1.0" match="compatible"/>
