@@ -7,6 +7,9 @@
 */
 package org.teiid.designer.vdb.ui.build;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.IMarkerResolutionGenerator;
@@ -22,6 +25,10 @@ public class VdbMarkerResolutionGenerator implements IMarkerResolutionGenerator 
      */
     @Override
     public IMarkerResolution[] getResolutions(IMarker marker) {
-        return new IMarkerResolution[] {new VdbModelPathResolution()};
+    	Collection<IMarkerResolution> resolutions = new ArrayList<IMarkerResolution>();
+    	if( marker.getAttribute(VdbBuilder.WRONG_PATH, false) || marker.getAttribute(VdbBuilder.OUT_OF_SYNC, false)) {
+    		resolutions.add(new VdbModelPathResolution());
+    	}
+        return resolutions.toArray(new IMarkerResolution[resolutions.size()]);
     }
 }

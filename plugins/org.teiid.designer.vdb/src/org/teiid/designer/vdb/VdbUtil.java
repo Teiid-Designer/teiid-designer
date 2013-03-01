@@ -7,6 +7,7 @@
 */
 package org.teiid.designer.vdb;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,12 +25,14 @@ import javax.xml.validation.SchemaFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.teiid.core.designer.util.ChecksumUtil;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
@@ -38,6 +41,7 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.vdb.Vdb.Xml;
+import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
@@ -261,16 +265,17 @@ public class VdbUtil {
 	/**
 	 * Simple check to see if the model file is in the vdb
 	 * 
-	 * @param theVdb
+	 * @param theVdbFile
 	 @return true if model exists by name in vdb
 	 */
-	public static MultiStatus validateVdbModelsInWorkspace(final IFile theVdb) {
+	public static MultiStatus validateVdbModelsInWorkspace(final IFile theVdbFile) {
 		Collection<IStatus> statuses = new ArrayList<IStatus>();
-		IProject theProject = theVdb.getProject();
+		IProject theProject = theVdbFile.getProject();
 		MultiStatus finalStatus = new MultiStatus(VdbConstants.PLUGIN_ID, 0, VdbPlugin.UTIL.getString("vdbValidationOK"), null); //$NON-NLS-1$
 		
-		if (theVdb.exists()) {
-			VdbElement manifest = VdbUtil.getVdbManifest(theVdb);
+		if (theVdbFile.exists()) {
+			VdbElement manifest = VdbUtil.getVdbManifest(theVdbFile);
+			Vdb theVdb = new Vdb(theVdbFile, new NullProgressMonitor());
 			if (manifest != null) {
 				for (ModelElement model : manifest.getModels()) {
 					String modelName = model.getName()+ ModelUtil.DOT_EXTENSION_XMI;
@@ -289,23 +294,79 @@ public class VdbUtil {
 						if( resource == null ) {
 							statuses.add(new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
 									VdbPlugin.UTIL.getString("vdbValidationWarning_modelExistsInDifferentLocation", //$NON-NLS-1$
-									modelName, theVdb.getName(), matchingResource.getFullPath()))); 
+									modelName, theVdbFile.getName(), matchingResource.getFullPath()))); 
+						}
+						
+						// Is it in sync
+						if( ! isSynchronized(theVdb, (IFile)matchingResource)) {
+							statuses.add(new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
+									VdbPlugin.UTIL.getString("vdbValidationWarning_modelNotSynchronized", //$NON-NLS-1$
+									modelName, theVdbFile.getName()))); 
 						}
 					}
 				}
 			}
 		} else {
-			statuses.add(new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID, "ERROR : VDB " + theVdb.getName() + " does not exist")); //$NON-NLS-1$  //$NON-NLS-2$
+			statuses.add(new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID, "ERROR : VDB " + theVdbFile.getName() + " does not exist")); //$NON-NLS-1$  //$NON-NLS-2$
 		}
 		
 		if( ! statuses.isEmpty() ) {
 	        final IStatus[] result = new IStatus[statuses.size()];
 	        statuses.toArray(result);
-			finalStatus = new MultiStatus(VdbConstants.PLUGIN_ID, 0, result, "ERROR : VDB " + theVdb.getName() + " has problems", null); //$NON-NLS-1$  //$NON-NLS-2$
+			finalStatus = new MultiStatus(VdbConstants.PLUGIN_ID, 0, result, "ERROR : VDB " + theVdbFile.getName() + " has problems", null); //$NON-NLS-1$  //$NON-NLS-2$
 		}
 		
 		return finalStatus;
 	}
+	
+	/**
+	 * @param theVdb the vdb
+	 * @param theModelFile the model file in the workspace that is also in the VDB
+	 * @return if model file in vdb is synchronized
+	 */
+	public static boolean isSynchronized(final Vdb theVdb, final IFile theModelFile) {
+        long fileCheckSum = 0L;
+        boolean foundCheckSum = false;
+        
+        try {
+			fileCheckSum = getCheckSum(theModelFile);
+			foundCheckSum = true;
+		} catch (Exception ex) {
+			foundCheckSum = false;
+		}
+
+        if( foundCheckSum ) {
+	 		for( VdbModelEntry modelEntry : theVdb.getModelEntries()) {
+				if( modelEntry.getName().lastSegment().equalsIgnoreCase(theModelFile.getName()) ) {
+	 				return modelEntry.getChecksum() == fileCheckSum;
+	 			}
+	 		}
+        }
+        
+        return false;
+	}
+	
+    /**
+     * Compute checksum for the given file.
+     * 
+     * @param f The file for which checksum needs to be computed
+     * @return The checksum
+     * @throws Exception 
+     * @since 4.3
+     */
+    public static long getCheckSum(final IFile f) throws Exception {
+        CoreArgCheck.isNotNull(f);
+        InputStream is = null;
+        try {
+            is = f.getContents();
+            return ChecksumUtil.computeChecksum(is).getValue();
+        } finally {
+            if (is != null) try {
+                is.close();
+            } catch (final IOException err1) {
+            }
+        }
+    }
 	
 	/**
 	 * Method which returns a list of models in your workspace that have the wrong path defined in the specified VDB
@@ -341,50 +402,64 @@ public class VdbUtil {
 		
 		return misMatchedResources;
 	}
-	
-	
-	/**
-	 * Updates a given VDB for change in the model path of the given model
-	 * @param theVdb the target VDB
-	 * @param theModelFile the target model file
-	 */
-	public static void updateVdbModelPath(final IFile theVdb, final IFile theModelFile) {
-	 	
-	    if( modelInVdb(theVdb, theModelFile) ) {
-	    	Vdb actualVDB = new Vdb(theVdb, true, new NullProgressMonitor());
-	 		for( VdbModelEntry modelEntry : actualVDB.getModelEntries()) {
-				if( modelEntry.getName().lastSegment().equalsIgnoreCase(theModelFile.getName()) ) {
-	 				actualVDB.removeEntry(modelEntry);
-	 				actualVDB.addModelEntry(theModelFile.getFullPath(), new NullProgressMonitor());
-	 			}
-	 		}
-	 		
-	 		actualVDB.save(new NullProgressMonitor());
-	    }
-	}
+
 	 
 	/**
 	 * @param theVdb the VDB
 	 */
-	public static void updateVdbModelPaths(final IFile theVdb) {
+	public static void synchronizeVdb(final IFile theVdb) {
 		if (theVdb.exists()) {
 			IProject theProject = theVdb.getProject();
-
+			
 			VdbElement manifest = VdbUtil.getVdbManifest(theVdb);
 			if (manifest != null) {
+				boolean changed = false;
+				boolean outOfSync = false;
+				
+				Vdb actualVDB = new Vdb(theVdb, true, new NullProgressMonitor());
+				
 				for (ModelElement model : manifest.getModels()) {
 					String modelName = model.getName()+ ModelUtil.DOT_EXTENSION_XMI;
 					IResource[] resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
 					if( resources.length == 1 ) {
 						String path = model.getPath();
-						IResource matchingResource = resources[0];
-						// Check IPath
-						IPath iPath = new Path(path);
-						IResource resource = ModelerCore.getWorkspace().getRoot().findMember(iPath);
-						
-						if( resource == null ) {
-							updateVdbModelPath(theVdb, (IFile)matchingResource);
+						IFile matchingResource = (IFile)resources[0];
+						if( modelInVdb(theVdb, matchingResource) ) {
+							// Check IPath
+							IPath iPath = new Path(path);
+							IResource resource = ModelerCore.getWorkspace().getRoot().findMember(iPath);
+							
+							if( resource == null ) {
+								
+						 		for( VdbModelEntry modelEntry : actualVDB.getModelEntries()) {
+									if( modelEntry.getName().lastSegment().equalsIgnoreCase(matchingResource.getName()) ) {
+										actualVDB.removeEntry(modelEntry);
+										actualVDB.addModelEntry(matchingResource.getFullPath(), new NullProgressMonitor());
+										changed = true;
+						 			}
+						 		}
+							}
+							
+					 		for( VdbModelEntry modelEntry : actualVDB.getModelEntries()) {
+					 			if( modelEntry.getSynchronization() == Synchronization.NotSynchronized) {
+					 				outOfSync = true;
+					 			}
+					 		}
 						}
+					}
+				}
+				
+				if( outOfSync ) {
+					actualVDB.synchronize(new NullProgressMonitor());
+					changed = true;
+				}
+				
+				if( changed ) {
+			 		actualVDB.save(new NullProgressMonitor());
+			 		try {
+						theVdb.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+					} catch (CoreException ex) {
+						VdbPlugin.UTIL.log(IStatus.ERROR, ex, ex.getMessage());
 					}
 				}
 			}

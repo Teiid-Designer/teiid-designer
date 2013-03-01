@@ -69,7 +69,7 @@ public class VdbModelPathResolution implements IMarkerResolution {
     }
     
     void fixVdb( IFile theVdb ) {
-    	VdbUtil.updateVdbModelPaths(theVdb);
+    	VdbUtil.synchronizeVdb(theVdb);
     }
     
     /**

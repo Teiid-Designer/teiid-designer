@@ -43,6 +43,8 @@ import org.teiid.designer.vdb.ui.VdbUiConstants;
 public class VdbBuilder extends IncrementalProjectBuilder {
 	@SuppressWarnings("javadoc")
 	public static final String WRONG_PATH = "wrongPath"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String OUT_OF_SYNC = "outOfSync"; //$NON-NLS-1$
     /**
      * {@inheritDoc}
      * 
@@ -114,10 +116,11 @@ public class VdbBuilder extends IncrementalProjectBuilder {
     			switch( iStatus.getSeverity() ) {
     			case IStatus.WARNING: {
     				boolean hasWrongPath = iStatus.getMessage().indexOf("exists in your project") > 0; //$NON-NLS-1$
-    				createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, hasWrongPath);
+    				boolean outOfSync = iStatus.getMessage().indexOf("is not synchronized") > 0; //$NON-NLS-1$
+    				createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, hasWrongPath, outOfSync);
     			} break;
     			case IStatus.ERROR: {
-    				createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, false);
+    				createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, false, false);
     			} break;
     			}
     		}
@@ -136,12 +139,14 @@ public class VdbBuilder extends IncrementalProjectBuilder {
      * @param message the marker message (precondition: not <code>null</code> or empty)
      * @param markerId the Id for the marker
      * @param hasWrongPath wrong path indicator
+     * @param outOfSync out of sync indicator
      */
     private void createMarker( IFile file,
                                int severity,
                                String message,
                                String markerId,
-                               boolean hasWrongPath) {
+                               boolean hasWrongPath,
+                               boolean outOfSync) {
         // parameters
         assert (file != null) : "file is null"; //$NON-NLS-1$
         assert ((message != null) && !message.isEmpty()) : "message is empty"; //$NON-NLS-1$
@@ -153,6 +158,8 @@ public class VdbBuilder extends IncrementalProjectBuilder {
         
         // Add attribute if wrong path so Quick Fix can find it
         if( hasWrongPath ) attributes.put(WRONG_PATH, true);
+        // Add attribute if out of sync so Quick Fix can find it
+        if( outOfSync ) attributes.put(OUT_OF_SYNC, true);
 
         try {
             MarkerUtilities.createMarker(file, attributes, markerId);

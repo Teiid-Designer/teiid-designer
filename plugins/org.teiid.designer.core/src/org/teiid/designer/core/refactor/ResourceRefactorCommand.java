@@ -635,6 +635,7 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
                                       Map refactoredPaths ) throws ModelWorkspaceException {
         final OrganizeImportCommand importCommand = new OrganizeImportCommand();
         importCommand.setResource(modelResource.getEmfResource());
+        importCommand.setIncludeDiagramReferences(true);
 
         // The OrganizeImportCommand has to be provided with a Map of old and new paths
         // of resources that are affected by refactoring.
