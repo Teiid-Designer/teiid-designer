@@ -33,52 +33,61 @@ import org.teiid.designer.extension.properties.Translation;
  */
 public final class ModelExtensionDefinitionValidator {
 
-    private static String containsOnlyIdCharactersCheck( String propertyName,
-                                                         String value ) {
-        String errorMsg = emptyCheck(propertyName, value);
+    private static MedStatus addStatus(final MedStatus currentStatus,
+                                       final MedStatus statusToAdd) {
+        if (statusToAdd.isOk()) {
+            return currentStatus;
+        }
 
-        if (CoreStringUtil.isEmpty(errorMsg)) {
+        MultiValidationStatus multi = null;
+
+        if (currentStatus.isMulti()) {
+            multi = (MultiValidationStatus)currentStatus;
+        } else {
+            multi = MultiValidationStatus.create(currentStatus);
+        }
+
+        multi.add(statusToAdd);
+        return multi;
+    }
+
+    private static String containsOnlyIdCharactersCheck( final String propertyName,
+                                                         final String value ) {
+        if (!CoreStringUtil.isEmpty(value)) {
             for (char c : value.toCharArray()) {
                 if (!Character.isLetterOrDigit(c) && (c != '_') && (c != '-')) {
-                    errorMsg = NLS.bind(Messages.invalidPropertyId, value);
-                    break;
+                    return NLS.bind(Messages.invalidPropertyId, value);
                 }
             }
         }
 
-        return errorMsg;
+        return null;
     }
 
-    private static String containsSpecialCharactersCheck( String propertyName,
-                                                          String value ) {
-        String errorMsg = emptyCheck(propertyName, value);
-
-        if (CoreStringUtil.isEmpty(errorMsg)) {
+    private static String containsSpecialCharactersCheck(final String propertyName,
+                                                         final String value) {
+        if (!CoreStringUtil.isEmpty(value)) {
             for (char c : value.toCharArray()) {
                 if (!Character.isLetterOrDigit(c)) {
-                    errorMsg = NLS.bind(Messages.valueContainsSpecialCharactersValidationMsg, propertyName);
+                    return NLS.bind(Messages.valueContainsSpecialCharactersValidationMsg, propertyName);
                 }
             }
         }
 
-        return errorMsg;
+        return null;
     }
 
-    private static String containsSpacesCheck( String propertyName,
-                                               String value ) {
-        String errorMsg = emptyCheck(propertyName, value);
-
-        if (CoreStringUtil.isEmpty(errorMsg)) {
-            if (value.contains(CoreStringUtil.Constants.SPACE)) {
-                errorMsg = NLS.bind(Messages.valueContainsSpacesValidationMsg, propertyName);
-            }
+    private static String containsSpacesCheck(final String propertyName,
+                                              final String value) {
+        if (!CoreStringUtil.isEmpty(value) && value.contains(CoreStringUtil.Constants.SPACE)) {
+            return NLS.bind(Messages.valueContainsSpacesValidationMsg, propertyName);
         }
 
-        return errorMsg;
+        return null;
     }
 
-    private static String emptyCheck( String propertyName,
-                                      String value ) {
+    private static String emptyCheck( final String propertyName,
+                                      final String value ) {
         if (CoreStringUtil.isEmpty(value)) {
             return NLS.bind(Messages.propertyIsEmptyValidationMsg, propertyName);
         }
@@ -87,8 +96,8 @@ public final class ModelExtensionDefinitionValidator {
         return null;
     }
 
-    private static String nullCheck( String name,
-                                     Object object ) {
+    private static String nullCheck(final String name,
+                                    final Object object) {
         if (object == null) {
             return NLS.bind(Messages.objectIsNullValidationMsg, name);
         }
@@ -97,89 +106,86 @@ public final class ModelExtensionDefinitionValidator {
         return null;
     }
 
-    private static String uriCheck( String propertyName,
-                                    String value ) {
-        String errorMsg = containsSpacesCheck(propertyName, value);
+    private static String uriCheck(final String propertyName,
+                                   final String value) {
+        String errorMsg = emptyCheck(propertyName, value);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
-            try {
-                URI.create(value);
-            } catch (Exception e) {
-                errorMsg = NLS.bind(Messages.uriInvalidValidationMsg, propertyName);
+            errorMsg = containsSpacesCheck(propertyName, value);
+
+            if (CoreStringUtil.isEmpty(errorMsg)) {
+                try {
+                    URI.create(value);
+                } catch (Exception e) {
+                    errorMsg = NLS.bind(Messages.uriInvalidValidationMsg, propertyName);
+                }
             }
         }
 
         return errorMsg;
     }
 
-    public static ValidationStatus validateDescription( String description ) {
+    /**
+     * @param description the description being validated (can be <code>null</code> or empty)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validateDescription(final String description) {
         return ValidationStatus.OK_STATUS; // any value is valid
     }
 
-    public static ValidationStatus validateMed( ModelExtensionDefinition med,
-                                                Collection<String> existingNamespacePrefixes,
-                                                Collection<String> existingNamespaceUris,
-                                                Collection<String> extendableMetamodelUris,
-                                                Set<String> validModelTypes ) {
-        ValidationStatus status = validateMedHeader(med.getHeader(), existingNamespacePrefixes, existingNamespaceUris,
-                                                    extendableMetamodelUris, validModelTypes);
-        status = validateMetaclassNames(med.getExtendedMetaclasses(), true);
-
-        if (status.isError()) {
-            return status;
-        }
-
-        // should have at least one metaclass
-        status = validatePropertyDefinitions(med.getPropertyDefinitions());
-
-        if (status.isError()) {
-            return status;
-        }
-
-        return ValidationStatus.OK_STATUS; // all good
+    /**
+     * @param med the MED being validated (cannot be <code>null</code>)
+     * @param existingNamespacePrefixes the namespace prefixes defined in the MED (can be <code>null</code>)
+     * @param existingNamespaceUris the namespace URIs defined in the MED (can be <code>null</code>) 
+     * @param extendableMetamodelUris the valid metamodel URIs that can be extended (can be <code>null</code>)
+     * @param validModelTypes the valid model types (can be <code>null</code>)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validateMed(final ModelExtensionDefinition med,
+                                        final Collection<String> existingNamespacePrefixes,
+                                        final Collection<String> existingNamespaceUris,
+                                        final Collection<String> extendableMetamodelUris,
+                                        final Set<String> validModelTypes) {
+        MedStatus status = validateMedHeader(med.getHeader(),
+                                             existingNamespacePrefixes,
+                                             existingNamespaceUris,
+                                             extendableMetamodelUris,
+                                             validModelTypes);
+        status = addStatus(status, validateMetaclassNames(med.getExtendedMetaclasses(), true));
+        return addStatus(status, validatePropertyDefinitions(med.getPropertyDefinitions()));
     }
 
-    public static ValidationStatus validateMedHeader( ModelExtensionDefinitionHeader header,
-                                                      Collection<String> existingNamespacePrefixes,
-                                                      Collection<String> existingNamespaceUris,
-                                                      Collection<String> extendableMetamodelUris,
-                                                      Set<String> validModelTypes ) {
-        ValidationStatus status = validateNamespacePrefix(header.getNamespacePrefix(), existingNamespacePrefixes);
-
-        if (status.isError()) {
-            return status;
-        }
-        status = validateNamespaceUri(header.getNamespaceUri(), existingNamespaceUris);
-
-        if (status.isError()) {
-            return status;
-        }
-        status = validateMetamodelUri(header.getMetamodelUri(), extendableMetamodelUris);
-
-        if (status.isError()) {
-            return status;
-        }
-        status = validateModelTypes(header.getSupportedModelTypes(), validModelTypes);
-
-        if (status.isError()) {
-            return status;
-        }
-
-        status = validateDescription(header.getDescription());
-
-        if (status.isError()) {
-            return status;
-        }
-
-        return validateVersion(Integer.toString(header.getVersion()));
+    /**
+     * @param header the MED header being validated (cannot be <code>null</code>)
+     * @param existingNamespacePrefixes the namespace prefixes defined in the MED (can be <code>null</code>)
+     * @param existingNamespaceUris the namespace URIs defined in the MED (can be <code>null</code>) 
+     * @param extendableMetamodelUris the valid metamodel URIs that can be extended (can be <code>null</code>)
+     * @param validModelTypes the valid model types (can be <code>null</code>)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validateMedHeader(final ModelExtensionDefinitionHeader header,
+                                              final Collection<String> existingNamespacePrefixes,
+                                              final Collection<String> existingNamespaceUris,
+                                              final Collection<String> extendableMetamodelUris,
+                                              final Set<String> validModelTypes) {
+        MedStatus status = validateNamespacePrefix(header.getNamespacePrefix(), existingNamespacePrefixes);
+        status = addStatus(status, validateNamespaceUri(header.getNamespaceUri(), existingNamespaceUris));
+        status = addStatus(status, validateMetamodelUri(header.getMetamodelUri(), extendableMetamodelUris));
+        status = addStatus(status, validateModelTypes(header.getSupportedModelTypes(), validModelTypes));
+        status = addStatus(status, validateDescription(header.getDescription()));
+        return addStatus(status, validateVersion(Integer.toString(header.getVersion())));
     }
 
-    public static ValidationStatus validateMetaclassName( String metaclassName ) {
+    /**
+     * @param metaclassName the metaclass name being validated (can be <code>null</code> or empty)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validateMetaclassName(final String metaclassName) {
         String errorMsg = emptyCheck(Messages.metaclassName, metaclassName);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
             // check for invalid characters
-            for (char c : metaclassName.toCharArray()) {
+            for (final char c : metaclassName.toCharArray()) {
                 if ((c != '.') && !Character.isJavaIdentifierPart(c)) {
                     errorMsg = Messages.metaclassNameHasInvalidCharactersValidationMsg;
                     break;
@@ -199,40 +205,37 @@ public final class ModelExtensionDefinitionValidator {
      * 
      * @param metaclassNames the collection of metaclass names in the model extension definition (can be <code>null</code>)
      * @param validateEachName indicates if each name should validate using {@link #validateMetaclassName(String)}
-     * @return
+     * @return the validation status (never <code>null</code>)
      */
-    public static ValidationStatus validateMetaclassNames( String[] metaclassNames,
-                                                           boolean validateEachName ) {
-        String errorMsg = null;
-
+    public static MedStatus validateMetaclassNames(final String[] metaclassNames,
+                                                   final boolean validateEachName) {
         if ((metaclassNames == null) || (metaclassNames.length == 0)) {
-            errorMsg = Messages.medHasNoMetaclassesValidationMsg;
-        } else {
-            // make sure no duplicates
-            if (metaclassNames.length != new HashSet<String>(Arrays.asList(metaclassNames)).size()) {
-                errorMsg = Messages.medHasDuplicateMetaclassesValidationMsg;
-            }
+            return ValidationStatus.createErrorMessage(Messages.medHasNoMetaclassesValidationMsg);
+        }
 
-            if (validateEachName) {
-                for (String metaclassName : metaclassNames) {
-                    ValidationStatus status = validateMetaclassName(metaclassName);
+        MedStatus status = ValidationStatus.OK_STATUS;
 
-                    if (status.isError()) {
-                        return status;
-                    }
-                }
+        // make sure no duplicates
+        if (metaclassNames.length != new HashSet<String>(Arrays.asList(metaclassNames)).size()) {
+            status = MultiValidationStatus.create(ValidationStatus.createErrorMessage(Messages.medHasDuplicateMetaclassesValidationMsg));
+        }
+
+        if (validateEachName) {
+            for (final String metaclassName : metaclassNames) {
+                status = addStatus(status, validateMetaclassName(metaclassName));
             }
         }
 
-        if (CoreStringUtil.isEmpty(errorMsg)) {
-            return ValidationStatus.OK_STATUS;
-        }
-
-        return ValidationStatus.createErrorMessage(errorMsg);
+        return status;
     }
 
-    public static ValidationStatus validateMetamodelUri( String metamodelUri,
-                                                         Collection<String> extendableMetamodelUris ) {
+    /**
+     * @param metamodelUri the URI being validated (can be <code>null</code> or empty)
+     * @param extendableMetamodelUris the allowed URIs that can be extended (can be <code>null</code>)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validateMetamodelUri(final String metamodelUri,
+                                                 final Collection<String> extendableMetamodelUris) {
         String errorMsg = uriCheck(Messages.metamodelUri, metamodelUri);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
@@ -248,13 +251,20 @@ public final class ModelExtensionDefinitionValidator {
         return ValidationStatus.createErrorMessage(errorMsg);
     }
 
-    public static ValidationStatus validateModelType( String supportedModelType,
-                                                      Set<String> validModelTypes ) {
-        String errorMsg = emptyCheck(Messages.modelType, supportedModelType);
+    /**
+     * @param supportedModelType the model type being checked (can be <code>null</code> or empty)
+     * @param validModelTypes the valid model types (can be <code>null</code>)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validateModelType(final String supportedModelType,
+                                              final Set<String> validModelTypes) {
+        { // empty check
+            final String errorMsg = emptyCheck(Messages.modelType, supportedModelType);
 
-        // invalid to have a null or empty model type
-        if (!CoreStringUtil.isEmpty(errorMsg)) {
-            return ValidationStatus.createErrorMessage(errorMsg);
+            // invalid to have a null or empty model type
+            if (!CoreStringUtil.isEmpty(errorMsg)) {
+                return ValidationStatus.createErrorMessage(errorMsg);
+            }
         }
 
         // make sure a valid value
@@ -266,83 +276,193 @@ public final class ModelExtensionDefinitionValidator {
         return ValidationStatus.createErrorMessage(NLS.bind(Messages.invalidModelType, supportedModelType));
     }
 
-    public static ValidationStatus validateModelTypes( Collection<String> supportedModelTypes,
-                                                       Set<String> validModelTypes ) {
+    /**
+     * @param supportedModelTypes the model types being checked (can be <code>null</code>)
+     * @param validModelTypes the valid model types (can be <code>null</code> if )
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validateModelTypes(final Collection<String> supportedModelTypes,
+                                               final Set<String> validModelTypes) {
         // ok to have null or empty collection of model types
         if ((supportedModelTypes == null) || supportedModelTypes.isEmpty()) {
             return ValidationStatus.OK_STATUS;
         }
 
-        // make sure each model type is valid
-        for (String modelType : supportedModelTypes) {
-            ValidationStatus status = validateModelType(modelType, validModelTypes);
+        MedStatus status = ValidationStatus.OK_STATUS;
 
-            if (status.isError()) {
-                return status;
-            }
+        // make sure each model type is valid
+        for (final String modelType : supportedModelTypes) {
+            status = addStatus(status, validateModelType(modelType, validModelTypes));
         }
 
         // make sure no duplicates
         if (new HashSet(supportedModelTypes).size() != supportedModelTypes.size()) {
-            return ValidationStatus.createErrorMessage(Messages.duplicateModelType);
+            status = addStatus(status, ValidationStatus.createErrorMessage(Messages.duplicateModelType));
         }
 
-        // all model types are valid
-        return ValidationStatus.OK_STATUS;
+        return status;
     }
 
-    public static ValidationStatus validateNamespacePrefix( String namespacePrefix,
-                                                            Collection<String> existingNamespacePrefixes ) {
-        String errorMsg = containsSpacesCheck(Messages.namespacePrefix, namespacePrefix);
+    /**
+     * @param namespacePrefix the namespace prefix being checked (can be <code>null</code> or empty)
+     * @param existingNamespacePrefixes the namespace prefixes defined in the MED (can be <code>null</code>)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validateNamespacePrefix(final String namespacePrefix,
+                                                    final Collection<String> existingNamespacePrefixes) {
+        { // empty check
+            final String errorMsg = emptyCheck(Messages.namespacePrefix, namespacePrefix);
 
-        if (CoreStringUtil.isEmpty(errorMsg)) {
-            errorMsg = containsSpecialCharactersCheck(Messages.namespacePrefix, namespacePrefix);
-
-            if (CoreStringUtil.isEmpty(errorMsg) && (existingNamespacePrefixes != null)
-                    && existingNamespacePrefixes.contains(namespacePrefix)) {
-                return ValidationStatus.createWarningMessage(NLS.bind(Messages.namespacePrefixExistsValidationMsg, namespacePrefix));
+            if (!CoreStringUtil.isEmpty(errorMsg)) {
+                return ValidationStatus.createErrorMessage(errorMsg);
             }
         }
 
-        if (CoreStringUtil.isEmpty(errorMsg)) {
-            return ValidationStatus.OK_STATUS;
-        }
+        MedStatus status = ValidationStatus.OK_STATUS;
 
-        return ValidationStatus.createErrorMessage(errorMsg);
-    }
+        { // spaces check
+            final String errorMsg = containsSpacesCheck(Messages.namespacePrefix, namespacePrefix);
 
-    public static ValidationStatus validateNamespaceUri( String namespaceUri,
-                                                         Collection<String> existingNamespaceUris ) {
-        String errorMsg = uriCheck(Messages.namespaceUri, namespaceUri);
-
-        if (CoreStringUtil.isEmpty(errorMsg)) {
-            if ((existingNamespaceUris != null) && existingNamespaceUris.contains(namespaceUri)) {
-                return ValidationStatus.createWarningMessage(NLS.bind(Messages.namespaceUriExistsValidationMsg, namespaceUri));
+            if (!CoreStringUtil.isEmpty(errorMsg)) {
+                status = addStatus(status, ValidationStatus.createErrorMessage(errorMsg));
             }
         }
 
-        if (CoreStringUtil.isEmpty(errorMsg)) {
-            return ValidationStatus.OK_STATUS;
+        { // special char check
+            final String errorMsg = containsSpecialCharactersCheck(Messages.namespacePrefix, namespacePrefix);
+
+            if (!CoreStringUtil.isEmpty(errorMsg)) {
+                status = addStatus(status, ValidationStatus.createErrorMessage(errorMsg));
+            }
         }
 
-        return ValidationStatus.createErrorMessage(errorMsg);
+        { // exists check
+            if ((existingNamespacePrefixes != null) && existingNamespacePrefixes.contains(namespacePrefix)) {
+                status = addStatus(status,
+                                   ValidationStatus.createWarningMessage(NLS.bind(Messages.namespacePrefixExistsValidationMsg,
+                                                                                  namespacePrefix)));
+            }
+        }
+
+        return status;
     }
 
-    public static ValidationStatus validatePropertyAdvancedAttribute( boolean proposedValue ) {
+    /**
+     * @param namespaceUri the namespace URI being checked (can be <code>null</code> or empty)
+     * @param existingNamespaceUris the namespace URIs defined in the MED (can be <code>null</code>) 
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validateNamespaceUri(final String namespaceUri,
+                                                 final Collection<String> existingNamespaceUris) {
+        MedStatus status = ValidationStatus.OK_STATUS;
+        final String errorMsg = uriCheck(Messages.namespaceUri, namespaceUri);
+
+        if (!CoreStringUtil.isEmpty(errorMsg)) {
+            status = addStatus(status, ValidationStatus.createErrorMessage(errorMsg));
+        }
+
+        if ((existingNamespaceUris != null) && existingNamespaceUris.contains(namespaceUri)) {
+            status = addStatus(status, ValidationStatus.createWarningMessage(NLS.bind(Messages.namespaceUriExistsValidationMsg,
+                                                                                      namespaceUri)));
+        }
+
+        return status;
+    }
+
+    /**
+     * @param proposedValue the value of the advanced attribute
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validatePropertyAdvancedAttribute(final boolean proposedValue) {
         return ValidationStatus.OK_STATUS; // any value is valid
     }
 
-    public static ValidationStatus validatePropertyAllowedValue( String runtimeType,
-                                                                 String allowedValue ) {
-        String errorMsg = emptyCheck(Messages.allowedValue, allowedValue);
+    /**
+     * @param runtimeType the runtime type of the property (can be <code>null</code> or empty)
+     * @param allowedValue the value being checked (can be <code>null</code> or empty)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validatePropertyAllowedValue(final String runtimeType,
+                                                         final String allowedValue) {
+        { // empty check
+            final String errorMsg = emptyCheck(Messages.allowedValue, allowedValue);
 
-        if (CoreStringUtil.isEmpty(errorMsg)) {
-            // if no runtime type and not empty assume valid
-            if (!validatePropertyRuntimeType(runtimeType).isError()) {
-                // make sure value is valid for type
-                errorMsg = Utils.isValidValue(Utils.convertRuntimeType(runtimeType), allowedValue, true, null);
+            if (!CoreStringUtil.isEmpty(errorMsg)) {
+                return ValidationStatus.createErrorMessage(errorMsg);
             }
         }
+
+        // when non-empty and no or invalid runtime type assume valid
+        if (CoreStringUtil.isEmpty(runtimeType) || validatePropertyRuntimeType(runtimeType).isError()) {
+            return ValidationStatus.OK_STATUS;
+        }
+
+        // make sure value is valid for type
+        final String errorMsg = Utils.isValidValue(Messages.propertyAllowedValue,
+                                                   Utils.convertRuntimeType(runtimeType),
+                                                   allowedValue,
+                                                   true,
+                                                   null);
+
+        if (!CoreStringUtil.isEmpty(errorMsg)) {
+            return ValidationStatus.createErrorMessage(errorMsg);
+        }
+
+        return ValidationStatus.OK_STATUS;
+    }
+
+    /**
+     * @param runtimeType the runtime type (can be <code>null</code> or empty)
+     * @param allowedValues the allowed values (can be <code>null</code>)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validatePropertyAllowedValues(final String runtimeType,
+                                                          final String[] allowedValues) {
+        // valid not to have allowed values
+        if (ArrayUtil.isNullOrEmpty(allowedValues)) {
+            return ValidationStatus.OK_STATUS;
+        }
+
+        MedStatus status = ValidationStatus.OK_STATUS;
+
+        for (final String allowedValue : allowedValues) {
+            status = addStatus(status, validatePropertyAllowedValue(runtimeType, allowedValue));
+
+            // need to get rid of first occurrence of allowedValue in order to see if there is a duplicate
+            final List<String> temp = new ArrayList<String>(Arrays.asList(allowedValues));
+            temp.remove(allowedValue);
+
+            for (final Object value : temp) {
+                if (value.equals(allowedValue)) {
+                    status = addStatus(status,
+                                       ValidationStatus.createErrorMessage(NLS.bind(Messages.duplicateAllowedValue, allowedValue)));
+                }
+            }
+        }
+
+        return status;
+    }
+
+    /**
+     * @param runtimeType the runtime type (can be <code>null</code> or empty)
+     * @param defaultValue the value being checked (can be <code>null</code> or empty)
+     * @param allowedValues the allowed values (can be <code>null</code>)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validatePropertyDefaultValue(final String runtimeType,
+                                                         final String defaultValue,
+                                                         final String[] allowedValues) {
+        // only validate if there is a valid runtime type
+        if (validatePropertyRuntimeType(runtimeType).isError()) {
+            return ValidationStatus.OK_STATUS;
+        }
+
+        // have a good runtime type
+        final String errorMsg = Utils.isValidValue(Messages.propertyDefaultValue,
+                                                   Utils.convertRuntimeType(runtimeType),
+                                                   defaultValue,
+                                                   true,
+                                                   allowedValues);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
             return ValidationStatus.OK_STATUS;
@@ -352,220 +472,115 @@ public final class ModelExtensionDefinitionValidator {
     }
 
     /**
-     * @param runtimeType the runtime type (cannot be <code>null</code>)
-     * @param allowedValues the allowed values (can be <code>null</code>)
-     * @return <code>null</code> if all values are valid based on the runtime type
+     * @param simpleId the unqualified property name (can be <code>null</code> or empty)
+     * @param runtimeType the property type (can be <code>null</code> or empty)
+     * @param requiresDefaultValue <code>true</code> if the property requires a default value
+     * @param defaultValue the default value (can be <code>null</code> or empty)
+     * @param requiresFixedValue <code>true</code> if the property requires a fixed value
+     * @param fixedValue the fixed value (can be <code>null</code> or empty)
+     * @param descriptions the property description translations (can be <code>null</code>)
+     * @param displayNames the property display name translations (can be <code>null</code>)
+     * @param allowedValues the property allowed values (can be <code>null</code>)
+     * @return the validation status (never <code>null</code>)
      */
-    public static ValidationStatus validatePropertyAllowedValues( String runtimeType,
-                                                                  String[] allowedValues ) {
-        // valid not to have allowed values
-        if (ArrayUtil.isNullOrEmpty(allowedValues)) {
-            return ValidationStatus.OK_STATUS;
+    public static MedStatus validatePropertyDefinition(final String simpleId,
+                                                       final String runtimeType,
+                                                       final boolean requiresDefaultValue,
+                                                       final String defaultValue,
+                                                       final boolean requiresFixedValue,
+                                                       final String fixedValue,
+                                                       final Collection<Translation> descriptions,
+                                                       final Collection<Translation> displayNames,
+                                                       final String[] allowedValues) {
+        MedStatus status = ValidationStatus.OK_STATUS;
+        status = addStatus(status, validatePropertySimpleId(simpleId));
+        status = addStatus(status, validatePropertyRuntimeType(runtimeType));
+
+        if (requiresDefaultValue) {
+            status = addStatus(status, validatePropertyDefaultValue(runtimeType, defaultValue, allowedValues));
         }
 
-        for (String allowedValue : allowedValues) {
-            // need to get rid of first occurrence of allowedValue in order to see if there is a duplicate
-            ValidationStatus status = validatePropertyAllowedValue(runtimeType, allowedValue);
-
-            // value is not valid for type
-            if (status.isError()) {
-                return status;
-            }
-
-            // make sure there are no duplicates
-            List<String> temp = new ArrayList<String>(Arrays.asList(allowedValues));
-            temp.remove(allowedValue);
-
-            for (Object value : temp) {
-                if (value.equals(allowedValue)) {
-                    return ValidationStatus.createErrorMessage(NLS.bind(Messages.duplicateAllowedValue, allowedValue));
-                }
-            }
+        if (requiresFixedValue) {
+            status = addStatus(status, validatePropertyFixedValue(runtimeType, fixedValue, allowedValues));
         }
 
-        // valid
-        return ValidationStatus.OK_STATUS;
+        status = addStatus(status, validateTranslations(Messages.propertyDescription, descriptions, true));
+        status = addStatus(status, validateTranslations(Messages.propertyDisplayName, displayNames, true));
+        status = addStatus(status, validatePropertyAllowedValues(runtimeType, allowedValues));
+
+        return status;
     }
 
-    public static ValidationStatus validatePropertyDefaultValue( String runtimeType,
-                                                                 String defaultValue,
-                                                                 String[] allowedValues ) {
-        // only validate if there is a runtime type
-        ValidationStatus status = validatePropertyRuntimeType(runtimeType);
+    /**
+     * @param medPropDefns the property definitions being validated (can be <code>null</code>)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validatePropertyDefinitions(final Map<String, Collection<ModelExtensionPropertyDefinition>> medPropDefns) {
+        MedStatus status = ValidationStatus.OK_STATUS;
 
-        if (status.isError()) {
-            // allow any value if there is no runtime type
-            return ValidationStatus.OK_STATUS;
-        }
-
-        // have a good runtime type
-        String errorMsg = Utils.isValidValue(Utils.convertRuntimeType(runtimeType), defaultValue, true, allowedValues);
-
-        if (CoreStringUtil.isEmpty(errorMsg)) {
-            return ValidationStatus.OK_STATUS;
-        }
-
-        return ValidationStatus.createErrorMessage(errorMsg);
-    }
-
-    @SuppressWarnings("unused")
-    public static ValidationStatus validatePropertyDefinition( String simpleId,
-                                                               String runtimeType,
-                                                               boolean requiresDefaultValue,
-                                                               String defaultValue,
-                                                               boolean requiresFixedValue,
-                                                               String fixedValue,
-                                                               Collection<Translation> descriptions,
-                                                               Collection<Translation> displayNames,
-                                                               String[] allowedValues ) {
-        // return the first error severity or the next most severity
-        ValidationStatus status = null;
-        ValidationStatus tempStatus = null;
-
-        SIMPLE_ID: {
-            status = validatePropertySimpleId(simpleId);
-
-            if (status.isError()) {
-                return status;
-            }
-        }
-
-        RUNTIME_TYPE: {
-            tempStatus = validatePropertyRuntimeType(runtimeType);
-
-            if (tempStatus.isError()) {
-                return tempStatus;
+        for (final String metaclassName : medPropDefns.keySet()) {
+            // only validate if there is a good metaclass
+            if (validateMetaclassName(metaclassName).isError()) {
+                continue;
             }
 
-            if (tempStatus.compareTo(status) < 0) {
-                status = tempStatus;
-            }
-        }
+            // make sure metaclass has at least one property
+            final Collection<ModelExtensionPropertyDefinition> props = medPropDefns.get(metaclassName);
 
-        DEFAULT_VALUE: {
-            if (requiresDefaultValue) {
-                tempStatus = validatePropertyDefaultValue(runtimeType, defaultValue, allowedValues);
+            if ((props == null) || props.isEmpty()) {
+                status = addStatus(status,
+                                   ValidationStatus.createErrorMessage(NLS.bind(Messages.extendedMetaclassHasNoPropertiesValidationMsg,
+                                                                                metaclassName)));
+            } else {
+                for (final Collection<ModelExtensionPropertyDefinition> propDefns : medPropDefns.values()) {
+                    final Set<String> ids = new HashSet<String>();
 
-                if (tempStatus.isError()) {
-                    return tempStatus;
+                    for (final ModelExtensionPropertyDefinition propDefn : propDefns) {
+                        // check for duplicates
+                        if (!ids.add(propDefn.getSimpleId())) {
+                            status = addStatus(status,
+                                               ValidationStatus.createErrorMessage(NLS.bind(Messages.duplicatePropertyIdValidatinMsg,
+                                                                                            propDefn.getSimpleId())));
+                        }
+
+                        status = addStatus(status,
+                                           validatePropertyDefinition(propDefn.getSimpleId(),
+                                                                      propDefn.getRuntimeType(),
+                                                                      !CoreStringUtil.isEmpty(propDefn.getDefaultValue()),
+                                                                      propDefn.getDefaultValue(),
+                                                                      !CoreStringUtil.isEmpty(propDefn.getFixedValue()),
+                                                                      propDefn.getFixedValue(),
+                                                                      propDefn.getDescriptions(),
+                                                                      propDefn.getDisplayNames(),
+                                                                      propDefn.getAllowedValues()));
+                    }
                 }
-
-                if (tempStatus.compareTo(status) < 0) {
-                    status = tempStatus;
-                }
-            }
-        }
-
-        FIXED_VALUE: {
-            if (requiresFixedValue) {
-                tempStatus = validatePropertyFixedValue(runtimeType, fixedValue, allowedValues);
-
-                if (tempStatus.isError()) {
-                    return tempStatus;
-                }
-
-                if (tempStatus.compareTo(status) < 0) {
-                    status = tempStatus;
-                }
-            }
-        }
-
-        DESCRIPTIONS: {
-            tempStatus = validateTranslations(Messages.propertyDescription, descriptions, true);
-
-            if (tempStatus.isError()) {
-                return tempStatus;
-            }
-
-            if (tempStatus.compareTo(status) < 0) {
-                status = tempStatus;
-            }
-        }
-
-        DISPLAY_NAMES: {
-            tempStatus = validateTranslations(Messages.propertyDisplayName, displayNames, true);
-
-            if (tempStatus.isError()) {
-                return tempStatus;
-            }
-
-            if (tempStatus.compareTo(status) < 0) {
-                status = tempStatus;
-            }
-        }
-
-        ALLOWED_VALUES: {
-            tempStatus = validatePropertyAllowedValues(runtimeType, allowedValues);
-
-            if (tempStatus.isError()) {
-                return tempStatus;
-            }
-
-            if (tempStatus.compareTo(status) < 0) {
-                status = tempStatus;
             }
         }
 
         return status;
     }
 
-    public static ValidationStatus
-            validatePropertyDefinitions( Map<String, Collection<ModelExtensionPropertyDefinition>> medPropDefns ) {
-        ValidationStatus status = null;
-
-        for (String metaclassName : medPropDefns.keySet()) {
-            status = validateMetaclassName(metaclassName);
-
-            if (!status.isError()) {
-                // make sure metaclass has at least one property
-                Collection<ModelExtensionPropertyDefinition> props = medPropDefns.get(metaclassName);
-
-                if ((props == null) || props.isEmpty()) {
-                    return ValidationStatus.createErrorMessage(NLS.bind(Messages.extendedMetaclassHasNoPropertiesValidationMsg,
-                                                                        metaclassName));
-                }
-
-                for (Collection<ModelExtensionPropertyDefinition> propDefns : medPropDefns.values()) {
-                    Set<String> ids = new HashSet<String>();
-
-                    for (ModelExtensionPropertyDefinition propDefn : propDefns) {
-                        // check for duplicates
-                        if (!ids.add(propDefn.getSimpleId())) {
-                            return ValidationStatus.createErrorMessage(NLS.bind(Messages.duplicatePropertyIdValidatinMsg,
-                                                                                propDefn.getSimpleId()));
-                        }
-
-                        status = validatePropertyDefinition(propDefn.getSimpleId(), propDefn.getRuntimeType(),
-                                                            !CoreStringUtil.isEmpty(propDefn.getDefaultValue()),
-                                                            propDefn.getDefaultValue(),
-                                                            !CoreStringUtil.isEmpty(propDefn.getFixedValue()),
-                                                            propDefn.getFixedValue(), propDefn.getDescriptions(),
-                                                            propDefn.getDisplayNames(), propDefn.getAllowedValues());
-
-                        if (status.isError()) {
-                            return status;
-                        }
-                    }
-                }
-            }
-        }
-
-        return ValidationStatus.OK_STATUS;
-    }
-
-    public static ValidationStatus validatePropertyFixedValue( String runtimeType,
-                                                               String fixedValue,
-                                                               String[] allowedValues ) {
+    /**
+     * @param runtimeType the property type (can be <code>null</code> or empty)
+     * @param fixedValue the value being checked (can be <code>null</code> or empty)
+     * @param allowedValues the allowed values (can be <code>null</code>)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validatePropertyFixedValue(final String runtimeType,
+                                                       final String fixedValue,
+                                                       final String[] allowedValues) {
         // only validate if there is a runtime type
-        ValidationStatus status = validatePropertyRuntimeType(runtimeType);
-
-        if (status.isError()) {
-            // allow any value if there is no runtime type
+        if (validatePropertyRuntimeType(runtimeType).isError()) {
             return ValidationStatus.OK_STATUS;
         }
 
         // have a good runtime type
-        String errorMsg = Utils.isValidValue(Utils.convertRuntimeType(runtimeType), fixedValue, true, allowedValues);
+        final String errorMsg = Utils.isValidValue(Messages.propertyFixedValue,
+                                                   Utils.convertRuntimeType(runtimeType),
+                                                   fixedValue,
+                                                   true,
+                                                   allowedValues);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
             return ValidationStatus.OK_STATUS;
@@ -574,19 +589,35 @@ public final class ModelExtensionDefinitionValidator {
         return ValidationStatus.createErrorMessage(errorMsg);
     }
 
-    public static ValidationStatus validatePropertyIndexedAttribute( boolean proposedValue ) {
+    /**
+     * @param proposedValue the value of the indexed attribute
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validatePropertyIndexedAttribute( final boolean proposedValue ) {
         return ValidationStatus.OK_STATUS; // any value is valid
     }
 
-    public static ValidationStatus validatePropertyMaskedAttribute( boolean proposedValue ) {
+    /**
+     * @param proposedValue the value of the masked attribute
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validatePropertyMaskedAttribute( final boolean proposedValue ) {
         return ValidationStatus.OK_STATUS; // any value is valid
     }
 
-    public static ValidationStatus validatePropertyRequiredAttribute( boolean proposedValue ) {
+    /**
+     * @param proposedValue the value of the required attribute
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validatePropertyRequiredAttribute(final boolean proposedValue) {
         return ValidationStatus.OK_STATUS; // any value is valid
     }
 
-    public static ValidationStatus validatePropertyRuntimeType( String runtimeType ) {
+    /**
+     * @param runtimeType property type being checked (can be <code>null</code> or empty)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validatePropertyRuntimeType(final String runtimeType) {
         String errorMsg = null;
 
         try {
@@ -602,7 +633,19 @@ public final class ModelExtensionDefinitionValidator {
         return ValidationStatus.createErrorMessage(errorMsg);
     }
 
-    public static ValidationStatus validatePropertySimpleId( String proposedValue ) {
+    /**
+     * @param proposedValue the unqualified property name (can be <code>null</code> or empty)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validatePropertySimpleId(final String proposedValue) {
+        { // empty check
+            final String errorMsg = emptyCheck(Messages.propertySimpleId, proposedValue);
+
+            if (!CoreStringUtil.isEmpty(errorMsg)) {
+                return ValidationStatus.createErrorMessage(errorMsg);
+            }
+        }
+
         String errorMsg = containsOnlyIdCharactersCheck(Messages.propertySimpleId, proposedValue);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
@@ -612,18 +655,24 @@ public final class ModelExtensionDefinitionValidator {
         return ValidationStatus.createErrorMessage(errorMsg);
     }
 
-    public static ValidationStatus validateTranslation( Locale locale,
-                                                        String text ) {
-        ValidationStatus status = validateTranslationLocale(locale);
-
-        if (!status.isError()) {
-            return validateTranslationText(text);
-        }
+    /**
+     * @param locale the translation locale (can be <code>null</code>)
+     * @param text the translated text (can be <code>null</code> or empty)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validateTranslation(final Locale locale,
+                                                final String text) {
+        MedStatus status = validateTranslationLocale(locale);
+        status = addStatus(status, validateTranslationText(text));
 
         return status;
     }
 
-    public static ValidationStatus validateTranslationLocale( Locale locale ) {
+    /**
+     * @param locale the locale being checked (can be <code>null</code>)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validateTranslationLocale( final Locale locale ) {
         if (locale == null) {
             return ValidationStatus.createErrorMessage(Messages.localeMissingValidationMsg);
         }
@@ -631,46 +680,50 @@ public final class ModelExtensionDefinitionValidator {
         return ValidationStatus.OK_STATUS;
     }
 
-    public static ValidationStatus validateTranslations( String translationType,
-                                                         Collection<Translation> translations,
-                                                         boolean validateEachTranslation ) {
+    /**
+     * @param translationType the translation type (can not be <code>null</code> or empty)
+     * @param translations the translations being checked (can be <code>null</code>)
+     * @param validateEachTranslation <code>true</code> if every translation should be validated
+     * @return the validation status (never <code>null</code>)
+     */
+    public static MedStatus validateTranslations(final String translationType,
+                                                 final Collection<Translation> translations,
+                                                 final boolean validateEachTranslation) {
         if ((translations == null) || translations.isEmpty()) {
             return ValidationStatus.OK_STATUS;
         }
 
-        String errorMsg = null;
-        Set<Locale> locales = new HashSet<Locale>(translations.size());
+        MedStatus status = ValidationStatus.OK_STATUS;
+        final Set<Locale> locales = new HashSet<Locale>(translations.size());
 
-        for (Translation translation : translations) {
-            errorMsg = nullCheck(translationType, translation);
+        for (final Translation translation : translations) {
+            final String errorMsg = nullCheck(translationType, translation);
 
             if (!CoreStringUtil.isEmpty(errorMsg)) {
+                status = addStatus(status, ValidationStatus.createErrorMessage(errorMsg));
                 break;
             }
 
             if (validateEachTranslation) {
-                ValidationStatus status = validateTranslation(translation.getLocale(), translation.getTranslation());
-
-                if (status.isError()) {
-                    return status;
-                }
+                status = addStatus(status, validateTranslation(translation.getLocale(), translation.getTranslation()));
             }
 
-            locales.add(translation.getLocale());
-        }
-
-        // duplicates check
-        if (CoreStringUtil.isEmpty(errorMsg)) {
-            if (translations.size() != locales.size()) {
-                return ValidationStatus.createErrorMessage(NLS.bind(Messages.duplicateTranslationLocaleValidationMsg,
-                                                                    translationType));
+            // duplicates check
+            if (!locales.add(translation.getLocale())) {
+                status = addStatus(status,
+                                   ValidationStatus.createErrorMessage(NLS.bind(Messages.duplicateTranslationLocaleValidationMsg,
+                                                                                translationType)));
             }
         }
 
-        return ValidationStatus.OK_STATUS;
+        return status;
     }
 
-    public static ValidationStatus validateTranslationText( String text ) {
+    /**
+     * @param text the text being checked (can be <code>null</code> or empty)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static ValidationStatus validateTranslationText(final String text) {
         String errorMsg = emptyCheck(Messages.translation, text);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
@@ -685,11 +738,25 @@ public final class ModelExtensionDefinitionValidator {
         return ValidationStatus.createErrorMessage(errorMsg);
     }
 
-    public static ValidationStatus validateVersion( String version ) {
-        String errorMsg = containsSpacesCheck(Messages.version, version);
+    /**
+     * @param version the version being checked (can be <code>null</code> or empty)
+     * @return the validation status (never <code>null</code>)
+     */
+    public static ValidationStatus validateVersion(final String version) {
+        { // empty check
+            final String errorMsg = emptyCheck(Messages.version, version);
 
-        if (!CoreStringUtil.isEmpty(errorMsg)) {
-            return ValidationStatus.createErrorMessage(errorMsg);
+            if (!CoreStringUtil.isEmpty(errorMsg)) {
+                return ValidationStatus.createErrorMessage(errorMsg);
+            }
+        }
+
+        { // spaces check
+            String errorMsg = containsSpacesCheck(Messages.version, version);
+
+            if (!CoreStringUtil.isEmpty(errorMsg)) {
+                return ValidationStatus.createErrorMessage(errorMsg);
+            }
         }
 
         int newVersion = -1;

@@ -8,7 +8,6 @@
 package org.teiid.designer.extension.properties;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     private Type type = TYPE_DEFAULT;
 
     /**
-     * @param namespaceProvider the namespace provider (cannot be <code>null</code>)
+     * @param namespacePrefixProvider the namespace provider (cannot be <code>null</code>)
      */
     public ModelExtensionPropertyDefinitionImpl( NamespaceProvider namespacePrefixProvider ) {
         CoreArgCheck.isNotNull(namespacePrefixProvider, "namespaceProvider is null"); //$NON-NLS-1$
@@ -64,7 +63,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     /**
      * @param namespaceProvider the namespace provider (cannot be <code>null</code>)
      * @param simpleId the property identifier without the namespace prefix (can be <code>null</code> or empty)
-     * @param runtimeType the Teiid runtime type (can be <code>null</code> or empty). Default value is {@value Type#STRING}.
+     * @param runtimeType the Teiid runtime type (can be <code>null</code> or empty). Default value is {@value org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition.Type#STRING}.
      * @param required <code>true</code> string if this property must have a value (can be <code>null</code> or empty). Default
      *            value is {@value #REQUIRED_DEFAULT}.
      * @param defaultValue a default value (can be <code>null</code> or empty)
@@ -213,9 +212,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
         return new HashSet<String>(this.allowedValues);
     }
 
-    /**
-     * {@inheritDoc}
-     *
+    /* (non-Javadoc)
      * @see java.lang.Object#clone()
      */
     @Override
@@ -594,14 +591,12 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      * @see org.teiid.core.designer.properties.PropertyDefinition#isValidValue(java.lang.String)
      */
     @Override
-    public String isValidValue( String proposedValue ) {
-        String errorMsg = Utils.isValidValue(this.type, proposedValue, this.required, getAllowedValues());
-
-        if (!CoreStringUtil.isEmpty(errorMsg)) {
-            errorMsg = NLS.bind(Messages.appendPropertyId, errorMsg, getId());
-        }
-
-        return errorMsg;
+    public String isValidValue(String proposedValue) {
+        return Utils.isValidValue(NLS.bind(Messages.propertyValue, getId()),
+                                  this.type,
+                                  proposedValue,
+                                  this.required,
+                                  getAllowedValues());
     }
 
     /**
@@ -871,9 +866,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     }
 
     /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setNamespacePrefixProvider(org.teiid.designer.extension.properties.NamespaceProvider)
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setNamespaceProvider(org.teiid.designer.extension.properties.NamespaceProvider)
      */
     @Override
     public void setNamespaceProvider( NamespaceProvider newNamespaceProvider ) {

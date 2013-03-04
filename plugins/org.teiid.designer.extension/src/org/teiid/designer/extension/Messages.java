@@ -95,7 +95,11 @@ public class Messages extends NLS {
     public static String uriInvalidValidationMsg;
     public static String versionIsNotAnIntegerValidationMsg;
     public static String versionLessThanDefaultValidationMsg;
-    public static String appendPropertyId;
+
+    public static String propertyAllowedValue;
+    public static String propertyDefaultValue;
+    public static String propertyFixedValue;
+    public static String propertyValue;
 
     public static String translationToString;
 

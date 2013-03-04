@@ -241,17 +241,14 @@ final class EditAllowedValueDialog extends FormDialog {
             }
         }
 
-        if (this.valueError.isOk()) {
-            this.scrolledForm.getMessageManager().removeMessage(this.valueError.getKey(), this.valueError.getControl());
+        this.valueError.update(this.scrolledForm.getMessageManager());
 
+        if (this.valueError.isOk()) {
+            // eclipse bug keeps font foreground red after an error when setting to NONE so set to INFO first as workaround
             if (!Messages.allowedValueDialogMessage.equals(this.scrolledForm.getMessage())) {
-                // eclipse bug keeps font foreground red after an error when setting to NONE so set to INFO first as workaround
                 this.scrolledForm.setMessage(Messages.allowedValueDialogMessage, IMessageProvider.INFORMATION);
                 this.scrolledForm.setMessage(Messages.allowedValueDialogMessage, IMessageProvider.NONE);
             }
-        } else {
-            this.scrolledForm.getMessageManager().addMessage(this.valueError.getKey(), this.valueError.getMessage(), null,
-                                                             this.valueError.getMessageType(), this.valueError.getControl());
         }
     }
 

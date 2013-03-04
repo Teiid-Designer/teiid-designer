@@ -28,9 +28,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.MedStatus;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
-import org.teiid.designer.extension.definition.ValidationStatus;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
@@ -369,13 +369,14 @@ public class NewMedDetailsPage extends AbstractWizardPage {
      * @since 7.6
      */
     private void validatePage() {
-        ValidationStatus nsPrefixStatus = ModelExtensionDefinitionValidator.validateNamespacePrefix(getNamespacePrefix(), getRegistry().getAllNamespacePrefixes());
-        ValidationStatus nsUriStatus = ModelExtensionDefinitionValidator.validateNamespaceUri(getNamespaceUri(),
-                                                                                              getRegistry().getAllNamespaceUris());
-        ValidationStatus metaModelUriStatus = ModelExtensionDefinitionValidator.validateMetamodelUri(getMetamodelUri(),
-                                                                                                     getRegistry().getExtendableMetamodelUris());
-        ValidationStatus definitionStatus = ModelExtensionDefinitionValidator.validateDescription(getDescription());
-        ValidationStatus versionStatus = ModelExtensionDefinitionValidator.validateVersion(getVersion());
+        MedStatus nsPrefixStatus = ModelExtensionDefinitionValidator.validateNamespacePrefix(getNamespacePrefix(),
+                                                                                             getRegistry().getAllNamespacePrefixes());
+        MedStatus nsUriStatus = ModelExtensionDefinitionValidator.validateNamespaceUri(getNamespaceUri(),
+                                                                                       getRegistry().getAllNamespaceUris());
+        MedStatus metaModelUriStatus = ModelExtensionDefinitionValidator.validateMetamodelUri(getMetamodelUri(),
+                                                                                              getRegistry().getExtendableMetamodelUris());
+        MedStatus definitionStatus = ModelExtensionDefinitionValidator.validateDescription(getDescription());
+        MedStatus versionStatus = ModelExtensionDefinitionValidator.validateVersion(getVersion());
 
         StringBuffer sb = new StringBuffer();
         addStatusMessage(sb, nsPrefixStatus);
@@ -390,8 +391,8 @@ public class NewMedDetailsPage extends AbstractWizardPage {
         setPageComplete(true);
     }
 
-    private void addStatusMessage( StringBuffer sb,
-                                   ValidationStatus status ) {
+    private void addStatusMessage( final StringBuffer sb,
+                                   final MedStatus status ) {
         if (status.isError()) {
             sb.append(TOKEN_ERROR + status.getMessage() + CR);
         } else if (status.isWarning()) {

@@ -272,15 +272,6 @@ public class EditTranslationDialog extends FormDialog {
         return (this.translationBeingEdited != null);
     }
 
-    private void updateMessage( ErrorMessage errorMsg ) {
-        if (!errorMsg.isError()) {
-            this.scrolledForm.getMessageManager().removeMessage(errorMsg.getKey(), errorMsg.getControl());
-        } else {
-            this.scrolledForm.getMessageManager().addMessage(errorMsg.getKey(), errorMsg.getMessage(), null,
-                                                             errorMsg.getMessageType(), errorMsg.getControl());
-        }
-    }
-
     private void updateState() {
         boolean enable = false;
 
@@ -329,11 +320,11 @@ public class EditTranslationDialog extends FormDialog {
             this.localeError.setStatus(ModelExtensionDefinitionValidator.validateTranslations(this.translationType, temp, false));
         }
 
-        updateMessage(this.localeError);
+        this.localeError.update(this.scrolledForm.getMessageManager());
 
         // validate translation text
         this.translationError.setStatus(ModelExtensionDefinitionValidator.validateTranslationText(this.translation));
-        updateMessage(this.translationError);
+        this.translationError.update(this.scrolledForm.getMessageManager());
     }
 
 }
