@@ -35,7 +35,6 @@ import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.widget.ListMessageDialog;
 import org.teiid.designer.ui.refactor.RefactorUndoManager;
 import org.teiid.designer.ui.viewsupport.ModelLabelProvider;
-import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
 /**
@@ -116,12 +115,13 @@ public abstract class RefactorAction extends ActionDelegate implements IWorkbenc
             && SelectionUtilities.isAllIResourceObjects(selection)) {
             IResource resTemp = (IResource)SelectionUtilities.getSelectedIResourceObjects(selection).get(0);
 
-            if (!ModelUtil.isIResourceReadOnly(resTemp) && !(resTemp instanceof IProject)
-                && ModelUtilities.isModelProjectResource(resTemp)) {
-            	if( ModelUtil.isModelFile(resTemp) || ModelUtil.isXsdFile(resTemp)) {
-	                enable = true;
-	                resSelectedResource = resTemp;
-            	}
+            enable = ! ModelUtil.isIResourceReadOnly(resTemp) && ! ModelUtil.isVdbArchiveFile(resTemp);
+            if( enable && resTemp instanceof IProject ) {
+            	enable = ((IProject)resTemp).isOpen();
+            }
+            
+            if( enable ) {
+	            resSelectedResource = resTemp;
             }
         }
         

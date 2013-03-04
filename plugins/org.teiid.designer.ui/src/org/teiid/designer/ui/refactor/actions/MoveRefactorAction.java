@@ -11,6 +11,7 @@ import java.util.Iterator;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -24,9 +25,11 @@ import org.teiid.designer.core.refactor.RefactorModelExtensionManager;
 import org.teiid.designer.core.refactor.RefactorResourceEvent;
 import org.teiid.designer.core.refactor.ResourceMoveCommand;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.viewsupport.JobUtils;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.refactor.FileFolderMoveDialog;
@@ -209,6 +212,29 @@ public class MoveRefactorAction extends RefactorAction {
     @Override
     protected String getUndoLabel() {
         return UNDO_LABEL;
+    }
+    
+    @Override
+	protected void setEnabledState() {
+        boolean enable = false;
+
+        if (selection != null && SelectionUtilities.isSingleSelection(selection)
+            && SelectionUtilities.isAllIResourceObjects(selection)) {
+            IResource resTemp = (IResource)SelectionUtilities.getSelectedIResourceObjects(selection).get(0);
+
+            enable = ! ModelUtil.isIResourceReadOnly(resTemp);
+            if( enable && resTemp instanceof IProject ) {
+            	enable = false;
+            }
+            
+            if( enable ) {
+	            resSelectedResource = resTemp;
+            }
+        }
+        
+        if (action.isEnabled() != enable) {
+            action.setEnabled(enable);
+        }
     }
 
 }
