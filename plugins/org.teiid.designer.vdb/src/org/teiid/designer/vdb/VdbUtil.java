@@ -214,6 +214,21 @@ public class VdbUtil {
 
         return 0;
     }
+    
+    /**
+     * @param modelElement the vdb model element
+     * @return the uuid string. may be null
+     */
+    public static String getUuid(final ModelElement modelElement) {
+	    for (final PropertyElement property : modelElement.getProperties()) {
+	        final String name = property.getName();
+	        if (ModelElement.MODEL_UUID.equals(name)) {
+	            return property.getValue();
+	        }
+	    }
+	    
+	    return null;
+    }
 
     static JAXBContext getJaxbContext() throws JAXBException {
         return JAXBContext.newInstance(new Class<?>[] {VdbElement.class});
@@ -278,30 +293,65 @@ public class VdbUtil {
 			Vdb theVdb = new Vdb(theVdbFile, new NullProgressMonitor());
 			if (manifest != null) {
 				for (ModelElement model : manifest.getModels()) {
-					String modelName = model.getName()+ ModelUtil.DOT_EXTENSION_XMI;
+					String modelName = model.getName();
+					String modelUuid = getUuid(model);
+					
+					IResource resource = null;
+					
 					// Check if model with that name exists in project
-					IResource[] resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
-					if( resources.length != 1 ) {
-						statuses.add(new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID, 
-								VdbPlugin.UTIL.getString("vdbValidationWarning_noModelInWorkspace", modelName,theVdb.getName()))); //$NON-NLS-1$
-					} else if( resources.length == 1 ) {
-						String path = model.getPath();
-						IResource matchingResource = resources[0];
-						// Check IPath
-						IPath iPath = new Path(path);
-						IResource resource = ModelerCore.getWorkspace().getRoot().findMember(iPath);
+					// first check if uuid == null
+					if( modelUuid == null ) {
 						
-						if( resource == null ) {
-							statuses.add(new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
-									VdbPlugin.UTIL.getString("vdbValidationWarning_modelExistsInDifferentLocation", //$NON-NLS-1$
-									modelName, theVdbFile.getName(), matchingResource.getFullPath()))); 
+						IResource[] resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
+						if( resources.length == 1 ) {
+							resource = resources[0];
 						}
 						
-						// Is it in sync
-						if( ! isSynchronized(theVdb, (IFile)matchingResource)) {
+						if( resource != null ) {
+							statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID, 
+									VdbPlugin.UTIL.getString("vdbValidationWarning_modelUuidMissing", modelName, theVdbFile.getName())) ); //$NON-NLS-1$
+						}
+					} else {
+						// Check if uuid exists in workspace or not
+						resource = WorkspaceResourceFinderUtil.findIResourceByUUID(modelUuid);
+						if( resource == null ) {
+							// Find by name
+							IResource[] resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
+							if( resources.length == 1 ) {
+								resource = resources[0];
+							}
+						}
+					}
+					
+					boolean nameChanged = false;
+					
+					if( resource == null ) {
+						statuses.add(  new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID, 
+								VdbPlugin.UTIL.getString("vdbValidationWarning_noModelInWorkspace", modelName, theVdbFile.getName())) ); //$NON-NLS-1$
+					} else {
+						// check same name
+						String resourceName = resource.getFullPath().removeFileExtension().lastSegment();
+						if( ! modelName.equals(resourceName) ) {
+							nameChanged = true;
+						}
+
+						String path = model.getPath();
+						
+						// Check IPath
+						IPath iPath = new Path(path);
+						IResource expectedResourceAtPath = ModelerCore.getWorkspace().getRoot().findMember(iPath);
+						
+						if( expectedResourceAtPath == null || nameChanged ) {
 							statuses.add(new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
-									VdbPlugin.UTIL.getString("vdbValidationWarning_modelNotSynchronized", //$NON-NLS-1$
-									modelName, theVdbFile.getName()))); 
+									VdbPlugin.UTIL.getString("vdbValidationWarning_modelExistsWithDifferentLocationOrName", //$NON-NLS-1$
+									modelName, theVdbFile.getName(), resource.getFullPath()))); 
+						} else {
+							// Is it in sync
+							if( ! isSynchronized(theVdb, (IFile)expectedResourceAtPath)) {
+								statuses.add(new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
+										VdbPlugin.UTIL.getString("vdbValidationWarning_modelNotSynchronized", //$NON-NLS-1$
+										modelName, theVdbFile.getName()))); 
+							}
 						}
 					}
 				}
@@ -419,33 +469,52 @@ public class VdbUtil {
 				Vdb actualVDB = new Vdb(theVdb, true, new NullProgressMonitor());
 				
 				for (ModelElement model : manifest.getModels()) {
-					String modelName = model.getName()+ ModelUtil.DOT_EXTENSION_XMI;
-					IResource[] resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
-					if( resources.length == 1 ) {
+					String modelName = model.getName();
+					String modelUuid = getUuid(model);
+					
+					IResource resource = null;
+					
+					boolean addTheUuid =  (modelUuid == null);
+					boolean nameWasChanged = false;
+
+					if( !addTheUuid ) {
+						resource = WorkspaceResourceFinderUtil.findIResourceByUUID(modelUuid);
+						nameWasChanged = ! resource.getFullPath().removeFileExtension().lastSegment().equalsIgnoreCase(modelName);
+					} else {
+						// Find my model name
+						IResource[] resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(model.getName()+ ModelUtil.DOT_EXTENSION_XMI, theProject);
+						if( resources.length == 1 ) {
+							resource = resources[0];
+						}
+					}
+					
+					// Check if resource is found or not.
+					if( resource != null ) {
 						String path = model.getPath();
-						IFile matchingResource = (IFile)resources[0];
-						if( modelInVdb(theVdb, matchingResource) ) {
-							// Check IPath
-							IPath iPath = new Path(path);
-							IResource resource = ModelerCore.getWorkspace().getRoot().findMember(iPath);
-							
-							if( resource == null ) {
-								
-						 		for( VdbModelEntry modelEntry : actualVDB.getModelEntries()) {
-									if( modelEntry.getName().lastSegment().equalsIgnoreCase(matchingResource.getName()) ) {
-										actualVDB.removeEntry(modelEntry);
-										actualVDB.addModelEntry(matchingResource.getFullPath(), new NullProgressMonitor());
-										changed = true;
-						 			}
-						 		}
-							}
-							
+						
+						// Check IPath
+						IPath iPath = new Path(path);
+						IResource expectedResourceAtPath = ModelerCore.getWorkspace().getRoot().findMember(iPath);
+						
+						boolean fixThePath = (expectedResourceAtPath == null);
+
+						if( fixThePath || nameWasChanged || addTheUuid) {
 					 		for( VdbModelEntry modelEntry : actualVDB.getModelEntries()) {
-					 			if( modelEntry.getSynchronization() == Synchronization.NotSynchronized) {
-					 				outOfSync = true;
+								if( modelEntry.getName().removeFileExtension().lastSegment().equalsIgnoreCase(modelName) ) {
+									actualVDB.removeEntry(modelEntry);
+									actualVDB.addModelEntry(resource.getFullPath(), new NullProgressMonitor());
+									changed = true;
+									break;
 					 			}
 					 		}
+
 						}
+							
+				 		for( VdbModelEntry modelEntry : actualVDB.getModelEntries()) {
+				 			if( modelEntry.getSynchronization() == Synchronization.NotSynchronized) {
+				 				outOfSync = true;
+				 			}
+				 		}
 					}
 				}
 				

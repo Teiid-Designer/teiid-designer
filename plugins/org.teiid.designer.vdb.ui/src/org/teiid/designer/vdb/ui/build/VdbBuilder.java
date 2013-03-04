@@ -45,6 +45,37 @@ public class VdbBuilder extends IncrementalProjectBuilder {
 	public static final String WRONG_PATH = "wrongPath"; //$NON-NLS-1$
 	@SuppressWarnings("javadoc")
 	public static final String OUT_OF_SYNC = "outOfSync"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String NAME_CHANGED = "nameChanged"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String MISSING_UUID = "missingUuid"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String MISSING_MODEL = "missingModel"; //$NON-NLS-1$
+	
+    private enum MarkerType {
+    	DEFAULT,
+    	WRONG_PATH, 
+    	OUT_OF_SYNC, 
+    	NAME_CHANGED, 
+    	MISSING_UUID,
+    	MISSING_MODEL;
+
+    }
+    
+    /**
+public enum Currency {
+        PENNY(1), NICKLE(5), DIME(10), QUARTER(25);
+        private int value;
+
+        private Currency(int value) {
+                this.value = value;
+        }
+};  
+
+Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutorial.html#ixzz2MJdMYTAM
+
+    	*/
+	
     /**
      * {@inheritDoc}
      * 
@@ -115,12 +146,24 @@ public class VdbBuilder extends IncrementalProjectBuilder {
     		for( IStatus iStatus : status.getChildren() )  {
     			switch( iStatus.getSeverity() ) {
     			case IStatus.WARNING: {
-    				boolean hasWrongPath = iStatus.getMessage().indexOf("exists in your project") > 0; //$NON-NLS-1$
-    				boolean outOfSync = iStatus.getMessage().indexOf("is not synchronized") > 0; //$NON-NLS-1$
-    				createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, hasWrongPath, outOfSync);
+    				if( iStatus.getMessage().indexOf("exists in your project") > 0 ) { //$NON-NLS-1$
+    					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.WRONG_PATH);
+    				}
+    				if( iStatus.getMessage().indexOf("is not synchronized") > 0 ) { //$NON-NLS-1$
+    					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.OUT_OF_SYNC);
+    				}
+    				if( iStatus.getMessage().indexOf("has different name than model") > 0 ) { //$NON-NLS-1$
+    					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.NAME_CHANGED);
+    				}
+    				if( iStatus.getMessage().indexOf("is missing its ID") > 0 ) { //$NON-NLS-1$
+    					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.MISSING_UUID);
+    				}
+    				if( iStatus.getMessage().indexOf("does not exist") > 0 ) { //$NON-NLS-1$
+    					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.MISSING_MODEL);
+    				}
     			} break;
     			case IStatus.ERROR: {
-    				createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, false, false);
+    				createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.DEFAULT);
     			} break;
     			}
     		}
@@ -138,15 +181,13 @@ public class VdbBuilder extends IncrementalProjectBuilder {
      * @param severity the marker severity
      * @param message the marker message (precondition: not <code>null</code> or empty)
      * @param markerId the Id for the marker
-     * @param hasWrongPath wrong path indicator
-     * @param outOfSync out of sync indicator
+     * @param markerType
      */
     private void createMarker( IFile file,
                                int severity,
                                String message,
                                String markerId,
-                               boolean hasWrongPath,
-                               boolean outOfSync) {
+                               MarkerType markerType) {
         // parameters
         assert (file != null) : "file is null"; //$NON-NLS-1$
         assert ((message != null) && !message.isEmpty()) : "message is empty"; //$NON-NLS-1$
@@ -156,11 +197,16 @@ public class VdbBuilder extends IncrementalProjectBuilder {
         attributes.put(IMarker.SEVERITY, severity);
         attributes.put(IMarker.MESSAGE, message);
         
-        // Add attribute if wrong path so Quick Fix can find it
-        if( hasWrongPath ) attributes.put(WRONG_PATH, true);
-        // Add attribute if out of sync so Quick Fix can find it
-        if( outOfSync ) attributes.put(OUT_OF_SYNC, true);
-
+		if (markerType == MarkerType.WRONG_PATH) {
+			attributes.put(WRONG_PATH, true);
+		} else if (markerType == MarkerType.OUT_OF_SYNC) {
+			attributes.put(OUT_OF_SYNC, true);
+		} else if (markerType == MarkerType.NAME_CHANGED) {
+			attributes.put(NAME_CHANGED, true);
+		} else if (markerType == MarkerType.MISSING_UUID) {
+			attributes.put(MISSING_UUID, true);
+		}
+        
         try {
             MarkerUtilities.createMarker(file, attributes, markerId);
         } catch (CoreException e) {

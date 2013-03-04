@@ -49,6 +49,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.ResourceFinder;
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.core.index.IndexUtil;
+import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.resource.MMXmiResource;
 import org.teiid.designer.core.xmi.XMIHeader;
@@ -1027,6 +1028,33 @@ public class ModelUtil {
             }
         }
         return false;
+    }
+    
+    /**
+     * @param obj the target object
+     * @return the uuid string
+     * @throws ModelWorkspaceException if issues finding <code>ModelResource</code>
+     */
+    public static String getUuidString(Object obj) {
+    	ModelResource mr = null;
+    	String uuid = null;
+    	try {
+			if (obj instanceof ModelResource) {
+				mr = (ModelResource)obj;
+			} else if (obj instanceof IFile) {
+			    mr = ModelUtil.getModelResource((IFile)obj, false);
+			} else if (obj instanceof Resource) {
+			    mr = ModelerCore.getModelEditor().findModelResource((Resource)obj);
+			}
+			
+			if( mr != null ) {
+				uuid = mr.getUuid();
+			}
+		} catch (ModelWorkspaceException ex) {
+			ModelerCore.Util.log(IStatus.ERROR, ex, ex.getMessage());
+		}
+    	
+    	return uuid;
     }
 
     /**

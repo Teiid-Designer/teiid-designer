@@ -128,10 +128,8 @@ public class VdbUiRefactorHandler implements IRefactorNonModelResourceHandler {
 				closeVdbEditor(editor);
 			}
 		}
-    	
-    	
-    	
-		return true;
+
+		return result;
 	}
 
     /**

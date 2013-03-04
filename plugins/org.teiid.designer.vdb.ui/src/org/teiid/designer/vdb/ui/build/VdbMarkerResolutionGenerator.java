@@ -26,7 +26,9 @@ public class VdbMarkerResolutionGenerator implements IMarkerResolutionGenerator 
     @Override
     public IMarkerResolution[] getResolutions(IMarker marker) {
     	Collection<IMarkerResolution> resolutions = new ArrayList<IMarkerResolution>();
-    	if( marker.getAttribute(VdbBuilder.WRONG_PATH, false) || marker.getAttribute(VdbBuilder.OUT_OF_SYNC, false)) {
+    	if( marker.getAttribute(VdbBuilder.WRONG_PATH, false) || 
+    		marker.getAttribute(VdbBuilder.OUT_OF_SYNC, false) ||
+    	 marker.getAttribute(VdbBuilder.MISSING_UUID, false)) {
     		resolutions.add(new VdbModelPathResolution());
     	}
         return resolutions.toArray(new IMarkerResolution[resolutions.size()]);

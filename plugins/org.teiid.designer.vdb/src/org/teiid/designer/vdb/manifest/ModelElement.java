@@ -28,6 +28,11 @@ public class ModelElement extends EntryElement {
 	/**
 	 * model class property key
      */
+    public static final String MODEL_UUID = "modelUuid"; //$NON-NLS-1$
+    
+	/**
+	 * model class property key
+     */
     public static final String MODEL_CLASS = "modelClass"; //$NON-NLS-1$
     
     /**
@@ -85,6 +90,10 @@ public class ModelElement extends EntryElement {
         for (final Problem problem : entry.getProblems())
             getProblems().add(new ProblemElement(problem));
         final List<PropertyElement> props = getProperties();
+        String modelUuid = entry.getModelUuid();
+        if( modelUuid != null ) {
+        	props.add(new PropertyElement(MODEL_UUID, entry.getModelUuid()));
+        }
         String modelClass = entry.getModelClass();
         if( modelClass != null ) {
         	props.add(new PropertyElement(MODEL_CLASS, entry.getModelClass()));

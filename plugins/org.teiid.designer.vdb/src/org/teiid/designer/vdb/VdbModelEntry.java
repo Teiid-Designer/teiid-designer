@@ -88,6 +88,7 @@ public final class VdbModelEntry extends VdbEntry {
     }
 
     private final String indexName;
+    private String modelUuid;
     private final Set<Problem> problems = new HashSet<Problem>();
     private final AtomicBoolean visible = new AtomicBoolean(true);
     private final CopyOnWriteArraySet<VdbModelEntry> imports = new CopyOnWriteArraySet<VdbModelEntry>();
@@ -119,8 +120,10 @@ public final class VdbModelEntry extends VdbEntry {
         builtIn = getFinder().isBuiltInResource(model);
         modelClass = findModelClass(model);
         if (ModelUtil.isXmiFile(model)) {
+        	final ModelResource mr = ModelerCore.getModelEditor().findModelResource(model);
             final EmfResource emfModel = (EmfResource)model;
             type = emfModel.getModelType().getName();
+            modelUuid = ModelUtil.getUuidString(mr);
 
             // TODO: Backing out the auto-set visibility to FALSE for physical models (Preview won't work)
             // visible.set(false);
@@ -134,7 +137,6 @@ public final class VdbModelEntry extends VdbEntry {
             if (ModelUtil.isPhysical(model)) {
                 final String defaultName = createDefaultJndiName(name);
                 source.set(defaultName);
-                final ModelResource mr = ModelerCore.getModelEditor().findModelResource(model);
                 final ConnectionInfoHelper helper = new ConnectionInfoHelper();
                 final String translator = helper.getTranslatorName(mr);
                 this.translator.set(translator == null ? EMPTY_STR : translator);
@@ -262,6 +264,7 @@ public final class VdbModelEntry extends VdbEntry {
             if (ModelElement.BUILT_IN.equals(name)) builtIn = Boolean.parseBoolean(property.getValue());
             else if (ModelElement.INDEX_NAME.equals(name)) indexName = property.getValue();
             else if (ModelElement.MODEL_CLASS.equals(name)) modelClass = property.getValue();
+            else if (ModelElement.MODEL_UUID.equals(name)) modelUuid = property.getValue();
             else if (ModelElement.IMPORT_VDB_REFERENCE.equals(name)) {
             	importVdbNames.add(property.getValue());
             }
@@ -469,7 +472,14 @@ public final class VdbModelEntry extends VdbEntry {
     }
     
     /**
-     * @return <code>true</code> if the associated model is a hidden built-in model.
+     * @return model uuid
+     */
+    public final String getModelUuid() {
+        return modelUuid;
+    }
+    
+    /**
+     * @return model class
      */
     public final String getModelClass() {
         return modelClass;

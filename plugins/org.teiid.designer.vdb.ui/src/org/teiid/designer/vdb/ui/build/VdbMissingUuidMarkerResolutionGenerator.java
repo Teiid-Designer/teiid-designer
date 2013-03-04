@@ -7,9 +7,11 @@
 */
 package org.teiid.designer.vdb.ui.build;
 
+import org.teiid.designer.vdb.ui.build.VdbMarkerResolutionGenerator;
+
 /**
  *
  */
-public class VdbOutOfSyncMarkerResolutionGenerator extends VdbMarkerResolutionGenerator {
+public class VdbMissingUuidMarkerResolutionGenerator extends VdbMarkerResolutionGenerator {
 
 }
