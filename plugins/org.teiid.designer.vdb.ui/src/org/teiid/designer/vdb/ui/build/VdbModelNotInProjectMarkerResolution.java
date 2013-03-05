@@ -10,22 +10,17 @@ package org.teiid.designer.vdb.ui.build;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IMarkerResolution;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.vdb.VdbConstants;
-import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.Messages;
-import org.teiid.designer.vdb.ui.editor.VdbEditor;
-import org.teiid.designer.vdb.ui.util.VdbUiRefactorHandler;
 import org.teiid.designer.vdb.ui.util.VdbUiUtil;
 
 /**
  *
  */
-public class VdbModelPathResolution implements IMarkerResolution {
+public class VdbModelNotInProjectMarkerResolution  implements IMarkerResolution {
 
     /**
      * {@inheritDoc}
@@ -34,7 +29,7 @@ public class VdbModelPathResolution implements IMarkerResolution {
      */
     @Override
     public String getLabel() {
-        return Messages.synchronizeVdbLabel;
+        return Messages.extractMissingModelsLabel;
     }
 
     /**
@@ -49,14 +44,6 @@ public class VdbModelPathResolution implements IMarkerResolution {
         // Fix the Marked Model Resource
         if(isVdbFile(resource)) {
             final IFile theVdbFile = (IFile)resource;
-            
-        	VdbEditor editor = VdbUiRefactorHandler.getVdbEditorForFile(theVdbFile);
-        	if( editor != null ) {
-        		String message = NLS.bind(Messages.fixVdbPath_OpenEditorMessage, theVdbFile.getName());
-        		boolean result = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(), Messages.fixVdbPath_OpenEditorTitle, message);
-        		if( !result ) return;
-        		VdbUiRefactorHandler.closeVdbEditor(editor);
-        	}
 
             // Add the selected Med
             UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
@@ -70,7 +57,7 @@ public class VdbModelPathResolution implements IMarkerResolution {
     }
     
     void fixVdb( IFile theVdb ) {
-    	VdbUiUtil.synchronizeVdb(theVdb, false);
+    	VdbUiUtil.synchronizeWorkspace(theVdb);
     }
     
     /**

@@ -26,6 +26,8 @@ public class Messages  extends NLS {
     public static String fixVdbPath_OpenEditorMessage;
 
 	public static String synchronizeVdbLabel;
+	public static String extractMissingModelsLabel;
+	public static String extractMissingModelsAndSyncLabel;
     
     static {
         NLS.initializeMessages("org.teiid.designer.vdb.ui.messages", Messages.class); //$NON-NLS-1$

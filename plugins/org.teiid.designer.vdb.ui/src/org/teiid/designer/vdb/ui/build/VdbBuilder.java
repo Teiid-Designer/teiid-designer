@@ -205,7 +205,11 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
 			attributes.put(NAME_CHANGED, true);
 		} else if (markerType == MarkerType.MISSING_UUID) {
 			attributes.put(MISSING_UUID, true);
+		} else if (markerType == MarkerType.MISSING_MODEL) {
+			attributes.put(MISSING_MODEL, true);
 		}
+		
+		attributes.put(IMarker.LOCATION, file.getName());
         
         try {
             MarkerUtilities.createMarker(file, attributes, markerId);

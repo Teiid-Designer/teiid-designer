@@ -14,10 +14,11 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.IMarkerResolutionGenerator;
 
+
 /**
- * Quick fix to update model path in VDB for local workspace location change
+ *
  */
-public class VdbMarkerResolutionGenerator implements IMarkerResolutionGenerator {
+public class VdbModelNotInProjectMarkerResolutionGenerator implements IMarkerResolutionGenerator {
     /**
      * {@inheritDoc}
      * 
@@ -27,12 +28,11 @@ public class VdbMarkerResolutionGenerator implements IMarkerResolutionGenerator 
     public IMarkerResolution[] getResolutions(IMarker marker) {
     	Collection<IMarkerResolution> resolutions = new ArrayList<IMarkerResolution>();
     	
-    	if( marker.getAttribute(VdbBuilder.WRONG_PATH, false) || 
-    		marker.getAttribute(VdbBuilder.OUT_OF_SYNC, false) ||
-    	 marker.getAttribute(VdbBuilder.MISSING_UUID, false)) {
-    		resolutions.add(new VdbModelPathResolution());
+    	if( marker.getAttribute(VdbBuilder.MISSING_MODEL, false) ) {
+    		resolutions.add(new VdbExtractModelsSyncVdbMarkerResolution());
+    		resolutions.add(new VdbModelNotInProjectMarkerResolution());
+    		
     	}
-    	
         return resolutions.toArray(new IMarkerResolution[resolutions.size()]);
     }
 }

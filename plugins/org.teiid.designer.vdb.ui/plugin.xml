@@ -110,6 +110,13 @@
           <attribute name="missingUuid" value="true"/>
        </markerResolutionGenerator> 
 	</extension>
+	<extension point="org.eclipse.ui.ide.markerResolution"> 
+	   <markerResolutionGenerator 
+	      class="org.teiid.designer.vdb.ui.build.VdbModelNotInProjectMarkerResolutionGenerator" 
+	      markerType="org.teiid.designer.vdb.ui.vdbMarker"> 
+          <attribute name="missingModel" value="true"/>
+       </markerResolutionGenerator> 
+	</extension>
 	  <extension
          point="org.teiid.designer.core.refactorModelHandler">
       <refactorHandler

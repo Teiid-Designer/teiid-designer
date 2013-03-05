@@ -25,7 +25,6 @@ import javax.xml.validation.SchemaFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -41,7 +40,6 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.vdb.Vdb.Xml;
-import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
@@ -151,7 +149,12 @@ public class VdbUtil {
         return false;
     }
 
-    private static VdbElement getVdbManifest( final IFile file ) {
+    /**
+     * Utility method to extract a copy of a VDB zip file's vdb.xml in VDB element xml structure
+     * @param file
+     * @return the root VdbElement
+     */
+    public static VdbElement getVdbManifest( final IFile file ) {
         final VdbElement[] manifest = new VdbElement[1];
 
         if (!file.exists()) {
@@ -309,7 +312,7 @@ public class VdbUtil {
 						
 						if( resource != null ) {
 							statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID, 
-									VdbPlugin.UTIL.getString("vdbValidationWarning_modelUuidMissing", modelName, theVdbFile.getName())) ); //$NON-NLS-1$
+									VdbPlugin.UTIL.getString("vdbValidationWarning_modelUuidMissing", modelName)) ); //$NON-NLS-1$
 						}
 					} else {
 						// Check if uuid exists in workspace or not
@@ -327,7 +330,7 @@ public class VdbUtil {
 					
 					if( resource == null ) {
 						statuses.add(  new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID, 
-								VdbPlugin.UTIL.getString("vdbValidationWarning_noModelInWorkspace", modelName, theVdbFile.getName())) ); //$NON-NLS-1$
+								VdbPlugin.UTIL.getString("vdbValidationWarning_noModelInWorkspace", modelName)) ); //$NON-NLS-1$
 					} else {
 						// check same name
 						String resourceName = resource.getFullPath().removeFileExtension().lastSegment();
@@ -344,13 +347,13 @@ public class VdbUtil {
 						if( expectedResourceAtPath == null || nameChanged ) {
 							statuses.add(new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
 									VdbPlugin.UTIL.getString("vdbValidationWarning_modelExistsWithDifferentLocationOrName", //$NON-NLS-1$
-									modelName, theVdbFile.getName(), resource.getFullPath()))); 
+									modelName, resource.getFullPath()))); 
 						} else {
 							// Is it in sync
 							if( ! isSynchronized(theVdb, (IFile)expectedResourceAtPath)) {
 								statuses.add(new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
 										VdbPlugin.UTIL.getString("vdbValidationWarning_modelNotSynchronized", //$NON-NLS-1$
-										modelName, theVdbFile.getName()))); 
+										modelName))); 
 							}
 						}
 					}
@@ -452,87 +455,21 @@ public class VdbUtil {
 		
 		return misMatchedResources;
 	}
-
-	 
+	
 	/**
-	 * @param theVdb the VDB
+	 * @param modelElement
+	 * @return the collection of model import strings
 	 */
-	public static void synchronizeVdb(final IFile theVdb) {
-		if (theVdb.exists()) {
-			IProject theProject = theVdb.getProject();
-			
-			VdbElement manifest = VdbUtil.getVdbManifest(theVdb);
-			if (manifest != null) {
-				boolean changed = false;
-				boolean outOfSync = false;
-				
-				Vdb actualVDB = new Vdb(theVdb, true, new NullProgressMonitor());
-				
-				for (ModelElement model : manifest.getModels()) {
-					String modelName = model.getName();
-					String modelUuid = getUuid(model);
-					
-					IResource resource = null;
-					
-					boolean addTheUuid =  (modelUuid == null);
-					boolean nameWasChanged = false;
-
-					if( !addTheUuid ) {
-						resource = WorkspaceResourceFinderUtil.findIResourceByUUID(modelUuid);
-						nameWasChanged = ! resource.getFullPath().removeFileExtension().lastSegment().equalsIgnoreCase(modelName);
-					} else {
-						// Find my model name
-						IResource[] resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(model.getName()+ ModelUtil.DOT_EXTENSION_XMI, theProject);
-						if( resources.length == 1 ) {
-							resource = resources[0];
-						}
-					}
-					
-					// Check if resource is found or not.
-					if( resource != null ) {
-						String path = model.getPath();
-						
-						// Check IPath
-						IPath iPath = new Path(path);
-						IResource expectedResourceAtPath = ModelerCore.getWorkspace().getRoot().findMember(iPath);
-						
-						boolean fixThePath = (expectedResourceAtPath == null);
-
-						if( fixThePath || nameWasChanged || addTheUuid) {
-					 		for( VdbModelEntry modelEntry : actualVDB.getModelEntries()) {
-								if( modelEntry.getName().removeFileExtension().lastSegment().equalsIgnoreCase(modelName) ) {
-									actualVDB.removeEntry(modelEntry);
-									actualVDB.addModelEntry(resource.getFullPath(), new NullProgressMonitor());
-									changed = true;
-									break;
-					 			}
-					 		}
-
-						}
-							
-				 		for( VdbModelEntry modelEntry : actualVDB.getModelEntries()) {
-				 			if( modelEntry.getSynchronization() == Synchronization.NotSynchronized) {
-				 				outOfSync = true;
-				 			}
-				 		}
-					}
-				}
-				
-				if( outOfSync ) {
-					actualVDB.synchronize(new NullProgressMonitor());
-					changed = true;
-				}
-				
-				if( changed ) {
-			 		actualVDB.save(new NullProgressMonitor());
-			 		try {
-						theVdb.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
-					} catch (CoreException ex) {
-						VdbPlugin.UTIL.log(IStatus.ERROR, ex, ex.getMessage());
-					}
-				}
+	public static Collection<String> getModelImports(ModelElement modelElement) {
+		Collection<String> imports = new ArrayList<String>();
+		
+		for( PropertyElement element : modelElement.getProperties() ) {
+			if( element.getName().equalsIgnoreCase(ModelElement.IMPORTS) ) {
+				imports.add(element.getValue());
 			}
 		}
-			
+		
+		return imports;
 	}
+
 }
