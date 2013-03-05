@@ -37,7 +37,7 @@
       <repository location="http://download.jboss.org/jbosstools/updates/requirements/juno/201209280900-R/"/>
     </location>
 
-    <!-- Eclipse Zest -->
+    <!-- Eclipse Zest : ESB -->
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.zest.feature.group" version="1.5.0.201208201742"/>
       <repository location="http://download.jboss.org/jbosstools/updates/requirements/juno/201209280900-R/"/>
@@ -66,6 +66,12 @@
     <!-- Modeling - OCL -->
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.ocl.all.feature.group" version="4.0.1.v20120917-1739"/>
+      <repository location="http://download.jboss.org/jbosstools/updates/requirements/juno/201209280900-R/"/>
+    </location>
+
+    <!-- javax.ws.rs : Fuse -->
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="javax.ws.rs" version="1.1.1.v20101004-1200"/>
       <repository location="http://download.jboss.org/jbosstools/updates/requirements/juno/201209280900-R/"/>
     </location>
 
