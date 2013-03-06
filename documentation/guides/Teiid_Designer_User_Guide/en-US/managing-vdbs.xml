@@ -53,7 +53,7 @@
 		<para>Teiid 8.1 introduced the ability to treat your deployed VDB as just another database where the 
 			database category is your VDB name and each visible model in your VDB is treated as a schema. 
 			This is accomplished via a new &lt;import-vdb&gt; element in the vdb.xml definition. 
-			(see <ulink url="https://docs.jboss.org/author/display/TEIID/VDB+Reuse">Teiid 8.2 VDB Reuse section</ulink>). 
+			(see <ulink url="https://docs.jboss.org/author/display/TEIID/VDB+Reuse">Teiid VDB Reuse section</ulink>). 
 			By allowing VDB's to referenced other VDBs, users can create reusable database components and reduce 
 			the amount of modeling required to create complex transformations.</para>
 

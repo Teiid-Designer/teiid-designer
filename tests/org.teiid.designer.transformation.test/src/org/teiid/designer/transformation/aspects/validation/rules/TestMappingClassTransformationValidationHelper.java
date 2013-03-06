@@ -183,7 +183,7 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
 
             /* 
              * Changes to client runtime mean a different result. Since canonical name has been removed from
-             * the Symbol implementation in 8.2, the word 'input' is case-sensitive and never upper-cased hence
+             * the Symbol implementation in 8.0+, the word 'input' is case-sensitive and never upper-cased hence
              * the validator never decides that 'input' and 'INPUT' are the same, which is what happened in 7.7.
              */
             if (ModelerCore.getTeiidServerVersion().isSevenServer()) {
@@ -224,7 +224,7 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
 
             /* 
              * Changes to client runtime mean a different result. Since canonical name has been removed from
-             * the Symbol implementation in 8.2, the word 'input' is case-sensitive and never upper-cased hence
+             * the Symbol implementation in 8.0+, the word 'input' is case-sensitive and never upper-cased hence
              * the validator never decides that 'input' and 'INPUT' are the same, which is what happened in 7.7.
              */
             if (ModelerCore.getTeiidServerVersion().isSevenServer()) {

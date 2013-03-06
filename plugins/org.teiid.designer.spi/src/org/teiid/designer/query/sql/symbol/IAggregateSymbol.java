@@ -27,6 +27,7 @@ public interface IAggregateSymbol<LV extends ILanguageVisitor>
         XMLAGG,
         TEXTAGG,
         ARRAY_AGG,
+        JSONARRAY_AGG,
         ANY,
         SOME,
         EVERY,

@@ -4,3 +4,6 @@
 [submodule "plugins/teiid/org.teiid.8.2.x"]
 	path = plugins/teiid/org.teiid.8.2.x
 	url = git://github.com/Teiid-Designer/teiid.git
+[submodule "plugins/teiid/org.teiid.8.3.x"]
+	path = plugins/teiid/org.teiid.8.3.x
+	url = git://github.com/Teiid-Designer/teiid.git

@@ -58,7 +58,9 @@ public interface IFunctionLibrary<F extends IFunctionForm, FD extends IFunctionD
 
         SPACE("space"), //$NON-NLS-1$
         ARRAY("array"), //$NON-NLS-1$
-        ARRAY_GET("array_get"); //$NON-NLS-1$
+        ARRAY_GET("array_get"), //$NON-NLS-1$
+
+        JSONARRAY("jsonarray"); //$NON-NLS-1$
         
         private final String text;
         
