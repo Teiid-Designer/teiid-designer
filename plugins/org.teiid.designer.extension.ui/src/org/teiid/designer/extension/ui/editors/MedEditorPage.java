@@ -133,24 +133,21 @@ public abstract class MedEditorPage extends FormPage {
     /**
      * @param errorMessage the message being updated in the {@link IMessageManager message manager} (never <code>null</code>)
      */
-    protected void updateMessage( ErrorMessage errorMessage ) {
+    protected void updateMessage(ErrorMessage errorMessage) {
         assert (errorMessage != null) : "errorMessage is null"; //$NON-NLS-1$
         IMessageManager msgMgr = ((ModelExtensionDefinitionEditor)getEditor()).getMessageManager();
 
-        if (errorMessage.isOk()) {
-            if (errorMessage.getControl() == null) {
+        if (errorMessage.getControl() == null) {
+            if (errorMessage.isOk()) {
                 msgMgr.removeMessage(errorMessage.getKey());
             } else {
-                msgMgr.removeMessage(errorMessage.getKey(), errorMessage.getControl());
+                msgMgr.addMessage(errorMessage.getKey(),
+                                  errorMessage.getMessage(),
+                                  errorMessage.getData(),
+                                  errorMessage.getMessageType());
             }
         } else {
-            if (errorMessage.getControl() == null) {
-                msgMgr.addMessage(errorMessage.getKey(), errorMessage.getMessage(), errorMessage.getData(),
-                                  errorMessage.getMessageType());
-            } else {
-                msgMgr.addMessage(errorMessage.getKey(), errorMessage.getMessage(), errorMessage.getData(),
-                                  errorMessage.getMessageType(), errorMessage.getControl());
-            }
+            errorMessage.update(msgMgr);
         }
     }
 

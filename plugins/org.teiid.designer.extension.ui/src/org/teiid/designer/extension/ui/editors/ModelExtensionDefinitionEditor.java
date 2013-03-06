@@ -586,7 +586,9 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
         // pass event on to medEditorPages
         for (MedEditorPage page : this.medEditorPages.keySet()) {
+            getMessageManager().setAutoUpdate(false);
             page.handlePropertyChanged(e);
+            getMessageManager().setAutoUpdate(true);
         }
     }
 
