@@ -194,12 +194,7 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     private void addMessage(ErrorMessage errorMsg) {
-        if (errorMsg.isOk()) {
-            this.scrolledForm.getMessageManager().removeMessage(errorMsg.getKey(), errorMsg.getControl());
-        } else {
-            this.scrolledForm.getMessageManager().addMessage(errorMsg.getKey(), errorMsg.getMessage(), null,
-                                                             errorMsg.getMessageType(), errorMsg.getControl());
-        }
+        errorMsg.update(this.scrolledForm.getMessageManager());
     }
 
     private void configureColumn(TableViewerColumn viewerColumn,
@@ -1334,7 +1329,6 @@ final class EditPropertyDialog extends FormDialog {
         }
 
         validateInitialValue(hasInitialValue, valueIsFixed);
-        addMessage(this.initialValueError);
         updateState();
     }
 
@@ -1364,6 +1358,7 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     void handlePropertyChanged(PropertyChangeEvent e) {
+        this.scrolledForm.getMessageManager().setAutoUpdate(false);
         String propName = e.getPropertyName();
 
         if (PropertyName.ADVANCED.toString().equals(propName)) {
@@ -1420,6 +1415,7 @@ final class EditPropertyDialog extends FormDialog {
 
         // update buttons enabled state and dialog message
         updateState();
+        this.scrolledForm.getMessageManager().setAutoUpdate(true);
     }
 
     void handleRemoveAllowedValue() {

@@ -58,6 +58,7 @@ import org.teiid.designer.core.extension.AbstractMetaclassNameProvider;
 import org.teiid.designer.core.extension.ModelTypeMetaclassNameFactory;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ExtendableMetaclassNameProvider;
+import org.teiid.designer.extension.definition.MedStatus;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
 import org.teiid.designer.extension.definition.ValidationStatus;
@@ -896,7 +897,7 @@ public class PropertiesEditorPage extends MedEditorPage {
         final String[] metaclasses = getMed().getExtendedMetaclasses();
 
         // validate with MED validator
-        ValidationStatus status = ModelExtensionDefinitionValidator.validateMetaclassNames(metaclasses, true);
+        MedStatus status = ModelExtensionDefinitionValidator.validateMetaclassNames(metaclasses, true);
 
         if (!status.isError()) {
             // validate against metamodel

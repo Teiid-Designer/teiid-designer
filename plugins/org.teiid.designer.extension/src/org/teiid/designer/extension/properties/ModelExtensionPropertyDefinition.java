@@ -309,6 +309,7 @@ public interface ModelExtensionPropertyDefinition extends Cloneable, PropertyDef
     /**
      * These runtime types <strong>MUST</strong>> match those listed in the model extension XSD.
      */
+    @SuppressWarnings( "javadoc" )
     public enum Type {
         BIG_DECIMAL("bigdecimal"), //$NON-NLS-1$
         BIG_INTEGER("biginteger"), //$NON-NLS-1$
@@ -385,6 +386,9 @@ public interface ModelExtensionPropertyDefinition extends Cloneable, PropertyDef
         }
     }
 
+    /**
+     * Utilities for extension properties.
+     */
     class Utils {
 
         /**
@@ -482,16 +486,18 @@ public interface ModelExtensionPropertyDefinition extends Cloneable, PropertyDef
         }
 
         /**
+         * @param valueTypeMsg a message describing the type of value being validated (cannot be <code>null</code>)
          * @param runtimeType the runtime type (can be <code>null</code>)
          * @param proposedValue the proposed value (can be <code>null</code> or empty)
          * @param required indicates if the property requires a value
          * @param allowedValues the allowed values (can be <code>null</code> or empty)
          * @return the error message or <code>null</code>
          */
-        public static String isValidValue( Type runtimeType,
-                                           String proposedValue,
-                                           boolean required,
-                                           String[] allowedValues ) {
+        public static String isValidValue( final String valueTypeMsg,
+                                           final Type runtimeType,
+                                           final String proposedValue,
+                                           final boolean required,
+                                           final String[] allowedValues ) {
             // must have a runtime type
             if (runtimeType == null) {
                 return Messages.missingRuntimeTypeValidationMsg;
@@ -500,7 +506,7 @@ public interface ModelExtensionPropertyDefinition extends Cloneable, PropertyDef
             // must have a value
             if (CoreStringUtil.isEmpty(proposedValue)) {
                 if (required) {
-                    return Messages.emptyPropertyValue;
+                    return NLS.bind(Messages.emptyPropertyValue, valueTypeMsg);
                 }
             }
 
