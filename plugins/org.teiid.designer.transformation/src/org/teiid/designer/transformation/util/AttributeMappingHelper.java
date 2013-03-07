@@ -89,7 +89,6 @@ public class AttributeMappingHelper {
             List attrs = TransformationHelper.getTransformationTargetAttributes((EObject)transMappingRoot);       
             
             IQueryService queryService = ModelerCore.getTeiidQueryService();
-            IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor(true);
             
             // Iterate attributes, setting each mapping
             Iterator iter = attrs.iterator();
@@ -106,7 +105,13 @@ public class AttributeMappingHelper {
                     // Find element matching the attribute name (if it exists)
                     IExpression seSymbol = getSymbolWithName(projectedSymbols,colName);
                     if(seSymbol!=null) {
+                        /**
+                         * Note as per TEIIDDES-1612, the elementCollectorVisitor implementations stores
+                         * the found elements in a field so reuse of an existing instance must be avoided
+                         * when using a loop.
+                         */
                         // Get the ElementSymbols / corresponding EObjs
+                        IElementCollectorVisitor elementCollectorVisitor = queryService.getElementCollectorVisitor(true);
                         Collection elemSymbols = elementCollectorVisitor.findElements(seSymbol);
                         Collection<EObject> elemEObjs = TransformationSqlHelper.getElementSymbolEObjects(elemSymbols,command);
                         // Set Elem EObjs as inputs for attr Mapping
