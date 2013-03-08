@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
@@ -25,6 +26,9 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.jface.action.Action;
@@ -471,6 +475,17 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         /* Listen for changes to the default server */
         ModelerCore.addTeiidServerVersionListener(teiidServerVersionListener);
         addExecutionConfigurationListener(defaultServer);
+        
+        IEclipsePreferences prefs = UiPlugin.getDefault().getPreferences();
+
+        prefs.addPreferenceChangeListener( new IPreferenceChangeListener() {
+			@Override
+			public void preferenceChange(PreferenceChangeEvent event) {
+				if (ModelerCore.DEFAULT_TEIID_SERVER_VERSION_ID.equals(event.getKey())) {
+					setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
+				}
+			}
+		});
     }
 
     /**
