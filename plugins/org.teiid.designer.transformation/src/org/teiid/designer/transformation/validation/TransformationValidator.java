@@ -55,7 +55,6 @@ import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.IReferenceCollectorVisitor;
 import org.teiid.designer.query.sql.IResolverVisitor;
 import org.teiid.designer.query.sql.lang.ICommand;
-import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.transformation.TransformationPlugin;
@@ -438,13 +437,11 @@ public class TransformationValidator implements QueryValidator {
             if (this.elementSymbolOptimization == ElementSymbolOptimization.OPTIMIZED) {
                 resolverVisitor.setProperty(IResolverVisitor.SHORT_NAME, true);
             }
-            queryResolver.resolveCommand(command, gSymbol, getTeiidCommandType(transformType), metadata);
-            // If unsuccessful, an exception is thrown
+            int teiidCommandType = getTeiidCommandType(transformType);
 
-            if (command instanceof ICreateProcedureCommand) {
-                List<IElementSymbol> projectedSymbols = getProjectedSymbols();
-                ((ICreateProcedureCommand)command).setProjectedSymbols(projectedSymbols);
-            }
+            queryResolver.resolveCommand(command, gSymbol, teiidCommandType, metadata);
+            // If unsuccessful, an exception is thrown
+            queryResolver.postResolveCommand(command, gSymbol, teiidCommandType, metadata, getProjectedSymbols());
         } catch (Exception e) {
             // create status
             status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
