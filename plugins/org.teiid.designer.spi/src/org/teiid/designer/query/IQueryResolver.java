@@ -7,8 +7,10 @@
 */
 package org.teiid.designer.query;
 
+import java.util.List;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 
 /**
@@ -24,5 +26,15 @@ public interface IQueryResolver<C extends ICommand, GS extends IGroupSymbol> {
      * @throws Exception 
      */
     void resolveCommand(C command, GS gSymbol, int teiidCommandType, IQueryMetadataInterface metadata) throws Exception;
+
+    /**
+     * @param command
+     * @param gSymbol
+     * @param commandType
+     * @param metadata
+     * @param projectedSymbols
+     */
+    void postResolveCommand(C command, GS gSymbol, int teiidCommandType, IQueryMetadataInterface metadata,
+                                               List<IElementSymbol> projectedSymbols);
 
 }
