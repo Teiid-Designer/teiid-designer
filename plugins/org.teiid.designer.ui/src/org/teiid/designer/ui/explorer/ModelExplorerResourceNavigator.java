@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
@@ -279,6 +278,16 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         }
     };
 
+    /* Listen for changes to the default server version preference */
+    private IPreferenceChangeListener preferenceChangeListener = new IPreferenceChangeListener() {
+        @Override
+        public void preferenceChange(PreferenceChangeEvent event) {
+            if (ModelerCore.DEFAULT_TEIID_SERVER_VERSION_ID.equals(event.getKey())) {
+                setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
+            }
+        }
+    };
+
     /**
      * Construct an instance of ModelExplorerResourceNavigator.
      */
@@ -475,17 +484,9 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         /* Listen for changes to the default server */
         ModelerCore.addTeiidServerVersionListener(teiidServerVersionListener);
         addExecutionConfigurationListener(defaultServer);
-        
-        IEclipsePreferences prefs = UiPlugin.getDefault().getPreferences();
 
-        prefs.addPreferenceChangeListener( new IPreferenceChangeListener() {
-			@Override
-			public void preferenceChange(PreferenceChangeEvent event) {
-				if (ModelerCore.DEFAULT_TEIID_SERVER_VERSION_ID.equals(event.getKey())) {
-					setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
-				}
-			}
-		});
+        IEclipsePreferences prefs = UiPlugin.getDefault().getPreferences();
+        prefs.addPreferenceChangeListener(preferenceChangeListener);
     }
 
     /**
@@ -675,6 +676,10 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     public void dispose() {
         // Remove listeners
         ModelerCore.removeTeiidServerVersionListener(teiidServerVersionListener);
+
+        IEclipsePreferences prefs = UiPlugin.getDefault().getPreferences();
+        if (prefs != null)
+            prefs.removePreferenceChangeListener(preferenceChangeListener);
 
         // unhook the selection listeners from the seleciton service
         getViewSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(getModelObjectSelectionListener());
