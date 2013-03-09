@@ -1670,7 +1670,7 @@ public final class PreviewManager extends JobChangeAdapter
          * change then all preview vdbs need to be erased and rebuilt since
          * they may contain non-compatible metadata.
          */
-        if (! teiidServer.getServerVersion().equals(oldServerVersion)) {
+        if (teiidServer == null || (! teiidServer.getServerVersion().equals(oldServerVersion))) {
             jobs.addAll(rebuildPreviewVdbs());
         }
 
