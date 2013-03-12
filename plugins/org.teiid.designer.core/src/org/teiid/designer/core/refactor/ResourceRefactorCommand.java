@@ -19,7 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -221,6 +220,11 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
             // see if we should modify the resource
             if (severity < IStatus.ERROR) {
 
+                // If dependent resources are loaded and the effected model resource
+                // is unloaded this can cause proxy references to be broken. This can
+                // be avoided by unloading the dependent resources first.
+                unloadDependentResources();
+
                 // tell the subclass to modify the resource
                 result = modifyResource(this.getResource(), monitor);
 
@@ -245,6 +249,8 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
                 return okayStatus;
             }
             return result;
+        } catch (Exception ex) {
+            return new Status(IStatus.ERROR, PID, ex.getMessage(), ex);
         } finally {
             if (monitor != null) monitor.done();
         }
@@ -258,6 +264,21 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
      */
     abstract protected IStatus modifyResource( IResource resource,
                                                IProgressMonitor monitor );
+
+    /**
+     * Unload all the dependent resources
+     *
+     * @throws Exception
+     */
+    private void unloadDependentResources() throws Exception {
+        if (dependentResources == null)
+            throw new Exception("Programming error: dependent resources should be calculated before trying to unload them"); //$NON-NLS-1$
+
+        for (Object resource : dependentResources) {
+            IFile file  = (IFile) resource;
+            unloadModelResources(file);
+        }
+    }
 
     /**
      * checkDependentResources
