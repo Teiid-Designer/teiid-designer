@@ -51,6 +51,8 @@ public class VdbBuilder extends IncrementalProjectBuilder {
 	public static final String MISSING_UUID = "missingUuid"; //$NON-NLS-1$
 	@SuppressWarnings("javadoc")
 	public static final String MISSING_MODEL = "missingModel"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String TOO_MANY_SOURCES = "tooManySources"; //$NON-NLS-1$
 	
     private enum MarkerType {
     	DEFAULT,
@@ -58,7 +60,8 @@ public class VdbBuilder extends IncrementalProjectBuilder {
     	OUT_OF_SYNC, 
     	NAME_CHANGED, 
     	MISSING_UUID,
-    	MISSING_MODEL;
+    	MISSING_MODEL,
+    	TOO_MANY_SOURCES;
 
     }
     
@@ -161,6 +164,9 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
     				if( iStatus.getMessage().indexOf("does not exist") > 0 ) { //$NON-NLS-1$
     					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.MISSING_MODEL);
     				}
+    				if( iStatus.getMessage().indexOf("multiple sources defined") > 0 ) { //$NON-NLS-1$
+    					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.TOO_MANY_SOURCES);
+    				}
     			} break;
     			case IStatus.ERROR: {
     				createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.DEFAULT);
@@ -168,12 +174,6 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
     			}
     		}
     	}
-    	
-    	// Check if each model file location is same as workspace (WARNING)
-
-        //createMarker(vdbFile, IMarker.SEVERITY_WARNING, NLS.bind(Messages.modelMedNotFoundInRegistry, namespacePrefix), VdbUiConstants.VdbIds.PROBLEM_MARKER, false);
-
-        //createMarker(vdbFile, IMarker.SEVERITY_ERROR, Messages.modelMedHasLegacyClassnames, VdbUiConstants.VdbIds.PROBLEM_MARKER, true);
     }
     
     /**

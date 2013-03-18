@@ -13,16 +13,16 @@ import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.preferences.VdbPreferenceConstants.SYNCHRONIZE_WITHOUT_WARNING;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -38,10 +38,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -51,19 +47,14 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
-import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -88,28 +79,19 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.EditorPart;
 import org.osgi.service.prefs.BackingStoreException;
-import org.teiid.designer.core.ModelEditorImpl;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.container.ContainerImpl;
 import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ResourceChangeUtilities;
-import org.teiid.designer.metamodels.core.ModelAnnotation;
-import org.teiid.designer.metamodels.relational.RelationalPackage;
-import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
-import org.teiid.designer.roles.DataRole;
-import org.teiid.designer.roles.ui.NewDataRoleWizard;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.table.CheckBoxColumnProvider;
 import org.teiid.designer.ui.common.table.DefaultTableProvider;
-import org.teiid.designer.ui.common.table.ResourceEditingSupport;
 import org.teiid.designer.ui.common.table.TableAndToolBar;
 import org.teiid.designer.ui.common.table.TextColumnProvider;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
@@ -125,9 +107,7 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
-import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
-import org.teiid.designer.vdb.VdbDataRole;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.VdbFileEntry;
@@ -137,6 +117,8 @@ import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiConstants.Images;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
+import org.teiid.designer.vdb.ui.editor.panels.DataRolesPanel;
+import org.teiid.designer.vdb.ui.editor.panels.ModelDetailsPanel;
 import org.teiid.designer.vdb.ui.translators.TranslatorOverridesPanel;
 
 
@@ -152,9 +134,6 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     static final String VDB_LOC_COLUMN_NAME = i18n("locationInVdbColumnName"); //$NON-NLS-1$
     static final String SYNCHRONIZED_COLUMN_NAME = i18n("synchronizedColumnName"); //$NON-NLS-1$
     static final String VISIBLE_COLUMN_NAME = i18n("visibleColumnName"); //$NON-NLS-1$;
-    static final String SOURCE_NAME_COLUMN_NAME = i18n("sourceNameColumnName"); //$NON-NLS-1$;
-    static final String TRANSLATOR_COLUMN_NAME = i18n("translatorColumnName"); //$NON-NLS-1$
-    static final String JNDI_NAME_COLUMN_NAME = i18n("jndiNameColumnName"); //$NON-NLS-1$;
     static final String DESCRIPTION_COLUMN_NAME = i18n("descriptionColumnName"); //$NON-NLS-1$;
 
     static final String SYNCHRONIZED_TOOLTIP = i18n("synchronizedTooltip"); //$NON-NLS-1$
@@ -183,7 +162,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     static final String INVALID_INTEGER_INPUT_TITLE = i18n("invalidQueryTimeoutValueTitle"); //$NON-NLS-1$
     static final String INVALID_INTEGER_INPUT_MESSAGE = i18n("invalidQueryTimeoutValueMessage"); //$NON-NLS-1$
 
-    static final String WEB_SERVICES_VIEW_MODEL_URI = "http://www.metamatrix.com/metamodels/WebService"; //$NON-NLS-1$
+//    static final String WEB_SERVICES_VIEW_MODEL_URI = "http://www.metamatrix.com/metamodels/WebService"; //$NON-NLS-1$
 
     static String i18n( final String id ) {
         return VdbUiConstants.Util.getString(id);
@@ -192,15 +171,14 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     Vdb vdb;
     StyledTextEditor textEditor;
     TableAndToolBar<VdbModelEntry> modelsGroup;
+    ModelDetailsPanel modelDetailsPanel;
     TableAndToolBar<VdbEntry> otherFilesGroup;
     TableAndToolBar<VdbEntry> udfJarsGroup;
-    TableAndToolBar<VdbDataRole> dataRolesGroup;
     private Button synchronizeAllButton;
     Button showImportVdbsButton;
     private PropertyChangeListener vdbListener;
 
-    Action cloneDataRoleAction;
-    VdbDataRole selectedDataRole;
+    DataRolesPanel dataRolesPanel;
     VdbDataRoleResolver dataRoleResolver;
     TranslatorOverridesPanel pnlTranslatorOverrides;
     
@@ -260,38 +238,6 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     };
 
     private final ModelLabelProvider modelLabelProvider = new ModelLabelProvider();
-
-    private final TextColumnProvider<VdbEntry> pathColumnProvider = new TextColumnProvider<VdbEntry>() {
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.teiid.designer.ui.common.table.ColumnProvider#getName()
-         */
-        @Override
-        public String getName() {
-            return PATH_COLUMN_NAME;
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.teiid.designer.ui.common.table.ColumnProvider#getImage()
-         */
-        @Override
-        public Image getImage() {
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.teiid.designer.ui.common.table.ColumnProvider#getValue(java.lang.Object)
-         */
-        @Override
-        public String getValue( final VdbEntry element ) {
-            return element.getName().removeLastSegments(1).toString();
-        }
-    };
     
     private final TextColumnProvider<VdbEntry> locationInVdbColumnProvider = new TextColumnProvider<VdbEntry>() {
         /**
@@ -524,457 +470,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     private void packModelsGroup() {
         modelsGroup.getTable().getColumn(0).getColumn().pack();
         modelsGroup.getTable().getColumn(1).getColumn().pack();
-        modelsGroup.getTable().getColumn(4).getColumn().pack();
-        modelsGroup.getTable().getColumn(5).getColumn().pack();
-        modelsGroup.getTable().getColumn(6).getColumn().pack();
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	private void createDataRolesControl( Composite parent ) {
-        final String DATA_POLICY_COLUMN_NAME = i18n("dataPolicyName"); //$NON-NLS-1$
-
-        final ButtonProvider editProvider = new ButtonProvider() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.widget.ButtonProvider#getImageDescriptor()
-             */
-            @Override
-            public ImageDescriptor getImageDescriptor() {
-                return VdbUiPlugin.singleton.getImageDescriptor(Images.EDIT_ROLE);
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.widget.ButtonProvider#getText()
-             */
-            @Override
-            public String getText() {
-                return null;
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.widget.ButtonProvider#getToolTip()
-             */
-            @Override
-            public String getToolTip() {
-                return i18n("editRoleToolTip"); //$NON-NLS-1$
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.widget.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
-             */
-            @Override
-            public boolean isEnabled( IStructuredSelection selection ) {
-                return (selection.size() == 1);
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.widget.ButtonProvider#selected(org.eclipse.jface.viewers.IStructuredSelection)
-             */
-            @Override
-            public void selected( IStructuredSelection selection ) {
-                VdbDataRole vdbDataRole = (VdbDataRole)selection.getFirstElement();
-                if (vdbDataRole == null) {
-                    return;
-                }
-                ContainerImpl tempContainer = null;
-                try {
-                    Collection<File> modelFiles = getVdb().getModelFiles();
-
-                    tempContainer = (ContainerImpl)ModelerCore.createContainer("tempVdbModelContainer"); //$NON-NLS-1$
-                    ModelEditorImpl.setContainer(tempContainer);
-                    for (File modelFile : modelFiles) {
-                        boolean isVisible = true;
-
-                        Resource r = tempContainer.getResource(URI.createFileURI(modelFile.getPath()), true);
-                        if (isVisible && ModelUtil.isModelFile(r) && !ModelUtil.isXsdFile(r)) {
-                            EObject firstEObj = r.getContents().get(0);
-                            ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
-                            String mmURI = ma.getPrimaryMetamodelUri();
-                            if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI)
-                                || XmlDocumentPackage.eNS_URI.equalsIgnoreCase(mmURI)
-                                || WEB_SERVICES_VIEW_MODEL_URI.equalsIgnoreCase(mmURI)
-                                || ModelIdentifier.FUNCTION_MODEL_URI.equals(mmURI)) {
-                                // DO NOTHING. This leaves the resource in the temp container
-                            } else {
-                                tempContainer.getResources().remove(r);
-                            }
-                        } else {
-                            tempContainer.getResources().remove(r);
-                        }
-                    }
-                } catch (CoreException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } finally {
-                    ModelEditorImpl.setContainer(null);
-                }
-
-                DataRole dataPolicy = new DataRole(vdbDataRole.getName(), vdbDataRole.getDescription(),
-                                                   vdbDataRole.isAnyAuthenticated(), vdbDataRole.allowCreateTempTables(),
-                                                   vdbDataRole.getMappedRoleNames(), vdbDataRole.getPermissions());
-
-                final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
-                final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, dataPolicy);
-
-                wizard.init(iww.getWorkbench(), new StructuredSelection(getVdb().getModelEntries()));
-                final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
-                final int rc = dialog.open();
-                if (rc == Window.OK) {
-                    // Get the Data Policy
-                    DataRole dp = wizard.getDataRole();
-                    if (dp != null) {
-                        getVdb().removeDataPolicy(vdbDataRole);
-                        getVdb().addDataPolicy(dp, new NullProgressMonitor());
-                    }
-
-                }
-            }
-        };
-
-        dataRolesGroup = new TableAndToolBar(parent, 1, new DefaultTableProvider<VdbDataRole>() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.table.DefaultTableProvider#doubleClicked(java.lang.Object)
-             */
-            @Override
-            public void doubleClicked( VdbDataRole element ) {
-                editProvider.selected(new StructuredSelection(element));
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.table.TableProvider#getElements()
-             */
-            @Override
-            public VdbDataRole[] getElements() {
-                final Set<VdbDataRole> entries = getVdb().getDataPolicyEntries();
-                return entries.toArray(new VdbDataRole[entries.size()]);
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.table.DefaultTableProvider#isDoubleClickSupported()
-             */
-            @Override
-            public boolean isDoubleClickSupported() {
-                return true;
-            }
-        }, new TextColumnProvider<VdbDataRole>() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.table.DefaultColumnProvider#getImage(java.lang.Object)
-             */
-            @Override
-            public Image getImage( final VdbDataRole element ) {
-                return null;
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.table.ColumnProvider#getName()
-             */
-            @Override
-            public String getName() {
-                return DATA_POLICY_COLUMN_NAME;
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.table.ColumnProvider#getImage()
-             */
-            @Override
-            public Image getImage() {
-                return null;
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.table.ColumnProvider#getValue(java.lang.Object)
-             */
-            @Override
-            public String getValue( final VdbDataRole element ) {
-                return element.getName();
-            }
-        }, new TextColumnProvider<VdbDataRole>() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.table.ColumnProvider#getName()
-             */
-            @Override
-            public String getName() {
-                return DESCRIPTION_COLUMN_NAME;
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.table.ColumnProvider#getImage()
-             */
-            @Override
-            public Image getImage() {
-                return null;
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.table.ColumnProvider#getValue(java.lang.Object)
-             */
-            @Override
-            public String getValue( final VdbDataRole element ) {
-                return element.getDescription();
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.table.DefaultColumnProvider#isEditable(java.lang.Object)
-             */
-            @Override
-            public boolean isEditable( final VdbDataRole element ) {
-                return true;
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.table.DefaultColumnProvider#setValue(java.lang.Object, java.lang.Object)
-             */
-            @Override
-            public void setValue( final VdbDataRole element,
-                                  final String value ) {
-                element.setDescription(value);
-            }
-        });
-
-        ButtonProvider newProvider = new ButtonProvider() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.widget.ButtonProvider#getImageDescriptor()
-             */
-            @Override
-            public ImageDescriptor getImageDescriptor() {
-                return VdbUiPlugin.singleton.getImageDescriptor(Images.ADD_ROLE);
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.widget.ButtonProvider#getText()
-             */
-            @Override
-            public String getText() {
-                return null;
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.widget.ButtonProvider#getToolTip()
-             */
-            @Override
-            public String getToolTip() {
-                return i18n("addRoleToolTip"); //$NON-NLS-1$
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.widget.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
-             */
-            @Override
-            public boolean isEnabled( IStructuredSelection selection ) {
-                return true;
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.widget.ButtonProvider#selected(org.eclipse.jface.viewers.IStructuredSelection)
-             */
-            @Override
-            public void selected( IStructuredSelection selection ) {
-                ContainerImpl tempContainer = null;
-                try {
-                    Collection<File> modelFiles = getVdb().getModelFiles();
-
-                    tempContainer = (ContainerImpl)ModelerCore.createContainer("tempVdbModelContainer"); //$NON-NLS-1$
-                    ModelEditorImpl.setContainer(tempContainer);
-                    for (File modelFile : modelFiles) {
-                        boolean isVisible = true;
-
-                        Resource r = tempContainer.getResource(URI.createFileURI(modelFile.getPath()), true);
-                        if (isVisible && ModelUtil.isModelFile(r) && !ModelUtil.isXsdFile(r)) {
-                            EObject firstEObj = r.getContents().get(0);
-                            ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
-                            String mmURI = ma.getPrimaryMetamodelUri();
-                            if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI)
-                                || XmlDocumentPackage.eNS_URI.equalsIgnoreCase(mmURI)
-                                || WEB_SERVICES_VIEW_MODEL_URI.equalsIgnoreCase(mmURI)
-                                || ModelIdentifier.FUNCTION_MODEL_URI.equals(mmURI)) {
-                                // DO NOTHING. This leaves the resource in the temp container
-                            } else {
-                                tempContainer.getResources().remove(r);
-                            }
-                        } else {
-                            tempContainer.getResources().remove(r);
-                        }
-                    }
-                } catch (CoreException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } finally {
-                    ModelEditorImpl.setContainer(null);
-                }
-
-                final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
-                final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, null);
-
-                wizard.init(iww.getWorkbench(), new StructuredSelection(getVdb().getModelEntries()));
-                final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
-                final int rc = dialog.open();
-                if (rc == Window.OK) {
-                    // Get the Data Policy
-                    DataRole dp = wizard.getDataRole();
-                    if (dp != null) {
-                        getVdb().addDataPolicy(dp, new NullProgressMonitor());
-                    }
-
-                }
-            }
-        };
-
-        dataRolesGroup.add(newProvider);
-        dataRolesGroup.add(editProvider);
-
-        ButtonProvider removeProvider = new ButtonProvider() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.widget.ButtonProvider#getImageDescriptor()
-             */
-            @Override
-            public ImageDescriptor getImageDescriptor() {
-                return VdbUiPlugin.singleton.getImageDescriptor(Images.REMOVE_ROLE);
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.widget.ButtonProvider#getText()
-             */
-            @Override
-            public String getText() {
-                return null;
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.widget.ButtonProvider#getToolTip()
-             */
-            @Override
-            public String getToolTip() {
-                return i18n("removeRoleToolTip"); //$NON-NLS-1$
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.widget.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
-             */
-            @Override
-            public boolean isEnabled( IStructuredSelection selection ) {
-                return !selection.isEmpty();
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.ui.common.widget.ButtonProvider#selected(org.eclipse.jface.viewers.IStructuredSelection)
-             */
-            @Override
-            public void selected( IStructuredSelection selection ) {
-                if (ConfirmationDialog.confirm(CONFIRM_REMOVE_MESSAGE)) {
-                    for (final Object element : selection.toList()) {
-                        if (element instanceof VdbDataRole) {
-                            getVdb().removeDataPolicy((VdbDataRole)element);
-                        }
-
-                    }
-                }
-            }
-        };
-
-        dataRolesGroup.add(removeProvider);
-        dataRolesGroup.setInput(vdb);
-
-        this.cloneDataRoleAction = new Action(i18n("cloneDataRoleActionLabel")) { //$NON-NLS-1$
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.jface.action.Action#run()
-             */
-            @Override
-            public void run() {
-
-                if (selectedDataRole != null) {
-                    DataRole newDR = new DataRole(
-                                                  selectedDataRole.getName() + i18n("cloneDataRoleAction.copySuffix"), //$NON-NLS-1$
-                                                  selectedDataRole.getDescription(), selectedDataRole.isAnyAuthenticated(),
-                                                  selectedDataRole.allowCreateTempTables(),
-                                                  selectedDataRole.getMappedRoleNames(), selectedDataRole.getPermissions());
-                    getVdb().addDataPolicy(newDR, new NullProgressMonitor());
-                    dataRolesGroup.getTable().getViewer().refresh();
-                }
-
-            }
-        };
-
-        this.cloneDataRoleAction.setEnabled(true);
-
-        // Add selection changed listener so if a Physical Source model is selected, the applicable menu actions are
-        // retrieved via the SourceHandler extension point and interface.
-        // This allows changing Translator and JNDI names via existing deployed objects on Teiid Servers that are
-        // connected in the user's workspace.
-        final TableViewer dataRolesViewer = dataRolesGroup.getTable().getViewer();
-        final MenuManager dataRolesMenuManager = new MenuManager();
-        dataRolesViewer.getControl().setMenu(dataRolesMenuManager.createContextMenu(parent));
-        dataRolesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-             */
-            @Override
-            public void selectionChanged( final SelectionChangedEvent event ) {
-                dataRolesMenuManager.removeAll();
-                IStructuredSelection sel = (IStructuredSelection)dataRolesViewer.getSelection();
-                if (sel.size() == 1) {
-                    selectedDataRole = (VdbDataRole)sel.getFirstElement();
-                    dataRolesMenuManager.add(cloneDataRoleAction);
-                }
-
-            }
-        });
+    	dataRolesPanel = new DataRolesPanel(parent, this);
     }
 
     private void createDescriptionControl( Composite parent ) {
@@ -1013,7 +513,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     	
     	Group descriptionGroup = WidgetFactory.createGroup(panel, i18n("description"), GridData.FILL_BOTH, 1, 1); //$NON-NLS-1$
     	
-        this.textEditor = new StyledTextEditor(descriptionGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
+        this.textEditor = new StyledTextEditor(descriptionGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
         final GridData gridData = new GridData(GridData.FILL_BOTH);
         gridData.horizontalSpan = 1;
 
@@ -1718,11 +1218,23 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             CTabItem modelsTab = new CTabItem(tabFolder, SWT.NONE);
             modelsTab.setText(i18n("modelsTab")); //$NON-NLS-1$
             modelsTab.setToolTipText(i18n("modelsTabToolTip")); //$NON-NLS-1$
+            
             Composite pnlModels = new Composite(tabFolder, SWT.NONE);
-            pnlModels.setLayout(new GridLayout());
+            pnlModels.setLayout(new GridLayout(2, false));
             pnlModels.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            
+            Composite pnlModelsList = new Composite(pnlModels, SWT.NONE);
+            pnlModelsList.setLayout(new GridLayout());
+            pnlModelsList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
+            ((GridData)pnlModelsList.getLayoutData()).widthHint = 300;
+            
+            createModelsSection(pnlModelsList);
+            
+            modelDetailsPanel = new ModelDetailsPanel(pnlModels, this);
+            
             modelsTab.setControl(pnlModels);
-            createModelsSection(pnlModels);
+            
+            
         }
 
         { // UDF jars tab
@@ -1914,7 +1426,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                                */
                                               @Override
                                               public String getName() {
-                                                  return MODEL_COLUMN_NAME;
+                                                  return MODEL_COLUMN_NAME + "                                                               ";
                                               }
 
                                               /**
@@ -1936,7 +1448,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                               public String getValue( final VdbModelEntry element ) {
                                                   return element.getName().lastSegment();
                                               }
-                                          }, this.pathColumnProvider, this.syncColumnProvider,
+                                          }, this.syncColumnProvider,
                                           new CheckBoxColumnProvider<VdbModelEntry>() {
                                               /**
                                                * {@inheritDoc}
@@ -1999,166 +1511,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                                                     final Boolean value ) {
                                                   element.setVisible(value);
                                               }
-                                          }, new TextColumnProvider<VdbModelEntry>() {
-                                              /**
-                                               * {@inheritDoc}
-                                               * 
-                                               * @see org.teiid.designer.ui.common.table.ColumnProvider#getName()
-                                               */
-                                              @Override
-                                              public String getName() {
-                                                  return SOURCE_NAME_COLUMN_NAME;
-                                              }
-
-                                              /**
-                                               * {@inheritDoc}
-                                               * 
-                                               * @see org.teiid.designer.ui.common.table.ColumnProvider#getImage()
-                                               */
-                                              @Override
-                                              public Image getImage() {
-                                                  return null;
-                                              }
-
-                                              /**
-                                               * {@inheritDoc}
-                                               * 
-                                               * @see org.teiid.designer.ui.common.table.ColumnProvider#getValue(java.lang.Object)
-                                               */
-                                              @Override
-                                              public String getValue( final VdbModelEntry element ) {
-                                                  final String value = element.getSourceName();
-                                                  return value == null ? EMPTY_STRING : value;
-                                              }
-
-                                              /**
-                                               * {@inheritDoc}
-                                               * 
-                                               * @see org.teiid.designer.ui.common.table.DefaultColumnProvider#isEditable(java.lang.Object)
-                                               */
-                                              @Override
-                                              public boolean isEditable( final VdbModelEntry element ) {
-                                                  return true;
-                                              }
-
-                                              /**
-                                               * {@inheritDoc}
-                                               * 
-                                               * @see org.teiid.designer.ui.common.table.DefaultColumnProvider#setValue(java.lang.Object,
-                                               *      java.lang.Object)
-                                               */
-                                              @Override
-                                              public void setValue( final VdbModelEntry element,
-                                                                    final String value ) {
-                                                  element.setSourceName(value);
-                                              }
-                                          }, new TextColumnProvider<VdbModelEntry>() {
-                                              /**
-                                               * {@inheritDoc}
-                                               * 
-                                               * @see org.teiid.designer.ui.common.table.ColumnProvider#getName()
-                                               */
-                                              @Override
-                                              public String getName() {
-                                                  return TRANSLATOR_COLUMN_NAME;
-                                              }
-
-                                              /**
-                                               * {@inheritDoc}
-                                               * 
-                                               * @see org.teiid.designer.ui.common.table.ColumnProvider#getImage()
-                                               */
-                                              @Override
-                                              public Image getImage() {
-                                                  return null;
-                                              }
-
-                                              /**
-                                               * {@inheritDoc}
-                                               * 
-                                               * @see org.teiid.designer.ui.common.table.ColumnProvider#getValue(java.lang.Object)
-                                               */
-                                              @Override
-                                              public String getValue( final VdbModelEntry element ) {
-                                                  final String value = element.getTranslator();
-                                                  return value == null ? EMPTY_STRING : value;
-                                              }
-
-                                              /**
-                                               * {@inheritDoc}
-                                               * 
-                                               * @see org.teiid.designer.ui.common.table.DefaultColumnProvider#isEditable(java.lang.Object)
-                                               */
-                                              @Override
-                                              public boolean isEditable( final VdbModelEntry element ) {
-                                                  return true;
-                                              }
-
-                                              /**
-                                               * {@inheritDoc}
-                                               * 
-                                               * @see org.teiid.designer.ui.common.table.DefaultColumnProvider#setValue(java.lang.Object,
-                                               *      java.lang.Object)
-                                               */
-                                              @Override
-                                              public void setValue( final VdbModelEntry element,
-                                                                    final String value ) {
-                                                  element.setTranslator(value);
-                                              }
-                                          }, new TextColumnProvider<VdbModelEntry>() {
-                                              /**
-                                               * {@inheritDoc}
-                                               * 
-                                               * @see org.teiid.designer.ui.common.table.ColumnProvider#getName()
-                                               */
-                                              @Override
-                                              public String getName() {
-                                                  return JNDI_NAME_COLUMN_NAME;
-                                              }
-
-                                              /**
-                                               * {@inheritDoc}
-                                               * 
-                                               * @see org.teiid.designer.ui.common.table.ColumnProvider#getImage()
-                                               */
-                                              @Override
-                                              public Image getImage() {
-                                                  return null;
-                                              }
-
-                                              /**
-                                               * {@inheritDoc}
-                                               * 
-                                               * @see org.teiid.designer.ui.common.table.ColumnProvider#getValue(java.lang.Object)
-                                               */
-                                              @Override
-                                              public String getValue( final VdbModelEntry element ) {
-                                                  final String value = element.getJndiName();
-                                                  return value == null ? EMPTY_STRING : value;
-                                              }
-
-                                              /**
-                                               * {@inheritDoc}
-                                               * 
-                                               * @see org.teiid.designer.ui.common.table.DefaultColumnProvider#isEditable(java.lang.Object)
-                                               */
-                                              @Override
-                                              public boolean isEditable( final VdbModelEntry element ) {
-                                                  return true;
-                                              }
-
-                                              /**
-                                               * {@inheritDoc}
-                                               * 
-                                               * @see org.teiid.designer.ui.common.table.DefaultColumnProvider#setValue(java.lang.Object,
-                                               *      java.lang.Object)
-                                               */
-                                              @Override
-                                              public void setValue( final VdbModelEntry element,
-                                                                    final String value ) {
-                                                  element.setJndiName(value);
-                                              }
-                                          }, this.descriptionColumnProvider);
+                                          });
 
         ButtonProvider addProvider = new ButtonProvider() {
             /**
@@ -2404,16 +1757,17 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 if (actions != null) for (final Object action : actions) {
                     if (action instanceof IAction) menuManager.add((IAction)action);
                 }
+                
+                // UPDATE MODEL DETAILS WIDGETS
+                IStructuredSelection sel = (IStructuredSelection)viewer.getSelection();
+                VdbModelEntry selectedEntry = null;
+                if (sel.getFirstElement() instanceof VdbModelEntry) {
+                	selectedEntry = (VdbModelEntry)sel.getFirstElement();
+                }
+                
+                modelDetailsPanel.setSelectedVdbModelEntry(selectedEntry);
             }
         });
-
-        // set a custom cell editor on translator column
-        EditingSupport editor = new TranslatorEditingSupport(modelsGroup.getViewer(), getVdb().getFile());
-        modelsGroup.getTable().getColumn(5).setEditingSupport(editor);
-
-        // set a custom cell editor on JNDI column
-        editor = new JndiEditingSupport(modelsGroup.getViewer(), getVdb().getFile());
-        modelsGroup.getTable().getColumn(6).setEditingSupport(editor);
 
         modelsGroup.setInput(vdb);
         packModelsGroup();
@@ -2672,147 +2026,4 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             }
         }
     }
-
-    class TranslatorEditingSupport extends ResourceEditingSupport {
-
-        /**
-         * @param viewer
-         * @param vdb
-         */
-        public TranslatorEditingSupport( ColumnViewer viewer,
-                                         IResource vdb ) {
-            super(viewer, vdb);
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.teiid.designer.ui.common.table.ResourceEditingSupport#canAddNewValue(java.lang.Object)
-         */
-        @Override
-        protected boolean canAddNewValue( Object element ) {
-            return true;
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.teiid.designer.ui.common.table.ResourceEditingSupport#getElementValue(java.lang.Object)
-         */
-        @Override
-        protected String getElementValue( Object element ) {
-            return ((VdbModelEntry)element).getTranslator();
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.teiid.designer.ui.common.table.ResourceEditingSupport#refreshItems(java.lang.Object)
-         */
-        @Override
-        protected String[] refreshItems( Object element ) {
-            List<String> translators = new ArrayList<String>();
-            // get the available translators from the server
-            String[] serverTypes = SourceHandlerExtensionManager.getVdbConnectionFinder().getTranslatorTypes();
-
-            if (serverTypes != null) {
-                translators.addAll(Arrays.asList(serverTypes));
-            }
-
-            // add in the translator overrides from the VDB
-            for (TranslatorOverride translator : getVdb().getTranslators()) {
-                translators.add(translator.getName());
-            }
-
-            Collections.sort(translators);
-            return translators.toArray(new String[translators.size()]);
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.teiid.designer.ui.common.table.ResourceEditingSupport#setElementValue(java.lang.Object, java.lang.String)
-         */
-        @Override
-        protected void setElementValue( Object element,
-                                        String newValue ) {
-            if (newValue == null) {
-                newValue = ""; //$NON-NLS-1$
-            }
-
-            ((VdbModelEntry)element).setTranslator(newValue);
-        }
-    }
-
-    class JndiEditingSupport extends ResourceEditingSupport {
-
-        /**
-         * @param viewer
-         * @param vdb
-         */
-        public JndiEditingSupport( ColumnViewer viewer,
-                                   IResource vdb ) {
-            super(viewer, vdb);
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.teiid.designer.ui.common.table.ResourceEditingSupport#canAddNewValue(java.lang.Object)
-         */
-        @Override
-        protected boolean canAddNewValue( Object element ) {
-            return true;
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.teiid.designer.ui.common.table.ResourceEditingSupport#getElementValue(java.lang.Object)
-         */
-        @Override
-        protected String getElementValue( Object element ) {
-            return ((VdbModelEntry)element).getJndiName();
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.teiid.designer.ui.common.table.ResourceEditingSupport#refreshItems(java.lang.Object)
-         */
-        @Override
-        protected String[] refreshItems( Object element ) {
-            List<String> dsNameList = new ArrayList<String>();
-            
-            // get the available datasource names from the server
-            String[] dsNames = SourceHandlerExtensionManager.getVdbConnectionFinder().getDataSourceNames();
-
-
-            // Copy dsNames into List for sorting
-            if (dsNames != null) {
-                dsNameList.addAll(Arrays.asList(dsNames));
-            }
-
-            // Sort names in alpha order
-            Collections.sort(dsNameList);
-            
-            return dsNameList.toArray(new String[dsNameList.size()]);
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.teiid.designer.ui.common.table.ResourceEditingSupport#setElementValue(java.lang.Object, java.lang.String)
-         */
-        @Override
-        protected void setElementValue( Object element,
-                                        String newValue ) {
-            if (newValue == null) {
-                newValue = ""; //$NON-NLS-1$
-            }
-
-            ((VdbModelEntry)element).setJndiName(newValue);
-        }
-    }
-
 }

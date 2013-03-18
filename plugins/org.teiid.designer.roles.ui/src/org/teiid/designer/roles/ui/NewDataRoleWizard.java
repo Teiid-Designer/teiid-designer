@@ -181,7 +181,7 @@ public class NewDataRoleWizard extends AbstractWizard {
 
         // ===========>>>> Create Description Group
         final Group descGroup = WidgetFactory.createGroup(mainPanel, getString("desciptionGroupLabel"), GridData.FILL_HORIZONTAL, 2); //$NON-NLS-1$
-        descriptionTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
+        descriptionTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
         final GridData descGridData = new GridData(GridData.FILL_BOTH);
         descGridData.horizontalSpan = 1;
         descGridData.heightHint = 50;

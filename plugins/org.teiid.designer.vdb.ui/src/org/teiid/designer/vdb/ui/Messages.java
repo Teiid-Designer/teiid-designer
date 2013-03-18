@@ -28,6 +28,17 @@ public class Messages  extends NLS {
 	public static String synchronizeVdbLabel;
 	public static String extractMissingModelsLabel;
 	public static String extractMissingModelsAndSyncLabel;
+	
+	public static String modelDetailsPanel_modelDetails;
+	public static String modelDetailsPanel_modelDetailsTooltip;
+	public static String noSelection;
+	public static String modelDetailsPanel_sourceBindingDefinition;
+	public static String modelDetailsPanel_sourceBindingDefinitionTooltip;
+	public static String modelDetailsPanel_multiSourceLabel;
+	public static String modelDetailsPanel_addColumnLabel;
+	public static String modelDetailsPanel_sourceNameLabel;
+	public static String modelDetailsPanel_translatorNameLabel;
+	public static String modelDetailsPanel_jndiNameLabel;
     
     static {
         NLS.initializeMessages("org.teiid.designer.vdb.ui.messages", Messages.class); //$NON-NLS-1$
