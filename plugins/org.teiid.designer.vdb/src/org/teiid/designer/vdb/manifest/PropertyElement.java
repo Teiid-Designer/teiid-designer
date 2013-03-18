@@ -53,4 +53,17 @@ public class PropertyElement implements Serializable {
     public String getValue() {
         return value;
     }
+    
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+        StringBuilder text = new StringBuilder();
+        text.append("PropertyElement : "); //$NON-NLS-1$
+        text.append("\n\t name  = ").append(getName()); //$NON-NLS-1$
+        text.append("\n\t value = ").append(getValue()); //$NON-NLS-1$
+
+        return text.toString();
+	}
 }

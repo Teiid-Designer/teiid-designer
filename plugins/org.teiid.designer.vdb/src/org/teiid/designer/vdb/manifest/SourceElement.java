@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.VdbSource;
 
 /**
  * 
@@ -40,10 +41,10 @@ public class SourceElement implements Serializable {
     public SourceElement() {
     }
 
-    SourceElement( final VdbModelEntry entry ) {
-        name = entry.getSourceName();
-        jndiName = entry.getJndiName();
-        translatorName = entry.getTranslator();
+    SourceElement( final VdbSource source ) {
+        name = source.getName();
+        jndiName = source.getJndiName();
+        translatorName = source.getTranslatorName();
     }
 
     /**

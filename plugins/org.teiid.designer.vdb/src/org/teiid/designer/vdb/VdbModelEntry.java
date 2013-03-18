@@ -7,10 +7,9 @@
  */
 package org.teiid.designer.vdb;
 
-import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
-import static org.teiid.designer.vdb.Vdb.Event.MODEL_SOURCE_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_VISIBLE;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,10 +21,11 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -40,6 +40,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.CoreModelerPlugin;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.core.ModelerCore;
@@ -98,9 +99,7 @@ public final class VdbModelEntry extends VdbEntry {
     private final String modelClass;
     private final boolean builtIn;
     private final String type;
-    private final AtomicReference<String> translator = new AtomicReference<String>();
-    private final AtomicReference<String> source = new AtomicReference<String>();
-    private final AtomicReference<String> jndiName = new AtomicReference<String>();
+    private final VdbSourceInfo sourceInfo;
     private transient ModelElement element;
 
     /**
@@ -119,6 +118,7 @@ public final class VdbModelEntry extends VdbEntry {
         final Resource model = findModel();
         builtIn = getFinder().isBuiltInResource(model);
         modelClass = findModelClass(model);
+        sourceInfo = new VdbSourceInfo(vdb);
         if (ModelUtil.isXmiFile(model)) {
         	final ModelResource mr = ModelerCore.getModelEditor().findModelResource(model);
             final EmfResource emfModel = (EmfResource)model;
@@ -136,11 +136,10 @@ public final class VdbModelEntry extends VdbEntry {
             // description.set(emfModel.getModelAnnotation().getDescription());
             if (ModelUtil.isPhysical(model)) {
                 final String defaultName = createDefaultJndiName(name);
-                source.set(defaultName);
                 final ConnectionInfoHelper helper = new ConnectionInfoHelper();
-                final String translator = helper.getTranslatorName(mr);
-                this.translator.set(translator == null ? EMPTY_STR : translator);
-                jndiName.set(defaultName);
+                String translator = helper.getTranslatorName(mr);
+                if( translator == null ) translator = EMPTY_STR;
+                sourceInfo.add(defaultName, defaultName, translator);
                 Properties translatorProps = helper.getTranslatorProperties(mr);
                 if( !translatorProps.isEmpty() ) {
                 	updateTranslatorOverrides(translatorProps);
@@ -153,9 +152,12 @@ public final class VdbModelEntry extends VdbEntry {
         } else {
         	type = VdbUtil.OTHER;
         }
+        // TODO: Fix This ???
+        /*
         if (this.translator.get() == null) {
             this.translator.set(EMPTY_STR);
         }
+        */
         if (this.description.get() == null) {
             this.description.set(EMPTY_STR);
         }
@@ -239,17 +241,12 @@ public final class VdbModelEntry extends VdbEntry {
         this.element = element;
         type =  element.getType();
         visible.set(element.isVisible());
+        sourceInfo = new VdbSourceInfo(vdb);
         if (element.getSources() != null && !element.getSources().isEmpty()) {
             for (final SourceElement source : element.getSources()) {
-                this.source.set(source.getName());
-                this.translator.set(source.getTranslatorName() == null ? StringUtilities.EMPTY_STRING : source.getTranslatorName());
-                this.jndiName.set(source.getJndiName());
-                break; // TODO: support multi-source bindings
+            	sourceInfo.add(source.getName(), source.getJndiName(), 
+            			source.getTranslatorName() == null ? StringUtilities.EMPTY_STRING : source.getTranslatorName());
             }
-        } else {
-            this.translator.set(EMPTY_STR);
-            // this.jndiName.set(EMPTY_STR);
-            // this.source.set(EMPTY_STR);
         }
         if(VdbUtil.FUNCTION.equals(type) || VdbUtil.VIRTUAL.equals(type) || VdbUtil.PHYSICAL.equals(type)) {
             updateUdfJars(findModel());
@@ -267,6 +264,12 @@ public final class VdbModelEntry extends VdbEntry {
             else if (ModelElement.MODEL_UUID.equals(name)) modelUuid = property.getValue();
             else if (ModelElement.IMPORT_VDB_REFERENCE.equals(name)) {
             	importVdbNames.add(property.getValue());
+            } else if( ModelElement.SUPPORTS_MULTI_SOURCE.equals(name)) {
+            	sourceInfo.setIsMultiSource(Boolean.parseBoolean(property.getValue()));
+            } else if( ModelElement.MULTI_SOURCE_ADD_COLUMN.equals(name)) {
+            	sourceInfo.setAddColumn(Boolean.parseBoolean(property.getValue()));
+            } else if( ModelElement.MULTI_SOURCE_COLUMN_ALIAS.equals(name)) {
+            	sourceInfo.setColumnAlias(property.getValue());
             }
         }
         this.builtIn = builtIn;
@@ -424,12 +427,12 @@ public final class VdbModelEntry extends VdbEntry {
     public String getIndexName() {
         return indexName;
     }
-
+    
     /**
-     * @return jndiName
+     * @return the <code>VdbSourceInfo</code> object
      */
-    public String getJndiName() {
-        return jndiName.get();
+	public VdbSourceInfo getSourceInfo() {
+    	return this.sourceInfo;
     }
 
     /**
@@ -437,20 +440,6 @@ public final class VdbModelEntry extends VdbEntry {
      */
     public final Set<Problem> getProblems() {
         return Collections.unmodifiableSet(problems);
-    }
-
-    /**
-     * @return source
-     */
-    public final String getSourceName() {
-        return source.get();
-    }
-
-    /**
-     * @return translator
-     */
-    public String getTranslator() {
-        return translator.get();
     }
 
     /**
@@ -528,35 +517,41 @@ public final class VdbModelEntry extends VdbEntry {
     }
 
     /**
-     * @param name
+     * @param index
+     * @param name 
      */
-    public void setJndiName( String name ) {
-        if (StringUtilities.isEmpty(name)) name = null;
-        final String oldName = getJndiName();
+    public void setJndiName( int index, String name ) {
+    	CoreArgCheck.isTrue(index < sourceInfo.getSourceCount(), "index out of range"); //$NON-NLS-1$
+    	
+    	if (StringUtilities.isEmpty(name)) name = null;
+    	String oldName = sourceInfo.getSource().getJndiName();
         if (StringUtilities.equals(name, oldName)) return;
-        this.jndiName.set(name);
-        getVdb().setModified(this, MODEL_JNDI_NAME, oldName, name);
+        sourceInfo.getSource(index).setJndiName(name);
     }
 
     /**
+     * @param index
      * @param name
      */
-    public final void setSourceName( String name ) {
-        if (StringUtilities.isEmpty(name)) name = null;
-        final String oldName = getSourceName();
+    public final void setSourceName(  int index, String name ) {
+    	CoreArgCheck.isTrue(index < sourceInfo.getSourceCount(), "index out of range"); //$NON-NLS-1$
+    	
+    	if (StringUtilities.isEmpty(name)) name = null;
+    	String oldName = sourceInfo.getSource().getName();
         if (StringUtilities.equals(name, oldName)) return;
-        this.source.set(name);
-        getVdb().setModified(this, MODEL_SOURCE_NAME, oldName, name);
+        sourceInfo.getSource(index).setName(name);
     }
 
     /**
-     * @param translator
+     * @param index
+     * @param name
      */
-    public final void setTranslator( String translator ) {
-        final String oldTranslator = getTranslator();
-        if (StringUtilities.equals(translator, oldTranslator)) return;
-        this.translator.set(translator);
-        getVdb().setModified(this, MODEL_TRANSLATOR, oldTranslator, translator);
+    public final void setTranslatorName(  int index, String name ) {
+    	CoreArgCheck.isTrue(index < sourceInfo.getSourceCount(), "index out of range"); //$NON-NLS-1$
+    	if (StringUtilities.isEmpty(name)) name = null;
+    	String oldName = sourceInfo.getSource().getTranslatorName();
+        if (StringUtilities.equals(name, oldName)) return;
+        sourceInfo.getSource(index).setTranslatorName(name);
     }
     
     /**
@@ -564,11 +559,14 @@ public final class VdbModelEntry extends VdbEntry {
      * @return translator override. May be null.
      */
     public final TranslatorOverride getTranslatorOverride() {
-    	if( this.translator != null ) {
+    	if( !this.sourceInfo.isEmpty() ) {
         	Set<TranslatorOverride> overrides = getVdb().getTranslators();
         	for( TranslatorOverride to : overrides) {
-        		if( this.translator.toString().equalsIgnoreCase(to.getName()) ) {
-        			return to;
+        		for( VdbSource source : this.sourceInfo.getSources() ) {
+        			String translatorName = source.getTranslatorName();
+	        		if( translatorName != null && translatorName.toString().equalsIgnoreCase(to.getName()) ) {
+	        			return to;
+	        		}
         		}
         	}
     	}
@@ -586,19 +584,27 @@ public final class VdbModelEntry extends VdbEntry {
      * 3) No way to tell if an OLD property needs to get removed though
      */
     void updateTranslatorOverrides(Properties props) {
+    	// TODO: Update for Multi-Sources bindings
+    	if( this.sourceInfo.isMultiSource() ) {
+    		return;
+    	}
+    	
         // If only ONE property and it's "name", then ignore
+
         if( props.size() == 1 && ((String)props.keySet().toArray()[0]).equalsIgnoreCase(VdbConstants.Translator.NAME_KEY) ) {
             return;
         }
     	TranslatorOverride to = getTranslatorOverride();
-    	String oldTranslator = getTranslator();
+    	String oldTranslator = this.sourceInfo.getSource().getTranslatorName();
+    	String newTranslator = null;
     	if( to == null ) {
     		String toName = null;
-    		if( !getTranslator().startsWith(getSourceName()) ) {
-    			toName = getSourceName() + '_' + getTranslator();
+    		if( !oldTranslator.startsWith(this.sourceInfo.getSource().getName()) ) {
+    			toName = this.sourceInfo.getSource().getName() + '_' + oldTranslator;
     		}
-    		to = new TranslatorOverride(getVdb(), toName, getTranslator(), null);
-    		setTranslator(toName);
+    		to = new TranslatorOverride(getVdb(), toName, oldTranslator, null);
+    		newTranslator = toName;
+    		this.sourceInfo.getSource().setTranslatorName(toName);
     		getVdb().addTranslator(to, new NullProgressMonitor());
     	}
     	
@@ -622,7 +628,7 @@ public final class VdbModelEntry extends VdbEntry {
     			to.addProperty(new TranslatorOverrideProperty(new TranslatorPropertyDefinition((String) nextKey, "dummy"), props.getProperty((String)nextKey))); //$NON-NLS-1$
     		}
     	}
-        getVdb().setModified(this, MODEL_TRANSLATOR, oldTranslator, translator);
+        getVdb().setModified(this, MODEL_TRANSLATOR, oldTranslator, newTranslator);
     }
 
     /**
@@ -654,18 +660,22 @@ public final class VdbModelEntry extends VdbEntry {
         try {
             final Resource model = findModel();
             if (ModelUtil.isPhysical(model)) {
-                final ModelResource mr = ModelerCore.getModelEditor().findModelResource(workspaceFile);
-                final ConnectionInfoHelper helper = new ConnectionInfoHelper();
+            	if( !this.getSourceInfo().isMultiSource() ) {
+	                final ModelResource mr = ModelerCore.getModelEditor().findModelResource(workspaceFile);
+	                final ConnectionInfoHelper helper = new ConnectionInfoHelper();
+	                
+	                String translatorName = this.sourceInfo.getSource().getTranslatorName();
+	                if (CoreStringUtil.isEmpty(translatorName)) {
+	                    final String translator = helper.getTranslatorName(mr);
+	                    this.sourceInfo.getSource().setTranslatorName(translator == null ? EMPTY_STR : translator);
+	                }
+	                
+	                Properties translatorProps = helper.getTranslatorProperties(mr);
+	                if( !translatorProps.isEmpty() ) {
+	                	updateTranslatorOverrides(translatorProps);
+	                }
+            	}
                 
-                if (CoreStringUtil.isEmpty(this.translator.get())) {
-                    final String translator = helper.getTranslatorName(mr);
-                    this.translator.set(translator == null ? EMPTY_STR : translator);
-                }
-                
-                Properties translatorProps = helper.getTranslatorProperties(mr);
-                if( !translatorProps.isEmpty() ) {
-                	updateTranslatorOverrides(translatorProps);
-                }
             }
             if (containsUdf()) {
                 updateUdfJars(model);
@@ -755,8 +765,10 @@ public final class VdbModelEntry extends VdbEntry {
         builder.append(visible);
         builder.append(", built-in?="); //$NON-NLS-1$
         builder.append(builtIn);
-        builder.append(", source="); //$NON-NLS-1$
-        builder.append(source);
+        for( VdbSource source : sourceInfo.getSources() ) {
+	        builder.append(", source="); //$NON-NLS-1$
+	        builder.append(source);
+        }
         builder.append(", index="); //$NON-NLS-1$
         builder.append(indexName);
         builder.append(", problems?="); //$NON-NLS-1$

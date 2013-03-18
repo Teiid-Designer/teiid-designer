@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.VdbModelEntry.Problem;
 
@@ -50,6 +51,21 @@ public class ModelElement extends EntryElement {
     /**
      */
     public static final String IMPORT_VDB_REFERENCE = "import-vdb-reference"; //$NON-NLS-1$
+    
+    /**
+     * 
+     */
+    public static final String SUPPORTS_MULTI_SOURCE = "supports-multi-source-bindings"; //$NON-NLS-1$
+    
+    /**
+     * 
+     */
+    public static final String MULTI_SOURCE_ADD_COLUMN = "multisource.addColumn"; //$NON-NLS-1$
+    
+    /**
+     * 
+     */
+    public static final String MULTI_SOURCE_COLUMN_ALIAS = "multisource.columnName"; //$NON-NLS-1$
 
     private static final long serialVersionUID = 1L;
 
@@ -86,7 +102,9 @@ public class ModelElement extends EntryElement {
         name = (ndx < 0 ? lastSeg : lastSeg.substring(0, ndx));
         type = entry.getType();
         visible = entry.isVisible();
-        if (entry.getSourceName() != null) getSources().add(new SourceElement(entry));
+        for( VdbSource source : entry.getSourceInfo().getSources() ) {
+        	getSources().add(new SourceElement(source));
+        }
         for (final Problem problem : entry.getProblems())
             getProblems().add(new ProblemElement(problem));
         final List<PropertyElement> props = getProperties();
@@ -100,6 +118,16 @@ public class ModelElement extends EntryElement {
         }
         props.add(new PropertyElement(BUILT_IN, Boolean.toString(entry.isBuiltIn())));
         props.add(new PropertyElement(INDEX_NAME, entry.getIndexName()));
+        if( entry.getSourceInfo().isMultiSource() ) {
+        	props.add(new PropertyElement(SUPPORTS_MULTI_SOURCE, Boolean.toString(true)));
+        	if( entry.getSourceInfo().isAddColumn() ) {
+        		props.add(new PropertyElement(MULTI_SOURCE_ADD_COLUMN, Boolean.toString(true)));
+        	}
+        	String alias = entry.getSourceInfo().getColumnAlias();
+        	if( alias != null && alias.length() > 0 ) {
+        		props.add(new PropertyElement(MULTI_SOURCE_COLUMN_ALIAS, alias));
+        	}
+        }
         for (final VdbModelEntry importedEntry : entry.getImports())
             props.add(new PropertyElement(IMPORTS, importedEntry.getName().toString()));
         for (final String importedVdbName : entry.getImportVdbNames())
@@ -145,4 +173,18 @@ public class ModelElement extends EntryElement {
     public boolean isVisible() {
         return visible;
     }
+    
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+        StringBuilder text = new StringBuilder();
+        text.append("PropertyElement : "); //$NON-NLS-1$
+        text.append("\n\t name  = ").append(getName()); //$NON-NLS-1$
+        text.append("\n\t type = ").append(getType()); //$NON-NLS-1$
+        text.append("\n\t visibility = ").append(isVisible()); //$NON-NLS-1$
+
+        return text.toString();
+	}
 }

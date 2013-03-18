@@ -357,7 +357,31 @@ public class VdbUtil {
 							}
 						}
 					}
+					
+					// Check for single source binding but mutliple sources
+					
+					if( model.getSources() != null && model.getSources().size() > 1 ) {
+						boolean multiSourceIsFalse = true;
+						for( PropertyElement prop : model.getProperties() ) {
+							if( prop.getName().equals(ModelElement.SUPPORTS_MULTI_SOURCE) ) {
+								// Check boolean property
+								if( Boolean.parseBoolean(prop.getValue()) ) {
+									multiSourceIsFalse = false;
+									break;
+								}
+							}
+						}
+						
+						if( multiSourceIsFalse ) {
+							statuses.add(new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
+									VdbPlugin.UTIL.getString("vdbValidationWarning_singleSourceModelHasMultipleSources", //$NON-NLS-1$
+									modelName))); 
+						}
+					}
+					
 				}
+				
+
 			}
 		} else {
 			statuses.add(new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID, "ERROR : VDB " + theVdbFile.getName() + " does not exist")); //$NON-NLS-1$  //$NON-NLS-2$

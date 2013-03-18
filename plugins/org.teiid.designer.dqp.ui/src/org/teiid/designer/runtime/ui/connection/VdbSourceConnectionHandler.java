@@ -138,7 +138,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
             // Get available servers and launch SelectTranslatorDialog
             // vdbModelEntry should not be null and should be a Physical model only
             if (vdbModelEntry != null) {
-                String jndiName = vdbModelEntry.getJndiName();
+                String jndiName = vdbModelEntry.getSourceInfo().getSource().getJndiName();
 
                 SelectJndiDataSourceDialog dialog = new SelectJndiDataSourceDialog(Display.getCurrent().getActiveShell());
 
@@ -160,7 +160,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
                 if (dialog.getReturnCode() == Window.OK) {
                     Object result = dialog.getFirstResult();
                     if (result != null && result instanceof ITeiidDataSource) {
-                        vdbModelEntry.setJndiName(((ITeiidDataSource)result).getName());
+                        vdbModelEntry.setJndiName(0, ((ITeiidDataSource)result).getName());
                     }
                 }
             }
@@ -186,7 +186,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
             // vdbModelEntry should not be null and should be a Physical model only
 
             if (vdbModelEntry != null) {
-                String transName = vdbModelEntry.getTranslator();
+                String transName = vdbModelEntry.getSourceInfo().getSource().getTranslatorName();
 
                 SelectTranslatorDialog dialog = new SelectTranslatorDialog(Display.getCurrent().getActiveShell());
 
@@ -208,7 +208,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
                 if (dialog.getReturnCode() == Window.OK) {
                     Object result = dialog.getFirstResult();
                     if (result != null && result instanceof ITeiidTranslator) {
-                        vdbModelEntry.setTranslator(((ITeiidTranslator)result).getName());
+                        vdbModelEntry.setTranslatorName(0, ((ITeiidTranslator)result).getName());
                     }
                 }
             }

@@ -177,7 +177,7 @@ public class VdbDeployer {
 
                     // check DS
                     monitor.subTask(UTIL.getString(PREFIX + "checkModelDataSourceTask", modelName)); //$NON-NLS-1$
-                    String jndiName = modelEntry.getJndiName();
+                    String jndiName = modelEntry.getSourceInfo().getSource().getJndiName();
 
                     // DS is empty
                     if (StringUtilities.isEmpty(jndiName)) {
@@ -308,7 +308,7 @@ public class VdbDeployer {
      */
     private boolean hasValidTranslator( VdbModelEntry modelEntry ) throws Exception {
         // assertion: must be a source model
-        String translatorName = modelEntry.getTranslator();
+        String translatorName = modelEntry.getSourceInfo().getSource().getTranslatorName();
 
         // must have a translator
         if (StringUtilities.isEmpty(translatorName)) {

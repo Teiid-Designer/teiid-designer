@@ -52,6 +52,7 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.designer.ModelerCoreRuntimeException;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
@@ -96,6 +97,8 @@ import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.VdbSource;
+import org.teiid.designer.vdb.VdbSourceInfo;
 import org.teiid.designer.vdb.VdbUtil;
 
 
@@ -499,8 +502,8 @@ public final class PreviewManager extends JobChangeAdapter
                 getOrCreateDataSource(model, jndiName);
             }
 
-            if (!jndiName.equals(modelEntry.getJndiName())) {
-                modelEntry.setJndiName(jndiName);
+            if (!jndiName.equals(getSourceJndiName(modelEntry)) ) {
+                modelEntry.setJndiName(0, jndiName);
             }
         } else {
             connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.ModelDoesNotHaveConnectionInfoError,
@@ -508,15 +511,15 @@ public final class PreviewManager extends JobChangeAdapter
         }
 
         // if no translator name see if we can get one
-        if (StringUtilities.isEmpty(modelEntry.getTranslator())) {
+        if (StringUtilities.isEmpty(getSourceTranslatorName(modelEntry)) ) {
             IConnectionProfile connectionProfile = helper.getConnectionProfile(modelResource);
 
             // get translator
             if (connectionProfile == null) {
                 // Teiid throws an error when deploying VDB if translator is not set so set to LOOPBACK as default
-                modelEntry.setTranslator(DataSourceConnectionConstants.Translators.LOOPBACK);
+                modelEntry.setTranslatorName(0, DataSourceConnectionConstants.Translators.LOOPBACK);
             } else {
-                modelEntry.setTranslator(JdbcTranslatorHelper.getTranslator(connectionProfile));
+                modelEntry.setTranslatorName(0, JdbcTranslatorHelper.getTranslator(connectionProfile));
             }
         }
 
@@ -1781,6 +1784,36 @@ public final class PreviewManager extends JobChangeAdapter
                 modelProjectOpened(project);
             }
         }
+    }
+    
+    /*
+     * 
+     */
+    private String getSourceJndiName(VdbModelEntry entry) {
+    	// Assuming a single source....
+    	VdbSourceInfo info = entry.getSourceInfo();
+    	
+    	if( !info.isMultiSource() && info.getSourceCount() == 1 ) {
+    		VdbSource source = entry.getSourceInfo().getSources().iterator().next();
+    		return source.getJndiName();
+    	}
+    	
+    	throw new ModelerCoreRuntimeException("Invalid VDB Source info for VDB model entry" + entry.getName());
+    }
+    
+    /*
+     * 
+     */
+    private String getSourceTranslatorName(VdbModelEntry entry) {
+    	// Assuming a single source....
+    	VdbSourceInfo info = entry.getSourceInfo();
+    	
+    	if( !info.isMultiSource() && info.getSourceCount() == 1 ) {
+    		VdbSource source = entry.getSourceInfo().getSources().iterator().next();
+    		return source.getTranslatorName();
+    	}
+    	
+    	throw new ModelerCoreRuntimeException("Invalid VDB Source info for VDB model entry" + entry.getName());
     }
 
     class PreviewVdbStatus {

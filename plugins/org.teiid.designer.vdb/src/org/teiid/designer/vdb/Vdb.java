@@ -994,21 +994,27 @@ public final class Vdb {
 
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB
-         * physical model entry's {@link VdbModelEntry#getSourceName() source name} changes
+         * physical model entry's {@link VdbModelEntry#getSourceInfo() source name} changes
          */
         public static final String MODEL_SOURCE_NAME = "modelentry.sourceName"; //$NON-NLS-1$
 
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB
-         * physical model entry's {@link VdbModelEntry#getTranslator() translator} changes
+         * physical model entry's {@link VdbModelEntry#getSourceInfo() source translator name} changes
          */
         public static final String MODEL_TRANSLATOR = "modelEntry.translator"; //$NON-NLS-1$
 
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB
-         * physical model entry's {@link VdbModelEntry#getJndiName() JNDI name} changes
+         * physical model entry's {@link VdbModelEntry#getSourceInfo() source JNDI name} changes
          */
         public static final String MODEL_JNDI_NAME = "modelEntry.jndiName"; //$NON-NLS-1$
+        
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB
+         * physical model entry's {@link VdbModelEntry#getSourceInfo() data} changes
+         */
+        public static final String MODEL_SOURCES = "modelEntry.sources"; //$NON-NLS-1$
 
         /**
 	     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when an data policy is
