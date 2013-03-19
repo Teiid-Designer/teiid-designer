@@ -138,7 +138,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
             // Get available servers and launch SelectTranslatorDialog
             // vdbModelEntry should not be null and should be a Physical model only
             if (vdbModelEntry != null) {
-                String jndiName = vdbModelEntry.getSourceInfo().getSource().getJndiName();
+                String jndiName = vdbModelEntry.getSourceInfo().getSource(0).getJndiName();
 
                 SelectJndiDataSourceDialog dialog = new SelectJndiDataSourceDialog(Display.getCurrent().getActiveShell());
 
@@ -186,7 +186,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
             // vdbModelEntry should not be null and should be a Physical model only
 
             if (vdbModelEntry != null) {
-                String transName = vdbModelEntry.getSourceInfo().getSource().getTranslatorName();
+                String transName = vdbModelEntry.getSourceInfo().getSource(0).getTranslatorName();
 
                 SelectTranslatorDialog dialog = new SelectTranslatorDialog(Display.getCurrent().getActiveShell());
 

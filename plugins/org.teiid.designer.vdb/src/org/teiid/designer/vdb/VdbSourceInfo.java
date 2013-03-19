@@ -22,6 +22,12 @@ import org.teiid.designer.vdb.manifest.SourceElement;
  *
  */
 public class VdbSourceInfo {
+	
+	/**
+	 * 
+	 */
+	public static final String DEFAULT_SOURCE_NAME = "default"; //$NON-NLS-1$
+	
 	// Reference info from Teiid documentation
 	/*
 	 * The following is an example of vdb.xml model entry that supports multi-source bindings
@@ -140,23 +146,9 @@ public class VdbSourceInfo {
 	 */
 	public VdbSource getSource(String name) {
 		CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
+		CoreArgCheck.isNotEmpty(this.sources.values());
 		
-		if( !sources.isEmpty() ) {
-			return sources.values().iterator().next();
-		}
 		return this.sources.get(name);
-	}
-	
-	/**
-	 * @return the VdbSource instance if it exists in the sources map
-	 */
-	public VdbSource getSource() {
-		// TODO: check for Multi-source
-		if(!sources.isEmpty() ) {
-			return sources.values().iterator().next();
-		}
-		
-		return null;
 	}
 	
 	/**
@@ -164,8 +156,10 @@ public class VdbSourceInfo {
 	 * @return the VdbSource instance if it exists in the sources map
 	 */
 	public VdbSource getSource(int index) {
-		// TODO: check for Multi-source
-		if(!sources.isEmpty() && sources.size() < index ) {
+		if( sources.isEmpty() ) {
+			add(DEFAULT_SOURCE_NAME, null, null);
+		}
+		if(index < sources.size()  ) {
 			for( int i=0; i<sources.size(); i++ ) {
 				VdbSource source = sources.values().iterator().next();
 				if( i == index ) return source;

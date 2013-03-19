@@ -435,7 +435,8 @@ public class TeiidServer implements ITeiidServer {
      */
     @Override
     public IStatus testJDBCPing(String host, String port, String username, String password) {
-        try {
+    	IStatus pingStatus = Status.OK_STATUS;
+    	try {
             boolean testCausesConnect = false;
             
             if (admin == null) {
@@ -443,7 +444,7 @@ public class TeiidServer implements ITeiidServer {
                 testCausesConnect = true;
             }
             
-            admin.ping(PingType.JDBC);
+            pingStatus = admin.ping(PingType.JDBC);
             
             // Only disconnect if this test ping caused
             // the connect
@@ -456,7 +457,7 @@ public class TeiidServer implements ITeiidServer {
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, e);
         }
 
-        return Status.OK_STATUS;
+        return pingStatus;
     }
     
     private String getVdbDataSourceConnectionUrl(String vdbName) {

@@ -116,11 +116,11 @@ public class VdbModelEntryTest {
 
     @Test
     public void shouldReflectJndiNameAsSimpleModelName() throws Exception {
-        assertThat(entry.getSourceInfo().getSource().getJndiName(), is(modelResourceFileName));
+        assertThat(entry.getSourceInfo().getSource(0).getJndiName(), is(modelResourceFileName));
     }
 
     @Test
     public void shouldReflectSourceNameAsSimpleModelName() throws Exception {
-        assertThat(entry.getSourceInfo().getSource().getName(), is(modelResourceFileName));
+        assertThat(entry.getSourceInfo().getSource(0).getName(), is(modelResourceFileName));
     }
 }

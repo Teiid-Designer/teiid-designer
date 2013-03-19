@@ -524,7 +524,7 @@ public final class VdbModelEntry extends VdbEntry {
     	CoreArgCheck.isTrue(index < sourceInfo.getSourceCount(), "index out of range"); //$NON-NLS-1$
     	
     	if (StringUtilities.isEmpty(name)) name = null;
-    	String oldName = sourceInfo.getSource().getJndiName();
+    	String oldName = sourceInfo.getSource(index).getJndiName();
         if (StringUtilities.equals(name, oldName)) return;
         sourceInfo.getSource(index).setJndiName(name);
     }
@@ -537,7 +537,7 @@ public final class VdbModelEntry extends VdbEntry {
     	CoreArgCheck.isTrue(index < sourceInfo.getSourceCount(), "index out of range"); //$NON-NLS-1$
     	
     	if (StringUtilities.isEmpty(name)) name = null;
-    	String oldName = sourceInfo.getSource().getName();
+    	String oldName = sourceInfo.getSource(index).getName();
         if (StringUtilities.equals(name, oldName)) return;
         sourceInfo.getSource(index).setName(name);
     }
@@ -549,7 +549,7 @@ public final class VdbModelEntry extends VdbEntry {
     public final void setTranslatorName(  int index, String name ) {
     	CoreArgCheck.isTrue(index < sourceInfo.getSourceCount(), "index out of range"); //$NON-NLS-1$
     	if (StringUtilities.isEmpty(name)) name = null;
-    	String oldName = sourceInfo.getSource().getTranslatorName();
+    	String oldName = sourceInfo.getSource(index).getTranslatorName();
         if (StringUtilities.equals(name, oldName)) return;
         sourceInfo.getSource(index).setTranslatorName(name);
     }
@@ -595,16 +595,16 @@ public final class VdbModelEntry extends VdbEntry {
             return;
         }
     	TranslatorOverride to = getTranslatorOverride();
-    	String oldTranslator = this.sourceInfo.getSource().getTranslatorName();
+    	String oldTranslator = this.sourceInfo.getSource(0).getTranslatorName();
     	String newTranslator = null;
     	if( to == null ) {
     		String toName = null;
-    		if( !oldTranslator.startsWith(this.sourceInfo.getSource().getName()) ) {
-    			toName = this.sourceInfo.getSource().getName() + '_' + oldTranslator;
+    		if( !oldTranslator.startsWith(this.sourceInfo.getSource(0).getName()) ) {
+    			toName = this.sourceInfo.getSource(0).getName() + '_' + oldTranslator;
     		}
     		to = new TranslatorOverride(getVdb(), toName, oldTranslator, null);
     		newTranslator = toName;
-    		this.sourceInfo.getSource().setTranslatorName(toName);
+    		this.sourceInfo.getSource(0).setTranslatorName(toName);
     		getVdb().addTranslator(to, new NullProgressMonitor());
     	}
     	
@@ -664,10 +664,10 @@ public final class VdbModelEntry extends VdbEntry {
 	                final ModelResource mr = ModelerCore.getModelEditor().findModelResource(workspaceFile);
 	                final ConnectionInfoHelper helper = new ConnectionInfoHelper();
 	                
-	                String translatorName = this.sourceInfo.getSource().getTranslatorName();
+	                String translatorName = this.sourceInfo.getSource(0).getTranslatorName();
 	                if (CoreStringUtil.isEmpty(translatorName)) {
 	                    final String translator = helper.getTranslatorName(mr);
-	                    this.sourceInfo.getSource().setTranslatorName(translator == null ? EMPTY_STR : translator);
+	                    this.sourceInfo.getSource(0).setTranslatorName(translator == null ? EMPTY_STR : translator);
 	                }
 	                
 	                Properties translatorProps = helper.getTranslatorProperties(mr);
