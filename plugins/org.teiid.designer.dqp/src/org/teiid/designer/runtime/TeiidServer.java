@@ -407,20 +407,20 @@ public class TeiidServer implements ITeiidServer {
                 testCausesConnect = true;
             }
             
-            ping();
-            
+            IStatus status = ping();
+
             // Only disconnect if this test ping caused
             // the connect
             if (testCausesConnect) {
                 disconnect();
             }
-            
+
+            return status;
+
         } catch (Exception e) {
             String msg = Util.getString("cannotConnectToServer", this); //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, e);
         }
-
-        return Status.OK_STATUS;
     }
     
     /**
@@ -435,8 +435,7 @@ public class TeiidServer implements ITeiidServer {
      */
     @Override
     public IStatus testJDBCPing(String host, String port, String username, String password) {
-    	IStatus pingStatus = Status.OK_STATUS;
-    	try {
+        try {
             boolean testCausesConnect = false;
             
             if (admin == null) {
@@ -444,20 +443,20 @@ public class TeiidServer implements ITeiidServer {
                 testCausesConnect = true;
             }
             
-            pingStatus = admin.ping(PingType.JDBC);
-            
+            IStatus status = admin.ping(PingType.JDBC);
+
             // Only disconnect if this test ping caused
             // the connect
             if (testCausesConnect) {
                 disconnect();
             }
-            
+
+            return status;
+
         } catch (Exception e) {
             String msg = Util.getString("cannotConnectToServer", this); //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, e);
         }
-
-        return pingStatus;
     }
     
     private String getVdbDataSourceConnectionUrl(String vdbName) {
