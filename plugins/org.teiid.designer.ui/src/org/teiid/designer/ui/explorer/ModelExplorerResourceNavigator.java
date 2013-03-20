@@ -540,7 +540,9 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
 
                 @Override
                 public void run() {
-                    defaultServerLink.setText(hyperlinkText);
+                	if( !defaultServerLink.isDisposed() ) {
+                		defaultServerLink.setText(hyperlinkText);
+                	}
                 }
             });
         }
