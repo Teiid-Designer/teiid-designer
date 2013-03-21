@@ -27,6 +27,7 @@ import org.teiid.designer.query.sql.lang.ISetCriteria;
 import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.designer.query.sql.lang.IUpdate;
 import org.teiid.designer.query.sql.symbol.IAliasSymbol;
+import org.teiid.designer.query.sql.symbol.IConstant;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
@@ -114,6 +115,8 @@ public class DisplayNodeFactory {
         } else if (obj instanceof IOrderBy) {
             OrderByDisplayNode node = new OrderByDisplayNode(parentNode, (IOrderBy)obj);
             return node;
+        } else if( parentNode instanceof FunctionDisplayNode && obj instanceof IConstant && ((IConstant)obj).getValue() != null ) {
+        	return new TextDisplayNode(parentNode, obj.toString());
         } else if (obj instanceof String) {
             // ---------------------------------------------------------------------
             // Keywords, Separators, Unknown Strings

@@ -134,14 +134,23 @@ public class TestDisplayNodeFactory extends TestCase {
         addExpectedResult("testBlock1", VERSION_7_7_2, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND");  //$NON-NLS-1$//$NON-NLS-2$
         addExpectedResult("testBlock1", VERSION_8_2_0, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
         
-        addExpectedResult("testCreateUpdateProcedure1", VERSION_7_7_2, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND");
-        addExpectedResult("testCreateUpdateProcedure1", VERSION_8_2_0, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND");
+        addExpectedResult("testCreateUpdateProcedure1", VERSION_7_7_2, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+        addExpectedResult("testCreateUpdateProcedure1", VERSION_8_2_0, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
         
-        addExpectedResult("testCreateUpdateProcedure2", VERSION_7_7_2, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND");
-        addExpectedResult("testCreateUpdateProcedure2", VERSION_8_2_0, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND");
+        addExpectedResult("testCreateUpdateProcedure2", VERSION_7_7_2, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+        addExpectedResult("testCreateUpdateProcedure2", VERSION_8_2_0, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
         
-        addExpectedResult("testCreateUpdateProcedure3", VERSION_7_7_2, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND");
-        addExpectedResult("testCreateUpdateProcedure3", VERSION_8_2_0, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND");
+        addExpectedResult("testCreateUpdateProcedure3", VERSION_7_7_2, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+        addExpectedResult("testCreateUpdateProcedure3", VERSION_8_2_0, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+        
+        addExpectedResult("testTrimAliasSymbol", VERSION_7_7_2, "SELECT\n\t\ttrim(' ' FROM X) AS ID\n\tFROM\n\t\tY"); //$NON-NLS-1$ //$NON-NLS-2$
+        addExpectedResult("testTrimAliasSymbol", VERSION_8_2_0, "SELECT\n\t\ttrim(' ' FROM X) AS ID\n\tFROM\n\t\tY"); //$NON-NLS-1$ //$NON-NLS-2$
+        
+        addExpectedResult("testConstantAliasSymbol", VERSION_7_7_2, "SELECT\n\t\t'123' AS ID\n\tFROM\n\t\tX"); //$NON-NLS-1$ //$NON-NLS-2$
+        addExpectedResult("testConstantAliasSymbol", VERSION_8_2_0, "SELECT\n\t\t'123' AS ID\n\tFROM\n\t\tX"); //$NON-NLS-1$ //$NON-NLS-2$
+        
+        addExpectedResult("testConcatWithNull", VERSION_7_7_2, "SELECT\n\t\tconcat('abcd', null) AS ProductName\n\tFROM\n\t\tPRODUCTDATA"); //$NON-NLS-1$ //$NON-NLS-2$
+        addExpectedResult("testConcatWithNull", VERSION_8_2_0, "SELECT\n\t\tconcat('abcd', null) AS ProductName\n\tFROM\n\t\tPRODUCTDATA"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     private String getExpectedResult(String testName, ITeiidServerVersion version) {
@@ -1385,8 +1394,8 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testFunction1() {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);
-            List<? extends IExpression> expressions = Arrays.asList(factory.createConstant("a"), null);
-            IFunction func = factory.createFunction("concat", expressions);
+            List<? extends IExpression> expressions = Arrays.asList(factory.createConstant("a"), null); //$NON-NLS-1$
+            IFunction func = factory.createFunction("concat", expressions); //$NON-NLS-1$
             helpTest(func, "concat('a', <undefined>)"); //$NON-NLS-1$
         }
     }
@@ -2087,6 +2096,31 @@ public class TestDisplayNodeFactory extends TestCase {
             setDefaultServerVersion(version);
             ILanguageObject ex = parser.parseCommand("/*+ cache(pref_mem) */ select * from db.g2"); //$NON-NLS-1$
             helpTest(ex, "/*+ cache(pref_mem) */\nSELECT\n\t\t*\n\tFROM\n\t\tdb.g2"); //$NON-NLS-1$
+        }
+    }
+    
+    public void testConstantAliasSymbol() throws Exception {
+        for (ITeiidServerVersion version : serverVersions) {
+            setDefaultServerVersion(version);
+            ILanguageObject agg = parser.parseCommand("SELECT '123' AS ID FROM X"); //$NON-NLS-1$
+            helpTest(agg, getExpectedResult("testConstantAliasSymbol", version)); //$NON-NLS-1$
+        }
+    }
+    
+    public void testTrimAliasSymbol() throws Exception {
+    	// "testTrimAliasSymbol" trim(' ' FROM X) AS ID"); //$NON-NLS-1$ //$NON-NLS-2$
+        for (ITeiidServerVersion version : serverVersions) {
+            setDefaultServerVersion(version);
+            ILanguageObject agg = parser.parseCommand("SELECT trim(' ' FROM X) AS ID FROM Y"); //$NON-NLS-1$
+            helpTest(agg, getExpectedResult("testTrimAliasSymbol", version)); //$NON-NLS-1$
+        }
+    }
+    
+    public void testConcatWithNull() throws Exception {
+        for (ITeiidServerVersion version : serverVersions) {
+            setDefaultServerVersion(version);
+            ILanguageObject agg = parser.parseCommand("SELECT concat('abcd', null) AS ProductName FROM	PRODUCTDATA"); //$NON-NLS-1$
+            helpTest(agg, getExpectedResult("testConcatWithNull", version)); //$NON-NLS-1$
         }
     }
 
