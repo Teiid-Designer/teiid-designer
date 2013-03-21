@@ -534,15 +534,15 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             });
 
         } else {
+        	if( defaultServerSectionBody.isDisposed() || defaultServerLink.isDisposed() ) return;
+        	
             Display display = defaultServerSectionBody.getDisplay();
             final String hyperlinkText = linkText;
             display.asyncExec(new Runnable() {
 
                 @Override
                 public void run() {
-                	if( !defaultServerLink.isDisposed() ) {
-                		defaultServerLink.setText(hyperlinkText);
-                	}
+                	defaultServerLink.setText(hyperlinkText);
                 }
             });
         }
