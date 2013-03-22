@@ -12,10 +12,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -52,6 +55,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.ToolBar;
@@ -119,6 +123,9 @@ public class JdbcImportObjectsPage extends WizardPage
 
     private static final String UNKNOWN_COLUMN_LABEL = "Col_"; //$NON-NLS-1$
 
+    private static final String CHECK_SELECTED = getString("checkSelected"); //$NON-NLS-1$
+    
+    private static final String UNCHECK_SELECTED = getString("uncheckSelected"); //$NON-NLS-1$
     /**
      * @since 4.0
      */
@@ -144,6 +151,9 @@ public class JdbcImportObjectsPage extends WizardPage
     Button showSelectedSchemasButton;
     private JdbcNode selectedNode;
     private Map counts;
+    
+    private IAction checkSelectedAction;
+    private IAction uncheckSelectedAction;
     
     private JdbcImporter importer;
 
@@ -201,10 +211,14 @@ public class JdbcImportObjectsPage extends WizardPage
                 mgr.update(true);
                 this.objsView.setTopRight(bar);
                 // Add contents to view form
-                this.treeViewer = new TreeViewer(this.objsView, SWT.CHECK | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
+                this.treeViewer = new TreeViewer(this.objsView, SWT.MULTI | SWT.CHECK | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
                 final Tree tree = this.treeViewer.getTree();
                 this.objsView.setContent(tree);
                 this.treeViewer.setContentProvider(createTreeContentProvider());
+                
+                MenuManager menuMgr = createContextMenu();
+                Menu menu = menuMgr.createContextMenu(treeViewer.getControl());
+                treeViewer.getControl().setMenu(menu);
 
                 // Check events can occur separate from selection events.
                 // In this case move the selected node.
@@ -310,6 +324,51 @@ public class JdbcImportObjectsPage extends WizardPage
                 saveWidgetValues();
             }
         });
+    }
+    
+    private MenuManager createContextMenu() {
+        MenuManager mgr = new MenuManager();
+
+        this.checkSelectedAction = new Action(CHECK_SELECTED, SWT.BORDER) {
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.jface.action.Action#run()
+             */
+            @Override
+            public void run() {
+                TreeItem[] items = JdbcImportObjectsPage.this.treeViewer.getTree().getSelection();
+                for( TreeItem item : items ) {
+                	JdbcNode jdbcNode = (JdbcNode)item.getData();
+                	item.setChecked(true);
+	                nodeSelected(jdbcNode);
+	                setNodeSelected(jdbcNode, item, true);
+                }
+            }
+        };
+        
+        this.uncheckSelectedAction = new Action(UNCHECK_SELECTED, SWT.BORDER) {
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.jface.action.Action#run()
+             */
+            @Override
+            public void run() {
+                TreeItem[] items = JdbcImportObjectsPage.this.treeViewer.getTree().getSelection();
+                for( TreeItem item : items ) {
+                	JdbcNode jdbcNode = (JdbcNode)item.getData();
+                	item.setChecked(false);
+	                nodeSelected(jdbcNode);
+	                setNodeSelected(jdbcNode, item, false);
+                }
+            }
+        };
+        
+        mgr.add(this.checkSelectedAction);
+        mgr.add(this.uncheckSelectedAction);
+
+        return mgr;
     }
 
     /**
