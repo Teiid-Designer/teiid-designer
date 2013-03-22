@@ -835,7 +835,9 @@ public final class ExportDdlWizard extends AbstractWizard
                 buffer.append(DDL_EXTENSION);
             }
             this.fileCombo.setText(buffer.toString());
+            this.file = new File(file);
         }
+        validatePage();
     }
 
     /**
@@ -1014,6 +1016,8 @@ public final class ExportDdlWizard extends AbstractWizard
                 WizardUtil.setPageComplete(this.pg, INVALID_FILE_MESSAGE, IMessageProvider.ERROR);
             } else if (this.file.exists()) {
                 WizardUtil.setPageComplete(this.pg, WidgetUtil.getFileExistsMessage(this.file), IMessageProvider.WARNING);
+            } else {
+            	WizardUtil.setPageComplete(this.pg);
             }
         } else {
             WizardUtil.setPageComplete(this.pg);
