@@ -106,7 +106,9 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         for (final Iterator<?> iter = selection.iterator(); iter.hasNext();) {
             final Object resource = iter.next();
             if (resource instanceof IContainer) selectedContainers.add((IContainer)resource);
-            else selectedContainers.add(((IResource)resource).getParent());
+            else if( resource instanceof IResource ) {
+            	selectedContainers.add(((IResource)resource).getParent());
+            }
             if (selectedContainers.size() > 1) return;
         }
         if (selectedContainers.size() == 0) {
