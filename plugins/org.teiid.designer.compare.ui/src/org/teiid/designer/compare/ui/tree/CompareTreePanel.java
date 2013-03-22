@@ -14,7 +14,6 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
@@ -28,9 +27,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -76,11 +78,11 @@ public class CompareTreePanel implements UiConstants, PluginConstants {
     private ArrayList<TreeItem> arylTreeItemDepthFirstList;
     private TreeItem tiCurrentSelection;
     private boolean bUpdatingSelection = false;
-
-    private ToolBar tbToolBar;
-    private ToolBarManager tbmToolBarMgr;
-    private Action actUp;
-    private Action actDown;
+    
+    Button upButton;
+    Button downButton;
+    Button selectAllButton;
+    Button deselectAllButton;
     
     private Composite parent;
 
@@ -154,7 +156,8 @@ public class CompareTreePanel implements UiConstants, PluginConstants {
         return this.treeViewer;
     }
 
-    private void initialize( int terminology ) {
+    @SuppressWarnings("unused")
+	private void initialize( int terminology ) {
 
     	if( this.title != null && this.title.trim().length() > 0 ) {
 	        // create title and make it bold
@@ -168,6 +171,11 @@ public class CompareTreePanel implements UiConstants, PluginConstants {
     	}
     	
         // create the up/down toolbar
+    	
+    	TOOLBAR : {
+
+    	}
+    	
         createToolBar();
 
         // tree
@@ -239,63 +247,60 @@ public class CompareTreePanel implements UiConstants, PluginConstants {
     }
 
     protected void createToolBar() {
+		// Create panel
+		Composite buttonPanel = WidgetFactory.createPanel(this.parent);
+		buttonPanel.setLayout(new GridLayout(4, false));
+		
+	    upButton = new Button(buttonPanel, SWT.PUSH);
+	    upButton.setImage(UiPlugin.getDefault().getImage(PluginConstants.Images.NEXT_NAV));
+	    upButton.setToolTipText(NEXT_NAV_TIP);
+	    upButton.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleUpArrow();
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 
-        tbToolBar = new ToolBar(this.parent, SWT.FLAT | SWT.WRAP);
-        tbmToolBarMgr = new PaneToolBarManager(tbToolBar);
-
-        // == Down (next) Arrow
-        actDown = new Action() {
-
-            @Override
-            public void run() {
-                handleDownArrow();
-            }
-        };
-
-        actDown.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(PluginConstants.Images.NEXT_NAV));
-        actDown.setToolTipText(NEXT_NAV_TIP);
-        tbmToolBarMgr.add(actDown);
-
-        // == Up (previous) Arrow
-        actUp = new Action() {
-
-            @Override
-            public void run() {
-                handleUpArrow();
-            }
-        };
-        actUp.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(PluginConstants.Images.PREV_NAV));
-        actUp.setToolTipText(PREV_NAV_TIP);
-        tbmToolBarMgr.add(actUp);
-
-        tbmToolBarMgr.update(true);
-        
-        // button panel
-        if (showCheckBoxes) {
-        	Action selectAll = new Action() {
-
-                @Override
-                public void run() {
-                	handleSelectAll();
-                }
-            };
-            selectAll.setToolTipText(SELECT_ALL_TIP);
-            selectAll.setText(SELECT_ALL_TEXT);
-            tbmToolBarMgr.add(selectAll);
-            
-        	Action unselectAll = new Action() {
-
-                @Override
-                public void run() {
-                	handleUnselectAll();
-                }
-            };
-            unselectAll.setToolTipText(UNSELECT_ALL_TIP);
-            unselectAll.setText(UNSELECT_ALL_TEXT);
-            tbmToolBarMgr.add(unselectAll);
-        	
-            tbmToolBarMgr.update(true);
-        }
+	    downButton = new Button(buttonPanel, SWT.PUSH);
+	    downButton.setImage(UiPlugin.getDefault().getImage(PluginConstants.Images.PREV_NAV));
+	    downButton.setToolTipText(PREV_NAV_TIP);
+	    downButton.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleDownArrow();
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+	    selectAllButton = new Button(buttonPanel, SWT.PUSH);
+	    selectAllButton.setText(SELECT_ALL_TEXT);
+	    selectAllButton.setToolTipText(SELECT_ALL_TIP);
+	    selectAllButton.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleSelectAll();
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+	    
+	    deselectAllButton = new Button(buttonPanel, SWT.PUSH);
+	    deselectAllButton.setText(UNSELECT_ALL_TEXT);
+	    deselectAllButton.setToolTipText(UNSELECT_ALL_TIP);
+	    deselectAllButton.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleUnselectAll();
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
     }
 
     void handleSelectAll() {
@@ -319,8 +324,8 @@ public class CompareTreePanel implements UiConstants, PluginConstants {
         generateStats();
 
         if ((getAdditionCount() == 0) && (getChangeCount() == 0) && (getDeletionCount() == 0)) {
-            this.actDown.setEnabled(false);
-            this.actUp.setEnabled(false);
+            this.upButton.setEnabled(false);
+            this.downButton.setEnabled(false);
         }
     }
 
