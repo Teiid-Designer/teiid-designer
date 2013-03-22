@@ -635,7 +635,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
      */
     void browseButtonSelected() {
 
-        IContainer folder = getFolder();
+        folder = getFolder();
 
         if (folder != null) {
             this.folderText.setText(folder.getFullPath().makeRelative().toString());
@@ -924,7 +924,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
             IStatus status = ModelNameUtil.validate(name, ModelerCore.MODEL_FILE_EXTENSION, folder,
             		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
             
-            if( status.getSeverity() == IStatus.ERROR ) {
+            if( !updating && status.getSeverity() == IStatus.ERROR ) {
                 WizardUtil.setPageComplete(this, status.getMessage(), ERROR);
                 folder = null;
             }
