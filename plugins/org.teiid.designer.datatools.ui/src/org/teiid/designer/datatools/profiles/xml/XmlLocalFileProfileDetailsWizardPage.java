@@ -8,9 +8,11 @@
 package org.teiid.designer.datatools.profiles.xml;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 import java.util.Properties;
-
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPage;
@@ -40,8 +42,6 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 
 public class XmlLocalFileProfileDetailsWizardPage  extends ConnectionProfileDetailsPage
 		implements Listener, DatatoolsUiConstants {
-
-	private static final String FILE_IMPORT_MASK = "*.xml;";//$NON-NLS-1$
 	
     private Composite scrolled;
 
@@ -117,7 +117,7 @@ public class XmlLocalFileProfileDetailsWizardPage  extends ConnectionProfileDeta
 
         Text descriptionText = new Text(descriptionGroup,  SWT.WRAP | SWT.READ_ONLY);
         gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
-        gd.heightHint = 100;
+        gd.heightHint = 150;
         gd.widthHint = 300;
         descriptionText.setLayoutData(gd);
         descriptionText.setText(UTIL.getString("XmlLocalFileProfileDetailsWizardPage.descriptionMessage")); //$NON-NLS-1$
@@ -163,7 +163,6 @@ public class XmlLocalFileProfileDetailsWizardPage  extends ConnectionProfileDeta
         String selectedFilePath = null;
 
         final FileDialog dialog = new FileDialog(localFilePathText.getShell(), SWT.OPEN);
-        dialog.setFilterExtensions(new String[] {FILE_IMPORT_MASK});
 
         final String currentSourceString = localFilePathText.getText();
         if (currentSourceString != null) {
@@ -234,12 +233,17 @@ public class XmlLocalFileProfileDetailsWizardPage  extends ConnectionProfileDeta
 			return;
 		}
         
-        // Check to see if URL ends with .xml ??
+        // Check to see if URL is a parseable xml file, regardless of extension
         String urlString = properties.get(IXmlProfileConstants.LOCAL_FILE_PATH_PROP_ID).toString();
         
-        if( !urlString.toUpperCase().endsWith(DOT_XML_UPPER_CASE) ) {
-        	setErrorMessage(UTIL.getString("XmlLocalFileDetailsWizardPage.NotXmlFile.Message", urlString)); //$NON-NLS-1$
-        	return;
+        try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            File xmlFile = new File(urlString);
+            dBuilder.parse(new FileInputStream(xmlFile));
+        } catch (Exception ex) {
+            setErrorMessage(UTIL.getString("XmlLocalProfileDetailsWizardPage.InvalidXml.Message", urlString, ex.getMessage())); //$NON-NLS-1$
+            return;
         }
         
         setErrorMessage(null);

@@ -9,11 +9,11 @@ package org.teiid.designer.datatools.profiles.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
-
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -45,6 +45,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
 
 public class XmlUrlProfileDetailsWizardPage  extends ConnectionProfileDetailsPage
@@ -100,6 +101,7 @@ public class XmlUrlProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         gd.grabExcessHorizontalSpace = true;
         gd.horizontalSpan = 1;
         descriptionText.setLayoutData(gd);
+        
         String description = ((XmlUrlConnectionProfileWizard)getWizard()).getProfileDescription();
         descriptionText.setText(description);
         descriptionText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
@@ -120,7 +122,7 @@ public class XmlUrlProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
 
         Text descriptionText = new Text(descriptionGroup,  SWT.WRAP | SWT.READ_ONLY);
         gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
-        gd.heightHint = 100;
+        gd.heightHint = 150;
         gd.widthHint = 300;
         descriptionText.setLayoutData(gd);
         descriptionText.setText(UTIL.getString("XmlUrlProfileDetailsWizardPage.descriptionMessage")); //$NON-NLS-1$
@@ -179,35 +181,48 @@ public class XmlUrlProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         profileText.setText(((NewConnectionProfileWizard)getWizard()).getProfileName());
         descriptionText.setText(((NewConnectionProfileWizard)getWizard()).getProfileDescription());
 
-        Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
+        final Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
         if (null == properties.get(IXmlProfileConstants.URL_PROP_ID)
                 || properties.get(IXmlProfileConstants.URL_PROP_ID).toString().isEmpty()) {
                 setErrorMessage(UTIL.getString("Common.URL.Error.Message")); //$NON-NLS-1$
                 return;
         }
         setErrorMessage(null);
-        try {
-        	@SuppressWarnings("unused")
-			URL url = new URL(properties.get(IXmlProfileConstants.URL_PROP_ID).toString());
-        } catch(MalformedURLException e) {
-        	setErrorMessage(UTIL.getString("Common.URL.Invalid.Message") + e.getMessage()); //$NON-NLS-1$
-        	return;
-        }
         
-        // Check to see if URL ends with .xml ??
-        String urlString = properties.get(IXmlProfileConstants.URL_PROP_ID).toString();
-        
-        if( !urlString.toUpperCase().endsWith(DOT_XML_UPPER_CASE) ) {
-        	setErrorMessage(UTIL.getString("XmlUrlProfileDetailsWizardPage.NotXmlUrl.Message", urlString)); //$NON-NLS-1$
-        	return;
-        }
-        
-        setPingButtonEnabled(true);
-        
-        setErrorMessage(null);
-        setPageComplete(true);
-        setMessage(UTIL.getString("Click.Next.or.Finish")); //$NON-NLS-1$
+        final Display display = getControl().getDisplay();
+        UiBusyIndicator.showWhile(display, new Runnable() {
 
+            @Override
+            public void run() {
+                // Check to see if URL is a parseable xml file, regardless of extension
+                final String urlString = properties.get(IXmlProfileConstants.URL_PROP_ID).toString();
+                final String[] errorMessage = new String[1];
+
+                try {
+                    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                    dBuilder.parse(new URL(urlString).openStream());
+                } catch (Exception ex) {
+                    errorMessage[0] = UTIL.getString("XmlUrlProfileDetailsWizardPage.InvalidXml.Message", urlString, ex.getMessage()); //$NON-NLS-1$
+                }
+
+                display.syncExec(new Runnable() {
+                    @Override
+                    public void run() {
+                        setPingButtonEnabled(true);
+
+                        if(errorMessage[0] != null) {
+                            setErrorMessage(errorMessage[0]);
+                            return;
+                        }
+
+                        setErrorMessage(null);
+                        setPageComplete(true);
+                        setMessage(UTIL.getString("Click.Next.or.Finish")); //$NON-NLS-1$
+                    }
+                });
+            }
+        });
     }
     
     /**
