@@ -26,7 +26,7 @@ public class TeiidFolderAdapterFactory implements IAdapterFactory {
 
         if (ITeiidResourceNode.class == adapterType)
             return adaptToTeiidResourceNode(abstractTeiidFolder);
-        else if (adapterType.isInstance(ITeiidServer.class))
+        else if (ITeiidServer.class.isAssignableFrom(adapterType))
             return adaptToTeiidServer(abstractTeiidFolder);
         
         return null;

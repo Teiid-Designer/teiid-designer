@@ -40,7 +40,7 @@ public class TeiidDataNodeAdapterFactory implements IAdapterFactory {
                 return value;
         }
         
-        if (ITeiidServer.class == adapterType) {
+        if (ITeiidServer.class.isAssignableFrom(adapterType)) {
             return adaptToTeiidServer(teiidDataNode);
         }
         
