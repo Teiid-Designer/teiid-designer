@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -26,7 +27,6 @@ import org.teiid.designer.query.IProcedureService;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.query.proc.ITeiidXmlColumnInfo;
 import org.teiid.designer.query.proc.ITeiidXmlFileInfo;
-import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidFileInfo;
 import org.xml.sax.SAXException;
@@ -38,7 +38,7 @@ import org.xml.sax.helpers.LocatorImpl;
  *
  * @since 8.0
  */
-public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQLConstants, ITeiidXmlFileInfo<TeiidXmlColumnInfo> {
+public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITeiidXmlFileInfo<TeiidXmlColumnInfo> {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidXmlFileInfo.class);
 	
 
@@ -539,14 +539,20 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ISQL
     	sb.append(XMLNAMESPACES).append(L_PAREN);
     	int i=0;
     	for( String prefix : this.namespaceMap.keySet() ) {
-    		if( prefix.equalsIgnoreCase(XSI_NAMESPACE_PREFIX)) {
-    			continue;
+    		// Check for prefix identified by value of 0 length string on first key
+    		if( i == 0 && prefix.length() == 0 ) {
+    			String uri = this.namespaceMap.get(prefix);
+	    		sb.append(DEFAULT).append(SPACE).append(S_QUOTE).append(uri).append(S_QUOTE);
+    		} else {
+	    		if( prefix.equalsIgnoreCase(XSI_NAMESPACE_PREFIX)) {
+	    			continue;
+	    		}
+	    		if( i > 0 ) {
+	    			sb.append(COMMA).append(SPACE);
+	    		}
+	    		String uri = this.namespaceMap.get(prefix);
+	    		sb.append(S_QUOTE).append(uri).append(S_QUOTE).append(SPACE).append(AS).append(SPACE).append(prefix);
     		}
-    		if( i > 0 ) {
-    			sb.append(COMMA).append(SPACE);
-    		}
-    		String uri = this.namespaceMap.get(prefix);
-    		sb.append(S_QUOTE).append(uri).append(S_QUOTE).append(SPACE).append(AS).append(SPACE).append(prefix);
     		i++;
     	}
     	sb.append(R_PAREN).append(SPACE).append(COMMA).append(SPACE);
