@@ -7,6 +7,8 @@
  */
 package org.teiid.designer.roles.ui;
 
+import static org.teiid.designer.ui.PluginConstants.Prefs.General.AUTO_WILL_TOGGLE_WITH_CHILDREN;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
@@ -46,12 +49,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.roles.Crud;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
+import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.InternalUiConstants.Widgets;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -75,6 +78,8 @@ public class NewDataRoleWizard extends AbstractWizard {
     private static final String DEFAULT_NAME = "Data Role 1"; //getString("undefinedName"); //$NON-NLS-1$
     private static final String SYS_ADMIN_TABLE_TARGET = "sysadmin"; //$NON-NLS-1$
     private static final String SYS_TABLE_TARGET = "sys"; //$NON-NLS-1$
+    
+    private static final String ALWAYS_TOGGLE_MESSAGE = getString("alwaysToggleAllChildrenMessage"); //$NON-NLS-1$
 
     private static String getString( final String id ) {
         return RolesUiPlugin.UTIL.getString(I18N_PREFIX + id);
@@ -431,14 +436,23 @@ public class NewDataRoleWizard extends AbstractWizard {
             boolean doToggle = true;
             IStatus toggleStatus = this.treeProvider.getToggleStatus(rowData, crudType);
             // If info is returned, the element cannot be toggled - display info dialog
-            if (toggleStatus.getSeverity() == IStatus.INFO) {
-                String title = RolesUiPlugin.UTIL.getString("NewDataRoleWizard.stateChangeInfoDialog.title"); //$NON-NLS-1$
-                MessageDialog.openInformation(getShell(), title, toggleStatus.getMessage());
-                doToggle = false;
-            } else if (toggleStatus.getSeverity() == IStatus.WARNING) {
-                String title = RolesUiPlugin.UTIL.getString("NewDataRoleWizard.stateChangeConfirmDialog.title"); //$NON-NLS-1$
-                doToggle = MessageDialog.openConfirm(getShell(), title, toggleStatus.getMessage());
-            }
+            String autoToggle = UiPlugin.getDefault().getPreferenceStore().getString(AUTO_WILL_TOGGLE_WITH_CHILDREN);
+            if( !MessageDialogWithToggle.ALWAYS.equals(autoToggle) ) {
+	            if (toggleStatus.getSeverity() == IStatus.INFO) {
+	            	doToggle = false;
+	                
+	                String title = RolesUiPlugin.UTIL.getString("NewDataRoleWizard.stateChangeInfoDialog.title"); //$NON-NLS-1$
+	                MessageDialogWithToggle.openOkCancelConfirm(
+	                		getShell(), title, toggleStatus.getMessage(), ALWAYS_TOGGLE_MESSAGE, false,
+	                		UiPlugin.getDefault().getPreferenceStore(), AUTO_WILL_TOGGLE_WITH_CHILDREN);
+	            } else if (toggleStatus.getSeverity() == IStatus.WARNING) {
+	                String title = RolesUiPlugin.UTIL.getString("NewDataRoleWizard.stateChangeConfirmDialog.title"); //$NON-NLS-1$
+	                MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(getShell(), title, toggleStatus.getMessage(),
+	                		ALWAYS_TOGGLE_MESSAGE, false,
+	                        UiPlugin.getDefault().getPreferenceStore(), AUTO_WILL_TOGGLE_WITH_CHILDREN);
+	                doToggle = dialog.getReturnCode() == Window.OK;
+	            }
+	        }
             // Toggle the state
             if (doToggle) {
                 this.treeProvider.togglePermission(rowData, crudType);
