@@ -30,6 +30,7 @@ import org.teiid.designer.query.sql.lang.IQueryCommand;
 import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.designer.query.sql.lang.ISelect;
 import org.teiid.designer.query.sql.lang.ISetQuery;
+import org.teiid.designer.query.sql.lang.util.CommandHelper;
 import org.teiid.designer.query.sql.symbol.IAliasSymbol;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
@@ -102,7 +103,7 @@ public class ReconcilerObject {
         if (originalCommand != null && originalCommand instanceof IQueryCommand) {
             this.sqlModifiable = true;
             modifiedCommand = (IQueryCommand)originalCommand.clone();
-            originalSymbols.addAll(modifiedCommand.getProjectedSymbols());
+            originalSymbols.addAll(CommandHelper.getProjectedSymbols(modifiedCommand));
             // Remember if the the SELECT is select distinct
             this.isSelectDistinct = isSelectDistinct((IQueryCommand)originalCommand);
         }
@@ -555,7 +556,7 @@ public class ReconcilerObject {
     public boolean modifiedSqlHasProjectedSymbols() {
         boolean hasSymbols = false;
         if (modifiedCommand != null) {
-            List symbolList = modifiedCommand.getProjectedSymbols();
+            List symbolList = CommandHelper.getProjectedSymbols(modifiedCommand);
             if (symbolList != null && symbolList.size() > 0) {
                 hasSymbols = true;
             }
@@ -643,7 +644,7 @@ public class ReconcilerObject {
             boolean isDistinct = select.isDistinct();
             if (select.isStar()) {
                 // Get the list of SELECT symbols
-                List symbols = queryCommand.getProjectedSymbols();
+                List symbols = CommandHelper.getProjectedSymbols(queryCommand);
                 
                 IQueryService queryService = ModelerCore.getTeiidQueryService();
                 IQueryFactory factory = queryService.createQueryFactory();

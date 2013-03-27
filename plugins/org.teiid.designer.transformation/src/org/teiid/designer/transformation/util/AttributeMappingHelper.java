@@ -26,6 +26,7 @@ import org.teiid.designer.query.metadata.IMetadataID;
 import org.teiid.designer.query.sql.IElementCollectorVisitor;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.util.CommandHelper;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.transformation.TransformationPlugin;
 
@@ -84,7 +85,7 @@ public class AttributeMappingHelper {
             }
             // Get the SQL Command and the Projected Symbols
             ICommand command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
-            List projectedSymbols = command.getProjectedSymbols();
+            List projectedSymbols = CommandHelper.getProjectedSymbols(command);
             // Get the target attributes that arent specified in an accessPattern
             List attrs = TransformationHelper.getTransformationTargetAttributes((EObject)transMappingRoot);       
             

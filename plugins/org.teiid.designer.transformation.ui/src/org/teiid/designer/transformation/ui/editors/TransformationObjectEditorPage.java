@@ -74,8 +74,10 @@ import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.metamodels.transformation.SqlTransformation;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IExpression;
 import org.teiid.designer.query.sql.lang.IQueryCommand;
 import org.teiid.designer.query.sql.lang.ISetQuery;
+import org.teiid.designer.query.sql.lang.util.CommandHelper;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
@@ -2969,7 +2971,8 @@ public class TransformationObjectEditorPage
                 if (!targetAndSQLOutSizesOK) {
                     if (cmdType == QueryValidator.SELECT_TRNS) {
                         ICommand cmd = TransformationHelper.getCommand(currentMappingRoot, cmdType);
-                        if (cmd.getProjectedSymbols().size() == 0) {
+                        List<IExpression> symbols = CommandHelper.getProjectedSymbols(cmd);
+                        if (symbols.isEmpty()) {
                             buff.append("\n" + QUERY_SIZE_MISMATCH_NO_PROJECTED_SYMBOLS_MSG); //$NON-NLS-1$
                         } else {
                             buff.append("\n" + QUERY_SIZE_MISMATCH_MSG); //$NON-NLS-1$

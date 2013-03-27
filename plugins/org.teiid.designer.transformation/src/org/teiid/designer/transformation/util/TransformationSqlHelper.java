@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +68,7 @@ import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.designer.query.sql.lang.IStoredProcedure;
 import org.teiid.designer.query.sql.lang.ISubqueryFromClause;
 import org.teiid.designer.query.sql.lang.IUnaryFromClause;
+import org.teiid.designer.query.sql.lang.util.CommandHelper;
 import org.teiid.designer.query.sql.proc.IBlock;
 import org.teiid.designer.query.sql.proc.ICommandStatement;
 import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
@@ -934,7 +936,8 @@ public class TransformationSqlHelper implements ISQLConstants {
             result = (IQuery)resolvedQuery.clone();
             // Get the current query ISelect Clause
             ISelect select = resolvedQuery.getSelect();
-            List currentSelectSymbols = resolvedQuery.getProjectedSymbols();
+            
+            List<IExpression> currentSelectSymbols = CommandHelper.getProjectedSymbols(resolvedQuery);
 
             // List of new ISelect Symbols to create
             List newSelectSymbols = removeSymbols(currentSelectSymbols, removeNames);
@@ -1225,10 +1228,8 @@ public class TransformationSqlHelper implements ISQLConstants {
         if (command != null) {
             // maintain collection of short names
             Collection attrNames = new ArrayList();
-            // Get the list of Projected symbols
-            List symbols = command.getProjectedSymbols();
             // Look for duplicate short names
-            for (IExpression seSymbol : command.getProjectedSymbols()) {
+            for (IExpression seSymbol : CommandHelper.getProjectedSymbols(command)) {
                 String name = TransformationSqlHelper.getSingleElementSymbolShortName(seSymbol, false);
                 // Construct unique name using symbol name and previous names
                 String uniqueName = getUniqueName(name, attrNames);
@@ -1249,13 +1250,12 @@ public class TransformationSqlHelper implements ISQLConstants {
         // ---------------------------------------------------
         // Get the List of ProjectedSymbols from the command
         // ---------------------------------------------------
-        List<IExpression> projectedSymbols = command.getProjectedSymbols();
-
+        List<IExpression> projectedSymbols = CommandHelper.getProjectedSymbols(command);
         // -------------------------------
         // Build the List of symbolNames
         // -------------------------------
         List symbolNames = null;
-        if (projectedSymbols == null || projectedSymbols.isEmpty()) {
+        if (projectedSymbols.isEmpty()) {
             symbolNames = Collections.EMPTY_LIST;
         } else {
             symbolNames = new ArrayList(projectedSymbols.size());
@@ -1427,7 +1427,8 @@ public class TransformationSqlHelper implements ISQLConstants {
         if (command != null) {
             Map symbolTypeMap = new HashMap();
             // Get the list of SELECT symbols
-            List<IExpression> symbols = command.getProjectedSymbols();
+            List<IExpression> symbols = CommandHelper.getProjectedSymbols(command);
+            
             // Populate the list with the symbol names
             for (IExpression symbol : symbols) {
                 String name = TransformationSqlHelper.getSingleElementSymbolShortName(symbol, false);
@@ -1485,9 +1486,9 @@ public class TransformationSqlHelper implements ISQLConstants {
         Map symbolEObjMap = new HashMap();
         if (command != null) {
             // Get the list of SELECT symbols
-            List<IExpression> symbols = command.getProjectedSymbols();
+            List<IExpression> symbols = CommandHelper.getProjectedSymbols(command);
+            
             // Populate the list with the symbol names
-            Iterator symbolIter = symbols.iterator();
             for (IExpression symbol : symbols) {
                 String name = TransformationSqlHelper.getSingleElementSymbolShortName(symbol, false);
                 Object eObj = null;
@@ -1554,7 +1555,7 @@ public class TransformationSqlHelper implements ISQLConstants {
 
         if (command != null) {
             // Get the list of SELECT symbols
-            List<IExpression> symbols = command.getProjectedSymbols();
+            List<IExpression> symbols = CommandHelper.getProjectedSymbols(command);
             // Populate the list with the symbol names
             for (IExpression symbol : symbols) {
                 String name = TransformationSqlHelper.getSingleElementSymbolShortName(symbol, false);
@@ -1906,7 +1907,7 @@ public class TransformationSqlHelper implements ISQLConstants {
         List selectTypes = new ArrayList();
         if (command != null) {
             // Get the list of SELECT symbols
-            List<IExpression> symbols = command.getProjectedSymbols();
+            List<IExpression> symbols = CommandHelper.getProjectedSymbols(command);
             for (IExpression symbol : symbols) {
                 selectTypes.add(getElementSymbolType(symbol));
             }
@@ -1933,7 +1934,7 @@ public class TransformationSqlHelper implements ISQLConstants {
                         }
                     }
                 }
-            } else if (sSymbol != null && sSymbol instanceof IExpression) {
+            } else if (sSymbol != null) {
                 seSymbols.add(sSymbol);
             }
         }

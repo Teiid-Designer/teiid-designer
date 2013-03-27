@@ -45,6 +45,7 @@ import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.IExpression;
 import org.teiid.designer.query.sql.lang.IQuery;
 import org.teiid.designer.query.sql.lang.ISetQuery;
+import org.teiid.designer.query.sql.lang.util.CommandHelper;
 import org.teiid.designer.query.sql.symbol.IConstant;
 import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
@@ -219,7 +220,7 @@ public class TransformationMappingHelper implements ISQLConstants {
                     // ----------------------------------------------------------
                     if (TransformationHelper.isValid(transMappingRoot, type)) {
                         // Get the list of SQL Symbols
-                        List sqlSyms = command.getProjectedSymbols();
+                        List sqlSyms = CommandHelper.getProjectedSymbols(command);
                         // Compare the types
                         typesMatch = allTypesMatch(sqlSyms, attributes);
                     }
@@ -283,7 +284,7 @@ public class TransformationMappingHelper implements ISQLConstants {
                     // ----------------------------------------------------------
                     if (commandValid(transMappingRoot, command)) {
                         // Get the list of SQL Symbols
-                        List sqlSyms = command.getProjectedSymbols();
+                        List sqlSyms = CommandHelper.getProjectedSymbols(command);
                         // Compare the types
                         typesMatch = allTypesMatch(sqlSyms, attributes);
                     }

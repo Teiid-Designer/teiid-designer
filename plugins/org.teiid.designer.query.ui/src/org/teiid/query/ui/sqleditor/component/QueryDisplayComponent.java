@@ -12,8 +12,11 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -34,6 +37,7 @@ import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.query.sql.lang.IQuery;
 import org.teiid.designer.query.sql.lang.ISelect;
 import org.teiid.designer.query.sql.lang.IUnaryFromClause;
+import org.teiid.designer.query.sql.lang.util.CommandHelper;
 import org.teiid.designer.query.sql.symbol.IMultipleElementSymbol;
 import org.teiid.designer.query.sql.symbol.ISymbol;
 import org.teiid.query.ui.UiConstants;
@@ -492,8 +496,8 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
      */
 	public int getProjectedSymbolCount() {
 	    if(getCommand()!=null) {
-	        List symbols = getCommand().getProjectedSymbols();
-	        if(symbols!=null) return symbols.size();
+            List<IExpression> symbols = CommandHelper.getProjectedSymbols(getCommand());
+	        return symbols.size();
 	    }
 	    return 0;	    
 	}
@@ -532,11 +536,12 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
             // expand Select if required
             if(expandSelect) {
                 // Get the list of SELECT symbols
-                List symbols = query.getProjectedSymbols();
+                List<IExpression> symbols = CommandHelper.getProjectedSymbols(query);
+                
                 StringBuffer selectStr = new StringBuffer(SELECT_STR+SPACE);
                 for(int i=0; i<symbols.size(); i++) {
                     if(i!=0) selectStr.append(COMMA+SPACE);
-                    String symbolName = ((IExpression)symbols.get(i)).toString();
+                    String symbolName = symbols.get(i).toString();
                     selectStr.append(symbolName);
                 }
                 if(symbols.size()>0) selectStr.append(SPACE+CR);
@@ -579,12 +584,13 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
             IQuery query = (IQuery)queryDisplayNode.getLanguageObject();
 
             // expand Select 
-            // Get the list of SELECT symbols
-            List symbols = query.getProjectedSymbols();
+            // Get the list of SELECT symbols  
+            List<IExpression> symbols = CommandHelper.getProjectedSymbols(query);
+            
             StringBuffer selectStr = new StringBuffer(SPACE);
             for(int i=0; i<symbols.size(); i++) {
                 if(i!=0) selectStr.append(COMMA+SPACE);
-                String symbolName = ((IExpression)symbols.get(i)).toString();
+                String symbolName = symbols.get(i).toString();
                 selectStr.append(symbolName);
             }
             if(symbols.size()>0) selectStr.append(SPACE+CR);
@@ -1120,7 +1126,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
          	}
          	// If the SELECT has at least one multi-symbol, test the projected symbols.
          	if(hasMultiSymbol) {
-             	List symbols = query.getProjectedSymbols();
+                List<IExpression> symbols = CommandHelper.getProjectedSymbols(query);
              	if(symbols.size()>0) {
              	    canExpand = true;
              	}

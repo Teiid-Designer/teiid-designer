@@ -27,6 +27,7 @@ import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.util.CommandHelper;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.AttributeMappingHelper;
@@ -55,7 +56,7 @@ public class ProjectSymbolsValidationHelper {
     public void validateProjectedSymbols( final ICommand command,
                                           final SqlTransformationMappingRoot transRoot,
                                           final ValidationResult validationResult ) {
-        List projSymbols = command.getProjectedSymbols();
+        List projSymbols = CommandHelper.getProjectedSymbols(command);
         applyMappingValidationRules(projSymbols, transRoot, validationResult);
     }
 

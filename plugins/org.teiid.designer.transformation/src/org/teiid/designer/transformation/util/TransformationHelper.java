@@ -80,6 +80,7 @@ import org.teiid.designer.query.sql.lang.IQuery;
 import org.teiid.designer.query.sql.lang.IQueryCommand;
 import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.designer.query.sql.lang.IStoredProcedure;
+import org.teiid.designer.query.sql.lang.util.CommandHelper;
 import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.transformation.TransformationPlugin;
@@ -3331,7 +3332,7 @@ public class TransformationHelper implements ISQLConstants {
                 Iterator qIter = queries.iterator();
                 while (qIter.hasNext()) {
                     IQueryCommand query = (IQueryCommand)qIter.next();
-                    List projSymbols = query.getProjectedSymbols();
+                    List projSymbols = CommandHelper.getProjectedSymbols(query);
                     // number of project symbols in each query in the union should be same as
                     // number of project symbols on the union, if the query is properly reconciled
                     // but there is no gaurentee so check the index in the proj of union to the proj

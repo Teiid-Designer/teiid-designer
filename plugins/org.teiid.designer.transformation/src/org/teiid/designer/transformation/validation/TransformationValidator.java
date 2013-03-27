@@ -11,8 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -55,6 +58,8 @@ import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.IReferenceCollectorVisitor;
 import org.teiid.designer.query.sql.IResolverVisitor;
 import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.lang.util.CommandHelper;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.transformation.TransformationPlugin;
@@ -551,7 +556,13 @@ public class TransformationValidator implements QueryValidator {
 	        	
 	        	try {
 	        		elemSymbols = getProjectedSymbols();
-	        		if( !elemSymbols.isEmpty() && elemSymbols.size() == command.getProjectedSymbols().size() ) {
+	        		
+	                List<IExpression> theSymbols = CommandHelper.getProjectedSymbols(command);
+	                
+	                List<IExpression> symbols = new ArrayList(theSymbols.size());
+	                symbols.addAll(theSymbols);
+	        		
+	        		if( !elemSymbols.isEmpty() && elemSymbols.size() == symbols.size() ) {
 	        			updateValidator.validate(command, elemSymbols);
 	        		}
 	        	} catch (Exception e) {
