@@ -7,6 +7,7 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import java.beans.Expression;
 import java.util.List;
 import org.teiid.designer.query.sql.ILanguageVisitor;
 
@@ -87,6 +88,11 @@ public interface ICommand<E extends IExpression, LV extends ILanguageVisitor>
      * @return
      */
     List<E> getProjectedSymbols();
+    
+    /**
+     * @return
+     */
+    List<? extends E> getResultSetColumns();
 
     /**
      * @return
