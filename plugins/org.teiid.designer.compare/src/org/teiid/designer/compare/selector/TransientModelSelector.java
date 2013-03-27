@@ -11,6 +11,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.teiid.designer.core.resource.xmi.MtkXmiResourceImpl;
+import org.teiid.designer.metamodels.core.ModelAnnotation;
 
 
 /**
@@ -21,11 +22,15 @@ import org.teiid.designer.core.resource.xmi.MtkXmiResourceImpl;
  * @since 8.0
  */
 public class TransientModelSelector extends URIModelSelector {
+    
+    ModelAnnotation mdlAnnotation;
+    
     //============================================================================================================================
     // Constructors
     
     /**
      * @since 4.1
+     * @param uri the uri string
      */
     public TransientModelSelector(final String uri) {
         this(URI.createURI(uri));
@@ -33,9 +38,20 @@ public class TransientModelSelector extends URIModelSelector {
     
     /**
      * @since 4.1
+     * @param uri the model URI
      */
     public TransientModelSelector(final URI uri) {
         super(uri);
+    }
+    
+    /**
+     * @since 8.1
+     * @param uri the model URI
+     * @param mdlAnnotation model annotation
+     */
+    public TransientModelSelector(final URI uri,ModelAnnotation mdlAnnotation) {
+        super(uri);
+        this.mdlAnnotation=mdlAnnotation;
     }
     
     //============================================================================================================================
@@ -55,6 +71,12 @@ public class TransientModelSelector extends URIModelSelector {
             set.getResources().add(resrc);
             this.contents = resrc.getModelContents();
             this.resource = resrc;
+            
+            if(mdlAnnotation!=null) {
+                ModelAnnotation annotation = resrc.getModelAnnotation();
+                annotation.setPrimaryMetamodelUri(this.mdlAnnotation.getPrimaryMetamodelUri());
+                annotation.setModelType(this.mdlAnnotation.getModelType());
+            }
         }
     }
 }
