@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.modeshape.graph.JcrLexicon;
 import org.modeshape.graph.property.Name;
@@ -42,14 +43,17 @@ import org.modeshape.sequencer.ddl.node.AstNode;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.I18n;
 import org.teiid.core.designer.exception.EmptyArgumentException;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
-import org.teiid.core.designer.util.FileUtils;
+import org.teiid.designer.compare.DifferenceProcessor;
 import org.teiid.designer.compare.DifferenceReport;
 import org.teiid.designer.compare.MergeProcessor;
 import org.teiid.designer.compare.ModelerComparePlugin;
 import org.teiid.designer.compare.processor.DifferenceProcessorImpl;
 import org.teiid.designer.compare.selector.ModelResourceSelector;
+import org.teiid.designer.compare.selector.ModelSelector;
 import org.teiid.designer.compare.selector.TransientModelSelector;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
@@ -91,7 +95,7 @@ public class DdlImporter {
     private String modelName;
     private IFile modelFile;
     private ModelType modelType;
-    private DifferenceProcessorImpl chgProcessor;
+    private DifferenceProcessor chgProcessor;
     private ModelResource model;
     private boolean optToCreateModelEntitiesForUnsupportedDdl;
     private boolean optToSetModelEntityDescription;
@@ -377,48 +381,6 @@ public class DdlImporter {
         }
     }
 
-    void importDdl( final FileReader reader,
-                    final List<String> messages,
-                    final IProgressMonitor monitor,
-                    final int totalWork ) throws IOException, CoreException {
-        final int workUnit = totalWork / 3;
-        monitor.subTask(DdlImporterI18n.PARSING_DDL_MSG);
-        final char[] buf = new char[FileUtils.DEFAULT_BUFFER_SIZE];
-        final StringBuilder builder = new StringBuilder();
-        for (int charTot = reader.read(buf); charTot >= 0; charTot = reader.read(buf))
-            builder.append(buf, 0, charTot);
-        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-        final DdlParsers parsers = new DdlParsers();
-        final AstNode rootNode = parsers.parse(builder.toString(), ddlFileName);
-        if (monitor.isCanceled()) throw new OperationCanceledException();
-        monitor.worked(workUnit);
-        monitor.subTask(DdlImporterI18n.CREATING_MODEL_MSG);
-        // TODO: cleanup old model in case import called multiple times
-        model = ModelerCore.create(modelFile);
-        final TransientModelSelector endSelector = new TransientModelSelector(model.getEmfResource().getURI());
-        final DifferenceProcessorImpl processor = new DifferenceProcessorImpl(new ModelResourceSelector(model), endSelector);
-        processor.addEObjectMatcherFactories(ModelerComparePlugin.createEObjectMatcherFactories());
-        final List<EObject> roots = endSelector.getRootObjects();
-        for (final AstNode node : rootNode) {
-            final Name mixinType = mixinType(node);
-            if (StandardDdlLexicon.TYPE_CREATE_SCHEMA_STATEMENT.equals(mixinType)) {
-                final Schema schema = FACTORY.createSchema();
-                roots.add(schema);
-                initialize(schema, node);
-                for (final AstNode node1 : node) {
-                    create(node1, mixinType(node1), roots, schema, messages);
-                }
-            } else create(node, mixinType, roots, null, messages);
-        }
-        if (monitor.isCanceled()) throw new OperationCanceledException();
-        monitor.worked(workUnit);
-        monitor.subTask(DdlImporterI18n.CREATING_CHANGE_REPORT_MSG);
-        handleStatus(processor.execute(monitor));
-        if (monitor.isCanceled()) throw new OperationCanceledException();
-        monitor.worked(workUnit);
-        chgProcessor = processor;
-    }
-
     /**
      * @param messages
      * @param monitor
@@ -447,6 +409,87 @@ public class DdlImporter {
                 importDdl(reader, messages, monitor, totalWork);
             }
         });
+    }
+
+    void importDdl( final FileReader reader,
+                    final List<String> messages,
+                    final IProgressMonitor monitor,
+                    final int totalWork ) throws IOException, CoreException {
+
+        final int workUnit = totalWork / 3;
+        
+        // ------------------------------------------------------------------------------
+        // Parse the DDL from the file
+        // ------------------------------------------------------------------------------
+        monitor.subTask(DdlImporterI18n.PARSING_DDL_MSG);
+        // Read the file contents
+        final char[] buf = new char[FileUtils.DEFAULT_BUFFER_SIZE];
+        final StringBuilder builder = new StringBuilder();
+        for (int charTot = reader.read(buf); charTot >= 0; charTot = reader.read(buf))
+            builder.append(buf, 0, charTot);
+        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+        final String ddlString = builder.toString();
+        
+        // Parse the DDL
+        final DdlParsers parsers = new DdlParsers();
+        final AstNode rootNode = parsers.parse(ddlString, ddlFileName);
+        if (monitor.isCanceled()) throw new OperationCanceledException();
+        monitor.worked(workUnit);
+        
+        // ------------------------------------------------------------------------------
+        // Set up DifferenceProcessor
+        //   - startingSelector -- existing model
+        //   - endingSelector   -- generated from parsed ddl nodes 
+        // ------------------------------------------------------------------------------
+        monitor.subTask(DdlImporterI18n.CREATING_MODEL_MSG);
+        model = ModelerCore.create(modelFile);
+        final ModelResourceSelector startingSelector = new ModelResourceSelector(model);
+        final URI mdlUri = URI.createFileURI(model.getPath().toFile().getAbsolutePath());
+        final ModelAnnotation mdlAnnotation = model.getModelAnnotation();
+        
+        final TransientModelSelector endingSelector = new TransientModelSelector(mdlUri,mdlAnnotation);
+        
+        final DifferenceProcessor diffProcessor = createDifferenceProcessor(startingSelector,endingSelector);
+        final List<EObject> roots = endingSelector.getRootObjects();
+        for (final AstNode node : rootNode) {
+            final Name mixinType = mixinType(node);
+            if (StandardDdlLexicon.TYPE_CREATE_SCHEMA_STATEMENT.equals(mixinType)) {
+                final Schema schema = FACTORY.createSchema();
+                roots.add(schema);
+                initialize(schema, node);
+                for (final AstNode node1 : node) {
+                    create(node1, mixinType(node1), roots, schema, messages);
+                }
+            } else create(node, mixinType, roots, null, messages);
+        }
+        if (monitor.isCanceled()) throw new OperationCanceledException();
+        monitor.worked(workUnit);
+        
+        
+        // ------------------------------------------------------------------------------
+        // Execute generates the differenceReport
+        // ------------------------------------------------------------------------------
+        monitor.subTask(DdlImporterI18n.CREATING_CHANGE_REPORT_MSG);
+        handleStatus(diffProcessor.execute(monitor));
+        if (monitor.isCanceled()) throw new OperationCanceledException();
+        monitor.worked(workUnit);
+        
+        chgProcessor = diffProcessor;
+    }
+    
+    /*
+     * Create DifferenceProcessor using starting and ending ModelSelector
+     * @param startingSelector the starting selector
+     * @param endingSelector the ending selector
+     * @return the difference processor
+     */
+    private DifferenceProcessor createDifferenceProcessor( final ModelSelector startingSelector,
+                                                           final ModelSelector endingSelector ) {
+        CoreArgCheck.isNotNull(startingSelector);
+        CoreArgCheck.isNotNull(endingSelector);
+        final DifferenceProcessor processor = new DifferenceProcessorImpl(startingSelector, endingSelector);
+        processor.addEObjectMatcherFactories(ModelerComparePlugin.createEObjectMatcherFactories());
+        return processor;
     }
 
     private void initialize( final RelationalEntity entity,
