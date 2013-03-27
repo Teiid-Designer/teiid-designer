@@ -42,6 +42,7 @@ import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelObjectAnnotationHelper;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -334,6 +335,28 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
         return uri;
     }
 
+    private static String getHeaders( Procedure procedure ) {
+        Object headers = null;
+
+        try {
+            // try new way first
+            ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
+                                                                                                    .getRegistry()
+                                                                                                    .getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
+            headers = assistant.getPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.HEADERS);
+
+            if (headers==null || CoreStringUtil.isEmpty((String)headers)) {
+                headers = ANNOTATION_HELPER.getPropertyValueAnyCase(procedure,
+                                                                        ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE
+                                                                                + "headers"); //$NON-NLS-1$
+            }
+        } catch (Exception e) {
+            UTIL.log(e);
+        }
+
+        return headers==null?StringUtilities.EMPTY_STRING:(String)headers;
+    }
+    
     private static String getCharset( Procedure procedure ) {
         String charset = null;
 
@@ -366,6 +389,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                                                 List restfulProcedureArray ) {
         String restMethod = getRestMethod(procedure);
         LinkedList<String> queryParameterList = new LinkedList<String>();
+        LinkedList<String> headerParameterList = new LinkedList<String>();
         
 
         if (restMethod != null) {
@@ -375,7 +399,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
             	charSet=Charset.defaultCharset().name();
             }
             
-            // the procedure is not eligible for REST exposure with a URI defined
+            // the procedure is not eligible for REST exposure without a URI defined
             if (uri != null) {
                 boolean hasReturn = false;
                 int parameterCount = procedure.getParameters().size();
@@ -394,6 +418,15 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
                 }
 
+                //Check for HTTP Header parameters
+                String headers = getHeaders(procedure);
+                if (headers.length()>0){ 
+                	String[] headerParameterArray = headers.split(";"); //$NON-NLS-1$
+                	for (String param : headerParameterArray) {
+	                    headerParameterList.addLast(param);
+	                }
+                }
+                
                 //Check for URI parameters
                 String uriString = uri;
                 for (int i = 0; i < uriString.length(); i++) {
@@ -423,6 +456,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                 restProcedure.setProcedureName(name);
                 restProcedure.setFullyQualifiedProcedureName(fullName);
                 restProcedure.setQueryParameterList(queryParameterList);
+                restProcedure.setHeaderParameterList(headerParameterList);
 
                 // Create JSON version
                 RestProcedure jsonRestProcedure = new RestProcedure();
@@ -432,13 +466,15 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                 jsonRestProcedure.setProcedureName(restProcedure.getProcedureName());
                 jsonRestProcedure.setRestMethod(restProcedure.getRestMethod());
                 jsonRestProcedure.setUri(restProcedure.getUri());
-          
+                jsonRestProcedure.setQueryParameterList(queryParameterList);
+                jsonRestProcedure.setHeaderParameterList(headerParameterList);          
+                
                 // If the parameterCount is greater than the number of parameters passed
                 // on the URI, we can expect more parameters via an input stream
                 // so the consumes annotation will need to be set. We will set for XML and JSON methods.
                 boolean hasInputStream = false;
-                if (uriParameterCount != parameterCount &&
-                	queryParameterList.size() != parameterCount) {
+                if (uriParameterCount + headerParameterList.size() < parameterCount &&
+                	queryParameterList.size() + headerParameterList.size() < parameterCount) {
                     hasInputStream = true;
                     restProcedure.setConsumesAnnotation("@Consumes( MediaType.APPLICATION_XML )"); //$NON-NLS-1$
                     jsonRestProcedure.setConsumesAnnotation("@Consumes( MediaType.APPLICATION_JSON )"); //$NON-NLS-1$

@@ -26,6 +26,7 @@ public class RestProcedure {
     private String modelName;
     private String charSet;
     private LinkedList<String> queryParameterList;
+    private LinkedList<String> headerParameterList;
 
     /**
      * @return consumesAnnotation
@@ -155,6 +156,22 @@ public class RestProcedure {
 	 */
 	public void setQueryParameterList(LinkedList<String> queryParameterList) {
 		this.queryParameterList = queryParameterList;
+	}
+
+	/**
+	 * @return the headerParameterList
+	 * @since 8.1
+	 */
+	public LinkedList<String> getHeaderParameterList() {
+		return headerParameterList;
+	}
+
+	/**
+	 * @param headerParameterList the headerParameterList to set
+	 * @since 8.1
+	 */
+	public void setHeaderParameterList(LinkedList<String> headerParameterList) {
+		this.headerParameterList = headerParameterList;
 	}
 
 }

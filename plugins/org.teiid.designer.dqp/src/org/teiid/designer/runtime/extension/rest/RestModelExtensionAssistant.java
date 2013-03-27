@@ -62,7 +62,7 @@ public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistan
         if (propDefn != null) {
             // must be procedure in a virtual model
             if ((modelObject instanceof Procedure) && ModelUtil.isVirtual(modelObject)) {
-                if (PropertyIds.REST_METHOD.equals(propId) || PropertyIds.URI.equals(propId) || PropertyIds.CHARSET.equals(propId)) {
+                if (PropertyIds.REST_METHOD.equals(propId) || PropertyIds.URI.equals(propId) || PropertyIds.CHARSET.equals(propId) || PropertyIds.HEADERS.equals(propId)) {
                     return propDefn;
                 }
             }
