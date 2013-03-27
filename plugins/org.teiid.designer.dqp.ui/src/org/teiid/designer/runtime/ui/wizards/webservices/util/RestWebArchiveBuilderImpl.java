@@ -626,9 +626,26 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
                 sb.append(", "); //$NON-NLS-1$
             }
         }
+        
+        //Now check for header parameters
+        LinkedList<String> headerParamList = new LinkedList<String>();
+        if (hasHeaders(restProcedure)){
+        	int headerParamCount = 0;
+        	headerParamList = restProcedure.getHeaderParameterList();
+            for (String param : headerParamList) {
+            	headerParamCount++;
+                sb.append("@HeaderParam( \"" + param + "\" ) String " + param); //$NON-NLS-1$ //$NON-NLS-2$
+                if (headerParamCount < headerParamList.size()) {
+                    sb.append(", "); //$NON-NLS-1$
+                }
+            }
+            //Add a comma if we expect to add query parameters in the next block of code
+            if (hasQueryParameters(restProcedure)) sb.append(", ");  //$NON-NLS-1$
+        }
+        
         //Now check for query parameters
         LinkedList<String> queryParamList = new LinkedList<String>();
-        if (pathParamCount==0 && (restProcedure.getQueryParameterList() != null && restProcedure.getQueryParameterList().size()>0)){
+        if (pathParamCount==0 && hasQueryParameters(restProcedure)){
         	int queryParamCount = 0;
         	queryParamList = restProcedure.getQueryParameterList();
             for (String param : queryParamList) {
@@ -641,7 +658,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             	
         }
         if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
-            if (pathParams.size() > 0 || queryParamList.size() > 0 ) {
+            if (pathParams.size() > 0 || headerParamList.size() > 0 || queryParamList.size() > 0 ) {
                 sb.append(", "); //$NON-NLS-1$
             }
             sb.append(" InputStream is ) { " + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -650,6 +667,12 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
         }
         // Gen setting of parameter(s)
         sb.append("\tparameterMap.clear();" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+        //We will always consider header parameters first, so the supporting procedure knows the correct order
+        if (headerParamList.size() > 0) {
+            for (String param : headerParamList) {
+                sb.append("\tparameterMap.put(\"" + param + "\", " + param + ");" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            }
+        }
         if (pathParams.size() > 0) {
             for (String param : pathParams) {
                 sb.append("\tparameterMap.put(\"" + param + "\", " + param + ");" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -660,6 +683,22 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
                 sb.append("\tparameterMap.put(\"" + param + "\", " + param + ");" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             }
         }
+    }
+    
+    /** 
+     * @param restProcedure
+     *  @return
+     */
+    private boolean hasQueryParameters(RestProcedure restProcedure) {
+    	return restProcedure.getQueryParameterList() != null && restProcedure.getQueryParameterList().size()>0;
+    }
+    
+    /**
+    * @param restProcedure
+    * @return
+    */
+    private boolean hasHeaders(RestProcedure restProcedure) {
+    	return restProcedure.getHeaderParameterList() != null && restProcedure.getHeaderParameterList().size()>0;
     }
 
     /**

@@ -23,5 +23,9 @@
             <p:allowedValue>UTF-8</p:allowedValue>
             <p:allowedValue>US-ASCII</p:allowedValue>
         </p:property>
+        <p:property advanced="false" index="false" masked="false" name="headers" required="false" type="string">
+            <p:description locale="en_US">Semi-colon delimited list of HTTP Header parameters to pass into the REST service operation. Ex. header1;header2;etc. These value will be passed into the procedure first.</p:description>
+            <p:display locale="en_US">HEADERS</p:display>
+        </p:property>
     </p:extendedMetaclass>
 </modelExtension>
