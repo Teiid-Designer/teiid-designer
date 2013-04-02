@@ -120,10 +120,12 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
                                                   InternalModelerJdbcUiPluginConstants.Util.getString("JDBCConnectionInfoProvider.notEnoughConnectionProviders", //$NON-NLS-1$
                                                                                      modelResource.getItemName()));
             }
+            
             // Remove old connection properties
             getHelper().removeProperties(modelResource, CONNECTION_PROFILE_NAMESPACE);
             getHelper().removeProperties(modelResource, CONNECTION_NAMESPACE);
             getHelper().removeProperties(modelResource, TRANSLATOR_NAMESPACE);
+            getHelper().removeProperties(modelResource, JDBCCONNECTION_NAMESPACE);
 
             // Add JDBC translator
             connectionProps.put(TRANSLATOR_NAMESPACE + TRANSLATOR_NAME_KEY, JdbcTranslatorHelper.getTranslator(connectionProfile));

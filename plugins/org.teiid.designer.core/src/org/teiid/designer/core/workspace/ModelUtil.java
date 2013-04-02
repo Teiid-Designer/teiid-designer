@@ -49,7 +49,6 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.ResourceFinder;
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.core.index.IndexUtil;
-import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.resource.MMXmiResource;
 import org.teiid.designer.core.xmi.XMIHeader;
@@ -376,6 +375,36 @@ public class ModelUtil {
     	}
     	
     	return null;
+    }
+    
+    /**
+     * Get a Model Annotation property value
+     * @param modelResource the model resource
+     * @param propertyKey the property key including ns prefix (i.e. core:vdb-name)
+     * @return the string property value
+     * @throws ModelWorkspaceException if problem finding property value
+     */
+    public static String getModelAnnotationPropertyValue(final ModelResource modelResource, final String propertyKey) throws ModelWorkspaceException {
+        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(propertyKey, "propertyKey"); //$NON-NLS-1$
+
+        ResourceAnnotationHelper helper = new ResourceAnnotationHelper();
+        return (String)helper.getPropertyValue(modelResource, propertyKey);
+    }
+    
+    /**
+     * Set a Model Annotation property value
+     * @param modelResource the model resource
+     * @param propertyKey the property key including ns prefix (i.e. core:vdb-name)
+     * @param propertyValue the property value
+     * @throws ModelWorkspaceException if problem setting property value
+     */
+    public static void setModelAnnotationPropertyValue( ModelResource modelResource, String propertyKey, String propertyValue ) throws ModelWorkspaceException {
+        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(propertyKey, "propertyKey"); //$NON-NLS-1$
+        
+        ResourceAnnotationHelper helper = new ResourceAnnotationHelper();
+        helper.setProperty(modelResource, propertyKey, propertyValue);
     }
 
     /**

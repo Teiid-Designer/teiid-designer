@@ -46,6 +46,7 @@ public class JdbcSourceItemProvider
      * This constructs an instance from a factory and a notifier.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * @param adapterFactory the adapter factory
      * @generated
      */
     public JdbcSourceItemProvider(AdapterFactory adapterFactory) {
@@ -87,7 +88,7 @@ public class JdbcSourceItemProvider
              getString("_UI_JdbcSource_name_feature"), //$NON-NLS-1$
              getString("_UI_PropertyDescriptor_description", "_UI_JdbcSource_name_feature", "_UI_JdbcSource_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
              JdbcPackage.eINSTANCE.getJdbcSource_Name(),
-             true,
+             false,
              ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
              //Customize code start
              getString("JdbcSource_source_category"), //$NON-NLS-1$
@@ -243,7 +244,7 @@ public class JdbcSourceItemProvider
              getString("_UI_JdbcSource_username_feature"), //$NON-NLS-1$
              getString("_UI_PropertyDescriptor_description", "_UI_JdbcSource_username_feature", "_UI_JdbcSource_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
              JdbcPackage.eINSTANCE.getJdbcSource_Username(),
-             true,
+             false,
              ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
              //customize code
              getString("JdbcSource_source_category"),//$NON-NLS-1$
@@ -295,7 +296,7 @@ public class JdbcSourceItemProvider
              getString("_UI_JdbcSource_url_feature"), //$NON-NLS-1$
              getString("_UI_PropertyDescriptor_description", "_UI_JdbcSource_url_feature", "_UI_JdbcSource_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
              JdbcPackage.eINSTANCE.getJdbcSource_Url(),
-             true,
+             false,
              ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
              //custom code
              getString("JdbcSource_source_category"), //$NON-NLS-1$
