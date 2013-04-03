@@ -16,9 +16,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
-
+import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -38,11 +40,16 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ltk.ui.refactoring.RedoRefactoringAction;
+import org.eclipse.ltk.ui.refactoring.UndoRefactoringAction;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.operations.RedoActionHandler;
+import org.eclipse.ui.operations.UndoActionHandler;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.designer.core.ModelerCore;
@@ -66,11 +73,9 @@ import org.teiid.designer.ui.editors.ModelObjectEditorPage;
 import org.teiid.designer.ui.editors.MultiPageModelEditor;
 import org.teiid.designer.ui.product.IModelerProductContexts;
 import org.teiid.designer.ui.refactor.RefactorUndoManager;
-import org.teiid.designer.ui.refactor.actions.MoveRefactorAction;
 import org.teiid.designer.ui.refactor.actions.NamespaceUriRefactorAction;
-import org.teiid.designer.ui.refactor.actions.RedoRefactoringAction;
 import org.teiid.designer.ui.refactor.actions.RenameRefactorAction;
-import org.teiid.designer.ui.refactor.actions.UndoRefactoringAction;
+import org.teiid.designer.ui.refactor.move.MoveRefactorAction;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
@@ -508,17 +513,29 @@ public final class ModelerActionService extends AbstractActionService
      */
     private boolean failedRefactorPreconditions( ISelection theSelection ) {
 
-        // fail if null, empty or multi
-        boolean result = (theSelection == null) || theSelection.isEmpty() || SelectionUtilities.isMultiSelection(theSelection);
-        if (!result) {
-            Object obj = SelectionUtilities.getSelectedObject(theSelection);
+        // fail if null, empty
+        if (theSelection == null || theSelection.isEmpty())
+            return true;
+
+        List resourceObjects = SelectionUtilities.getSelectedIResourceObjects(theSelection);
+
+        IProject project = null;
+        for (Object obj : resourceObjects) {
             // fail if NOT an IResource
             if (!(obj instanceof IResource)) {
-                result = true;
+                return true;
+            }
+
+            IResource resource = (IResource) obj;
+            if (project == null) {
+                project = resource.getProject();
+            } else if (! project.equals(resource.getProject())) {
+                // 2 resources are not part of the same project
+                return true;
             }
         }
 
-        return result;
+        return false;
     }
 
     /**
@@ -942,13 +959,16 @@ public final class ModelerActionService extends AbstractActionService
      * Gets an refactor menu appropriate for the given input parameter.
      * 
      * @param theSelection the selection whose insert child menu is being requested
+     * @param partSite the part's site where the menu is to be added
      * @return the insert child menu
      */
-    public MenuManager getRefactorMenu( ISelection theSelection ) {
+    public MenuManager getRefactorMenu( ISelection theSelection, IWorkbenchPartSite partSite ) {
         //        System.out.println("[ModelerActionService.getRefactorMenu] top");  //$NON-NLS-1$
 
         MenuManager menu = new MenuManager(utils.getString(PREFIX + "RefactorMenu.title"), //$NON-NLS-1$
                                            ModelerActionBarIdManager.getRefactorMenuId());
+        
+        IUndoContext undoContext = (IUndoContext) ResourcesPlugin.getWorkspace().getAdapter(IUndoContext.class);
 
         if (failedRefactorPreconditions(theSelection)) {
             // will result in returning a disabled 'Refactor' submenu
@@ -968,15 +988,11 @@ public final class ModelerActionService extends AbstractActionService
 
             try {
                 // undo
-                IActionDelegate delUndo = new UndoRefactoringAction();
-                IAction actUndo = new DelegatableAction(delUndo, window);
-                delUndo.selectionChanged(actUndo, theSelection);
+                IAction actUndo = new UndoActionHandler(partSite, undoContext);
                 menu.add(actUndo);
 
                 // redo
-                IActionDelegate delRedo = new RedoRefactoringAction();
-                IAction actRedo = new DelegatableAction(delRedo, window);
-                delRedo.selectionChanged(actRedo, theSelection);
+                IAction actRedo = new RedoActionHandler(partSite, undoContext);
                 menu.add(actRedo);
 
                 // separator
@@ -1136,6 +1152,9 @@ public final class ModelerActionService extends AbstractActionService
      * @param bars the action bars to register global actions
      */
     public void registerDefaultGlobalActions( IActionBars bars ) {
+        
+        // TODO this replaces the eclipse Undo action with the designer version
+        
         Iterator itr = defaultActionsMap.entrySet().iterator();
 
         while (itr.hasNext()) {

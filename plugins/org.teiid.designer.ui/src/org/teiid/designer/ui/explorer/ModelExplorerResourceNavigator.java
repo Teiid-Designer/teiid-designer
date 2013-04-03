@@ -13,12 +13,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -74,6 +76,7 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -88,6 +91,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IGotoMarker;
+import org.eclipse.ui.operations.UndoActionHandler;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.ResourceTransfer;
@@ -457,6 +461,11 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         ModelerCore.getWorkspace().addResourceChangeListener(markerListener);
 
         addCustomListeners();
+        
+        IUndoContext undoContext =  (IUndoContext)ResourcesPlugin.getWorkspace().getAdapter(IUndoContext.class);
+        UndoActionHandler undoAction = new UndoActionHandler(getSite(), undoContext);
+        undoAction.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_UNDO);
+        getViewSite().getActionBars().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
     }
 
     /**
@@ -1082,36 +1091,32 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             }
         }
 
-        // if single selection and ANY resource add refactor menu
+        MenuManager refactorMenu = getActionService().getRefactorMenu(selection, getSite());
+        // insert menu at end of the cut/copy/paste group
+        if (refactorMenu != null) {
+            // find the location. Default to the end of the whole
+            // context menu.
+            if (theMenu.find(ECLIPSE_RENAME_ID) != null) {
+                theMenu.insertAfter(ECLIPSE_RENAME_ID, refactorMenu);
+
+            } else {
+                theMenu.insertBefore(ContextMenu.ADDITIONS, refactorMenu);
+            }
+        }
+
+        // remove the 'other' rename and move
+        if (theMenu.find(ECLIPSE_RENAME_ID) != null) {
+            theMenu.remove(ECLIPSE_RENAME_ID);
+        }
+
+        // override the move in the context menu same as delete.
+        if (theMenu.find(ECLIPSE_MOVE_ID) != null) {
+            theMenu.remove(ECLIPSE_MOVE_ID);
+        }
+        
         if (SelectionUtilities.isSingleSelection(selection)) {
             Object obj = SelectionUtilities.getSelectedObject(selection);
 
-            if (obj instanceof IResource) {
-                MenuManager refactorMenu = getActionService().getRefactorMenu(selection);
-
-                // insert menu at end of the cut/copy/paste group
-                if (refactorMenu != null) {
-                    // find the location. Default to the end of the whole
-                    // context menu.
-                    if (theMenu.find(ECLIPSE_RENAME_ID) != null) {
-                        theMenu.insertAfter(ECLIPSE_RENAME_ID, refactorMenu);
-
-                    } else {
-                        theMenu.insertBefore(ContextMenu.ADDITIONS, refactorMenu);
-                    }
-                }
-
-                // remove the 'other' rename and move
-                if (theMenu.find(ECLIPSE_RENAME_ID) != null) {
-                    theMenu.remove(ECLIPSE_RENAME_ID);
-                }
-
-                // override the move in the context menu same as delete.
-                if (theMenu.find(ECLIPSE_MOVE_ID) != null) {
-                    theMenu.remove(ECLIPSE_MOVE_ID);
-                }
-
-            }
             // Add Remove project action if selection is IProject and it is closed
             if (obj instanceof IProject) {
                 if (!((IProject)obj).isOpen()) {
