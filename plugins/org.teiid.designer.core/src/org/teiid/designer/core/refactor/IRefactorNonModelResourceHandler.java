@@ -7,8 +7,7 @@
  */
 package org.teiid.designer.core.refactor;
 
-import java.util.Map;
-
+import java.util.Collection;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -22,13 +21,13 @@ public interface IRefactorNonModelResourceHandler extends IRefactorModelHandler 
     /**
      * @param type the type of refactor operation
      * @param refactoredResource the resource involved (cannot be <code>null</code>)
-     * @param refactoredPaths the before (key) and after (value) resource path
+     * @param refactoredPaths the collection of path pairs denoting the old and new paths
      * @param monitor the progress monitor (can be <code>null</code>)
      * @throws Exception if there is a problem processing the resource
      */
     void processNonModel( int type,
                           IResource refactoredResource,
-                          Map refactoredPaths,
+                          Collection<PathPair> refactoredPaths,
                           IProgressMonitor monitor ) throws Exception;
 
 }

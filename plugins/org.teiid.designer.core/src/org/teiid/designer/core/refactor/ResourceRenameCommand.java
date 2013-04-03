@@ -10,10 +10,8 @@ package org.teiid.designer.core.refactor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-
+import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -55,8 +53,8 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
     private IStatus currentStatus;
     private String nameBeforeRename;
     private String extension;
-    private HashMap pathMap;
-    private HashMap undoMap;
+    private Collection<PathPair> pathPairs;
+    private Collection<PathPair> undoPairs;
     private String undoLabel = UNDO_RENAME;
     private String undoDescription = UNDO_RENAME;
 
@@ -125,9 +123,9 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
     @Override
     protected IStatus modifyResource(final IResource resource, final IProgressMonitor monitor) {
         
-        this.pathMap = new HashMap();
-        this.undoMap = new HashMap();
-        return this.modifyResource(resource, this.getNewName(), this.pathMap, this.undoMap, monitor);
+        this.pathPairs = new ArrayList<PathPair>();
+        this.undoPairs = new ArrayList<PathPair>();
+        return this.modifyResource(resource, this.getNewName(), this.pathPairs, this.undoPairs, monitor);
     }
 
     /* (non-Javadoc)
@@ -135,8 +133,8 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
      */
     private IStatus modifyResource(final IResource resource, 
                                    final String newResourceName, 
-                                   final Map preToPostPathMap, 
-                                   final Map postToPrePathMap,
+                                   final Collection<PathPair> preToPostPathPairs, 
+                                   final Collection<PathPair> postToPrePathPairs,
                                    final IProgressMonitor monitor) {
         
         IPath oldResourcePath = null;
@@ -154,7 +152,7 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
 
            ModelResourceCollectorVisitor preMoveVisitor = new ModelResourceCollectorVisitor();    
            resource.accept(preMoveVisitor);
-           ArrayList preMoveList = new ArrayList(preMoveVisitor.getResources().size());
+           List<String> preMoveList = new ArrayList<String>(preMoveVisitor.getResources().size());
            for ( Iterator iter = preMoveVisitor.getResources().iterator() ; iter.hasNext() ; ) {
                preMoveList.add(((IResource) iter.next()).getFullPath().makeAbsolute().toString());
            }
@@ -181,26 +179,26 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
 
            ModelResourceCollectorVisitor postMoveVisitor = new ModelResourceCollectorVisitor();               
            newResource.accept(postMoveVisitor);
-           ArrayList postMoveList = new ArrayList(postMoveVisitor.getResources().size());
+           List<String> postMoveList = new ArrayList<String>(postMoveVisitor.getResources().size());
            for ( Iterator iter = postMoveVisitor.getResources().iterator() ; iter.hasNext() ; ) {
                postMoveList.add(((IResource) iter.next()).getFullPath().makeAbsolute().toString());
            }
 
-           preToPostPathMap.clear();
-           postToPrePathMap.clear();
+           preToPostPathPairs.clear();
+           postToPrePathPairs.clear();
            if ( preMoveList.size() == postMoveList.size() ) {
-               Iterator preIter = preMoveList.iterator();
-               Iterator postIter = postMoveList.iterator();
+               Iterator<String> preIter = preMoveList.iterator();
+               Iterator<String> postIter = postMoveList.iterator();
                while ( preIter.hasNext() ) {
-                   Object pre = preIter.next();
-                   Object post = postIter.next();
-                   preToPostPathMap.put(pre, post);
-                   postToPrePathMap.put(post, pre);
+                   String pre = preIter.next();
+                   String post = postIter.next();
+                   preToPostPathPairs.add(new PathPair(pre, post));
+                   postToPrePathPairs.add(new PathPair(post, pre));
                }
            }       
            
            // Refactor the renamed files
-           IStatus result = refactorModifiedResources(monitor, this.getModifiedResource(), preToPostPathMap);
+           IStatus result = refactorModifiedResources(monitor, this.getModifiedResource(), preToPostPathPairs);
            if ( result != null && result.getSeverity() == IStatus.ERROR ) {
                return result;
            }
@@ -216,7 +214,7 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
        }
     }
     
-    protected IStatus refactorModifiedResources(IProgressMonitor monitor, IResource resource, final Map refactoredPaths) {
+    protected IStatus refactorModifiedResources(IProgressMonitor monitor, IResource resource, final Collection<PathPair> refactoredPaths) {
 
         Collection errorList = new ArrayList();
         int severity = IStatus.OK;
@@ -345,7 +343,7 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
     }
     
     @Override
-    protected IStatus refactorModelContents(IProgressMonitor monitor, final Map refactoredPaths ) {
+    protected IStatus refactorModelContents(IProgressMonitor monitor, final Collection<PathPair> refactoredPaths ) {
         Collection errorList = new ArrayList();
 
         IResource modifiedRes = this.getModifiedResource();
@@ -389,7 +387,7 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
 //        setResourceName(this.nameBeforeRename, monitor);
 //        return null;
 
-        return this.modifyResource(super.getModifiedResource(), this.nameBeforeRename, this.pathMap, this.undoMap, monitor);
+        return this.modifyResource(super.getModifiedResource(), this.nameBeforeRename, this.pathPairs, this.undoPairs, monitor);
     }
 
     /* (non-Javadoc)
@@ -400,7 +398,7 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
 //        setResourceName(this.nameAfterRename, monitor);
 //        return null;
 
-        return this.modifyResource(super.getModifiedResource(), this.getNewName(), this.pathMap, this.undoMap, monitor);
+        return this.modifyResource(super.getModifiedResource(), this.getNewName(), this.pathPairs, this.undoPairs, monitor);
     }
 
     /* (non-Javadoc)
@@ -443,8 +441,8 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
      * @See org.teiid.designer.core.refactor.ResourceRefactorCommand#getMovedResourcePaths(boolean)
      */
     @Override
-    protected Map getMovedResourcePathMap(boolean isUndo) {
-        return this.pathMap;
+    protected Collection<PathPair> getMovedResourcePathCollection(boolean isUndo) {
+        return this.pathPairs;
     }
 
     private void setUndo(IFile oldFile, IFile newFile) {

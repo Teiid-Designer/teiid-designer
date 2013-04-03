@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -28,6 +27,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.refactor.IRefactorModelHandler;
+import org.teiid.designer.core.refactor.PathPair;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -58,36 +58,15 @@ public class TransformationRefactorModelHandler extends
 	
 	@Override
 	public void helpUpdateModelContents(int type, ModelResource modelResource,
-			Map refactoredPaths, IProgressMonitor monitor) {
+			Collection<PathPair> refactoredPaths, IProgressMonitor monitor) {
 		CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
-		CoreArgCheck.isNotEmpty(refactoredPaths.values(), "refactoredPaths"); //$NON-NLS-1$
+		CoreArgCheck.isNotEmpty(refactoredPaths, "refactoredPaths"); //$NON-NLS-1$
 		// Need to fix any queries within a virtual model that has transformation sources internal to the same model
 		
 		try {
 			switch( type ) {
 				case IRefactorModelHandler.RENAME: {
-                    //boolean sqlChanged = 
                     regenerateUserSql(modelResource, monitor, refactoredPaths);
-                    
-//                    if( sqlChanged ) {
-//	                    // Send notification for transformation roots to invalidate any transformation cache
-//	                    final Resource resrc = modelResource.getEmfResource();
-//	                    if (resrc instanceof EmfResource) {
-//	                        final List xformations = ((EmfResource)resrc).getModelContents().getTransformations();
-//	                        for (final Iterator rootIter = xformations.iterator(); rootIter.hasNext();) {
-//	                            final TransformationMappingRoot root = (TransformationMappingRoot)rootIter.next();
-//	                            if( root instanceof SqlTransformationMappingRoot ) {
-//		                            final Notification notification = new ENotificationImpl(
-//		                                                                                    (InternalEObject)root,
-//		                                                                                    Notification.SET,
-//		                                                                                    TransformationPackage.TRANSFORMATION_MAPPING_ROOT__TARGET,
-//		                                                                                    refactoredPaths.keySet(),
-//		                                                                                    refactoredPaths.values());
-//		                            root.eNotify(notification);
-//	                            }
-//	                        }
-//	                    }
-//                    }
 				}break;
 				case IRefactorModelHandler.DELETE: {
 					
@@ -105,15 +84,15 @@ public class TransformationRefactorModelHandler extends
 	
 	@Override
 	public void helpUpdateDependentModelContents(int type, ModelResource modelResource,
-			Map refactoredPaths, IProgressMonitor monitor) {
+			Collection<PathPair> refactoredPaths, IProgressMonitor monitor) {
 		CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
-		CoreArgCheck.isNotEmpty(refactoredPaths.values(), "refactoredPaths"); //$NON-NLS-1$
+		CoreArgCheck.isNotEmpty(refactoredPaths, "refactoredPaths"); //$NON-NLS-1$
 		
 		helpUpdateModelContents(type, modelResource, refactoredPaths, monitor);
 	}
 
 	protected boolean regenerateUserSql(ModelResource modelResource,
-			IProgressMonitor monitor, Map refactoredPaths)
+			IProgressMonitor monitor, Collection<PathPair> refactoredPaths)
 			throws ModelWorkspaceException {
 		final Resource r = modelResource.getEmfResource();
 		

@@ -9,7 +9,6 @@ package org.teiid.designer.core.refactor;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -38,7 +37,7 @@ public class OrganizeImportCommand implements ModelRefactorCommand {
     private CoreFactory factory;
     private Resource resource;
     private OrganizeImportHandler handler;
-    private Map paths;
+    private Collection<PathPair> paths;
     private final Object factoryLock = new Object();
 
     /**
@@ -249,7 +248,7 @@ public class OrganizeImportCommand implements ModelRefactorCommand {
      * @param paths
      * @since 4.3
      */
-    protected void setRefactoredPaths( Map paths ) {
+    protected void setRefactoredPaths(Collection<PathPair> paths ) {
         this.paths = paths;
     }
 

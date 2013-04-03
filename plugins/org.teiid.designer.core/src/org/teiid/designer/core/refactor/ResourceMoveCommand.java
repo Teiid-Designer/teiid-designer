@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -56,8 +55,8 @@ public class ResourceMoveCommand extends ResourceRefactorCommand {
     private IContainer destination;
     private IStatus currentStatus;
     private IPath pathAfterMove;
-    private Map pathMap;
-    private Map undoMap;
+    private Collection<PathPair> pathPairs;
+    private Collection<PathPair> undoPairs;
 
     /**
      * Construct an instance of ResourceMoveCommand.
@@ -168,9 +167,9 @@ public class ResourceMoveCommand extends ResourceRefactorCommand {
     @Override
     protected IStatus modifyResource(final IResource resource, final IProgressMonitor monitor) {
         
-        this.pathMap = new HashMap();
-        this.undoMap = new HashMap();
-        return this.modifyResource(resource, this.destination, this.pathMap, this.undoMap, monitor);
+        this.pathPairs = new ArrayList<PathPair>();
+        this.undoPairs = new ArrayList<PathPair>();
+        return this.modifyResource(resource, this.destination, this.pathPairs, this.undoPairs, monitor);
     }
 
     /* (non-Javadoc)
@@ -178,8 +177,8 @@ public class ResourceMoveCommand extends ResourceRefactorCommand {
      */
     private IStatus modifyResource(final IResource resource, 
                                    final IContainer targetContainer, 
-                                   final Map preToPostPathMap, 
-                                   final Map postToPrePathMap,
+                                   final Collection<PathPair> preToPostPathMap, 
+                                   final Collection<PathPair> postToPrePathMap,
                                    final IProgressMonitor monitor) {
         
         IResource[] resources = new IResource[] { resource };
@@ -188,7 +187,7 @@ public class ResourceMoveCommand extends ResourceRefactorCommand {
 
             ModelResourceCollectorVisitor preMoveVisitor = new ModelResourceCollectorVisitor();    
             resource.accept(preMoveVisitor);
-            ArrayList preMoveList = new ArrayList(preMoveVisitor.getResources().size());
+            List<String> preMoveList = new ArrayList<String>(preMoveVisitor.getResources().size());
             for ( Iterator iter = preMoveVisitor.getResources().iterator() ; iter.hasNext() ; ) {
                 preMoveList.add(((IResource) iter.next()).getFullPath().makeAbsolute().toString());
             }
@@ -206,7 +205,7 @@ public class ResourceMoveCommand extends ResourceRefactorCommand {
 
             ModelResourceCollectorVisitor postMoveVisitor = new ModelResourceCollectorVisitor();    
             movedResource.accept(postMoveVisitor);
-            ArrayList postMoveList = new ArrayList(postMoveVisitor.getResources().size());
+            List<String> postMoveList = new ArrayList<String>(postMoveVisitor.getResources().size());
             for ( Iterator iter = postMoveVisitor.getResources().iterator() ; iter.hasNext() ; ) {
                 postMoveList.add(((IResource) iter.next()).getFullPath().makeAbsolute().toString());
             }
@@ -214,13 +213,13 @@ public class ResourceMoveCommand extends ResourceRefactorCommand {
             preToPostPathMap.clear();
             postToPrePathMap.clear();
             if ( preMoveList.size() == postMoveList.size() ) {
-                Iterator preIter = preMoveList.iterator();
-                Iterator postIter = postMoveList.iterator();
+                Iterator<String> preIter = preMoveList.iterator();
+                Iterator<String> postIter = postMoveList.iterator();
                 while ( preIter.hasNext() ) {
-                    Object pre = preIter.next();
-                    Object post = postIter.next();
-                    preToPostPathMap.put(pre, post);
-                    postToPrePathMap.put(post, pre);
+                    String pre = preIter.next();
+                    String post = postIter.next();
+                    preToPostPathMap.add(new PathPair(pre, post));
+                    postToPrePathMap.add(new PathPair(post, pre));
                 }
             }       
                  
@@ -241,7 +240,7 @@ public class ResourceMoveCommand extends ResourceRefactorCommand {
 //        return result;
     }
     
-    protected IStatus refactorModifiedResources(IProgressMonitor monitor, IResource resource, final Map refactoredPaths) {
+    protected IStatus refactorModifiedResources(IProgressMonitor monitor, IResource resource, final Collection<PathPair> refactoredPaths) {
 
         Collection errorList = new ArrayList();
         int severity = IStatus.OK;
@@ -334,7 +333,7 @@ public class ResourceMoveCommand extends ResourceRefactorCommand {
     }
     
     @Override
-	protected IStatus refactorModelContents(IProgressMonitor monitor, final Map refactoredPaths ) {
+	protected IStatus refactorModelContents(IProgressMonitor monitor, final Collection<PathPair> refactoredPaths ) {
     	return null;
     }
 
@@ -344,7 +343,7 @@ public class ResourceMoveCommand extends ResourceRefactorCommand {
     @Override
     protected IStatus undoResourceModification(IProgressMonitor monitor) {
         final IContainer targetContainer = super.getResource().getParent();
-        return this.modifyResource(super.getModifiedResource(), targetContainer, this.pathMap, this.undoMap, monitor);
+        return this.modifyResource(super.getModifiedResource(), targetContainer, this.pathPairs, this.undoPairs, monitor);
     }
 
     /* (non-Javadoc)
@@ -353,7 +352,7 @@ public class ResourceMoveCommand extends ResourceRefactorCommand {
     @Override
     protected IStatus redoResourceModification(IProgressMonitor monitor) {
         final IContainer targetContainer = this.destination;
-        return this.modifyResource(super.getResource(), targetContainer, this.pathMap, this.undoMap, monitor);
+        return this.modifyResource(super.getResource(), targetContainer, this.pathPairs, this.undoPairs, monitor);
     }
 
     /* (non-Javadoc)
@@ -390,11 +389,11 @@ public class ResourceMoveCommand extends ResourceRefactorCommand {
      * @See org.teiid.designer.core.refactor.ResourceRefactorCommand#getMovedResourcePaths(boolean)
      */
     @Override
-    protected Map getMovedResourcePathMap(boolean isUndo) {
+    protected Collection<PathPair> getMovedResourcePathCollection(boolean isUndo) {
         if ( isUndo ) {
-            return this.undoMap;
+            return this.undoPairs;
         }
-        return this.pathMap;
+        return this.pathPairs;
     }
     
     /*

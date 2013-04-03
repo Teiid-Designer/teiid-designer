@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.core.refactor;
 
-import java.util.Map;
+import java.util.Collection;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -181,11 +181,11 @@ public final class ResourceRenameNamespaceUriCommand extends ResourceRefactorCom
     }
 
     /** 
-     * @see org.teiid.designer.core.refactor.ResourceRefactorCommand#getMovedResourcePathMap(boolean)
+     * @see org.teiid.designer.core.refactor.ResourceRefactorCommand#getMovedResourcePathCollection(boolean)
      * @since 4.3
      */
     @Override
-    protected Map getMovedResourcePathMap(boolean theIsUndo) {
+    protected Collection<PathPair> getMovedResourcePathCollection(boolean theIsUndo) {
         return null;
     }
 
@@ -241,7 +241,7 @@ public final class ResourceRenameNamespaceUriCommand extends ResourceRefactorCom
     }
     
     @Override
-    protected IStatus refactorModelContents(IProgressMonitor monitor, final Map refactoredPaths ) {
+    protected IStatus refactorModelContents(IProgressMonitor monitor, final Collection<PathPair> refactoredPaths ) {
     	return null;
     }
 

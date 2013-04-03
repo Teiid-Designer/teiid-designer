@@ -9,17 +9,14 @@ package org.teiid.designer.vdb.ui.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -27,13 +24,13 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.core.refactor.IRefactorNonModelResourceHandler;
+import org.teiid.designer.core.refactor.PathPair;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ResourceFilter;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.vdb.VdbUtil;
-import org.teiid.designer.vdb.ui.Messages;
 import org.teiid.designer.vdb.ui.editor.VdbEditor;
 /**
  *
@@ -47,7 +44,7 @@ public class VdbUiRefactorHandler implements IRefactorNonModelResourceHandler {
 	 */
 	@Override
 	public void helpUpdateDependentModelContents(int type,
-			ModelResource modelResource, Map refactoredPaths,
+			ModelResource modelResource, Collection<PathPair> refactoredPaths,
 			IProgressMonitor monitor) {
 		// No implementation
 		
@@ -60,7 +57,7 @@ public class VdbUiRefactorHandler implements IRefactorNonModelResourceHandler {
 	 */
 	@Override
 	public void helpUpdateModelContents(int type,
-			ModelResource refactoredModelResource, Map refactoredPaths,
+			ModelResource refactoredModelResource, Collection<PathPair> refactoredPaths,
 			IProgressMonitor monitor) {
 		// No implementation
 		
@@ -88,7 +85,7 @@ public class VdbUiRefactorHandler implements IRefactorNonModelResourceHandler {
 	 */
 	@Override
 	public void processNonModel(int type, IResource refactoredResource,
-			Map refactoredPaths, IProgressMonitor monitor) throws Exception {
+			Collection<PathPair> refactoredPaths, IProgressMonitor monitor) throws Exception {
 		// No implementation
 	}
 	
@@ -107,29 +104,36 @@ public class VdbUiRefactorHandler implements IRefactorNonModelResourceHandler {
     	Collection<IFile> targetVdbs = new ArrayList<IFile>();
     	Collection<VdbEditor> openVdbEditors = new ArrayList<VdbEditor>();
     	
-    	for( IFile theVdb : allVdbResourcesInProject ) {
-    		if( VdbUtil.modelInVdb(theVdb, (IFile)refactoredResource) ) {
-    			targetVdbs.add(theVdb);
-	    		VdbEditor vdbEditor = getVdbEditorForFile(theVdb);
-    			if( vdbEditor != null ) {
-    				openVdbEditors.add(vdbEditor);
-    			}
-    		}
-    	}
-    	
-    	if( targetVdbs.isEmpty() ) return true;
-    	
-    	String message = NLS.bind(Messages.refactorModelVdbDependencyMessage_openEditors, refactoredResource.getName());
-    	if( openVdbEditors.isEmpty()) message = NLS.bind(Messages.refactorModelVdbDependencyMessage_noOpenEditors, refactoredResource.getName());
-		boolean result = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(), Messages.refactorModelVdbDependencyTitle, message);
-		
-		if( result) {
-			for( VdbEditor editor : openVdbEditors ) {
-				closeVdbEditor(editor);
-			}
-		}
+        for( IFile theVdb : allVdbResourcesInProject ) {
+    	    if (refactoredResource instanceof IFolder) {
+    	        IFolder folder = (IFolder) refactoredResource;
+    	        try {
+                    IResource[] members = folder.members();
+                    for (int i = 0; i < members.length; ++i) {
+                        preProcess(refactorType, members[i], monitor);
+                    }
+                } catch (CoreException ex) {
+                    // Consider what TODO
+                }
 
-		return result;
+    	    } else if (refactoredResource instanceof IFile) {
+    	        if( VdbUtil.modelInVdb(theVdb, (IFile)refactoredResource) ) {
+    	            targetVdbs.add(theVdb);
+    	            VdbEditor vdbEditor = getVdbEditorForFile(theVdb);
+    	            if( vdbEditor != null ) {
+    	                openVdbEditors.add(vdbEditor);
+    	            }
+    	        }
+    	    }
+    	}
+
+    	if( targetVdbs.isEmpty() ) return true;
+
+    	for( VdbEditor editor : openVdbEditors ) {
+    	    closeVdbEditor(editor);
+    	}
+
+		return true;
 	}
 
     /**

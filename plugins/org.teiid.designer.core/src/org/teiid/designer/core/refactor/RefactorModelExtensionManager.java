@@ -9,8 +9,6 @@ package org.teiid.designer.core.refactor;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -104,7 +102,7 @@ public class RefactorModelExtensionManager {
 	 * @param monitor the ProgressMonitor
 	 */
 	public static void helpUpdateDependentModelContents(int type, ModelResource modelResource,
-			Map refactoredPaths, IProgressMonitor monitor) {
+			Collection<PathPair> refactoredPaths, IProgressMonitor monitor) {
 		if( !handlersLoaded ) {
 			loadExtensions();
 		}
@@ -124,7 +122,7 @@ public class RefactorModelExtensionManager {
      */
     public static void helpUpdateNonModelResource( int type,
                                                    IResource refactoredResource,
-                                                   Map refactoredPaths,
+                                                   Collection<PathPair> refactoredPaths,
                                                    IProgressMonitor monitor ) {
         if (!handlersLoaded) {
             loadExtensions();
@@ -151,7 +149,7 @@ public class RefactorModelExtensionManager {
      * @see org.teiid.designer.core.refactor.IRefactorModelHandler#helpUpdateModelContents(int, org.teiid.designer.core.workspace.ModelResource, java.util.Map, 
      *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public static void helpUpdateModelContents(int type, ModelResource refactoredModelResource, Map refactoredPaths, IProgressMonitor monitor) {
+	public static void helpUpdateModelContents(int type, ModelResource refactoredModelResource, Collection<PathPair> refactoredPaths, IProgressMonitor monitor) {
 		if( !handlersLoaded ) {
 			loadExtensions();
 		}

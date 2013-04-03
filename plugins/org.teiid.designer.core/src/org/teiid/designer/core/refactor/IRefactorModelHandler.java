@@ -9,7 +9,6 @@ package org.teiid.designer.core.refactor;
 
 import java.util.Collection;
 import java.util.Map;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -36,10 +35,10 @@ public interface IRefactorModelHandler {
 	 * 
 	 * @param type the type of the refactor operations (see <code>IRefactorModelHandler</code>
 	 * @param modelResource the dependent model
-	 * @param refactoredPaths a Map containing original and new model paths
+	 * @param refactoredPaths a collection of path pairs containing original and new model paths
 	 * @param monitor the ProgressMonitor
 	 */
-	void helpUpdateDependentModelContents(int type, ModelResource modelResource, Map refactoredPaths, IProgressMonitor monitor);
+	void helpUpdateDependentModelContents(int type, ModelResource modelResource, Collection<PathPair> refactoredPaths, IProgressMonitor monitor);
 	
 	/**
 	 * Method which delegates to all handlers the ability to update or perform internal refactoring for the refactored models
@@ -49,7 +48,7 @@ public interface IRefactorModelHandler {
 	 * @param refactoredPaths
 	 * @param monitor
 	 */
-	void helpUpdateModelContents(int type, ModelResource refactoredModelResource, Map refactoredPaths, IProgressMonitor monitor);
+	void helpUpdateModelContents(int type, ModelResource refactoredModelResource, Collection<PathPair> refactoredPaths, IProgressMonitor monitor);
 	
 	/**
 	 * Method which delegates to all handlers the ability to update or perform internal refactoring for the deleted models

@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -25,6 +23,7 @@ import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.refactor.IRefactorModelHandler;
+import org.teiid.designer.core.refactor.PathPair;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -54,9 +53,9 @@ public class DiagramRefactorModelHandler implements IRefactorModelHandler {
 
 	@Override
 	public void helpUpdateDependentModelContents(int type, ModelResource modelResource,
-			Map refactoredPaths, IProgressMonitor monitor) {
+			Collection<PathPair> refactoredPaths, IProgressMonitor monitor) {
 		CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
-		CoreArgCheck.isNotEmpty(refactoredPaths.values(), "refactoredPaths"); //$NON-NLS-1$
+		CoreArgCheck.isNotEmpty(refactoredPaths, "refactoredPaths"); //$NON-NLS-1$
 		
 		
 		try {
@@ -75,9 +74,9 @@ public class DiagramRefactorModelHandler implements IRefactorModelHandler {
 	
 	@Override
 	public void helpUpdateModelContents(int type, ModelResource modelResource,
-			Map refactoredPaths, IProgressMonitor monitor) {
+			Collection<PathPair> refactoredPaths, IProgressMonitor monitor) {
 		CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
-		CoreArgCheck.isNotEmpty(refactoredPaths.values(), "refactoredPaths"); //$NON-NLS-1$
+		CoreArgCheck.isNotEmpty(refactoredPaths, "refactoredPaths"); //$NON-NLS-1$
 		
 		try {
 			if( ModelUtil.isXmiFile(modelResource.getCorrespondingResource())) {

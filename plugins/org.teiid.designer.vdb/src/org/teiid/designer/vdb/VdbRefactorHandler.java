@@ -8,13 +8,12 @@
 package org.teiid.designer.vdb;
 
 import java.util.Collection;
-import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.teiid.designer.core.refactor.IRefactorModelHandler;
 import org.teiid.designer.core.refactor.IRefactorNonModelResourceHandler;
+import org.teiid.designer.core.refactor.PathPair;
 import org.teiid.designer.core.workspace.ModelResource;
 
 
@@ -29,12 +28,12 @@ public class VdbRefactorHandler implements IRefactorNonModelResourceHandler {
      * {@inheritDoc}
      * 
      * @see org.teiid.designer.core.refactor.IRefactorModelHandler#helpUpdateDependentModelContents(int,
-     *      org.teiid.designer.core.workspace.ModelResource, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
+     *      org.teiid.designer.core.workspace.ModelResource, java.util.Collection, org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     public void helpUpdateDependentModelContents( int type,
                                                   ModelResource modelResource,
-                                                  Map refactoredPaths,
+                                                  Collection<PathPair> refactoredPaths,
                                                   IProgressMonitor monitor ) {
         // nothing to do
     }
@@ -43,12 +42,12 @@ public class VdbRefactorHandler implements IRefactorNonModelResourceHandler {
      * {@inheritDoc}
      * 
      * @see org.teiid.designer.core.refactor.IRefactorModelHandler#helpUpdateModelContents(int,
-     *      org.teiid.designer.core.workspace.ModelResource, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
+     *      org.teiid.designer.core.workspace.ModelResource, java.util.Collection, org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     public void helpUpdateModelContents( int type,
                                          ModelResource refactoredModelResource,
-                                         Map refactoredPaths,
+                                         Collection<PathPair> refactoredPaths,
                                          IProgressMonitor monitor ) {
         // nothing to do
     }
@@ -75,7 +74,7 @@ public class VdbRefactorHandler implements IRefactorNonModelResourceHandler {
     @Override
     public void processNonModel( int type,
                                  IResource refactoredResource,
-                                 Map refactoredPaths,
+                                 Collection<PathPair> refactoredPaths,
                                  IProgressMonitor monitor ) {
         // only care about renames
         if ((type == IRefactorModelHandler.RENAME) && (refactoredResource.getType() == IResource.FILE)
