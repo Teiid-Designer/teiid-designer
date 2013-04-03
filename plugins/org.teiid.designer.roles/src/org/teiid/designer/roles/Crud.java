@@ -108,4 +108,20 @@ public class Crud {
 		}
 		return null;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("Crud: "); //$NON-NLS-1$
+		sb.append("\n\t").append("c = " + c.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append("\n\t").append("r = " + r.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append("\n\t").append("u = " + u.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append("\n\t").append("d = " + d.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append("\n\t").append("e = " + e.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append("\n\t").append("a = " + a.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
+		return sb.toString();
+	}
+	
 }

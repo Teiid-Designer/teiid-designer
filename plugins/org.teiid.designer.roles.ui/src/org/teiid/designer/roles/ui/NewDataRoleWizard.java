@@ -18,7 +18,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.DocumentEvent;

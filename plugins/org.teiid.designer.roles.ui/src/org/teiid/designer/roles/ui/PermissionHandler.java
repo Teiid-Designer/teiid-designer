@@ -14,6 +14,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.roles.Crud;
@@ -165,6 +166,50 @@ public class PermissionHandler {
 
         return perm;
     }
+	
+    /**
+     * Finds the parent permission which contains a non-null Boolean crud value
+     * @param element
+     * @param crudType
+     * @return parent permission. may be null
+     */
+	public Permission getParentPermission(Object element, Crud.Type crudType) {
+		Permission perm = this.permissionsMap.get(element);
+		if (perm != null &&  perm.getCRUDValue(crudType) != null) {
+			return perm;
+		}
+		
+		return null;
+    }
+	
+	private Permission getModelPermssion(Object element) {
+		if( element instanceof Resource ) {
+			return this.permissionsMap.get(element);
+		}
+		
+        Object parent = tree.getParent(element);
+        while (parent != null ) {
+        	if( parent instanceof Resource ) {
+        		return this.permissionsMap.get(parent);
+        	}
+            parent = tree.getParent(parent);
+        }
+
+		return null;
+	}
+	
+	private Object getModelElement(Object element) {
+        Object parent = element;
+        while (parent != null ) {
+        	Object theParent = parent;
+        	if( theParent instanceof Resource ) {
+        		return theParent;
+        	}
+            parent = tree.getParent(theParent);
+        }
+        
+        return null;
+	}
 
     /*
      * Find the first parent above the element with an NON-NULL boolean value for the specified CRUD type
@@ -213,65 +258,142 @@ public class PermissionHandler {
             this.permissionsMap.put(key, perm);
         }
     }
-
+	
+	private void disableNearestParentPermission(Object element, Crud.Type crudType) {
+		Object firstParent = tree.getParent(element);
+		Permission perm = this.permissionsMap.get(firstParent);
+		
+		if( perm != null && perm.getCRUDValue(crudType) != null && perm.getCRUDValue(crudType) == Boolean.FALSE ) {
+			perm.setCRUDValue(true, crudType);
+		} else {
+			Permission permiss = null;
+            Object parent = tree.getParent(firstParent);
+            
+            while (parent != null && !(parent instanceof Resource) && permiss == null) {
+            	permiss = this.permissionsMap.get(parent);
+                parent = tree.getParent(parent);
+                if( permiss != null && permiss.getCRUDValue(crudType) == Boolean.FALSE ) {
+                	perm.setCRUDValue(true, crudType);
+                	return;
+                }
+            }
+		}
+	}
+	
+	private boolean hasParentPermission(Object element, Crud.Type crudType) {
+		Object firstParent = tree.getParent(element);
+		Permission perm = this.permissionsMap.get(firstParent);
+		
+		if( (perm == null || perm.getCRUDValue(crudType) == null)) {
+			return false;
+		} else {
+			Permission permiss = perm;
+            if( permiss.getCRUDValue(crudType) == Boolean.FALSE ) {
+            	return true;
+            }
+            Object parent = tree.getParent(firstParent);
+            
+            while (parent != null && !(parent instanceof Resource) && (permiss == null || permiss.getCRUDValue(crudType) == null)) {
+            	permiss = this.permissionsMap.get(parent);
+                parent = tree.getParent(parent);
+                if( permiss != null && permiss.getCRUDValue(crudType) == Boolean.FALSE ) {
+                	return true;
+                }
+            }
+		}
+		
+		return false;
+	}
+	
+	@SuppressWarnings("unused")
+	private Permission togglePermissionValue(Object element, boolean newValue, Crud.Type crudType) {
+		Permission permission = this.permissionsMap.get(element);
+		if( permission == null ) {
+			permission = new Permission(tree.getTargetName(element), new Crud(null, null, null, null, null, null));
+			this.permissionsMap.put(element, permission);
+			permission.setCRUDValue(newValue, crudType);
+		} else {
+			permission.toggleCRUDValue(crudType);
+		}
+		
+		// If toggling permission value to TRUE, then need to set all Children to TRUE if perm
+		SET_CHILD_PERMISSIONS : {
+	        Boolean parentValue = permission.getCRUDValue(crudType);
+	
+	        Collection<Permission> childPermissions = new ArrayList<Permission>();
+	
+	        getChildPermissions(element, childPermissions);
+	
+	        for (Permission perm : childPermissions) {
+	            perm.setCRUDValue(parentValue, crudType);
+	        }
+		}
+		
+		return permission;
+	}
+	
     /**
-	 * Performs the necessary permission CRUDDELETE value changes based on the target element and the CRUD type.
+	 * Performs the necessary permission CRUD value changes based on the target element and the CRUD type.
 	 * This method is targeted for use by a single-click editor changing ONE CRUD boolean value for one object.
      * 
      * @param element
      * @param crudType
      */
-	public void togglePermission( Object element, Crud.Type crudType ) {
+	public void toggleElementPermission( Object element, Crud.Type crudType ) {
         if (!supportsUpdates(element, crudType)) {
             return;
         }
 
-        // The current element permission
-        Permission targetPermission = this.permissionsMap.get(element);
+    	// See if model permission is TRUE or FALSE
+    	
+    	Permission modelPermission = getModelPermssion(element);
+    	Object modelElement = getModelElement(element);
+    	
+    	boolean firstTimePermission = false;
+    	if( modelPermission == null || modelPermission.getCRUDValue(crudType) == Boolean.FALSE) {
+    		// Model needs to get turned ON because this is the FIRST time this crud type is enabled
+    		
+    		if( modelPermission == null ) {
+    			Crud targetCrud = new Crud(null, null, null, null, null, null);
+    			
+    			modelPermission = new Permission(tree.getTargetName(modelElement), targetCrud);
+    			modelPermission.setCRUDValue(true, crudType);
+                this.permissionsMap.put(modelElement, modelPermission);
+    		} else {
+    			modelPermission.setCRUDValue(true, crudType);
+    		}
+    		firstTimePermission = true;
+    	}
+    	
+    	// if firstTimePermission == TRUE
+    	// Then we just need to set all non-checked siblings with PERMISSION = FALSE and all parent's siblings to FALSE
+    	// etc... until we reach the model
+    	
+    	if( firstTimePermission ) {
+    		disableAllSiblingPermissions(element, crudType);
+    		
+    		Object parent = this.tree.getParent(element);
+    		while( parent != null && parent != modelElement ) {
+    			Object theParent = parent;
+    			disableAllSiblingPermissions(parent, crudType);
+    			parent = tree.getParent(theParent);
+    		}
+    	} else {
+    		// Now we have an enabled Model Permission and need to look only at the selected object and it's siblings
+    		// toggle existing permission (or create new with false)
 
-        // Current element permission is null - inherits from parent
-        if (targetPermission == null) {
-            Permission parentPermission = getExistingPermission(element, crudType);
-
-            // Now create New permission with NULL values
-            Crud targetCrud = new Crud(null, null, null, null, null, null);
-            targetPermission = new Permission(tree.getTargetName(element), targetCrud);
-
-            // Set the target permission crud value to parent permission crud value
-            // ONLY if the parent crud value == TRUE, else we can't override the parent.
-            if (parentPermission.getCRUDValue(crudType) == Boolean.TRUE) {
-                targetPermission.setCRUDValue(parentPermission.getCRUDValue(crudType), crudType);
-                permissionsMap.put(element, targetPermission);
-                targetPermission.toggleCRUDValue(crudType);
-            }
-            // Current element permission non null - some portion already contains override.
-        } else {
-            // if the targetPermission's value == NULL, then we should treat this like a "new Permission"
-            if (targetPermission.getCRUDValue(crudType) == null) {
-                Permission parentPermission = getExistingPermission(element, crudType);
-                // Set the target permission crud value to parent permission crud value
-                // ONLY if the parent crud value == TRUE, else we can't override the parent.
-                if (parentPermission.getCRUDValue(crudType) == Boolean.TRUE) {
-                    targetPermission.setCRUDValue(parentPermission.getCRUDValue(crudType), crudType);
-                    targetPermission.toggleCRUDValue(crudType);
-                }
-            } else if (targetPermission.getCRUDValue(crudType) == Boolean.FALSE) {
-                if (targetPermission.isPrimary()) {
-                    targetPermission.toggleCRUDValue(crudType);
-                } else {
-                    Permission parentPermission = getFirstParentPermission(element, crudType);
-                    // Set the target permission crud value to parent permission crud value
-                    // ONLY if the parent crud value == TRUE, else we can't override the parent.
-                    if (parentPermission.getCRUDValue(crudType) == Boolean.TRUE) {
-                        targetPermission.setCRUDValue(null, crudType); // parentPermission.getCRUDValue(type), type);
-                    }
-                }
-            } else {
-                targetPermission.toggleCRUDValue(crudType);
-            }
-
-        }
-
+    		
+    		boolean hasParentPermissionFalse = hasParentPermission(element, crudType);
+    		
+    		if( hasParentPermissionFalse ) {
+    			disableNearestParentPermission(element, crudType);
+    			disableAllSiblingPermissions(element, crudType);
+    		}
+    		
+    		
+    		togglePermissionValue(element, hasParentPermissionFalse, crudType);
+    	}
+        
         // Now check if we need to remove any permissions based on the selected element.
         cleanUpPermissions(element);
 
@@ -313,8 +435,31 @@ public class PermissionHandler {
             }
             workingElem = parent;
         }
-        return;
-    }
+	}
+
+
+
+	
+	private void disableAllSiblingPermissions(Object element, Crud.Type crudType) {
+		Object parent = tree.getParent(element);
+		
+		if( parent != null ) {
+			for( Object child : tree.getChildren(parent) ) {
+				if( child == element ) {
+					continue;
+				}
+				Permission existingPermission = this.permissionsMap.get(child);
+				if( existingPermission == null ) {
+					Crud childCrud = new Crud(null, null, null, null, null, null);
+					Permission newPermission = new Permission(tree.getTargetName(child), childCrud);
+					newPermission.setCRUDValue(false, crudType);
+					this.permissionsMap.put(child, newPermission);
+				} else {
+					existingPermission.setCRUDValue(false, crudType);
+				}
+			}
+		}
+	}
 
     /**
      * Check the 'toggle-ability' of the crud type of the supplied element. The status may return INFO - means a message should be
@@ -331,30 +476,6 @@ public class PermissionHandler {
         // Return INFO - if element does not support updates
         if (!supportsUpdates(element, crudType)) {
             return createStatus(IStatus.INFO, RolesUiPlugin.UTIL.getString("PermissionHandler.infoNotUpdatable")); //$NON-NLS-1$
-        }
-
-        // Check for conditions where parent does not allow toggle
-        boolean parentAllowsToggle = true;
-        // The current element permission
-        Permission targetPermission = this.permissionsMap.get(element);
-        // Target Permission null, check existing permission from parent
-        if (targetPermission == null) {
-            Permission parentPermission = getExistingPermission(element, crudType);
-            if (parentPermission.getCRUDValue(crudType) != Boolean.TRUE) parentAllowsToggle = false;
-        } else {
-            if (targetPermission.getCRUDValue(crudType) == null) {
-                Permission parentPermission = getExistingPermission(element, crudType);
-                if (parentPermission.getCRUDValue(crudType) != Boolean.TRUE) parentAllowsToggle = false;
-            } else if (targetPermission.getCRUDValue(crudType) == Boolean.FALSE) {
-                if (!targetPermission.isPrimary()) {
-                    Permission parentPermission = getFirstParentPermission(element, crudType);
-                    if (parentPermission.getCRUDValue(crudType) != Boolean.TRUE) parentAllowsToggle = false;
-                }
-            }
-        }
-        // Return INFO - if parent state disallows toggle
-        if (!parentAllowsToggle) {
-            return createStatus(IStatus.INFO, RolesUiPlugin.UTIL.getString("PermissionHandler.infoParentNotEnabled")); //$NON-NLS-1$
         }
 
         // Return WARNING - if element can be toggled, but doing so will toggle all its children

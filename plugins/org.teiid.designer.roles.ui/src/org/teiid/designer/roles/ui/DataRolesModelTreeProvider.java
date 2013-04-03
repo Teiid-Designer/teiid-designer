@@ -58,6 +58,12 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
     private static final Image UNCHECKED_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.UNCHECKED_BOX_ICON);
     private static final Image GRAY_CHECKED_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.GRAY_CHECKED_BOX_ICON);
     private static final Image GRAY_UNCHECKED_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.GRAY_UNCHECKED_BOX_ICON);
+    
+    private static final int CHECKED = 0;
+    private static final int UNCHECKED = 1;
+    private static final int GRAY_CHECKED = 2;
+    private static final int GRAY_UNCHECKED = 3;
+    
 
     // private Map<Object, Permission> permissionsMap;
     private PermissionHandler handler;
@@ -83,19 +89,36 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
      * Helper method to find a check-box image based on boolean value, if it is a parent or not and if it has at lease one
      * child (or grand-child, etc.) that has a different boolean value.
      */
-	private Image getCheckBoxImage(Boolean value, boolean isParentValue, boolean hasDifferentChildValue) {
+	private Image getCheckBoxImage(Object element, int columnIndex, Boolean value, boolean isParentValue, boolean hasDifferentChildValue) {
         // First case where the actual node does not have a CRUD value, so the first parent with a Value determines the state
         // of the check-box along with the boolean indicating that a child below it has a different value
+		int imageType = CHECKED;
+		
         if (isParentValue) {
-            if (value == Boolean.FALSE) return GRAY_UNCHECKED_BOX;
-            if (hasDifferentChildValue) return GRAY_CHECKED_BOX;
-            return CHECKED_BOX;
+            if (value == Boolean.FALSE) imageType = GRAY_UNCHECKED;
+            if (hasDifferentChildValue) imageType = GRAY_CHECKED;
         }
 
         // The case where the actual node HAS a Permission with a non-null CRUD value
-        if (value == Boolean.FALSE) return UNCHECKED_BOX;
-        if (hasDifferentChildValue) return GRAY_CHECKED_BOX;
-        return CHECKED_BOX;
+        if (value == Boolean.FALSE) imageType = UNCHECKED;
+        if (hasDifferentChildValue) imageType = GRAY_CHECKED;
+        
+        switch(imageType) {
+	        case CHECKED: {
+	        	return CHECKED_BOX;
+	        }
+	        case UNCHECKED: {
+	        	return UNCHECKED_BOX;
+	        }
+	        case GRAY_CHECKED: {
+	        	return GRAY_CHECKED_BOX;
+	        }
+	        case GRAY_UNCHECKED: {
+	        	return GRAY_UNCHECKED_BOX;
+	        }
+	        
+	        default: return null;
+        }
 
     }
 
@@ -145,11 +168,11 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
             boolean hasDifferentChildValue = false;
 			// If the permission is defined by a parent value, then we assume that this element has a NULL value and we need to determine
             // if any children below the element has a permission crud value not equal to the parent.
-            if (isParent) {
+            if (isParent || getChildren(element).length > 0 ) {
                 hasDifferentChildValue = handler.hasChildWithDifferentCrudValue(perm, element, crudType);
             }
 
-            return getCheckBoxImage(booleanValue, isParent, hasDifferentChildValue);
+            return getCheckBoxImage(element, columnIndex, booleanValue, isParent, hasDifferentChildValue);
         }
 
         return GRAY_UNCHECKED_BOX;
@@ -413,7 +436,7 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
      * @param crudType
      */
 	public void togglePermission( Object element, Crud.Type crudType ) {
-        handler.togglePermission(element, crudType);
+        handler.toggleElementPermission(element, crudType);
     }
 
     /**

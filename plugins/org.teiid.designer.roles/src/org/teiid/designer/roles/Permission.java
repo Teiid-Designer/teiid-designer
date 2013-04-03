@@ -121,7 +121,7 @@ public class Permission {
 		this.crud = new Crud(c,r,u,d,e,a);
 	}
 	
-	public void setCRUDValue(Boolean value, Crud.Type type) {
+	public void setCRUDValue(Boolean value, Crud.Type type) {	
 		switch(type) {
 			case CREATE: setCreateAllowed(value); break;
 			case READ: setReadAllowed(value); break;
@@ -197,13 +197,13 @@ public class Permission {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("Permission: ").append(this.targetName); //$NON-NLS-1$
-		sb.append("\n\t").append(this.crud.c.booleanValue()); //$NON-NLS-1$
-		sb.append("\n\t").append(this.crud.r.booleanValue()); //$NON-NLS-1$
-		sb.append("\n\t").append(this.crud.u.booleanValue()); //$NON-NLS-1$
-		sb.append("\n\t").append(this.crud.d.booleanValue()); //$NON-NLS-1$
-		sb.append("\n\t").append(this.crud.e.booleanValue()); //$NON-NLS-1$
-		sb.append("\n\t").append(this.crud.a.booleanValue()); //$NON-NLS-1$
-		return super.toString();
+		sb.append("\n\t").append("c = " + this.crud.c.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append("\n\t").append("r = " + this.crud.r.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append("\n\t").append("u = " + this.crud.u.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append("\n\t").append("d = " + this.crud.d.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append("\n\t").append("e = " + this.crud.e.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append("\n\t").append("a = " + this.crud.a.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
+		return sb.toString();
 	}
 
 	
