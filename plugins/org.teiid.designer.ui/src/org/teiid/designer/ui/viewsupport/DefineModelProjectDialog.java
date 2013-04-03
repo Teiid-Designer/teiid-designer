@@ -218,11 +218,6 @@ public class DefineModelProjectDialog extends TitleAreaDialog implements
 		}
 	}
 	
-	private void setProject(Properties properties) {
-		this.project = DesignerPropertiesUtil.getProject(properties);
-		this.selectedProjectText.setText(this.project.getName());
-	}
-	
 	private void handleNewProjectPressed() {
 		
 		Properties properties = this.designerProperties;
@@ -230,7 +225,13 @@ public class DefineModelProjectDialog extends TitleAreaDialog implements
 			properties = new Properties();
 		}
 		ModelerUiViewUtils.launchWizard("newModelProject", new StructuredSelection(), properties, true); //$NON-NLS-1$
-		setProject(properties);
+		
+		// Get the new project, which may be null if cancelled
+		this.project = DesignerPropertiesUtil.getProject(properties);
+		
+		if( this.project != null ) {
+			this.selectedProjectText.setText(this.project.getName());
+		}
 	}
 
 	private void handleBrowseWorkspaceForObjectPressed() {
