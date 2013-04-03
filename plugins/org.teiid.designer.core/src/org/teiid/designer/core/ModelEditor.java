@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -863,7 +861,7 @@ public interface ModelEditor {
      * @return the ModelResource; null only if the resource is not known to the {@link ModelWorkspace}.
      * @throws ModelWorkspaceException if there is an error obtaining the corresponding resource
      */
-    public ModelResource findModelResource( final IFile resource ) throws ModelWorkspaceException;
+    public ModelResource findModelResource( final IResource resource ) throws ModelWorkspaceException;
 
     public ModelContents getModelContents( final EObject eObject );
     public ModelContents getModelContents( final Resource emfResource );

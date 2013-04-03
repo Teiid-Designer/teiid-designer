@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -80,7 +81,7 @@ public class WarArchiveUtil {
                 wsModel = webServiceModel;
                 wsdlGenerator.addWebServiceModel(webServiceModel.getEmfResource());
                 webServiceName = webServiceModel.getItemName();
-                IResource[] iResources = WorkspaceResourceFinderUtil.getDependentResources(webServiceModel.getResource());
+                List<? extends IResource> iResources = WorkspaceResourceFinderUtil.getDependentResources(webServiceModel.getResource());
                 for (IResource iResource : iResources) {
                     if (ModelIdentifier.isSchemaModel(iResource)) {
                         wsdlGenerator.addXsdModel(importSchema(iResource.getLocation().toOSString()), iResource.getLocation());

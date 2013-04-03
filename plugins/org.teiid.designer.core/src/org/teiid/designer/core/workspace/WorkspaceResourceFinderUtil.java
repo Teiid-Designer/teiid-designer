@@ -27,9 +27,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.id.UUID;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.designer.common.vdb.VdbModelInfo;
 import org.teiid.designer.common.xsd.XsdHeader;
 import org.teiid.designer.common.xsd.XsdHeaderReader;
@@ -115,9 +115,9 @@ public class WorkspaceResourceFinderUtil {
      * then null is returned since there is no IResource in the workspace that represents any one of those models.
      * 
      * @param workspaceUri the URI string
-     * @return the IResource identified by the URI if it exists; may return null
+     * @return the IFile identified by the URI if it exists; may return null
      */
-    public static IResource findIResource( final String workspaceUri ) {
+    public static IFile findIResource( final String workspaceUri ) {
 
         if (!isValidWorkspaceUri(workspaceUri)) return null;
         final String normalizedUriString = normalizeUriString(workspaceUri);
@@ -125,7 +125,7 @@ public class WorkspaceResourceFinderUtil {
         // MyDefect : 16368 Refactored methods.
 
         IFile fileResource;
-        final IFile[] fileResources = getAllProjectsFileResources();
+        final Collection<IFile> fileResources = getAllProjectsFileResources();
 
         // If the workspace URI starts with "http" then check it against the target
         // namespaces of any XML schema in the workspace ...
@@ -163,7 +163,7 @@ public class WorkspaceResourceFinderUtil {
             if (resourceUri != null && getWorkspace() != null) {
                 // Match the Emf resource location against the location
                 final String uriString = normalizeUriToString(resourceUri);
-                final IFile[] fileResources = getAllProjectsFileResources();
+                final Collection<IFile> fileResources = getAllProjectsFileResources();
 
                 final IFile fileResource = getResourceByLocation(fileResources, uriString);
                 if (fileResource != null) return fileResource;
@@ -202,7 +202,7 @@ public class WorkspaceResourceFinderUtil {
 
         // Try to match the specified resource name with one of the IResource instances
         final boolean removeExtension = (name.indexOf('.') == -1);
-        final IFile[] fileResources = visitor.getFileResources();
+        final Collection<IFile> fileResources = visitor.getFileResources();
         final ArrayList tmp = new ArrayList();
         for (final IFile fileResource : fileResources)
             if (fileResource != null) {
@@ -246,7 +246,7 @@ public class WorkspaceResourceFinderUtil {
 
         // Try to match the specified resource name with one of the IResource instances
         final boolean removeExtension = (name.indexOf('.') == -1);
-        final IFile[] fileResources = visitor.getFileResources();
+        final Collection<IFile> fileResources = visitor.getFileResources();
         final ArrayList tmp = new ArrayList();
         for (final IFile fileResource : fileResources)
             if (fileResource != null) {
@@ -289,7 +289,7 @@ public class WorkspaceResourceFinderUtil {
                 }
         }
 
-        final IFile[] fileResources = visitor.getFileResources();
+        final Collection<IFile> fileResources = visitor.getFileResources();
         for (final IFile fileResource : fileResources)
             if (fileResource != null) {
                 final IPath path = fileResource.getFullPath();
@@ -324,7 +324,7 @@ public class WorkspaceResourceFinderUtil {
                 }
         }
 
-        final IFile[] fileResources = visitor.getFileResources();
+        final Collection<IFile> fileResources = visitor.getFileResources();
         for (final IFile fileResource : fileResources) {
             final IFile iResource = fileResource;
             if (iResource != null && !ModelUtil.isXsdFile(iResource)) {
@@ -344,7 +344,7 @@ public class WorkspaceResourceFinderUtil {
         return URI.decode(relLocation.toString());
     }
 
-    private static IFile[] getAllProjectsFileResources() {
+    private static Collection<IFile> getAllProjectsFileResources() {
         // Collect all IResources within all IProjects
 
         final FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor();
@@ -368,7 +368,7 @@ public class WorkspaceResourceFinderUtil {
         return getAllWorkspaceResources(null);
     }
 
-    public static Collection getAllWorkspaceResources( final ResourceFilter filter ) {
+    public static Collection<IFile> getAllWorkspaceResources(final ResourceFilter filter) {
         // Collect all IResources within all IProjects
         final FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor(filter);
         final IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
@@ -379,10 +379,10 @@ public class WorkspaceResourceFinderUtil {
                 // do nothing
             }
 
-        final Collection fileResources = visitor.getFileResourcesCollection();
-        final Iterator itor = fileResources.iterator();
+        final Collection<IFile> fileResources = visitor.getFileResources();
+        final Iterator<IFile> itor = fileResources.iterator();
         while (itor.hasNext()) {
-            final IFile fileResource = (IFile)itor.next();
+            final IFile fileResource = itor.next();
             final IPath path = fileResource.getFullPath();
             // Do not process file names starting with '.' since these
             // are considered reserved for Eclipse specific files
@@ -407,16 +407,15 @@ public class WorkspaceResourceFinderUtil {
      *        environment, an empty array will be returned.
      * @return the IPath[] for paths to the dependent IResource instances
      */
-    public static IPath[] getDependentResourcePaths( final IResource iResource ) {
-        if (iResource == null || getWorkspace() == null) return EMPTY_IPATH_ARRAY;
+    public static List<IPath> getDependentResourcePaths( final IResource iResource ) {
+        if (iResource == null || getWorkspace() == null) return Collections.emptyList();
 
-        final IResource[] dependentIResources = getDependentResources(iResource);
-        if (dependentIResources == null || dependentIResources.length == 0) return EMPTY_IPATH_ARRAY;
+        final List<IFile> dependentIResources = getDependentResources(iResource);
+        if (dependentIResources.isEmpty()) return Collections.emptyList();
 
-        final IPath[] result = new IPath[dependentIResources.length];
-        for (int i = 0; i != dependentIResources.length; ++i) {
-            final IResource dependentIResource = dependentIResources[i];
-            result[i] = dependentIResource.getFullPath();
+        final List<IPath> result = new ArrayList<IPath>();
+        for (IFile resource : dependentIResources) {
+            result.add(resource.getFullPath());
         }
 
         return result;
@@ -432,19 +431,19 @@ public class WorkspaceResourceFinderUtil {
      * </p>
      * is encountered, a corresponding IResource does not exist in the workspace and, therefore, cannot be returned as part of the
      * result. If the method is called outside of the Eclipse runtime environment, or if the specified IResource is null or cannot
-     * be found on the file system then an empty array will be returned.
+     * be found on the file system then an empty list will be returned.
      * 
      * @param iResource the IResource to examine for import declarations. If null, or it not running in a Eclipse runtime
-     *        environment, an empty array will be returned.
+     *        environment, an empty list will be returned.
      * @return the IResource[] references of dependent resources
      */
-    public static IResource[] getDependentResources( final IResource iResource ) {
-        if (iResource == null || getWorkspace() == null) return EMPTY_IRESOURCE_ARRAY;
+    public static List<IFile> getDependentResources( final IResource iResource ) {
+        if (iResource == null || getWorkspace() == null) return Collections.emptyList();
 
         final File iResourceFile = iResource.getRawLocation().toFile();
-        if (!iResourceFile.exists()) return EMPTY_IRESOURCE_ARRAY;
+        if (!iResourceFile.exists()) return Collections.emptyList();
 
-        final Collection result = new ArrayList();
+        final List<IFile> result = new ArrayList();
         try {
 
             // Get the header information from the XSD file
@@ -457,7 +456,7 @@ public class WorkspaceResourceFinderUtil {
                     for (int i = 0; i != locations.length; ++i) {
                         final String location = locations[i];
 
-                        IResource dependentIResource = findIResource(location);
+                        IFile dependentIResource = findIResource(location);
                         if (dependentIResource == null) {
                             final String absolutePath = getAbsoluteLocation(iResourceFile, location);
                             dependentIResource = findIResource(absolutePath);
@@ -469,7 +468,7 @@ public class WorkspaceResourceFinderUtil {
                     locations = header.getIncludeSchemaLocations();
                     for (int i = 0; i != locations.length; ++i) {
                         final String location = locations[i];
-                        IResource dependentIResource = findIResource(location);
+                        IFile dependentIResource = findIResource(location);
                         if (dependentIResource == null) {
                             final String absolutePath = getAbsoluteLocation(iResourceFile, location);
                             dependentIResource = findIResource(absolutePath);
@@ -485,7 +484,7 @@ public class WorkspaceResourceFinderUtil {
 
                     final ModelImportInfo[] infos = header.getModelImportInfos();
                     for (final ModelImportInfo info : infos) {
-                        IResource dependentIResource = null;
+                        IFile dependentIResource = null;
 
                         final String location = info.getLocation();
                         final String path = info.getPath();
@@ -512,7 +511,7 @@ public class WorkspaceResourceFinderUtil {
 
                     final ModelImportInfo[] infos = header.getModelImportInfos();
                     for (final ModelImportInfo info : infos) {
-                        IResource dependentIResource = null;
+                        IFile dependentIResource = null;
 
                         final String location = info.getLocation();
                         final String path = info.getPath();
@@ -535,7 +534,7 @@ public class WorkspaceResourceFinderUtil {
             ModelerCore.Util.log(IStatus.ERROR, err, msg);
         }
 
-        return (IResource[])result.toArray(new IResource[result.size()]);
+        return result;
     }
 
     /**
@@ -603,7 +602,7 @@ public class WorkspaceResourceFinderUtil {
         return null;
     }
 
-    private static IFile getResourceByLocation( final IFile[] fileResources,
+    private static IFile getResourceByLocation( final Collection<IFile> fileResources,
                                                 final String workspaceUri ) {
 
         IFile fileResource = null;
@@ -639,7 +638,7 @@ public class WorkspaceResourceFinderUtil {
         return null;
     }
 
-    private static IFile getResourceStartsWithHttp( final IFile[] fileResources,
+    private static IFile getResourceStartsWithHttp( final Collection<IFile> fileResources,
                                                     final String workspaceUri ) {
 
         IFile fileResource = null;
@@ -654,7 +653,7 @@ public class WorkspaceResourceFinderUtil {
         return null;
     }
 
-    private static IFile getResourceStartsWithPathSeparator( final IFile[] fileResources,
+    private static IFile getResourceStartsWithPathSeparator( final Collection<IFile> fileResources,
                                                              final String workspaceUri ) {
 
         IFile fileResource = null;
@@ -685,7 +684,7 @@ public class WorkspaceResourceFinderUtil {
         final IPath targetPath = resource.getFullPath();
         for (final Iterator iter = allResources.iterator(); iter.hasNext();) {
             final IResource nextResource = (IResource)iter.next();
-            final IPath[] paths = getDependentResourcePaths(nextResource);
+            final List<IPath> paths = getDependentResourcePaths(nextResource);
             for (final IPath path : paths)
                 if (path.equals(targetPath)) {
                     final String modelPath = nextResource.getFullPath().toString();
@@ -702,15 +701,14 @@ public class WorkspaceResourceFinderUtil {
 
     public static void getResourcesThatUseRecursive( final IResource resource,
                                                      final ResourceFilter filter,
-                                                     final Collection dependentResources ) {
+                                                     final Collection<IFile> dependentResources ) {
         // search the workspace for any models that import anything beneath the path that is moving
-        final Collection allResources = getAllWorkspaceResources(filter);
+        final Collection<IFile> allResources = getAllWorkspaceResources(filter);
 
         // check to see if any of the resources found depend upon the specified resource:
         final IPath targetPath = resource.getFullPath();
-        for (final Iterator iter = allResources.iterator(); iter.hasNext();) {
-            final IResource nextResource = (IResource)iter.next();
-            final IPath[] paths = getDependentResourcePaths(nextResource);
+        for (IFile nextResource : allResources) {
+            final List<IPath> paths = getDependentResourcePaths(nextResource);
             for (final IPath path : paths)
                 if (path.equals(targetPath)) {
                     final String modelPath = nextResource.getFullPath().toString();
@@ -1064,7 +1062,7 @@ public class WorkspaceResourceFinderUtil {
     }
 
     public static class FileResourceCollectorVisitor implements IResourceVisitor {
-        private final List resources;
+        private final List<IFile> resources;
         private ResourceFilter resFilt;
 
         public FileResourceCollectorVisitor() {
@@ -1072,22 +1070,20 @@ public class WorkspaceResourceFinderUtil {
         }
 
         public FileResourceCollectorVisitor( final ResourceFilter rf ) {
-            this.resources = new ArrayList();
+            this.resources = new ArrayList<IFile>();
             if (rf != null) resFilt = rf;
             else resFilt = ResourceFilter.ACCEPT_ALL;
         }
 
-        public IFile[] getFileResources() {
-            return (IFile[])resources.toArray(new IFile[resources.size()]);
-        }
-
-        public Collection getFileResourcesCollection() {
+        public Collection<IFile> getFileResources() {
             return resources;
         }
 
         @Override
 		public boolean visit( final IResource resource ) {
-            if (resource.exists() && resource.getType() == IResource.FILE && resFilt.accept(resource)) resources.add(resource);
+            if (resource.exists() && resource.getType() == IResource.FILE && resFilt.accept(resource)) {
+                resources.add((IFile) resource);
+            }
             return true;
         }
     }

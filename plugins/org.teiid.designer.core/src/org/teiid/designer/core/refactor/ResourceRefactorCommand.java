@@ -297,7 +297,7 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
         // Determine dependencies
         searchResults = dependencyResources(isUndo);
         statusList = new ResourceStatusList(searchResults, IStatus.OK);
-        this.dependencies = statusList.getImportedResourceList();
+        this.dependencies = statusList.getResourceList();
 
         this.problems.addAll(statusList.getProblems());
         return statusList.getHighestSeverity();

@@ -8,7 +8,6 @@
 package org.teiid.designer.core.refactor;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -26,35 +25,34 @@ import org.teiid.designer.core.workspace.ModelUtil;
  */
 public class ModelResourceCollectorVisitor implements IResourceVisitor {
 
-    private List resources;
-    private List modelResources;
+    private List<IFile> resources;
+    private List<ModelResource> modelResources;
 
     /**
      * Construct an instance of ModelResourceCollectorVisitor.
      */
     public ModelResourceCollectorVisitor() {
-        this.resources = new ArrayList();
-        this.modelResources = new ArrayList();
+        this.resources = new ArrayList<IFile>();
+        this.modelResources = new ArrayList<ModelResource>();
     }
 
     @Override
 	public boolean visit( IResource resource ) {
-        if (resource != null && resource instanceof IFile) {
-            resources.add(resource);
+        if (resource instanceof IFile) {
+            resources.add((IFile) resource);
             return false; // don't need to go deeper
         }
         return true;
     }
 
-    public List getResources() {
+    public List<IFile> getResources() {
         return resources;
     }
 
-    public List getModelResources() throws CoreException {
-        for (Iterator iter = resources.iterator(); iter.hasNext();) {
-            IResource resource = (IResource)iter.next();
+    public List<ModelResource> getModelResources() throws CoreException {
+        for (IFile resource : resources) {
             if (ModelUtil.isModelFile(resource)) {
-                final ModelResource modelResource = ModelerCore.getModelEditor().findModelResource((IFile)resource);
+                final ModelResource modelResource = ModelerCore.getModelEditor().findModelResource(resource);
                 if (modelResource != null) {
                     modelResources.add(modelResource);
                 }

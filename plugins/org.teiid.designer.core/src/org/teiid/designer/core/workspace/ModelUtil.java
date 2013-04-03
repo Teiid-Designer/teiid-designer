@@ -344,11 +344,11 @@ public class ModelUtil {
         IResource theResource = resource.getResource();
 
         // Get the array of resources that this resource depends upon
-        IResource[] dependents = WorkspaceResourceFinderUtil.getDependentResources(theResource);
+        List<IFile> dependents = WorkspaceResourceFinderUtil.getDependentResources(theResource);
 
         ModelResource mo = null;
-        for (int i = 0; i != dependents.length; ++i) {
-            mo = getModelResource((IFile)dependents[i], true);
+        for (IFile dependentResource : dependents) {
+            mo = getModelResource(dependentResource, true);
             if (mo != null) {
                 if (result.isEmpty()) {
                     result = new ArrayList();

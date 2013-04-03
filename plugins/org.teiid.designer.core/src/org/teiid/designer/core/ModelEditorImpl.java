@@ -25,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -82,10 +81,10 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import org.teiid.core.designer.TeiidDesignerException;
-import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
+import org.teiid.core.designer.TeiidDesignerException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.id.IDGenerator;
 import org.teiid.core.designer.id.InvalidIDException;
 import org.teiid.core.designer.id.ObjectID;
@@ -4048,7 +4047,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see org.teiid.designer.core.ModelEditor#findModelResource(org.eclipse.core.resources.IResource)
      */
     @Override
-	public ModelResource findModelResource( final IFile resource ) throws ModelWorkspaceException {
+	public ModelResource findModelResource( final IResource resource ) throws ModelWorkspaceException {
         CoreArgCheck.isNotNull(resource);
         return (ModelResource)ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(resource);
     }
