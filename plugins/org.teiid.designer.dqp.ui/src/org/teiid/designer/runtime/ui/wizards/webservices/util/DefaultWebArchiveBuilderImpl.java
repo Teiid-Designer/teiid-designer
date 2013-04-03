@@ -490,7 +490,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         String jndiValue = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_JNDI_NAME);
 
         if (jndiValue != null && !jndiValue.startsWith(JNDI_PREFIX)) {
-            jndiValue = JNDI_PREFIX + jndiValue;
+            jndiValue = JNDI_PREFIX + "/" + jndiValue; //$NON-NLS-1$
         }
 
         FileWriter fstream = null;
