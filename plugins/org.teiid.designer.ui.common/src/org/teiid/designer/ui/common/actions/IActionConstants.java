@@ -44,21 +44,15 @@ public interface IActionConstants {
         /** Key for accessing the eclipse global paste action. */
         String PRINT = ActionFactory.PRINT.getId();
 
-        /** Key for accessing the eclipse global redo action. */
-        String REDO = ActionFactory.REDO.getId();
-
         /** Key for accessing the eclipse global rename action. */
         String RENAME = ActionFactory.RENAME.getId();
 
         /** Key for accessing the eclipse global redo action. */
         String SELECT_ALL = ActionFactory.SELECT_ALL.getId();
 
-        /** Key for accessing the eclipse global undo action. */
-        String UNDO = ActionFactory.UNDO.getId();
-
         /** All actions eclipse identifies as being global. */
         String[] ALL_ACTIONS = new String[] {
-            UNDO, REDO, CUT, COPY, PASTE, PRINT, DELETE, FIND, SELECT_ALL, BOOKMARK, RENAME
+            CUT, COPY, PASTE, PRINT, DELETE, FIND, SELECT_ALL, BOOKMARK, RENAME
         };
     }
 }

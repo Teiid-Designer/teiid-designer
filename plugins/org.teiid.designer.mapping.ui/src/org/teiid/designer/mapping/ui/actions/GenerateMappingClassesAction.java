@@ -16,7 +16,6 @@ import org.teiid.designer.mapping.ui.UiConstants;
 import org.teiid.designer.mapping.ui.UiPlugin;
 import org.teiid.designer.metamodels.xml.XmlDocument;
 import org.teiid.designer.ui.editors.ModelEditor;
-import org.teiid.designer.ui.undo.ModelerUndoManager;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 
@@ -95,7 +94,6 @@ public class GenerateMappingClassesAction extends MappingAction {
                 if (requiredStart) {
                     if (succeeded) {
                         ModelerCore.commitTxn();
-                        if (!canUndo) ModelerUndoManager.getInstance().clearAllEdits();
                     } else {
                         ModelerCore.rollbackTxn();
                     }

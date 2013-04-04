@@ -29,7 +29,6 @@ import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelObjectEditorPage;
 import org.teiid.designer.ui.editors.MultiPageModelEditor;
 import org.teiid.designer.ui.search.SearchPageUtil;
-import org.teiid.designer.ui.undo.ModelerUndoManager;
 
 
 /**
@@ -161,8 +160,6 @@ public class AddTransformationSourceAction extends TransformationAction {
             if (requiredStart) {
                 if(succeeded) {
                     ModelerCore.commitTxn();
-                    if( !canUndo)
-                        ModelerUndoManager.getInstance().clearAllEdits();
                 } else {
                     ModelerCore.rollbackTxn();
                 }

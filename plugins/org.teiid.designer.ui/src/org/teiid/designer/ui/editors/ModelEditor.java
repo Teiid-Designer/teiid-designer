@@ -9,14 +9,13 @@ package org.teiid.designer.ui.editors;
 
 import static org.teiid.designer.ui.PluginConstants.Prefs.General.AUTO_OPEN_PERSPECTIVE_WHEN_MODEL_EDITOR_OPENED;
 import static org.teiid.designer.ui.UiConstants.Extensions.PERSPECTIVE;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
+import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -64,13 +63,17 @@ import org.eclipse.ui.INavigationLocation;
 import org.eclipse.ui.INavigationLocationProvider;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWindowListener;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.operations.RedoActionHandler;
+import org.eclipse.ui.operations.UndoActionHandler;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.texteditor.ITextEditorExtension2;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -158,6 +161,10 @@ public class ModelEditor extends MultiPageModelEditor
 
     /** The ModelResource listener for file system changes on models and projects */
     EventObjectListener modelResourceListener;
+
+    private UndoActionHandler undoAction;
+
+    private RedoActionHandler redoAction;
 
     private int iCurrentPage;
 
@@ -670,6 +677,15 @@ public class ModelEditor extends MultiPageModelEditor
             }
         });
 
+        // Add in undo / redo command wiring
+        IUndoContext undoContext = ModelerUndoManager.getInstance().getUndoContext();
+        undoAction= new UndoActionHandler(getSite(), undoContext);
+        undoAction.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_UNDO);
+        redoAction= new RedoActionHandler(getSite(), undoContext);
+        redoAction.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_REDO);
+        getEditorSite().getActionBars().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
+        getEditorSite().getActionBars().setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
+
         this.initialized = true;
     }
 
@@ -893,8 +909,6 @@ public class ModelEditor extends MultiPageModelEditor
                     this.modelResource.close();
                     event = new ModelResourceEvent(this.modelResource, ModelResourceEvent.CLOSED, this);
                     UiPlugin.getDefault().getEventBroker().processEvent(event);
-
-                    ModelerUndoManager.getInstance().clearAllEdits();
 
                     // defect 16805 - notify listeners that this model will be reloaded
                     // since the changes have been discarded (even though, yes,

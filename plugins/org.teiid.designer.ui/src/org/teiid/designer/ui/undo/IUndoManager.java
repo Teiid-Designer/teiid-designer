@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.ui.undo;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
@@ -44,7 +45,7 @@ public interface IUndoManager {
      * @param monitor the progress monitor to report progress while performing the redo change
      * @since 5.5.3
      */
-    void redo(IProgressMonitor monitor);
+    void redo(IProgressMonitor monitor) throws ExecutionException;
 
     /**
      * Undo the top most change.
@@ -52,6 +53,6 @@ public interface IUndoManager {
      * @param monitor the progress monitor to report progress while performing the undo change
      * @since 5.5.3
      */
-    void undo(IProgressMonitor monitor);
+    void undo(IProgressMonitor monitor) throws ExecutionException;
 
 }

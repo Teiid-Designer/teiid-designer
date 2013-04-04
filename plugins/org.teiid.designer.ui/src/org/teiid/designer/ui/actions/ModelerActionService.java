@@ -16,11 +16,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
-import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -32,6 +30,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.emf.edit.provider.ItemProvider;
+import org.eclipse.emf.edit.ui.action.RedoAction;
+import org.eclipse.emf.edit.ui.action.UndoAction;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
@@ -40,16 +40,12 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ltk.ui.refactoring.RedoRefactoringAction;
-import org.eclipse.ltk.ui.refactoring.UndoRefactoringAction;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.operations.RedoActionHandler;
-import org.eclipse.ui.operations.UndoActionHandler;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.designer.core.ModelerCore;
@@ -113,7 +109,7 @@ public final class ModelerActionService extends AbstractActionService
         //
         // must keep these in order with IModelerActionConstants.EclipseGlobalActions.ALL_ACTIONS
         //
-        String[] ACTION_CLASSES = new String[] {UndoAction.class.getName(), RedoAction.class.getName(),
+        String[] ACTION_CLASSES = new String[] {
             CutAction.class.getName(), CopyAction.class.getName(), PasteAction.class.getName(), PrintAction.class.getName(),
             DeleteAction.class.getName(), FindAction.class.getName(), SelectAllAction.class.getName(),
             BookmarkAction.class.getName(), RenameAction.class.getName()};
@@ -222,29 +218,6 @@ public final class ModelerActionService extends AbstractActionService
         theMenuMgr.add(new Separator());
 
         //
-        // Menu item group for undo and redo
-        //
-        theMenuMgr.add(new GroupMarker(ContextMenu.UNDO_START));
-
-        IAction undoAction = getAction(EclipseGlobalActions.UNDO, actionsMap);
-        theMenuMgr.add(undoAction);
-
-        if (undoAction instanceof IMenuListener) {
-            ((IMenuListener)undoAction).menuAboutToShow(theMenuMgr);
-        }
-
-        IAction redoAction = getAction(EclipseGlobalActions.REDO, actionsMap);
-        theMenuMgr.add(redoAction);
-
-        if (redoAction instanceof IMenuListener) {
-            ((IMenuListener)redoAction).menuAboutToShow(theMenuMgr);
-        }
-
-        theMenuMgr.add(new GroupMarker(ContextMenu.UNDO_END));
-
-        theMenuMgr.add(new Separator());
-
-        //
         // Menu item group for cut, copy, paste, clone, copyFullName, and copyName
         //
         theMenuMgr.add(new GroupMarker(ContextMenu.CUT_START));
@@ -322,33 +295,6 @@ public final class ModelerActionService extends AbstractActionService
     public IMenuManager getFileMenu() {
         IMenuManager menuMgr = getActionBars().getMenuManager();
         return menuMgr.findMenuUsingPath(ModelerActionBarIdManager.getFileMenuId());
-    }
-
-    /**
-     * Called once to add items to the edit menu.
-     */
-    private void contributeToEditMenu() {
-        IMenuManager editMenu = getEditMenu();
-
-        // only allow services from this plugin to be a menu listener
-        if (getPlugin().getBundle().getSymbolicName().equals(UiConstants.PLUGIN_ID)) {
-            // hook up undo/redo actions to be edit menu listeners
-            IMenuListener action;
-
-            try {
-                action = (IMenuListener)getAction(UndoAction.class.getName());
-                editMenu.addMenuListener(action);
-            } catch (CoreException e) {
-                utils.log(IStatus.ERROR, e, utils.getString(PREFIX + "actionProblem")); //$NON-NLS-1$
-            }
-
-            try {
-                action = (IMenuListener)getAction(RedoAction.class.getName());
-                editMenu.addMenuListener(action);
-            } catch (CoreException e) {
-                utils.log(IStatus.ERROR, e, utils.getString(PREFIX + "actionProblem")); //$NON-NLS-1$
-            }
-        }
     }
 
     /**
@@ -963,8 +909,6 @@ public final class ModelerActionService extends AbstractActionService
 
         MenuManager menu = new MenuManager(utils.getString(PREFIX + "RefactorMenu.title"), //$NON-NLS-1$
                                            ModelerActionBarIdManager.getRefactorMenuId());
-        
-        IUndoContext undoContext = (IUndoContext) ResourcesPlugin.getWorkspace().getAdapter(IUndoContext.class);
 
         if (failedRefactorPreconditions(theSelection)) {
             // will result in returning a disabled 'Refactor' submenu
@@ -983,17 +927,6 @@ public final class ModelerActionService extends AbstractActionService
             String sMoveTooltip = utils.getString("org.teiid.designer.ui.refactor.actions.MoveRefactorAction.tooltip"); //$NON-NLS-1$
 
             try {
-                // undo
-                IAction actUndo = new UndoActionHandler(partSite, undoContext);
-                menu.add(actUndo);
-
-                // redo
-                IAction actRedo = new RedoActionHandler(partSite, undoContext);
-                menu.add(actRedo);
-
-                // separator
-                menu.add(new GroupMarker(ContextMenu.UNDO_END));
-                menu.add(new Separator());
                 menu.add(new GroupMarker("reorgStart")); //$NON-NLS-1$
 
                 // rename
@@ -1123,9 +1056,6 @@ public final class ModelerActionService extends AbstractActionService
                 UiConstants.Util.log(IStatus.ERROR, e, message);
             }
         }
-
-        // get global actions installed in edit menu
-        contributeToEditMenu();
     }
 
     /**
@@ -1148,9 +1078,6 @@ public final class ModelerActionService extends AbstractActionService
      * @param bars the action bars to register global actions
      */
     public void registerDefaultGlobalActions( IActionBars bars ) {
-        
-        // TODO this replaces the eclipse Undo action with the designer version
-        
         Iterator itr = defaultActionsMap.entrySet().iterator();
 
         while (itr.hasNext()) {

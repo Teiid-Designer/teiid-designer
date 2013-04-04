@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -63,7 +62,6 @@ import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.widget.ListMessageDialog;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.event.ModelResourceEvent;
-import org.teiid.designer.ui.undo.ModelerUndoManager;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
@@ -827,8 +825,6 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
             
         	
             if( latch.getCount() == 0 ) {
-            	ModelerUndoManager.getInstance().clearAllEdits();
-	
 	            for (final Object path : deletedModelPaths)
 	                notifyDeleted((IPath)path);
             }
