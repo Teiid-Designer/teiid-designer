@@ -9,6 +9,8 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
+import java.io.File;
+import java.io.InputStream;
 import java.sql.Driver;
 import java.util.Collection;
 import java.util.List;
@@ -32,6 +34,7 @@ import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
+import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 
@@ -644,6 +647,56 @@ public class TeiidServer implements ITeiidServer {
         
         getTeiidAdminInfo().setAll(otherServer.getTeiidAdminInfo());
         getTeiidJdbcInfo().setAll(otherServer.getTeiidJdbcInfo());  
+    }
+    
+    @Override
+    public void deployDynamicVdb(String vdbName, InputStream inStream) throws Exception {
+        connect();
+        admin.deployDynamicVdb(vdbName,inStream);
+    }
+    
+    @Override
+    public void deployDriver(File file) throws Exception {
+        connect();
+        admin.deployDriver(file);
+    }
+
+    @Override
+    public void undeployDynamicVdb(String vdbName) throws Exception {
+        connect();
+        admin.undeployDynamicVdb(vdbName);
+    }
+
+    @Override
+    public Set<String> getDataSourceTemplateNames() throws Exception {
+        connect();
+        return admin.getDataSourceTemplateNames();
+    }
+   
+    @Override
+    public Collection<TeiidPropertyDefinition> getTemplatePropertyDefns(String templateName) throws Exception {
+        connect();
+        return admin.getTemplatePropertyDefns(templateName);
+    }
+
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.spi.IExecutionAdmin#getSchema(java.lang.String, int, java.lang.String)
+     */
+    @Override
+    public String getSchema(String vdbName,
+                            int vdbVersion,
+                            String modelName) throws Exception {
+        connect();
+        return admin.getSchema(vdbName, vdbVersion, modelName);
+    }
+
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.spi.IExecutionAdmin#getDataSourceProperties(java.lang.String)
+     */
+    @Override
+    public Properties getDataSourceProperties(String name) throws Exception {
+        connect();
+        return admin.getDataSourceProperties(name);
     }
     
     @Deprecated
