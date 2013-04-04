@@ -771,6 +771,11 @@ public class JdbcImportWizard extends AbstractWizard
                                                                                       getDatabase(),
                                                                                       ppProcessorPack.getJdbcSource().getImportSettings(),
                                                                                       monitor);
+                // Reset the connection profile, since it may have changed
+                if (this.connectionProfile != null) {
+                    IConnectionInfoProvider provider = new JDBCConnectionInfoProvider();
+                    provider.setConnectionInfo(ppProcessorPack.getModelResource(), this.connectionProfile);
+                }
             }
             sWatch.stop();
 

@@ -33,6 +33,9 @@ public interface IConnectionInfoHelper {
     public static final String TRANSLATOR_NAMESPACE = "translator:"; //$NON-NLS-1$
     public static final String TRANSLATOR_NAME_KEY = "name"; //$NON-NLS-1$
     public static final String TRANSLATOR_TYPE_KEY = "type"; //$NON-NLS-1$
+    public static final String JDBCCONNECTION_NAMESPACE = "jdbcConnection:"; //$NON-NLS-1$
+    public static final String JDBCCONNECTION_ALLOW_AUTOUPDATE_KEY = "allowAutoUpdate"; //$NON-NLS-1$
+    public static final String JDBCCONNECTION_ALLOW_COSTUPDATE_KEY = "allowCostUpdate"; //$NON-NLS-1$
     public static final String CATEGORY_ID_KEY = "connectionProfileCategory"; //$NON-NLS-1$
 
     public abstract Properties getProperties( IConnectionProfile connectionProfile );

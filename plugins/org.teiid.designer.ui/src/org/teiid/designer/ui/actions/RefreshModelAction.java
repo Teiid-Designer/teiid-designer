@@ -10,11 +10,11 @@ package org.teiid.designer.ui.actions;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.Iterator;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
@@ -26,6 +26,7 @@ import org.eclipse.ui.actions.ImportResourcesAction;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.jdbc.relational.JdbcImporter;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -88,6 +89,15 @@ public class RefreshModelAction
                     if (iter.next() instanceof JdbcSource) {
                         Shell sh = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
 
+                        // JdbcSource found - check if autoUpdate is allowed
+                        String allowsUpdate = ModelUtil.getModelAnnotationPropertyValue(model, IConnectionInfoHelper.JDBCCONNECTION_NAMESPACE+IConnectionInfoHelper.JDBCCONNECTION_ALLOW_AUTOUPDATE_KEY);
+                        if(allowsUpdate!=null && !allowsUpdate.isEmpty() && !Boolean.getBoolean(allowsUpdate)) {
+                            final String title = UiConstants.Util.getString("RefreshModelAction.updateNotAllowed.title"); //$NON-NLS-1$
+                            final String message = UiConstants.Util.getString("RefreshModelAction.updateNotAllowed.msg"); //$NON-NLS-1$
+                            MessageDialog.openInformation(sh, title, message);
+                            return;
+                        }
+                       
                         new AbstractPasswordDialog(sh) {
                             @Override
                             protected boolean isPasswordValid( final String password ) {
