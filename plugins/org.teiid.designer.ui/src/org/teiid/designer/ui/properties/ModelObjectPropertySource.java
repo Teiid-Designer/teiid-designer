@@ -77,6 +77,8 @@ public class ModelObjectPropertySource extends PropertySource {
      * @since 4.3
      */
     private Map idDescriptorMap;
+    
+    private boolean initialized = false;
 
     // ===================================
     // Constructors
@@ -266,6 +268,8 @@ public class ModelObjectPropertySource extends PropertySource {
             }
         }
         
+        initialized = true;
+        
         return result;
     }
     
@@ -352,6 +356,9 @@ public class ModelObjectPropertySource extends PropertySource {
         
         // check if transient descriptors can handle that property
         ITransientPropertyDescriptor descriptor = null;
+        
+        if( !initialized ) getPropertyDescriptors();
+        
         if (idDescriptorMap != null) {
             descriptor = (ITransientPropertyDescriptor) this.idDescriptorMap.get(propertyId);
         } // endif
