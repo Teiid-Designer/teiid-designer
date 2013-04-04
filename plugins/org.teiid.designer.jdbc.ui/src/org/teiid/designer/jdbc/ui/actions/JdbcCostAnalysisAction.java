@@ -34,6 +34,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.jdbc.JdbcUtil;
 import org.teiid.designer.jdbc.relational.CostAnalyzer;
@@ -105,6 +106,14 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
             try {
                 ModelResource modelResource = ModelUtil.getModelResource(this.selectedModel, false);
                 if (modelResource != null) {
+                    // JdbcSource found - check if can do costing update
+                    String allowsCostUpdate = ModelUtil.getModelAnnotationPropertyValue(modelResource, IConnectionInfoHelper.JDBCCONNECTION_NAMESPACE+IConnectionInfoHelper.JDBCCONNECTION_ALLOW_COSTUPDATE_KEY);
+                    if(allowsCostUpdate!=null && !allowsCostUpdate.isEmpty() && !Boolean.getBoolean(allowsCostUpdate)) {
+                        String title = InternalModelerJdbcUiPluginConstants.Util.getString("JdbcCostAnalysisAction.costingNotAllowed.title"); //$NON-NLS-1$
+                        String message = InternalModelerJdbcUiPluginConstants.Util.getString("JdbcCostAnalysisAction.costingNotAllowed.msg"); //$NON-NLS-1$
+                        MessageDialog.openInformation(shell, title, message);
+                        return;
+                    }
                 	
                 	boolean cancelled = openEditorIfNeeded(modelResource);
                 	
@@ -117,8 +126,8 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
                 }
             } catch (Exception e) {
                 InternalModelerJdbcUiPluginConstants.Util.log(e);
-                final String title = InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.errorTitle"); //$NON-NLS-1$
-                final String message = InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.errorMessage"); //$NON-NLS-1$
+                final String title = InternalModelerJdbcUiPluginConstants.Util.getString("JdbcCostAnalysisAction.errorTitle"); //$NON-NLS-1$
+                final String message = InternalModelerJdbcUiPluginConstants.Util.getString("JdbcCostAnalysisAction.errorMessage"); //$NON-NLS-1$
                 MessageDialog.openError(shell, title, message);
             }
         }
@@ -153,18 +162,18 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
                 if (tblStats != null && tblStats.size() > 0) {
                     CostAnalysisDialog dialog = new CostAnalysisDialog(
                                                                        shell,
-                                                                       InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.taskDescription"), //$NON-NLS-1$
-                                                                       InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.passwordPrompt", new Object[] {source.getUrl(), source.getUsername()}), null, null); //$NON-NLS-1$
+                                                                       InternalModelerJdbcUiPluginConstants.Util.getString("JdbcCostAnalysisAction.taskDescription"), //$NON-NLS-1$
+                                                                       InternalModelerJdbcUiPluginConstants.Util.getString("JdbcCostAnalysisAction.passwordPrompt", new Object[] {source.getUrl(), source.getUsername()}), null, null); //$NON-NLS-1$
                     dialog.open();
 
                     final String password = dialog.getValue();
                     if (password != null) {
                         final Job job = new Job(
-                                                InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.jobDescription")) { //$NON-NLS-1$
+                                                InternalModelerJdbcUiPluginConstants.Util.getString("JdbcCostAnalysisAction.jobDescription")) { //$NON-NLS-1$
                             @Override
                             protected IStatus run( IProgressMonitor monitor ) {
                                 try {
-                                    monitor.beginTask(InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.taskDescription"), calculateNumberOfWorkIncrements(tblStats.values())); //$NON-NLS-1$
+                                    monitor.beginTask(InternalModelerJdbcUiPluginConstants.Util.getString("JdbcCostAnalysisAction.taskDescription"), calculateNumberOfWorkIncrements(tblStats.values())); //$NON-NLS-1$
 
                                     CostAnalyzer costAnalyzer = CostAnalyzerFactory.getCostAnalyzerFactory().getCostAnalyzer(source,
                                                                                                                              password);
@@ -186,14 +195,14 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
                                                       IStatus.OK,
                                                       ModelerJdbcUiConstants.PLUGIN_ID,
                                                       IStatus.OK,
-                                                      InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.statusFinished", emfTables.size()), null); //$NON-NLS-1$
+                                                      InternalModelerJdbcUiPluginConstants.Util.getString("JdbcCostAnalysisAction.statusFinished", emfTables.size()), null); //$NON-NLS-1$
                                 } catch (Exception e) {
                                     InternalModelerJdbcUiPluginConstants.Util.log(e);
                                     return new Status(
                                                       IStatus.ERROR,
                                                       ModelerJdbcUiConstants.PLUGIN_ID,
                                                       IStatus.ERROR,
-                                                      InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.errorMessage"), e); //$NON-NLS-1$
+                                                      InternalModelerJdbcUiPluginConstants.Util.getString("JdbcCostAnalysisAction.errorMessage"), e); //$NON-NLS-1$
                                 } finally {
                                 }
                             }
@@ -207,7 +216,7 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
                     }
                 } else {
                     MessageDialog.openInformation(shell,
-                                                  InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.taskDescription"), InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.noValidTablesMessage")); //$NON-NLS-1$ //$NON-NLS-2$
+                                                  InternalModelerJdbcUiPluginConstants.Util.getString("JdbcCostAnalysisAction.taskDescription"), InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.noValidTablesMessage")); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
         }
@@ -363,9 +372,7 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
         // we only need to worry about the readonly status if the file is not currently open,
         // and its underlying IResource is not read only
         
-    	if( currentModel == null ) {
-    		
-    	} else if (!isEditorOpen(currentModel) && !currentModel.getResource().getResourceAttributes().isReadOnly()) {
+    	if (currentModel!=null && !isEditorOpen(currentModel) && !currentModel.getResource().getResourceAttributes().isReadOnly()) {
             final IFile modelFile = (IFile)currentModel.getResource();
             Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
 

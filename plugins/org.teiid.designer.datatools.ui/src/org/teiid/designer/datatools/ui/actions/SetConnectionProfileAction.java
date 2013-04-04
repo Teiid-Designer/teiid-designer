@@ -9,25 +9,34 @@ package org.teiid.designer.datatools.ui.actions;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.datatools.connectivity.drivers.DriverInstance;
+import org.eclipse.datatools.connectivity.drivers.DriverManager;
+import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
+import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 import org.teiid.designer.datatools.ui.dialogs.SelectConnectionProfileDialog;
+import org.teiid.designer.jdbc.JdbcFactory;
+import org.teiid.designer.jdbc.JdbcSource;
+import org.teiid.designer.jdbc.impl.JdbcFactoryImpl;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.editors.ModelEditor;
@@ -117,6 +126,12 @@ public class SetConnectionProfileAction extends SortableSelectionAction {
         }
     }
 
+    /**
+     * Set the Model's connection profile
+     * @param modelFile the model file
+     * @return 'true' if the ConnectionFile was successfully reset, 'false' if not.
+     * @throws Exception indicates problem
+     */
     public static boolean setConnectionProfile( IFile modelFile ) throws Exception {
 
         SelectConnectionProfileDialog dialog = new SelectConnectionProfileDialog(Display.getCurrent().getActiveShell());
@@ -127,17 +142,11 @@ public class SetConnectionProfileAction extends SortableSelectionAction {
             Object[] result = dialog.getResult();
             if (result != null && result.length == 1) {
                 IConnectionProfile profile = (IConnectionProfile)result[0];
-                // // TODO: Not sure if we keep this dialog or NOT???
-                // boolean doIt = MessageDialog.openQuestion(Display.getCurrent().getActiveShell(),
-                //						DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.applyQuestionTitle"), //$NON-NLS-1$
-                //						DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.applyQuestionText", profile.getName())); //$NON-NLS-1$
-                //
-                // if( doIt ) {
-                SetConnectionProfileAction.setConnectionInfo(modelFile, profile);
+                 
+                // Update the JdbcSource properties (if exist) with the new profile.  User is prompted if the driver class will be changed.
+                updateJdbcSourceAndConnectionInfo(modelFile,profile);
 
                 return true;
-                // }
-
             }
         }
 
@@ -174,8 +183,15 @@ public class SetConnectionProfileAction extends SortableSelectionAction {
         return result;
     }
 
+    /**
+     * @param model the model file
+     * @param connectionProfile the connection profile
+     * @param driverClassChanged 'true' if driver class was changed, 'false' if not.
+     * @throws Exception indicates a problem
+     */
     public static void setConnectionInfo( IFile model,
-                                          IConnectionProfile connectionProfile ) throws Exception {
+                                          IConnectionProfile connectionProfile,
+                                          boolean driverClassChanged) throws Exception {
 
         ModelResource mr = ModelUtil.getModelResource(model, true);
 
@@ -185,12 +201,118 @@ public class SetConnectionProfileAction extends SortableSelectionAction {
         if (null == provider) {
             throw new Exception(NO_PROFILE_PROVIDER_FOUND_KEY);
         }
-
+            
         provider.setConnectionInfo(mr, connectionProfile);
     }
 
     private Shell getShell() {
         return Display.getCurrent().getActiveShell();
     }
+    
+    /**
+     * Update the JdbcSource within the specified Model, using the supplied connection profile.  If the driver class in the provided
+     * profile is different than the JdbcSource, the user is prompted to confirm.  
+     * @param model the model file
+     * @param profile the connection profile
+     */
+    private static void updateJdbcSourceAndConnectionInfo( IFile model, IConnectionProfile profile ) throws Exception {
+        boolean driverClassChanged = false;
+        ModelResource modelResc = ModelUtil.getModelResource(model, true);
+        JdbcSource jdbcSource = null;
+        if(modelResc!=null) {
+            jdbcSource = getJdbcSource(modelResc);
+            // JdbcSource was found - update it
+            if(jdbcSource!=null) {
+                Properties profileProps = profile.getBaseProperties();
+                
+                // Driver Class from ConnectionProfile
+                String driverClassCP = profileProps.getProperty(IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID);
+                String driverClassJdbcSrc = jdbcSource.getDriverClass();
+                
+                // Check driver classes.  If different, warn user that import settings will be blown away
+                if(driverClassCP!=null && !driverClassCP.equalsIgnoreCase(driverClassJdbcSrc)) {
+                    String title = DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.confirmDriverclassChangeDialogTitle");  //$NON-NLS-1$
+                    String msg = DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.confirmDriverclassChangeDialogMsg");  //$NON-NLS-1$
+                    if(!MessageDialog.openConfirm(Display.getCurrent().getActiveShell(), title, msg)) {
+                        return;
+                    }
+                    driverClassChanged = true;
+                }
+                
+                String profileName = profile.getName();
+                if(!CoreStringUtil.isEmpty(profileName)) {
+                    jdbcSource.setName(profileName);
+                }
+                
+                String driverID = profileProps.getProperty("org.eclipse.datatools.connectivity.driverDefinitionID"); //$NON-NLS-1$
+                DriverInstance driver = DriverManager.getInstance().getDriverInstanceByID(driverID);
+                if(driver!=null) {
+                    String driverName = driver.getName();
+                    if(!CoreStringUtil.isEmpty(driverName)) {
+                        jdbcSource.setDriverName(driverName);
+                    }
+                }
+                
+                String url = profileProps.getProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID);
+                if(!CoreStringUtil.isEmpty(url)) {
+                    jdbcSource.setUrl(url);
+                }
+                String driverClass = profileProps.getProperty(IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID);
+                if(!CoreStringUtil.isEmpty(driverClass)) {
+                    jdbcSource.setDriverClass(driverClass);
+                }
+                String userName = profileProps.getProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID);
+                if(!CoreStringUtil.isEmpty(userName)) {
+                    jdbcSource.setUsername(userName);
+                }
+                        
+                // If driver classes was changed, reset the import settings
+                if(driverClassChanged) {
+                    JdbcFactory jdbcFactory = new JdbcFactoryImpl();
+                    jdbcSource.setImportSettings(jdbcFactory.createJdbcImportSettings());
+                }
+            }
+            
+            // Set Connection Profile on the model
+            SetConnectionProfileAction.setConnectionInfo(model, profile, driverClassChanged);  
+            
+            // Set flags on model to prevent AutoUpdate and CostUpdate - if driverClass changed
+            if(driverClassChanged) {
+                ModelUtil.setModelAnnotationPropertyValue(modelResc, IConnectionInfoHelper.JDBCCONNECTION_NAMESPACE+IConnectionInfoHelper.JDBCCONNECTION_ALLOW_AUTOUPDATE_KEY, "false"); //$NON-NLS-1$
+                ModelUtil.setModelAnnotationPropertyValue(modelResc, IConnectionInfoHelper.JDBCCONNECTION_NAMESPACE+IConnectionInfoHelper.JDBCCONNECTION_ALLOW_COSTUPDATE_KEY, "false"); //$NON-NLS-1$
+            }
+        }
+        modelResc.save(null, true);
+    }
+    
+    /*
+     * Get the JdbcSource object from the supplied ModelResource.  If none is found, null is returned
+     * @param modelResc the Model Resource
+     * @return the JdbcSource, null if not found
+     */
+    private static JdbcSource getJdbcSource(ModelResource modelResc) {
+        JdbcSource jdbcSource = null;
+        
+        // Non-null model supplied. Transfer the import settings
+        if (modelResc != null) {
+            List rootObjs = null;
+            try {
+                rootObjs = modelResc.getAllRootEObjects();
+            } catch (Exception ex) {
+                DatatoolsUiConstants.UTIL.log(ex);
+                return null;
+            }
+            if(rootObjs!=null) {
+                for (final Iterator modelIter = rootObjs.iterator(); modelIter.hasNext();) {
+                    final Object obj = modelIter.next();
+                    if (obj instanceof JdbcSource) {
+                        jdbcSource=(JdbcSource)obj;
+                    }
+                }
+            }
+        }
+        return jdbcSource;
+    }
+
 
 }
