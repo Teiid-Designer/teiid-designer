@@ -72,7 +72,6 @@ import org.teiid.designer.ui.editors.IEditorActionExporter;
 import org.teiid.designer.ui.editors.ModelObjectEditorPage;
 import org.teiid.designer.ui.editors.MultiPageModelEditor;
 import org.teiid.designer.ui.product.IModelerProductContexts;
-import org.teiid.designer.ui.refactor.RefactorUndoManager;
 import org.teiid.designer.ui.refactor.actions.NamespaceUriRefactorAction;
 import org.teiid.designer.ui.refactor.actions.RenameRefactorAction;
 import org.teiid.designer.ui.refactor.move.MoveRefactorAction;
@@ -136,9 +135,6 @@ public final class ModelerActionService extends AbstractActionService
 
     /** Array of all extensions to the NewSiblingAction extension point */
     private INewSiblingAction[] newSiblingExtensions;
-
-    /** The undo manager for this window's refactor actions */
-    private RefactorUndoManager refactorUndoManager;
 
     /**
      * Constructs a <code>ModelerActionService</code> associated with the given <code>IWorkbenchWindow</code>.
@@ -1274,15 +1270,4 @@ public final class ModelerActionService extends AbstractActionService
         }
         return newSiblingExtensions;
     }
-
-    /**
-     * @return the refactor undo manager
-     */
-    public RefactorUndoManager getRefactorUndoManager() {
-        if (this.refactorUndoManager == null) {
-            this.refactorUndoManager = RefactorUndoManager.getInstance();
-        }
-        return this.refactorUndoManager;
-    }
-
 }

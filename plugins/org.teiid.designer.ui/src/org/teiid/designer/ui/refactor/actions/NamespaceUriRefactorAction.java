@@ -82,10 +82,7 @@ public final class NamespaceUriRefactorAction extends RefactorAction
                     if (preExecuteStatus.getSeverity() != IStatus.ERROR) {
                         executeCommand(cmd);
                         IStatus executionStatus = getStatus();
-                        
-                        if ((executionStatus != null) && (executionStatus.getSeverity() != IStatus.ERROR)) {
-                            getRefactorUndoManager().addCommand(cmd);
-                        } else if (executionStatus != null) {
+                        if (executionStatus != null) {
                             throw new ModelWorkspaceException(executionStatus.getMessage());
                         }
                     } else {

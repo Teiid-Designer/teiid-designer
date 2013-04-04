@@ -8,7 +8,6 @@
 package org.teiid.designer.ui.refactor.actions;
 
 import java.text.MessageFormat;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -165,12 +164,6 @@ public class RenameRefactorAction extends RefactorAction {
                         executeCommand(rrcCommand);
                     }
                 });
-
-                // add the command to the Undo Manager (the manager will deal with whether
-                // the command can be undone or not)
-                if (getStatus() != null && getStatus().getSeverity() < IStatus.ERROR) {
-                    getRefactorUndoManager().addCommand(rrcCommand);
-                }
 
                 // if there are problems, use the common error dialog to report them
                 displayErrorMessage(rrcCommand);

@@ -63,7 +63,6 @@ import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.widget.ListMessageDialog;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.event.ModelResourceEvent;
-import org.teiid.designer.ui.refactor.RefactorUndoManager;
 import org.teiid.designer.ui.undo.ModelerUndoManager;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
@@ -829,7 +828,6 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
         	
             if( latch.getCount() == 0 ) {
             	ModelerUndoManager.getInstance().clearAllEdits();
-	            RefactorUndoManager.getInstance().clear();
 	
 	            for (final Object path : deletedModelPaths)
 	                notifyDeleted((IPath)path);

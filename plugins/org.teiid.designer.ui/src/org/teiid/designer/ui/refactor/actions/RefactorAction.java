@@ -8,7 +8,6 @@
 package org.teiid.designer.ui.refactor.actions;
 
 import java.util.List;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -29,11 +28,9 @@ import org.teiid.designer.core.refactor.ResourceRefactorCommand;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
-import org.teiid.designer.ui.actions.ModelerActionService;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.widget.ListMessageDialog;
-import org.teiid.designer.ui.refactor.RefactorUndoManager;
 import org.teiid.designer.ui.viewsupport.ModelLabelProvider;
 
 
@@ -62,12 +59,6 @@ public abstract class RefactorAction extends ActionDelegate implements IWorkbenc
      */
     protected boolean doResourceCleanup() {
         return UiUtil.saveDirtyEditors(null, null, true);
-    }
-
-    public RefactorUndoManager getRefactorUndoManager() {
-
-        ModelerActionService mas = (ModelerActionService)UiPlugin.getDefault().getActionService(window.getActivePage());
-        return mas.getRefactorUndoManager();
     }
 
     protected void setResult( IStatus status ) {
