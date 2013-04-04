@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,6 +31,7 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPFault;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -271,11 +273,9 @@ public class TeiidWSProvider {
 		javax.xml.transform.Source response = null; 
 		String inputMessage = ""; //$NON-NLS-1$
 		String procedureName = ""; //$NON-NLS-1$
-		Object wsdlOperationQName = webServiceContext.getMessageContext().get(
-				MessageContext.WSDL_OPERATION);    
-		MessageContext mc = webServiceContext.getMessageContext();   
-		System.out.print(mc.values().toString()); 
-
+		MessageContext mc = webServiceContext.getMessageContext();
+		Object wsdlOperationQName = mc.get(MessageContext.WSDL_OPERATION);  
+		
 		// Load the properties object
 		try {
 			loadProperties();
