@@ -1017,7 +1017,7 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
             soapBinding.setStyle(SoapStyleType.DOCUMENT_LITERAL);
             soapBinding.setTransport("http://schemas.xmlsoap.org/soap/http"); //$NON-NLS-1$
             this.binding.setSoapBinding(soapBinding);
-
+         
             // --------------------------------------------------------------------------------------------------------
             // Port information
             // --------------------------------------------------------------------------------------------------------
@@ -1068,7 +1068,7 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
 
             // Add the SOAP operation information ...
             final SoapOperation soapOp = this.soapFactory.createSoapOperation();
-            final String action = CoreStringUtil.Constants.EMPTY_STRING;
+            final String action = opName;
             soapOp.setAction(action);
             addToOperationToProcedureMap(object);
             soapOp.setStyle(SoapStyleType.DOCUMENT_LITERAL);
