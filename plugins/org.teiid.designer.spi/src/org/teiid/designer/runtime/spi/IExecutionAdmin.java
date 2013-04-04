@@ -7,6 +7,8 @@
 */
 package org.teiid.designer.runtime.spi;
 
+import java.io.File;
+import java.io.InputStream;
 import java.sql.Driver;
 import java.util.Collection;
 import java.util.List;
@@ -226,6 +228,67 @@ public interface IExecutionAdmin {
      Driver getTeiidDriver(String driverClass) throws Exception;
      
      /**
+      * Deploys the Dynamic VDB (InputStream) to the related Teiid server
+      * 
+      * @param deploymentName the vdb deploymentName
+      * @param inStream the VDB InputStream
+      * 
+      * @throws Exception if deployment fails
+      */
+     void deployDynamicVdb( String deploymentName, InputStream inStream ) throws Exception;
+
+     /**
+      * Undeploy the dynamic vdb
+      * @param vdbName
+      * @throws Exception
+      */
+     void undeployDynamicVdb(String vdbName) throws Exception;
+
+     /**
+      * Deploys a driver (jar or rar) to the related Teiid server
+      * 
+      * @param driverFile the file to deploy
+      * 
+      * @throws Exception if deployment fails
+      */
+     void deployDriver(File driverFile) throws Exception;
+
+     /**
+      * Get Model Schema DDL from the VDB
+      * 
+      * @param vdbName the name of the VDB
+      * @param vdbVersion the VDB version
+      * @param modelName the model name
+      * @return the Schema DDL for the model
+      * @throws Exception if deployment fails
+      */
+     String getSchema(String vdbName, int vdbVersion, String modelName) throws Exception;
+
+     /**
+      * Get Properties for a DataSource
+      * 
+      * @param name the data source name
+      * @return the Properties for the data source
+      * @throws Exception if deployment fails
+      */
+     Properties getDataSourceProperties(String name) throws Exception;
+
+     /**
+      * Get all DataSource template names
+      * @return set of template names
+      * @throws Exception
+      */
+     Set<String> getDataSourceTemplateNames() throws Exception;
+    
+     /**
+      * Get Property definitions for the specified template
+      * @param templateName
+      * @return template property definitions
+      * @throws Exception
+      */
+    Collection<TeiidPropertyDefinition> getTemplatePropertyDefns(String templateName) throws Exception;
+
+    /**
       * @param sourceVdbName (excluding .vdb extension) the name of the VDB being merged into the target VDB
       * @param sourceVdbVersion the version of the source VDB
       * @param targetVdbName (excluding .vdb extension) the name of the VDB being merged into
