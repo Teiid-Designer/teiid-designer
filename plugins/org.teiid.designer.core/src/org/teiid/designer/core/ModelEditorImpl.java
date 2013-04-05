@@ -3600,8 +3600,10 @@ public class ModelEditorImpl implements ModelEditor {
                     command = new DisabledCommand(command);
                 }
             }
-
-            commands.add(command);
+            
+            if( command != null && !(command instanceof DisabledCommand) ) {
+            	commands.add(command);
+            }
 
         }
 
