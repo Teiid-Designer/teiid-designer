@@ -16,10 +16,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IMarkerResolution;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.vdb.VdbConstants;
+import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.Messages;
 import org.teiid.designer.vdb.ui.editor.VdbEditor;
 import org.teiid.designer.vdb.ui.util.VdbUiRefactorHandler;
-import org.teiid.designer.vdb.ui.util.VdbUiUtil;
 
 /**
  *
@@ -70,7 +70,7 @@ public class VdbExtractModelsSyncVdbMarkerResolution implements IMarkerResolutio
 	}
 
 	void fixVdb(IFile theVdb) {
-		VdbUiUtil.synchronizeVdb(theVdb, true);
+		VdbUtil.synchronizeVdb(theVdb, true);
 	}
 
 	/**
