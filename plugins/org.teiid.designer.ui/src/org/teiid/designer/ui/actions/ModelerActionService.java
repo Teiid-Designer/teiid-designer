@@ -30,12 +30,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.emf.edit.provider.ItemProvider;
-import org.eclipse.emf.edit.ui.action.RedoAction;
-import org.eclipse.emf.edit.ui.action.UndoAction;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -69,8 +66,8 @@ import org.teiid.designer.ui.editors.ModelObjectEditorPage;
 import org.teiid.designer.ui.editors.MultiPageModelEditor;
 import org.teiid.designer.ui.product.IModelerProductContexts;
 import org.teiid.designer.ui.refactor.actions.NamespaceUriRefactorAction;
-import org.teiid.designer.ui.refactor.actions.RenameRefactorAction;
 import org.teiid.designer.ui.refactor.move.MoveRefactorAction;
+import org.teiid.designer.ui.refactor.rename.RenameRefactorAction;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
@@ -295,36 +292,6 @@ public final class ModelerActionService extends AbstractActionService
     public IMenuManager getFileMenu() {
         IMenuManager menuMgr = getActionBars().getMenuManager();
         return menuMgr.findMenuUsingPath(ModelerActionBarIdManager.getFileMenuId());
-    }
-
-    /**
-     * @see org.teiid.designer.ui.common.actions.AbstractActionService#shutdown()
-     * @since 5.5.3
-     */
-    @Override
-    public void shutdown() {
-        // unhook undo/redo
-        IMenuManager editMenu = getEditMenu();
-
-        if (editMenu != null) {
-            IMenuListener action;
-
-            try {
-                action = (IMenuListener)getAction(UndoAction.class.getName());
-                editMenu.removeMenuListener(action);
-            } catch (CoreException e) {
-                utils.log(IStatus.ERROR, e, utils.getString(PREFIX + "actionProblem")); //$NON-NLS-1$
-            }
-
-            try {
-                action = (IMenuListener)getAction(RedoAction.class.getName());
-                editMenu.removeMenuListener(action);
-            } catch (CoreException e) {
-                utils.log(IStatus.ERROR, e, utils.getString(PREFIX + "actionProblem")); //$NON-NLS-1$
-            }
-        }
-
-        super.shutdown();
     }
 
     /**
