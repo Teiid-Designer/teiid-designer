@@ -22,8 +22,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.refactor.IRefactorModelHandler;
-import org.teiid.designer.core.refactor.PathPair;
+import org.teiid.designer.core.refactor.AbstractRefactorModelHandler;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -45,57 +44,36 @@ import org.teiid.designer.metamodels.diagram.DiagramEntity;
  *
  * @since 8.0
  */
-public class DiagramRefactorModelHandler implements IRefactorModelHandler {
-
-	public DiagramRefactorModelHandler() {
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	public void helpUpdateDependentModelContents(int type, ModelResource modelResource,
-			Collection<PathPair> refactoredPaths, IProgressMonitor monitor) {
-		CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
-		CoreArgCheck.isNotEmpty(refactoredPaths, "refactoredPaths"); //$NON-NLS-1$
-		
-		
-		try {
-			if( ModelUtil.isXmiFile(modelResource.getCorrespondingResource())) {
-				for( Object diagram : modelResource.getModelDiagrams().getDiagrams() ) {
-					DiagramEntityManager.cleanDiagramEntities((Diagram)diagram);
-					
-					DiagramEntityManager.cleanUpDiagram((Diagram)diagram);
-				}
-			}
-		} catch (ModelWorkspaceException e) {
-			DiagramUiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
-		}
-
-	}
+public class DiagramRefactorModelHandler extends AbstractRefactorModelHandler {
 	
 	@Override
-	public void helpUpdateModelContents(int type, ModelResource modelResource,
-			Collection<PathPair> refactoredPaths, IProgressMonitor monitor) {
-		CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
-		CoreArgCheck.isNotEmpty(refactoredPaths, "refactoredPaths"); //$NON-NLS-1$
+	public boolean preProcess(RefactorType refactorType, IResource refactoredResource, IProgressMonitor monitor) {
+		CoreArgCheck.isNotNull(refactoredResource, "modelResource"); //$NON-NLS-1$
 		
 		try {
-			if( ModelUtil.isXmiFile(modelResource.getCorrespondingResource())) {
-				for( Object diagram : modelResource.getModelDiagrams().getDiagrams() ) {
-					DiagramEntityManager.cleanDiagramEntities((Diagram)diagram);
+			if(! ModelUtil.isXmiFile(refactoredResource))
+			    return true;
+			    
+			ModelResource modelResource = ModelUtil.getModel(refactoredResource);
+			    
+			for( Object diagram : modelResource.getModelDiagrams().getDiagrams() ) {
+			    DiagramEntityManager.cleanDiagramEntities((Diagram)diagram);
 					
-					DiagramEntityManager.cleanUpDiagram((Diagram)diagram);
-				}
+			    DiagramEntityManager.cleanUpDiagram((Diagram)diagram);
 			}
+			
 		} catch (ModelWorkspaceException e) {
 			DiagramUiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
+			return false;
 		}
 
+		return true;
 	}
 	
     @Override
 	public void helpUpdateModelContentsForDelete(
-			Collection<Object> deletedResourcePaths,
-			Collection<Object> directDependentResources,
+			Collection<IResource> deletedResourcePaths,
+			Collection<IResource> directDependentResources,
 			IProgressMonitor monitor) {
 		
     	// For each resource, clean up diagram references from diagram entity model objects
@@ -171,25 +149,4 @@ public class DiagramRefactorModelHandler implements IRefactorModelHandler {
 		
 		return false;
 	}
-	
-    
-    /**
-     * {@inheritDoc}
-     * 
-    * @see org.teiid.designer.core.refactor.IRefactorModelHandler#preProcess(int, org.eclipse.core.resources.IResource, org.eclipse.core.runtime.IProgressMonitor)
-    */
-   @Override
-   public boolean preProcess(int refactoryType, IResource refactoredResource, IProgressMonitor monitor) {
-   	return true;
-   }
-   
-    /**
-     * {@inheritDoc}
-     * 
-    * @see org.teiid.designer.core.refactor.IRefactorModelHandler#postProcess(int, org.eclipse.core.resources.IResource, org.eclipse.core.runtime.IProgressMonitor)
-    */
-   @Override
-   public void postProcess(int refactoryType, IResource refactoredResource, IProgressMonitor monitor) {
-   	// No Op
-   }
 }

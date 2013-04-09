@@ -354,12 +354,12 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
 	        try {
 	            ModelResource modelResource = editor.findModelResource((IFile)this.getModifiedResource());
 	            if (modelResource != null) {
-	                RefactorModelExtensionManager.helpUpdateModelContents(IRefactorModelHandler.RENAME, modelResource, refactoredPaths, monitor);
-	                    
+//	                RefactorModelExtensionManager.helpUpdateModelContents(IRefactorModelHandler.RENAME, modelResource, refactoredPaths, monitor);
+//	                    
 	                modelResource.save(null, false);
 	            } else {
-                    RefactorModelExtensionManager.helpUpdateNonModelResource(IRefactorModelHandler.RENAME, modifiedRes,
-                                                                             refactoredPaths, monitor);
+//                    RefactorModelExtensionManager.helpUpdateNonModelResource(IRefactorModelHandler.RENAME, modifiedRes,
+//                                                                             refactoredPaths, monitor);
 	            }
 	
 	        } catch (ModelWorkspaceException e) {

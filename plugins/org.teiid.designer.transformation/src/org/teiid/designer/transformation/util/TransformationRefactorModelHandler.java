@@ -7,36 +7,27 @@
  */
 package org.teiid.designer.transformation.util;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.ModelerCoreException;
-import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.refactor.IRefactorModelHandler;
-import org.teiid.designer.core.refactor.PathPair;
+import org.teiid.designer.core.refactor.AbstractRefactorModelHandler;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
-import org.teiid.designer.mapping.factory.MappingRefactorModelHandler;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.transformation.SqlTransformation;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
-import org.teiid.designer.transformation.TransformationPlugin;
 
 
 
@@ -50,157 +41,12 @@ import org.teiid.designer.transformation.TransformationPlugin;
  *
  * @since 8.0
  */
-public class TransformationRefactorModelHandler extends
-		MappingRefactorModelHandler {
+public class TransformationRefactorModelHandler extends AbstractRefactorModelHandler {
 
-	public TransformationRefactorModelHandler() {
-	}
-	
 	@Override
-	public void helpUpdateModelContents(int type, ModelResource modelResource,
-			Collection<PathPair> refactoredPaths, IProgressMonitor monitor) {
-		CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
-		CoreArgCheck.isNotEmpty(refactoredPaths, "refactoredPaths"); //$NON-NLS-1$
-		// Need to fix any queries within a virtual model that has transformation sources internal to the same model
+	public void helpUpdateModelContentsForDelete(Collection<IResource> deletedResourcePaths, Collection<IResource> directDependentResources, IProgressMonitor monitor) {
 		
-		try {
-			switch( type ) {
-				case IRefactorModelHandler.RENAME: {
-                    regenerateUserSql(modelResource, monitor, refactoredPaths);
-				}break;
-				case IRefactorModelHandler.DELETE: {
-					
-				}break;
-				case IRefactorModelHandler.MOVE: {
-					
-				}break;
-				default: break;
-			}
-		} catch (ModelWorkspaceException e) {
-			TransformationPlugin.Util.log(IStatus.ERROR, e, e.getMessage());
-		}
-
-	}
-	
-	@Override
-	public void helpUpdateDependentModelContents(int type, ModelResource modelResource,
-			Collection<PathPair> refactoredPaths, IProgressMonitor monitor) {
-		CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
-		CoreArgCheck.isNotEmpty(refactoredPaths, "refactoredPaths"); //$NON-NLS-1$
-		
-		helpUpdateModelContents(type, modelResource, refactoredPaths, monitor);
-	}
-
-	protected boolean regenerateUserSql(ModelResource modelResource,
-			IProgressMonitor monitor, Collection<PathPair> refactoredPaths)
-			throws ModelWorkspaceException {
-		final Resource r = modelResource.getEmfResource();
-		
-		boolean sqlChanged = false;
-		
-		// If the model resource being represents a virtual model with
-		// transformations ...
-		if (r instanceof EmfResource
-				&& ((EmfResource) r).getModelType() == ModelType.VIRTUAL_LITERAL) {
-
-			// Ensure that this model resource is loaded so that we can retrieve
-			// and update its contents
-			if (!r.isLoaded()) {
-				Map options = (r.getResourceSet() != null ? r.getResourceSet().getLoadOptions() : Collections.EMPTY_MAP);
-				try {
-					r.load(options);
-				} catch (IOException e) {
-					TransformationPlugin.Util.log(IStatus.ERROR, e, e
-							.getLocalizedMessage());
-					return false;
-				}
-			}
-
-			// Process all transformations in the TransformationContainer
-			final List transformations = ((EmfResource) r).getModelContents()
-					.getTransformations();
-			for (Iterator i = transformations.iterator(); i.hasNext();) {
-				boolean invalidateStatus = false;
-				EObject eObj = (EObject) i.next();
-				if (eObj instanceof SqlTransformationMappingRoot) {
-					SqlTransformationMappingRoot mappingRoot = (SqlTransformationMappingRoot) eObj;
-					SqlTransformation helper = (SqlTransformation) mappingRoot
-							.getHelper();
-					SqlTransformation nested = null;
-					if (helper != null) {
-						for (Iterator j = helper.getNested().iterator(); j
-								.hasNext();) {
-							eObj = (EObject) j.next();
-							if (eObj instanceof SqlTransformation) {
-								nested = (SqlTransformation) eObj;
-							}
-						}
-					}
-					if (nested != null) {
-						// Convert select SQL
-						String userFormSql = nested.getSelectSql();
-						String convertedSql = null;
-						if (!CoreStringUtil.isEmpty(userFormSql)) {
-							convertedSql = refactorUserSql(userFormSql,
-									refactoredPaths);
-							if( !userFormSql.equalsIgnoreCase(convertedSql)) {
-								nested.setSelectSql(convertedSql);
-								sqlChanged = true;
-								invalidateStatus = true;
-							}
-						}
-
-						// Convert insert SQL
-						userFormSql = nested.getInsertSql();
-						if (!CoreStringUtil.isEmpty(userFormSql)) {
-							convertedSql = refactorUserSql(userFormSql,
-									refactoredPaths);
-							if( !userFormSql.equalsIgnoreCase(convertedSql)) {
-								nested.setInsertSql(convertedSql);
-								sqlChanged = true;
-								invalidateStatus = true;
-							}
-						}
-
-						// Convert update SQL
-						userFormSql = nested.getUpdateSql();
-						if (!CoreStringUtil.isEmpty(userFormSql)) {
-							convertedSql = refactorUserSql(userFormSql,
-									refactoredPaths);
-							if( !userFormSql.equalsIgnoreCase(convertedSql)) {
-								nested.setUpdateSql(convertedSql);
-								sqlChanged = true;
-								invalidateStatus = true;
-							}
-						}
-
-						// Convert delete SQL
-						userFormSql = nested.getDeleteSql();
-						if (!CoreStringUtil.isEmpty(userFormSql)) {
-							convertedSql = refactorUserSql(userFormSql,
-									refactoredPaths);
-							if( !userFormSql.equalsIgnoreCase(convertedSql)) {
-								nested.setDeleteSql(convertedSql);
-								sqlChanged = true;
-								invalidateStatus = true;
-							}
-						}
-					}
-					if( invalidateStatus ) {
-						SqlMappingRootCache.invalidateStatus(mappingRoot, false, this);
-					}
-				}
-			}
-		}
-		
-		return sqlChanged;
-	}
-	
-	@Override
-	public void helpUpdateModelContentsForDelete(Collection<Object> deletedResourcePaths, Collection<Object> directDependentResources, IProgressMonitor monitor) {
-		
-		for( Object nextObj : directDependentResources ) {
-			IResource nextRes = (IResource)nextObj;
+		for( IResource nextRes : directDependentResources ) {
 			
 			try {
 				cleanUpTransformationReferences(nextRes, deletedResourcePaths, monitor);

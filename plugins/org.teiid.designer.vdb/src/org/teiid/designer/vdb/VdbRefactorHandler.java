@@ -7,14 +7,10 @@
  */
 package org.teiid.designer.vdb;
 
-import java.util.Collection;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.teiid.designer.core.refactor.IRefactorModelHandler;
-import org.teiid.designer.core.refactor.IRefactorNonModelResourceHandler;
-import org.teiid.designer.core.refactor.PathPair;
-import org.teiid.designer.core.workspace.ModelResource;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.teiid.designer.core.refactor.AbstractRefactorModelHandler;
 
 
 /**
@@ -22,87 +18,17 @@ import org.teiid.designer.core.workspace.ModelResource;
  *
  * @since 8.0
  */
-public class VdbRefactorHandler implements IRefactorNonModelResourceHandler {
+public class VdbRefactorHandler extends AbstractRefactorModelHandler {
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.core.refactor.IRefactorModelHandler#helpUpdateDependentModelContents(int,
-     *      org.teiid.designer.core.workspace.ModelResource, java.util.Collection, org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
-    public void helpUpdateDependentModelContents( int type,
-                                                  ModelResource modelResource,
-                                                  Collection<PathPair> refactoredPaths,
-                                                  IProgressMonitor monitor ) {
-        // nothing to do
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.core.refactor.IRefactorModelHandler#helpUpdateModelContents(int,
-     *      org.teiid.designer.core.workspace.ModelResource, java.util.Collection, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-    public void helpUpdateModelContents( int type,
-                                         ModelResource refactoredModelResource,
-                                         Collection<PathPair> refactoredPaths,
-                                         IProgressMonitor monitor ) {
-        // nothing to do
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.core.refactor.IRefactorModelHandler#helpUpdateModelContentsForDelete(java.util.Collection,
-     *      java.util.Collection, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-    public void helpUpdateModelContentsForDelete( Collection<Object> deletedResourcePaths,
-                                                  Collection<Object> directDependentResources,
-                                                  IProgressMonitor monitor ) {
-        // nothing to do
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.core.refactor.IRefactorNonModelResourceHandler#processNonModel(int,
-     *      org.eclipse.core.resources.IResource, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-    public void processNonModel( int type,
-                                 IResource refactoredResource,
-                                 Collection<PathPair> refactoredPaths,
-                                 IProgressMonitor monitor ) {
+    public void postProcess( RefactorType type, IResource refactoredResource) {
         // only care about renames
-        if ((type == IRefactorModelHandler.RENAME) && (refactoredResource.getType() == IResource.FILE)
+        if ((type == RefactorType.RENAME) && (refactoredResource.getType() == IResource.FILE)
                 && Vdb.FILE_EXTENSION_NO_DOT.equals(((IFile)refactoredResource).getFileExtension())) {
             // just save VDB to get new manifest written out
+            NullProgressMonitor monitor = new NullProgressMonitor();
             Vdb renamedVdb = new Vdb((IFile)refactoredResource, monitor);
             renamedVdb.save(monitor);
         }
     }
-    
-     /**
-      * {@inheritDoc}
-      * 
-     * @see org.teiid.designer.core.refactor.IRefactorModelHandler#preProcess(int, org.eclipse.core.resources.IResource, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-    public boolean preProcess(int refactoryType, IResource refactoredResource, IProgressMonitor monitor) {
-    	return true;
-    }
-    
-     /**
-      * {@inheritDoc}
-      * 
-     * @see org.teiid.designer.core.refactor.IRefactorModelHandler#postProcess(int, org.eclipse.core.resources.IResource, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-    public void postProcess(int refactoryType, IResource refactoredResource, IProgressMonitor monitor) {
-    	// No Op
-    }
-
 }

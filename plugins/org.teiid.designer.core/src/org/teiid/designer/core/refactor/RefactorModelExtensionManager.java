@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.ModelBuildUtil;
+import org.teiid.designer.core.refactor.IRefactorModelHandler.RefactorType;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -91,80 +92,7 @@ public class RefactorModelExtensionManager {
 		
 		handlers = extList.values();
 	}
-	
 
-	/**
-	 * Method which delegates to all handlers the ability to update models that are dependent on the refactored models
-	 * 
-	 * @param type the type of the refactor operations (see <code>IRefactorModelHandler</code>
-	 * @param modelResource the dependent model
-	 * @param refactoredPaths a Map containing original and new model paths
-	 * @param monitor the ProgressMonitor
-	 */
-	public static void helpUpdateDependentModelContents(int type, ModelResource modelResource,
-			Collection<PathPair> refactoredPaths, IProgressMonitor monitor) {
-		if( !handlersLoaded ) {
-			loadExtensions();
-		}
-		
-		for( IRefactorModelHandler handler : handlers) {
-			handler.helpUpdateDependentModelContents(type, modelResource, refactoredPaths, monitor);
-		}
-	}
-
-    /**
-	 * @param type the type of the refactor operations (see <code>IRefactorModelHandler</code>
-	 * @param refactoredResource the dependent model
-	 * @param refactoredPaths a Map containing original and new model paths
-	 * @param monitor the ProgressMonitor
-     * @see org.teiid.designer.core.refactor.IRefactorNonModelResourceHandler#processNonModel(int, org.eclipse.core.resources.IResource, java.util.Map, 
-     * 	org.eclipse.core.runtime.IProgressMonitor)
-     */
-    public static void helpUpdateNonModelResource( int type,
-                                                   IResource refactoredResource,
-                                                   Collection<PathPair> refactoredPaths,
-                                                   IProgressMonitor monitor ) {
-        if (!handlersLoaded) {
-            loadExtensions();
-        }
-
-        try {
-            for (IRefactorModelHandler handler : handlers) {
-                if (handler instanceof IRefactorNonModelResourceHandler) {
-                    ((IRefactorNonModelResourceHandler)handler).processNonModel(type, refactoredResource, refactoredPaths, monitor);
-                }
-            }
-        } catch (Exception e) {
-            ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
-        }
-    }
-	
-	/**
-	 * Method which delegates to all handlers the ability to update or perform internal refactoring for the refactored models
-	 * 
-	 * @param type the type of the refactor operations (see <code>IRefactorModelHandler</code>
-	 * @param refactoredModelResource the dependent model
-	 * @param refactoredPaths a Map containing original and new model paths
-	 * @param monitor the ProgressMonitor
-     * @see org.teiid.designer.core.refactor.IRefactorModelHandler#helpUpdateModelContents(int, org.teiid.designer.core.workspace.ModelResource, java.util.Map, 
-     *      org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	public static void helpUpdateModelContents(int type, ModelResource refactoredModelResource, Collection<PathPair> refactoredPaths, IProgressMonitor monitor) {
-		if( !handlersLoaded ) {
-			loadExtensions();
-		}
-		
-		try {
-			if( !ModelUtil.isXsdFile(refactoredModelResource.getCorrespondingResource()) ) {
-				for( IRefactorModelHandler handler : handlers) {
-					handler.helpUpdateModelContents(type, refactoredModelResource, refactoredPaths, monitor);
-				}
-			}
-		} catch (ModelWorkspaceException theException) {
-			ModelerCore.Util.log(IStatus.ERROR, theException, theException.getMessage());
-		}
-	}
-	
 	/**
 	 * 
 	 * @param deletedResourcePaths a collection of deleted resource paths
@@ -173,7 +101,7 @@ public class RefactorModelExtensionManager {
 	 * @see org.teiid.designer.core.refactor.IRefactorModelHandler#helpUpdateModelContentsForDelete(
 	 * 		java.util.Collection, java.util.Collection, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public static void helpUpdateModelContentsForDelete(Collection<Object> deletedResourcePaths, Collection<Object> directDependentResources, IProgressMonitor monitor) {
+	public static void helpUpdateModelContentsForDelete(Collection<IResource> deletedResourcePaths, Collection<IResource> directDependentResources, IProgressMonitor monitor) {
 		if( !handlersLoaded ) {
 			loadExtensions();
 		}
@@ -208,7 +136,7 @@ public class RefactorModelExtensionManager {
      * @return if all handlers approve of refactoring
      * @see org.teiid.designer.core.refactor.IRefactorModelHandler#preProcess(int, org.eclipse.core.resources.IResource, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public static boolean preProcess(final int refactorType, final IResource refactoredResource, IProgressMonitor monitor) {
+	public static boolean preProcess(RefactorType refactorType, final IResource refactoredResource, IProgressMonitor monitor) {
 		if( !handlersLoaded ) {
 			loadExtensions();
 		}
@@ -223,19 +151,16 @@ public class RefactorModelExtensionManager {
 	}
 	
     /**
-     * 
-	 * @param refactorType the refactor type
+     * @param refactorType type of refactoring
      * @param refactoredResource the refactored resource
-     * @param monitor the progress monitor
-     * @see org.teiid.designer.core.refactor.IRefactorModelHandler#postProcess(int, org.eclipse.core.resources.IResource, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public static void postProcess(final int refactorType, final IResource refactoredResource, IProgressMonitor monitor) {
+	public static void postProcess(RefactorType refactorType, final IResource refactoredResource) {
 		if( !handlersLoaded ) {
 			loadExtensions();
 		}
 		
 		for( IRefactorModelHandler handler : handlers) {
-			handler.postProcess(refactorType, refactoredResource, monitor);
+			handler.postProcess(refactorType, refactoredResource);
 		}
 	}
 }

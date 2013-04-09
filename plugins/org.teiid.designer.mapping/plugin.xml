@@ -11,12 +11,4 @@
 
      <extension-point id="modelMapper" name="%modelMapperName" schema="schema/modelMapper.exsd"/>
    <extension-point id="choiceObjectHandler" name="%choiceObjectHandlerName" schema="schema/choiceObjectHandler.exsd"/>
-   <extension
-		id="MappingRefactorModelHandler"
-		name="%mappingRefactorModelExtension.name"
-        point="org.teiid.designer.core.refactorModelHandler">
-      <refactorHandler
-         name="org.teiid.designer.mapping.factory.MappingRefactorModelHandler">
-      </refactorHandler>
-   </extension>
 </plugin>

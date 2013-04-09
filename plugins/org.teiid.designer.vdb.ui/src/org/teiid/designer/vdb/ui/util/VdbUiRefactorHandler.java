@@ -23,9 +23,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.teiid.designer.core.refactor.IRefactorNonModelResourceHandler;
-import org.teiid.designer.core.refactor.PathPair;
-import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.refactor.AbstractRefactorModelHandler;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ResourceFilter;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
@@ -35,67 +33,10 @@ import org.teiid.designer.vdb.ui.editor.VdbEditor;
 /**
  *
  */
-public class VdbUiRefactorHandler implements IRefactorNonModelResourceHandler {
+public class VdbUiRefactorHandler extends AbstractRefactorModelHandler {
 
-    /**
-     * {@inheritDoc}
-     * 
-	 * @see org.teiid.designer.core.refactor.IRefactorModelHandler#helpUpdateDependentModelContents(int, org.teiid.designer.core.workspace.ModelResource, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@Override
-	public void helpUpdateDependentModelContents(int type,
-			ModelResource modelResource, Collection<PathPair> refactoredPaths,
-			IProgressMonitor monitor) {
-		// No implementation
-		
-	}
-
-    /**
-     * {@inheritDoc}
-     * 
-	 * @see org.teiid.designer.core.refactor.IRefactorModelHandler#helpUpdateModelContents(int, org.teiid.designer.core.workspace.ModelResource, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	@Override
-	public void helpUpdateModelContents(int type,
-			ModelResource refactoredModelResource, Collection<PathPair> refactoredPaths,
-			IProgressMonitor monitor) {
-		// No implementation
-		
-	}
-
-    /**
-     * {@inheritDoc}
-     * 
-	 * @see org.teiid.designer.core.refactor.IRefactorModelHandler#helpUpdateModelContentsForDelete(java.util.Collection, java.util.Collection, org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	@Override
-	public void helpUpdateModelContentsForDelete(
-			Collection<Object> deletedResourcePaths,
-			Collection<Object> directDependentResources,
-			IProgressMonitor monitor) {
-		// No implementation
-		
-	}
-
-
-    /**
-     * {@inheritDoc}
-     * 
-	 * @see org.teiid.designer.core.refactor.IRefactorNonModelResourceHandler#processNonModel(int, org.eclipse.core.resources.IResource, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	@Override
-	public void processNonModel(int type, IResource refactoredResource,
-			Collection<PathPair> refactoredPaths, IProgressMonitor monitor) throws Exception {
-		// No implementation
-	}
-	
-    /**
-     * {@inheritDoc}
-     * 
-	 * @see org.teiid.designer.core.refactor.IRefactorModelHandler#preProcess(int, org.eclipse.core.resources.IResource, org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	@Override
-	public boolean preProcess(int refactorType, IResource refactoredResource, IProgressMonitor monitor) {
+	public boolean preProcess(RefactorType refactorType, IResource refactoredResource, IProgressMonitor monitor) {
 		// Find and show affected VDBs
     	@SuppressWarnings("unchecked")
 		final Collection<IFile> allVdbResourcesInProject = 
@@ -134,16 +75,6 @@ public class VdbUiRefactorHandler implements IRefactorNonModelResourceHandler {
     	}
 
 		return true;
-	}
-
-    /**
-     * {@inheritDoc}
-     * 
-	 * @see org.teiid.designer.core.refactor.IRefactorModelHandler#postProcess(int, org.eclipse.core.resources.IResource, org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	@Override
-	public void postProcess(int refactorType, IResource refactoredResource, IProgressMonitor monitor) {
-		// Do nothing
 	}
 
 	/**

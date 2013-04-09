@@ -509,9 +509,9 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
 
                             modelResource.save(null, false);
                             
-                            RefactorModelExtensionManager.helpUpdateDependentModelContents(IRefactorModelHandler.RENAME, modelResource, refactoredPathPairs, monitor);
-                            
-                            modelResource.save(null, false);
+//                            RefactorModelExtensionManager.helpUpdateDependentModelContents(IRefactorModelHandler.RENAME, modelResource, refactoredPathPairs, monitor);
+//                            
+//                            modelResource.save(null, false);
                         } // endif -- readonly
                     } else {
                         if (severity < IStatus.WARNING) {
