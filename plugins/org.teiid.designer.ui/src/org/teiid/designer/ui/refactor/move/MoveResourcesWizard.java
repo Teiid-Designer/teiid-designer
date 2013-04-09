@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -23,6 +24,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 import org.eclipse.ltk.ui.refactoring.UserInputWizardPage;
 import org.eclipse.swt.SWT;
@@ -33,6 +35,8 @@ import org.eclipse.swt.widgets.Label;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.refactor.AbstractResourcesRefactoring;
+import org.teiid.designer.ui.refactor.RefactorResourcesUtils;
 import org.teiid.designer.ui.refactor.SingleProjectModelContentProvider;
 
 /**
@@ -51,7 +55,7 @@ public class MoveResourcesWizard extends RefactoringWizard {
 
     @Override
     protected void addUserInputPages() {
-        List<IResource> resources = ((MoveResourcesRefactoring) getRefactoring()).getResources();
+        List<IResource> resources = ((AbstractResourcesRefactoring) getRefactoring()).getResources();
         addPage(new MoveResourceDestinationPage(resources));
     }
 
@@ -64,7 +68,7 @@ public class MoveResourcesWizard extends RefactoringWizard {
         private TreeViewer treeViewer;
 
         public MoveResourceDestinationPage(List<IResource> resources) {
-            super("MoveResourceDestinationPage");
+            super(RefactorResourcesUtils.getString("MoveRefactoring.moveResourceDestinationPage")); //$NON-NLS-1$
             
             CoreArgCheck.isNotEmpty(resources, ""); //$NON-NLS-1$
             
@@ -75,6 +79,10 @@ public class MoveResourcesWizard extends RefactoringWizard {
         @Override
         public MoveResourcesRefactoring getRefactoring() {
             return (MoveResourcesRefactoring) super.getRefactoring();
+        }
+
+        private RefactoringStatus createErrorStatus(String key, Object... args) {
+            return RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString(key, args));
         }
 
         private boolean verifyResourcesProject(Collection<IResource> resources) {
@@ -96,7 +104,7 @@ public class MoveResourcesWizard extends RefactoringWizard {
 
         private void verifyDestination(Object selection) {
             if (! (selection instanceof IContainer)) {
-                setPageComplete(false);
+                setPageComplete(createErrorStatus("MoveRefactoring.destinationNotFolder")); //$NON-NLS-1$
                 return;
             }
                 
@@ -108,31 +116,30 @@ public class MoveResourcesWizard extends RefactoringWizard {
                 // Not open or a non-model project
                 try {
                     if (! project.isOpen() || project.getNature(ModelerCore.NATURE_ID) == null) {
-                        setPageComplete(false);
+                        setPageComplete(createErrorStatus("MoveRefactoring.destinationProjectNotOpen")); //$NON-NLS-1$
                         return;
                     }
                 } catch (CoreException ex) {
                     ModelerCore.Util.log(ex);
-                    setPageComplete(false);
+                    setPageComplete(createErrorStatus(ex.getMessage()));
                     return;
                 }
-                
             }
 
             List<IResource> resources = getRefactoring().getResources();
             if (! verifyResourcesProject(resources)) {
-                setPageComplete(false);
+                setPageComplete(createErrorStatus("MoveRefactoring.resourcesNotInSameProject")); //$NON-NLS-1$
                 return;
             }
             
             for (IResource resource : resources) {
                 if (! resource.getProject().equals(destination.getProject())) {
-                    setPageComplete(false);
+                    setPageComplete(createErrorStatus("MoveRefactoring.destinationNotSameProject")); //$NON-NLS-1$
                     return;
                 }
                 
                 if (resource.getParent().equals(destination)) {
-                    setPageComplete(false);
+                    setPageComplete(createErrorStatus("MoveRefactoring.destinationSame")); //$NON-NLS-1$
                     return;
                 }
 
@@ -142,7 +149,7 @@ public class MoveResourcesWizard extends RefactoringWizard {
                     // destination cannot be beneath target
                     final String resourcePath = folderResource.getFullPath().toString() + '/';
                     if (destinationPath.startsWith(resourcePath)) {
-                        setPageComplete(false);
+                        setPageComplete(createErrorStatus("MoveRefactoring.destinationSubFolder")); //$NON-NLS-1$
                         return;
                     }
                 }
@@ -154,13 +161,13 @@ public class MoveResourcesWizard extends RefactoringWizard {
                 final String proposedPath = destinationPath + '/' + resource.getName();
                 final IWorkspaceRoot workspaceRoot = resource.getWorkspace().getRoot();
                 if (workspaceRoot.findMember(proposedPath) != null) {
-                    setPageComplete(false);
+                    setPageComplete(createErrorStatus("MoveRefactoring.nameClash", resource.getName())); //$NON-NLS-1$
                     return;
                 }
             }
 
             getRefactoring().setDestination(destination);
-            setPageComplete(true);
+            setPageComplete(RefactoringStatus.create(Status.OK_STATUS));
         }
 
         private void addSelectionChangeListener() {
@@ -180,7 +187,7 @@ public class MoveResourcesWizard extends RefactoringWizard {
 
         private void addLabel(Composite parent) {
             Label label = new Label(parent, SWT.WRAP);
-            String text = new String("Choose the destination for the resource:");
+            String text = new String(RefactorResourcesUtils.getString("MoveRefactoring.destinationLabelDefaultText")); //$NON-NLS-1$
 
             label.setText(text);
             GridData data = new GridData(SWT.FILL, SWT.END, true, false);

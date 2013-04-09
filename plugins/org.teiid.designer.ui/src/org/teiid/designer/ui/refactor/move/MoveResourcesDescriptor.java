@@ -19,7 +19,7 @@ import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.designer.ui.common.UiConstants;
+import org.teiid.designer.ui.refactor.RefactorResourcesUtils;
 
 /**
  * Descriptor for storing the resource move change
@@ -30,7 +30,7 @@ public class MoveResourcesDescriptor extends RefactoringDescriptor {
     
     static final String DESTINATION_PATH_KEY = "DestinationPathKey"; //$NON-NLS-1$
 
-	private static final String REFACTORING_ID = MoveResourcesDescriptor.class.getPackage().getName();
+	static final String REFACTORING_ID = MoveResourcesDescriptor.class.getPackage().getName();
 
 	private static final String UNAMED_DESCRIPTOR = "Unamed_Descriptor"; //$NON-NLS-1$
    
@@ -67,6 +67,9 @@ public class MoveResourcesDescriptor extends RefactoringDescriptor {
         return this.destinationPath;
     }
     
+	/**
+	 * @param destination
+	 */
 	public void setDestinationPath(IPath destination) {
         CoreArgCheck.isNotNull(destination);
         destinationPath = destination;
@@ -79,10 +82,16 @@ public class MoveResourcesDescriptor extends RefactoringDescriptor {
         return this.resourcePaths;
     }
 	
+	/**
+	 * @param resourcePaths
+	 */
 	public void setResourcePathsToMove(Collection<IPath> resourcePaths) {
 	    this.resourcePaths = resourcePaths;
 	}
 
+    /**
+     * @param resources
+     */
     public void setResourcesToMove(Collection<IResource> resources) {
         CoreArgCheck.isNotNull(resources);
         
@@ -99,7 +108,7 @@ public class MoveResourcesDescriptor extends RefactoringDescriptor {
 
 	        IResource destination = root.findMember(destinationPath);
 	        if (!(destination instanceof IFolder || destination instanceof IProject) || !destination.exists()) {
-	            status.addFatalError(UiConstants.Util.getString("MoveResourceDescriptor.destinationNotExistError", destinationPath)); //$NON-NLS-1$
+	            status.addFatalError(RefactorResourcesUtils.getString("MoveResourceDescriptor.destinationNotExistError", destinationPath)); //$NON-NLS-1$
 	            return null;
 	        }
 
@@ -108,12 +117,12 @@ public class MoveResourcesDescriptor extends RefactoringDescriptor {
 	        for (IPath resourcePath : resourcePaths) {
 	            IResource resource = root.findMember(resourcePath);
 	            if (resource == null || !resource.exists()) {
-	                status.addFatalError(UiConstants.Util.getString("MoveResourceDescriptor.resourceNoExistError", resourcePath)); //$NON-NLS-1$
+	                status.addFatalError(RefactorResourcesUtils.getString("MoveResourceDescriptor.resourceNoExistError", resourcePath)); //$NON-NLS-1$
 	                return null;
 	            }
 	            
 	            if (!(resource instanceof IFile || resource instanceof IFolder)) {
-	                status.addFatalError(UiConstants.Util.getString("MoveResourceDescriptor.resourceNotFileOrFolder", resourcePath)); //$NON-NLS-1$
+	                status.addFatalError(RefactorResourcesUtils.getString("MoveResourceDescriptor.resourceNotFileOrFolder", resourcePath)); //$NON-NLS-1$
 	                return null;
 	            }
 	            

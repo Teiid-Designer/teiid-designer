@@ -37,7 +37,7 @@ public class MoveResourcesContribution extends RefactoringContribution {
     private static final String ATTRIBUTE_ELEMENT= "element"; //$NON-NLS-1$
 
     /**
-     * Key used for the new resource name
+     * Key used for the destination parameter
      */
     private static final String ATTRIBUTE_DESTINATION= "destination"; //$NON-NLS-1$
     
@@ -117,7 +117,7 @@ public class MoveResourcesContribution extends RefactoringContribution {
             return null;
         
         MoveResourcesDescriptor moveDescriptor = (MoveResourcesDescriptor) descriptor;
-        HashMap map = new HashMap();
+        HashMap<String, String> map = new HashMap<String, String>();
 
         Collection<IPath> paths = moveDescriptor.getResourcePaths();
         String project = moveDescriptor.getProject();

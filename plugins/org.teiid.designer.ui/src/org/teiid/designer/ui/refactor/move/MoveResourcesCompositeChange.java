@@ -14,6 +14,7 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.ChangeDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringChangeDescriptor;
 import org.teiid.designer.ui.refactor.AbstractResourcesCompositeChange;
+import org.teiid.designer.ui.refactor.RefactorResourcesUtils;
 
 /**
  *
@@ -39,8 +40,8 @@ public class MoveResourcesCompositeChange extends AbstractResourcesCompositeChan
     @Override
     public ChangeDescriptor getDescriptor() {
         String project = destination.getProject().getName();
-        String description = MoveResourcesUtils.getString("MoveRefactoring.moveDescriptorDescription"); //$NON-NLS-1$
-        String comment = MoveResourcesUtils.getString("MoveRefactoring.moveDescriptorComment"); //$NON-NLS-1$
+        String description = RefactorResourcesUtils.getString("MoveRefactoring.moveDescriptorDescription"); //$NON-NLS-1$
+        String comment = RefactorResourcesUtils.getString("MoveRefactoring.moveDescriptorComment"); //$NON-NLS-1$
 
         MoveResourcesDescriptor descriptor = new MoveResourcesDescriptor(project, description, comment);
         descriptor.setResourcesToMove(resources);

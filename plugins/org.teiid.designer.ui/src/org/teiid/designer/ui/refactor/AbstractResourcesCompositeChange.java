@@ -14,7 +14,6 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.ChangeDescriptor;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.resource.ResourceChange;
-import org.teiid.designer.ui.refactor.move.MoveResourcesUtils;
 
 /**
  * Abstract implementation of composite change that ensure all
@@ -42,7 +41,7 @@ public abstract class AbstractResourcesCompositeChange extends CompositeChange {
         if (objects != null) {
             for (Object object : objects) {
                 if (object instanceof IResource) {
-                    MoveResourcesUtils.unloadModelResource((IResource) object);
+                    RefactorResourcesUtils.unloadModelResource((IResource) object);
                 }
             }
         }
@@ -51,7 +50,7 @@ public abstract class AbstractResourcesCompositeChange extends CompositeChange {
             ResourceChange resourceChange = (ResourceChange) change;
             Object object = resourceChange.getModifiedElement();
             if (object instanceof IResource) {
-                MoveResourcesUtils.unloadModelResource((IResource) object);
+                RefactorResourcesUtils.unloadModelResource((IResource) object);
             }
         }
     }
@@ -62,6 +61,20 @@ public abstract class AbstractResourcesCompositeChange extends CompositeChange {
             unloadChangeResource(childChange);
         }
 
-        return super.perform(pm);
+        Change change = super.perform(pm);
+
+        if (change instanceof CompositeChange) {
+            for (Change childChange : ((CompositeChange) change).getChildren()) {
+                postPerform(childChange);
+            }
+        } else {
+            postPerform(change);
+        }
+
+        return change;
+    }
+
+    protected void postPerform(Change change) {
+        // Do Nothing
     }
 }
