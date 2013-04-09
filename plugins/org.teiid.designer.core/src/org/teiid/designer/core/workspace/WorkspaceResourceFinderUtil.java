@@ -8,12 +8,15 @@
 package org.teiid.designer.core.workspace;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -30,14 +33,18 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.id.UUID;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.designer.common.vdb.VdbModelInfo;
 import org.teiid.designer.common.xsd.XsdHeader;
 import org.teiid.designer.common.xsd.XsdHeaderReader;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.reader.ZipReaderCallback;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.xmi.ModelImportInfo;
 import org.teiid.designer.core.xmi.XMIHeader;
 import org.teiid.designer.core.xmi.XMIHeaderReader;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 
 /**
@@ -775,6 +782,47 @@ public class WorkspaceResourceFinderUtil {
         return (IResource[])result.toArray(new IResource[result.size()]);
     }
 
+    private static boolean vdbContainsResource(File vdbFile, final IPath targetResourcePath) {
+        final Boolean[] status = new Boolean[1];
+        status[0] = false;
+
+        try {
+            ZipReaderCallback callback = new ZipReaderCallback() {
+
+               @Override
+                public void process(InputStream inputStream) throws Exception {
+                   DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                   DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                   Document xmlDocument = dBuilder.parse(inputStream);
+
+                   NodeList modelList = xmlDocument.getElementsByTagName("model"); //$NON-NLS-1$
+                   for (int i = 0; i < modelList.getLength(); ++i) {
+                       Node modelNode = modelList.item(i);
+                       if (modelNode.getNodeType() != Node.ELEMENT_NODE)
+                           continue;
+
+                       Element element = (Element)modelNode;
+                       if (!element.hasAttribute("path")) //$NON-NLS-1$
+                          continue;
+
+                       String path = element.getAttribute("path"); //$NON-NLS-1$
+                       if (path.equals(targetResourcePath.toOSString())) {
+                           status[0] = true;
+                           return;
+                       }
+                   }
+                }
+            };
+
+            ModelUtil.readVdbHeader(vdbFile, callback);
+
+        } catch (Exception ex) {
+            ModelerCore.Util.log(ex);
+        }
+
+        return status[0];
+    }
+
     /**
      * From the collection of workspace resources return the vdb archive resources that reference this IResource
      * 
@@ -785,42 +833,26 @@ public class WorkspaceResourceFinderUtil {
      */
     private static Collection getVdbResourcesThatContain( final IResource resource,
                                                           final Collection workspaceResources ) {
-        Collection result = Collections.EMPTY_LIST;
-        if (resource == null || !resource.exists() || ModelUtil.isVdbArchiveFile(resource)) return result;
-        if (workspaceResources == null || workspaceResources.isEmpty()) return result;
+        Collection<IResource> result = Collections.emptyList();
+        if (resource == null || !resource.exists() || ModelUtil.isVdbArchiveFile(resource))
+            return result;
+
+        if (workspaceResources == null || workspaceResources.isEmpty())
+            return result;
 
         // Check if any vdb archive resources in the workspace reference this resource ...
-        String targetUuid = null;
-        final XMIHeader xmiHeader = ModelUtil.getXmiHeader(resource);
-        if (xmiHeader != null) targetUuid = xmiHeader.getUUID();
-        final String targetPath = resource.getFullPath().makeAbsolute().toString();
-        result = new ArrayList();
+        result = new ArrayList<IResource>();
 
-        // Match the UUID or full path of the specified resource to those referenced in the vdb manifest
+        // Match the full path of the specified resource to those referenced in the vdb manifest
         for (final Iterator iter = workspaceResources.iterator(); iter.hasNext();) {
             final IResource nextResource = (IResource)iter.next();
             if (!ModelUtil.isVdbArchiveFile(nextResource)) continue;
             final File vdbFile = nextResource.getRawLocation().toFile();
-            if (vdbFile.exists()) {
-                final org.teiid.designer.common.vdb.VdbHeader vdbHeader = ModelUtil.getVdbHeader(vdbFile);
-                if (vdbHeader != null) {
-                    final VdbModelInfo[] infos = vdbHeader.getModelInfos();
-                    for (int i = 0; i != infos.length; ++i) {
-                        if (targetUuid != null && targetUuid.equals(infos[i].getUUID())) {
-                            result.add(nextResource);
-                            break;
-                        }
-                        if (targetPath.equals(infos[i].getPath())) {
-                            result.add(nextResource);
-                            break;
-                        }
-                        if (targetPath.equals(infos[i].getLocation())) {
-                            result.add(nextResource);
-                            break;
-                        }
-                    }
-                }
-            }
+            if (! vdbFile.exists())
+                continue;
+
+            if (vdbContainsResource(vdbFile, resource.getFullPath().makeAbsolute()))
+                result.add(nextResource);
         }
 
         return result;
