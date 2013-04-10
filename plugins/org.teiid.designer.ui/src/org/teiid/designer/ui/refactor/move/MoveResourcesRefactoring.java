@@ -100,6 +100,32 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
         return status;
     }
 
+    /**
+     * @param resource
+     */
+    private void calculateRelatedVdbResources(IResource resource) {
+        IResource[] vdbResources = WorkspaceResourceFinderUtil.getVdbResourcesThatContain(resource);
+        for (IResource vdb : vdbResources) {
+            if (! (vdb instanceof IFile))
+                continue;
+            
+            addChange(vdb, new VdbResourceChange((IFile) vdb));
+        }
+    }
+    
+    private void analyseRelatedFile(IFile relatedFile, Collection<PathPair> pathPairs) throws Exception {
+        RefactorResourcesUtils.unloadModelResource(relatedFile);
+
+        TextFileChange textFileChange = new TextFileChange(relatedFile.getName(), relatedFile);
+        RefactorResourcesUtils.calculatePathChanges(relatedFile, pathPairs, textFileChange);
+
+        if (textFileChange.getEdit().hasChildren()) {
+            // Only if the related file is actually being changed do we add the text change
+            // and calculate the effect on any vdbs containing this related file
+            addChange(relatedFile, textFileChange);
+            calculateRelatedVdbResources(relatedFile);
+        }
+    }
 
     private void calculateRelatedResources(RefactoringStatus status) {
         String destinationPath = destination.getRawLocation().makeAbsolute().toOSString();
@@ -131,11 +157,7 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
 
             for (IFile file : statusList.getResourceList()) {
                 try {
-                    RefactorResourcesUtils.unloadModelResource(file);
-                    
-                    TextFileChange textFileChange = new TextFileChange(file.getName(), file);
-                    RefactorResourcesUtils.calculatePathChanges(file, pathPairs, textFileChange);
-                    addChange(file, textFileChange);
+                    analyseRelatedFile(file, pathPairs);
                 } catch (Exception ex) {
                     UiConstants.Util.log(ex);
                     status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
@@ -153,15 +175,15 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
 
             for (IFile file : statusList.getResourceList()) {
                 try {
-                    TextFileChange textFileChange = new TextFileChange(file.getName(), file);
-                    RefactorResourcesUtils.calculatePathChanges(file, pathPairs, textFileChange);
-                    addChange(file, textFileChange);
+                    analyseRelatedFile(file, pathPairs);
                 } catch (Exception ex) {
                     UiConstants.Util.log(ex);
                     status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
                     return;
                 }
             }
+
+            calculateRelatedVdbResources(resource);
         }
     }
 

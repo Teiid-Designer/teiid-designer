@@ -942,6 +942,10 @@
             class="org.teiid.designer.ui.refactor.move.MoveResourcesContribution"
             id="org.teiid.designer.ui.refactor.move">
       </contribution>
+      <contribution
+            class="org.teiid.designer.ui.refactor.rename.RenameResourceContribution"
+            id="org.teiid.designer.ui.refactor.rename">
+      </contribution>
    </extension>
 	
 

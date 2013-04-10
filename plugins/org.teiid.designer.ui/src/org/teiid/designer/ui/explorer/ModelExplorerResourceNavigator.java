@@ -137,7 +137,7 @@ import org.teiid.designer.ui.editors.ModelEditorSelectionSynchronizer;
 import org.teiid.designer.ui.event.ModelResourceEvent;
 import org.teiid.designer.ui.product.IModelerProductContexts;
 import org.teiid.designer.ui.properties.ModelObjectPropertySourceProvider;
-import org.teiid.designer.ui.refactor.actions.RenameRefactorAction;
+import org.teiid.designer.ui.refactor.rename.RenameRefactorAction;
 import org.teiid.designer.ui.search.IModelObjectMatch;
 import org.teiid.designer.ui.search.MetadataMatchInfo;
 import org.teiid.designer.ui.util.EObjectTransfer;

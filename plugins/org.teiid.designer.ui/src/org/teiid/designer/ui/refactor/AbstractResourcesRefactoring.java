@@ -15,6 +15,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ltk.core.refactoring.Change;
@@ -29,7 +30,10 @@ import org.teiid.designer.core.refactor.RelatedResourceFinder.Relationship;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.ui.common.util.KeyInValueHashMap;
+import org.teiid.designer.ui.common.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.vdb.refactor.VdbResourceChange;
 
 /**
  *
@@ -42,8 +46,18 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
 
     private Map<IResource, Collection<Change>> changes = new LinkedHashMap<IResource, Collection<Change>>();
 
+    private final KeyInValueHashMap<IFile, VdbResourceChange> vdbChanges;
+    
     private String name;
 
+    private class VdbResourceChangeAdapter implements KeyFromValueAdapter<IFile, VdbResourceChange> {
+
+        @Override
+        public IFile getKey(VdbResourceChange value) {
+            return value.getVdb();
+        }
+    }
+    
     /**
      * Create new instance
      *
@@ -54,6 +68,7 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
         super();
         this.name = name;
         this.resources = resources;
+        this.vdbChanges = new KeyInValueHashMap<IFile, VdbResourceChange>(new VdbResourceChangeAdapter());
     }
 
     /**
@@ -85,8 +100,33 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
     public IWorkbenchWindow getWorkbenchWindow() {
         return this.workbenchWindow;
     }
+    
+    protected void addVdbChange(VdbResourceChange change) {
+        VdbResourceChange mappedChange = vdbChanges.get(change.getVdb());
+        if (mappedChange == null) {
+            vdbChanges.add(change);
+            return;
+        }
+
+        mappedChange.addReplacements(change.getReplacedResources());
+    }
+    
+    protected void addVdbChange(IFile vdbFile, IPath invalidResourcePath, IPath newResourcePath) {
+        VdbResourceChange change = vdbChanges.get(vdbFile);
+        if (change == null) {
+            change = new VdbResourceChange(vdbFile);
+        }
+        
+        change.addReplacement(invalidResourcePath.toOSString(), newResourcePath.toOSString());
+        vdbChanges.add(change);
+    }
 
     protected void addChange(IResource resource, Change change) {
+        if (change instanceof VdbResourceChange) {
+            addVdbChange((VdbResourceChange) change);
+            return;
+        }
+        
         Collection<Change> collection = changes.get(resource);
         if (collection == null) {
             collection = new ArrayList<Change>();
@@ -101,6 +141,11 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
         for (Map.Entry<IResource, Collection<Change>> entry : changes.entrySet()) {
             changeCollection.addAll(entry.getValue());
         }
+        
+        // Add vdb changes last since synchronisation should be done
+        // after all other changes
+        changeCollection.addAll(vdbChanges.values());
+        
         return changeCollection;
     }
 
