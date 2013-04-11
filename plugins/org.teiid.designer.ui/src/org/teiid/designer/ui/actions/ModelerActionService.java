@@ -65,7 +65,6 @@ import org.teiid.designer.ui.editors.IEditorActionExporter;
 import org.teiid.designer.ui.editors.ModelObjectEditorPage;
 import org.teiid.designer.ui.editors.MultiPageModelEditor;
 import org.teiid.designer.ui.product.IModelerProductContexts;
-import org.teiid.designer.ui.refactor.actions.NamespaceUriRefactorAction;
 import org.teiid.designer.ui.refactor.move.MoveRefactorAction;
 import org.teiid.designer.ui.refactor.rename.RenameRefactorAction;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
@@ -903,14 +902,6 @@ public final class ModelerActionService extends AbstractActionService
                 actRename.setToolTipText(sRenameTooltip);
                 delRename.selectionChanged(actRename, theSelection);
                 menu.add(actRename);
-
-                // rename Namespace URI
-                NamespaceUriRefactorAction delNamespace = new NamespaceUriRefactorAction();
-                IAction namespaceRenameAction = new DelegatableAction(delNamespace, window);
-                namespaceRenameAction.setText(uriLabel);
-                namespaceRenameAction.setToolTipText(uriToolTip);
-                delNamespace.selectionChanged(namespaceRenameAction, theSelection);
-                menu.add(namespaceRenameAction);
 
                 // move
                 IActionDelegate delMove = new MoveRefactorAction();
