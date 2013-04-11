@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -53,9 +54,11 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.I18n;
 import org.teiid.core.designer.exception.EmptyArgumentException;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ddl.importer.DdlImporter;
@@ -81,6 +84,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
     private final DdlImporter importer;
     final IProject[] projects;
     IFile selectedFile;
+    private StringNameValidator nameValidator = new StringNameValidator();
 
     private Combo ddlFileCombo;
     private Text modelFolderFld;
@@ -566,6 +570,13 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
             setErrorMessage(DdlImporterUiI18n.MODEL_FOLDER_MSG + ' ' + error.getMessage());
         }
         final String modelName = modelNameFld.getText().trim();
+        if (!CoreStringUtil.isEmpty(modelName)) {
+            String validationMsg = nameValidator.checkValidName(modelName);
+            if (!CoreStringUtil.isEmpty(validationMsg)) {
+            	setErrorMessage(DdlImporterUiI18n.MODEL_MSG+'\n'+validationMsg);
+            }
+        }
+        
         try {
             importer.setModelName(modelName);
         } catch (final EmptyArgumentException error) {
