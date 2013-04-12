@@ -10,6 +10,7 @@ Export-Package: org.teiid.designer.runtime,
  org.teiid.designer.runtime.adapter,
  org.teiid.designer.runtime.connection,
  org.teiid.designer.runtime.extension.rest,
+ org.teiid.designer.runtime.importer,
  org.teiid.designer.runtime.preview,
  org.teiid.designer.runtime.preview.jobs
 Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.8.0,4.0.0)",

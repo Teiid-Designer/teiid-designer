@@ -36,6 +36,7 @@ import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
+import org.teiid.designer.runtime.importer.ImportManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
@@ -182,6 +183,11 @@ public final class TeiidServerManager implements EventManager {
     private final PreviewManager previewManager;
 
     /**
+     * The manager responsible for the handling of the Import Server and functionality,
+     */
+    private final ImportManager importManager;
+
+    /**
      * The path where the server registry is persisted or <code>null</code> if not persisted.
      */
     private final String stateLocationPath;
@@ -251,6 +257,9 @@ public final class TeiidServerManager implements EventManager {
         }
 
         this.previewManager = tempPreviewManager;
+        this.importManager = new ImportManager();
+        addListener(this.importManager);
+        this.importManager.setPasswordProvider(passwordProvider);
         this.state = RuntimeState.STARTED;
     }
 
@@ -302,6 +311,13 @@ public final class TeiidServerManager implements EventManager {
      */
     public PreviewManager getPreviewManager() {
         return this.previewManager;
+    }
+    
+    /**
+     * @return the Import VDB manager (may be <code>null</code> if preview not enabled because of no state space folder)
+     */
+    public ImportManager getImportManager() {
+        return this.importManager;
     }
 
     /**
