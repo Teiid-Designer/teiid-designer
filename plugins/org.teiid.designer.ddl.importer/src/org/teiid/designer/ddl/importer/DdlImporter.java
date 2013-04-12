@@ -10,11 +10,13 @@ package org.teiid.designer.ddl.importer;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -29,9 +31,6 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.modeshape.graph.JcrLexicon;
-import org.modeshape.graph.property.Name;
-import org.modeshape.graph.property.Property;
 import org.modeshape.sequencer.ddl.DdlConstants;
 import org.modeshape.sequencer.ddl.DdlParsers;
 import org.modeshape.sequencer.ddl.StandardDdlLexicon;
@@ -39,9 +38,12 @@ import org.modeshape.sequencer.ddl.dialect.derby.DerbyDdlLexicon;
 import org.modeshape.sequencer.ddl.dialect.mysql.MySqlDdlLexicon;
 import org.modeshape.sequencer.ddl.dialect.oracle.OracleDdlLexicon;
 import org.modeshape.sequencer.ddl.dialect.postgres.PostgresDdlLexicon;
+import org.modeshape.sequencer.ddl.dialect.teiid.TeiidDdlConstants;
+import org.modeshape.sequencer.ddl.dialect.teiid.TeiidDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.I18n;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.exception.EmptyArgumentException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.FileUtils;
@@ -61,8 +63,10 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.relational.AccessPattern;
 import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Column;
+import org.teiid.designer.metamodels.relational.ColumnSet;
 import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.ForeignKey;
 import org.teiid.designer.metamodels.relational.Index;
@@ -80,7 +84,7 @@ import org.teiid.designer.metamodels.relational.UniqueConstraint;
 import org.teiid.designer.metamodels.relational.util.RelationalTypeMappingImpl;
 
 /**
- * 
+ * DdlImporter parses the provided DDL and generates a model containing the parsed entities
  *
  * @since 8.0
  */
@@ -99,54 +103,84 @@ public class DdlImporter {
     private ModelResource model;
     private boolean optToCreateModelEntitiesForUnsupportedDdl;
     private boolean optToSetModelEntityDescription;
+    boolean isTeiidDdl = false;
     
     // hold on to DDL so that it can be set in the description
     private Map<RelationalEntity, String> descriptionMap = new HashMap<RelationalEntity, String>();
 
     /**
-     * @param projects
+     * DdlImporter contructor
+     * @param projects the list of open workspace projects
      */
     public DdlImporter( final IProject[] projects ) {
         this.projects = projects;
     }
 
+    /*
+     * Create a Model Entity, using the provided AstNode
+     * @param node the provided AstNode
+     * @param roots the current model roots
+     * @param schema the schema
+     * @param messages the list of messages generated during generation
+     */
     private void create( final AstNode node,
-                         Name mixinType,
                          final List<EObject> roots,
                          final Schema schema,
                          final List<String> messages ) throws CoreException {
-        try {
-            if (StandardDdlLexicon.TYPE_CREATE_TABLE_STATEMENT.equals(mixinType)) {
-                final BaseTable table = initializeTable(FACTORY.createBaseTable(), node, roots);
-                for (final AstNode node1 : node) {
-                    mixinType = mixinType(node1);
-                    if (StandardDdlLexicon.TYPE_COLUMN_DEFINITION.equals(mixinType)) createColumn(node1, table);
-                    else if (StandardDdlLexicon.TYPE_TABLE_CONSTRAINT.equals(mixinType)) createKey(node1, table, roots, messages);
-                }
-            } else if (StandardDdlLexicon.TYPE_CREATE_VIEW_STATEMENT.equals(mixinType)) {
-                if (modelType != ModelType.VIRTUAL_LITERAL && optToCreateModelEntitiesForUnsupportedDdl) initializeTable(FACTORY.createView(),
-                                                                                                                         node,
-                                                                                                                         roots);
-            } else if (OracleDdlLexicon.TYPE_CREATE_INDEX_STATEMENT.equals(mixinType)
-                       || DerbyDdlLexicon.TYPE_CREATE_INDEX_STATEMENT.equals(mixinType)
-                       || MySqlDdlLexicon.TYPE_CREATE_INDEX_STATEMENT.equals(mixinType)
-                       || PostgresDdlLexicon.TYPE_CREATE_INDEX_STATEMENT.equals(mixinType)) {
+    	isTeiidDdl = false;
+    	try {
+        	// -----------------------------------------------------------------------
+        	// Handle Creation of Teiid Entities
+        	// -----------------------------------------------------------------------
+        	if (node.hasMixin(TeiidDdlLexicon.CreateTable.TABLE_STATEMENT)
+        		|| node.hasMixin(TeiidDdlLexicon.CreateProcedure.PROCEDURE_STATEMENT)
+        		|| node.hasMixin(TeiidDdlLexicon.CreateProcedure.FUNCTION_STATEMENT)
+        		|| node.hasMixin(TeiidDdlLexicon.AlterOptions.TABLE_STATEMENT)
+        		|| node.hasMixin(TeiidDdlLexicon.AlterOptions.VIEW_STATEMENT)
+        		|| node.hasMixin(TeiidDdlLexicon.AlterOptions.PROCEDURE_STATEMENT)
+        		|| node.hasMixin(TeiidDdlLexicon.CreateTable.VIEW_STATEMENT)) {
+        		
+        		isTeiidDdl = true;
+        		
+        		createTeiidEntity(node,roots,messages);
+        		
+    		// -----------------------------------------------------------------------
+    		// All other Non-Teiid DDL 
+    		// -----------------------------------------------------------------------
+        	} else if (node.hasMixin(StandardDdlLexicon.TYPE_CREATE_TABLE_STATEMENT)) {
+        		isTeiidDdl = false;
+        		
+        		final BaseTable table = initializeTable(FACTORY.createBaseTable(), node, roots);
+        		for (final AstNode child : node) {
+        			if (child.hasMixin(StandardDdlLexicon.TYPE_COLUMN_DEFINITION)) createColumn(child, table);
+        			else if (child.hasMixin(StandardDdlLexicon.TYPE_TABLE_CONSTRAINT)) createKey(child, table, roots, messages);
+        		}
+        	} else if (node.hasMixin(StandardDdlLexicon.TYPE_CREATE_VIEW_STATEMENT)) {
+        		isTeiidDdl = false;
+        		if (modelType != ModelType.VIRTUAL_LITERAL && optToCreateModelEntitiesForUnsupportedDdl) initializeTable(FACTORY.createView(),
+        				node,
+        				roots);
+            } else if (node.hasMixin(OracleDdlLexicon.TYPE_CREATE_INDEX_STATEMENT)
+                       || node.hasMixin(DerbyDdlLexicon.TYPE_CREATE_INDEX_STATEMENT)
+                       || node.hasMixin(MySqlDdlLexicon.TYPE_CREATE_INDEX_STATEMENT)
+                       || node.hasMixin(PostgresDdlLexicon.TYPE_CREATE_INDEX_STATEMENT)) {
+        		isTeiidDdl = false;
                 final Index index = FACTORY.createIndex();
                 final Info<Index> info = new Info<Index>(index, node, roots);
                 if (info.schema == null) roots.add(index);
                 else info.schema.getIndexes().add(index);
                 initialize(index, node, info.name);
-                Property prop = node.getProperty(OracleDdlLexicon.UNIQUE_INDEX);
+                Object prop = node.getProperty(OracleDdlLexicon.UNIQUE_INDEX);
                 if (prop == null) prop = node.getProperty(DerbyDdlLexicon.UNIQUE_INDEX);
-                if (prop != null) index.setUnique((Boolean)prop.getFirstValue());
+                if (prop != null) index.setUnique((Boolean)prop);
                 prop = node.getProperty(OracleDdlLexicon.TABLE_NAME);
                 if (prop == null) prop = node.getProperty(DerbyDdlLexicon.TABLE_NAME);
                 if (prop != null) {
                     try {
-                        final Table table = find(Table.class, prop.getFirstValue().toString(), node, null, roots);
+                        final Table table = find(Table.class, prop.toString(), node, null, roots);
                         for (final AstNode node1 : node) {
                             // Probably need to check for a simple column reference for Oracle
-                            if (DerbyDdlLexicon.TYPE_INDEX_COLUMN_REFERENCE.equals(mixinType(node1))) try {
+                            if (node1.hasMixin(DerbyDdlLexicon.TYPE_INDEX_COLUMN_REFERENCE)) try {
                                 index.getColumns().add(find(Column.class, node1, table, roots));
                             } catch (final EntityNotFoundException error) {
                                 messages.add(error.getMessage());
@@ -156,30 +190,32 @@ public class DdlImporter {
                         messages.add(error.getMessage());
                     }
                 }
-            } else if (OracleDdlLexicon.TYPE_CREATE_PROCEDURE_STATEMENT.equals(mixinType)
-                       || DerbyDdlLexicon.TYPE_CREATE_PROCEDURE_STATEMENT.equals(mixinType)
-                       || MySqlDdlLexicon.TYPE_CREATE_PROCEDURE_STATEMENT.equals(mixinType)) try {
+            } else if (node.hasMixin(OracleDdlLexicon.TYPE_CREATE_PROCEDURE_STATEMENT)
+                       || node.hasMixin(DerbyDdlLexicon.TYPE_CREATE_PROCEDURE_STATEMENT)
+                       || node.hasMixin(MySqlDdlLexicon.TYPE_CREATE_PROCEDURE_STATEMENT)) try {
+           		isTeiidDdl = false;
                 createProcedure(node, roots);
             } catch (final EntityNotFoundException error) {
                 messages.add(error.getMessage());
             }
-            else if (OracleDdlLexicon.TYPE_CREATE_FUNCTION_STATEMENT.equals(mixinType)
-                     || DerbyDdlLexicon.TYPE_CREATE_FUNCTION_STATEMENT.equals(mixinType)
-                     || MySqlDdlLexicon.TYPE_CREATE_FUNCTION_STATEMENT.equals(mixinType)
-                     || PostgresDdlLexicon.TYPE_CREATE_FUNCTION_STATEMENT.equals(mixinType)) try {
+            else if (node.hasMixin(OracleDdlLexicon.TYPE_CREATE_FUNCTION_STATEMENT)
+                     || node.hasMixin(DerbyDdlLexicon.TYPE_CREATE_FUNCTION_STATEMENT)
+                     || node.hasMixin(MySqlDdlLexicon.TYPE_CREATE_FUNCTION_STATEMENT)
+                     || node.hasMixin(PostgresDdlLexicon.TYPE_CREATE_FUNCTION_STATEMENT)) try {
+                isTeiidDdl = false;
                 createProcedure(node, roots).setFunction(true);
             } catch (final EntityNotFoundException error) {
                 messages.add(error.getMessage());
             }
-            else if (StandardDdlLexicon.TYPE_ALTER_TABLE_STATEMENT.equals(mixinType)) {
+            else if (node.hasMixin(StandardDdlLexicon.TYPE_ALTER_TABLE_STATEMENT)) {
+        		isTeiidDdl = false;
                 final BaseTable table = find(BaseTable.class, node, schema, roots);
                 for (final AstNode node1 : node) {
-                    mixinType = mixinType(node1);
-                    if (StandardDdlLexicon.TYPE_ADD_TABLE_CONSTRAINT_DEFINITION.equals(mixinType)) createKey(node1,
+                    if (node1.hasMixin(StandardDdlLexicon.TYPE_ADD_TABLE_CONSTRAINT_DEFINITION)) createKey(node1,
                                                                                                              table,
                                                                                                              roots,
                                                                                                              messages);
-                    else if (StandardDdlLexicon.TYPE_ADD_COLUMN_DEFINITION.equals(mixinType)) createColumn(node1, table);
+                    else if (node1.hasMixin(StandardDdlLexicon.TYPE_ADD_COLUMN_DEFINITION)) createColumn(node1, table);
                 }
             }
         } catch (final EntityNotFoundException error) {
@@ -187,37 +223,232 @@ public class DdlImporter {
         }
     }
 
-    private void createColumn( final AstNode node,
-                               final BaseTable table ) throws CoreException {
+    /**
+     * Creates Entity from Teiid DDL nodes
+	 * @param node the provided AstNode
+	 * @param roots the current model roots
+	 * @param messages the generated messages
+	 * @throws CoreException
+     * @throws EntityNotFoundException 
+	 */
+	private void createTeiidEntity(AstNode node, List<EObject> roots, List<String> messages) throws CoreException,EntityNotFoundException {
+		// TODO need to handle SchemaElement (foreign or virtual) - DO we need to set model type to physical or virtual
+		
+    	if (node.hasMixin(TeiidDdlLexicon.CreateTable.TABLE_STATEMENT)
+        		|| node.hasMixin(TeiidDdlLexicon.CreateTable.VIEW_STATEMENT) ) {
+    		
+            final BaseTable table = initializeTable(FACTORY.createBaseTable(), node, roots);
+
+            for (final AstNode child : node) {
+                if (child.hasMixin(TeiidDdlLexicon.CreateTable.TABLE_ELEMENT)) {
+                	createColumn(child, table);
+                } else if(child.hasMixin(TeiidDdlLexicon.Constraint.TABLE_ELEMENT)
+                		               || child.hasMixin(TeiidDdlLexicon.Constraint.FOREIGN_KEY_CONSTRAINT)
+                	                   || child.hasMixin(TeiidDdlLexicon.Constraint.INDEX_CONSTRAINT)) {
+                	                    	 
+                	createTeiidConstraint(child,table,roots,messages);                	
+                }
+                // TODO: handle autoIncrement property and statement options
+            }
+    	} else if (node.hasMixin(TeiidDdlLexicon.CreateProcedure.PROCEDURE_STATEMENT)
+    			  || node.hasMixin(TeiidDdlLexicon.CreateProcedure.FUNCTION_STATEMENT)) {
+    		createProcedure(node,roots);
+    		
+    	} else if (  node.hasMixin(TeiidDdlLexicon.AlterOptions.TABLE_STATEMENT)
+    			  || node.hasMixin(TeiidDdlLexicon.AlterOptions.VIEW_STATEMENT)
+    			  || node.hasMixin(TeiidDdlLexicon.AlterOptions.PROCEDURE_STATEMENT) ) {
+    		// TODO Determine what to do with statementOptions
+    		
+//            final BaseTable table = find(BaseTable.class, node, null, roots);
+//            for (final AstNode node1 : node) {
+//                if (node1.hasMixin(StandardDdlLexicon.TYPE_ADD_TABLE_CONSTRAINT_DEFINITION)) createKey(node1,
+//                                                                                                         table,
+//                                                                                                         roots,
+//                                                                                                         messages);
+//                else if (node1.hasMixin(StandardDdlLexicon.TYPE_ADD_COLUMN_DEFINITION)) createColumn(node1, table);
+//            }
+    	} else {
+    		throw new IllegalStateException();
+    	}		
+	}
+
+	/*
+	 * Create Constraints
+	 */
+	private void createTeiidConstraint(final AstNode constraintNode,
+			final BaseTable table,
+			final List<EObject> roots,
+			final List<String> messages) throws CoreException {
+
+		final String type = constraintNode.getProperty(TeiidDdlLexicon.Constraint.TYPE).toString();
+
+		boolean primaryKeyConstraint = false;
+		boolean uniqueConstraint = false;
+		boolean accessPatternConstraint = false;
+		boolean foreignKeyConstraint = false;
+		boolean indexConstraint = false;
+		RelationalEntity key = null;
+
+		if (DdlConstants.PRIMARY_KEY.equals(type)) {
+			key = FACTORY.createPrimaryKey();
+			initialize(key, constraintNode);
+			table.setPrimaryKey((PrimaryKey)key);
+			primaryKeyConstraint = true;
+		} else if (DdlConstants.INDEX.equals(type)) {
+			// TODO need to process teiidddl:expression property
+			key = FACTORY.createIndex();
+			initialize(key, constraintNode);
+			roots.add(key);
+			indexConstraint = true;
+		} else if (DdlConstants.UNIQUE.equals(type)) {
+			key = FACTORY.createUniqueConstraint();
+			initialize(key, constraintNode);
+			table.getUniqueConstraints().add(key);
+			uniqueConstraint = true;
+		} else if (TeiidDdlConstants.TeiidNonReservedWord.ACCESSPATTERN.toDdl().equals(type)) {
+			key = FACTORY.createAccessPattern();
+			initialize(key, constraintNode);
+			table.getAccessPatterns().add(key);
+			accessPatternConstraint = true;
+		} else if (DdlConstants.FOREIGN_KEY.equals(type)) {
+			key = FACTORY.createForeignKey();
+			initializeFK(table.getForeignKeys(), (ForeignKey)key, constraintNode);
+			table.getForeignKeys().add(key);
+			foreignKeyConstraint = true;
+		} else {
+			assert false : "Unexpected constraint type of '" + type + "'"; //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
+		// process referenced columns multi-valued property
+		final Object temp = constraintNode.getProperty(TeiidDdlLexicon.Constraint.REFERENCES);
+		final List<AstNode> references = (List<AstNode>)temp;
+
+		for (final AstNode ref : references) {
+			try {
+				if (primaryKeyConstraint) {
+					((PrimaryKey)key).getColumns().add(find(Column.class, ref, table, roots));
+				} else if (uniqueConstraint) {
+					((UniqueConstraint)key).getColumns().add(find(Column.class, ref, table, roots));
+				} else if (accessPatternConstraint) {
+					((AccessPattern)key).getColumns().add(find(Column.class, ref, table, roots));
+				} else if (foreignKeyConstraint) {
+					((ForeignKey)key).getColumns().add(find(Column.class, ref, table, roots));
+				} else if (indexConstraint) {
+					((Index)key).getColumns().add(find(Column.class, ref, table, roots));
+				}else {
+					assert false : "Unexpected constraint type of '" + type + "'"; //$NON-NLS-1$ //$NON-NLS-2$
+				}
+			} catch (final EntityNotFoundException error) {
+				messages.add(error.getMessage());
+			}
+		}
+
+		// special processing for foreign key
+		if (foreignKeyConstraint) {
+			final ForeignKey foreignKey = (ForeignKey)key;
+
+			// must have a table reference
+			final AstNode tableRefNode = (AstNode)constraintNode.getProperty(TeiidDdlLexicon.Constraint.TABLE_REFERENCE);
+
+			try {
+				final BaseTable tableRef = find(BaseTable.class, tableRefNode, null, roots);
+				final PrimaryKey tableRefPrimaryKey = tableRef.getPrimaryKey();
+				final List<Column> primaryKeyColumns = tableRef.getColumns();
+				// check to see if foreign table columns are referenced
+				final Object tempRefColumns = constraintNode.getProperty(TeiidDdlLexicon.Constraint.TABLE_REFERENCE_REFERENCES);
+
+				final List<AstNode> foreignTableColumnNodes = (tempRefColumns==null) ? Collections.<AstNode>emptyList() : (List<AstNode>)tempRefColumns;
+				if (primaryKeyColumns.size() == foreignTableColumnNodes.size()) {
+					if(!foreignTableColumnNodes.isEmpty()) {
+						for(AstNode fTableColumn : foreignTableColumnNodes) {
+							find(Column.class, fTableColumn, tableRef, roots);
+						}
+					}
+					foreignKey.setUniqueKey(tableRefPrimaryKey);
+					//					} else {
+						//						for (final Object obj : foreignTable.getUniqueConstraints()) {
+					//							final UniqueConstraint uniqueKey = (UniqueConstraint)obj;
+					//							final List<Column> uniqueKeyColumns = uniqueKey.getColumns();
+					//
+					//							if (uniqueKeyColumns.containsAll(foreignColumns) && uniqueKeyColumns.size() == foreignColumns.size()) {
+					//								key.setUniqueKey(uniqueKey);
+					//								break;
+					//							}
+					//						}
+				}
+			} catch (final EntityNotFoundException error) {
+				messages.add(error.getMessage());
+			}
+		}
+	}
+
+	/*
+	 * Create Column from the provided AstNode within ColumnSet
+	 * @param node the provided AstNode
+	 * @param colSet the columnSet in which to create the column
+	 */
+	private void createColumn( final AstNode node,
+                               final ColumnSet table) throws CoreException {
         final Column col = FACTORY.createColumn();
         table.getColumns().add(col);
         initialize(col, node);
-        final String datatype = node.getProperty(StandardDdlLexicon.DATATYPE_NAME).getFirstValue().toString();
+        
+        final String datatype = node.getProperty(StandardDdlLexicon.DATATYPE_NAME).toString();
         col.setNativeType(datatype);
-        col.setType(RelationalTypeMappingImpl.getInstance().getDatatype(datatype));
-        Property prop = node.getProperty(StandardDdlLexicon.DATATYPE_LENGTH);
-        if (prop != null) col.setLength(((Number)prop.getFirstValue()).intValue());
+        
+        EObject type = null;
+        if(!isTeiidDdl) {
+        	type = RelationalTypeMappingImpl.getInstance().getDatatype(datatype);
+        } else {
+        	type = getTeiidDatatype(datatype);
+        }
+    	col.setType(type);
+    	
+        Object prop = node.getProperty(StandardDdlLexicon.DATATYPE_LENGTH);
+        if (prop != null) col.setLength(Integer.parseInt(prop.toString()));
         prop = node.getProperty(StandardDdlLexicon.DATATYPE_PRECISION);
-        if (prop != null) col.setPrecision((Integer)prop.getFirstValue());
+        if (prop != null) col.setPrecision(Integer.parseInt(prop.toString()));
         prop = node.getProperty(StandardDdlLexicon.DATATYPE_SCALE);
-        if (prop != null) col.setScale((Integer)prop.getFirstValue());
+        if (prop != null) col.setScale(Integer.parseInt(prop.toString()));
         prop = node.getProperty(StandardDdlLexicon.NULLABLE);
-        if (prop != null) col.setNullable(prop.getFirstValue().toString().equals("NULL") ? NullableType.NULLABLE_LITERAL : NullableType.NO_NULLS_LITERAL); //$NON-NLS-1$
+        if (prop != null) col.setNullable(prop.toString().equals("NULL") ? NullableType.NULLABLE_LITERAL : NullableType.NO_NULLS_LITERAL); //$NON-NLS-1$
         prop = node.getProperty(StandardDdlLexicon.DEFAULT_VALUE);
-        if (prop != null) col.setDefaultValue(prop.getFirstValue().toString());
+        if (prop != null) col.setDefaultValue(prop.toString());
+    }
+	
+    private EObject getTeiidDatatype(String datatype) throws ModelerCoreException {
+    	EObject resultType = null;
+    	
+    	// Look up matching Built-In type
+        Object[] builtInTypes = ModelerCore.getWorkspaceDatatypeManager().getAllDatatypes();
+        String dtName = null;
+        for( int i=0; i<builtInTypes.length; i++ ) {
+            dtName = ModelerCore.getWorkspaceDatatypeManager().getName((EObject)builtInTypes[i]);
+            if( dtName != null && dtName.equalsIgnoreCase(datatype)) {
+                resultType = (EObject)builtInTypes[i];
+                break;
+            }
+        }
+        
+        // Built In type not found, try mapping from native to built-in
+        if(resultType==null) {
+        	resultType = RelationalTypeMappingImpl.getInstance().getDatatype(datatype);
+        }
+                
+        return resultType;
     }
 
     private void createKey( final AstNode node,
                             final BaseTable table,
                             final List<EObject> roots,
                             final List<String> messages ) throws CoreException {
-        final String type = node.getProperty(StandardDdlLexicon.CONSTRAINT_TYPE).getFirstValue().toString();
+        final String type = node.getProperty(StandardDdlLexicon.CONSTRAINT_TYPE).toString();
         if (DdlConstants.PRIMARY_KEY.equals(type)) {
             final PrimaryKey key = FACTORY.createPrimaryKey();
             table.setPrimaryKey(key);
             initialize(key, node);
             for (final AstNode node1 : node) {
-                if (StandardDdlLexicon.TYPE_COLUMN_REFERENCE.equals(mixinType(node1))) try {
+                if (node1.hasMixin(StandardDdlLexicon.TYPE_COLUMN_REFERENCE)) try {
                     key.getColumns().add(find(Column.class, node1, table, roots));
                 } catch (final EntityNotFoundException error) {
                     messages.add(error.getMessage());
@@ -230,18 +461,17 @@ public class DdlImporter {
             BaseTable foreignTable = null;
             final Set<Column> foreignColumns = new HashSet<Column>();
             for (final AstNode node1 : node) {
-                final Name mixinType = mixinType(node1);
-                if (StandardDdlLexicon.TYPE_COLUMN_REFERENCE.equals(mixinType)) try {
+                if (node1.hasMixin(StandardDdlLexicon.TYPE_COLUMN_REFERENCE)) try {
                     key.getColumns().add(find(Column.class, node1, table, roots));
                 } catch (final EntityNotFoundException error) {
                     messages.add(error.getMessage());
                 }
-                else if (StandardDdlLexicon.TYPE_TABLE_REFERENCE.equals(mixinType)) try {
+                else if (node1.hasMixin(StandardDdlLexicon.TYPE_TABLE_REFERENCE)) try {
                     foreignTable = find(BaseTable.class, node1, null, roots);
                 } catch (final EntityNotFoundException error) {
                     messages.add(error.getMessage());
                 }
-                else if (StandardDdlLexicon.TYPE_FK_COLUMN_REFERENCE.equals(mixinType)) {
+                else if (node1.hasMixin(StandardDdlLexicon.TYPE_FK_COLUMN_REFERENCE)) {
                     if (foreignTable != null) try {
                         foreignColumns.add(find(Column.class, node1, foreignTable, roots));
                     } catch (final EntityNotFoundException error) {
@@ -268,7 +498,7 @@ public class DdlImporter {
             table.getUniqueConstraints().add(key);
             initialize(key, node);
             for (final AstNode node1 : node) {
-                if (StandardDdlLexicon.TYPE_COLUMN_REFERENCE.equals(mixinType(node1))) try {
+                if (node1.hasMixin(StandardDdlLexicon.TYPE_COLUMN_REFERENCE)) try {
                     key.getColumns().add(find(Column.class, node1, table, roots));
                 } catch (final EntityNotFoundException error) {
                     messages.add(error.getMessage());
@@ -277,45 +507,82 @@ public class DdlImporter {
         }
     }
 
-    private Procedure createProcedure( final AstNode node,
-                                       final List<EObject> roots ) throws EntityNotFoundException, CoreException {
+    private Procedure createProcedure( final AstNode procedureNode,
+                                       final List<EObject> roots) throws EntityNotFoundException, CoreException {
         final Procedure procedure = FACTORY.createProcedure();
-        final Info<Procedure> info = new Info<Procedure>(procedure, node, roots);
+        final Info<Procedure> info = new Info<Procedure>(procedure, procedureNode, roots);
         if (info.schema == null) roots.add(procedure);
         else info.schema.getProcedures().add(procedure);
-        initialize(procedure, node, info.name);
-        if (node.getProperty(StandardDdlLexicon.DATATYPE_NAME) != null) {
+        initialize(procedure, procedureNode, info.name);
+		// TODO: determine how to handle Procedure StatementOption
+        // TODO: determine how to handle Procedure Statement
+
+        if (procedureNode.getProperty(StandardDdlLexicon.DATATYPE_NAME) != null) {
             final ProcedureResult result = FACTORY.createProcedureResult();
             procedure.setResult(result);
-            initialize(result, node);
+            initialize(result, procedureNode);
         }
-        for (final AstNode node1 : node) {
-            final Name mixinType = mixinType(node1);
-            if (OracleDdlLexicon.TYPE_FUNCTION_PARAMETER.equals(mixinType)
-                || DerbyDdlLexicon.TYPE_FUNCTION_PARAMETER.equals(mixinType)) {
+        for (final AstNode child : procedureNode) {
+            if (child.hasMixin(OracleDdlLexicon.TYPE_FUNCTION_PARAMETER)
+                || child.hasMixin(DerbyDdlLexicon.TYPE_FUNCTION_PARAMETER)
+                || child.hasMixin(TeiidDdlLexicon.CreateProcedure.PARAMETER)) {
                 final ProcedureParameter prm = FACTORY.createProcedureParameter();
                 procedure.getParameters().add(prm);
-                initialize(prm, node1);
-                final String datatype = node1.getProperty(StandardDdlLexicon.DATATYPE_NAME).getFirstValue().toString();
+                initialize(prm, child);
+                final String datatype = child.getProperty(StandardDdlLexicon.DATATYPE_NAME).toString();
                 prm.setNativeType(datatype);
-                prm.setType(RelationalTypeMappingImpl.getInstance().getDatatype(datatype));
-                Property prop = node1.getProperty(StandardDdlLexicon.DATATYPE_LENGTH);
-                if (prop != null) prm.setLength(((Number)prop.getFirstValue()).intValue());
-                prop = node1.getProperty(StandardDdlLexicon.DATATYPE_PRECISION);
-                if (prop != null) prm.setPrecision((Integer)prop.getFirstValue());
-                prop = node1.getProperty(StandardDdlLexicon.DATATYPE_SCALE);
-                if (prop != null) prm.setScale((Integer)prop.getFirstValue());
-                prop = node1.getProperty(StandardDdlLexicon.NULLABLE);
-                if (prop != null) prm.setNullable(prop.getFirstValue().toString().equals("NULL") ? NullableType.NULLABLE_LITERAL : NullableType.NO_NULLS_LITERAL); //$NON-NLS-1$
-                prop = node1.getProperty(StandardDdlLexicon.DEFAULT_VALUE);
-                if (prop != null) prm.setDefaultValue(prop.getFirstValue().toString());
-                prop = node1.getProperty(OracleDdlLexicon.IN_OUT_NO_COPY);
+
+                EObject type = null;
+                if(!isTeiidDdl) {
+                	type = RelationalTypeMappingImpl.getInstance().getDatatype(datatype);
+                } else {
+                	type = getTeiidDatatype(datatype);
+                }
+                prm.setType(type);
+                Object prop = child.getProperty(StandardDdlLexicon.DATATYPE_LENGTH);
+                if (prop != null) prm.setLength(Integer.parseInt(prop.toString()));
+                prop = child.getProperty(StandardDdlLexicon.DATATYPE_PRECISION);
+                if (prop != null) prm.setPrecision(Integer.parseInt(prop.toString()));
+                prop = child.getProperty(StandardDdlLexicon.DATATYPE_SCALE);
+                if (prop != null) prm.setScale(Integer.parseInt(prop.toString()));
+                prop = child.getProperty(StandardDdlLexicon.NULLABLE);
+                if (prop != null) prm.setNullable(prop.toString().equals("NULL") ? NullableType.NULLABLE_LITERAL : NullableType.NO_NULLS_LITERAL); //$NON-NLS-1$
+                prop = child.getProperty(StandardDdlLexicon.DEFAULT_VALUE);
+                if (prop != null) prm.setDefaultValue(prop.toString());
+                prop = child.getProperty(OracleDdlLexicon.IN_OUT_NO_COPY);
                 if (prop != null) {
-                    final String direction = prop.getFirstValue().toString();
+                    final String direction = prop.toString();
                     if ("IN".equals(direction)) prm.setDirection(DirectionKind.IN_LITERAL); //$NON-NLS-1$
                     else if ("OUT".equals(direction) || "OUT NOCOPY".equals(direction)) prm.setDirection(DirectionKind.OUT_LITERAL); //$NON-NLS-1$ //$NON-NLS-2$
                     else if ("IN OUT".equals(direction) || "IN OUT NOCOPY".equals(direction)) prm.setDirection(DirectionKind.INOUT_LITERAL); //$NON-NLS-1$ //$NON-NLS-2$
+                } else {
+                	prop = child.getProperty(TeiidDdlLexicon.CreateProcedure.PARAMETER_TYPE);
+                	// TODO - Determine how to handle 'VARIADIC'
+                	if(prop!=null) {
+                		final String direction = prop.toString();
+                		if ("IN".equals(direction)) prm.setDirection(DirectionKind.IN_LITERAL); //$NON-NLS-1$
+                		else if ("OUT".equals(direction) ) prm.setDirection(DirectionKind.OUT_LITERAL); //$NON-NLS-1$ 
+                		else if ("INOUT".equals(direction) ) prm.setDirection(DirectionKind.INOUT_LITERAL); //$NON-NLS-1$ 
+                	}
                 }
+                // TODO: Determine how to handle teiidddl:result, ddl:defaultOption, ddl:statementOption
+                
+            } else if(child.hasMixin(TeiidDdlLexicon.CreateProcedure.RESULT_COLUMNS)) {
+            	// TODO: determine how to handle Table flag property
+            	final ProcedureResult result = FACTORY.createProcedureResult();
+            	procedure.setResult(result);
+            	initialize(result, procedureNode);
+            	for(AstNode resultCol: child) {
+            		// TODO: determine how to handle ResultColumn StatementOption
+            		if(resultCol.hasMixin(TeiidDdlLexicon.CreateProcedure.RESULT_COLUMN)) {
+                    	createColumn(resultCol,result);
+            		}
+            	}
+            } else if(child.hasMixin(TeiidDdlLexicon.CreateProcedure.RESULT_DATA_TYPE)) {
+            	final ProcedureResult result = FACTORY.createProcedureResult();
+            	procedure.setResult(result);
+            	initialize(result, procedureNode);
+            	createColumn(child,result);
             }
         }
         return procedure;
@@ -332,7 +599,7 @@ public class DdlImporter {
                                                  final AstNode node,
                                                  final RelationalEntity parent,
                                                  final List<EObject> roots ) throws EntityNotFoundException, CoreException {
-        return find(type, node.getName().getLocalName(), node, parent, roots);
+        return find(type, node.getName(), node, parent, roots);
     }
 
     <T extends RelationalEntity> T find( final Class<T> type,
@@ -363,8 +630,8 @@ public class DdlImporter {
                                                       name,
                                                       parentType,
                                                       parent == null ? modelName : parent.getName(),
-                                                      node.getProperty(StandardDdlLexicon.DDL_START_LINE_NUMBER).getFirstValue(),
-                                                      node.getProperty(StandardDdlLexicon.DDL_START_COLUMN_NUMBER).getFirstValue()));
+                                                      node.getProperty(StandardDdlLexicon.DDL_START_LINE_NUMBER).toString(),
+                                                      node.getProperty(StandardDdlLexicon.DDL_START_COLUMN_NUMBER).toString()));
     }
 
     /**
@@ -452,15 +719,14 @@ public class DdlImporter {
         final DifferenceProcessor diffProcessor = createDifferenceProcessor(startingSelector,endingSelector);
         final List<EObject> roots = endingSelector.getRootObjects();
         for (final AstNode node : rootNode) {
-            final Name mixinType = mixinType(node);
-            if (StandardDdlLexicon.TYPE_CREATE_SCHEMA_STATEMENT.equals(mixinType)) {
+            if (node.hasMixin(StandardDdlLexicon.TYPE_CREATE_SCHEMA_STATEMENT)) {
                 final Schema schema = FACTORY.createSchema();
                 roots.add(schema);
                 initialize(schema, node);
                 for (final AstNode node1 : node) {
-                    create(node1, mixinType(node1), roots, schema, messages);
+                    create(node1, roots, schema, messages);
                 }
-            } else create(node, mixinType, roots, null, messages);
+            } else create(node, roots, null, messages);
         }
         if (monitor.isCanceled()) throw new OperationCanceledException();
         monitor.worked(workUnit);
@@ -494,14 +760,14 @@ public class DdlImporter {
 
     private void initialize( final RelationalEntity entity,
                              final AstNode node ) {
-        initialize(entity, node, node.getName().getLocalName());
+        initialize(entity, node, node.getName());
     }
 
     private void initializeFK( final List<ForeignKey> currentFKs,
                                final ForeignKey key,
                                final AstNode node ) {
         // Get Name from DDL node
-        String fkName = node.getName().getLocalName();
+        String fkName = node.getName();
         // Make sure not to add duplicate FK names
         String uniqueName = getUniqueFKName(currentFKs, fkName);
 
@@ -539,9 +805,9 @@ public class DdlImporter {
 
         // descriptions must wait to be set until container and model type has been set
         if (optToSetModelEntityDescription) {
-            final Property prop = node.getProperty(StandardDdlLexicon.DDL_EXPRESSION);
+            final Object prop = node.getProperty(StandardDdlLexicon.DDL_EXPRESSION);
             if (prop != null) {
-                this.descriptionMap.put(entity, prop.getFirstValue().toString());
+                this.descriptionMap.put(entity, prop.toString());
             }
         }
     }
@@ -554,18 +820,6 @@ public class DdlImporter {
         else info.schema.getTables().add(table);
         initialize(table, node, info.name);
         return table;
-    }
-
-    private Name mixinType( final AstNode node ) {
-        final Property prop = node.getProperty(JcrLexicon.MIXIN_TYPES);
-        for (final Object obj : prop) {
-            final Name mixinType = (Name)obj;
-            final String uri = mixinType.getNamespaceUri();
-            if (StandardDdlLexicon.Namespace.URI.equals(uri) || OracleDdlLexicon.Namespace.URI.equals(uri)
-                || DerbyDdlLexicon.Namespace.URI.equals(uri) || MySqlDdlLexicon.Namespace.URI.equals(uri)
-                || PostgresDdlLexicon.Namespace.URI.equals(uri)) return mixinType;
-        }
-        return null; // Not possible
     }
 
     /**
@@ -773,11 +1027,14 @@ public class DdlImporter {
         Info( final T entity,
               final AstNode node,
               final List<EObject> roots ) throws EntityNotFoundException, CoreException {
-            final String name = node.getName().getLocalName();
+            final String name = node.getName();
             final int ndx = name.indexOf('.');
             if (ndx < 0) {
                 schema = null;
                 this.name = name;
+            } else if (isTeiidDdl) {
+            	schema = null;
+                this.name = name.substring(ndx + 1);
             } else {
                 schema = find(Schema.class, name.substring(0, ndx), node, null, roots);
                 this.name = name.substring(ndx + 1);
