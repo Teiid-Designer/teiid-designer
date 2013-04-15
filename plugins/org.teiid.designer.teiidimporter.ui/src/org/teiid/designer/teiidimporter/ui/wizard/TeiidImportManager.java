@@ -67,6 +67,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 public class TeiidImportManager implements ITeiidImportServer, UiConstants {
 
     private static final String IMPORT_VDB_NAME = Messages.TeiidImportManager_ImportVDBName;
+    private static final String PREVIEW_DATASOURCE_PREFIX = "PREVIEW_";  //$NON-NLS-1$
     
     private IPath targetModelLocation = null;
     private String targetModelName = null;
@@ -467,7 +468,16 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
      */
     @Override
     public Collection<ITeiidDataSource> getDataSources() throws Exception {
-        return getServerImportManager().getDataSources();
+    	// Filters the PREVIEW sources from the results
+    	Collection<ITeiidDataSource> resultSources = new ArrayList<ITeiidDataSource>();
+        Collection<ITeiidDataSource> teiidSources = getServerImportManager().getDataSources();
+        for(ITeiidDataSource dSource : teiidSources) {
+        	String sourceName = dSource.getName();
+        	if(sourceName!=null && !sourceName.startsWith(PREVIEW_DATASOURCE_PREFIX)) {
+        		resultSources.add(dSource);
+        	}
+        }
+        return resultSources;
     }
 
     /* (non-Javadoc)
