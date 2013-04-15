@@ -70,6 +70,7 @@
 		<module>org.teiid.designer.schema.tools</module>
 		<module>org.teiid.designer.sdt</module>
 		<module>org.teiid.designer.spi</module>
+		<module>org.teiid.designer.teiidimporter.ui</module>
 		<module>org.teiid.designer.tools.textimport.ui</module>
 		<module>org.teiid.designer.transformation</module>
 		<module>org.teiid.designer.transformation.ui</module>
