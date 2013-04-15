@@ -12,9 +12,14 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.filebuffers.LocationKind;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -179,7 +184,7 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
                 }
             } catch (Exception err) {
                 ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
-                status.merge(RefactoringStatus.createErrorStatus(err.getMessage()));
+                status.merge(RefactoringStatus.createFatalErrorStatus(err.getMessage()));
                 return;
             }
         }
@@ -231,5 +236,39 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
         }
 
         return true;
+    }
+
+    private void checkDirtyFile(RefactoringStatus result, IFile file) {
+        if (!file.exists())
+            return;
+        ITextFileBuffer buffer= FileBuffers.getTextFileBufferManager().getTextFileBuffer(file.getFullPath(), LocationKind.IFILE);
+        if (buffer != null && buffer.isDirty()) {
+            if (buffer.isStateValidated() && buffer.isSynchronized()) {
+                result.addWarning(RefactorResourcesUtils.getString("ResourcesRefactoring.unsavedFile", file.getFullPath())); //$NON-NLS-1$
+            } else {
+                result.addFatalError(RefactorResourcesUtils.getString("ResourcesRefactoring.unsavedFile", file.getFullPath())); //$NON-NLS-1$
+            }
+        }
+    }
+
+    protected void checkDirtyResources(final RefactoringStatus status) {
+        for (IResource resource : getResources()) {
+            if (resource instanceof IProject && !((IProject) resource).isOpen())
+                continue;
+
+            try {
+                resource.accept(new IResourceVisitor() {
+                    @Override
+                    public boolean visit(IResource visitedResource) {
+                        if (visitedResource instanceof IFile) {
+                            checkDirtyFile(status, (IFile)visitedResource);
+                        }
+                        return true;
+                    }
+                }, IResource.DEPTH_INFINITE, false);
+            } catch (CoreException ex) {
+                status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
+            }
+        }
     }
 }

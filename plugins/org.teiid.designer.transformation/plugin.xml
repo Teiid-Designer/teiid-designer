@@ -75,12 +75,4 @@
         name="org.teiid.designer.transformation.util.TransformationNewModelObjectHelper">
       </class>
    </extension>
-   <extension
-		id="TransformationRefactorModelHandler"
-		name="%transformationRefactorModelExtension.name"
-        point="org.teiid.designer.core.refactorModelHandler">
-      <refactorHandler
-         name="org.teiid.designer.transformation.util.TransformationRefactorModelHandler">
-      </refactorHandler>
-   </extension>
 </plugin>

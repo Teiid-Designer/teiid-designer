@@ -446,4 +446,63 @@ public class RefactorResourcesUtils {
             }
         }
     }
+
+    /**
+     * Return the given resources cumulative type
+     *
+     * @param resources
+     *
+     * @return int representing the cumulative type of resources
+     */
+    public static int getResourceTypes(List<IResource> resources) {
+        if (resources == null || resources.isEmpty())
+            return 0;
+
+        int types = 0;
+        for (IResource resource : resources) {
+            types |= resource.getType();
+        }
+        return types;
+    }
+
+    /**
+     * @param resources
+     *
+     * @return true if resources are only non-projects
+     */
+    public static boolean containsOnlyNonProjects(List<IResource> resources) {
+        int types = getResourceTypes(resources);
+        // check for empty selection
+        if (types == 0) {
+            return false;
+        }
+        return (types & IResource.PROJECT) == 0;
+    }
+
+    /**
+     * @param resources
+     *
+     * @return true if resources are only projects
+     */
+    public static boolean containsOnlyProjects(List<IResource> resources) {
+        int types = getResourceTypes(resources);
+        return types == IResource.PROJECT;
+    }
+
+    /**
+     * @param resources
+     *
+     * @return true is resources contain linked resource
+     */
+    public static boolean containsLinkedResource(List<IResource> resources) {
+        if (resources == null || resources.isEmpty())
+            return false;
+
+        for (IResource resource : resources) {
+            if (resource != null && resource.isLinked()) { // paranoia code, can not be null
+                return true;
+            }
+        }
+        return false;
+    }
 }

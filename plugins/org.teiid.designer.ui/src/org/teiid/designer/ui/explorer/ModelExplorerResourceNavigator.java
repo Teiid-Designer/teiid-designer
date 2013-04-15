@@ -113,7 +113,7 @@ import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.actions.DelegatableAction;
-import org.teiid.designer.ui.actions.DeleteResourceAction;
+import org.teiid.designer.ui.actions.DeleteAction;
 import org.teiid.designer.ui.actions.IModelerActionConstants;
 import org.teiid.designer.ui.actions.ModelProjectActionManager;
 import org.teiid.designer.ui.actions.ModelResourceActionManager;
@@ -365,7 +365,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             actionsMap.put(EclipseGlobalActions.RENAME, renameAction);
             bars.setGlobalActionHandler(EclipseGlobalActions.RENAME, renameAction);
 
-            final IAction deleteAction = svc.getAction(DeleteResourceAction.class);
+            final IAction deleteAction = svc.getAction(DeleteAction.class);
             bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteAction);
 
             final IAction pasteAction = svc.getAction(PasteInResourceAction.class);
@@ -951,7 +951,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                 // (if necessary) prior to deleting.
 
                 if (theMenu.find(ECLIPSE_DELETE_ID) != null) {
-                    IAction deleteAction = getActionService().getAction(DeleteResourceAction.class);
+                    IAction deleteAction = getActionService().getAction(DeleteAction.class);
                     theMenu.insertAfter(ECLIPSE_DELETE_ID, deleteAction);
                     theMenu.remove(ECLIPSE_DELETE_ID);
                 }
