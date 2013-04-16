@@ -57,11 +57,6 @@ public class ModelEditorSite implements IEditorSite {
     private ISelectionChangedListener selectionChangedListener = null;
 
     /**
-     * The list of popup menu extenders; <code>null</code> if none registered.
-     */
-    private ArrayList menuExtenders;
-
-    /**
      * Creates a site for the given page nested within the given multi-page editor.
      * 
      * @param editor the multi-page editor
@@ -77,12 +72,7 @@ public class ModelEditorSite implements IEditorSite {
      * Dispose the contributions.
      */
     public void dispose() {
-        if (menuExtenders != null) {
-            for (int i = 0; i < menuExtenders.size(); i++) {
-                ((PopupMenuExtender)menuExtenders.get(i)).dispose();
-            }
-            menuExtenders = null;
-        }
+        
     }
 
     /**
@@ -249,10 +239,7 @@ public class ModelEditorSite implements IEditorSite {
 	public void registerContextMenu( String menuID,
                                      MenuManager menuMgr,
                                      ISelectionProvider selProvider ) {
-        if (menuExtenders == null) {
-            menuExtenders = new ArrayList(1);
-        }
-        menuExtenders.add(new PopupMenuExtender(menuID, menuMgr, selProvider, editor));
+    	 getMultiPageEditor().getSite().registerContextMenu(menuMgr, selectionProvider);
     }
 
     /**
