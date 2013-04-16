@@ -91,6 +91,7 @@ import org.teiid.designer.metamodels.relational.util.RelationalTypeMappingImpl;
 public class DdlImporter {
 
     private static final RelationalFactory FACTORY = RelationalFactory.eINSTANCE;
+    private static final String STRING_TYPENAME = "string"; //$NON-NLS-1$
 
     private final IProject[] projects;
 
@@ -405,7 +406,16 @@ public class DdlImporter {
     	col.setType(type);
     	
         Object prop = node.getProperty(StandardDdlLexicon.DATATYPE_LENGTH);
-        if (prop != null) col.setLength(Integer.parseInt(prop.toString()));
+        // Datatype length
+        if (prop != null) {
+        	col.setLength(Integer.parseInt(prop.toString()));
+        // If length is not provided for type 'string', use the default length specified in preferences...
+        } else {
+        	String dtName = ModelerCore.getWorkspaceDatatypeManager().getName(type);
+        	if(dtName!=null && dtName.equalsIgnoreCase(STRING_TYPENAME)) {
+        		col.setLength(ModelerCore.getTransformationPreferences().getDefaultStringLength());
+        	}
+        }
         prop = node.getProperty(StandardDdlLexicon.DATATYPE_PRECISION);
         if (prop != null) col.setPrecision(Integer.parseInt(prop.toString()));
         prop = node.getProperty(StandardDdlLexicon.DATATYPE_SCALE);
