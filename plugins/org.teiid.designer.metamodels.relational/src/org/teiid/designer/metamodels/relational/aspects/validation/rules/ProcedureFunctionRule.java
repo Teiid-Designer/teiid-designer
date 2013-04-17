@@ -82,7 +82,7 @@ public class ProcedureFunctionRule implements ObjectValidationRule {
             ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR ,RelationalPlugin.Util.getString("ProcedureFunctionRule.javaClassNotSpecified")); //$NON-NLS-1$
             result.addProblem(problem);
         } else {
-            validateJavaIdentifier(javaClass, RelationalPlugin.Util.getString("ProcedureFunctionRule.javaClass"), true, result); //$NON-NLS-1$
+            validateJavaIdentifier(javaClass, RelationalPlugin.Util.getString("ProcedureFunctionRule.javaClass",javaClass), true, result); //$NON-NLS-1$
         }
 
         //  validate invocation method
@@ -90,7 +90,7 @@ public class ProcedureFunctionRule implements ObjectValidationRule {
             ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR ,RelationalPlugin.Util.getString("ProcedureFunctionRule.javaMethodNotSpecified")); //$NON-NLS-1$
             result.addProblem(problem);
         } else {
-            validateJavaIdentifier(javaMethod, RelationalPlugin.Util.getString("ProcedureFunctionRule.javaMethod"), false, result); //$NON-NLS-1$
+            validateJavaIdentifier(javaMethod, RelationalPlugin.Util.getString("ProcedureFunctionRule.javaMethod",javaMethod), false, result); //$NON-NLS-1$
         }
         
         // validate jarPath property
@@ -259,7 +259,7 @@ public class ProcedureFunctionRule implements ObjectValidationRule {
         if(!CoreStringUtil.isEmpty(identifier)) {
             char firstChar = identifier.charAt(0);
             if(! Character.isJavaIdentifierStart(firstChar)) {
-                ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR , strName+RelationalPlugin.Util.getString("ProcedureFunctionRule.hasInvalidFirstChar")+firstChar); //$NON-NLS-1$
+                ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR , strName+RelationalPlugin.Util.getString("ProcedureFunctionRule.hasInvalidFirstChar")+'\''+firstChar+'\''); //$NON-NLS-1$
                 result.addProblem(problem);
             }
 
@@ -268,7 +268,7 @@ public class ProcedureFunctionRule implements ObjectValidationRule {
                 char ch = identifier.charAt(i);
                 if(! Character.isJavaIdentifierPart(ch)) {
                     if(! allowMultiple || ! (ch == '.')) {
-                        ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR , strName+RelationalPlugin.Util.getString("ProcedureFunctionRule.hasInvalidChar")+firstChar); //$NON-NLS-1$
+                        ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR , strName+RelationalPlugin.Util.getString("ProcedureFunctionRule.hasInvalidChar")+'\''+ch+'\''); //$NON-NLS-1$ 
                         result.addProblem(problem);
                     }
                 }
