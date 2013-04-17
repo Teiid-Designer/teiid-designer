@@ -53,6 +53,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
@@ -510,17 +511,24 @@ public final class PreviewManager extends JobChangeAdapter
                                                                                 model.getFullPath()), null);
         }
 
-        // if no translator name see if we can get one
-        if (StringUtilities.isEmpty(getSourceTranslatorName(modelEntry)) ) {
-            IConnectionProfile connectionProfile = helper.getConnectionProfile(modelResource);
+        // If modelEntry translator name is null (or 'loopback'), see if it can be overridden.
+        //   - need to check for loopback, since it may be used for default (see below)
+        String srcTranslatorName = getSourceTranslatorName(modelEntry);
+        if ( CoreStringUtil.isEmpty(srcTranslatorName) || srcTranslatorName.equalsIgnoreCase(DataSourceConnectionConstants.Translators.LOOPBACK) ) {
+        	String translator = helper.getTranslatorName(modelResource);
+        	if(!CoreStringUtil.isEmpty(translator) && !translator.equalsIgnoreCase(DataSourceConnectionConstants.Translators.LOOPBACK)) {
+        		modelEntry.setTranslatorName(0, translator);
+        	} else {
+        		IConnectionProfile connectionProfile = helper.getConnectionProfile(modelResource);
 
-            // get translator
-            if (connectionProfile == null) {
-                // Teiid throws an error when deploying VDB if translator is not set so set to LOOPBACK as default
-                modelEntry.setTranslatorName(0, DataSourceConnectionConstants.Translators.LOOPBACK);
-            } else {
-                modelEntry.setTranslatorName(0, JdbcTranslatorHelper.getTranslator(connectionProfile));
-            }
+        		// get translator
+        		if (connectionProfile == null) {
+        			// Teiid throws an error when deploying VDB if translator is not set so set to LOOPBACK as default
+        			modelEntry.setTranslatorName(0, DataSourceConnectionConstants.Translators.LOOPBACK);
+        		} else {
+        			modelEntry.setTranslatorName(0, JdbcTranslatorHelper.getTranslator(connectionProfile));
+        		}
+        	}
         }
 
         return ((connectionInfoError == null) ? Status.OK_STATUS : connectionInfoError);
