@@ -46,6 +46,7 @@ import org.teiid.core.designer.I18n;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.exception.EmptyArgumentException;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
@@ -75,10 +76,12 @@ import org.teiid.designer.metamodels.relational.PrimaryKey;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.ProcedureResult;
+import org.teiid.designer.metamodels.relational.ProcedureUpdateCount;
 import org.teiid.designer.metamodels.relational.RelationalEntity;
 import org.teiid.designer.metamodels.relational.RelationalFactory;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.relational.Schema;
+import org.teiid.designer.metamodels.relational.SearchabilityType;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.UniqueConstraint;
 import org.teiid.designer.metamodels.relational.util.RelationalTypeMappingImpl;
@@ -108,6 +111,7 @@ public class DdlImporter {
     
     // hold on to DDL so that it can be set in the description
     private Map<RelationalEntity, String> descriptionMap = new HashMap<RelationalEntity, String>();
+    private Map<RelationalEntity, String> teiidAnnotationMap = new HashMap<RelationalEntity, String>();
 
     /**
      * DdlImporter contructor
@@ -239,42 +243,219 @@ public class DdlImporter {
         		|| node.hasMixin(TeiidDdlLexicon.CreateTable.VIEW_STATEMENT) ) {
     		
             final BaseTable table = initializeTable(FACTORY.createBaseTable(), node, roots);
-
+            
             for (final AstNode child : node) {
+            	// Table Elements
                 if (child.hasMixin(TeiidDdlLexicon.CreateTable.TABLE_ELEMENT)) {
                 	createColumn(child, table);
+                // Contraints
                 } else if(child.hasMixin(TeiidDdlLexicon.Constraint.TABLE_ELEMENT)
                 		               || child.hasMixin(TeiidDdlLexicon.Constraint.FOREIGN_KEY_CONSTRAINT)
                 	                   || child.hasMixin(TeiidDdlLexicon.Constraint.INDEX_CONSTRAINT)) {
                 	                    	 
-                	createTeiidConstraint(child,table,roots,messages);                	
+                	createTeiidConstraint(child,table,roots,messages); 
+                // Statement Options
+                } else if(child.hasMixin(StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
+                	handleTeiidTableOption(table,child);
                 }
-                // TODO: handle autoIncrement property and statement options
             }
     	} else if (node.hasMixin(TeiidDdlLexicon.CreateProcedure.PROCEDURE_STATEMENT)
     			  || node.hasMixin(TeiidDdlLexicon.CreateProcedure.FUNCTION_STATEMENT)) {
     		createProcedure(node,roots);
     		
-    	} else if (  node.hasMixin(TeiidDdlLexicon.AlterOptions.TABLE_STATEMENT)
-    			  || node.hasMixin(TeiidDdlLexicon.AlterOptions.VIEW_STATEMENT)
-    			  || node.hasMixin(TeiidDdlLexicon.AlterOptions.PROCEDURE_STATEMENT) ) {
-    		// TODO Determine what to do with statementOptions
-    		
-//            final BaseTable table = find(BaseTable.class, node, null, roots);
-//            for (final AstNode node1 : node) {
-//                if (node1.hasMixin(StandardDdlLexicon.TYPE_ADD_TABLE_CONSTRAINT_DEFINITION)) createKey(node1,
-//                                                                                                         table,
-//                                                                                                         roots,
-//                                                                                                         messages);
-//                else if (node1.hasMixin(StandardDdlLexicon.TYPE_ADD_COLUMN_DEFINITION)) createColumn(node1, table);
-//            }
+        // Handle Alter Table
+    	} else if (  node.hasMixin(TeiidDdlLexicon.AlterOptions.TABLE_STATEMENT) ) {
+    		final BaseTable table = find(BaseTable.class, node, null, roots);
+    		if(table!=null) {
+    			for (final AstNode child : node) {
+    				if (child.hasMixin(TeiidDdlLexicon.AlterOptions.OPTIONS_LIST)) {
+    					List<AstNode> nodeList = child.getChildren();
+    					for(AstNode listItem: nodeList) {
+    						if(listItem.hasMixin(StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
+    							handleTeiidTableOption(table,listItem);
+    						}
+    					}
+    				}
+    			}
+    		}
+        // Handle Alter View and Procedure
+        // TODO: could potentially be combined with alter table block above
+    	} else if (  node.hasMixin(TeiidDdlLexicon.AlterOptions.VIEW_STATEMENT)
+  			  || node.hasMixin(TeiidDdlLexicon.AlterOptions.PROCEDURE_STATEMENT) ) {
     	} else {
     		throw new IllegalStateException();
     	}		
 	}
+	
+	/*
+	 * Handle the OPTION keys that may be set on Tables for Teiid DDL
+	 */
+	private void handleTeiidTableOption(BaseTable table, AstNode node) {
+		boolean wasCommonOption = handleTeiidCommonOption(table,node);
+		if(wasCommonOption) return;
+		
+        // TODO: handle 'generic' statement options
+    	String optionName = node.getName();
+        Object optionValue = node.getProperty(StandardDdlLexicon.VALUE);
+        if(!CoreStringUtil.isEmpty(optionName)) {
+        	String optionValueStr = (String)optionValue;
+        	if(!CoreStringUtil.isEmpty(optionValueStr)) {
+            	if(optionName.equalsIgnoreCase(TeiidDDLConstants.CARDINALITY)) {
+            		table.setCardinality(Integer.parseInt(optionValueStr));
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.MATERIALIZED)) {
+        			table.setMaterialized(isTrue(optionValueStr));
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.MATERIALIZED_TABLE)) {
+            		//Table mattable = new Table();
+            		//mattable.setName(value);
+            		//table.setMaterializedTable(mattable);
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.UPDATABLE)) {
+        			table.setSupportsUpdate(isTrue(optionValueStr));
+            	}
+        	}
+        }
+	}
+	
+	/*
+	 * Handle the OPTION keys that may be set on ProcedureParameters for Teiid DDL
+	 * @param procParam the ProcedureParameter
+	 * @param paramNode the procedure parameter AstNode
+	 */
+	private void handleTeiidProcParamOptions(ProcedureParameter procParam, AstNode paramNode) {
+		List<AstNode> children = paramNode.getChildren();
+		for(AstNode child: children) {
+			if(child.hasMixin(StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
+				handleTeiidProcParamOption(procParam,child);
+			}
+		}
+	}
+	
+	/*
+	 * Handle the OPTION keys that may be set on a ProcedureParameter for Teiid DDL
+	 * @param procParam the ProcedureParameter
+	 * @param procParamOptionNode a statementOption node for the procedure parameter
+	 */
+	private void handleTeiidProcParamOption(ProcedureParameter procParam, AstNode procParamOptionNode) {
+		boolean wasCommonOption = handleTeiidCommonOption(procParam,procParamOptionNode);
+		if(wasCommonOption) return;
+	}
+	
+	/*
+	 * Handle the OPTION keys that may be set on Column for Teiid DDL
+	 * @param column the Column
+	 * @param columnNode the column AstNode
+	 */
+	private void handleTeiidColumnOptions(Column column, AstNode columnNode) {
+		List<AstNode> children = columnNode.getChildren();
+		for(AstNode child: children) {
+			if(child.hasMixin(StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
+				handleTeiidColumnOption(column,child);
+			}
+		}
+	}
+	
+	/*
+	 * Handle a statement OPTION key for Column for Teiid DDL
+	 * @param column the Column
+	 * @param columnOptionNode a statementOption node for a column
+	 */
+	private void handleTeiidColumnOption(Column column, AstNode columnOptionNode) {
+		boolean wasCommonOption = handleTeiidCommonOption(column,columnOptionNode);
+		if(wasCommonOption) return;
+		
+    	String optionName = columnOptionNode.getName();
+        Object optionValue = columnOptionNode.getProperty(StandardDdlLexicon.VALUE);
+        if(!CoreStringUtil.isEmpty(optionName)) {
+        	String optionValueStr = (String)optionValue;
+        	if(!CoreStringUtil.isEmpty(optionValueStr)) {
+            	if(optionName.equalsIgnoreCase(TeiidDDLConstants.SELECTABLE)) {
+            		column.setSelectable(isTrue(optionValueStr));
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.UPDATABLE)) {
+            		column.setUpdateable(isTrue(optionValueStr));
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.CURRENCY)) {
+            		column.setCurrency(isTrue(optionValueStr));
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.CASE_SENSITIVE)) {
+            		column.setCaseSensitive(isTrue(optionValueStr));
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.SIGNED)) {
+            		column.setSigned(isTrue(optionValueStr));
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.FIXED_LENGTH)) {
+            		column.setFixedLength(isTrue(optionValueStr));
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.SEARCHABLE)) {
+            		column.setSearchability(SearchabilityType.get(optionValueStr.toUpperCase()));
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.MIN_VALUE)) {
+            		column.setMinimumValue(optionValueStr);
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.MAX_VALUE)) {
+            		column.setMaximumValue(optionValueStr);
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.NATIVE_TYPE)) {
+            		column.setNativeType(optionValueStr);
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.NULL_VALUE_COUNT)) {
+            		column.setNullValueCount(Integer.parseInt(optionValueStr));
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.DISTINCT_VALUES)) {
+            		//column.setDistinctValueCount(value);
+            	}
+        	}
+        }
+	}
 
 	/*
-	 * Create Constraints
+	 * Handle a statementOption for a Procedure for Teiid DDL
+	 * @param proc the Procedure
+	 * @param procOptionNode a statementOption for a procedure
+	 */
+	private void handleTeiidProcedureOption(Procedure proc, AstNode procOptionNode) {
+		boolean wasCommonOption = handleTeiidCommonOption(proc,procOptionNode);
+		if(wasCommonOption) return;
+		
+    	String optionName = procOptionNode.getName();
+        Object optionValue = procOptionNode.getProperty(StandardDdlLexicon.VALUE);
+        if(!CoreStringUtil.isEmpty(optionName)) {
+        	String optionValueStr = (String)optionValue;
+        	if(!CoreStringUtil.isEmpty(optionValueStr)) {
+            	if(optionName.equalsIgnoreCase(TeiidDDLConstants.UPDATECOUNT)) {
+            		proc.setUpdateCount(getUpdateCount(optionValueStr));
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.CATEGORY)) {
+            		proc.setFunction(true);
+            	}
+        	}
+        }
+	}
+	
+	/*
+	 * Get ProcedureUpdateCount object for the provided string value
+	 * @param value the string value
+	 * @return the ProcedureUpdateCount object corresponding to the provided string
+	 */
+    private  ProcedureUpdateCount getUpdateCount(String value) {
+        if( ProcedureUpdateCount.AUTO_LITERAL.getName().equalsIgnoreCase(value) ) {
+            return ProcedureUpdateCount.AUTO_LITERAL;
+        }
+        if( ProcedureUpdateCount.ONE_LITERAL.getName().equalsIgnoreCase(value) ) {
+            return ProcedureUpdateCount.ONE_LITERAL;
+        }
+        if( ProcedureUpdateCount.MULTIPLE_LITERAL.getName().equalsIgnoreCase(value) ) {
+            return ProcedureUpdateCount.MULTIPLE_LITERAL;
+        }
+        if( ProcedureUpdateCount.ZERO_LITERAL.getName().equalsIgnoreCase(value) ) {
+            return ProcedureUpdateCount.ZERO_LITERAL;
+        }
+        
+        return ProcedureUpdateCount.AUTO_LITERAL;
+    }
+	
+    /*
+     * Gets boolean value for the provided text string
+     * @param text a text string
+     * @return 'true' if provided string is "true", otherwise 'false'
+     */
+	private static boolean isTrue(final String text) {
+        return Boolean.valueOf(text);
+    }    
+
+	/*
+	 * Creates constraints for Table for Teiid DDL
+	 * @param contraintNode the AstNode for the constraint
+	 * @param table the BaseTable object
+	 * @param roots the current model roots
+	 * @param message the list of messages
 	 */
 	private void createTeiidConstraint(final AstNode constraintNode,
 			final BaseTable table,
@@ -382,11 +563,11 @@ public class DdlImporter {
 			}
 		}
 	}
-
+	
 	/*
 	 * Create Column from the provided AstNode within ColumnSet
 	 * @param node the provided AstNode
-	 * @param colSet the columnSet in which to create the column
+	 * @param table the ColumnSet in which to create the column
 	 */
 	private void createColumn( final AstNode node,
                                final ColumnSet table) throws CoreException {
@@ -424,8 +605,50 @@ public class DdlImporter {
         if (prop != null) col.setNullable(prop.toString().equals("NULL") ? NullableType.NULLABLE_LITERAL : NullableType.NO_NULLS_LITERAL); //$NON-NLS-1$
         prop = node.getProperty(StandardDdlLexicon.DEFAULT_VALUE);
         if (prop != null) col.setDefaultValue(prop.toString());
+        
+        // Handle Teiid-specific properties and options
+        if(isTeiidDdl) {
+        	prop = node.getProperty(TeiidDdlLexicon.CreateTable.AUTO_INCREMENT);
+        	if(prop!=null) col.setAutoIncremented(isTrue(prop.toString()));
+        	handleTeiidColumnOptions(col,node);
+        }
     }
 	
+	/*
+	 * Handles statementOption common to all relational entities for Teiid DDL
+	 * @param entity the RelationalEntity
+	 * @param node the statementOption AstNode
+	 * @return 'true' if the provided OPTION was a 'common' option, 'false' if not.
+	 */
+	private boolean handleTeiidCommonOption(RelationalEntity entity, AstNode optionNode) {
+		boolean wasCommonOption = false;
+		
+    	String optionName = optionNode.getName();
+        Object optionValue = optionNode.getProperty(StandardDdlLexicon.VALUE);
+        if(!CoreStringUtil.isEmpty(optionName)) {
+        	String optionValueStr = (String)optionValue;
+        	if(!CoreStringUtil.isEmpty(optionValueStr)) {
+            	if(optionName.equalsIgnoreCase(TeiidDDLConstants.ANNOTATION)) {
+            		this.teiidAnnotationMap.put(entity, optionValueStr);
+            		wasCommonOption = true;
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.UUID)) {
+            		// entity.setUUID();
+            		wasCommonOption = true;
+            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.NAMEINSOURCE)) {
+            		entity.setNameInSource(optionValueStr);
+            		wasCommonOption = true;
+            	} 
+        	}
+        }
+        return wasCommonOption;
+	}
+	
+	/*
+	 * Get the Datatype for Teiid DDL.  First tries to match the datatype string with a teiid built-in type.
+	 * If a built-in type is not found, then attempt to use the relational mapping to find a match.
+	 * @param datatype the datatype string
+	 * @param the matching EObject datatype
+	 */
     private EObject getTeiidDatatype(String datatype) throws ModelerCoreException {
     	EObject resultType = null;
     	
@@ -575,15 +798,15 @@ public class DdlImporter {
                 		else if ("INOUT".equals(direction) ) prm.setDirection(DirectionKind.INOUT_LITERAL); //$NON-NLS-1$ 
                 	}
                 }
+                handleTeiidProcParamOptions(prm,child);
                 // TODO: Determine how to handle teiidddl:result, ddl:defaultOption, ddl:statementOption
-                
             } else if(child.hasMixin(TeiidDdlLexicon.CreateProcedure.RESULT_COLUMNS)) {
             	// TODO: determine how to handle Table flag property
             	final ProcedureResult result = FACTORY.createProcedureResult();
             	procedure.setResult(result);
             	initialize(result, procedureNode);
+            	
             	for(AstNode resultCol: child) {
-            		// TODO: determine how to handle ResultColumn StatementOption
             		if(resultCol.hasMixin(TeiidDdlLexicon.CreateProcedure.RESULT_COLUMN)) {
                     	createColumn(resultCol,result);
             		}
@@ -593,6 +816,8 @@ public class DdlImporter {
             	procedure.setResult(result);
             	initialize(result, procedureNode);
             	createColumn(child,result);
+            } else if(child.hasMixin(StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
+            	handleTeiidProcedureOption(procedure,child);
             }
         }
         return procedure;
@@ -879,15 +1104,28 @@ public class DdlImporter {
             handleStatus(mergeProcessor.execute(monitor));
             model.save(monitor, false);
 
-            // now set descriptions (model type and container *must* be already set)
+            // If Teiid DDL, use descriptionMap created from teiid annotations
+            boolean setDescriptions = false;
+            if(isTeiidDdl) {
+                for (Map.Entry<RelationalEntity, String> entry : this.teiidAnnotationMap.entrySet()) {
+                    ModelerCore.getModelEditor().setDescription(entry.getKey(), entry.getValue());
+                    setDescriptions = true;
+                }
+            }
+            
+            // If user chose to use DDL as description, now set those descriptions (model type and container *must* be already set)
             if (optToSetModelEntityDescription) {
                 for (Map.Entry<RelationalEntity, String> entry : this.descriptionMap.entrySet()) {
                     ModelerCore.getModelEditor().setDescription(entry.getKey(), entry.getValue());
+                    setDescriptions = true;
                 }
-
+             } 
+            
+            if(setDescriptions) {
                 // save again
                 model.save(monitor, false);
             }
+            
         } catch (final Exception error) {
             throw CoreModelerPlugin.toRuntimeException(error);
         }
