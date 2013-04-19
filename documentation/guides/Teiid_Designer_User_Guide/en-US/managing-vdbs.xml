@@ -48,6 +48,77 @@
 		</para>
 	</section>
 	
+	<section id="multi-source-bindings">
+		<title>Multi-source Binding Support</title>
+		<para> Teiid Designer now supports the Teiid feature of defining relational source models and binding them
+			to multiple data sources.</para>
+		<para>Multi-source models can be used to quickly access data in multiple sources with homogeneous metadata. 
+			When you have multiple instances using identical schema, Teiid can help you gather data across all the 
+			instances, using "multi-source" models. In this scenario, instead of creating/importing a model for 
+			every data source, one source model is defined to represents the schema and is configured with 
+			multiple data "sources" underneath it. During runtime when a query issued against this model,
+			 the query engine analyzes the information and gathers the required data from all sources configured and 
+			 gathers the results and provides in a single result. Since all sources utilize the same physical 
+			 metadata, this feature is most appropriate for accessing the same source type with multiple instances</para>
+		<para>The VDB editor's <emphasis role="bold">Models</emphasis> tab now contains a simplified model table on the left and a new 
+			tabbed panel on the right containing <emphasis role="bold">Model Details</emphasis> and 
+			<emphasis role="bold">Source Binding Definition</emphasis> tabs.  
+			Click the <emphasis role="bold">Multi-source</emphasis> check box if you wish to add additional source bindings. Note that each 
+			binding must be defined with a unique <emphasis role="bold">Source Name</emphasis> as well as unique 
+			<emphasis role="bold">JNDI Name</emphasis> representing a deployed data source you your server. </para>
+		<figure>
+			<title>VDB Editor's Source Binding Definition</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/vdb-editor-source-binding-tab.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</section>
+	
+	<section id="udfs-in-vdb">
+		<title>UDF support</title>
+		<para>In Teiid Designer you can create, manage and use User Defined Functions (UDFs). These functions allow you to 
+			perform simple or complex java operations on your data during runtime. This is accomplished by deploying your 
+			custom UDF jars on your server and creating a scalar function representation of your function method to use
+			in your view transformation. In the VDB Editor, you have the option of including your UDF jars as part of
+			the VDB artifact. If included in the VDB, the jars will automatically be deployed to the server for you when
+			the VDB is deployed.
+		</para>
+		<para>The figure below illustrates a sample project setup which includes a UDF jar in a lib folder under
+			a project.
+			<figure>
+				<title>UDF Jar In Project</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/udf-jar-in-project-lib-folder.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</para>
+		<para>This figure shows a VDB containing the several models including the user's Function model.
+			<figure>
+				<title>VDB Models</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/udf-model-in-vdb-editor.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</para>
+		<para>When a UDF model is added to a VDB, each scalar function is interrogated and it's referenced UDF jar
+			(if available) is added to the VDB as well as shown in the UDF Jars tab in the editor as shown below.
+			<figure>
+				<title>UDF Jars in VDB</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/udf-jars-tab-in-vdb-editor.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</para>
+	</section>
+	
 	<section id="reuse-vdbs">
 		<title>Reusing VDBs</title>
 		<para>Teiid 8.1 introduced the ability to treat your deployed VDB as just another database where the 

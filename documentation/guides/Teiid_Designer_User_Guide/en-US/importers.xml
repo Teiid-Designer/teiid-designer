@@ -197,6 +197,94 @@
 		</figure>
 	</section>
 	
+	<!-- ####### TEIID DATA SOURCE IMPORTER ######################################### -->
+	
+	<section id="teiid-connection-import-section">
+		<title>Import From Teiid Data Source Connection</title>
+		<para>The <emphasis role="bold">Teiid Connection >> Source Model</emphasis> import option provides a means to
+		create relational source models from JDBC and other deployed data sources that are not supported by other Teiid
+		Designer importers. </para>
+		<para>NOTE: To launch this importer, you must have at minimum a Teiid 8.x server running in Designer. 
+			The Teiid importer deploys a dynamic VDB to Teiid containing the selected source type, then the schema 
+			(as determined by Teiid) is retrieved.  We expect to move towards this type of import in future 
+			versions of Teiid Designer.</para>
+		<itemizedlist>
+			<listitem>
+			   <para>You can create relational source models from your deployed data source connections using the steps below.</para>
+					
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
+								choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/import-wiz.png"/>
+									</imageobject>
+								</inlinemediaobject> in the toolbar or select a project, folder or 
+							 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
+								<emphasis role="bold">Teiid Designer > Teiid Connection >> Source Model</emphasis>  and click <emphasis role="bold">Next></emphasis>
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - Select the datasource to use for the import.  
+								You can create a new source if it doesnt exist, as well as other source management functions.
+							    Click <emphasis role="bold">NEXT></emphasis> to continue.</para>
+							<figure>
+								<title>Select Deployed Data Source</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/teiid-connection-importer-select-datasource-page.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 4 </emphasis> - On the next page select the appropriate
+								translator for your data source type as well as defined the target relational model 
+								that you wish to create or update. Click <emphasis role="bold">NEXT></emphasis> to continue.</para>
+							<figure>
+								<title>Translator and Model Definition</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/teiid-connection-importer-options-page.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 5 </emphasis> - When you move to next page of the wizard, 
+								a temporary dynamic vdb is actually deployed to you rserver and the schema your data source
+								is retrieved in DDL form.  This DDL is displayed (and can also be exported if desired).
+								Click <emphasis role="bold">NEXT></emphasis> to continue.</para>
+							<figure>
+								<title>Review DDL Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/teiid-connection-importer-ddl-page.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 6 </emphasis> - On the final page of the wizard, 
+								a difference report is presented for viewing or de-selecting individual 
+								relational entities. Press <emphasis role="bold">Finish</emphasis> to complete.</para>
+							<figure>
+								<title>Review Model Updates Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/teiid-connection-importer-difference-page.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+			</itemizedlist>
+	</section>
+	
 	<!-- ####### FLAT FILE IMPORTER ######################################### -->
 	
 	<section id="flat-file-import-section">
@@ -927,67 +1015,7 @@ FROM
 				</listitem>
 			</itemizedlist>
 		</section>
-				
-		<!-- ####### DATATYPES TEXT IMPORTER ######################################### -->
-		
-		<section id="datatypes-text-import-section">
-			<title>Import Datatypes (CSV Format)</title>
-			<para></para>
-			<itemizedlist>
-				<listitem>
-					<para>
-						To create datatypes from imported text file metadata:
-						<itemizedlist>
-							<listitem>
-								<para>
-									Perform <emphasis role="bold">Steps 1 through 3</emphasis> (above) 
-									and select the <emphasis role="bold">Datatypes (CSV Format)</emphasis> import type, 
-									then click <emphasis role="bold">Next ></emphasis>
-								</para>
-								<figure>
-									<title>Select Import Type - Datatypes (CSV Format)</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/import-from-text-file-page-2-datatypes.png"/>
-										</imageobject>
-									</mediaobject>
-								</figure>
-							</listitem>
-							<listitem>
-								<para>
-									<emphasis role="bold">Step 4 </emphasis>
-									- In the next page, you'll need to provide a source text file 
-									containing the metadata formatted to the specifications on the previous page.
-								</para>
-								<figure>
-									<title>Select Source Text File and Datatypes Model </title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/import-from-text-file-page-3-datatypes.png"/>
-										</imageobject>
-									</mediaobject>
-								</figure>
-							</listitem>
-							<listitem>
-								<para>
-									<emphasis role="bold">Step 5 </emphasis>
-									- Select an existing datatype model as the target location for your new model
-									components using the <guibutton>Browse...</guibutton> button to open the Datatypes 
-									Model Selector Dialog. Select a datatypes model from your workspace or specify a unique 
-									name to create a new model.
-								</para>
-							</listitem>
-							<listitem>
-								<para>
-									<emphasis role="bold">Step 6 </emphasis>
-									- Select any additional options and choose <emphasis role="bold">Finish</emphasis>.
-								</para>
-							</listitem>
-						</itemizedlist>
-					</para>
-				</listitem>
-			</itemizedlist>
-		</section>
+
 	</section>
 	
 	<!-- ####### WSDL AS SOURCE IMPORTER ######################################### -->
