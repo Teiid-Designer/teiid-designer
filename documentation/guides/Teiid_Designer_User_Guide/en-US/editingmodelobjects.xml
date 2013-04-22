@@ -364,7 +364,134 @@
 			
 		</section>
 	</section>
+	
+		
+	
+	<!-- ####### MODEL OBJECT EDITORS ######################################### -->
+	
+	<section id="model-object-wizards-section">
+		<title>New Model Object Wizards</title>	
+		<para>In addition to the simple new object actions, Teiid Designer provides New Child and New Sibling 
+			wizards for children of view and source relational models. Namely tables, views, procedures and indexes.
+			The menu now looks like:
+			<figure>
+				<title>Relational Model New Child Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/new-child-action-for-source-model.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</para>
+		
+		<!-- Create Relational Table Wizard -->
+		<section id="create-relational-table-wizard-section">
+			<title>Create Relational Table Wizard</title>
+			<para>The <emphasis role="bold">Create Relational Table Wizard</emphasis>, shown below, 
+				allows creating a complete relational table including columns, unique keys, foreign keys definition and indexes.
+			</para>
+			<figure>
+				<title>Create Relational Table Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/new-table-wizard-properties-tab.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>Note that the relational view wizard is identical to the relational table wizard.</para>
+		</section>
+		
+		<!-- Create Relational Procedure Wizard -->
+				<section id="create-relational-procedure-wizard-section">
+			<title>Create Relational Procedure Wizard</title>
+			<para>The <emphasis role="bold">Create Relational Procedure Wizard</emphasis>, shown below, 
+				allows creating a complete relational Procedure including columns, unique keys, foreign keys definition and indexes.
+				The relational procedure object can represent different types of procedures, including a standard 
+				procedure, a source function or a user defined function. When the 
+				<emphasis role="bold">New Child > Procedure...</emphasis>  action is launched the first dialog gives 
+				you the option of selecting the procedure type. 
+			</para>
+			<figure>
+				<title>Select Procedure Type Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/select-procedure-type-dialog.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>The second dialog customizes the <emphasis role="bold">Create Relational Procedure</emphasis> dialog 
+				based on your selected type.  The following dialog provides standard procedure data input.
+			</para>
+			<figure>
+				<title>Create Relational Procedure Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/new-procedure-wizard-properties.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>Source functions are procedures that are already deployed and accessable on your database. By
+				defining source functions in your relational model, you can call these functions from within your
+				transformation SQL and the functions will be pushed down to your database for execution.
+			</para>
+			<figure>
+				<title>Create Relational Source Function Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/new-procedure-wizard-source-function-option.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>User Defined Functions require additional properties such as <emphasis role="bold">Java Class</emphasis> 
+				and <emphasis role="bold">Method</emphasis> as well as a path to the jar file containing the code 
+				as shown below.
+			</para>
+			<figure>
+				<title>Create Relational User Defined Fuction Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/new-procedure-wizard-udf-option.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>
+		
+		<!-- Create Relational Index Wizard -->
+				<section id="create-relational-index-wizard-section">
+			<title>Create Relational Index Wizard</title>
+			<para>Indexes can be created at the same time as your relational table object (see Indexes tab in 
+				<emphasis role="bold">Create Relational Table</emphasis> image above) or via 
+				<emphasis role="bold">New Child > Index...</emphasis>  action and dialog as shown below.
+			</para>
+			<figure>
+				<title>Create Relational Index Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/new-index-wizard-properties-tab.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>
+		
 
+		<!-- Create View Model Wizards -->
+			<section id="create-view-model-children-section">
+			<title>Create View Model Objects Wizards</title>
+			<para>For view models, only tables, procedures (standard procedures and user defined functions) and indexes 
+			can be created. For view tables and procedures, the primary difference in the wizards is that they 
+			include a SQL Transformation tab.
+			</para>
+			<figure>
+				<title>Create Relational Table Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/new-view-table-wizard-transformation-tab.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>
+		
+	</section>
 	
 	<!-- ####### MODEL OBJECT EDITORS ######################################### -->
 	
