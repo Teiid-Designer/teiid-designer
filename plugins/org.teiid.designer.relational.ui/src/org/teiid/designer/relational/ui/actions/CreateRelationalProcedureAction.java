@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -27,13 +26,14 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.core.ModelerCore;
@@ -60,10 +60,6 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  */
 public class CreateRelationalProcedureAction extends Action implements INewChildAction, INewSiblingAction {
 	private IFile selectedModel;
-	/**
-	 * 
-	 */
-	public static final String TITLE = Messages.createRelationalProcedureActionText;
 	 
 	private Collection<String> datatypes;
 	 
@@ -71,7 +67,7 @@ public class CreateRelationalProcedureAction extends Action implements INewChild
 	 * 
 	 */
 	public CreateRelationalProcedureAction() {
-		super(TITLE);
+		super(Messages.createRelationalProcedureActionText);
 		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor( UiConstants.Images.NEW_PROCEDURE_ICON));
 		
 		IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
@@ -210,159 +206,145 @@ public class CreateRelationalProcedureAction extends Action implements INewChild
     }
     
     class SelectProcedureTypeDialog extends TitleAreaDialog {
-    	Button procedureRB, sourceFunctionRB, userDefinedFunctionRB;
-    	
     	RelationalProcedure relationalProcedure;
     	
     	public SelectProcedureTypeDialog(Shell parentShell, RelationalProcedure procedure) {
     		super(parentShell);
-    		setShellStyle(getShellStyle() | SWT.RESIZE);
     		relationalProcedure = procedure;
     	}
-    	
-    	/**
-    	 * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
-    	 * @since 5.5.3
-    	 */
-    	@Override
-    	protected void configureShell(Shell shell) {
-    		super.configureShell(shell);
-    		shell.setText(Messages.selectProcedureTypeDialogTitle);
-    	}
+
+        /**
+         * @see org.eclipse.jface.window.Window#constrainShellSize()
+         */
+        @Override
+        protected void constrainShellSize() {
+            super.constrainShellSize();
+
+            final Shell shell = getShell();
+            shell.setText(Messages.selectProcedureTypeDialogTitle);
+
+            { // set size
+                final Rectangle r = shell.getBounds();
+                shell.setBounds(r.x, r.y, (int)(r.width * 0.67), r.height);
+            }
+
+            { // center on parent
+                final Shell parentShell = (Shell)shell.getParent();
+                final Rectangle parentBounds = parentShell.getBounds();
+                final Point parentCenter = new Point(parentBounds.x + (parentBounds.width/2), parentBounds.y + parentBounds.height/2);
+
+                final Rectangle r = shell.getBounds();
+                final Point shellLocation = new Point(parentCenter.x - r.width/2, parentCenter.y - r.height/2);
+
+                shell.setBounds(Math.max(0, shellLocation.x), Math.max(0, shellLocation.y), r.width, r.height);
+            }
+        }
 
     	/**
     	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
     	 * @since 5.5.3
     	 */
-    	@SuppressWarnings("unused")
 		@Override
     	protected Control createDialogArea(Composite parent) {
-    		Composite pnlOuter = (Composite) super.createDialogArea(parent);
-    		
+            Composite pnlOuter = (Composite) super.createDialogArea(parent);
+            
     		Composite panel = new Composite(pnlOuter, SWT.NONE);
     		GridLayout gridLayout = new GridLayout();
-    		gridLayout.numColumns = 1;
+    		gridLayout.marginLeft = 20;
+    		gridLayout.marginRight = 20;
     		panel.setLayout(gridLayout);
-    		panel.setLayoutData(new GridData(GridData.FILL_BOTH));
-    		
-    		// COLUMN 1 will be the radio buttons
-    		// COLUMN 2 will be the "description" of the procedure type
+    		panel.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true));
 
     		// set title
     		setTitle(Messages.selectProcedureTypeDialogSubTitle);
     		
-    		SIMPLE_PROCEDURE : {
-	        	this.procedureRB = new Button(panel, SWT.RADIO | SWT.RIGHT);
-	            this.procedureRB.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
-	            this.procedureRB.setText(Messages.procedureLabel);
-	            this.procedureRB.addSelectionListener(new SelectionAdapter() {
+    		{ // simple procedure
+    		    final Button procedureRB = new Button(panel, SWT.RADIO);
+	            procedureRB.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+	            procedureRB.setText(Messages.procedureLabel);
+	            procedureRB.addSelectionListener(new SelectionAdapter() {
 	                /**            		
 	                 * {@inheritDoc}
 	                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
 	                 */
 	                @Override
 	                public void widgetSelected( SelectionEvent e ) {
-	                	handleInfoChanged();
+	                	handleInfoChanged(false, false);
 	                }
 	            });
-	            this.procedureRB.setSelection(!relationalProcedure.isFunction());
-	            
-	    		Composite subPanel = new Composite(panel, SWT.NONE);
-	    		subPanel.setLayout(new GridLayout(2, false));
-	    		subPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+	            procedureRB.setSelection(!relationalProcedure.isFunction());
 	    		
-	    		Label spaceLabel = new Label(subPanel, SWT.NONE);
-	    		spaceLabel.setText("   "); //$NON-NLS-1$
-	    		
-    	    	Text descText = new Text(subPanel, SWT.WRAP | SWT.READ_ONLY);
+    	    	Text descText = new Text(panel, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
     	    	descText.setBackground(parent.getBackground());
     	    	descText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-    	    	descText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-    	    	((GridData)descText.getLayoutData()).horizontalSpan = 1;
-    	    	((GridData)descText.getLayoutData()).heightHint = 30;
-    	    	((GridData)descText.getLayoutData()).widthHint = 450;
+    	    	descText.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true));
+                ((GridData)descText.getLayoutData()).horizontalIndent = 20;
+                ((GridData)descText.getLayoutData()).heightHint = (3 * descText.getLineHeight());
     	    	descText.setText(Messages.createRelationalProcedureDescription);
     		}
             
-    		SOURCE_FUNCTION : {
-	            this.sourceFunctionRB = new Button(panel, SWT.RADIO | SWT.RIGHT);
-	            this.sourceFunctionRB.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
-	            this.sourceFunctionRB.setText(Messages.sourceFunctionLabel);
-	            this.sourceFunctionRB.addSelectionListener(new SelectionAdapter() {
+    		{ // source function
+	            final Button sourceFunctionRB = new Button(panel, SWT.RADIO);
+	            sourceFunctionRB.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+	            sourceFunctionRB.setText(Messages.sourceFunctionLabel);
+	            sourceFunctionRB.addSelectionListener(new SelectionAdapter() {
 	                /**            		
 	                 * {@inheritDoc}
 	                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
 	                 */
 	                @Override
 	                public void widgetSelected( SelectionEvent e ) {
-	                	handleInfoChanged();
+	                	handleInfoChanged(false, true);
 	                }
 	            });
-	            
-	    		Composite subPanel = new Composite(panel, SWT.NONE);
-	    		subPanel.setLayout(new GridLayout(2, false));
-	    		subPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
-	    		
-	    		Label spaceLabel = new Label(subPanel, SWT.NONE);
-	    		spaceLabel.setText("   "); //$NON-NLS-1$
-	    		
-    	    	Text descText = new Text(subPanel, SWT.WRAP | SWT.READ_ONLY);
+
+	            if (this.relationalProcedure.isSourceFunction()) {
+	                sourceFunctionRB.setSelection(!relationalProcedure.isFunction());
+	            }
+
+	            Text descText = new Text(panel, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
     	    	descText.setBackground(parent.getBackground());
     	    	descText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-    	    	descText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-    	    	((GridData)descText.getLayoutData()).horizontalSpan = 1;
-    	    	((GridData)descText.getLayoutData()).heightHint = 40;
-    	    	((GridData)descText.getLayoutData()).widthHint = 450;
+    	    	descText.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true));
+                ((GridData)descText.getLayoutData()).horizontalIndent = 20;
+                ((GridData)descText.getLayoutData()).heightHint = (3 * descText.getLineHeight());
     	    	descText.setText(Messages.createRelationalSourceFunctionDescription);
     		}
             
-    		USER_DEFINED_FUNCTION : {
-	            this.userDefinedFunctionRB = new Button(panel, SWT.RADIO | SWT.RIGHT);
-	            this.userDefinedFunctionRB.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
-	            this.userDefinedFunctionRB.setText(Messages.userDefinedFunctionLabel);
-	            this.userDefinedFunctionRB.addSelectionListener(new SelectionAdapter() {
+    		{ // user defined function
+	            final Button userDefinedFunctionRB = new Button(panel, SWT.RADIO);
+	            userDefinedFunctionRB.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+	            userDefinedFunctionRB.setText(Messages.userDefinedFunctionLabel);
+	            userDefinedFunctionRB.addSelectionListener(new SelectionAdapter() {
 	                /**            		
 	                 * {@inheritDoc}
 	                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
 	                 */
 	                @Override
 	                public void widgetSelected( SelectionEvent e ) {
-	                	handleInfoChanged();
+	                	handleInfoChanged(true, false);
 	                }
 	            });
-	            
-	    		Composite subPanel = new Composite(panel, SWT.NONE);
-	    		subPanel.setLayout(new GridLayout(2, false));
-	    		subPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
-	    		
-	    		Label spaceLabel = new Label(subPanel, SWT.NONE);
-	    		spaceLabel.setText("   "); //$NON-NLS-1$
-	    		
-    	    	Text descText = new Text(subPanel, SWT.WRAP | SWT.READ_ONLY);
+
+                if (this.relationalProcedure.isFunction() && !this.relationalProcedure.isSourceFunction()) {
+                    userDefinedFunctionRB.setSelection(!relationalProcedure.isFunction());
+                }
+
+    	    	Text descText = new Text(panel, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
     	    	descText.setBackground(parent.getBackground());
     	    	descText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-    	    	descText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-    	    	((GridData)descText.getLayoutData()).horizontalSpan = 1;
-    	    	((GridData)descText.getLayoutData()).heightHint = 40;
-    	    	((GridData)descText.getLayoutData()).widthHint = 450;
+    	    	descText.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true));
+                ((GridData)descText.getLayoutData()).horizontalIndent = 20;
+                ((GridData)descText.getLayoutData()).heightHint = (3 * descText.getLineHeight());
     	    	descText.setText(Messages.createRelationalUserDefinedFunctionDescription);
     		}
-            return panel;
+            return pnlOuter;
     	}
     	
-    	private void handleInfoChanged() {
-        	boolean isUDF = userDefinedFunctionRB.getSelection();
-        	boolean isSourceFunction = sourceFunctionRB.getSelection();
-        	if( isUDF ) {
-        		relationalProcedure.setFunction(true);
-        		relationalProcedure.setSourceFunction(false);
-        	} else if( isSourceFunction ) {
-        		relationalProcedure.setFunction(true);
-        		relationalProcedure.setSourceFunction(true);
-        	} else {
-        		relationalProcedure.setFunction(false);
-        		relationalProcedure.setSourceFunction(false);
-        	}
+    	private void handleInfoChanged( final boolean isUdf,
+    	                                final boolean isSourceFunction ) {
+    	    relationalProcedure.setFunction(isUdf || isSourceFunction);
+            relationalProcedure.setSourceFunction(isSourceFunction);
     	}
 
     }
