@@ -210,9 +210,6 @@ public final class Vdb {
                                 }
                             } else assert false;
                         }
-                        for (final EntryElement element : manifest.getEntries()) {
-                            entries.add(new VdbFileEntry(Vdb.this, element, monitor));
-                        }
                         
                         for (final ModelElement element : manifest.getModels()) 
                             modelEntries.add(new VdbModelEntry(Vdb.this, element, monitor));
@@ -220,6 +217,10 @@ public final class Vdb {
                         // Initialize model entry imports only after all model entries have been created
                         for (final VdbModelEntry entry : modelEntries) {
                             entry.initializeImports();
+                        }
+                                                
+                        for (final EntryElement element : manifest.getEntries()) {
+                            entries.add(new VdbFileEntry(Vdb.this, element, monitor));
                         }
                         
                         // Vdb Import entries
