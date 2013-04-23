@@ -13,6 +13,9 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -44,11 +47,27 @@ public class EditRelationalObjectDialog extends TitleAreaDialog implements IDial
         this.modelFile = file;
         setShellStyle(getShellStyle() | SWT.RESIZE);
     }
-    
+
+    /**
+     * @see org.eclipse.jface.window.Window#constrainShellSize()
+     */
     @Override
-    protected void configureShell( Shell shell ) {
-        super.configureShell(shell);
+    protected void constrainShellSize() {
+        super.constrainShellSize();
+
+        final Shell shell = getShell();
         shell.setText(RelationalObjectEditorFactory.getDialogTitle(relationalObject));
+
+        { // center on parent
+            final Shell parentShell = (Shell)shell.getParent();
+            final Rectangle parentBounds = parentShell.getBounds();
+            final Point parentCenter = new Point(parentBounds.x + (parentBounds.width/2), parentBounds.y + parentBounds.height/2);
+
+            final Rectangle r = shell.getBounds();
+            final Point shellLocation = new Point(parentCenter.x - r.width/2, parentCenter.y - r.height/2);
+
+            shell.setBounds(Math.max(0, shellLocation.x), Math.max(0, shellLocation.y), r.width, r.height);
+        }
     }
     
     /* (non-Javadoc)
@@ -56,9 +75,15 @@ public class EditRelationalObjectDialog extends TitleAreaDialog implements IDial
      */
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite mainPanel = (Composite)super.createDialogArea(parent);
-        ((GridLayout)mainPanel.getLayout()).marginHeight=10;
-        ((GridLayout)mainPanel.getLayout()).marginWidth=10;
+        Composite pnlOuter = (Composite) super.createDialogArea(parent);
+        
+        Composite mainPanel = new Composite(pnlOuter, SWT.NONE);
+        GridLayout gridLayout = new GridLayout();
+        gridLayout.marginLeft = 20;
+        gridLayout.marginRight = 20;
+        mainPanel.setLayout(gridLayout);
+        mainPanel.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true));
+
         this.setTitle(RelationalObjectEditorFactory.getDialogTitle(relationalObject));
         this.setMessage(RelationalObjectEditorFactory.getInitialMessage(relationalObject));
         
