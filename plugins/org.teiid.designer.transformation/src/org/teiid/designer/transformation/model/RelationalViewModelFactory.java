@@ -157,7 +157,7 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
                 RelationalViewProcedure viewProc = (RelationalViewProcedure)obj;
                 TransformationHelper.createTransformation(procedure, viewProc.getTransformationSQL());
                 
-                applyProcedureExtensionProperties((RelationalProcedure)obj,(Procedure) procedure, true);
+                applyProcedureExtensionProperties((RelationalProcedure)obj,(Procedure) procedure);
             }
                 break;
             case TYPES.INDEX: {
