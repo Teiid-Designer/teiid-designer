@@ -868,7 +868,6 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         };
 
         udfJarsGroup.add(removeProvider);
-        udfJarsGroup.setInput(vdb);
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -1158,7 +1157,6 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         };
 
         otherFilesGroup.add(removeProvider);
-        otherFilesGroup.setInput(vdb);
     }
     
     /*
@@ -1370,7 +1368,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             });
             showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
         }
-
+        
+        // Set Vdb input on Udf and Other files tab.
+        this.udfJarsGroup.setInput(vdb);
+        this.otherFilesGroup.setInput(vdb);
+        
         tabFolder.setSelection(0);
     }
 
