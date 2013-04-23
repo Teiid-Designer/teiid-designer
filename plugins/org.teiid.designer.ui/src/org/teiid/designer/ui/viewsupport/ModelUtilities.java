@@ -447,6 +447,22 @@ public abstract class ModelUtilities implements UiConstants {
 
         return null;
     }
+    
+    /**
+     * 
+     * @param modelObject the eObject
+     * @return the model name containing the model object
+     */
+    public static String getModelName(EObject modelObject) {
+    	try {
+    		return ModelUtilities.getModelResource(modelObject).getCorrespondingResource().getName();
+		} catch (Exception ex) {
+			String message = "[ModelUtilities.getModelName()] ERROR: exception finding model name"; //$NON-NLS-1$
+            UiConstants.Util.log(IStatus.ERROR, ex, message);
+		}
+    	
+    	return null;
+    }
 
     /**
      * Obtain the WorkspaceContainer for this application.

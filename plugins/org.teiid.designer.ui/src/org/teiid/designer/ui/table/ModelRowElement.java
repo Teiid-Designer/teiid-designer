@@ -290,7 +290,12 @@ public class ModelRowElement {
         Object result = null;
         Object propertyId = tableModel.getPropertyIdAtIndex(index);
         if (tableModel.isLocationColumn(propertyId)) {
-            result = ModelUtilities.getEMFLabelProvider().getText(modelObject.eContainer());
+        	EObject container = modelObject.eContainer();
+        	if( container != null ) {
+        		result = ModelUtilities.getEMFLabelProvider().getText(modelObject.eContainer());
+        	} else {
+        		result = ModelUtilities.getModelName(modelObject);
+        	}
         } else if (tableModel.isDescriptionColumn(propertyId)) {
             result = ModelObjectUtilities.getDescription(modelObject);
         } else {
