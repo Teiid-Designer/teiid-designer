@@ -34,6 +34,8 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -130,23 +132,19 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 	@Override
 	protected void createPanel(Composite parent) {
 		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 1);
-		thePanel.setLayout(new GridLayout(1, false));
+		thePanel.setLayout(new GridLayout());
 		GridData panelGD = new GridData(GridData.FILL_BOTH);
-		panelGD.heightHint = 550;
-		panelGD.widthHint = 550;
     	thePanel.setLayoutData(panelGD);
     	
 		this.viewProcedure = (RelationalViewProcedure)getRelationalReference();
-		// Spacer label
 		new Label(thePanel, SWT.NONE);
 		{
-	    	helpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
+	    	helpText = new Text(thePanel, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
 	    	helpText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 	    	helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-	    	helpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-	    	((GridData)helpText.getLayoutData()).horizontalSpan = 1;
-	    	((GridData)helpText.getLayoutData()).heightHint = 20;
-	    	((GridData)helpText.getLayoutData()).widthHint = 360;
+	    	helpText.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true));
+            ((GridData)helpText.getLayoutData()).horizontalIndent = 20;
+            ((GridData)helpText.getLayoutData()).heightHint = (3 * helpText.getLineHeight());
 		}
 		createNameGroup(thePanel);
 		
@@ -220,10 +218,20 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 			this.viewProcedure = (RelationalViewProcedure)getRelationalReference();
 		}
 		synchronizing = true;
-		
-    	helpText.setText(Messages.createRelationalViewProcedureHelpText);
-		
-		if( viewProcedure.getName() != null ) {
+
+		if (this.viewProcedure.isFunction()) {
+            helpText.setText(Messages.createRelationalViewUserDefinedFunctionHelpText);
+		} else {
+            helpText.setText(Messages.createRelationalViewProcedureHelpText);
+		}
+
+        // size help text
+		final GC gc = new GC(helpText);
+        final FontMetrics fm = gc.getFontMetrics();
+        ((GridData)helpText.getLayoutData()).widthHint = (80 * fm.getAverageCharWidth());
+        gc.dispose();
+
+        if( viewProcedure.getName() != null ) {
 			if( WidgetUtil.widgetValueChanged(this.nameText, viewProcedure.getName()) ) {
 				this.nameText.setText(viewProcedure.getName());
 			}
@@ -646,11 +654,6 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
 		thePanel.setLayout(new GridLayout(2, false));
 		GridData panelGD = new GridData(GridData.FILL_BOTH);
-		if( this.viewProcedure.isFunction() ) {
-			panelGD.heightHint = 300;
-		} else {
-			panelGD.heightHint = 400;
-		}
     	thePanel.setLayoutData(panelGD);
         Label label = new Label(thePanel, SWT.NONE);
         label.setText(Messages.updateCountLabel);
