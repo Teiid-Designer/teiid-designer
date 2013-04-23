@@ -33,6 +33,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metamodels.core.Annotation;
 import org.teiid.designer.metamodels.core.AnnotationContainer;
@@ -282,7 +283,7 @@ public class RelationalModelFactory implements RelationalConstants {
             case TYPES.PROCEDURE: {
                 EObject procedure = createProcedure(obj, modelResource);
                 modelResource.getEmfResource().getContents().add(procedure);
-                applyProcedureExtensionProperties((RelationalProcedure)obj,(Procedure) procedure, false);
+                applyProcedureExtensionProperties((RelationalProcedure)obj,(Procedure) procedure);
             } break;
             case TYPES.INDEX: {
                 indexes.add((RelationalIndex)obj);
@@ -769,64 +770,76 @@ public class RelationalModelFactory implements RelationalConstants {
         }
     }
     
-    protected void applyProcedureExtensionProperties(RelationalProcedure procedureRef, Procedure procedure, boolean isVirtual) {
+    protected void applyProcedureExtensionProperties(RelationalProcedure procedureRef, Procedure procedure) {
         // Set Extension Properties here
         final RelationalModelExtensionAssistant assistant = getExtensionAssistant();
         if( assistant != null ) {
         	try {
-        		if( !isVirtual )  {
-					assistant.setPropertyValue(procedure, 
-							PROCEDURE_EXT_PROPERTIES.NON_PREPARED, 
-							Boolean.toString(procedureRef.isNonPrepared()));
-					assistant.setPropertyValue(procedure, 
-							PROCEDURE_EXT_PROPERTIES.NATIVE_QUERY, 
-							procedureRef.getNativeQuery() );
-        		}
-				if( procedureRef.isFunction() ) {
-					assistant.setPropertyValue(procedure, 
-							PROCEDURE_EXT_PROPERTIES.DETERMINISTIC, 
-							Boolean.toString(procedureRef.isDeterministic()));
-					assistant.setPropertyValue(procedure, 
-							PROCEDURE_EXT_PROPERTIES.NULL_ON_NULL, 
-							Boolean.toString(procedureRef.isReturnsNullOnNull()));
-					assistant.setPropertyValue(procedure, 
-							PROCEDURE_EXT_PROPERTIES.VARARGS, 
-							Boolean.toString(procedureRef.isVariableArguments()));
-					assistant.setPropertyValue(procedure, 
-							PROCEDURE_EXT_PROPERTIES.AGGREGATE, 
-							Boolean.toString(procedureRef.isAggregate()));
-					if( procedureRef.isAggregate() ) {
-						assistant.setPropertyValue(procedure, 
-								PROCEDURE_EXT_PROPERTIES.ALLOWS_DISTINCT, 
-								Boolean.toString(procedureRef.isAllowsDistinct()));
-						assistant.setPropertyValue(procedure, 
-								PROCEDURE_EXT_PROPERTIES.ALLOWS_ORDER_BY, 
-								Boolean.toString(procedureRef.isAllowsOrderBy()));
-						assistant.setPropertyValue(procedure, 
-								PROCEDURE_EXT_PROPERTIES.ANALYTIC, 
-								Boolean.toString(procedureRef.isAnalytic()));
-						assistant.setPropertyValue(procedure, 
-								PROCEDURE_EXT_PROPERTIES.DECOMPOSABLE, 
-								Boolean.toString(procedureRef.isDecomposable()));
-						assistant.setPropertyValue(procedure, 
-								PROCEDURE_EXT_PROPERTIES.USES_DISTINCT_ROWS, 
-								Boolean.toString(procedureRef.isUseDistinctRows()));
-					}
-					if( !procedureRef.isSourceFunction() ) {
-						assistant.setPropertyValue(procedure, 
-								PROCEDURE_EXT_PROPERTIES.JAVA_CLASS, 
-								procedureRef.getJavaClassName() );
-						assistant.setPropertyValue(procedure, 
-								PROCEDURE_EXT_PROPERTIES.JAVA_METHOD, 
-								procedureRef.getJavaMethodName() );
-						assistant.setPropertyValue(procedure, 
-								PROCEDURE_EXT_PROPERTIES.UDF_JAR_PATH, 
-								procedureRef.getUdfJarPath() );
-						assistant.setPropertyValue(procedure, 
-								PROCEDURE_EXT_PROPERTIES.FUNCTION_CATEGORY, 
-								procedureRef.getUdfJarPath() );
-					}
-				}
+        	    final Collection<ModelExtensionPropertyDefinition> extProps = assistant.getPropertyDefinitions(procedure);
+
+                for (final ModelExtensionPropertyDefinition propDefn : extProps) {
+                    final String id = propDefn.getId();
+
+                    if (PROCEDURE_EXT_PROPERTIES.NON_PREPARED.equals(id)) {
+                        assistant.setPropertyValue(procedure,
+                                                   PROCEDURE_EXT_PROPERTIES.NON_PREPARED,
+                                                   Boolean.toString(procedureRef.isNonPrepared()));
+                    } else if (PROCEDURE_EXT_PROPERTIES.NATIVE_QUERY.equals(id)) {
+                        assistant.setPropertyValue(procedure,
+                                                   PROCEDURE_EXT_PROPERTIES.NATIVE_QUERY,
+                                                   procedureRef.getNativeQuery());
+                    } else if (PROCEDURE_EXT_PROPERTIES.DETERMINISTIC.equals(id)) {
+                        assistant.setPropertyValue(procedure,
+                                                   PROCEDURE_EXT_PROPERTIES.DETERMINISTIC,
+                                                   Boolean.toString(procedureRef.isDeterministic()));
+                    } else if (PROCEDURE_EXT_PROPERTIES.NULL_ON_NULL.equals(id)) {
+                        assistant.setPropertyValue(procedure,
+                                                   PROCEDURE_EXT_PROPERTIES.NULL_ON_NULL,
+                                                   Boolean.toString(procedureRef.isReturnsNullOnNull()));
+                    } else if (PROCEDURE_EXT_PROPERTIES.VARARGS.equals(id)) {
+                        assistant.setPropertyValue(procedure,
+                                                   PROCEDURE_EXT_PROPERTIES.VARARGS,
+                                                   Boolean.toString(procedureRef.isVariableArguments()));
+                    } else if (PROCEDURE_EXT_PROPERTIES.AGGREGATE.equals(id)) {
+                        assistant.setPropertyValue(procedure,
+                                                   PROCEDURE_EXT_PROPERTIES.AGGREGATE,
+                                                   Boolean.toString(procedureRef.isAggregate()));
+                    } else if (PROCEDURE_EXT_PROPERTIES.ALLOWS_DISTINCT.equals(id)) {
+                        assistant.setPropertyValue(procedure,
+                                                   PROCEDURE_EXT_PROPERTIES.ALLOWS_DISTINCT,
+                                                   Boolean.toString(procedureRef.isAllowsDistinct()));
+                    } else if (PROCEDURE_EXT_PROPERTIES.ALLOWS_ORDER_BY.equals(id)) {
+                        assistant.setPropertyValue(procedure,
+                                                   PROCEDURE_EXT_PROPERTIES.ALLOWS_ORDER_BY,
+                                                   Boolean.toString(procedureRef.isAllowsOrderBy()));
+                    } else if (PROCEDURE_EXT_PROPERTIES.ANALYTIC.equals(id)) {
+                        assistant.setPropertyValue(procedure,
+                                                   PROCEDURE_EXT_PROPERTIES.ANALYTIC,
+                                                   Boolean.toString(procedureRef.isAnalytic()));
+                    } else if (PROCEDURE_EXT_PROPERTIES.DECOMPOSABLE.equals(id)) {
+                        assistant.setPropertyValue(procedure,
+                                                   PROCEDURE_EXT_PROPERTIES.DECOMPOSABLE,
+                                                   Boolean.toString(procedureRef.isDecomposable()));
+                    } else if (PROCEDURE_EXT_PROPERTIES.JAVA_CLASS.equals(id)) {
+                        assistant.setPropertyValue(procedure,
+                                                   PROCEDURE_EXT_PROPERTIES.JAVA_CLASS,
+                                                   procedureRef.getJavaClassName());
+                    } else if (PROCEDURE_EXT_PROPERTIES.USES_DISTINCT_ROWS.equals(id)) {
+                        assistant.setPropertyValue(procedure,
+                                                   PROCEDURE_EXT_PROPERTIES.USES_DISTINCT_ROWS,
+                                                   Boolean.toString(procedureRef.isUseDistinctRows()));
+                    } else if (PROCEDURE_EXT_PROPERTIES.JAVA_METHOD.equals(id)) {
+                        assistant.setPropertyValue(procedure,
+                                                   PROCEDURE_EXT_PROPERTIES.JAVA_METHOD,
+                                                   procedureRef.getJavaMethodName());
+                    } else if (PROCEDURE_EXT_PROPERTIES.UDF_JAR_PATH.equals(id)) {
+                        assistant.setPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.UDF_JAR_PATH, procedureRef.getUdfJarPath());
+                    } else if (PROCEDURE_EXT_PROPERTIES.FUNCTION_CATEGORY.equals(id)) {
+                        assistant.setPropertyValue(procedure,
+                                                   PROCEDURE_EXT_PROPERTIES.FUNCTION_CATEGORY,
+                                                   procedureRef.getFunctionCategory());
+                    }
+                }
 			} catch (Exception ex) {
 				RelationalPlugin.Util.log(IStatus.ERROR, ex, 
 	                	NLS.bind(Messages.relationalModelFactory_error_setting_extension_props_on_0, procedureRef.getName()));
@@ -989,7 +1002,10 @@ public class RelationalModelFactory implements RelationalConstants {
         }
     }
     
-    // TODO: 
+    /**
+     * @param eObject the model object whose relational reference is being requested (cannot be <code>null</code>)
+     * @return the relational reference or <code>null</code> if not found
+     */
     public RelationalReference getRelationalObject(EObject eObject) {
     	
     	if( eObject instanceof BaseTable) {
