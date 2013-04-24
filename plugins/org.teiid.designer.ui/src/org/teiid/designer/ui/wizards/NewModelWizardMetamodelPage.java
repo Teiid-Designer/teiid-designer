@@ -113,6 +113,7 @@ public class NewModelWizardMetamodelPage extends WizardPage
     private static final int STATUS_CLOSED_PROJECT = 7;
     private static final int STATUS_NO_PROJECT_NATURE = 8;
     private static final int STATUS_DEPRECATED_EXTENSION_METAMODEL = 9;
+    private static final int STATUS_DEPRECATED_FUNCTION_METAMODEL = 10;
 
     /** HashMap of key=String metamodel name, value = MetamodelDescriptor */
     protected HashMap descriptorMap = new HashMap();
@@ -465,6 +466,11 @@ public class NewModelWizardMetamodelPage extends WizardPage
             	setMessage(Util.getString("NewModelWizard.extensionMetamodelDeprecated"), IStatus.WARNING); //$NON-NLS-1$
             	break;
 
+            case (STATUS_DEPRECATED_FUNCTION_METAMODEL):
+            	updateStatus(panelMessage);
+            	setMessage(Util.getString("NewModelWizard.functionMetamodelDeprecated"), IStatus.WARNING); //$NON-NLS-1$
+            	break;
+
             case (STATUS_OK):
             default:
                 updateStatus(panelMessage);
@@ -526,9 +532,14 @@ public class NewModelWizardMetamodelPage extends WizardPage
         
         String metaModelType = getMetamodelType();
         // If selected Metamodel type is Model Extension, warn user of deprecation
-        if( metaModelType!=null && metaModelType.startsWith(ModelUtil.MODEL_CLASS_MODEL_EXTENSION) ) {
-        	currentStatus = STATUS_DEPRECATED_EXTENSION_METAMODEL;
-        	return true;
+        if( metaModelType!=null ) {
+        	if( metaModelType.startsWith(ModelUtil.MODEL_CLASS_MODEL_EXTENSION) ) {
+        		currentStatus = STATUS_DEPRECATED_EXTENSION_METAMODEL;
+        		return true;
+        	} else if( metaModelType.startsWith(ModelUtil.MODEL_CLASS_FUNCTION) ) {
+        		currentStatus = STATUS_DEPRECATED_FUNCTION_METAMODEL;
+        		return true;
+        	}
         }
         currentStatus = STATUS_OK;
         return true;
