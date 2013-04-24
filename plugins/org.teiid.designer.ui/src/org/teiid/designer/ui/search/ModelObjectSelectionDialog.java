@@ -28,6 +28,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -511,7 +512,8 @@ public class ModelObjectSelectionDialog extends AbstractElementListSelectionDial
 
         // if we pass other OK tests, check to see that the Container does not end
         // in 'xmi', which indicates an incomplete path. In that case disable OK.
-        if (getOkButton().isEnabled()) {
+        Button okButton = getOkButton();
+        if (okButton!=null && okButton.isEnabled()) {
             Object oSelected = getLowerSelectedElement();
             String sContainerLabel = fQualifierRenderer.getText(oSelected);
             String sContainerLabelLowerCase = sContainerLabel.toLowerCase();
