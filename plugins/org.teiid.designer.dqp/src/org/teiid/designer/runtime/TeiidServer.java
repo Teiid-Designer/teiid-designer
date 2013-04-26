@@ -323,7 +323,7 @@ public class TeiidServer implements ITeiidServer {
      */
     @Override
     public boolean isConnected() {
-        if (! isParentConnected() && this.admin == null) {
+        if (! isParentConnected() || this.admin == null) {
             return false;
         }
         return ping().isOK();
@@ -353,7 +353,7 @@ public class TeiidServer implements ITeiidServer {
         String msg = Util.getString("cannotConnectToServer", getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
         
         try {
-            if (! isParentConnected() && this.admin == null)
+            if (! isParentConnected() || this.admin == null)
                 throw new Exception(msg);
             
             admin.ping(PingType.ADMIN);
