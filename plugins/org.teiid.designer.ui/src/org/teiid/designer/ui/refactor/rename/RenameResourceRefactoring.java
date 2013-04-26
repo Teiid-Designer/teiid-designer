@@ -7,7 +7,6 @@
 */
 package org.teiid.designer.ui.refactor.rename;
 
-import java.util.Collection;
 import java.util.Collections;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -24,19 +23,65 @@ import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.ltk.core.refactoring.resource.RenameResourceChange;
 import org.teiid.designer.core.refactor.IRefactorModelHandler.RefactorType;
 import org.teiid.designer.core.refactor.PathPair;
-import org.teiid.designer.core.refactor.RelatedResourceFinder;
-import org.teiid.designer.core.refactor.RelatedResourceFinder.Relationship;
-import org.teiid.designer.core.refactor.ResourceStatusList;
 import org.teiid.designer.core.workspace.ModelUtil;
-import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.refactor.AbstractResourcesRefactoring;
 import org.teiid.designer.ui.refactor.RefactorResourcesUtils;
+import org.teiid.designer.ui.refactor.RefactorResourcesUtils.IRelatedResourceCallback;
 
 /**
  * Refactoring for a rename operation
  */
 public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
+
+    private class RelatedResourcesCallback implements IRelatedResourceCallback {
+
+        private final PathPair pathPair;
+
+        private final RefactoringStatus status;
+
+        /**
+         * @param pathPair
+         * @param status
+         */
+        public RelatedResourcesCallback(PathPair pathPair, RefactoringStatus status) {
+            this.pathPair = pathPair;
+            this.status = status;
+        }
+
+        @Override
+        public void mergeStatus(RefactoringStatus status) {
+            this.status.merge(status);
+        }
+
+        @Override
+        public void indexFile(IResource resource, IFile relatedFile) throws Exception {
+            RefactorResourcesUtils.unloadModelResource(relatedFile);
+
+            TextFileChange textFileChange = new TextFileChange(relatedFile.getName(), relatedFile);
+            RefactorResourcesUtils.calculatePathChanges(relatedFile, Collections.singleton(pathPair), textFileChange);
+
+            if (ModelUtil.isModelFile(getResource())) {
+                // It is reasonable that only if a model file is being renamed will it impact the SQL of related files.
+                // There is no reason to expect a project or folder to even be include in an SQL statement.
+                RefactorResourcesUtils.calculateSQLChanges(relatedFile, pathPair, textFileChange);
+            }
+
+            if (textFileChange.getEdit() != null && textFileChange.getEdit().hasChildren()) {
+                // Only if the related file is actually being changed do we add the text change
+                // and calculate the effect on any vdbs containing this related file
+                addChange(relatedFile, textFileChange);
+                RefactorResourcesUtils.calculateRelatedVdbResources(relatedFile, this);
+            }
+        }
+
+        @Override
+        public void indexVdb(IResource resource, IFile vdbFile) {
+            IPath oldResourcePath = resource.getFullPath();
+            IPath newResourcePath = oldResourcePath.removeLastSegments(1).append(getNewResourceName());
+            addVdbChange(vdbFile, oldResourcePath, newResourcePath);
+        }
+    }
 
     private String newName;
 
@@ -104,85 +149,6 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
         return status;
     }
 
-    /**
-     * @param resource
-     */
-    private void calculateRelatedVdbResources(IResource resource) {
-        IResource[] vdbResources = WorkspaceResourceFinderUtil.getVdbResourcesThatContain(resource);
-        for (IResource vdb : vdbResources) {
-            if (! (vdb instanceof IFile))
-                continue;
-            
-            IPath oldResourcePath = resource.getFullPath();
-            IPath newResourcePath = oldResourcePath.removeLastSegments(1).append(getNewResourceName());
-            addVdbChange((IFile) vdb, oldResourcePath, newResourcePath);
-        }
-    }
-    
-    private void analyseRelatedFile(IFile relatedFile, PathPair pathPair) throws Exception {
-        RefactorResourcesUtils.unloadModelResource(relatedFile);
-        
-        TextFileChange textFileChange = new TextFileChange(relatedFile.getName(), relatedFile);
-        RefactorResourcesUtils.calculatePathChanges(relatedFile, Collections.singleton(pathPair), textFileChange);
-        
-        if (ModelUtil.isModelFile(getResource())) {
-            // It is reasonable that only if a model file is being renamed will it impact the SQL of related files.
-            // There is no reason to expect a project or folder to even be include in an SQL statement.
-            RefactorResourcesUtils.calculateSQLChanges(relatedFile, pathPair, textFileChange);
-        }
-
-        if (textFileChange.getEdit() != null && textFileChange.getEdit().hasChildren()) {
-            // Only if the related file is actually being changed do we add the text change
-            // and calculate the effect on any vdbs containing this related file
-            addChange(relatedFile, textFileChange);
-            calculateRelatedVdbResources(relatedFile);
-        }
-    }
-
-    private void calculateRelatedResources(RefactoringStatus status, PathPair pathPair) {
-        IResource resource = getResource();
-        
-        RelatedResourceFinder finder = new RelatedResourceFinder(resource);
-            
-        // Determine dependent resources
-        Collection<IFile> searchResults = finder.findRelatedResources(Relationship.DEPENDENT);
-        ResourceStatusList statusList = new ResourceStatusList(searchResults);
-
-        for (IStatus problem : statusList.getProblems()) {
-            status.merge(RefactoringStatus.create(problem));
-        }
-
-        for (IFile file : statusList.getResourceList()) {
-            try {
-                analyseRelatedFile(file, pathPair);
-            } catch (Exception ex) {
-                UiConstants.Util.log(ex);
-                status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
-                return;
-            }
-        }
-
-        // Determine dependencies
-        searchResults = finder.findRelatedResources(Relationship.DEPENDENCY);
-        statusList = new ResourceStatusList(searchResults, IStatus.OK);
-
-        for (IStatus problem : statusList.getProblems()) {
-            status.merge(RefactoringStatus.create(problem));
-        }
-
-        for (IFile file : statusList.getResourceList()) {
-            try {
-                analyseRelatedFile(file, pathPair);
-            } catch (Exception ex) {
-                UiConstants.Util.log(ex);
-                status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
-                return;
-            }
-        }
-        
-        calculateRelatedVdbResources(resource);
-    }
-
     @Override
     public RefactoringStatus checkFinalConditions(IProgressMonitor progressMonitor) throws OperationCanceledException {
         /* Clear changes in case we are going back then forward in the wizard */
@@ -195,11 +161,12 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
             for (IResource resource : getResources()) {
                 // Add move change for the resource
                 addChange(resource, new RenameResourceChange(resource.getFullPath(), getNewResourceName()));
-                
+
                 IPath absPath = resource.getRawLocation().makeAbsolute();
                 IPath destination = absPath.removeLastSegments(1).append(getNewResourceName());
                 String destinationPath = destination.toOSString();
                 PathPair pathPair = new PathPair(absPath.toOSString(), destinationPath);
+                RelatedResourcesCallback callback = new RelatedResourcesCallback(pathPair, status);
 
                 if (ModelUtil.isModelFile(resource)) {
                     // Add change for updating of any SQL contained in the resource
@@ -208,7 +175,7 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
                         RefactorResourcesUtils.calculateSQLChanges((IFile) resource, pathPair, textFileChange);
                         addChange(resource, textFileChange);
 
-                        calculateRelatedVdbResources(resource);
+                        RefactorResourcesUtils.calculateRelatedVdbResources(resource, callback);
                     } catch (Exception ex) {
                         UiConstants.Util.log(ex);
                         status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
@@ -216,7 +183,7 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
                 }          
 
                 // Add changes for related resources
-                calculateRelatedResources(status, pathPair);
+                RefactorResourcesUtils.calculateRelatedResources(resource, callback);
             }
         }
         finally {

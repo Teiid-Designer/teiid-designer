@@ -38,10 +38,12 @@ import org.teiid.designer.core.refactor.ModelResourceCollectorVisitor;
 import org.teiid.designer.core.refactor.PathPair;
 import org.teiid.designer.core.refactor.RelatedResourceFinder;
 import org.teiid.designer.core.refactor.RelatedResourceFinder.Relationship;
+import org.teiid.designer.core.refactor.ResourceStatusList;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelResourceImpl;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.ui.UiConstants;
 
 /**
@@ -59,6 +61,39 @@ public class RefactorResourcesUtils {
          * Exclude folders from collection of path pairs
          */
         EXCLUDE_FOLDERS;
+    }
+
+    /**
+     * Callback for individual refactoring classes to process resources/files
+     * found to be related to a given resource.
+     */
+    public interface IRelatedResourceCallback {
+
+        /**
+         * Merge in a status with the callbacks existing status
+         *
+         * @param status
+         */
+        void mergeStatus(RefactoringStatus status);
+
+        /**
+         * Index the given related file against the resource. The type of indexing
+         * is dependent on the refactoring class implementing the interface
+         *
+         * @param resource
+         * @param relatedFile
+         * @throws Exception
+         */
+        void indexFile(IResource resource, IFile relatedFile) throws Exception;
+
+        /**
+         * Index the given related vdb against the resource. The type of indexing
+         * is dependent on the refactoring class implementing the interface
+         *
+         * @param resource
+         * @param vdbFile
+         */
+        void indexVdb(IResource resource, IFile vdbFile);
     }
     
     /**
@@ -550,6 +585,70 @@ public class RefactorResourcesUtils {
             } catch (Exception err) {
                 ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
                 status.merge(RefactoringStatus.createFatalErrorStatus(err.getMessage()));
+                return;
+            }
+        }
+    }
+
+    /**
+     * Calculate VDBs related to the given resource and use the given
+     * callback to process them appropriately
+     *
+     * @param resource
+     * @param callback
+     */
+    public static void calculateRelatedVdbResources(IResource resource, IRelatedResourceCallback callback) {
+        IResource[] vdbResources = WorkspaceResourceFinderUtil.getVdbResourcesThatContain(resource);
+        for (IResource vdb : vdbResources) {
+            if (! (vdb instanceof IFile))
+                continue;
+
+            callback.indexVdb(resource, (IFile) vdb);
+        }
+    }
+
+    /**
+     * Calculate resources related to the given resource and use the given
+     * callback to process them appropriately
+     *
+     * @param resource
+     * @param callback
+     */
+    public static void calculateRelatedResources(IResource resource, IRelatedResourceCallback callback) {
+        RelatedResourceFinder finder = new RelatedResourceFinder(resource);
+
+        // Determine dependent resources
+        Collection<IFile> searchResults = finder.findRelatedResources(Relationship.DEPENDENT);
+        ResourceStatusList statusList = new ResourceStatusList(searchResults);
+
+        for (IStatus problem : statusList.getProblems()) {
+            callback.mergeStatus(RefactoringStatus.create(problem));
+        }
+
+        for (IFile file : statusList.getResourceList()) {
+            try {
+                callback.indexFile(resource, file);
+            } catch (Exception ex) {
+                UiConstants.Util.log(ex);
+                callback.mergeStatus(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
+                return;
+            }
+        }
+
+        // Determine dependencies
+        searchResults = finder.findRelatedResources(Relationship.DEPENDENCY);
+        statusList = new ResourceStatusList(searchResults, IStatus.OK);
+
+        for (IStatus problem : statusList.getProblems()) {
+            callback.mergeStatus(RefactoringStatus.create(problem));
+        }
+
+        for (IFile file : statusList.getResourceList()) {
+            try {
+                callback.indexFile(resource, file);
+            } catch (Exception ex) {
+                UiConstants.Util.log(ex);
+                callback.mergeStatus(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
                 return;
             }
         }

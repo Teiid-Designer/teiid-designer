@@ -7,7 +7,6 @@
 */
 package org.teiid.designer.ui.refactor.delete;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,20 +25,61 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.resource.DeleteResourceChange;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.refactor.IRefactorModelHandler.RefactorType;
-import org.teiid.designer.core.refactor.RelatedResourceFinder;
-import org.teiid.designer.core.refactor.RelatedResourceFinder.Relationship;
-import org.teiid.designer.core.refactor.ResourceStatusList;
 import org.teiid.designer.core.workspace.ModelUtil;
-import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
-import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.refactor.AbstractResourcesRefactoring;
 import org.teiid.designer.ui.refactor.RefactorResourcesUtils;
+import org.teiid.designer.ui.refactor.RefactorResourcesUtils.IRelatedResourceCallback;
 import org.teiid.designer.vdb.refactor.VdbResourceChange;
 
 /**
  *
  */
 public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
+
+    private class RelatedResourcesCallback implements IRelatedResourceCallback {
+
+        private final RefactoringStatus status;
+
+        private final Set<IResource> indexedResources = new HashSet<IResource>();
+
+        /**
+         * @param status
+         */
+        public RelatedResourcesCallback(RefactoringStatus status) {
+            this.status = status;
+        }
+
+        @Override
+        public void mergeStatus(RefactoringStatus status) {
+            this.status.merge(status);
+        }
+
+        @Override
+        public void indexFile(IResource resource, IFile relatedFile) throws Exception {
+            /*
+             * The related file will be deleted so we don't want to try deleting it twice
+             */
+            if (indexedResources.contains(relatedFile))
+                return;
+
+            indexedResources.add(relatedFile);
+
+            RefactorResourcesUtils.unloadModelResource(relatedFile);
+
+            if (! resourcesAndChildren.contains(relatedFile)) {
+                // file is NOT already being deleted
+                DeleteResourceChange change = new DeleteResourceChange(relatedFile.getFullPath(), true, isDeleteContents());
+                addChange(relatedFile, change);
+            }
+
+            RefactorResourcesUtils.calculateRelatedVdbResources(relatedFile, this);
+        }
+
+        @Override
+        public void indexVdb(IResource resource, IFile vdbFile) {
+            addChange(vdbFile, new VdbResourceChange(vdbFile));
+        }
+    }
 
     private boolean deleteContents;
     
@@ -146,78 +186,10 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
         return status;
     }
 
-    /**
-     * @param resource
-     */
-    private void calculateRelatedVdbResources(IResource resource) {
-        IResource[] vdbResources = WorkspaceResourceFinderUtil.getVdbResourcesThatContain(resource);
-        for (IResource vdb : vdbResources) {
-            if (! (vdb instanceof IFile))
-                continue;
-            
-            addChange(vdb, new VdbResourceChange((IFile) vdb));
-        }
-    }
-    
-    private void sheduleRemoveRelatedFile(IFile relatedFile) throws Exception {
-        RefactorResourcesUtils.unloadModelResource(relatedFile);
-        
-        if (! resourcesAndChildren.contains(relatedFile)) {
-            // file is NOT already being deleted
-            DeleteResourceChange change = new DeleteResourceChange(relatedFile.getFullPath(), true, isDeleteContents());
-            addChange(relatedFile, change);
-        }
-
-        calculateRelatedVdbResources(relatedFile);
-    }
-
-    private void calculateRelatedResources(RefactoringStatus status) {
-        for (IResource resource : getResources()) {
-            RelatedResourceFinder finder = new RelatedResourceFinder(resource);
-            
-            // Determine dependent resources
-            Collection<IFile> searchResults = finder.findRelatedResources(Relationship.DEPENDENT);
-            ResourceStatusList statusList = new ResourceStatusList(searchResults);
-
-            for (IStatus problem : statusList.getProblems()) {
-                status.merge(RefactoringStatus.create(problem));
-            }
-
-            for (IFile file : statusList.getResourceList()) {
-                try {
-                    sheduleRemoveRelatedFile(file);
-                } catch (Exception ex) {
-                    UiConstants.Util.log(ex);
-                    status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
-                    return;
-                }
-            }
-
-            // Determine dependencies
-            searchResults = finder.findRelatedResources(Relationship.DEPENDENCY);
-            statusList = new ResourceStatusList(searchResults, IStatus.OK);
-
-            for (IStatus problem : statusList.getProblems()) {
-                status.merge(RefactoringStatus.create(problem));
-            }
-
-            for (IFile file : statusList.getResourceList()) {
-                try {
-                    sheduleRemoveRelatedFile(file);
-                } catch (Exception ex) {
-                    UiConstants.Util.log(ex);
-                    status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
-                    return;
-                }
-            }
-
-            calculateRelatedVdbResources(resource);
-        }
-    }
-
     @Override
     public RefactoringStatus checkFinalConditions(IProgressMonitor progressMonitor) throws OperationCanceledException {
         RefactoringStatus status = new RefactoringStatus();
+
         try {
             for (IResource resource : getResources()) {
                 if (!resource.isSynchronized(IResource.DEPTH_INFINITE)) {
@@ -228,10 +200,11 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
             checkDirtyResources(status);
             
             progressMonitor.beginTask(RefactorResourcesUtils.getString("MoveRefactoring.finalConditions"), 2); //$NON-NLS-1$
-            
+
+            RelatedResourcesCallback callback = new RelatedResourcesCallback(status);
             for (IResource resource : getResources()) {
                 addChange(resource, new DeleteResourceChange(resource.getFullPath(), true, isDeleteContents()));
-                calculateRelatedResources(status);
+                RefactorResourcesUtils.calculateRelatedResources(resource, callback);
             }
         }
         finally {

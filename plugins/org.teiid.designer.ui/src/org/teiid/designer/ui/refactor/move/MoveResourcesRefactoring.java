@@ -7,7 +7,6 @@
 */
 package org.teiid.designer.ui.refactor.move;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import org.eclipse.core.resources.IContainer;
@@ -25,19 +24,57 @@ import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.ltk.core.refactoring.resource.MoveResourceChange;
 import org.teiid.designer.core.refactor.IRefactorModelHandler.RefactorType;
 import org.teiid.designer.core.refactor.PathPair;
-import org.teiid.designer.core.refactor.RelatedResourceFinder;
-import org.teiid.designer.core.refactor.RelatedResourceFinder.Relationship;
-import org.teiid.designer.core.refactor.ResourceStatusList;
-import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.refactor.AbstractResourcesRefactoring;
 import org.teiid.designer.ui.refactor.RefactorResourcesUtils;
+import org.teiid.designer.ui.refactor.RefactorResourcesUtils.IRelatedResourceCallback;
 import org.teiid.designer.vdb.refactor.VdbResourceChange;
 
 /**
  *
  */
 public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
+
+    private class RelatedResourcesCallback implements IRelatedResourceCallback {
+
+        private final Set<PathPair> pathPairs;
+
+        private final RefactoringStatus status;
+
+        /**
+         * @param pathPairs
+         * @param status
+         */
+        public RelatedResourcesCallback(Set<PathPair> pathPairs, RefactoringStatus status) {
+            this.pathPairs = pathPairs;
+            this.status = status;
+        }
+
+        @Override
+        public void mergeStatus(RefactoringStatus status) {
+            this.status.merge(status);
+        }
+
+        @Override
+        public void indexFile(IResource resource, IFile relatedFile) throws Exception {
+            RefactorResourcesUtils.unloadModelResource(relatedFile);
+
+            TextFileChange textFileChange = new TextFileChange(relatedFile.getName(), relatedFile);
+            RefactorResourcesUtils.calculatePathChanges(relatedFile, pathPairs, textFileChange);
+
+            if (textFileChange.getEdit().hasChildren()) {
+                // Only if the related file is actually being changed do we add the text change
+                // and calculate the effect on any vdbs containing this related file
+                addChange(relatedFile, textFileChange);
+                RefactorResourcesUtils.calculateRelatedVdbResources(relatedFile, this);
+            }
+        }
+
+        @Override
+        public void indexVdb(IResource resource, IFile vdbFile) {
+            addChange(vdbFile, new VdbResourceChange(vdbFile));
+        }
+    }
 
     private IContainer destination;
     
@@ -100,105 +137,33 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
         return status;
     }
 
-    /**
-     * @param resource
-     */
-    private void calculateRelatedVdbResources(IResource resource) {
-        IResource[] vdbResources = WorkspaceResourceFinderUtil.getVdbResourcesThatContain(resource);
-        for (IResource vdb : vdbResources) {
-            if (! (vdb instanceof IFile))
-                continue;
-            
-            addChange(vdb, new VdbResourceChange((IFile) vdb));
-        }
-    }
-    
-    private void analyseRelatedFile(IFile relatedFile, Collection<PathPair> pathPairs) throws Exception {
-        RefactorResourcesUtils.unloadModelResource(relatedFile);
-
-        TextFileChange textFileChange = new TextFileChange(relatedFile.getName(), relatedFile);
-        RefactorResourcesUtils.calculatePathChanges(relatedFile, pathPairs, textFileChange);
-
-        if (textFileChange.getEdit().hasChildren()) {
-            // Only if the related file is actually being changed do we add the text change
-            // and calculate the effect on any vdbs containing this related file
-            addChange(relatedFile, textFileChange);
-            calculateRelatedVdbResources(relatedFile);
-        }
-    }
-
-    private void calculateRelatedResources(RefactoringStatus status) {
-        String destinationPath = destination.getRawLocation().makeAbsolute().toOSString();
-        Set<PathPair> pathPairs = null;
-        
-        try {
-            pathPairs = RefactorResourcesUtils.calculateResourceMoves(getResources(), destinationPath, RefactorResourcesUtils.Option.EXCLUDE_FOLDERS);
-        } catch (Exception ex) {
-            UiConstants.Util.log(ex);
-            status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
-            return;
-        }
-        
-        if (pathPairs == null || pathPairs.isEmpty()) {
-            status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("MoveRefactoring.emptyResourcePairsError"))); //$NON-NLS-1$
-            return;
-        }
-        
-        for (IResource resource : getResources()) {
-            RelatedResourceFinder finder = new RelatedResourceFinder(resource);
-            
-            // Determine dependent resources
-            Collection<IFile> searchResults = finder.findRelatedResources(Relationship.DEPENDENT);
-            ResourceStatusList statusList = new ResourceStatusList(searchResults);
-
-            for (IStatus problem : statusList.getProblems()) {
-                status.merge(RefactoringStatus.create(problem));
-            }
-
-            for (IFile file : statusList.getResourceList()) {
-                try {
-                    analyseRelatedFile(file, pathPairs);
-                } catch (Exception ex) {
-                    UiConstants.Util.log(ex);
-                    status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
-                    return;
-                }
-            }
-
-            // Determine dependencies
-            searchResults = finder.findRelatedResources(Relationship.DEPENDENCY);
-            statusList = new ResourceStatusList(searchResults, IStatus.OK);
-
-            for (IStatus problem : statusList.getProblems()) {
-                status.merge(RefactoringStatus.create(problem));
-            }
-
-            for (IFile file : statusList.getResourceList()) {
-                try {
-                    analyseRelatedFile(file, pathPairs);
-                } catch (Exception ex) {
-                    UiConstants.Util.log(ex);
-                    status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
-                    return;
-                }
-            }
-
-            calculateRelatedVdbResources(resource);
-        }
-    }
-
     @Override
     public RefactoringStatus checkFinalConditions(IProgressMonitor progressMonitor) throws OperationCanceledException {
         /* Clear changes in case we are going back then forward in the wizard */
         clearChanges();
 
         RefactoringStatus status = new RefactoringStatus();
+        String destinationPath = destination.getRawLocation().makeAbsolute().toOSString();
         try {
             progressMonitor.beginTask(RefactorResourcesUtils.getString("MoveRefactoring.finalConditions"), 2); //$NON-NLS-1$
             
             for (IResource resource : getResources()) {
                 addChange(resource, new MoveResourceChange(resource, destination));
-                calculateRelatedResources(status);
+
+                try {
+                    Set<PathPair> pathPairs = RefactorResourcesUtils.calculateResourceMoves(getResources(), destinationPath, RefactorResourcesUtils.Option.EXCLUDE_FOLDERS);
+
+                    if (pathPairs == null || pathPairs.isEmpty()) {
+                        status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("MoveRefactoring.emptyResourcePairsError"))); //$NON-NLS-1$
+                        continue;
+                    }
+
+                    RefactorResourcesUtils.calculateRelatedResources(resource, new RelatedResourcesCallback(pathPairs, status));
+
+                } catch (Exception ex) {
+                    UiConstants.Util.log(ex);
+                    status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
+                }
             }
         }
         finally {
