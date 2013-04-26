@@ -93,6 +93,12 @@
          <topic label="New Sibling Action" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#create-new-sibling-section"/>
          <topic label="New Association Action" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#create-new-association-section"/>
       </topic>
+      <topic label="New Model Object Wizards" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#model-object-wizards-section">
+         <topic label="Create Relational Table Wizard" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#create-relational-table-wizard-section"/>
+         <topic label="Create Relational Procedure Wizard" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#create-relational-procedure-wizard-section"/>
+         <topic label="Create Relational Index Wizard" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#create-relational-index-wizard-section"/>
+         <topic label="Create View Model Objects Wizards" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#create-view-model-children-section"/>
+      </topic>
       <topic label="Model Object Editors" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#model-object-editors-section">
          <topic label="Transformation Editor" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#transformation-editor-section">
             <topic label="Using the Reconciler" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#using-reconciler-section"/>
@@ -102,14 +108,14 @@
          </topic>
          <topic label="Input Set Editor (XML)" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#input-set-editor-section"/>
          <topic label="Choice Editor (XML)" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#choice-editor-section">
-            <topic label="Using the Choice Editor" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#d0e6429"/>
-            <topic label="Excluding Fragments" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#d0e6456"/>
-            <topic label="Editing Choice Criteria" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#d0e6475"/>
-            <topic label="Setting Choice Element Order" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#d0e6519"/>
-            <topic label="Setting a Default Choice Action " href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#d0e6538"/>
+            <topic label="Using the Choice Editor" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#d0e6540"/>
+            <topic label="Excluding Fragments" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#d0e6567"/>
+            <topic label="Editing Choice Criteria" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#d0e6586"/>
+            <topic label="Setting Choice Element Order" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#d0e6630"/>
+            <topic label="Setting a Default Choice Action " href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#d0e6649"/>
          </topic>
          <topic label="Recursion Editor (XML)" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#recursion-editor-section">
-            <topic label="The Recursion Editor" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#d0e6623"/>
+            <topic label="The Recursion Editor" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#d0e6734"/>
          </topic>
          <topic label="Operation Editor" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/editing-model-objects-chapter.html#operation-editor-section"/>
       </topic>
@@ -238,8 +244,8 @@
                <topic label="Mapping Transformation Diagram" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/ui-reference-appendix.html#mapping-transformation-diagram-section"/>
             </topic>
             <topic label="Table Editor" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/ui-reference-appendix.html#table-editor-section">
-               <topic label="Editing Properties" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/ui-reference-appendix.html#d0e13933"/>
-               <topic label="Inserting Table Rows" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/ui-reference-appendix.html#d0e13976"/>
+               <topic label="Editing Properties" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/ui-reference-appendix.html#d0e14044"/>
+               <topic label="Inserting Table Rows" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/ui-reference-appendix.html#d0e14087"/>
             </topic>
             <topic label="Simple Datatypes Editor" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/ui-reference-appendix.html#datatypes-editor-section"/>
             <topic label="Semantic Editor" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/ui-reference-appendix.html#semantic-editor-section"/>
