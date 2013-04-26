@@ -137,7 +137,7 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
 
             if (result) {
                 // Only if the resources passed the tests above do we bother with related resources
-                checkRelatedResources(status);
+                RefactorResourcesUtils.checkReadOnlyResources(getResources(), status);
             }
         } finally {
             progressMonitor.done();

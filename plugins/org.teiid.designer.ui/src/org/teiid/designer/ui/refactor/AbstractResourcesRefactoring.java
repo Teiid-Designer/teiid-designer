@@ -22,19 +22,13 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.refactor.IRefactorModelHandler.RefactorType;
 import org.teiid.designer.core.refactor.RefactorModelExtensionManager;
-import org.teiid.designer.core.refactor.RelatedResourceFinder;
-import org.teiid.designer.core.refactor.RelatedResourceFinder.Relationship;
-import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
-import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.ui.common.util.KeyInValueHashMap;
 import org.teiid.designer.ui.common.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.ui.common.util.UiUtil;
@@ -157,37 +151,6 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
     protected void clearChanges() {
         changes.clear();
         vdbChanges.clear();
-    }
-
-    protected void checkRelatedResources(RefactoringStatus status) {
-        for (IResource resource : resources) {
-            try {
-                ModelResource modelResource = ModelUtil.getModel(resource);
-
-                if (modelResource != null && modelResource.isReadOnly()) {
-                    status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("ResourcesRefactoring.readOnlyResourceError", resource.getName()))); //$NON-NLS-1$
-                    return;
-                }
-
-                RelatedResourceFinder finder = new RelatedResourceFinder(resource);
-                Collection<IFile> relatedFiles = finder.findRelatedResources(Relationship.ALL);
-
-                for (IFile relatedFile : relatedFiles) {
-                    try {
-                        modelResource = ModelUtil.getModel(relatedFile);
-                        if (modelResource != null && modelResource.isReadOnly()) {
-                            status.merge(RefactoringStatus.createWarningStatus(RefactorResourcesUtils.getString("ResourcesRefactoring.readOnlyRelatedResourceError", modelResource.getItemName()))); //$NON-NLS-1$
-                        }
-                    } catch (ModelWorkspaceException err) {
-                        ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
-                    }
-                }
-            } catch (Exception err) {
-                ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
-                status.merge(RefactoringStatus.createFatalErrorStatus(err.getMessage()));
-                return;
-            }
-        }
     }
 
     protected void checkResourcesNotEmpty(RefactoringStatus status) {

@@ -24,17 +24,24 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.index.IndexUtil;
 import org.teiid.designer.core.refactor.ModelResourceCollectorVisitor;
 import org.teiid.designer.core.refactor.PathPair;
+import org.teiid.designer.core.refactor.RelatedResourceFinder;
+import org.teiid.designer.core.refactor.RelatedResourceFinder.Relationship;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelResourceImpl;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.ui.UiConstants;
 
 /**
@@ -504,5 +511,47 @@ public class RefactorResourcesUtils {
             }
         }
         return false;
+    }
+
+    /**
+     * Check each resource in the collection as read-only and in turn check
+     * all dependent resources as to whether they are read-only. Populates
+     * the given status object with errors as appropriate.
+     *
+     * @param resources
+     * @param status
+     */
+    public static void checkReadOnlyResources(Collection<IResource> resources, RefactoringStatus status) {
+        CoreArgCheck.isNotNull(resources);
+        CoreArgCheck.isNotNull(status);
+        
+        for (IResource resource : resources) {
+            try {
+                ModelResource modelResource = ModelUtil.getModel(resource);
+
+                if (modelResource != null && modelResource.isReadOnly()) {
+                    status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("ResourcesRefactoring.readOnlyResourceError", resource.getName()))); //$NON-NLS-1$
+                    return;
+                }
+
+                RelatedResourceFinder finder = new RelatedResourceFinder(resource);
+                Collection<IFile> relatedFiles = finder.findRelatedResources(Relationship.ALL);
+
+                for (IFile relatedFile : relatedFiles) {
+                    try {
+                        modelResource = ModelUtil.getModel(relatedFile);
+                        if (modelResource != null && modelResource.isReadOnly()) {
+                            status.merge(RefactoringStatus.createWarningStatus(RefactorResourcesUtils.getString("ResourcesRefactoring.readOnlyRelatedResourceError", modelResource.getItemName()))); //$NON-NLS-1$
+                        }
+                    } catch (ModelWorkspaceException err) {
+                        ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
+                    }
+                }
+            } catch (Exception err) {
+                ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
+                status.merge(RefactoringStatus.createFatalErrorStatus(err.getMessage()));
+                return;
+            }
+        }
     }
 }
