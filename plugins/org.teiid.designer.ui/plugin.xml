@@ -31,6 +31,7 @@
    <extension-point id="modelObjectSpecialAction" 		name="%modelObjectSpecialAction" 		schema="schema/modelObjectSpecialAction.exsd"/>
    <extension-point id="generalPreferenceContributor" 	name="%generalPreferenceContributor" 	schema="schema/generalPreferenceContributor.exsd"/>
    <extension-point id="modelProjectAction"             name="%modelProjectAction"              schema="schema/modelProjectAction.exsd"/>
+   <extension-point id="modelExplorerSectionFactory" name="modelExplorerSectionFactory" schema="schema/modelExplorerStatusPanel.exsd"/>
 <!-- Model Project Nature -->
    <extension
          point="org.eclipse.ui.ide.projectNatureImages">
