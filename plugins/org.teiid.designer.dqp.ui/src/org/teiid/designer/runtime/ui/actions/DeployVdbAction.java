@@ -161,12 +161,17 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 		        	deployVdb(teiidServer, vdb, true);
 		        }
 		        
+			    String vdbName = vdb.getFullPath().removeFileExtension().lastSegment();
 		        try {
-		            if( teiidServer.hasVdb(vdb.getName()) && doCreateDS  ) {
+		            if( teiidServer.hasVdb(vdbName) && doCreateDS  ) {
 		                createVdbDataSource(vdb, jndiName, jndiName);
 		            }
 		        } catch (Exception ex) {
 		            DqpPlugin.Util.log(ex);
+		    		Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
+		    		String title = UTIL.getString(I18N_PREFIX + "problemDeployingVdbDataSource.title", vdbName, teiidServer); //$NON-NLS-1$
+					String message = UTIL.getString(I18N_PREFIX + "problemDeployingVdbDataSource.msg", vdbName, teiidServer); //$NON-NLS-1$
+					ErrorDialog.openError(shell, title, null, new Status(IStatus.ERROR, PLUGIN_ID, message, ex));
 		        }
 			}
 		}
@@ -325,7 +330,8 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     private static void createVdbDataSource(Object vdbOrVdbFile, String displayName, String jndiName) {
     	Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new Vdb((IFile) vdbOrVdbFile, null) : (Vdb) vdbOrVdbFile);
     	ITeiidServer teiidServer = getServerManager().getDefaultServer();
-    	teiidServer.createVdbDataSource(vdb.getFile().getName(), displayName, jndiName);
+	    String vdbName = vdb.getFile().getFullPath().removeFileExtension().lastSegment();
+    	teiidServer.createVdbDataSource(vdbName, displayName, jndiName);
     }
 
 }
