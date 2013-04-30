@@ -14,8 +14,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IMarkerResolution;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.vdb.VdbConstants;
+import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.Messages;
-import org.teiid.designer.vdb.ui.util.VdbUiUtil;
 
 /**
  *
@@ -57,7 +57,7 @@ public class VdbModelNotInProjectMarkerResolution  implements IMarkerResolution 
     }
     
     void fixVdb( IFile theVdb ) {
-    	VdbUiUtil.synchronizeWorkspace(theVdb);
+    	VdbUtil.synchronizeWorkspace(theVdb);
     }
     
     /**

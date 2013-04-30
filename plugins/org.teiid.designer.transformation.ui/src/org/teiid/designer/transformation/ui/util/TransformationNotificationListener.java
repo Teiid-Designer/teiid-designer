@@ -78,7 +78,7 @@ import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.editors.ModelObjectEditorPage;
 import org.teiid.designer.ui.event.ModelResourceEvent;
-import org.teiid.designer.ui.refactor.actions.RenameRefactorAction;
+import org.teiid.designer.ui.refactor.rename.RenameRefactorAction;
 import org.teiid.designer.ui.undo.ModelerUndoManager;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;

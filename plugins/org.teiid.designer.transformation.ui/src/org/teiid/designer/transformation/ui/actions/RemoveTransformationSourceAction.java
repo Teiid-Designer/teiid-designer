@@ -22,7 +22,6 @@ import org.teiid.designer.transformation.util.TransformationSqlHelper;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.editors.ModelObjectEditorPage;
 import org.teiid.designer.ui.editors.MultiPageModelEditor;
-import org.teiid.designer.ui.undo.ModelerUndoManager;
 
 /**
  * RemoveTransformationSource
@@ -111,8 +110,6 @@ public class RemoveTransformationSourceAction extends TransformationAction {
                 if (requiredStart) {
                     if(succeeded) {
                         ModelerCore.commitTxn();
-                        if( !canUndo)
-                            ModelerUndoManager.getInstance().clearAllEdits();
                     } else {
                         ModelerCore.rollbackTxn();
                     }

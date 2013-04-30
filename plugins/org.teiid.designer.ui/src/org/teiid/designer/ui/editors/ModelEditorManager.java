@@ -10,12 +10,10 @@ package org.teiid.designer.ui.editors;
 import static org.teiid.designer.ui.PluginConstants.Prefs.General.AUTO_OPEN_EDITOR_IF_NEEDED;
 import static org.teiid.designer.ui.UiConstants.Util;
 import static org.teiid.designer.ui.UiConstants.Extensions.MODEL_EDITOR;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -594,19 +592,6 @@ abstract public class ModelEditorManager {
         return result;
     }
 
-    // =============================================
-    // Undo/Redo Methods
-
-    public static void markNotSignificant( Object transactionID ) {
-        undoManager.markNotSignificant(transactionID);
-    }
-
-    public static void ignoreUndoableToolkitEdit( Object transactionID ) {
-        undoManager.ignoreUndoableToolkitEdit(transactionID);
-    }
-
-    // =============================================
-    
     public static ModelEditor getModelEditorForFile( final IFile file,
                                                      boolean forceOpen ) {
         ModelEditor result = null;

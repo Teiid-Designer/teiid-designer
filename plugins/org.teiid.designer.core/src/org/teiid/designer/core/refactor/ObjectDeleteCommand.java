@@ -9,10 +9,9 @@ package org.teiid.designer.core.refactor;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -177,7 +176,7 @@ public class ObjectDeleteCommand extends ResourceRefactorCommand {
     }
     
     @Override
-    protected IStatus refactorModelContents(IProgressMonitor monitor, final Map refactoredPaths ) {
+    protected IStatus refactorModelContents(IProgressMonitor monitor, final Collection<PathPair> refactoredPaths ) {
     	return null;
     }
     
@@ -234,8 +233,8 @@ public class ObjectDeleteCommand extends ResourceRefactorCommand {
     }
 
     @Override
-    protected Map getMovedResourcePathMap( boolean isUndo ) {
-        return new HashMap();
+    protected Collection<PathPair> getMovedResourcePathCollection( boolean isUndo ) {
+        return Collections.emptyList();
     }
 
     /* (non-Javadoc) We do not want to rebuild imports

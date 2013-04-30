@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -65,7 +64,7 @@ public class PreviewWsdlAction extends SortableSelectionAction {
             try {
                 wsdlGenerator.addWebServiceModel(webServiceModel.getEmfResource());
                 webServiceName = webServiceModel.getItemName();
-                IResource[] iResources = WorkspaceResourceFinderUtil.getDependentResources(webServiceModel.getResource());
+                List<? extends IResource> iResources = WorkspaceResourceFinderUtil.getDependentResources(webServiceModel.getResource());
                 for (IResource iResource : iResources) {
                     if (ModelIdentifier.isSchemaModel(iResource)) {
                         wsdlGenerator.addXsdModel(importSchema(iResource.getLocation().toOSString()), iResource.getLocation());

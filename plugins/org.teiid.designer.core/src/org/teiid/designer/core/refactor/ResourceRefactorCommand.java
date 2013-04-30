@@ -229,14 +229,14 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
                 result = modifyResource(this.getResource(), monitor);
 
                 if (result == null || result.getSeverity() < IStatus.ERROR) {
-                	final Map refactoredPaths = getMovedResourcePathMap(false);
+                	final Collection<PathPair> refactoredPaths = getMovedResourcePathCollection(false);
                 	result = refactorModelContents(monitor, refactoredPaths);
                 }
                 
                 // if modification succeeded, refactor the dependent files
                 if (result == null || result.getSeverity() < IStatus.ERROR) {
                     // Get the map of the refactored paths, that is old path mapped to the new refactored path
-                    final Map refactoredPaths = getMovedResourcePathMap(false);
+                    final Collection<PathPair> refactoredPaths = getMovedResourcePathCollection(false);
                     result = refactorDependentResources(monitor, refactoredPaths);
                 }
 
@@ -297,7 +297,7 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
         // Determine dependencies
         searchResults = dependencyResources(isUndo);
         statusList = new ResourceStatusList(searchResults, IStatus.OK);
-        this.dependencies = statusList.getImportedResourceList();
+        this.dependencies = statusList.getResourceList();
 
         this.problems.addAll(statusList.getProblems());
         return statusList.getHighestSeverity();
@@ -488,7 +488,7 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
      * @return
      */
     protected IStatus refactorDependentResources( IProgressMonitor monitor,
-                                                  final Map refactoredPaths ) {
+                                                  final Collection<PathPair> refactoredPathPairs ) {
         Collection errorList = new ArrayList();
         int severity = IStatus.OK;
 
@@ -505,13 +505,13 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
                         }
                         // defect 16804 - should not try to refactor read-only dependent resources:
                         if (!modelResource.isReadOnly()) {
-                            rebuildImports(modelResource, monitor, refactoredPaths);
+                            rebuildImports(modelResource, monitor, refactoredPathPairs);
 
                             modelResource.save(null, false);
                             
-                            RefactorModelExtensionManager.helpUpdateDependentModelContents(IRefactorModelHandler.RENAME, modelResource, refactoredPaths, monitor);
-                            
-                            modelResource.save(null, false);
+//                            RefactorModelExtensionManager.helpUpdateDependentModelContents(IRefactorModelHandler.RENAME, modelResource, refactoredPathPairs, monitor);
+//                            
+//                            modelResource.save(null, false);
                         } // endif -- readonly
                     } else {
                         if (severity < IStatus.WARNING) {
@@ -653,14 +653,14 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
 
     protected IStatus rebuildImports( ModelResource modelResource,
                                       IProgressMonitor monitor,
-                                      Map refactoredPaths ) throws ModelWorkspaceException {
+                                      Collection<PathPair> refactoredPathPairs ) throws ModelWorkspaceException {
         final OrganizeImportCommand importCommand = new OrganizeImportCommand();
         importCommand.setResource(modelResource.getEmfResource());
         importCommand.setIncludeDiagramReferences(true);
 
         // The OrganizeImportCommand has to be provided with a Map of old and new paths
         // of resources that are affected by refactoring.
-        importCommand.setRefactoredPaths(refactoredPaths);
+        importCommand.setRefactoredPaths(refactoredPathPairs);
         importCommand.setHandler(this.handler);
         IStatus status = importCommand.canExecute();
         if (status.isOK()) {
@@ -749,7 +749,7 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
         }
 
         redoResourceModification(monitor);
-        final Map refactoredPaths = getMovedResourcePathMap(false);
+        final Collection<PathPair> refactoredPaths = getMovedResourcePathCollection(false);
         
     	IStatus result = refactorModelContents(monitor, refactoredPaths);
     
@@ -768,7 +768,7 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
      */
     abstract protected IStatus redoResourceModification( IProgressMonitor monitor );
     
-    abstract protected IStatus refactorModelContents( IProgressMonitor monitor, Map refactoredPaths);
+    abstract protected IStatus refactorModelContents( IProgressMonitor monitor, Collection<PathPair> refactoredPathPairs);
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.RefactorCommand#undo(org.eclipse.core.runtime.IProgressMonitor)
@@ -784,7 +784,7 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
         }
 
         undoResourceModification(monitor);
-        final Map refactoredPaths = getMovedResourcePathMap(true);
+        final Collection<PathPair> refactoredPaths = getMovedResourcePathCollection(true);
     	IStatus result = refactorModelContents(monitor, refactoredPaths);
         
 	    // if modification succeeded, refactor the dependent files
@@ -942,7 +942,7 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
      * @param isUndo true if this operation is being undone.
      * @return
      */
-    protected abstract Map getMovedResourcePathMap( boolean isUndo );
+    protected abstract Collection<PathPair> getMovedResourcePathCollection( boolean isUndo );
 
     /** Indicate whether we should attempt to rebuild imports */
     protected boolean shouldRebuildImports() {

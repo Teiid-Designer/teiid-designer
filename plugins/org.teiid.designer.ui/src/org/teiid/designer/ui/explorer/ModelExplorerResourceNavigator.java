@@ -13,12 +13,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -74,6 +76,7 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -88,6 +91,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IGotoMarker;
+import org.eclipse.ui.operations.UndoActionHandler;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.ResourceTransfer;
@@ -109,7 +113,7 @@ import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.actions.DelegatableAction;
-import org.teiid.designer.ui.actions.DeleteResourceAction;
+import org.teiid.designer.ui.actions.DeleteAction;
 import org.teiid.designer.ui.actions.IModelerActionConstants;
 import org.teiid.designer.ui.actions.ModelProjectActionManager;
 import org.teiid.designer.ui.actions.ModelResourceActionManager;
@@ -133,7 +137,7 @@ import org.teiid.designer.ui.editors.ModelEditorSelectionSynchronizer;
 import org.teiid.designer.ui.event.ModelResourceEvent;
 import org.teiid.designer.ui.product.IModelerProductContexts;
 import org.teiid.designer.ui.properties.ModelObjectPropertySourceProvider;
-import org.teiid.designer.ui.refactor.actions.RenameRefactorAction;
+import org.teiid.designer.ui.refactor.rename.RenameRefactorAction;
 import org.teiid.designer.ui.search.IModelObjectMatch;
 import org.teiid.designer.ui.search.MetadataMatchInfo;
 import org.teiid.designer.ui.util.EObjectTransfer;
@@ -361,7 +365,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             actionsMap.put(EclipseGlobalActions.RENAME, renameAction);
             bars.setGlobalActionHandler(EclipseGlobalActions.RENAME, renameAction);
 
-            final IAction deleteAction = svc.getAction(DeleteResourceAction.class);
+            final IAction deleteAction = svc.getAction(DeleteAction.class);
             bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteAction);
 
             final IAction pasteAction = svc.getAction(PasteInResourceAction.class);
@@ -457,6 +461,11 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         ModelerCore.getWorkspace().addResourceChangeListener(markerListener);
 
         addCustomListeners();
+        
+        IUndoContext undoContext =  (IUndoContext)ResourcesPlugin.getWorkspace().getAdapter(IUndoContext.class);
+        UndoActionHandler undoAction = new UndoActionHandler(getSite(), undoContext);
+        undoAction.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_UNDO);
+        getViewSite().getActionBars().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
     }
 
     /**
@@ -942,7 +951,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                 // (if necessary) prior to deleting.
 
                 if (theMenu.find(ECLIPSE_DELETE_ID) != null) {
-                    IAction deleteAction = getActionService().getAction(DeleteResourceAction.class);
+                    IAction deleteAction = getActionService().getAction(DeleteAction.class);
                     theMenu.insertAfter(ECLIPSE_DELETE_ID, deleteAction);
                     theMenu.remove(ECLIPSE_DELETE_ID);
                 }
@@ -1082,36 +1091,32 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             }
         }
 
-        // if single selection and ANY resource add refactor menu
+        MenuManager refactorMenu = getActionService().getRefactorMenu(selection, getSite());
+        // insert menu at end of the cut/copy/paste group
+        if (refactorMenu != null) {
+            // find the location. Default to the end of the whole
+            // context menu.
+            if (theMenu.find(ECLIPSE_RENAME_ID) != null) {
+                theMenu.insertAfter(ECLIPSE_RENAME_ID, refactorMenu);
+
+            } else {
+                theMenu.insertBefore(ContextMenu.ADDITIONS, refactorMenu);
+            }
+        }
+
+        // remove the 'other' rename and move
+        if (theMenu.find(ECLIPSE_RENAME_ID) != null) {
+            theMenu.remove(ECLIPSE_RENAME_ID);
+        }
+
+        // override the move in the context menu same as delete.
+        if (theMenu.find(ECLIPSE_MOVE_ID) != null) {
+            theMenu.remove(ECLIPSE_MOVE_ID);
+        }
+        
         if (SelectionUtilities.isSingleSelection(selection)) {
             Object obj = SelectionUtilities.getSelectedObject(selection);
 
-            if (obj instanceof IResource) {
-                MenuManager refactorMenu = getActionService().getRefactorMenu(selection);
-
-                // insert menu at end of the cut/copy/paste group
-                if (refactorMenu != null) {
-                    // find the location. Default to the end of the whole
-                    // context menu.
-                    if (theMenu.find(ECLIPSE_RENAME_ID) != null) {
-                        theMenu.insertAfter(ECLIPSE_RENAME_ID, refactorMenu);
-
-                    } else {
-                        theMenu.insertBefore(ContextMenu.ADDITIONS, refactorMenu);
-                    }
-                }
-
-                // remove the 'other' rename and move
-                if (theMenu.find(ECLIPSE_RENAME_ID) != null) {
-                    theMenu.remove(ECLIPSE_RENAME_ID);
-                }
-
-                // override the move in the context menu same as delete.
-                if (theMenu.find(ECLIPSE_MOVE_ID) != null) {
-                    theMenu.remove(ECLIPSE_MOVE_ID);
-                }
-
-            }
             // Add Remove project action if selection is IProject and it is closed
             if (obj instanceof IProject) {
                 if (!((IProject)obj).isOpen()) {

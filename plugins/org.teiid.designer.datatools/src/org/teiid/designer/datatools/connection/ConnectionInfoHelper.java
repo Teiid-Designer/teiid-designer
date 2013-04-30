@@ -220,6 +220,8 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
      */
     @Override
     public Properties getTranslatorProperties( ModelResource modelResource ) {
+        CoreArgCheck.isNotNull(modelResource);
+        
     	Properties props = null;
     	
         try {

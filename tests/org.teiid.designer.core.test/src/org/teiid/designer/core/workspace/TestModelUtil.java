@@ -15,10 +15,7 @@ import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.teiid.core.util.SmartTestDesignerSuite;
-import org.teiid.designer.common.vdb.VdbHeader;
-import org.teiid.designer.common.vdb.VdbModelInfo;
 import org.teiid.designer.common.xmi.XMIHeader;
-import org.teiid.designer.core.workspace.ModelFileUtil;
 
 
 
@@ -122,62 +119,6 @@ public class TestModelUtil extends TestCase {
     // public void testModelFileNameWithInvalidCharacters() {
     //        assertTrue( false == ModelUtil.isValidModelFileName("Model / file with invalid ? characters.xml") ); //$NON-NLS-1$
     // }
-
-    public void testGetVdbHeaderForBooksVdbArchive() {
-        final String testDataPath = SmartTestDesignerSuite.getGlobalTestDataPath() + "global/baselinevdbs/books/BooksXML_VDB.vdb"; //$NON-NLS-1$
-        final File f = new File(testDataPath);
-        assertTrue(f.exists());
-        final VdbHeader header = ModelUtil.getVdbHeader(f);
-        assertNotNull(header);
-        assertEquals(5, header.getModelInfos().length);
-        assertEquals(0, header.getNonModelInfos().length);
-        assertEquals("mmuuid:89582d80-0e17-1eec-8518-c32201e76066", header.getUUID()); //$NON-NLS-1$
-    }
-
-    public void testGetVdbHeaderForNonVdbArchive() {
-        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "emptyModel.xmi"); //$NON-NLS-1$
-        assertTrue(null == ModelUtil.getVdbHeader(f));
-    }
-
-    public void testGetVdbHeaderForNullArgument() {
-        assertTrue(null == ModelUtil.getVdbHeader(null));
-    }
-
-    public void testGetVdbHeaderForPartsVdbArchive() {
-        final String testDataPath = SmartTestDesignerSuite.getGlobalTestDataPath()
-                                    + "global/baselinevdbs/partssupplier/PartsSupplier_VDB.vdb"; //$NON-NLS-1$
-        final File f = new File(testDataPath);
-        assertTrue(f.exists());
-        final VdbHeader header = ModelUtil.getVdbHeader(f);
-        assertNotNull(header);
-        assertEquals(3, header.getModelInfos().length);
-        assertEquals(0, header.getNonModelInfos().length);
-        assertEquals("mmuuid:155720c0-14df-1eec-8518-c32201e76066", header.getUUID()); //$NON-NLS-1$
-
-        VdbModelInfo info = header.getModelInfos()[0];
-        assertEquals("PartSupplier_Oracle.xmi", info.getName()); //$NON-NLS-1$
-        assertEquals("/Parts Project/PartSupplier_Oracle.xmi", info.getPath()); //$NON-NLS-1$
-        assertEquals("mmuuid:579b2e80-1274-1eec-8518-c32201e76066", info.getUUID()); //$NON-NLS-1$
-        assertEquals("PHYSICAL", info.getModelType()); //$NON-NLS-1$
-        assertEquals("http://www.metamatrix.com/metamodels/Relational", info.getPrimaryMetamodelURI()); //$NON-NLS-1$
-
-        info = header.getModelInfos()[2];
-        assertEquals("PartsVirtual.xmi", info.getName()); //$NON-NLS-1$
-        assertEquals("/Parts Project/PartsVirtual.xmi", info.getPath()); //$NON-NLS-1$
-        assertEquals("mmuuid:fb52cb80-128a-1eec-8518-c32201e76066", info.getUUID()); //$NON-NLS-1$
-        assertEquals("VIRTUAL", info.getModelType()); //$NON-NLS-1$
-        assertEquals("http://www.metamatrix.com/metamodels/Relational", info.getPrimaryMetamodelURI()); //$NON-NLS-1$
-    }
-
-    public void testGetVdbHeaderForVdbArchive() {
-        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "builtInDatatypes.zip"); //$NON-NLS-1$
-        assertTrue(null == ModelUtil.getVdbHeader(f));
-    }
-
-    public void testGetVdbHeaderWithZipFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "builtInDatatypes.zip"); //$NON-NLS-1$
-        assertTrue(null == ModelUtil.getVdbHeader(f));
-    }
 
     public void testGetXmiHeaderWith0200File() {
         final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "partsSupplierOracle_v0200.xml"); //$NON-NLS-1$

@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -519,8 +518,8 @@ public class OrganizeImportCommandHelperNonXsd extends OrganizeImportCommandHelp
      * @since 4.3
      */
     @Override
-    protected void setRefactoredPaths( Map paths ) {
-        getHelper().setRefactoredPaths(paths);
+    protected void setRefactoredPaths( Collection<PathPair> pathPairs ) {
+        getHelper().setRefactoredPaths(pathPairs);
     }
 
     /**
