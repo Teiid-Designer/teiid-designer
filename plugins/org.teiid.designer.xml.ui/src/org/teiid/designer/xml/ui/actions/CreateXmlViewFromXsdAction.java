@@ -38,7 +38,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
 import org.teiid.designer.ui.UiConstants;
-import org.teiid.designer.ui.actions.DeleteResourceAction;
+import org.teiid.designer.ui.actions.DeleteAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
@@ -168,7 +168,7 @@ public class CreateXmlViewFromXsdAction extends SortableSelectionAction implemen
                                         IResource resource = xmlModel.getUnderlyingResource();
 
                                         if (resource != null) {
-                                            DeleteResourceAction action = new DeleteResourceAction();
+                                            DeleteAction action = new DeleteAction();
                                             action.selectionChanged(null, new StructuredSelection(resource));
                                             action.run();
                                         }

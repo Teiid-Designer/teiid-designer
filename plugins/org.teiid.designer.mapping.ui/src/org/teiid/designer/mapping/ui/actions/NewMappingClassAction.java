@@ -15,7 +15,6 @@ import org.teiid.designer.mapping.ui.UiConstants;
 import org.teiid.designer.mapping.ui.UiPlugin;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.editors.ModelEditor;
-import org.teiid.designer.ui.undo.ModelerUndoManager;
 
 
 /**
@@ -61,7 +60,6 @@ public class NewMappingClassAction extends MappingAction {
                     if (requiredStart) {
                         if (succeeded) {
                             ModelerCore.commitTxn();
-                            if (!canUndo) ModelerUndoManager.getInstance().clearAllEdits();
                         } else {
                             ModelerCore.rollbackTxn();
                         }

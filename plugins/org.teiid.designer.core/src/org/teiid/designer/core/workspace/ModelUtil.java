@@ -41,14 +41,14 @@ import org.teiid.core.designer.util.FileSeparatorUtil;
 import org.teiid.core.designer.util.FileUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.designer.common.vdb.VdbHeader;
-import org.teiid.designer.common.vdb.VdbHeaderReader;
 import org.teiid.designer.common.xsd.XsdHeader;
 import org.teiid.designer.common.xsd.XsdHeaderReader;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.ResourceFinder;
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.core.index.IndexUtil;
+import org.teiid.designer.core.reader.ZipReader;
+import org.teiid.designer.core.reader.ZipReaderCallback;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.resource.MMXmiResource;
 import org.teiid.designer.core.xmi.XMIHeader;
@@ -64,6 +64,11 @@ import org.teiid.designer.metamodels.core.extension.ExtensionPackage;
  * @since 8.0
  */
 public class ModelUtil {
+
+    /**
+     * Path to vdb.xml located in vdb files
+     */
+    public static final String META_INF_VDB_XML = "META-INF/vdb.xml"; //$NON-NLS-1$
 
     public static final String DOT_PROJECT = ModelFileUtil.DOT_PROJECT;
     public static final String FILE_COLON = ModelFileUtil.FILE_COLON;
@@ -344,11 +349,11 @@ public class ModelUtil {
         IResource theResource = resource.getResource();
 
         // Get the array of resources that this resource depends upon
-        IResource[] dependents = WorkspaceResourceFinderUtil.getDependentResources(theResource);
+        List<IFile> dependents = WorkspaceResourceFinderUtil.getDependentResources(theResource);
 
         ModelResource mo = null;
-        for (int i = 0; i != dependents.length; ++i) {
-            mo = getModelResource((IFile)dependents[i], true);
+        for (IFile dependentResource : dependents) {
+            mo = getModelResource(dependentResource, true);
             if (mo != null) {
                 if (result.isEmpty()) {
                     result = new ArrayList();
@@ -515,18 +520,23 @@ public class ModelUtil {
     }
 
     /**
-     * Return the VdbHeader for the specified vdb file or null if the file does not represent a vdb.
+     * Assuming the resource is a vdb, read its vdb.xml and pass it to the
+     * given callback, which will process it in its custom manner.
      * 
-     * @param resource The file of a Teiid Designer vdb file.
-     * @return The VdbHeader for the model file
+     * @param resource
+     * @param callback
+     *
+     * @throws Exception
      */
-    public static VdbHeader getVdbHeader( final File resource ) {
-        if (resource != null && resource.isFile() && resource.exists()) if (ModelFileUtil.isVdbArchiveFile(resource)) try {
-            return VdbHeaderReader.readHeader(resource);
-        } catch (final TeiidDesignerException e) {
-            ModelerCore.Util.log(e);
-        }
-        return null;
+    public static void readVdbHeader( final File resource, ZipReaderCallback callback) throws Exception {
+        if (resource == null || ! resource.isFile() || ! resource.exists())
+            return;
+
+        if (! ModelFileUtil.isVdbArchiveFile(resource))
+            return;
+
+        ZipReader reader = new ZipReader(resource);
+        reader.readEntry(META_INF_VDB_XML, callback);
     }
 
     /**

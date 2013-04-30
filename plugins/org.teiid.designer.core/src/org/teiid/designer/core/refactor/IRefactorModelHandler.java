@@ -8,11 +8,8 @@
 package org.teiid.designer.core.refactor;
 
 import java.util.Collection;
-import java.util.Map;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.teiid.designer.core.workspace.ModelResource;
 
 
 /**
@@ -24,33 +21,16 @@ import org.teiid.designer.core.workspace.ModelResource;
  * @since 8.0
  */
 public interface IRefactorModelHandler {
-	@SuppressWarnings("javadoc")
-	public final static int RENAME = 0;
-	@SuppressWarnings("javadoc")
-	public final static int MOVE = 1;
-	@SuppressWarnings("javadoc")
-	public final static int DELETE = 2;
-	
-	/**
-	 * Method which delegates to all handlers the ability to update models that are dependent on the refactored models
-	 * 
-	 * @param type the type of the refactor operations (see <code>IRefactorModelHandler</code>
-	 * @param modelResource the dependent model
-	 * @param refactoredPaths a Map containing original and new model paths
-	 * @param monitor the ProgressMonitor
-	 */
-	void helpUpdateDependentModelContents(int type, ModelResource modelResource, Map refactoredPaths, IProgressMonitor monitor);
-	
-	/**
-	 * Method which delegates to all handlers the ability to update or perform internal refactoring for the refactored models
-	 * 
-	 * @param type
-	 * @param refactoredModelResource
-	 * @param refactoredPaths
-	 * @param monitor
-	 */
-	void helpUpdateModelContents(int type, ModelResource refactoredModelResource, Map refactoredPaths, IProgressMonitor monitor);
-	
+
+    /**
+     * Type of refactoring being performed
+     */
+    public enum RefactorType {
+	    RENAME,
+	    MOVE,
+	    DELETE;
+    }
+
 	/**
 	 * Method which delegates to all handlers the ability to update or perform internal refactoring for the deleted models
 	 * 
@@ -58,7 +38,7 @@ public interface IRefactorModelHandler {
 	 * @param directDependentResources
 	 * @param monitor
 	 */
-	void helpUpdateModelContentsForDelete(Collection<Object> deletedResourcePaths, Collection<Object> directDependentResources, IProgressMonitor monitor);
+	void helpUpdateModelContentsForDelete(Collection<IResource> deletedResourcePaths, Collection<IResource> directDependentResources, IProgressMonitor monitor);
 	
 	/**
 	 * Method to allow approving the refactoring before execution.
@@ -68,14 +48,13 @@ public interface IRefactorModelHandler {
 	 * @param monitor
 	 * @return true if preprocessing confirms that refactoring should continue
 	 */
-	boolean preProcess(final int refactorType, final IResource refactoredResource, IProgressMonitor monitor);
+	boolean preProcess(RefactorType refactorType, final IResource refactoredResource, IProgressMonitor monitor);
 	
 	/**
 	 * Method to allow post-processing after refactoring
 	 * 
 	 * @param refactorType
 	 * @param refactoredResource
-	 * @param monitor
 	 */
-	void postProcess(final int refactorType, final IResource refactoredResource, IProgressMonitor monitor);
+	void postProcess(RefactorType refactorType, final IResource refactoredResource);
 }

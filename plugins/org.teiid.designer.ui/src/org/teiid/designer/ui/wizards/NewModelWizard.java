@@ -57,7 +57,7 @@ import org.teiid.designer.metamodels.core.ModelImport;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
-import org.teiid.designer.ui.actions.DeleteResourceAction;
+import org.teiid.designer.ui.actions.DeleteAction;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
 import org.teiid.designer.ui.editors.ModelEditorManager;
@@ -216,7 +216,7 @@ public class NewModelWizard extends AbstractWizard
                     // this wizard performs the real rollback (i.e. delete new resource)
                     if (overrideRollback) {
                         if (newModelResource != null) {
-                            DeleteResourceAction action = new DeleteResourceAction();
+                            DeleteAction action = new DeleteAction();
                             action.selectionChanged(null, new StructuredSelection(newModelResource));
                             action.run();
                         }

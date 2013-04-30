@@ -499,63 +499,7 @@
          </action>
       </actionSet>
    </extension>
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            label="%RefactorActionSet.label"
-            description="%RefactorActionSet.description"
-            visible="false"
-            id="RefactorActionSet">
-<!-- =========================================================================== -->
-<!-- Refactoring Menu                                                            -->
-<!-- =========================================================================== -->
-         <menu
-               label="%Refactoring.menu.label"
-               path="edit"
-               id="org.teiid.designer.ui.refactoring.menu">
-            <separator
-                  name="undoRedoGroup">
-            </separator>
-            <separator
-                  name="reorgGroup">
-            </separator>
-            <separator
-                  name="additions">
-            </separator>
-         </menu>
-<!-- undo/redo group  -->
-         <action
-               label="%refactoring.redoAction.label"
-               class="org.teiid.designer.ui.refactor.actions.RedoRefactoringAction"
-               menubarPath="org.teiid.designer.ui.refactoring.menu/undoRedoGroup"
-               id="RedoAction">
-         </action>
-<!--definitionId="org.eclipse.jdt.ui.edit.text.java.refactor.redo"-->
-         <action
-               label="%refactoring.undoAction.label"
-               class="org.teiid.designer.ui.refactor.actions.UndoRefactoringAction"
-               menubarPath="org.teiid.designer.ui.refactoring.menu/undoRedoGroup"
-               id="UndoAction">
-         </action>
-<!--definitionId="org.eclipse.jdt.ui.edit.text.java.refactor.undo"-->
-<!-- reorg group  -->
-         <action
-               label="%refactoring.moveAction.label"
-               class="org.teiid.designer.ui.refactor.actions.MoveRefactorAction"
-               menubarPath="org.teiid.designer.ui.refactoring.menu/reorgGroup"
-               id="Move">
-         </action>
-<!--
-			definitionId="org.teiid.designer.ui.edit.text.java.move.element"
-			retarget="true" /> -->
-         <action
-               label="%refactoring.renameAction.label"
-               class="org.teiid.designer.ui.refactor.actions.RenameRefactorAction"
-               menubarPath="org.teiid.designer.ui.refactoring.menu/reorgGroup"
-               id="Rename">
-         </action>
-      </actionSet>
-   </extension>
+
 <!--
 	Add Metadata action set to this perspective to make it's menu visible.
 -->
@@ -565,9 +509,6 @@
             targetID="modelerPerspective">
          <actionSet
                id="metadataActionSet">
-         </actionSet>
-         <actionSet
-               id="RefactorActionSet">
          </actionSet>
          <view
                id="org.eclipse.wst.server.ui.ServersView"
@@ -995,5 +936,21 @@
             id="defaultServerVersionPreferenceContributor">
       </preference>      
 	</extension>
+   <extension
+         point="org.eclipse.ltk.core.refactoring.refactoringContributions">
+      <contribution
+            class="org.teiid.designer.ui.refactor.move.MoveResourcesContribution"
+            id="org.teiid.designer.ui.refactor.move">
+      </contribution>
+      <contribution
+            class="org.teiid.designer.ui.refactor.rename.RenameResourceContribution"
+            id="org.teiid.designer.ui.refactor.rename">
+      </contribution>
+      <contribution
+            class="org.teiid.designer.ui.refactor.delete.DeleteResourcesContribution"
+            id="org.teiid.designer.ui.refactor.delete">
+      </contribution>
+   </extension>
+	
 
 </plugin>

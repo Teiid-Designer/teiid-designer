@@ -39,7 +39,6 @@ import org.teiid.designer.transformation.validation.TransformationValidator;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.editors.ModelEditorManager;
-import org.teiid.designer.ui.undo.ModelerUndoManager;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.query.ui.sqleditor.component.QueryDisplayNode;
 
@@ -305,9 +304,6 @@ public class ReconcileTransformationAction extends TransformationAction implemen
                                 if (succeeded) {
                                     ModelerCore.commitTxn();
                                     tObjEditorPage.refreshEditorContent();
-                                    if (!canUndo) {
-                                        ModelerUndoManager.getInstance().clearAllEdits();
-                                    }
                                 } else {
                                     ModelerCore.rollbackTxn();
                                     txnOK = false;
@@ -338,9 +334,6 @@ public class ReconcileTransformationAction extends TransformationAction implemen
                                 if (succeeded) {
                                     ModelerCore.commitTxn();
                                     tObjEditorPage.refreshEditorContent();
-                                    if (!canUndo) {
-                                        ModelerUndoManager.getInstance().clearAllEdits();
-                                    }
                                 } else {
                                     ModelerCore.rollbackTxn();
                                 }

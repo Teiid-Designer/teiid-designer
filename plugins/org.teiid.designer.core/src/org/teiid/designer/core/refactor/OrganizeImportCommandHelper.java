@@ -8,8 +8,8 @@
 package org.teiid.designer.core.refactor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -160,8 +160,8 @@ public abstract class OrganizeImportCommandHelper{
      * @param paths
      * @since 4.3
      */
-    protected void setRefactoredPaths(Map paths) {
-        finderHelper.setRefactoredPaths(paths);
+    protected void setRefactoredPaths(Collection<PathPair> pathPairs) {
+        finderHelper.setRefactoredPaths(pathPairs);
     }
     
     /**

@@ -32,7 +32,7 @@ import org.teiid.designer.ui.actions.DelegatableAction;
 import org.teiid.designer.ui.actions.TreeViewerRenameAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.WidgetUtil;
-import org.teiid.designer.ui.refactor.actions.RenameRefactorAction;
+import org.teiid.designer.ui.refactor.rename.RenameRefactorAction;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 

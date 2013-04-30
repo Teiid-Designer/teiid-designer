@@ -20,7 +20,6 @@ import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.Messages;
 import org.teiid.designer.vdb.ui.editor.VdbEditor;
 import org.teiid.designer.vdb.ui.util.VdbUiRefactorHandler;
-import org.teiid.designer.vdb.ui.util.VdbUiUtil;
 
 /**
  *
@@ -70,7 +69,7 @@ public class VdbModelPathResolution implements IMarkerResolution {
     }
     
     void fixVdb( IFile theVdb ) {
-    	VdbUiUtil.synchronizeVdb(theVdb, false);
+    	VdbUtil.synchronizeVdb(theVdb, false);
     }
     
     /**

@@ -21,7 +21,6 @@ import org.teiid.designer.mapping.ui.model.MappingExtentNode;
 import org.teiid.designer.mapping.ui.part.MappingExtentEditPart;
 import org.teiid.designer.metamodels.transformation.MappingClassColumn;
 import org.teiid.designer.ui.editors.ModelEditor;
-import org.teiid.designer.ui.undo.ModelerUndoManager;
 
 
 /**
@@ -83,7 +82,6 @@ public class DeleteMappingLinksAction extends MappingAction {
                     if (requiredStart) {
                         if (succeeded) {
                             ModelerCore.commitTxn();
-                            if (!canUndo) ModelerUndoManager.getInstance().clearAllEdits();
                         } else {
                             ModelerCore.rollbackTxn();
                         }

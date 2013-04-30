@@ -50,7 +50,7 @@ import org.teiid.designer.core.transaction.UnitOfWorkImpl;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.ui.UiPlugin;
-import org.teiid.designer.ui.actions.DeleteResourceAction;
+import org.teiid.designer.ui.actions.DeleteAction;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -311,7 +311,7 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
                 final List newResources = builder.getAllNewResources();
                 if (newResources != null && !newResources.isEmpty()) {
 
-                    DeleteResourceAction action = new DeleteResourceAction();
+                    DeleteAction action = new DeleteAction();
                     action.selectionChanged(null, new StructuredSelection(newResources));
                     action.run();
 

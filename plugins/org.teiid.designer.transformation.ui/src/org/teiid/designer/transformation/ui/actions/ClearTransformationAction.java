@@ -22,7 +22,6 @@ import org.teiid.designer.transformation.util.SqlMappingRootCache;
 import org.teiid.designer.transformation.util.SqlTransformationStatusChangeEvent;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.ui.editors.ModelEditor;
-import org.teiid.designer.ui.undo.ModelerUndoManager;
 
 
 /**
@@ -152,9 +151,6 @@ public class ClearTransformationAction extends TransformationAction implements E
                 if (requiredStart) {
                     if(succeeded) {
                         ModelerCore.commitTxn();
-                        if( !canUndo) {
-                            ModelerUndoManager.getInstance().clearAllEdits();
-                        }
                     } else {
                         ModelerCore.rollbackTxn();
                     }

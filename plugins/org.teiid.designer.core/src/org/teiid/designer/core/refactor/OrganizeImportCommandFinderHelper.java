@@ -9,13 +9,10 @@ package org.teiid.designer.core.refactor;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -53,21 +50,21 @@ import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 public class OrganizeImportCommandFinderHelper {
 
     private Resource resource;
-    private Map refactoredPaths;
+    private Collection<PathPair> refactoredPaths;
 
     protected OrganizeImportCommandFinderHelper() {
-        this.refactoredPaths = new HashMap();
+        this.refactoredPaths = new ArrayList<PathPair>();
     }
 
     /**
-     * @param paths
+     * @param pathPairs
      * @since 4.3
      */
-    protected void setRefactoredPaths( Map paths ) {
-        if (paths != null) {
-            this.refactoredPaths = paths;
+    protected void setRefactoredPaths( Collection<PathPair> pathPairs ) {
+        if (pathPairs != null) {
+            this.refactoredPaths = pathPairs;
         } else {
-            this.refactoredPaths = new HashMap();
+            this.refactoredPaths = new ArrayList<PathPair>();
         }
     }
 
@@ -427,9 +424,8 @@ public class OrganizeImportCommandFinderHelper {
     protected IPath findFromRefactoredPaths( String uriPath ) {
 
         if (this.refactoredPaths != null) {
-            Set keys = refactoredPaths.keySet();
-            for (Iterator iter = keys.iterator(); iter.hasNext();) {
-                String oldPath = iter.next().toString();
+            for (PathPair pathPair : refactoredPaths) {
+                String oldPath = pathPair.getSourcePath();
                 if (uriPath.endsWith(oldPath)) {
                     return new Path(oldPath);
                 }
@@ -479,15 +475,11 @@ public class OrganizeImportCommandFinderHelper {
         if (schemaLocation == null) return null;
 
         IPath currentPath = new Path(schemaLocation);
-        Iterator iter = refactoredPaths.keySet().iterator();
-        String oldPath;
 
-        while (iter.hasNext()) {
-            oldPath = iter.next().toString();
-            IPath oldPathRef = new Path(oldPath);
+        for (PathPair pathPair : refactoredPaths) {
+            IPath oldPathRef = new Path(pathPair.getSourcePath());
             if (oldPathRef.lastSegment().equals(currentPath.lastSegment())) {
-                String newPath = refactoredPaths.get(oldPath).toString();
-                return new Path(newPath);
+                return new Path(pathPair.getTargetPath());
             }
         }
 

@@ -21,7 +21,7 @@ import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.actions.DelegatableAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
-import org.teiid.designer.ui.refactor.actions.MoveRefactorAction;
+import org.teiid.designer.ui.refactor.move.MoveRefactorAction;
 
 
 /**
