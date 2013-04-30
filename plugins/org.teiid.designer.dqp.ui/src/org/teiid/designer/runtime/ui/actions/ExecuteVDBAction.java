@@ -7,12 +7,18 @@
  */
 package org.teiid.designer.runtime.ui.actions;
 
+import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
@@ -21,6 +27,8 @@ import org.teiid.designer.runtime.ui.vdb.ExecuteVdbWorker;
 import org.teiid.designer.runtime.ui.vdb.VdbConstants;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.vdb.Vdb;
 
 
 /**
@@ -37,6 +45,9 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
     
 	static ExecuteVdbWorker worker;
 
+	/**
+	 * Execute VDB constructor
+	 */
     public ExecuteVDBAction() {
         super();
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.EXECUTE_VDB));
@@ -56,8 +67,8 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
     }
 
     /**
-     * @param selection
-     * @return
+     * @param selection the selection
+     * @return 'true' if applicable selection, 'false' if not
      */
     @Override
     public boolean isApplicable( ISelection selection ) {
@@ -82,7 +93,16 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
      */
     @Override
     public void run() {
+    	if(!checkForConnectedServer()) return;
+    	
     	IFile vdb = selectedVDB;
+    	
+    	if(!isVdbSyncd(vdb)) {
+    		Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
+    		String title = UTIL.getString("VdbNotSyncdDialog.title"); //$NON-NLS-1$
+    		String msg = UTIL.getString("VdbNotSyncdDialog.msg"); //$NON-NLS-1$
+        	if (!MessageDialog.openQuestion(shell,title,msg)) return;
+     	}
     	
     	if (vdb == null) {
     		ExecuteVdbDialog dialog = new ExecuteVdbDialog(worker.getShell(), null);
@@ -99,6 +119,33 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
     	}
     }
     
+    /*
+     * Check that the default server is connected.  Show dialog if it is not.
+     * @return 'true' if default server is connected, 'false' if not.
+     */
+    private boolean checkForConnectedServer() {
+        ITeiidServer teiidServer = getServerManager().getDefaultServer();
+        if(!teiidServer.isConnected()) {
+    		Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
+    		String title = UTIL.getString("ActionRequiresServer.title"); //$NON-NLS-1$
+    		String msg = UTIL.getString("ActionRequiresServer.msg"); //$NON-NLS-1$
+        	MessageDialog.openInformation(shell,title,msg);
+        	return false;
+        }
+        return true;
+    }
+    
+    private boolean isVdbSyncd(IFile file) {
+    	Vdb vdb = new Vdb(file, null);
+    	return vdb.isSynchronized();
+    }
+    
+    /**
+     * Execute the VDB
+     * @param teiidServer the TeiidServer instance
+     * @param vdbName the VDB
+     * @throws Exception exception
+     */
     public static void executeVdb( ITeiidServer teiidServer, String vdbName ) throws Exception {
     	if( worker == null ) {
     		worker = new ExecuteVdbWorker();
@@ -106,6 +153,9 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
     	worker.processForDTP(teiidServer, vdbName);
 	}
     
+    private static TeiidServerManager getServerManager() {
+        return DqpPlugin.getInstance().getServerManager();
+    }
 
 
     @Override

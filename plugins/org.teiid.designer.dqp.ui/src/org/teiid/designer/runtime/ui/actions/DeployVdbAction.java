@@ -42,7 +42,6 @@ import org.teiid.designer.ui.actions.ISelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.vdb.Vdb;
-import org.teiid.designer.vdb.Vdb;
 
 
 /**
@@ -67,7 +66,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     /**
      * Create a new instance with given properties
      * 
-     * @param properties
+     * @param properties the properties
      */
     public DeployVdbAction(Properties properties) {
         super();
@@ -122,8 +121,11 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
      */
     @Override
     public void run() {
-        ITeiidServer teiidServer = getServerManager().getDefaultServer();
+    	// Make sure default server is connected
+    	if(!checkForConnectedServer()) return;
 
+    	ITeiidServer teiidServer = getServerManager().getDefaultServer();
+        
         for (IFile nextVDB : this.selectedVDBs) {
             boolean doDeploy = VdbRequiresSaveChecker.insureOpenVdbSaved(nextVDB);
             if (doDeploy) {
@@ -136,6 +138,11 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
                     }
                 } catch (Exception ex) {
                     DqpPlugin.Util.log(ex);
+		    		Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
+				    String vdbName = nextVDB.getFullPath().removeFileExtension().lastSegment();
+		    		String title = UTIL.getString(I18N_PREFIX + "problemDeployingVdbDataSource.title", vdbName, teiidServer); //$NON-NLS-1$
+					String message = UTIL.getString(I18N_PREFIX + "problemDeployingVdbDataSource.msg", vdbName, teiidServer); //$NON-NLS-1$
+					ErrorDialog.openError(shell, title, null, new Status(IStatus.ERROR, PLUGIN_ID, message, ex));
                 }
             }
         }
@@ -145,6 +152,9 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
      * Ask the user to select the vdb and deploy it
      */
     public void queryUserAndRun() {
+    	// Make sure default server is connected
+    	if(!checkForConnectedServer()) return;
+    	
         ITeiidServer teiidServer = getServerManager().getDefaultServer();
         
         DeployVdbDialog dialog = new DeployVdbDialog(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(), designerProperties);
@@ -202,6 +212,22 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
         }
     }
 
+    /*
+     * Check that the default server is connected.  Show dialog if it is not.
+     * @return 'true' if default server is connected, 'false' if not.
+     */
+    private boolean checkForConnectedServer() {
+        ITeiidServer teiidServer = getServerManager().getDefaultServer();
+        if(!teiidServer.isConnected()) {
+    		Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
+    		String title = UTIL.getString("ActionRequiresServer.title"); //$NON-NLS-1$
+    		String msg = UTIL.getString("ActionRequiresServer.msg"); //$NON-NLS-1$
+        	MessageDialog.openInformation(shell,title,msg);
+        	return false;
+        }
+        return true;
+    }
+
     private static TeiidServerManager getServerManager() {
         return DqpPlugin.getInstance().getServerManager();
     }
@@ -218,9 +244,9 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 	/**
 	 * Deploy the given vdb to the given teiid server
 	 * 
-	 * @param teiidServer
-	 * @param vdbOrVdbFile
-	 * @param doCreateDataSource
+	 * @param teiidServer the Teiid Server instance
+	 * @param vdbOrVdbFile the VDB
+	 * @param doCreateDataSource 'true' to create corresponding datasource, 'false' if not.
 	 */
 	public static void deployVdb(ITeiidServer teiidServer, final Object vdbOrVdbFile, final boolean doCreateDataSource) {
 		Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
@@ -237,6 +263,13 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 
 			Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new Vdb(
 					(IFile) vdbOrVdbFile, null) : (Vdb) vdbOrVdbFile);
+
+			if(!vdb.isSynchronized()) {
+	    		String title = UTIL.getString("VdbNotSyncdDialog.title"); //$NON-NLS-1$
+	    		String msg = UTIL.getString("VdbNotSyncdDialog.msg"); //$NON-NLS-1$
+	        	if (!MessageDialog.openQuestion(shell,title,msg)) return;
+	     	}
+			
 			final VdbDeployer deployer = new VdbDeployer(shell, vdb, teiidServer, doCreateDataSource);
 			ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
 
