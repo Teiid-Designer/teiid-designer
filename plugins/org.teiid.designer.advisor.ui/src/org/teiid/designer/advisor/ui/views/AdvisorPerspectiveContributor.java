@@ -48,7 +48,7 @@ public class AdvisorPerspectiveContributor implements IModelerPerspectiveContrib
                 new PerspectiveObject(
                      AdvisorUiConstants.Extensions.STATUS_VIEW_ID,
                      false,
-                     PerspectiveObject.TOP_RIGHT);
+                     PerspectiveObject.BOTTOM_LEFT);
         contributions[1] = statusView;
     }
 }
