@@ -127,7 +127,7 @@ public class ProjectStatusSection implements AdvisorUiConstants.Groups {
 	        projectLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 	        
 	        projectNameLabel = new Label(sectionBody, SWT.NONE);
-	        projectNameLabel.setText(Messages.NoProjectMessage);
+	        projectNameLabel.setText(Messages.NoProjectMessage + "                                     "); //$NON-NLS-1$
 	        projectNameLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 
         }
@@ -366,8 +366,8 @@ public class ProjectStatusSection implements AdvisorUiConstants.Groups {
         	projectNameLabel.setText( status.getCurrentModelProject().getName());
         	resetStatusFGColor(false);
         } else {
-        	projectNameLabel.setText(Messages.StatusSectionTitle_NoProjectSelected);
-        	resetStatusFGColor(true);
+        	projectNameLabel.setText(Messages.StatusSectionTitle_NoProjectSelected + "                                     "); //$NON-NLS-1$
+        	//resetStatusFGColor(true);
         }
         
         refreshIcons();
@@ -402,7 +402,7 @@ public class ProjectStatusSection implements AdvisorUiConstants.Groups {
         this.testRow.setLinkTooltip(Messages.NoProjectMessage + CRETURN + Messages.Status_ClickForActions);
         this.schemasRow.setLinkTooltip(Messages.NoProjectMessage + CRETURN + Messages.Status_ClickForActions);
 
-        resetStatusFGColor(true);
+        //resetStatusFGColor(true);
 
         this.validationRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
         this.validationRow.setText(Messages.ModelValidationLabel + TEN_SPACES);

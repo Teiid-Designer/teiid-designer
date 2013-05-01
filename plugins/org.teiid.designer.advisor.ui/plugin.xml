@@ -149,12 +149,4 @@
             name="org.teiid.designer.advisor.ui.suppliers.xml.XmlModelingSupplier">
       </advisorStatusProvider>
    </extension>
-   <extension
-         id="statusViewSectionFactory"
-         name="%statusViewSectionFactory"
-         point="org.teiid.designer.ui.modelExplorerSectionFactory">
-      <class
-            name="org.teiid.designer.advisor.ui.views.status.StatusViewSectionFactory">
-      </class>
-   </extension>
 </plugin>
