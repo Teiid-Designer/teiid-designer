@@ -108,10 +108,12 @@ public class TestDotProjectUtil extends TestCase {
         final MockFileResource fileResource = (MockFileResource)buildMockResourceFromTestData(SmartTestDesignerSuite.getTestDataFile(getClass(), "/dotProjectFiles/modelerdotproject/.project")); //$NON-NLS-1$
         fileResource.setAccessible(true);
         fileResource.setModelNature(false);
-        assertEquals("The wrong .project count was found.", 1, DotProjectUtils.getDotProjectCount(fileResource, false, false)); //$NON-NLS-1$ 
-        assertEquals("The wrong .project count was found.", 1, DotProjectUtils.getDotProjectCount(fileResource, false, true)); //$NON-NLS-1$ 
+        assertEquals("The wrong .project count was found.", 1, DotProjectUtils.getDotProjectCount(fileResource, false, false)); //$NON-NLS-1$
+        // Test change since the model nature setter above makes it a non-modelling project
+        assertEquals("The wrong .project count was found.", 0, DotProjectUtils.getDotProjectCount(fileResource, false, true)); //$NON-NLS-1$ 
         fileResource.setModelNature(true);
-        assertEquals("The wrong .project count was found.", 1, DotProjectUtils.getDotProjectCount(fileResource, false, false)); //$NON-NLS-1$ 
+        assertEquals("The wrong .project count was found.", 1, DotProjectUtils.getDotProjectCount(fileResource, false, false)); //$NON-NLS-1$
+        assertEquals("The wrong .project count was found.", 1, DotProjectUtils.getDotProjectCount(fileResource, false, true)); //$NON-NLS-1$
 
     }
 

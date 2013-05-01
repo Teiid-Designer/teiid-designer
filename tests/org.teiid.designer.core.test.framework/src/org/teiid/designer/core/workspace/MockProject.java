@@ -1,25 +1,27 @@
 /*
  * JBoss, Home of Professional Open Source.
- *
- * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
- *
- * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
- */
+*
+* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+*
+* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+*/
 package org.teiid.designer.core.workspace;
 
 import java.io.File;
-import java.io.InputStream;
-import java.io.Reader;
 import java.net.URI;
 import java.util.Map;
+import org.eclipse.core.resources.FileInfoMatcherDescription;
+import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFileState;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IPathVariableManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceFilterDescription;
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.resources.IResourceVisitor;
@@ -27,27 +29,326 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.core.runtime.content.IContentDescription;
+import org.eclipse.core.runtime.content.IContentTypeMatcher;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.teiid.core.designer.util.FileUtils;
+import org.teiid.designer.core.ModelerCore;
 
-@SuppressWarnings( "deprecation" )
-public class MockFileResource implements IFile {
+public class MockProject implements IProject {
+    private boolean modelNature;
 
-    private File file;
-    private boolean accessible;
-    private final IProject project;
+    private final File nativeProjectFile;
 
-    public MockFileResource( File file ) {
-        this(file, new MockProject());
+    private final MockFileResource projectFile;
+
+    private boolean open;
+    
+    public MockProject() {
+        String tempDir = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
+        this.nativeProjectFile = new File(tempDir + File.separator + ".project");  //$NON-NLS-1$
+        this.projectFile = new MockFileResource(nativeProjectFile, this);
+        this.projectFile.setAccessible(true);
+        setOpen(true);
     }
 
-    public MockFileResource(File file, IProject project) {
-        this.file = file;
-        this.project = project;
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#build(int, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+	public void build( int kind,
+                       IProgressMonitor monitor ) {
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#close(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+	public void close( IProgressMonitor monitor ) {
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#create(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+	public void create( IProgressMonitor monitor ) {
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#create(org.eclipse.core.resources.IProjectDescription, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+	public void create( IProjectDescription description,
+                        IProgressMonitor monitor ) {
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#delete(boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+	public void delete( boolean deleteContent,
+                        boolean force,
+                        IProgressMonitor monitor ) {
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#getDescription()
+     */
+    @Override
+	public IProjectDescription getDescription() {
+
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#getFile(java.lang.String)
+     */
+    @Override
+	public IFile getFile( String name ) {
+        return projectFile;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#getFolder(java.lang.String)
+     */
+    @Override
+	public IFolder getFolder( String name ) {
+
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#getNature(java.lang.String)
+     */
+    @Override
+	public IProjectNature getNature( String natureId ) {
+
+        return null;
+    }
+
+    /**
+     * @see org.eclipse.core.resources.IProject#getPluginWorkingLocation(org.eclipse.core.runtime.IPluginDescriptor)
+     */
+    @Override
+	public IPath getPluginWorkingLocation( IPluginDescriptor plugin ) {
+
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#getReferencedProjects()
+     */
+    @Override
+	public IProject[] getReferencedProjects() {
+
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#getReferencingProjects()
+     */
+    @Override
+	public IProject[] getReferencingProjects() {
+
+        return null;
+    }
+    
+    public void setModelNature(boolean modelNature) {
+        this.modelNature = modelNature;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#hasNature(java.lang.String)
+     */
+    @Override
+	public boolean hasNature( String natureId ) {
+        boolean result = false;
+
+        if (this.modelNature && natureId.equals(ModelerCore.NATURE_ID)) {
+            result = true;
+        }
+
+        return result;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#isNatureEnabled(java.lang.String)
+     */
+    @Override
+	public boolean isNatureEnabled( String natureId ) {
+        boolean result = false;
+
+        if (this.modelNature && natureId.equals(ModelerCore.NATURE_ID)) {
+            result = true;
+        }
+
+        return result;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#isOpen()
+     */
+    @Override
+	public boolean isOpen() {
+        return isAccessible() && open;
+    }
+    
+    public void setOpen(boolean open) {
+        this.open = open;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#move(org.eclipse.core.resources.IProjectDescription, boolean, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+	public void move( IProjectDescription description,
+                      boolean force,
+                      IProgressMonitor monitor ) {
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#open(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+	public void open( IProgressMonitor monitor ) {
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#setDescription(org.eclipse.core.resources.IProjectDescription, int, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+	public void setDescription( IProjectDescription description,
+                                int updateFlags,
+                                IProgressMonitor monitor ) {
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IProject#setDescription(org.eclipse.core.resources.IProjectDescription, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+	public void setDescription( IProjectDescription description,
+                                IProgressMonitor monitor ) {
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IContainer#exists(org.eclipse.core.runtime.IPath)
+     */
+    @Override
+	public boolean exists( IPath path ) {
+
+        return false;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IContainer#findDeletedMembersWithHistory(int, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+	public IFile[] findDeletedMembersWithHistory( int depth,
+                                                  IProgressMonitor monitor ) {
+
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IContainer#findMember(org.eclipse.core.runtime.IPath, boolean)
+     */
+    @Override
+	public IResource findMember( IPath path,
+                                 boolean includePhantoms ) {
+
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IContainer#findMember(org.eclipse.core.runtime.IPath)
+     */
+    @Override
+	public IResource findMember( IPath path ) {
+
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IContainer#findMember(java.lang.String, boolean)
+     */
+    @Override
+	public IResource findMember( String name,
+                                 boolean includePhantoms ) {
+
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IContainer#findMember(java.lang.String)
+     */
+    @Override
+	public IResource findMember( String name ) {
+
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IContainer#getFile(org.eclipse.core.runtime.IPath)
+     */
+    @Override
+	public IFile getFile( IPath path ) {
+
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IContainer#getFolder(org.eclipse.core.runtime.IPath)
+     */
+    @Override
+	public IFolder getFolder( IPath path ) {
+
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IContainer#members()
+     */
+    @Override
+	public IResource[] members() {
+
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IContainer#members(boolean)
+     */
+    @Override
+	public IResource[] members( boolean includePhantoms ) {
+
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IContainer#members(int)
+     */
+    @Override
+	public IResource[] members( int memberFlags ) {
+
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+     */
+    @Override
+	public Object getAdapter( Class adapter ) {
+
+        return null;
     }
 
     /* (non-Javadoc)
@@ -56,14 +357,6 @@ public class MockFileResource implements IFile {
     @Override
 	public void accept( IResourceProxyVisitor visitor,
                         int memberFlags ) {
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IResource#accept(org.eclipse.core.resources.IResourceVisitor)
-     */
-    @Override
-	public void accept( IResourceVisitor visitor ) {
 
     }
 
@@ -91,9 +384,18 @@ public class MockFileResource implements IFile {
      * @see org.eclipse.core.resources.IResource#accept(org.eclipse.core.resources.IResourceProxyVisitor, int, int)
      */
     @Override
+	@SuppressWarnings("unused")
 	public void accept( IResourceProxyVisitor visitor,
                         int depth,
                         int memberFlags ) {
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IResource#accept(org.eclipse.core.resources.IResourceVisitor)
+     */
+    @Override
+	public void accept( IResourceVisitor visitor ) {
+
     }
 
     /* (non-Javadoc)
@@ -215,9 +517,6 @@ public class MockFileResource implements IFile {
      */
     @Override
 	public String getFileExtension() {
-        if (this.file != null) {
-            return FileUtils.getExtension(this.file);
-        }
 
         return null;
     }
@@ -227,9 +526,6 @@ public class MockFileResource implements IFile {
      */
     @Override
 	public IPath getFullPath() {
-        if (this.file != null) {
-            return new Path(this.file.getAbsolutePath());
-        }
 
         return null;
     }
@@ -240,7 +536,7 @@ public class MockFileResource implements IFile {
     @Override
 	public IPath getLocation() {
 
-        return new Path(this.file.getAbsolutePath());
+        return null;
     }
 
     /* (non-Javadoc)
@@ -266,7 +562,8 @@ public class MockFileResource implements IFile {
      */
     @Override
 	public String getName() {
-        return this.file.getName();
+
+        return null;
     }
 
     /* (non-Javadoc)
@@ -298,7 +595,7 @@ public class MockFileResource implements IFile {
      */
     @Override
 	public IProject getProject() {
-        return project;
+        return this;
     }
 
     /* (non-Javadoc)
@@ -339,7 +636,8 @@ public class MockFileResource implements IFile {
      */
     @Override
 	public int getType() {
-        return IResource.FILE;
+
+        return 0;
     }
 
     /* (non-Javadoc)
@@ -356,11 +654,7 @@ public class MockFileResource implements IFile {
      */
     @Override
 	public boolean isAccessible() {
-        return accessible;
-    }
-
-    public void setAccessible( boolean accessible ) {
-         this.accessible = accessible;
+        return projectFile.isAccessible();
     }
 
     /* (non-Javadoc)
@@ -373,19 +667,19 @@ public class MockFileResource implements IFile {
     }
 
     /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IResource#isLocal(int)
+     * @see org.eclipse.core.resources.IResource#isLinked()
      */
     @Override
-	public boolean isLocal( int depth ) {
+	public boolean isLinked() {
 
         return false;
     }
 
     /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IResource#isLinked()
+     * @see org.eclipse.core.resources.IResource#isLocal(int)
      */
     @Override
-	public boolean isLinked() {
+	public boolean isLocal( int depth ) {
 
         return false;
     }
@@ -536,196 +830,51 @@ public class MockFileResource implements IFile {
 
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-     */
     @Override
-	public Object getAdapter( Class adapter ) {
+	public IPath getWorkingLocation( String id ) {
 
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IFile#appendContents(java.io.InputStream, boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
-	public void appendContents( InputStream source,
-                                boolean force,
-                                boolean keepHistory,
-                                IProgressMonitor monitor ) {
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IFile#appendContents(java.io.InputStream, int, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-	public void appendContents( InputStream source,
-                                int updateFlags,
-                                IProgressMonitor monitor ) {
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IFile#create(java.io.InputStream, boolean, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-	public void create( InputStream source,
-                        boolean force,
-                        IProgressMonitor monitor ) {
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IFile#create(java.io.InputStream, int, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-	public void create( InputStream source,
-                        int updateFlags,
-                        IProgressMonitor monitor ) {
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IFile#createLink(org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-	public void createLink( IPath localLocation,
-                            int updateFlags,
-                            IProgressMonitor monitor ) {
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IFile#delete(boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-	public void delete( boolean force,
-                        boolean keepHistory,
-                        IProgressMonitor monitor ) {
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IStorage#getContents()
-     */
-    @Override
-	public InputStream getContents() {
-
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IFile#getContents(boolean)
-     */
-    @Override
-	public InputStream getContents( boolean force ) {
-
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IFile#getEncoding()
-     */
-    @Override
-	public int getEncoding() {
-
-        return 0;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IFile#getHistory(org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-	public IFileState[] getHistory( IProgressMonitor monitor ) {
-
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IFile#move(org.eclipse.core.runtime.IPath, boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-	public void move( IPath destination,
-                      boolean force,
-                      boolean keepHistory,
+	public void open( int updateFlags,
                       IProgressMonitor monitor ) {
 
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IFile#setContents(org.eclipse.core.resources.IFileState, boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
-	public void setContents( IFileState source,
-                             boolean force,
-                             boolean keepHistory,
-                             IProgressMonitor monitor ) {
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IFile#setContents(org.eclipse.core.resources.IFileState, int, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-	public void setContents( IFileState source,
-                             int updateFlags,
-                             IProgressMonitor monitor ) {
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IFile#setContents(java.io.InputStream, boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-	public void setContents( InputStream source,
-                             boolean force,
-                             boolean keepHistory,
-                             IProgressMonitor monitor ) {
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.resources.IFile#setContents(java.io.InputStream, int, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-	public void setContents( InputStream source,
-                             int updateFlags,
-                             IProgressMonitor monitor ) {
-
-    }
-
-    public void setModelNature( boolean modelNature ) {
-        ((MockProject) this.project).setModelNature(modelNature);
-    }
-
-    @Override
-	public String getCharset() {
+	public String getDefaultCharset() {
 
         return null;
     }
 
     @Override
-	public String getCharset( boolean checkImplicit ) {
+	public String getDefaultCharset( boolean checkImplicit ) {
 
         return null;
     }
 
     @Override
-	public IContentDescription getContentDescription() {
-
-        return null;
-    }
-
-    @Override
-	public void setCharset( String newCharset,
-                            IProgressMonitor monitor ) {
+	public void setDefaultCharset( String charset,
+                                   IProgressMonitor monitor ) {
 
     }
 
     @Override
-	public void setCharset( String newCharset ) {
+	public void setDefaultCharset( String charset ) {
 
+    }
+
+    @Override
+	public boolean contains( ISchedulingRule rule ) {
+
+        return false;
+    }
+
+    @Override
+	public boolean isConflicting( ISchedulingRule rule ) {
+
+        return false;
     }
 
     @Override
@@ -757,19 +906,7 @@ public class MockFileResource implements IFile {
     }
 
     @Override
-	public boolean contains( ISchedulingRule rule ) {
-
-        return false;
-    }
-
-    @Override
-	public boolean isConflicting( ISchedulingRule rule ) {
-
-        return false;
-    }
-
-    @Override
-	public String getCharsetFor( Reader reader ) {
+	public IContentTypeMatcher getContentTypeMatcher() {
 
         return null;
     }
@@ -777,12 +914,13 @@ public class MockFileResource implements IFile {
     /**
      * {@inheritDoc}
      * 
-     * @see org.eclipse.core.resources.IFile#createLink(java.net.URI, int, org.eclipse.core.runtime.IProgressMonitor)
+     * @see org.eclipse.core.resources.IProject#create(org.eclipse.core.resources.IProjectDescription, int,
+     *      org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
-	public void createLink( URI location,
-                            int updateFlags,
-                            IProgressMonitor monitor ) {
+	public void create( IProjectDescription description,
+                        int updateFlags,
+                        IProgressMonitor monitor ) {
     }
 
     /**
@@ -889,6 +1027,30 @@ public class MockFileResource implements IFile {
     /**
      * {@inheritDoc}
      * 
+     * @see org.eclipse.core.resources.IContainer#createFilter(int, org.eclipse.core.resources.FileInfoMatcherDescription,
+     *      int, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+    public IResourceFilterDescription createFilter( int arg0,
+                                                    FileInfoMatcherDescription arg1,
+                                                    int arg2,
+                                                    IProgressMonitor arg3 ) throws CoreException {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IContainer#getFilters()
+     */
+    @Override
+    public IResourceFilterDescription[] getFilters() throws CoreException {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @see org.eclipse.core.resources.IResource#getPathVariableManager()
      */
     @Override
@@ -916,4 +1078,72 @@ public class MockFileResource implements IFile {
                             IProgressMonitor arg1 ) throws CoreException {
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IProject#loadSnapshot(int, java.net.URI, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+    public void loadSnapshot( int arg0,
+                              URI arg1,
+                              IProgressMonitor arg2 ) throws CoreException {
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IProject#saveSnapshot(int, java.net.URI, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+    public void saveSnapshot( int arg0,
+                              URI arg1,
+                              IProgressMonitor arg2 ) throws CoreException {
+    }
+
+	@Override
+	public void build(IBuildConfiguration config, int kind,
+			IProgressMonitor monitor) throws CoreException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void build(int kind, String builderName,
+			Map<String, String> args, IProgressMonitor monitor)
+			throws CoreException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public IBuildConfiguration getActiveBuildConfig() throws CoreException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IBuildConfiguration getBuildConfig(String configName)
+			throws CoreException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IBuildConfiguration[] getBuildConfigs() throws CoreException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IBuildConfiguration[] getReferencedBuildConfigs(
+			String configName, boolean includeMissing) throws CoreException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean hasBuildConfig(String configName) throws CoreException {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
