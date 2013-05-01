@@ -598,11 +598,8 @@ public class RefactorResourcesUtils {
      * @param callback
      */
     public static void calculateRelatedVdbResources(IResource resource, IRelatedResourceCallback callback) {
-        IResource[] vdbResources = WorkspaceResourceFinderUtil.getVdbResourcesThatContain(resource);
+        Collection<IFile> vdbResources = WorkspaceResourceFinderUtil.getVdbResourcesThatContain(resource);
         for (IResource vdb : vdbResources) {
-            if (! (vdb instanceof IFile))
-                continue;
-
             callback.indexVdb(resource, (IFile) vdb);
         }
     }

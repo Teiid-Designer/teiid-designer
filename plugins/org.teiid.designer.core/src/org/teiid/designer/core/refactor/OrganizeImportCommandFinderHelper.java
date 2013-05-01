@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -183,25 +184,25 @@ public class OrganizeImportCommandFinderHelper {
         }
 
         IResource iResource = null;
-        IResource[] iResources = WorkspaceResourceFinderUtil.findIResourceByName(name);
+        Collection<IFile> iResources = WorkspaceResourceFinderUtil.findIResourceByName(name);
 
-        if (iResources.length == 0) {
+        if (iResources.size() == 0) {
             return null;
-        } else if (iResources.length == 1) {
-            iResource = iResources[0];
+        } else if (iResources.size() == 1) {
+            iResource = iResources.iterator().next();
         } else {
             // Find the IResource with this name in the same IProject as the IResource being operated on
             IResource iRes = WorkspaceResourceFinderUtil.findIResource(this.resource.getURI());
             IProject project = iRes.getProject();
-            for (int idx = 0; idx < iResources.length; idx++) {
-                if (iResources[idx].getProject() == project) {
-                    iResource = iResources[idx];
+            for (IFile fileResource : iResources) {
+                if (fileResource.getProject().equals(project)) {
+                    iResource = fileResource;
                     break;
                 }
             }
             // If no IResource exists in this project then pick the first on in the array
             if (iResource == null) {
-                iResource = iResources[0];
+                iResource = iResources.iterator().next();
             }
         }
 

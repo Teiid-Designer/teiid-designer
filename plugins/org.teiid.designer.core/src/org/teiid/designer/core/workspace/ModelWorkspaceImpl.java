@@ -406,12 +406,17 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      */
     @Override
 	public ModelProject getModelProject( final IResource resource ) {
-        if (!ModelerCore.hasModelNature(resource.getProject())) {
+        IProject project = resource.getProject();
+        if (project == null || ! project.isOpen())
+            return null;
+
+        if (!DotProjectUtils.isModelerProject(project)) {
             return null;
         }
+
+        // Only if the modelling project is open, is a partner model project created
         ModelProject modelProject = findModelProject(resource);
         if (modelProject == null) {
-            IProject project = resource.getProject();
             switch (resource.getType()) {
                 case IResource.FOLDER:
                 case IResource.FILE:

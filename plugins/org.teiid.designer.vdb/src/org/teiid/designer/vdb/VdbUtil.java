@@ -315,9 +315,9 @@ public class VdbUtil {
 					// first check if uuid == null
 					if( modelUuid == null ) {
 						
-						IResource[] resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
-						if( resources.length == 1 ) {
-							resource = resources[0];
+						Collection<IFile> resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
+						if( resources.size() == 1 ) {
+							resource = resources.iterator().next();
 						}
 						
 						if( resource != null ) {
@@ -329,9 +329,9 @@ public class VdbUtil {
 						resource = WorkspaceResourceFinderUtil.findIResourceByUUID(modelUuid);
 						if( resource == null ) {
 							// Find by name
-							IResource[] resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
-							if( resources.length == 1 ) {
-								resource = resources[0];
+							Collection<IFile> resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
+							if( resources.size() == 1 ) {
+								resource = resources.iterator().next();
 							}
 						}
 					}
@@ -471,10 +471,10 @@ public class VdbUtil {
 			if (manifest != null) {
 				for (ModelElement model : manifest.getModels()) {
 					String modelName = model.getName()+ ModelUtil.DOT_EXTENSION_XMI;
-					IResource[] resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
-					if( resources.length == 1 ) {
+					Collection<IFile> resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
+					if( resources.size() == 1 ) {
 						String path = model.getPath();
-						IResource matchingResource = resources[0];
+						IResource matchingResource = resources.iterator().next();
 						// Check IPath
 						IPath iPath = new Path(path);
 						IResource resource = ModelerCore.getWorkspace().getRoot().findMember(iPath);
@@ -625,11 +625,11 @@ public class VdbUtil {
                 resource = WorkspaceResourceFinderUtil.findIResourceByUUID(modelUuid);
             } else {
                 // Find my model name
-                IResource[] resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(model.getName()
+                Collection<IFile> resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(model.getName()
                                                                                                  + ModelUtil.DOT_EXTENSION_XMI,
                                                                                                  theProject);
-                if (resources.length == 1) {
-                    resource = resources[0];
+                if (resources.size() == 1) {
+                    resource = resources.iterator().next();
                 }
             }
 
@@ -706,11 +706,11 @@ public class VdbUtil {
                 }
             } else {
                 // Find my model name
-                IResource[] resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(model.getName()
+                Collection<IFile> resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(model.getName()
                                                                                                  + ModelUtil.DOT_EXTENSION_XMI,
                                                                                                  theProject);
-                if (resources.length == 1) {
-                    resource = resources[0];
+                if (resources.size() == 1) {
+                    resource = resources.iterator().next();
                 }
             }
 

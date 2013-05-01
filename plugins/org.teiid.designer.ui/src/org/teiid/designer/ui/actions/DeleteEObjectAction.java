@@ -9,7 +9,6 @@ package org.teiid.designer.ui.actions;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -310,67 +309,44 @@ public class DeleteEObjectAction extends ModelObjectAction {
         
         return readOnlyResources;
     }
-    /*
-     * Filters modified resources to check for already existing in list, or in the list to be deleted.
-     */
-    private void appendDependentModelFiles(Collection affectedResources, Collection allAffectedResources, Collection targetedResources) {
-        // Walk through affectedResources list and add to allAffectedResources only if it doesn't contain the model resourse
-        Iterator iter = affectedResources.iterator();
-        IResource iResource = null;
-    
-        while( iter.hasNext() ) {
-            iResource = (IResource)iter.next();
-            if( !ModelUtilities.isVdbFile(iResource) && !targetedResources.contains(iResource) && !allAffectedResources.contains(iResource) ) {
-                allAffectedResources.add(iResource);
-            }
-        }
-    }
-    
+
     /* (non-Javadoc)
      * Overridden to collect up only the models that actually reference the object to be deleted.
      * @See org.teiid.designer.core.refactor.ResourceRefactorCommand#getDependentResources()
      */
-    private Collection getAllDependentResources(EObject[] objectsToDelete) {
-        Collection resourceList = new HashSet();
-        Collection allDepResources = new HashSet();
+    private Collection<IFile> getAllDependentResources(EObject[] objectsToDelete) {
+        Collection<IResource> resourcesToDelete = new HashSet<IResource>();
+        Collection<IFile> dependentResources = new HashSet<IFile>();
         ModelResource mr = null;
-        
+
         try {
             for ( int i=0 ; i< objectsToDelete.length ; ++i ) {
                 mr = ModelUtilities.getModelResourceForModelObject(objectsToDelete[i]);
-                if( mr != null )
-                    resourceList.add(mr.getCorrespondingResource());
+                if( mr == null)
+                    continue;
+
+                IResource objectResource = mr.getCorrespondingResource();
+                resourcesToDelete.add(objectResource);
+
+                Collection<IFile> dependents =
+                        WorkspaceResourceFinderUtil.getResourcesThatUse(objectResource, IResource.DEPTH_ZERO);
+
+                for (IFile dependent : dependents) {
+                    // Not deleting vdb files since they carry a copy of the resource
+                    // so not strictly a dependency
+                    if(ModelUtilities.isVdbFile(dependent))
+                        continue;
+
+                    dependentResources.add(dependent);
+                }
             }
         } catch (ModelWorkspaceException err) {
             UiConstants.Util.log(IStatus.ERROR, err, UiConstants.Util.getString(FIND_RESOURCE_ERROR_MSG, mr) );
         }
-        
-        /* Temp dependant model list */            
-        Collection depModelFiles = Collections.EMPTY_LIST;  
-        /*Cached list of all dependent models for all contained resources */
-        final Collection allDependantModelFiles = new ArrayList(); 
-        
-        Iterator iter = resourceList.iterator();
-        // Loop through all contained/objects targeted for deletion
-        while( iter.hasNext() ) {
-            // Obtain all model file IResources for each model targeted for deletion
-            depModelFiles = WorkspaceResourceFinderUtil.getResourcesThatUse((IResource)iter.next());
-            // Append these to the big list using the private appendXXXX method below
-            if( !depModelFiles.isEmpty() )
-                appendDependentModelFiles(depModelFiles, allDependantModelFiles, resourceList);
-        }
-        
-        
-        for ( Iterator iter2 = allDependantModelFiles.iterator() ; iter2.hasNext() ; ) {
-            IResource resource = (IResource) iter2.next();
-            
-            if (  ! allDepResources.contains(resource) ) {
-                allDepResources.add(resource);
-            }
-        }
 
-        
-        return allDepResources;
+        // Remove any object to delete resources from the dependencies
+        dependentResources.removeAll(resourcesToDelete);
+        return dependentResources;
     }
     
     private boolean openEditorsForDependentModels() throws ModelWorkspaceException {

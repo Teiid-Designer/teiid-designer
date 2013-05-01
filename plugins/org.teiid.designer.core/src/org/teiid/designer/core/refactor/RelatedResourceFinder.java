@@ -46,7 +46,7 @@ public class RelatedResourceFinder {
      */
     private Collection<IFile> findDependentResources(IResource resource) {
 
-        Collection<IFile> dependentResources = new HashSet<IFile>();
+        Collection<IFile> dependentResources = Collections.emptyList();
 
         try {
             if (resource instanceof IContainer) {
@@ -55,17 +55,17 @@ public class RelatedResourceFinder {
                 if (resource.exists()) {
                     IContainer folder = (IContainer) resource;
                     IResource[] resources = folder.members();
+                    dependentResources = new HashSet<IFile>();
 
                     for (int idx = 0; idx < resources.length; idx++) {
                         dependentResources.addAll(findDependentResources(resources[idx]));
                     }
                 } // endif
             } else {
-                WorkspaceResourceFinderUtil.getResourcesThatUseRecursive(resource, RESOURCE_FILTER, dependentResources);
+                dependentResources = WorkspaceResourceFinderUtil.getResourcesThatUse(resource, RESOURCE_FILTER, IResource.DEPTH_INFINITE);
             }
         } catch (CoreException ce) {
             ModelerCore.Util.log(ce);
-            dependentResources = Collections.EMPTY_LIST;
         }
 
         return dependentResources;

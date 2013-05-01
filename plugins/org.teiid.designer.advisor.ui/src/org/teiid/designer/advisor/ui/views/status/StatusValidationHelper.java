@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -318,14 +317,8 @@ public class StatusValidationHelper implements StatusValidationConstants {
             }
         }
         // Check for VDBs
-        
-        Collection<IFile> vdbs = WorkspaceResourceFinderUtil.getAllWorkspaceResources(WorkspaceResourceFinderUtil.VDB_RESOURCE_FILTER);
-        for( IFile vdb : vdbs ) {
-        	if( vdb.getProject().equals(currentProject) ) {
-                resources.add(vdb);
-        	}
-        }
-        
+        Collection<IFile> vdbs = WorkspaceResourceFinderUtil.getProjectFileResources(currentProject, WorkspaceResourceFinderUtil.VDB_RESOURCE_FILTER);
+        resources.addAll(vdbs);
         
         if (resources.isEmpty()) {
             return new IResource[0];

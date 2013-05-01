@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -107,7 +106,7 @@ public class ModelBuildUtil {
             
             for (final Iterator resourceIter = projectIResources.iterator(); resourceIter.hasNext();) {
                 IResource resource = (IResource)resourceIter.next();
-                Collection models = WorkspaceResourceFinderUtil.getResourcesThatUse(resource);
+                Collection models = WorkspaceResourceFinderUtil.getResourcesThatUse(resource, IResource.DEPTH_ZERO);
                 models.removeAll(projectIResources);
                 dependentModels.addAll(models);
             }
@@ -148,7 +147,7 @@ public class ModelBuildUtil {
             
             for (final Iterator resourceIter = projectIResources.iterator(); resourceIter.hasNext();) {
                 IResource resource = (IResource)resourceIter.next();
-                Collection models = WorkspaceResourceFinderUtil.getResourcesThatUse(resource);
+                Collection models = WorkspaceResourceFinderUtil.getResourcesThatUse(resource, IResource.DEPTH_ZERO);
                 models.removeAll(projectIResources);
                 dependentModels.addAll(models);
             }
