@@ -32,6 +32,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.ide.IDE;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
@@ -40,7 +41,6 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.ui.PluginConstants;
-import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
@@ -189,7 +189,8 @@ public final class NewMedWizard extends AbstractWizard
             folderLocation = ModelUtil.getContainer(selection.getFirstElement());
             // If no container was selected, set to the first open project found. user can re-select if desired.
         } else {
-            folderLocation = getWorkspaceOpenProject();
+            Collection<IProject> openModelProjects = DotProjectUtils.getOpenModelProjects();
+            folderLocation = openModelProjects.iterator().next();
         }
 
         if (!ModelerUiViewUtils.workspaceHasOpenModelProjects()) {
@@ -218,27 +219,6 @@ public final class NewMedWizard extends AbstractWizard
             addPage(newMedDetailsPage);
         }
 
-    }
-
-    /*
-     * Get first open / non-hidden project from the workspace
-     */
-    private IProject getWorkspaceOpenProject() {
-        IProject openProj = null;
-
-        for (IProject proj : ModelerCore.getWorkspace().getRoot().getProjects()) {
-            try {
-                boolean result = proj.isOpen() && !proj.hasNature(ModelerCore.HIDDEN_PROJECT_NATURE_ID)
-                                 && proj.hasNature(ModelerCore.NATURE_ID);
-                if (result) {
-                    openProj = proj;
-                    break;
-                }
-            } catch (CoreException e) {
-                UiConstants.Util.log(e);
-            }
-        }
-        return openProj;
     }
 
     private boolean folderInModelProject(IContainer folderLoc) {

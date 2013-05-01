@@ -8,14 +8,9 @@
 package org.teiid.designer.core.workspace;
 
 import java.io.File;
-import java.io.IOException;
 import junit.framework.TestCase;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.jdom.JDOMException;
 import org.teiid.core.util.SmartTestDesignerSuite;
-import org.teiid.designer.core.workspace.MockContainer;
-import org.teiid.designer.core.workspace.MockFileResource;
 
 
 /**
@@ -36,7 +31,7 @@ public class TestDotProjectUtil extends TestCase {
         return resource;
     }
 
-    public void testGetDotProjectCountFromFiles() throws IOException, JDOMException {
+    public void testGetDotProjectCountFromFiles() throws Exception {
         assertEquals("The wrong .project count was found.", 0, DotProjectUtils.getDotProjectCount(SmartTestDesignerSuite.getTestDataFile(getClass(), "/dotProjectFiles/nodotproject"), true, false)); //$NON-NLS-1$ //$NON-NLS-2$
         assertEquals("The wrong .project count was found.", 1, DotProjectUtils.getDotProjectCount(SmartTestDesignerSuite.getTestDataFile(getClass(), "/dotProjectFiles/modelerdotproject"), true, false)); //$NON-NLS-1$ //$NON-NLS-2$
         assertEquals("The wrong .project count was found.", 1, DotProjectUtils.getDotProjectCount(SmartTestDesignerSuite.getTestDataFile(getClass(), "/dotProjectFiles/simpleproject"), true, false)); //$NON-NLS-1$ //$NON-NLS-2$
@@ -65,7 +60,7 @@ public class TestDotProjectUtil extends TestCase {
         assertEquals("The wrong .project count was found.", 2, DotProjectUtils.getDotProjectCount(SmartTestDesignerSuite.getTestDataFile(getClass(), "/dotProjectFiles/multiplenestedcompound"), true, true)); //$NON-NLS-1$ //$NON-NLS-2$    
     }
 
-    public void testGetDotProjectCountFromResource() throws CoreException, IOException, JDOMException {
+    public void testGetDotProjectCountFromResource() throws Exception {
         assertEquals("The wrong .project count was found.", 0, DotProjectUtils.getDotProjectCount(buildMockResourceFromTestData(SmartTestDesignerSuite.getTestDataFile(getClass(), "/dotProjectFiles/nodotproject")), true, false)); //$NON-NLS-1$ //$NON-NLS-2$
         assertEquals("The wrong .project count was found.", 1, DotProjectUtils.getDotProjectCount(buildMockResourceFromTestData(SmartTestDesignerSuite.getTestDataFile(getClass(), "/dotProjectFiles/modelerdotproject")), true, false)); //$NON-NLS-1$ //$NON-NLS-2$
         assertEquals("The wrong .project count was found.", 1, DotProjectUtils.getDotProjectCount(buildMockResourceFromTestData(SmartTestDesignerSuite.getTestDataFile(getClass(), "/dotProjectFiles/simpleproject")), true, false)); //$NON-NLS-1$ //$NON-NLS-2$

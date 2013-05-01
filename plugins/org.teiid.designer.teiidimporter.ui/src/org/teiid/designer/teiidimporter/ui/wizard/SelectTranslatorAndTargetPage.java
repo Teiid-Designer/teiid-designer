@@ -14,7 +14,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -38,6 +37,7 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
@@ -468,23 +468,10 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
         setTargetModelInfoText();
         
         // Check for at least ONE open non-hidden Model Project
-        boolean validProj = false;
-        for (IProject proj : ModelerCore.getWorkspace().getRoot().getProjects()) {
-            try {
-                boolean result = proj.isOpen()
-                        && !proj.hasNature(ModelerCore.HIDDEN_PROJECT_NATURE_ID)
-                        && proj.hasNature(ModelerCore.NATURE_ID);
-                if (result) {
-                    validProj = true;
-                    break;
-                }
-            } catch (CoreException e) {
-                UTIL.log(e);
-            }
-        }
+        Collection<IProject> openModelProjects = DotProjectUtils.getOpenModelProjects();
 
         // No open projects
-        if (!validProj) {
+        if (openModelProjects.size() == 0) {
             setThisPageComplete(Messages.SelectTranslatorPage_NoOpenProjMsg, ERROR);
             return false;
         } 

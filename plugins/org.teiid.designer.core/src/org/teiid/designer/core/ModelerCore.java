@@ -89,6 +89,7 @@ import org.teiid.designer.core.util.InvocationFactoryHelper;
 import org.teiid.designer.core.util.StartupLogger;
 import org.teiid.designer.core.util.WorkspaceUriPathConverter;
 import org.teiid.designer.core.validation.ValidationRuleManager;
+import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.core.workspace.ModelProject;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelStatusImpl;
@@ -1299,30 +1300,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @since 4.0
      */
     public static boolean hasModelNature( final IProject project ) {
-        CoreArgCheck.isNotNull(project);
-        try {
-            return project.hasNature(NATURE_ID);
-        } catch (final CoreException e) {
-            // project does not exist or is not open
-        }
-        return false;
-    }
-
-    /**
-     * Returns true if the given project is accessible and it has a java nature, otherwise false.
-     * 
-     * @since 4.0
-     */
-    public static boolean hasNature( final IProject project,
-                                     final String nature ) {
-        CoreArgCheck.isNotNull(project);
-        CoreArgCheck.isNotEmpty(nature);
-        try {
-            return project.hasNature(nature);
-        } catch (final CoreException e) {
-            // project does not exist or is not open
-        }
-        return false;
+        return DotProjectUtils.isModelerProject(project);
     }
 
     /**

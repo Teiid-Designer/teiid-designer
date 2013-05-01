@@ -59,6 +59,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.util.CoreModelObjectNotificationHelper;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -639,10 +640,6 @@ public final class PreviewManager extends JobChangeAdapter
                 pvdbPaths.add(resource.getFullPath());
             }
         }
-    }
-
-    private IProject[] getAllProjects() {
-        return ModelerCore.getWorkspace().getRoot().getProjects();
     }
 
     private IFile getFile( IPath path ) {
@@ -1575,7 +1572,7 @@ public final class PreviewManager extends JobChangeAdapter
         /*
          * Loop through all the projects and find their preview vdbs
          */
-        for (IProject project : getAllProjects()) {
+        for (IProject project : DotProjectUtils.getOpenModelProjects()) {
             List<IPath> pvdbPaths = new ArrayList<IPath>();
             try {
                 if (project.isOpen() && ModelerCore.hasModelNature(project)) {
@@ -1665,7 +1662,7 @@ public final class PreviewManager extends JobChangeAdapter
             };
 
             // delete all Preview VDBs on old server
-            for (IProject project : getAllProjects()) {
+            for (IProject project : DotProjectUtils.getOpenModelProjects()) {
                 for (IFile pvdbFile : findProjectPvdbs(project, false)) {
                     Job deleteDeployedPvdbJob = new DeleteDeployedPreviewVdbJob(getPreviewVdbDeployedName(pvdbFile),
                                                                                     getPreviewVdbVersion(pvdbFile),
@@ -1775,7 +1772,7 @@ public final class PreviewManager extends JobChangeAdapter
 
         // when Eclipse starts you don't get an open project event so pretend we did get one and call the event handler
         if (this.previewEnabled) {
-            for (IProject project : getAllProjects()) {
+            for (IProject project : DotProjectUtils.getOpenModelProjects()) {
                 if (project.isOpen() && (ModelerCore.hasModelNature(project))) {
                     modelProjectOpened(project);
                 }
@@ -1787,10 +1784,8 @@ public final class PreviewManager extends JobChangeAdapter
      * Make sure all PVDBs exist and are synchronized.
      */
     private void synchronizeWorkspace() {
-        for (IProject project : getAllProjects()) {
-            if (project.isOpen() && (ModelerCore.hasModelNature(project))) {
-                modelProjectOpened(project);
-            }
+        for (IProject project : DotProjectUtils.getOpenModelProjects()) {
+            modelProjectOpened(project);
         }
     }
     

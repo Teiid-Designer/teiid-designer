@@ -250,13 +250,14 @@ public class DesignerPropertiesUtil {
     public static IProject getProject( Properties properties ) {
         IProject project = null;
         String projectName = properties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
-        if (projectName != null) {
-            IProject[] openProjects = DotProjectUtils.getOpenModelProjects();
-            for (IProject openProject : openProjects) {
-                if (openProject.getName().equals(projectName)) {
-                    project = openProject;
-                    break;
-                }
+        if (projectName == null)
+            return null;
+
+        Collection<IProject> openProjects = DotProjectUtils.getOpenModelProjects();
+        for (IProject openProject : openProjects) {
+            if (openProject.getName().equals(projectName)) {
+                project = openProject;
+                break;
             }
         }
         return project;
