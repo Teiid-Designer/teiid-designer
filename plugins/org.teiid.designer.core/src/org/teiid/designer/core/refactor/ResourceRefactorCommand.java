@@ -331,9 +331,9 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
      * @return Collection
      * @since 4.3
      */
-    private static Collection dependentResources( IResource res ) {
+    private static Collection<IFile> dependentResources( IResource res ) {
 
-        Collection dependentResources = new ArrayList();
+        Collection<IFile> dependentResources = null;
 
         try {
             if (res instanceof IContainer) {
@@ -342,14 +342,14 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
                 if (res.exists()) {
                     IContainer folder = (IContainer)res;
                     IResource[] resources = folder.members();
-                    dependentResources = new LinkedList();
+                    dependentResources = new LinkedList<IFile>();
 
                     for (int idx = 0; idx < resources.length; idx++) {
                         dependentResources.addAll(dependentResources(resources[idx]));
                     }
                 } // endif
             } else {
-                WorkspaceResourceFinderUtil.getResourcesThatUseRecursive(res, RESOURCE_FILTER, dependentResources);
+                dependentResources = WorkspaceResourceFinderUtil.getResourcesThatUse(res, RESOURCE_FILTER, IResource.DEPTH_INFINITE);
             }
         } catch (CoreException ce) {
             ModelerCore.Util.log(ce);

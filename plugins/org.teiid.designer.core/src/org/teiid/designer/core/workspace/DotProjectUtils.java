@@ -12,18 +12,18 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.common.xml.JdomHelper;
 import org.teiid.designer.core.ModelerCore;
 
@@ -69,7 +69,7 @@ public class DotProjectUtils {
 
     public static int getDotProjectCount( String fileName,
                                           boolean recurse,
-                                          boolean onlyModelerProjects ) throws IOException, JDOMException {
+                                          boolean onlyModelerProjects ) throws Exception {
         File file = new File(fileName);
         return getDotProjectCount(file, recurse, onlyModelerProjects);
     }
@@ -86,7 +86,7 @@ public class DotProjectUtils {
      */
     public static int getDotProjectCount( File file,
                                           boolean recurse,
-                                          boolean onlyModelerProjects ) throws IOException, JDOMException {
+                                          boolean onlyModelerProjects ) throws Exception {
         int dotProjectCount = 0;
         int depth = 0;
         List<File> resources = new ArrayList<File>();
@@ -122,7 +122,7 @@ public class DotProjectUtils {
      */
 
     public static boolean isDotProject( String file,
-                                        boolean onlyModelerProject ) throws IOException, JDOMException {
+                                        boolean onlyModelerProject ) throws Exception {
         return isDotProject(new File(file), onlyModelerProject);
     }
 
@@ -135,7 +135,7 @@ public class DotProjectUtils {
      * @return
      */
     public static boolean isDotProject( File file,
-                                        boolean onlyModelerProject ) throws IOException, JDOMException {
+                                        boolean onlyModelerProject ) throws Exception {
         if (file.getName().equals(DOT_PROJECT)) {
             if (onlyModelerProject) {
                 Document doc = JdomHelper.buildDocument(file);
@@ -165,7 +165,7 @@ public class DotProjectUtils {
      */
     public static int getDotProjectCount( IResource targetResource,
                                           boolean recurse,
-                                          boolean onlyModelerProjects ) throws CoreException, IOException, JDOMException {
+                                          boolean onlyModelerProjects ) throws Exception {
         int dotProjectCount = 0;
         int depth = 0;
         List<IResource> resources = new ArrayList<IResource>();
@@ -201,13 +201,12 @@ public class DotProjectUtils {
      * @return
      */
     public static boolean isDotProject( IResource resource,
-                                        boolean onlyModelerProject ) throws CoreException, IOException, JDOMException {
+                                        boolean onlyModelerProject ) throws Exception {
         if (resource.getName().equals(DOT_PROJECT) && resource.getType() == IResource.FILE) {
             if (onlyModelerProject) {
                 if (resource.isAccessible()) {
                     if (resource.getProject().isOpen()) {
-                        IProjectNature nature = resource.getProject().getNature(ModelerCore.NATURE_ID);
-                        return nature != null;
+                        return resource.getProject().hasNature(ModelerCore.NATURE_ID);
                     }
 
                     return isModelNature(resource);
@@ -291,30 +290,38 @@ public class DotProjectUtils {
         return result;
     }
 
+    /**
+     * Returns true if the given project is accessible and it has a java nature, otherwise false.
+     *
+     * @since 4.0
+     */
+    public static boolean hasNature( final IProject project, final String nature ) {
+        CoreArgCheck.isNotNull(project);
+        CoreArgCheck.isNotEmpty(nature);
+        try {
+            return project.hasNature(nature);
+        } catch (final CoreException e) {
+            // project does not exist or is not open
+        }
+        return false;
+    }
 
     /**
      * Returns a list of open Model Projects within the workspace
      * 
-     * @return array of Modeler <code>IProject</code>s
+     * @return collection of Modeler <code>IProject</code>s
      */
-    public static IProject[] getOpenModelProjects() {
+    public static Collection<IProject> getOpenModelProjects() {
         IProject[] allProjects = ModelerCore.getWorkspace().getRoot().getProjects();
 
         List<IProject> openModelProjectList = new ArrayList<IProject>(allProjects.length);
 
         for (IProject proj : allProjects) {
-            if (proj.isOpen() && isModelerProject(proj) && !ModelerCore.hasNature(proj, ModelerCore.HIDDEN_PROJECT_NATURE_ID)) {
+            if (proj.isOpen() && isModelerProject(proj) && !hasNature(proj, ModelerCore.HIDDEN_PROJECT_NATURE_ID)) {
                 openModelProjectList.add(proj);
             }
         }
 
-        IProject[] projArray = new IProject[openModelProjectList.size()];
-        int i = 0;
-        for (IProject mProj : openModelProjectList) {
-            projArray[i++] = mProj;
-        }
-
-        return projArray;
+        return openModelProjectList;
     }
-
 }

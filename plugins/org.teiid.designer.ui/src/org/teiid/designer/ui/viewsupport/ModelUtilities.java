@@ -13,13 +13,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -47,13 +45,11 @@ import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.index.IndexUtil;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.search.runtime.ResourceImportRecord;
-import org.teiid.designer.core.validation.ValidationResultImpl;
-import org.teiid.designer.core.validation.rules.CoreValidationRulesUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
-import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
+import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil.FileResourceCollectorVisitor;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.jdbc.JdbcPackage;
@@ -1363,38 +1359,34 @@ public abstract class ModelUtilities implements UiConstants {
      * @since 4.2
      */
     public static Collection getAllWorkspaceResources() {
-        // Collect all IResources within all IProjects
-        Collection allResources = new ArrayList();
+        if (ModelerCore.getModelWorkspace() == null)
+            return Collections.emptyList();
 
-        FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor();
-        if (ModelerCore.getModelWorkspace() != null && ModelerCore.getWorkspace().getRoot() != null) {
-            IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
-            for (int i = 0; i < projects.length; i++) {
-                try {
-                    projects[i].accept(visitor);
-                } catch (CoreException e) {
-                    // do nothing
-                }
+        if (ModelerCore.getWorkspace() == null || ModelerCore.getWorkspace().getRoot() == null)
+            return Collections.emptyList();
+
+        FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor() {
+           @Override
+            public boolean visit(IResource resource) {
+               if (! resource.exists() || resource.getType() != IResource.FILE || ! getResourceFilter().accept(resource)) 
+                   return false;
+
+               IPath path = resource.getFullPath();
+               // Do not process file names starting with '.' since these
+               // are considered reserved for Eclipse specific files
+               if (path.lastSegment().charAt(0) == '.') {
+                   return false;
+               }
+
+               if (isModelFile(resource))
+                   addResource(resource);
+
+               return true;
             }
-        }
+        };
 
-        IFile[] fileResources = visitor.getFileResources();
-        for (int i = 0; i < fileResources.length; i++) {
-            IFile fileResource = fileResources[i];
-            if (fileResource != null) {
-                IPath path = fileResource.getFullPath();
-                // Do not process file names starting with '.' since these
-                // are considered reserved for Eclipse specific files
-                if (path.lastSegment().charAt(0) == '.') {
-                    continue;
-                }
-                if (isModelFile(fileResource)) {
-                    allResources.add(fileResource);
-                }
-            }
-        }
-
-        return allResources;
+        WorkspaceResourceFinderUtil.getProjectFileResources(visitor);
+        return visitor.getFileResources();
     }
 
     /**
@@ -1433,7 +1425,7 @@ public abstract class ModelUtilities implements UiConstants {
         IResource theResource = resource.getResource();
 
         // Get dependants
-        Collection dependants = WorkspaceResourceFinderUtil.getResourcesThatUse(theResource);
+        Collection dependants = WorkspaceResourceFinderUtil.getResourcesThatUse(theResource, IResource.DEPTH_ZERO);
         Iterator it = dependants.iterator();
         IResource nextRes = null;
         ModelResource mo = null;
@@ -1714,26 +1706,6 @@ public abstract class ModelUtilities implements UiConstants {
         modelResource.save(monitor, force);
     }
 
-    private static class FileResourceCollectorVisitor implements IResourceVisitor {
-        private List resources;
-
-        public FileResourceCollectorVisitor() {
-            this.resources = new ArrayList();
-        }
-
-        @Override
-		public boolean visit( IResource resource ) {
-            if (resource.exists() && resource instanceof IFile) {
-                resources.add(resource);
-            }
-            return true;
-        }
-
-        public IFile[] getFileResources() {
-            return (IFile[])resources.toArray(new IFile[resources.size()]);
-        }
-    }
-    
     public static boolean modelIsLocked(final ModelResource modelResource) throws Exception {
     	if (modelResource != null ) {
     		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();

@@ -9,10 +9,10 @@ package org.teiid.designer.core.workspace;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -151,13 +151,11 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
                                      final IResource underlyingResource ) {
 
         ModelWorkspaceManager.getModelWorkspaceManager().putInfo(this, info);
+
         // determine my children
-        IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
-        for (int i = 0, max = projects.length; i < max; i++) {
-            IProject project = projects[i];
-            if (ModelerCore.hasModelNature(project)) {
-                info.addChild(getModelProject(project));
-            }
+        Collection<IProject> projects = DotProjectUtils.getOpenModelProjects();
+        for (IProject project : projects) {
+            info.addChild(getModelProject(project));
         }
         return true;
     }
@@ -408,12 +406,17 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      */
     @Override
 	public ModelProject getModelProject( final IResource resource ) {
-        if (!ModelerCore.hasModelNature(resource.getProject())) {
+        IProject project = resource.getProject();
+        if (project == null || ! project.isOpen())
+            return null;
+
+        if (!DotProjectUtils.isModelerProject(project)) {
             return null;
         }
+
+        // Only if the modelling project is open, is a partner model project created
         ModelProject modelProject = findModelProject(resource);
         if (modelProject == null) {
-            IProject project = resource.getProject();
             switch (resource.getType()) {
                 case IResource.FOLDER:
                 case IResource.FILE:
@@ -497,14 +500,6 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
         }
 
         return result;
-    }
-
-    /**
-     * @see ModelWorkspace
-     */
-    @Override
-	public Object[] getNonModelingResources() throws ModelWorkspaceException {
-        return ((ModelWorkspaceInfo)getItemInfo()).getNonModelResources();
     }
 
     /* (non-Javadoc)

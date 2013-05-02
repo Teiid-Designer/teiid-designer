@@ -139,7 +139,7 @@ public final class UdfManager implements IResourceChangeListener {
         ModelerCore.addTeiidServerVersionListener(teiidServerVersionListener);
 
         // Register ModelResources that 1) are type function model or 2) are type relational, containing a procedure with function=true
-        Collection<IResource> allResources = WorkspaceResourceFinderUtil.getAllWorkspaceResources();
+        Collection<IFile> allResources = WorkspaceResourceFinderUtil.getProjectFileResources();
         try {
             for( IResource next : allResources ) {
                 if(! ModelUtil.isModelFile(next, true)) {

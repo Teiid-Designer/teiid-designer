@@ -8,10 +8,8 @@
 package org.teiid.designer.ui.viewsupport;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -26,6 +24,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
+import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil.VdbResourceCollectorVisitor;
 import org.teiid.designer.ui.UiPlugin;
 
 
@@ -250,13 +249,14 @@ public class DesignerPropertiesUtil {
     public static IProject getProject( Properties properties ) {
         IProject project = null;
         String projectName = properties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
-        if (projectName != null) {
-            IProject[] openProjects = DotProjectUtils.getOpenModelProjects();
-            for (IProject openProject : openProjects) {
-                if (openProject.getName().equals(projectName)) {
-                    project = openProject;
-                    break;
-                }
+        if (projectName == null)
+            return null;
+
+        Collection<IProject> openProjects = DotProjectUtils.getOpenModelProjects();
+        for (IProject openProject : openProjects) {
+            if (openProject.getName().equals(projectName)) {
+                project = openProject;
+                break;
             }
         }
         return project;
@@ -311,22 +311,16 @@ public class DesignerPropertiesUtil {
      * @return the IResource, null if not defined or found
      */
     public static IResource getVDB( Properties properties ) {
-        IResource vdbResource = null;
         // check for vdb name property
         String vdbName = properties.getProperty(IPropertiesContext.KEY_LAST_VDB_NAME);
-        if (vdbName != null) {
-            // Try to find VDB in workspace - collect only vdb resources from the workspace
-            // Collect only vdb archive resources from the workspace
-            final Collection vdbResources = WorkspaceResourceFinderUtil.getAllWorkspaceResources(WorkspaceResourceFinderUtil.VDB_RESOURCE_FILTER);
-            for (final Iterator iter = vdbResources.iterator(); iter.hasNext();) {
-                final IResource vdb = (IResource)iter.next();
-                if (vdb.getFullPath().lastSegment().equalsIgnoreCase(vdbName)) {
-                    vdbResource = vdb;
-                    break;
-                }
-            }
-        }
-        return vdbResource;
+        if (vdbName == null)
+            return null;
+
+        // Try to find VDB in workspace - collect only vdb resources from the workspace
+        VdbResourceCollectorVisitor visitor = new VdbResourceCollectorVisitor(vdbName);
+        WorkspaceResourceFinderUtil.getProjectFileResources(visitor);
+
+        return visitor.getFileResources().iterator().next();
     }
 
     /**

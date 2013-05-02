@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IProfileListener;
@@ -43,7 +42,7 @@ import org.teiid.core.designer.event.IChangeListener;
 import org.teiid.core.designer.event.IChangeNotifier;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.datatools.JdbcTranslatorHelper;
 import org.teiid.designer.datatools.ui.actions.EditConnectionProfileAction;
 import org.teiid.designer.jdbc.JdbcException;
@@ -53,7 +52,6 @@ import org.teiid.designer.jdbc.relational.JdbcImporter;
 import org.teiid.designer.jdbc.relational.util.JdbcModelProcessorManager;
 import org.teiid.designer.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 import org.teiid.designer.jdbc.ui.util.JdbcUiUtil;
-import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -650,26 +648,14 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
      * @since 4.0
      */
     private boolean validatePage() {
-    	// Show isTeiidSourceModelCheckBox or not, select or not and notify checked or not
-    	this.isVdbSourceModelCheckBox.setVisible(isTeiidConnection);
-    	this.isVdbSourceModelCheckBox.setSelection(isTeiidConnection);
+        // Show isTeiidSourceModelCheckBox or not, select or not and notify checked or not
+        this.isVdbSourceModelCheckBox.setVisible(isTeiidConnection);
+        this.isVdbSourceModelCheckBox.setSelection(isTeiidConnection);
     	
         // Check for at least ONE open non-hidden Model Project
-        boolean validProj = false;
-        for (IProject proj : ModelerCore.getWorkspace().getRoot().getProjects()) {
-            try {
-                boolean result = proj.isOpen() && !proj.hasNature(ModelerCore.HIDDEN_PROJECT_NATURE_ID)
-                                 && proj.hasNature(ModelerCore.NATURE_ID);
-                if (result) {
-                    validProj = true;
-                    break;
-                }
-            } catch (CoreException e) {
-                UiConstants.Util.log(e);
-            }
-        }
+        Collection<IProject> openModelProjects = DotProjectUtils.getOpenModelProjects();
 
-        if (!validProj) {
+        if (openModelProjects.size() == 0) {
             WizardUtil.setPageComplete(this, getString("noOpenProjectsMessage"), ERROR); //$NON-NLS-1$
         } else if (this.srcCombo.getText().length() == 0) {
             WizardUtil.setPageComplete(this, INVALID_PAGE_MESSAGE, ERROR);
@@ -680,7 +666,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         }
         fireStateChanged();
 
-        return validProj;
+        return openModelProjects.size() > 0;
     }
 
     void fireStateChanged() {

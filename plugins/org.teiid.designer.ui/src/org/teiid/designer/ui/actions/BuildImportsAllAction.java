@@ -12,9 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -33,6 +31,7 @@ import org.teiid.designer.core.builder.ModelBuildUtil;
 import org.teiid.designer.core.refactor.ModelResourceCollectorVisitor;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.widget.ListMessageDialog;
@@ -55,20 +54,10 @@ public class BuildImportsAllAction extends ActionDelegate implements IWorkbenchW
         super();
     }
 
-    private Collection getModelResourceList() {
+    private Collection<ModelResource> getModelResourceList() {
 
         final ModelResourceCollectorVisitor visitor = new ModelResourceCollectorVisitor();
-        final IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
-
-        for (int i = 0; i < projects.length; ++i) {
-            if (projects[i].isOpen() && ModelerCore.hasModelNature(projects[i])) {
-                try {
-                    projects[i].accept(visitor);
-                } catch (final CoreException e) {
-                    UiConstants.Util.log(e);
-                }
-            }
-        }
+        WorkspaceResourceFinderUtil.getProjectFileResources(visitor);
 
         try {
             return visitor.getModelResources();

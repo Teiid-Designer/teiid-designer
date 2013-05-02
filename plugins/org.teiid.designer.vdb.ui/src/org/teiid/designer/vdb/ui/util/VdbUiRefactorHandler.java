@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,7 +24,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.core.refactor.AbstractRefactorModelHandler;
 import org.teiid.designer.core.workspace.ModelUtil;
-import org.teiid.designer.core.workspace.ResourceFilter;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.vdb.VdbUtil;
@@ -38,13 +36,14 @@ public class VdbUiRefactorHandler extends AbstractRefactorModelHandler {
 	@Override
 	public boolean preProcess(RefactorType refactorType, IResource refactoredResource, IProgressMonitor monitor) {
 		// Find and show affected VDBs
-    	@SuppressWarnings("unchecked")
-		final Collection<IFile> allVdbResourcesInProject = 
-    			WorkspaceResourceFinderUtil.getAllWorkspaceResources(new VdbResourceFilter(refactoredResource.getProject()));
-    	
+
+	    final Collection<IFile> allVdbResourcesInProject =
+	        WorkspaceResourceFinderUtil.getProjectFileResources(refactoredResource.getProject(),
+	                                                                                            WorkspaceResourceFinderUtil.VDB_RESOURCE_FILTER);
+
     	Collection<IFile> targetVdbs = new ArrayList<IFile>();
     	Collection<VdbEditor> openVdbEditors = new ArrayList<VdbEditor>();
-    	
+
         for( IFile theVdb : allVdbResourcesInProject ) {
     	    if (refactoredResource instanceof IFolder) {
     	        IFolder folder = (IFolder) refactoredResource;
@@ -145,27 +144,4 @@ public class VdbUiRefactorHandler extends AbstractRefactorModelHandler {
     		closeVdbEditor(editor);
     	}
     }
-    
-    class VdbResourceFilter implements ResourceFilter {
-    	IProject project;
-    	
-        /**
-    	 * @param project the target project
-    	 */
-    	public VdbResourceFilter(IProject project) {
-    		super();
-    		this.project = project;
-    	}
-
-    	@Override
-    	public boolean accept( final IResource res ) {
-    		if( project != null ) {
-    			return res.getProject() == project && ModelUtil.isVdbArchiveFile(res);
-    		}
-    		
-            return ModelUtil.isVdbArchiveFile(res);
-        }
-
-    }
-
 }

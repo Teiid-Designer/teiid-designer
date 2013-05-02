@@ -80,14 +80,6 @@ public class FakeModelWorkspace extends FakeModelWorkspaceItem implements ModelW
     }
 
     /**
-     * @see org.teiid.designer.core.workspace.ModelWorkspace#getNonModelingResources()
-     */
-    @Override
-	public Object[] getNonModelingResources() {
-        return null;
-    }
-
-    /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#getEmfResources()
      * @since 4.2
      */
