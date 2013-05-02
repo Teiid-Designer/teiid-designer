@@ -35,19 +35,24 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 		DqpUiConstants, IChangeListener {
 
 	private static final String PREFIX = I18nUtil.getPropertyPrefix(ServerSelectionDialog.class);
+	private static final String NO_DEFAULT = "No Default"; //$NON-NLS-1$
 
 	private ITeiidServer selectedServer;
 	
 	private Combo serversCombo;
+	private boolean includeNoDefaultOption = false;
 	
 	private Map<String, ITeiidServer> serverMap = new HashMap<String, ITeiidServer>();
 
 	/**
-	 * @since 5.5.3
+	 * Constructor
+	 * @param parentShell the parent shell
+	 * @param includeNoDefaultOption 'true' includes a 'No Default' option in addition to available servers
 	 */
-	public ServerSelectionDialog(Shell parentShell) {
+	public ServerSelectionDialog(Shell parentShell, boolean includeNoDefaultOption) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
+		this.includeNoDefaultOption = includeNoDefaultOption;
 	}
 
 	/**
@@ -67,7 +72,7 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 	@Override
 	protected Control createButtonBar(Composite parent) {
 		Control buttonBar = super.createButtonBar(parent);
-		getButton(OK).setEnabled(false);
+		getButton(OK).setEnabled(true);
 
 		// set the first selection so that initial validation state is set
 		// (doing it here since the selection handler uses OK
@@ -117,15 +122,45 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 				}
 			});
 			Collection<ITeiidServer> teiidServers = DqpPlugin.getInstance().getServerManager().getServers();
+			ITeiidServer currentDefault = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+			String currentServerStr = null;
+			if(currentDefault==null) {
+				currentServerStr = NO_DEFAULT;
+			} else {
+				currentServerStr = currentDefault.toString();
+			}
+			
+			// Add NO_DEFAULT option if desired
+			if(this.includeNoDefaultOption) serverMap.put(NO_DEFAULT, null);
+			
+			// Add remaining servers from DQP Plugin
 			for( ITeiidServer teiidServer : teiidServers ) {
                 serverMap.put(teiidServer.toString(), teiidServer);
 			}
+			
 			WidgetUtil.setComboItems(serversCombo, serverMap.keySet(), null, true);
+			// Set initial selection
+			boolean setInitial = false;
+			for(int i=0; i<serversCombo.getItemCount(); i++) {
+				String serverName = serversCombo.getItem(i);
+				if(serverName!=null && serverName.equalsIgnoreCase(currentServerStr)) {
+					serversCombo.select(i);
+					selectedServer = serverMap.get(serverName);
+					setInitial = true;
+					break;
+				}
+			}
+			// If initial selection was not found, set to first item.
+			if(!setInitial && serversCombo.getItemCount()>0) serversCombo.select(0);
 		}
 
 		return panel;
 	}
 
+	/**
+	 * Get the selected server
+	 * @return the selected server
+	 */
 	public ITeiidServer getServer() {
 		return this.selectedServer;
 	}
@@ -140,20 +175,18 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 	}
 
 	private void updateState() {
-
-		if (this.selectedServer == null ) {
+		// selectedServer == null is a valid choice (No Default)
+		getButton(OK).setEnabled(true);
+		
+		if(!this.includeNoDefaultOption && this.serversCombo.getItemCount()==0) {
 			getButton(OK).setEnabled(false);
-			if( this.serversCombo.getItemCount() == 0 ) {
-				setErrorMessage(UTIL.getString(PREFIX + "noServersExistMessage")); //$NON-NLS-1$
-			} else {
-				setErrorMessage(UTIL.getString(PREFIX + "noServerSelectedMessage")); //$NON-NLS-1$
-			}
-
-			
-		} else {
-			getButton(OK).setEnabled(true);
+			setErrorMessage(UTIL.getString(PREFIX + "noServersExistMessage")); //$NON-NLS-1$
+			return;
+		}
+		
+		if(this.includeNoDefaultOption && this.serversCombo.getItemCount()==1) {
 			setErrorMessage(null);
-			setMessage(UTIL.getString(PREFIX + "okMsg")); //$NON-NLS-1$
+			setMessage(UTIL.getString(PREFIX + "noServersExistMessage")); //$NON-NLS-1$
 		}
 	}
 }
