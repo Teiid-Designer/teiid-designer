@@ -34,6 +34,7 @@ public final class RuntimeAssistant {
      * The I18n properties prefix key used by this class.
      */
     private static final String PREFIX = I18nUtil.getPropertyPrefix(RuntimeAssistant.class);
+    private static boolean selectServerCancelled = false;
 
     /**
      * If the preview preference is disabled or a Teiid server does not exist, a dialog is shown asking the user if they want to
@@ -158,7 +159,7 @@ public final class RuntimeAssistant {
      * @param shell the shell used to run the new server wizard
      */
     public static void runEditServerAction( Shell shell ) {
-        EditServerAction action = new EditServerAction(shell, getServerManager());
+        EditServerAction action = new EditServerAction(shell, false);
         action.run();
     }
     
@@ -229,25 +230,46 @@ public final class RuntimeAssistant {
      * Can display a dialog, allowing the user to select a server should there
      * be more than one or return the single server in the event of only one.
      * 
-     * @param shell 
+     * @param shell the shell
+     * @param includeNoDefaultOption 'true' includes the 'No Default' option, 'false' does not.
      * 
      * @return a selected {@link ITeiidServer}
      */
-    public static ITeiidServer selectServer(Shell shell) {
+    public static ITeiidServer selectServer(Shell shell, boolean includeNoDefaultOption) {
         ITeiidServer selectedServer = null;
-
+        selectServerCancelled = false;
+        
         if (getServerManager().getServers().size() == 1) {
             selectedServer = getServerManager().getServers().iterator().next();
         } else if (getServerManager().getServers().size() > 1) {
-            ServerSelectionDialog dialog = new ServerSelectionDialog(shell);
+            ServerSelectionDialog dialog = new ServerSelectionDialog(shell,includeNoDefaultOption);
             dialog.open();
 
             if (dialog.getReturnCode() == Window.OK) {
                 selectedServer = dialog.getServer();
+            } else {
+            	selectServerCancelled = true;
             }
         }
 
         return selectedServer;
+    }
+    
+    /**
+     * Determine if the last server selection was cancelled.
+     * @return 'true' if the selection dialog was cancelled, 'false' if not.
+     */
+    public static boolean selectServerWasCancelled() {
+    	return selectServerCancelled;
+    }
+    
+    /**
+     * Determine if at least one available server
+     * @return 'true' if at least one server is available, 'false' if not.
+     */
+    public static boolean hasAvailableServers() {
+    	if(getServerManager().getServers().size()>0) return true;
+    	return false;
     }
 
 }

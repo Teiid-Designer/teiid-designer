@@ -8,6 +8,10 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -18,6 +22,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -31,7 +36,7 @@ import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
  *
  * @since 8.0
  */
-public class SetDefaultServerAction extends BaseSelectionListenerAction {
+public class SetDefaultServerAction extends BaseSelectionListenerAction implements IHandler {
 
     // ===========================================================================================================================
     // Fields
@@ -40,7 +45,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
     /**
      * The server manager used to create and edit servers.
      */
-    private final TeiidServerManager teiidServerManager;
+    private TeiidServerManager teiidServerManager;
 
     /**
      * The servers being deleted (never <code>null</code>).
@@ -48,18 +53,33 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
     private ITeiidServer selectedServer;
 
     /**
-     * @param teiidServerManager the server manager to use when creating and editing servers
+     * Default Constructor
      */
-    public SetDefaultServerAction( TeiidServerManager teiidServerManager ) {
+    public SetDefaultServerAction() {
         super(UTIL.getString("setDefaultServerActionText")); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(teiidServerManager, "serverManager"); //$NON-NLS-1$
 
         if (Platform.isRunning()) {
             setToolTipText(UTIL.getString("setDefaultServerActionToolTip")); //$NON-NLS-1$
             setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SET_DEFAULT_SERVER_ICON));
         }
-
-        this.teiidServerManager = teiidServerManager;
+        setServerManager(getServerManager());
+    }
+    
+    /**
+     * @param teiidServerManager the server manager to use when creating and editing servers
+     */
+    public SetDefaultServerAction( TeiidServerManager teiidServerManager ) {
+        this();
+        setServerManager(teiidServerManager);
+    }
+    
+    /**
+     * Set the ServerManager
+     * @param serverManager the server manager
+     */
+    private void setServerManager(TeiidServerManager serverManager) {
+        CoreArgCheck.isNotNull(serverManager, "serverManager"); //$NON-NLS-1$
+    	this.teiidServerManager = serverManager;
     }
 
     // ===========================================================================================================================
@@ -79,15 +99,22 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
          * selectedServer may be null. In which case, need to ask the user
          * which server to be selected
          */
-        if( this.selectedServer == null) {
-            this.selectedServer = RuntimeAssistant.selectServer(getShell());
-        }
-        
-        if (selectedServer == null) {
+    	if(!RuntimeAssistant.hasAvailableServers()) {
             String title = UTIL.getString("noServerAvailableTitle"); //$NON-NLS-1$
             String message = UTIL.getString("noServerAvailableMessage"); //$NON-NLS-1$
             MessageDialog.openError(getShell(), title, message);
             return;
+    	}
+    	
+        this.selectedServer = RuntimeAssistant.selectServer(getShell(),true);
+        if(RuntimeAssistant.selectServerWasCancelled()) return;
+        
+        if (selectedServer == null) {
+        	this.teiidServerManager.setDefaultServer(null);
+            String title = UTIL.getString("defaultServerChangedTitle"); //$NON-NLS-1$
+            String message = UTIL.getString("defaultServerChangedMessage", "No Default"); //$NON-NLS-1$ //$NON-NLS-2$
+            MessageDialog.openInformation(getShell(), title, message);
+        	return;
         }
         
         ITeiidServer currentDefaultServer = this.teiidServerManager.getDefaultServer();
@@ -110,7 +137,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
          * If old default server is connected, ask user if they wish to disconnect it.
          */
         boolean disconnectOldDefault = false;
-        if( currentDefaultServer.isConnected() ) {
+        if( currentDefaultServer!=null && currentDefaultServer.isConnected() ) {
 	    	disconnectOldDefault = MessageDialog.openQuestion(getShell(), 
 	    			UTIL.getString("setDefaultServerActionDisconnectOldTitle"),  //$NON-NLS-1$
 	    			UTIL.getString("setDefaultServerActionDisconnectOldMessage", currentDefaultServer.getDisplayName())); //$NON-NLS-1$
@@ -146,6 +173,13 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
         String title = UTIL.getString("defaultServerChangedTitle"); //$NON-NLS-1$
         String message = UTIL.getString("defaultServerChangedMessage", selectedServer.getDisplayName()); //$NON-NLS-1$
         MessageDialog.openInformation(getShell(), title, message);
+    }
+
+    /**
+     * @return the server manager
+     */
+    private TeiidServerManager getServerManager() {
+        return DqpPlugin.getInstance().getServerManager();
     }
 
     private boolean hasOpenEditors() {
@@ -200,4 +234,25 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
     private static Shell getShell() {
     	return DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
     }
+
+	@Override
+	public void addHandlerListener(IHandlerListener handlerListener) {
+        // Not required
+	}
+
+	@Override
+	public void dispose() {
+        // Not required
+	}
+
+	@Override
+	public Object execute(ExecutionEvent event) {
+        run();
+        return null;
+	}
+
+	@Override
+	public void removeHandlerListener(IHandlerListener handlerListener) {
+        // Not required
+	}
 }

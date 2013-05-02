@@ -306,6 +306,18 @@
             id="org.teiid.designer.dqp.ui.newServerAction"
             name="%newJbossTeiidServerCommand.label">
       </command>
+      <command
+            defaultHandler="org.teiid.designer.runtime.ui.server.SetDefaultServerAction" 
+            description="%setDefaultServerAction.description"
+            id="org.teiid.designer.dqp.ui.setDefaultServerAction"
+            name="%setDefaultServerCommand.label">
+      </command>
+      <command
+            defaultHandler="org.teiid.designer.runtime.ui.server.EditServerAction" 
+            description="%editServerAction.description"
+            id="org.teiid.designer.dqp.ui.editServerAction"
+            name="%editServerCommand.label">
+      </command>
    </extension>
    <extension point="org.eclipse.ui.editors">
       <editor

@@ -248,6 +248,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     private FormToolkit toolkit;
     private Section defaultServerSection;
     private Composite defaultServerSectionBody;
+    private Hyperlink changeDefaultServerLink;
     private Hyperlink defaultServerLink;
     private Label defaultServerVersionLabel;
 
@@ -481,7 +482,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
 
         defaultServerSectionBody = new Composite(defaultServerSection, SWT.NONE);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(defaultServerSectionBody);
-        GridLayoutFactory.fillDefaults().numColumns(2).applyTo(defaultServerSectionBody);
+        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(defaultServerSectionBody);
         defaultServerSectionBody.setBackground(bkgdColor);
 
         ITeiidServer defaultServer = ModelerCore.getDefaultServer();
@@ -529,16 +530,38 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                     IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
                     try {
                         window.getActivePage().showView("org.eclipse.wst.server.ui.ServersView"); //$NON-NLS-1$
-
-                        if (defaultServer == null) {
+                        
+                        ITeiidServer defServer = ModelerCore.getDefaultServer();
+                        if (defServer == null) {
                             // No default server so most likely no servers at all so open the new server wizard
                             IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
                             handlerService.executeCommand("org.teiid.designer.dqp.ui.newServerAction", null); //$NON-NLS-1$
+                        } else {
+                            // No default server so most likely no servers at all so open the new server wizard
+                            IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+                            handlerService.executeCommand("org.teiid.designer.dqp.ui.editServerAction", null); //$NON-NLS-1$
                         }
 
                     } catch (Exception ex) {
                         UiConstants.Util.log(ex);
                     }
+                }
+            });
+            
+            // configure link to change default server
+            changeDefaultServerLink = toolkit.createHyperlink(defaultServerSectionBody, getString("changeServerLinkText"), SWT.NONE); //$NON-NLS-1$
+
+            changeDefaultServerLink.addHyperlinkListener(new HyperlinkAdapter() {
+
+                @Override
+                public void linkActivated(HyperlinkEvent e) {
+                	try {
+                        // No default server so most likely no servers at all so open the new server wizard
+                        IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+                        handlerService.executeCommand("org.teiid.designer.dqp.ui.setDefaultServerAction", null); //$NON-NLS-1$
+                	} catch (Exception ex) {
+                		UiConstants.Util.log(ex);
+                	}
                 }
             });
 
