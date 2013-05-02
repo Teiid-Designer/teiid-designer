@@ -818,15 +818,6 @@
          <editorPreferenceComponent
          	class="org.teiid.designer.ui.preferences.TableEditorPreferencesComponent"/>
    </extension>
-<!-- Custom properties factory/editor for the Core metamodel Namespace URI feature -->   
-   <extension
-         id="coreModelPropertyEditorFactory"
-         name="%coreModelPropertyEditorFactory"
-         point="org.teiid.designer.ui.propertyEditorFactory">
-      <class
-            name="org.teiid.designer.ui.properties.CoreModelPropertyEditorFactory">
-      </class>
-   </extension>
 
 <!-- Context Help -->
 	<extension point="org.eclipse.help.contexts">
