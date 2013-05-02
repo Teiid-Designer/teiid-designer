@@ -2,7 +2,6 @@
 	// Getting a list of all VDBs files in the workspace 
     // ========================================================================
 
-	org.eclipse.core.resources.IProject[] projects = org.eclipse.core.resources.ResourcesPlugin.getWorkspace().getRoot().getProjects();
     VdbResourceCollectorVisitor visitor = new VdbResourceCollectorVisitor() {
         private List resources = new ArrayList(); 
         public boolean visit(IResource resource) throws CoreException {
@@ -16,13 +15,7 @@
         }
     
     };
-    for(int i=0; i < projects.length; i++) {
-        try {
-            projects[i].accept(visitor);
-        } catch (CoreException e) {
-            // do nothing
-        }
-    }   
+    org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil.getProjectFileResources(visitor);
 
     // ========================================================================
 	//                 Creating extension models

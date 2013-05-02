@@ -10,9 +10,9 @@ package org.teiid.designer.vdb.ui.wizards;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -53,6 +53,7 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.WizardDataTransferPage;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.dialog.FileSystemDialog;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -949,13 +950,22 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     private boolean isClosedWorkspaceModelProjectFolder( final String projectName ) {
-        // IProject existingProject = ModelerCore.getWorkspace().getRoot().getProject(projectName);
         final IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
-        for (int i = 0; i < projects.length; i++)
-            if (projects[i].getName().equals(projectName)) if (!projects[i].isOpen()) // System.out.println("ImportMPSMP.isWorkspaceProjectFolder() Selected Closed Project = "
-            // + existingProject);
-            // Need to query the .project file and see if has a MODELER NATURE
-            return true;
+        for (IProject project : projects) {
+            if (! project.getName().equals(projectName))
+                continue;
+
+            if (project.isOpen())
+                continue;
+
+            try {
+            if (DotProjectUtils.isDotProject(project, true))
+                return true;
+            } catch (Exception ex) {
+                ModelerCore.Util.log(ex);
+                return false;
+            }
+        }
 
         return false;
     }
@@ -965,10 +975,11 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     private boolean isOpenWorkspaceModelProjectFolder( final String projectName ) {
-        final IProject existingProject = ModelerCore.getWorkspace().getRoot().getProject(projectName);
-        final IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
-        for (final IProject project : projects)
-            if (project.getName().equals(projectName)) if (project.isOpen()) if (ModelerCore.hasModelNature(existingProject)) return true;
+        final Collection<IProject> projects = DotProjectUtils.getOpenModelProjects();
+        for (final IProject project : projects) {
+            if (project.getName().equals(projectName))
+                return true;
+        }
 
         return false;
     }

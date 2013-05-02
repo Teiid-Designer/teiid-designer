@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -212,9 +212,8 @@ public class ModelBuilder extends IncrementalProjectBuilder implements Ignorable
                 // Add to the iResources collection any VDB IResource that references one of
                 // the entries in iResourcs. We want to revalidate VDBs that reference modified
                 // resources in the workspace (defect 15779)
-                IResource[] vdbResources = WorkspaceResourceFinderUtil.getVdbResourcesThatContain(iResources);
-                for (int i = 0; i != vdbResources.length; ++i) {
-                    IResource vdbResource = vdbResources[i];
+                Collection<IFile> vdbResources = WorkspaceResourceFinderUtil.getVdbResourcesThatContain(iResources);
+                for (IFile vdbResource : vdbResources) {
                     if (!iResources.contains(vdbResource)) {
                         iResources.add(vdbResource);
                     }

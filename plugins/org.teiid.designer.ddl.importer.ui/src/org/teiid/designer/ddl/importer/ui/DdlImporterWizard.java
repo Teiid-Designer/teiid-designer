@@ -2,6 +2,7 @@ package org.teiid.designer.ddl.importer.ui;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.eclipse.core.resources.IProject;
@@ -124,10 +125,11 @@ public class DdlImporterWizard extends Wizard implements IDifferencingWizard {
         		finalSelection = new StructuredSelection(newProject);
         	}
         }
-        final IProject[] projects = DotProjectUtils.getOpenModelProjects();
+        final Collection<IProject> projects = DotProjectUtils.getOpenModelProjects();
+        IProject[] projectArray = projects.toArray(new IProject[0]);
         
-        importer = new DdlImporter(projects);
-        srcPg = new DdlImporterPage(importer, projects, finalSelection);
+        importer = new DdlImporter(projectArray);
+        srcPg = new DdlImporterPage(importer, projectArray, finalSelection);
     }
 
     @Override

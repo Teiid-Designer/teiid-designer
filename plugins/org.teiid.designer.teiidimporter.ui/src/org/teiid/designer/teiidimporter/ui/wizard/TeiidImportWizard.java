@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.teiidimporter.ui.wizard;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -94,8 +95,9 @@ public class TeiidImportWizard extends AbstractWizard implements IDifferencingWi
         }
         
         // Init the DDL Importer
-        final IProject[] projects = DotProjectUtils.getOpenModelProjects();
-        getImportManager().initDdlImporter(projects);
+        final Collection<IProject> projects = DotProjectUtils.getOpenModelProjects();
+        IProject[] projectArray = projects.toArray(new IProject[0]);
+        getImportManager().initDdlImporter(projectArray);
 		
         // Get the selected Object - determine if it's a relational source model
         Object selectedObj = finalSelection.getFirstElement();

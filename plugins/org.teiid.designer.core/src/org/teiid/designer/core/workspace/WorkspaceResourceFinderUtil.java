@@ -32,6 +32,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.id.UUID;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.common.xsd.XsdHeader;
 import org.teiid.designer.common.xsd.XsdHeaderReader;
@@ -55,12 +56,12 @@ import org.w3c.dom.NodeList;
 public class WorkspaceResourceFinderUtil {
 
     protected static final String URI_REFERENCE_DELIMITER = DatatypeConstants.URI_REFERENCE_DELIMITER;
-    protected static final IResource[] EMPTY_IRESOURCE_ARRAY = new IResource[0];
-    protected static final IPath[] EMPTY_IPATH_ARRAY = new IPath[0];
 
+    /**
+     * Resource filter for return only VDB archive files
+     */
     public static final ResourceFilter VDB_RESOURCE_FILTER = new VdbResourceFilter();
 
-    // org.eclipse.emf.common.util.URI constants
     private static final String SCHEME_PLATFORM = "platform:"; //$NON-NLS-1$
     private static final String SCHEME_FILE = "file:"; //$NON-NLS-1$
     private static final String PLATFORM_RESOURCE_SEGMENT = "/resource"; //$NON-NLS-1$
@@ -97,7 +98,7 @@ public class WorkspaceResourceFinderUtil {
      * </p>
      * then null is returned since there is no IResource in the workspace that represents any one of those models.
      * 
-     * @param workspaceUri the URI string
+     * @param resource
      * @return the IResource identified by the URI if it exists; may return null
      */
     public static IResource findIResource( final Resource resource ) {
@@ -125,14 +126,13 @@ public class WorkspaceResourceFinderUtil {
      * @return the IFile identified by the URI if it exists; may return null
      */
     public static IFile findIResource( final String workspaceUri ) {
-
         if (!isValidWorkspaceUri(workspaceUri)) return null;
         final String normalizedUriString = normalizeUriString(workspaceUri);
 
         // MyDefect : 16368 Refactored methods.
 
         IFile fileResource;
-        final Collection<IFile> fileResources = getAllProjectsFileResources();
+        final Collection<IFile> fileResources = getProjectFileResources();
 
         // If the workspace URI starts with "http" then check it against the target
         // namespaces of any XML schema in the workspace ...
@@ -170,7 +170,7 @@ public class WorkspaceResourceFinderUtil {
             if (resourceUri != null && getWorkspace() != null) {
                 // Match the Emf resource location against the location
                 final String uriString = normalizeUriToString(resourceUri);
-                final Collection<IFile> fileResources = getAllProjectsFileResources();
+                final Collection<IFile> fileResources = getProjectFileResources();
 
                 final IFile fileResource = getResourceByLocation(fileResources, uriString);
                 if (fileResource != null) return fileResource;
@@ -186,246 +186,229 @@ public class WorkspaceResourceFinderUtil {
     }
 
     /**
-     * Return the array of IResource instances that match the specified name. The name must consist of only one path segment and may
-     * or may not have a file extension. If no IResource instances are found that match this name an empty array is returned.
+     * Return the collection of {@link IFile} instances that match the specified name.
+     * The name must consist of only one path segment and may or may not have
+     * a file extension. If no {@link IFile} instances are found that match this name an
+     * empty collection is returned.
      * 
      * @param name the name of the IResource
-     * @return the IResource[]
+     * @return the {@link IFile} collection
      */
-    public static IResource[] findIResourceByName( final String name ) {
-        if (name == null || name.length() == 0 || getWorkspace() == null) return EMPTY_IRESOURCE_ARRAY;
+    public static Collection<IFile> findIResourceByName( final String name ) {
+        if (name == null || name.length() == 0 || getWorkspace() == null)
+            return Collections.emptyList();
 
-        // Collect all IResources within all IProjects
-        final FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor();
-        if (getWorkspace() != null && getWorkspace().getRoot() != null) {
-            final IProject[] projects = getWorkspace().getRoot().getProjects();
-            for (final IProject project : projects)
-                try {
-                    project.accept(visitor);
-                } catch (final CoreException e) {
-                    // do nothing
-                }
-        }
-
-        // Try to match the specified resource name with one of the IResource instances
-        final boolean removeExtension = (name.indexOf('.') == -1);
-        final Collection<IFile> fileResources = visitor.getFileResources();
-        final ArrayList tmp = new ArrayList();
-        for (final IFile fileResource : fileResources)
-            if (fileResource != null) {
-                IPath path = fileResource.getFullPath();
-                // Do not process file names staring with '.' since these
-                // are considered reserved for Eclipse specific files
-                if (path.lastSegment().charAt(0) == '.') continue;
-                if (removeExtension) path = path.removeFileExtension();
-                if (name.equalsIgnoreCase(path.lastSegment())) tmp.add(fileResource);
-            }
-
-        // If no matching resources are found return an empty array
-        if (tmp.size() == 0) return EMPTY_IRESOURCE_ARRAY;
-
-        final IResource[] result = new IResource[tmp.size()];
-        tmp.toArray(result);
-
-        return result;
+        FileNameResourceCollectorVisitor visitor = new FileNameResourceCollectorVisitor(name);
+        getProjectFileResources(visitor);
+        return visitor.getFileResources();
     }
     
     /**
-     * Return the array of IResource instances that match the specified name. The name must consist of only one path segment and may
-     * or may not have a file extension. If no IResource instances are found that match this name an empty array is returned.
+     * Return the collection of {@link IFile} instances that match the specified name.
+     * The name must consist of only one path segment and may or may not have a
+     * file extension. If no {@link IFile} instances are found that match this name
+     * an empty collection is returned.
      * 
      * @param name the name of the IResource
      * @param project the target project
-     * @return the IResource[]
+     * @return the {@link IFile} collection
      */
-    public static IResource[] findIResourceInProjectByName( final String name, final IProject project) {
-        if (name == null || name.length() == 0 || getWorkspace() == null) return EMPTY_IRESOURCE_ARRAY;
+    public static Collection<IFile> findIResourceInProjectByName( final String name, final IProject project) {
+        if (name == null || name.length() == 0 || getWorkspace() == null)
+            return Collections.emptyList();
 
-        // Collect all IResources within all IProjects
-        final FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor();
-        if (getWorkspace() != null && getWorkspace().getRoot() != null) {
-            try {
-                project.accept(visitor);
-            } catch (final CoreException e) {
-                // do nothing
-            }
+        FileNameResourceCollectorVisitor visitor = new FileNameResourceCollectorVisitor(name);
+        try {
+            project.accept(visitor);
+        } catch (final CoreException e) {
+            // do nothing
+            ModelerCore.Util.log(e);
         }
-
-        // Try to match the specified resource name with one of the IResource instances
-        final boolean removeExtension = (name.indexOf('.') == -1);
-        final Collection<IFile> fileResources = visitor.getFileResources();
-        final ArrayList tmp = new ArrayList();
-        for (final IFile fileResource : fileResources)
-            if (fileResource != null) {
-                IPath path = fileResource.getFullPath();
-                // Do not process file names staring with '.' since these
-                // are considered reserved for Eclipse specific files
-                if (path.lastSegment().charAt(0) == '.') continue;
-                if (removeExtension) path = path.removeFileExtension();
-                if (name.equalsIgnoreCase(path.lastSegment())) tmp.add(fileResource);
-            }
-
-        // If no matching resources are found return an empty array
-        if (tmp.size() == 0) return EMPTY_IRESOURCE_ARRAY;
-
-        final IResource[] result = new IResource[tmp.size()];
-        tmp.toArray(result);
-
-        return result;
+        return visitor.getFileResources();
     }
 
     /**
-     * Return the IResource instance that matches the specified path. The path is the relative path in the workspace. If no
-     * IResource instance is found that match this path a null is returned.
-     * 
-     * @param name the path to the IResource
-     * @return the IResource
+     * Return the {@link IFile} instance that matches the specified path.
+     * The path is the relative path in the workspace. If no
+     * file is found that match this path a null is returned.
+     *
+     * @param workspacePath the path to the resource
+     * @return the {@link IFile}
      */
-    public static IResource findIResourceByPath( final IPath workspacePath ) {
-        if (workspacePath == null || workspacePath.isEmpty() || getWorkspace() == null) return null;
+    public static IFile findIResourceByPath( final IPath workspacePath ) {
+        if (workspacePath == null || workspacePath.isEmpty() || getWorkspace() == null)
+            return null;
 
-        // Collect all IResources within all IProjects
-        final FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor();
-        if (getWorkspace() != null && getWorkspace().getRoot() != null) {
-            final IProject[] projects = getWorkspace().getRoot().getProjects();
-            for (final IProject project : projects)
-                try {
-                    project.accept(visitor);
-                } catch (final CoreException e) {
-                    // do nothing
-                }
-        }
+        FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor() {
+            @Override
+            public boolean visit(IResource resource) {
+                if (! resource.exists() || resource.getType() != IResource.FILE || getResourceFilter().accept(resource)) 
+                    return false;
 
-        final Collection<IFile> fileResources = visitor.getFileResources();
-        for (final IFile fileResource : fileResources)
-            if (fileResource != null) {
-                final IPath path = fileResource.getFullPath();
+                IPath path = resource.getFullPath();
                 // Do not process file names staring with '.' since these
                 // are considered reserved for Eclipse specific files
-                if (path.lastSegment().charAt(0) == '.') continue;
-                if (path.equals(workspacePath)) return fileResource;
-            }
+                if (path.lastSegment().charAt(0) == '.')
+                    return false;
 
-        return null;
+                if (path.equals(workspacePath))
+                    addResource(resource);
+
+                return true;
+            }
+        };
+
+        getProjectFileResources(visitor);
+
+        if (visitor.getFileResources().size() == 0)
+            return null;
+
+        // Return the first one in the collection as there should be only one
+        return visitor.getFileResources().iterator().next();
     }
 
     /**
-     * Return the IResource instance that matches the stringified UUID. If the stringified UUID is null, empty, or does not have a
-     * UUID.PROTOCOL prefix then null is returned. If no IResource instance is found that matches this UUID then null is returned.
+     * Return the {@link IFile} instance that matches the stringified UUID.
+     * If the stringified UUID is null, empty, does not have a
+     * UUID.PROTOCOL prefix or no match is found then null is returned.
      * 
      * @param stringifiedUuid the stringified form of a UUID instance
-     * @return the IResource
+     * @return the {@link IFile}
      */
-    public static IResource findIResourceByUUID( final String stringifiedUuid ) {
+    public static IFile findIResourceByUUID( final String stringifiedUuid ) {
         if (CoreStringUtil.isEmpty(stringifiedUuid) || !stringifiedUuid.startsWith(UUID.PROTOCOL) || getWorkspace() == null) return null;
 
-        // Collect all IResources within all IProjects
-        final FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor();
-        if (getWorkspace() != null && getWorkspace().getRoot() != null) {
-            final IProject[] projects = getWorkspace().getRoot().getProjects();
-            for (final IProject project : projects)
-                try {
-                    project.accept(visitor);
-                } catch (final CoreException e) {
-                    // do nothing
-                }
-        }
+        FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor() {
+            @Override
+            public boolean visit(IResource resource) {
+                if (! resource.exists() || resource.getType() != IResource.FILE || getResourceFilter().accept(resource)) 
+                    return false;
 
-        final Collection<IFile> fileResources = visitor.getFileResources();
-        for (final IFile fileResource : fileResources) {
-            final IFile iResource = fileResource;
-            if (iResource != null && !ModelUtil.isXsdFile(iResource)) {
-                final XMIHeader header = ModelUtil.getXmiHeader(iResource);
-                if (header != null && stringifiedUuid.equals(header.getUUID())) return iResource;
+                if (ModelUtil.isXsdFile(resource))
+                    return false;
+
+                XMIHeader header = ModelUtil.getXmiHeader(resource);
+                if (header != null && stringifiedUuid.equals(header.getUUID()))
+                    addResource(resource);
+
+                return true;
             }
-        }
+        };
 
-        return null;
+        getProjectFileResources(visitor);
+
+        if (visitor.getFileResources().size() == 0)
+            return null;
+
+        // Return the first one in the collection as there should be only one
+        return visitor.getFileResources().iterator().next();
     }
 
-    public static String getAbsoluteLocation( final File base,
-                                               final String relativePath ) {
+    /**
+     * Get the absolute location of give relative path using the given base
+     *
+     * @param base
+     * @param relativePath
+     *
+     * @return absolute file path
+     */
+    public static String getAbsoluteLocation( final File base, final String relativePath ) {
         final URI baseLocation = URI.createFileURI(base.getAbsolutePath());
         URI relLocation = URI.createURI(relativePath, false);
         if (baseLocation.isHierarchical() && !baseLocation.isRelative() && relLocation.isRelative()) relLocation = relLocation.resolve(baseLocation);
         return URI.decode(relLocation.toString());
     }
 
-    private static Collection<IFile> getAllProjectsFileResources() {
-        // Collect all IResources within all IProjects
-
+    /**
+     * Find all files in open modelling projects,
+     * ie. this will ignore projects that lack a modelling nature
+     *
+     * @return collection of file resources
+     */
+    public static Collection<IFile> getProjectFileResources() {
         final FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor();
-        final IWorkspace workSpace = getWorkspace();
-        if (workSpace != null && workSpace.getRoot() != null) {
-            final IWorkspaceRoot wsRoot = workSpace.getRoot();
-            final IProject[] projects = wsRoot.getProjects();
-            for (final IProject project : projects)
-                if (project.isOpen()) try {
-                    project.accept(visitor);
-                } catch (final CoreException e) {
-                    // do nothing
-                    ModelerCore.Util.log(e);
-                }
-        }
+        getProjectFileResources(visitor);
 
         return visitor.getFileResources();
     }
 
-    public static Collection getAllWorkspaceResources() {
-        return getAllWorkspaceResources(null);
-    }
+    /**
+     * Find all files in open modelling projects using the given visitor.
+     *
+     * @param visitor
+     */
+    public static void getProjectFileResources(IResourceVisitor visitor) {
+        final IWorkspace workspace = getWorkspace();
+        if (workspace == null || workspace.getRoot() == null)
+            return;
 
-    public static Collection<IFile> getAllWorkspaceResources(final ResourceFilter filter) {
-        // Collect all IResources within all IProjects
-        final FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor(filter);
-        final IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
-        for (final IProject project : projects)
+        final IWorkspaceRoot wsRoot = workspace.getRoot();
+        final IProject[] projects = wsRoot.getProjects();
+        for (final IProject project : projects) {
+            if (! project.isOpen())
+                continue;
+
+            // Ignore of projects without a modelling nature
+            if (! ModelerCore.hasModelNature(project))
+                continue;
+
             try {
                 project.accept(visitor);
             } catch (final CoreException e) {
                 // do nothing
+                ModelerCore.Util.log(e);
             }
-
-        final Collection<IFile> fileResources = visitor.getFileResources();
-        final Iterator<IFile> itor = fileResources.iterator();
-        while (itor.hasNext()) {
-            final IFile fileResource = itor.next();
-            final IPath path = fileResource.getFullPath();
-            // Do not process file names starting with '.' since these
-            // are considered reserved for Eclipse specific files
-            if (path.lastSegment().charAt(0) == '.') itor.remove();
-        } // endwhile
-
-        return fileResources;
+        }
     }
 
     /**
-     * Return IPath[] array representing the workspace paths to dependent IResource instances. The dependent paths are found by
-     * reading the model imports declarations in the specified resource. Only paths to IResource instances will be returned whereas
-     * import declarations to one of the well-know Teiid Designer/EMF global resources such as
-     * <p>
-     * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
-     * "http://www.w3.org/2001/MagicXMLSchema" "http://www.w3.org/2001/XMLSchema-instance"
-     * </p>
-     * will not be returned in the result. If the method is called outside of the Eclipse runtime environment, or if the specified
-     * IResource is null or cannot be found on the file system then an empty array will be returned.
-     * 
-     * @param iResource the IResource to examine for import declarations. If null, or it not running in a Eclipse runtime
-     *        environment, an empty array will be returned.
-     * @return the IPath[] for paths to the dependent IResource instances
+     * Get all file resources contained in the given project
+     *
+     * @param project
+     *
+     * @return collection of file resources
      */
-    public static List<IPath> getDependentResourcePaths( final IResource iResource ) {
-        if (iResource == null || getWorkspace() == null) return Collections.emptyList();
+    public static Collection<IFile> getProjectFileResources(final IProject project) {
+        return getProjectFileResources(project, null);
+    }
 
-        final List<IFile> dependentIResources = getDependentResources(iResource);
-        if (dependentIResources.isEmpty()) return Collections.emptyList();
+    /**
+     * Get all file resources contained in the given project,
+     * filtered by the given filter.
+     *
+     * @param project
+     * @param filter
+     *
+     * @return collection of file resources
+     */
+    public static Collection<IFile> getProjectFileResources(final IProject project, final ResourceFilter filter ) {
+        CoreArgCheck.isNotNull(project);
 
-        final List<IPath> result = new ArrayList<IPath>();
-        for (IFile resource : dependentIResources) {
-            result.add(resource.getFullPath());
+        if (! ModelerCore.hasModelNature(project))
+            return Collections.emptyList();
+
+        // Collect all IResources within the given project
+        final FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor(filter);
+        try {
+            project.accept(visitor);
+        } catch (final CoreException e) {
+            ModelerCore.Util.log(e);
         }
 
-        return result;
+        // List is required since visitor's collection is unmodifiable
+        final Collection<IFile> fileResources = new ArrayList<IFile>(visitor.getFileResources());
+        final Iterator<IFile> iterator = fileResources.iterator();
+        while(iterator.hasNext()) {
+            final IFile fileResource = iterator.next();
+            final IPath path = fileResource.getFullPath();
+
+            // Do not process file names starting with '.' since these
+            // are considered reserved for Eclipse specific files
+            if (path.lastSegment().charAt(0) == '.')
+                iterator.remove();
+        }
+
+        return fileResources;
     }
 
     /**
@@ -545,16 +528,18 @@ public class WorkspaceResourceFinderUtil {
     }
 
     /**
-     * Returns true if the specified URI string is one of the well-known Teiid Designer/EMF identifiers to a global resource such as
+     * Returns a valid path reference if the specified URI string is one of the
+     * well-known Teiid Designer/EMF identifiers to a global resource such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"
      * "http://www.metamatrix.com/metamodels/UmlPrimitiveTypes-instance"
      * "http://www.metamatrix.com/relationships/BuiltInRelationshipTypes-instance" "http://www.w3.org/2001/XMLSchema"
      * "http://www.w3.org/2001/MagicXMLSchema" "http://www.w3.org/2001/XMLSchema-instance"
      * </p>
-     * otherwise false is returned.
-     * 
+     * otherwise null is returned.
+     *
      * @param uri the URI string
+     * @return a valid path reference or null
      */
     public static String getGlobalResourceUri( final String uri ) {
         if (uri == null) return null;
@@ -609,177 +594,194 @@ public class WorkspaceResourceFinderUtil {
         return null;
     }
 
-    private static IFile getResourceByLocation( final Collection<IFile> fileResources,
-                                                final String workspaceUri ) {
-
-        IFile fileResource = null;
+    private static IFile getResourceByLocation( final Collection<IFile> fileResources, final String workspaceUri ) {
         String resourceLocation;
 
         // Try to match the workspace URI to a IResource location ...
-        for (final IFile fileResource2 : fileResources) {
-            fileResource = fileResource2;
-            resourceLocation = fileResource.getLocation().toOSString();
-            if (workspaceUri.endsWith(resourceLocation)) return fileResource;
-            resourceLocation = fileResource.getLocation().toString();
-            if (workspaceUri.endsWith(resourceLocation)) return fileResource;
-        }
+        for (final IFile fileResource : fileResources) {
+            IPath location = fileResource.getLocation();
 
-        // Case 5683 - look for a match of the supplied workspaceUri (usually file.ext) to the
-        // last segment of the fileResource path.
-        for (final IFile fileResource2 : fileResources) {
-            fileResource = fileResource2;
-            final String fileNameSegment = fileResource.getLocation().lastSegment();
-            if (fileNameSegment != null && fileNameSegment.equalsIgnoreCase(workspaceUri)) return fileResource;
-        }
+            resourceLocation = location.toOSString();
+            if (workspaceUri.endsWith(resourceLocation))
+                return fileResource;
 
-        // MyDefect : 16368 Added to fix the defect
-        for (final IFile fileResource2 : fileResources) {
-            fileResource = fileResource2;
-            final IPath resrcLocation = fileResource.getLocation();
-            resourceLocation = resrcLocation.toOSString();
-            if (resourceLocation.endsWith(workspaceUri)) return fileResource;
-            resourceLocation = resrcLocation.toString();
-            if (resourceLocation.endsWith(workspaceUri)) return fileResource;
+            if (resourceLocation.endsWith(workspaceUri))
+                return fileResource;
+
+            resourceLocation = location.toString();
+            if (workspaceUri.endsWith(resourceLocation))
+                return fileResource;
+
+            if (resourceLocation.endsWith(workspaceUri))
+                return fileResource;
+
+            // Case 5683 - look for a match of the supplied workspaceUri (usually file.ext) to the
+            // last segment of the fileResource path.
+            final String fileNameSegment = location.lastSegment();
+            if (workspaceUri.equalsIgnoreCase(fileNameSegment))
+                return fileResource;
         }
 
         return null;
     }
 
-    private static IFile getResourceStartsWithHttp( final Collection<IFile> fileResources,
-                                                    final String workspaceUri ) {
-
-        IFile fileResource = null;
+    private static IFile getResourceStartsWithHttp( final Collection<IFile> fileResources, final String workspaceUri ) {
         String targetNamespace;
 
-        if (workspaceUri.startsWith("http")) for (final IFile fileResource2 : fileResources) { //$NON-NLS-1$
-            fileResource = fileResource2;
+        if (! workspaceUri.startsWith("http")) //$NON-NLS-1$
+            return null;
+
+         for (final IFile fileResource : fileResources) {
             targetNamespace = getXsdTargetNamespace(fileResource);
-            if (workspaceUri.equals(targetNamespace)) return fileResource;
+            if (workspaceUri.equals(targetNamespace))
+                return fileResource;
         }
 
         return null;
     }
 
-    private static IFile getResourceStartsWithPathSeparator( final Collection<IFile> fileResources,
-                                                             final String workspaceUri ) {
+    private static IFile getResourceStartsWithPathSeparator( final Collection<IFile> fileResources, final String workspaceUri ) {
+        if (workspaceUri.charAt(0) != IPath.SEPARATOR)
+            return null;
 
-        IFile fileResource = null;
-        IPath pathInWorkspace;
+        IPath pathInWorkspace = new Path(workspaceUri);
+        for (final IFile fileResource : fileResources) {
+            if (fileResource == null)
+                continue;
 
-        if (workspaceUri.charAt(0) == IPath.SEPARATOR) {
-            pathInWorkspace = new Path(workspaceUri);
-            for (final IFile fileResource2 : fileResources) {
-                fileResource = fileResource2;
-                if (fileResource != null && fileResource.getFullPath().equals(pathInWorkspace)) return fileResource;
+            if (fileResource.getFullPath().equals(pathInWorkspace))
+                return fileResource;
+        }
+
+        return null;
+    }
+
+    /**
+     * Find all resources in the same project that use the given resource.
+     * <p>
+     * To control the depth of the search so as to find indirect relationships between
+     * resources, set the depth value accordingly:
+     * <ul>
+     * <li>{@link IResource#DEPTH_ZERO} only direct resource dependencies;</li>
+     * <li>{@link IResource#DEPTH_INFINITE} direct and indirect resource dependencies</li>
+     * </ul>
+     *
+     * @param resource
+     * @param depth one of {@link IResource#DEPTH_ZERO} or {@link IResource#DEPTH_INFINITE}
+     *
+     * @return collection of resources that use the given resource
+     */
+    public static Collection<IFile> getResourcesThatUse( final IResource resource, int depth ) {
+        return getResourcesThatUse(resource, null, depth);
+    }
+
+    /**
+     * Find all resources in the same project that use the given resource,
+     * filtered by the given filter.
+     * <p>
+     * To control the depth of the search so as to find indirect relationships between
+     * resources, set the depth value accordingly:
+     * <ul>
+     * <li>{@link IResource#DEPTH_ZERO} only direct resource dependencies;</li>
+     * <li>{@link IResource#DEPTH_INFINITE} direct and indirect resource dependencies</li>
+     * </ul>
+     *
+     * @param resource
+     * @param filter
+     * @param depth one of {@link IResource#DEPTH_ZERO} or {@link IResource#DEPTH_INFINITE}
+     * @return collection of resources that use the given resource
+     */
+    public static Collection<IFile> getResourcesThatUse( final IResource resource, final ResourceFilter filter, int depth ) {
+        Collection<IFile> fileResources = new HashSet<IFile>();
+        getResourcesThatUse(resource, filter, depth, fileResources);
+        return fileResources;
+    }
+
+    private static void getResourcesThatUse(final IResource resource, final ResourceFilter filter, int depth, Collection<IFile> resultDependents) {
+        // search the resource's project for any models that import anything beneath the path of the resource
+        IProject project = resource.getProject();
+        IPath targetPath = resource.getFullPath();
+        Collection<IFile> projectResources = getProjectFileResources(project, filter);
+
+        /* Check to see if any of the resources found
+         * depend upon the specified resource
+         */
+
+        // Iterate through all the file resources
+        for (IFile fileResource : projectResources) {
+            // Get all the dependents of this file resource
+            final Collection<IFile> dependents = getDependentResources(fileResource);
+
+            // Iterate through the dependents
+            for (final IResource dependent : dependents) {
+                if (! targetPath.equals(dependent.getFullPath()))
+                    continue;
+
+                // This dependent imports the target resource
+                final String modelPath = fileResource.getFullPath().toString();
+
+                // If the URI is to the Teiid Designer built-in datatypes resource or to one
+                // of the Emf XMLSchema resources then continue since there is no
+                // ModelReference to add.
+                if (isGlobalResource(modelPath))
+                    continue;
+
+                resultDependents.add(fileResource);
+                if (IResource.DEPTH_INFINITE == depth)
+                    getResourcesThatUse(fileResource, filter, depth, resultDependents);
+
+                break;
             }
-        }
-
-        return null;
-    }
-
-    public static Collection getResourcesThatUse( final IResource resource ) {
-        return getResourcesThatUse(resource, null);
-    }
-
-    public static Collection getResourcesThatUse( final IResource resource,
-                                                  final ResourceFilter filter ) {
-        // search the workspace for any models that import anything beneath the path that is moving
-        final Collection allResources = getAllWorkspaceResources(filter);
-        final Collection colDependentResources = new ArrayList();
-
-        // check to see if any of the resources found depend upon the specified resource:
-        final IPath targetPath = resource.getFullPath();
-        for (final Iterator iter = allResources.iterator(); iter.hasNext();) {
-            final IResource nextResource = (IResource)iter.next();
-            final List<IPath> paths = getDependentResourcePaths(nextResource);
-            for (final IPath path : paths)
-                if (path.equals(targetPath)) {
-                    final String modelPath = nextResource.getFullPath().toString();
-                    // If the URI is to the Teiid Designer built-in datatypes resource or to one
-                    // of the Emf XMLSchema resources then continue since there is no
-                    // ModelReference to add.
-                    if (modelPath != null && !isGlobalResource(modelPath)) colDependentResources.add(nextResource);
-                    break;
-                }
-        }
-
-        return colDependentResources;
-    }
-
-    public static void getResourcesThatUseRecursive( final IResource resource,
-                                                     final ResourceFilter filter,
-                                                     final Collection<IFile> dependentResources ) {
-        // search the workspace for any models that import anything beneath the path that is moving
-        final Collection<IFile> allResources = getAllWorkspaceResources(filter);
-
-        // check to see if any of the resources found depend upon the specified resource:
-        final IPath targetPath = resource.getFullPath();
-        for (IFile nextResource : allResources) {
-            final List<IPath> paths = getDependentResourcePaths(nextResource);
-            for (final IPath path : paths)
-                if (path.equals(targetPath)) {
-                    final String modelPath = nextResource.getFullPath().toString();
-                    // If the URI is to the Teiid Designer built-in datatypes resource or to one
-                    // of the Emf XMLSchema resources then continue since there is no
-                    // ModelReference to add.
-                    if (modelPath != null && !isGlobalResource(modelPath) && !dependentResources.contains(nextResource)) {
-                        dependentResources.add(nextResource);
-                        getResourcesThatUseRecursive(nextResource, filter, dependentResources);
-                    }
-                    break;
-                }
         }
     }
 
     /**
-     * Return IResource[] array representing vdb archive IResource instances in the workspace that contain a version of any
-     * IResource in the specified collection. If the method is called outside of the Eclipse runtime environment, or if the
-     * specified collection is null, empty or contains IResource instances that cannot be found on the file system then an empty
-     * array will be returned.
+     * Return {@link IFile} collection representing vdb instances in the given resources' projects that contain a 
+     * version of any resource in the specified collection.
      * 
-     * @param iResources the collection to search all vdb archive files for references to. If null or it not running in a Eclipse
-     *        runtime environment, an empty array will be returned.
-     * @return the IResource[] representing vdb archive files within the workspace
-     * @param resource
-     * @return
-     * @since 4.3
+     * If the method is called outside of the Eclipse runtime environment, or if the specified collection is null, 
+     * empty or contains resource instances that cannot be found on the file system then an empty
+     * collection will be returned.
+     *
+     * @param resources the collection to search all vdb archive files for references to. If null or it not 
+     *        running in a Eclipse runtime environment, an empty collection will be returned.
+     * @return the {@link IFile} collection representing vdb archive files within the workspace
      */
-    public static IResource[] getVdbResourcesThatContain( final Collection resources ) {
-        if (resources == null || resources.isEmpty() || getWorkspace() == null) return EMPTY_IRESOURCE_ARRAY;
-
-        // Collect only vdb archive resources from the workspace
-        final Collection vdbResources = getAllWorkspaceResources(VDB_RESOURCE_FILTER);
+    public static Collection<IFile> getVdbResourcesThatContain( final Collection<IResource> resources ) {
+        if (resources == null || resources.isEmpty() || getWorkspace() == null)
+            return Collections.emptyList();
 
         // Retrieve any vdb archive resources that reference the specified IResource
         final Collection result = new HashSet();
-        for (final Iterator iter = resources.iterator(); iter.hasNext();) {
-            final IResource resource = (IResource)iter.next();
-            result.addAll(getVdbResourcesThatContain(resource, vdbResources));
+        for (IResource resource : resources) {
+            result.addAll(getVdbResourcesThatContain(resource));
         }
-        return (IResource[])result.toArray(new IResource[result.size()]);
+
+        return result;
     }
 
     /**
-     * Return IResource[] array representing vdb archive IResource instances in the workspace that contain a version of the
-     * specified IResource. If the method is called outside of the Eclipse runtime environment, or if the specified IResource is
-     * null or cannot be found on the file system then an empty array will be returned.
-     * 
-     * @param iResource the IResource to search all vdb archive files for references to. If null or it not running in a Eclipse
-     *        runtime environment, an empty array will be returned.
-     * @return the IResource[] representing vdb archive files within the workspace
-     * @param resource
-     * @return
-     * @since 4.3
+     * Return {@link IFile} collection representing vdb instances in the given resource's project that contains a 
+     * version of the given resource.
+     *
+     * If the method is called outside of the Eclipse runtime environment, or if the given resource is null, 
+     * or the resource cannot be found on the file system then an empty collection will be returned.
+     *
+     * @param resource to search all vdb archive files for references to. If null or it not
+     *        running in a Eclipse runtime environment, an empty collection will be returned.
+     * @return the {@link IFile} collection representing vdb archive files within the workspace
      */
-    public static IResource[] getVdbResourcesThatContain( final IResource resource ) {
-        if (resource == null || !resource.exists() || getWorkspace() == null) return EMPTY_IRESOURCE_ARRAY;
+    public static Collection<IFile> getVdbResourcesThatContain( final IResource resource ) {
+        if (resource == null || !resource.exists() || getWorkspace() == null)
+            return Collections.emptyList();
 
-        // Collect only vdb archive resources from the workspace
-        final Collection vdbResources = getAllWorkspaceResources(VDB_RESOURCE_FILTER);
+        final Collection result = new HashSet();
 
-        // Retrieve any vdb archive resources that reference the specified IResource
-        final Collection result = getVdbResourcesThatContain(resource, vdbResources);
-        return (IResource[])result.toArray(new IResource[result.size()]);
+        // Collect vdb resources from resource's project
+        final Collection<IFile> vdbResources = getProjectFileResources(resource.getProject(), VDB_RESOURCE_FILTER);
+        result.addAll(getVdbResourcesThatContain(resource, vdbResources));
+
+        return result;
     }
 
     private static boolean vdbContainsResource(File vdbFile, final IPath targetResourcePath) {
@@ -832,7 +834,7 @@ public class WorkspaceResourceFinderUtil {
      * @since 4.3
      */
     private static Collection getVdbResourcesThatContain( final IResource resource,
-                                                          final Collection workspaceResources ) {
+                                                          final Collection<IFile> workspaceResources ) {
         Collection<IResource> result = Collections.emptyList();
         if (resource == null || !resource.exists() || ModelUtil.isVdbArchiveFile(resource))
             return result;
@@ -844,15 +846,16 @@ public class WorkspaceResourceFinderUtil {
         result = new ArrayList<IResource>();
 
         // Match the full path of the specified resource to those referenced in the vdb manifest
-        for (final Iterator iter = workspaceResources.iterator(); iter.hasNext();) {
-            final IResource nextResource = (IResource)iter.next();
-            if (!ModelUtil.isVdbArchiveFile(nextResource)) continue;
-            final File vdbFile = nextResource.getRawLocation().toFile();
+        for (IFile fileResource : workspaceResources) {
+            if (!ModelUtil.isVdbArchiveFile(fileResource))
+                continue;
+
+            final File vdbFile = fileResource.getRawLocation().toFile();
             if (! vdbFile.exists())
                 continue;
 
             if (vdbContainsResource(vdbFile, resource.getFullPath().makeAbsolute()))
-                result.add(nextResource);
+                result.add(fileResource);
         }
 
         return result;
@@ -869,7 +872,7 @@ public class WorkspaceResourceFinderUtil {
      * Return the URI string defining the relative path within the workspace for the specified IResource.
      * 
      * @param resource
-     * @return
+     * @return string representation of the resource URI
      */
     public static String getWorkspaceUri( final IResource resource ) {
         if (resource != null) return resource.getFullPath().toString();
@@ -886,61 +889,66 @@ public class WorkspaceResourceFinderUtil {
      * then a logic URI is returned null since there is no IResource in the workspace that represents any one of those models.
      * 
      * @param resource
-     * @return
+     * @return string representation of the resource URI
      */
     public static String getWorkspaceUri( final Resource resource ) {
-        if (resource != null && resource.getURI() != null && getWorkspace() != null) {
+        if (resource == null || resource.getURI() == null || getWorkspace() == null)
+            return null;
 
-            // If the resource is the Teiid Designer built-in datatypes model
-            // then return the specific logical URI for that model
-            final URI resourceUri = resource.getURI();
+        // If the resource is the Teiid Designer built-in datatypes model
+        // then return the specific logical URI for that model
+        final URI resourceUri = resource.getURI();
 
-            // if it is a global resource just return the uri
-            String resourceUriString = resourceUri.toString();
-            if (isGlobalResource(resourceUriString)) return getGlobalResourceUri(resourceUriString);
-            resourceUriString = normalizeUriToString(resourceUri);
-            if (isGlobalResource(resourceUriString)) return getGlobalResourceUri(resourceUriString);
+        // if it is a global resource just return the uri
+        String resourceUriString = resourceUri.toString();
+        if (isGlobalResource(resourceUriString))
+            return getGlobalResourceUri(resourceUriString);
 
-            // If the corresponding IResource can be found then
-            // return the relative path within the workspace
-            final IResource iResource = findIResource(resource);
-            if (iResource != null) return iResource.getFullPath().toString();
+        resourceUriString = normalizeUriToString(resourceUri);
+        if (isGlobalResource(resourceUriString))
+            return getGlobalResourceUri(resourceUriString);
 
-            // Try and compute the relative path for the Emf resource
-            // by checking its path against those of all known workspace
-            // projects. If the resource URI is prefixed by a known
-            // project location path then remove that path from the resource
-            // URI in order to create a relative path.
-            String path = resourceUriString;
-            try {
-                final IProject[] projects = getWorkspace().getRoot().getProjects();
-                for (final IProject project : projects) {
-                    final IPath iPath = project.getLocation().removeLastSegments(1);
-                    final String projectLocation = iPath.toString();
-                    int beginIndex = path.indexOf(projectLocation);
-                    if (beginIndex >= 0) {
-                        beginIndex = beginIndex + projectLocation.length();
-                        return path.substring(beginIndex);
-                    }
+        // If the corresponding IResource can be found then
+        // return the relative path within the workspace
+        final IResource iResource = findIResource(resource);
+        if (iResource != null)
+            return iResource.getFullPath().toString();
+
+        // Try and compute the relative path for the Emf resource
+        // by checking its path against those of all known workspace
+        // projects. If the resource URI is prefixed by a known
+        // project location path then remove that path from the resource
+        // URI in order to create a relative path.
+        String path = resourceUriString;
+        try {
+            final IProject[] projects = getWorkspace().getRoot().getProjects();
+            for (final IProject project : projects) {
+                final IPath iPath = project.getLocation().removeLastSegments(1);
+                final String projectLocation = iPath.toString();
+                int beginIndex = path.indexOf(projectLocation);
+                if (beginIndex >= 0) {
+                    beginIndex = beginIndex + projectLocation.length();
+                    return path.substring(beginIndex);
                 }
-            } catch (final Exception e) {
-                path = resourceUriString;
             }
-
-            // Try and compute the relative path from the Emf resource
-            // URI and the Platform installation location
+        } catch (final Exception e) {
             path = resourceUriString;
-            final String osPath = resourceUri.toFileString();
-            if (osPath == null) return null;
-
-            // Remove the path to the workspace from the resource path ...
-            final IPath wsPath = Platform.getLocation();
-            final String wsPathStr = wsPath.toOSString();
-            if (osPath.startsWith(wsPathStr)) path = osPath.substring(wsPathStr.length());
-            return path;
-
         }
-        return null;
+
+        // Try and compute the relative path from the Emf resource
+        // URI and the Platform installation location
+        path = resourceUriString;
+        final String osPath = resourceUri.toFileString();
+        if (osPath == null)
+            return null;
+
+        // Remove the path to the workspace from the resource path ...
+        final IPath wsPath = Platform.getLocation();
+        final String wsPathStr = wsPath.toOSString();
+        if (osPath.startsWith(wsPathStr))
+            path = osPath.substring(wsPathStr.length());
+
+        return path;
     }
 
     private static String getXsdTargetNamespace( final IResource iResource ) {
@@ -968,6 +976,7 @@ public class WorkspaceResourceFinderUtil {
      * otherwise false is returned.
      * 
      * @param uri the URI string
+     * @return true if the uri represents a global resource or false otherwise
      */
     public static boolean isGlobalResource( final String uri ) {
         if (uri == null) return false;
@@ -1044,6 +1053,13 @@ public class WorkspaceResourceFinderUtil {
         return found;
     }
 
+    /**
+     * Is the given workspace URI valid.
+     *
+     * @param workspaceUri
+     *
+     * @return true if valid, false otherwise
+     */
     public static boolean isValidWorkspaceUri( final String workspaceUri ) {
 
         if (workspaceUri == null || workspaceUri.length() == 0 || getWorkspace() == null) return false;
@@ -1056,6 +1072,13 @@ public class WorkspaceResourceFinderUtil {
         return true;
     }
 
+    /**
+     * Normalise the given uri string reprentation
+     *
+     * @param uriString
+     *
+     * @return normalized uri string
+     */
     public static String normalizeUriString( final String uriString ) {
         final String normalizedUriString = removeSchemeAndAuthority(uriString);
         return normalizedUriString;
@@ -1093,34 +1116,147 @@ public class WorkspaceResourceFinderUtil {
         return normalizedUri;
     }
 
+    /**
+     * Visitor that collects file resources conforming to an optional filter
+     */
     public static class FileResourceCollectorVisitor implements IResourceVisitor {
-        private final List<IFile> resources;
-        private ResourceFilter resFilt;
+        private final List resources;
 
+        private final ResourceFilter resourceFilter;
+
+        /**
+         * Create a new default instance with an 'accept everything filter'
+         */
         public FileResourceCollectorVisitor() {
             this(ResourceFilter.ACCEPT_ALL);
         }
 
-        public FileResourceCollectorVisitor( final ResourceFilter rf ) {
-            this.resources = new ArrayList<IFile>();
-            if (rf != null) resFilt = rf;
-            else resFilt = ResourceFilter.ACCEPT_ALL;
+        /**
+         * Create a new instance with filter
+         *
+         * @param resourceFilter
+         */
+        public FileResourceCollectorVisitor( final ResourceFilter resourceFilter ) {
+            this.resources = new ArrayList();
+            if (resourceFilter != null)
+                this.resourceFilter = resourceFilter;
+            else
+                this.resourceFilter = ResourceFilter.ACCEPT_ALL;
         }
 
+        protected boolean addResource(final IResource resource) {
+            return resources.add(resource);
+        }
+
+        protected ResourceFilter getResourceFilter() {
+            return resourceFilter;
+        }
+
+        /**
+         * Get the found file resource collection
+         *
+         * @return collection of {@link IFile} resources
+         */
         public Collection<IFile> getFileResources() {
-            return resources;
+            return Collections.unmodifiableCollection(resources);
         }
 
         @Override
 		public boolean visit( final IResource resource ) {
-            if (resource.exists() && resource.getType() == IResource.FILE && resFilt.accept(resource)) {
-                resources.add((IFile) resource);
-            }
+            if (resource.exists() && resource.getType() == IResource.FILE && getResourceFilter().accept(resource)) 
+                addResource(resource);
+
             return true;
         }
     }
 
-    static class VdbResourceFilter implements ResourceFilter {
+    /**
+     * Visits resources and returns those that match a particular name
+     */
+    private static class FileNameResourceCollectorVisitor extends FileResourceCollectorVisitor {
+
+        private final String name;
+
+        private final boolean removeExtension;
+
+        /**
+         * Create new instance
+         *
+         * @param name
+         */
+        public FileNameResourceCollectorVisitor(String name) {
+            this.name = name;
+            this.removeExtension = name.indexOf('.') == -1;
+        }
+
+        @Override
+        public boolean visit(IResource resource) {
+            if (! resource.exists() || resource.getType() != IResource.FILE || getResourceFilter().accept(resource)) 
+                return false;
+
+            IPath path = resource.getFullPath();
+            // Do not process file names staring with '.' since these
+            // are considered reserved for Eclipse specific files
+            if (path.lastSegment().charAt(0) == '.')
+                return false;
+
+            if (removeExtension)
+                path = path.removeFileExtension();
+
+            if (name.equalsIgnoreCase(path.lastSegment()))
+                addResource(resource);
+
+            return true;
+        }
+    }
+
+    /**
+     * Visitor that collects vdb resources
+     */
+    public static class VdbResourceCollectorVisitor extends FileResourceCollectorVisitor {
+
+        private final String optionalName;
+
+        /**
+         * Create a default instance which will simply find all vdb files
+         */
+        public VdbResourceCollectorVisitor() {
+            this.optionalName = null;
+        }
+
+        /**
+         * Create an instance which will find vdb files with the given name
+         *
+         * @param vdbName
+         */
+        public VdbResourceCollectorVisitor(String vdbName) {
+            this.optionalName = vdbName;
+        }
+
+        @Override
+        public boolean visit(IResource resource) {
+            if (! resource.exists() || resource.getType() != IResource.FILE || getResourceFilter().accept(resource)) 
+                return false;
+
+            if (! ModelUtil.isVdbArchiveFile(resource))
+                return false;
+
+            if (optionalName == null) {// no optional name specified
+                addResource(resource);
+            }
+            else if (optionalName != null && optionalName.equalsIgnoreCase(resource.getFullPath().lastSegment())) {
+                // optional name specified
+                addResource(resource);
+            }
+
+            return true;
+        }
+    }
+
+    /**
+     * Filter to find the vdb resources
+     */
+    private static class VdbResourceFilter implements ResourceFilter {
         @Override
 		public boolean accept( final IResource res ) {
             return ModelUtil.isVdbArchiveFile(res);

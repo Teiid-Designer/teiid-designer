@@ -77,20 +77,6 @@ public interface ModelWorkspace extends ModelWorkspaceItem, Openable {
      * @exception ModelWorkspaceException if this request fails.
      */
     ModelProject[] getModelProjects() throws ModelWorkspaceException;
-
-    /**
-     * Returns an array of non-model resources (that is, non-Modeling projects) in
-     * the workspace.
-     * <p>
-     * Non-Modeling projects include all projects that are closed (even if they have the
-     * Modeling nature).
-     * </p>
-     * 
-     * @return an array of non-modeling projects contained in the workspace.
-     * @throws ModelWorkspaceException if this element does not exist or if an
-     *      exception occurs while accessing its corresponding resource
-     */
-    Object[] getNonModelingResources() throws ModelWorkspaceException;
     
     /**
      * Obtains all the {@link ModelResource}s found in open model projects in the workspace. 
