@@ -30,7 +30,11 @@ public class CommandHelper {
         Set<IExpression> theSymbols = new LinkedHashSet<IExpression>();
         
         theSymbols.addAll(command.getProjectedSymbols());
-        theSymbols.addAll(command.getResultSetColumns());
+        
+        // Teiid ICommand.getResultSetColumns() may return NULL so need to check before adding to Set
+        if( command.getResultSetColumns() != null ) {
+        	theSymbols.addAll(command.getResultSetColumns());
+        }
         
         List<IExpression> symbols = new ArrayList(theSymbols.size());
         symbols.addAll(theSymbols);
