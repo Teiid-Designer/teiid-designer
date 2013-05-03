@@ -242,7 +242,7 @@ public class WorkspaceResourceFinderUtil {
         FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor() {
             @Override
             public boolean visit(IResource resource) {
-                if (! resource.exists() || resource.getType() != IResource.FILE || getResourceFilter().accept(resource)) 
+                if (! resource.exists() || resource.getType() != IResource.FILE || !getResourceFilter().accept(resource)) 
                     return false;
 
                 IPath path = resource.getFullPath();
@@ -278,20 +278,35 @@ public class WorkspaceResourceFinderUtil {
     public static IFile findIResourceByUUID( final String stringifiedUuid ) {
         if (CoreStringUtil.isEmpty(stringifiedUuid) || !stringifiedUuid.startsWith(UUID.PROTOCOL) || getWorkspace() == null) return null;
 
+        // Visitor should only look for XMI files with UUIDs in them
+        // If the resource is a FOLDER or PROJECT we should return TRUE so that the resource's children will get visited
+        // If we encounter a XSD or XMI file, we return false so the visitation stops at the model
+        
         FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor() {
             @Override
             public boolean visit(IResource resource) {
-                if (! resource.exists() || resource.getType() != IResource.FILE || getResourceFilter().accept(resource)) 
+                if (resource.exists() && resource.getType() == IResource.FILE && getResourceFilter().accept(resource) ) { 
+                    if (ModelUtil.isXsdFile(resource))
+                        return false;
+
+                    if( ModelUtil.isModelFile(resource, true)) {
+                    	XMIHeader header = ModelUtil.getXmiHeader(resource);
+                    	if (header != null && stringifiedUuid.equals(header.getUUID())) {
+                    		addResource(resource);
+                    	}
+                    	return false;
+                    }
+
+                    if( resource.getType() == IResource.PROJECT || 
+                    	resource.getType() == IResource.FOLDER ) {
+                    	return true;
+                    }
+                    
                     return false;
-
-                if (ModelUtil.isXsdFile(resource))
-                    return false;
-
-                XMIHeader header = ModelUtil.getXmiHeader(resource);
-                if (header != null && stringifiedUuid.equals(header.getUUID()))
-                    addResource(resource);
-
+                }
+                
                 return true;
+
             }
         };
 
