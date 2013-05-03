@@ -535,7 +535,10 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      */
     public ModelWorkspaceItem findModelWorkspaceItem( final IResource resource ) throws ModelWorkspaceException {
         CoreArgCheck.isNotNull(resource);
-        return findModelWorkspaceItem(resource, false);
+        if( resource.getProject().isOpen() ) {
+        	return findModelWorkspaceItem(resource, false);
+        }
+        return null;
     }
 
     /**
