@@ -65,6 +65,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -161,7 +162,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     static final String INFORM_DATA_ROLES_ON_ADD_MESSAGE = i18n("informDataRolesExistOnAddMessage"); //$NON-NLS-1$
     static final String INVALID_INTEGER_INPUT_TITLE = i18n("invalidQueryTimeoutValueTitle"); //$NON-NLS-1$
     static final String INVALID_INTEGER_INPUT_MESSAGE = i18n("invalidQueryTimeoutValueMessage"); //$NON-NLS-1$
-
+    
+    static final int MODELS_PANEL_WIDTH_HINT = 300;  // Models Panel Overall Width
+    static final int MODELS_PANEL_IMAGE_COL_WIDTH = 50;  // Image Cols Width
+    static final int MODELS_PANEL_MODELNAME_COL_WIDTH_MIN = 200;  // Min ModelName Width
+    
 //    static final String WEB_SERVICES_VIEW_MODEL_URI = "http://www.metamatrix.com/metamodels/WebService"; //$NON-NLS-1$
 
     static String i18n( final String id ) {
@@ -467,9 +472,22 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
     }
     
-    private void packModelsGroup() {
-        modelsGroup.getTable().getColumn(0).getColumn().pack();
-        modelsGroup.getTable().getColumn(1).getColumn().pack();
+    /*
+     * Set the image cols to a fixed width, then use the remainder for Model Name column
+     */
+    void packModelsGroup() {
+    	// Set Image Col Widths
+        modelsGroup.getTable().getColumn(1).getColumn().setWidth(MODELS_PANEL_IMAGE_COL_WIDTH);
+        modelsGroup.getTable().getColumn(2).getColumn().setWidth(MODELS_PANEL_IMAGE_COL_WIDTH);
+        
+        // Get Overall area width
+        Rectangle area = modelsGroup.getTable().getViewer().getTable().getClientArea();
+        int totalAreaWidth = area.width;
+        
+        // Use the Minimum for ModelName Column
+        int col1Width = totalAreaWidth - MODELS_PANEL_IMAGE_COL_WIDTH - MODELS_PANEL_IMAGE_COL_WIDTH;
+        if(col1Width<MODELS_PANEL_MODELNAME_COL_WIDTH_MIN) col1Width=MODELS_PANEL_MODELNAME_COL_WIDTH_MIN;
+        modelsGroup.getTable().getColumn(0).getColumn().setWidth(col1Width);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -1218,17 +1236,21 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             modelsTab.setToolTipText(i18n("modelsTabToolTip")); //$NON-NLS-1$
             
             Composite pnlModels = new Composite(tabFolder, SWT.NONE);
-            pnlModels.setLayout(new GridLayout(2, false));
+            pnlModels.setLayout(new GridLayout(1, false));
             pnlModels.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             
-            Composite pnlModelsList = new Composite(pnlModels, SWT.NONE);
+            SashForm splitter = new SashForm(pnlModels,SWT.HORIZONTAL);
+            splitter.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            
+            Composite pnlModelsList = new Composite(splitter, SWT.NONE);
             pnlModelsList.setLayout(new GridLayout());
             pnlModelsList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
-            ((GridData)pnlModelsList.getLayoutData()).widthHint = 300;
+            ((GridData)pnlModelsList.getLayoutData()).widthHint = MODELS_PANEL_WIDTH_HINT;
             
             createModelsSection(pnlModelsList);
             
-            modelDetailsPanel = new ModelDetailsPanel(pnlModels, this);
+            modelDetailsPanel = new ModelDetailsPanel(splitter, this);
+            splitter.setWeights(new int[] {35, 65});
             
             modelsTab.setControl(pnlModels);
             
@@ -1428,7 +1450,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                                */
                                               @Override
                                               public String getName() {
-                                                  return MODEL_COLUMN_NAME + "                                                               ";
+                                                  return MODEL_COLUMN_NAME;
                                               }
 
                                               /**
@@ -1630,7 +1652,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
                 // pack columns if first time a model is added
                 if (firstTime) {
-                    WidgetUtil.pack(modelsGroup.getTable().getViewer());
+                	packModelsGroup();
                 }
                 
                 showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
