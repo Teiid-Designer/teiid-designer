@@ -682,7 +682,12 @@ public class DdlImporter {
             initialize(key, node);
             for (final AstNode node1 : node) {
                 if (node1.hasMixin(StandardDdlLexicon.TYPE_COLUMN_REFERENCE)) try {
-                    key.getColumns().add(find(Column.class, node1, table, roots));
+                	Column column = find(Column.class, node1, table, roots);
+                	
+                	if( column.getNullable() == NullableType.NULLABLE_UNKNOWN_LITERAL || column.getNullable() == NullableType.NULLABLE_LITERAL ) {
+                		column.setNullable(NullableType.NO_NULLS_LITERAL);
+                	}
+                    key.getColumns().add(column);
                 } catch (final EntityNotFoundException error) {
                     messages.add(error.getMessage());
                 }
@@ -732,7 +737,12 @@ public class DdlImporter {
             initialize(key, node);
             for (final AstNode node1 : node) {
                 if (node1.hasMixin(StandardDdlLexicon.TYPE_COLUMN_REFERENCE)) try {
-                    key.getColumns().add(find(Column.class, node1, table, roots));
+                	Column column = find(Column.class, node1, table, roots);
+                	
+                	if( column.getNullable() == NullableType.NULLABLE_UNKNOWN_LITERAL || column.getNullable() == NullableType.NULLABLE_LITERAL ) {
+                		column.setNullable(NullableType.NO_NULLS_LITERAL);
+                	}
+                    key.getColumns().add(column);
                 } catch (final EntityNotFoundException error) {
                     messages.add(error.getMessage());
                 }
