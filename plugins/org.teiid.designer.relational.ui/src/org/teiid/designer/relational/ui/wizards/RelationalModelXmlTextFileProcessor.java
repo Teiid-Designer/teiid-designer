@@ -169,8 +169,8 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                             case TYPES.TABLE: {
                                 Properties props = getProperties(child.getAttributes());
                                 RelationalTable table = new RelationalTable();
-                                table.setProperties(props);
                                 relModel.addChild(table);
+                                table.setProperties(props);
                                 
                                 Node primaryKeyElement = null;
                                 Node uniqueConstraintElement = null;
@@ -191,8 +191,8 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                                             case TYPES.COLUMN: {
                                                 Properties columnProps = getProperties(tableChild.getAttributes());
                                                 RelationalColumn column = new RelationalColumn();
-                                                column.setProperties(columnProps);
                                                 table.addColumn(column);
+                                                column.setProperties(columnProps);
                                             } break;
                                             case TYPES.PK: {
                                                 primaryKeyElement = tableChild;
@@ -226,8 +226,8 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                             case TYPES.VIEW: {
                                 Properties props = getProperties(child.getAttributes());
                                 RelationalView view = new RelationalView();
-                                view.setProperties(props);
                                 relModel.addChild(view);
+                                view.setProperties(props);
                                 
                                 Collection<Node> accessPatternNodes = new ArrayList<Node>();
                                 
@@ -245,8 +245,8 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                                             case TYPES.COLUMN: {
                                                 Properties columnProps = getProperties(tableChild.getAttributes());
                                                 RelationalColumn column = new RelationalColumn();
-                                                column.setProperties(columnProps);
                                                 view.addColumn(column);
+                                                column.setProperties(columnProps);
                                             } break;
                                             case TYPES.AP: {
                                                 accessPatternNodes.add(tableChild);
@@ -263,8 +263,8 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                             case TYPES.PROCEDURE: {
                                 Properties props = getProperties(child.getAttributes());
                                 RelationalProcedure proc = new RelationalProcedure();
-                                proc.setProperties(props);
                                 relModel.addChild(proc);
+                                proc.setProperties(props);
                                 
                                 NodeList procChildren = child.getChildNodes();
                                 if(procChildren != null && procChildren.getLength() > 0) {
@@ -278,8 +278,8 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                                             case TYPES.PARAMETER: {
                                                 Properties paramProps = getProperties(procChild.getAttributes());
                                                 RelationalParameter param = new RelationalParameter();
-                                                param.setProperties(paramProps);
                                                 proc.addParameter(param);
+                                                param.setProperties(paramProps);
                                             } break;
                                             case TYPES.RESULT_SET: {
                                                 Properties rsProps = getProperties(procChild.getAttributes());
@@ -333,8 +333,8 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                 for( Node indexNode : indexNodes ) {
                     Properties props = getProperties(indexNode.getAttributes());
                     RelationalIndex index = new RelationalIndex();
-                    index.setProperties(props);
                     relModel.addChild(index);
+                    index.setProperties(props);
                     
                     NodeList indexChildren = indexNode.getChildNodes();
                     if(indexChildren != null && indexChildren.getLength() > 0) {
