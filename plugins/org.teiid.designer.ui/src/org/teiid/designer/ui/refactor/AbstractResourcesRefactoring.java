@@ -12,26 +12,15 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.eclipse.core.filebuffers.FileBuffers;
-import org.eclipse.core.filebuffers.ITextFileBuffer;
-import org.eclipse.core.filebuffers.LocationKind;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceVisitor;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.teiid.designer.core.refactor.IRefactorModelHandler.RefactorType;
-import org.teiid.designer.core.refactor.RefactorModelExtensionManager;
-import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ui.common.util.KeyInValueHashMap;
 import org.teiid.designer.ui.common.util.KeyInValueHashMap.KeyFromValueAdapter;
-import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.vdb.refactor.VdbResourceChange;
 
 /**
@@ -40,8 +29,6 @@ import org.teiid.designer.vdb.refactor.VdbResourceChange;
 public abstract class AbstractResourcesRefactoring extends Refactoring {
 
     private final List<IResource> resources;
-
-    private IWorkbenchWindow workbenchWindow;
 
     private Map<IResource, Collection<Change>> changes = new LinkedHashMap<IResource, Collection<Change>>();
 
@@ -70,13 +57,6 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
         this.vdbChanges = new KeyInValueHashMap<IFile, VdbResourceChange>(new VdbResourceChangeAdapter());
     }
 
-    /**
-     * @param window
-     */
-    public void setWorkbenchWindow(IWorkbenchWindow window) {
-        this.workbenchWindow = window;
-    }
-
     @Override
     public String getName() {
         return name;
@@ -92,13 +72,14 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
     }
 
     /**
-     * Get the workbench window
+     * Provides a specific set of tests to test the given resource to ensure
+     * that the operation can continue. This can then be used in both the
+     * implementation of createInitialConditions and when testing dependencies.
      *
-     * @return window
+     * @param resource
+     * @param status
      */
-    public IWorkbenchWindow getWorkbenchWindow() {
-        return this.workbenchWindow;
-    }
+    protected abstract void checkResource(IResource resource, IProgressMonitor progressMonitor, RefactoringStatus status);
     
     protected void addVdbChange(VdbResourceChange change) {
         VdbResourceChange mappedChange = vdbChanges.get(change.getVdb());
@@ -153,85 +134,20 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
         vdbChanges.clear();
     }
 
-    protected void checkResourcesNotEmpty(RefactoringStatus status) {
+    /**
+     * Check wth the resources is populated at all.
+     *
+     * Populate the given status accordingly.
+     *
+     * @param status
+     * @return true if the resources collection is populated, otherwise false.
+     */
+    protected boolean checkResourcesNotEmpty(RefactoringStatus status) {
         if (getResources() == null || getResources().isEmpty()) {
             status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("ResourcesRefactoring.noResourceError"))); //$NON-NLS-1$
-        }
-    }
-
-    protected void closeDirtyEditors(RefactoringStatus status) {
-        if (UiUtil.saveDirtyEditors(getWorkbenchWindow(), null, true)) {
-            status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("ResourcesRefactoring.saveEditorsError"))); //$NON-NLS-1$
-        }
-    }
-
-    protected boolean checkResourceExists(IResource resource, RefactoringStatus status) {
-        if (!resource.exists()) {
-            status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("ResourcesRefactoring.resourceNoExistError", resource.getName()))); //$NON-NLS-1$
             return false;
         }
 
         return true;
-    }
-
-    protected boolean checkResourceReadOnly(IResource resource, RefactoringStatus status) {
-        if (ModelUtil.isIResourceReadOnly(resource)) {
-            status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("ResourcesRefactoring.readOnlyResourceError", resource.getName()))); //$NON-NLS-1$
-            return false;
-        }
-
-        return true;
-    }
-
-    protected boolean checkForProject(IResource resource, RefactoringStatus status) {
-        if (resource instanceof IProject) {
-            status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("ResourcesRefactoring.refactorProjectError", resource.getName()))); //$NON-NLS-1$
-            return false;
-        }
-
-        return true;
-    }
-
-    protected boolean checkExtensionManager(IResource resource, RefactorType refactorType, IProgressMonitor progressMonitor, RefactoringStatus status) {
-        if (! RefactorModelExtensionManager.preProcess(refactorType, resource, progressMonitor)) {
-            status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("ResourcesRefactoring.extensionManagerError"))); //$NON-NLS-1$
-            return false;
-        }
-
-        return true;
-    }
-
-    private void checkDirtyFile(RefactoringStatus result, IFile file) {
-        if (!file.exists())
-            return;
-        ITextFileBuffer buffer= FileBuffers.getTextFileBufferManager().getTextFileBuffer(file.getFullPath(), LocationKind.IFILE);
-        if (buffer != null && buffer.isDirty()) {
-            if (buffer.isStateValidated() && buffer.isSynchronized()) {
-                result.addWarning(RefactorResourcesUtils.getString("ResourcesRefactoring.unsavedFile", file.getFullPath())); //$NON-NLS-1$
-            } else {
-                result.addFatalError(RefactorResourcesUtils.getString("ResourcesRefactoring.unsavedFile", file.getFullPath())); //$NON-NLS-1$
-            }
-        }
-    }
-
-    protected void checkDirtyResources(final RefactoringStatus status) {
-        for (IResource resource : getResources()) {
-            if (resource instanceof IProject && !((IProject) resource).isOpen())
-                continue;
-
-            try {
-                resource.accept(new IResourceVisitor() {
-                    @Override
-                    public boolean visit(IResource visitedResource) {
-                        if (visitedResource instanceof IFile) {
-                            checkDirtyFile(status, (IFile)visitedResource);
-                        }
-                        return true;
-                    }
-                }, IResource.DEPTH_INFINITE, false);
-            } catch (CoreException ex) {
-                status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
-            }
-        }
     }
 }

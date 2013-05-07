@@ -27,8 +27,21 @@ public class RelatedResourceFinder {
     private static final ModelResourceFilter RESOURCE_FILTER = new ModelResourceFilter();
     
     public enum Relationship {
+        /**
+         * The relationship where resource A is imported by resource B
+         * hence B is dependent on A
+         */
         DEPENDENT,
+
+        /**
+         * The relationship where resource A imports resource B
+         * hence A is dependent on B
+         */
         DEPENDENCY,
+
+        /**
+         * Encompasses all types of relationship
+         */
         ALL;
     }
 

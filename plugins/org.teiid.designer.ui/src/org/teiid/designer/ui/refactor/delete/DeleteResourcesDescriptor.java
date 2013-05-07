@@ -14,7 +14,6 @@ import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
@@ -98,7 +97,8 @@ public class DeleteResourcesDescriptor extends RefactoringDescriptor {
         this.deleteContents = deleteContents;
     }
 
-    public Refactoring createRefactoring(RefactoringStatus status) throws CoreException {
+    @Override
+    public Refactoring createRefactoring(RefactoringStatus status) {
         IWorkspaceRoot root= ResourcesPlugin.getWorkspace().getRoot();
         List<IResource> resources = new ArrayList<IResource>();
 

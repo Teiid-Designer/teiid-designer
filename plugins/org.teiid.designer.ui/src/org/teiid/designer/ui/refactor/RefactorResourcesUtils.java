@@ -19,11 +19,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.filebuffers.LocationKind;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
@@ -31,11 +37,13 @@ import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
-import org.teiid.core.designer.util.CoreArgCheck;
+import org.eclipse.ui.IEditorPart;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.index.IndexUtil;
+import org.teiid.designer.core.refactor.IRefactorModelHandler.RefactorType;
 import org.teiid.designer.core.refactor.ModelResourceCollectorVisitor;
 import org.teiid.designer.core.refactor.PathPair;
+import org.teiid.designer.core.refactor.RefactorModelExtensionManager;
 import org.teiid.designer.core.refactor.RelatedResourceFinder;
 import org.teiid.designer.core.refactor.RelatedResourceFinder.Relationship;
 import org.teiid.designer.core.refactor.ResourceStatusList;
@@ -45,6 +53,7 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.ui.UiConstants;
+import org.teiid.designer.ui.common.util.UiUtil;
 
 /**
  * Utilities for moving a resource
@@ -67,33 +76,65 @@ public class RefactorResourcesUtils {
      * Callback for individual refactoring classes to process resources/files
      * found to be related to a given resource.
      */
-    public interface IRelatedResourceCallback {
+    public interface IResourceCallback {
 
         /**
-         * Merge in a status with the callbacks existing status
+         * Check that the given related file is valid according to the rules of
+         * the refactoring taking place.
          *
+         * Populates the given status with any problems.
+         *
+         * @param relatedFile
          * @param status
          */
-        void mergeStatus(RefactoringStatus status);
+        void checkValidFile(IFile relatedFile, RefactoringStatus status);
 
         /**
          * Index the given related file against the resource. The type of indexing
          * is dependent on the refactoring class implementing the interface
          *
+         * Populates the given status with any problems.
+         *
          * @param resource
          * @param relatedFile
+         * @param status
+         *
          * @throws Exception
          */
-        void indexFile(IResource resource, IFile relatedFile) throws Exception;
+        void indexFile(IResource resource, IFile relatedFile, RefactoringStatus status) throws Exception;
 
         /**
          * Index the given related vdb against the resource. The type of indexing
          * is dependent on the refactoring class implementing the interface
          *
+         * Populates the given status with any problems.
+         *
          * @param resource
          * @param vdbFile
+         * @param status
          */
-        void indexVdb(IResource resource, IFile vdbFile);
+        void indexVdb(IResource resource, IFile vdbFile, RefactoringStatus status);
+    }
+
+    /**
+     * Abstract implementation of {@link IResourceCallback}
+     */
+    public abstract static class AbstractResourceCallback implements IResourceCallback {
+
+        @Override
+        public void checkValidFile(IFile relatedFile, RefactoringStatus status) {
+            // do nothing
+        }
+
+        @Override
+        public void indexFile(IResource resource, IFile relatedFile, RefactoringStatus status) throws Exception {
+            // do nothing
+        }
+
+        @Override
+        public void indexVdb(IResource resource, IFile vdbFile, RefactoringStatus status) {
+            // do nothing
+        }
     }
     
     /**
@@ -548,45 +589,225 @@ public class RefactorResourcesUtils {
         return false;
     }
 
+    private static void checkSavedFile(IFile file, RefactoringStatus status) {
+        if (!file.exists()) {
+            status.merge(RefactoringStatus.createFatalErrorStatus(getString("ResourcesRefactoring.resourceNoExistError", file.getName()))); //$NON-NLS-1$
+            return;
+        }
+
+        IEditorPart fileEditor = UiUtil.getEditorForFile(file, false);
+        if (fileEditor != null && fileEditor.isDirty()) {
+            status.addFatalError(getString("ResourcesRefactoring.unsavedFile", file.getFullPath())); //$NON-NLS-1$
+            return;
+        }
+
+        ITextFileBuffer buffer= FileBuffers.getTextFileBufferManager().getTextFileBuffer(file.getFullPath(), LocationKind.IFILE);
+        if (buffer != null && buffer.isDirty()) {
+            if (buffer.isStateValidated() && buffer.isSynchronized()) {
+                status.addWarning(getString("ResourcesRefactoring.unsavedFile", file.getFullPath())); //$NON-NLS-1$
+            } else {
+                status.addFatalError(getString("ResourcesRefactoring.unsavedFile", file.getFullPath())); //$NON-NLS-1$
+            }
+        }
+    }
+
     /**
-     * Check each resource in the collection as read-only and in turn check
-     * all dependent resources as to whether they are read-only. Populates
-     * the given status object with errors as appropriate.
+     * Check if the given resource has unsaved content.
      *
-     * @param resources
+     * Populates the given status object accordingly.
+     *
+     * @param resource
+     * @param status
+     *
+     */
+    public static void checkSavedResource(IResource resource, final RefactoringStatus status) {
+        if (resource instanceof IProject && !((IProject) resource).isOpen()) {
+            status.merge(RefactoringStatus.createFatalErrorStatus(getString("ResourcesRefactoring.closeProjectError", resource.getName()))); //$NON-NLS-1$
+            return;
+        }
+
+        try {
+            resource.accept(new IResourceVisitor() {
+                @Override
+                public boolean visit(IResource visitedResource) {
+                    if (visitedResource instanceof IFile) {
+                        checkSavedFile((IFile)visitedResource, status);
+                    }
+                    return true;
+                }
+            }, IResource.DEPTH_INFINITE, false);
+
+        } catch (CoreException ex) {
+            status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
+        }
+    }
+
+    /**
+     * Check if the given file has an open editor.
+     *
+     * @param file
      * @param status
      */
-    public static void checkReadOnlyResources(Collection<IResource> resources, RefactoringStatus status) {
-        CoreArgCheck.isNotNull(resources);
-        CoreArgCheck.isNotNull(status);
-        
-        for (IResource resource : resources) {
-            try {
-                ModelResource modelResource = ModelUtil.getModel(resource);
+    private static void checkOpenEditors(IFile file, RefactoringStatus status) {
+        if (!file.exists()) {
+            status.merge(RefactoringStatus.createFatalErrorStatus(getString("ResourcesRefactoring.resourceNoExistError", file.getName()))); //$NON-NLS-1$
+            return;
+        }
 
-                if (modelResource != null && modelResource.isReadOnly()) {
-                    status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("ResourcesRefactoring.readOnlyResourceError", resource.getName()))); //$NON-NLS-1$
-                    return;
-                }
+        IEditorPart fileEditor = UiUtil.getEditorForFile(file, false);
+        if (fileEditor != null) {
+            status.addFatalError(getString("ResourcesRefactoring.openEditorError", file.getFullPath())); //$NON-NLS-1$
+            return;
+        }
+    }
 
-                RelatedResourceFinder finder = new RelatedResourceFinder(resource);
-                Collection<IFile> relatedFiles = finder.findRelatedResources(Relationship.ALL);
+    /**
+     * Check if the given resource has open editors.
+     *
+     * Populates the given status object accordingly.
+     *
+     * @param resource
+     * @param status
+     *
+     */
+    public static void checkOpenEditors(IResource resource, final RefactoringStatus status) {
+        if (resource instanceof IProject && !((IProject) resource).isOpen()) {
+            status.merge(RefactoringStatus.createFatalErrorStatus(getString("ResourcesRefactoring.closeProjectError", resource.getName()))); //$NON-NLS-1$
+            return;
+        }
 
-                for (IFile relatedFile : relatedFiles) {
-                    try {
-                        modelResource = ModelUtil.getModel(relatedFile);
-                        if (modelResource != null && modelResource.isReadOnly()) {
-                            status.merge(RefactoringStatus.createWarningStatus(RefactorResourcesUtils.getString("ResourcesRefactoring.readOnlyRelatedResourceError", modelResource.getItemName()))); //$NON-NLS-1$
-                        }
-                    } catch (ModelWorkspaceException err) {
-                        ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
+        try {
+            resource.accept(new IResourceVisitor() {
+                @Override
+                public boolean visit(IResource visitedResource) {
+                    if (visitedResource instanceof IFile) {
+                        checkOpenEditors((IFile) visitedResource, status);
                     }
+                    return true;
                 }
-            } catch (Exception err) {
-                ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
-                status.merge(RefactoringStatus.createFatalErrorStatus(err.getMessage()));
+            }, IResource.DEPTH_INFINITE, false);
+
+        } catch (CoreException ex) {
+            status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
+        }
+    }
+
+    /**
+     * Check the given resource exists.
+     *
+     * Populates the given status object accordingly.
+     *
+     * @param resource
+     * @param status
+     *
+     */
+    public static void checkResourceExists(IResource resource, RefactoringStatus status) {
+        if (!resource.exists()) {
+            status.merge(RefactoringStatus.createFatalErrorStatus(getString("ResourcesRefactoring.resourceNoExistError", resource.getName()))); //$NON-NLS-1$
+        }
+    }
+
+    /**
+     * Check the given resource is synchronized.
+     *
+     * Populates the given status object accordingly.
+     *
+     * @param resource
+     * @param status
+     *
+     */
+    public static void checkResourceSynched(IResource resource, RefactoringStatus status) {
+        if (!resource.isSynchronized(IResource.DEPTH_INFINITE)) {
+            status.merge(RefactoringStatus.createFatalErrorStatus(getString("DeleteRefactoring.warningOutOfSync", resource.getFullPath()))); //$NON-NLS-1$
+        }
+    }
+
+    /**
+     * Check the given resource is writable
+     *
+     * Populates the given status object accordingly.
+     *
+     * @param resource
+     * @param status
+     *
+     */
+    public static void checkResourceWritable(IResource resource, RefactoringStatus status) {
+        if (ModelUtil.isIResourceReadOnly(resource)) {
+            status.merge(RefactoringStatus.createFatalErrorStatus(getString("ResourcesRefactoring.readOnlyResourceError", resource.getName()))); //$NON-NLS-1$
+        }
+    }
+
+    /**
+     * Checks whether the given resource's related {@link ModelResource} and its
+     * related resources are writable.
+     *
+     * Populates the given status object accordingly.
+     *
+     * @param resource
+     * @param status
+     *
+     */
+    public static void checkModelResourceWritable(IResource resource, RefactoringStatus status) {
+        try {
+            ModelResource modelResource = ModelUtil.getModel(resource);
+            if (modelResource == null) {
+                // Test does not apply since this resource is not a model
                 return;
             }
+
+            if (modelResource.isReadOnly()) {
+                status.merge(RefactoringStatus.createFatalErrorStatus(getString("ResourcesRefactoring.readOnlyResourceError", resource.getName()))); //$NON-NLS-1$
+                return;
+            }
+
+            RelatedResourceFinder finder = new RelatedResourceFinder(resource);
+            Collection<IFile> relatedFiles = finder.findRelatedResources(Relationship.ALL);
+
+            for (IFile relatedFile : relatedFiles) {
+                try {
+                    modelResource = ModelUtil.getModel(relatedFile);
+                    if (modelResource != null && modelResource.isReadOnly()) {
+                        status.merge(RefactoringStatus.createWarningStatus(getString("ResourcesRefactoring.readOnlyRelatedResourceError", modelResource.getItemName()))); //$NON-NLS-1$
+                    }
+                } catch (ModelWorkspaceException err) {
+                    ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
+                }
+            }
+        } catch (Exception err) {
+            ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
+            status.merge(RefactoringStatus.createFatalErrorStatus(err.getMessage()));
+        }
+    }
+
+    /**
+     * Check the given resource is not a project
+     *
+     * Populates the given status object accordingly.
+     *
+     * @param resource
+     * @param status
+     *
+     */
+    public static void checkResourceIsNotProject(IResource resource, RefactoringStatus status) {
+        if (resource instanceof IProject) {
+            status.merge(RefactoringStatus.createFatalErrorStatus(getString("ResourcesRefactoring.refactorProjectError", resource.getName()))); //$NON-NLS-1$
+        }
+    }
+
+    /**
+     * Check the {@link RefactorModelExtensionManager#preProcess(RefactorType, IResource, IProgressMonitor)}
+     * for problems.
+     *
+     * Populates the given status object accordingly.
+     *
+     * @param resource
+     * @param refactorType
+     * @param progressMonitor
+     * @param status
+     */
+    public static void checkExtensionManager(IResource resource, RefactorType refactorType, IProgressMonitor progressMonitor, RefactoringStatus status) {
+        if (! RefactorModelExtensionManager.preProcess(refactorType, resource, progressMonitor)) {
+            status.merge(RefactoringStatus.createFatalErrorStatus(getString("ResourcesRefactoring.extensionManagerError"))); //$NON-NLS-1$
         }
     }
 
@@ -595,12 +816,19 @@ public class RefactorResourcesUtils {
      * callback to process them appropriately
      *
      * @param resource
+     * @param status
      * @param callback
      */
-    public static void calculateRelatedVdbResources(IResource resource, IRelatedResourceCallback callback) {
+    public static void calculateRelatedVdbResources(IResource resource, RefactoringStatus status, IResourceCallback callback) {
         Collection<IFile> vdbResources = WorkspaceResourceFinderUtil.getVdbResourcesThatContain(resource);
-        for (IResource vdb : vdbResources) {
-            callback.indexVdb(resource, (IFile) vdb);
+        for (IFile vdb : vdbResources) {
+
+            callback.checkValidFile(vdb, status);
+            if (! status.isOK()) {
+                return;
+            }
+
+            callback.indexVdb(resource, vdb, status);
         }
     }
 
@@ -609,43 +837,34 @@ public class RefactorResourcesUtils {
      * callback to process them appropriately
      *
      * @param resource
+     * @param status
      * @param callback
+     * @param relationship one of {@link Relationship}
      */
-    public static void calculateRelatedResources(IResource resource, IRelatedResourceCallback callback) {
+    public static void calculateRelatedResources(IResource resource, RefactoringStatus status,
+                                                                             IResourceCallback callback, Relationship relationship) {
         RelatedResourceFinder finder = new RelatedResourceFinder(resource);
 
         // Determine dependent resources
-        Collection<IFile> searchResults = finder.findRelatedResources(Relationship.DEPENDENT);
+        Collection<IFile> searchResults = finder.findRelatedResources(relationship);
         ResourceStatusList statusList = new ResourceStatusList(searchResults);
 
         for (IStatus problem : statusList.getProblems()) {
-            callback.mergeStatus(RefactoringStatus.create(problem));
+            status.merge(RefactoringStatus.create(problem));
         }
 
         for (IFile file : statusList.getResourceList()) {
             try {
-                callback.indexFile(resource, file);
+
+                callback.checkValidFile(file, status);
+                if (! status.isOK()) {
+                    return;
+                }
+
+                callback.indexFile(resource, file, status);
             } catch (Exception ex) {
                 UiConstants.Util.log(ex);
-                callback.mergeStatus(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
-                return;
-            }
-        }
-
-        // Determine dependencies
-        searchResults = finder.findRelatedResources(Relationship.DEPENDENCY);
-        statusList = new ResourceStatusList(searchResults, IStatus.OK);
-
-        for (IStatus problem : statusList.getProblems()) {
-            callback.mergeStatus(RefactoringStatus.create(problem));
-        }
-
-        for (IFile file : statusList.getResourceList()) {
-            try {
-                callback.indexFile(resource, file);
-            } catch (Exception ex) {
-                UiConstants.Util.log(ex);
-                callback.mergeStatus(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
+                status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
                 return;
             }
         }

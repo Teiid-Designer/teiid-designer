@@ -157,38 +157,66 @@ public final class UiUtil implements UiConstants {
         return result;
     }
 
-    public static IEditorPart getEditorForFile( IFile file,
-                                                boolean forceOpen ) {
+    public static IEditorPart getEditorForFile( IFile file, boolean forceOpen ) {
         IEditorPart result = null;
-        if (file != null) {
-            IWorkbenchPage page = UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage();
-            if (page != null) {
+        if (file == null)
+            return null;
+
+        IWorkbench workbench = PlatformUI.getWorkbench();
+        if (workbench == null)
+            return null;
+
+        IWorkbenchWindow[] workbenchWindows = workbench.getWorkbenchWindows();
+        if (workbenchWindows == null || workbenchWindows.length == 0)
+            return null;
+
+        IWorkbenchPage firstPage = null;
+        for (IWorkbenchWindow window : workbenchWindows) {
+            if (result != null)
+                continue; // already found it!
+
+            IWorkbenchPage[] pages = window.getPages();
+            if (pages == null || pages.length == 0)
+                continue;
+
+            for (IWorkbenchPage page : pages) {
+                if (firstPage == null)
+                    firstPage = page;
+
+                if (result != null)
+                    continue; // already found it!
+
                 // look through the open editors and see if there is one available for this model file.
                 IEditorReference[] editors = page.getEditorReferences();
-                for (int i = 0; i < editors.length; ++i) {
-                    IEditorPart editor = editors[i].getEditor(false);
-                    if (editor != null) {
-                        IEditorInput input = editor.getEditorInput();
-                        if (input instanceof IFileEditorInput) {
-                            if (file.equals(((IFileEditorInput)input).getFile())) {
-                                // found it;
-                                result = editor;
-                                break;
-                            }
-                        }
-                    }
-                }
+                if (editors == null || editors.length == 0)
+                    continue;
 
-                if (result == null && forceOpen) {
-                    // there is no editor open for this object. Open one and hand it the double-click target.
-                    try {
-                        result = IDE.openEditor(page, file);
-                    } catch (PartInitException e) {
-                        e.printStackTrace();
+                for (IEditorReference editorReference: editors) {
+                    IEditorPart editor = editorReference.getEditor(false);
+                    if (editor == null)
+                        continue;
+
+                    IEditorInput input = editor.getEditorInput();
+                    if (input instanceof IFileEditorInput) {
+                        if (file.equals(((IFileEditorInput)input).getFile())) {
+                            // found it;
+                            result = editor;
+                            break;
+                        }
                     }
                 }
             }
         }
+
+        if (result == null && firstPage != null && forceOpen) {
+            // there is no editor open for this object. Open one and hand it the double-click target.
+            try {
+                result = IDE.openEditor(firstPage, file);
+            } catch (PartInitException e) {
+                UiConstants.Util.log(e);
+            }
+        }
+
         return result;
     }
     

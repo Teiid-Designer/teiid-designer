@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ltk.core.refactoring.Change;
@@ -25,10 +26,12 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.resource.DeleteResourceChange;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.refactor.IRefactorModelHandler.RefactorType;
+import org.teiid.designer.core.refactor.RelatedResourceFinder.Relationship;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ui.refactor.AbstractResourcesRefactoring;
 import org.teiid.designer.ui.refactor.RefactorResourcesUtils;
-import org.teiid.designer.ui.refactor.RefactorResourcesUtils.IRelatedResourceCallback;
+import org.teiid.designer.ui.refactor.RefactorResourcesUtils.AbstractResourceCallback;
+import org.teiid.designer.ui.refactor.RefactorResourcesUtils.IResourceCallback;
 import org.teiid.designer.vdb.refactor.VdbResourceChange;
 
 /**
@@ -36,26 +39,17 @@ import org.teiid.designer.vdb.refactor.VdbResourceChange;
  */
 public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
 
-    private class RelatedResourcesCallback implements IRelatedResourceCallback {
-
-        private final RefactoringStatus status;
+    private class RelatedResourceCallback extends AbstractResourceCallback {
 
         private final Set<IResource> indexedResources = new HashSet<IResource>();
 
-        /**
-         * @param status
-         */
-        public RelatedResourcesCallback(RefactoringStatus status) {
-            this.status = status;
+        @Override
+        public void checkValidFile(IFile relatedFile, RefactoringStatus status) {
+            checkResource(relatedFile, new NullProgressMonitor(), status);
         }
 
         @Override
-        public void mergeStatus(RefactoringStatus status) {
-            this.status.merge(status);
-        }
-
-        @Override
-        public void indexFile(IResource resource, IFile relatedFile) throws Exception {
+        public void indexFile(IResource resource, IFile relatedFile, RefactoringStatus status) throws Exception {
             /*
              * The related file will be deleted so we don't want to try deleting it twice
              */
@@ -72,11 +66,11 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
                 addChange(relatedFile, change);
             }
 
-            RefactorResourcesUtils.calculateRelatedVdbResources(relatedFile, this);
+            RefactorResourcesUtils.calculateRelatedVdbResources(relatedFile, status, this);
         }
 
         @Override
-        public void indexVdb(IResource resource, IFile vdbFile) {
+        public void indexVdb(IResource resource, IFile vdbFile, RefactoringStatus status) {
             addChange(vdbFile, new VdbResourceChange(vdbFile));
         }
     }
@@ -86,7 +80,7 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
     private Set<IResource> resourcesAndChildren = new HashSet<IResource>();
 
     /**
-     * @param selectedResources 
+     * @param selectedResources
      */
     public DeleteResourcesRefactoring(final List<IResource> selectedResources) {
         super(RefactorResourcesUtils.getString("DeleteRefactoring.title"), selectedResources); //$NON-NLS-1$
@@ -116,26 +110,46 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
      * 
      * @param project
      * @param status
-     * @return
      */
-    private boolean checkProjectReadOnly(IProject project, RefactoringStatus status) {
+    private void checkProjectReadOnly(IProject project, RefactoringStatus status) {
         if (isDeleteContents() && ModelUtil.isIResourceReadOnly(project)) {
             status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("ResourcesRefactoring.readOnlyResourceError", project.getName()))); //$NON-NLS-1$
-            return false;
         }
+    }
 
-        return true;
+    @Override
+    protected void checkResource(IResource resource, IProgressMonitor progressMonitor, RefactoringStatus status) {
+        RefactorResourcesUtils.checkResourceExists(resource, status);
+        if (!status.isOK()) return;
+
+        RefactorResourcesUtils.checkResourceSynched(resource, status);
+        if (!status.isOK()) return;
+
+        if (resource instanceof IProject)
+            checkProjectReadOnly((IProject) resource, status);
+        else
+            RefactorResourcesUtils.checkResourceWritable(resource, status);
+
+        if (!status.isOK()) return;
+
+        RefactorResourcesUtils.checkExtensionManager(resource, RefactorType.DELETE, progressMonitor, status);
+        if (!status.isOK()) return;
+
+        RefactorResourcesUtils.checkModelResourceWritable(resource, status);
+        if (!status.isOK()) return;
+
+        RefactorResourcesUtils.checkSavedResource(resource, status);
     }
     
     @Override
-    public RefactoringStatus checkInitialConditions(IProgressMonitor progressMonitor) throws OperationCanceledException {
+    public RefactoringStatus checkInitialConditions(final IProgressMonitor progressMonitor) throws OperationCanceledException {
         RefactoringStatus status = new RefactoringStatus();
 
         try {
             progressMonitor.beginTask(RefactorResourcesUtils.getString("DeleteRefactoring.initialConditions"), 1); //$NON-NLS-1$
 
-            checkResourcesNotEmpty(status);
-            closeDirtyEditors(status);
+            if (! checkResourcesNotEmpty(status))
+                return status;
             
             // allow only projects or only non-projects to be selected;
             // note that the selection may contain multiple types of resource
@@ -143,21 +157,9 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
                 return RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("DeleteRefactoring.containsProjectsAndResourcesError")); //$NON-NLS-1$
             }
 
-            boolean result = true;
             for (IResource resource : getResources()) {
-                result = checkResourceExists(resource, status);
-                if (!result) break;
-
-                if (resource instanceof IProject) {
-                    result = checkProjectReadOnly((IProject) resource, status);
-                }
-                else {
-                    result = checkResourceReadOnly(resource, status);
-                }                
-                if (!result) break;
-
-                result = checkExtensionManager(resource, RefactorType.DELETE, progressMonitor, status);
-                if (!result) break;
+                checkResource(resource, progressMonitor, status);
+                if (! status.isOK()) break;
                 
                 // Accumulate all the resources that will be deleted so that scheduleRemovedRelatedFile()
                 // does not add a delete change for a resource already being deleted
@@ -173,11 +175,16 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
                     ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
                     status.merge(RefactoringStatus.createFatalErrorStatus(err.getMessage()));
                 }
-            }
 
-            if (result) {
-                // Only if the resources passed the tests above do we bother with related resources
-                RefactorResourcesUtils.checkReadOnlyResources(getResources(), status);
+                // Check validity of related resources
+                IResourceCallback callback = new AbstractResourceCallback() {
+                    @Override
+                    public void checkValidFile(IFile relatedFile, RefactoringStatus validityStatus) {
+                        checkResource(relatedFile, progressMonitor, validityStatus);
+                    }
+                };
+
+                RefactorResourcesUtils.calculateRelatedResources(resource, status, callback, Relationship.DEPENDENT);
             }
         } finally {
             progressMonitor.done();
@@ -191,20 +198,12 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
         RefactoringStatus status = new RefactoringStatus();
 
         try {
-            for (IResource resource : getResources()) {
-                if (!resource.isSynchronized(IResource.DEPTH_INFINITE)) {
-                    status.addInfo(RefactorResourcesUtils.getString("DeleteRectoring.warningOutOfSync", resource.getFullPath())); //$NON-NLS-1$
-                }
-            }
+            progressMonitor.beginTask(RefactorResourcesUtils.getString("DeleteRefactoring.finalConditions"), 2); //$NON-NLS-1$
 
-            checkDirtyResources(status);
-            
-            progressMonitor.beginTask(RefactorResourcesUtils.getString("MoveRefactoring.finalConditions"), 2); //$NON-NLS-1$
-
-            RelatedResourcesCallback callback = new RelatedResourcesCallback(status);
+            RelatedResourceCallback callback = new RelatedResourceCallback();
             for (IResource resource : getResources()) {
                 addChange(resource, new DeleteResourceChange(resource.getFullPath(), true, isDeleteContents()));
-                RefactorResourcesUtils.calculateRelatedResources(resource, callback);
+                RefactorResourcesUtils.calculateRelatedResources(resource, status, callback, Relationship.DEPENDENT);
             }
         }
         finally {

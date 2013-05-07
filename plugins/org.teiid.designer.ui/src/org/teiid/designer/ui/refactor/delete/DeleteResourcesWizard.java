@@ -63,10 +63,6 @@ public class DeleteResourcesWizard extends RefactoringWizard {
             return (DeleteResourcesRefactoring)super.getRefactoring();
         }
 
-        private RefactoringStatus createErrorStatus(String key, Object... args) {
-            return RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString(key, args));
-        }
-
         @Override
         public void createControl(Composite parent) {
             initializeDialogUnits(parent);

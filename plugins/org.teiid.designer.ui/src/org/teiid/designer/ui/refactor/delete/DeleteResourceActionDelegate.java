@@ -28,7 +28,6 @@ public class DeleteResourceActionDelegate extends AbstractRefactorAction {
         CoreArgCheck.isNotNull(resources);
         
         DeleteResourcesRefactoring refactoring = new DeleteResourcesRefactoring(resources);
-        refactoring.setWorkbenchWindow(window);
         
         String wizardTitle = "Delete Resources"; //$NON-NLS-1$
         return new DeleteResourcesWizard(refactoring, wizardTitle);

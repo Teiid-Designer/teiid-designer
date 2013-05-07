@@ -165,11 +165,13 @@ public final class VdbModelEntry extends VdbEntry {
 
     private void updateUdfJars(Resource model) {
         if(model==null) return;
-        
+
+        final ModelResource mdlResrc = ModelerCore.getModelEditor().findModelResource(model);
+        if (mdlResrc == null) return;
+
         udfJars.clear();
         
         // Find available udf jar resources in the project
-        final ModelResource mdlResrc = ModelerCore.getModelEditor().findModelResource(model);
         IProject project = mdlResrc.getModelProject().getProject();
         List<IResource> jarResources = VdbHelper.getUdfJarResources(project);
         

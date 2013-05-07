@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ltk.core.refactoring.Change;
@@ -23,39 +24,37 @@ import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.ltk.core.refactoring.resource.RenameResourceChange;
 import org.teiid.designer.core.refactor.IRefactorModelHandler.RefactorType;
 import org.teiid.designer.core.refactor.PathPair;
+import org.teiid.designer.core.refactor.RelatedResourceFinder.Relationship;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.refactor.AbstractResourcesRefactoring;
 import org.teiid.designer.ui.refactor.RefactorResourcesUtils;
-import org.teiid.designer.ui.refactor.RefactorResourcesUtils.IRelatedResourceCallback;
+import org.teiid.designer.ui.refactor.RefactorResourcesUtils.AbstractResourceCallback;
+import org.teiid.designer.ui.refactor.RefactorResourcesUtils.IResourceCallback;
 
 /**
  * Refactoring for a rename operation
  */
 public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
 
-    private class RelatedResourcesCallback implements IRelatedResourceCallback {
+    private class RelatedResourceCallback extends AbstractResourceCallback {
 
         private final PathPair pathPair;
 
-        private final RefactoringStatus status;
-
         /**
          * @param pathPair
-         * @param status
          */
-        public RelatedResourcesCallback(PathPair pathPair, RefactoringStatus status) {
+        public RelatedResourceCallback(PathPair pathPair) {
             this.pathPair = pathPair;
-            this.status = status;
         }
 
         @Override
-        public void mergeStatus(RefactoringStatus status) {
-            this.status.merge(status);
+        public void checkValidFile(IFile relatedFile, RefactoringStatus status) {
+            checkResource(relatedFile, new NullProgressMonitor(), status);
         }
 
         @Override
-        public void indexFile(IResource resource, IFile relatedFile) throws Exception {
+        public void indexFile(IResource resource, IFile relatedFile, RefactoringStatus status) throws Exception {
             RefactorResourcesUtils.unloadModelResource(relatedFile);
 
             TextFileChange textFileChange = new TextFileChange(relatedFile.getName(), relatedFile);
@@ -71,12 +70,12 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
                 // Only if the related file is actually being changed do we add the text change
                 // and calculate the effect on any vdbs containing this related file
                 addChange(relatedFile, textFileChange);
-                RefactorResourcesUtils.calculateRelatedVdbResources(relatedFile, this);
+                RefactorResourcesUtils.calculateRelatedVdbResources(relatedFile, status, this);
             }
         }
 
         @Override
-        public void indexVdb(IResource resource, IFile vdbFile) {
+        public void indexVdb(IResource resource, IFile vdbFile, RefactoringStatus status) {
             IPath oldResourcePath = resource.getFullPath();
             IPath newResourcePath = oldResourcePath.removeLastSegments(1).append(getNewResourceName());
             addVdbChange(vdbFile, oldResourcePath, newResourcePath);
@@ -117,30 +116,50 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
     }
 
     @Override
-    public RefactoringStatus checkInitialConditions(IProgressMonitor progressMonitor) throws OperationCanceledException {
+    protected void checkResource(IResource resource, IProgressMonitor progressMonitor, RefactoringStatus status) {
+        RefactorResourcesUtils.checkResourceExists(resource, status);
+        if (!status.isOK()) return;
+
+        RefactorResourcesUtils.checkResourceSynched(resource, status);
+        if (!status.isOK()) return;
+
+        RefactorResourcesUtils.checkResourceWritable(resource, status);
+        if (!status.isOK()) return;
+
+        RefactorResourcesUtils.checkExtensionManager(resource, RefactorType.MOVE, progressMonitor, status);
+        if (!status.isOK()) return;
+
+        RefactorResourcesUtils.checkModelResourceWritable(resource, status);
+        if (!status.isOK()) return;
+
+        RefactorResourcesUtils.checkSavedResource(resource, status);
+        if (!status.isOK()) return;
+
+        RefactorResourcesUtils.checkOpenEditors(resource, status);
+    }
+
+    @Override
+    public RefactoringStatus checkInitialConditions(final IProgressMonitor progressMonitor) throws OperationCanceledException {
         RefactoringStatus status = new RefactoringStatus();
 
         try {
             progressMonitor.beginTask(RefactorResourcesUtils.getString("RenameRefactoring.initialConditions"), 1); //$NON-NLS-1$
 
             checkResourcesNotEmpty(status);
-            closeDirtyEditors(status);
 
-            boolean result = true;
             for (IResource resource : getResources()) {
-                result = checkResourceExists(resource, status);
-                if (!result) break;
+                checkResource(resource, progressMonitor, status);
+                if (!status.isOK()) break;
 
-                result = checkResourceReadOnly(resource, status);
-                if (!result) break;
+                // Check validity of related resources
+                IResourceCallback callback = new AbstractResourceCallback() {
+                    @Override
+                    public void checkValidFile(IFile relatedFile, RefactoringStatus validityStatus) {
+                        checkResource(relatedFile, progressMonitor, validityStatus);
+                    }
+                };
 
-                result = checkExtensionManager(resource, RefactorType.RENAME, progressMonitor, status);
-                if (!result) break;
-            }
-
-            if (result) {
-                // Only if the resources passed the tests above do we bother with related resources
-                RefactorResourcesUtils.checkReadOnlyResources(getResources(), status);
+                RefactorResourcesUtils.calculateRelatedResources(resource, status, callback, Relationship.DEPENDENCY);
             }
         } finally {
             progressMonitor.done();
@@ -166,7 +185,7 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
                 IPath destination = absPath.removeLastSegments(1).append(getNewResourceName());
                 String destinationPath = destination.toOSString();
                 PathPair pathPair = new PathPair(absPath.toOSString(), destinationPath);
-                RelatedResourcesCallback callback = new RelatedResourcesCallback(pathPair, status);
+                RelatedResourceCallback callback = new RelatedResourceCallback(pathPair);
 
                 if (ModelUtil.isModelFile(resource)) {
                     // Add change for updating of any SQL contained in the resource
@@ -175,7 +194,7 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
                         RefactorResourcesUtils.calculateSQLChanges((IFile) resource, pathPair, textFileChange);
                         addChange(resource, textFileChange);
 
-                        RefactorResourcesUtils.calculateRelatedVdbResources(resource, callback);
+                        RefactorResourcesUtils.calculateRelatedVdbResources(resource, status, callback);
                     } catch (Exception ex) {
                         UiConstants.Util.log(ex);
                         status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
@@ -183,7 +202,7 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
                 }          
 
                 // Add changes for related resources
-                RefactorResourcesUtils.calculateRelatedResources(resource, callback);
+                RefactorResourcesUtils.calculateRelatedResources(resource, status, callback, Relationship.DEPENDENCY);
             }
         }
         finally {

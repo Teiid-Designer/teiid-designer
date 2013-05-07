@@ -28,7 +28,6 @@ public class RenameRefactorAction extends AbstractRefactorAction {
         CoreArgCheck.isEqual(resources.size(), 1);
         
         RenameResourceRefactoring refactoring = new RenameResourceRefactoring(resources.get(0));
-        refactoring.setWorkbenchWindow(window);
         
         String wizardTitle = "Rename Resource " + resources.get(0).getName(); //$NON-NLS-1$
         

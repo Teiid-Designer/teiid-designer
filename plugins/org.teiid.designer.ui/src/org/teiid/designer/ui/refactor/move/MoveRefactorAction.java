@@ -25,7 +25,6 @@ public class MoveRefactorAction extends AbstractRefactorAction {
     @Override
     protected RefactoringWizard getRefactoringWizard(List<IResource> resources, IWorkbenchWindow window) {
         MoveResourcesRefactoring refactoring = new MoveResourcesRefactoring(resources);
-        refactoring.setWorkbenchWindow(window);
         
         String wizardTitle = "Move Resource"; //$NON-NLS-1$
         if (resources.size() > 1)
