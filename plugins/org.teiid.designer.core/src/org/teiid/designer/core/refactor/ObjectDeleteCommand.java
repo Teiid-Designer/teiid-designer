@@ -7,20 +7,35 @@
  */
 package org.teiid.designer.core.refactor;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.TransactionRunnable;
+import org.teiid.designer.core.builder.ModelBuildUtil;
+import org.teiid.designer.core.container.Container;
+import org.teiid.designer.core.index.IndexUtil;
+import org.teiid.designer.core.refactor.RelatedResourceFinder.Relationship;
+import org.teiid.designer.core.transaction.UnitOfWork;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelResourceImpl;
+import org.teiid.designer.core.workspace.ModelUtil;
 
 
 /**
@@ -28,35 +43,46 @@ import org.teiid.designer.core.workspace.ModelResource;
  *
  * @since 8.0
  */
-public class ObjectDeleteCommand extends ResourceRefactorCommand {
+public class ObjectDeleteCommand implements RefactorCommand {
 
-    public static final int ERROR_MISSING_OBJECT = 3001;
-    public static final int ERROR_MULTIPLE_FILES = 3002;
-    public static final int ERROR_DELETE_NULL = 3003;
-    public static final int EXCEPTION_CALCULATING_DEPENDENCIES = 3004;
-    public static final int ERROR_READONLY_RESOURCES = 3006;
-    public static final int EXCEPTION_DURING_DELETE = 3007;
-    public static final int ERROR_SIBLING_NAME = 3008;
-    public static final int ERROR_SAME_NAME = 3008;
+    private static final String PID = ModelerCore.PLUGIN_ID;
 
-    private IStatus currentStatus;
+    /** IStatus code indicating that no target Resource has been set for this command before calling canExecute */
+    private static final int ERROR_MISSING_OBJECT = 3001;
+    private static final int ERROR_MULTIPLE_FILES = 3002;
+    private static final int ERROR_DELETE_NULL = 3003;
+    private static final int EXCEPTION_CALCULATING_DEPENDENCIES = 3004;
+    private static final int EXCEPTION_DURING_DELETE = 3007;
+
     private EObject[] objectsToDelete;
     private String objectName;
     private boolean moreThanOneResource = false;
     private boolean deleteArrayContainsNull = false;
 
+    private List<IStatus> problems = new ArrayList<IStatus>();
+    private Collection<IFile> relatedResources;
+
     /**
      * Construct an instance of ResourceRenameCommand.
      */
     public ObjectDeleteCommand() {
-        super(ModelerCore.Util.getString("ObjectDeleteCommand.label")); //$NON-NLS-1$
+        relatedResources = Collections.emptyList();
     }
 
     /**
-     * Set the new name for this resource, without the extension. This command will re-apply the resource extension (if one
-     * exists).
+     * Add a problem to the problems list
      * 
-     * @param name
+     * @param problem
+     */
+    private void addProblem( IStatus problem ) {
+        this.problems.add(problem);
+    }
+
+    /**
+     * Set the objects to be deleted by this command
+     *
+     * @param objects
+     *
      */
     public void setObjectsToDelete( EObject[] objects ) {
         this.objectsToDelete = objects;
@@ -66,8 +92,6 @@ public class ObjectDeleteCommand extends ResourceRefactorCommand {
         if (objects != null && objects.length > 0 && objects[0] != null) {
             // get the IResource from the first object and set it on the base class
             Resource firstResource = objects[0].eResource();
-            ModelResource modelResource = ModelerCore.getModelEditor().findModelResource(firstResource);
-            super.setResource(modelResource.getResource());
 
             // all objects to delete must be in the same resource
             if (objects.length > 1) {
@@ -93,155 +117,292 @@ public class ObjectDeleteCommand extends ResourceRefactorCommand {
         }
     }
 
-    private void checkStatus() {
-        if (this.objectsToDelete == null || this.objectsToDelete.length == 0) {
-            final String msg = ModelerCore.Util.getString("ObjectDeleteCommand.No_delete_target_selected"); //$NON-NLS-1$
-            currentStatus = new Status(IStatus.ERROR, PID, ERROR_MISSING_OBJECT, msg, null);
-            return;
-        }
-
-        if (this.moreThanOneResource) {
-            final String msg = ModelerCore.Util.getString("ObjectDeleteCommand.Delete_from_more_than_one_file"); //$NON-NLS-1$
-            currentStatus = new Status(IStatus.ERROR, PID, ERROR_MULTIPLE_FILES, msg, null);
-            return;
-        }
-
-        if (this.deleteArrayContainsNull) {
-            final String msg = ModelerCore.Util.getString("ObjectDeleteCommand.Delete_array_contains_null"); //$NON-NLS-1$
-            currentStatus = new Status(IStatus.ERROR, PID, ERROR_DELETE_NULL, msg, null);
-            return;
-        }
-
-        final Object[] params = new Object[] {objectName};
-        final String msg = ModelerCore.Util.getString("ObjectDeleteCommand.Ready_to_delete", params); //$NON-NLS-1$
-        currentStatus = new Status(IStatus.OK, PID, CAN_EXECUTE, msg, null);
-    }
-
-    /* (non-Javadoc)
-     * @See org.teiid.designer.core.refactor.ModelRefactorCommand#getCanExecuteStatus()
-     */
-    @Override
-    protected IStatus getCanExecuteStatus() {
-        checkStatus();
-        return this.currentStatus;
-    }
-
-    /* (non-Javadoc)
-     * @See org.teiid.designer.core.refactor.ResourceRefactorCommand#modifyResource(org.eclipse.core.resources.IResource, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-    protected IStatus modifyResource( IResource resource,
-                                      IProgressMonitor monitor ) {
-        try {
-            // Added to fix null pointer issue, defect #16050
-            super.setModifiedResource(resource);
-            monitor.worked(5);
-            ModelerCore.getModelEditor().delete(Arrays.asList(objectsToDelete), monitor);
-        } catch (ModelerCoreException e) {
-            final Object[] params = new Object[] {objectName};
-            final String msg = ModelerCore.Util.getString("ObjectDeleteCommand.Error_attempting_to_delete", params); //$NON-NLS-1$
-            return new Status(IStatus.ERROR, PID, EXCEPTION_DURING_DELETE, msg, e);
-        }
-
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * Overridden to collect up only the models that actually reference the object to be deleted.
-     * @See org.teiid.designer.core.refactor.ResourceRefactorCommand#getDependentResources()
-     */
-    @Override
-    public Collection getDependentResources() {
-        Collection result = new HashSet();
-        Collection emfResourceList = new HashSet();
-
-        for (int i = 0; i < objectsToDelete.length; ++i) {
-            try {
-                Collection list = ModelerCore.getModelEditor().findOtherObjectsToBeDeleted(objectsToDelete[i]);
-                list = ModelerCore.getModelEditor().findExternalReferencesToObjectsBeingDeleted(objectsToDelete[i], list);
-                for (Iterator iter = list.iterator(); iter.hasNext();) {
-                    Resource resource = ((EObject)iter.next()).eResource();
-                    if (!emfResourceList.contains(resource)) {
-                        emfResourceList.add(resource);
-                        result.add(ModelerCore.getModelEditor().findModelResource(resource));
-                    }
-                }
-            } catch (ModelerCoreException e) {
-                final String msg = ModelerCore.Util.getString("ObjectDeleteCommand.Error_attempting_calculate_dependencies", objectsToDelete[i]); //$NON-NLS-1$
-                super.addProblem(new Status(IStatus.ERROR, PID, EXCEPTION_CALCULATING_DEPENDENCIES, msg, e));
-            }
-        }
-
-        return result;
-    }
-    
-    @Override
-    protected IStatus refactorModelContents(IProgressMonitor monitor, final Collection<PathPair> refactoredPaths ) {
-    	return null;
-    }
-    
-
-    /* (non-Javadoc)
-     * @See org.teiid.designer.core.refactor.ModelRefactorCommand#undo()
-     */
-    @Override
-    public IStatus undoResourceModification( IProgressMonitor monitor ) {
-        // swjTODO: undo the delete
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @See org.teiid.designer.core.refactor.ModelRefactorCommand#redo()
-     */
-    @Override
-    public IStatus redoResourceModification( IProgressMonitor monitor ) {
-        // swjTODO: redo the delete
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @See org.teiid.designer.core.refactor.ModelRefactorCommand#getLabel()
-     */
     @Override
     public String getLabel() {
         return ModelerCore.Util.getString("ObjectDeleteCommand.delete_label", objectName); //$NON-NLS-1$
     }
 
-    /* (non-Javadoc)
-     * @See org.teiid.designer.core.refactor.ModelRefactorCommand#getDescription()
-     */
     @Override
     public String getDescription() {
-        final Object[] params = new Object[] {objectName};
+        Object[] params = new Object[] {objectName};
         return ModelerCore.Util.getString("ObjectDeleteCommand.delete_description", params); //$NON-NLS-1$
     }
 
-    /* (non-Javadoc)
-     * @See org.teiid.designer.core.refactor.RefactorCommand#canRedo()
-     */
     @Override
     public boolean canRedo() {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @See org.teiid.designer.core.refactor.RefactorCommand#canUndo()
-     */
     @Override
     public boolean canUndo() {
         return false;
     }
 
     @Override
-    protected Collection<PathPair> getMovedResourcePathCollection( boolean isUndo ) {
-        return Collections.emptyList();
+    public IStatus canExecute() {
+        IStatus status;
+        String msg;
+
+        if (this.objectsToDelete == null || this.objectsToDelete.length == 0) {
+            msg = ModelerCore.Util.getString("ObjectDeleteCommand.No_delete_target_selected"); //$NON-NLS-1$
+            status = new Status(IStatus.ERROR, PID, ERROR_MISSING_OBJECT, msg, null);
+            return status;
+        }
+
+        if (this.moreThanOneResource) {
+            msg = ModelerCore.Util.getString("ObjectDeleteCommand.Delete_from_more_than_one_file"); //$NON-NLS-1$
+            status = new Status(IStatus.ERROR, PID, ERROR_MULTIPLE_FILES, msg, null);
+            return status;
+        }
+
+        if (this.deleteArrayContainsNull) {
+            msg = ModelerCore.Util.getString("ObjectDeleteCommand.Delete_array_contains_null"); //$NON-NLS-1$
+            status = new Status(IStatus.ERROR, PID, ERROR_DELETE_NULL, msg, null);
+            return status;
+        }
+
+        ModelResource modelResource = getModelResource();
+        if (modelResource == null || modelResource.isReadOnly()) {
+            msg = ModelerCore.Util.getString("ObjectDeleteCommand.Selection_is_read_only"); //$NON-NLS-1$
+            status = new Status(IStatus.ERROR, PID, ERROR_READONLY_RESOURCE, msg, null);
+            return status;
+        }
+
+        Object[] params = new Object[] {objectName};
+        msg = ModelerCore.Util.getString("ObjectDeleteCommand.Ready_to_delete", params); //$NON-NLS-1$
+        status = new Status(IStatus.OK, PID, CAN_EXECUTE, msg, null);
+        return status;
     }
 
-    /* (non-Javadoc) We do not want to rebuild imports
-     * @See org.teiid.designer.core.refactor.ResourceRefactorCommand#shouldRebuildImports()
+    /**
+     * Get the model resource from the objects being
+     * deleted. Since all objects are in the same resource,
+     * returning the first object's resource is sufficient.
      */
+    private ModelResource getModelResource() {
+        ModelEditor editor = ModelerCore.getModelEditor();
+        ModelResource modelResource = editor.findModelResource(objectsToDelete[0]);
+        return modelResource;
+    }
+
+    /**
+     * Get the resources dependent upon the objects being deleted
+     *
+     * @return collection
+     */
+    public Set<ModelResource> getDependentResources() {
+        Set<ModelResource> result = new HashSet<ModelResource>();
+        Collection<Resource> emfResourceList = new HashSet<Resource>();
+
+        for (EObject object : objectsToDelete) {
+            try {
+                Collection<EObject> relatedList = ModelerCore.getModelEditor().findOtherObjectsToBeDeleted(object);
+                relatedList = ModelerCore.getModelEditor().findExternalReferencesToObjectsBeingDeleted(object, relatedList);
+                for (EObject dependent : relatedList) {
+                    Resource resource = dependent.eResource();
+                    if (!emfResourceList.contains(resource)) {
+                        emfResourceList.add(resource);
+                        result.add(ModelerCore.getModelEditor().findModelResource(resource));
+                    }
+                }
+            } catch (ModelerCoreException e) {
+                String msg = ModelerCore.Util.getString("ObjectDeleteCommand.Error_attempting_calculate_dependencies", object); //$NON-NLS-1$
+                addProblem(new Status(IStatus.ERROR, PID, EXCEPTION_CALCULATING_DEPENDENCIES, msg, e));
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Check the dependent resources to determine if it is OK to delete the objects.
+     *
+     * TODO
+     * Consider whether it is better to use eObjects to search as in {@link #getDependentResources()}
+     * rather than this implementation which uses the first eObject's resource.
+     *
+     * @return value of severity of problems encountered.
+     */
+    private int checkDependentResources() {
+
+        RelatedResourceFinder finder = new RelatedResourceFinder(getModelResource().getResource());
+
+        // Determine dependent resource
+        Collection<IFile> searchResults = finder.findRelatedResources(Relationship.ALL);
+        ResourceStatusList statusList = new ResourceStatusList(searchResults);
+        this.relatedResources = statusList.getResourceList();
+        this.problems.addAll(statusList.getProblems());
+
+        return statusList.getHighestSeverity();
+    }
+
+    /**
+     * Unload the given resource
+     *
+     * @param resource
+     * @throws CoreException
+     */
+    private void unloadModelResources( IResource resource ) throws CoreException {
+        // Collect all IResources within all IProjects
+        ModelResourceCollectorVisitor visitor = new ModelResourceCollectorVisitor();
+        resource.accept(visitor);
+
+        for (Iterator iter = visitor.getModelResources().iterator(); iter.hasNext();) {
+            ModelResource mResource = (ModelResource)iter.next();
+            mResource.unload();
+            mResource.close();
+            if (mResource instanceof ModelResourceImpl) {
+                ((ModelResourceImpl)mResource).removeEmfResource();
+            }
+        }
+
+        // The resources move/rename will trigger the event that will actually remove and create
+        // the corresponding resources, since these too are workspace management events
+        // they are processed after the refactoring is done. But since we need the index files at
+        // the old path to be deleted and the index files at the new path to be created,
+        // we do it explicitly.
+
+        // Delete the index files corresponding to the model resource at the old path
+        for (Iterator iter = visitor.getResources().iterator(); iter.hasNext();) {
+            IResource tmpResource = (IResource)iter.next();
+
+            if (ModelUtil.isModelFile(tmpResource) && tmpResource.getLocation() != null) {
+                // Remove the runtime index file associated with the resource being removed
+                String runtimeIndexFileName = IndexUtil.getRuntimeIndexFileName(tmpResource);
+                File runtimeIndexFile = new File(IndexUtil.INDEX_PATH, runtimeIndexFileName);
+                if (!runtimeIndexFile.delete()) {
+                    runtimeIndexFile.deleteOnExit();
+                }
+
+                // Remove the search index file associated with the resource being removed
+                String searchIndexFileName = IndexUtil.getSearchIndexFileName(tmpResource);
+                File searchIndexFile = new File(IndexUtil.INDEX_PATH, searchIndexFileName);
+                if (!searchIndexFile.delete()) {
+                    searchIndexFile.deleteOnExit();
+                }
+            }
+        }
+    }
+
+    /**
+     * Unload all the related resources
+     *
+     * @throws Exception
+     */
+    private void unloadRelatedResources() throws Exception {
+        if (relatedResources == null)
+            throw new Exception("Programming error: related resources should be calculated before trying to unload them"); //$NON-NLS-1$
+
+        for (Object resource : relatedResources) {
+            IFile file  = (IFile) resource;
+            unloadModelResources(file);
+        }
+    }
+
+    /**
+     * Calls the appropriate validate method to re-index the related resources.
+     */
+    private void validateDependentResources() {
+        if (relatedResources.isEmpty())
+            return;
+
+        TransactionRunnable runnable = new TransactionRunnable() {
+            @Override
+            public Object run( final UnitOfWork uow ) {
+                Container cont = null;
+                try {
+                    cont = ModelerCore.getModelContainer();
+                } catch (CoreException err) {
+                    String msg = ModelerCore.Util.getString("ObjectDeleteCommand.doGetContainerProblemMessage"); //$NON-NLS-1$
+                    ModelerCore.Util.log(IStatus.ERROR, err, msg);
+                }
+                ModelBuildUtil.validateResources(null, relatedResources, cont, false);
+                return null;
+            }
+        };
+
+        // Execute the validation within a transaction as this operation may open resources
+        // and create new EObjects
+        try {
+            ModelerCore.getModelEditor().executeAsTransaction(runnable, "Updating ModelIndexes", false, false, this); //$NON-NLS-1$
+        } catch (CoreException err) {
+            ModelerCore.Util.log(err);
+        }
+    }
+
     @Override
-    protected boolean shouldRebuildImports() {
-        return false;
+    public IStatus execute( IProgressMonitor monitor ) {
+        problems.clear();
+
+        try {
+            String msg = ModelerCore.Util.getString("ObjectDeleteCommand.Execution_complete"); //$NON-NLS-1$
+            IStatus result = new Status(IStatus.OK, PID, EXECUTE_SUCCEEDED, msg, null);
+
+            // To check the dependent resources, the index files of all the model resources
+            // in the workspace are to be searched. So, generate the index files.
+            // result = buildIndexes(monitor);
+
+            if (result.getSeverity() == IStatus.ERROR) {
+                return result;
+            }
+
+            // check the dependent resources
+            int severity = checkDependentResources();
+
+            // see if we should modify the resource
+            if (severity >= IStatus.ERROR) {
+                msg = ModelerCore.Util.getString("ObjectDeleteCommand.Dependent_resource_error"); //$NON-NLS-1$
+                return new Status(severity, PID, ERROR_READONLY_RESOURCE, msg, null);
+            }
+
+            // If dependent resources are loaded and the effected model resource
+            // is unloaded this can cause proxy references to be broken. This can
+            // be avoided by unloading the dependent resources first.
+            unloadRelatedResources();
+
+            // Delete the objects
+            try {
+                ModelerCore.getModelEditor().delete(Arrays.asList(objectsToDelete), monitor);
+            } catch (ModelerCoreException e) {
+                final Object[] params = new Object[] {objectName};
+                msg = ModelerCore.Util.getString("ObjectDeleteCommand.Error_attempting_to_delete", params); //$NON-NLS-1$
+                return new Status(IStatus.ERROR, PID, EXCEPTION_DURING_DELETE, msg, e);
+            }
+
+            validateDependentResources();
+            return result;
+        } catch (Exception ex) {
+            return new Status(IStatus.ERROR, PID, ex.getMessage(), ex);
+        } finally {
+            if (monitor != null) monitor.done();
+        }
+
+    }
+
+    @Override
+    public IStatus undo( IProgressMonitor monitor ) {
+        // do nothing - command is not undoable
+        return Status.OK_STATUS;
+    }
+
+    @Override
+    public IStatus redo( IProgressMonitor monitor ) {
+        // do nothing - command is not redoable
+        return Status.OK_STATUS;
+    }
+
+    @Override
+    public Collection<Object> getResult() {
+        return Collections.EMPTY_LIST;
+    }
+
+    @Override
+    public Collection<Object> getAffectedObjects() {
+        return Collections.EMPTY_LIST;
+    }
+
+    @Override
+    public Collection<IStatus> getPostExecuteMessages() {
+        return this.problems;
     }
 }

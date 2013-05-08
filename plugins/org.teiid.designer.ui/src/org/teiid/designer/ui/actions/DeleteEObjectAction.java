@@ -110,7 +110,8 @@ public class DeleteEObjectAction extends ModelObjectAction {
 
     private ISaveableFilter getResourcesFilter() {
         // first get the dependent resources
-        final Collection ignoredResources = this.worker.getObjectDeleteCommand().getDependentResources();
+        final Collection<ModelResource> ignoredResources = new HashSet<ModelResource>();
+        ignoredResources.addAll(worker.getObjectDeleteCommand().getDependentResources());
 
         // then get the resources that own the selected objects
         ModelResource mrTemp = null;
@@ -289,7 +290,6 @@ public class DeleteEObjectAction extends ModelObjectAction {
     
     /* (non-Javadoc)
      * Overridden to collect up only the models that actually reference the object to be deleted.
-     * @See org.teiid.designer.core.refactor.ResourceRefactorCommand#getDependentResources()
      */
     private Collection getReadOnlyDependentResources(EObject[] objectsToDelete) {
 
@@ -312,7 +312,6 @@ public class DeleteEObjectAction extends ModelObjectAction {
 
     /* (non-Javadoc)
      * Overridden to collect up only the models that actually reference the object to be deleted.
-     * @See org.teiid.designer.core.refactor.ResourceRefactorCommand#getDependentResources()
      */
     private Collection<IFile> getAllDependentResources(EObject[] objectsToDelete) {
         Collection<IResource> resourcesToDelete = new HashSet<IResource>();
