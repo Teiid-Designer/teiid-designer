@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.ui.edit.IDialogStatusListener;
 import org.teiid.designer.relational.ui.edit.RelationalEditorPanel;
-import org.teiid.designer.relational.ui.edit.RelationalObjectEditorFactory;
 import org.teiid.designer.transformation.ui.Messages;
 
 /**
