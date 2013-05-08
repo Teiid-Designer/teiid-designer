@@ -145,7 +145,7 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
                     }
                 };
 
-                RefactorResourcesUtils.calculateRelatedResources(resource, status, callback, Relationship.DEPENDENCY);
+                RefactorResourcesUtils.calculateRelatedResources(resource, status, callback, Relationship.DEPENDENT);
             }
         } finally {
             progressMonitor.done();
@@ -175,7 +175,7 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
                         continue;
                     }
 
-                    RefactorResourcesUtils.calculateRelatedResources(resource, status, new RelatedResourceCallback(pathPairs), Relationship.DEPENDENCY);
+                    RefactorResourcesUtils.calculateRelatedResources(resource, status, new RelatedResourceCallback(pathPairs), Relationship.DEPENDENT);
 
                 } catch (Exception ex) {
                     UiConstants.Util.log(ex);

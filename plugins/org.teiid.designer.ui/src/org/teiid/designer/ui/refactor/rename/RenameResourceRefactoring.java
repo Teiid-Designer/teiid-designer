@@ -159,7 +159,7 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
                     }
                 };
 
-                RefactorResourcesUtils.calculateRelatedResources(resource, status, callback, Relationship.DEPENDENCY);
+                RefactorResourcesUtils.calculateRelatedResources(resource, status, callback, Relationship.DEPENDENT);
             }
         } finally {
             progressMonitor.done();
@@ -202,7 +202,7 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
                 }          
 
                 // Add changes for related resources
-                RefactorResourcesUtils.calculateRelatedResources(resource, status, callback, Relationship.DEPENDENCY);
+                RefactorResourcesUtils.calculateRelatedResources(resource, status, callback, Relationship.DEPENDENT);
             }
         }
         finally {
