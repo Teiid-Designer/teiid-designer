@@ -52,13 +52,17 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.dialogs.FilteredList.FilterMatcher;
+import org.eclipse.ui.internal.misc.StringMatcher;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
@@ -72,6 +76,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
+import org.teiid.designer.datatools.profiles.xml.IXmlProfileConstants;
 import org.teiid.designer.datatools.ui.actions.EditConnectionProfileAction;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.metamodels.relational.Procedure;
@@ -136,8 +141,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	private static final String DOT_XML = ".XML"; //$NON-NLS-1$
-	private static final String DOT_TXT = ".TXT"; //$NON-NLS-1$
-	private static final String DOT_CSV = ".CSV"; //$NON-NLS-1$
+	private static final String FILTER_INIT = "*.*"; //$NON-NLS-1$
 	private static final String DOT_XML_LOWER = ".xml"; //$NON-NLS-1$
 	
 	private static final String GET_TEXT_FILES = "getTextFiles"; //$NON-NLS-1$
@@ -155,6 +159,8 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	private ILabelProvider srcLabelProvider;
 	private Combo srcCombo;
 	private Text dataFileFolderText;
+	private Text fileFilterText;
+	
 	private Button editCPButton;
 	private TableViewer fileViewer;
 	private DataFolderContentProvider fileContentProvider;
@@ -321,7 +327,12 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		dataFileFolderText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 		dataFileFolderText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		dataFileFolderText.setEditable(false);
-
+		
+		Label fileFilterLabel = new Label(folderContentsGroup, SWT.NONE);
+		fileFilterLabel.setText(getString("fileFilterLabel")); //$NON-NLS-1$
+		
+		createFilterTextBox(folderContentsGroup);
+		
 		createFileTableViewer(folderContentsGroup);
 		
 		Label selectedFileLabel = new Label(folderContentsGroup, SWT.NONE);
@@ -334,7 +345,54 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		selectedFileText.setEditable(false);
 
 	}
+	
+    /**
+     * Creates Text Widget for Filter string entry
+     * @param parent the parent composite.
+     */
+    protected void createFilterTextBox( Composite parent ) {
+        fileFilterText = new Text(parent, SWT.BORDER);
 
+        GridData data = new GridData();
+        data.grabExcessVerticalSpace = false;
+        data.grabExcessHorizontalSpace = true;
+        data.horizontalAlignment = GridData.FILL;
+        data.verticalAlignment = GridData.BEGINNING;
+        fileFilterText.setLayoutData(data);
+        fileFilterText.setFont(parent.getFont());
+
+        // Initial filter text is empty
+        fileFilterText.setText(FILTER_INIT);
+        setImportInfoFileFilter(FILTER_INIT);
+
+        Listener listener = new Listener() {
+            @Override
+            public void handleEvent( Event e ) {
+				for( TeiidMetadataFileInfo fileInfo : info.getFileInfos()) {
+					fileInfo.setDoProcess(false);
+				}
+				for( TableItem item : fileViewer.getTable().getItems()) {
+						item.setChecked(false);
+				}
+
+            	String filterText = fileFilterText.getText();
+            	// Set filter on import info
+            	setImportInfoFileFilter(filterText);
+            	// Update content provider, then refresh viewer
+    			fileContentProvider.setFilterString(filterText);
+    			fileViewer.refresh();
+    			
+    			synchronizeUI();
+    			validatePage();
+            }
+        };
+        fileFilterText.addListener(SWT.Modify, listener);
+    }
+    
+	private void setImportInfoFileFilter(String filterText) {
+		this.info.setFileFilterText(filterText);
+	}
+	
 	private void createFileTableViewer(Composite parent) {
 
 		Table table = new Table(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.CHECK );
@@ -349,6 +407,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		gd.horizontalSpan = 2;
 		this.fileViewer.getControl().setLayoutData(gd);
 		fileContentProvider = new DataFolderContentProvider();
+		fileContentProvider.setFilterString(FILTER_INIT);
 		this.fileViewer.setContentProvider(fileContentProvider);
 		this.fileViewer.setLabelProvider(new FileSystemLabelProvider());
 
@@ -545,8 +604,46 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 
 		this.editCPButton.setEnabled(getConnectionProfile() != null);
 	}
+	
+	private void setDataFolderLocation() {
+		IConnectionProfile profile = getConnectionProfile();
+		if(profile!=null) {
+			Properties props = profile.getBaseProperties();
+			String home = (String) props.get(IXmlProfileConstants.TEIID_PARENT_DIRECTORY_KEY);
+			if (home != null) {
+				String location = home;
+				if (location.length() > 60) {
+					int len = location.length();
+					location = "..." + location.substring(len - 60, len); //$NON-NLS-1$
+				}
+				this.dataFileFolderText.setText(location);
+				this.dataFileFolderText.setToolTipText(home);
+			} else {
+				String URL = (String) props.get(IXmlProfileConstants.URL_PROP_ID);
+				if( URL != null ) {
+					String location = URL;
+					if (location.length() > 60) {
+						int len = location.length();
+						location = "..." + location.substring(len - 60, len); //$NON-NLS-1$
+					}
+					this.dataFileFolderText.setText(location);
+					this.dataFileFolderText.setToolTipText(URL);
+				} else {
+					this.dataFileFolderText.setText(EMPTY_STRING);
+					this.dataFileFolderText.setToolTipText(EMPTY_STRING);
+				}
+			}
+		} else {
+			this.dataFileFolderText.setText(EMPTY_STRING);
+			this.dataFileFolderText.setToolTipText(EMPTY_STRING);
+		}
+	}
 
 	private void setConnectionProfile(IConnectionProfile profile) {
+		if(profile==null) {
+			this.fileViewer.setInput(null);
+			clearFileListViewer();
+		}
 		this.info.setConnectionProfile(profile);
 	}
 
@@ -1227,6 +1324,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	class DataFolderContentProvider implements ITreeContentProvider {
 
 		boolean isFlatFileContent = true;
+		private DefaultFilterMatcher filterMatcher = new DefaultFilterMatcher();
 
 		// /////////////////////////////////////////////////////////////////////////////////////////////
 		// CONSTANTS
@@ -1238,6 +1336,10 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		// METHODS
 		// /////////////////////////////////////////////////////////////////////////////////////////////
 
+		public void setFilterString(String pattern) {
+			this.filterMatcher.setFilter(pattern+"*", true, false); //$NON-NLS-1$
+		}
+		
 		/**
 		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 		 * @since 4.2
@@ -1310,8 +1412,8 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		private boolean isValidTextFile(File file) {
 		    boolean isValid = false;
 		    String fileName = file.getName().toUpperCase();
-		    if(fileName.endsWith(DOT_CSV) || fileName.endsWith(DOT_TXT) || fileName.indexOf('.')==-1) {
-		        isValid = true;
+		    if(filterMatcher.match(fileName)) {
+		    	isValid = true;
 		    }
 		    return isValid;
 		}
@@ -1348,6 +1450,20 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 
 		public void setIsFlatFileContent(boolean isFlatFileContent) {
 			this.isFlatFileContent = isFlatFileContent;
+		}
+	}
+	
+	class DefaultFilterMatcher implements FilterMatcher {
+		private StringMatcher fMatcher;
+
+		public void setFilter(String pattern, boolean ignoreCase,
+				boolean ignoreWildCards) {
+			fMatcher = new StringMatcher(pattern + '*', ignoreCase,
+					ignoreWildCards);
+		}
+
+		public boolean match(Object element) {
+			return fMatcher.match(element.toString());
 		}
 	}
 

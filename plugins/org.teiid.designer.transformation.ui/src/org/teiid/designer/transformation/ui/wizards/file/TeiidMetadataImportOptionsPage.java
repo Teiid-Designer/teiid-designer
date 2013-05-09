@@ -95,7 +95,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	StackLayout stackLayout;
 	
 	Text selectedFileText;
-	
+
+	Button useFileTextRadio, useFilterTextRadio;
 	TextViewer sqlTextViewer;
 	IDocument sqlDocument;
 	
@@ -192,6 +193,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 
 				loadFileContentsViewers();
 			}
+			this.useFileTextRadio.setSelection(true);
+			this.useFilterTextRadio.setSelection(false);
 			synchronizeUI();
 			
 			validatePage();
@@ -215,6 +218,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	private void synchronizeUI() {
 		synchronizing = true;
 
+		if(dataFileInfo==null) return;
+		
 		selectedFileText.setText(dataFileInfo.getDataFile().getName());
 
 		boolean isDelimitedOption = this.dataFileInfo.doUseDelimitedColumns();
@@ -1066,6 +1071,37 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     	gd.horizontalSpan = 2;
     	textTableOptionsGroup.setLayoutData(gd);
     	
+    	// Radio Button Panel
+    	Composite radioPanel = new Composite(textTableOptionsGroup,SWT.NONE);
+    	radioPanel.setLayout(new GridLayout(2,false));
+    	GridData gd2 = new GridData(GridData.FILL_HORIZONTAL);
+    	radioPanel.setLayoutData(gd2);
+    	
+    	useFileTextRadio = new Button(radioPanel,SWT.RADIO);
+    	useFileTextRadio.setText(getString("sqlUseSelectedFile")); //$NON-NLS-1$
+        useFileTextRadio.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+            	if(useFileTextRadio.getSelection()) {
+            		useFilterTextRadio.setSelection(false);
+            		updateSqlText();
+            	}
+            }
+        });
+    	useFilterTextRadio = new Button(radioPanel,SWT.RADIO);
+    	useFilterTextRadio.setText(getString("sqlUseSelectedFilter")); //$NON-NLS-1$
+    	useFilterTextRadio.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+            	if(useFilterTextRadio.getSelection()) {
+            		useFileTextRadio.setSelection(false);
+            		updateSqlText();
+            	}
+            }
+        });
+    	
     	ColorManager colorManager = new ColorManager();
         int styles = SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.FULL_SELECTION;
 
@@ -1210,6 +1246,17 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     
     void updateSqlText() {
     	if( this.dataFileInfo != null ) {
+    		String fileFilterText = this.info.getFileFilterText();
+    		boolean useFilterTextInSQL = this.useFilterTextRadio.getSelection();
+    		if(useFilterTextInSQL) {
+    			if(fileFilterText!=null) {
+    				this.dataFileInfo.setDataFileFilter(fileFilterText);
+    			} else {
+    				this.dataFileInfo.setDataFileFilter("*.*"); //$NON-NLS-1$
+    			}
+    		} else {
+    			this.dataFileInfo.setDataFileFilter(null);
+    		}
     		if( this.info.getSourceModelName() != null ) {
     			String modelName = this.dataFileInfo.getModelNameWithoutExtension(this.info.getSourceModelName());
     			sqlTextViewer.getDocument().set(dataFileInfo.getSqlString(modelName));

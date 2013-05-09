@@ -21,10 +21,12 @@ import org.teiid.designer.query.proc.ITeiidFileInfo;
  */
 public abstract class TeiidFileInfo implements ITeiidFileInfo {
 	boolean isFlatFile = false;
+	String dataFileFilter;
 	
 	/**
-	 * 
+	 * Constructor
 	 * @param dataFile the Teiid-formatted data file
+	 * @param isFlatFile 'true' if this is flatFile or 'false' for Xml
 	 */
 	public TeiidFileInfo(File dataFile, boolean isFlatFile) {
 		super();
@@ -56,6 +58,21 @@ public abstract class TeiidFileInfo implements ITeiidFileInfo {
 	 */
 	public File getDataFile() {
 		return this.dataFile;
+	}
+	
+	/**
+	 * 
+	 * @return the Data file filter
+	 */
+	public String getDataFileFilter() {
+		return this.dataFileFilter;
+	}
+	
+	/**
+	 * @param filter the filter string
+	 */
+	public void setDataFileFilter(String filter) {
+		this.dataFileFilter=filter;
 	}
 	
 	/**

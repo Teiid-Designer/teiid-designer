@@ -108,6 +108,7 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	private IStatus NO_FILES_STATUS;
 	
 	private int fileMode;
+	private String fileFilterText;
 	
 	/**
 	 * Basic constructor
@@ -416,6 +417,22 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	
 	public int getFileMode() {
 		return this.fileMode;
+	}
+	
+	/**
+	 * Set the filter text
+	 * @param filterText the filter
+	 */
+	public void setFileFilterText(String filterText) {
+		this.fileFilterText=filterText;
+	}
+	
+	/**
+	 * Get the filter text
+	 * @return the filter text
+	 */
+	public String getFileFilterText() {
+		return this.fileFilterText;
 	}
 	
     /**
