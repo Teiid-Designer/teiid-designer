@@ -128,7 +128,6 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	private static final String DOT_XML = ".XML"; //$NON-NLS-1$
 	private static final String DOT_XML_LOWER = ".xml"; //$NON-NLS-1$
 
-	private static final String DEFAULT_EXTENSION = ".xmi"; //$NON-NLS-1$
 	private static final String GET_TEXT_FILES = "getTextFiles()"; //$NON-NLS-1$
 	private static final String INVOKE_HTTP = "invokeHttp()"; //$NON-NLS-1$
 
@@ -183,7 +182,9 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
     Properties designerProperties;
 
 	/**
+	 * Constructor
 	 * @since 4.0
+	 * @param info the import info object
 	 */
 	public TeiidXmlImportSourcePage(TeiidMetadataImportInfo info) {
 		this(null, info);
@@ -258,9 +259,8 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				profileModified();
+				profileComboSelectionChanged();
 				fileViewer.refresh();
-
 			}
 
 			@Override
@@ -470,37 +470,13 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 
 	}
 
-	void profileModified() {
+	void profileComboSelectionChanged() {
 		if (this.srcCombo.getSelectionIndex() > -1) {
 			String cpName = this.srcCombo.getItem(this.srcCombo.getSelectionIndex());
 			for (IConnectionProfile profile : this.connectionProfiles) {
 				if (profile.getName().equalsIgnoreCase(cpName)) {
 					setConnectionProfile(profile);
-					Properties props = profile.getBaseProperties();
-					String home = (String) props.get(IXmlProfileConstants.TEIID_PARENT_DIRECTORY_KEY);
-					if (home != null) {
-						String location = home;
-						if (location.length() > 60) {
-							int len = location.length();
-							location = "..." + location.substring(len - 60, len); //$NON-NLS-1$
-						}
-						this.dataFileFolderText.setText(location);
-						this.dataFileFolderText.setToolTipText(home);
-					} else {
-						String URL = (String) props.get(IXmlProfileConstants.URL_PROP_ID);
-						if( URL != null ) {
-							String location = URL;
-							if (location.length() > 60) {
-								int len = location.length();
-								location = "..." + location.substring(len - 60, len); //$NON-NLS-1$
-							}
-							this.dataFileFolderText.setText(location);
-							this.dataFileFolderText.setToolTipText(URL);
-						} else {
-							this.dataFileFolderText.setText(EMPTY_STRING);
-							this.dataFileFolderText.setToolTipText(EMPTY_STRING);
-						}
-					}
+					setDataFolderLocation();
 
 					clearFileListViewer();
 					loadFileListViewer();
@@ -523,6 +499,11 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
     }
 
 	private void setConnectionProfile(IConnectionProfile profile) {
+		if(profile==null || isInvalidXmlFileProfile(profile)) {
+			this.fileViewer.setInput(null);
+			clearFileListViewer();
+		}
+		
 		this.info.setConnectionProfile(profile);
 	}
 
@@ -538,20 +519,41 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		
 		return false;
 	}
+	
+	private boolean isValidProfileForPage(IConnectionProfile profile) {
+		boolean isValid = false;
+		if( this.info.isXmlLocalFileMode() && profile.getProviderId().equalsIgnoreCase(XML_FILE_ID)) {
+			isValid=true;
+		} else if( this.info.isXmlUrlFileMode() && (profile.getProviderId().equalsIgnoreCase(XML_URL_FILE_ID) || profile.getProviderId().equalsIgnoreCase(TEIID_WS_ID)) ) {
+			isValid=true;
+		}
+		return isValid;
+	}
+	
+	private boolean isInvalidXmlFileProfile(IConnectionProfile profile) {
+		// If File ConnectionProfile, make sure it references a file
+		File theXmlFile = getFileForConnectionProfile(profile); 
+		if (theXmlFile!=null && theXmlFile.exists() && !theXmlFile.isFile()) {
+			return true;
+		}
+		return false;
+	}
 
 	private void clearFileListViewer() {
 		this.info.clearXmlFileInfos();
 		this.info.clearFileInfos();
-		fileViewer.remove(fileViewer.getTable().getItems());
+		fileViewer.getTable().clearAll();
 	}
 
 	private void loadFileListViewer() {
 		if (getConnectionProfile() != null) {
-			File theXmlFile = getFileForConnectionProfile();
+			File theXmlFile = getFileForConnectionProfile(getConnectionProfile());
 			String urlString = getUrlStringForConnectionProfile();
 
-			if (theXmlFile != null && theXmlFile.exists()) {
-				setXmlFile(theXmlFile, false, null);
+			if (theXmlFile!=null) {
+				if(theXmlFile.exists() && theXmlFile.isFile()) {
+					setXmlFile(theXmlFile, false, null);
+				}
 			} else if (urlString != null && urlString.trim().length() > 0) {
 				File xmlFile = null;
 				// Clears the viewer
@@ -729,9 +731,9 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		return filePath;
 	}
 
-	private File getFileForConnectionProfile() {
-		if (getConnectionProfile() != null) {
-			Properties props = getConnectionProfile().getBaseProperties();
+	private File getFileForConnectionProfile(IConnectionProfile profile) {
+		if (profile != null) {
+			Properties props = profile.getBaseProperties();
 			String fileListValue = (String) props.get(LOCAL_FILE_NAME_KEY);
 			if (fileListValue != null) {
 				return new File(fileListValue);
@@ -758,10 +760,6 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		}
 
 		return null;
-	}
-
-	void profileChanged() {
-		profileModified();
 	}
 
 	void createNewConnectionProfile() {
@@ -809,7 +807,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		for (String item : this.srcCombo.getItems()) {
 			if (item != null && item.equalsIgnoreCase(profile.getName())) {
 				this.srcCombo.select(index);
-				profileModified();
+				profileComboSelectionChanged();
 				break;
 			}
 			index++;
@@ -848,7 +846,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 
 				ProfileManager.getInstance().removeProfileListener(listener);
 
-				profileModified();
+				profileComboSelectionChanged();
 			} else {
 				// Remove the listener if the dialog is canceled
 				ProfileManager.getInstance().removeProfileListener(listener);
@@ -1007,7 +1005,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		}
 		if (cpIndex > -1) {
 			srcCombo.select(cpIndex);
-            profileModified();
+			profileComboSelectionChanged();
 		}
 	}
 
@@ -1050,6 +1048,19 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	}
 
 	private boolean validatePage() {
+		IConnectionProfile connProfile = getConnectionProfile();
+		if(connProfile==null) {
+			setThisPageComplete(getString("noConnectionProfileSelected"), ERROR);//$NON-NLS-1$
+			return false;
+		}
+		
+		// If File ConnectionProfile, make sure it references a file
+		File theXmlFile = getFileForConnectionProfile(connProfile); 
+		if (theXmlFile!=null && theXmlFile.exists() && !theXmlFile.isFile()) {
+			setThisPageComplete(getString("invalidXmlFileConnProfileMesage"), ERROR);//$NON-NLS-1$
+			return false;
+		}
+		
 		setSourceHelpMessage();
 		
 		// Check for model file selected
@@ -1459,6 +1470,26 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 				this.setTitle(XML_TITLE);
 				this.fileNameColumn.getColumn().setText(getString("xmlDataFileNameColumn")); //$NON-NLS-1$
 			}
+			// If current profile is invalid for this page, it is reset.
+			// this may happen if user toggle between local and remote xml...
+			IConnectionProfile currentProfile = getConnectionProfile();
+			if(currentProfile==null) {
+				this.fileViewer.setInput(null);
+	    		this.info.setSourceModelName(null);
+	    		setSourceHelpMessage();
+			} else if(!isValidProfileForPage(currentProfile)) {
+				setConnectionProfile(null);
+				this.fileViewer.setInput(null);
+	    		this.info.setSourceModelName(null);
+	    		setSourceHelpMessage();
+			} else if(isInvalidXmlFileProfile(currentProfile)) {
+				this.fileViewer.setInput(null);
+	    		this.info.setSourceModelName(null);
+	    		setSourceHelpMessage();
+			}
+			
+			setDataFolderLocation();
+			
 			refreshConnectionProfiles();
 			
 			resetCPComboItems();
@@ -1470,6 +1501,42 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 			synchronizeUI();
 
             setProfileFromProperties();
+            validatePage();
 		}
 	}
+	
+	private void setDataFolderLocation() {
+		IConnectionProfile profile = getConnectionProfile();
+		if(profile!=null) {
+			Properties props = profile.getBaseProperties();
+			String home = (String) props.get(IXmlProfileConstants.TEIID_PARENT_DIRECTORY_KEY);
+			if (home != null) {
+				String location = home;
+				if (location.length() > 60) {
+					int len = location.length();
+					location = "..." + location.substring(len - 60, len); //$NON-NLS-1$
+				}
+				this.dataFileFolderText.setText(location);
+				this.dataFileFolderText.setToolTipText(home);
+			} else {
+				String URL = (String) props.get(IXmlProfileConstants.URL_PROP_ID);
+				if( URL != null ) {
+					String location = URL;
+					if (location.length() > 60) {
+						int len = location.length();
+						location = "..." + location.substring(len - 60, len); //$NON-NLS-1$
+					}
+					this.dataFileFolderText.setText(location);
+					this.dataFileFolderText.setToolTipText(URL);
+				} else {
+					this.dataFileFolderText.setText(EMPTY_STRING);
+					this.dataFileFolderText.setToolTipText(EMPTY_STRING);
+				}
+			}
+		} else {
+			this.dataFileFolderText.setText(EMPTY_STRING);
+			this.dataFileFolderText.setToolTipText(EMPTY_STRING);
+		}
+	}
+	
 }

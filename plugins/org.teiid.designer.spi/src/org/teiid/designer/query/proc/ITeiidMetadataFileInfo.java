@@ -140,6 +140,12 @@ public interface ITeiidMetadataFileInfo extends ITeiidFileInfo, ISQLConstants {
     int getNumberOfLinesInFile();
 
     /**
+     * 
+     * @return the Data file filter, if specified
+     */
+    String getDataFileFilter();
+    
+    /**
      * Returns the current generated SQL string based on an unknown relational model name
      * @return the generated SQL string
      */
