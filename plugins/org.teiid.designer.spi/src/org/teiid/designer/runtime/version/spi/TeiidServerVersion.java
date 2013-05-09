@@ -70,19 +70,17 @@ public class TeiidServerVersion implements ITeiidServerVersion {
 
         String[] tokens = versionString.split("\\."); //$NON-NLS-1$
 
-        switch (tokens.length) {
-            case 3:
-                majorVersion = tokens[0];
-                minorVersion = tokens[1];
-                microVersion = tokens[2];
-                break;
-            case 2:
-                majorVersion = tokens[0];
-                minorVersion = tokens[1];
-                break;
-            case 1:
-            default:
-                majorVersion = tokens[0];
+        if (tokens.length >= 3) {
+            majorVersion = tokens[0];
+            minorVersion = tokens[1];
+            microVersion = tokens[2];
+        }
+        else if(tokens.length == 2) {
+            majorVersion = tokens[0];
+            minorVersion = tokens[1];
+        }
+        else {
+            majorVersion = tokens[0];
         }
     }
 
