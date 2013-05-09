@@ -161,6 +161,8 @@ public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements
 	}
 
 	private boolean validatePage() {
+		if(dataFileInfo==null) return false;
+		
 		if( !dataFileInfo.getStatus().isOK() && !(dataFileInfo.getStatus().getSeverity() == IStatus.WARNING)  ) {
 			setThisPageComplete(dataFileInfo.getStatus().getMessage(), IStatus.ERROR);
 			return false;
@@ -176,6 +178,8 @@ public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements
 
 	private void synchronizeUI() {
 		synchronizing = true;
+
+		if(dataFileInfo==null) return;
 
 		String charset = this.info.getFileInfo(this.dataFileInfo.getDataFile()).getCharset();
 		if (!charset.equals(this.dataFileInfo.getCharset())) {
