@@ -38,6 +38,7 @@ import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.compare.DifferenceDescriptor;
 import org.teiid.designer.compare.DifferenceReport;
 import org.teiid.designer.compare.ui.UiConstants;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Dialog;
 import org.teiid.designer.ui.common.widget.Label;
@@ -757,10 +758,15 @@ public class DifferenceReportsPanel extends Composite implements CoreStringUtil.
 
         final Iterator<DifferenceReport> diffs = differenceReports.iterator();
         while (diffs.hasNext()) {
-            final DifferenceReport dr = diffs.next();
-            result.adds += dr.getTotalAdditions();
-            result.deletes += dr.getTotalDeletions();
-            result.diffs += dr.getTotalChanges();
+        	final DifferenceReport dr = diffs.next();
+        	if(dr!=null) {
+        		result.adds += dr.getTotalAdditions();
+        		result.deletes += dr.getTotalDeletions();
+        		result.diffs += dr.getTotalChanges();
+        	} else {
+        		String msg = "DifferenceReportsPanel.getStats encountered null report - skipping its stats";  //$NON-NLS-1$
+                ModelerCore.Util.log(IStatus.WARNING, msg);        		
+        	}
         } // while
 
         return result;
