@@ -15,5 +15,6 @@
 		<modules>
 			<module>org.teiid.7.7.x</module>
 			<module>org.teiid.8.3.x</module>
+			<module>org.teiid.8.4.x</module>
 	</modules>
 </project>

@@ -62,6 +62,7 @@
       <import plugin="org.jbosstools.locus.mockito" version="1.9.5" match="greaterOrEqual"/>
       <import plugin="org.teiid.7.7.x" version="8.1.0" match="greaterOrEqual"/>
       <import plugin="org.teiid.8.3.x" version="8.1.0" match="greaterOrEqual"/>
+      <import plugin="org.teiid.8.4.x" version="8.1.0" match="greaterOrEqual"/>
       <import plugin="org.teiid.designer.transformation"/>
       <import plugin="org.teiid.designer.ui.common"/>
       <import plugin="org.teiid.designer.ui"/>
@@ -326,6 +327,14 @@
 
    <plugin
          id="org.teiid.designer.vdb.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.8.4.x.test"
          download-size="0"
          install-size="0"
          version="0.0.0"
