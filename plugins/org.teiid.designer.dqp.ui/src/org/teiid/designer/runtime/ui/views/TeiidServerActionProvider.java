@@ -418,7 +418,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         viewer.addSelectionChangedListener(this.disconnectAction);
 
         // the edit action is only enabled when one server is selected
-        this.editServerAction = new EditServerAction(shell, false);
+        this.editServerAction = new EditServerAction(shell);
         viewer.addSelectionChangedListener(this.editServerAction);
 
         // the new server action is always enabled

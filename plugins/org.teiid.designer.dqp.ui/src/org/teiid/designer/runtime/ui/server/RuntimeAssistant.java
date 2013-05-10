@@ -159,7 +159,7 @@ public final class RuntimeAssistant {
      * @param shell the shell used to run the new server wizard
      */
     public static void runEditServerAction( Shell shell ) {
-        EditServerAction action = new EditServerAction(shell, false);
+        EditServerAction action = new EditServerAction(shell);
         action.run();
     }
     
