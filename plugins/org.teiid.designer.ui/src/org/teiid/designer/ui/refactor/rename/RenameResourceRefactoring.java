@@ -192,7 +192,11 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
                     try {
                         TextFileChange textFileChange = new TextFileChange(resource.getName(), (IFile) resource);
                         RefactorResourcesUtils.calculateSQLChanges((IFile) resource, pathPair, textFileChange);
-                        addChange(resource, textFileChange);
+                        if (textFileChange.getEdit() != null && textFileChange.getEdit().hasChildren()) {
+                            // Only if the related file is actually being changed do we add the text change
+                            // and calculate the effect on any vdbs containing this related file
+                            addChange(resource, textFileChange);
+                        }
 
                         RefactorResourcesUtils.calculateRelatedVdbResources(resource, status, callback);
                     } catch (Exception ex) {

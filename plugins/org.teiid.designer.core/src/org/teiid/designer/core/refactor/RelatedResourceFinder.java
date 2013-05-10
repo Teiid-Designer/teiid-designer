@@ -141,7 +141,7 @@ public class RelatedResourceFinder {
             case ALL:
                 Set<IFile> files = new HashSet<IFile>();
                 files.addAll(findDependentResources());
-                files.addAll(findDependentResources());
+                files.addAll(findDependencyResources());
                 return files;
         }
         

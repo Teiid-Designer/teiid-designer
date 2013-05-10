@@ -448,7 +448,7 @@ public class RefactorResourcesUtils {
         
         File nativeFile = file.getRawLocation().makeAbsolute().toFile();
         if (nativeFile == null || ! nativeFile.exists())
-            throw new Exception(getString("MoveResourceUtils.fileNotFoundError", file.getFullPath())); //$NON-NLS-1$
+            throw new Exception(getString("RefactorResourceUtils.fileNotFoundError", file.getFullPath())); //$NON-NLS-1$
 
         TextEdit fileChangeRootEdit = setRootEdit(textFileChange);
         BufferedReader reader = null;
@@ -462,13 +462,16 @@ public class RefactorResourcesUtils {
             while ((line = reader.readLine()) != null) {
                 if (line.contains("Sql=")) { //$NON-NLS-1$
                     for (char prefixChar : prefixChars) {
-                        int lineOffset = line.indexOf(prefixChar + sourceName + '.');
-                        if (lineOffset < 0) continue;
+                        String toReplace = prefixChar + sourceName + '.';
 
-                        // +1 on the end taking care of the prefix character
-                        int offset = docOffset + lineOffset + 1;
-                        ReplaceEdit edit = new ReplaceEdit(offset, sourceName.length(), targetName);
-                        fileChangeRootEdit.addChild(edit);
+                        for (int lineOffset = line.indexOf(toReplace); lineOffset >= 0; lineOffset = line.indexOf(toReplace, lineOffset + 1)) {
+                            if (lineOffset < 0) continue;
+
+                            // +1 on the end taking care of the prefix character
+                            int offset = docOffset + lineOffset + 1;
+                            ReplaceEdit edit = new ReplaceEdit(offset, sourceName.length(), targetName);
+                            fileChangeRootEdit.addChild(edit);
+                        }
                     }
                 }
                 
