@@ -512,7 +512,12 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         teiidServer.getEventManager().addListener(execConfigurationListener);
     }
 
-    private void setDefaultServerText(final ITeiidServer defaultServer) {
+    /**
+     * Called by a number of different methods to update the default server name text field.
+     *
+     * @param defaultServer can be null if there are no servers and thus no default server has been set
+     */
+    private void setDefaultServerText(ITeiidServer defaultServer) {
         String defaultName = defaultServer != null ? defaultServer.getDisplayName() : getString("noDefaultServer"); //$NON-NLS-1$
         String linkText =  defaultName;
 
@@ -530,16 +535,23 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                     IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
                     try {
                         window.getActivePage().showView("org.eclipse.wst.server.ui.ServersView"); //$NON-NLS-1$
-                        
+
+                        // Need to fetch the default server again since the parameter in the
+                        // parent method does not remain assigned becoming null
                         ITeiidServer defServer = ModelerCore.getDefaultServer();
                         if (defServer == null) {
                             // No default server so most likely no servers at all so open the new server wizard
                             IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
                             handlerService.executeCommand("org.teiid.designer.dqp.ui.newServerAction", null); //$NON-NLS-1$
                         } else {
-                            // No default server so most likely no servers at all so open the new server wizard
+                            //  defaultServer is a valid server so open the editServer editor
                             IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
-                            handlerService.executeCommand("org.teiid.designer.dqp.ui.editServerAction", null); //$NON-NLS-1$
+
+                            // Load the default server into an event's data in order to
+                            // make it available to the command's handler.
+                            Event event = new Event();
+                            event.data = defServer;
+                            handlerService.executeCommand("org.teiid.designer.dqp.ui.editServerAction", event); //$NON-NLS-1$
                         }
 
                     } catch (Exception ex) {
