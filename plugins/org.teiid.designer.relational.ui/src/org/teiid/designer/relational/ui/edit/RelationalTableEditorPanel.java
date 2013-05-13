@@ -1252,7 +1252,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	    	nativeQueryHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 	    	nativeQueryHelpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 	    	((GridData)nativeQueryHelpText.getLayoutData()).horizontalSpan = 1;
-	    	((GridData)nativeQueryHelpText.getLayoutData()).heightHint = 50;
+	    	((GridData)nativeQueryHelpText.getLayoutData()).heightHint = 80;
 	    	((GridData)nativeQueryHelpText.getLayoutData()).widthHint = 360;
 	    	nativeQueryHelpText.setText(Messages.nativeQueryHelpText);
 		}
