@@ -16,7 +16,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
+import org.teiid.designer.modelgenerator.wsdl.model.ModelGenerationException;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
+import org.teiid.designer.modelgenerator.wsdl.model.impl.ModelImpl;
 import org.teiid.designer.query.proc.wsdl.IWsdlColumnInfo;
 import org.teiid.designer.query.proc.wsdl.IWsdlProcedureInfo;
 import org.teiid.designer.query.sql.ISQLConstants;
@@ -32,6 +34,11 @@ public abstract class ProcedureInfo implements IWsdlProcedureInfo, ISQLConstants
     private StringNameValidator nameValidator;
     
     public SchemaTreeModel treeModel = null;
+    
+    /**
+	 * @since 8.1
+	 */
+    public HashMap<String, String> reverseNSMap;
     
 //	CREATE VIRTUAL PROCEDURE
 //	BEGIN
@@ -75,6 +82,12 @@ public abstract class ProcedureInfo implements IWsdlProcedureInfo, ISQLConstants
 		this.bodyColumnInfoList = new ArrayList<ColumnInfo>();
 		this.headerColumnInfoList = new ArrayList<ColumnInfo>();
 		this.namespaceMap = new HashMap<String, String>();
+		try {
+			this.reverseNSMap = (HashMap<String, String>) ((ModelImpl)generator.getImportManager().getWSDLModel()).getReverseNamespaces();
+		} catch (ModelGenerationException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
 		this.type = type;
 		this.generator = generator;
 		this.nameValidator = new StringNameValidator(true);
@@ -396,4 +409,13 @@ public abstract class ProcedureInfo implements IWsdlProcedureInfo, ISQLConstants
 	abstract String getSqlStringTemplate();
 	
 	abstract String getSqlString(Properties properties);
+
+	/**
+	 * @since 8.2
+	 */
+	@Override
+	public HashMap<String, String> getReverseNSMap() {
+		return reverseNSMap;
+	}
+
 }

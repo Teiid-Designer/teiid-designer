@@ -28,7 +28,7 @@ import org.teiid.designer.modelgenerator.wsdl.model.Part;
 public class SchemaTreeModel {
 
 	Collection<SchemaNode> nodeList = new ArrayList<SchemaNode>();
-	String defaultNamespace = null;
+	String namespace = null;
 	String rootPath = null;
 	public static Map<String, String> namespaceMap = new HashMap<String, String>();
 	public Part[] partArray = null;
@@ -37,12 +37,12 @@ public class SchemaTreeModel {
 		return namespaceMap;
 	}
 
-	public String getDefaultNamespace() {
-		return defaultNamespace;
+	public String getNamespace() {
+		return namespace;
 	}
 
-	public void setDefaultNamespace(String defaultNamespace) {
-		this.defaultNamespace = defaultNamespace;
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
 	}
 
 	public Part[] getPartArray() {
@@ -298,7 +298,7 @@ public class SchemaTreeModel {
 		//  This is default.. no need to alias
 		//	if (nsPrefix.equals(ResponseInfo.DEFAULT_NS)) nsPrefix = ""; //$NON-NLS-1$ //$NON-NLS-2$
 		//  We will always prefix, since we can't count on a service default for a given element
-		return nsPrefix == "" ? nsPrefix : nsPrefix + ":"; //$NON-NLS-1$ //$NON-NLS-2$
+		return nsPrefix.equals("") ? nsPrefix : nsPrefix + ":"; //$NON-NLS-1$ //$NON-NLS-2$
 		
     }
 

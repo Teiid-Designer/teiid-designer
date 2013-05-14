@@ -7,6 +7,7 @@
 */
 package org.teiid.designer.query.proc.wsdl;
 
+import java.util.HashMap;
 import java.util.Properties;
 
 /**
@@ -23,5 +24,5 @@ public interface IWsdlRequestInfo extends IWsdlProcedureInfo {
     boolean isMessageServiceMode();
 
     IWsdlWrapperInfo getWrapperProcedure();
-
+    
 }
