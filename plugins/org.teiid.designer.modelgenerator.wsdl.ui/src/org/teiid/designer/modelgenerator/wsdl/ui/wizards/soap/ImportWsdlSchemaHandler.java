@@ -40,6 +40,7 @@ import org.teiid.designer.modelgenerator.wsdl.model.Model;
 import org.teiid.designer.modelgenerator.wsdl.model.ModelGenerationException;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
 import org.teiid.designer.modelgenerator.wsdl.model.Part;
+import org.teiid.designer.modelgenerator.wsdl.model.impl.ModelImpl;
 import org.teiid.designer.modelgenerator.wsdl.schema.extensions.SOAPSchemaProcessor;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
@@ -137,9 +138,9 @@ public class ImportWsdlSchemaHandler {
 		        String namespace = part.getElementNamespace();
 
 		        if (ProcedureType.REQUEST.equals(type)) {
-		            this.requestSchemaTreeModel.setDefaultNamespace(namespace);
+		            this.requestSchemaTreeModel.setNamespace(namespace);
 		        }else{
-		            this.responseSchemaTreeModel.setDefaultNamespace(namespace);
+		            this.responseSchemaTreeModel.setNamespace(namespace);
 		        }
 
 		        boolean foundElement = false;
@@ -285,8 +286,12 @@ public class ImportWsdlSchemaHandler {
 		SchemaNode node = (SchemaNode)selection.getFirstElement();
 		Object obj = node.getElement();
 		requestInfo.setTreeModel(this.requestSchemaTreeModel);
-		if (this.requestSchemaTreeModel.getDefaultNamespace()!=null){
-			requestInfo.addNamespace(ResponseInfo.DEFAULT_NS, this.requestSchemaTreeModel.getDefaultNamespace());
+		if (this.requestSchemaTreeModel.getNamespace()!=null){
+			try {
+				requestInfo.addNamespace((String)((ModelImpl)importManager.getWSDLModel()).getReverseNamespaces().get(this.requestSchemaTreeModel.getNamespace()), this.requestSchemaTreeModel.getNamespace());
+			} catch (ModelGenerationException ex) {
+				throw new RuntimeException(ex);
+			}
 		}
 		
 		String name = null;
@@ -302,6 +307,11 @@ public class ImportWsdlSchemaHandler {
 			}
 			ns = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
 					.getContent()).getTargetNamespace();
+			try {
+				if (ns!=null)requestInfo.addNamespace((String)((ModelImpl)importManager.getWSDLModel()).getReverseNamespaces().get(ns), ns);
+			} catch (ModelGenerationException ex) {
+				throw new RuntimeException(ex.getMessage());
+			}
 			if (type == ProcedureInfo.TYPE_BODY) {
 				requestInfo.addBodyColumn(
 						requestInfo.getUniqueBodyColumnName(name), false,
@@ -505,8 +515,8 @@ public class ImportWsdlSchemaHandler {
 				responseInfo.addNamespace(ISQLConstants.ENVELOPE_NS_ALIAS,
 						ISQLConstants.ENVELOPE_NS);
 			}
-			//Add the default namespace.
-			responseInfo.addNamespace(ResponseInfo.DEFAULT_NS, this.responseSchemaTreeModel.getDefaultNamespace());
+		//	//Add the default namespace.
+		//	responseInfo.addNamespace(ResponseInfo.DEFAULT_NS, this.responseSchemaTreeModel.getDefaultNamespace());
 			getParentXpath(node, parentXpath, this.responseSchemaTreeModel);
 			 
 			for (SchemaObject schemaObject : elements) {
@@ -591,8 +601,15 @@ public class ImportWsdlSchemaHandler {
 				throw new RuntimeException(e);
 			}
 
-			//Add the default namespace.
-			responseInfo.addNamespace(ResponseInfo.DEFAULT_NS, this.operationsDetailsPage.getProcedureGenerator().getNamespaceURI()); 
+			//Add the namespace.
+			String prefix = null;
+			try {
+				prefix = this.importManager.getWSDLModel().getNamespaces().get(this.operationsDetailsPage.getProcedureGenerator().getNamespaceURI());
+			} catch (ModelGenerationException ex) {
+				throw new RuntimeException(ex);
+			}
+			
+			responseInfo.addNamespace(prefix!=null&&prefix.length()>0?prefix:ResponseInfo.DEFAULT_NS, this.operationsDetailsPage.getProcedureGenerator().getNamespaceURI()); 
 			
 			SchemaProcessor processor = new SOAPSchemaProcessor(null);
 			processor.representTypes(true);
@@ -645,7 +662,7 @@ public class ImportWsdlSchemaHandler {
 			
 			StringBuilder xpath = new StringBuilder();
 			String namespace = null;
-			String prefix = null;
+			prefix = null;
 			StringBuilder parentXpath = new StringBuilder();
 
 			getParentXpath(node, parentXpath, this.responseSchemaTreeModel);

@@ -69,10 +69,10 @@ public class ProcedureGenerator implements IWsdlWrapperInfo, ISQLConstants, Mode
 		super();
 		this.initializing = true;
 		this.operation = operation;
+		this.importManager = importManager;
 		this.requestInfo = new RequestInfo(operation, this);
 		this.responseInfo = new ResponseInfo(operation, this);
 		//this.importManager.setViewModelName(operation.getBinding().getPort().getService().getName() + "View"); //$NON-NLS-1$
-		this.importManager = importManager;
 		this.generateWrapperProcedure = true;
 		this.namespaceURI = operation.getBinding().getPort().getNamespaceURI();
 		this.bindingType = operation.getBinding().getPort().getBindingType();

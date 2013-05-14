@@ -129,6 +129,13 @@ public class ModelImpl implements Model {
 	public Map getNamespaces() {
         return m_namespaces;
     }
+    
+    /**
+     * @return Map
+     */
+    public Map getReverseNamespaces() {
+        return m_reverseNamespaceLookup;
+    }
 
     @Override
 	public void setNamespaces( Map collection ) {

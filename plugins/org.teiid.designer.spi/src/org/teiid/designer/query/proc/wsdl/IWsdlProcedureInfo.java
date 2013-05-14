@@ -7,6 +7,7 @@
 */
 package org.teiid.designer.query.proc.wsdl;
 
+import java.util.HashMap;
 import java.util.Map;
 import org.teiid.designer.query.proc.wsdl.model.IOperation;
 
@@ -26,6 +27,8 @@ public interface IWsdlProcedureInfo extends IWsdlConstants {
     IWsdlColumnInfo[] getHeaderColumnInfoList();
 
     String getProcedureName();
+    
+    HashMap<String, String> getReverseNSMap();
 
     /**
      * 
