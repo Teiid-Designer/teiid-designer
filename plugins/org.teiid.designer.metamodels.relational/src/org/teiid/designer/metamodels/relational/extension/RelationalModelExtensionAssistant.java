@@ -128,7 +128,7 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
 
             // must be a procedure in a physical model to have these properties
             if (PropertyName.same(PropertyName.NON_PREPARED, propId)) {
-                if ((modelObject instanceof Procedure) && ModelUtil.isPhysical(modelObject)) {
+                if ((modelObject instanceof Procedure) && isPhysical) {
                     return propDefn;
                 }
 
@@ -138,51 +138,29 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
             
             // 'UDF' properties are supported in physical or virtual models now, when function=true
             if (  PropertyName.same(PropertyName.JAVA_CLASS, propId) || PropertyName.same(PropertyName.JAVA_METHOD, propId) 
-               || PropertyName.same(PropertyName.FUNCTION_CATEGORY, propId) || PropertyName.same(PropertyName.UDF_JAR_PATH, propId)) {
+               || PropertyName.same(PropertyName.FUNCTION_CATEGORY, propId) || PropertyName.same(PropertyName.UDF_JAR_PATH, propId)
+               || PropertyName.same(PropertyName.VARARGS, propId) || PropertyName.same(PropertyName.NULL_ON_NULL, propId)
+               || PropertyName.same(PropertyName.DETERMINISTIC, propId) || PropertyName.same(PropertyName.AGGREGATE, propId)) {
                 if ((modelObject instanceof Procedure) && isFunction) {
                     return propDefn;
                 }
                 
                 // make sure model object does not have these extension properties for when function is false
+                removeProperty(modelObject, PropertyName.DETERMINISTIC.toString());
                 removeProperty(modelObject, PropertyName.JAVA_CLASS.toString());
                 removeProperty(modelObject, PropertyName.JAVA_METHOD.toString());
                 removeProperty(modelObject, PropertyName.FUNCTION_CATEGORY.toString());
                 removeProperty(modelObject, PropertyName.UDF_JAR_PATH.toString());
+                removeProperty(modelObject, PropertyName.VARARGS.toString());
+                removeProperty(modelObject, PropertyName.NULL_ON_NULL.toString());
+                removeProperty(modelObject, PropertyName.AGGREGATE.toString());
+                removeProperty(modelObject, PropertyName.ANALYTIC.toString());
+                removeProperty(modelObject, PropertyName.ALLOWS_ORDER_BY.toString());
+                removeProperty(modelObject, PropertyName.USES_DISTINCT_ROWS.toString());
+                removeProperty(modelObject, PropertyName.DECOMPOSABLE.toString());
+                removeProperty(modelObject, PropertyName.ALLOWS_DISTINCT.toString());
 
                 // EObject should not have these property definitions
-                return null;
-            }
-
-            // must be a procedure in a physical model and have function property set to true to have these properties
-            if (PropertyName.same(PropertyName.DETERMINISTIC, propId)) {
-                if ((modelObject instanceof Procedure) && isFunction) {
-                    return propDefn;
-                }
-
-                // make sure model object does not have this extension property for when function is false
-                removeProperty(modelObject, PropertyName.DETERMINISTIC.toString());
-
-                // EObject should not have these property definitions
-                return null;
-            }
-
-            // must have function set to true to have aggregate property
-            if (PropertyName.same(PropertyName.AGGREGATE, propId)) {
-                if ((modelObject instanceof Procedure) ) {
-                    if (isFunction) {
-                        return propDefn;
-                    }
-
-                    // make sure model object does not have these extension properties for when function is false
-                    removeProperty(modelObject, PropertyName.AGGREGATE.toString());
-                    removeProperty(modelObject, PropertyName.ANALYTIC.toString());
-                    removeProperty(modelObject, PropertyName.ALLOWS_ORDER_BY.toString());
-                    removeProperty(modelObject, PropertyName.USES_DISTINCT_ROWS.toString());
-                    removeProperty(modelObject, PropertyName.DECOMPOSABLE.toString());
-                    removeProperty(modelObject, PropertyName.ALLOWS_DISTINCT.toString());
-                }
-
-                // EObject should not have the aggregate property definition
                 return null;
             }
 
@@ -210,18 +188,6 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
                 return null;
             }
             
-            if( PropertyName.same(PropertyName.VARARGS, propId)
-            	|| PropertyName.same(PropertyName.NULL_ON_NULL, propId)) {
-                if ((modelObject instanceof Procedure) && ModelUtil.isPhysical(modelObject)) {
-                    if (isFunction) {
-                        return propDefn;
-                    }
-                    removeProperty(modelObject, PropertyName.VARARGS.toString());
-                    removeProperty(modelObject, PropertyName.NULL_ON_NULL.toString());
-                }
-                return null;
-        	}
-
             return propDefn;
         }
 
