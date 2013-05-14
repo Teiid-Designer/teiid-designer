@@ -814,7 +814,7 @@ public class TransformationValidator implements QueryValidator {
     	
     	List<IStatus> statusList = new ArrayList<IStatus>(items.size());
     	for( IValidatorFailure item : items ) {
-    		IStatus status = new Status(item.getStatus().getSeverity(), TransformationPlugin.PLUGIN_ID, errorCode, item.toString(), null);
+    		IStatus status = new Status(item.getStatus().getSeverity(), TransformationPlugin.PLUGIN_ID, errorCode, item.getStatus().getMessage(), null);
     		statusList.add(status);
     	}
     	
