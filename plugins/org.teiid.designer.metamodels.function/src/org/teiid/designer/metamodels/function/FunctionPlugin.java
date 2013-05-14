@@ -20,6 +20,7 @@ import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
+import org.eclipse.emf.ecore.EObject;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
@@ -199,5 +200,29 @@ public class FunctionPlugin extends Plugin {
                 }
             }
         }
+    }
+    
+    /**
+     * 
+     * @param modelObject the emf model object
+     * @param propertyID the extension property ID
+     * @return the string value of the property. may be null
+     */
+    public static String getExtensionProperty(EObject modelObject, String propertyID) {
+    	String value = null;
+    	
+        if (modelObject != null) {
+            final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+            final String prefix = FunctionModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
+            final FunctionModelExtensionAssistant assistant = (FunctionModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
+
+            try {
+            	value = assistant.getPropertyValue(modelObject, propertyID);
+            } catch (Exception e) {
+                Util.log(e);
+            }
+        }
+        
+        return value;
     }
 }

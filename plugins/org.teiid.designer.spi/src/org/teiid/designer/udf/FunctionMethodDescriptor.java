@@ -24,6 +24,7 @@ public class FunctionMethodDescriptor {
     private final String schema;
     private String pushDownLiteral;
     private boolean deterministic;
+    private boolean varArgs;
 
     /**
      * @param metadataID 
@@ -140,5 +141,19 @@ public class FunctionMethodDescriptor {
      */
     public void setDeterministic(boolean deterministic) {
         this.deterministic = deterministic;
+    }
+    
+    /**
+     * @return the varArgs
+     */
+    public boolean isVariableArgs() {
+        return this.varArgs;
+    }
+    
+    /**
+     * @param varArgs
+     */
+    public void setVariableArgs(boolean varArgs) {
+        this.varArgs = varArgs;
     }
 }
