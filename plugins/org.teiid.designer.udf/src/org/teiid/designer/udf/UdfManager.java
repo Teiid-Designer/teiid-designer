@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -39,11 +40,13 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.core.workspace.ResourceChangeUtilities;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.function.FunctionPlugin;
 import org.teiid.designer.metamodels.function.ScalarFunction;
 import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
+import org.teiid.designer.metamodels.relational.RelationalPlugin;
 import org.teiid.designer.metamodels.relational.util.PushdownFunctionData;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.runtime.spi.ITeiidServer;
@@ -430,6 +433,13 @@ public final class UdfManager implements IResourceChangeListener {
         	    
         	    fMethodDescriptor.setPushDown(function.getPushDown().getLiteral());
         	    fMethodDescriptor.setDeterministic(function.isDeterministic());
+        	    
+        	    boolean varArgs = false;
+        	    String propValue = FunctionPlugin.getExtensionProperty(function, "function:varargs"); //$NON-NLS-1$
+        	    if( propValue != null && propValue.length() > 0 ) {
+        	    	varArgs = Boolean.parseBoolean(propValue);
+        	    }
+        	    fMethodDescriptor.setVariableArgs(varArgs);
         	   
         	    functionMethodDescriptors.add(fMethodDescriptor);
         	}
@@ -515,6 +525,13 @@ public final class UdfManager implements IResourceChangeListener {
     			fMethodDescriptor.setPushDown(Boolean.toString(true));
     			fMethodDescriptor.setDeterministic(wrappedProcedure.isDeterministic());
     			
+        	    boolean varArgs = false;
+        	    String propValue = RelationalPlugin.getExtensionProperty(procedure, "relational:varargs"); //$NON-NLS-1$
+        	    if( propValue != null && propValue.length() > 0 ) {
+        	    	varArgs = Boolean.parseBoolean(propValue);
+        	    }
+        	    fMethodDescriptor.setVariableArgs(varArgs);
+    			
     			functionMethodDescriptors.add(fMethodDescriptor);
     		}
         }
@@ -589,6 +606,7 @@ public final class UdfManager implements IResourceChangeListener {
     	
     	Collection<ScalarFunction> functions;
 
+		@SuppressWarnings("unused")
 		@Override
 		public boolean visit(EObject object) throws ModelerCoreException {
 			// Tables are contained by Catalogs, Schemas and Resources
@@ -603,6 +621,7 @@ public final class UdfManager implements IResourceChangeListener {
 	        return false;
 		}
 
+		@SuppressWarnings("unused")
 		@Override
 		public boolean visit(Resource resource) throws ModelerCoreException {
 			return true;
