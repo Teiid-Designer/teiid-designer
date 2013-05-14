@@ -81,8 +81,10 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.eclipse.ui.actions.OpenFileAction;
 import org.eclipse.ui.actions.RefreshAction;
+import org.eclipse.ui.actions.SelectionProviderAction;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -941,6 +943,70 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     }
 
     /**
+     * Overrides the action with the given action id in the context menu with the given action.
+     *
+     * The only way appears to be removing the original action and adding the new action.
+     *
+     * @param theMenu
+     * @param ActionId existing action id
+     * @param newAction new action to add
+     * @throws CoreException
+     */
+    private void overrideAction(IMenuManager theMenu, final String ActionId, IAction newAction) throws CoreException {
+        if (theMenu.find(ActionId) != null)
+            return;
+
+        theMenu.insertAfter(ActionId, newAction);
+        theMenu.remove(ActionId);
+
+        if (newAction instanceof BaseSelectionListenerAction) {
+            ((BaseSelectionListenerAction) newAction).selectionChanged((IStructuredSelection)getTreeViewer().getSelection());
+        } else if (newAction instanceof SelectionProviderAction) {
+            ((SelectionProviderAction) newAction).selectionChanged((IStructuredSelection)getTreeViewer().getSelection());
+        }
+    }
+
+    /**
+     * Overrides the action with the given action id in the context menu with an instance of
+     * the given action class.
+     *
+     * @see #overrideAction(IMenuManager, String, IAction)
+     *
+     * @param theMenu
+     * @param ActionId
+     * @param newActionClass
+     * @throws CoreException
+     */
+    private void overrideAction(IMenuManager theMenu, final String ActionId, Class<? extends IAction> newActionClass) throws CoreException {
+        IAction action = getActionService().getAction(newActionClass);
+        overrideAction(theMenu, ActionId, action);
+    }
+
+    /**
+     * Create the refactor sub-menu
+     *
+     * @return
+     */
+    private IMenuManager createRefactorMenu() {
+        IMenuManager refactorMenu = new MenuManager(UiConstants.Util.getString(ModelerActionService.PREFIX + "RefactorMenu.title"), //$NON-NLS-1$
+                                                                                         ModelerActionBarIdManager.getRefactorMenuId());
+        refactorMenu.add(new GroupMarker("reorgStart")); //$NON-NLS-1$
+        refactorMenu.add(renameAction);
+        refactorMenu.add(moveAction);
+        refactorMenu.add(new GroupMarker("reorgEnd")); //$NON-NLS-1$
+
+        IStructuredSelection selection = new StructuredSelection();
+        if (getViewer().getSelection() instanceof IStructuredSelection) {
+            selection = (IStructuredSelection) getViewer().getSelection();
+        }
+
+        renameAction.selectionChanged(selection);
+        moveAction.selectionChanged(selection);
+
+        return refactorMenu;
+    }
+
+    /**
      * @see org.eclipse.ui.views.navigator.ResourceNavigator#fillContextMenu(org.eclipse.jface.action.IMenuManager)
      */
     @Override
@@ -984,12 +1050,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                 // need to override the delete in the context menu. the only way i could figure out was by
                 // removing and adding. our action makes sure to close the model and close it's editor
                 // (if necessary) prior to deleting.
-
-                if (theMenu.find(ECLIPSE_DELETE_ID) != null) {
-                    IAction deleteAction = getActionService().getAction(DeleteAction.class);
-                    theMenu.insertAfter(ECLIPSE_DELETE_ID, deleteAction);
-                    theMenu.remove(ECLIPSE_DELETE_ID);
-                }
+                overrideAction(theMenu, ECLIPSE_DELETE_ID, DeleteAction.class);
 
                 // Add PasteSpecialAction after PasteAction
                 // (if single selection and model resource)
@@ -1008,28 +1069,25 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                 // need to override the paste in the context menu. the only way i could figure out was by
                 // removing and adding. our action makes sure to close the model and close it's editor
                 // (if necessary) prior to pasting.
+                overrideAction(theMenu, ECLIPSE_PASTE_ID, PasteInResourceAction.class);
 
-                if (theMenu.find(ECLIPSE_PASTE_ID) != null) {
-                    IAction pasteAction = getActionService().getAction(PasteInResourceAction.class);
-                    theMenu.insertAfter(ECLIPSE_PASTE_ID, pasteAction);
-                    theMenu.remove(ECLIPSE_PASTE_ID);
-                }
+                /*
+                 * Override the rename  and move actions in the context menu
+                 * by adding a refactor sub-menu
+                 */
+                // Create the refactor sub-menu
+                IMenuManager refactorMenu = createRefactorMenu();
 
-                // override the rename in the context menu same as delete.
-
+                // Insert the refactor sub-menu
                 if (theMenu.find(ECLIPSE_RENAME_ID) != null) {
-                    theMenu.insertAfter(ECLIPSE_RENAME_ID, renameAction);
-                    theMenu.remove(ECLIPSE_RENAME_ID);
-                    renameAction.selectionChanged((IStructuredSelection)getTreeViewer().getSelection());
+                  theMenu.insertAfter(ECLIPSE_RENAME_ID, refactorMenu);
+                } else {
+                  theMenu.insertBefore(ContextMenu.ADDITIONS, refactorMenu);
                 }
 
-                // override the move in the context menu same as delete.
-
-                if (theMenu.find(ECLIPSE_MOVE_ID) != null) {
-                    theMenu.insertAfter(ECLIPSE_MOVE_ID, moveAction);
-                    theMenu.remove(ECLIPSE_MOVE_ID);
-                    moveAction.selectionChanged((IStructuredSelection)getTreeViewer().getSelection());
-                }
+                // Remove the original refactor actions
+                theMenu.remove(ECLIPSE_RENAME_ID);
+                theMenu.remove(ECLIPSE_MOVE_ID);
 
                 // override the properties dialog action in the context menu.
                 // unfortunately the default action does not use the ID setup in IWorkbenchConstants:-(
@@ -1061,11 +1119,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                     }
                 }
 
-                if (theMenu.find(ActionFactory.PROPERTIES.getId()) != null) {
-                    theMenu.insertAfter(ActionFactory.PROPERTIES.getId(), propertyAction);
-                    theMenu.remove(ActionFactory.PROPERTIES.getId());
-                    propertyAction.selectionChanged((IStructuredSelection)getTreeViewer().getSelection());
-                }
+                overrideAction(theMenu, ActionFactory.PROPERTIES.getId(), propertyAction);
 
             } catch (CoreException theException) {
                 Util.log(theException);
@@ -1124,31 +1178,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             if (modelingActionMenu != null && modelingActionMenu.getItems().length > 0) {
                 theMenu.insertBefore(ContextMenu.INSERT_END, modelingActionMenu);
             }
-        }
+        } // End of resource additions
 
-        MenuManager refactorMenu = getActionService().getRefactorMenu(selection, getSite());
-        // insert menu at end of the cut/copy/paste group
-        if (refactorMenu != null) {
-            // find the location. Default to the end of the whole
-            // context menu.
-            if (theMenu.find(ECLIPSE_RENAME_ID) != null) {
-                theMenu.insertAfter(ECLIPSE_RENAME_ID, refactorMenu);
-
-            } else {
-                theMenu.insertBefore(ContextMenu.ADDITIONS, refactorMenu);
-            }
-        }
-
-        // remove the 'other' rename and move
-        if (theMenu.find(ECLIPSE_RENAME_ID) != null) {
-            theMenu.remove(ECLIPSE_RENAME_ID);
-        }
-
-        // override the move in the context menu same as delete.
-        if (theMenu.find(ECLIPSE_MOVE_ID) != null) {
-            theMenu.remove(ECLIPSE_MOVE_ID);
-        }
-        
         if (SelectionUtilities.isSingleSelection(selection)) {
             Object obj = SelectionUtilities.getSelectedObject(selection);
 
@@ -1168,6 +1199,10 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             }
         }
 
+        // Updates the menu's widget to reflect what has just been added
+        // This is necessary since the refactor menu appears to show 2 'rename' entries
+        // when clicking on a folder after the display of the menu when clicking on an eObject.
+        theMenu.updateAll(true);
     }
 
     /**

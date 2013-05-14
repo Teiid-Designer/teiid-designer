@@ -38,11 +38,8 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.designer.core.ModelerCore;
@@ -65,8 +62,6 @@ import org.teiid.designer.ui.editors.IEditorActionExporter;
 import org.teiid.designer.ui.editors.ModelObjectEditorPage;
 import org.teiid.designer.ui.editors.MultiPageModelEditor;
 import org.teiid.designer.ui.product.IModelerProductContexts;
-import org.teiid.designer.ui.refactor.move.MoveRefactorAction;
-import org.teiid.designer.ui.refactor.rename.RenameRefactorAction;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
@@ -82,7 +77,7 @@ public final class ModelerActionService extends AbstractActionService
     IModelerProductContexts {
 
     /** The logging prefix. */
-    private static final String PREFIX = "ModelerActionService."; //$NON-NLS-1$
+    public static final String PREFIX = "ModelerActionService."; //$NON-NLS-1$
     
     /**
      * 
@@ -858,66 +853,6 @@ public final class ModelerActionService extends AbstractActionService
         if (menu.isEmpty()) {
             // just add a disabled "none allowed" item so menu is not empty
             menu.add(new NewChildAction());
-        }
-
-        return menu;
-    }
-
-    /**
-     * Gets an refactor menu appropriate for the given input parameter.
-     * 
-     * @param theSelection the selection whose insert child menu is being requested
-     * @param partSite the part's site where the menu is to be added
-     * @return the insert child menu
-     */
-    public MenuManager getRefactorMenu( ISelection theSelection, IWorkbenchPartSite partSite ) {
-        //        System.out.println("[ModelerActionService.getRefactorMenu] top");  //$NON-NLS-1$
-
-        MenuManager menu = new MenuManager(utils.getString(PREFIX + "RefactorMenu.title"), //$NON-NLS-1$
-                                           ModelerActionBarIdManager.getRefactorMenuId());
-
-        if (failedRefactorPreconditions(theSelection)) {
-            // will result in returning a disabled 'Refactor' submenu
-
-        } else {
-            // object must be an IResource since it passed preconditions
-            IWorkbenchWindow window = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
-
-            String sRenameLabel = utils.getString("org.teiid.designer.ui.refactor.actions.RenameRefactorAction.text"); //$NON-NLS-1$
-            String sRenameTooltip = utils.getString("org.teiid.designer.ui.refactor.actions.RenameRefactorAction.tooltip"); //$NON-NLS-1$
-
-            String uriLabel = utils.getString("org.teiid.designer.ui.refactor.actions.NamespaceUriRefactorAction.text"); //$NON-NLS-1$
-            String uriToolTip = utils.getString("org.teiid.designer.ui.refactor.actions.NamespaceUriRefactorAction.toolTip"); //$NON-NLS-1$
-
-            String sMoveLabel = utils.getString("org.teiid.designer.ui.refactor.actions.MoveRefactorAction.text"); //$NON-NLS-1$
-            String sMoveTooltip = utils.getString("org.teiid.designer.ui.refactor.actions.MoveRefactorAction.tooltip"); //$NON-NLS-1$
-
-            try {
-                menu.add(new GroupMarker("reorgStart")); //$NON-NLS-1$
-
-                // rename
-                IActionDelegate delRename = new RenameRefactorAction();
-                IAction actRename = new DelegatableAction(delRename, window);
-                actRename.setText(sRenameLabel);
-                actRename.setToolTipText(sRenameTooltip);
-                delRename.selectionChanged(actRename, theSelection);
-                menu.add(actRename);
-
-                // move
-                IActionDelegate delMove = new MoveRefactorAction();
-                IAction actMove = new DelegatableAction(delMove, window);
-                actMove.setText(sMoveLabel);
-                actMove.setToolTipText(sMoveTooltip);
-                delMove.selectionChanged(actMove, theSelection);
-                actMove.setId(MoveRefactorAction.class.getName());
-                menu.add(actMove);
-
-                menu.add(new GroupMarker("reorgEnd")); //$NON-NLS-1$
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
         }
 
         return menu;
