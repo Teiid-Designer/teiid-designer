@@ -202,7 +202,9 @@ public class DotProjectUtils {
      */
     public static boolean isDotProject( IResource resource,
                                         boolean onlyModelerProject ) throws Exception {
-        if (resource.getName().equals(DOT_PROJECT) && resource.getType() == IResource.FILE) {
+        if (resource.getName().equals(DOT_PROJECT) 
+        		&& resource.getType() == IResource.FILE 
+        		&& resource.getLocation() != null) {
             if (onlyModelerProject) {
                 if (resource.isAccessible()) {
                     if (resource.getProject().isOpen()) {
