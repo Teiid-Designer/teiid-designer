@@ -12,12 +12,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
@@ -2619,18 +2619,15 @@ public class TransformationSqlHelper implements ISQLConstants {
     public static boolean containsGroupSymbol( Collection symbols,
                                                IGroupSymbol gSymbol ) {
         boolean result = false;
-        // Get the supplied IGroupSymbol name and definition
-//        String gSymbName = gSymbol.getCanonicalName();
-     // TODO: This may not be right
+        // Name and Definition of the Symbol being tested
         String gSymbName = gSymbol.getName();
         String gSymbDefn = gSymbol.getDefinition();
+        
         // Check the list for a matching symbol
         Iterator iter = symbols.iterator();
         while (iter.hasNext()) {
             IGroupSymbol listSymbol = (IGroupSymbol)iter.next();
-//            String lSymbName = listSymbol.getCanonicalName();
-            // TODO: This may not be right
-            String lSymbName = gSymbol.getName();
+            String lSymbName = listSymbol.getName();
             String lSymbDefn = listSymbol.getDefinition();
             // If the symbol definitions are both null, neither are aliased - just compare the canonical names
             if (lSymbDefn == null && gSymbDefn == null) {
