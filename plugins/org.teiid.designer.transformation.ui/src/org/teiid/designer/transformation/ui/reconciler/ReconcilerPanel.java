@@ -37,11 +37,16 @@ import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.query.sql.symbol.IAliasSymbol;
 import org.teiid.designer.query.sql.symbol.IConstant;
 import org.teiid.designer.query.sql.symbol.IExpressionSymbol;
+import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.builder.ExpressionBuilder;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlDisplayPanel;
+import org.teiid.designer.udf.IFunctionDescriptor;
+import org.teiid.designer.udf.IFunctionForm;
+import org.teiid.designer.udf.IFunctionLibrary;
+import org.teiid.designer.udf.UdfManager;
 import org.teiid.designer.ui.common.graphics.GlobalUiFontManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
@@ -671,6 +676,10 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
             // -------------------------------------------------------------------------
             if (status == Window.OK) {
                 ILanguageObject langObj = expressionBuilder.getLanguageObject();
+                // Function needs to have descriptor and types set
+                if(langObj instanceof IFunction) {
+                	syncFunction((IFunction)langObj);
+                }
 
                 // Do the unbind
                 List selectedBindings = bindingsPanel.getSelectedBindings();
@@ -693,6 +702,32 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
                     setButtonStates();
                 }
             }
+        }
+    }
+    
+    /*
+     * The supplied function is syncd with the corresponding FunctionLibrary function.
+     * The FunctionDescriptor is set, as well as the return type - if possible.
+     * @param function the supplied Function
+     */
+    private void syncFunction(IFunction function) {
+        IFunctionLibrary<IFunctionForm, IFunctionDescriptor> functionLibrary = UdfManager.getInstance().getFunctionLibrary();
+
+        // Get the function name and arg types
+    	String functionName = function.getName();
+        IExpression[] args = function.getArgs();
+        Class[] types = new Class[args.length];
+        for(int i=0; i<args.length; i++) {
+        	types[i] = args[i].getType();
+        }
+        
+        // Lookup the corresponding FunctionDescriptor from the function library 
+        IFunctionDescriptor fd = functionLibrary.findFunction(functionName, types);
+        
+        // update the Function language object with the function descriptor and return type
+        if(fd!=null) {
+        	function.setFunctionDescriptor(fd);
+        	function.setType(fd.getReturnType());
         }
     }
 

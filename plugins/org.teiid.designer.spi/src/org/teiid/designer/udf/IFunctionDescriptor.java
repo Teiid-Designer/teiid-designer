@@ -27,4 +27,10 @@ public interface IFunctionDescriptor {
      */
     Object getMetadataID();
 
+	/**
+     * Get return type
+     * 
+     * @return type
+     */
+    Class<?> getReturnType();
 }
