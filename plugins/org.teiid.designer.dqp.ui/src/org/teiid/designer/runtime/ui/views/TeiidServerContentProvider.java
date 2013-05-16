@@ -304,22 +304,6 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
     public void setShowDataSources(boolean show) {
         this.showDataSources = show;
     }
-      
-    /**
-     * @return the showTranslators
-     */
-    public boolean isShowTranslators() {
-        return this.showTranslators;
-    }
-    
-    /**
-     * Set show translators flag
-     * 
-     * @param show
-     */
-    public void setShowTranslators(boolean show) {
-        this.showTranslators = show;
-    }
     
     /**
      * @return the showVDBs

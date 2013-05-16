@@ -143,18 +143,11 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
 
             // hide translators related variables from other local variables
             TRANSLATORS: {
-                Collection<ITeiidTranslator> translators;
-
-                if (provider.isShowTranslators()) {
-                    translators = teiidServer.getTranslators();
-
-                    if (!translators.isEmpty()) {
-                        children.add(new TranslatorsFolder(this, translators));
-                    }
-                } else {
-                    translators = Collections.emptyList();
+                Collection<ITeiidTranslator> translators = teiidServer.getTranslators();
+                if (!translators.isEmpty()) {
+                    children.add(new TranslatorsFolder(this, translators));
                 }
-                
+
                 break TRANSLATORS;
             }
             clearError();

@@ -40,7 +40,6 @@ import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
-import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
@@ -64,26 +63,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
      * Prefix for language NLS properties
      */
     private static final String PREFIX = I18nUtil.getPropertyPrefix(TeiidServerActionProvider.class);
-    
-    /**
-     * A <code>ViewerFilter</code> that hides the translators.
-     */
-    private static final ViewerFilter TRANSLATORS_FILTER = new ViewerFilter() {
-        /**
-         * {@inheritDoc}
-         *
-         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-         */
-        @Override
-        public boolean select(Viewer viewer,
-                              Object parentElement,
-                              Object element) {
-            ITeiidTranslator teiidTranslator = RuntimeAssistant.adapt(element, ITeiidTranslator.class);
-            if (teiidTranslator != null) return false;
-
-            return true;
-        }
-    };
 
     /**
      * A <code>ViewerFilter</code> that hides Preview Data Sources.
@@ -131,7 +110,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     private static final String MENU_MEMENTO = "menu-settings"; //$NON-NLS-1$
     private static final String SHOW_PREVIEW_VDBS = "show-preview-vdbs"; //$NON-NLS-1$
     private static final String SHOW_PREVIEW_DATA_SOURCES = "show-preview-data-sources"; //$NON-NLS-1$
-    private static final String SHOW_TRANSLATORS = "show-translators"; //$NON-NLS-1$
     
     private ICommonActionExtensionSite actionSite;
     
@@ -179,8 +157,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
 
     private IAction showPreviewDataSourcesAction;
     
-    private IAction showTranslatorsAction;
-    
     private IAction enablePreviewAction;
     
     private IMenuListener enablePreviewActionListener = new IMenuListener() {
@@ -202,15 +178,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
      * <code>true</code> if the viewer should show preview data sources
      */
     private boolean showPreviewDataSources;
-    
-    /**
-     * <code>true</code> if the viewer should show translators
-     */
-    private boolean showTranslators;
-    
-    
-    
-    
+
     /**
      * Create instance
      */
@@ -280,10 +248,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         if (!this.showPreviewVdbs) {
             filters.add(PREVIEW_VDB_FILTER);
         }
-        
-        if (!this.showTranslators) {
-            filters.add(TRANSLATORS_FILTER);
-        }
 
         // set new content filters
         this.viewer.setFilters(filters.toArray(new ViewerFilter[filters.size()]));
@@ -304,15 +268,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         this.showPreviewDataSources = !this.showPreviewDataSources;
         updateViewerFilters();
     }
-    
-    /**
-     * Handler for when the show translator menu action is selected
-     */
-    private void toggleShowTranslators() {
-        this.showTranslators = !this.showTranslators;
-        updateViewerFilters();
-    }
-    
+
     /*
      *  Initialize view actions, set icons and action text.
      */
@@ -483,16 +439,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 }
             };
         }
-
-        // add the show translators action
-        if (showTranslatorsAction == null) {
-            showTranslatorsAction = new Action(getString("showTranslatorsMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
-                @Override
-                public void run() {
-                    toggleShowTranslators();
-                }
-            };
-        }
         
         // add the show preview data sources action
         if (showPreviewDataSourcesAction == null) {
@@ -506,7 +452,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         }
 
         showPreviewVdbsAction.setChecked(this.showPreviewVdbs);
-        showTranslatorsAction.setChecked(this.showTranslators);
         showPreviewDataSourcesAction.setChecked(this.showPreviewDataSources);
 
         if (enablePreviewAction == null) {
@@ -527,7 +472,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         menuMgr.addMenuListener(enablePreviewActionListener);
 
         menuMgr.add(showPreviewVdbsAction);
-        menuMgr.add(showTranslatorsAction);
         menuMgr.add(showPreviewDataSourcesAction);
         menuMgr.add(enablePreviewAction);
     }
@@ -639,7 +583,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         IMemento menuMemento = memento.createChild(MENU_MEMENTO);
         menuMemento.putBoolean(SHOW_PREVIEW_DATA_SOURCES, this.showPreviewDataSourcesAction.isChecked());
         menuMemento.putBoolean(SHOW_PREVIEW_VDBS, this.showPreviewVdbsAction.isChecked());
-        menuMemento.putBoolean(SHOW_TRANSLATORS, this.showTranslatorsAction.isChecked());
         super.saveState(memento);
     }
 
@@ -652,11 +595,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             if (menuMemento != null) {
                 this.showPreviewDataSources = menuMemento.getBoolean(SHOW_PREVIEW_DATA_SOURCES);
                 this.showPreviewVdbs = menuMemento.getBoolean(SHOW_PREVIEW_VDBS);
-                this.showTranslators = menuMemento.getBoolean(SHOW_TRANSLATORS);
-                
-                if (viewer.getContentProvider() instanceof TeiidServerContentProvider) {
-                    ((TeiidServerContentProvider) viewer.getContentProvider()).setShowTranslators(this.showTranslators);
-                }
             }
         }
     }
