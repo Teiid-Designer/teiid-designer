@@ -19,8 +19,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.teiid.designer.ui.common.util.KeyInValueHashMap;
 import org.teiid.designer.ui.common.util.KeyInValueHashMap.KeyFromValueAdapter;
+import org.teiid.designer.ui.refactor.RefactorResourcesUtils.AbstractResourceCallback;
 import org.teiid.designer.vdb.refactor.VdbResourceChange;
 
 /**
@@ -43,7 +45,17 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
             return value.getVdb();
         }
     }
-    
+
+    /**
+     * Callback implementation for adding vdb resource changes
+     */
+    public class VdbResourceCallback extends AbstractResourceCallback {
+        @Override
+        public void indexVdb(IResource resource, IFile vdbFile, RefactoringStatus status) {
+            addChange(vdbFile, new VdbResourceChange(vdbFile));
+        }
+    }
+
     /**
      * Create new instance
      *
@@ -114,6 +126,28 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
         }
 
         collection.add(change);
+    }
+
+    /**
+     * Add a text change to the refactoring for the given file.
+     *
+     * @param pathpairs the pairs of paths being modified as a result of the move
+     * @param file resource being analysed
+     *
+     * @return true if the text change was added, false otherwise.
+     *
+     * @throws Exception
+     */
+    protected boolean addTextChange(IFile file, TextFileChange textFileChange) {
+        if (textFileChange == null)
+            return false;
+
+        if (textFileChange.getEdit() == null || !textFileChange.getEdit().hasChildren())
+            return false;
+
+        // Only if the file is actually being changed do we add the text change
+        addChange(file, textFileChange);
+        return true;
     }
 
     protected Collection<Change> getChanges() {

@@ -7,12 +7,14 @@
 */
 package org.teiid.designer.ui.refactor.move;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -26,19 +28,19 @@ import org.eclipse.ltk.core.refactoring.resource.MoveResourceChange;
 import org.teiid.designer.core.refactor.IRefactorModelHandler.RefactorType;
 import org.teiid.designer.core.refactor.PathPair;
 import org.teiid.designer.core.refactor.RelatedResourceFinder.Relationship;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.refactor.AbstractResourcesRefactoring;
 import org.teiid.designer.ui.refactor.RefactorResourcesUtils;
 import org.teiid.designer.ui.refactor.RefactorResourcesUtils.AbstractResourceCallback;
 import org.teiid.designer.ui.refactor.RefactorResourcesUtils.IResourceCallback;
-import org.teiid.designer.vdb.refactor.VdbResourceChange;
 
 /**
  *
  */
 public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
 
-    private class RelatedResourceCallback extends AbstractResourceCallback {
+    private class RelatedResourceCallback extends VdbResourceCallback {
 
         private final Set<PathPair> pathPairs;
 
@@ -58,20 +60,20 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
         public void indexFile(IResource resource, IFile relatedFile, RefactoringStatus status) throws Exception {
             RefactorResourcesUtils.unloadModelResource(relatedFile);
 
-            TextFileChange textFileChange = new TextFileChange(relatedFile.getName(), relatedFile);
-            RefactorResourcesUtils.calculatePathChanges(relatedFile, pathPairs, textFileChange);
+            IPath relatedFilePath = relatedFile.getRawLocation().makeAbsolute();
+            IPath relatedParentPath = relatedFilePath.removeLastSegments(1);
 
-            if (textFileChange.getEdit().hasChildren()) {
-                // Only if the related file is actually being changed do we add the text change
-                // and calculate the effect on any vdbs containing this related file
-                addChange(relatedFile, textFileChange);
+            // Convert the path pair to a pair of relative paths
+            Set<PathPair> relativePathPairs = new HashSet<PathPair>();
+            for (PathPair absPathPair : pathPairs) {
+                relativePathPairs.add(RefactorResourcesUtils.getRelativePath(relatedParentPath.toOSString(), absPathPair));
+            }
+
+            TextFileChange textFileChange = RefactorResourcesUtils.calculateTextChanges(relatedFile, relativePathPairs);
+            if (addTextChange(relatedFile, textFileChange)) {
+                // Calculate the effect on any vdbs containing this modified related file
                 RefactorResourcesUtils.calculateRelatedVdbResources(relatedFile, status, this);
             }
-        }
-
-        @Override
-        public void indexVdb(IResource resource, IFile vdbFile, RefactoringStatus status) {
-            addChange(vdbFile, new VdbResourceChange(vdbFile));
         }
     }
 
@@ -163,25 +165,37 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
         String destinationPath = destination.getRawLocation().makeAbsolute().toOSString();
         try {
             progressMonitor.beginTask(RefactorResourcesUtils.getString("MoveRefactoring.finalConditions"), 2); //$NON-NLS-1$
-            
-            for (IResource resource : getResources()) {
-                addChange(resource, new MoveResourceChange(resource, destination));
 
-                try {
-                    Set<PathPair> pathPairs = RefactorResourcesUtils.calculateResourceMoves(getResources(), destinationPath, RefactorResourcesUtils.Option.EXCLUDE_FOLDERS);
-
-                    if (pathPairs == null || pathPairs.isEmpty()) {
-                        status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("MoveRefactoring.emptyResourcePairsError"))); //$NON-NLS-1$
-                        continue;
-                    }
-
-                    RefactorResourcesUtils.calculateRelatedResources(resource, status, new RelatedResourceCallback(pathPairs), Relationship.DEPENDENT);
-
-                } catch (Exception ex) {
-                    UiConstants.Util.log(ex);
-                    status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
-                }
+            Set<PathPair> pathPairs = RefactorResourcesUtils.calculateResourceMoves(getResources(), destinationPath, RefactorResourcesUtils.Option.EXCLUDE_FOLDERS);
+            if (pathPairs == null || pathPairs.isEmpty()) {
+                status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("MoveRefactoring.emptyResourcePairsError"))); //$NON-NLS-1$
+                return status;
             }
+
+            RelatedResourceCallback relatedResourceCallback = new RelatedResourceCallback(pathPairs);
+
+            for (IResource resource : getResources()) {
+                // Find the resource's related resources and determine their changes
+                RefactorResourcesUtils.calculateRelatedResources(resource, status, relatedResourceCallback, Relationship.DEPENDENT);
+
+                // Find the resource's imports as they need to be updated due to the resource move
+                if (ModelUtil.isModelFile(resource)) {
+                    IFile file = (IFile) resource;
+                    Set<PathPair> importPathPairs = RefactorResourcesUtils.calculateImportChanges(file, destinationPath);
+                    TextFileChange textFileChange = RefactorResourcesUtils.calculateTextChanges(file, importPathPairs);
+                    if (addTextChange(file, textFileChange)) {
+                        // Calculate the effect on any vdbs containing this modified related file
+                        RefactorResourcesUtils.calculateRelatedVdbResources(file, status, new VdbResourceCallback());
+                    }
+                }
+
+                addChange(resource, new MoveResourceChange(resource, destination));
+            }
+
+        } catch (Exception ex) {
+            UiConstants.Util.log(ex);
+            status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
+            return status;
         }
         finally {
             progressMonitor.done();

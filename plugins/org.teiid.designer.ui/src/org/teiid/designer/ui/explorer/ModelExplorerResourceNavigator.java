@@ -953,7 +953,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
      * @throws CoreException
      */
     private void overrideAction(IMenuManager theMenu, final String ActionId, IAction newAction) throws CoreException {
-        if (theMenu.find(ActionId) != null)
+        if (theMenu.find(ActionId) == null)
             return;
 
         theMenu.insertAfter(ActionId, newAction);
