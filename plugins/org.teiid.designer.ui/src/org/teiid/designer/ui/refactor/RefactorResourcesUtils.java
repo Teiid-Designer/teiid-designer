@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,6 +18,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.filebuffers.LocationKind;
@@ -54,6 +55,10 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.util.UiUtil;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Utilities for moving a resource
@@ -159,6 +164,9 @@ public class RefactorResourcesUtils {
      */
     private static void createPathBuffer(String[] pathArray, int startingIndex, StringBuffer pathBuffer) {
         for (int i = startingIndex; i < pathArray.length; ++i) {
+            if (pathArray[i].length() == 0)
+                continue;
+
             pathBuffer.append(pathArray[i]);
             if ((i + 1) < pathArray.length)
                 pathBuffer.append(File.separator);
@@ -181,6 +189,19 @@ public class RefactorResourcesUtils {
     }
 
     /**
+     * Append the given number of parent symbols ("..") to the given buffer.
+     *
+     * @param buffer to append to
+     * @param numder of parent symbols to append
+     */
+    private static void appendParentSymbol(StringBuffer buffer, int number) {
+        for (int i = 0; i < number; ++i) {
+            buffer.append(PARENT_DIRECTORY);
+            buffer.append(File.separator);
+        }
+    }
+
+    /**
      * Derive a relative path pair from the given target absolute path pair 
      * using the given base directory
      *
@@ -195,7 +216,7 @@ public class RefactorResourcesUtils {
      * 
      * @throws IOException
      */
-    static PathPair getRelativePath(String baseDirectory, PathPair absPair) throws IOException {
+    public static PathPair getRelativePath(String baseDirectory, PathPair absPair) throws IOException {
         String source = absPair.getSourcePath();
         String target = absPair.getTargetPath();
 
@@ -212,86 +233,81 @@ public class RefactorResourcesUtils {
         }
 
         /*
-         * The relative source path
+         * The common pieces of the paths have been removed so only the
+         * different components remain.
          */
-        int comIndex = 0;
-        StringBuffer src = new StringBuffer();
-        if (sarr.length == 0 || ! barr[0].equals(sarr[0])) {
-             // This will occur when the source path is a parent directory of base
-            src.append(PARENT_DIRECTORY);
-            src.append(File.separator);
-            comIndex = 0;
-        } else {
-            // the first component of base and source is the same implying its target's that will be different
-            comIndex = 1;
-        }
-
-        // For the number of base path components add a ../ to the src path
-        for (int i = 0; i < barr.length - 1; ++i) {
-            src.append(PARENT_DIRECTORY);
-            src.append(File.separator);
-        }
-
-        // Append the remainder of source components to the src path subject to the value of comIndex
-        createPathBuffer(sarr, comIndex, src);
+        boolean RENAME = false;
 
         /*
-         * The relative target path
-         * Since the target path does not actually exist yet, we need to use the source path
-         * as a base and replace components of it with those from the target path.
+         * Determine whether this is a rename by analysing the
+         * remaining components of sarr and tarr.
+         *
+         * Only if the lengths of sarr and tarr match and the last component in
+         * tarr differs from sarr then it could be a rename.
          */
-        String tgt;
-
-        // At this point 1 of the paths now has a different starting component
-
-        if (sarr[0].equals(tarr[0])) { // The base has the differing 1st component
-
-            // Find the index of the first component that differs between source and target
-            int index = 0;
-            while (index < sarr.length && index < tarr.length) {
-                if (sarr[index].equals(tarr[index])) {
+        if (sarr.length == tarr.length && ! sarr[sarr.length - 1].equals(tarr[tarr.length - 1])) {
+            // Need to analyse whether components other than the last
+            // are different. If other components differ as well then its a move
+            // and not a rename
+            RENAME = true;
+            for (int i = 0; i < (sarr.length - 1); ++i) {
+                if (! sarr[i].equals(tarr[i])) {
+                    RENAME = false;
                     break;
                 }
-                ++index;
             }
-
-            // index is the first index which does not match so these are the components
-            StringBuffer srcBuffer = createPathBuffer(sarr, index);
-            StringBuffer tgtBuffer = createPathBuffer(tarr, index);
-
-            // Create relative target by replacing the remaining different components of
-            // source with target's
-            tgt = src.toString().replaceFirst(srcBuffer.toString(), tgtBuffer.toString());
-
-        } else if (sarr[0].equals(barr[0])){    // The source and base are the same but target is not
-
-            // Create relative target by replacing source with target
-            tgt = src.toString().replaceFirst(source, target);
-            
-            // however if target's length is smaller than source then 
-            // target has been moved up a directory so append a ../
-            if (sarr.length > tarr.length) {
-                tgt = PARENT_DIRECTORY + File.separator + tgt;
-            }
-
-        } else if (tarr[0].equals(barr[0])){    // target and base are the same
-
-            // Create relative target by
-            // replacing source with target
-            // since target is 'in' base then remove the base path component and
-            // remove the ../ from the start of the path
-            tgt = src.toString().replace(source, target);
-            tgt = tgt.replaceFirst(barr[0] + File.separator, ""); //$NON-NLS-1$
-            tgt = tgt.replaceFirst(PARENT_DIRECTORY + File.separator, ""); //$NON-NLS-1$
-
-        } else {    // All 3 have different starting components
-
-            // Create relative target by directly replacing source with target
-            tgt = src.toString().replaceFirst(source, target);
-
         }
 
-        return new PathPair(src.toString(), tgt);
+        StringBuffer src = new StringBuffer();
+        StringBuffer tgt = new StringBuffer();
+
+        if (baseDirectory.length() == 0) {
+            /* both source and target are inside base directory */
+
+            // Append the remainder of source components to the src and target paths
+            createPathBuffer(sarr, 0, src);
+            createPathBuffer(tarr, 0, tgt);
+        }
+        else if (barr[0].equals(sarr[0])) {
+            /* source is below base but target has now branched off */
+
+            appendParentSymbol(src, barr.length - 1);
+            createPathBuffer(sarr, 1, src);
+            
+            if (RENAME) {
+                appendParentSymbol(tgt, barr.length - 1);
+                createPathBuffer(tarr, 1, tgt);
+            }
+            else {
+                appendParentSymbol(tgt, barr.length);
+                createPathBuffer(tarr, 0, tgt);
+            }
+        }
+        else if (barr[0].equals(tarr[0])) {
+            /* target is below base but source has now branched off */
+
+            appendParentSymbol(src, barr.length);
+            createPathBuffer(sarr, 0, src);
+
+            if (RENAME) {
+                appendParentSymbol(tgt, barr.length);
+                createPathBuffer(tarr, 1, tgt);
+            }
+            else {
+                appendParentSymbol(tgt, barr.length - 1);
+                createPathBuffer(tarr, 1, tgt);
+            }
+        } else {
+            /* both source and target have branched off from base */
+
+            appendParentSymbol(src, barr.length);
+            createPathBuffer(sarr, 0, src);
+
+            appendParentSymbol(tgt, barr.length);
+            createPathBuffer(tarr, 0, tgt);
+        }
+
+        return new PathPair(src.toString(), tgt.toString());
     }
 
     private static void calculateResourceMoves(IResource resource, String destination, Collection<PathPair> pathPairs, Option...options) throws Exception {
@@ -332,7 +348,7 @@ public class RefactorResourcesUtils {
     }
     
     /**
-     * Calculates the {@link PathPair}s produced when moving the given resources
+     * Calculates the absolute {@link PathPair}s produced when moving the given resources
      * to the given destination.
      * 
      * <p>
@@ -347,7 +363,7 @@ public class RefactorResourcesUtils {
      * @param destination 
      * @param options
      * 
-     * @return list of {@link PathPair}s 
+     * @return list of absolute {@link PathPair}s
      * @throws Exception 
      */
     public static Set<PathPair> calculateResourceMoves(List<IResource> resources, String destination, Option... options) throws Exception {
@@ -365,36 +381,27 @@ public class RefactorResourcesUtils {
         
         return edit;
     }
-    
+
     /**
-     * Calculates the set of text changes for the given file where the paths in the given {@link PathPair}s
-     *  are substituted.
-     *  
+     * Calculates a {@link TextFileChange} for all the substitutions that need to take place in the
+     * given file based on the collection of path pairs.
+     *
      * @param file
      * @param pathPairs
-     * @param textFileChange
-     * 
-     * @throws Exception 
+     * @return text file change
+     *
+     * @throws Exception
      */
-    public static void calculatePathChanges(IFile file, Collection<PathPair> pathPairs, TextFileChange textFileChange) throws Exception {
+    public static TextFileChange calculateTextChanges(IFile file, Collection<PathPair> pathPairs) throws Exception {
         File nativeFile = file.getRawLocation().makeAbsolute().toFile();
         if (nativeFile == null || ! nativeFile.exists())
-            throw new Exception(getString("RefactorResourceUtils.fileNotFoundError", file.getFullPath())); //$NON-NLS-1$
+            throw new Exception(getString("ResourcesRefactoring.fileNotFoundError", file.getFullPath())); //$NON-NLS-1$
 
-        // Convert the path pairs to relative paths based on the file
-        List<PathPair> relPathPairs = new ArrayList<PathPair>();
-        for (PathPair pathPair : pathPairs) {
-            PathPair relativePath = getRelativePath(nativeFile.getParentFile().getAbsolutePath(), pathPair);
-            if (! relativePath.getSourcePath().equals(relativePath.getTargetPath())) {
-                // Only if there is going to be a genuine replacement should we persist with a relative path pair
-                relPathPairs.add(relativePath);
-            }
-        }
-
+        TextFileChange textFileChange = new TextFileChange(file.getName(), file);
         TextEdit fileChangeRootEdit = setRootEdit(textFileChange);
 
-        if (relPathPairs.isEmpty()) {
-            return;
+        if (pathPairs.isEmpty()) {
+            return textFileChange;
         }
 
         BufferedReader reader = null;
@@ -405,7 +412,7 @@ public class RefactorResourcesUtils {
             reader = new BufferedReader(new FileReader(nativeFile));
 
             while ((line = reader.readLine()) != null) {
-                for (PathPair pathPair : relPathPairs) {
+                for (PathPair pathPair : pathPairs) {
                     int lineOffset = line.indexOf(pathPair.getSourcePath());
                     if (lineOffset < 0) continue;
 
@@ -421,8 +428,73 @@ public class RefactorResourcesUtils {
             if (reader != null)
                 reader.close();
         }
+
+        return textFileChange;
     }
 
+    /**
+     * Finds the import locations in the given file and calculates the modified paths against the 
+     * given destination
+     *
+     * @param file
+     * @param destination
+     *
+     * @return a set of path pairs representing the import locations
+     *
+     * @throws Exception
+     */
+    public static Set<PathPair> calculateImportChanges(IFile file, String destination) throws Exception {
+        File nativeFile = file.getRawLocation().makeAbsolute().toFile();
+        if (nativeFile == null || ! nativeFile.exists())
+            throw new Exception(getString("ResourcesRefactoring.fileNotFoundError", file.getFullPath())); //$NON-NLS-1$
+
+        Set<PathPair> importPairs = new HashSet<PathPair>();
+        File parentFolder = nativeFile.getParentFile();
+
+        // Find the imports in the file and return a collection of relative resource paths
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document xmlDocument = dBuilder.parse(nativeFile);
+
+        NodeList modelList = xmlDocument.getElementsByTagName("modelImports"); //$NON-NLS-1$
+        for (int i = 0; i < modelList.getLength(); ++i) {
+            Node modelNode = modelList.item(i);
+            if (modelNode.getNodeType() != Node.ELEMENT_NODE)
+                continue;
+
+            Element element = (Element) modelNode;
+            if (!element.hasAttribute("modelLocation")) //$NON-NLS-1$
+                continue;
+
+            String relativeLocation = element.getAttribute("modelLocation"); //$NON-NLS-1$
+            if (relativeLocation.startsWith("http:") || relativeLocation.startsWith("https:")) { //$NON-NLS-1$ //$NON-NLS-2$
+                continue;
+            }
+
+            // Find the absolute path of the model location based on the location of the file
+            File absLocationFile = new File(parentFolder, relativeLocation);
+            String absLocation = absLocationFile.getCanonicalPath();
+
+            // Use the new proposed location of the file to extrapolate the relative path of the
+            // import location. This takes advantage of the getRelativePath function by adding
+            // the absLocation to the source and target of a path pair. This is for convenience.
+
+            // Original model location   -> ../sources/sourcemodel.xmi
+            // Absolute model location  -> /home/test1/programming/java/td-projects/parts/sources/sourcemodel.xmi
+            // /home/test1/programming/java/td-projects/parts                 -> sources/sourcemodel.xmi
+            // /home/test1/programming/java/td-projects/parts/test          -> ../sources/sourcemodel.xmi
+            // /home/test1/programming/java/td-projects/parts/sources    -> sourcemodel.xmi
+            PathPair newRelativePair = getRelativePath(destination, new PathPair(absLocation, absLocation));
+            String newRelativeLocation = newRelativePair.getSourcePath();
+
+            if (! relativeLocation.equals(newRelativeLocation)) {
+                // Only if the import location must change do we need to include it
+                importPairs.add(new PathPair(relativeLocation, newRelativeLocation));
+            }
+        }
+
+        return importPairs;
+    }
 
     /**
      * Calculate changes to user-generated sql
@@ -448,7 +520,7 @@ public class RefactorResourcesUtils {
         
         File nativeFile = file.getRawLocation().makeAbsolute().toFile();
         if (nativeFile == null || ! nativeFile.exists())
-            throw new Exception(getString("RefactorResourceUtils.fileNotFoundError", file.getFullPath())); //$NON-NLS-1$
+            throw new Exception(getString("ResourcesRefactoring.fileNotFoundError", file.getFullPath())); //$NON-NLS-1$
 
         TextEdit fileChangeRootEdit = setRootEdit(textFileChange);
         BufferedReader reader = null;
@@ -721,7 +793,7 @@ public class RefactorResourcesUtils {
      */
     public static void checkResourceSynched(IResource resource, RefactoringStatus status) {
         if (!resource.isSynchronized(IResource.DEPTH_INFINITE)) {
-            status.merge(RefactoringStatus.createFatalErrorStatus(getString("DeleteRefactoring.warningOutOfSync", resource.getFullPath()))); //$NON-NLS-1$
+            status.merge(RefactoringStatus.createFatalErrorStatus(getString("ResourcesRefactoring.warningOutOfSync", resource.getFullPath()))); //$NON-NLS-1$
         }
     }
 

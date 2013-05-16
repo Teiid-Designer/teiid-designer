@@ -40,7 +40,7 @@ public abstract class AbstractResourcesCompositeChange extends CompositeChange {
         Object[] objects = change.getAffectedObjects();
         if (objects != null) {
             for (Object object : objects) {
-                if (object instanceof IResource) {
+                if (object instanceof IResource && ((IResource) object).exists()) {
                     RefactorResourcesUtils.unloadModelResource((IResource) object);
                 }
             }
