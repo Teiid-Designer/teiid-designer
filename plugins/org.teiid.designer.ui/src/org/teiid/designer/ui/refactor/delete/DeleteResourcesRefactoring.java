@@ -32,14 +32,13 @@ import org.teiid.designer.ui.refactor.AbstractResourcesRefactoring;
 import org.teiid.designer.ui.refactor.RefactorResourcesUtils;
 import org.teiid.designer.ui.refactor.RefactorResourcesUtils.AbstractResourceCallback;
 import org.teiid.designer.ui.refactor.RefactorResourcesUtils.IResourceCallback;
-import org.teiid.designer.vdb.refactor.VdbResourceChange;
 
 /**
  *
  */
 public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
 
-    private class RelatedResourceCallback extends AbstractResourceCallback {
+    private class RelatedResourceCallback extends VdbResourceCallback {
 
         private final Set<IResource> indexedResources = new HashSet<IResource>();
 
@@ -67,11 +66,6 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
             }
 
             RefactorResourcesUtils.calculateRelatedVdbResources(relatedFile, status, this);
-        }
-
-        @Override
-        public void indexVdb(IResource resource, IFile vdbFile, RefactoringStatus status) {
-            addChange(vdbFile, new VdbResourceChange(vdbFile));
         }
     }
 

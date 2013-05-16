@@ -57,19 +57,23 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
         public void indexFile(IResource resource, IFile relatedFile, RefactoringStatus status) throws Exception {
             RefactorResourcesUtils.unloadModelResource(relatedFile);
 
-            TextFileChange textFileChange = new TextFileChange(relatedFile.getName(), relatedFile);
-            RefactorResourcesUtils.calculatePathChanges(relatedFile, Collections.singleton(pathPair), textFileChange);
+            IPath relatedFilePath = relatedFile.getRawLocation().makeAbsolute();
+            IPath relatedParentPath = relatedFilePath.removeLastSegments(1);
+
+            // Convert the path pair to a pair of relative paths
+            PathPair relativePathPair = RefactorResourcesUtils.getRelativePath(relatedParentPath.toOSString(), pathPair);
+
+            // Calculate any text changes made as a result of the relative path pair
+            TextFileChange textFileChange = RefactorResourcesUtils.calculateTextChanges(relatedFile, Collections.singleton(relativePathPair));
 
             if (ModelUtil.isModelFile(getResource())) {
                 // It is reasonable that only if a model file is being renamed will it impact the SQL of related files.
                 // There is no reason to expect a project or folder to even be include in an SQL statement.
-                RefactorResourcesUtils.calculateSQLChanges(relatedFile, pathPair, textFileChange);
+                RefactorResourcesUtils.calculateSQLChanges(relatedFile, relativePathPair, textFileChange);
             }
 
-            if (textFileChange.getEdit() != null && textFileChange.getEdit().hasChildren()) {
-                // Only if the related file is actually being changed do we add the text change
-                // and calculate the effect on any vdbs containing this related file
-                addChange(relatedFile, textFileChange);
+            if (addTextChange(relatedFile, textFileChange)) {
+                // Calculate the effect on any vdbs containing this modified related file
                 RefactorResourcesUtils.calculateRelatedVdbResources(relatedFile, status, this);
             }
         }
@@ -178,20 +182,18 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
             progressMonitor.beginTask(RefactorResourcesUtils.getString("RenameRefactoring.finalConditions"), 2); //$NON-NLS-1$
 
             for (IResource resource : getResources()) {
-                // Add move change for the resource
-                addChange(resource, new RenameResourceChange(resource.getFullPath(), getNewResourceName()));
-
                 IPath absPath = resource.getRawLocation().makeAbsolute();
-                IPath destination = absPath.removeLastSegments(1).append(getNewResourceName());
-                String destinationPath = destination.toOSString();
-                PathPair pathPair = new PathPair(absPath.toOSString(), destinationPath);
-                RelatedResourceCallback callback = new RelatedResourceCallback(pathPair);
+                IPath parentFolder = absPath.removeLastSegments(1);
+                IPath destination = parentFolder.append(getNewResourceName());
+                PathPair absPathPair = new PathPair(absPath.toOSString(), destination.toOSString());
+
+                RelatedResourceCallback callback = new RelatedResourceCallback(absPathPair);
 
                 if (ModelUtil.isModelFile(resource)) {
                     // Add change for updating of any SQL contained in the resource
                     try {
                         TextFileChange textFileChange = new TextFileChange(resource.getName(), (IFile) resource);
-                        RefactorResourcesUtils.calculateSQLChanges((IFile) resource, pathPair, textFileChange);
+                        RefactorResourcesUtils.calculateSQLChanges((IFile) resource, absPathPair, textFileChange);
                         if (textFileChange.getEdit() != null && textFileChange.getEdit().hasChildren()) {
                             // Only if the related file is actually being changed do we add the text change
                             // and calculate the effect on any vdbs containing this related file
@@ -203,10 +205,13 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
                         UiConstants.Util.log(ex);
                         status.merge(RefactoringStatus.createFatalErrorStatus(ex.getMessage()));
                     }
-                }          
+                }
 
                 // Add changes for related resources
                 RefactorResourcesUtils.calculateRelatedResources(resource, status, callback, Relationship.DEPENDENT);
+
+                // Add rename change for the resource
+                addChange(resource, new RenameResourceChange(resource.getFullPath(), getNewResourceName()));
             }
         }
         finally {

@@ -126,6 +126,15 @@ public class MoveResourcesWizard extends RefactoringWizard {
                 }
             }
 
+            RefactoringStatus status = new RefactoringStatus();
+            RefactorResourcesUtils.checkResourceExists(destination, status);
+            RefactorResourcesUtils.checkResourceSynched(destination, status);
+            RefactorResourcesUtils.checkResourceWritable(destination, status);
+            if (! status.isOK()) {
+                setPageComplete(createErrorStatus(status.getEntryWithHighestSeverity().getMessage()));
+                return;
+            }
+
             List<IResource> resources = getRefactoring().getResources();
             if (! verifyResourcesProject(resources)) {
                 setPageComplete(createErrorStatus("MoveRefactoring.resourcesNotInSameProject")); //$NON-NLS-1$
