@@ -2,15 +2,19 @@ package org.teiid.designer.teiidimporter.ui.panels;
 
 import java.util.Collection;
 import java.util.Properties;
+
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.teiidimporter.ui.UiConstants;
 
 /**
  * Lookup the translator name given the IConnectionProfile
  * @since 8.1
  */
 @SuppressWarnings("javadoc")
-public class TranslatorHelper {
+public class TranslatorHelper implements UiConstants {
 	public static final String VENDOR_KEY = "org.eclipse.datatools.connectivity.db.vendor";  //$NON-NLS-1$
 	public static final String VERSION_KEY = "org.eclipse.datatools.connectivity.db.version";  //$NON-NLS-1$
 
@@ -29,6 +33,12 @@ public class TranslatorHelper {
     public static final String TEIID_LDAP_DRIVER = "teiid-connector-ldap.rar"; //$NON-NLS-1$
     public static final String TEIID_SALESORCE_DRIVER = "teiid-connector-salesforce.rar"; //$NON-NLS-1$
     public static final String TEIID_WEBSERVICE_DRIVER = "teiid-connector-ws.rar"; //$NON-NLS-1$
+    public static final String TEIID_FILE_DRIVER_84UP = "file"; //$NON-NLS-1$
+    public static final String TEIID_GOOGLE_DRIVER_84UP = "google"; //$NON-NLS-1$
+    public static final String TEIID_INFINISPAN_DRIVER_84UP = "infinispan"; //$NON-NLS-1$
+    public static final String TEIID_LDAP_DRIVER_84UP = "ldap"; //$NON-NLS-1$
+    public static final String TEIID_SALESORCE_DRIVER_84UP = "salesforce"; //$NON-NLS-1$
+    public static final String TEIID_WEBSERVICE_DRIVER_84UP = "webservice"; //$NON-NLS-1$
     public static final String TEIID_FILE_DRIVER_DISPLAYNAME = "FlatFile"; //$NON-NLS-1$
     public static final String TEIID_GOOGLE_DRIVER_DISPLAYNAME = "Google"; //$NON-NLS-1$
     public static final String TEIID_INFINISPAN_DRIVER_DISPLAYNAME = "Infinispan"; //$NON-NLS-1$
@@ -95,34 +105,63 @@ public class TranslatorHelper {
      * Get the best fit translator, given the driverName and list of translator names
      * @param driverName the driver name
      * @param translatorNames the list of current translators
+     * @param teiidVersion the Teiid Version
      * @return the best fit translator for the provided driver
      */
-	public static String getTranslator(String driverName, Collection<String> translatorNames) {
+	public static String getTranslator(String driverName, Collection<String> translatorNames, ITeiidServerVersion teiidVersion) {
 	    CoreArgCheck.isNotEmpty(driverName,"driverName is Empty"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(translatorNames,"translatorNames is Empty"); //$NON-NLS-1$
 	    
-	    if(driverName.equals(TEIID_FILE_DRIVER) && translatorNames.contains(FILE)) {
-	        return FILE;
-	    }
-	    
-        if(driverName.equals(TEIID_GOOGLE_DRIVER) && translatorNames.contains(GOOGLE_SPREADSHEET)) {
-            return GOOGLE_SPREADSHEET;
-        }
+        boolean isTeiid84OrHigher = isTeiid84OrHigher(teiidVersion);
         
-        if(driverName.equals(TEIID_INFINISPAN_DRIVER) && translatorNames.contains(INFINISPAN)) {
-            return INFINISPAN;
-        }
-        
-        if(driverName.equals(TEIID_LDAP_DRIVER) && translatorNames.contains(LDAP)) {
-            return LDAP;
-        }
-	    
-        if(driverName.equals(TEIID_SALESORCE_DRIVER) && translatorNames.contains(SALESFORCE)) {
-            return SALESFORCE;
-        }
-        
-        if(driverName.equals(TEIID_WEBSERVICE_DRIVER) && translatorNames.contains(WS)) {
-            return WS;
+        if(!isTeiid84OrHigher) {
+        	if(driverName.equals(TEIID_FILE_DRIVER) && translatorNames.contains(FILE)) {
+        		return FILE;
+        	}
+
+        	if(driverName.equals(TEIID_GOOGLE_DRIVER) && translatorNames.contains(GOOGLE_SPREADSHEET)) {
+        		return GOOGLE_SPREADSHEET;
+        	}
+
+        	if(driverName.equals(TEIID_INFINISPAN_DRIVER) && translatorNames.contains(INFINISPAN)) {
+        		return INFINISPAN;
+        	}
+
+        	if(driverName.equals(TEIID_LDAP_DRIVER) && translatorNames.contains(LDAP)) {
+        		return LDAP;
+        	}
+
+        	if(driverName.equals(TEIID_SALESORCE_DRIVER) && translatorNames.contains(SALESFORCE)) {
+        		return SALESFORCE;
+        	}
+
+        	if(driverName.equals(TEIID_WEBSERVICE_DRIVER) && translatorNames.contains(WS)) {
+        		return WS;
+        	}
+        } else {
+        	if(driverName.equals(TEIID_FILE_DRIVER_84UP) && translatorNames.contains(FILE)) {
+        		return FILE;
+        	}
+
+        	if(driverName.equals(TEIID_GOOGLE_DRIVER_84UP) && translatorNames.contains(GOOGLE_SPREADSHEET)) {
+        		return GOOGLE_SPREADSHEET;
+        	}
+
+        	if(driverName.equals(TEIID_INFINISPAN_DRIVER_84UP) && translatorNames.contains(INFINISPAN)) {
+        		return INFINISPAN;
+        	}
+
+        	if(driverName.equals(TEIID_LDAP_DRIVER_84UP) && translatorNames.contains(LDAP)) {
+        		return LDAP;
+        	}
+
+        	if(driverName.equals(TEIID_SALESORCE_DRIVER_84UP) && translatorNames.contains(SALESFORCE)) {
+        		return SALESFORCE;
+        	}
+
+        	if(driverName.equals(TEIID_WEBSERVICE_DRIVER_84UP) && translatorNames.contains(WS)) {
+        		return WS;
+        	}
         }
         
         if(driverName.startsWith("derby")) { //$NON-NLS-1$
@@ -158,6 +197,82 @@ public class TranslatorHelper {
         }
 
         return JDBC_ANSI; 
+	}
+	
+	/**
+	 * Get the Driver Name for the supplied class and server version
+	 * @param driverClassName the driver class name
+	 * @param teiidVersion the teiid version
+	 * @return the driver name
+	 */
+	public static String getDriverNameForClass(String driverClassName, ITeiidServerVersion teiidVersion) {
+		String driverName = null;
+		if(!CoreStringUtil.isEmpty(driverClassName)) {
+			// Teiid 8.3 and below
+			if(!isTeiid84OrHigher(teiidVersion)) {
+				if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_FILE_CLASS)) {
+					driverName = TranslatorHelper.TEIID_FILE_DRIVER;
+				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_GOOGLE_CLASS)) {
+					driverName = TranslatorHelper.TEIID_GOOGLE_DRIVER;
+				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_INFINISPAN_CLASS)) {
+					driverName = TranslatorHelper.TEIID_INFINISPAN_DRIVER;
+				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_LDAP_CLASS)) {
+					driverName = TranslatorHelper.TEIID_LDAP_DRIVER;
+				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_SALESORCE_CLASS)) {
+					driverName = TranslatorHelper.TEIID_SALESORCE_DRIVER;
+				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_WEBSERVICE_CLASS)) {
+					driverName = TranslatorHelper.TEIID_WEBSERVICE_DRIVER;
+				}
+			// Teiid 8.4 and higher
+			} else {
+				if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_FILE_CLASS)) {
+					driverName = TranslatorHelper.TEIID_FILE_DRIVER_84UP;
+				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_GOOGLE_CLASS)) {
+					driverName = TranslatorHelper.TEIID_GOOGLE_DRIVER_84UP;
+				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_INFINISPAN_CLASS)) {
+					driverName = TranslatorHelper.TEIID_INFINISPAN_DRIVER_84UP;
+				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_LDAP_CLASS)) {
+					driverName = TranslatorHelper.TEIID_LDAP_DRIVER_84UP;
+				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_SALESORCE_CLASS)) {
+					driverName = TranslatorHelper.TEIID_SALESORCE_DRIVER_84UP;
+				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_WEBSERVICE_CLASS)) {
+					driverName = TranslatorHelper.TEIID_WEBSERVICE_DRIVER_84UP;
+				}
+			}
+		}
+		return driverName;
+	}
+	
+	/**
+	 * Test whether the version is 8.4 or higher.  (.rar deployments were changed in 8.4)
+	 * We assume false, and may not be able to determine - if wildcards are used.
+	 * @param teiidVersion the Teiid Server version
+	 * @return 'true' if the version is 8.4 or higher, 'false' if lower or unknown
+	 */
+	public static boolean isTeiid84OrHigher(ITeiidServerVersion teiidVersion) {
+        CoreArgCheck.isNotNull(teiidVersion,"teiidVersion is null"); //$NON-NLS-1$
+		try {
+			// Seven or lower
+			String major = teiidVersion.getMajor();
+			if(Integer.parseInt(major) <= 7) {
+				return false;
+			}
+
+			// Nine or higher
+			if(Integer.parseInt(major) >= 9) {
+				return true;
+			}
+
+			// Version 8 - check minor version
+			String minor = teiidVersion.getMinor();
+			if(Integer.parseInt(minor) >=4 ) {
+				return true;
+			}
+		} catch (Exception e) {
+            UTIL.log(e);
+			return false;
+		}
+		return false;
 	}
 	
 	/**

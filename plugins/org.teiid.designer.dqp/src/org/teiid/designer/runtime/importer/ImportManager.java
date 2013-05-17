@@ -422,5 +422,18 @@ public final class ImportManager implements IExecutionConfigurationListener {
     public Properties getDataSourceProperties(String dataSourceName) throws Exception {
         return getImportServer().getDataSourceProperties(dataSourceName);
     }
+    
+    /**
+     * Return the version of the current import server - null if not defined or not connected
+     * @return the teiid server version
+     */
+    public ITeiidServerVersion getServerVersion() {
+        ITeiidServer importServer = getImportServer();
+        // If no server, or not connected - invalid
+        if(importServer==null || !importServer.isConnected()) {
+            return null;
+        }
+        return importServer.getServerVersion();
+    }
 
 }
