@@ -41,6 +41,7 @@ import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.panels.TranslatorHelper;
@@ -192,7 +193,13 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
         if(translatorNames.isEmpty() || CoreStringUtil.isEmpty(driverName)) {
             return null;
         }
-        return TranslatorHelper.getTranslator(driverName, translatorNames);
+		ITeiidServerVersion teiidVersion = null;
+        try {
+			teiidVersion = importManager.getTeiidServerVersion();
+		} catch (Exception ex) {
+            UTIL.log(ex);
+		}
+        return TranslatorHelper.getTranslator(driverName, translatorNames, teiidVersion);
     }
     
     /*
