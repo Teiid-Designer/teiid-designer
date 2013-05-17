@@ -32,6 +32,8 @@ import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.query.sql.symbol.IMultipleElementSymbol;
+import org.teiid.designer.query.sql.symbol.IWindowFunction;
+import org.teiid.designer.query.sql.symbol.IWindowSpecification;
 
 /**
  * The <code>DisplayNodeFactory</code> class is the Factory used to create all different types of DisplayNodes.
@@ -146,6 +148,9 @@ public class DisplayNodeFactory {
             // Constant, Function, Expression Nodes
             // ---------------------------------------------------------------------
             FunctionDisplayNode node = new FunctionDisplayNode(parentNode, (IFunction)obj);
+            return node;
+        } else if (obj instanceof IWindowFunction || obj instanceof IWindowSpecification ) {
+            TextDisplayNode node = new TextDisplayNode(parentNode, obj.toString());
             return node;
         } else if (obj instanceof IAliasSymbol) {
             AliasSymbolDisplayNode node = new AliasSymbolDisplayNode(parentNode, (IAliasSymbol)obj);

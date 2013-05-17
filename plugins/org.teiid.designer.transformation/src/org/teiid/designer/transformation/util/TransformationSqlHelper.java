@@ -2804,9 +2804,8 @@ public class TransformationSqlHelper implements ISQLConstants {
             // -------------------------------------
             // IExpression Symbol
             // -------------------------------------
-        } else if (symbol instanceof IExpressionSymbol) {
-            IExpressionSymbol exSymbol = (IExpressionSymbol)symbol;
-            datatype = exSymbol.getType();
+        } else {
+            datatype = symbol.getType();
         }
         return datatype;
     }
