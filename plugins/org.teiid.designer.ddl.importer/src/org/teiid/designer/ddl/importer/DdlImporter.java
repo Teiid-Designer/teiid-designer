@@ -540,11 +540,14 @@ public class DdlImporter {
 				final Object tempRefColumns = constraintNode.getProperty(TeiidDdlLexicon.Constraint.TABLE_REFERENCE_REFERENCES);
 
 				final List<AstNode> foreignTableColumnNodes = (tempRefColumns==null) ? Collections.<AstNode>emptyList() : (List<AstNode>)tempRefColumns;
-				if (primaryKeyColumns.size() == foreignTableColumnNodes.size()) {
-					if(!foreignTableColumnNodes.isEmpty()) {
-						for(AstNode fTableColumn : foreignTableColumnNodes) {
-							find(Column.class, fTableColumn, tableRef, roots);
-						}
+				int numPKColumns = primaryKeyColumns.size();
+				int numFKColumns = foreignTableColumnNodes.size();
+				
+				if( foreignTableColumnNodes.isEmpty() ) {
+					foreignKey.setUniqueKey(tableRefPrimaryKey);
+				} else if( numPKColumns == numFKColumns ) {
+					for(AstNode fTableColumn : foreignTableColumnNodes) {
+						find(Column.class, fTableColumn, tableRef, roots);
 					}
 					foreignKey.setUniqueKey(tableRefPrimaryKey);
 					//					} else {
@@ -557,6 +560,8 @@ public class DdlImporter {
 					//								break;
 					//							}
 					//						}
+				} else {
+					foreignKey.setUniqueKey(tableRefPrimaryKey);
 				}
 			} catch (final EntityNotFoundException error) {
 				messages.add(error.getMessage());
