@@ -2801,12 +2801,11 @@ public class TransformationSqlHelper implements ISQLConstants {
             } else if (idObj == null) {
                 datatype = eSymbol.getType();
             }
-            // -------------------------------------
-            // IExpression Symbol
-            // -------------------------------------
-        } else if (symbol instanceof IExpressionSymbol) {
-            IExpressionSymbol exSymbol = (IExpressionSymbol)symbol;
-            datatype = exSymbol.getType();
+        // -------------------------------------
+        // IExpression
+        // -------------------------------------
+        } else {
+            datatype = symbol.getType();
         }
         return datatype;
     }
