@@ -52,6 +52,7 @@ import org.teiid.designer.runtime.importer.ImportManager;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.panels.PropertyItem;
@@ -538,6 +539,14 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     public Properties getDataSourceProperties(String sourceName) throws Exception {
         return getServerImportManager().getDataSourceProperties(sourceName);
     }
+    
+	/* (non-Javadoc)
+	 * @see org.teiid.designer.teiidimporter.ui.wizard.ITeiidImportServer#getTeiidServerVersion()
+	 */
+	@Override
+	public ITeiidServerVersion getTeiidServerVersion() throws Exception {
+    	return getServerImportManager().getServerVersion();
+	}
     
     // ----------------------------------------------------------------------------
     // DDL Import functionality

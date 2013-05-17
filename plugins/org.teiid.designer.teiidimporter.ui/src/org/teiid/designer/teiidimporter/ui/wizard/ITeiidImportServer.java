@@ -14,6 +14,7 @@ import java.util.Set;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 /**
  *  Interface for TeiidImporter.  Essentially a partial implementation of the ITeiidServer
@@ -110,5 +111,12 @@ public interface ITeiidImportServer {
       * @throws Exception
       */
      void undeployDynamicVdb(String vdbName) throws Exception;
+     
+     /**
+      * Get the Teiid Server Version
+      * @return the Teiid Server version
+      * @throws Exception
+      */
+     ITeiidServerVersion getTeiidServerVersion() throws Exception;
 
 }

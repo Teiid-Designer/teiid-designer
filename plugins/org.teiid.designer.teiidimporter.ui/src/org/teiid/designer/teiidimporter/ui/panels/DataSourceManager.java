@@ -20,6 +20,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.wizard.ITeiidImportServer;
@@ -261,9 +262,11 @@ public class DataSourceManager implements UiConstants {
     public List<PropertyItem> getDriverPropertyItems(String driverName) {
         List<PropertyItem> propertyItemList = new ArrayList<PropertyItem>();
         Collection<TeiidPropertyDefinition> propDefns;
+        ITeiidServerVersion teiidVersion = null;
         try {
             // Get the driver template properties
             propDefns = teiidImportServer.getTemplatePropertyDefns(driverName);
+            teiidVersion = teiidImportServer.getTeiidServerVersion();
         } catch (Exception ex) {
             propDefns = new ArrayList<TeiidPropertyDefinition>();
             UTIL.log(ex);
@@ -271,7 +274,7 @@ public class DataSourceManager implements UiConstants {
         
         // Get the Managed connection factory class for rars
         String rarConnFactoryValue = null;
-        if(driverName!=null && driverName.endsWith(DOT_RAR)) {
+        if(isRarDriver(driverName,teiidVersion)) {
             rarConnFactoryValue = getManagedConnectionFactoryClassDefault(propDefns);
         }
         
@@ -338,9 +341,11 @@ public class DataSourceManager implements UiConstants {
      */
     public String getDataSourceDriver(String dsName) {
         String driverName = null;
+        ITeiidServerVersion teiidVersion = null;
         Properties props = new Properties();
         try {
             props = teiidImportServer.getDataSourceProperties(dsName);
+            teiidVersion = teiidImportServer.getTeiidServerVersion();
         } catch (Exception ex) {
             UTIL.log(ex);
             return null;
@@ -350,22 +355,37 @@ public class DataSourceManager implements UiConstants {
         if(CoreStringUtil.isEmpty(driverName)) {
             String className = props.getProperty(CLASSNAME_KEY);
             if(!CoreStringUtil.isEmpty(className)) {
-                if(className.equalsIgnoreCase(TranslatorHelper.TEIID_FILE_CLASS)) {
-                    driverName = TranslatorHelper.TEIID_FILE_DRIVER;
-                } else if(className.equalsIgnoreCase(TranslatorHelper.TEIID_GOOGLE_CLASS)) {
-                    driverName = TranslatorHelper.TEIID_GOOGLE_DRIVER;
-                } else if(className.equalsIgnoreCase(TranslatorHelper.TEIID_INFINISPAN_CLASS)) {
-                    driverName = TranslatorHelper.TEIID_INFINISPAN_DRIVER;
-                } else if(className.equalsIgnoreCase(TranslatorHelper.TEIID_LDAP_CLASS)) {
-                    driverName = TranslatorHelper.TEIID_LDAP_DRIVER;
-                } else if(className.equalsIgnoreCase(TranslatorHelper.TEIID_SALESORCE_CLASS)) {
-                    driverName = TranslatorHelper.TEIID_SALESORCE_DRIVER;
-                } else if(className.equalsIgnoreCase(TranslatorHelper.TEIID_WEBSERVICE_CLASS)) {
-                    driverName = TranslatorHelper.TEIID_WEBSERVICE_DRIVER;
-                }
+            	driverName = TranslatorHelper.getDriverNameForClass(className, teiidVersion);
             }
         }
         return driverName;
+    }
+    
+    /**
+     * Determine if this is a 'rar' type driver that is deployed with Teiid
+     * @param driverName the name of the driver
+     * @param teiidVersion the teiid server version
+     * @return 'true' if the driver is a rar driver, 'false' if not.
+     */
+    private boolean isRarDriver(String driverName, ITeiidServerVersion teiidVersion) {
+    	boolean isRarDriver = false;
+    	if(!CoreStringUtil.isEmpty(driverName)) {
+    		// Teiid 8.3 and before
+    		if(!TranslatorHelper.isTeiid84OrHigher(teiidVersion)) {
+    			if (driverName.endsWith(DOT_RAR)) {
+    				isRarDriver = true;
+    			}
+    		// Teiid 8.4 and later
+     		} else  {
+    			if(   driverName.equals(TranslatorHelper.TEIID_FILE_DRIVER_84UP) || driverName.equals(TranslatorHelper.TEIID_GOOGLE_DRIVER_84UP)
+    			   || driverName.equals(TranslatorHelper.TEIID_INFINISPAN_DRIVER_84UP) || driverName.equals(TranslatorHelper.TEIID_LDAP_DRIVER_84UP)
+    			   || driverName.equals(TranslatorHelper.TEIID_SALESORCE_DRIVER_84UP) || driverName.equals(TranslatorHelper.TEIID_WEBSERVICE_DRIVER_84UP)) {
+    				isRarDriver = true;
+    			}
+    		}
+    	}
+    	
+    	return isRarDriver;
     }
     
     /*
