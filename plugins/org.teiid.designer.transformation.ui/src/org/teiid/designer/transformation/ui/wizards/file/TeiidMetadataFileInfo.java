@@ -150,6 +150,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
  
 	private String charset = "UTF-8";  //$NON-NLS-1$
 	
+	private boolean loaded = false;
+	
 	/**
 	 * 
 	 * @param dataFile the Teiid-formatted data file
@@ -235,7 +237,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 		this.cachedFirstLines = new String[0];
 		this.columnInfoList = new ArrayList<ITeiidColumnInfo>();
 		
-		loadHeader();
+		//loadHeader();
 		
 		String fileName = getDataFile().getName();
 		if(fileName.toLowerCase().endsWith(".txt")) { //$NON-NLS-1$
@@ -360,6 +362,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 	 */
 	@Override
     public String getHeaderString() {
+		
 		if( cachedFirstLines.length == 0 ) {
 			return null;
 		}
@@ -415,6 +418,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 		if( delimitedColumns ) {
 			defineColumns();
 		}
+		
+		loaded = true;
 	}
 	
 	private Collection<String> getRowsFromLine(String str) {
@@ -463,6 +468,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 	 */
 	@Override
     public String[] getCachedFirstLines() {
+		if( ! loaded ) loadHeader();
+		
 		return this.cachedFirstLines;
 	}
 	
@@ -472,6 +479,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 	 */
 	@Override
     public List<ITeiidColumnInfo> getColumnInfoList() {
+		if( ! loaded ) loadHeader();
+		
 		return this.columnInfoList;
 	}
 	

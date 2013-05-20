@@ -189,6 +189,10 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     IStatus fileParsingStatus;
     
     IConnectionInfoHelper connectionInfoHelper;
+    
+    static String[] TEXT_FILE_EXTENSIONS = {
+    	"TXT", "CSV", "TSV"   //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
+    };
 
 	/**
 	 * @param info the TeiidMetadataImportInfo
@@ -675,7 +679,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 								if (fileInfo == null || !fileInfo.getCharset().equals(this.profileInfo.charset)) {
 								    this.info.addFileInfo(new TeiidMetadataFileInfo(theFile, this.profileInfo.charset));
 								}
-								this.info.validate();
+								//this.info.validate();
 							}
 						}
 					}
@@ -868,7 +872,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	void resetCPComboItems() {
 		if (this.srcCombo != null) {
 			WidgetUtil.setComboItems(this.srcCombo,
-					(ArrayList) this.connectionProfiles, this.srcLabelProvider,
+					this.connectionProfiles, this.srcLabelProvider,
 					true);
 		}
 	}
@@ -888,7 +892,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 				setConnectionProfile(listener.getChangedProfile());
 				this.refreshConnectionProfiles();
 				WidgetUtil.setComboItems(this.srcCombo,
-						(ArrayList) this.connectionProfiles,
+						this.connectionProfiles,
 						this.srcLabelProvider, true);
 
 				WidgetUtil.setComboText(this.srcCombo, getConnectionProfile(),this.srcLabelProvider);
@@ -1012,10 +1016,10 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         	}
         	this.selectedFileText.setText(fileName);
         	if( fileName_wo_extension != null && (this.info.getSourceModelName() == null || this.info.getSourceModelName().length() == 0) ) {
-        		this.info.setSourceModelName(fileName_wo_extension + "_source");
+        		this.info.setSourceModelName(fileName_wo_extension + "_source"); //$NON-NLS-1$
         	}
         	if( fileName_wo_extension != null && (this.info.getViewModelName() == null || this.info.getViewModelName().length() == 0) ) {
-        		this.info.setViewModelName(fileName_wo_extension + "_view");
+        		this.info.setViewModelName(fileName_wo_extension + "_view"); //$NON-NLS-1$
         	}
         } else {
         	String fileName = EMPTY_STRING;
@@ -1111,7 +1115,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
             }
 			return false;
 		}
-		
+			
 		if( fileParsingStatus.getSeverity() == IStatus.ERROR) {
 			setThisPageComplete(fileParsingStatus.getMessage(), ERROR);
 			return false;
@@ -1156,8 +1160,12 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         	setThisPageComplete(Util.getString(I18N_PREFIX + "connectionProfileForModelIsDifferent", fileText), ERROR); //$NON-NLS-1$
             return false;
         }
-
-        setThisPageComplete(EMPTY_STRING, NONE);
+        
+		if( ! isKnownTextFileExtension(info.getCheckedFileInfo().getDataFile()) ) {
+			setThisPageComplete(getString("nonStandardFileExtensionSelected"), WARNING);//$NON-NLS-1$
+		} else {
+			setThisPageComplete(EMPTY_STRING, NONE);
+		}
 
 
 		return openModelProjects.size() > 0;
@@ -1482,7 +1490,12 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		public String getText(Object element) {
 			// Element should be a "File"
 			if( element instanceof File) {
-				return ((File) element).getName();
+				String name = ((File) element).getName();
+				
+				if( isKnownTextFileExtension((File) element)) {
+					name =  name + "     <<<<"; //$NON-NLS-1$
+				}
+				return name;
 			}
 			return EMPTY_STRING;
 		}
@@ -1561,5 +1574,19 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 			synchronizeUI();
 		}
 	}
+	
+	
+	private boolean isKnownTextFileExtension(File file) {
+	    IPath filePath = new Path(file.getPath());
+	    String ext = filePath.getFileExtension().toUpperCase();
+	    for( String str : TEXT_FILE_EXTENSIONS ) {
+	    	if( str.equalsIgnoreCase(ext) ) {
+	    		return true;
+	    	}
+	    }
+	    
+	    return false;
+	}
+
 
 }
