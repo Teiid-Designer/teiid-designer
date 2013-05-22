@@ -91,6 +91,8 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
     // otherwise, the OperationObjectEditorPage gets focus when it shouldn't
     // ----------------------------
     private boolean ignoreInternalFocus = false;
+    
+    private boolean tabFolderSelectionInProgress = false;
 
     /**
      * Creates an empty multi-page editor with no pages.
@@ -437,6 +439,7 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
 
             @Override
             public void widgetSelected( final SelectionEvent e ) {
+            	tabFolderSelectionInProgress = true;
                 // System.out.println("MultiPageModelEditor.createContainer()$SelectionAdapter.widgetSelected"); //$NON-NLS-1$
                 UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
 
@@ -452,6 +455,7 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
 	                        int newPageIndex = tabFolder.indexOf(item);
 	                        pageChange(newPageIndex);
                         }
+                        tabFolderSelectionInProgress = false;
                     }
                 });
             }
@@ -901,7 +905,9 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
                 event.widget = getTabFolder();
                 event.item = item;
                 event.type = SWT.Selection;
-                getTabFolder().notifyListeners(SWT.Selection, event);
+                if( !tabFolderSelectionInProgress ) {
+                	getTabFolder().notifyListeners(SWT.Selection, event);
+                }
                 break;
             }
         }
