@@ -162,6 +162,13 @@
             category="Relational">
       </preference>
       <preference
+            toolTip="Sibling names the same ?"
+            name="siblingName"
+            label="%siblingName"
+            default="error"
+            category="Relational">
+      </preference>
+      <preference
             toolTip="Indexes with columns from more than one table.  Many relational database management systems don't allow such indexes."
             name="crossTableIndexes"
             label="%crossTableIndexes"

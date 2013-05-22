@@ -41,6 +41,11 @@ public interface ValidationPreferences {
      * Preference name for siblings having same nameInSource rule.
      */
     String RELATIONAL_SIBLING_NAME_IN_SOURCE = "relationalPreferences.siblingNameInSource"; //$NON-NLS-1$
+    
+    /**
+     * Preference name for siblings having same nameInSource rule.
+     */
+    String RELATIONAL_SIBLING_NAME = "relationalPreferences.siblingName"; //$NON-NLS-1$
 
     /**
      * Preference name for string/char datatype columns whose length is undefined.

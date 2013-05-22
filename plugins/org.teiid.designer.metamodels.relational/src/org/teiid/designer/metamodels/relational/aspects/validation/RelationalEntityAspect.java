@@ -24,6 +24,7 @@ import org.teiid.designer.metamodels.relational.aspects.validation.rules.Missing
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.MissingNameInSourceRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.ProcedureParametersRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.ProcedureFunctionRule;
+import org.teiid.designer.metamodels.relational.aspects.validation.rules.RelationalChildrenNameValidationRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.RelationalStringNameRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.SiblingNameInSourceRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.SourceProcedureUniquenessRule;
@@ -46,6 +47,7 @@ public abstract class RelationalEntityAspect extends AbstractValidationAspect {
 	public static final ValidationRule MISSING_COLUMN_LENGTH_RULE = new MissingColumnLengthRule();
     public static final ValidationRule MISSING_COLUMN_PRECISION_RULE = new MissingColumnPrecisionRule();
 	public static final ValidationRule SIBLING_NAME_IN_SOURCE_RULE = new SiblingNameInSourceRule();
+	public static final ValidationRule SIBLING_NAME_RULE = new RelationalChildrenNameValidationRule();
 	public static final ValidationRule COLUMN_INTEGER_DATATYPE_RULE = new ColumnIntegerDatatypeRule();
 	public static final ValidationRule FOREIGN_KEY_COLUMNS_RULE = new ForeignKeyColumnsRule();
 	public static final ValidationRule UNIQUE_KEY_COLUMNS_RULE = new UniqueKeyColumnsRule();
@@ -71,6 +73,7 @@ public abstract class RelationalEntityAspect extends AbstractValidationAspect {
     public ValidationRuleSet getValidationRules() {
 		addRule(NAME_RULE);
 		addRule(LENGTH_RULE);
+		addRule(SIBLING_NAME_RULE);
         addRule(SIBLING_NAME_IN_SOURCE_RULE);
 		return super.getValidationRules();		
 	}
