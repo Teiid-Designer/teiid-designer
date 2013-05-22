@@ -455,4 +455,15 @@ public class RelationalColumn extends RelationalReference {
             }
         }
     }
+    
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.getClass().getName());
+		sb.append(" : name = ").append(getName()); //$NON-NLS-1$
+		return sb.toString();
+	}
 }

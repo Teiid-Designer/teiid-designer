@@ -38,6 +38,7 @@ public class RelationalModel extends RelationalReference {
         }
         
         if( !this.children.contains(child) ) {
+        	child.setParent(this);
             return this.children.add(child);
         }
         

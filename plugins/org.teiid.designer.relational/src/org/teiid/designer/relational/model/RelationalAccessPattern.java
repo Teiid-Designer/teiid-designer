@@ -53,6 +53,14 @@ public class RelationalAccessPattern extends RelationalReference {
         this.columns.add(column);
     }
     
+    public RelationalTable getTable() {
+    	if( getParent() != null ) {
+    		return (RelationalTable)getParent();
+    	}
+    	
+    	return null;
+    }
+    
     public void setProperties(Properties props) {
         for( Object key : props.keySet() ) {
             String keyStr = (String)key;
@@ -71,4 +79,21 @@ public class RelationalAccessPattern extends RelationalReference {
             }
         }
     }
+    
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.getClass().getName());
+		sb.append(" : name = ").append(getName()); //$NON-NLS-1$
+		if( !getColumns().isEmpty() ) {
+			sb.append("\n\t").append(getColumns().size()).append(" columns"); //$NON-NLS-1$  //$NON-NLS-2$
+			for( RelationalColumn col : getColumns() ) {
+				sb.append("\n\tcol = ").append(col); //$NON-NLS-1$
+			}
+		}
+		return sb.toString();
+	}
 }

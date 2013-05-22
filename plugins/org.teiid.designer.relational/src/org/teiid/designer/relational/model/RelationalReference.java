@@ -24,7 +24,6 @@ import org.teiid.designer.relational.RelationalPlugin;
  *
  * @since 8.0
  */
-@SuppressWarnings("javadoc")
 public class RelationalReference implements RelationalConstants {
 	public static final String KEY_NAME = "NAME"; //$NON-NLS-1$
     public static final String KEY_NAME_IN_SOURCE = "NAMEINSOURCE"; //$NON-NLS-1$
@@ -256,4 +255,17 @@ public class RelationalReference implements RelationalConstants {
 		}
 		setStatus(Status.OK_STATUS);
     }
+    
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.getClass().getName());
+		sb.append(" : name = ").append(getName()); //$NON-NLS-1$
+		return sb.toString();
+	}
+    
+    
 }

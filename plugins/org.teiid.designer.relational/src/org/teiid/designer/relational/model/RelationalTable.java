@@ -464,5 +464,34 @@ public class RelationalTable extends RelationalReference {
 		}
 		
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.getClass().getName());
+		sb.append(" : name = ").append(getName()); //$NON-NLS-1$
+		if( !getColumns().isEmpty() ) {
+			sb.append("\n\t").append(getColumns().size()).append(" columns"); //$NON-NLS-1$  //$NON-NLS-2$
+			for( RelationalColumn col : getColumns() ) {
+				sb.append("\n\tcol = ").append(col); //$NON-NLS-1$
+			}
+		}
+		if( primaryKey != null ) {
+			sb.append("\n\t").append("PK = ").append(primaryKey); //$NON-NLS-1$  //$NON-NLS-2$
+		}
+		if( uniqueContraint != null ) {
+			sb.append("\n\t").append("UC = ").append(uniqueContraint); //$NON-NLS-1$  //$NON-NLS-2$
+		}
+		if( !getAccessPatterns().isEmpty() ) {
+			sb.append("\n\t").append(getAccessPatterns().size()).append(" access patterns"); //$NON-NLS-1$  //$NON-NLS-2$
+			for( RelationalAccessPattern ap : getAccessPatterns() ) {
+				sb.append("\n\tap = ").append(ap); //$NON-NLS-1$
+			}
+		}
+		return sb.toString();
+	}
 
 }
