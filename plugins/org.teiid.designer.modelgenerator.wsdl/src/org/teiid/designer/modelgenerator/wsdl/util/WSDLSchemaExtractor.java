@@ -14,7 +14,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashSet;
 import java.util.Iterator;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -58,11 +57,11 @@ public class WSDLSchemaExtractor {
         URI uri;
         InputStream inputStream = null;
 
-        URI wsdlURI = URI.createURI(wsdlUriString);
-        if (wsdlURI.isFile()) {
-            File testWsdl = new File(wsdlURI.devicePath());
-            uri = URI.createFileURI(testWsdl.getCanonicalPath().toString());
-        } else {
+        /*
+         * Only if the wsdl uri starts with http, will it be necessary
+         * to set http-basic security credentials
+         */
+        if (wsdlUriString.startsWith("http")) { //$NON-NLS-1$
             uri = URI.createURI(wsdlUriString);
 
             /*
@@ -82,6 +81,11 @@ public class WSDLSchemaExtractor {
 
             inputStream = urlConn.getInputStream();
         }
+        else {
+            File testWsdl = new File(wsdlUriString);
+            uri = URI.createFileURI(testWsdl.getCanonicalPath().toString());
+        }
+
         WSDLResourceFactoryImpl fac = (WSDLResourceFactoryImpl)resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().get("wsdl"); //$NON-NLS-1$
         Resource res = fac.createResource(uri);
         if (res instanceof WSDLResourceImpl) {

@@ -33,7 +33,7 @@
       <import plugin="org.eclipse.core.resources" version="3.8.0" match="compatible"/>
       <import plugin="org.eclipse.core.runtime" version="3.8.0" match="compatible"/>
       <import plugin="org.teiid.core.designer" version="8.1.0" match="compatible"/>
-      <import plugin="org.junit4" version="4.8.1" match="compatible"/>
+      <import plugin="org.junit" version="4.11.0" match="compatible"/>
       <import plugin="org.teiid.designer.core" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.core.designer.test.framework" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.designer.sdt" version="8.1.0" match="compatible"/>
