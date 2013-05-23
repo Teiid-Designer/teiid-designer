@@ -8,7 +8,7 @@ Fragment-Host: org.teiid.designer.ddl.importer
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.teiid.core.designer.test.framework;bundle-version="[8.1.0,9.0.0)",
- org.jbosstools.locus.mockito;bundle-version="[1.9.5,2.0.0)",
+ org.jboss.tools.locus.mockito;bundle-version="[1.9.5,2.0.0)",
  org.hamcrest;bundle-version="[1.1.0,2.0.0)",
  org.hamcrest.core;bundle-version="[1.1.0,2.0.0)",
  org.hamcrest.integration;bundle-version="[1.1.0,2.0.0)",

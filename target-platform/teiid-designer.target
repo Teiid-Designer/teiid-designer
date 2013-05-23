@@ -2,11 +2,11 @@
 <target name="locus" sequenceNumber="4">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<repository location="http://download.jboss.org/teiid/designer/updates/locus"/>
-<unit id="org.jbosstools.locus.apache.poi.feature.feature.group" version="2.5.1.Final-v20130301-1425"/>
-<unit id="org.jbosstools.locus.jcip.annotations.feature.feature.group" version="1.0.0.Final-v20130301-1425"/>
-<unit id="org.jbosstools.locus.mockito.feature.feature.group" version="1.9.5.Final-v20130301-1425"/>
-<unit id="org.jbosstools.locus.sf.saxon.feature.feature.group" version="9.2.1.Final-v20130301-1425"/>
+<repository location="http://download.jboss.org/jbosstools/updates/integration/kepler/core/locus/0.0.1.v20130507-2028-B7"/>
+  <unit id="org.jboss.tools.locus.apache.poi" version="2.5.1.Final-v20130507-2028-B7"/>
+  <unit id="org.jboss.tools.locus.jcip.annotations" version="1.0.0.Final-v20130507-2028-B7"/>
+  <unit id="org.jboss.tools.locus.mockito" version="1.9.5.Final_patched_TEIIDDES-1681-v20130507-2028-B7"/>
+  <unit id="org.jboss.tools.locus.sf.saxon" version="9.2.1.5j-Final-v20130507-2028-B7"/>
 </location>
 
 

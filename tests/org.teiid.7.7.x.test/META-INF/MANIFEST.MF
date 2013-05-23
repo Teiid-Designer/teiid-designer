@@ -13,4 +13,4 @@ Require-Bundle: org.hamcrest;bundle-version="[1.1.0,2.0.0)",
  org.hamcrest.library;bundle-version="[1.1.0,2.0.0)",
  org.hamcrest.text;bundle-version="[1.1.0,2.0.0)",
  org.junit;bundle-version="[4.11.0,5.0.0)",
- org.jbosstools.locus.mockito;bundle-version="1.9.5"
+ org.jboss.tools.locus.mockito;bundle-version="1.9.5"

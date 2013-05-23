@@ -19,12 +19,8 @@
       %license
    </license>
 
-   <includes
-         id="org.jbosstools.locus.mockito.feature"
-         version="0.0.0"/>
-
    <requires>
-      <import plugin="org.jbosstools.locus.mockito" version="1.9.5" match="compatible"/>
+      <import plugin="org.jboss.tools.locus.mockito" version="1.9.5" match="compatible"/>
       <import plugin="org.hamcrest" version="1.1.0" match="compatible"/>
       <import plugin="org.hamcrest.core" version="1.1.0" match="compatible"/>
       <import plugin="org.hamcrest.integration" version="1.1.0" match="compatible"/>
@@ -59,7 +55,7 @@
       <import plugin="org.teiid.7.7.x" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.designer.query.ui"/>
       <import plugin="org.teiid.designer.schema.tools"/>
-      <import plugin="org.jbosstools.locus.mockito" version="1.9.5" match="greaterOrEqual"/>
+      <import plugin="org.jboss.tools.locus.mockito" version="1.9.5" match="greaterOrEqual"/>
       <import plugin="org.teiid.7.7.x" version="8.1.0" match="greaterOrEqual"/>
       <import plugin="org.teiid.8.3.x" version="8.1.0" match="greaterOrEqual"/>
       <import plugin="org.teiid.8.4.x" version="8.1.0" match="greaterOrEqual"/>
@@ -359,6 +355,13 @@
 
    <plugin
          id="org.teiid.designer.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.jboss.tools.locus.mockito"
          download-size="0"
          install-size="0"
          version="0.0.0"

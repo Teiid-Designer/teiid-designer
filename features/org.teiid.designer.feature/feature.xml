@@ -26,18 +26,6 @@
       %license
    </license>
 
-   <includes
-         id="org.jbosstools.locus.sf.saxon.feature"
-         version="9.2.1"/>
-
-   <includes
-         id="org.jbosstools.locus.apache.poi.feature"
-         version="2.5.1"/>
-
-   <includes
-         id="org.jbosstools.locus.jcip.annotations.feature"
-         version="1.0.0"/>
-
    <requires>
       <import plugin="org.eclipse.ui.cheatsheets" version="3.4.200" match="compatible"/>
       <import plugin="org.eclipse.ui.ide" version="3.8.0" match="compatible"/>
@@ -84,11 +72,11 @@
       <import plugin="org.eclipse.ui.navigator.resources" version="3.4.400" match="compatible"/>
       <import plugin="org.teiid.designer.spi" version="8.1.0" match="compatible"/>
       <import plugin="org.apache.xerces"/>
-      <import plugin="org.jbosstools.locus.sf.saxon" version="9.2.1" match="compatible"/>
+      <import plugin="org.jboss.tools.locus.sf.saxon" version="9.2.1" match="compatible"/>
       <import plugin="org.eclipse.emf.ecore" version="2.8.0" match="compatible"/>
       <import plugin="org.eclipse.emf.edit" version="2.8.0" match="compatible"/>
       <import plugin="org.eclipse.emf.common" version="2.8.0" match="compatible"/>
-      <import plugin="org.jbosstools.locus.apache.poi" version="2.5.1" match="compatible"/>
+      <import plugin="org.jboss.tools.locus.apache.poi" version="2.5.1" match="compatible"/>
       <import plugin="org.eclipse.datatools.connectivity" version="1.2.5" match="compatible"/>
       <import plugin="org.teiid.designer.compare.ui" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.designer.ui" version="8.1.0" match="compatible"/>
@@ -130,7 +118,7 @@
       <import plugin="org.teiid.designer.modelgenerator.salesforce" version="8.1.0" match="compatible"/>
       <import plugin="org.eclipse.datatools.help" version="1.5.0" match="compatible"/>
       <import plugin="org.eclipse.osgi" version="3.8.0" match="compatible"/>
-      <import plugin="org.jbosstools.locus.jcip.annotations" version="1.0.0" match="compatible"/>
+      <import plugin="org.jboss.tools.locus.jcip.annotations" version="1.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.roles" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.designer.vdb" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.designer.roles.ui" version="8.1.0" match="compatible"/>
@@ -597,6 +585,27 @@
 
    <plugin
          id="org.teiid.designer.spi"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.jboss.tools.locus.apache.poi"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.jboss.tools.locus.jcip.annotations"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.jboss.tools.locus.sf.saxon"
          download-size="0"
          install-size="0"
          version="0.0.0"

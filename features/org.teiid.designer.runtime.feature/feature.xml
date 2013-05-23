@@ -123,7 +123,7 @@ Including: Connection management, VDB creation and management and Data Preview/V
       <import feature="org.eclipse.datatools.sqldevtools.schemaobjecteditor.feature" version="1.7.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.datatools.sqldevtools.sqlbuilder.feature" version="1.7.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.datatools.sqltools.doc.user" version="1.7.0" match="greaterOrEqual"/>
-      <import plugin="org.jbosstools.locus.jcip.annotations" version="1.0.0" match="compatible"/>
+      <import plugin="org.jboss.tools.locus.jcip.annotations" version="1.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.spi" version="8.1.0" match="compatible"/>
       <import plugin="org.jboss.ide.eclipse.as.ui" version="2.4.0" match="compatible"/>
    </requires>

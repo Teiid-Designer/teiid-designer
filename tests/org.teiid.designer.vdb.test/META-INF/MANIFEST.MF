@@ -6,7 +6,7 @@ Bundle-Version: 8.2.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: %Bundle-Vendor
 Fragment-Host: org.teiid.designer.vdb
-Require-Bundle: org.jbosstools.locus.mockito;bundle-version="[1.9.5,2.0.0)",
+Require-Bundle: org.jboss.tools.locus.mockito;bundle-version="[1.9.5,2.0.0)",
  org.hamcrest;bundle-version="[1.1.0,2.0.0)",
  org.hamcrest.core;bundle-version="[1.1.0,2.0.0)",
  org.hamcrest.integration;bundle-version="[1.1.0,2.0.0)",
