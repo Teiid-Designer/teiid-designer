@@ -13,5 +13,5 @@ Export-Package: org.teiid.designer.ui.common.actions,
  org.teiid.designer.ui.common.util,
  org.teiid.designer.ui.common.viewsupport
 Bundle-Localization: plugin
-Require-Bundle: org.junit4;bundle-version="[4.8.1,5.0.0)",
+Require-Bundle: org.junit;bundle-version="[4.11.0,5.0.0)",
  org.teiid.core.designer.test.framework;bundle-version="[8.1.0,9.0.0)"

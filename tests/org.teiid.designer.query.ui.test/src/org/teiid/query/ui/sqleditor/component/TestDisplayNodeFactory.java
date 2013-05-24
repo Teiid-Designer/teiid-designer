@@ -80,6 +80,8 @@ public class TestDisplayNodeFactory extends TestCase {
                                                         new TeiidServerVersion("8.3.0") //$NON-NLS-1$
                                                         };
 
+    private static final ITeiidServerVersion VERSION_8_4 = new TeiidServerVersion("8.4.x"); //$NON-NLS-1$
+
     private IQueryFactory factory;
 
     private IQueryParser parser;
@@ -115,80 +117,112 @@ public class TestDisplayNodeFactory extends TestCase {
             addExpectedResult("testAggregateSymbol1", version83, "abc('abc')");  //$NON-NLS-1$//$NON-NLS-2$
         }
 
+        addExpectedResult("testAggregateSymbol1", VERSION_8_4, "abc('abc')");  //$NON-NLS-1$//$NON-NLS-2$
+
         addExpectedResult("testAggregateSymbol2", VERSION_7_7_2, "COUNT(DISTINCT 'abc')"); //$NON-NLS-1$ //$NON-NLS-2$
         for (ITeiidServerVersion version83 : VERSIONS_8_3) {
             addExpectedResult("testAggregateSymbol2", version83, "abc(DISTINCT 'abc')"); //$NON-NLS-1$ //$NON-NLS-2$
         }
+
+        addExpectedResult("testAggregateSymbol2", VERSION_8_4, "abc(DISTINCT 'abc')"); //$NON-NLS-1$ //$NON-NLS-2$
 
         addExpectedResult("testAggregateSymbol3", VERSION_7_7_2, "COUNT(*)"); //$NON-NLS-1$ //$NON-NLS-2$
         for (ITeiidServerVersion version83 : VERSIONS_8_3) {
             addExpectedResult("testAggregateSymbol3", version83, "abc(*)"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
+        addExpectedResult("testAggregateSymbol3", VERSION_8_4, "abc(*)"); //$NON-NLS-1$ //$NON-NLS-2$
+
         addExpectedResult("testAggregateSymbol4", VERSION_7_7_2, "AVG('abc')");  //$NON-NLS-1$//$NON-NLS-2$
         for (ITeiidServerVersion version83 : VERSIONS_8_3) {
             addExpectedResult("testAggregateSymbol4", version83, "abc('abc')");  //$NON-NLS-1$//$NON-NLS-2$
         }
+
+        addExpectedResult("testAggregateSymbol4", VERSION_8_4, "abc('abc')");  //$NON-NLS-1$//$NON-NLS-2$
 
         addExpectedResult("testAggregateSymbol5", VERSION_7_7_2, "SUM('abc')");  //$NON-NLS-1$//$NON-NLS-2$
         for (ITeiidServerVersion version83 : VERSIONS_8_3) {
             addExpectedResult("testAggregateSymbol5", version83, "abc('abc')");  //$NON-NLS-1$//$NON-NLS-2$
         }
 
+        addExpectedResult("testAggregateSymbol5", VERSION_8_4, "abc('abc')");  //$NON-NLS-1$//$NON-NLS-2$
+
         addExpectedResult("testAggregateSymbol6", VERSION_7_7_2, "MIN('abc')");  //$NON-NLS-1$//$NON-NLS-2$
         for (ITeiidServerVersion version83 : VERSIONS_8_3) {
             addExpectedResult("testAggregateSymbol6", version83, "abc('abc')");  //$NON-NLS-1$//$NON-NLS-2$
         }
+
+        addExpectedResult("testAggregateSymbol6", VERSION_8_4, "abc('abc')");  //$NON-NLS-1$//$NON-NLS-2$
 
         addExpectedResult("testAggregateSymbol7", VERSION_7_7_2, "MAX('abc')");  //$NON-NLS-1$//$NON-NLS-2$
         for (ITeiidServerVersion version83 : VERSIONS_8_3) {
             addExpectedResult("testAggregateSymbol7", version83, "abc('abc')");  //$NON-NLS-1$//$NON-NLS-2$
         }
 
+        addExpectedResult("testAggregateSymbol7", VERSION_8_4, "abc('abc')");  //$NON-NLS-1$//$NON-NLS-2$
+
         addExpectedResult("testRaiseStatement", VERSION_7_7_2, "ERROR 'My Error';");  //$NON-NLS-1$//$NON-NLS-2$
         for (ITeiidServerVersion version83 : VERSIONS_8_3) {
             addExpectedResult("testRaiseStatement", version83, "RAISE 'My Error';");  //$NON-NLS-1$//$NON-NLS-2$
         }
+
+        addExpectedResult("testRaiseStatement", VERSION_8_4, "RAISE 'My Error';");  //$NON-NLS-1$//$NON-NLS-2$
 
         addExpectedResult("testRaiseStatementWithExpression", VERSION_7_7_2, "ERROR a;");  //$NON-NLS-1$//$NON-NLS-2$
         for (ITeiidServerVersion version83 : VERSIONS_8_3) {
             addExpectedResult("testRaiseStatementWithExpression", version83, "RAISE a;");  //$NON-NLS-1$//$NON-NLS-2$
         }
 
+        addExpectedResult("testRaiseStatementWithExpression", VERSION_8_4, "RAISE a;");  //$NON-NLS-1$//$NON-NLS-2$
+
         addExpectedResult("testBlock1", VERSION_7_7_2, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND");  //$NON-NLS-1$//$NON-NLS-2$
         for (ITeiidServerVersion version83 : VERSIONS_8_3) {
             addExpectedResult("testBlock1", version83, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
         }
+
+        addExpectedResult("testBlock1", VERSION_8_4, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
 
         addExpectedResult("testCreateUpdateProcedure1", VERSION_7_7_2, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
         for (ITeiidServerVersion version83 : VERSIONS_8_3) {
             addExpectedResult("testCreateUpdateProcedure1", version83, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
+        addExpectedResult("testCreateUpdateProcedure1", VERSION_8_4, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+
         addExpectedResult("testCreateUpdateProcedure2", VERSION_7_7_2, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
         for (ITeiidServerVersion version83 : VERSIONS_8_3) {
             addExpectedResult("testCreateUpdateProcedure2", version83, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
         }
+
+        addExpectedResult("testCreateUpdateProcedure2", VERSION_8_4, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
 
         addExpectedResult("testCreateUpdateProcedure3", VERSION_7_7_2, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
         for (ITeiidServerVersion version83 : VERSIONS_8_3) {
             addExpectedResult("testCreateUpdateProcedure3", version83, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
+        addExpectedResult("testCreateUpdateProcedure3", VERSION_8_4, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+
         addExpectedResult("testTrimAliasSymbol", VERSION_7_7_2, "SELECT\n\t\ttrim(' ' FROM X) AS ID\n\tFROM\n\t\tY"); //$NON-NLS-1$ //$NON-NLS-2$
         for (ITeiidServerVersion version83 : VERSIONS_8_3) {
             addExpectedResult("testTrimAliasSymbol", version83, "SELECT\n\t\ttrim(' ' FROM X) AS ID\n\tFROM\n\t\tY"); //$NON-NLS-1$ //$NON-NLS-2$
         }
+
+        addExpectedResult("testTrimAliasSymbol", VERSION_8_4, "SELECT\n\t\ttrim(' ' FROM X) AS ID\n\tFROM\n\t\tY"); //$NON-NLS-1$ //$NON-NLS-2$
 
         addExpectedResult("testConstantAliasSymbol", VERSION_7_7_2, "SELECT\n\t\t'123' AS ID\n\tFROM\n\t\tX"); //$NON-NLS-1$ //$NON-NLS-2$
         for (ITeiidServerVersion version83 : VERSIONS_8_3) {
             addExpectedResult("testConstantAliasSymbol", version83, "SELECT\n\t\t'123' AS ID\n\tFROM\n\t\tX"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
+        addExpectedResult("testConstantAliasSymbol", VERSION_8_4, "SELECT\n\t\t'123' AS ID\n\tFROM\n\t\tX"); //$NON-NLS-1$ //$NON-NLS-2$
+
         addExpectedResult("testConcatWithNull", VERSION_7_7_2, "SELECT\n\t\tconcat('abcd', null) AS ProductName\n\tFROM\n\t\tPRODUCTDATA"); //$NON-NLS-1$ //$NON-NLS-2$
         for (ITeiidServerVersion version83 : VERSIONS_8_3) {
             addExpectedResult("testConcatWithNull", version83, "SELECT\n\t\tconcat('abcd', null) AS ProductName\n\tFROM\n\t\tPRODUCTDATA"); //$NON-NLS-1$ //$NON-NLS-2$
         }
+
+        addExpectedResult("testConcatWithNull", VERSION_8_4, "SELECT\n\t\tconcat('abcd', null) AS ProductName\n\tFROM\n\t\tPRODUCTDATA"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     private String getExpectedResult(String testName, ITeiidServerVersion version) {
