@@ -24,7 +24,8 @@ class DdlImporterI18n {
     static final String MODEL_NAME_IS_NON_RELATIONAL_MODEL_MSG = i18n("modelNameIsNonRelationalModelMsg"); //$NON-NLS-1$
     static final String PARSING_DDL_MSG = i18n("parsingDdlMsg"); //$NON-NLS-1$
     static final String SAVING_MODEL_MSG = i18n("savingModelMsg"); //$NON-NLS-1$
-
+    static final String FK_TABLE_REF_NOT_FOUND_MSG = i18n("fkTableRefNotFoundMsg"); //$NON-NLS-1$
+    
     private DdlImporterI18n() {
     }
 }

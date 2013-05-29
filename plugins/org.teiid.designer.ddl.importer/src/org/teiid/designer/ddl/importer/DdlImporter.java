@@ -531,6 +531,10 @@ public class DdlImporter {
 
 			// must have a table reference
 			final AstNode tableRefNode = (AstNode)constraintNode.getProperty(TeiidDdlLexicon.Constraint.TABLE_REFERENCE);
+			if(tableRefNode==null) {
+				messages.add(DdlImporterI18n.FK_TABLE_REF_NOT_FOUND_MSG+" '"+foreignKey.getName()+"'"); //$NON-NLS-1$ //$NON-NLS-2$
+				return;
+			}
 
 			try {
 				final BaseTable tableRef = find(BaseTable.class, tableRefNode, null, roots);
