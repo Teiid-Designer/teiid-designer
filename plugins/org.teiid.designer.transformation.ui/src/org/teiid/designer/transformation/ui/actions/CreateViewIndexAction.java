@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -32,10 +31,11 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
-import org.teiid.designer.transformation.ui.editors.EditRelationalObjectDialog;
+import org.teiid.designer.relational.ui.editor.EditRelationalObjectDialog;
 import org.teiid.designer.transformation.model.RelationalViewIndex;
 import org.teiid.designer.transformation.model.RelationalViewModelFactory;
 import org.teiid.designer.transformation.ui.Messages;
+import org.teiid.designer.transformation.ui.editors.TransformationDialogModel;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.actions.INewChildAction;
 import org.teiid.designer.ui.actions.INewSiblingAction;
@@ -162,8 +162,8 @@ public class CreateViewIndexAction  extends Action implements INewChildAction, I
             relationalViewIndex = new RelationalViewIndex();
 	        
 	        // Hand the table off to the generic edit dialog
-            //EditViewProcedureDialog dialog = new EditViewProcedureDialog(shell, relationalViewIndex, selectedModel);
-            EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, relationalViewIndex, selectedModel);
+            TransformationDialogModel dialogModel = new TransformationDialogModel(relationalViewIndex, selectedModel);
+            EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
 
 	        dialog.open();
 	        

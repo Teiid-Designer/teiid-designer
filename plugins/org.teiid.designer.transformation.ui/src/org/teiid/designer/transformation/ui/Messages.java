@@ -35,7 +35,6 @@ public class Messages extends NLS {
     
     public static String createRelationalViewTableActionText;
     public static String createRelationalViewTableTitle;
-    public static String createRelationalViewTableInitialMessage;
     public static String createRelationalViewTableExceptionMessage;
     public static String createRelationalViewTableHelpText;
     
@@ -47,17 +46,14 @@ public class Messages extends NLS {
     
     public static String createRelationalViewProcedureActionText;
     public static String createRelationalViewProcedureTitle;
-    public static String createRelationalViewProcedureInitialMessage;
     public static String createRelationalViewProcedureExceptionMessage;
     public static String createRelationalViewProcedureHelpText;
     
     public static String createRelationalViewIndexActionText;
     public static String createRelationalViewIndexTitle;
-    public static String createRelationalViewIndexInitialMessage;
     public static String createRelationalViewIndexExceptionMessage;
     public static String createRelationalViewIndexHelpText;
-    
-    public static String createRelationalViewUserDefinedFunctionInitialMessage;
+
     public static String createRelationalViewUserDefinedFunctionTitle;
     public static String createRelationalViewUserDefinedFunctionHelpText;
 
