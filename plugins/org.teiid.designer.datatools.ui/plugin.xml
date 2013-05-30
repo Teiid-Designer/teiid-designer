@@ -89,6 +89,35 @@
    
    <extension
          point="org.eclipse.datatools.connectivity.connectionProfile">
+   <newWizard
+         class="org.teiid.designer.datatools.profiles.ws.ODataConnectionProfileWizard"
+         description="Create an OData Web Service connection profile."
+         icon="icons/full/obj16/web-service-cp.png"
+         id="org.teiid.designer.datatools.profiles.ws.ODataConnectionProfileWizard"
+         name="Web Services Data Source (OData)"
+         profile="org.teiid.designer.datatools.profiles.ws.ODataConnectionProfile"/>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.teiid.designer.datatools.profiles.ws.PropertyPage"
+            icon="icons/full/obj16/web-service-cp.png"
+            id="org.teiid.designer.datatools.profiles.ws.odataProfileProperties"
+            name="%connectionProperties.name">
+         <filter
+               name="org.eclipse.datatools.profile.property.id"
+               value="org.teiid.designer.datatools.profiles.ws.ODataConnectionProfile"/>
+         <enabledWhen>
+            <instanceof
+                  value="org.eclipse.datatools.connectivity.IConnectionProfile">
+            </instanceof>
+         </enabledWhen>
+      </page>
+   </extension>
+   
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
    		<newWizard
          class="org.teiid.designer.datatools.profiles.ws.WSSoapConnectionProfileWizard"
          description="Create a SOAP Web Service connection profile."

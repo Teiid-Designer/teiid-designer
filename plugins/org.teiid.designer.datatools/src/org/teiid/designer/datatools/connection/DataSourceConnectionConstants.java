@@ -29,13 +29,14 @@ public interface DataSourceConnectionConstants {
         String LDAP = "ldap"; //$NON-NLS-1$
         String FILE = "file"; //$NON-NLS-1$
         String WS = "ws"; //$NON-NLS-1$
+        String ODATA = "odata"; //$NON-NLS-1$
         String UNKNOWN = "unknown"; //$NON-NLS-1$
 
         final static String[] JDBC_TRANSLATORS = {INFORMIX, SYBASE, TEIID, POSTGRESQL, ACCESS, HSQL, ORACLE, MYSQL, MYSQL5,
             JDBC_ANSI, JDBC_SIMPLE, SQLSERVER, DB2, H2, DERBY};
 
         final static String[] ALL_TRANSLATORS = {INFORMIX, SYBASE, TEIID, POSTGRESQL, ACCESS, HSQL, ORACLE, MYSQL, MYSQL5,
-            JDBC_ANSI, JDBC_SIMPLE, SQLSERVER, DB2, H2, DERBY, METAMATRIX, SALESFORCE, TERADATA, LOOPBACK, LDAP, FILE, WS};
+            JDBC_ANSI, JDBC_SIMPLE, SQLSERVER, DB2, H2, DERBY, METAMATRIX, SALESFORCE, TERADATA, LOOPBACK, LDAP, FILE, WS, ODATA};
 
     }
 }
