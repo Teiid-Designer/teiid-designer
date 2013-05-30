@@ -22,6 +22,7 @@ public class NewConnectionProfileAction extends Action implements AdvisorUiConst
 	public static final String CATEGORY_XML_FILE_LOCAL = "org.teiid.designer.datatools.profiles.xml.localfile"; //$NON-NLS-1$
 	public static final String CATEGORY_XML_FILE_URL = "org.teiid.designer.datatools.profiles.xml.fileurl"; //$NON-NLS-1$
 	public static final String CATEGORY_WS_CONNECTION = "org.teiid.designer.datatools.profiles.ws.WSConnectionProfile"; //$NON-NLS-1$
+	public static final String CATEGORY_ODATA_CONNECTION = "org.teiid.designer.datatools.profiles.ws.ODataConnectionProfile"; //$NON-NLS-1$
 	public static final String CATEGORY_LDAP_CONNECTION = "org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"; //$NON-NLS-1$
 	public static final String CATEGORY_SALESFORCE_CONNECTION = "org.teiid.designer.datatools.salesforce.connectionProfile"; //$NON-NLS-1$
 	

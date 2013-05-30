@@ -422,12 +422,16 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
                 // Get the connection profile URL from target Model props
                 Properties profileProps = profile.getBaseProperties();
                 String targetModelUrl = profileProps.getProperty(PropertyItem.CONNECTION_URL_DISPLAYNAME);
+                if (targetModelUrl==null) targetModelUrl = profileProps.getProperty(PropertyItem.CONNECTION_ENDPOINT_DISPLAYNAME);
                 
                 // Get the importer DataSource Url property
                 Properties importDsProps = getDataSourceProperties();
                 String importDsUrl = null;
                 if(importDsProps!=null) {
                     importDsUrl = importDsProps.getProperty(PropertyItem.CONNECTION_URL_DISPLAYNAME);
+                    if(importDsUrl==null) {
+                        importDsUrl = importDsProps.getProperty(PropertyItem.CONNECTION_ENDPOINT_DISPLAYNAME);
+                    }
                 }
                 if(importDsUrl!=null && importDsUrl.equalsIgnoreCase(targetModelUrl)) {
                     return true;
