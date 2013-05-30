@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -34,7 +33,8 @@ import org.teiid.designer.relational.model.RelationalView;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
-import org.teiid.designer.relational.ui.edit.EditRelationalObjectDialog;
+import org.teiid.designer.relational.ui.edit.RelationalDialogModel;
+import org.teiid.designer.relational.ui.editor.EditRelationalObjectDialog;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.actions.INewChildAction;
 import org.teiid.designer.ui.actions.INewSiblingAction;
@@ -145,7 +145,8 @@ public class CreateRelationalViewAction  extends Action implements INewChildActi
 	        table.setSupportsUpdate(true);
 	        
 	        // Hand the table off to the generic edit dialog
-	        EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, table, selectedModel);
+	        RelationalDialogModel dialogModel = new RelationalDialogModel(table, selectedModel);
+	        EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
 	        
 	        dialog.open();
 	        

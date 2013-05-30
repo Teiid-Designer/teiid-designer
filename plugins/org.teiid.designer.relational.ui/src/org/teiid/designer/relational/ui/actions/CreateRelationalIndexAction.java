@@ -29,7 +29,8 @@ import org.teiid.designer.relational.model.RelationalModelFactory;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
-import org.teiid.designer.relational.ui.edit.EditRelationalObjectDialog;
+import org.teiid.designer.relational.ui.edit.RelationalDialogModel;
+import org.teiid.designer.relational.ui.editor.EditRelationalObjectDialog;
 import org.teiid.designer.ui.actions.INewChildAction;
 import org.teiid.designer.ui.actions.INewSiblingAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -124,7 +125,8 @@ public class CreateRelationalIndexAction  extends Action implements INewChildAct
 	        RelationalIndex index = new RelationalIndex();
 	        
 	        // Hand the table off to the generic edit dialog
-	        EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, index, selectedModel);
+	        RelationalDialogModel dialogModel = new RelationalDialogModel(index, selectedModel);
+	        EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
 	        
 	        dialog.open();
 	        

@@ -45,7 +45,8 @@ import org.teiid.designer.relational.model.RelationalProcedure;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
-import org.teiid.designer.relational.ui.edit.EditRelationalObjectDialog;
+import org.teiid.designer.relational.ui.edit.RelationalDialogModel;
+import org.teiid.designer.relational.ui.editor.EditRelationalObjectDialog;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.actions.INewChildAction;
 import org.teiid.designer.ui.actions.INewSiblingAction;
@@ -154,7 +155,8 @@ public class CreateRelationalProcedureAction extends Action implements INewChild
 	        
 	        if (procedureTypeDialog.getReturnCode() == Window.OK) {
 		        // Hand the table off to the generic edit dialog
-		        EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, procedure, selectedModel);
+	            RelationalDialogModel dialogModel = new RelationalDialogModel(procedure, selectedModel);
+	            EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
 		        
 		        dialog.open();
 		        

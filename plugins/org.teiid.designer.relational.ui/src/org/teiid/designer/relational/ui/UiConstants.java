@@ -8,7 +8,6 @@
 package org.teiid.designer.relational.ui;
 
 import java.util.ResourceBundle;
-
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
 
@@ -95,8 +94,12 @@ public interface UiConstants {
         String INDEX_ICON = OBJ16 + "index.png"; //$NON-NLS-1$
         String INDEX_ERROR_ICON = OBJ16 + "index-error.png"; //$NON-NLS-1$
         String INDEX_WARNING_ICON = OBJ16 + "index-warning.png"; //$NON-NLS-1$
-        
-        
+        String EDIT_DESCRIPTION_ICON = OBJ16 + "edit-description.png"; //$NON-NLS-1$
+        String EDIT_DESCRIPTION_ERROR_ICON = OBJ16 + "edit-description-error.png"; //$NON-NLS-1$
+        String EDIT_DESCRIPTION_WARNING_ICON = OBJ16 + "edit-description-warning.png"; //$NON-NLS-1$
+        String NATIVE_SQL_ICON = OBJ16 + "native-sql.png"; //$NON-NLS-1$
+        String NATIVE_SQL_ERROR_ICON = OBJ16 + "native-sql-error.png"; //$NON-NLS-1$
+        String NATIVE_SQL_WARNING_ICON = OBJ16 + "native-sql-warning.png"; //$NON-NLS-1$
     }
 
     /**

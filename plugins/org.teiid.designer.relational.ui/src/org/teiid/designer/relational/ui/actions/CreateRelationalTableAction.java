@@ -27,16 +27,14 @@ import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
-import org.teiid.designer.metamodels.relational.BaseTable;
-import org.teiid.designer.metamodels.relational.impl.BaseTableImpl;
-import org.teiid.designer.metamodels.relational.impl.TableImpl;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalModelFactory;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
-import org.teiid.designer.relational.ui.edit.EditRelationalObjectDialog;
+import org.teiid.designer.relational.ui.edit.RelationalDialogModel;
+import org.teiid.designer.relational.ui.editor.EditRelationalObjectDialog;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.actions.INewChildAction;
 import org.teiid.designer.ui.actions.INewSiblingAction;
@@ -147,7 +145,8 @@ public class CreateRelationalTableAction extends Action implements INewChildActi
 	        table.setSupportsUpdate(true);
 	        
 	        // Hand the table off to the generic edit dialog
-	        EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, table, selectedModel);
+	        RelationalDialogModel dialogModel = new RelationalDialogModel(table, selectedModel);
+	        EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
 	        
 	        dialog.open();
 	        

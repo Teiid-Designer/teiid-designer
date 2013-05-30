@@ -44,10 +44,11 @@ import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalProcedure;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
+import org.teiid.designer.relational.ui.editor.EditRelationalObjectDialog;
 import org.teiid.designer.transformation.model.RelationalViewModelFactory;
 import org.teiid.designer.transformation.model.RelationalViewProcedure;
 import org.teiid.designer.transformation.ui.Messages;
-import org.teiid.designer.transformation.ui.editors.EditRelationalObjectDialog;
+import org.teiid.designer.transformation.ui.editors.TransformationDialogModel;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.actions.INewChildAction;
 import org.teiid.designer.ui.actions.INewSiblingAction;
@@ -174,7 +175,8 @@ public class CreateViewProcedureAction  extends Action implements INewChildActio
 	        procedureTypeDialog.open();
 	        
 	        if (procedureTypeDialog.getReturnCode() == Window.OK) {
-	            EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, relationalViewProcedure, selectedModel);
+	            TransformationDialogModel dialogModel = new TransformationDialogModel(relationalViewProcedure, selectedModel);
+	            EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
 	
 		        dialog.open();
 		        
