@@ -15,8 +15,10 @@ import org.teiid.designer.ui.common.ICredentialsCommon;
 public interface IWSProfileConstants extends ICredentialsCommon {
 
 	String TEIID_WS_CONNECTION_PROFILE_ID = "org.teiid.designer.datatools.profiles.ws.WSConnectionProfile";  //$NON-NLS-1$
+	String TEIID_ODATA_CONNECTION_PROFILE_ID = "org.teiid.designer.datatools.profiles.ws.ODataConnectionProfile";  //$NON-NLS-1$
 
-    String TEIID_CATEGORY = "org.teiid.designer.import.category"; //$NON-NLS-1$
+    
+	String TEIID_CATEGORY = "org.teiid.designer.import.category"; //$NON-NLS-1$
     
 
     /*
@@ -26,6 +28,11 @@ public interface IWSProfileConstants extends ICredentialsCommon {
      */
      String DS_ENDPOINT = "wsdlURI"; //$NON-NLS-1$
      String DS_SECURITY_TYPE = SECURITY_TYPE_ID;
+     /**
+     * For OData
+     * @since 8.2
+     */
+     String DS_REQUEST_TIMEOUT = "RequestTimeout"; //$NON-NLS-1$
      String DS_AUTH_USER_NAME = "AuthUserName"; //$NON-NLS-1$
      String DS_AUTH_PASSWORD = "AuthPassword"; //$NON-NLS-1$
      String DS_WS_SECURITY_CONFIG_URL = "WsSecurityConfigURL"; //$NON-NLS-1$

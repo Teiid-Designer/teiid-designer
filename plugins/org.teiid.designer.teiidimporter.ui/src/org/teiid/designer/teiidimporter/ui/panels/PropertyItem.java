@@ -12,6 +12,8 @@ public class PropertyItem extends Object implements Serializable {
     @SuppressWarnings( "javadoc" )
     public static final String CONNECTION_URL_DISPLAYNAME = "connection-url";  //$NON-NLS-1$
     @SuppressWarnings( "javadoc" )
+    public static final String CONNECTION_ENDPOINT_DISPLAYNAME = "EndPoint";  //$NON-NLS-1$
+    @SuppressWarnings( "javadoc" )
     public static final String USERNAME_PROP_DISPLAYNAME = "user-name";  //$NON-NLS-1$
     @SuppressWarnings( "javadoc" )
     public static final String PASSWORD_PROP_DISPLAYNAME = "password";  //$NON-NLS-1$
