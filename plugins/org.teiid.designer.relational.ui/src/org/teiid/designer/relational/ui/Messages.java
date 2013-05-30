@@ -31,14 +31,12 @@ public class Messages extends NLS {
 
     public static String baseTableActionText;
     public static String createRelationalTableTitle;
-    public static String createRelationalTableInitialMessage;
     public static String createRelationalTableExceptionMessage;
     public static String createRelationalTableHelpText;
     
 
     public static String viewActionText;
     public static String createRelationalViewTitle;
-    public static String createRelationalViewInitialMessage;
     public static String createRelationalViewExceptionMessage;
     public static String createRelationalViewHelpText;
     
@@ -52,12 +50,9 @@ public class Messages extends NLS {
     public static String createRelationalUserDefinedFunctionDescription;
     public static String createRelationalProcedureActionText;
     public static String createRelationalProcedureTitle;
-    public static String createRelationalProcedureInitialMessage;
     public static String createRelationalProcedureExceptionMessage;
     public static String createRelationalProcedureHelpText;
-    
-    public static String createRelationalSourceFunctionInitialMessage;
-    public static String createRelationalUserDefinedFunctionInitialMessage;
+
     public static String createRelationalSourceFunctionTitle;
     public static String createRelationalUserDefinedFunctionTitle;
     public static String createRelationalSourceFunctionHelpText;
@@ -65,7 +60,6 @@ public class Messages extends NLS {
     
     public static String createRelationalIndexActionText;
     public static String createRelationalIndexTitle;
-    public static String createRelationalIndexInitialMessage;
     public static String createRelationalIndexExceptionMessage;
     public static String createRelationalIndexHelpText;
     public static String browseModelToSelectTableForIndexTooltipText;

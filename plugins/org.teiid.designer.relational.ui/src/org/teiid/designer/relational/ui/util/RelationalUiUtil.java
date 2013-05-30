@@ -102,4 +102,26 @@ public class RelationalUiUtil implements RelationalConstants {
 		
 		return null;
 	}
+
+	/**
+     * @param status the error status object
+     * @return the relevant description image
+     */
+    public static Image getDescriptionImage(IStatus status) {
+        int severity = status.getSeverity();
+        if( severity == ERROR ) return UiPlugin.getDefault().getImage(UiConstants.Images.EDIT_DESCRIPTION_ERROR_ICON);
+        if( severity == WARNING ) return UiPlugin.getDefault().getImage(UiConstants.Images.EDIT_DESCRIPTION_WARNING_ICON);
+        return UiPlugin.getDefault().getImage(UiConstants.Images.EDIT_DESCRIPTION_ICON);
+    }
+
+    /**
+     * @param status the error status object
+     * @return the relevant native sql image
+     */
+    public static Image getNativeSQLImage(IStatus status) {
+        int severity = status.getSeverity();
+        if( severity == ERROR ) return UiPlugin.getDefault().getImage(UiConstants.Images.NATIVE_SQL_ERROR_ICON);
+        if( severity == WARNING ) return UiPlugin.getDefault().getImage(UiConstants.Images.NATIVE_SQL_WARNING_ICON);
+        return UiPlugin.getDefault().getImage(UiConstants.Images.NATIVE_SQL_ICON);
+    }
 }
