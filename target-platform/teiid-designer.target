@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?>
 <target name="locus" sequenceNumber="4">
-<locations>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<repository location="http://download.jboss.org/jbosstools/updates/integration/kepler/core/locus/0.0.1.v20130507-2028-B7"/>
-  <unit id="org.jboss.tools.locus.apache.poi" version="2.5.1.Final-v20130507-2028-B7"/>
-  <unit id="org.jboss.tools.locus.jcip.annotations" version="1.0.0.Final-v20130507-2028-B7"/>
-  <unit id="org.jboss.tools.locus.mockito" version="1.9.5.Final_patched_TEIIDDES-1681-v20130507-2028-B7"/>
-  <unit id="org.jboss.tools.locus.sf.saxon" version="9.2.1.5j-Final-v20130507-2028-B7"/>
-</location>
-
+  <locations>
+    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <repository location="http://download.jboss.org/jbosstools/updates/integration/kepler/core/locus/0.0.1.v20130507-2028-B7"/>
+      <unit id="org.jboss.tools.locus.jcip.annotations" version="1.0.0.Final-v20130507-2028-B7"/>
+      <unit id="org.jboss.tools.locus.mockito" version="1.9.5.Final_patched_TEIIDDES-1681-v20130507-2028-B7"/>
+      <unit id="org.jboss.tools.locus.sf.saxon" version="9.2.1.5j-Final-v20130507-2028-B7"/>
+    </location>
+  
+    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <repository location="http://download.jboss.org/jbosstools/updates/requirements/orbit/S20130427215344/"/>
+      <unit id="org.apache.poi" version="3.9.0.v201303080712"/>
+    </location>
+  
 
     <!-- Eclipse Graphiti -->
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -591,5 +595,5 @@
     
 
   </locations>
-<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+  <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 </target>
