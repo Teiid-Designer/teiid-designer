@@ -1,57 +1,77 @@
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.jboss.tools</groupId>
-		<artifactId>teiid</artifactId>
-		<version>0.0.4-SNAPSHOT</version>
-	</parent>
-	<groupId>org.jboss.tools</groupId>
-	<artifactId>teiid.site</artifactId>
-	<version>8.2.0-SNAPSHOT</version>
-	<packaging>eclipse-repository</packaging>
-	<properties>
-		<update.site.name>Teiid Designer</update.site.name>
-		<!--
-		<update.site.description>Nightly Build</update.site.description>
-		<update.site.description>Development Milestone</update.site.description>
-		<update.site.description>Stable Release</update.site.description>
-		-->
-		<target.eclipse.version>4.3 (Kepler)</target.eclipse.version>
-		<siteTemplateFolder>siteTemplateFolder</siteTemplateFolder>
-	</properties>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.jboss.tools.tycho-plugins</groupId>
-				<artifactId>repository-utils</artifactId>
-				<version>0.16.0.CR1</version>
-				<executions>
-					<execution>
-						<id>generate-facade</id>
-						<phase>package</phase>
-						<goals>
-							<goal>generate-repository-facade</goal>
-						</goals>
-						<configuration>
-							<!--
-							<associateSites>
-								<associateSite>http://download.jboss.org/jbosstools/updates/kepler/</associateSite>
-							</associateSites>
-							-->
-							<siteTemplateFolder>${siteTemplateFolder}</siteTemplateFolder>
-							<symbols>
-								<update.site.name>${update.site.name}</update.site.name>
-								<update.site.description>${update.site.description}</update.site.description>
-								<update.site.version>${update.site.version}</update.site.version>
-								<target.eclipse.version>${target.eclipse.version}</target.eclipse.version>
-							</symbols>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.jboss.tools</groupId>
+    <artifactId>teiid</artifactId>
+    <version>0.0.4-SNAPSHOT</version>
+  </parent>
+  <groupId>org.jboss.tools</groupId>
+  <artifactId>teiid.site</artifactId>
+  <name>Teiid Designer</name>
+  <version>8.2.0-SNAPSHOT</version>
+  <packaging>eclipse-repository</packaging>
+  <properties>
+    <update.site.name>Teiid Designer</update.site.name>
+    <update.site.description>Nightly Build</update.site.description>
+    <!--
+    <update.site.description>Development Milestone</update.site.description>
+    <update.site.description>Stable Release</update.site.description>
+    -->
+    <target.eclipse.version>4.3 (Kepler)</target.eclipse.version>
+    <siteTemplateFolder>siteTemplateFolder</siteTemplateFolder>
+  </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.jboss.tools.tycho-plugins</groupId>
+        <artifactId>repository-utils</artifactId>
+        <executions>
+          <execution>
+            <id>generate-facade</id>
+            <phase>package</phase>
+            <goals>
+              <goal>generate-repository-facade</goal>
+            </goals>
+            <configuration>
+              <!--
+              <associateSites>
+                <site>http://download.jboss.org/jbosstools/updates/kepler/</site>
+              </associateSites>
+              -->
+              <siteTemplateFolder>${siteTemplateFolder}</siteTemplateFolder>
+              <symbols>
+                <update.site.name>${update.site.name}</update.site.name>
+                <update.site.description>${update.site.description}</update.site.description>
+                <target.eclipse.version>${target.eclipse.version}</target.eclipse.version>
+              </symbols>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!-- Workaround for publish script not able to deal with ${artifactId}-${version}.zip -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <id>copy-site-to-site_assembly.zip</id>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <copy
+                  file="${project.build.directory}/${project.artifactId}-${project.version}.zip"
+                  tofile="${project.build.directory}/site_assembly.zip" />
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
