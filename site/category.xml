@@ -12,17 +12,17 @@ With Teiid Designer, not only do you create source data models and map your sour
 
 Visit the project home page at:  http://www.teiid.org  for details.
    </description>
-   <feature url="features/org.teiid.designer.feature_0.0.0.jar" id="org.teiid.designer.feature" version="0.0.0">
+   <feature id="org.teiid.designer.feature">
    	<category name="DataTools"/>
    </feature>
-   <feature url="features/org.teiid.designer.runtime.feature_0.0.0.jar" id="org.teiid.designer.runtime.feature" version="0.0.0">
+   <feature id="org.teiid.designer.runtime.feature">
    	<category name="DataTools"/>
    </feature>
-   <feature url="features/org.teiid.datatools.connectivity.feature_0.0.0.jar" id="org.teiid.datatools.connectivity.feature" version="0.0.0">
+   <feature id="org.teiid.datatools.connectivity.feature">
     <category name="DataTools"/>
    </feature>
    <!--
-   <feature url="features/org.teiid.designer.test.feature_0.0.0.jar" id="org.teiid.designer.test.feature" version="0.0.0">
+   <feature id="org.teiid.designer.test.feature">
     <category name="DataTools"/>
    </feature>
    -->
