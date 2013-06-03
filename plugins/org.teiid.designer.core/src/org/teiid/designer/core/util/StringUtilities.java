@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
 
 /**
@@ -40,6 +43,11 @@ public class StringUtilities {
      * The String "\n"
      */
     public static final String NEW_LINE = "\n"; //$NON-NLS-1$
+    
+    /**
+     * A Comma.
+     */
+    public static String COMMA = ","; //$NON-NLS-1$
 
     /**
      * The name of the System property that specifies the string that should be used to separate lines. This property is a standard
@@ -212,6 +220,37 @@ public class StringUtilities {
         String firstChar = new Character(value.charAt(0)).toString();
         firstChar = firstChar.toLowerCase();
         return (firstChar + value.substring(1));
+    }
+    
+    /**
+     * Parses a comma-separated list into an array of strings into an array of strings
+     * Values can contain whitespace, but whitespace at the beginning and end of each value is trimmed.
+     * @return array of Strings
+     * @param csvList a string of comma separated values
+     */
+    public static String[] parseCommaDelimitedString(String csvString) {
+        String[] result = parseList(csvString, COMMA);
+        for (int i = 0; i < result.length; i++) {
+            result[i] = result[i].trim();
+        }
+        
+        return result;
+    }
+
+    /**
+     * Parses a delimited string using the specified delimiter.
+     * @param list a string of token separated values
+     * @param delimiter the delimiter character(s).  Each character in the string is a single delimiter.
+     * @return an array of strings
+     */
+    public static String[] parseList(String delimitedString, String delimiter) {
+        List<String> result = new ArrayList<String>();
+        StringTokenizer tokenizer = new StringTokenizer(delimitedString, delimiter);
+        while (tokenizer.hasMoreTokens()) {
+            result.add(tokenizer.nextToken());
+        }
+        
+        return result.toArray(new String[0]);
     }
 
     public static String removeChars( final String value,

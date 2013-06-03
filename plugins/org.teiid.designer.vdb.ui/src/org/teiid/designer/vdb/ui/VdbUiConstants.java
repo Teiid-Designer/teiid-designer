@@ -80,6 +80,9 @@ public interface VdbUiConstants {
         String REMOVE_MODEL = CTOOL16 + "remove-model.png"; //$NON-NLS-1$
         String REMOVE_ROLE = CTOOL16 + "remove-role.png"; //$NON-NLS-1$
         String REMOVE_TRANSLATOR = CTOOL16 + "remove-translator.png"; //$NON-NLS-1$
+        String ADD = CTOOL16 + "add.png"; //$NON-NLS-1$
+        String REMOVE = CTOOL16 + "remove.png"; //$NON-NLS-1$
+        String EDIT = CTOOL16 + "edit.png"; //$NON-NLS-1$
         String RESTORE_DEFAULT_VALUE = CTOOL16 + "restore-default-value.png"; //$NON-NLS-1$
         
         String VDB_ICON = OBJ16 + "VDB.gif"; //$NON-NLS-1$

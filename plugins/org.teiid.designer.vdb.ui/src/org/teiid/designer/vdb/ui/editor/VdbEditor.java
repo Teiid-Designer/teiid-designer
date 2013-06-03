@@ -45,8 +45,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.text.DocumentEvent;
-import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -60,8 +58,6 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -72,10 +68,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -95,7 +88,6 @@ import org.teiid.designer.ui.common.table.CheckBoxColumnProvider;
 import org.teiid.designer.ui.common.table.DefaultTableProvider;
 import org.teiid.designer.ui.common.table.TableAndToolBar;
 import org.teiid.designer.ui.common.table.TextColumnProvider;
-import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -119,7 +111,9 @@ import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiConstants.Images;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
 import org.teiid.designer.vdb.ui.editor.panels.DataRolesPanel;
+import org.teiid.designer.vdb.ui.editor.panels.DescriptionPanel;
 import org.teiid.designer.vdb.ui.editor.panels.ModelDetailsPanel;
+import org.teiid.designer.vdb.ui.editor.panels.PropertiesPanel;
 import org.teiid.designer.vdb.ui.translators.TranslatorOverridesPanel;
 
 
@@ -160,8 +154,6 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     static final String CONFIRM_OVERWRITE_USERFILE_MESSAGE = i18n("confirmOverwriteUserFileMessage"); //$NON-NLS-1$
     static final String CONFIRM_OVERWRITE_UDFJAR_MESSAGE = i18n("confirmOverwriteUdfJarMessage"); //$NON-NLS-1$
     static final String INFORM_DATA_ROLES_ON_ADD_MESSAGE = i18n("informDataRolesExistOnAddMessage"); //$NON-NLS-1$
-    static final String INVALID_INTEGER_INPUT_TITLE = i18n("invalidQueryTimeoutValueTitle"); //$NON-NLS-1$
-    static final String INVALID_INTEGER_INPUT_MESSAGE = i18n("invalidQueryTimeoutValueMessage"); //$NON-NLS-1$
     
     static final int MODELS_PANEL_WIDTH_HINT = 300;  // Models Panel Overall Width
     static final int MODELS_PANEL_IMAGE_COL_WIDTH = 50;  // Image Cols Width
@@ -174,7 +166,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     }
 
     Vdb vdb;
-    StyledTextEditor textEditor;
+
     TableAndToolBar<VdbModelEntry> modelsGroup;
     ModelDetailsPanel modelDetailsPanel;
     TableAndToolBar<VdbEntry> otherFilesGroup;
@@ -186,6 +178,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     DataRolesPanel dataRolesPanel;
     VdbDataRoleResolver dataRoleResolver;
     TranslatorOverridesPanel pnlTranslatorOverrides;
+    PropertiesPanel propertiesPanel;
+    DescriptionPanel descriptionPanel;
     
     boolean disposed = false;
 
@@ -338,7 +332,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         public void setValue( final VdbEntry element,
                               final Boolean value ) {
             IPreferenceStore prefStore = VdbUiPlugin.singleton.getPreferenceStore();
-            // set value to true if preferene not found
+            // set value to true if preference not found
             boolean showWarningDialog = "".equals(prefStore.getString(SYNCHRONIZE_WITHOUT_WARNING)) ? true //$NON-NLS-1$
             : !prefStore.getBoolean(SYNCHRONIZE_WITHOUT_WARNING);
             boolean synchronize = !showWarningDialog;
@@ -490,77 +484,6 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         modelsGroup.getTable().getColumn(0).getColumn().setWidth(col1Width);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-	private void createDataRolesControl( Composite parent ) {
-    	dataRolesPanel = new DataRolesPanel(parent, this);
-    }
-
-    private void createDescriptionControl( Composite parent ) {
-    	Composite panel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1, 2);
-    	panel.setLayout(new GridLayout(2, false));
-
-		Group propertiesGroup = WidgetFactory.createGroup(panel, i18n("properties"), SWT.FILL, 1, 2); //$NON-NLS-1$
-		GridData gd_1 = new GridData(GridData.FILL_VERTICAL);
-		gd_1.widthHint = 220;
-		propertiesGroup.setLayoutData(gd_1);
-
-		Label label = new Label(propertiesGroup, SWT.NONE);
-		label.setText(i18n("queryTimeoutLabel")); //$NON-NLS-1$
-
-		final Text queryTimeoutText = new Text(propertiesGroup, SWT.BORDER | SWT.SINGLE);
-		queryTimeoutText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		queryTimeoutText.setText(Integer.toString(vdb.getQueryTimeout()));
-    	queryTimeoutText.addModifyListener(new ModifyListener() {
-			
-			@Override
-			public void modifyText(ModifyEvent e) {
-				try {
-                    int valueInSecs = Integer.parseInt(queryTimeoutText.getText());
-                    if (valueInSecs > -1) {
-                        getVdb().setQueryTimeout(valueInSecs);
-					}
-				} catch (NumberFormatException ex) {
-					MessageDialog.openWarning(Display.getCurrent().getActiveShell(),
-                            VdbEditor.INVALID_INTEGER_INPUT_TITLE,
-                            INVALID_INTEGER_INPUT_MESSAGE);
-					queryTimeoutText.setText(Integer.toString(vdb.getQueryTimeout()));
-				}
-				
-			}
-		});
-    	
-    	Group descriptionGroup = WidgetFactory.createGroup(panel, i18n("description"), GridData.FILL_BOTH, 1, 1); //$NON-NLS-1$
-    	
-        this.textEditor = new StyledTextEditor(descriptionGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
-        final GridData gridData = new GridData(GridData.FILL_BOTH);
-        gridData.horizontalSpan = 1;
-
-        this.textEditor.setLayoutData(gridData);
-        this.textEditor.setText(vdb.getDescription());
-        this.textEditor.getDocument().addDocumentListener(new IDocumentListener() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
-             */
-            @Override
-            public void documentAboutToBeChanged( final DocumentEvent event ) {
-                // nothing to do
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
-             */
-            @Override
-            public void documentChanged( final DocumentEvent event ) {
-                getVdb().setDescription(textEditor.getText());
-            }
-
-        });
-    }
-
     private void createEditorBottom( Composite parent ) {
         Composite pnlBottom = new Composite(parent, SWT.BORDER);
         pnlBottom.setLayout(new GridLayout());
@@ -575,9 +498,20 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             pnlRoles.setLayout(new GridLayout());
             pnlRoles.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             rolesTab.setControl(pnlRoles);
-            createDataRolesControl(pnlRoles);
+            new DataRolesPanel(pnlRoles, this);
         }
 
+        { // properties tab
+            CTabItem propertiesTab = new CTabItem(tabFolder, SWT.NONE);
+            propertiesTab.setText(i18n("propertiesTab")); //$NON-NLS-1$
+            propertiesTab.setToolTipText(i18n("propertiesTabToolTip")); //$NON-NLS-1$
+            Composite pnlProperties = new Composite(tabFolder, SWT.NONE);
+            pnlProperties.setLayout(new GridLayout());
+            pnlProperties.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            propertiesTab.setControl(pnlProperties);
+            propertiesPanel = new PropertiesPanel(pnlProperties, this);
+        }
+        
         { // description tab
             CTabItem descriptionTab = new CTabItem(tabFolder, SWT.NONE);
             descriptionTab.setText(i18n("descriptionTab")); //$NON-NLS-1$
@@ -586,7 +520,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             pnlDescription.setLayout(new GridLayout());
             pnlDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             descriptionTab.setControl(pnlDescription);
-            createDescriptionControl(pnlDescription);
+            descriptionPanel = new DescriptionPanel(pnlDescription, this);
         }
 
         { // translator overrides tab
@@ -1808,7 +1742,9 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         if (vdb != null) try {
             vdb.removeChangeListener(vdbListener);
             vdb.close();
-            if (textEditor != null) textEditor.dispose();
+            if( descriptionPanel != null ) {
+            	descriptionPanel.close();
+            }
         } catch (final Exception err) {
             VdbUiConstants.Util.log(err);
             WidgetUtil.showError(err);

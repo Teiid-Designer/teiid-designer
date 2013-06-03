@@ -24,12 +24,14 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
+
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -242,7 +244,27 @@ public class VdbUtil {
 	    
 	    return null;
     }
-
+    
+    /**
+     * Builds a comma-separated string from an array of strings
+	 * @param values an array of strings
+     * @return string of comma separated values
+     *
+     */
+    public static String buildCommaDelimitedString(Set<String> values) {
+        StringBuilder sb = new StringBuilder();
+        int i=0;
+        int numVal = values.size();
+        for (String val : values) {
+        	i++;
+        	sb.append(val);
+        	if( i< numVal ) {
+        		sb.append(StringUtilities.COMMA).append(StringUtilities.SPACE);
+        	}
+        }
+        
+        return sb.toString();
+    }
     static JAXBContext getJaxbContext() throws JAXBException {
         return JAXBContext.newInstance(new Class<?>[] {VdbElement.class});
     }
@@ -577,17 +599,14 @@ public class VdbUtil {
                 }
             }
         } catch (FileNotFoundException ex) {
-            // TODO Auto-generated catch block
             ex.printStackTrace();
         } catch (IOException ex) {
-            // TODO Auto-generated catch block
             ex.printStackTrace();
         } finally {
             if( zin != null ) {
                 try {
                     zin.close();
                 } catch (IOException ex) {
-                    // TODO Auto-generated catch block
                     ex.printStackTrace();
                 }
             }

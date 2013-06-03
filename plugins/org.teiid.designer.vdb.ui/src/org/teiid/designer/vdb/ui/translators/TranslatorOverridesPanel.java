@@ -8,17 +8,17 @@
 package org.teiid.designer.vdb.ui.translators;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Util;
+import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD;
+import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.EDIT_TRANSLATOR;
-import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.RESTORE_DEFAULT_VALUE;
+import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.EDIT;
+import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
+import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE_TRANSLATOR;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -41,20 +41,22 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.ISharedImages;
 import org.teiid.core.designer.properties.PropertyDefinition;
-import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.ui.common.UiPlugin;
+import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.TranslatorOverrideProperty;
@@ -73,33 +75,16 @@ import org.teiid.designer.vdb.ui.VdbUiPlugin;
 public final class TranslatorOverridesPanel extends Composite {
 
     static final String PREFIX = I18nUtil.getPropertyPrefix(TranslatorOverridesPanel.class);
-
-    /**
-     * Action to add a custom property.
-     */
-    private final IAction addPropertyAction;
-
-    /**
-     * Action to remove a custom property.
-     */
-    private final IAction deletePropertyAction;
-
-    /**
-     * Action to edit a translator override name.
-     */
-    private final IAction editTranslatorAction;
-
-    /**
-     * Action to remove a translator from those being overridden.
-     */
-    private final IAction deleteTranslatorAction;
+    
+    Button addPropertyButton;
+    Button deletePropertyButton;
+    Button restorePropertyButton;
+    
+    Button addTranslatorButton;
+    Button deleteTranslatorButton;
+    Button editTranslatorButton;
 
     private final TableViewer propertiesViewer;
-
-    /**
-     * Action to restore the property to its default value.
-     */
-    private final IAction restorePropertyDefaultAction;
 
     private final TableViewer translatorsViewer;
 
@@ -131,7 +116,7 @@ public final class TranslatorOverridesPanel extends Composite {
             // add the list for holding overridden translators
             //
 
-            this.translatorsViewer = new TableViewer(pnlTranslators, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
+            this.translatorsViewer = new TableViewer(pnlTranslators, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
             this.translatorsViewer.setContentProvider(new IStructuredContentProvider() {
                 /**
                  * {@inheritDoc}
@@ -238,84 +223,71 @@ public final class TranslatorOverridesPanel extends Composite {
             //
             // add toolbar below the list of translators
             //
+            Composite toolbarPanel = WidgetFactory.createPanel(pnlTranslators, SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 3);
+            
+            this.addTranslatorButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
+            this.addTranslatorButton.setImage(VdbUiPlugin.singleton.getImage(ADD_TRANSLATOR));
+            this.addTranslatorButton.setToolTipText(Util.getString(PREFIX + "addTranslatorAction.toolTip")); //$NON-NLS-1$
+            this.addTranslatorButton.addSelectionListener(new SelectionListener() {
+    			
+    			@Override
+    			public void widgetSelected(SelectionEvent e) {
+    				handleAddTranslatorOverride();
+    			}
 
-            ToolBar toolBar = new ToolBar(pnlTranslators, SWT.PUSH | SWT.BORDER);
-            ToolBarManager toolBarMgr = new ToolBarManager(toolBar);
+    			@Override
+    			public void widgetDefaultSelected(SelectionEvent e) {
+    				// TODO Auto-generated method stub
+    				
+    			}
+    		});
+            
+            this.editTranslatorButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
+            this.editTranslatorButton.setImage(VdbUiPlugin.singleton.getImage(EDIT_TRANSLATOR));
+            this.editTranslatorButton.setToolTipText(Util.getString(PREFIX + "editTranslatorAction.toolTip")); //$NON-NLS-1$
+            this.editTranslatorButton.addSelectionListener(new SelectionListener() {
+    			
+    			@Override
+    			public void widgetSelected(SelectionEvent e) {
+    				handleTranslatorRemoved();
+    			}
 
-            //
-            // add the add action to the toolbar
-            //
+    			@Override
+    			public void widgetDefaultSelected(SelectionEvent e) {
+    				// TODO Auto-generated method stub
+    				
+    			}
+    		});
+            
+            this.deleteTranslatorButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
+            this.deleteTranslatorButton.setImage(VdbUiPlugin.singleton.getImage(REMOVE_TRANSLATOR));
+            this.deleteTranslatorButton.setToolTipText(Util.getString(PREFIX + "removeTranslatorAction.toolTip")); //$NON-NLS-1$
+            this.deleteTranslatorButton.addSelectionListener(new SelectionListener() {
+    			
+    			@Override
+    			public void widgetSelected(SelectionEvent e) {
+    				handleTranslatorRemoved();
+    			}
 
-            IAction addAction = new Action(Util.getString(PREFIX + "addTranslatorAction.text"), SWT.BORDER) { //$NON-NLS-1$
+    			@Override
+    			public void widgetDefaultSelected(SelectionEvent e) {
+    				// TODO Auto-generated method stub
+    				
+    			}
+    		});
+            
+            this.translatorsViewer.addDoubleClickListener(new IDoubleClickListener() {
+            	
                 /**
                  * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.jface.action.Action#run()
+                 *
+                 * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
                  */
                 @Override
-                public void run() {
-                    handleAddTranslatorOverride();
+                public void doubleClick( DoubleClickEvent event ) {
+                    handleEditTranslatorOverride();
                 }
-            };
-
-            addAction.setToolTipText(Util.getString(PREFIX + "addTranslatorAction.toolTip")); //$NON-NLS-1$
-            toolBarMgr.add(addAction);
-            toolBarMgr.add(new Separator());
-
-            { // edit translator action
-                this.editTranslatorAction = new Action(CoreStringUtil.Constants.EMPTY_STRING, SWT.BORDER) {
-    
-                    /**
-                     * {@inheritDoc}
-                     * 
-                     * @see org.eclipse.jface.action.Action#run()
-                     */
-                    @Override
-                    public void run() {
-                        handleEditTranslatorOverride();
-                    }
-                };
-    
-                this.editTranslatorAction.setToolTipText(Util.getString(PREFIX + "editTranslatorAction.toolTip")); //$NON-NLS-1$
-                this.editTranslatorAction.setEnabled(false);
-                this.editTranslatorAction.setImageDescriptor(VdbUiPlugin.singleton.getImageDescriptor(EDIT_TRANSLATOR));
-                toolBarMgr.add(this.editTranslatorAction);
-                toolBarMgr.add(new Separator());
-                
-                this.translatorsViewer.addDoubleClickListener(new IDoubleClickListener() {
-                    
-                    /**
-                     * {@inheritDoc}
-                     *
-                     * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
-                     */
-                    @Override
-                    public void doubleClick( DoubleClickEvent event ) {
-                        handleEditTranslatorOverride();
-                    }
-                });
-            }
-
-            //
-            // add the delete action to the toolbar
-            //
-
-            this.deleteTranslatorAction = new Action(Util.getString(PREFIX + "removeTranslatorAction.text"), SWT.BORDER) { //$NON-NLS-1$
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.jface.action.Action#run()
-                 */
-                @Override
-                public void run() {
-                    handleTranslatorRemoved();
-                }
-            };
-
-            this.deleteTranslatorAction.setToolTipText(Util.getString(PREFIX + "removeTranslatorAction.toolTip")); //$NON-NLS-1$
-            this.deleteTranslatorAction.setEnabled(false);
-            toolBarMgr.add(this.deleteTranslatorAction);
-            toolBarMgr.update(true);
+            });
         }
 
         { // right-side is an override description and table with the selected translator's properties
@@ -344,7 +316,7 @@ public final class TranslatorOverridesPanel extends Composite {
                 }
             });
 
-            this.propertiesViewer = new TableViewer(pnlOverrides, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
+            this.propertiesViewer = new TableViewer(pnlOverrides, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
             ColumnViewerToolTipSupport.enableFor(this.propertiesViewer);
             this.propertiesViewer.setContentProvider(new IStructuredContentProvider() {
                 /**
@@ -415,7 +387,7 @@ public final class TranslatorOverridesPanel extends Composite {
 
             // create columns
             TableViewerColumn column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
-            column.getColumn().setText(Util.getString(PREFIX + "propertyColumn.text")); //$NON-NLS-1$
+            column.getColumn().setText(Util.getString(PREFIX + "propertyColumn.text") + "        "); //$NON-NLS-1$ //$NON-NLS-2$
             column.setLabelProvider(new PropertyLabelProvider(true));
             column.getColumn().pack();
 
@@ -440,75 +412,61 @@ public final class TranslatorOverridesPanel extends Composite {
             //
             // add toolbar below the table
             //
+            Composite toolbarPanel = WidgetFactory.createPanel(pnlOverrides, SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 3);
+            
+            this.addPropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
+            this.addPropertyButton.setImage(VdbUiPlugin.singleton.getImage(ADD));
+            this.addPropertyButton.setToolTipText(Util.getString(PREFIX + "addPropertyAction.toolTip")); //$NON-NLS-1$
+            this.addPropertyButton.addSelectionListener(new SelectionListener() {
+    			
+    			@Override
+    			public void widgetSelected(SelectionEvent e) {
+    				handleAddProperty();
+    			}
 
-            ToolBar toolBar = new ToolBar(pnlOverrides, SWT.PUSH | SWT.BORDER);
-            ToolBarManager toolBarMgr = new ToolBarManager(toolBar);
+    			@Override
+    			public void widgetDefaultSelected(SelectionEvent e) {
+    				// TODO Auto-generated method stub
+    				
+    			}
+    		});
+            
+            this.restorePropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
+            this.restorePropertyButton.setEnabled(false);
+            this.restorePropertyButton.setImage(VdbUiPlugin.singleton.getImage(EDIT));
+            this.restorePropertyButton.setToolTipText(Util.getString(PREFIX + "restorePropertyAction.toolTip")); //$NON-NLS-1$
+            this.restorePropertyButton.addSelectionListener(new SelectionListener() {
+    			
+    			@Override
+    			public void widgetSelected(SelectionEvent e) {
+    				handleRestorePropertyDefaultValue();
+    			}
 
-            //
-            // add the add custom property action to the toolbar
-            //
+    			@Override
+    			public void widgetDefaultSelected(SelectionEvent e) {
+    				// TODO Auto-generated method stub
+    				
+    			}
+    		});
+            
+            this.deletePropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
+            this.deletePropertyButton.setEnabled(false);
+            this.deletePropertyButton.setImage(VdbUiPlugin.singleton.getImage(REMOVE));
+            this.deletePropertyButton.setToolTipText(Util.getString(PREFIX + "removePropertyAction.toolTip")); //$NON-NLS-1$
+            this.deletePropertyButton.addSelectionListener(new SelectionListener() {
+    			
+    			@Override
+    			public void widgetSelected(SelectionEvent e) {
+    				handlePropertyRemoved();
+    			}
 
-            this.addPropertyAction = new Action(Util.getString(PREFIX + "addPropertyAction.text"), SWT.BORDER) { //$NON-NLS-1$
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.jface.action.Action#run()
-                 */
-                @Override
-                public void run() {
-                    handleAddProperty();
-                }
-            };
+    			@Override
+    			public void widgetDefaultSelected(SelectionEvent e) {
+    				// TODO Auto-generated method stub
+    				
+    			}
+    		});
 
-            this.addPropertyAction.setToolTipText(Util.getString(PREFIX + "addPropertyAction.toolTip")); //$NON-NLS-1$
-            this.addPropertyAction.setEnabled(false);
-            toolBarMgr.add(this.addPropertyAction);
-
-            //
-            // add the delete custom property action to the toolbar
-            //
-
-            this.deletePropertyAction = new Action(Util.getString(PREFIX + "removePropertyAction.text"), SWT.BORDER) { //$NON-NLS-1$
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.jface.action.Action#run()
-                 */
-                @Override
-                public void run() {
-                    handlePropertyRemoved();
-                }
-            };
-
-            this.deletePropertyAction.setToolTipText(Util.getString(PREFIX + "removePropertyAction.toolTip")); //$NON-NLS-1$
-            this.deletePropertyAction.setEnabled(false);
-            toolBarMgr.add(new Separator());
-            toolBarMgr.add(this.deletePropertyAction);
-
-            //
-            // add the restore default value action to the toolbar
-            //
-
-            this.restorePropertyDefaultAction = new Action(Util.getString(PREFIX + "restorePropertyDefaultAction.text"), SWT.BORDER) { //$NON-NLS-1$
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.jface.action.Action#run()
-                 */
-                @Override
-                public void run() {
-                    handleRestorePropertyDefaultValue();
-                }
-            };
-
-            this.restorePropertyDefaultAction.setImageDescriptor(VdbUiPlugin.singleton.getImageDescriptor(RESTORE_DEFAULT_VALUE));
-            this.restorePropertyDefaultAction.setToolTipText(Util.getString(PREFIX + "restorePropertyDefaultAction.toolTip")); //$NON-NLS-1$
-            this.restorePropertyDefaultAction.setEnabled(false);
-            toolBarMgr.add(new Separator());
-            toolBarMgr.add(this.restorePropertyDefaultAction);
-
-            // update toolbar to show all actions
-            toolBarMgr.update(true);
         }
 
         splitter.setWeights(new int[] { 25, 75 });
@@ -651,12 +609,12 @@ public final class TranslatorOverridesPanel extends Composite {
         IStructuredSelection selection = (IStructuredSelection)event.getSelection();
 
         if (selection.isEmpty()) {
-            if (this.deletePropertyAction.isEnabled()) {
-                this.deletePropertyAction.setEnabled(false);
+            if (this.deletePropertyButton.isEnabled()) {
+                this.deletePropertyButton.setEnabled(false);
             }
 
-            if (this.restorePropertyDefaultAction.isEnabled()) {
-                this.restorePropertyDefaultAction.setEnabled(false);
+            if (this.restorePropertyButton.isEnabled()) {
+                this.restorePropertyButton.setEnabled(false);
             }
         } else {
             TranslatorOverrideProperty prop = (TranslatorOverrideProperty)selection.getFirstElement();
@@ -664,15 +622,15 @@ public final class TranslatorOverridesPanel extends Composite {
             // only enable delete property if it is a custom property
             boolean enable = prop.isCustom();
 
-            if (this.deletePropertyAction.isEnabled() != enable) {
-                this.deletePropertyAction.setEnabled(enable);
+            if (this.deletePropertyButton.isEnabled() != enable) {
+                this.deletePropertyButton.setEnabled(enable);
             }
 
             // only enable restore default value if it has overridden value
             enable = prop.hasOverridenValue();
 
-            if (this.restorePropertyDefaultAction.isEnabled() != enable) {
-                this.restorePropertyDefaultAction.setEnabled(enable);
+            if (this.restorePropertyButton.isEnabled() != enable) {
+                this.restorePropertyButton.setEnabled(enable);
             }
         }
     }
@@ -684,7 +642,7 @@ public final class TranslatorOverridesPanel extends Composite {
         prop.setValue(null);
         // TODO this needs to dirty VDB
         this.propertiesViewer.refresh(prop);
-        this.restorePropertyDefaultAction.setEnabled(false);
+        this.restorePropertyButton.setEnabled(false);
     }
 
     void handleTranslatorRemoved() {
@@ -707,32 +665,32 @@ public final class TranslatorOverridesPanel extends Composite {
                 this.txtDescription.setEnabled(false);
             }
 
-            if (this.editTranslatorAction.isEnabled()) {
-                this.editTranslatorAction.setEnabled(false);
+            if (this.editTranslatorButton.isEnabled()) {
+                this.editTranslatorButton.setEnabled(false);
             }
 
-            if (this.deleteTranslatorAction.isEnabled()) {
-                this.deleteTranslatorAction.setEnabled(false);
+            if (this.deleteTranslatorButton.isEnabled()) {
+                this.deleteTranslatorButton.setEnabled(false);
             }
 
-            if (this.addPropertyAction.isEnabled()) {
-                this.addPropertyAction.setEnabled(false);
+            if (this.addPropertyButton.isEnabled()) {
+                this.addPropertyButton.setEnabled(false);
             }
         } else {
             if (!this.txtDescription.isEnabled()) {
                 this.txtDescription.setEnabled(true);
             }
 
-            if (!this.editTranslatorAction.isEnabled()) {
-                this.editTranslatorAction.setEnabled(true);
+            if (!this.editTranslatorButton.isEnabled()) {
+                this.editTranslatorButton.setEnabled(true);
             }
 
-            if (!this.deleteTranslatorAction.isEnabled()) {
-                this.deleteTranslatorAction.setEnabled(true);
+            if (!this.deleteTranslatorButton.isEnabled()) {
+                this.deleteTranslatorButton.setEnabled(true);
             }
 
-            if (!this.addPropertyAction.isEnabled()) {
-                this.addPropertyAction.setEnabled(true);
+            if (!this.addPropertyButton.isEnabled()) {
+                this.addPropertyButton.setEnabled(true);
             }
 
             TranslatorOverride translator = getSelectedTranslator();

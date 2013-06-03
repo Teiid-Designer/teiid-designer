@@ -24,6 +24,7 @@ import org.teiid.designer.vdb.VdbDataRole;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbImportVdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.VdbUtil;
 
 /**
  * 
@@ -94,6 +95,18 @@ public class VdbElement implements Serializable {
         if( vdb.getQueryTimeout() > 0 ) {
             int timeoutMillis = vdb.getQueryTimeout() * 1000;
             getProperties().add(new PropertyElement(Vdb.Xml.QUERY_TIMEOUT, Integer.toString(timeoutMillis)));
+        }
+        
+        if( ! vdb.getAllowedLanguages().isEmpty() ) {
+        	String valueStr = VdbUtil.buildCommaDelimitedString(vdb.getAllowedLanguages());
+        	if( valueStr != null && valueStr.length() > 1 ) {
+        		getProperties().add(new PropertyElement(Vdb.Xml.ALLOWED_LANGUAGES, valueStr));
+        	}
+        }
+        
+        for( String key : vdb.getGeneralProperties().keySet()) {
+        	String value = vdb.getGeneralProperties().get(key);
+        	getProperties().add(new PropertyElement(key, value));
         }
     }
 

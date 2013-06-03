@@ -1,16 +1,17 @@
 /*
  * JBoss, Home of Professional Open Source.
- *
- * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
- *
- * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
- */
-package org.teiid.designer.vdb.ui.translators;
+*
+* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+*
+* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+*/
+package org.teiid.designer.vdb.ui.editor.panels;
 
+import static org.teiid.designer.vdb.VdbPlugin.UTIL;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Util;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -29,19 +30,16 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
-import org.teiid.designer.vdb.TranslatorOverrideProperty;
-import org.teiid.designer.vdb.TranslatorPropertyDefinition;
-
 
 /**
  *
  */
-public class AddPropertyDialog extends MessageDialog {
+public class AddGeneralPropertyDialog  extends MessageDialog {
 
-    private static final String PREFIX = I18nUtil.getPropertyPrefix(AddPropertyDialog.class);
+    private static final String PREFIX = I18nUtil.getPropertyPrefix(AddGeneralPropertyDialog.class);
 
     private Button btnOk;
-    private final List<String> existingNames;
+    private final Set<String> existingNames;
     private String name;
     private String value;
 
@@ -49,13 +47,17 @@ public class AddPropertyDialog extends MessageDialog {
      * @param parentShell the parent shell (may be <code>null</code>)
      * @param existingPropertyNames the existing property names (can be <code>null</code>)
      */
-    public AddPropertyDialog( Shell parentShell,
-                              List<String> existingPropertyNames ) {
+    public AddGeneralPropertyDialog( Shell parentShell,
+                              Set<String> existingPropertyNames ) {
         super(parentShell, Util.getString(PREFIX + "title"), null, //$NON-NLS-1$
                 Util.getString(PREFIX + "message"), MessageDialog.INFORMATION, //$NON-NLS-1$
                 new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 
-        this.existingNames = (existingPropertyNames == null) ? new ArrayList<String>(0) : existingPropertyNames;
+        if( existingPropertyNames == null ) {
+        	this.existingNames = new HashSet<String>(0);
+        } else {
+        	this.existingNames = existingPropertyNames;
+        }
     }
 
     /**
@@ -132,12 +134,21 @@ public class AddPropertyDialog extends MessageDialog {
     }
 
     /**
-     * @return the new property (never <code>null</code>)
+     * @return the new property name (never <code>null</code>)
      * @throws IllegalArgumentException if called when dialog return code is not {@link Window#OK}.
      */
-    public TranslatorOverrideProperty getProperty() {
+    public String getName() {
         CoreArgCheck.isEqual(getReturnCode(), Window.OK);
-        return new TranslatorOverrideProperty(new TranslatorPropertyDefinition(this.name, this.value), null);
+        return name;
+    }
+    
+    /**
+     * @return the new property value (never <code>null</code>)
+     * @throws IllegalArgumentException if called when dialog return code is not {@link Window#OK}.
+     */
+    public String getValue() {
+        CoreArgCheck.isEqual(getReturnCode(), Window.OK);
+        return value;
     }
 
     /**
@@ -196,7 +207,7 @@ public class AddPropertyDialog extends MessageDialog {
     }
 
     private String validateName() {
-        String errorMsg = TranslatorPropertyDefinition.validateName(this.name);
+        String errorMsg = validateName(this.name);
 
         if (errorMsg == null) {
             // make sure property ID doesn't already exist
@@ -212,6 +223,42 @@ public class AddPropertyDialog extends MessageDialog {
     }
 
     private String validateValue() {
-        return TranslatorPropertyDefinition.validateValue(this.value);
+        return validateValue(this.value);
     }
+    
+    /**
+     * @param proposedName the proposed property name
+     * @return an error message or <code>null</code> if name is valid
+     */
+    public static String validateName( String proposedName ) {
+        // must have a name
+        if (StringUtilities.isEmpty(proposedName)) {
+            return UTIL.getString(PREFIX + "emptyPropertyName"); //$NON-NLS-1$
+        }
+
+        // make sure only letters
+        for (char c : proposedName.toCharArray()) {
+            if (!Character.isLetter(c) && !Character.isDigit(c) ) {
+                return UTIL.getString(PREFIX + "invalidPropertyName"); //$NON-NLS-1$
+            }
+        }
+
+        // valid name
+        return null;
+    }
+    
+    /**
+     * @param proposedValue the proposed value
+     * @return an error message or <code>null</code> if value is valid
+     */
+    public static String validateValue( String proposedValue ) {
+        // must have a value
+        if (StringUtilities.isEmpty(proposedValue)) {
+            return UTIL.getString(PREFIX + "emptyPropertyValue"); //$NON-NLS-1$
+        }
+
+        // valid
+        return null;
+    }
+
 }

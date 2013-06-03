@@ -134,6 +134,13 @@ public final class Vdb {
             return translator1.getName().compareTo(translator2.getName());
         }
     });
+    final Map<String, String> generalPropertiesMap = new HashMap<String, String>();
+    final Set<String> allowedLanguages = new TreeSet<String>(new Comparator<String>() {
+        @Override
+        public int compare( String str1, String str2 ) {
+            return str1.compareTo(str2);
+        }
+    });
     private final CopyOnWriteArrayList<PropertyChangeListener> listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
     final AtomicBoolean modified = new AtomicBoolean();
     private final AtomicReference<String> description = new AtomicReference<String>();
@@ -200,15 +207,30 @@ public final class Vdb {
                         // VDB properties
                         for (final PropertyElement property : manifest.getProperties()) {
                             final String name = property.getName();
+                            final String value = property.getValue();
+                            
                             if (Xml.PREVIEW.equals(name)) {
-                            	previewable[0] = Boolean.parseBoolean(property.getValue());
+                            	previewable[0] = Boolean.parseBoolean(value);
                                 // The stored timeout is in milliseconds. We are converting to seconds for display in Designer
                             } else if (Xml.QUERY_TIMEOUT.equals(name)) { 
-                                int timeoutMillis = Integer.parseInt(property.getValue());
+                                int timeoutMillis = Integer.parseInt(value);
                                 if (timeoutMillis > 0) {
                                     queryTimeout[0] = timeoutMillis / 1000;
                                 }
-                            } else assert false;
+                            } else if(Xml.ALLOWED_LANGUAGES.equals(name) ) {
+                            	/*
+                            	 *  EXAMPLE XML FRAGMENT
+                            	 *  multiple properties allowed with SAME KEY different values
+                            	 *  Need to discover and treat these differently
+								    <property name="allowed-languages" value="javascript, perl, php"/>
+                            	 */
+                            	String[] langs = StringUtilities.parseCommaDelimitedString(value);
+                            	for( String lang : langs ) {
+                            		allowedLanguages.add(lang);
+                            	}
+                            } else {
+                            	generalPropertiesMap.put(name, value);
+                            }
                         }
                         
                         for (final ModelElement element : manifest.getModels()) 
@@ -360,6 +382,43 @@ public final class Vdb {
     	
     	return false;
     }
+    
+    /**
+     * Add an allowed language property
+     * 
+     * @param name
+     * 
+     * @return whether the import vdb attribute was successfully added
+     */
+    public final boolean addAllowedLanguage(String name) {
+    	if( this.allowedLanguages.add(name) ) {
+    		setModified(this, Event.ALLOWED_LANGUAGES, name, name);
+            return true;
+    	}
+    	return false;
+    }
+
+    /**
+     * add general name-value pair property to VDB
+     * @param key
+     * @param value
+     * @return if value was added or not
+     */
+    public final boolean setGeneralProperty(String key, String value) {
+    	if( value == null ) {
+    		return removeGeneralProperty(key, value);
+    	}
+    	String oldValue = this.generalPropertiesMap.put(key, value);
+    	if( oldValue == null ) {
+    		setModified(this, Event.GENERAL_PROPERTY, null, value);
+    		return true;
+    	} else if( ! oldValue.equals(value)) {
+    		setModified(this, Event.GENERAL_PROPERTY, oldValue, value);
+    		return true;
+    	}
+    	
+    	return false;
+    }
 
     /**
      * Synchronize the Vdb file entries.  The supplied entries must be included - it's VdbModelEntry
@@ -430,6 +489,14 @@ public final class Vdb {
         if (isModified()) modified.set(false);
         // Notify change listeners VDB is closed
         notifyChangeListeners(this, Event.CLOSED, null, null);
+    }
+    
+    /**
+     * 
+     * @return the immutable set of allowed-languages strings
+     */
+    public final Set<String> getAllowedLanguages() {
+    	return Collections.unmodifiableSet(allowedLanguages);
     }
 
     /**
@@ -524,6 +591,13 @@ public final class Vdb {
             }
         }
         return userFileEntries;
+    }
+    
+    /**
+     * @return the map of general VDB properties
+     */
+    public final Map<String, String> getGeneralProperties() {
+    	return Collections.unmodifiableMap(generalPropertiesMap);
     }
 
     /**
@@ -722,7 +796,21 @@ public final class Vdb {
     	}
     }
     
+    /**
+     * Remove the allowed language from the property list from this VDB
+     * @param name the language name
+     * 
+     * @return whether the property was successfully removed
+     */
+    public final boolean removeAllowedLanguage(String name) {
+    	if (this.allowedLanguages.remove(name) ) {
+    		setModified(this, Event.ALLOWED_LANGUAGES, name, null);
+    		return true;
+    	}
 
+    	return false;
+    }
+    
 
     /**
      * @param entry
@@ -792,6 +880,21 @@ public final class Vdb {
 	    		setModified(this, Event.IMPORT_VDB_ENTRY_REMOVED, entry, null);
 	    	}
     	}
+    }
+    
+    /**
+     * Remove the given property from this VDB
+     * @param key the property key
+     * @param value the current value to remove
+     * @return whether the property was successfully removed
+     */
+    public final boolean removeGeneralProperty(String key, String value) {
+    	if (this.generalPropertiesMap.remove(key) != null ) {
+    		setModified(this, Event.GENERAL_PROPERTY, value, null);
+    		return true;
+    	}
+
+    	return false;
     }
     
     /**
@@ -1101,6 +1204,18 @@ public final class Vdb {
          * 
          */
         public static final String QUERY_TIMEOUT = "queryTimeout"; //$NON-NLS-1$
+        
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a general property
+         * is changed.
+         */
+        public static final String GENERAL_PROPERTY = "generalProperty"; //$NON-NLS-1$
+        
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when the allowed-languages
+         * is changed.
+         */
+        public static final String ALLOWED_LANGUAGES = "allowed-languages"; //$NON-NLS-1$
     }
 
     /**
@@ -1115,5 +1230,9 @@ public final class Vdb {
         /**
          */
         public static final String QUERY_TIMEOUT = "query-timeout"; //$NON-NLS-1$
+        /**
+         * 
+         */
+        public static final String ALLOWED_LANGUAGES = "allowed-languages"; //$NON-NLS-1$
     }
 }
