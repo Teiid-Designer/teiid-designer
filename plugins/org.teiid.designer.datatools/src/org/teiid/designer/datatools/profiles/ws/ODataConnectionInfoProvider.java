@@ -37,6 +37,11 @@ public class ODataConnectionInfoProvider extends ConnectionInfoHelper implements
         if (null != user) {
             connectionProps.setProperty(CONNECTION_NAMESPACE + ICredentialsCommon.USERNAME_PROP_ID, user);
         }
+        
+        String password = props.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
+        if (null != password) {
+            connectionProps.setProperty(CONNECTION_NAMESPACE + ICredentialsCommon.PASSWORD_PROP_ID, password);
+        }
 
         String security = props.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
         if (security == null) {
@@ -93,7 +98,7 @@ public class ODataConnectionInfoProvider extends ConnectionInfoHelper implements
         }
         
         String requestTimeout = props.getProperty(IWSProfileConstants.DS_REQUEST_TIMEOUT);
-        if (null != user) {
+        if (null != requestTimeout) {
             connectionProps.setProperty(IWSProfileConstants.DS_REQUEST_TIMEOUT, requestTimeout);
         }
 
