@@ -10,16 +10,12 @@ package org.teiid.designer.runtime.registry;
 import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.Messages;
 import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.registry.AbstractExtensionRegistry;
 import org.teiid.designer.runtime.spi.IExecutionAdmin;
 import org.teiid.designer.runtime.spi.IExecutionAdminFactory;
 import org.teiid.designer.runtime.spi.ITeiidServer;
@@ -30,14 +26,12 @@ import org.teiid.designer.type.IDataTypeManagerService;
 /**
  * @since 8.0
  */
-public class TeiidRuntimeRegistry {
+public class TeiidRuntimeRegistry extends AbstractExtensionRegistry<ITeiidServerVersion, IExecutionAdminFactory> {
     
     private static final String EXT_POINT_ID = "org.teiid.designer.spi.teiidRuntimeClient"; //$NON-NLS-1$
 
     private static final String FACTORY_ID = "runtimeFactory"; //$NON-NLS-1$
-    
-    private static final String CLASS_ATTRIBUTE_ID = "class"; //$NON-NLS-1$
-    
+
     private static final String VERSION_ELEMENT_ID = "version"; //$NON-NLS-1$
     
     private static final String MAJOR_ATTRIBUTE_ID = "major"; //$NON-NLS-1$
@@ -47,9 +41,7 @@ public class TeiidRuntimeRegistry {
     private static final String MICRO_ATTRIBUTE_ID = "micro"; //$NON-NLS-1$
     
     private static TeiidRuntimeRegistry registry;
-    
-    private Map<ITeiidServerVersion, IExecutionAdminFactory> factories = new HashMap<ITeiidServerVersion, IExecutionAdminFactory>();
-    
+
     /**
      * Get the singleton instance of this registry
      * 
@@ -60,33 +52,28 @@ public class TeiidRuntimeRegistry {
     public static TeiidRuntimeRegistry getInstance() throws Exception {
         if (registry == null) {
             registry = new TeiidRuntimeRegistry();
-            registry.load();
         }
-        
+
         return registry;
     }
-    
-    private void load() throws Exception {
-        IExtensionRegistry extRegistry = Platform.getExtensionRegistry();
-        IConfigurationElement[] extensions = extRegistry.getConfigurationElementsFor(EXT_POINT_ID);
-        for (IConfigurationElement element : extensions) {
-            if (! FACTORY_ID.equals(element.getName()))
-                continue;
-            
-            IExecutionAdminFactory factory = (IExecutionAdminFactory) element.createExecutableExtension(CLASS_ATTRIBUTE_ID);
-            
-            IConfigurationElement[] versions = element.getChildren(VERSION_ELEMENT_ID);
-            for (IConfigurationElement version : versions) {
-                String major = version.getAttribute(MAJOR_ATTRIBUTE_ID);
-                String minor = version.getAttribute(MINOR_ATTRIBUTE_ID);
-                String micro = version.getAttribute(MICRO_ATTRIBUTE_ID);
-                
-                ITeiidServerVersion serverVersion = new TeiidServerVersion(major, minor, micro);
-                factories.put(serverVersion, factory);
-            }
+
+    private TeiidRuntimeRegistry() throws Exception {
+        super(EXT_POINT_ID, FACTORY_ID);
+    }
+
+    @Override
+    protected void register(IConfigurationElement configurationElement, IExecutionAdminFactory adminFactory) {
+        IConfigurationElement[] versions = configurationElement.getChildren(VERSION_ELEMENT_ID);
+        for (IConfigurationElement version : versions) {
+            String major = version.getAttribute(MAJOR_ATTRIBUTE_ID);
+            String minor = version.getAttribute(MINOR_ATTRIBUTE_ID);
+            String micro = version.getAttribute(MICRO_ATTRIBUTE_ID);
+
+            ITeiidServerVersion serverVersion = new TeiidServerVersion(major, minor, micro);
+            register(serverVersion, adminFactory);
         }
     }
-    
+
     /**
      * Get an {@link IExecutionAdmin} applicable for the given server
      * 
@@ -157,11 +144,11 @@ public class TeiidRuntimeRegistry {
      */
     private IExecutionAdminFactory search(ITeiidServerVersion serverVersion) {
         
-        IExecutionAdminFactory factory = factories.get(serverVersion);
+        IExecutionAdminFactory factory = getRegistered(serverVersion);
         if (factory != null)
             return factory;
         
-        for (Map.Entry<ITeiidServerVersion, IExecutionAdminFactory> entry : factories.entrySet()) {
+        for (Map.Entry<ITeiidServerVersion, IExecutionAdminFactory> entry : getRegisteredEntries()) {
             ITeiidServerVersion entryVersion = entry.getKey();
             
             if (serverVersion.compareTo(entryVersion))
@@ -177,7 +164,6 @@ public class TeiidRuntimeRegistry {
      * @return unmodifiable collection
      */
     public Collection<ITeiidServerVersion> getRegisteredServerVersions() {
-        List<ITeiidServerVersion> versions = new ArrayList<ITeiidServerVersion>(factories.keySet());
-        return Collections.unmodifiableCollection(versions);
+        return getRegisteredKeys();
     }
 }
