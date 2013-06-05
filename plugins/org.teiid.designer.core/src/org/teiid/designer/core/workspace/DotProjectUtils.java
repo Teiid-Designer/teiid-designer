@@ -136,6 +136,9 @@ public class DotProjectUtils {
      */
     public static boolean isDotProject( File file,
                                         boolean onlyModelerProject ) throws Exception {
+        if (file == null || ! file.exists())
+            return false;
+
         if (file.getName().equals(DOT_PROJECT)) {
             if (onlyModelerProject) {
                 Document doc = JdomHelper.buildDocument(file);
