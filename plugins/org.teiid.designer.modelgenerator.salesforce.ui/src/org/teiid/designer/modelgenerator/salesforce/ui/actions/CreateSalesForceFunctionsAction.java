@@ -15,7 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -24,19 +24,17 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
-import org.teiid.designer.metamodels.core.ModelAnnotation;
-import org.teiid.designer.metamodels.core.ModelType;
-import org.teiid.designer.metamodels.function.FunctionFactory;
-import org.teiid.designer.metamodels.function.FunctionPackage;
-import org.teiid.designer.metamodels.function.FunctionParameter;
-import org.teiid.designer.metamodels.function.PushDownType;
-import org.teiid.designer.metamodels.function.ReturnParameter;
-import org.teiid.designer.metamodels.function.ScalarFunction;
+import org.teiid.designer.metamodels.relational.DirectionKind;
+import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.ProcedureParameter;
+import org.teiid.designer.metamodels.relational.RelationalFactory;
 import org.teiid.designer.modelgenerator.salesforce.ui.Activator;
 import org.teiid.designer.modelgenerator.salesforce.ui.ModelGeneratorSalesforceUiConstants;
+import org.teiid.designer.relational.model.DatatypeProcessor;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -49,7 +47,7 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
  * @since 8.0
  */
 public class CreateSalesForceFunctionsAction extends SortableSelectionAction {
-
+	private DatatypeProcessor datatypeProcessor;
     /**
      * 
      */
@@ -116,6 +114,8 @@ public class CreateSalesForceFunctionsAction extends SortableSelectionAction {
      */
     @Override
     public void run() {
+    	this.datatypeProcessor = new DatatypeProcessor();
+    	
         final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
             @Override
             public void execute( final IProgressMonitor theMonitor ) {
@@ -125,15 +125,11 @@ public class CreateSalesForceFunctionsAction extends SortableSelectionAction {
                 boolean succeeded = false;
                 try {
                     IFile modelFile = (IFile)SelectionUtilities.getSelectedObjects(getSelection()).get(0);
-                    IFile file = modelFile.getParent().getFile(new Path("SalesforceFunctions.xmi")); //$NON-NLS-1$
                     theMonitor.beginTask(taskName, IProgressMonitor.UNKNOWN);
-                    final ModelResource modelResource = ModelerCore.create(file);
+                    final ModelResource modelResource = ModelUtil.getModelResource(modelFile, true);
                     theMonitor.worked(1000);
                     if (modelResource != null) {
-                        final ModelAnnotation modelAnnotation = modelResource.getModelAnnotation();
-                        modelAnnotation.setPrimaryMetamodelUri(FunctionPackage.eNS_URI);
-                        modelAnnotation.setModelType(ModelType.FUNCTION_LITERAL);
-                        createFunctions(modelResource, theMonitor);
+                        createPushdownFunctions(modelResource, theMonitor);
                         modelResource.save(theMonitor, false);
                     }
 
@@ -164,9 +160,9 @@ public class CreateSalesForceFunctionsAction extends SortableSelectionAction {
     /**
      * @param modelResource
      */
-    protected void createFunctions( ModelResource modelResource,
+    protected void createPushdownFunctions( ModelResource modelResource,
                                     IProgressMonitor theMonitor ) throws ModelWorkspaceException {
-        ScalarFunction function = createIncludesFunction();
+    	Procedure function = createIncludesFunction();
         modelResource.getEmfResource().getContents().add(function);
         theMonitor.worked(1000);
         function = createExcludesFunction();
@@ -178,8 +174,8 @@ public class CreateSalesForceFunctionsAction extends SortableSelectionAction {
      * @param createFunction
      * @return
      */
-    private ScalarFunction createExcludesFunction() {
-        ScalarFunction function = createCommonProps();
+    private Procedure createExcludesFunction() {
+        Procedure function = createCommonProps();
         function.setName("excludes"); //$NON-NLS-1$
         return function;
     }
@@ -188,32 +184,45 @@ public class CreateSalesForceFunctionsAction extends SortableSelectionAction {
      * @param createFunction
      * @return
      */
-    private ScalarFunction createIncludesFunction() {
-        ScalarFunction function = createCommonProps();
+    private Procedure createIncludesFunction() {
+    	Procedure function = createCommonProps();
         function.setName("includes"); //$NON-NLS-1$
         return function;
     }
 
-    private ScalarFunction createCommonProps() {
-        ScalarFunction function = FunctionFactory.eINSTANCE.createScalarFunction();
-        function.setCategory("SalesForce"); //$NON-NLS-1$
-        function.setPushDown(PushDownType.REQUIRED_LITERAL);
-        function.setInvocationClass("None"); //$NON-NLS-1$
-        function.setInvocationMethod("None"); //$NON-NLS-1$
+    private Procedure createCommonProps() {
+    	Procedure function = RelationalFactory.eINSTANCE.createProcedure();
+    	function.setFunction(true);
+    	
+    	EObject stringDatatype = this.datatypeProcessor.findDatatype("string"); //$NON-NLS-1$
 
-        FunctionParameter param = FunctionFactory.eINSTANCE.createFunctionParameter();
+        ProcedureParameter param = RelationalFactory.eINSTANCE.createProcedureParameter();
         param.setName("columnName"); //$NON-NLS-1$
-        param.setType("string"); //$NON-NLS-1$
-        function.getInputParameters().add(param);
+        if( stringDatatype != null ) {
+            param.setType(stringDatatype);
+            param.setLength(DatatypeProcessor.DEFAULT_DATATYPE_LENGTH);
+        }
+        param.setDirection(DirectionKind.IN_LITERAL);
+        function.getParameters().add(param);
 
-        param = FunctionFactory.eINSTANCE.createFunctionParameter();
+        param = RelationalFactory.eINSTANCE.createProcedureParameter();
         param.setName("param"); //$NON-NLS-1$
-        param.setType("string"); //$NON-NLS-1$
-        function.getInputParameters().add(param);
 
-        ReturnParameter result = FunctionFactory.eINSTANCE.createReturnParameter();
-        result.setType("boolean"); //$NON-NLS-1$
-        function.setReturnParameter(result);
+        if( stringDatatype != null ) {
+            param.setType(stringDatatype);
+            param.setLength(DatatypeProcessor.DEFAULT_DATATYPE_LENGTH);
+        }
+        param.setDirection(DirectionKind.IN_LITERAL);
+        function.getParameters().add(param);
+
+        ProcedureParameter result = RelationalFactory.eINSTANCE.createProcedureParameter();
+        result.setDirection(DirectionKind.RETURN_LITERAL);
+    	EObject booleanDatatype = this.datatypeProcessor.findDatatype("boolean"); //$NON-NLS-1$
+        if( booleanDatatype != null ) {
+        	result.setType(booleanDatatype);
+        }
+        result.setName("returnParam"); //$NON-NLS-1$
+        function.getParameters().add(result);
         return function;
     }
 }
