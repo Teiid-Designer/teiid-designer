@@ -53,14 +53,14 @@ public class ProcedureParametersRule implements ObjectValidationRule {
             ProcedureParameter param = (ProcedureParameter) paramIter.next();
             DirectionKind direction = param.getDirection();
             if(direction == null) {
-                ValidationProblem problem = new ValidationProblemImpl(0, IStatus.WARNING, RelationalPlugin.Util.getString("ProcedureParametersRule.Parameter_{0}_does_not_have_a_direction._1", new Object[]{param.getName()})); //$NON-NLS-1$
+                ValidationProblem problem = new ValidationProblemImpl(0, IStatus.ERROR, RelationalPlugin.Util.getString("ProcedureParametersRule.Parameter_{0}_does_not_have_a_direction._1", new Object[]{param.getName()})); //$NON-NLS-1$
                 result.addProblem(problem);
             }
 
             // validate the direction of the parameters in the procedure 
             int directionKind = direction.getValue();
             if(directionKind == DirectionKind.UNKNOWN) {
-                ValidationProblem problem = new ValidationProblemImpl(0, IStatus.WARNING, RelationalPlugin.Util.getString("ProcedureParametersRule.Parameter_{0}_has_an_UNKNOWN_direction._1", new Object[]{param.getName()})); //$NON-NLS-1$
+                ValidationProblem problem = new ValidationProblemImpl(0, IStatus.ERROR, RelationalPlugin.Util.getString("ProcedureParametersRule.Parameter_{0}_has_an_UNKNOWN_direction._1", new Object[]{param.getName()})); //$NON-NLS-1$
                 result.addProblem(problem);
             } else if(directionKind == DirectionKind.RETURN) {
                 if(!foundReturnParam) {
