@@ -17,7 +17,7 @@ import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 public interface IDelete<C extends ICriteria, 
                                            G extends IGroupSymbol,
                                            E extends IExpression,
-                                           LV extends ILanguageVisitor> extends ITranslatableProcedureContainer<E, LV> {
+                                           LV extends ILanguageVisitor> extends IProcedureContainer<E, LV> {
 
     /**
      * Returns the group being deleted from

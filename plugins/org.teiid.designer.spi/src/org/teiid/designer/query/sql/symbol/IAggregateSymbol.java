@@ -38,6 +38,7 @@ public interface IAggregateSymbol<LV extends ILanguageVisitor>
         RANK,
         DENSE_RANK,
         ROW_NUMBER,
+        STRING_AGG,
         USER_DEFINED;
     }
 
