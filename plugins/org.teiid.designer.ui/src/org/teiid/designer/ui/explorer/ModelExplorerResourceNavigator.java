@@ -106,6 +106,7 @@ import org.teiid.core.designer.event.EventSourceException;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
+import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidServer;
@@ -262,8 +263,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             if (defaultServerLink == null)
                 return;
 
-            setDefaultServerText(server);
-            addExecutionConfigurationListener(server);
+            setDefaultServerText(server.getDisplayName());
+            addExecutionConfigurationListener(server.getEventManager());
         }
 
         @Override
@@ -280,7 +281,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
 
         @Override
         public void configurationChanged(ExecutionConfigurationEvent event) {
-            setDefaultServerText(ModelerCore.getDefaultServer());
+            setDefaultServerText(ModelerCore.getDefaultServerName());
             setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
         }
     };
@@ -487,15 +488,14 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         GridLayoutFactory.fillDefaults().numColumns(3).applyTo(defaultServerSectionBody);
         defaultServerSectionBody.setBackground(bkgdColor);
 
-        ITeiidServer defaultServer = ModelerCore.getDefaultServer();
-        setDefaultServerText(defaultServer);
+        setDefaultServerText(ModelerCore.getDefaultServerName());
         setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
 
         defaultServerSection.setClient(defaultServerSectionBody);
 
         /* Listen for changes to the default server */
         ModelerCore.addTeiidServerVersionListener(teiidServerVersionListener);
-        addExecutionConfigurationListener(defaultServer);
+        addExecutionConfigurationListener(ModelerCore.getDefaultServerEventManager());
 
         IEclipsePreferences prefs = UiPlugin.getDefault().getPreferences();
         prefs.addPreferenceChangeListener(preferenceChangeListener);
@@ -507,26 +507,23 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
      *
      * @param teiidServer
      */
-    private void addExecutionConfigurationListener(ITeiidServer teiidServer) {
-        if (teiidServer == null)
+    private void addExecutionConfigurationListener(EventManager eventManager) {
+        if (eventManager == null)
             return;
 
-        teiidServer.getEventManager().addListener(execConfigurationListener);
+        eventManager.addListener(execConfigurationListener);
     }
 
     /**
      * Called by a number of different methods to update the default server name text field.
      *
-     * @param defaultServer can be null if there are no servers and thus no default server has been set
+     * @param serverName name of the server or a noDefaultServer message
      */
-    private void setDefaultServerText(ITeiidServer defaultServer) {
-        String defaultName = defaultServer != null ? defaultServer.getDisplayName() : getString("noDefaultServer"); //$NON-NLS-1$
-        String linkText =  defaultName;
-
+    private void setDefaultServerText(String serverName) {
         if (defaultServerLink == null) {
             toolkit.createLabel(defaultServerSectionBody, getString("defaultServerPrefix")); //$NON-NLS-1$
 
-            defaultServerLink = toolkit.createHyperlink(defaultServerSectionBody, linkText, SWT.NONE);
+            defaultServerLink = toolkit.createHyperlink(defaultServerSectionBody, serverName, SWT.NONE);
             GridDataFactory.fillDefaults().grab(true, false).applyTo(defaultServerLink);
 
             defaultServerLink.addHyperlinkListener(new HyperlinkAdapter() {
@@ -540,8 +537,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
 
                         // Need to fetch the default server again since the parameter in the
                         // parent method does not remain assigned becoming null
-                        ITeiidServer defServer = ModelerCore.getDefaultServer();
-                        if (defServer == null) {
+                        if (! ModelerCore.hasDefaultTeiidServer()) {
                             // No default server so most likely no servers at all so open the new server wizard
                             IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
                             handlerService.executeCommand("org.teiid.designer.dqp.ui.newServerAction", null); //$NON-NLS-1$
@@ -551,8 +547,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
 
                             // Load the default server into an event's data in order to
                             // make it available to the command's handler.
-                            Event event = new Event();
-                            event.data = defServer;
+                            Event event = ModelerCore.createDefaultTeiidServerEvent();
                             handlerService.executeCommand("org.teiid.designer.dqp.ui.editServerAction", event); //$NON-NLS-1$
                         }
 
@@ -583,7 +578,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         	if( defaultServerSectionBody.isDisposed() || defaultServerLink.isDisposed() ) return;
         	
             Display display = defaultServerSectionBody.getDisplay();
-            final String hyperlinkText = linkText;
+            final String hyperlinkText = serverName;
             display.asyncExec(new Runnable() {
 
                 @Override

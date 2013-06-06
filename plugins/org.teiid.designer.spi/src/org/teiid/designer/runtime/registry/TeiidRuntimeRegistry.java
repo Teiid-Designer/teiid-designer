@@ -7,6 +7,7 @@
 */
 package org.teiid.designer.runtime.registry;
 
+import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -116,6 +117,22 @@ public class TeiidRuntimeRegistry {
             throw new Exception(NLS.bind(Messages.NoExecutionAdminFactory, teiidServerVersion));
         
         return factory.getDataTypeManagerService();
+    }
+
+    /**
+     * Get the Teiid Driver for the given server version
+     *
+     * @param teiidServerVersion
+     *
+     * @return the Teiid Driver
+     * @throws Exception
+     */
+    public Driver getTeiidDriver(ITeiidServerVersion teiidServerVersion) throws Exception {
+        IExecutionAdminFactory factory = search(teiidServerVersion);
+        if (factory == null)
+            throw new Exception(NLS.bind(Messages.NoExecutionAdminFactory, teiidServerVersion));
+
+        return factory.getTeiidDriver();
     }
 
     /**

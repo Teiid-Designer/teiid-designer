@@ -7,6 +7,7 @@
 */
 package org.teiid.designer.runtime.spi;
 
+import java.sql.Driver;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.type.IDataTypeManagerService;
 
@@ -32,6 +33,13 @@ public interface IExecutionAdminFactory {
      * @return instance of {@link IDataTypeManagerService}
      */
     IDataTypeManagerService getDataTypeManagerService();
+
+    /**
+     * Get the {@link Driver} for the Teiid Server
+     *
+     * @return the driver
+     */
+    Driver getTeiidDriver();
 
     /**
      * Get the query service

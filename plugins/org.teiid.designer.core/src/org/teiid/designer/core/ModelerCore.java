@@ -8,6 +8,7 @@
 package org.teiid.designer.core;
 
 import java.io.File;
+import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMLMapImpl;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -60,6 +62,7 @@ import org.teiid.core.designer.aspects.DeclarativeTransactionManager;
 import org.teiid.core.designer.id.ObjectID;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.core.designer.util.Stopwatch;
 import org.teiid.designer.WorkspaceUUIDService;
@@ -100,6 +103,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.core.workspace.ModelWorkspaceManagerSaveParticipant;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
+import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -288,6 +292,8 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * Provides access to the plugin's log and to it's resources.
      */
     private static final String I18N_NAME = PACKAGE_ID + ".i18n"; //$NON-NLS-1$
+
+    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ModelerCore.class);
 
     public static final PluginUtil Util = new PluginUtilImpl(PLUGIN_ID, I18N_NAME, ResourceBundle.getBundle(I18N_NAME));
 
@@ -2063,19 +2069,58 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         String PRODUCER_NAME = getProducerName();
         String VERSION = getVersion();
     }
-    
+
     /**
-     * Get the targeted teiid server
-     * 
-     * @return teiid server
+     * Has a default server been set
+     *
+     * @return
      */
-    public static ITeiidServer getDefaultServer() {
-        return defaultTeiidServer;
+    public static boolean hasDefaultTeiidServer() {
+        return defaultTeiidServer != null;
     }
 
     /**
      * Get the targeted teiid server version
      * 
+     * @return teiid server version
+     */
+    public static String getDefaultServerName() {
+        if (defaultTeiidServer == null) {
+            return Util.getString(I18N_PREFIX + "noDefaultServer"); //$NON-NLS-1$
+        }
+        return defaultTeiidServer.getDisplayName();
+    }
+
+    /**
+     * Get the {@link EventManager} associated with the default
+     * server or null if there is no default server set.
+     *
+     * @return event manager
+     */
+    public static EventManager getDefaultServerEventManager() {
+        if (defaultTeiidServer == null) {
+            return null;
+        }
+
+        return defaultTeiidServer.getEventManager();
+    }
+
+    /**
+     * Create an SWT {@link Event} that encapsulates the
+     * default teiid server as its data object
+     *
+     * @return an event
+     */
+    public static Event createDefaultTeiidServerEvent() {
+        Event event = new Event();
+        event.data = defaultTeiidServer;
+
+        return event;
+    }
+
+    /**
+     * Get the targeted teiid server version
+     *
      * @return teiid server version
      */
     public static ITeiidServerVersion getTeiidServerVersion() {
@@ -2089,6 +2134,26 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         }
         
         return defaultTeiidServer.getServerVersion();
+    }
+
+    /**
+     * Find a Teiid {@link Driver} for the given server version.
+     *
+     * The driver class should be provided as a check to ensure the class name
+     * is as expected.
+     *
+     * @param teiidServerVersion
+     * @param driverClass
+     *
+     * @return the Teiid {@link Driver}
+     * @throws Exception
+     */
+    public static Driver getTeiidDriver(ITeiidServerVersion teiidServerVersion, String driverClass) throws Exception {
+        Driver driver = TeiidRuntimeRegistry.getInstance().getTeiidDriver(teiidServerVersion);
+        if (driver != null && driver.getClass().getSimpleName().equals(driverClass))
+            return driver;
+
+        throw new IllegalStateException(Util.getString(I18N_PREFIX + "noTeiidDriver", driverClass, teiidServerVersion));
     }
     
     /**
