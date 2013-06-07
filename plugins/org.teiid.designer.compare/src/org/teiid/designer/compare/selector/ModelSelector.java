@@ -9,6 +9,7 @@ package org.teiid.designer.compare.selector;
 
 import java.util.List;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -28,7 +29,7 @@ public interface ModelSelector {
     
     public void setLabel( String label );
     
-    public List getRootObjects() throws ModelerCoreException;
+    public List<EObject> getRootObjects() throws ModelerCoreException;
     
     public URI getUri();
     

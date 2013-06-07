@@ -28,6 +28,7 @@
 		<module>org.teiid.designer.datatools.ui</module>
 		<module>org.teiid.designer.ddl</module>
 		<module>org.teiid.designer.ddl.importer.ui</module>
+		<module>org.teiid.designer.ddl.spi</module>
 		<module>org.teiid.designer.ddl.importer</module>
 		<module>org.teiid.designer.diagram.ui</module>
 		<module>org.teiid.designer.dqp</module>

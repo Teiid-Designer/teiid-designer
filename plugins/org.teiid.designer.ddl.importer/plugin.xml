@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.teiid.designer.ddl.nodeImporter">
+      <importer
+            class="org.teiid.designer.ddl.importer.node.StandardImporter"
+            dialect="Standard">
+      </importer>
+      <importer
+            class="org.teiid.designer.ddl.importer.node.OracleImporter"
+            dialect="Oracle">
+      </importer>
+      <importer
+            class="org.teiid.designer.ddl.importer.node.DerbyImporter"
+            dialect="Derby">
+      </importer>
+      <importer
+            class="org.teiid.designer.ddl.importer.node.PostgresImporter"
+            dialect="Postgres">
+      </importer>
+      <importer
+            class="org.teiid.designer.ddl.importer.node.TeiidDdlImporter"
+            dialect="Teiid">
+      </importer>
+   </extension>
+
+</plugin>

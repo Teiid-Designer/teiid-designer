@@ -42,6 +42,17 @@ public class DdlImporterPlugin extends Plugin {
     }
 
     /**
+     * Not intended for use by any class other than {@link DdlImporterI18n}.
+     * 
+     * @param key
+     * @param parameters
+     * @return The i18n template associated with the supplied key
+     */
+    static String i18n( final String key, Object... parameters) {
+        return UTIL.getString(key, parameters);
+    }
+
+    /**
      * @return the singleton instance of this type
      */
     public static DdlImporterPlugin singleton() {
