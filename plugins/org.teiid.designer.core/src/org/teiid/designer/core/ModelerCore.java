@@ -2150,7 +2150,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      */
     public static Driver getTeiidDriver(ITeiidServerVersion teiidServerVersion, String driverClass) throws Exception {
         Driver driver = TeiidRuntimeRegistry.getInstance().getTeiidDriver(teiidServerVersion);
-        if (driver != null && driver.getClass().getSimpleName().equals(driverClass))
+        if (driver != null && driver.getClass().getName().equals(driverClass))
             return driver;
 
         throw new IllegalStateException(Util.getString(I18N_PREFIX + "noTeiidDriver", driverClass, teiidServerVersion));
