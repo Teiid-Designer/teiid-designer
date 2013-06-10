@@ -18,14 +18,14 @@ public class TeiidServerEditorInputFactory implements IElementFactory {
 
     protected final static String FACTORY_ID = "org.teiid.designer.runtime.ui.server.editor.input.factory"; //$NON-NLS-1$
     
-    protected final static String SERVER_URL = "server-url"; //$NON-NLS-1$
+    protected final static String SERVER_ID = "server-id"; //$NON-NLS-1$
 
     @Override
     public IAdaptable createElement(IMemento memento) {
-        // get the resource names
-        String serverUrl = memento.getString(SERVER_URL);
+        // get the server id from the memento
+        String serverId = memento.getString(SERVER_ID);
         
-        return new TeiidServerEditorInput(serverUrl);
+        return new TeiidServerEditorInput(serverId);
     }
 
     /**
@@ -37,8 +37,8 @@ public class TeiidServerEditorInputFactory implements IElementFactory {
     public static void saveState(IMemento memento, TeiidServerEditorInput input) {
         if (input == null)
             return;
-            
-        if (input.getServerUrl() != null)
-            memento.putString(SERVER_URL, input.getServerUrl());
+
+        if (input.getServerId() != null)
+            memento.putString(SERVER_ID, input.getServerId());
     }
 }
