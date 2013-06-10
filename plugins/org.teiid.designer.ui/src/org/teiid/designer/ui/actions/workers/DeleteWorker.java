@@ -48,6 +48,7 @@ public class DeleteWorker extends ModelObjectWorker {
     private EObject focusedObject;
     private IStatus status;
     private ObjectDeleteCommand odcDeleteCommand;
+    private List<EObject> selectedObjects;
 
     /**
      * @since 4.2
@@ -125,12 +126,9 @@ public class DeleteWorker extends ModelObjectWorker {
                 createObjectDeleteCommand(); // why is this done here unconditionally? it was already called once
             }
 
-            // get the selected objects
-            EObject[] eobjects = getSelectedEObjects();
-
             try {
                 // run it
-                executeCommand(odcDeleteCommand, eobjects, getTransactionSettings());
+                executeCommand(odcDeleteCommand, selectedObjects, getTransactionSettings());
 
             } finally {
 
@@ -152,34 +150,25 @@ public class DeleteWorker extends ModelObjectWorker {
     }
 
     public void createObjectDeleteCommand() {
-        // get the selected objects
-        EObject[] eobjects = getSelectedEObjects();
-
         // create the Delete command, set the objects on it
         odcDeleteCommand = new ObjectDeleteCommand();
-
-        odcDeleteCommand.setObjectsToDelete(eobjects);
+        odcDeleteCommand.setObjectsToDelete(selectedObjects);
     }
 
-    public EObject[] getSelectedEObjects() {
-
+    /**
+     * Set the selected {@link EObject}s
+     */
+    public void setSelectedObjects() {
         ISelection selection = (ISelection)getSelection();
-        List selectedObjects = SelectionUtilities.getSelectedEObjects(selection);
+        selectedObjects = SelectionUtilities.getSelectedEObjects(selection);
+    }
 
-        EObject[] eobjects = new EObject[selectedObjects.size()];
-        int iCount = 0;
-        Iterator it = selectedObjects.iterator();
-
-        while (it.hasNext()) {
-            EObject eoTemp = (EObject)it.next();
-            eobjects[iCount++] = eoTemp;
-        }
-
-        return eobjects;
+    public List<EObject> getSelectedEObjects() {
+        return selectedObjects;
     }
 
     private void executeCommand( final ObjectDeleteCommand odcDeleteCommand,
-                                 final EObject[] eObjects,
+                                 final List<EObject> eObjects,
                                  TransactionSettings ts ) {
 
         if (odcDeleteCommand == null) {
@@ -187,8 +176,8 @@ public class DeleteWorker extends ModelObjectWorker {
         }
 
         String tempString = UiConstants.Util.getString(DELETE_ONE_TITLE_KEY);
-        if (eObjects.length > 1) {
-            tempString = UiConstants.Util.getString(DELETE_MANY_TITLE_KEY, eObjects.length);
+        if (eObjects.size() > 1) {
+            tempString = UiConstants.Util.getString(DELETE_MANY_TITLE_KEY, eObjects.size());
         }
         final String deleteTitle = tempString;
 
@@ -261,20 +250,20 @@ public class DeleteWorker extends ModelObjectWorker {
 
     private TransactionSettings processDescription( TransactionSettings ts ) {
 
-        ts.setDescription(getUndoText(getSelectedEObjects()));
+        ts.setDescription(getUndoText());
 
         return ts;
     }
 
-    private String getUndoText( EObject[] selectedObjects ) {
+    private String getUndoText() {
 
         String description = null;
-        if (selectedObjects.length == 1) {
-            EObject obj = selectedObjects[0];
+        if (selectedObjects.size() == 1) {
+            EObject obj = selectedObjects.get(0);
             String path = ModelerCore.getModelEditor().getModelRelativePath(obj).toString();
             description = UiConstants.Util.getString(UNDO_TEXT, path);
         } else {
-            description = UiConstants.Util.getString(PLURAL_UNDO_TEXT, selectedObjects.length);
+            description = UiConstants.Util.getString(PLURAL_UNDO_TEXT, selectedObjects.size());
         }
         return description;
     }

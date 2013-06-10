@@ -9,7 +9,6 @@ package org.teiid.designer.core.refactor;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -54,7 +53,7 @@ public class ObjectDeleteCommand implements RefactorCommand {
     private static final int EXCEPTION_CALCULATING_DEPENDENCIES = 3004;
     private static final int EXCEPTION_DURING_DELETE = 3007;
 
-    private EObject[] objectsToDelete;
+    private List<EObject> objectsToDelete;
     private String objectName;
     private boolean moreThanOneResource = false;
     private boolean deleteArrayContainsNull = false;
@@ -84,23 +83,23 @@ public class ObjectDeleteCommand implements RefactorCommand {
      * @param objects
      *
      */
-    public void setObjectsToDelete( EObject[] objects ) {
+    public void setObjectsToDelete( List<EObject> objects ) {
         this.objectsToDelete = objects;
         this.deleteArrayContainsNull = false;
         this.moreThanOneResource = false;
 
-        if (objects != null && objects.length > 0 && objects[0] != null) {
+        if (objects != null && objects.size() > 0 && objects.get(0) != null) {
             // get the IResource from the first object and set it on the base class
-            Resource firstResource = objects[0].eResource();
+            Resource firstResource = objects.get(0).eResource();
 
             // all objects to delete must be in the same resource
-            if (objects.length > 1) {
-                for (int i = 1; i < objects.length; ++i) {
-                    if (objects[i] == null) {
+            if (objects.size() > 1) {
+                for (EObject eObject : objects) {
+                    if (eObject == null) {
                         deleteArrayContainsNull = true;
                         break;
                     }
-                    if (!objects[i].eResource().equals(firstResource)) {
+                    if (!eObject.eResource().equals(firstResource)) {
                         moreThanOneResource = true;
                         break;
                     }
@@ -109,11 +108,10 @@ public class ObjectDeleteCommand implements RefactorCommand {
         }
 
         // set the object name for labels & messages
-        if (objects.length == 1) {
-            this.objectName = ModelerCore.getModelEditor().getName(objects[0]);
+        if (objects.size() == 1) {
+            this.objectName = ModelerCore.getModelEditor().getName(objects.get(0));
         } else {
-            String objectCount = new Integer(objects.length).toString();
-            this.objectName = ModelerCore.Util.getString("ObjectDeleteCommand.Number_of_objects", objectCount); //$NON-NLS-1$
+            this.objectName = ModelerCore.Util.getString("ObjectDeleteCommand.Number_of_objects", objects.size()); //$NON-NLS-1$
         }
     }
 
@@ -143,7 +141,7 @@ public class ObjectDeleteCommand implements RefactorCommand {
         IStatus status;
         String msg;
 
-        if (this.objectsToDelete == null || this.objectsToDelete.length == 0) {
+        if (this.objectsToDelete == null || this.objectsToDelete.size() == 0) {
             msg = ModelerCore.Util.getString("ObjectDeleteCommand.No_delete_target_selected"); //$NON-NLS-1$
             status = new Status(IStatus.ERROR, PID, ERROR_MISSING_OBJECT, msg, null);
             return status;
@@ -181,7 +179,7 @@ public class ObjectDeleteCommand implements RefactorCommand {
      */
     private ModelResource getModelResource() {
         ModelEditor editor = ModelerCore.getModelEditor();
-        ModelResource modelResource = editor.findModelResource(objectsToDelete[0]);
+        ModelResource modelResource = editor.findModelResource(objectsToDelete.get(0));
         return modelResource;
     }
 
@@ -362,7 +360,7 @@ public class ObjectDeleteCommand implements RefactorCommand {
 
             // Delete the objects
             try {
-                ModelerCore.getModelEditor().delete(Arrays.asList(objectsToDelete), monitor);
+                ModelerCore.getModelEditor().delete(objectsToDelete, monitor);
             } catch (ModelerCoreException e) {
                 final Object[] params = new Object[] {objectName};
                 msg = ModelerCore.Util.getString("ObjectDeleteCommand.Error_attempting_to_delete", params); //$NON-NLS-1$

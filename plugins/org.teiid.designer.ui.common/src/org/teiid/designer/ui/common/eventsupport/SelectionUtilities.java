@@ -58,7 +58,7 @@ public class SelectionUtilities implements UiConstants {
      * @param theSelection the selection whose selected <code>EObject</code>s are being requested
      * @return the selected <code>EObject</code>s or an empty <code>List</code>
      */
-    public static List getSelectedEObjects(ISelection theSelection) {
+    public static List<EObject> getSelectedEObjects(ISelection theSelection) {
         List result = getSelectedObjects(theSelection);
 
         if (!result.isEmpty()) {
