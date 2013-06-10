@@ -167,18 +167,21 @@ public class DeleteEObjectAction extends ModelObjectAction {
     protected boolean preRun() {
         
         /*
-         *      1. create the transactionsettings object
-         *      2. call canDelete and canUndoDelete methods in the helper
+         *      1. set the selected objects on the worker. Must be done prior to opening any dependent
+         *          model editors since the selection may change if 'link with editor' is checked
+         *      2. create the transactionsettings object
+         *      3. call canDelete and canUndoDelete methods in the helper
          *          -- put result of these calls in the TranSettings object
-         *      3. if canUndo == false,
+         *      4. if canUndo == false,
          *          present warning dialog
          *          if user wants to continue,
          *              make sure we use the value of TxnSettings.canUndo in the
          *              canUndo arg of the startTxn method
-         *      4.  if canUndo was true, return true
+         *      5.  if canUndo was true, return true
          *          if canUndo was false, return true if user wishes to continue
          *                                return false if user does NOT wish to continue 
          */
+        worker.setSelectedObjects();
         
         if( ! resourceDependencyCheckOK() ) {
             return false;
@@ -268,9 +271,9 @@ public class DeleteEObjectAction extends ModelObjectAction {
     
     private boolean resourceDependencyCheckOK() {
         boolean isOkToDelete = true;
-        EObject[] eoArray = worker.getSelectedEObjects();
+        List<EObject> eObjects = worker.getSelectedEObjects();
 
-        List readOnlyDependencies = new ArrayList(getReadOnlyDependentResources(eoArray));
+        List readOnlyDependencies = new ArrayList(getReadOnlyDependentResources(eObjects));
         
         if( !readOnlyDependencies.isEmpty() ) {
             String sTitle = UiConstants.Util.getString( READ_ONLY_DEPENDENCIES_TITLE );
@@ -291,9 +294,9 @@ public class DeleteEObjectAction extends ModelObjectAction {
     /* (non-Javadoc)
      * Overridden to collect up only the models that actually reference the object to be deleted.
      */
-    private Collection getReadOnlyDependentResources(EObject[] objectsToDelete) {
+    private Collection getReadOnlyDependentResources(List<EObject> eObjects) {
 
-        Collection allDependentModelFiles = getAllDependentResources(objectsToDelete);
+        Collection allDependentModelFiles = getAllDependentResources(eObjects);
         Collection visitedResources = new HashSet();
         Collection readOnlyResources = new HashSet();
         for ( Iterator iter2 = allDependentModelFiles.iterator() ; iter2.hasNext() ; ) {
@@ -313,14 +316,14 @@ public class DeleteEObjectAction extends ModelObjectAction {
     /* (non-Javadoc)
      * Overridden to collect up only the models that actually reference the object to be deleted.
      */
-    private Collection<IFile> getAllDependentResources(EObject[] objectsToDelete) {
+    private Collection<IFile> getAllDependentResources(List<EObject> eObjects) {
         Collection<IResource> resourcesToDelete = new HashSet<IResource>();
         Collection<IFile> dependentResources = new HashSet<IFile>();
         ModelResource mr = null;
 
         try {
-            for ( int i=0 ; i< objectsToDelete.length ; ++i ) {
-                mr = ModelUtilities.getModelResourceForModelObject(objectsToDelete[i]);
+            for (EObject eObject : eObjects) {
+                mr = ModelUtilities.getModelResourceForModelObject(eObject);
                 if( mr == null)
                     continue;
 
@@ -351,9 +354,9 @@ public class DeleteEObjectAction extends ModelObjectAction {
     private boolean openEditorsForDependentModels() throws ModelWorkspaceException {
         boolean okToDelete = true;
         
-        EObject[] eoArray = worker.getSelectedEObjects();
+        List<EObject> eObjects = worker.getSelectedEObjects();
         
-        Collection allDepResources = getAllDependentResources(eoArray);
+        Collection allDepResources = getAllDependentResources(eObjects);
         
         if( !allDepResources.isEmpty()) {
             String sTitle = UiConstants.Util.getString( MODIFY_DEPENDENCIES_TITLE );
@@ -380,11 +383,10 @@ public class DeleteEObjectAction extends ModelObjectAction {
             ModelResource mr = null;
             
             // Create a unique list of ModelResources that will be losing objects
-            Collection eObjectResources = new HashSet(eoArray.length);
-            for ( int i=0 ; i< eoArray.length ; ++i ) {
-                mr = ModelUtilities.getModelResourceForModelObject(eoArray[i]);
+            Collection eObjectResources = new HashSet(eObjects.size());
+            for (EObject eObject : eObjects) {
+                mr = ModelUtilities.getModelResourceForModelObject(eObject);
                 eObjectResources.add(mr);
-
             }
             
             // Insure the affected resources are open in editors
