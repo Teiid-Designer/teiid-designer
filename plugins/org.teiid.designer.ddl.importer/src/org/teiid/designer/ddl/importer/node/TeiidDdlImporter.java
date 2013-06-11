@@ -7,9 +7,17 @@
 */
 package org.teiid.designer.ddl.importer.node;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.modeshape.sequencer.ddl.DdlConstants;
 import org.modeshape.sequencer.ddl.StandardDdlLexicon;
@@ -18,10 +26,18 @@ import org.modeshape.sequencer.ddl.dialect.teiid.TeiidDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.ddl.DdlImporterModel.EntityDescriptions;
 import org.teiid.designer.ddl.DdlImporterModel.EntityDescriptions.DescriptionOperation;
+import org.teiid.designer.ddl.DdlImporterModel.EntityExtensionProperties;
 import org.teiid.designer.ddl.importer.DdlImporterI18n;
+import org.teiid.designer.ddl.importer.DdlImporterPlugin;
 import org.teiid.designer.ddl.importer.TeiidDDLConstants;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
+import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.metamodels.relational.AccessPattern;
 import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Column;
@@ -29,7 +45,6 @@ import org.teiid.designer.metamodels.relational.ColumnSet;
 import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.ForeignKey;
 import org.teiid.designer.metamodels.relational.Index;
-import org.teiid.designer.metamodels.relational.NullableType;
 import org.teiid.designer.metamodels.relational.PrimaryKey;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
@@ -46,7 +61,9 @@ import org.teiid.designer.metamodels.relational.UniqueConstraint;
  */
 public class TeiidDdlImporter extends StandardImporter {
 
-    private class TeiidInfo extends Info {
+	private Map<String, Collection<ModelObjectExtensionAssistant>> classNameToMedAssistantsMap = new HashMap<String,Collection<ModelObjectExtensionAssistant>>();
+
+	private class TeiidInfo extends Info {
 
         /**
          * @param node
@@ -215,89 +232,6 @@ public class TeiidDdlImporter extends StandardImporter {
     }
 
     /**
-     * Handles statementOption common to all relational entities for Teiid DDL
-     * @param entity the RelationalEntity
-     * @param optionNode the statementOption AstNode
-     * @return 'true' if the provided OPTION was a 'common' option, 'false' if not.
-     */
-    private boolean handleCommonOption(RelationalEntity entity, AstNode optionNode) {
-        boolean wasCommonOption = false;
-        
-        String optionName = optionNode.getName();
-        Object optionValue = optionNode.getProperty(StandardDdlLexicon.VALUE);
-        if(!CoreStringUtil.isEmpty(optionName)) {
-            String optionValueStr = (String)optionValue;
-            if(!CoreStringUtil.isEmpty(optionValueStr)) {
-                if(optionName.equalsIgnoreCase(TeiidDDLConstants.ANNOTATION)) {
-                    getImporterModel().addDescription(entity, optionValueStr, DescriptionOperation.PREPEND);
-                    wasCommonOption = true;
-                } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.UUID)) {
-                    // entity.setUUID();
-                    wasCommonOption = true;
-                } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.NAMEINSOURCE)) {
-                    entity.setNameInSource(optionValueStr);
-                    wasCommonOption = true;
-                } 
-            }
-        }
-        return wasCommonOption;
-    }
-
-    /**
-     * Handle the OPTION keys that may be set on Tables for Teiid DDL
-     * @param table
-     * @param node 
-     */
-    private void handleTableOption(BaseTable table, AstNode node) {
-        boolean wasCommonOption = handleCommonOption(table,node);
-        if(wasCommonOption) return;
-        
-        // TODO: handle 'generic' statement options
-        String optionName = node.getName();
-        Object optionValue = node.getProperty(StandardDdlLexicon.VALUE);
-        if(!CoreStringUtil.isEmpty(optionName)) {
-            String optionValueStr = (String)optionValue;
-            if(!CoreStringUtil.isEmpty(optionValueStr)) {
-                if(optionName.equalsIgnoreCase(TeiidDDLConstants.CARDINALITY)) {
-                    table.setCardinality(Integer.parseInt(optionValueStr));
-                } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.MATERIALIZED)) {
-                    table.setMaterialized(isTrue(optionValueStr));
-                } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.MATERIALIZED_TABLE)) {
-                    //Table mattable = new Table();
-                    //mattable.setName(value);
-                    //table.setMaterializedTable(mattable);
-                } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.UPDATABLE)) {
-                    table.setSupportsUpdate(isTrue(optionValueStr));
-                }
-            }
-        }
-    }
-
-    /**
-     * Handle the OPTION keys that may be set on ProcedureParameters for Teiid DDL
-     * @param procParam the ProcedureParameter
-     * @param paramNode the procedure parameter AstNode
-     */
-    private void handleProcParamOptions(ProcedureParameter procParam, AstNode paramNode) {
-        List<AstNode> children = paramNode.getChildren();
-        for(AstNode child: children) {
-            if(is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
-                handleProcParamOption(procParam,child);
-            }
-        }
-    }
-
-    /**
-     * Handle the OPTION keys that may be set on a ProcedureParameter for Teiid DDL
-     * @param procParam the ProcedureParameter
-     * @param procParamOptionNode a statementOption node for the procedure parameter
-     */
-    private void handleProcParamOption(ProcedureParameter procParam, AstNode procParamOptionNode) {
-        boolean wasCommonOption = handleCommonOption(procParam,procParamOptionNode);
-        if(wasCommonOption) return;
-    }
-
-    /**
      * Get ProcedureUpdateCount object for the provided string value
      *
      * @param value the string value
@@ -306,94 +240,15 @@ public class TeiidDdlImporter extends StandardImporter {
     private  ProcedureUpdateCount getUpdateCount(String value) {
         if( ProcedureUpdateCount.AUTO_LITERAL.getName().equalsIgnoreCase(value) ) {
             return ProcedureUpdateCount.AUTO_LITERAL;
-        }
-        if( ProcedureUpdateCount.ONE_LITERAL.getName().equalsIgnoreCase(value) ) {
+        } else if( ProcedureUpdateCount.ONE_LITERAL.getName().equalsIgnoreCase(value) ) {
             return ProcedureUpdateCount.ONE_LITERAL;
-        }
-        if( ProcedureUpdateCount.MULTIPLE_LITERAL.getName().equalsIgnoreCase(value) ) {
+        } else if( ProcedureUpdateCount.MULTIPLE_LITERAL.getName().equalsIgnoreCase(value) ) {
             return ProcedureUpdateCount.MULTIPLE_LITERAL;
-        }
-        if( ProcedureUpdateCount.ZERO_LITERAL.getName().equalsIgnoreCase(value) ) {
+        } else if( ProcedureUpdateCount.ZERO_LITERAL.getName().equalsIgnoreCase(value) ) {
             return ProcedureUpdateCount.ZERO_LITERAL;
         }
 
         return ProcedureUpdateCount.AUTO_LITERAL;
-    }
-
-    /**
-     * Handle a statementOption for a Procedure for Teiid DDL
-     * @param proc the Procedure
-     * @param procOptionNode a statementOption for a procedure
-     */
-    private void handleProcedureOption(Procedure proc, AstNode procOptionNode) {
-        boolean wasCommonOption = handleCommonOption(proc,procOptionNode);
-        if(wasCommonOption) return;
-        
-        String optionName = procOptionNode.getName();
-        Object optionValue = procOptionNode.getProperty(StandardDdlLexicon.VALUE);
-        if(!CoreStringUtil.isEmpty(optionName)) {
-            String optionValueStr = (String)optionValue;
-            if(!CoreStringUtil.isEmpty(optionValueStr)) {
-                if(optionName.equalsIgnoreCase(TeiidDDLConstants.UPDATECOUNT)) {
-                    proc.setUpdateCount(getUpdateCount(optionValueStr));
-                } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.CATEGORY)) {
-                    proc.setFunction(true);
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void handleColumnOption(Column column, AstNode columnOptionNode) {
-        boolean wasCommonOption = handleCommonOption(column,columnOptionNode);
-        if(wasCommonOption)
-            return;
-        
-        String optionName = columnOptionNode.getName();
-        Object optionValue = columnOptionNode.getProperty(StandardDdlLexicon.VALUE);
-
-        if(CoreStringUtil.isEmpty(optionName))
-            return;
-
-        String optionValueStr = (String)optionValue;
-        if(CoreStringUtil.isEmpty(optionValueStr))
-            return;
-
-        if(optionName.equalsIgnoreCase(TeiidDDLConstants.SELECTABLE)) {
-            column.setSelectable(isTrue(optionValueStr));
-        } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.UPDATABLE)) {
-            column.setUpdateable(isTrue(optionValueStr));
-        } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.CURRENCY)) {
-            column.setCurrency(isTrue(optionValueStr));
-        } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.CASE_SENSITIVE)) {
-            column.setCaseSensitive(isTrue(optionValueStr));
-        } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.SIGNED)) {
-            column.setSigned(isTrue(optionValueStr));
-        } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.FIXED_LENGTH)) {
-            column.setFixedLength(isTrue(optionValueStr));
-        } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.SEARCHABLE)) {
-            column.setSearchability(SearchabilityType.get(optionValueStr.toUpperCase()));
-        } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.MIN_VALUE)) {
-            column.setMinimumValue(optionValueStr);
-        } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.MAX_VALUE)) {
-            column.setMaximumValue(optionValueStr);
-        } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.NATIVE_TYPE)) {
-            column.setNativeType(optionValueStr);
-        } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.NULL_VALUE_COUNT)) {
-            column.setNullValueCount(Integer.parseInt(optionValueStr));
-        } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.DISTINCT_VALUES)) {
-            //column.setDistinctValueCount(value);
-        }
-    }
-
-    @Override
-    protected void handleColumnOptions(Column column, AstNode columnNode) {
-        List<AstNode> children = columnNode.getChildren();
-        for(AstNode child: children) {
-            if(is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
-                handleColumnOption(column,child);
-            }
-        }
     }
 
     @Override
@@ -405,58 +260,59 @@ public class TeiidDdlImporter extends StandardImporter {
         if(prop != null)
             column.setAutoIncremented(isTrue(prop.toString()));
 
-        handleColumnOptions(column,node);
+        // Find all the Option properties
+		List<AstNode> optionNodes = new ArrayList<AstNode>();
+        List<AstNode> children = node.getChildren();
+        for(AstNode child: children) {
+        	if(is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
+        		optionNodes.add(child);
+        	}
+        }
+        
+        // process the Column Options
+        processOptions(optionNodes,column);
+        
         return column;
+    }
+
+    @Override
+    protected BaseTable createBaseTable(AstNode tableNode, List<EObject> roots) throws Exception {
+    	BaseTable table = super.createBaseTable(tableNode, roots);
+    	
+		List<AstNode> optionNodes = new ArrayList<AstNode>();
+		
+        for (AstNode child : tableNode) {
+            // Table Elements
+            if (is(child, TeiidDdlLexicon.CreateTable.TABLE_ELEMENT)) {
+                createColumn(child, table);
+            // Contraints
+            } else if (is(child, TeiidDdlLexicon.Constraint.TABLE_ELEMENT)
+                       || is(child, TeiidDdlLexicon.Constraint.FOREIGN_KEY_CONSTRAINT)
+                       || is(child, TeiidDdlLexicon.Constraint.INDEX_CONSTRAINT)) {
+
+                createConstraint(child, table, roots);
+            // Statement Options
+            } else if (is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
+            	optionNodes.add(child);
+            }
+        }
+        // processes all options for this table
+        if(!optionNodes.isEmpty()) {
+        	processOptions(optionNodes,table);
+        }
+        
+        return table;
     }
 
     @Override
     protected Procedure createProcedure(AstNode procedureNode, List<EObject> roots) throws Exception {
         Procedure procedure = super.createProcedure(procedureNode, roots);
 
+		List<AstNode> procOptionNodes = new ArrayList<AstNode>();
+		
         for (AstNode child : procedureNode) {
             if (is(child, TeiidDdlLexicon.CreateProcedure.PARAMETER)) {
-                ProcedureParameter prm = getFactory().createProcedureParameter();
-                procedure.getParameters().add(prm);
-                initialize(prm, child);
-                String datatype = child.getProperty(StandardDdlLexicon.DATATYPE_NAME).toString();
-                prm.setNativeType(datatype);
-
-                EObject type = getDataType(datatype);
-                prm.setType(type);
-
-                Object prop = child.getProperty(StandardDdlLexicon.DATATYPE_LENGTH);
-                if (prop != null)
-                    prm.setLength(Integer.parseInt(prop.toString()));
-
-                prop = child.getProperty(StandardDdlLexicon.DATATYPE_PRECISION);
-                if (prop != null)
-                    prm.setPrecision(Integer.parseInt(prop.toString()));
-
-                prop = child.getProperty(StandardDdlLexicon.DATATYPE_SCALE);
-                if (prop != null)
-                    prm.setScale(Integer.parseInt(prop.toString()));
-
-                prop = child.getProperty(StandardDdlLexicon.NULLABLE);
-                if (prop != null)
-                    prm.setNullable(prop.toString().equals("NULL") ? NullableType.NULLABLE_LITERAL : NullableType.NO_NULLS_LITERAL); //$NON-NLS-1$
-
-                prop = child.getProperty(StandardDdlLexicon.DEFAULT_VALUE);
-                if (prop != null)
-                    prm.setDefaultValue(prop.toString());
-
-                prop = child.getProperty(TeiidDdlLexicon.CreateProcedure.PARAMETER_TYPE);
-                // TODO - Determine how to handle 'VARIADIC'
-                if(prop != null) {
-                    String direction = prop.toString();
-                    if (DirectionKind.IN_LITERAL.getName().equals(direction))
-                        prm.setDirection(DirectionKind.IN_LITERAL);
-                    else if (DirectionKind.OUT_LITERAL.getName().equals(direction) )
-                        prm.setDirection(DirectionKind.OUT_LITERAL);
-                    else if (DirectionKind.INOUT_LITERAL.getName().equals(direction)) 
-                    prm.setDirection(DirectionKind.INOUT_LITERAL);
-                }
-
-                handleProcParamOptions(prm,child);
+                createProcedureParameter(child, procedure);
 
                 // TODO: Determine how to handle teiidddl:result, ddl:defaultOption, ddl:statementOption
             } else if(is(child, TeiidDdlLexicon.CreateProcedure.RESULT_COLUMNS)) {
@@ -476,11 +332,45 @@ public class TeiidDdlImporter extends StandardImporter {
                 initialize(result, procedureNode);
                 createColumn(child,result);
             } else if(is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
-                handleProcedureOption(procedure,child);
+            	procOptionNodes.add(child);
             }
         }
         
+        // process the Procedure Options
+        processOptions(procOptionNodes,procedure);
+        
         return procedure;
+    }
+    
+    @Override
+    protected ProcedureParameter createProcedureParameter(AstNode node, Procedure procedure) throws Exception {
+        ProcedureParameter prm = super.createProcedureParameter(node, procedure);
+
+        // Handle Teiid-specific properties and options
+        Object prop = node.getProperty(TeiidDdlLexicon.CreateProcedure.PARAMETER_TYPE);
+        // TODO - Determine how to handle 'VARIADIC'
+        if(prop != null) {
+            String direction = prop.toString();
+            if (DirectionKind.IN_LITERAL.getName().equals(direction))
+                prm.setDirection(DirectionKind.IN_LITERAL);
+            else if (DirectionKind.OUT_LITERAL.getName().equals(direction) )
+                prm.setDirection(DirectionKind.OUT_LITERAL);
+            else if (DirectionKind.INOUT_LITERAL.getName().equals(direction)) 
+            prm.setDirection(DirectionKind.INOUT_LITERAL);
+        }
+        
+        // Find all the Option properties
+		List<AstNode> optionNodes = new ArrayList<AstNode>();
+        List<AstNode> children = node.getChildren();
+        for(AstNode child: children) {
+        	if(is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
+        		optionNodes.add(child);
+        	}
+        }
+        
+        processOptions(optionNodes,prm);
+        
+        return prm;
     }
 
     @Override
@@ -492,41 +382,31 @@ public class TeiidDdlImporter extends StandardImporter {
         if (is(node, TeiidDdlLexicon.CreateTable.TABLE_STATEMENT)
             || is(node, TeiidDdlLexicon.CreateTable.VIEW_STATEMENT)) {
 
-            BaseTable table = initializeTable(getFactory().createBaseTable(), node, roots);
-
-            for (AstNode child : node) {
-                // Table Elements
-                if (is(child, TeiidDdlLexicon.CreateTable.TABLE_ELEMENT)) {
-                    createColumn(child, table);
-                    // Contraints
-                } else if (is(child, TeiidDdlLexicon.Constraint.TABLE_ELEMENT)
-                           || is(child, TeiidDdlLexicon.Constraint.FOREIGN_KEY_CONSTRAINT)
-                           || is(child, TeiidDdlLexicon.Constraint.INDEX_CONSTRAINT)) {
-
-                    createConstraint(child, table, roots);
-                    // Statement Options
-                } else if (is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
-                    handleTableOption(table, child);
-                }
-            }
+            createBaseTable(node, roots);
+            
         } else if (is(node, TeiidDdlLexicon.CreateProcedure.PROCEDURE_STATEMENT)
                    || is(node, TeiidDdlLexicon.CreateProcedure.FUNCTION_STATEMENT)) {
             createProcedure(node, roots);
 
-            // Handle Alter Table
+        // Handle Alter Table
         } else if (is(node, TeiidDdlLexicon.AlterOptions.TABLE_STATEMENT)) {
             BaseTable table = find(BaseTable.class, node, null, roots);
+			List<AstNode> optionNodes = new ArrayList<AstNode>();
             if (table != null) {
                 for (AstNode child : node) {
                     if (is(child, TeiidDdlLexicon.AlterOptions.OPTIONS_LIST)) {
                         List<AstNode> nodeList = child.getChildren();
                         for (AstNode listItem : nodeList) {
                             if (listItem.hasMixin(StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
-                                handleTableOption(table, listItem);
+                            	optionNodes.add(listItem);
                             }
                         }
                     }
                 }
+            }
+            // processes all options for this table
+            if(!optionNodes.isEmpty()) {
+            	processOptions(optionNodes,table);
             }
             // Handle Alter View and Procedure
             // TODO: could potentially be combined with alter table block above
@@ -540,7 +420,335 @@ public class TeiidDdlImporter extends StandardImporter {
         }
     }
 
-    @Override
+	/**
+	 * Process the Statement Option AstNodes for the supplied relational entity.
+	 * @param optionNodes the list of AstNodes
+	 * @param relationalEntity the RelationalEntity
+	 */
+	private void processOptions(List<AstNode> optionNodes, RelationalEntity relationalEntity) {
+		// process the standard teiid options
+		processTeiidStandardOptions(optionNodes,relationalEntity);
+		
+		// save Extension Options - they are created in 'importFinalize' after model is created.
+		saveTeiidExtensionOptions(optionNodes,relationalEntity);
+	}
+
+	/**
+	 * Process the options that are specific to the provided entity type
+	 * @param optionNodes the list of AstNode
+	 * @param entity the relational entity
+	 */
+	private void processTeiidStandardOptions(List<AstNode> optionNodes, RelationalEntity entity) {
+		// process Options common to all Entities
+		processTeiidCommonOptions(optionNodes,entity);
+		
+		// process Options specific to entity type
+		if(entity instanceof BaseTable) {
+			processTeiidTableOptions(optionNodes,(BaseTable)entity);
+		} else if(entity instanceof Column) {
+			processTeiidColumnOptions(optionNodes,(Column)entity);
+		} else if(entity instanceof Procedure) {
+			processTeiidProcedureOptions(optionNodes,(Procedure)entity);
+		} else if(entity instanceof ProcedureParameter) {
+			processTeiidProcedureParameterOptions(optionNodes,(ProcedureParameter)entity);
+		}
+		//ETC
+	}
+	
+	/**
+	 * Handles statementOption common to all relational entities for Teiid DDL
+	 * @param optionNodes the list of statementOption AstNodes
+	 * @param entity the RelationalEntity
+	 */
+	private void processTeiidCommonOptions(List<AstNode> optionNodes, RelationalEntity entity) {
+		Iterator<AstNode> nodeIter = optionNodes.iterator();
+		while(nodeIter.hasNext()) {
+			AstNode optionNode = nodeIter.next();
+	    	String optionName = optionNode.getName();
+	        Object optionValue = optionNode.getProperty(StandardDdlLexicon.VALUE);
+	        if(!CoreStringUtil.isEmpty(optionName)) {
+	        	String optionValueStr = (String)optionValue;
+	        	if(!CoreStringUtil.isEmpty(optionValueStr)) {
+	            	if(optionName.equalsIgnoreCase(TeiidDDLConstants.ANNOTATION)) {
+	                    getImporterModel().addDescription(entity, optionValueStr, DescriptionOperation.PREPEND);
+	            		nodeIter.remove();
+	            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.UUID)) {
+	            		// entity.setUUID();
+	            		nodeIter.remove();
+	            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.NAMEINSOURCE)) {
+	            		entity.setNameInSource(optionValueStr);
+	            		nodeIter.remove();
+	            	} 
+	        	}
+	        }
+		}
+		return;
+	}
+	
+
+	/**
+	 * Handle the OPTION keys that may be set on Tables for Teiid DDL
+	 * @param optionNodes 
+	 * @param table 
+	 */
+	private void processTeiidTableOptions(List<AstNode> optionNodes, BaseTable table) {
+		Iterator<AstNode> nodeIter = optionNodes.iterator();
+		while(nodeIter.hasNext()) {
+			AstNode optionNode = nodeIter.next();
+	    	String optionName = optionNode.getName();
+	        Object optionValue = optionNode.getProperty(StandardDdlLexicon.VALUE);
+	        if(!CoreStringUtil.isEmpty(optionName)) {
+	        	String optionValueStr = (String)optionValue;
+	        	if(!CoreStringUtil.isEmpty(optionValueStr)) {
+	            	if(optionName.equalsIgnoreCase(TeiidDDLConstants.CARDINALITY)) {
+	            		table.setCardinality(Integer.parseInt(optionValueStr));
+	            		nodeIter.remove();
+	            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.MATERIALIZED)) {
+	        			table.setMaterialized(isTrue(optionValueStr));
+	        			nodeIter.remove();
+	            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.MATERIALIZED_TABLE)) {
+	            		//Table mattable = new Table();
+	            		//mattable.setName(value);
+	            		//table.setMaterializedTable(mattable);
+	            		nodeIter.remove();
+	            	} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.UPDATABLE)) {
+	        			table.setSupportsUpdate(isTrue(optionValueStr));
+	        			nodeIter.remove();
+	            	}
+	        	}
+	        }
+		}
+	}
+	
+    /**
+     * Handle the OPTION keys that may be set on Procedures for Teiid DDL
+     * @param optionNodes the list of optionNodes for a Procedure
+     * @param procedure the procedure
+     */
+	private void processTeiidProcedureOptions(List<AstNode> optionNodes, Procedure procedure) {
+		Iterator<AstNode> nodeIter = optionNodes.iterator();
+		while(nodeIter.hasNext()) {
+			AstNode optionNode = nodeIter.next();
+	    	String optionName = optionNode.getName();
+	        Object optionValue = optionNode.getProperty(StandardDdlLexicon.VALUE);
+	        if(!CoreStringUtil.isEmpty(optionName)) {
+	        	String optionValueStr = (String)optionValue;
+	        	if(!CoreStringUtil.isEmpty(optionValueStr)) {
+	        		if(optionName.equalsIgnoreCase(TeiidDDLConstants.UPDATECOUNT)) {
+	        			procedure.setUpdateCount(getUpdateCount(optionValueStr));
+	        		} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.CATEGORY)) {
+	        			procedure.setFunction(true);
+	        		}
+	        	}
+	        }
+		}
+	}
+		
+	/**
+	 * Handle the OPTION keys that may be set on Columns for Teiid DDL
+	 * @param optionNodes 
+	 * @param column 
+	 */
+	private void processTeiidColumnOptions(List<AstNode> optionNodes, Column column) {
+		Iterator<AstNode> nodeIter = optionNodes.iterator();
+		while(nodeIter.hasNext()) {
+			AstNode optionNode = nodeIter.next();
+	    	String optionName = optionNode.getName();
+	        Object optionValue = optionNode.getProperty(StandardDdlLexicon.VALUE);
+	        if(!CoreStringUtil.isEmpty(optionName)) {
+	        	String optionValueStr = (String)optionValue;
+	        	if(!CoreStringUtil.isEmpty(optionValueStr)) {
+	        		if(optionName.equalsIgnoreCase(TeiidDDLConstants.SELECTABLE)) {
+	        			column.setSelectable(isTrue(optionValueStr));
+	            		nodeIter.remove();
+	        		} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.UPDATABLE)) {
+	        			column.setUpdateable(isTrue(optionValueStr));
+	            		nodeIter.remove();
+	        		} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.CURRENCY)) {
+	        			column.setCurrency(isTrue(optionValueStr));
+	            		nodeIter.remove();
+	        		} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.CASE_SENSITIVE)) {
+	        			column.setCaseSensitive(isTrue(optionValueStr));
+	            		nodeIter.remove();
+	        		} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.SIGNED)) {
+	        			column.setSigned(isTrue(optionValueStr));
+	            		nodeIter.remove();
+	        		} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.FIXED_LENGTH)) {
+	        			column.setFixedLength(isTrue(optionValueStr));
+	            		nodeIter.remove();
+	        		} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.SEARCHABLE)) {
+	        			column.setSearchability(SearchabilityType.get(optionValueStr.toUpperCase()));
+	            		nodeIter.remove();
+	        		} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.MIN_VALUE)) {
+	        			column.setMinimumValue(optionValueStr);
+	            		nodeIter.remove();
+	        		} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.MAX_VALUE)) {
+	        			column.setMaximumValue(optionValueStr);
+	            		nodeIter.remove();
+	        		} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.NATIVE_TYPE)) {
+	        			column.setNativeType(optionValueStr);
+	            		nodeIter.remove();
+	        		} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.NULL_VALUE_COUNT)) {
+	        			column.setNullValueCount(Integer.parseInt(optionValueStr));
+	            		nodeIter.remove();
+	        		} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.DISTINCT_VALUES)) {
+	        			//column.setDistinctValueCount(value);
+	            		nodeIter.remove();
+	        		}
+	        	}
+	        }
+		}
+	}
+	
+	 /**
+     * Handle the OPTION keys that may be set on ProcedureParameters for Teiid DDL
+     * @param optionNodes the list of statementOptions for a procedure parameter
+     * @param procParam the ProcedureParameter
+     */
+	private void processTeiidProcedureParameterOptions(List<AstNode> optionNodes, ProcedureParameter procParam) {
+//		Iterator<AstNode> nodeIter = optionNodes.iterator();
+//		while(nodeIter.hasNext()) {
+//			AstNode optionNode = nodeIter.next();
+//	    	String optionName = optionNode.getName();
+//	        Object optionValue = optionNode.getProperty(StandardDdlLexicon.VALUE);
+//	        if(!CoreStringUtil.isEmpty(optionName)) {
+//	        	String optionValueStr = (String)optionValue;
+//	        	if(!CoreStringUtil.isEmpty(optionValueStr)) {
+//
+//	        	}
+//	        }
+//		}
+	}
+
+	/**
+	 * Save the Extension Option name-value info to the importerModel
+	 * @param optionNodes the list of statement option AstNodes
+	 * @param relationalEntity the relational entity
+	 */
+	private void saveTeiidExtensionOptions(List<AstNode> optionNodes, RelationalEntity relationalEntity) {
+		Iterator<AstNode> nodeIter = optionNodes.iterator();
+		while(nodeIter.hasNext()) {
+			AstNode optionNode = nodeIter.next();
+			
+			String optionName = optionNode.getName();
+		    Object optionValue = optionNode.getProperty(StandardDdlLexicon.VALUE);
+		    if(!CoreStringUtil.isEmpty(optionName)) {
+		    	String optionValueStr = (String)optionValue;
+		    	if(!CoreStringUtil.isEmpty(optionValueStr)) {
+		    		getImporterModel().addExtensionProperty(relationalEntity, optionName, optionValueStr);
+		    	}
+		    }
+		    nodeIter.remove();
+		}
+	}
+	
+	/**
+	 * Process the extension properties for a relational entity.  This will apply the necessary med to the model (if needed) and add the 
+	 * appropriate extension properties to the model.
+	 * @param modelResource the ModelResource
+	 * @param relationalEntity the RelationalEntity
+	 * @param extensionProperties the extension property info
+	 * 
+	 */
+	private void processExtensionProperties(ModelResource modelResource, RelationalEntity relationalEntity, Properties extensionProperties) {
+		
+		Iterator<Object> keyIter = extensionProperties.keySet().iterator();
+		while(keyIter.hasNext()) {
+			String propName = (String)keyIter.next();
+			String propValue = extensionProperties.getProperty(propName);
+			
+			// Find an extension assistant that can create this extension property (if it exists)
+	    	ModelObjectExtensionAssistant assistant = getModelExtensionAssistant(relationalEntity.getClass().getName(),propName);
+	    	if(assistant!=null) {
+	    		// Ensure that the Model supports the MED
+	    		try {
+	    			applyMedIfNecessary(modelResource,assistant);
+	    		} catch (Exception e) {
+	    			DdlImporterPlugin.UTIL.log(IStatus.ERROR,e,DdlImporterI18n.ERROR_APPLYING_MED_TO_MODEL);
+	    		}
+	    		String namespacedId = null;
+	    		try {
+	    			namespacedId = assistant.getNamespacePrefix()+':'+propName;
+					assistant.setPropertyValue(relationalEntity, namespacedId, propValue);
+				} catch (Exception ex) {
+	    			DdlImporterPlugin.UTIL.log(IStatus.ERROR,ex,DdlImporterI18n.ERROR_SETTING_PROPERTY_VALUE+namespacedId);
+				}
+	    	}
+		}
+	}
+	
+	/**
+	 * If the ModelResource does not support the assistants namespace, apply its MED to the model
+	 * @param modelResource the model resource
+	 * @param assistant the ModelObjectExtensionAssistant
+	 * @throws Exception exception if there's a problem applying the MED
+	 */
+	private void applyMedIfNecessary(final ModelResource modelResource, ModelObjectExtensionAssistant assistant) throws Exception {
+		if (modelResource != null && !modelResource.isReadOnly()) {
+			if(!assistant.supportsMyNamespace(modelResource)) {
+				assistant.saveModelExtensionDefinition(modelResource);
+			}
+		}
+	}
+
+	/**
+	 * Get the ModelExtensionAssistant that can handle the supplied property for the specified metaClass.  Currently, this will
+	 * get the first valid assistant found (if more than one can handle the property)
+	 * @param eObjectClassName the metaclass name
+	 * @param propId the property
+	 * @return the assistant
+	 * 
+	 */
+	private ModelObjectExtensionAssistant getModelExtensionAssistant( String eObjectClassName, String propId ) {
+    	// Get available assistants for the provided className.  If the map has no entry, go to the ExtensionPlugin and populate it first.
+    	Collection<ModelObjectExtensionAssistant> assistants = null;
+    	if(this.classNameToMedAssistantsMap.containsKey(eObjectClassName)) {
+        	assistants = this.classNameToMedAssistantsMap.get(eObjectClassName);
+    	} else {
+    		Collection<ModelExtensionAssistant> medAssistants = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistants(eObjectClassName);
+    		assistants = new ArrayList<ModelObjectExtensionAssistant>();
+    		for(ModelExtensionAssistant medAssistant: medAssistants) {
+    			if(medAssistant instanceof ModelObjectExtensionAssistant) {
+    				assistants.add((ModelObjectExtensionAssistant)medAssistant);
+    			}
+    		}
+    		this.classNameToMedAssistantsMap.put(eObjectClassName, assistants);
+    	}
+    	
+
+        // no assistants found that have properties defined for the model object type
+        if (assistants.isEmpty()) {
+    		DdlImporterPlugin.UTIL.log(IStatus.WARNING,DdlImporterI18n.WARNING_ASSISTANT_FOR_METACLASS_NOT_FOUND+eObjectClassName);
+            return null;
+        }
+
+        // find the assistant for the property
+        for (ModelExtensionAssistant assistant : assistants) {
+        	// Prepend the assistant namespace to the propertyId, since it doesnt have one
+        	String namespacedId = assistant.getNamespacePrefix()+':'+propId;
+
+        	if(hasMatchingPropertyName(assistant.getModelExtensionDefinition(), eObjectClassName, namespacedId)) {
+                return ((assistant instanceof ModelObjectExtensionAssistant) ? (ModelObjectExtensionAssistant)assistant : null);
+            }
+        }
+    
+		DdlImporterPlugin.UTIL.log(IStatus.WARNING,DdlImporterI18n.WARNING_ASSISTANT_FOR_PROPERTY_NOT_FOUND+propId);
+        return null;
+    }
+        
+	/**
+	 *  Determine if the ModelExtensionDefinition has a propertyId that matches the supplied property
+	 * @param med the ModelExtensionDefinition 
+	 * @param metaclassName the extended metaclass name
+	 * @param propId the property id
+	 * @return 'true' if the med has a matching propertyDefn, 'false' if not
+	 */
+	private boolean hasMatchingPropertyName(ModelExtensionDefinition med, String metaclassName, String propId) {
+		ModelExtensionPropertyDefinition propDefn = med.getPropertyDefinition(metaclassName, propId);
+		return propDefn!=null ? true : false;
+	}
+        
+	@Override
     public void importFinalize() throws Exception {
         /*
          * The descriptions are added from to the model's descriptions
@@ -549,5 +757,17 @@ public class TeiidDdlImporter extends StandardImporter {
         for (EntityDescriptions pair : getImporterModel().getEntityDescriptions()) {
             ModelerCore.getModelEditor().setDescription(pair.getEntity(), pair.getPreferredDescription());
         }
+        
+		// Clear Map of extended objectClass to available MED Assistants
+		this.classNameToMedAssistantsMap.clear();
+		
+        /*
+         * Create the Extension Properties using the extension properties saved previously on the importer model
+         */
+		ModelResource modelResource = getImporterModel().getModel();
+        for (EntityExtensionProperties pair : getImporterModel().getEntityExtensionProperties()) {
+        	processExtensionProperties(modelResource,pair.getEntity(),pair.getProperties());
+        }
+        
     }
 }

@@ -29,4 +29,8 @@ public interface DdlImporterI18n {
     String SAVING_MODEL_MSG = i18n("savingModelMsg"); //$NON-NLS-1$
     String FK_TABLE_REF_NOT_FOUND_MSG = i18n("fkTableRefNotFoundMsg"); //$NON-NLS-1$
     String FAILURE_IMPORT_MSG = i18n("importFailureMsg"); //$NON-NLS-1$
+    String ERROR_APPLYING_MED_TO_MODEL = i18n("errorApplyingMedToModel"); //$NON-NLS-1$
+    String ERROR_SETTING_PROPERTY_VALUE = i18n("errorSettingProperty"); //$NON-NLS-1$
+    String WARNING_ASSISTANT_FOR_METACLASS_NOT_FOUND = i18n("assistantForMetaclassNotFound"); //$NON-NLS-1$
+    String WARNING_ASSISTANT_FOR_PROPERTY_NOT_FOUND = i18n("assistantForPropertyNotFound"); //$NON-NLS-1$
 }
