@@ -27,7 +27,6 @@ import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbCleanupJob;
@@ -256,7 +255,7 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
         IWorkbenchPage page = workbenchWindow.getActivePage();
         
         try {
-            TeiidServerEditorInput input = new TeiidServerEditorInput(server.getUrl());
+            TeiidServerEditorInput input = new TeiidServerEditorInput(server.getId());
             page.openEditor(input, TeiidServerEditor.EDITOR_ID);
         } catch (Exception e) {
             DqpUiConstants.UTIL.log(e);

@@ -11,10 +11,8 @@ import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -34,6 +32,8 @@ import org.teiid.core.designer.util.Base64;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.KeyInValueHashMap;
+import org.teiid.designer.core.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.importer.ImportManager;
@@ -167,7 +167,14 @@ public final class TeiidServerManager implements EventManager {
      */
     private static final String JDBC_SECURE_ATTR = "jdbcsecure"; //$NON-NLS-1$
 
-    
+    private class TeiidServerKeyValueAdapter implements KeyFromValueAdapter<String, ITeiidServer> {
+
+        @Override
+        public String getKey(ITeiidServer value) {
+            return value.getId();
+        }
+    }
+
     // ===========================================================================================================================
     // Fields
     // ===========================================================================================================================
@@ -195,7 +202,7 @@ public final class TeiidServerManager implements EventManager {
     /**
      * The server registry.
      */
-    private final List<ITeiidServer> teiidServers;
+    private final KeyInValueHashMap<String, ITeiidServer> teiidServers;
 
     /**
      * The default server.
@@ -236,7 +243,7 @@ public final class TeiidServerManager implements EventManager {
      */
     public TeiidServerManager( String stateLocationPath, IPasswordProvider passwordProvider, 
                                IServersProvider parentServersProvider, ISecureStorageProvider secureStorageProvider ) {
-        this.teiidServers = new ArrayList<ITeiidServer>();
+        this.teiidServers = new KeyInValueHashMap<String, ITeiidServer>(new TeiidServerKeyValueAdapter());
         this.stateLocationPath = stateLocationPath;
         this.parentServersProvider = parentServersProvider;
         this.secureStorageProvider = secureStorageProvider;
@@ -321,19 +328,13 @@ public final class TeiidServerManager implements EventManager {
     }
 
     /**
-     * @param url the URL of the server being requested (never <code>null</code> )
+     * @param id the id of the server being requested (never <code>null</code> )
      * @return the requested server or <code>null</code> if not found in the registry
      */
-    public ITeiidServer getServer( String url ) {
-        CoreArgCheck.isNotNull(url, "url"); //$NON-NLS-1$
+    public ITeiidServer getServer( String id ) {
+        CoreArgCheck.isNotNull(id, "id"); //$NON-NLS-1$
 
-        for (ITeiidServer teiidServer : getServers()) {
-            if (url.equals(teiidServer.getUrl())) {
-                return teiidServer;
-            }
-        }
-
-        return null;
+        return teiidServers.get(id);
     }
 
     /**
@@ -358,7 +359,7 @@ public final class TeiidServerManager implements EventManager {
     public Collection<ITeiidServer> getServers() {
         try {
             this.serverLock.readLock().lock();
-            return Collections.unmodifiableCollection(new ArrayList<ITeiidServer>(this.teiidServers));
+            return Collections.unmodifiableCollection(this.teiidServers.values());
         } finally {
             this.serverLock.readLock().unlock();
         }
@@ -428,23 +429,17 @@ public final class TeiidServerManager implements EventManager {
         try {
             this.serverLock.writeLock().lock();
 
-            // see if registered server has the same key
-            for (ITeiidServer registeredServer : this.teiidServers) {
-                if (registeredServer.hasSameKey(teiidServer)) {
-                    removed = this.teiidServers.remove(registeredServer);
-                    if (removed) {
-                        // If no servers left, set defaultServer to null
-                        if (this.teiidServers.isEmpty()) {
-                            setDefaultServer(null);
-                        }
-                        // Check if removed server is default, then set to first server
-                        if (teiidServer.equals(getDefaultServer())) {
-                            setDefaultServer(this.teiidServers.get(0));
-                        }
-                    }
-                    break;
-                }
+            removed = this.teiidServers.remove(teiidServer);
+
+            // Check if removed server is default, then set to first server
+            if (teiidServer.equals(getDefaultServer())) {
+                // If no servers left, set defaultServer to null
+                if (this.teiidServers.isEmpty())
+                    setDefaultServer(null);
+                else
+                    setDefaultServer(this.teiidServers.get(0));
             }
+
         } finally {
             this.serverLock.writeLock().unlock();
         }
@@ -485,38 +480,7 @@ public final class TeiidServerManager implements EventManager {
 
         try {
             this.serverLock.readLock().lock();
-
-            // check to make sure no other registered server has the same key
-            for (ITeiidServer registeredServer : this.teiidServers) {
-                if (registeredServer.hasSameKey(teiidServer)) {
-                    return true;
-                }
-            }
-
-            return false;
-        } finally {
-            this.serverLock.readLock().unlock();
-        }
-    }
-    
-    /**
-     * @param url the url being tested (never <code>null</code>)
-     * @return <code>true</code> if a server with the url has been registered
-     */
-    public boolean isRegisteredUrl( String url ) {
-        CoreArgCheck.isNotEmpty(url, "url"); //$NON-NLS-1$
-
-        try {
-            this.serverLock.readLock().lock();
-
-            // check to make sure no other registered server has the same key
-            for (ITeiidServer registeredServer : this.teiidServers) {
-                if (registeredServer.getUrl().equals(url)) {
-                    return true;
-                }
-            }
-
-            return false;
+            return this.teiidServers.containsValue(teiidServer);
         } finally {
             this.serverLock.readLock().unlock();
         }
@@ -700,34 +664,6 @@ public final class TeiidServerManager implements EventManager {
                                     }
                                 }
                             }
-                        } else {
-                            // OLD xml structure where there were only attributes for each server node
-                            Node urlNode = serverAttributeMap.getNamedItem(URL_ATTR);
-
-                            // if bad registry file just continue since error will be corrected when registry is saved
-                            if (urlNode == null) {
-                                continue;
-                            }
-
-                            TeiidURL jdbcURL = new TeiidURL(urlNode.getNodeValue());
-                            
-                            Node userNode = serverAttributeMap.getNamedItem(USER_ATTR);
-                            Node passwordNode = serverAttributeMap.getNamedItem(PASSWORD_ATTR);
-                            String pswd = ((passwordNode == null) ? null : new String(Base64.decode(passwordNode.getNodeValue()),
-                                                                                      "UTF-8")); //$NON-NLS-1$
-
-                            host = jdbcURL.getHosts();
-                            teiidAdminInfo = new TeiidAdminInfo(jdbcURL.getPorts(),
-                                                                userNode.getNodeValue(),
-                                                                secureStorageProvider,
-                                                                pswd,
-                                                                jdbcURL.isUsingSSL());
-
-                            teiidJdbcInfo = new TeiidJdbcInfo(teiidAdminInfo.getPort(),
-                                                              teiidAdminInfo.getUsername(),
-                                                              secureStorageProvider,
-                                                              null,
-                                                              ITeiidJdbcInfo.DEFAULT_SECURE);
                         }
 
                         // add server to registry

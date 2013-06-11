@@ -102,6 +102,11 @@ public class TeiidServer implements ITeiidServer {
     private String host;
 
     /**
+     * The unique id of this server
+     */
+    private final String id;
+
+    /**
      * The parent {@link IServer} of this teiid server
      */
     private IServer parentServer;
@@ -112,6 +117,7 @@ public class TeiidServer implements ITeiidServer {
      * ie. turn off -> do work -> turn on
      */
     private boolean notifyListeners = true;
+
 
     // ===========================================================================================================================
     // Constructors
@@ -151,6 +157,8 @@ public class TeiidServer implements ITeiidServer {
         
         this.eventManager = eventManager;
         this.parentServer = parentServer;
+
+        this.id = getUrl() + "-" + getServerVersion() + "-" + getParent().getId();  //$NON-NLS-1$//$NON-NLS-2$
         
         if (parentServer.getServerState() != IServer.STATE_STARTED)
             disconnect();
@@ -181,12 +189,9 @@ public class TeiidServer implements ITeiidServer {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
         TeiidServer other = (TeiidServer)obj;
-        if (this.admin == null) {
-            if (other.admin != null) return false;
-        } else if (!this.admin.equals(other.admin)) return false;
-        if (this.eventManager == null) {
-            if (other.eventManager != null) return false;
-        } else if (!this.eventManager.equals(other.eventManager)) return false;
+        if (this.id == null) {
+            if (other.id != null) return false;
+        } else if (!this.id.equals(other.id)) return false;
         if (this.host == null) {
             if (other.host != null) return false;
         } else if (!this.host.equals(other.host)) return false;
@@ -281,7 +286,12 @@ public class TeiidServer implements ITeiidServer {
 
         return this.host;
     }
-    
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
     /**
      * @return the parentServer
      */
@@ -302,20 +312,6 @@ public class TeiidServer implements ITeiidServer {
         result = prime * result + ((this.teiidAdminInfo == null) ? 0 : this.teiidAdminInfo.hashCode());
         result = prime * result + ((this.teiidJdbcInfo == null) ? 0 : this.teiidJdbcInfo.hashCode());
         return result;
-    }
-
-    /**
-     * A server has the same identifying properties if their URL and user matches.
-     * 
-     * @param otherServer the server whose key is being compared (never <code>null</code>)
-     * @return <code>true</code> if the servers have the same key
-     * @throws IllegalArgumentException if the argument is <code>null</code>
-     */
-    @Override
-    public boolean hasSameKey( ITeiidServer otherServer ) {
-        CoreArgCheck.isNotNull(otherServer, "otherServer"); //$NON-NLS-1$
-        return (equivalent(getUrl(), otherServer.getUrl()) && equivalent(getTeiidAdminInfo().getUsername(),
-                                                                         otherServer.getTeiidAdminInfo().getUsername()));
     }
 
     /**

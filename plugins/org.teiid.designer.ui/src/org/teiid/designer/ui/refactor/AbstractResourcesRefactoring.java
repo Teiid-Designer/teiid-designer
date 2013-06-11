@@ -20,8 +20,8 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
-import org.teiid.designer.ui.common.util.KeyInValueHashMap;
-import org.teiid.designer.ui.common.util.KeyInValueHashMap.KeyFromValueAdapter;
+import org.teiid.designer.core.util.KeyInValueHashMap;
+import org.teiid.designer.core.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.ui.refactor.RefactorResourcesUtils.AbstractResourceCallback;
 import org.teiid.designer.vdb.refactor.VdbResourceChange;
 
