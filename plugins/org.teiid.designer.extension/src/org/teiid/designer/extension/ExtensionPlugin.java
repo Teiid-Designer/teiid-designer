@@ -240,7 +240,7 @@ public class ExtensionPlugin extends Plugin {
     /*
      * Load the Built In MEDS (which are contributed from extension point) into the Registry.
      */
-    private void loadBuiltInMeds() {
+    private void loadBuiltInMeds() throws Exception {
         final String EXT_PT = PLUGIN_ID + ".modelExtensionProvider"; //$NON-NLS-1$
         final String PATH = "path"; //$NON-NLS-1$
         final String CLASS_NAME = "className"; //$NON-NLS-1$
@@ -299,37 +299,24 @@ public class ExtensionPlugin extends Plugin {
                         continue;
                     }
 
-                    ISafeRunnable runnable = new ISafeRunnable() {
-                        /**
-                         * {@inheritDoc}
-                         * 
-                         * @see org.eclipse.core.runtime.ISafeRunnable#handleException(java.lang.Throwable)
-                         */
-                        @Override
-                        public void handleException( Throwable e ) {
-                            Util.log(IStatus.ERROR, e, NLS.bind(Messages.errorProcessingDefinitionFile, path, pluginId));
-                        }
-
-                        /**
-                         * {@inheritDoc}
-                         * 
-                         * @see org.eclipse.core.runtime.ISafeRunnable#run()
-                         */
-                        @Override
-                        public void run() throws Exception {
-                            ModelExtensionDefinition definition = getRegistry().addDefinition(new FileInputStream(defnFile),
-                                                                                              (ModelExtensionAssistant)assistant);
-                            definition.markAsBuiltIn();
-                        }
-                    };
-
-                    SafeRunner.run(runnable);
+                    ModelExtensionDefinition definition;
+					try {
+						definition = getRegistry().addDefinition(new FileInputStream(defnFile),(ModelExtensionAssistant)assistant);
+					} catch (Exception ex) {
+                        Util.log(IStatus.ERROR, ex, NLS.bind(Messages.errorProcessingDefinitionFile, path, pluginId));
+                        throw ex;
+					}
+					if(definition!=null) {
+						definition.markAsBuiltIn();
+					}
+                    
                 } catch (Exception e) {
                     Util.log(IStatus.ERROR, e, NLS.bind(Messages.errorProcessingModelExtension, pluginId));
                 }
             }
         } catch (Exception e) {
             Util.log(IStatus.ERROR, e, NLS.bind(Messages.errorProcessingExtensionPoint, EXT_PT));
+            throw e;
         }
     }
 
