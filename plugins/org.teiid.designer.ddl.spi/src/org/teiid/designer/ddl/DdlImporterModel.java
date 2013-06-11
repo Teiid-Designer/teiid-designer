@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -136,6 +138,78 @@ public class DdlImporterModel {
             return true;
         }
     }
+    
+    /**
+     * A 1-1 mapping of an entity with its extension properties
+     */
+    public static class EntityExtensionProperties {
+        
+        private RelationalEntity entity;
+
+        private Properties properties = new Properties();
+
+        /**
+         * @param entity 
+         * @param optionName
+         * @param optionValue 
+         */
+        public EntityExtensionProperties(RelationalEntity entity, String propName, String propValue) {
+            CoreArgCheck.isNotNull(entity);
+            CoreArgCheck.isNotNull(propName);
+            CoreArgCheck.isNotNull(propValue);
+            
+            this.entity = entity;
+            this.properties.put(propName, propValue);
+        }
+
+        /**
+         * @return the entity
+         */
+        public RelationalEntity getEntity() {
+            return this.entity;
+        }
+        
+        /**
+         * @return the properties
+         */
+        public Properties getProperties() {
+        	return this.properties;
+        }
+
+        /**
+         * Add a description to the list of descriptions.
+         *
+         * Descriptions are in priority order with the preferred description
+         * being first in the list. Therefore, the first description is
+         * considered to be the preferred description.
+         * <p>
+         * Use the given {@link DescriptionOperation} to determine whether
+         * to prepend or append the given description.
+         *
+         * @param propName
+         * @param propValue
+         */
+        public void addProperty(String propName, String propValue) {
+        	this.properties.put(propName,propValue);
+        }
+
+        @Override
+        public int hashCode() {
+            return entity.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null) return false;
+            if (getClass() != obj.getClass()) return false;
+            EntityExtensionProperties other = (EntityExtensionProperties)obj;
+            if (this.entity == null) {
+                if (other.entity != null) return false;
+            } else if (!this.entity.equals(other.entity)) return false;
+            return true;
+        }
+    }
 
     private final RelationalFactory factory = RelationalFactory.eINSTANCE;
 
@@ -161,6 +235,8 @@ public class DdlImporterModel {
 
     private Collection<EntityDescriptions> descriptionPairs = new ArrayList<EntityDescriptions>();
 
+    private Collection<EntityExtensionProperties> extensionPropertyPairs = new ArrayList<EntityExtensionProperties>();
+
     private DdlNodeImporter nodeImporter;
 
     /**
@@ -168,6 +244,13 @@ public class DdlImporterModel {
      */
     public void setRelationalModel(ModelResource model) {
         this.model = model;
+    }
+    
+    /**
+     * @return
+     */
+    public ModelResource getModel() {
+    	return this.model;
     }
 
     /**
@@ -343,6 +426,30 @@ public class DdlImporterModel {
      */
     public Collection<EntityDescriptions> getEntityDescriptions() {
         return this.descriptionPairs;
+    }
+    
+    /**
+     * @param entity
+     * @param propName
+     * @param propValue
+     */
+    public void addExtensionProperty(RelationalEntity entity, String propName, String propValue) {
+        for (EntityExtensionProperties pair : extensionPropertyPairs) {
+            if (pair.getEntity().equals(entity)) {
+                pair.addProperty(propName, propValue);
+                return;
+            }
+        }
+
+        // Completely new entity option
+        extensionPropertyPairs.add(new EntityExtensionProperties(entity, propName, propValue));
+    }
+
+    /**
+     * @return the descriptionPairs
+     */
+    public Collection<EntityExtensionProperties> getEntityExtensionProperties() {
+        return this.extensionPropertyPairs;
     }
 
     /**
