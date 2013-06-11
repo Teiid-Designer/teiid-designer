@@ -44,6 +44,8 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
 
         private final Set<PathPair> pathPairs;
 
+        private final Set<IResource> history = new HashSet<IResource>();
+
         /**
          * @param pathPairs
          */
@@ -59,6 +61,28 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
         @Override
         public void indexFile(IResource resource, IFile relatedFile, RefactoringStatus status) throws Exception {
             RefactorResourcesUtils.unloadModelResource(relatedFile);
+
+            if (history.contains(relatedFile)) {
+                /*
+                 * This file has been processed before implying that it is related
+                 * to more than one target resource.
+                 *
+                 * Since pathpairs are global to all resources there is
+                 * no point in processing the related file more than once.
+                 */
+                return;
+            }
+
+            // Add the related file to the history to avoid processing it again
+            history.add(relatedFile);
+
+            if (getResourcesAndChildren(status).contains(relatedFile)) {
+                /*
+                 * Changes are not applicable as the related file is moving
+                 * to the new destination as well
+                 */
+                return;
+            }
 
             IPath relatedFilePath = relatedFile.getRawLocation().makeAbsolute();
             IPath relatedParentPath = relatedFilePath.removeLastSegments(1);
@@ -181,7 +205,7 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
                 // Find the resource's imports as they need to be updated due to the resource move
                 if (ModelUtil.isModelFile(resource)) {
                     IFile file = (IFile) resource;
-                    Set<PathPair> importPathPairs = RefactorResourcesUtils.calculateImportChanges(file, destinationPath);
+                    Set<PathPair> importPathPairs = RefactorResourcesUtils.calculateImportChanges(file, destinationPath, getResourcesAndChildren(status));
                     TextFileChange textFileChange = RefactorResourcesUtils.calculateTextChanges(file, importPathPairs);
                     if (addTextChange(file, textFileChange)) {
                         // Calculate the effect on any vdbs containing this modified related file
