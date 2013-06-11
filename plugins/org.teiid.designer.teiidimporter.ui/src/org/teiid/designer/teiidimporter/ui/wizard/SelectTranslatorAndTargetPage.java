@@ -280,7 +280,10 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
 
         // Location Text box
         targetModelContainerText = new Text(sourceGroup, SWT.BORDER | SWT.SINGLE);
-        String targetContainerText = this.importManager.getTargetModelLocation().toOSString();
+        String targetContainerText = null;
+        if( this.importManager.getTargetModelLocation() != null ) {
+        	targetContainerText = this.importManager.getTargetModelLocation().toOSString();
+        }
         if(targetContainerText!=null) targetModelContainerText.setText(targetContainerText);
         
         GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
