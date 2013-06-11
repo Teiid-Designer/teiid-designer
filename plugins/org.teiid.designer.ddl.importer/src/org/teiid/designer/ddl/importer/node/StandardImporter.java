@@ -10,6 +10,7 @@ package org.teiid.designer.ddl.importer.node;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.modeshape.sequencer.ddl.DdlConstants;
@@ -30,6 +31,7 @@ import org.teiid.designer.metamodels.relational.ForeignKey;
 import org.teiid.designer.metamodels.relational.NullableType;
 import org.teiid.designer.metamodels.relational.PrimaryKey;
 import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.ProcedureResult;
 import org.teiid.designer.metamodels.relational.RelationalEntity;
 import org.teiid.designer.metamodels.relational.Schema;
@@ -325,6 +327,56 @@ public class StandardImporter extends AbstractImporter {
 
         return col;
     }
+    
+    /**
+     * Create ProcedureParameter from the provided AstNode within procedure
+     * @param node the provided AstNode
+     * @param procedure the Procedure in which to create the procedure parameter
+     * @return the procedure parameter
+     *
+     * @throws Exception 
+     */
+    protected ProcedureParameter createProcedureParameter(AstNode node, Procedure procedure) throws Exception {
+        ProcedureParameter prm = getFactory().createProcedureParameter();
+        procedure.getParameters().add(prm);
+        initialize(prm, node);
+
+        String datatype = node.getProperty(StandardDdlLexicon.DATATYPE_NAME).toString();
+        prm.setNativeType(datatype);
+        
+        EObject type = getDataType(datatype);
+        prm.setType(type);
+
+        // Datatype length
+        Object prop = node.getProperty(StandardDdlLexicon.DATATYPE_LENGTH);
+        if (prop != null) {
+            prm.setLength(Integer.parseInt(prop.toString()));
+        } else {
+            // Length is not provided for type 'string', use the default length specified in preferences...
+            String dtName = ModelerCore.getWorkspaceDatatypeManager().getName(type);
+            if(dtName != null && dtName.equalsIgnoreCase(STRING_TYPENAME)) {
+                prm.setLength(ModelerCore.getTransformationPreferences().getDefaultStringLength());
+            }
+        }
+
+        prop = node.getProperty(StandardDdlLexicon.DATATYPE_PRECISION);
+        if (prop != null)
+            prm.setPrecision(Integer.parseInt(prop.toString()));
+
+        prop = node.getProperty(StandardDdlLexicon.DATATYPE_SCALE);
+        if (prop != null)
+            prm.setScale(Integer.parseInt(prop.toString()));
+
+        prop = node.getProperty(StandardDdlLexicon.NULLABLE);
+        if (prop != null)
+            prm.setNullable(prop.toString().equals("NULL") ? NullableType.NULLABLE_LITERAL : NullableType.NO_NULLS_LITERAL); //$NON-NLS-1$
+
+        prop = node.getProperty(StandardDdlLexicon.DEFAULT_VALUE);
+        if (prop != null)
+            prm.setDefaultValue(prop.toString());
+
+        return prm;
+    }
 
     /**
      * Create primary key
@@ -420,6 +472,23 @@ public class StandardImporter extends AbstractImporter {
                 }
             }
         }
+    }
+
+    /**
+     * Create a BaseTable
+     *
+     * @param tableNode
+     * @param roots
+     *
+     * @return a table
+     *
+     * @throws Exception
+     */
+    protected BaseTable createBaseTable( AstNode tableNode, List<EObject> roots) throws Exception {
+        BaseTable baseTable = getFactory().createBaseTable();
+    	initializeTable(baseTable, tableNode, roots);
+    	
+        return baseTable;
     }
 
     /**
