@@ -56,18 +56,14 @@ public interface ITeiidServer extends IExecutionAdmin, HostProvider {
     String getUrl();
 
     /**
+     * @return the unique identifier of this server
+     */
+    String getId();
+
+    /**
      * @return the parentServer
      */
     IServer getParent();
-
-    /**
-     * A server has the same identifying properties if their URL and user matches.
-     * 
-     * @param otherServer the server whose key is being compared (never <code>null</code>)
-     * @return <code>true</code> if the servers have the same key
-     * @throws IllegalArgumentException if the argument is <code>null</code>
-     */
-    boolean hasSameKey(ITeiidServer otherServer);
 
     /**
      * @return <code>true</code> if a connection to this server exists and is working

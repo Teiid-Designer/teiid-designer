@@ -20,21 +20,21 @@ import org.teiid.designer.runtime.spi.ITeiidServer;
  */
 public class TeiidServerEditorInput implements IEditorInput, IPersistableElement {
 
-    private String serverUrl;
+    private String serverId;
 
     /**
-     * @param serverUrl
+     * @param serverId
      */
-    public TeiidServerEditorInput(String serverUrl) {
-        this.serverUrl = serverUrl;
+    public TeiidServerEditorInput(String serverId) {
+        this.serverId = serverId;
     }
     
     /**
-     * Returns the server url
-     * @return unique url of this server
+     * Returns the server id
+     * @return unique id of this server
      */
-    public String getServerUrl() {
-        return serverUrl;
+    public String getServerId() {
+        return serverId;
     }
     
     /**
@@ -47,7 +47,7 @@ public class TeiidServerEditorInput implements IEditorInput, IPersistableElement
         if (dqpPlugin == null) 
             return null;
         
-        return dqpPlugin.getServerManager().getServer(serverUrl);
+        return dqpPlugin.getServerManager().getServer(serverId);
     }
 
     /**
@@ -60,17 +60,17 @@ public class TeiidServerEditorInput implements IEditorInput, IPersistableElement
         if (!(obj instanceof TeiidServerEditorInput))
             return false;
         TeiidServerEditorInput other = (TeiidServerEditorInput) obj;
-        if (serverUrl == null) {
-            if (other.serverUrl != null)
+        if (serverId == null) {
+            if (other.serverId != null)
                 return false;   
-        } else if (!serverUrl.equals(other.serverUrl))
+        } else if (!serverId.equals(other.serverId))
             return false;
         return true;
     }
 
     @Override
     public boolean exists() {
-        if (serverUrl != null && getTeiidServer() == null)
+        if (serverId != null && getTeiidServer() == null)
             return false;
         
         return true;
@@ -93,12 +93,12 @@ public class TeiidServerEditorInput implements IEditorInput, IPersistableElement
     
     @Override
     public String getName() {
-        if (serverUrl != null) {
+        if (serverId != null) {
             ITeiidServer server = getTeiidServer();
             if (server != null)
                 return server.getCustomLabel();
             
-            return serverUrl;
+            return serverId;
         }
         return ""; //$NON-NLS-1$
     }

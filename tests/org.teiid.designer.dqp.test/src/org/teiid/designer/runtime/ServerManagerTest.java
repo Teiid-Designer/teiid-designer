@@ -11,7 +11,6 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
-import static org.hamcrest.core.IsSame.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyObject;
@@ -20,7 +19,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.wst.server.core.IServer;
@@ -107,8 +105,6 @@ public class ServerManagerTest {
     private static final String RESTORED_SERVER3_URL = "mm://localhost:8280";
     private static final String RESTORED_SERVER3_USER = "user8280";
 
-    private static final String SERVER1_URL = "mm://server:4321";
-
     private TeiidServerManager mgr;
     
     private IServersProvider serversProvider = new TestServersProvider();
@@ -158,9 +154,6 @@ public class ServerManagerTest {
 
     @Test
     public void shouldConfirmServerIsNotAddedMultipleTimes() {
-        // setup
-        when(this.server1.hasSameKey(this.server1)).thenReturn(true);
-
         // add
         this.mgr.addServer(this.server1);
         assertThat(this.mgr.getServers().size(), is(1));
@@ -177,7 +170,6 @@ public class ServerManagerTest {
 
     @Test
     public void shouldConfirmServerIsRegistered() {
-        when(this.server1.hasSameKey(server1)).thenReturn(true);
         assertThat(this.mgr.addServer(this.server1).isOK(), is(true));
         assertThat(this.mgr.isRegistered(this.server1), is(true));
     }
@@ -185,7 +177,6 @@ public class ServerManagerTest {
     @Test
     public void shouldConfirmServerIsRemoved() {
         // first add
-        when(server1.hasSameKey(server1)).thenReturn(true);
         this.mgr.addServer(this.server1);
         assertThat(this.mgr.isRegistered(this.server1), is(true));
 
@@ -209,10 +200,12 @@ public class ServerManagerTest {
     }
 
     @Test
-    public void shouldGetServerByUrl() {
+    public void shouldGetServerById() {
+        String serverId = "mm://server:4321-8.2-12345";
+
         this.mgr.addServer(server1);
-        when(server1.getUrl()).thenReturn(SERVER1_URL);
-        assertThat(this.mgr.getServer(SERVER1_URL), is(server1));
+        when(server1.getId()).thenReturn(serverId);
+        assertThat(this.mgr.getServer(serverId), is(server1));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -256,32 +249,6 @@ public class ServerManagerTest {
     }
 
     @Test
-    public void shouldOldRestoreServerRegistry() throws Exception {
-        // setup
-        MockObjectFactory.createModelContainer();
-
-        this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()) + File.separator + "oldregistrydata", 
-                                          null, serversProvider, new DefaultStorageProvider());
-        this.mgr.restoreState();
-        assertThat(this.mgr.getServers().size(), is(3));
-
-        ITeiidServer teiidServer = this.mgr.getServer(RESTORED_SERVER1_URL);
-        assertThat(teiidServer, notNullValue());
-        assertThat(teiidServer.getTeiidAdminInfo().getUsername(), is(RESTORED_SERVER1_USER));
-        assertThat(teiidServer, is(not(this.mgr.getDefaultServer())));
-
-        teiidServer = this.mgr.getServer(RESTORED_SERVER2_URL);
-        assertThat(teiidServer, notNullValue());
-        assertThat(teiidServer.getTeiidAdminInfo().getUsername(), is(RESTORED_SERVER2_USER));
-        assertThat(teiidServer, is(sameInstance(this.mgr.getDefaultServer()))); // server was persisted as the default preview server
-
-        teiidServer = this.mgr.getServer(RESTORED_SERVER3_URL);
-        assertThat(teiidServer, notNullValue());
-        assertThat(teiidServer.getTeiidAdminInfo().getUsername(), is(RESTORED_SERVER3_USER));
-        assertThat(teiidServer, is(not(this.mgr.getDefaultServer())));
-    }
-
-    @Test
     public void shouldRestoreServerRegistry() throws Exception {
         // setup
         MockObjectFactory.createModelContainer();
@@ -291,7 +258,7 @@ public class ServerManagerTest {
         this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(2));
 
-        ITeiidServerVersion serverVersion = new TeiidServerVersion(ITeiidServerVersion.DEFAULT_TEIID_8_SERVER_ID);
+        ITeiidServerVersion serverVersion = new TeiidServerVersion("8.1.2");
         
         String customLabel = "My Custom Label";
         String adminPort = "31443";
@@ -304,6 +271,7 @@ public class ServerManagerTest {
         String jdbcPassword = null;
         EventManager eventMgr = mock(EventManager.class);
         IServer parentServer1 = mock(IServer.class);
+        when(parentServer1.getId()).thenReturn("server1");
         ISecureStorageProvider secureStorageProvider = new DefaultStorageProvider();
 
         // construct a server just to get its URL
@@ -313,7 +281,7 @@ public class ServerManagerTest {
         adminInfo.setHostProvider(testServer);
         jdbcInfo.setHostProvider(testServer);
 
-        ITeiidServer teiidServer = this.mgr.getServer(testServer.getUrl());
+        ITeiidServer teiidServer = this.mgr.getServer(testServer.getId());
         assertThat(teiidServer, notNullValue());
         assertThat(teiidServer, is(this.mgr.getDefaultServer()));
         assertThat(teiidServer.getCustomLabel(), is(customLabel));
@@ -327,7 +295,9 @@ public class ServerManagerTest {
         assertThat(teiidServer.getTeiidJdbcInfo().getPassword(), is(jdbcPassword));
         assertThat(teiidServer.getTeiidJdbcInfo().isSecure(), is(jdbcSecure));
 
+        serverVersion = new TeiidServerVersion("8.2.1");
         IServer parentServer2 = mock(IServer.class);
+        when(parentServer2.getId()).thenReturn("server2");
         when(parentServer2.getHost()).thenReturn("myserver.com");
         customLabel = "";
         adminPort = "31444";
@@ -346,7 +316,7 @@ public class ServerManagerTest {
         adminInfo.setHostProvider(testServer);
         jdbcInfo.setHostProvider(testServer);
 
-        teiidServer = this.mgr.getServer(testServer.getUrl());
+        teiidServer = this.mgr.getServer(testServer.getId());
         assertThat(teiidServer, notNullValue());
         assertThat(teiidServer, is(not(this.mgr.getDefaultServer())));
         assertThat(teiidServer.getCustomLabel(), nullValue()); // customLabel is empty string but gets set as a null

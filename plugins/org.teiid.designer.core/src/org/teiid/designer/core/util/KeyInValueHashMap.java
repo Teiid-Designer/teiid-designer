@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.designer.ui.common.util;
+package org.teiid.designer.core.util;
 
 import java.util.AbstractMap;
 import java.util.HashMap;
