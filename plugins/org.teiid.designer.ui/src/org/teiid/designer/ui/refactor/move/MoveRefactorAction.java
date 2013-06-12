@@ -10,6 +10,7 @@ package org.teiid.designer.ui.refactor.move;
 import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
@@ -40,6 +41,25 @@ public class MoveRefactorAction extends AbstractRefactorAction {
         // Cannot move projects
         for (IResource resource : resources) {
             if(resource instanceof IProject) {
+                action.setEnabled(false);
+                return;
+            }
+        }
+
+        /*
+         * Check the resources being moved are in the same directory.
+         *
+         * This is a limitation of the move but avoids more difficult
+         * problems with keeping track of location changes with the
+         * resources being moved.
+        */
+        IPath parentDirectory = null;
+        for (IResource resource : resources) {
+            IPath path = resource.getFullPath();
+            path = path.uptoSegment(path.segmentCount() - 1);
+            if (parentDirectory == null) {
+                parentDirectory = path;
+            } else if (! parentDirectory.equals(path)) {
                 action.setEnabled(false);
                 return;
             }

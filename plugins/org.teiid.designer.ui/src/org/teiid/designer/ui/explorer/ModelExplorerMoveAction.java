@@ -105,9 +105,6 @@ public class ModelExplorerMoveAction extends ResourceNavigatorMoveAction impleme
     @Override
     protected boolean updateSelection(IStructuredSelection selection) {
         boolean bResult = false;
-
-        if ( selection.size() > 1 )
-            return false;
     
         List lstResourceObjects = SelectionUtilities.getSelectedIResourceObjects( selection );
         if ( lstResourceObjects.size() > 0 ) {
