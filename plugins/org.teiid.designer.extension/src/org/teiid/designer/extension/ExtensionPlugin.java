@@ -22,12 +22,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -130,14 +128,44 @@ public class ExtensionPlugin extends Plugin {
     }
 
     public ModelExtensionAssistantAggregator getModelExtensionAssistantAggregator() {
+    	if(this.assistantAggregator==null) {
+    		initializeMedRegistry();
+    	}
         return this.assistantAggregator;
     }
 
     public ModelExtensionRegistry getRegistry() {
+    	if(this.registry==null) {
+    		initializeMedRegistry();
+    	}
         return this.registry;
+    }
+    
+    /*
+     * Create and load the ModelExtensionRegistry
+     */
+    private void initializeMedRegistry() {
+        try {
+            this.registry = new ModelExtensionRegistry(getMedSchema());
+            loadExtensibleMetamodelUriClassnameMap();
+            this.registry.setMetamodelUris(this.metaclassNameProvidersMap.keySet());
+            this.assistantAggregator = new ModelExtensionAssistantAggregator(this.registry);
+
+            // Load Built-In MEDs into the Registry
+            loadBuiltInMeds();
+
+            // Load User-Defined MEDs into the Registry
+            loadUserDefinedMeds();
+        } catch (Exception e) {
+            Util.log(e);
+        }
     }
 
     public ExtendableMetaclassNameProvider getMetaclassNameProvider( String metaclassUri ) {
+    	// if metaclassNameProvidersMap is null, MED registry has not yet been initialized
+    	if(this.metaclassNameProvidersMap==null) {
+    		initializeMedRegistry();
+    	}
         return this.metaclassNameProvidersMap.get(metaclassUri);
     }
 
@@ -383,22 +411,14 @@ public class ExtensionPlugin extends Plugin {
         // initialize logger first so that other methods can use logger
         ((LoggingUtil)Util).initializePlatformLogger(this);
 
+        // initialized the Med schema
         try {
-            this.schemaFile = getMedSchema();
-            this.registry = new ModelExtensionRegistry(this.schemaFile);
-            loadExtensibleMetamodelUriClassnameMap();
-            this.registry.setMetamodelUris(this.metaclassNameProvidersMap.keySet());
-            this.assistantAggregator = new ModelExtensionAssistantAggregator(this.registry);
-
-            // Load Built-In MEDs into the Registry
-            loadBuiltInMeds();
-
-            // Load User-Defined MEDs into the Registry
-            loadUserDefinedMeds();
+        	this.schemaFile = getMedSchema();
         } catch (Exception e) {
-            Util.log(e);
-            throw e;
+        	Util.log(e);
+        	throw e;
         }
+
     }
 
     /**
