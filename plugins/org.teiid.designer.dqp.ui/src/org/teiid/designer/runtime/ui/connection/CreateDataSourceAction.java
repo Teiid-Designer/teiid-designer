@@ -8,6 +8,7 @@ import java.util.Properties;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.datatools.connectivity.ui.navigator.actions.ProfileActionsActionProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -22,11 +23,14 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.datatools.profiles.ws.ODataConnectionInfoProvider;
+import org.teiid.designer.datatools.profiles.ws.WSConnectionInfoProvider;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.dialog.AbstractPasswordDialog;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
@@ -130,19 +134,21 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
                 IConnectionInfoProvider provider = info.getConnectionInfoProvider();
                 boolean cancelledPassword = false;
                 if (null != provider.getDataSourcePasswordPropertyKey() && props.get(provider.getDataSourcePasswordPropertyKey()) == null) {
-                	
-                    int result = new AbstractPasswordDialog(iww.getShell(), getString("passwordTitle"), null) { //$NON-NLS-1$
-                        @SuppressWarnings( "synthetic-access" )
-                        @Override
-                        protected boolean isPasswordValid( final String password ) {
-                            pwd = password;
-                            return true;
-                        }
-                    }.open();
-                    if (result == Window.OK) {
-                        props.put(provider.getDataSourcePasswordPropertyKey(), this.pwd);
-                    } else {
-                    	cancelledPassword = true;
+                    if (provider.requiresPassword(provider.getConnectionProfile(modelResource))) {
+            
+	                    int result = new AbstractPasswordDialog(iww.getShell(), getString("passwordTitle"), null) { //$NON-NLS-1$
+	                        @SuppressWarnings( "synthetic-access" )
+	                        @Override
+	                        protected boolean isPasswordValid( final String password ) {
+	                            pwd = password;
+	                            return true;
+	                        }
+	                    }.open();
+	                    if (result == Window.OK) {
+	                        props.put(provider.getDataSourcePasswordPropertyKey(), this.pwd);
+	                    } else {
+	                    	cancelledPassword = true;
+	                    }
                     }
                 }
 
