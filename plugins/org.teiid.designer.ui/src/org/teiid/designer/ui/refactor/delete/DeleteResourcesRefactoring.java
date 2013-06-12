@@ -13,7 +13,6 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -24,7 +23,6 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.resource.DeleteResourceChange;
-import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.refactor.IRefactorModelHandler.RefactorType;
 import org.teiid.designer.core.refactor.RelatedResourceFinder.Relationship;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -59,7 +57,7 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
 
             RefactorResourcesUtils.unloadModelResource(relatedFile);
 
-            if (! resourcesAndChildren.contains(relatedFile)) {
+            if (! getResourcesAndChildren(status).contains(relatedFile)) {
                 // file is NOT already being deleted
                 DeleteResourceChange change = new DeleteResourceChange(relatedFile.getFullPath(), true, isDeleteContents());
                 addChange(relatedFile, change);
@@ -67,11 +65,17 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
 
             RefactorResourcesUtils.calculateRelatedVdbResources(relatedFile, status, this);
         }
+
+        @Override
+        public void indexVdb(IResource resource, IFile vdbFile, RefactoringStatus status) {
+            if (! getResourcesAndChildren(status).contains(vdbFile)) {
+                // vdb is NOT already being deleted
+                super.indexVdb(resource, vdbFile, status);
+            }
+        }
     }
 
     private boolean deleteContents;
-    
-    private Set<IResource> resourcesAndChildren = new HashSet<IResource>();
 
     /**
      * @param selectedResources
@@ -154,21 +158,6 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
             for (IResource resource : getResources()) {
                 checkResource(resource, progressMonitor, status);
                 if (! status.isOK()) break;
-                
-                // Accumulate all the resources that will be deleted so that scheduleRemovedRelatedFile()
-                // does not add a delete change for a resource already being deleted
-                try {
-                    resource.accept(new IResourceVisitor() {
-                        @Override
-                        public boolean visit(IResource visitedResource) {
-                            resourcesAndChildren.add(visitedResource);
-                            return true;
-                        }
-                    }, IResource.DEPTH_INFINITE, false);
-                } catch (Exception err) {
-                    ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
-                    status.merge(RefactoringStatus.createFatalErrorStatus(err.getMessage()));
-                }
 
                 // Check validity of related resources
                 IResourceCallback callback = new AbstractResourceCallback() {

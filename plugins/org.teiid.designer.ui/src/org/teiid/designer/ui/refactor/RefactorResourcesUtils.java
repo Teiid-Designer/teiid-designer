@@ -434,19 +434,28 @@ public class RefactorResourcesUtils {
 
     /**
      * Finds the import locations in the given file and calculates the modified paths against the 
-     * given destination
+     * given destination. If an import location points to a resource in the given set then nothing
+     * should be done since that resource is also being moved to the destination and no change
+     * is necessary.
      *
-     * @param file
-     * @param destination
+     * @param file the file to be refactored
+     * @param destination the location the file is to be refactored to
+     * @param refactorResources the collection of all resources being refactored
      *
      * @return a set of path pairs representing the import locations
      *
      * @throws Exception
      */
-    public static Set<PathPair> calculateImportChanges(IFile file, String destination) throws Exception {
+    public static Set<PathPair> calculateImportChanges(IFile file, String destination, Set<IResource> refactorResources) throws Exception {
         File nativeFile = file.getRawLocation().makeAbsolute().toFile();
         if (nativeFile == null || ! nativeFile.exists())
             throw new Exception(getString("ResourcesRefactoring.fileNotFoundError", file.getFullPath())); //$NON-NLS-1$
+
+        Set<String> refactorResourcePaths = new HashSet<String>();
+        for (IResource resource : refactorResources) {
+            File nativeRes = resource.getRawLocation().makeAbsolute().toFile();
+            refactorResourcePaths.add(nativeRes.getCanonicalPath());
+        }
 
         Set<PathPair> importPairs = new HashSet<PathPair>();
         File parentFolder = nativeFile.getParentFile();
@@ -474,6 +483,8 @@ public class RefactorResourcesUtils {
             // Find the absolute path of the model location based on the location of the file
             File absLocationFile = new File(parentFolder, relativeLocation);
             String absLocation = absLocationFile.getCanonicalPath();
+            if (refactorResourcePaths.contains(absLocation))
+                continue;
 
             // Use the new proposed location of the file to extrapolate the relative path of the
             // import location. This takes advantage of the getRelativePath function by adding

@@ -9,17 +9,22 @@ package org.teiid.designer.ui.refactor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.KeyInValueHashMap;
 import org.teiid.designer.core.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.ui.refactor.RefactorResourcesUtils.AbstractResourceCallback;
@@ -31,6 +36,8 @@ import org.teiid.designer.vdb.refactor.VdbResourceChange;
 public abstract class AbstractResourcesRefactoring extends Refactoring {
 
     private final List<IResource> resources;
+
+    private Set<IResource> resourcesAndChildren;
 
     private Map<IResource, Collection<Change>> changes = new LinkedHashMap<IResource, Collection<Change>>();
 
@@ -81,6 +88,36 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
      */
     public List<IResource> getResources() {
         return resources;
+    }
+
+    /**
+     * Returns all the resources as well as their children
+     *
+     * @param status to be populate if there are any errors with collecting the resources
+     *
+     * @return the resourcesAndChildren
+     */
+    public Set<IResource> getResourcesAndChildren(RefactoringStatus status) {
+        if (this.resourcesAndChildren == null) {
+            this.resourcesAndChildren = new HashSet<IResource>();
+
+            for (IResource resource : resources) {
+                try {
+                    resource.accept(new IResourceVisitor() {
+                        @Override
+                        public boolean visit(IResource visitedResource) {
+                            resourcesAndChildren.add(visitedResource);
+                            return true;
+                        }
+                    }, IResource.DEPTH_INFINITE, false);
+                } catch (Exception err) {
+                    ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
+                    status.merge(RefactoringStatus.createFatalErrorStatus(err.getMessage()));
+                }
+            }
+        }
+
+        return this.resourcesAndChildren;
     }
 
     /**
