@@ -285,6 +285,7 @@ public class RelationalModelTextImporterMainPage extends WizardDataTransferPage 
         data.widthHint = SIZING_TEXT_FIELD_WIDTH;
         sourceNameField.setLayoutData(data);
         sourceNameField.setFont(parent.getFont());
+        sourceNameField.setBackground(sourceContainerGroup.getBackground());
 
         sourceNameField.addSelectionListener(new SelectionAdapter() {
 
@@ -389,6 +390,7 @@ public class RelationalModelTextImporterMainPage extends WizardDataTransferPage 
         modelFolderNameField.setLayoutData(data);
         modelFolderNameField.setFont(parent.getFont());
         modelFolderNameField.setEditable(false);
+        modelFolderNameField.setBackground(containerGroup.getBackground());
 
         // container browse button
         modelFolderBrowseButton = new Button(containerGroup, SWT.PUSH);
