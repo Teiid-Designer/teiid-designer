@@ -7,22 +7,12 @@
  */
 package org.teiid.designer.ui.wizards;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
-
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.operations.AbstractOperation;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -38,8 +28,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
-import org.eclipse.ui.ide.undo.CreateFolderOperation;
-import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
@@ -153,9 +141,9 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
                 }
             }
             project.setDescription(desc, null);
-            // Defect 11480 - closing and opening the project sets the overlay icon properly
-            project.close(null);
-            project.open(null);
+//            // Defect 11480 - closing and opening the project sets the overlay icon properly
+//            project.close(null);
+//            project.open(null);
             
             if( designerProperties != null ) {
                 DesignerPropertiesUtil.setProjectName(designerProperties, project.getName());
