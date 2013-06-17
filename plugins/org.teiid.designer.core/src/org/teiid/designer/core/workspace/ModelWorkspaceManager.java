@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -280,34 +279,25 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * @param project
      * @since 4.3
      */
-    private void add( final IResource resource,
-                      ModelProjectImpl project ) {
+    private void add( final IResource resource, ModelProjectImpl project ) {
         // there should be no existing item for the resource being added
         final ModelWorkspaceItem resourceItem = this.modelWorkspace.getWorkspaceItem(resource.getFullPath(), resource.getType());
         if (resourceItem != null) // if there is return, no need to add
-        return;
+            return;
+
+        if (project == null) {
+            // We don't have a project yet. If the resource is being created while the project
+            // is also being created then its expected that the project has not been added.
+            project = new ModelProjectImpl(resource.getProject(), this.modelWorkspace);
+        }
 
         // create new ModelWorkspaceItem for resource
         ModelWorkspaceItem newResource = null;
         ModelWorkspaceItem parentItem = null;
-        if (resource instanceof IProject && project == null) {
-            project = new ModelProjectImpl((IProject)resource, this.modelWorkspace);
+        if (resource.getType() == IResource.PROJECT) {
             newResource = project;
             parentItem = this.modelWorkspace;
-        } else if (!(resource instanceof IProject)) {
-            // 11/4/03 LLP: We are periodically getting into this logic with a resource for which we
-            // can not resolve a project. This is causing a NPE in the first line of the try below.
-            // To resolve this, return in this case, but log a warning message so we can see how
-            // often this situation is occurring.
-
-            // 11/19/03 GC: This should not occur any more, this was occuring when
-            // projects are getting opeaned and they are not getting added to the workspace.
-            if (project == null) {
-                final String msg = ModelerCore.Util.getString("ModelWorkspaceManager.Encountered_null_project_for_resource_of_type_{0}_1", resource.getClass().getName()); //$NON-NLS-1$  
-                ModelerCore.Util.log(IStatus.WARNING, msg);
-                return;
-            }
-
+        } else {
             // create the item and update the cache
             try {
                 if (ModelerCore.DEBUG_MODEL_WORKSPACE || ModelerCore.DEBUG_MODEL_WORKSPACE_EVENT) {
@@ -315,21 +305,20 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                     final String debugMsg = ModelerCore.Util.getString("ModelWorkspaceManager.DEBUG.Creating_ModelResource_instance_for_0_2", params); //$NON-NLS-1$
                     ModelerCore.Util.log(IStatus.INFO, debugMsg);
                 }
+
                 if (resource.getType() == IResource.FILE && ((IFile)resource).getFileExtension() != null
                     && ModelUtil.isModelFile(resource)) {
                     newResource = project.createModelResource((IFile)resource);
-                } else if (resource.getType() == IResource.FOLDER) newResource = project.createModelFolder((IFolder)resource);
+                } else if (resource.getType() == IResource.FOLDER) {
+                    newResource = project.createModelFolder((IFolder)resource);
+                }
+
                 parentItem = this.modelWorkspace.getParent(resource);
             } catch (final Exception e) {
                 ModelerCore.Util.log(IStatus.ERROR,
                                      e,
                                      ModelerCore.Util.getString("ModelWorkspaceManager.Error_creating_new_model_workspace_item___{0}_1", e.getMessage())); //$NON-NLS-1$
             }
-        } else if (resource instanceof IProject && project != null) parentItem = this.modelWorkspace;
-        else {
-            ModelerCore.Util.log(IStatus.ERROR,
-                                 ModelerCore.Util.getString("ModelWorkspaceManager.Unable_to_create_workspace_item_for_{0}_2", resource.getFullPath())); //$NON-NLS-1$
-            return;
         }
 
         if (parentItem == null) {
@@ -338,8 +327,10 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                                  ModelerCore.Util.getString("ModelWorkspaceManager.Unable_to_find_parent_item_for_{0})_3", resource.getFullPath())); //$NON-NLS-1$
             return;
         }
-        final ModelWorkspaceItemInfo parentInfo = (ModelWorkspaceItemInfo)getInfo(parentItem);
-        if (parentInfo != null) parentInfo.addChild(newResource);
+
+        final ModelWorkspaceItemInfo parentInfo = (ModelWorkspaceItemInfo) getInfo(parentItem);
+        if (parentInfo != null)
+            parentInfo.addChild(newResource);
     }
 
     private void addChangeNotifier( final Container container ) {
