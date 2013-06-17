@@ -13,7 +13,9 @@ Require-Bundle: org.teiid.core.designer;bundle-version="[8.1.0,9.0.0)",
  org.eclipse.core.resources;bundle-version="[3.8.0,4.0.0)",
  org.eclipse.datatools.connectivity.oda.flatfile;bundle-version="[3.1.2,4.0.0)",
  org.teiid.designer.ui.common;bundle-version="[8.1.0,9.0.0)",
- org.teiid.designer.spi;bundle-version="[8.1.0,9.0.0)"
+ org.teiid.designer.spi;bundle-version="[8.1.0,9.0.0)",
+ org.codehaus.jackson.core;bundle-version="[1.6.0,2.0.0)",
+ org.codehaus.jackson.mapper;bundle-version="[1.6.0,2.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.teiid.designer.datatools,
@@ -23,5 +25,4 @@ Export-Package: org.teiid.designer.datatools,
  org.teiid.designer.datatools.profiles.modeshape,
  org.teiid.designer.datatools.profiles.ws,
  org.teiid.designer.datatools.profiles.xml
-Bundle-ClassPath: lib/jackson-all-1.6.1.jar,
- .
+Bundle-ClassPath: .
