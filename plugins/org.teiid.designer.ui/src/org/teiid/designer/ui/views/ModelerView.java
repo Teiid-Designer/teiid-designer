@@ -7,7 +7,6 @@
  */
 package org.teiid.designer.ui.views;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -17,13 +16,9 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheet;
-import org.teiid.designer.ui.UiConstants;
-import org.teiid.designer.ui.UiPlugin;
-import org.teiid.designer.ui.common.actions.AbstractActionService;
 import org.teiid.designer.ui.common.eventsupport.SelectionProvider;
 import org.teiid.designer.ui.properties.ModelObjectPropertySourceProvider;
 import org.teiid.designer.ui.undo.IUndoManager;
@@ -69,17 +64,6 @@ public abstract class ModelerView extends ViewPart {
             }
         };
         site.getWorkbenchWindow().getSelectionService().addSelectionListener(this.selectionListener);
-
-        // install undo/redo global actions
-        AbstractActionService actionService = (AbstractActionService)UiPlugin.getDefault().getActionService(getViewSite().getPage());
-        try {
-            getViewSite().getActionBars().setGlobalActionHandler(ActionFactory.UNDO.getId(),
-                                                                 actionService.getAction(ActionFactory.UNDO.getId()));
-            getViewSite().getActionBars().setGlobalActionHandler(ActionFactory.REDO.getId(),
-                                                                 actionService.getAction(ActionFactory.REDO.getId()));
-        } catch (CoreException e) {
-            UiConstants.Util.log(e);
-        }
     }
 
     protected ISelectionChangedListener getStatusBarListener() {
