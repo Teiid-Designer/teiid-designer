@@ -7,6 +7,7 @@
  */
 package org.teiid.datatools.connectivity;
 
+import java.sql.Driver;
 import java.util.Properties;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -24,6 +25,7 @@ import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileCon
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 import org.teiid.datatools.connectivity.security.impl.EquinoxSecureStorageProvider;
 import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
+import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 /**
@@ -292,5 +294,26 @@ public class ConnectivityUtil {
      */
     public static ISecureStorageProvider getSecureStorageProvider() {
         return EquinoxSecureStorageProvider.getInstance();
+    }
+
+    /**
+     * Find a Teiid {@link Driver} for the given server version.
+     *
+     * The driver class should be provided as a check to ensure the class name
+     * is as expected.
+     *
+     * @param teiidServerVersion
+     * @param driverClass
+     *
+     * @return the Teiid {@link Driver}
+     * @throws Exception
+     */
+    public static Driver getTeiidDriver(ITeiidServerVersion teiidServerVersion, String driverClass) throws Exception {
+        Driver driver = TeiidRuntimeRegistry.getInstance().getTeiidDriver(teiidServerVersion);
+        if (driver != null && driver.getClass().getName().equals(driverClass))
+            return driver;
+
+        String msg = "No Teiid Driver ( "+ driverClass + " ) available for version " + teiidServerVersion;  //$NON-NLS-1$//$NON-NLS-2$
+        throw new IllegalStateException(msg);
     }
 }

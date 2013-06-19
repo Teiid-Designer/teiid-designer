@@ -8,7 +8,6 @@
 package org.teiid.designer.core;
 
 import java.io.File;
-import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -2136,26 +2135,6 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         return defaultTeiidServer.getServerVersion();
     }
 
-    /**
-     * Find a Teiid {@link Driver} for the given server version.
-     *
-     * The driver class should be provided as a check to ensure the class name
-     * is as expected.
-     *
-     * @param teiidServerVersion
-     * @param driverClass
-     *
-     * @return the Teiid {@link Driver}
-     * @throws Exception
-     */
-    public static Driver getTeiidDriver(ITeiidServerVersion teiidServerVersion, String driverClass) throws Exception {
-        Driver driver = TeiidRuntimeRegistry.getInstance().getTeiidDriver(teiidServerVersion);
-        if (driver != null && driver.getClass().getName().equals(driverClass))
-            return driver;
-
-        throw new IllegalStateException(Util.getString(I18N_PREFIX + "noTeiidDriver", driverClass, teiidServerVersion));
-    }
-    
     /**
      * Add a listener to be notified in the event the default server
      * version is changed

@@ -13,7 +13,6 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.JDBCConnection;
-import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 
@@ -84,7 +83,7 @@ public class TeiidJDBCConnection extends JDBCConnection {
         String teiidVersion = props.getProperty(IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID);
         if (teiidVersion != null) {
             ITeiidServerVersion teiidServerVersion = new TeiidServerVersion(teiidVersion);
-            Driver jdbcDriver = ModelerCore.getTeiidDriver(teiidServerVersion, driverClass);
+            Driver jdbcDriver = ConnectivityUtil.getTeiidDriver(teiidServerVersion, driverClass);
             if (jdbcDriver != null) {
                 return jdbcDriver.connect(connectURL, connectionProps);
             }
@@ -92,5 +91,4 @@ public class TeiidJDBCConnection extends JDBCConnection {
         
         throw new Exception("Cannot find Teiid Driver"); //$NON-NLS-1$
     }
-
 }
