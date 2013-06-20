@@ -26,6 +26,10 @@
       %license
    </license>
 
+   <includes
+         id="org.teiid.datatools.connectivity.feature"
+         version="0.0.0"/>
+
    <requires>
       <import plugin="org.eclipse.ui.cheatsheets" version="3.4.200" match="compatible"/>
       <import plugin="org.eclipse.ui.ide" version="3.8.0" match="compatible"/>
