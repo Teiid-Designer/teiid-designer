@@ -21,19 +21,19 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
  */
 public class TeiidJDBCConnection extends JDBCConnection {
 
-    public TeiidJDBCConnection( IConnectionProfile profile,
-                                Class factoryClass ) {
+    /**
+     * Create an instance of this connection
+     *
+     * @param profile
+     * @param factoryClass
+     */
+    public TeiidJDBCConnection( IConnectionProfile profile, Class factoryClass ) {
         super(profile, factoryClass);
     }
 
     @Override
-    protected Object createConnection( ClassLoader cl ) throws Throwable {
+    protected Object createConnection( ClassLoader classloader ) throws Throwable {
         Properties props = getConnectionProfile().getBaseProperties();
-        // TODO: remove these Sys Outs
-        // System.out.print("  >>  Properties for Connection Profile: " + getConnectionProfile().getName());
-        // for( Object key : props.keySet() ) {
-        // System.out.print("\n      Prop : Key = " + key + "  Value = " + props.get(key));
-        // }
         Properties connectionProps = new Properties();
 
         // boolean hasDriver = (getDriverDefinition() != null);
@@ -76,6 +76,18 @@ public class TeiidJDBCConnection extends JDBCConnection {
         }
 
         /*
+         * The classloader is provided to allow access to the JAR_LIST of the connection
+         * properties. Thus, the driver should be contained in this list.
+         */
+        Driver jdbcDriver = (Driver) classloader.loadClass(driverClass).newInstance();
+        if (jdbcDriver != null)
+            return jdbcDriver.connect(connectURL, connectionProps);
+
+        /*
+         * Failed to find the driver with the given classloader so try to get a match from
+         * the installed client runtime plugins. This could happen if the jar list fails to
+         * contain the correct driver jar, for example.
+         *
          * Using the database version id, attempt to acquire the driver
          * from the teiid client runtimes. This no longer requires using
          * the default teiid server (which has to be connected).
@@ -83,12 +95,12 @@ public class TeiidJDBCConnection extends JDBCConnection {
         String teiidVersion = props.getProperty(IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID);
         if (teiidVersion != null) {
             ITeiidServerVersion teiidServerVersion = new TeiidServerVersion(teiidVersion);
-            Driver jdbcDriver = ConnectivityUtil.getTeiidDriver(teiidServerVersion, driverClass);
+            jdbcDriver = ConnectivityUtil.getTeiidDriver(teiidServerVersion, driverClass);
             if (jdbcDriver != null) {
                 return jdbcDriver.connect(connectURL, connectionProps);
             }
         }
-        
+
         throw new Exception("Cannot find Teiid Driver"); //$NON-NLS-1$
     }
 }
