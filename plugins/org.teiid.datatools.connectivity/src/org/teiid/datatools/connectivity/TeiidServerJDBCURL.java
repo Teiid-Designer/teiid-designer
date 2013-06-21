@@ -65,7 +65,7 @@ public class TeiidServerJDBCURL {
             if (remainingURL.indexOf(';') > -1) {
                 // there are connection properties
                 // TODO: how do we want to handle these? As checkboxes or test fields?
-                this.node = remainingURL.substring(0, remainingURL.indexOf(';'));
+                this.port = remainingURL.substring(0, remainingURL.indexOf(';'));
                 remainingURL = remainingURL.substring(remainingURL.indexOf(';') + 1);
                 this.properties = remainingURL;
 

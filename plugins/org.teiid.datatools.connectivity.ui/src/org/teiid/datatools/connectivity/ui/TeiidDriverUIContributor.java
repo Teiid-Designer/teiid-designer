@@ -18,11 +18,11 @@ import org.eclipse.datatools.connectivity.ui.wizards.IDriverUIContributor;
 import org.eclipse.datatools.connectivity.ui.wizards.IDriverUIContributorInformation;
 import org.eclipse.datatools.connectivity.ui.wizards.OptionalPropertiesPane;
 import org.eclipse.jface.dialogs.DialogPage;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.osgi.util.TextProcessor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -51,6 +51,8 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
     private static final String USERNAME_LBL_UI_ = Messages.getString("TeiidDriverUIContributor.USERNAME_LBL_UI_"); //$NON-NLS-1$
 
     private static final String PASSWORD_LBL_UI_ = Messages.getString("TeiidDriverUIContributor.PASSWORD_LBL_UI_"); //$NON-NLS-1$
+
+    private static final String URL_PROPERTIES = Messages.getString("TeiidDriverUIContributor.URL_PROPERTIES_ARG_LBL_UI_"); //$NON-NLS-1$
 
     private static final String SSL_BTN_UI_ = Messages.getString("TeiidDriverUIContributor.SSL_BTN_UI_"); //$NON-NLS-1$
 
@@ -94,6 +96,10 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
 
     private Text passwordText;
 
+    private Label urlPropertiesLabel;
+
+    private Text urlPropertiesText;
+
     private Button protocolCheck;
 
     private Button savePasswordButton;
@@ -119,7 +125,6 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
                                              boolean isReadOnly ) {
 
         if ((parentComposite == null) || parentComposite.isDisposed() || (this.isReadOnly != isReadOnly)) {
-            GridData gd;
 
             this.isReadOnly = isReadOnly;
             int additionalStyles = SWT.NONE;
@@ -130,7 +135,7 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
             parentComposite = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
             parentComposite.setExpandHorizontal(true);
             parentComposite.setExpandVertical(true);
-            parentComposite.setLayout(new GridLayout());
+            GridLayoutFactory.fillDefaults().applyTo(parentComposite);
 
             TabFolder tabComposite = new TabFolder(parentComposite, SWT.TOP);
 
@@ -139,111 +144,67 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
             generalTab.setText(ConnectivityUIPlugin.getDefault().getResourceString("CommonDriverUIContributor.generaltab")); //$NON-NLS-1$
 
             Composite baseComposite = new Composite(tabComposite, SWT.NULL);
-            GridLayout layout = new GridLayout();
-            layout.numColumns = 2;
-            baseComposite.setLayout(layout);
+            GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).applyTo(baseComposite);
             generalTab.setControl(baseComposite);
 
             databaseLabel = new Label(baseComposite, SWT.NONE);
             databaseLabel.setText(VDB_LBL_UI_);
-            gd = new GridData();
-            gd.verticalAlignment = GridData.BEGINNING;
-            databaseLabel.setLayoutData(gd);
+            GridDataFactory.fillDefaults().span(2, 1).applyTo(databaseLabel);
 
             databaseText = new Text(baseComposite, SWT.SINGLE | SWT.BORDER | additionalStyles);
-            gd = new GridData();
-            gd.verticalAlignment = GridData.BEGINNING;
-            gd.horizontalAlignment = GridData.FILL;
-            gd.horizontalSpan = 2;
-            databaseText.setLayoutData(gd);
+            GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(databaseText);
 
             hostLabel = new Label(baseComposite, SWT.NONE);
             hostLabel.setText(HOST_LBL_UI_);
-            gd = new GridData();
-            gd.verticalAlignment = GridData.BEGINNING;
-            hostLabel.setLayoutData(gd);
+            GridDataFactory.fillDefaults().span(2, 1).applyTo(hostLabel);
 
             hostText = new Text(baseComposite, SWT.SINGLE | SWT.BORDER | additionalStyles);
-            gd = new GridData();
-            gd.horizontalAlignment = GridData.FILL;
-            gd.verticalAlignment = GridData.BEGINNING;
-            gd.horizontalSpan = 2;
-            gd.grabExcessHorizontalSpace = true;
-            hostText.setLayoutData(gd);
+            GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(hostText);
 
             portLabel = new Label(baseComposite, SWT.NONE);
             portLabel.setText(PORT_LBL_UI_);
-            gd = new GridData();
-            gd.verticalAlignment = GridData.BEGINNING;
-            portLabel.setLayoutData(gd);
+            GridDataFactory.fillDefaults().span(2, 1).applyTo(portLabel);
 
             portText = new Text(baseComposite, SWT.SINGLE | SWT.BORDER | additionalStyles);
-            gd = new GridData();
-            gd.horizontalAlignment = GridData.FILL;
-            gd.verticalAlignment = GridData.BEGINNING;
-            gd.grabExcessHorizontalSpace = true;
-            gd.horizontalSpan = 2;
-            portText.setLayoutData(gd);
+            GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(portText);
 
             usernameLabel = new Label(baseComposite, SWT.NONE);
             usernameLabel.setText(USERNAME_LBL_UI_);
-            gd = new GridData();
-            gd.verticalAlignment = GridData.BEGINNING;
-            usernameLabel.setLayoutData(gd);
+            GridDataFactory.fillDefaults().span(2, 1).applyTo(usernameLabel);
 
             usernameText = new Text(baseComposite, SWT.SINGLE | SWT.BORDER | additionalStyles);
-            gd = new GridData();
-            gd.horizontalAlignment = GridData.FILL;
-            gd.verticalAlignment = GridData.BEGINNING;
-            gd.grabExcessHorizontalSpace = true;
-            gd.horizontalSpan = 2;
-            usernameText.setLayoutData(gd);
+            GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(usernameText);
 
             passwordLabel = new Label(baseComposite, SWT.NONE);
             passwordLabel.setText(PASSWORD_LBL_UI_);
-            gd = new GridData();
-            gd.verticalAlignment = GridData.BEGINNING;
-            passwordLabel.setLayoutData(gd);
+            GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(passwordLabel);
+
+            savePasswordButton = new Button(baseComposite, SWT.CHECK);
+            savePasswordButton.setText(SAVE_PASSWORD_LBL_UI_);
+            GridDataFactory.fillDefaults().align(SWT.END, SWT.BEGINNING).applyTo(savePasswordButton);
 
             passwordText = new Text(baseComposite, SWT.SINGLE | SWT.BORDER | SWT.PASSWORD | additionalStyles);
-            gd = new GridData();
-            gd.horizontalAlignment = GridData.FILL;
-            gd.verticalAlignment = GridData.BEGINNING;
-            gd.grabExcessHorizontalSpace = true;
-            gd.horizontalSpan = 2;
-            passwordText.setLayoutData(gd);
+            GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(passwordText);
+
+            urlPropertiesLabel = new Label(baseComposite, SWT.NONE);
+            urlPropertiesLabel.setText(URL_PROPERTIES);
+            GridDataFactory.fillDefaults().span(2, 1).applyTo(usernameLabel);
+
+            urlPropertiesText = new Text(baseComposite, SWT.SINGLE | SWT.BORDER | additionalStyles);
+            GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(urlPropertiesText);
+
+            urlLabel = new Label(baseComposite, SWT.NONE);
+            urlLabel.setText(CONNECTIONURL_LBL_UI_);
+            GridDataFactory.fillDefaults().applyTo(urlLabel);
 
             protocolCheck = new Button(baseComposite, SWT.CHECK);
             protocolCheck.setText(SSL_BTN_UI_);
             protocolCheck.setSelection(false);
-            gd = new GridData();
-            gd.horizontalSpan = 3;
-            protocolCheck.setLayoutData(gd);
-
-            savePasswordButton = new Button(baseComposite, SWT.CHECK);
-            savePasswordButton.setText(SAVE_PASSWORD_LBL_UI_);
-            gd = new GridData();
-            gd.horizontalAlignment = GridData.FILL;
-            gd.verticalAlignment = GridData.BEGINNING;
-            gd.horizontalSpan = 3;
-            gd.grabExcessHorizontalSpace = true;
-            savePasswordButton.setLayoutData(gd);
-
-            urlLabel = new Label(baseComposite, SWT.NONE);
-            urlLabel.setText(CONNECTIONURL_LBL_UI_);
-            gd = new GridData();
-            gd.verticalAlignment = GridData.BEGINNING;
-            urlLabel.setLayoutData(gd);
+            GridDataFactory.fillDefaults().align(SWT.END, SWT.BEGINNING).applyTo(protocolCheck);
 
             urlText = new Text(baseComposite, SWT.MULTI | SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
-            gd = new GridData();
-            gd.horizontalAlignment = GridData.FILL;
-            gd.verticalAlignment = GridData.BEGINNING;
-            gd.grabExcessHorizontalSpace = true;
-            gd.horizontalSpan = 2;
-            gd.widthHint = 190;
-            gd.heightHint = 90;
-            urlText.setLayoutData(gd);
+            GridDataFactory.fillDefaults().span(2, 1).align(SWT.FILL, SWT.BEGINNING).
+                grab(true, false).hint(190, 90).applyTo(urlText);
 
             // add optional properties tab
             TabItem optionalPropsTab = new TabItem(tabComposite, SWT.None);
@@ -301,6 +262,9 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
         if (portText.getText().trim().length() > 0) {
             url += ":" + portText.getText().trim(); //$NON-NLS-1$
         }
+        if (urlPropertiesText.getText().trim().length() > 0) {
+            url += ";" + urlPropertiesText.getText().trim(); //$NON-NLS-1$
+        }
         urlText.setText(url);
     }
 
@@ -310,6 +274,7 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
         portText.removeListener(SWT.Modify, this);
         usernameText.removeListener(SWT.Modify, this);
         passwordText.removeListener(SWT.Modify, this);
+        urlPropertiesText.removeListener(SWT.Modify, this);
         protocolCheck.removeListener(SWT.Selection, this);
         savePasswordButton.removeListener(SWT.Selection, this);
     }
@@ -320,6 +285,7 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
         portText.addListener(SWT.Modify, this);
         usernameText.addListener(SWT.Modify, this);
         passwordText.addListener(SWT.Modify, this);
+        urlPropertiesText.addListener(SWT.Modify, this);
         protocolCheck.addListener(SWT.Selection, this);
         savePasswordButton.addListener(SWT.Selection, this);
     }
@@ -391,6 +357,7 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
 						.getProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID));
         hostText.setText(url.getNode());
         portText.setText(url.getPort());
+        urlPropertiesText.setText(url.getProperties());
         databaseText.setText(url.getDatabaseName());
 
         String username = this.properties.getProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID);
@@ -447,6 +414,7 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
             protocolCheck.getSelection() ? TRUE_SUMMARY_DATA_TEXT_ : FALSE_SUMMARY_DATA_TEXT_});
         summaryData.add(new String[] {SAVE_PASSWORD_SUMMARY_DATA_TEXT_,
             savePasswordButton.getSelection() ? TRUE_SUMMARY_DATA_TEXT_ : FALSE_SUMMARY_DATA_TEXT_});
+        summaryData.add(new String[] {URL_PROPERTIES, this.urlPropertiesText.getText().trim()});
         summaryData.add(new String[] {URL_SUMMARY_DATA_TEXT_, this.urlText.getText().trim()});
         return summaryData;
     }
