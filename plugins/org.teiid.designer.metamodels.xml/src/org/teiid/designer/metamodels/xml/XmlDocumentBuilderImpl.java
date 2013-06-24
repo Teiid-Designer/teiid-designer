@@ -38,6 +38,7 @@ import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
+import org.eclipse.xsd.impl.XSDComplexTypeDefinitionImpl;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.id.ObjectID;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -120,7 +121,11 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
             if (parentXsdComp instanceof XSDFeature) {
                 final XSDFeature feature = (XSDFeature)parentXsdComp;
                 if (feature.isGlobal() || XSDForm.QUALIFIED_LITERAL.equals(feature.getForm())) {
-                    final String uri = feature.getTargetNamespace();
+                    String uri = feature.getTargetNamespace();
+                    //If the TNS is null in the XSDFeature, check the XSDComplexTypeDefintionImpl
+                    if (uri == null && xsdComponent != null && xsdComponent instanceof XSDComplexTypeDefinitionImpl) {
+                    	uri = ((XSDComplexTypeDefinitionImpl)xsdComponent).getTargetNamespace(); 
+                    }
                     if (uri != null) {
                         final XmlNamespace ns = (XmlNamespace)this.uriToNamespaceMap.get(uri);
                         if (ns != null) elem.setNamespace(ns);
@@ -476,7 +481,7 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
                 // this.factor = new Double(0 - (1/(4500d/9200) ) ).intValue();
                 // }
 
-                initializeRecursionStack(root);
+         //       initializeRecursionStack(root);
                 nodeCount = 0;
 
                 // Recursively build document from schema
