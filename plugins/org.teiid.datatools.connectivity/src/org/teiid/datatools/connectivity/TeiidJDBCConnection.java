@@ -79,9 +79,12 @@ public class TeiidJDBCConnection extends JDBCConnection {
          * The classloader is provided to allow access to the JAR_LIST of the connection
          * properties. Thus, the driver should be contained in this list.
          */
-        Driver jdbcDriver = (Driver) classloader.loadClass(driverClass).newInstance();
-        if (jdbcDriver != null)
-            return jdbcDriver.connect(connectURL, connectionProps);
+        Driver jdbcDriver = null;
+        try {
+            jdbcDriver = (Driver) classloader.loadClass(driverClass).newInstance();
+            if (jdbcDriver != null)
+                return jdbcDriver.connect(connectURL, connectionProps);
+        } catch (Exception ex) { /* Do nothing */ }
 
         /*
          * Failed to find the driver with the given classloader so try to get a match from
