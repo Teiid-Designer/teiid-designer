@@ -182,6 +182,7 @@ public class ModelDetailsPanel {
 			subPanel_1.setLayout(new GridLayout(4, false));
 			// Options panel contains: multi-source check-box, add column checkbox and source name alias label + text entry box
 			multiSourceCB = WidgetFactory.createButton(subPanel_1, Messages.modelDetailsPanel_multiSourceLabel, SWT.NONE, 1, SWT.CHECK);
+			multiSourceCB.setToolTipText(Messages.modelDetailsPanel_multiSourceCheckBoxTooltip);
 			multiSourceCB.addSelectionListener(new SelectionListener() {
 				
 				@Override
@@ -199,6 +200,7 @@ public class ModelDetailsPanel {
 			});
 			
 			addColumnCB = WidgetFactory.createButton(subPanel_1, Messages.modelDetailsPanel_addColumnLabel + "      ", SWT.NONE, 1, SWT.CHECK); //$NON-NLS-1$
+			addColumnCB.setToolTipText(Messages.modelDetailsPanel_addColumnCheckBoxTooltip);
 			addColumnCB.addSelectionListener(new SelectionListener() {
 				
 				@Override
@@ -216,6 +218,7 @@ public class ModelDetailsPanel {
 			});
 			columnAliaslabel = new Label(subPanel_1, SWT.NONE);
 			columnAliaslabel.setText("Column Alias"); //$NON-NLS-1$
+			columnAliaslabel.setToolTipText(Messages.modelDetailsPanel_columnAliaslabelTooltip);
 			columnAliasText = new Text(subPanel_1, SWT.BORDER | SWT.SINGLE);
 			columnAliasText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			columnAliasText.addModifyListener(new ModifyListener() {
@@ -241,6 +244,7 @@ public class ModelDetailsPanel {
 			addButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ADD));
 			addButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			addButton.setEnabled(false);
+			addButton.setToolTipText(Messages.modelDetailsPanel_addButtonTooltip);
 			addButton.addSelectionListener(new SelectionAdapter() {
 
 				@Override
@@ -257,6 +261,7 @@ public class ModelDetailsPanel {
 			deleteButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DELETE));
 			deleteButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			deleteButton.setEnabled(false);
+			deleteButton.setToolTipText(Messages.modelDetailsPanel_deleteButtonTooltip);
 			deleteButton.addSelectionListener(new SelectionAdapter() {
 
 				@Override
