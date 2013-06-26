@@ -597,6 +597,8 @@ public class MergeProcessorImpl implements MergeProcessor {
                 }
 
             }
+        } catch (Throwable e) {
+            throw new ModelerCoreException(e);
         } finally {
             this.monitor.worked(this.workInfo.workPerMapping);
         }
@@ -686,9 +688,10 @@ public class MergeProcessorImpl implements MergeProcessor {
      * 
      * @param mapping
      * @param diffDesc
+     * @throws Exception
      */
     protected void doChange( final Mapping mapping,
-                             final DifferenceDescriptor diffDesc ) {
+                             final DifferenceDescriptor diffDesc ) throws Exception {
         // There should both one input and one output ...
         final List inputs = mapping.getInputs();
         final EObject oldObject = (EObject)inputs.get(0);
@@ -726,7 +729,12 @@ public class MergeProcessorImpl implements MergeProcessor {
                             oldObject.eSet(feature, newValueInSource);
                         }
                     } else {
-                        oldObject.eSet(feature, newValue);
+                        if (oldObject.eClass().equals(feature.getEContainingClass()))
+                            oldObject.eSet(feature, newValue);
+                        else {
+                            final String msg = ModelerComparePlugin.Util.getString("MergeProcessorImpl.Feature_not_owned_by_object_error"); //$NON-NLS-1$
+                            throw new Exception(msg);
+                        }
                     }
                 }
             }

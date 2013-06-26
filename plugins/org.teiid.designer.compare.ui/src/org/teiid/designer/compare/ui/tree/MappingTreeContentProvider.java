@@ -18,6 +18,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -27,6 +28,7 @@ import org.teiid.designer.compare.CompareFactory;
 import org.teiid.designer.compare.DifferenceDescriptor;
 import org.teiid.designer.compare.DifferenceReport;
 import org.teiid.designer.compare.DifferenceType;
+import org.teiid.designer.compare.ModelerComparePlugin;
 import org.teiid.designer.compare.PropertyDifference;
 import org.teiid.designer.compare.impl.CompareFactoryImpl;
 import org.teiid.designer.core.ModelerCore;
@@ -385,7 +387,7 @@ public class MappingTreeContentProvider implements ITreeContentProvider {
         propDiff.setOldValue((theOldAnnotation == null) ? null : theOldAnnotation.getDescription());
         propDiff.setNewValue((theNewAnnotation == null) ? null : theNewAnnotation.getDescription());
 
-        EObject target = (theNewAnnotation == null) ? theOldAnnotation.getAnnotatedObject() : theNewAnnotation.getAnnotatedObject();
+        EObject target = (theNewAnnotation == null) ? theOldAnnotation : theNewAnnotation;
         registerDescriptionPropertyDifference(target, propDiff);
     }
 
@@ -401,6 +403,17 @@ public class MappingTreeContentProvider implements ITreeContentProvider {
                                Mapping theMapping ) {
         boolean result = false;
         Object helper = theMapping.getHelper();
+
+        /*
+         * Check that the association is legal in that the mapping inputs
+         * should possess the affected feature of the property difference
+         */
+        for (EObject eObject : theMapping.getInputs()) {
+            if (! thePropDifference.getAffectedFeature().eClass().equals(eObject.eClass())) {
+                final String msg = ModelerComparePlugin.Util.getString("MergeProcessorImpl.Feature_not_owned_by_object_error"); //$NON-NLS-1$
+                throw new IllegalStateException(msg);
+            }
+        }
 
         if (helper instanceof DifferenceDescriptor) {
             thePropDifference.setDescriptor((DifferenceDescriptor)helper);
@@ -427,6 +440,16 @@ public class MappingTreeContentProvider implements ITreeContentProvider {
      */
     private void registerDescriptionPropertyDifference( EObject theObject,
                                                         PropertyDifference thePropDifference ) {
+        /*
+         * Check that the registration is legal in that the object
+         * should possess the affected feature of the property difference
+         */
+        EStructuralFeature feature = thePropDifference.getAffectedFeature();
+        if (! feature.getEContainingClass().equals(theObject.eClass())) {
+            final String msg = ModelerComparePlugin.Util.getString("MergeProcessorImpl.Feature_not_owned_by_object_error"); //$NON-NLS-1$
+            throw new IllegalStateException(msg);
+        }
+
         boolean cacheDiff = true;
         Mapping mapping = getPropertyDifferenceMapping(theObject);
 
@@ -443,7 +466,7 @@ public class MappingTreeContentProvider implements ITreeContentProvider {
 
     /**
      * Creates a {@link PropertyDifference} for the specified <code>Annotation</code>. This <code>PropertyDifference</code> will
-     * be associated with the annotated object of the <code>Annotation</code>.
+     * be associated with the <code>Annotation</code>.
      * 
      * @param theAnnotation the Annotation whose description has changed
      * @param theAddedFlag the flag indicating if the description was added or deleted
@@ -461,13 +484,12 @@ public class MappingTreeContentProvider implements ITreeContentProvider {
             propDiff.setOldValue(theAnnotation.getDescription());
         }
 
-        EObject target = theAnnotation.getAnnotatedObject();
-        registerDescriptionPropertyDifference(target, propDiff);
+        registerDescriptionPropertyDifference(theAnnotation, propDiff);
     }
 
     /**
      * Creates a {@link PropertyDifference} for the specified <code>Annotation</code>. This <code>PropertyDifference</code> will
-     * be associated with the annotated object of the <code>Annotation</code>.
+     * be associated with the <code>Annotation</code>.
      * 
      * @param theAnnotation the Annotation whose description has changed
      * @param theAddedFlag the flag indicating if the description was added or deleted
@@ -487,8 +509,7 @@ public class MappingTreeContentProvider implements ITreeContentProvider {
             propDiff.setNewValue(new BasicEMap());
         }
 
-        EObject target = theAnnotation.getAnnotatedObject();
-        registerDescriptionPropertyDifference(target, propDiff);
+        registerDescriptionPropertyDifference(theAnnotation, propDiff);
     }
 
     /*
