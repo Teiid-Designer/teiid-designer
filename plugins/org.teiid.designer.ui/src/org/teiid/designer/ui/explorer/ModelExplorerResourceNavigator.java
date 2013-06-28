@@ -593,6 +593,9 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         String defaultVersionValue = teiidServerVersion.toString();
         final String labelText = getString("defaultServerVersionPrefix") + defaultVersionValue; //$NON-NLS-1$
 
+        if (defaultServerSectionBody == null || defaultServerSectionBody.isDisposed())
+            return;
+
         if (defaultServerVersionLabel == null) {
             defaultServerVersionLabel = toolkit.createLabel(defaultServerSectionBody, labelText);
             GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(defaultServerVersionLabel);
