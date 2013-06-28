@@ -109,16 +109,22 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
         try {
             // hide Data Sources related variables from other local variables
             DATA_SOURCES: {
-                Collection<ITeiidDataSource> dataSources;
+                Collection<ITeiidDataSource> dataSources = teiidServer.getDataSources();
 
-                if (provider.isShowDataSources()) {
-                    dataSources = new ArrayList(teiidServer.getDataSources());
+                if (provider.isShowDataSources() && ! dataSources.isEmpty()) {
+                    List<ITeiidDataSource> filteredDataSources = new ArrayList<ITeiidDataSource>(dataSources.size());
 
-                    if (!dataSources.isEmpty()) {
-                        children.add(new DataSourcesFolder(this, dataSources));
+                    for (ITeiidDataSource dataSource : dataSources) {
+                        if (! provider.isShowPreviewDataSources() && dataSource.isPreview())
+                            continue;
+
+                        // Either we are showing preview data source or dataSource is not a preview
+                        filteredDataSources.add(dataSource);
                     }
-                } else {
-                    dataSources = Collections.emptyList();
+
+                    if (!filteredDataSources.isEmpty()) {
+                        children.add(new DataSourcesFolder(this, filteredDataSources));
+                    }
                 }
                 
                 break DATA_SOURCES;
@@ -126,26 +132,38 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
 
             // hide VDBs related variables from other local variables
             VDBS: {
-                Collection<ITeiidVdb> vdbs;
+                Collection<ITeiidVdb> vdbs = teiidServer.getVdbs();
 
-                if (provider.isShowVDBs()) {
-                    vdbs = new ArrayList<ITeiidVdb>(teiidServer.getVdbs());
+                if (provider.isShowVDBs() && ! vdbs.isEmpty()) {
+                    List<ITeiidVdb> filteredVdbs = new ArrayList<ITeiidVdb>(vdbs.size());
 
-                    if (!vdbs.isEmpty()) {
-                        children.add(new VdbsFolder(this, vdbs));
+                    for (ITeiidVdb vdb : vdbs) {
+                        if (! provider.isShowPreviewVDBs() && vdb.isPreviewVdb())
+                            continue;
+
+                        // Either we are showing preview data source or dataSource is not a preview
+                        filteredVdbs.add(vdb);
                     }
-                } else {
-                    vdbs = Collections.emptyList();
+
+                    if (!filteredVdbs.isEmpty()) {
+                        children.add(new VdbsFolder(this, filteredVdbs));
+                    }
                 }
-                
                 break VDBS;
             }
 
             // hide translators related variables from other local variables
             TRANSLATORS: {
-                Collection<ITeiidTranslator> translators = teiidServer.getTranslators();
-                if (!translators.isEmpty()) {
-                    children.add(new TranslatorsFolder(this, translators));
+                Collection<ITeiidTranslator> translators;
+
+                if (provider.isShowTranslators()) {
+                    translators = new ArrayList<ITeiidTranslator>(teiidServer.getTranslators());
+
+                    if (!translators.isEmpty()) {
+                        children.add(new TranslatorsFolder(this, translators));
+                    }
+                } else {
+                    translators = Collections.emptyList();
                 }
 
                 break TRANSLATORS;

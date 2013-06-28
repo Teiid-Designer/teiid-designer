@@ -7,7 +7,6 @@
 */
 package org.teiid.designer.runtime.ui.views;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
@@ -20,12 +19,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.CommonViewer;
@@ -63,56 +59,9 @@ public class TeiidServerActionProvider extends CommonActionProvider {
      * Prefix for language NLS properties
      */
     private static final String PREFIX = I18nUtil.getPropertyPrefix(TeiidServerActionProvider.class);
-
-    /**
-     * A <code>ViewerFilter</code> that hides Preview Data Sources.
-     */
-    private static final ViewerFilter PREVIEW_DATA_SOURCE_FILTER = new ViewerFilter() {
-        /**
-         * {@inheritDoc}
-         *
-         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-         */
-        @Override
-        public boolean select(Viewer viewer,
-                              Object parentElement,
-                              Object element) {
-            ITeiidDataSource dataSource = RuntimeAssistant.adapt(element, ITeiidDataSource.class);
-            if (dataSource != null && dataSource.isPreview()) return false;
-
-            return true;
-        }
-    };
-
-    /**
-     * A <code>ViewerFilter</code> that hides Preview VDBs.
-     */
-    private static final ViewerFilter PREVIEW_VDB_FILTER = new ViewerFilter() {
-        /**
-         * {@inheritDoc}
-         *
-         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-         */
-        @Override
-        public boolean select(Viewer viewer,
-                              Object parentElement,
-                              Object element) {
-            ITeiidVdb vdb = RuntimeAssistant.adapt(element, ITeiidVdb.class);
-            if (vdb != null && vdb.isPreviewVdb()) return false;
-
-            return true;
-        }
-    };
-    
-    /**
-     * Memento info for saving and restoring menu state from session to session
-     */
-    private static final String MENU_MEMENTO = "menu-settings"; //$NON-NLS-1$
-    private static final String SHOW_PREVIEW_VDBS = "show-preview-vdbs"; //$NON-NLS-1$
-    private static final String SHOW_PREVIEW_DATA_SOURCES = "show-preview-data-sources"; //$NON-NLS-1$
     
     private ICommonActionExtensionSite actionSite;
-    
+
     private CommonViewer viewer;
     
     /**
@@ -158,7 +107,9 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     private IAction showPreviewDataSourcesAction;
     
     private IAction enablePreviewAction;
-    
+
+    private final TeiidServerPreviewOptionContributor previewOptionContributor;
+
     private IMenuListener enablePreviewActionListener = new IMenuListener() {
 
         @Override
@@ -170,20 +121,11 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     private ISelectionProvider selectionProvider;
 
     /**
-     * <code>true</code> if the viewer should show preview VDBs
-     */
-    private boolean showPreviewVdbs;
-    
-    /**
-     * <code>true</code> if the viewer should show preview data sources
-     */
-    private boolean showPreviewDataSources;
-
-    /**
      * Create instance
      */
     public TeiidServerActionProvider() {
         super();
+        previewOptionContributor = TeiidServerPreviewOptionContributor.getDefault();
     }
     
     @Override
@@ -198,7 +140,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 ICommonViewerWorkbenchSite wsSite = (ICommonViewerWorkbenchSite)site;
                 selectionProvider = wsSite.getSelectionProvider();
                 initActions();
-                updateViewerFilters();
             }
         }
     }
@@ -234,39 +175,14 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         PreviewManager previewManager = getServerManager().getPreviewManager();
         return ((previewManager != null) && previewManager.isPreviewEnabled());
     }
-    
-    /**
-     * Applies the current viewer filters.
-     */
-    private void updateViewerFilters() {
-        List<ViewerFilter> filters = new ArrayList<ViewerFilter>(3);
 
-        if (!this.showPreviewDataSources) {
-            filters.add(PREVIEW_DATA_SOURCE_FILTER);
-        }
-
-        if (!this.showPreviewVdbs) {
-            filters.add(PREVIEW_VDB_FILTER);
-        }
-
-        // set new content filters
-        this.viewer.setFilters(filters.toArray(new ViewerFilter[filters.size()]));
-    }
-    
     /**
-     * Handler for when the show preview VDBs menu action is selected
+     * Handler for when the show preview options menu actions are selected
      */
-    private void toggleShowPreviewVdbs() {
-        this.showPreviewVdbs = !this.showPreviewVdbs;
-        updateViewerFilters();
-    }
-    
-    /**
-     * Handler for when the show preview data sources menu action is selected
-     */
-    private void toggleShowPreviewDataSources() {
-        this.showPreviewDataSources = !this.showPreviewDataSources;
-        updateViewerFilters();
+    private void toggleShowPreviewOptions() {
+        previewOptionContributor.setShowPreviewOptions(
+                                                       showPreviewDataSourcesAction.isChecked(),
+                                                       showPreviewVdbsAction.isChecked());
     }
 
     /*
@@ -435,7 +351,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             showPreviewVdbsAction = new Action(getString("showPreviewVdbsMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
                 @Override
                 public void run() {
-                    toggleShowPreviewVdbs();
+                    toggleShowPreviewOptions();
                 }
             };
         }
@@ -446,13 +362,13 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                                                        getString("showPreviewDataSourcesMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
                 @Override
                 public void run() {
-                    toggleShowPreviewDataSources();
+                    toggleShowPreviewOptions();
                 }
             };
         }
 
-        showPreviewVdbsAction.setChecked(this.showPreviewVdbs);
-        showPreviewDataSourcesAction.setChecked(this.showPreviewDataSources);
+        showPreviewVdbsAction.setChecked(previewOptionContributor.isShowPreviewVdbs());
+        showPreviewDataSourcesAction.setChecked(previewOptionContributor.isShowPreviewDataSources());
 
         if (enablePreviewAction == null) {
             enablePreviewAction = new Action(
@@ -573,39 +489,5 @@ public class TeiidServerActionProvider extends CommonActionProvider {
 
             manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
         }
-    }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.navigator.CommonActionProvider#saveState(org.eclipse.ui.IMemento)
-     */
-    @Override
-    public void saveState(IMemento memento) {
-        IMemento menuMemento = memento.createChild(MENU_MEMENTO);
-        menuMemento.putBoolean(SHOW_PREVIEW_DATA_SOURCES, this.showPreviewDataSourcesAction.isChecked());
-        menuMemento.putBoolean(SHOW_PREVIEW_VDBS, this.showPreviewVdbsAction.isChecked());
-        super.saveState(memento);
-    }
-
-    private void restoreLocalPullDown(IMemento viewMemento) {
-        // need to check for null since first time view is opened in a new workspace there won't be previous state
-        if (viewMemento != null) {
-            IMemento menuMemento = viewMemento.getChild(MENU_MEMENTO);
-            
-            // also need to check for null here if running an existing workspace that didn't have this memento created
-            if (menuMemento != null) {
-                this.showPreviewDataSources = menuMemento.getBoolean(SHOW_PREVIEW_DATA_SOURCES);
-                this.showPreviewVdbs = menuMemento.getBoolean(SHOW_PREVIEW_VDBS);
-            }
-        }
-    }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.navigator.CommonActionProvider#restoreState(org.eclipse.ui.IMemento)
-     */
-    @Override
-    public void restoreState(IMemento aMemento) {
-        restoreLocalPullDown(aMemento);
-        updateViewerFilters();
-        super.restoreState(aMemento);
     }
 }

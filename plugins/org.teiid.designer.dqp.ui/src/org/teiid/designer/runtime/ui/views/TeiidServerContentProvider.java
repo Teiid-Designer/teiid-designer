@@ -7,6 +7,8 @@
  */
 package org.teiid.designer.runtime.ui.views;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,17 +21,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IMemento;
+import org.eclipse.ui.navigator.ICommonContentExtensionSite;
+import org.eclipse.ui.navigator.ICommonContentProvider;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.tools.as.wst.server.ui.xpl.ServerToolTip;
 import org.teiid.designer.runtime.DqpPlugin;
@@ -56,12 +57,12 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
  * 
  * @since 8.0
  */
-public class TeiidServerContentProvider implements ITreeContentProvider {
+public class TeiidServerContentProvider implements ICommonContentProvider {
 
     /** Represents a pending request in the tree. */
     private static final String LOAD_ELEMENT_JOB = DqpUiConstants.UTIL.getString(TeiidServerContentProvider.class.getSimpleName() + ".jobName"); //$NON-NLS-1$
     private static final Object PENDING = new Object();
-    
+
     private ConcurrentMap<ITeiidContainerNode, Object> pendingUpdates = new ConcurrentHashMap<ITeiidContainerNode, Object>();
     private transient TreeViewer viewer;
 
@@ -125,67 +126,16 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
                 public void run() {
                     if (viewer.getTree().isDisposed())
                         return;
-                    
-                    Tree tree = viewer.getTree();
-                    ITeiidResourceNode trn = null;
-                    
-                    // Preserve the selection
-                    int selectionCount = tree.getSelectionCount();
-                    ISelection currentSelection = viewer.getSelection();
-                    
+
+                    TreePath[] expandedElements = viewer.getExpandedTreePaths();
+
                     // Refresh the viewer
                     viewer.refresh();
-                    
-                    /*
-                     * If the TeiidResourceNode is expanded then we will need to
-                     * re-expand it since it has now been refreshed.
-                     *
-                     * If not found, then the node was never expanded so nothing
-                     * need be done
-                     */
-                    TreePath[] expandedElements = viewer.getExpandedTreePaths();
-                    for (TreePath o : expandedElements) {
-                        Object element = o.getLastSegment();
-                        
-                        if (isTeiidResourceNode(element)) {
-                            trn = (ITeiidResourceNode) element;
-                            break;
-                        }
-                        
-                        Object[] children = TeiidServerContentProvider.this.getChildren(element);
-                        for (Object child : children) {
-                            if (isTeiidResourceNode(child)) {
-                                trn = (ITeiidResourceNode) child;
-                                break;
-                            }
-                        }
-                    
-                        if (isTeiidResourceNode(trn)) {
-                            break;
-                        }
-                    }
-                    
-                    // Re-expand the TeiidResourceNode if
-                    // it was expanded previously
-                    if (trn != null) {
-                        viewer.setExpandedState(trn, true);
-                        viewer.expandToLevel(trn, 2);
-                    }
 
-                    // Try and reset the selection
-                    if (selectionCount == 1) {
-                        viewer.setSelection(new StructuredSelection());
-                        viewer.setSelection(currentSelection);
-                    }
-                        
-                    // Refresh the Model Explorer too
-                    ModelerUiViewUtils.refreshModelExplorerResourceNavigatorTree();    
+                    // Re-expand the viewer
+                    reExpand(expandedElements);
                 }
-                
-                private boolean isTeiidResourceNode(Object o) {
-                    return o instanceof ITeiidResourceNode;
-                }
-                
+
             }, false);
         }
     }
@@ -255,7 +205,31 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
             refreshThread.refresh();
         }
     };
-    
+
+    /**
+     * Listener that responds to property changes of the previewOptionContributor
+     */
+    private PropertyChangeListener propertyChangeListener = new PropertyChangeListener() {
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (TeiidServerPreviewOptionContributor.PREVIEW_OPTIONS_PROPERTY.equals(evt.getPropertyName())) {
+
+                if (viewer == null || viewer.isBusy())
+                    return;
+
+                TreePath[] expandedElements = viewer.getExpandedTreePaths();
+                viewer.refresh();
+                reExpand(expandedElements);
+            }
+        }
+    };
+
+    /**
+     * Determines the display of the preview data source and vdb options
+     */
+    private final TeiidServerPreviewOptionContributor previewOptionContributor;
+
     private RefreshThread refreshThread = new RefreshThread();
     
     private ServerToolTip tooltip;
@@ -266,14 +240,20 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
      */
     public TeiidServerContentProvider() {
         super();
-        
+
         refreshThread.start();
-        
+
         // Wire as listener to server manager and to receive configuration changes
         DqpPlugin.getInstance().getServerManager().addListener(configListener);
+
+        // Wire as a listener to the default preview options contributor
+        previewOptionContributor = TeiidServerPreviewOptionContributor.getDefault();
+        previewOptionContributor.addPropertyChangeListener(propertyChangeListener);
     }
 
     /**
+     * Used for display of server content in dialogs
+     *
      * @param showVDBs 
      * @param showTranslators 
      * @param showDataSources 
@@ -290,37 +270,40 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
     }
     
     /**
-     * @return the showDataSources
+     * @return whether to show data sources
      */
     public boolean isShowDataSources() {
         return this.showDataSources;
     }
-    
+
     /**
-     * Set show data sources flag
-     * 
-     * @param show
+     * @return whether to show preview data sources
      */
-    public void setShowDataSources(boolean show) {
-        this.showDataSources = show;
+    public boolean isShowPreviewDataSources() {
+        return previewOptionContributor.isShowPreviewDataSources();
     }
-    
+
     /**
-     * @return the showVDBs
+     * @return whether to show vdbs
      */
     public boolean isShowVDBs() {
         return this.showVDBs;
     }
-    
+
     /**
-     * Set show vdbs flag
-     * 
-     * @param show
+     * @return whether to show preview vdbs
      */
-    public void setShowVdbs(boolean show) {
-        this.showVDBs = show;
+    public boolean isShowPreviewVDBs() {
+        return previewOptionContributor.isShowPreviewVdbs();
     }
-    
+
+    /**
+     * @return the showTranslators
+     */
+    public boolean isShowTranslators() {
+        return this.showTranslators;
+    }
+
     /**
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      * @since 4.2
@@ -438,15 +421,76 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
         return false;
     }
 
+    private boolean isTeiidResourceNode(Object o) {
+        return o instanceof ITeiidResourceNode;
+    }
+
+    /**
+     * Re-expand the tree if it was previously expanded.
+     *
+     * If the TeiidResourceNode is expanded then we will need to
+     * re-expand it since it has now been refreshed.
+     *
+     * If not found, then the node was never expanded so nothing
+     * need be done.
+     *
+     * Requires the current selection prior to a refresh in order to try and
+     * re-apply it once the nodes have been re-expanded.
+     */
+    private void reExpand(TreePath[] expandedElements) {
+        ITeiidResourceNode trn = null;
+
+        for (TreePath o : expandedElements) {
+            Object element = o.getLastSegment();
+
+            if (isTeiidResourceNode(element)) {
+                trn = (ITeiidResourceNode) element;
+                break;
+            }
+
+            Object[] children = getChildren(element);
+            for (Object child : children) {
+                if (isTeiidResourceNode(child)) {
+                    trn = (ITeiidResourceNode) child;
+                    break;
+                }
+            }
+
+            if (isTeiidResourceNode(trn)) {
+                break;
+            }
+        }
+
+        // Re-expand the TeiidResourceNode if
+        // it was expanded previously
+        if (trn != null) {
+            viewer.setExpandedState(trn, true);
+            viewer.expandToLevel(trn, 2);
+        }
+
+        // Refresh the Model Explorer too
+        ModelerUiViewUtils.refreshModelExplorerResourceNavigatorTree();
+    }
+
     /**
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
      *      java.lang.Object)
      * @since 4.2
      */
     @Override
+    public void init(ICommonContentExtensionSite aConfig) {
+        /*
+         * Restore state does not get called conventionally since the provider
+         * is an adjunct to the viewer so call in manually when it is initialised.
+         */
+        restoreState(aConfig.getMemento());
+    }
+
+    @Override
     public void inputChanged( Viewer viewer, Object oldInput, Object newInput ) {
         if (viewer instanceof TreeViewer) {
             this.viewer = (TreeViewer) viewer;
+
             if( tooltip != null )
                 tooltip.deactivate();
             
@@ -485,5 +529,15 @@ public class TeiidServerContentProvider implements ITreeContentProvider {
         
         refreshThread.die();
         refreshThread = null;
+    }
+
+    @Override
+    public void saveState(IMemento memento) {
+        previewOptionContributor.saveState(memento);
+    }
+
+    @Override
+    public void restoreState(IMemento aMemento) {
+        previewOptionContributor.restoreState(aMemento);
     }
 }
