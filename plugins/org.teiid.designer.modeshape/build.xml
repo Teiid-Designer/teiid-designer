@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+==
+== Script to resolve the plugin's lib directory dependencies
+==
+== Note. This has to build both the target platform and the
+==       spi plugin in order to satisfy the dependencies of
+==       this plugin (even though we are not actually
+==       compiling it!)
+==
+-->
+
+<project name="generate-libs" default="generate">
+
+	<property name="GIT-HOME" location="../.." />
+
+	<!-- Comma-separated list of required libraries -->
+	<property name="libs" value="modeshape-common.jar,
+                                 modeshape-sequencer-ddl.jar"/>
+
+	<!--
+	   Test whether all the required libraries are present
+	-->
+	<target name="check-libs">
+
+		<filelist id="my.libs" dir="lib" files="${libs}" />
+		<restrict id="missing.libs">
+			<filelist refid="my.libs" />
+			<not>
+				<exists />
+			</not>
+		</restrict>
+
+		<property name="missing.libs" refid="missing.libs" />
+		<condition property="libs-present" value="true">
+			<length string="${missing.libs}" length="0" />
+		</condition>
+	</target>
+
+	<!--
+	   Check whether the libraries have already been downloaded.
+	   If it is not present then the 'should-generate' property 
+	   be set to the 'true'
+	-->
+	<target name="check-work" depends="check-libs">
+		<condition property="should-generate" value="true">
+			<or>
+				<isfalse value="${libs-present}" />
+			</or>
+		</condition>
+	</target>
+
+	<target name="nothing-todo" unless="should-generate">
+		<echo message="Project source generation is up-to-date" />
+	</target>
+
+	<target name="generate" depends="check-work, nothing-todo" if="should-generate">
+
+		<echo message="Generating from maven ..." />
+
+		<!-- Build the target platform and install it -->
+		<echo message="=== Installing target platform ===" />
+		<exec dir="${GIT-HOME}/target-platform" executable="mvn" failifexecutionfails="true" failonerror="true">
+			<arg line="install" />
+		</exec>
+
+		<!-- Build the spi dependency and install it -->
+		<echo message="=== Installing the spi plugin dependency ===" />
+		<exec dir="${GIT-HOME}/plugins/org.teiid.designer.spi" executable="mvn" failifexecutionfails="true" failonerror="true">
+			<arg line="install" />
+		</exec>
+
+		<!-- Call the process sources goal and generate using javacc -->
+		<echo message="=== Generating external libraries and sources ===" />
+		<exec dir="." executable="mvn" failifexecutionfails="true" failonerror="true">
+		    <arg line="process-sources" />
+		</exec>
+
+	</target>
+</project>
