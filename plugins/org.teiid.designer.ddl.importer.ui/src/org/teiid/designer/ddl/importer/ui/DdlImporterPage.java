@@ -74,11 +74,18 @@ import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
  */
 class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
 
+	private static final String TEIID_DIALECT = "TEIID"; //$NON-NLS-1$
+	private static final String SQL92_DIALECT = "SQL92"; //$NON-NLS-1$
+	private static final String ORACLE_DIALECT = "ORACLE"; //$NON-NLS-1$
+	private static final String POSTGRES_DIALECT = "POSTGRES"; //$NON-NLS-1$
+	private static final String DERBY_DIALECT = "DERBY"; //$NON-NLS-1$
+	
     private static final int PANEL_GRID_SPAN = 3;
     private static final String INITIAL_DIALOG_FOLDER_SETTING = "initialDialogFolder"; //$NON-NLS-1$
     private static final String HISTORY_SETTING = "history"; //$NON-NLS-1$
     private static final int MAX_HISTORY = 5;
     private static final List<ModelType> MODEL_TYPES = Arrays.asList(ModelType.PHYSICAL_LITERAL, ModelType.VIRTUAL_LITERAL);
+    private static final List<String> DIALECT_TYPES = Arrays.asList(TEIID_DIALECT,SQL92_DIALECT,ORACLE_DIALECT,POSTGRES_DIALECT,DERBY_DIALECT);
     private static final String DDL_FILE_CONTENTS_SHOWN_SETTING = "ddlFileContentsShown"; //$NON-NLS-1$
     private static final String OPT_TO_CREATE_MODEL_ENTITIES_FOR_UNSUPPORTED_DDL_SETTING = "optToCreateModelEntitiesForUnsupportedDdl"; //$NON-NLS-1$
     private static final String OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_SETTING = "optToSetModelEntityDescription"; //$NON-NLS-1$
@@ -91,6 +98,8 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
     private Combo ddlFileCombo;
     private Text modelFolderFld;
     private Text modelNameFld;
+    private Combo dialectCombo;
+    private Button autoSelectDialectCheckBox;
     private Combo modelTypeCombo;
     private Button optToSetModelEntityDescriptionCheckBox;
     private Button optToCreateModelEntitiesForUnsupportedDdlCheckBox;
@@ -102,6 +111,12 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
     private boolean generateModelName = true;
     private int ddlFileContentsBoxY;
 
+    /**
+     * DdlImporterPage constructor
+     * @param importer the DdlImporter
+     * @param projects current workspace projects
+     * @param selection current selection
+     */
     DdlImporterPage( final DdlImporter importer,
                      final IProject[] projects,
                      final IStructuredSelection selection ) {
@@ -236,8 +251,12 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         final Composite panel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1, PANEL_GRID_SPAN);
         setControl(panel);
 
+        // ----------------------------------------
+        // DDL File controls 
+        // ----------------------------------------
         WidgetFactory.createLabel(panel, GridData.VERTICAL_ALIGN_CENTER, DdlImporterUiI18n.DDL_FILE_LABEL);
-        ddlFileCombo = WidgetFactory.createCombo(panel, SWT.NONE, GridData.FILL_HORIZONTAL, settings.getArray(HISTORY_SETTING));
+        String[] ddlFileHistory = settings.getArray(HISTORY_SETTING);
+        ddlFileCombo = WidgetFactory.createCombo(panel, SWT.NONE, GridData.FILL_HORIZONTAL, Arrays.asList(ddlFileHistory), new LabelProvider(), false) ;
         ddlFileCombo.addModifyListener(new ModifyListener() {
 
             @Override
@@ -274,6 +293,43 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
             }
         });
 
+        // ----------------------------------------
+        // DDL Dialect controls 
+        // ----------------------------------------
+        WidgetFactory.createLabel(panel, GridData.VERTICAL_ALIGN_CENTER, DdlImporterUiI18n.DIALECT_LABEL);
+        final Composite dialectPanel = WidgetFactory.createPanel(panel, SWT.NONE, GridData.HORIZONTAL_ALIGN_FILL, 2, 2);
+        dialectCombo = WidgetFactory.createCombo(dialectPanel, SWT.READ_ONLY, GridData.HORIZONTAL_ALIGN_FILL, DIALECT_TYPES, new LabelProvider(), false);
+        dialectCombo.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                int comboIndx = dialectCombo.getSelectionIndex();
+                String dialect = dialectCombo.getItem(comboIndx);
+                selectDialect(dialect);
+            }
+        });
+        
+        // Initial selection is 'TEIID'
+        int teiidIndx = dialectCombo.indexOf(TEIID_DIALECT);
+        dialectCombo.select(teiidIndx);
+        selectDialect(TEIID_DIALECT);
+        autoSelectDialectCheckBox = WidgetFactory.createCheckBox(dialectPanel,
+        		DdlImporterUiI18n.AUTO_SELECT_DIALECT_CHECKBOX,
+        		0,
+        		1,
+        		false);
+        autoSelectDialectCheckBox.addSelectionListener(new SelectionAdapter() {
+
+        	@Override
+        	public void widgetSelected( final SelectionEvent event ) {
+        		autoSelectDialectChanged();
+        	}
+        });
+
+        
+        // ----------------------------------------
+        // Model Folder controls
+        // ----------------------------------------
         WidgetFactory.createLabel(panel, GridData.VERTICAL_ALIGN_CENTER, DdlImporterUiI18n.MODEL_FOLDER_LABEL);
         modelFolderFld = WidgetFactory.createTextField(panel);
         final IContainer modelFolder = importer.modelFolder();
@@ -295,6 +351,9 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
             }
         });
 
+        // ----------------------------------------
+        // Model Name controls
+        // ----------------------------------------
         WidgetFactory.createLabel(panel, GridData.VERTICAL_ALIGN_CENTER, DdlImporterUiI18n.MODEL_NAME_LABEL);
         modelNameFld = WidgetFactory.createTextField(panel);
         modelNameFld.addModifyListener(new ModifyListener() {
@@ -314,6 +373,9 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
             }
         });
 
+        // ----------------------------------------
+        // Model Type controls
+        // ----------------------------------------
         WidgetFactory.createLabel(panel, GridData.VERTICAL_ALIGN_CENTER, DdlImporterUiI18n.MODEL_TYPE_LABEL);
         modelTypeCombo = WidgetFactory.createCombo(panel, SWT.READ_ONLY, 0, PANEL_GRID_SPAN - 1, MODEL_TYPES, new LabelProvider() {
 
@@ -338,6 +400,9 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         });
         modelTypeCombo.select(modelTypeCombo.indexOf(ModelType.PHYSICAL_LITERAL.getDisplayName()));
 
+        // ----------------------------------------
+        // Option checkboxes
+        // ----------------------------------------
         optToSetModelEntityDescriptionCheckBox = WidgetFactory.createCheckBox(panel,
                                                                               DdlImporterUiI18n.OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_LABEL,
                                                                               0,
@@ -370,6 +435,9 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         // make sure importer has restored setting
         optToCreateModelEntitiesForUnsupportedDdlModified();
 
+        // ----------------------------------------
+        // File contents area
+        // ----------------------------------------
         ddlFileContentsExpanderBar = new ExpandBar(panel, SWT.NONE);
         final GridData gridData = new GridData(GridData.FILL_BOTH);
         gridData.horizontalSpan = PANEL_GRID_SPAN;
@@ -445,6 +513,23 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
 
     void modelTypeModified() {
         importer.setModelType(MODEL_TYPES.get(modelTypeCombo.indexOf(modelTypeCombo.getText())));
+    }
+    
+    void selectDialect(String dialect) {
+        importer.setSpecifiedParser(dialect);
+    }
+    
+    void autoSelectDialectChanged( ) {
+    	boolean isChecked = this.autoSelectDialectCheckBox.getSelection();
+    	if(isChecked) {
+    		this.dialectCombo.setEnabled(false);
+            selectDialect(null);
+    	} else {
+    		this.dialectCombo.setEnabled(true);
+            int comboIndx = dialectCombo.getSelectionIndex();
+            String dialect = dialectCombo.getItem(comboIndx);
+            selectDialect(dialect);
+    	}
     }
 
     void optToCreateModelEntitiesForUnsupportedDdlModified() {
@@ -558,6 +643,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
             setErrorMessage(DdlImporterUiI18n.DDL_FILE_MSG + ' ' + error.getMessage());
         }
         ddlFileCombo.setToolTipText(ddlFileName);
+        
         try {
             importer.setModelFolder(modelFolderFld.getText());
         } catch (final EmptyArgumentException error) {

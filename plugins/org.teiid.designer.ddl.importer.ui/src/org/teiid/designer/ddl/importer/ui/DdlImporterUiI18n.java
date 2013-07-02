@@ -15,6 +15,8 @@ class DdlImporterUiI18n {
     static final String CHOOSE_DDL_FILE_DIALOG_TITLE = i18n("chooseDdlFileDialogTitle"); //$NON-NLS-1$
     static final String CHOOSE_FROM_FILE_SYSTEM_BUTTON = i18n("chooseFromFileSystemButton"); //$NON-NLS-1$
     static final String CHOOSE_FROM_WORKSPACE_BUTTON = i18n("chooseFromWorkspaceButton"); //$NON-NLS-1$
+    static final String DIALECT_LABEL = i18n("dialectLabel"); //$NON-NLS-1$
+    static final String AUTO_SELECT_DIALECT_CHECKBOX = i18n("autoSelectDialectCheckBox"); //$NON-NLS-1$
     static final String CHOOSE_MODEL_FOLDER_DIALOG_MSG = i18n("chooseModelFolderDialogMsg"); //$NON-NLS-1$
     static final String CHOOSE_MODEL_FOLDER_DIALOG_TITLE = i18n("chooseModelFolderDialogTitle"); //$NON-NLS-1$
     static final String CHOOSE_MODEL_FILE_DIALOG_MSG = i18n("chooseModelFileDialogMsg"); //$NON-NLS-1$
