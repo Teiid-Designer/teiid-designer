@@ -15,6 +15,8 @@
 
 	<property name="GIT-HOME" location="../.." />
 
+	<import file="${GIT-HOME}/scripts/build-common.xml" />
+
 	<!-- Comma-separated list of required libraries -->
 	<property name="libs" value="modeshape-common.jar,
                                  modeshape-sequencer-ddl.jar"/>
@@ -61,21 +63,15 @@
 
 		<!-- Build the target platform and install it -->
 		<echo message="=== Installing target platform ===" />
-		<exec dir="${GIT-HOME}/target-platform" executable="mvn" failifexecutionfails="true" failonerror="true">
-			<arg line="install" />
-		</exec>
+		<mvn dir="${GIT-HOME}/target-platform" args="install" />
 
 		<!-- Build the spi dependency and install it -->
 		<echo message="=== Installing the spi plugin dependency ===" />
-		<exec dir="${GIT-HOME}/plugins/org.teiid.designer.spi" executable="mvn" failifexecutionfails="true" failonerror="true">
-			<arg line="install" />
-		</exec>
+		<mvn dir="${GIT-HOME}/plugins/org.teiid.designer.spi" args="install" />
 
 		<!-- Call the process sources goal and generate using javacc -->
 		<echo message="=== Generating external libraries and sources ===" />
-		<exec dir="." executable="mvn" failifexecutionfails="true" failonerror="true">
-		    <arg line="process-sources -P download-sources" />
-		</exec>
+		<mvn dir="." args="process-sources -P download-sources" />
 
 	</target>
 </project>

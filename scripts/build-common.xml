@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- == == Common targets for use as imports == -->
+
+<project name="common">
+
+    <macrodef name="mvn">
+        <attribute name="dir" />
+        <attribute name="args" />
+        <sequential>
+            <exec dir="@{dir}" executable="mvn.bat" osfamily="windows" failifexecutionfails="true" failonerror="true">
+                <arg line="@{args}" />
+            </exec>
+            <exec dir="@{dir}" executable="mvn" osfamily="mac" failifexecutionfails="true" failonerror="true">
+                <arg line="@{args}" />
+            </exec>
+            <exec dir="@{dir}" executable="mvn" osfamily="unix" failifexecutionfails="true" failonerror="true">
+                <arg line="@{args}" />
+            </exec>
+        </sequential>
+    </macrodef>
+
+</project>

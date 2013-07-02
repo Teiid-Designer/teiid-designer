@@ -8,14 +8,16 @@
 
 <project name="generate-docs" default="maven-generate">
 
+	<property name="GIT-HOME" location="../../.." />
+
+	<import file="${GIT-HOME}/scripts/build-common.xml" />
+
 	<target name="maven-generate">
 
 		<echo message="Generating using maven ..." />
 
 		<!-- Call the compile goal with the all profile -->
-		<exec dir="." executable="mvn" failifexecutionfails="true" failonerror="true">
-			<arg line="compile -P all" />
-		</exec>
+		<mvn dir="." args="compile -P all" />
 
 	</target>
 
