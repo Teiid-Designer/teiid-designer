@@ -8,9 +8,8 @@
 package org.teiid.designer.teiidimporter.ui.wizard;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -21,14 +20,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
-import org.teiid.designer.compare.DifferenceReport;
-import org.teiid.designer.compare.ui.wizard.IDifferencingWizard;
-import org.teiid.designer.compare.ui.wizard.ShowDifferencesPage;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.ddl.importer.ui.DdlImportDifferencesPage;
 import org.teiid.designer.teiidimporter.ui.Activator;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
@@ -41,7 +39,6 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 
-
 /**
  * TeiidImportWizard
  * Performs import by deploying a teiid dynamic VDB with a chose DataSource.
@@ -49,7 +46,7 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
  *  
  * @since 8.1
  */
-public class TeiidImportWizard extends AbstractWizard implements IDifferencingWizard, IPropertiesContext, UiConstants {
+public class TeiidImportWizard extends AbstractWizard implements IImportWizard, IPropertiesContext, UiConstants {
 
 	private static final ImageDescriptor IMAGE = Activator.getDefault().getImageDescriptor(ImageIds.IMPORT_TEIID_METADATA);
 
@@ -57,7 +54,7 @@ public class TeiidImportWizard extends AbstractWizard implements IDifferencingWi
     private SelectDataSourcePage selectDataSourcePage;
     private SelectTranslatorAndTargetPage selectTranslatorAndTargetPage;
     private ShowDDLPage showDDLPage;
-    private ShowDifferencesPage differencesPage;
+    private DdlImportDifferencesPage differencesPage;
     
     IContainer targetContainer = null;
     
@@ -162,7 +159,7 @@ public class TeiidImportWizard extends AbstractWizard implements IDifferencingWi
         addPage(showDDLPage);
         
         // Differences Page
-        this.differencesPage = new ShowDifferencesPage(this);
+        this.differencesPage = new DdlImportDifferencesPage(importManager.getDdlImporter());
         // DDL differences page
         addPage(differencesPage);  
 	}
@@ -190,16 +187,6 @@ public class TeiidImportWizard extends AbstractWizard implements IDifferencingWi
         importManager.undeployDynamicVdb();
         importManager.deleteDdlTempFile();
         return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.compare.ui.wizard.IDifferencingWizard#getDifferenceReports()
-     */
-    @Override
-    public List<DifferenceReport> getDifferenceReports() {
-        return Collections.singletonList(getImportManager().getDdlDifferenceReport(getShell(),100));
     }
 
 	@Override

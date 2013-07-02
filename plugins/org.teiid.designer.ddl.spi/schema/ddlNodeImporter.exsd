@@ -67,7 +67,7 @@
             </annotation>
             <simpleType>
                <restriction base="string">
-                  <enumeration value="Standard">
+                  <enumeration value="SQL92">
                   </enumeration>
                   <enumeration value="Oracle">
                   </enumeration>

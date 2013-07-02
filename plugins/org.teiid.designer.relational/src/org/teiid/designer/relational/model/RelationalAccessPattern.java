@@ -9,20 +9,25 @@ package org.teiid.designer.relational.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
+import org.teiid.core.designer.HashCodeUtil;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 
 
 
 /**
- * 
+ * RelationalAccessPattern
  *
  * @since 8.0
  */
 public class RelationalAccessPattern extends RelationalReference {
-    private Collection<RelationalColumn> columns;
+    private List<RelationalColumn> columns;
     
+    /**
+     * constructor
+     */
     public RelationalAccessPattern() {
         super();
         setType(TYPES.AP);
@@ -31,7 +36,8 @@ public class RelationalAccessPattern extends RelationalReference {
     }
     
     /**
-     * @param name
+     * constructor
+     * @param name the name for the access pattern
      */
     public RelationalAccessPattern( String name ) {
         super(name);
@@ -43,16 +49,22 @@ public class RelationalAccessPattern extends RelationalReference {
     /**
      * @return columns
      */
-    public Collection<RelationalColumn> getColumns() {
+    public List<RelationalColumn> getColumns() {
         return columns;
     }
+    
     /**
-     * @param columns Sets columns to the specified value.
+     * Add a column
+     * @param column the relational column to add
      */
     public void addColumn( RelationalColumn column ) {
         this.columns.add(column);
     }
     
+    /**
+     * Get the table
+     * @return the relational table
+     */
     public RelationalTable getTable() {
     	if( getParent() != null ) {
     		return (RelationalTable)getParent();
@@ -61,6 +73,10 @@ public class RelationalAccessPattern extends RelationalReference {
     	return null;
     }
     
+    /**
+     * Set properties
+     * @param props the properties
+     */
     public void setProperties(Properties props) {
         for( Object key : props.keySet() ) {
             String keyStr = (String)key;
@@ -96,4 +112,55 @@ public class RelationalAccessPattern extends RelationalReference {
 		}
 		return sb.toString();
 	}
+	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals( final Object object ) {
+		if (!super.equals(object)) {
+			return false;
+		}
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
+        if (getClass() != object.getClass())
+            return false;
+        final RelationalAccessPattern other = (RelationalAccessPattern)object;
+
+        // Columns
+        Collection<RelationalColumn> thisColumns = getColumns();
+        Collection<RelationalColumn> thatColumns = other.getColumns();
+
+        if (thisColumns.size() != thatColumns.size()) {
+            return false;
+        }
+        
+        if (!thisColumns.isEmpty() && !thisColumns.containsAll(thatColumns)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+
+        List<RelationalColumn> cols = getColumns();
+        for(RelationalColumn col: cols) {
+            result = HashCodeUtil.hashCode(result, col);
+        }
+        
+        return result;
+    }    
+
 }

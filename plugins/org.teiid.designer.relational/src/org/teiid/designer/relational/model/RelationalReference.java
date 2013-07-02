@@ -7,10 +7,17 @@
  */
 package org.teiid.designer.relational.model;
 
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.designer.HashCodeUtil;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -44,25 +51,33 @@ public class RelationalReference implements RelationalConstants {
     
     private IStatus currentStatus;
     
+    private boolean isChecked = true;
+    
     private int modelType = ModelType.PHYSICAL;
+    
+    private Properties extensionProperties = new Properties();
     
     private StringNameValidator nameValidator = new StringNameValidator();
     
     /**
-     * 
+     * RelationalReference constructor
      */
     public RelationalReference() {
         super();
         this.processType = CREATE_ANYWAY;
         this.currentStatus = Status.OK_STATUS; 
+        this.isChecked = true;
     }
+    
     /**
+     * RelationalReference constructor
      * @param name the name of the object
      */
     public RelationalReference( String name ) {
         super();
         this.name = name;
         this.processType = CREATE_ANYWAY;
+        this.isChecked = true;
     }
     
 
@@ -76,7 +91,7 @@ public class RelationalReference implements RelationalConstants {
 	}
 	
 	/**
-	 * @param obj
+	 * @param obj the relational reference
 	 */
 	public void inject(RelationalReference obj) {
 		
@@ -183,7 +198,79 @@ public class RelationalReference implements RelationalConstants {
     public void setDoProcessType(int value) {
         this.processType = value;
     }
+    
+    /**
+     * @return the isChecked state
+     */
+    public boolean isChecked() {
+        return this.isChecked;
+    }
 
+    /**
+     * sets selected flag
+     * @param isChecked 'true' if the item is selected
+     * 
+     */
+    public void setChecked(boolean isChecked) {
+        this.isChecked = isChecked;
+    }    
+
+    /**
+     * Set the extension properties
+     * @param extProps the extension properties
+     */
+    public void setExtensionProperties(Properties extProps) {
+    	clearExtensionProperties();
+    	if(extProps!=null) {
+    		Set<Object> propKeys = extProps.keySet();
+    		for(Object propKey : propKeys) {
+    			String strKey = (String)propKey;
+    			String strValue = extProps.getProperty(strKey);
+    			int index = strKey.indexOf(':');
+    			if(index!=-1) {
+    				strKey = strKey.substring(index+1);
+    			}
+    			// TODO: Supports ID Lookup is not being returned in DDL Options - need to resolve.
+    			if(strKey!=null && !strKey.equalsIgnoreCase("Supports ID Lookup")) {  //$NON-NLS-1$
+    				addExtensionProperty(strKey,strValue);
+    			}
+    		}
+    	}
+    }
+    
+    /**
+     * Add an extension property
+     * @param propName property name
+     * @param propValue property value
+     */
+    public void addExtensionProperty(String propName, String propValue) {
+    	if(propName!=null) this.extensionProperties.put(propName,propValue);
+    }
+    
+    /**
+     * remove an extension property
+     * @param propName property name
+     */
+    public void removeExtensionProperty(String propName) {
+    	this.extensionProperties.remove(propName);
+    }
+    
+    /**
+     * clear the extension properties
+     */
+    public void clearExtensionProperties() {
+    	this.extensionProperties.clear();
+    }
+
+    /**
+     * @return the extension properties
+     */
+    public Properties getExtensionProperties() {
+    	return this.extensionProperties;
+    }
+    
+    
+    
     /**
      * @return the display name
      */
@@ -226,6 +313,10 @@ public class RelationalReference implements RelationalConstants {
     	validate();
     }
     
+    /**
+     * Check name validity
+     * @return 'true' if value, 'false' if not.
+     */
     public final boolean nameIsValid() {
 		if( this.getName() == null || this.getName().length() == 0 ) {
 			return false;
@@ -266,6 +357,104 @@ public class RelationalReference implements RelationalConstants {
 		sb.append(" : name = ").append(getName()); //$NON-NLS-1$
 		return sb.toString();
 	}
+	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals( final Object object ) {
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
+        if (getClass() != object.getClass())
+            return false;
+        final RelationalReference other = (RelationalReference)object;
+
+        // string properties
+        if (!CoreStringUtil.valuesAreEqual(getName(), other.getName())
+                || !CoreStringUtil.valuesAreEqual(getNameInSource(), other.getNameInSource())
+                || !CoreStringUtil.valuesAreEqual(getDescription(), other.getDescription())) {
+            return false;
+        }
+        
+        if( !(getType()==other.getType()) ) {
+        	return false;
+        }
+        if( !(getModelType()==other.getModelType()) ) {
+        	return false;
+        }
+        if( !(getProcessType()==other.getProcessType()) ) {
+        	return false;
+        }
+        if(!getExtensionProperties().equals(other.getExtensionProperties())) {
+        	return false;
+        }
+
+        return true;
+    }
     
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int result = HashCodeUtil.hashCode(0, getType());
+
+        result = HashCodeUtil.hashCode(result, getType());
+        result = HashCodeUtil.hashCode(result, getModelType());
+        result = HashCodeUtil.hashCode(result, getProcessType());
+        
+        // string properties
+        if (!CoreStringUtil.isEmpty(getName())) {
+            result = HashCodeUtil.hashCode(result, getName());
+        }
+        
+        if (!CoreStringUtil.isEmpty(getNameInSource())) {
+            result = HashCodeUtil.hashCode(result, getNameInSource());
+        }
+
+        if (getDescription() != null && !getDescription().isEmpty()) {
+            result = HashCodeUtil.hashCode(result, getDescription());
+        }
+
+        if ((this.extensionProperties != null) && !this.extensionProperties.isEmpty()) {
+        	Iterator<Object> keyIter = this.extensionProperties.keySet().iterator();
+        	while(keyIter.hasNext()) {
+        		String key = (String)keyIter.next();
+        		String value = this.extensionProperties.getProperty(key);
+        		result = HashCodeUtil.hashCode(result, key);
+        		result = HashCodeUtil.hashCode(result, value);
+        	}
+        }
+
+        return result;
+    } 
     
+    /**
+     * Reference comparator
+     */
+    public class ReferenceComparator implements Comparator<RelationalReference> {
+    	@Override
+    	public int compare(RelationalReference x, RelationalReference y) {
+    		RelationalReference xParent = x.getParent();
+    		RelationalReference yParent = y.getParent();
+
+    		// if either of parents null, just use names
+    		if(xParent==null || yParent==null) {
+        	    return x.getName().compareTo(y.getName());
+    		}
+    		
+    		int parentResult = xParent.getName().compareTo(yParent.getName());
+    	    if (parentResult != 0) return parentResult;
+
+    	    // if parent names match, use reference name
+    	    return x.getName().compareTo(y.getName());
+    	}
+
+    }       
 }

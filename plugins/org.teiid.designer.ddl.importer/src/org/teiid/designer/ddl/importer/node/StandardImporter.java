@@ -7,8 +7,11 @@
 */
 package org.teiid.designer.ddl.importer.node;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -19,571 +22,611 @@ import org.modeshape.sequencer.ddl.node.AstNode;
 import org.teiid.core.designer.I18n;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
-import org.teiid.designer.ddl.DdlImporterModel;
-import org.teiid.designer.ddl.DdlImporterModel.EntityDescriptions;
-import org.teiid.designer.ddl.DdlImporterModel.EntityDescriptions.DescriptionOperation;
+import org.teiid.designer.ddl.DdlImporterManager;
 import org.teiid.designer.ddl.importer.DdlImporterI18n;
 import org.teiid.designer.metamodels.core.ModelType;
-import org.teiid.designer.metamodels.relational.BaseTable;
-import org.teiid.designer.metamodels.relational.Column;
-import org.teiid.designer.metamodels.relational.ColumnSet;
-import org.teiid.designer.metamodels.relational.ForeignKey;
-import org.teiid.designer.metamodels.relational.NullableType;
-import org.teiid.designer.metamodels.relational.PrimaryKey;
-import org.teiid.designer.metamodels.relational.Procedure;
-import org.teiid.designer.metamodels.relational.ProcedureParameter;
-import org.teiid.designer.metamodels.relational.ProcedureResult;
-import org.teiid.designer.metamodels.relational.RelationalEntity;
-import org.teiid.designer.metamodels.relational.Schema;
-import org.teiid.designer.metamodels.relational.Table;
-import org.teiid.designer.metamodels.relational.UniqueConstraint;
 import org.teiid.designer.metamodels.relational.util.RelationalTypeMappingImpl;
+import org.teiid.designer.relational.model.RelationalColumn;
+import org.teiid.designer.relational.model.RelationalForeignKey;
+import org.teiid.designer.relational.model.RelationalModel;
+import org.teiid.designer.relational.model.RelationalParameter;
+import org.teiid.designer.relational.model.RelationalPrimaryKey;
+import org.teiid.designer.relational.model.RelationalProcedure;
+import org.teiid.designer.relational.model.RelationalProcedureResultSet;
+import org.teiid.designer.relational.model.RelationalReference;
+import org.teiid.designer.relational.model.RelationalSchema;
+import org.teiid.designer.relational.model.RelationalTable;
+import org.teiid.designer.relational.model.RelationalUniqueConstraint;
 
 /**
  * Node importer for standard DDL
  */
 public class StandardImporter extends AbstractImporter {
 
-    class Info {
+	class Info {
 
-        protected Schema schema;
-        protected String name;
+		protected RelationalSchema schema;
+		protected String name;
 
-        public Info(AstNode node, List<EObject> roots) throws Exception {
-            init(node, roots);
-        }
+		public Info(AstNode node, RelationalModel model) throws Exception {
+			init(node, model);
+		}
 
-        protected void init(AstNode node, List<EObject> roots) throws Exception {
-            String name = node.getName();
-            int ndx = name.indexOf('.');
-            if (ndx < 0) {
-                schema = null;
-                this.name = name;
-            } else {
-                schema = find(Schema.class, name.substring(0, ndx), node, null, roots);
-                this.name = name.substring(ndx + 1);
-            }
-        }
+		protected void init(AstNode node, RelationalModel model) throws Exception {
+			String name = node.getName();
+			int ndx = name.indexOf('.');
+			if (ndx < 0) {
+				schema = null;
+				this.name = name;
+			} else {
+				//                schema = find(RelationalSchema.class, name.substring(0, ndx), node, null, model);
+				//                this.name = name.substring(ndx + 1);
+			}
+		}
 
-        /**
-         * @return the name
-         */
-        public String getName() {
-            return this.name;
-        }
+		/**
+		 * @return the name
+		 */
+		public String getName() {
+			return this.name;
+		}
 
-        /**
-         * @return the schema
-         */
-        public Schema getSchema() {
-            return schema;
-        }
-    }
+		/**
+		 * @return the schema
+		 */
+		public RelationalSchema getSchema() {
+			return schema;
+		}
+	}
 
-    private static final String STRING_TYPENAME = "string"; //$NON-NLS-1$
+	private static final String STRING_TYPENAME = "string"; //$NON-NLS-1$
 
-    /**
-     * Create new info object
-     *
-     * @param node
-     * @param roots
-     *
-     * @return new info object
-     *
-     * @throws Exception
-     */
-    protected Info createInfo(AstNode node, List<EObject> roots) throws Exception {
-        return new Info(node, roots);
-    }
+	/**
+	 * Create new info object
+	 *
+	 * @param node the AstNode
+	 * @param model the RelationalModel
+	 *
+	 * @return new info object
+	 *
+	 * @throws Exception
+	 */
+	protected Info createInfo(AstNode node, RelationalModel model) throws Exception {
+		return new Info(node, model);
+	}
 
-    /**
-     * @param type
-     * @param name
-     * @param node
-     * @param parent
-     * @param roots
-     *
-     * @return entity matching parameters
-     *
-     * @throws EntityNotFoundException
-     * @throws CoreException
-     */
-    protected <T extends RelationalEntity> T find(Class<T> type, String name, AstNode node,
-                                                                                          RelationalEntity parent, List<EObject> roots) throws EntityNotFoundException, CoreException {
-        for (EObject obj : parent == null ? roots : parent.eContents()) {
-            if (type.isInstance(obj)) {
-                T entity = (T)obj;
-                if (entity.getName().equalsIgnoreCase(name))
-                    return entity;
-            } else if (parent == null && obj instanceof Schema) {
-                try {
-                    return find(type, name, node, (Schema)obj, roots);
-                } catch (EntityNotFoundException ignored) {
-                }
-            }
-        }
+	/**
+	 * @param type type of RelationalReference to find
+	 * @param name the node name
+	 * @param node the AstNode
+	 * @param parent the parent reference
+	 * @param allModelRefs the collection of all model RelationalReferences
+	 *
+	 * @return RelationalReference which is a match
+	 *
+	 * @throws EntityNotFoundException
+	 * @throws CoreException
+	 */
+	protected <T extends RelationalReference> T find(Class<T> type, String name, AstNode node,
+			RelationalReference parent, Collection<RelationalReference> allModelRefs) throws EntityNotFoundException, CoreException {
+		
+		// Look through all refs list for a matching object
+		for ( RelationalReference obj : allModelRefs) {
+			if (type.isInstance(obj)) {
+				T relEntity = (T)obj;
+				if (relEntity.getName().equalsIgnoreCase(name)) {
+					RelationalReference relParent = relEntity.getParent();
+					if(parent!=null) {
+						if(relParent.getName().equalsIgnoreCase(parent.getName())) {
+							return relEntity;
+						}
+					} else {
+						return relEntity;
+					}
+				}
+			}
+		}
 
-        while (node.getProperty(StandardDdlLexicon.DDL_EXPRESSION) == null) {
-            node = node.getParent();
-        }
+		while (node.getProperty(StandardDdlLexicon.DDL_EXPRESSION) == null) {
+			node = node.getParent();
+		}
 
-        String parentType = null;
-        if (parent == null)
-            parentType = DdlImporterI18n.MODEL;
-        else for (Class<?> parentInterface : parent.getClass().getInterfaces()) {
-            if (RelationalEntity.class.isAssignableFrom(parentInterface))
-                parentType = parentInterface.getSimpleName();
-        }
+		throw new EntityNotFoundException(I18n.format(DdlImporterI18n.ENTITY_NOT_FOUND_MSG,
+				type.getSimpleName(),
+				name,
+				DdlImporterI18n.MODEL,
+				parent == null ? getImporterManager().getModelName() : parent.getName(),
+						node.getProperty(StandardDdlLexicon.DDL_START_LINE_NUMBER).toString(),
+						node.getProperty(StandardDdlLexicon.DDL_START_COLUMN_NUMBER).toString()));
+	}
 
-        throw new EntityNotFoundException(I18n.format(DdlImporterI18n.ENTITY_NOT_FOUND_MSG,
-                                                      type.getSimpleName(),
-                                                      name,
-                                                      parentType,
-                                                      parent == null ? getImporterModel().getModelName() : parent.getName(),
-                                                      node.getProperty(StandardDdlLexicon.DDL_START_LINE_NUMBER).toString(),
-                                                      node.getProperty(StandardDdlLexicon.DDL_START_COLUMN_NUMBER).toString()));
-    }
+	/**
+	 * @param type type of RelationalReference to find
+	 * @param node the AstNode
+	 * @param parent the parent reference
+	 * @param allModelRefs the collection of all model RelationalReferences
+	 * @return RelationalReference which is a match
+	 *
+	 * @throws EntityNotFoundException
+	 * @throws CoreException
+	 */
+	protected <T extends RelationalReference> T find(Class<T> type, AstNode node, RelationalReference parent, Collection<RelationalReference> allModelRefs) throws EntityNotFoundException, CoreException {
+		return find(type, node.getName(), node, parent, allModelRefs);
+	}
 
-    /**
-     * @param type
-     * @param node
-     * @param parent
-     * @param roots
-     * @return entity matching parameters
-     *
-     * @throws EntityNotFoundException
-     * @throws CoreException
-     */
-    protected <T extends RelationalEntity> T find(Class<T> type, AstNode node, RelationalEntity parent,
-                                                                                          List<EObject> roots) throws EntityNotFoundException, CoreException {
-        return find(type, node.getName(), node, parent, roots);
-    }
+	/**
+	 * Initialize the RelationalReference
+	 * @param entity the object
+	 * @param node the corresponding AstNode
+	 * @param name the name for the object
+	 */
+	protected void initialize(RelationalReference entity, AstNode node, String name) {
+		entity.setName(name);
+		entity.setNameInSource(name);
 
-    /**
-     * 
-     * @param entity
-     * @param node
-     * @param name
-     */
-    protected void initialize(RelationalEntity entity, AstNode node, String name) {
-        entity.setName(name);
-        entity.setNameInSource(name);
-
-        // descriptions must wait to be set until container and model type has been set
-        if (getImporterModel().optToSetModelEntityDescription()) {
-            Object prop = node.getProperty(StandardDdlLexicon.DDL_EXPRESSION);
-            if (prop != null) {
-                getImporterModel().addDescription(entity, prop.toString(), DescriptionOperation.PREPEND);
-            }
-        }
-    }
+		// descriptions must wait to be set until container and model type has been set
+		if (getImporterManager().optToSetModelEntityDescription()) {
+			Object prop = node.getProperty(StandardDdlLexicon.DDL_EXPRESSION);
+			if (prop != null) {
+				entity.setDescription(prop.toString());
+			} else {
+				entity.setDescription(""); //$NON-NLS-1$
+			}
+		}
+	}
 
 
-    /**
-     * @param entity
-     * @param node
-     */
-    protected void initialize(RelationalEntity entity, AstNode node) {
-        initialize(entity, node, node.getName());
-    }
+	/**
+	 * Initialize the RelationalReference
+	 * @param entity the object
+	 * @param node the corresponding AstNode
+	 */
+	protected void initialize(RelationalReference entity, AstNode node) {
+		initialize(entity, node, node.getName());
+	}
 
-    /**
-     * Helper method for creating unique FK names
-     * @param currentFKs the List of ForeignKeys currently on the table
-     * @param newFKName the proposed name for the new FK
-     * @return the unique name - generated from the proposed name
-     */
-    protected String getUniqueFKName(List<ForeignKey> currentFKs, String newFKName) {
-        // If current list is empty, no need to check names
-        if (currentFKs == null || currentFKs.isEmpty()) return newFKName;
+	/**
+	 * Helper method for creating unique FK names
+	 * @param currentFKs the List of ForeignKeys currently on the table
+	 * @param newFKName the proposed name for the new FK
+	 * @return the unique name - generated from the proposed name
+	 */
+	protected String getUniqueFKName(Collection<RelationalForeignKey> currentFKs, String newFKName) {
+		// If current list is empty, no need to check names
+		if (currentFKs == null || currentFKs.isEmpty()) return newFKName;
 
-        // Use name validator for unique name generation
-        StringNameValidator nameValidator = new StringNameValidator();
+		// Use name validator for unique name generation
+		StringNameValidator nameValidator = new StringNameValidator();
 
-        // Add the current FK names to the validator
-        for (ForeignKey fk : currentFKs) {
-            nameValidator.addExistingName(fk.getName());
-        }
+		// Add the current FK names to the validator
+		for (RelationalForeignKey fk : currentFKs) {
+			nameValidator.addExistingName(fk.getName());
+		}
 
-        // Make the proposed name unique
-        return nameValidator.createValidUniqueName(newFKName);
-    }
+		// Make the proposed name unique
+		return nameValidator.createValidUniqueName(newFKName);
+	}
 
-    /**
-     * @param currentFKs
-     * @param key
-     * @param node
-     */
-    protected void initializeFK(List<ForeignKey> currentFKs, ForeignKey key, AstNode node) {
-        // Get Name from DDL node
-        String fkName = node.getName();
-        // Make sure not to add duplicate FK names
-        String uniqueName = getUniqueFKName(currentFKs, fkName);
+	/**
+	 * Initialize a ForeignKey
+	 * @param currentFKs collection of current FKs
+	 * @param key a ForeignKey
+	 * @param node corresponding AstNode
+	 */
+	protected void initializeFK(Collection<RelationalForeignKey> currentFKs, RelationalForeignKey key, AstNode node) {
+		// Get Name from DDL node
+		String fkName = node.getName();
+		// Make sure not to add duplicate FK names
+		String uniqueName = getUniqueFKName(currentFKs, fkName);
 
-        initialize(key, node, uniqueName);
-    }
+		initialize(key, node, uniqueName);
+	}
 
-    /**
-     * @param table
-     * @param node
-     * @param roots
-     *
-     * @return initialised table
-     *
-     * @throws Exception
-     */
-    protected <T extends Table> T initializeTable(T table, AstNode node, List<EObject> roots) throws Exception {
-        Info info = createInfo(node, roots);
-        if (info.getSchema() == null)
-            roots.add(table);
-        else
-            info.getSchema().getTables().add(table);
+	/**
+	 * Initialize a RelationalTable
+	 * @param table the Table to init
+	 * @param node corresponding AstNode
+	 * @param model the RelationalModel
+	 * @return the initialized Table
+	 * @throws Exception
+	 */
+	protected <T extends RelationalTable> T initializeTable(T table, AstNode node, RelationalModel model) throws Exception {
+		Info info = createInfo(node, model);
+		if (info.getSchema() == null)
+			model.addChild(table);
+		else
+			info.getSchema().getTables().add(table);
 
-        initialize(table, node, info.getName());
-        return table;
-    }
+		initialize(table, node, info.getName());
+		return table;
+	}
 
-    /**
-     * Handle a statement OPTION key for Column for DDL
-     *
-     * @param column the Column
-     * @param columnOptionNode a statementOption node for a column
-     */
-    protected void handleColumnOption(Column column, AstNode columnOptionNode) {
-        // Do nothing
-    }
+	/**
+	 * Handle a statement OPTION key for Column for DDL
+	 *
+	 * @param column the Column
+	 * @param columnOptionNode a statementOption node for a column
+	 */
+	protected void handleColumnOption(RelationalColumn column, AstNode columnOptionNode) {
+		// Do nothing
+	}
 
-    /**
-     * Handle the OPTION keys that may be set on Column for DDL
-     *
-     * @param column the Column
-     * @param columnNode the column AstNode
-     */
-    protected void handleColumnOptions(Column column, AstNode columnNode) {
-        List<AstNode> children = columnNode.getChildren();
-        for(AstNode child: children) {
-            if(is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
-                handleColumnOption(column,child);
-            }
-        }
-    }
+	/**
+	 * Handle the OPTION keys that may be set on Column for DDL
+	 *
+	 * @param column the Column
+	 * @param columnNode the column AstNode
+	 */
+	protected void handleColumnOptions(RelationalColumn column, AstNode columnNode) {
+		List<AstNode> children = columnNode.getChildren();
+		for(AstNode child: children) {
+			if(is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
+				handleColumnOption(column,child);
+			}
+		}
+	}
 
-    /**
-     * @param datatype
-     *
-     * @return {@link EObject} represented by the given data type id
-     * @throws Exception
-     */
-    protected EObject getDataType(String datatype) throws Exception {
-        return RelationalTypeMappingImpl.getInstance().getDatatype(datatype);
-    }
+	/**
+	 * @param datatype
+	 *
+	 * @return {@link EObject} represented by the given data type id
+	 * @throws Exception
+	 */
+	protected String getTeiidDataTypeName(String datatype) throws Exception {
+		String typeName = ""; //$NON-NLS-1$
+		EObject dataType = RelationalTypeMappingImpl.getInstance().getDatatype(datatype);
+		if(dataType!=null) {
+			typeName = ModelerCore.getWorkspaceDatatypeManager().getName(dataType);
+		}
+		return typeName;
+	}
 
-    /**
-     * Create Column from the provided AstNode within ColumnSet
-     * @param node the provided AstNode
-     * @param table the ColumnSet in which to create the column
-     * @return the column
-     *
-     * @throws Exception 
-     */
-    protected Column createColumn(AstNode node, ColumnSet table) throws Exception {
-        Column col = getFactory().createColumn();
-        table.getColumns().add(col);
-        initialize(col, node);
+	/**
+	 * Create Column from the provided AstNode within ColumnSet
+	 * @param node the provided AstNode
+	 * @param table the ColumnSet in which to create the column
+	 * @return the column
+	 *
+	 * @throws Exception 
+	 */
+	protected RelationalColumn createColumn(AstNode node, RelationalTable table) throws Exception {
+		RelationalColumn col = getFactory().createColumn();
+		col.setParent(table);
+		table.getColumns().add(col);
+		initialize(col, node);
 
-        String datatype = node.getProperty(StandardDdlLexicon.DATATYPE_NAME).toString();
-        col.setNativeType(datatype);
-        
-        EObject type = getDataType(datatype);
-        col.setType(type);
+		String datatype = node.getProperty(StandardDdlLexicon.DATATYPE_NAME).toString();
+		col.setNativeType(datatype);
 
-        // Datatype length
-        Object prop = node.getProperty(StandardDdlLexicon.DATATYPE_LENGTH);
-        if (prop != null) {
-            col.setLength(Integer.parseInt(prop.toString()));
-        } else {
-            // Length is not provided for type 'string', use the default length specified in preferences...
-            String dtName = ModelerCore.getWorkspaceDatatypeManager().getName(type);
-            if(dtName != null && dtName.equalsIgnoreCase(STRING_TYPENAME)) {
-                col.setLength(ModelerCore.getTransformationPreferences().getDefaultStringLength());
-            }
-        }
+		String teiidType = getTeiidDataTypeName(datatype);
+		col.setDatatype(teiidType);
 
-        prop = node.getProperty(StandardDdlLexicon.DATATYPE_PRECISION);
-        if (prop != null)
-            col.setPrecision(Integer.parseInt(prop.toString()));
+		// Datatype length
+		Object prop = node.getProperty(StandardDdlLexicon.DATATYPE_LENGTH);
+		if (prop != null) {
+			col.setLength(Integer.parseInt(prop.toString()));
+		} else {
+			// Length is not provided for type 'string', use the default length specified in preferences...
+			//String dtName = ModelerCore.getWorkspaceDatatypeManager().getName(type);
+			if(teiidType != null && teiidType.equalsIgnoreCase(STRING_TYPENAME)) {
+				col.setLength(ModelerCore.getTransformationPreferences().getDefaultStringLength());
+			}
+		}
 
-        prop = node.getProperty(StandardDdlLexicon.DATATYPE_SCALE);
-        if (prop != null)
-            col.setScale(Integer.parseInt(prop.toString()));
+		prop = node.getProperty(StandardDdlLexicon.DATATYPE_PRECISION);
+		if (prop != null)
+			col.setPrecision(Integer.parseInt(prop.toString()));
 
-        prop = node.getProperty(StandardDdlLexicon.NULLABLE);
-        if (prop != null)
-            col.setNullable(prop.toString().equals("NULL") ? NullableType.NULLABLE_LITERAL : NullableType.NO_NULLS_LITERAL); //$NON-NLS-1$
+		prop = node.getProperty(StandardDdlLexicon.DATATYPE_SCALE);
+		if (prop != null)
+			col.setScale(Integer.parseInt(prop.toString()));
 
-        prop = node.getProperty(StandardDdlLexicon.DEFAULT_VALUE);
-        if (prop != null)
-            col.setDefaultValue(prop.toString());
+		prop = node.getProperty(StandardDdlLexicon.NULLABLE);
+		if (prop != null)
+			col.setNullable(getRelRefNullable(prop.toString())); 
 
-        return col;
-    }
+		prop = node.getProperty(StandardDdlLexicon.DEFAULT_VALUE);
+		if (prop != null)
+			col.setDefaultValue(prop.toString());
+
+		return col;
+	}
+
+	/**
+	 * Create ProcedureParameter from the provided AstNode within procedure
+	 * @param node the provided AstNode
+	 * @param procedure the Procedure in which to create the procedure parameter
+	 * @return the procedure parameter
+	 *
+	 * @throws Exception 
+	 */
+	protected RelationalParameter createProcedureParameter(AstNode node, RelationalProcedure procedure) throws Exception {
+		RelationalParameter prm = getFactory().createParameter();
+		procedure.getParameters().add(prm);
+		initialize(prm, node);
+
+		String datatype = node.getProperty(StandardDdlLexicon.DATATYPE_NAME).toString();
+		prm.setNativeType(datatype);
+
+		String teiidType = getTeiidDataTypeName(datatype);
+		prm.setDatatype(teiidType);
+
+		// Datatype length
+		Object prop = node.getProperty(StandardDdlLexicon.DATATYPE_LENGTH);
+		if (prop != null) {
+			prm.setLength(Integer.parseInt(prop.toString()));
+		} else {
+			// Length is not provided for type 'string', use the default length specified in preferences...
+			//String dtName = ModelerCore.getWorkspaceDatatypeManager().getName(type);
+			if(teiidType != null && teiidType.equalsIgnoreCase(STRING_TYPENAME)) {
+				prm.setLength(ModelerCore.getTransformationPreferences().getDefaultStringLength());
+			}
+		}
+
+		prop = node.getProperty(StandardDdlLexicon.DATATYPE_PRECISION);
+		if (prop != null)
+			prm.setPrecision(Integer.parseInt(prop.toString()));
+
+		prop = node.getProperty(StandardDdlLexicon.DATATYPE_SCALE);
+		if (prop != null)
+			prm.setScale(Integer.parseInt(prop.toString()));
+
+		prop = node.getProperty(StandardDdlLexicon.NULLABLE);
+		if (prop != null)
+			prm.setNullable(getRelRefNullable(prop.toString())); 
+
+		prop = node.getProperty(StandardDdlLexicon.DEFAULT_VALUE);
+		if (prop != null)
+			prm.setDefaultValue(prop.toString());
+
+		return prm;
+	}
+
+	/**
+	 * Create a PrimaryKey
+	 * @param node the AstNode representing the key
+	 * @param table the parent Table
+	 * @param allRefs the Collection of all RelationalReference objects in the model
+	 *
+	 * @throws CoreException
+	 */
+	protected void createKey(AstNode node, RelationalTable table, Collection<RelationalReference> allRefs) throws CoreException {
+		String type = node.getProperty(StandardDdlLexicon.CONSTRAINT_TYPE).toString();
+		if (DdlConstants.PRIMARY_KEY.equals(type)) {
+			RelationalPrimaryKey key = getFactory().createPrimaryKey();
+			table.setPrimaryKey(key);
+			initialize(key, node);
+
+			for (AstNode node1 : node) {
+				if (is(node1, StandardDdlLexicon.TYPE_COLUMN_REFERENCE)) {
+					try {
+						RelationalColumn column = find(RelationalColumn.class, node1, table, allRefs);
+						//                        if (column.getNullable() == NullableType.NULLABLE_UNKNOWN_LITERAL
+						//                            || column.getNullable() == NullableType.NULLABLE_LITERAL) {
+						//                            column.setNullable(NullableType.NO_NULLS_LITERAL);
+						//                        }
+						key.getColumns().add(column);
+					} catch (EntityNotFoundException error) {
+						addProgressMessage(error.getMessage());
+					}
+				}
+			}
+		} else if (DdlConstants.FOREIGN_KEY.equals(type)) {
+			RelationalForeignKey key = getFactory().createForeignKey();
+			initializeFK(table.getForeignKeys(), key, node);
+			table.getForeignKeys().add(key);
+			RelationalTable foreignTable = null;
+			Set<RelationalColumn> foreignColumns = new HashSet<RelationalColumn>();
+
+			for (AstNode node1 : node) {
+				try {
+					if (is(node1, StandardDdlLexicon.TYPE_COLUMN_REFERENCE))
+						key.getColumns().add(find(RelationalColumn.class, node1, table, allRefs));
+					else if (is(node1, StandardDdlLexicon.TYPE_TABLE_REFERENCE))
+						foreignTable = find(RelationalTable.class, node1, null, allRefs);
+					else if (is(node1, StandardDdlLexicon.TYPE_FK_COLUMN_REFERENCE) && foreignTable != null) {
+						foreignColumns.add(find(RelationalColumn.class, node1, foreignTable, allRefs));
+					}
+				} catch (Exception error) {
+					addProgressMessage(error.getMessage());
+				}
+			}
+
+			if (foreignTable == null)
+				return;
+
+			RelationalPrimaryKey primaryKey = foreignTable.getPrimaryKey();
+			Collection<RelationalColumn> primaryKeyColumns = primaryKey.getColumns();
+			if (foreignColumns.isEmpty())
+				key.setUniqueKeyName(primaryKey.getName());
+
+			if (primaryKeyColumns.containsAll(foreignColumns) && primaryKeyColumns.size() == foreignColumns.size())
+				key.setUniqueKeyName(primaryKey.getName());
+			else {
+				for (Object obj : foreignTable.getUniqueConstraints()) {
+					RelationalUniqueConstraint uniqueKey = (RelationalUniqueConstraint)obj;
+					Collection<RelationalColumn> uniqueKeyColumns = uniqueKey.getColumns();
+					if (uniqueKeyColumns.containsAll(foreignColumns) && uniqueKeyColumns.size() == foreignColumns.size()) {
+						key.setUniqueKeyName(uniqueKey.getName());
+						break;
+					}
+				}
+			}
+
+		} else if (DdlConstants.UNIQUE.equals(type)) {
+			RelationalUniqueConstraint key = getFactory().createUniqueConstraint();
+			table.getUniqueConstraints().add(key);
+			initialize(key, node);
+
+			for (AstNode node1 : node) {
+				if (! is(node1, StandardDdlLexicon.TYPE_COLUMN_REFERENCE))
+					continue;
+
+				try {
+					RelationalColumn column = find(RelationalColumn.class, node1, table, allRefs);
+
+					//                    if (column.getNullable() == NullableType.NULLABLE_UNKNOWN_LITERAL || column.getNullable() == NullableType.NULLABLE_LITERAL) {
+						//                        column.setNullable(NullableType.NO_NULLS_LITERAL);
+						//                    }
+					key.getColumns().add(column);
+				} catch (Exception error) {
+					addProgressMessage(error.getMessage());
+				}
+			}
+		}
+	}
+
+	/**
+	 * Create a RelationalProcedure
+	 * @param procedureNode the AstNode for the procedure
+	 * @param model the RelationalModel
+	 * @return the RelationalProcedure
+	 *
+	 * @throws Exception
+	 */
+	protected RelationalProcedure createProcedure( AstNode procedureNode, RelationalModel model) throws Exception {
+		RelationalProcedure procedure = getFactory().createProcedure();
+		Info info = createInfo(procedureNode, model);
+		if (info.getSchema() == null)
+			model.addChild(procedure);
+		else {
+			info.getSchema().getProcedures().add(procedure);
+			procedure.setParent(info.getSchema());
+		}
+
+		initialize(procedure, procedureNode, info.getName());
+		// TODO: determine how to handle Procedure StatementOption
+		// TODO: determine how to handle Procedure Statement
+
+		if (procedureNode.getProperty(StandardDdlLexicon.DATATYPE_NAME) != null) {
+			RelationalProcedureResultSet result = getFactory().createProcedureResultSet();
+			procedure.setResultSet(result);
+			initialize(result, procedureNode);
+		}
+
+		return procedure;
+	}
+
+	/**
+	 * Perform the import
+	 * @param rootNode the rootNode of the DDL
+	 * @param importManager the import manager which maintains import options
+	 * @return the RelationalModel created
+	 * @throws Exception
+	 */
+	@Override
+	public RelationalModel importNode(AstNode rootNode, DdlImporterManager importManager) throws Exception {
+
+		setImporterManager(importManager);
+
+		// Create a RelationalModel for the imported DDL
+		RelationalModel model = getFactory().createModel("ddlImportedModel"); //$NON-NLS-1$
+
+		// Map for holding deferred nodes, which much be created later
+		Map<AstNode,RelationalReference> deferredCreateMap = new HashMap<AstNode,RelationalReference>();
+
+		// Create objects from the DDL.  (populated map of deferred nodes)
+		for (AstNode node : rootNode) {
+			if (is(node, StandardDdlLexicon.TYPE_CREATE_SCHEMA_STATEMENT)) {
+				RelationalSchema schema = getFactory().createSchema();
+				model.addChild(schema);
+				initialize(schema, node);
+				for (AstNode node1 : node) {
+					Map<AstNode,RelationalReference> deferredMap = createObject(node1, model, schema);
+					if(!deferredMap.isEmpty()) {
+						deferredCreateMap.putAll(deferredMap);
+					}
+				}
+			} else {
+				Map<AstNode,RelationalReference> deferredMap = createObject(node, model, null);
+				if(!deferredMap.isEmpty()) {
+					deferredCreateMap.putAll(deferredMap);
+				}
+			}
+		}
+
+		// Now process all the 'deferred' nodes.  These are nodes which reference other nodes (which are required to exist first)
+		createDeferredObjects(deferredCreateMap,model);
+
+		return model;
+	}
+
+	/**
+	 * Create RelationalReference objects
+	 * @param node the provided AstNode
+	 * @param model the RelationalModel being created
+	 * @param schema the schema
+	 * @return the map of AstNodes which need to be deferred
+	 * @throws Exception 
+	 */
+	protected Map<AstNode,RelationalReference> createObject(AstNode node, RelationalModel model, RelationalSchema schema) throws Exception {
+		Map<AstNode,RelationalReference> deferredMap = new HashMap<AstNode,RelationalReference>();
+
+		// -----------------------------------------------------------------------
+		// Standard DDL 
+		// -----------------------------------------------------------------------
+		if (is(node, StandardDdlLexicon.TYPE_CREATE_TABLE_STATEMENT)) {
+			RelationalTable table = initializeTable(getFactory().createBaseTable(), node, model);
+			for (AstNode child : node) {
+				if (is(child, StandardDdlLexicon.TYPE_COLUMN_DEFINITION))
+					createColumn(child, table);
+				else if (is(child, StandardDdlLexicon.TYPE_TABLE_CONSTRAINT)) {
+					deferredMap.put(child, table);
+				}
+			}
+		} else if (is(node, StandardDdlLexicon.TYPE_CREATE_VIEW_STATEMENT)) {
+			if (getImporterManager().getModelType() != ModelType.VIRTUAL_LITERAL 
+					&& getImporterManager().optToCreateModelEntitiesForUnsupportedDdl())
+
+				initializeTable(getFactory().createView(), node, model);
+
+		} else if (is(node, StandardDdlLexicon.TYPE_ALTER_TABLE_STATEMENT)) {
+			deferredMap.put(node, null);
+		}
+		return deferredMap;
+	}
+
+	/**
+	 * Create deferred objects using the supplied map
+	 * @param deferredNodes the map of deferred AstNodes
+	 * @param model the RelationalModel being created
+	 * @throws Exception 
+	 */
+	protected void createDeferredObjects(Map<AstNode,RelationalReference> deferredNodes, RelationalModel model) throws Exception {
+		Collection<RelationalReference> allRefs = model.getAllReferences();
+
+		Set<AstNode> astNodes = deferredNodes.keySet();
+		for(AstNode node:astNodes) {
+			if (is(node, StandardDdlLexicon.TYPE_TABLE_CONSTRAINT)) {
+				RelationalTable table = (RelationalTable)deferredNodes.get(node);
+				createKey(node, table, allRefs);
+			} else if (is(node, StandardDdlLexicon.TYPE_ALTER_TABLE_STATEMENT)) {
+				RelationalTable table = find(RelationalTable.class, node, null, allRefs);
+				for (AstNode node1 : node) {
+					if (is(node1, StandardDdlLexicon.TYPE_ADD_TABLE_CONSTRAINT_DEFINITION)) 
+						createKey(node1, table, allRefs);
+					else if (is(node1, StandardDdlLexicon.TYPE_ADD_COLUMN_DEFINITION))
+						createColumn(node1, table);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Get the RelationalReference nullable string for the provided ast nullable property value
+	 * @param astNullableStr
+	 * @return RelationalReference nullable string
+	 */
+	protected String getRelRefNullable(String astNullableStr) {
+		String nullableStr = "NULLABLE_UNKNOWN"; //$NON-NLS-1$
+		if(astNullableStr!=null) {
+			if(astNullableStr.equalsIgnoreCase("null")) { //$NON-NLS-1$
+				nullableStr = "NULLABLE"; //$NON-NLS-1$
+			} else if(astNullableStr.equalsIgnoreCase("not null")) { //$NON-NLS-1$
+				nullableStr = "NO_NULLS"; //$NON-NLS-1$
+			}
+		}
+		return nullableStr;
+	}
     
-    /**
-     * Create ProcedureParameter from the provided AstNode within procedure
-     * @param node the provided AstNode
-     * @param procedure the Procedure in which to create the procedure parameter
-     * @return the procedure parameter
-     *
-     * @throws Exception 
-     */
-    protected ProcedureParameter createProcedureParameter(AstNode node, Procedure procedure) throws Exception {
-        ProcedureParameter prm = getFactory().createProcedureParameter();
-        procedure.getParameters().add(prm);
-        initialize(prm, node);
-
-        String datatype = node.getProperty(StandardDdlLexicon.DATATYPE_NAME).toString();
-        prm.setNativeType(datatype);
-        
-        EObject type = getDataType(datatype);
-        prm.setType(type);
-
-        // Datatype length
-        Object prop = node.getProperty(StandardDdlLexicon.DATATYPE_LENGTH);
-        if (prop != null) {
-            prm.setLength(Integer.parseInt(prop.toString()));
-        } else {
-            // Length is not provided for type 'string', use the default length specified in preferences...
-            String dtName = ModelerCore.getWorkspaceDatatypeManager().getName(type);
-            if(dtName != null && dtName.equalsIgnoreCase(STRING_TYPENAME)) {
-                prm.setLength(ModelerCore.getTransformationPreferences().getDefaultStringLength());
-            }
-        }
-
-        prop = node.getProperty(StandardDdlLexicon.DATATYPE_PRECISION);
-        if (prop != null)
-            prm.setPrecision(Integer.parseInt(prop.toString()));
-
-        prop = node.getProperty(StandardDdlLexicon.DATATYPE_SCALE);
-        if (prop != null)
-            prm.setScale(Integer.parseInt(prop.toString()));
-
-        prop = node.getProperty(StandardDdlLexicon.NULLABLE);
-        if (prop != null)
-            prm.setNullable(prop.toString().equals("NULL") ? NullableType.NULLABLE_LITERAL : NullableType.NO_NULLS_LITERAL); //$NON-NLS-1$
-
-        prop = node.getProperty(StandardDdlLexicon.DEFAULT_VALUE);
-        if (prop != null)
-            prm.setDefaultValue(prop.toString());
-
-        return prm;
-    }
-
-    /**
-     * Create primary key
-     *
-     * @param node
-     * @param table
-     * @param roots
-     *
-     * @throws CoreException
-     */
-    protected void createKey(AstNode node, BaseTable table, List<EObject> roots) throws CoreException {
-        String type = node.getProperty(StandardDdlLexicon.CONSTRAINT_TYPE).toString();
-        if (DdlConstants.PRIMARY_KEY.equals(type)) {
-            PrimaryKey key = getFactory().createPrimaryKey();
-            table.setPrimaryKey(key);
-            initialize(key, node);
-
-            for (AstNode node1 : node) {
-                if (is(node1, StandardDdlLexicon.TYPE_COLUMN_REFERENCE)) {
-                    try {
-                        Column column = find(Column.class, node1, table, roots);
-
-                        if (column.getNullable() == NullableType.NULLABLE_UNKNOWN_LITERAL
-                            || column.getNullable() == NullableType.NULLABLE_LITERAL) {
-                            column.setNullable(NullableType.NO_NULLS_LITERAL);
-                        }
-                        key.getColumns().add(column);
-                    } catch (EntityNotFoundException error) {
-                        addProgressMessage(error.getMessage());
-                    }
-                }
-            }
-        } else if (DdlConstants.FOREIGN_KEY.equals(type)) {
-            ForeignKey key = getFactory().createForeignKey();
-            initializeFK(table.getForeignKeys(), key, node);
-            table.getForeignKeys().add(key);
-            BaseTable foreignTable = null;
-            Set<Column> foreignColumns = new HashSet<Column>();
-
-            for (AstNode node1 : node) {
-                try {
-                    if (is(node1, StandardDdlLexicon.TYPE_COLUMN_REFERENCE))
-                        key.getColumns().add(find(Column.class, node1, table, roots));
-                    else if (is(node1, StandardDdlLexicon.TYPE_TABLE_REFERENCE))
-                        foreignTable = find(BaseTable.class, node1, null, roots);
-                    else if (is(node1, StandardDdlLexicon.TYPE_FK_COLUMN_REFERENCE) && foreignTable != null) {
-                        foreignColumns.add(find(Column.class, node1, foreignTable, roots));
-                    }
-                } catch (Exception error) {
-                    addProgressMessage(error.getMessage());
-                }
-            }
-
-            if (foreignTable == null)
-                return;
-
-            PrimaryKey primaryKey = foreignTable.getPrimaryKey();
-            List<Column> primaryKeyColumns = primaryKey.getColumns();
-            if (foreignColumns.isEmpty())
-                key.setUniqueKey(primaryKey);
-
-            if (primaryKeyColumns.containsAll(foreignColumns) && primaryKeyColumns.size() == foreignColumns.size())
-                key.setUniqueKey(primaryKey);
-            else {
-                for (Object obj : foreignTable.getUniqueConstraints()) {
-                    UniqueConstraint uniqueKey = (UniqueConstraint)obj;
-                    List<Column> uniqueKeyColumns = uniqueKey.getColumns();
-                    if (uniqueKeyColumns.containsAll(foreignColumns) && uniqueKeyColumns.size() == foreignColumns.size()) {
-                        key.setUniqueKey(uniqueKey);
-                        break;
-                    }
-                }
-            }
-
-        } else if (DdlConstants.UNIQUE.equals(type)) {
-            UniqueConstraint key = getFactory().createUniqueConstraint();
-            table.getUniqueConstraints().add(key);
-            initialize(key, node);
-
-            for (AstNode node1 : node) {
-                if (! is(node1, StandardDdlLexicon.TYPE_COLUMN_REFERENCE))
-                    continue;
-
-                try {
-                    Column column = find(Column.class, node1, table, roots);
-
-                    if (column.getNullable() == NullableType.NULLABLE_UNKNOWN_LITERAL || column.getNullable() == NullableType.NULLABLE_LITERAL) {
-                        column.setNullable(NullableType.NO_NULLS_LITERAL);
-                    }
-                    key.getColumns().add(column);
-                } catch (Exception error) {
-                    addProgressMessage(error.getMessage());
-                }
-            }
-        }
-    }
-
-    /**
-     * Create a BaseTable
-     *
-     * @param tableNode
-     * @param roots
-     *
-     * @return a table
-     *
-     * @throws Exception
-     */
-    protected BaseTable createBaseTable( AstNode tableNode, List<EObject> roots) throws Exception {
-        BaseTable baseTable = getFactory().createBaseTable();
-    	initializeTable(baseTable, tableNode, roots);
-    	
-        return baseTable;
-    }
-
-    /**
-     * Create a procedure
-     *
-     * @param procedureNode
-     * @param roots
-     *
-     * @return a procedure
-     *
-     * @throws Exception
-     */
-    protected Procedure createProcedure( AstNode procedureNode, List<EObject> roots) throws Exception {
-        Procedure procedure = getFactory().createProcedure();
-        Info info = createInfo(procedureNode, roots);
-        if (info.getSchema() == null)
-            roots.add(procedure);
-        else
-            info.getSchema().getProcedures().add(procedure);
-
-        initialize(procedure, procedureNode, info.getName());
-        // TODO: determine how to handle Procedure StatementOption
-        // TODO: determine how to handle Procedure Statement
-
-        if (procedureNode.getProperty(StandardDdlLexicon.DATATYPE_NAME) != null) {
-            ProcedureResult result = getFactory().createProcedureResult();
-            procedure.setResult(result);
-            initialize(result, procedureNode);
-        }
-
-        return procedure;
-    }
-
-    /**
-     * Create a Model Entity, using the provided AstNode
-     * @param node the provided AstNode
-     * @param roots the current model roots
-     * @param schema the schema
-     * @throws Exception 
-     */
-    protected void create(AstNode node, List<EObject> roots, Schema schema) throws Exception {
-        // -----------------------------------------------------------------------
-        // Standard DDL 
-        // -----------------------------------------------------------------------
-        if (is(node, StandardDdlLexicon.TYPE_CREATE_TABLE_STATEMENT)) {
-            BaseTable table = initializeTable(getFactory().createBaseTable(), node, roots);
-            for (AstNode child : node) {
-                if (is(child, StandardDdlLexicon.TYPE_COLUMN_DEFINITION))
-                    createColumn(child, table);
-                else if (is(child, StandardDdlLexicon.TYPE_TABLE_CONSTRAINT))
-                    createKey(child, table, roots);
-            }
-        } else if (is(node, StandardDdlLexicon.TYPE_CREATE_VIEW_STATEMENT)) {
-            if (getImporterModel().getModelType() != ModelType.VIRTUAL_LITERAL 
-                        && getImporterModel().optToCreateModelEntitiesForUnsupportedDdl())
-
-                initializeTable(getFactory().createView(), node, roots);
-
-        } else if (is(node, StandardDdlLexicon.TYPE_ALTER_TABLE_STATEMENT)) {
-            BaseTable table = find(BaseTable.class, node, schema, roots);
-            for (AstNode node1 : node) {
-                if (is(node1, StandardDdlLexicon.TYPE_ADD_TABLE_CONSTRAINT_DEFINITION)) 
-                    createKey(node1, table, roots);
-                else if (is(node1, StandardDdlLexicon.TYPE_ADD_COLUMN_DEFINITION))
-                    createColumn(node1, table);
-            }
-        }
-    }
-
-    @Override
-    public void importNode(DdlImporterModel importerModel, AstNode rootNode) throws Exception {
-        // FIXME not sure I like this at the moment
-        setImporterModel(importerModel);
-
-        List<EObject> roots = importerModel.getEndingSelector().getRootObjects();
-
-        for (AstNode node : rootNode) {
-            if (is(node, StandardDdlLexicon.TYPE_CREATE_SCHEMA_STATEMENT)) {
-                Schema schema = importerModel.getFactory().createSchema();
-                roots.add(schema);
-                initialize(schema, node);
-                for (AstNode node1 : node) {
-                    create(node1, roots, schema);
-                }
-            } else create(node, roots, null);
-        }
-    }
-    
-    @Override
-    public void importFinalize() throws Exception {
-        // If user chose to use DDL as description, now set those descriptions (model type and container *must* be already set)
-        if (getImporterModel().optToSetModelEntityDescription()) {
-            for (EntityDescriptions pair : getImporterModel().getEntityDescriptions()) {
-                ModelerCore.getModelEditor().setDescription(pair.getEntity(), pair.getPreferredDescription());
-            }
-        }
-    }
 }

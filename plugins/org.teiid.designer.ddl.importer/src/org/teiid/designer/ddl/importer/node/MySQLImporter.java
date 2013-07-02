@@ -7,34 +7,67 @@
 */
 package org.teiid.designer.ddl.importer.node;
 
-import java.util.List;
-import org.eclipse.emf.ecore.EObject;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import org.modeshape.sequencer.ddl.dialect.mysql.MySqlDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
-import org.teiid.designer.metamodels.relational.Index;
-import org.teiid.designer.metamodels.relational.Schema;
+import org.teiid.designer.relational.model.RelationalIndex;
+import org.teiid.designer.relational.model.RelationalModel;
+import org.teiid.designer.relational.model.RelationalReference;
+import org.teiid.designer.relational.model.RelationalSchema;
 
 /**
  *
  */
 public class MySQLImporter extends StandardImporter {
 
+    /**
+     * Create RelationalReference objects
+     * @param node the provided AstNode
+     * @param model the RelationalModel being created
+     * @param schema the schema
+     * @return the map of AstNodes which need to be deferred
+     * @throws Exception 
+     */
     @Override
-    protected void create(AstNode node, List<EObject> roots, Schema schema) throws Exception {
-        if (is(node, MySqlDdlLexicon.TYPE_CREATE_INDEX_STATEMENT)) {
-            Index index = getFactory().createIndex();
-            Info info = createInfo(node, roots);
-            if (info.getSchema() == null)
-                roots.add(index);
-            else
-                info.getSchema().getIndexes().add(index);
+    protected Map<AstNode,RelationalReference> createObject(AstNode node, RelationalModel model, RelationalSchema schema) throws Exception {
+      	Map<AstNode,RelationalReference> deferredMap = new HashMap<AstNode,RelationalReference>();
 
-            initialize(index, node, info.getName());
+        if (is(node, MySqlDdlLexicon.TYPE_CREATE_INDEX_STATEMENT)) {
+      		deferredMap.put(node, null);
         } else if (is(node, MySqlDdlLexicon.TYPE_CREATE_PROCEDURE_STATEMENT)) {
-            createProcedure(node, roots);
+            createProcedure(node, model);
         } else if (is(node, MySqlDdlLexicon.TYPE_CREATE_FUNCTION_STATEMENT)) {
-            createProcedure(node, roots).setFunction(true);
+            createProcedure(node, model).setFunction(true);
         } else
-            super.create(node, roots, schema);
+            return super.createObject(node, model, schema);
+      	return deferredMap;
     }
+    
+    /**
+     * Create deferred objects using the supplied map
+     * @param deferredNodes the map of deferred AstNodes
+     * @param model the RelationalModel being created
+     * @throws Exception 
+     */
+    @Override
+	protected void createDeferredObjects(Map<AstNode,RelationalReference> deferredNodes, RelationalModel model) throws Exception {
+
+    	Set<AstNode> astNodes = deferredNodes.keySet();
+    	for(AstNode node:astNodes) {
+            if (is(node, MySqlDdlLexicon.TYPE_CREATE_INDEX_STATEMENT)) {
+                RelationalIndex index = getFactory().createIndex();
+                Info info = createInfo(node, model);
+                if (info.getSchema() == null)
+                    model.addChild(index);
+                else
+                    info.getSchema().getIndexes().add(index);
+
+                initialize(index, node, info.getName());
+            } 
+    	}
+    }
+    
 }

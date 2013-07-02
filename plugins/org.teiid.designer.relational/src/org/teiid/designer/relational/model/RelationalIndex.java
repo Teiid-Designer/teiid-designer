@@ -9,11 +9,14 @@ package org.teiid.designer.relational.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.designer.HashCodeUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalPlugin;
@@ -37,7 +40,7 @@ public class RelationalIndex extends RelationalReference {
     public static final boolean DEFAULT_NULLABLE = false;
     public static final boolean DEFAULT_UNIQUE = false;
     
-    private Collection<RelationalColumn> columns;
+    private List<RelationalColumn> columns;
     private boolean autoUpdate;
     private String  filterCondition;
     private boolean nullable;
@@ -103,7 +106,7 @@ public class RelationalIndex extends RelationalReference {
     /**
      * @return columns
      */
-    public Collection<RelationalColumn> getColumns() {
+    public List<RelationalColumn> getColumns() {
         return columns;
     }
 
@@ -170,7 +173,7 @@ public class RelationalIndex extends RelationalReference {
 	}
 
 	/**
-	 * @param existingTable the existingTable to set
+	 * @param usesExistingTable the existingTable to set
 	 */
 	public void setUsesExistingTable(boolean usesExistingTable) {
 		this.existingTable = usesExistingTable;
@@ -190,7 +193,8 @@ public class RelationalIndex extends RelationalReference {
 		this.relationalTable = relationalTable;
 	}
 
-	/**
+    /**
+     * Set properties
      * @param props the properties
      */
     public void setProperties(Properties props) {
@@ -274,4 +278,88 @@ public class RelationalIndex extends RelationalReference {
 		}
 		return sb.toString();
 	}
+	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals( final Object object ) {
+		if (!super.equals(object)) {
+			return false;
+		}
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
+        if (getClass() != object.getClass())
+            return false;
+        final RelationalIndex other = (RelationalIndex)object;
+
+
+        
+        // string properties
+        if (!CoreStringUtil.valuesAreEqual(getFilterCondition(), other.getFilterCondition()) ) {
+            return false;
+        }
+        
+        if( !(isAutoUpdate()==other.isAutoUpdate()) ||  
+            !(isNullable()==other.isNullable()) ||
+            !(isUnique()==other.isUnique()) ) {
+        	return false;
+        }
+        
+        // Table
+        if (relationalTable == null) {
+            if (other.relationalTable != null)
+                return false;   
+        } else if (!relationalTable.equals(other.relationalTable))
+            return false;
+
+        // Columns
+        Collection<RelationalColumn> thisColumns = getColumns();
+        Collection<RelationalColumn> thatColumns = other.getColumns();
+
+        if (thisColumns.size() != thatColumns.size()) {
+            return false;
+        }
+        
+        if (!thisColumns.isEmpty() && !thisColumns.containsAll(thatColumns)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+
+        // string properties
+        if (!CoreStringUtil.isEmpty(getFilterCondition())) {
+            result = HashCodeUtil.hashCode(result, getFilterCondition());
+        }
+        
+        result = HashCodeUtil.hashCode(result, isAutoUpdate());
+        result = HashCodeUtil.hashCode(result, isNullable());
+        result = HashCodeUtil.hashCode(result, isUnique());
+       
+        if(relationalTable!=null) {
+            result = HashCodeUtil.hashCode(result, relationalTable);
+        }
+
+        List<RelationalColumn> cols = getColumns();
+        for(RelationalColumn col: cols) {
+            result = HashCodeUtil.hashCode(result, col);
+        }
+        
+        return result;
+    }    
+    
 }

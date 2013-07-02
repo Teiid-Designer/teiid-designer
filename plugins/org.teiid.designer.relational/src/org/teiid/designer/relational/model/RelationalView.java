@@ -8,6 +8,7 @@
 package org.teiid.designer.relational.model;
 
 
+
 /**
  * 
  *
@@ -15,12 +16,17 @@ package org.teiid.designer.relational.model;
  */
 public class RelationalView extends RelationalTable {
 
+	/**
+	 * RelationalView constructor
+	 */
     public RelationalView() {
         super();
         setType(TYPES.VIEW);
     }
+    
     /**
-     * @param name
+     * RelationalView constructor
+     * @param name the name
      */
     public RelationalView( String name ) {
         super(name);
@@ -53,6 +59,5 @@ public class RelationalView extends RelationalTable {
     public void setUniqueConstraint( RelationalUniqueConstraint uc ) {
         throw new UnsupportedOperationException("addUniqueConstraint() not supported for Relational Views"); //$NON-NLS-1$
     }
-
     
 }
