@@ -74,7 +74,7 @@
 		<!-- Call the process sources goal and generate using javacc -->
 		<echo message="=== Generating external libraries and sources ===" />
 		<exec dir="." executable="mvn" failifexecutionfails="true" failonerror="true">
-		    <arg line="process-sources" />
+		    <arg line="process-sources -P download-sources" />
 		</exec>
 
 	</target>

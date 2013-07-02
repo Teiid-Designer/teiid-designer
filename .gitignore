@@ -19,3 +19,4 @@ plugins/teiid_embedded_query/System.vdb
 plugins/org.teiid.designer.ui/launch
 
 plugins/*/lib/*.jar
+plugins/*/libsrc/*.jar
