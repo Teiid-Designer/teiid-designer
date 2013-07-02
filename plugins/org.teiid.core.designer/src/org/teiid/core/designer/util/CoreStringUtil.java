@@ -664,6 +664,22 @@ public final class CoreStringUtil {
 
         return equals(thisValue, thatValue);
     }
+    
+    /**
+     * Compare string values - considered equal if either are null or empty.
+     * Ignores case
+     * @param thisValue the first value being compared (can be <code>null</code> or empty)
+     * @param thatValue the other value being compared (can be <code>null</code> or empty)
+     * @return <code>true</code> if values are equal or both values are empty
+     */
+    public static boolean valuesAreEqualIgnoreCase( String thisValue,
+                                                    String thatValue ) {
+        if (isEmpty(thisValue) && isEmpty(thatValue)) {
+            return true;
+        }
+
+        return equalsIgnoreCase(thisValue, thatValue);
+    }
 
     /**
      * Returns the index within this string of the first occurrence of the specified substring. The integer returned is the
@@ -1084,5 +1100,19 @@ public final class CoreStringUtil {
         }
 
         return thisString.equals(thatString);
+    }
+    
+    /**
+     * @param thisString the first string being compared (may be <code>null</code>)
+     * @param thatString the other string being compared (may be <code>null</code>)
+     * @return <code>true</code> if the supplied strings are both <code>null</code> or have equal values, (ignoring case)
+     */
+    public static boolean equalsIgnoreCase( final String thisString,
+                                            final String thatString ) {
+        if (thisString == null) {
+            return (thatString == null);
+        }
+
+        return thisString.equalsIgnoreCase(thatString);
     }
 }

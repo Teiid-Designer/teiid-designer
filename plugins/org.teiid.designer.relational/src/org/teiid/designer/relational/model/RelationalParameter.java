@@ -11,6 +11,8 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.teiid.core.designer.HashCodeUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalPlugin;
@@ -55,6 +57,9 @@ public class RelationalParameter extends RelationalReference {
     private int radix;
     private int scale;
     
+    /**
+     * RelationalParameter constructor
+     */
     public RelationalParameter() {
         super();
         setType(TYPES.PARAMETER);
@@ -62,7 +67,8 @@ public class RelationalParameter extends RelationalReference {
     }
     
     /**
-     * @param name
+     * RelationalParameter constructor
+     * @param name the parameter name
      */
     public RelationalParameter( String name ) {
         super(name);
@@ -189,15 +195,20 @@ public class RelationalParameter extends RelationalReference {
 		}
 		
 		// Parameter directions check
-		if( ((RelationalProcedure)getParent()).isFunction() ) {
+		RelationalProcedure parentProcedure = (RelationalProcedure)getParent();
+		if(parentProcedure!=null && parentProcedure.isFunction()) {
 			if( ! getDirection().equalsIgnoreCase(DIRECTION.IN) &&
-				! getDirection().equalsIgnoreCase(DIRECTION.RETURN)	) {
+					! getDirection().equalsIgnoreCase(DIRECTION.RETURN)	) {
 				setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, Messages.validate_error_invalidParameterDirectionInFunction ));
 				return;
 			}
 		}
 	}
     
+    /**
+     * Set properties
+     * @param props the properties
+     */
     public void setProperties(Properties props) {
         for( Object key : props.keySet() ) {
             String keyStr = (String)key;
@@ -234,4 +245,76 @@ public class RelationalParameter extends RelationalReference {
             } 
         }
     }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals( final Object object ) {
+		if (!super.equals(object)) {
+			return false;
+		}
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
+        if (getClass() != object.getClass())
+            return false;
+        final RelationalParameter other = (RelationalParameter)object;
+
+        // string properties
+        if (!CoreStringUtil.valuesAreEqual(getDatatype(), other.getDatatype()) ||
+        		!CoreStringUtil.valuesAreEqual(getDefaultValue(), other.getDefaultValue()) ||
+        		!CoreStringUtil.valuesAreEqual(getDirection(), other.getDirection()) ||
+        		!CoreStringUtil.valuesAreEqual(getNativeType(), other.getNativeType()) ||
+        		!CoreStringUtil.valuesAreEqual(getNullable(), other.getNullable()) ) {
+        	return false;
+        }
+        
+        if( !(getLength()==other.getLength()) ||
+            !(getPrecision()==other.getPrecision()) ||
+            !(getRadix()==other.getRadix()) ||
+            !(getScale()==other.getScale()) ) {
+        	return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+
+        // string properties
+        if (!CoreStringUtil.isEmpty(getDatatype())) {
+            result = HashCodeUtil.hashCode(result, getDatatype());
+        }
+        if (!CoreStringUtil.isEmpty(getDefaultValue())) {
+            result = HashCodeUtil.hashCode(result, getDefaultValue());
+        }
+        if (!CoreStringUtil.isEmpty(getDirection())) {
+            result = HashCodeUtil.hashCode(result, getDirection());
+        }
+        if (!CoreStringUtil.isEmpty(getNativeType())) {
+            result = HashCodeUtil.hashCode(result, getNativeType());
+        }
+        if (!CoreStringUtil.isEmpty(getNullable())) {
+            result = HashCodeUtil.hashCode(result, getNullable());
+        }
+
+        result = HashCodeUtil.hashCode(result, getLength());
+        result = HashCodeUtil.hashCode(result, getPrecision());
+        result = HashCodeUtil.hashCode(result, getRadix());
+        result = HashCodeUtil.hashCode(result, getScale());
+
+        return result;
+    }    
+
 }

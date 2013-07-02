@@ -69,7 +69,9 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.wizard.IPersistentWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 
-
+/*
+ * DdlImporterPage - for selection of DDL to import and target model being generated or updated
+ */
 class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
 
     private static final int PANEL_GRID_SPAN = 3;
@@ -79,7 +81,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
     private static final List<ModelType> MODEL_TYPES = Arrays.asList(ModelType.PHYSICAL_LITERAL, ModelType.VIRTUAL_LITERAL);
     private static final String DDL_FILE_CONTENTS_SHOWN_SETTING = "ddlFileContentsShown"; //$NON-NLS-1$
     private static final String OPT_TO_CREATE_MODEL_ENTITIES_FOR_UNSUPPORTED_DDL_SETTING = "optToCreateModelEntitiesForUnsupportedDdl"; //$NON-NLS-1$
-//    private static final String OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_SETTING = "optToSetModelEntityDescription"; //$NON-NLS-1$
+    private static final String OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_SETTING = "optToSetModelEntityDescription"; //$NON-NLS-1$
 
     private final DdlImporter importer;
     final IProject[] projects;
@@ -90,7 +92,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
     private Text modelFolderFld;
     private Text modelNameFld;
     private Combo modelTypeCombo;
-    //private Button optToSetModelEntityDescriptionCheckBox;
+    private Button optToSetModelEntityDescriptionCheckBox;
     private Button optToCreateModelEntitiesForUnsupportedDdlCheckBox;
     private ExpandBar ddlFileContentsExpanderBar;
     private ExpandItem ddlFileContentsExpander;
@@ -183,7 +185,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         if (importer.modelFile() != null) dlg.setInitialSelection(importer.modelFile());
         final IPath choice = showChooseDialog(dlg);
         if (choice == null) return;
-        modelNameFld.setText(choice.removeFileExtension().lastSegment());
+        ddlFileCombo.setText(choice.removeFileExtension().lastSegment());
     }
 
     void chooseModelFolder() {
@@ -336,21 +338,21 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         });
         modelTypeCombo.select(modelTypeCombo.indexOf(ModelType.PHYSICAL_LITERAL.getDisplayName()));
 
-//        optToSetModelEntityDescriptionCheckBox = WidgetFactory.createCheckBox(panel,
-//                                                                              DdlImporterUiI18n.OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_LABEL,
-//                                                                              0,
-//                                                                              PANEL_GRID_SPAN,
-//                                                                              settings.getBoolean(OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_SETTING));
-//        optToSetModelEntityDescriptionCheckBox.addSelectionListener(new SelectionAdapter() {
-//
-//            @Override
-//            public void widgetSelected( final SelectionEvent event ) {
-//                optToSetModelEntityDescriptionModified();
-//            }
-//        });
+        optToSetModelEntityDescriptionCheckBox = WidgetFactory.createCheckBox(panel,
+                                                                              DdlImporterUiI18n.OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_LABEL,
+                                                                              0,
+                                                                              PANEL_GRID_SPAN,
+                                                                              settings.getBoolean(OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_SETTING));
+        optToSetModelEntityDescriptionCheckBox.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                optToSetModelEntityDescriptionModified();
+            }
+        });
         
         // make sure importer has restored setting
-//        optToSetModelEntityDescriptionModified();
+        optToSetModelEntityDescriptionModified();
 
         optToCreateModelEntitiesForUnsupportedDdlCheckBox = WidgetFactory.createCheckBox(panel,
                                                                                          DdlImporterUiI18n.OPT_TO_CREATE_MODEL_ENTITIES_FOR_UNSUPPORTED_DDL_LABEL,
@@ -449,9 +451,9 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         importer.setOptToCreateModelEntitiesForUnsupportedDdl(optToCreateModelEntitiesForUnsupportedDdlCheckBox.getSelection());
     }
 
-//    void optToSetModelEntityDescriptionModified() {
-//        importer.setOptToSetModelEntityDescription(optToSetModelEntityDescriptionCheckBox.getSelection());
-//    }
+    void optToSetModelEntityDescriptionModified() {
+        importer.setOptToSetModelEntityDescription(optToSetModelEntityDescriptionCheckBox.getSelection());
+    }
 
     void panelResized() {
         if (ddlFileContentsExpander.getExpanded()) sizeDdlFileContents();
@@ -481,7 +483,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         final IDialogSettings settings = getDialogSettings();
         if (initDlgFolderName != null) settings.put(INITIAL_DIALOG_FOLDER_SETTING, initDlgFolderName);
         final String file = importer.ddlFileName();
-        if (!file.isEmpty()) {
+        if (file!=null && !file.isEmpty()) {
             String[] history = ddlFileCombo.getItems();
             boolean exists = false;
             for (final String oldFile : history)
@@ -503,7 +505,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
             }
         }
         settings.put(DDL_FILE_CONTENTS_SHOWN_SETTING, ddlFileContentsExpander.getExpanded());
-//        settings.put(OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_SETTING, optToSetModelEntityDescriptionCheckBox.getSelection());
+        settings.put(OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_SETTING, optToSetModelEntityDescriptionCheckBox.getSelection());
         settings.put(OPT_TO_CREATE_MODEL_ENTITIES_FOR_UNSUPPORTED_DDL_SETTING,
                      optToCreateModelEntitiesForUnsupportedDdlCheckBox.getSelection());
     }
@@ -539,12 +541,6 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         if (ddlFileContentsBoxY == 0) ddlFileContentsBoxY = ddlFileContentsBox.getLocation().y;
         ddlFileContentsExpander.setHeight(ddlFileContentsExpanderBar.getSize().y - ddlFileContentsBoxY);
     }
-
-    //
-    // void showDdlFileContents() {
-    // if (ddlFileContentsBox.getText().isEmpty() && importer.ddlFileName() != null) readDdlFile();
-    // sizeDdlFileContents();
-    // }
 
     void tabFromDdlFileCombo() {
         if (importer.ddlFileName() != null) if (importer.modelFolder() == null) modelFolderFld.setFocus();

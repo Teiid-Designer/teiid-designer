@@ -5,7 +5,7 @@
          point="org.teiid.designer.ddl.nodeImporter">
       <importer
             class="org.teiid.designer.ddl.importer.node.StandardImporter"
-            dialect="Standard">
+            dialect="SQL92">
       </importer>
       <importer
             class="org.teiid.designer.ddl.importer.node.OracleImporter"

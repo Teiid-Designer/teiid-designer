@@ -23,7 +23,7 @@ public class DdlImporterUiPlugin extends AbstractUIPlugin {
     /**
      * This plug-in's utility for logging and internationalization
      */
-    private static final PluginUtil UTIL = new PluginUtilImpl(ID, I18N_NAME, ResourceBundle.getBundle(I18N_NAME));
+    public static final PluginUtil UTIL = new PluginUtilImpl(ID, I18N_NAME, ResourceBundle.getBundle(I18N_NAME));
 
     /**
      * The singleton instance of this plug-in

@@ -52,7 +52,8 @@ Require-Bundle: org.eclipse.ui.ide;bundle-version="[3.8.0,4.0.0)",
  org.teiid.designer.compare;bundle-version="8.0.0",
  org.teiid.designer.compare.ui;bundle-version="8.0.0",
  org.teiid.designer.vdb;bundle-version="8.1.0",
- org.eclipse.ui.forms;bundle-version="3.5.200"
+ org.eclipse.ui.forms;bundle-version="3.5.200",
+ org.teiid.designer.ddl.importer.ui;bundle-version="8.2.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.apache.xerces.parsers

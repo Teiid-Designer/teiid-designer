@@ -9,11 +9,14 @@ package org.teiid.designer.relational.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.designer.HashCodeUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.relational.Messages;
@@ -67,12 +70,12 @@ public class RelationalProcedure extends RelationalReference {
     boolean sourceFunction;
     
     private String  updateCount;
-    private Collection<RelationalParameter> parameters;
+    private List<RelationalParameter> parameters;
     private RelationalProcedureResultSet resultSet;
     
     
     /**
-     * 
+     * RelationalProcedure constructor
      */
     public RelationalProcedure() {
         super();
@@ -80,7 +83,9 @@ public class RelationalProcedure extends RelationalReference {
         this.parameters = new ArrayList<RelationalParameter>();
         setNameValidator(new RelationalStringNameValidator(true, true));
     }
+    
     /**
+     * RelationalProcedure constructor
      * @param name the procedure name
      */
     public RelationalProcedure( String name ) {
@@ -366,7 +371,7 @@ public class RelationalProcedure extends RelationalReference {
     /**
      * @return parameters
      */
-    public Collection<RelationalParameter> getParameters() {
+    public List<RelationalParameter> getParameters() {
         return this.parameters;
     }
     
@@ -463,7 +468,7 @@ public class RelationalProcedure extends RelationalReference {
 			existingParameters[startIndex-1] = theParameter;
 			existingParameters[startIndex] = priorParameter;
 			
-			Collection<RelationalParameter> newParameters = new ArrayList<RelationalParameter>(existingParameters.length);
+			List<RelationalParameter> newParameters = new ArrayList<RelationalParameter>(existingParameters.length);
 			for( RelationalParameter info : existingParameters) {
 				newParameters.add(info);
 			}
@@ -484,7 +489,7 @@ public class RelationalProcedure extends RelationalReference {
 			existingParameters[startIndex+1] = theParameter;
 			existingParameters[startIndex] = afterParameter;
 			
-			Collection<RelationalParameter> newParameters = new ArrayList<RelationalParameter>(existingParameters.length);
+			List<RelationalParameter> newParameters = new ArrayList<RelationalParameter>(existingParameters.length);
 			for( RelationalParameter info : existingParameters) {
 				newParameters.add(info);
 			}
@@ -612,4 +617,124 @@ public class RelationalProcedure extends RelationalReference {
 			}
 		}
 	}
+	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals( final Object object ) {
+		if (!super.equals(object)) {
+			return false;
+		}
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
+        if (getClass() != object.getClass())
+            return false;
+        final RelationalProcedure other = (RelationalProcedure)object;
+
+        // string properties
+        if (!CoreStringUtil.valuesAreEqual(getNativeQuery(), other.getNativeQuery()) ||
+        		!CoreStringUtil.valuesAreEqual(getFunctionCategory(), other.getFunctionCategory()) ||
+        		!CoreStringUtil.valuesAreEqual(getJavaClassName(), other.getJavaClassName()) || 
+        		!CoreStringUtil.valuesAreEqual(getJavaMethodName(), other.getJavaMethodName()) ||
+        		!CoreStringUtil.valuesAreEqual(getUdfJarPath(), other.getUdfJarPath()) ||
+        		!CoreStringUtil.valuesAreEqual(getUpdateCount(), other.getUpdateCount()) ) {
+            return false;
+        }
+        
+        if( !(isAggregate()==other.isAggregate()) ||  
+            !(isAllowsDistinct()==other.isAllowsDistinct()) ||
+            !(isAllowsOrderBy()==other.isAllowsOrderBy()) ||
+            !(isAnalytic()==other.isAnalytic()) ||
+            !(isDecomposable()==other.isDecomposable()) ||
+            !(isDeterministic()==other.isDeterministic()) ||
+            !(isFunction()==other.isFunction()) ||
+            !(isNonPrepared()==other.isNonPrepared()) ||
+            !(isReturnsNullOnNull()==other.isReturnsNullOnNull()) ||
+            !(isSourceFunction()==other.isSourceFunction()) ||
+            !(isUseDistinctRows()==other.isUseDistinctRows()) ||
+            !(isVariableArguments()==other.isVariableArguments()) ) {
+        	return false;
+        }
+        
+        // ResultSet
+        if (resultSet == null) {
+            if (other.resultSet != null)
+                return false;   
+        } else if (!resultSet.equals(other.resultSet))
+            return false;
+                
+        // Parameters
+        Collection<RelationalParameter> thisParameters = getParameters();
+        Collection<RelationalParameter> thatParameters = other.getParameters();
+
+        if (thisParameters.size() != thatParameters.size()) {
+            return false;
+        }
+        
+        if (!thisParameters.isEmpty() && !thisParameters.equals(thatParameters)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+
+        // string properties
+        if (!CoreStringUtil.isEmpty(getNativeQuery())) {
+            result = HashCodeUtil.hashCode(result, getNativeQuery());
+        }
+        if (!CoreStringUtil.isEmpty(getFunctionCategory())) {
+            result = HashCodeUtil.hashCode(result, getFunctionCategory());
+        }
+        if (!CoreStringUtil.isEmpty(getJavaClassName())) {
+            result = HashCodeUtil.hashCode(result, getJavaClassName());
+        }
+        if (!CoreStringUtil.isEmpty(getJavaMethodName())) {
+            result = HashCodeUtil.hashCode(result, getJavaMethodName());
+        }
+        if (!CoreStringUtil.isEmpty(getUdfJarPath())) {
+            result = HashCodeUtil.hashCode(result, getUdfJarPath());
+        }
+        if (!CoreStringUtil.isEmpty(getUpdateCount())) {
+            result = HashCodeUtil.hashCode(result, getUpdateCount());
+        }
+
+		result = HashCodeUtil.hashCode(result, isAggregate());
+        result = HashCodeUtil.hashCode(result, isAllowsDistinct());
+        result = HashCodeUtil.hashCode(result, isAllowsOrderBy());
+        result = HashCodeUtil.hashCode(result, isAnalytic());
+		result = HashCodeUtil.hashCode(result, isDecomposable());
+        result = HashCodeUtil.hashCode(result, isDeterministic());
+        result = HashCodeUtil.hashCode(result, isFunction());
+        result = HashCodeUtil.hashCode(result, isNonPrepared());
+		result = HashCodeUtil.hashCode(result, isReturnsNullOnNull());
+        result = HashCodeUtil.hashCode(result, isSourceFunction());
+        result = HashCodeUtil.hashCode(result, isUseDistinctRows());
+        result = HashCodeUtil.hashCode(result, isVariableArguments());
+        
+        if(resultSet!=null) {
+            result = HashCodeUtil.hashCode(result, resultSet);
+        }
+
+        List<RelationalParameter> params = getParameters();
+        for(RelationalParameter param: params) {
+            result = HashCodeUtil.hashCode(result, param);
+        }
+
+        return result;
+    }    
+	
 }

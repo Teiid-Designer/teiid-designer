@@ -26,6 +26,28 @@ public class Messages extends NLS {
 	public static String relationalModelFactory_replacingModelObject;
 	public static String relationalModelFactory_creatingModelChild;
 	public static String relationalModelFactory_error_setting_extension_props_on_0;
+
+	public static String emfModelGenerator_unknown_object_type_0_cannot_be_processed;
+	public static String emfModelGenerator_modelGenerationSuccess;
+	public static String emfModelGenerator_generatingModel;
+	public static String emfModelGenerator_creatingPrimaryObjects;
+	public static String emfModelGenerator_deletingPrimaryObjects;
+	public static String emfModelGenerator_updatingPrimaryObjects;
+	public static String emfModelGenerator_creatingSecondaryObjects;
+	public static String emfModelGenerator_settingExtensionProps;
+	public static String emfModelGenerator_error_finding_table_named;
+	public static String emfModelGenerator_error_adding_desciption_to_0;
+	public static String emfModelGenerator_errorApplyingMedToModel;
+	public static String emfModelGenerator_errorSettingPropertyValue;
+	public static String emfModelGenerator_warningAssistantForMetaclassNotFound;
+	public static String emfModelGenerator_warningAssistantForPropertyNotFound;
+
+	public static String relationalRefFactory_columnNotFound_forFKCreate;
+	public static String relationalRefFactory_columnNotFound_forPKCreate;
+	public static String relationalRefFactory_columnNotFound_forAPCreate;
+	public static String relationalRefFactory_columnNotFound_forIndexCreate;
+	public static String relationalRefFactory_errorSettingDescription;
+	public static String relationalRefFactory_errorGettingEmfExtProps;
 	
 	public static String validationOkCreateObject;
 	public static String validate_error_nameCannotBeNullOrEmpty;

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -33,6 +34,9 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metamodels.core.Annotation;
@@ -90,7 +94,9 @@ public class RelationalModelFactory implements RelationalConstants {
     private Map<RelationalForeignKey, BaseTable> fkTableMap = new HashMap<RelationalForeignKey, BaseTable>();
     private Collection<RelationalIndex> indexes = new ArrayList<RelationalIndex>();
 
-    /**
+	private Map<String, Collection<ModelObjectExtensionAssistant>> classNameToMedAssistantsMap = new HashMap<String,Collection<ModelObjectExtensionAssistant>>();
+
+	/**
      * 
      */
     public RelationalModelFactory() {
@@ -244,17 +250,17 @@ public class RelationalModelFactory implements RelationalConstants {
     }
     
     /**
-     * @param obj the relational model object
+     * @param relationalRef the relational model object
      * @param modelResource the model resource
      * @param progressMonitor progress monitor
      * @return the new model object
      * @throws ModelWorkspaceException if problems building model
      */
-    public EObject buildObject( RelationalReference obj, ModelResource modelResource, IProgressMonitor progressMonitor) throws ModelWorkspaceException {
+    public EObject buildObject( RelationalReference relationalRef, ModelResource modelResource, IProgressMonitor progressMonitor) throws ModelWorkspaceException {
         EObject newEObject = null;
         
-        progressMonitor.setTaskName(NLS.bind(Messages.relationalModelFactory_creatingModelChild, obj.getName()));
-        switch (obj.getType()) {
+        progressMonitor.setTaskName(NLS.bind(Messages.relationalModelFactory_creatingModelChild, relationalRef.getName()));
+        switch (relationalRef.getType()) {
             case TYPES.MODEL: {
                 // NOOP. Shouldn't get here
             } break;
@@ -265,36 +271,39 @@ public class RelationalModelFactory implements RelationalConstants {
              // NOOP. Shouldn't get here
             } break;
             case TYPES.TABLE: {
-                EObject baseTable = createBaseTable(obj, modelResource);
-                modelResource.getEmfResource().getContents().add(baseTable);
-                applyTableExtensionProperties((RelationalTable)obj, (BaseTable)baseTable, false);
+                newEObject = createBaseTable(relationalRef, modelResource);
+                modelResource.getEmfResource().getContents().add(newEObject);
+                //applyTableExtensionProperties((RelationalTable)obj, (BaseTable)baseTable, false);
                 
                 // In the case of the new object wizards, users can create Indexes while creating a table
                 // So just walk these and add them to the model too
-                for( RelationalIndex index : ((RelationalTable)obj).getIndexes() ) {
+                for( RelationalIndex index : ((RelationalTable)relationalRef).getIndexes() ) {
                 	EObject newIndex = createIndex(index, modelResource);
                 	modelResource.getEmfResource().getContents().add(newIndex);
                 }
             } break;
             case TYPES.VIEW: {
-                EObject view = createView(obj, modelResource);
-                modelResource.getEmfResource().getContents().add(view);
+            	newEObject = createView(relationalRef, modelResource);
+                modelResource.getEmfResource().getContents().add(newEObject);
             } break;
             case TYPES.PROCEDURE: {
-                EObject procedure = createProcedure(obj, modelResource);
-                modelResource.getEmfResource().getContents().add(procedure);
-                applyProcedureExtensionProperties((RelationalProcedure)obj,(Procedure) procedure);
+            	newEObject = createProcedure(relationalRef, modelResource);
+                modelResource.getEmfResource().getContents().add(newEObject);
+                //applyProcedureExtensionProperties((RelationalProcedure)obj,(Procedure) procedure);
             } break;
             case TYPES.INDEX: {
-                indexes.add((RelationalIndex)obj);
+                indexes.add((RelationalIndex)relationalRef);
             } break;
             
             case TYPES.UNDEFINED:
             default: {
                 RelationalPlugin.Util.log(IStatus.WARNING, 
-                		NLS.bind(Messages.relationalModelFactory_unknown_object_type_0_cannot_be_processed, obj.getName()));
+                		NLS.bind(Messages.relationalModelFactory_unknown_object_type_0_cannot_be_processed, relationalRef.getName()));
             } break;
         }
+        
+//        // Apply Extension Properties
+//        processExtensionProperties(modelResource,relationalRef,newEObject);
         
         return newEObject;
     }
@@ -346,8 +355,10 @@ public class RelationalModelFactory implements RelationalConstants {
         
         for( RelationalForeignKey fk : tableRef.getForeignKeys()) {
             fkTableMap.put(fk, baseTable);
-            //createForeignKey(fk, baseTable, modelResource);
         }
+        
+        // Apply Extension Properties
+        processExtensionProperties(modelResource,tableRef,baseTable);
         
         return baseTable;
     }
@@ -383,6 +394,9 @@ public class RelationalModelFactory implements RelationalConstants {
         for( RelationalAccessPattern uc : viewRef.getAccessPatterns()) {
             createAccessPattern(uc, view, modelResource);
         }
+
+        // Apply Extension Properties
+        processExtensionProperties(modelResource,viewRef,view);
 
         return view;
     }
@@ -439,6 +453,9 @@ public class RelationalModelFactory implements RelationalConstants {
             createAnnotation(column, columnRef.getDescription(), modelResource);
         }
         
+        // Apply Extension Properties
+        processExtensionProperties(modelResource,columnRef,column);
+
         return column;
     }
     
@@ -505,6 +522,9 @@ public class RelationalModelFactory implements RelationalConstants {
             createAnnotation(column, columnRef.getDescription(), modelResource);
         }
         
+        // Apply Extension Properties
+        processExtensionProperties(modelResource,columnRef,column);
+
         return column;
     }
     
@@ -555,9 +575,12 @@ public class RelationalModelFactory implements RelationalConstants {
             }
         }
         
+        // Apply Extension Properties
+        processExtensionProperties(modelResource,pkRef,primaryKey);
+        
     }
     
-    private void createForeignKey( RelationalReference ref, BaseTable baseTable, ModelResource modelResource) {
+    public void createForeignKey( RelationalReference ref, BaseTable baseTable, ModelResource modelResource) {
         CoreArgCheck.isInstanceOf(RelationalForeignKey.class, ref);
         
         RelationalForeignKey fkRef = (RelationalForeignKey)ref;
@@ -596,6 +619,9 @@ public class RelationalModelFactory implements RelationalConstants {
             }
         }
         
+        // Apply Extension Properties
+        processExtensionProperties(modelResource,fkRef,foreignKey);
+        
     }
     
     private void createAccessPattern( RelationalReference ref, Table baseTable, ModelResource modelResource) {
@@ -619,6 +645,9 @@ public class RelationalModelFactory implements RelationalConstants {
             }
         }
         
+        // Apply Extension Properties
+        processExtensionProperties(modelResource,apRef,accessPattern);
+        
     }
     
     private void createUniqueConstraint( RelationalReference ref, BaseTable baseTable, ModelResource modelResource) {
@@ -641,6 +670,9 @@ public class RelationalModelFactory implements RelationalConstants {
                 keyColumns.add(column);
             }
         }
+        
+        // Apply Extension Properties
+        processExtensionProperties(modelResource,ucRef,uniqueConstraint);
         
     }
     
@@ -704,6 +736,9 @@ public class RelationalModelFactory implements RelationalConstants {
             
         }
         
+        // Apply Extension Properties
+        processExtensionProperties(modelResource,procedureRef,procedure);
+
         return procedure;
     }
     
@@ -748,6 +783,8 @@ public class RelationalModelFactory implements RelationalConstants {
             }
         }
        
+        // Apply Extension Properties
+        processExtensionProperties(modelResource,parameterRef,parameter);
         
         return parameter;
     }
@@ -873,6 +910,9 @@ public class RelationalModelFactory implements RelationalConstants {
             createColumn(colRef, result, modelResource);
         }
         
+        // Apply Extension Properties
+        processExtensionProperties(modelResource,resultSetRef,result);
+
         return result;
     }
     
@@ -910,6 +950,9 @@ public class RelationalModelFactory implements RelationalConstants {
             }
         }
         
+        // Apply Extension Properties
+        processExtensionProperties(modelResource,indexRef,index);
+
         return index;
     }
     
@@ -1079,4 +1122,111 @@ public class RelationalModelFactory implements RelationalConstants {
 			ex.printStackTrace();
 		}
     }
+    
+	/**
+	 * Process the extension properties for a relational entity.  This will apply the necessary med to the model (if needed) and add the 
+	 * appropriate extension properties to the model.
+	 * @param modelResource the ModelResource
+	 * @param relationalEntity the RelationalReference
+	 * 
+	 */
+	private void processExtensionProperties(ModelResource modelResource, RelationalReference relationalEntity, EObject eObject) {
+		Properties extensionProperties = relationalEntity.getExtensionProperties();
+		
+		Iterator<Object> keyIter = extensionProperties.keySet().iterator();
+		while(keyIter.hasNext()) {
+			String propName = (String)keyIter.next();
+			String propValue = extensionProperties.getProperty(propName);
+			
+			// Find an extension assistant that can create this extension property (if it exists)
+	    	ModelObjectExtensionAssistant assistant = getModelExtensionAssistant(eObject.getClass().getName(),propName);
+	    	if(assistant!=null) {
+	    		// Ensure that the Model supports the MED
+	    		try {
+	    			applyMedIfNecessary(modelResource,assistant);
+	    		} catch (Exception e) {
+	    			//DdlImporterPlugin.UTIL.log(IStatus.ERROR,e,DdlImporterI18n.ERROR_APPLYING_MED_TO_MODEL);
+	    		}
+	    		String namespacedId = null;
+	    		try {
+	    			namespacedId = assistant.getNamespacePrefix()+':'+propName;
+					assistant.setPropertyValue(eObject, namespacedId, propValue);
+				} catch (Exception ex) {
+	    			//DdlImporterPlugin.UTIL.log(IStatus.ERROR,ex,DdlImporterI18n.ERROR_SETTING_PROPERTY_VALUE+namespacedId);
+				}
+	    	}
+		}
+	}
+	
+	/**
+	 * If the ModelResource does not support the assistants namespace, apply its MED to the model
+	 * @param modelResource the model resource
+	 * @param assistant the ModelObjectExtensionAssistant
+	 * @throws Exception exception if there's a problem applying the MED
+	 */
+	private void applyMedIfNecessary(final ModelResource modelResource, ModelObjectExtensionAssistant assistant) throws Exception {
+		if (modelResource != null && !modelResource.isReadOnly()) {
+			if(!assistant.supportsMyNamespace(modelResource)) {
+				assistant.saveModelExtensionDefinition(modelResource);
+			}
+		}
+	}
+
+	/**
+	 * Get the ModelExtensionAssistant that can handle the supplied property for the specified metaClass.  Currently, this will
+	 * get the first valid assistant found (if more than one can handle the property)
+	 * @param eObjectClassName the metaclass name
+	 * @param propId the property
+	 * @return the assistant
+	 * 
+	 */
+	private ModelObjectExtensionAssistant getModelExtensionAssistant( String eObjectClassName, String propId ) {
+    	// Get available assistants for the provided className.  If the map has no entry, go to the ExtensionPlugin and populate it first.
+    	Collection<ModelObjectExtensionAssistant> assistants = null;
+    	if(this.classNameToMedAssistantsMap.containsKey(eObjectClassName)) {
+        	assistants = this.classNameToMedAssistantsMap.get(eObjectClassName);
+    	} else {
+    		Collection<ModelExtensionAssistant> medAssistants = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistants(eObjectClassName);
+    		assistants = new ArrayList<ModelObjectExtensionAssistant>();
+    		for(ModelExtensionAssistant medAssistant: medAssistants) {
+    			if(medAssistant instanceof ModelObjectExtensionAssistant) {
+    				assistants.add((ModelObjectExtensionAssistant)medAssistant);
+    			}
+    		}
+    		this.classNameToMedAssistantsMap.put(eObjectClassName, assistants);
+    	}
+    	
+
+        // no assistants found that have properties defined for the model object type
+        if (assistants.isEmpty()) {
+    		//DdlImporterPlugin.UTIL.log(IStatus.WARNING,DdlImporterI18n.WARNING_ASSISTANT_FOR_METACLASS_NOT_FOUND+eObjectClassName);
+            return null;
+        }
+
+        // find the assistant for the property
+        for (ModelExtensionAssistant assistant : assistants) {
+        	// Prepend the assistant namespace to the propertyId, since it doesnt have one
+        	String namespacedId = assistant.getNamespacePrefix()+':'+propId;
+
+        	if(hasMatchingPropertyName(assistant.getModelExtensionDefinition(), eObjectClassName, namespacedId)) {
+                return ((assistant instanceof ModelObjectExtensionAssistant) ? (ModelObjectExtensionAssistant)assistant : null);
+            }
+        }
+    
+		//DdlImporterPlugin.UTIL.log(IStatus.WARNING,DdlImporterI18n.WARNING_ASSISTANT_FOR_PROPERTY_NOT_FOUND+propId);
+        return null;
+    }
+        
+	/**
+	 *  Determine if the ModelExtensionDefinition has a propertyId that matches the supplied property
+	 * @param med the ModelExtensionDefinition 
+	 * @param metaclassName the extended metaclass name
+	 * @param propId the property id
+	 * @return 'true' if the med has a matching propertyDefn, 'false' if not
+	 */
+	private boolean hasMatchingPropertyName(ModelExtensionDefinition med, String metaclassName, String propId) {
+		ModelExtensionPropertyDefinition propDefn = med.getPropertyDefinition(metaclassName, propId);
+		return propDefn!=null ? true : false;
+	}
+    
 }

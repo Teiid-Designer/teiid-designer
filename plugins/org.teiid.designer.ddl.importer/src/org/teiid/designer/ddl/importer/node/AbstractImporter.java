@@ -8,12 +8,12 @@
 package org.teiid.designer.ddl.importer.node;
 
 import org.modeshape.sequencer.ddl.node.AstNode;
-import org.teiid.designer.ddl.DdlImporterModel;
+import org.teiid.designer.ddl.DdlImporterManager;
 import org.teiid.designer.ddl.DdlNodeImporter;
-import org.teiid.designer.metamodels.relational.RelationalFactory;
+import org.teiid.designer.relational.model.RelationalReferenceFactory;
 
 /**
- *
+ *  AbstractImporter - imports AstNodes
  */
 public abstract class AbstractImporter implements DdlNodeImporter {
 
@@ -32,34 +32,34 @@ public abstract class AbstractImporter implements DdlNodeImporter {
         }
     }
 
-    private DdlImporterModel importerModel;
+    private DdlImporterManager importManager;
 
     /**
-     * @param importerModel
+     * @param importerManager
      */
-    protected void setImporterModel(DdlImporterModel importerModel) {
-        this.importerModel = importerModel;
+    protected void setImporterManager(DdlImporterManager importerManager) {
+        this.importManager = importerManager;
     }
 
     /**
-     * @return the importerModel
+     * @return the importerManager
      */
-    protected DdlImporterModel getImporterModel() {
-        return this.importerModel;
+    protected DdlImporterManager getImporterManager() {
+        return this.importManager;
     }
 
     /**
     * @return relational factory
     */
-    protected RelationalFactory getFactory() {
-        return importerModel.getFactory();
+    protected RelationalReferenceFactory getFactory() {
+        return RelationalReferenceFactory.INSTANCE;
     }
 
     /**
      * @param message
      */
     protected void addProgressMessage(String message) {
-        importerModel.getProgressMessages().add(message);
+        importManager.getProgressMessages().add(message);
     }
 
     /**

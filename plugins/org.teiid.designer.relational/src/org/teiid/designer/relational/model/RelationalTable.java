@@ -9,11 +9,15 @@ package org.teiid.designer.relational.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.designer.HashCodeUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.relational.Messages;
@@ -45,22 +49,28 @@ public class RelationalTable extends RelationalReference {
     private RelationalReference materializedTable;
     private boolean supportsUpdate = DEFAULT_SUPPORTS_UPDATE;
     private boolean system = DEFAULT_SYSTEM;
-    private Collection<RelationalColumn> columns;
+    private List<RelationalColumn> columns;
     private RelationalPrimaryKey primaryKey;
-    private RelationalUniqueConstraint uniqueContraint;
-    private Collection<RelationalAccessPattern> accessPatterns;
-    private Collection<RelationalForeignKey> foreignKeys;
-    private Collection<RelationalIndex> indexes;
+    private RelationalUniqueConstraint uniqueConstraint;
+    private List<RelationalUniqueConstraint> uniqueConstraints;
+    private List<RelationalAccessPattern> accessPatterns;
+    private List<RelationalForeignKey> foreignKeys;
+    private List<RelationalIndex> indexes;
     private String nativeQuery;
     
     
+    /**
+     * RelationalTable constructor
+     */
     public RelationalTable() {
         super();
         setType(TYPES.TABLE);
         init();
     }
+    
     /**
-     * @param name
+     * RelationalTable constructor
+     * @param name the table name
      */
     public RelationalTable( String name ) {
         super(name);
@@ -171,10 +181,14 @@ public class RelationalTable extends RelationalReference {
     /**
      * @return columns
      */
-    public Collection<RelationalColumn> getColumns() {
+    public List<RelationalColumn> getColumns() {
         return columns;
     }
     
+    /**
+     * Add a column to the table
+     * @param column the column to add
+     */
     public void addColumn(RelationalColumn column) {
     	if( this.columns.add(column) ) {
     		column.setParent(this);
@@ -182,6 +196,10 @@ public class RelationalTable extends RelationalReference {
     	} 
     }
     
+    /**
+     * Remove a column from the table
+     * @param column the column to remove
+     */
     public boolean removeColumn(RelationalColumn column) {
     	if( this.columns.remove(column) ) {
     		handleInfoChanged();
@@ -197,6 +215,10 @@ public class RelationalTable extends RelationalReference {
         return primaryKey;
     }
 
+    /**
+     * Set the tables PK
+     * @param pk the pk
+     */
     public void setPrimaryKey(RelationalPrimaryKey pk) {
     	if( this.primaryKey != pk ) {
 	    	if( pk != null ) {
@@ -211,26 +233,65 @@ public class RelationalTable extends RelationalReference {
      * @return uniqueContraints
      */
     public RelationalUniqueConstraint getUniqueContraint() {
-        return uniqueContraint;
+        return uniqueConstraint;
     }
     
+    /**
+     * Set the unique constraint
+     * @param uc the uc
+     */
     public void setUniqueConstraint(RelationalUniqueConstraint uc) {
-    	if( this.uniqueContraint != uc ) {
+    	if( this.uniqueConstraint != uc ) {
 	    	if( uc != null ) {
 	    		uc.setParent(this);
 	    	}
-	        this.uniqueContraint = uc;
+	        this.uniqueConstraint = uc;
 	        handleInfoChanged();
     	}
     }
     
     /**
+     * @return uniqueContraints
+     */
+    public Collection<RelationalUniqueConstraint> getUniqueConstraints() {
+        return uniqueConstraints;
+    }
+    
+    /**
+     * Add a unique constraint
+     * @param constraint the constraint
+     */
+    public void addUniqueConstraint(RelationalUniqueConstraint constraint) {
+    	if( this.uniqueConstraints.add(constraint) ) {
+    		constraint.setParent(this);
+    		handleInfoChanged();
+    	}
+    }
+    
+    /**
+     * Remove a unique constraint
+     * @param constraint the constraint
+     * @return 'true' if removed, 'false' if not
+     */
+    public boolean removeUniqueConstraint(RelationalUniqueConstraint constraint) {
+    	if( this.uniqueConstraints.remove(constraint) ) {
+    		handleInfoChanged();
+    		return true;
+    	}
+    	return false;
+    }
+
+    /**
      * @return accessPatterns
      */
-    public Collection<RelationalAccessPattern> getAccessPatterns() {
+    public List<RelationalAccessPattern> getAccessPatterns() {
         return accessPatterns;
     }
     
+    /**
+     * Add an AccessPattern to the table
+     * @param ap the AccessPattern
+     */
     public void addAccessPattern(RelationalAccessPattern ap) {
     	if( this.accessPatterns.add(ap) ) {
     		ap.setParent(this);
@@ -238,6 +299,11 @@ public class RelationalTable extends RelationalReference {
     	}
     }
     
+    /**
+     * Remove an AccessPattern from the table
+     * @param ap the AccessPattern
+     * @return 'true' if removed, 'false' if not
+     */
     public boolean removeAccessPattern(RelationalAccessPattern ap) {
     	if( this.accessPatterns.remove(ap) ) {
     		handleInfoChanged();
@@ -249,10 +315,14 @@ public class RelationalTable extends RelationalReference {
     /**
      * @return foreignKeys
      */
-    public Collection<RelationalForeignKey> getForeignKeys() {
+    public List<RelationalForeignKey> getForeignKeys() {
         return foreignKeys;
     }
 
+    /**
+     * Add FK to the table
+     * @param fk the fk
+     */
     public void addForeignKey(RelationalForeignKey fk) {
     	if( this.foreignKeys.add(fk) ) {
     		fk.setParent(this);
@@ -260,6 +330,11 @@ public class RelationalTable extends RelationalReference {
     	}
     }
     
+    /**
+     * Remove FK from the table
+     * @param fk the fk
+     * @return 'true' if removed, 'false' if not.
+     */
     public boolean removeForeignKey(RelationalForeignKey fk) {
     	if( this.foreignKeys.remove(fk) ) {
     		handleInfoChanged();
@@ -271,7 +346,7 @@ public class RelationalTable extends RelationalReference {
     /**
      * @return indexes
      */
-    public Collection<RelationalIndex> getIndexes() {
+    public List<RelationalIndex> getIndexes() {
         return indexes;
     }
 
@@ -298,6 +373,10 @@ public class RelationalTable extends RelationalReference {
     	return false;
     }
     
+    /**
+     * Set the object properties
+     * @param props the properties
+     */
     public void setProperties(Properties props) {
         for( Object key : props.keySet() ) {
             String keyStr = (String)key;
@@ -371,7 +450,7 @@ public class RelationalTable extends RelationalReference {
 			existingColumns[startIndex-1] = theColumn;
 			existingColumns[startIndex] = priorColumn;
 			
-			Collection<RelationalColumn> newColumns = new ArrayList<RelationalColumn>(existingColumns.length);
+			List<RelationalColumn> newColumns = new ArrayList<RelationalColumn>(existingColumns.length);
 			for( RelationalColumn info : existingColumns) {
 				newColumns.add(info);
 			}
@@ -389,7 +468,7 @@ public class RelationalTable extends RelationalReference {
 			existingColumns[startIndex+1] = theColumn;
 			existingColumns[startIndex] = afterColumn;
 			
-			Collection<RelationalColumn> newColumns = new ArrayList<RelationalColumn>(existingColumns.length);
+			List<RelationalColumn> newColumns = new ArrayList<RelationalColumn>(existingColumns.length);
 			for( RelationalColumn info : existingColumns) {
 				newColumns.add(info);
 			}
@@ -465,6 +544,169 @@ public class RelationalTable extends RelationalReference {
 		
 	}
 	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals( final Object object ) {
+		if (!super.equals(object)) {
+			return false;
+		}
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
+        if (getClass() != object.getClass())
+            return false;
+        final RelationalTable other = (RelationalTable)object;
+
+        // string properties
+        if (!CoreStringUtil.valuesAreEqual(getNativeQuery(), other.getNativeQuery())) {
+            return false;
+        }
+        
+        if( !(getCardinality()==other.getCardinality()) ||  
+            !(getSupportsUpdate()==other.getSupportsUpdate()) ||
+            !(isMaterialized()==other.isMaterialized()) ||
+        	!(isSystem()==other.isSystem())) {
+        	return false;
+        }
+ 
+        if (materializedTable == null) {
+            if (other.materializedTable != null)
+                return false;   
+        } else if (!materializedTable.equals(other.materializedTable))
+            return false;
+
+        if (uniqueConstraint == null) {
+            if (other.uniqueConstraint != null)
+                return false;   
+        } else if (!uniqueConstraint.equals(other.uniqueConstraint))
+            return false;
+
+        if (primaryKey == null) {
+            if (other.primaryKey != null)
+                return false;   
+        } else if (!primaryKey.equals(other.primaryKey))
+            return false;
+
+        // Columns
+        List<RelationalColumn> thisColumns = getColumns();
+        List<RelationalColumn> thatColumns = other.getColumns();
+
+        if (thisColumns.size() != thatColumns.size()) {
+            return false;
+        }
+        
+        if (!thisColumns.isEmpty() && !thisColumns.equals(thatColumns)) {
+            return false;
+        }
+        
+        // ForeignKeys
+        List<RelationalForeignKey> thisFKs = getForeignKeys();
+        List<RelationalForeignKey> thatFKs = other.getForeignKeys();
+
+        if (thisFKs.size() != thatFKs.size()) {
+            return false;
+        }
+        
+        if (thisFKs.size()==1) {
+        	if(!thisFKs.get(0).equals(thatFKs.get(0))) {
+        		return false;
+        	}
+        } else if(thisFKs.size()>1){
+            ReferenceComparator comparator = new ReferenceComparator();
+            List<RelationalForeignKey> sortedThisFKs = new ArrayList<RelationalForeignKey>(getForeignKeys());
+            List<RelationalForeignKey> sortedThatFKs = new ArrayList<RelationalForeignKey>(other.getForeignKeys());
+            Collections.sort(sortedThisFKs,comparator);
+            Collections.sort(sortedThatFKs,comparator);
+            
+            if (!sortedThisFKs.equals(sortedThatFKs)) {
+                return false;
+            }
+        }
+        
+        // Indexes
+        List<RelationalIndex> thisIndexes = getIndexes();
+        List<RelationalIndex> thatIndexes = other.getIndexes();
+
+        if (thisIndexes.size() != thatIndexes.size()) {
+            return false;
+        }
+        
+        if (!thisIndexes.isEmpty() && !thisIndexes.equals(thatIndexes)) {
+            return false;
+        }
+
+        // AccessPatterns
+        List<RelationalAccessPattern> thisAPs = getAccessPatterns();
+        List<RelationalAccessPattern> thatAPs = other.getAccessPatterns();
+
+        if (thisAPs.size() != thatAPs.size()) {
+            return false;
+        }
+        
+        if (!thisAPs.isEmpty() && !thisAPs.equals(thatAPs)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+
+        // string properties
+        if (!CoreStringUtil.isEmpty(getNativeQuery())) {
+            result = HashCodeUtil.hashCode(result, getNativeQuery());
+        }
+        
+        result = HashCodeUtil.hashCode(result, getCardinality());
+        result = HashCodeUtil.hashCode(result, getSupportsUpdate());
+        result = HashCodeUtil.hashCode(result, isMaterialized());
+        result = HashCodeUtil.hashCode(result, isSystem());
+        
+        if(materializedTable!=null) {
+            result = HashCodeUtil.hashCode(result, materializedTable);
+        }
+        if(uniqueConstraint!=null) {
+            result = HashCodeUtil.hashCode(result, uniqueConstraint);
+        }
+        if(primaryKey!=null) {
+            result = HashCodeUtil.hashCode(result, primaryKey);
+        }
+
+        List<RelationalColumn> cols = getColumns();
+        for(RelationalColumn col: cols) {
+            result = HashCodeUtil.hashCode(result, col);
+        }
+        
+        List<RelationalForeignKey> fks = getForeignKeys();
+        for(RelationalForeignKey fk: fks) {
+            result = HashCodeUtil.hashCode(result, fk);
+        }
+
+        List<RelationalIndex> indexes = getIndexes();
+        for(RelationalIndex index: indexes) {
+            result = HashCodeUtil.hashCode(result, index);
+        }
+
+        List<RelationalAccessPattern> aps = getAccessPatterns();
+        for(RelationalAccessPattern ap: aps) {
+            result = HashCodeUtil.hashCode(result, ap);
+        }
+        
+        return result;
+    }    
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -482,8 +724,8 @@ public class RelationalTable extends RelationalReference {
 		if( primaryKey != null ) {
 			sb.append("\n\t").append("PK = ").append(primaryKey); //$NON-NLS-1$  //$NON-NLS-2$
 		}
-		if( uniqueContraint != null ) {
-			sb.append("\n\t").append("UC = ").append(uniqueContraint); //$NON-NLS-1$  //$NON-NLS-2$
+		if( uniqueConstraint != null ) {
+			sb.append("\n\t").append("UC = ").append(uniqueConstraint); //$NON-NLS-1$  //$NON-NLS-2$
 		}
 		if( !getAccessPatterns().isEmpty() ) {
 			sb.append("\n\t").append(getAccessPatterns().size()).append(" access patterns"); //$NON-NLS-1$  //$NON-NLS-2$
