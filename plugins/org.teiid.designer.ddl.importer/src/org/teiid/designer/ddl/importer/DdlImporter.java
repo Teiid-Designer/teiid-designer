@@ -10,6 +10,7 @@ package org.teiid.designer.ddl.importer;
 import java.io.File;
 import java.io.FileReader;
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -26,22 +27,23 @@ import org.modeshape.sequencer.ddl.StandardDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.exception.EmptyArgumentException;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
-import org.teiid.designer.compare.DifferenceProcessor;
-import org.teiid.designer.compare.DifferenceReport;
-import org.teiid.designer.compare.MergeProcessor;
-import org.teiid.designer.compare.ModelerComparePlugin;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
-import org.teiid.designer.ddl.DdlImporterModel;
+import org.teiid.designer.ddl.DdlImporterManager;
 import org.teiid.designer.ddl.DdlNodeImporter;
 import org.teiid.designer.ddl.registry.DdlNodeImporterRegistry;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
+import org.teiid.designer.relational.compare.DifferenceGenerator;
+import org.teiid.designer.relational.compare.DifferenceReport;
+import org.teiid.designer.relational.model.RelationalModel;
+import org.teiid.designer.relational.processor.EmfModelGenerator;
 
 /**
  * DdlImporter parses the provided DDL and generates a model containing the parsed entities
@@ -54,14 +56,15 @@ public class DdlImporter {
 
     private IContainer modelFolder;
     private String ddlFileName;
-    private IFile modelFile;
-    private DifferenceProcessor chgProcessor;
+    private String specifiedParser;
+	private IFile modelFile;
+    private DifferenceReport diffReport;
     private ModelResource model;
 
-    private DdlImporterModel importerModel = new DdlImporterModel();
+    private DdlImporterManager importManager = new DdlImporterManager();
 
     /**
-     * DdlImporter contructor
+     * DdlImporter constructor
      * @param projects the list of open workspace projects
      */
     public DdlImporter(IProject[] projects ) {
@@ -73,13 +76,6 @@ public class DdlImporter {
      */
     public String ddlFileName() {
         return ddlFileName;
-    }
-
-    /**
-     * @return The difference report for the {@link #importDdl(List, IProgressMonitor, int) imported} model
-     */
-    public DifferenceReport getChangeReport() {
-        return chgProcessor == null ? null : chgProcessor.getDifferenceReport();
     }
 
     private void handleStatus(IStatus status ) {
@@ -95,9 +91,6 @@ public class DdlImporter {
      * @param totalWork
      */
     public void importDdl(final List<String> messages, final IProgressMonitor monitor, final int totalWork ) {
-        if (chgProcessor != null)
-            return;
-
         OperationUtil.perform(new Unreliable() {
 
             private FileReader reader = null;
@@ -134,9 +127,15 @@ public class DdlImporter {
             builder.append(buf, 0, charTot);
         Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 
-        // Parse the DDL
+        // Use specified parser if it has been set
+        AstNode rootNode = null;
         DdlParsers parsers = new DdlParsers();
-        AstNode rootNode = parsers.parse(builder.toString(), ddlFileName);
+        if(!CoreStringUtil.isEmpty(specifiedParser)) {
+        	rootNode = parsers.parseUsing(builder.toString(),specifiedParser);
+        // No DDL parser is specified - user DdlParsers which will score the best fit
+        } else {
+            rootNode = parsers.parse(builder.toString(), ddlFileName);
+        }
         String parserId = (String) rootNode.getProperty(StandardDdlLexicon.PARSER_ID);
 
         if (monitor.isCanceled())
@@ -150,32 +149,42 @@ public class DdlImporter {
         // ------------------------------------------------------------------------------
         monitor.subTask(DdlImporterI18n.CREATING_MODEL_MSG);
         model = ModelerCore.create(modelFile);
-        importerModel.setRelationalModel(model);
-        importerModel.setProgressMonitor(monitor);
-        importerModel.setProgressMessages(messages);
+        importManager.setRelationalModel(model);
+        
+        RelationalModel targetRelationalModel = importManager.getObjectFactory().createRelationalModel(model);
+        
+        importManager.setProgressMonitor(monitor);
+        importManager.setProgressMessages(messages);
 
         DdlNodeImporter nodeImporter = DdlNodeImporterRegistry.getInstance().getRegistered(parserId.toUpperCase());
         if (nodeImporter == null)
             throw new Exception(DdlImporterPlugin.i18n("noDDLImporterRegisteredMsg", parserId)); //$NON-NLS-1$
 
-        importerModel.setNodeImporter(nodeImporter);
-        nodeImporter.importNode(importerModel, rootNode);
+        importManager.setNodeImporter(nodeImporter);
+        RelationalModel ddlImportModel = nodeImporter.importNode(rootNode,importManager);
+        
         if (monitor.isCanceled())
             throw new OperationCanceledException();
         monitor.worked(workUnit);
 
         // ------------------------------------------------------------------------------
-        // Execute generates the differenceReport
+        // Generate a DifferenceReport
         // ------------------------------------------------------------------------------
         monitor.subTask(DdlImporterI18n.CREATING_CHANGE_REPORT_MSG);
-        chgProcessor = importerModel.getDifferenceProcessor();
-
-        handleStatus(chgProcessor.execute(monitor));
+        diffReport = DifferenceGenerator.compare(ddlImportModel,targetRelationalModel);
+        
         if (monitor.isCanceled())
             throw new OperationCanceledException();
         monitor.worked(workUnit);
     }
 
+    /**
+     * @return differenceReport
+     */
+    public DifferenceReport getDifferenceReport() {
+    	return diffReport;
+    }
+    
     /**
      * @return modelFile
      */
@@ -194,7 +203,7 @@ public class DdlImporter {
      * @return modelType
      */
     public ModelType modelType() {
-        return importerModel.getModelType();
+        return importManager.getModelType();
     }
 
     /**
@@ -204,23 +213,19 @@ public class DdlImporter {
     public void save(IProgressMonitor monitor, int totalWork ) {
         monitor.subTask(DdlImporterI18n.SAVING_MODEL_MSG);
         try {
+        	// Set model type etc if new model
             if (!model.exists()) {
                 ModelAnnotation modelAnnotation = model.getModelAnnotation();
                 modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
-                modelAnnotation.setModelType(importerModel.getModelType());
+                modelAnnotation.setModelType(importManager.getModelType());
             }
-            MergeProcessor mergeProcessor = ModelerComparePlugin.createMergeProcessor(chgProcessor,
-                                                                                            ModelerCore.getWorkspaceDatatypeManager().getAllDatatypes(),
-                                                                                            true);
-            handleStatus(mergeProcessor.execute(monitor));
-            model.save(monitor, false);
+            
+            // Update the model, based on difference report
+            IStatus importStatus = EmfModelGenerator.INSTANCE.execute(diffReport, model, monitor, totalWork);
+            handleStatus(importStatus);
 
-            DdlNodeImporter nodeImporter = importerModel.getNodeImporter();
-            if (nodeImporter != null) {
-                nodeImporter.importFinalize();
-                // save again
-                model.save(monitor, false);
-            }
+            // Save model
+            model.save(monitor, false);
             
         } catch (Exception error) {
             throw CoreModelerPlugin.toRuntimeException(error);
@@ -234,7 +239,6 @@ public class DdlImporter {
      */
     public void setDdlFileName(String ddlFileName ) {
         this.ddlFileName = null;
-        chgProcessor = null;
         if (ddlFileName == null) throw new EmptyArgumentException("ddlFileName"); //$NON-NLS-1$
         ddlFileName = ddlFileName.trim();
         if (ddlFileName.isEmpty()) throw new EmptyArgumentException("ddlFileName"); //$NON-NLS-1$
@@ -248,7 +252,6 @@ public class DdlImporter {
      */
     public void setModelFolder(IContainer modelFolder ) {
         this.modelFolder = modelFolder;
-        chgProcessor = null;
     }
 
     /**
@@ -256,7 +259,7 @@ public class DdlImporter {
      */
     public void setModelFolder(String modelFolderName ) {
         modelFolder = null;
-        chgProcessor = null;
+        //chgProcessor = null;
         if (modelFolderName == null) throw new EmptyArgumentException("modelFolderName"); //$NON-NLS-1$
         modelFolderName = modelFolderName.trim();
         IPath modelFolderPath = Path.fromPortableString(modelFolderName).makeAbsolute();
@@ -290,9 +293,9 @@ public class DdlImporter {
      * @param modelName
      */
     public void setModelName(String modelName ) {
-        importerModel.setModelName(null);
+    	importManager.setModelName(null);
         modelFile = null;
-        chgProcessor = null;
+
         if (modelName == null) throw new EmptyArgumentException("modelName"); //$NON-NLS-1$
         modelName = modelName.trim();
         if (modelName.isEmpty()) throw new EmptyArgumentException("modelName"); //$NON-NLS-1$
@@ -320,37 +323,50 @@ public class DdlImporter {
                 }
             } else modelFile = root.getFile(modelPath);
         }
-        importerModel.setModelName(new Path(modelName).removeFileExtension().lastSegment());
+        importManager.setModelName(new Path(modelName).removeFileExtension().lastSegment());
     }
 
     /**
      * @param modelType Sets modelType to the specified value.
      */
     public void setModelType(ModelType modelType ) {
-        importerModel.setModelType(modelType);
-        chgProcessor = null;
+    	importManager.setModelType(modelType);
     }
 
     /**
      * @param optToCreateModelEntitiesForUnsupportedDdl
      */
     public void setOptToCreateModelEntitiesForUnsupportedDdl(boolean optToCreateModelEntitiesForUnsupportedDdl ) {
-        importerModel.setOptToCreateModelEntitiesForUnsupportedDdl(optToCreateModelEntitiesForUnsupportedDdl);
-        chgProcessor = null;
+    	importManager.setOptToCreateModelEntitiesForUnsupportedDdl(optToCreateModelEntitiesForUnsupportedDdl);
     }
 
     /**
      * @param optToSetModelEntityDescription
      */
     public void setOptToSetModelEntityDescription(boolean optToSetModelEntityDescription ) {
-        importerModel.setOptToSetModelEntityDescription(optToSetModelEntityDescription);
-        chgProcessor = null;
+    	importManager.setOptToSetModelEntityDescription(optToSetModelEntityDescription);
     }
+
+    /**
+	 * @return the specifiedParser
+	 */
+	public String getSpecifiedParser() {
+		return this.specifiedParser;
+	}
+
+	/**
+	 * Allows a specific parser to be used for the import.  If the parser is not specified,
+	 * the DdlParsers class is used - which does scoring to determine the best parser
+	 * @param specifiedParser the specifiedParser to set
+	 */
+	public void setSpecifiedParser(String specifiedParser) {
+		this.specifiedParser = specifiedParser;
+	}
 
     /**
      * 
      */
     public void undoImport() {
-        chgProcessor = null;
+    	diffReport = null;
     }
 }

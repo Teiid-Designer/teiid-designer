@@ -14,7 +14,6 @@ import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -27,19 +26,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.window.Window;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.designer.compare.DifferenceReport;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
@@ -241,12 +232,27 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
      * @return the schema DDL
      */
     public String getDdl( ) {
+    	boolean success = true;
+    	
         String ddl = null;
         try {
             ddl = getServerImportManager().getSchema(IMPORT_VDB_NAME);
         } catch (Exception ex) {
             UTIL.log(ex);
         	ddl = Messages.TeiidImportManager_getDdlErrorMsg;
+        	success = false;
+        }
+        
+        // If successful getting the DDL, write it to the temp file
+        try {
+        	if(success) {
+        		writeDdlToTempFile(ddl);
+        	} else {
+        		writeDdlToTempFile(""); //$NON-NLS-1$
+        	}
+        } catch (Exception ex) {
+            UTIL.log(ex);
+            WidgetUtil.showError(ex);
         }
         return ddl;
     }
@@ -569,6 +575,8 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
             UTIL.log(ex);
         }
         this.ddlImporter.setDdlFileName(ddlFile.getAbsolutePath().toString());
+        // Specify the Teiid Parser
+        this.ddlImporter.setSpecifiedParser("TEIID"); //$NON-NLS-1$
     }
     
     /**
@@ -577,79 +585,6 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
      */
     public DdlImporter getDdlImporter() {
         return ddlImporter;
-    }
-    
-    /**
-     * Get the DifferenceReport for the DDL
-     * @param shell the shell
-     * @param pct the percentage of work represented
-     * @return the difference report
-     */
-    public DifferenceReport getDdlDifferenceReport(Shell shell, int pct) {
-        try {
-            createDifferenceReport(shell,pct);
-        } catch (final Exception error) {
-            error.printStackTrace();
-            WidgetUtil.showError(error);
-        }
-        return ddlImporter.getChangeReport();
-    }
-
-    /*
-     * Uses the DdlImporter to process the DDL and create the difference report
-     * @param shell the shell
-     * @totalWork the total pct of work the operation represents
-     */
-    private void createDifferenceReport( final Shell shell, final int totalWork ) throws InterruptedException, InvocationTargetException {
-        
-        // If the DDL Importer has a change report, return.
-        if (ddlImporter.getChangeReport() != null) return;
-        
-        // TODO: This will be replace with 'getDdl', instead of temporary DDL
-        String ddl = getDdl();
-
-        // Update the ddl file contents
-        try {
-            writeDdlToTempFile(ddl);
-        } catch (Exception ex) {
-            UTIL.log(ex);
-            WidgetUtil.showError(ex);
-            return;
-        }
-        
-        // Perform the DDL Import
-        final List<String> msgs = new ArrayList<String>();
-        new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
-
-            @Override
-            public void run( final IProgressMonitor monitor ) {
-                monitor.beginTask(Messages.TeiidImportManager_ImportingDDLMsg, 100);
-                ddlImporter.importDdl(msgs, monitor, totalWork);
-                monitor.done();
-            }
-        });
-        
-        // Errors Encountered - confirm with user whether to continue
-        if (!msgs.isEmpty()
-            && new MessageDialog(shell, Messages.TeiidImportManager_ConfirmDialgTitle, null, Messages.TeiidImportManager_ContinueImportMsg,
-                                 MessageDialog.CONFIRM, new String[] {IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL},
-                                 SWT.NONE) {
-
-                @Override
-                protected Control createCustomArea( final Composite parent ) {
-                    final org.eclipse.swt.widgets.List list = new org.eclipse.swt.widgets.List(parent, SWT.BORDER | SWT.V_SCROLL
-                                                                                                       | SWT.H_SCROLL);
-                    list.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-                    list.setItems(msgs.toArray(new String[msgs.size()]));
-                    return list;
-                }
-
-                @Override
-                protected final int getShellStyle() {
-                    return SWT.SHEET;
-                }
-            }.open() != Window.OK) ddlImporter.undoImport();
-        
     }
     
     /*
@@ -688,8 +623,9 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
      */
     public boolean saveUsingDdlDiffReport(Shell shell) {
         try {
-            DifferenceReport changeReport = getDdlDifferenceReport(shell,50);
-            if(changeReport == null) return false;
+        	// Use the importer to process the difference report, generating the model
+            if (ddlImporter.getDifferenceReport() == null) return false;
+
             new ProgressMonitorDialog(shell).run(false, false, new IRunnableWithProgress() {
 
                 @Override
@@ -712,5 +648,5 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         
         return true;
     }
-
+    
 }

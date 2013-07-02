@@ -7,17 +7,19 @@
 */
 package org.teiid.designer.ddl.importer.node;
 
-import java.util.List;
-import org.eclipse.emf.ecore.EObject;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import org.modeshape.sequencer.ddl.StandardDdlLexicon;
 import org.modeshape.sequencer.ddl.dialect.oracle.OracleDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
-import org.teiid.designer.metamodels.relational.DirectionKind;
-import org.teiid.designer.metamodels.relational.Index;
-import org.teiid.designer.metamodels.relational.NullableType;
-import org.teiid.designer.metamodels.relational.Procedure;
-import org.teiid.designer.metamodels.relational.ProcedureParameter;
-import org.teiid.designer.metamodels.relational.Schema;
+import org.teiid.designer.relational.model.RelationalIndex;
+import org.teiid.designer.relational.model.RelationalModel;
+import org.teiid.designer.relational.model.RelationalParameter;
+import org.teiid.designer.relational.model.RelationalProcedure;
+import org.teiid.designer.relational.model.RelationalReference;
+import org.teiid.designer.relational.model.RelationalSchema;
 
 /**
  *
@@ -25,21 +27,21 @@ import org.teiid.designer.metamodels.relational.Schema;
 public class OracleImporter extends StandardImporter {
 
     @Override
-    protected Procedure createProcedure(AstNode procedureNode, List<EObject> roots) throws Exception {
-        Procedure procedure = super.createProcedure(procedureNode, roots);
+    protected RelationalProcedure createProcedure(AstNode procedureNode, RelationalModel model) throws Exception {
+    	RelationalProcedure procedure = super.createProcedure(procedureNode, model);
 
         for (AstNode child : procedureNode) {
             if (! is(child, OracleDdlLexicon.TYPE_FUNCTION_PARAMETER))
                 continue;
 
-            ProcedureParameter prm = getFactory().createProcedureParameter();
+            RelationalParameter prm = getFactory().createParameter();
             procedure.getParameters().add(prm);
             initialize(prm, child);
             String datatype = child.getProperty(StandardDdlLexicon.DATATYPE_NAME).toString();
             prm.setNativeType(datatype);
 
-            EObject type = getDataType(datatype);
-            prm.setType(type);
+            String teiidType = getTeiidDataTypeName(datatype);
+            prm.setDatatype(teiidType);
 
             Object prop = child.getProperty(StandardDdlLexicon.DATATYPE_LENGTH);
             if (prop != null)
@@ -55,7 +57,7 @@ public class OracleImporter extends StandardImporter {
 
             prop = child.getProperty(StandardDdlLexicon.NULLABLE);
             if (prop != null)
-                prm.setNullable(prop.toString().equals("NULL") ? NullableType.NULLABLE_LITERAL : NullableType.NO_NULLS_LITERAL); //$NON-NLS-1$
+            	prm.setNullable(prop.toString()); 
 
             prop = child.getProperty(StandardDdlLexicon.DEFAULT_VALUE);
             if (prop != null)
@@ -64,38 +66,63 @@ public class OracleImporter extends StandardImporter {
             prop = child.getProperty(OracleDdlLexicon.IN_OUT_NO_COPY);
             if (prop != null) {
                 String direction = prop.toString();
-                if (DirectionKind.IN_LITERAL.getName().equals(direction))
-                    prm.setDirection(DirectionKind.IN_LITERAL);
-                else if (DirectionKind.OUT_LITERAL.getName().equals(direction) || "OUT NOCOPY".equals(direction)) //$NON-NLS-1$
-                    prm.setDirection(DirectionKind.OUT_LITERAL);
-                else if (DirectionKind.INOUT_LITERAL.getName().equals(direction) || "IN OUT NOCOPY".equals(direction)) //$NON-NLS-1$
-                    prm.setDirection(DirectionKind.INOUT_LITERAL);
+                prm.setDirection(direction);
             }
         }
 
         return procedure;
     }
+    
+    /**
+     * Create RelationalReference objects
+     * @param node the provided AstNode
+     * @param model the RelationalModel being created
+     * @param schema the schema
+     * @return the map of AstNodes which need to be deferred
+     * @throws Exception 
+     */
     @Override
-    protected void create(AstNode node, List<EObject> roots, Schema schema) throws Exception {
+    protected Map<AstNode,RelationalReference> createObject(AstNode node, RelationalModel model, RelationalSchema schema) throws Exception {
+      	Map<AstNode,RelationalReference> deferredMap = new HashMap<AstNode,RelationalReference>();
 
         if (is(node, OracleDdlLexicon.TYPE_CREATE_INDEX_STATEMENT)) {
-            Index index = getFactory().createIndex();
-            Info info = createInfo(node, roots);
-            if (info.getSchema() == null)
-                roots.add(index);
-            else
-                info.getSchema().getIndexes().add(index);
-
-            initialize(index, node, info.getName());
-
-            Object prop = node.getProperty(OracleDdlLexicon.UNIQUE_INDEX);
-            if (prop != null)
-                index.setUnique((Boolean)prop);
+      		deferredMap.put(node, null);
         } else if (is(node, OracleDdlLexicon.TYPE_CREATE_PROCEDURE_STATEMENT)) {
-            createProcedure(node, roots);
+            createProcedure(node, model);
         } else if (is(node, OracleDdlLexicon.TYPE_CREATE_FUNCTION_STATEMENT)) {
-            createProcedure(node, roots).setFunction(true);
+            createProcedure(node, model).setFunction(true);
         } else
-            super.create(node, roots, schema);
+            return super.createObject(node, model, schema);
+
+        return deferredMap;
     }
+    
+    /**
+     * Create deferred objects using the supplied map
+     * @param deferredNodes the map of deferred AstNodes
+     * @param model the RelationalModel being created
+     * @throws Exception 
+     */
+    @Override
+	protected void createDeferredObjects(Map<AstNode,RelationalReference> deferredNodes, RelationalModel model) throws Exception {
+
+    	Set<AstNode> astNodes = deferredNodes.keySet();
+    	for(AstNode node:astNodes) {
+            if (is(node, OracleDdlLexicon.TYPE_CREATE_INDEX_STATEMENT)) {
+                RelationalIndex index = getFactory().createIndex();
+                Info info = createInfo(node, model);
+                if (info.getSchema() == null)
+                    model.addChild(index);
+                else
+                    info.getSchema().getIndexes().add(index);
+
+                initialize(index, node, info.getName());
+
+                Object prop = node.getProperty(OracleDdlLexicon.UNIQUE_INDEX);
+                if (prop != null)
+                    index.setUnique((Boolean)prop);
+            }
+    	}
+    }
+   
 }

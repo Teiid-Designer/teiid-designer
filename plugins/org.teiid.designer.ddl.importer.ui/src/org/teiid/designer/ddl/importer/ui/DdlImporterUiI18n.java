@@ -41,6 +41,21 @@ class DdlImporterUiI18n {
     static final String UPDATE_MSG_PART = i18n("updateMsgPart"); //$NON-NLS-1$
     static final String WIZARD_TITLE = i18n("wizardTitle"); //$NON-NLS-1$
 
+    static final String DIFFERENCE_PAGE_TITLE = i18n("differencePage.title"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_DESCRIPTION = i18n("differencePage.description"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_IMPORT_SELECTIONS_LABEL = i18n("differencePage.importSelectionsLabel"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_DDLIMPORT_ERROR_MSG = i18n("differencePage.ddlImportErrorMsg"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_CONFIRM_DIALOG_TITLE = i18n("differencePage.confirmDialogTitle"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_CONTINUE_IMPORT_MSG = i18n("differencePage.continueImportMsg"); //$NON-NLS-1$
+    
+    static final String DIFFERENCE_PAGE_CREATELIST_LABEL = i18n("differencePage.createListLabel"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_DELETELIST_LABEL = i18n("differencePage.deleteListLabel"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_UPDATELIST_LABEL = i18n("differencePage.updateListLabel"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_UNKNOWN_LABEL = i18n("differencePage.unknownListLabel"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_NO_DIFFERENCE_REPORT_MSG = i18n("differencePage.noDiffReportErrorMsg"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_NO_DIFFERENCE_OPERATIONS_MSG = i18n("differencePage.noDiffOperationsErrorMsg"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_NO_DIFFERENCE_OPERATIONS_SELECTED_MSG = i18n("differencePage.noDiffOperationsSelectedErrorMsg"); //$NON-NLS-1$
+    
     private DdlImporterUiI18n() {
     }
 }

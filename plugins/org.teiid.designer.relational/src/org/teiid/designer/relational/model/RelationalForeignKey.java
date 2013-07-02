@@ -14,6 +14,8 @@ import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.designer.HashCodeUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalPlugin;
@@ -43,6 +45,9 @@ public class RelationalForeignKey extends RelationalReference {
     private String   uniqueKeyName;
     private String   uniqueKeyTableName;
     
+    /**
+     * RelationalForeignKey constructor
+     */
     public RelationalForeignKey() {
         super();
         setType(TYPES.FK);
@@ -51,7 +56,8 @@ public class RelationalForeignKey extends RelationalReference {
     }
     
     /**
-     * @param name
+     * RelationalForeignKey constructor
+     * @param name the FK name
      */
     public RelationalForeignKey( String name ) {
         super(name);
@@ -101,6 +107,10 @@ public class RelationalForeignKey extends RelationalReference {
         return columns;
     }
 
+    /**
+     * Add a column to this FK
+     * @param column the column
+     */
     public void addColumn( RelationalColumn column ) {
         this.columns.add(column);
     }
@@ -147,6 +157,7 @@ public class RelationalForeignKey extends RelationalReference {
     public String getUniqueKeyTableName() {
         return uniqueKeyTableName;
     }
+    
     /**
      * @param uniqueKeyTableName Sets uniqueKeyTableName to the specified value.
      */
@@ -154,6 +165,9 @@ public class RelationalForeignKey extends RelationalReference {
         this.uniqueKeyTableName = uniqueKeyTableName;
     }
     
+    /**
+     * @return the table
+     */
     public RelationalTable getTable() {
     	if( getParent() != null ) {
     		return (RelationalTable)getParent();
@@ -162,6 +176,10 @@ public class RelationalForeignKey extends RelationalReference {
     	return null;
     }
 
+    /**
+     * Set properties
+     * @param props the properties
+     */
     public void setProperties(Properties props) {
         for( Object key : props.keySet() ) {
             String keyStr = (String)key;
@@ -233,4 +251,77 @@ public class RelationalForeignKey extends RelationalReference {
 		}
 		return sb.toString();
 	}
+	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals( final Object object ) {
+		if (!super.equals(object)) {
+			return false;
+		}
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
+        if (getClass() != object.getClass())
+            return false;
+        final RelationalForeignKey other = (RelationalForeignKey)object;
+
+        // string properties
+        if (!CoreStringUtil.valuesAreEqual(getForeignKeyMultiplicity(), other.getForeignKeyMultiplicity()) ||
+        		!CoreStringUtil.valuesAreEqual(getPrimaryKeyMultiplicity(), other.getPrimaryKeyMultiplicity()) ||
+        		!CoreStringUtil.valuesAreEqual(getUniqueKeyName(), other.getUniqueKeyName()) || 
+        		!CoreStringUtil.valuesAreEqual(getUniqueKeyTableName(), other.getUniqueKeyTableName()) ) {
+            return false;
+        }
+        
+        // Columns
+        Collection<RelationalColumn> thisColumns = getColumns();
+        Collection<RelationalColumn> thatColumns = other.getColumns();
+
+        if (thisColumns.size() != thatColumns.size()) {
+            return false;
+        }
+        
+        if (!thisColumns.isEmpty() && !thisColumns.containsAll(thatColumns)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+
+        // string properties
+        if (!CoreStringUtil.isEmpty(getForeignKeyMultiplicity())) {
+            result = HashCodeUtil.hashCode(result, getForeignKeyMultiplicity());
+        }
+        if (!CoreStringUtil.isEmpty(getPrimaryKeyMultiplicity())) {
+            result = HashCodeUtil.hashCode(result, getPrimaryKeyMultiplicity());
+        }
+        if (!CoreStringUtil.isEmpty(getUniqueKeyName())) {
+            result = HashCodeUtil.hashCode(result, getUniqueKeyName());
+        }
+        if (!CoreStringUtil.isEmpty(getUniqueKeyTableName())) {
+            result = HashCodeUtil.hashCode(result, getUniqueKeyTableName());
+        }
+        
+        Collection<RelationalColumn> cols = getColumns();
+        for(RelationalColumn col: cols) {
+            result = HashCodeUtil.hashCode(result, col);
+        }
+                
+        return result;
+    }    
+
 }

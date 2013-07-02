@@ -9,11 +9,13 @@ package org.teiid.designer.relational.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.designer.HashCodeUtil;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalPlugin;
@@ -26,8 +28,11 @@ import org.teiid.designer.relational.RelationalPlugin;
  * @since 8.0
  */
 public class RelationalUniqueConstraint extends RelationalReference {
-    private Collection<RelationalColumn> columns;
+    private List<RelationalColumn> columns;
     
+    /**
+     * RelationalUniqueConstraint constructor
+     */
     public RelationalUniqueConstraint() {
         super();
         setType(TYPES.UC);
@@ -36,7 +41,8 @@ public class RelationalUniqueConstraint extends RelationalReference {
     }
     
     /**
-     * @param name
+     * RelationalUniqueConstraint constructor
+     * @param name the UC name
      */
     public RelationalUniqueConstraint( String name ) {
         super(name);
@@ -48,17 +54,21 @@ public class RelationalUniqueConstraint extends RelationalReference {
     /**
      * @return columns
      */
-    public Collection<RelationalColumn> getColumns() {
+    public List<RelationalColumn> getColumns() {
         return columns;
     }
     /**
      * @param columns Sets columns to the specified value.
      */
     public void setColumns( Collection<RelationalColumn> columns ) {
-        this.columns = columns;
+        this.columns = new ArrayList(columns);
         handleInfoChanged();
     }
     
+    /**
+     * Add a column to the unique constraint
+     * @param column the column
+     */
     public void addColumn(RelationalColumn column) {
     	if( this.columns.add(column) ) {
     		column.setParent(this);
@@ -66,6 +76,10 @@ public class RelationalUniqueConstraint extends RelationalReference {
     	} 
     }
 
+    /**
+     * Set the object properties
+     * @param props the properties
+     */
     public void setProperties(Properties props) {
         for( Object key : props.keySet() ) {
             String keyStr = (String)key;
@@ -81,6 +95,10 @@ public class RelationalUniqueConstraint extends RelationalReference {
         handleInfoChanged();
     }
     
+    /**
+     * Get the parent table
+     * @return the table
+     */
     public RelationalTable getTable() {
     	if( getParent() != null ) {
     		return (RelationalTable)getParent();
@@ -105,7 +123,57 @@ public class RelationalUniqueConstraint extends RelationalReference {
 		}
 	}
 	
-	/* (non-Javadoc)
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals( final Object object ) {
+		if (!super.equals(object)) {
+			return false;
+		}
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
+        if (getClass() != object.getClass())
+            return false;
+        final RelationalUniqueConstraint other = (RelationalUniqueConstraint)object;
+
+        // Columns
+        Collection<RelationalColumn> thisColumns = getColumns();
+        Collection<RelationalColumn> thatColumns = other.getColumns();
+
+        if (thisColumns.size() != thatColumns.size()) {
+            return false;
+        }
+        
+        if (!thisColumns.isEmpty() && !thisColumns.containsAll(thatColumns)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+
+        List<RelationalColumn> cols = getColumns();
+        for(RelationalColumn col: cols) {
+            result = HashCodeUtil.hashCode(result, col);
+        }
+
+        return result;
+    }    
+
+    /* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

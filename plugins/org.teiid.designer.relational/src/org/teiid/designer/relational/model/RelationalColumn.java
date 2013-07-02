@@ -9,12 +9,14 @@ package org.teiid.designer.relational.model;
 
 import java.util.Properties;
 
+import org.teiid.core.designer.HashCodeUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 
 
 
 /**
- * 
+ * RelationalColumn
  *
  * @since 8.0
  */
@@ -93,6 +95,9 @@ public class RelationalColumn extends RelationalReference {
     private boolean selectable = DEFAULT_SELECTABLE;
     private boolean updateable = DEFAULT_UPDATEABLE;
     
+    /**
+     * RelationalColumn constructor
+     */
     public RelationalColumn() {
         super();
         setType(TYPES.COLUMN);
@@ -100,7 +105,8 @@ public class RelationalColumn extends RelationalReference {
     }
     
     /**
-     * @param name
+     * RelationalColumn constructor
+     * @param name the name of the column
      */
     public RelationalColumn( String name ) {
         super(name);
@@ -391,6 +397,10 @@ public class RelationalColumn extends RelationalReference {
 		super.validate();
 	}
     
+    /**
+     * Set properties
+     * @param props the properties
+     */
     public void setProperties(Properties props) {
         for( Object key : props.keySet() ) {
             String keyStr = (String)key;
@@ -466,4 +476,114 @@ public class RelationalColumn extends RelationalReference {
 		sb.append(" : name = ").append(getName()); //$NON-NLS-1$
 		return sb.toString();
 	}
+	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals( final Object object ) {
+		if (!super.equals(object)) {
+			return false;
+		}
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
+        if (getClass() != object.getClass())
+            return false;
+        final RelationalColumn other = (RelationalColumn)object;
+
+        // string properties
+        if (!CoreStringUtil.valuesAreEqualIgnoreCase(getCharacterSetName(), other.getCharacterSetName()) ||
+        		!CoreStringUtil.valuesAreEqualIgnoreCase(getCollationName(), other.getCollationName()) ||
+        		!CoreStringUtil.valuesAreEqualIgnoreCase(getDatatype(), other.getDatatype()) ||
+        		!CoreStringUtil.valuesAreEqualIgnoreCase(getDefaultValue(), other.getDefaultValue()) ||
+        		!CoreStringUtil.valuesAreEqualIgnoreCase(getFormat(), other.getFormat()) ||
+        		!CoreStringUtil.valuesAreEqualIgnoreCase(getMaximumValue(), other.getMaximumValue()) ||
+        		!CoreStringUtil.valuesAreEqualIgnoreCase(getMinimumValue(), other.getMinimumValue()) ||
+        		!CoreStringUtil.valuesAreEqualIgnoreCase(getNativeType(), other.getNativeType()) ||
+        		!CoreStringUtil.valuesAreEqualIgnoreCase(getNullable(), other.getNullable()) ||
+        		!CoreStringUtil.valuesAreEqualIgnoreCase(getSearchability(), other.getSearchability())  ) {
+        	return false;
+        }
+        
+        if( !(getDistinctValueCount()==other.getDistinctValueCount()) ||  
+            !(getLength()==other.getLength()) ||
+            !(getNullValueCount()==other.getNullValueCount()) ||
+            !(getPrecision()==other.getPrecision()) ||
+            !(getRadix()==other.getRadix()) ||
+            !(getScale()==other.getScale()) ||
+            !(isAutoIncremented()==other.isAutoIncremented()) ||
+            !(isCaseSensitive()==other.isCaseSensitive()) ||
+            !(isCurrency()==other.isCurrency()) ||
+            !(isLengthFixed()==other.isLengthFixed()) ||
+            !(isSelectable()==other.isSelectable()) ||
+            !(isSigned()==other.isSigned()) ||
+            !(isUpdateable()==other.isUpdateable()) ) {
+        	return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+
+        // string properties
+        if (!CoreStringUtil.isEmpty(getCharacterSetName())) {
+            result = HashCodeUtil.hashCode(result, getCharacterSetName());
+        }
+        if (!CoreStringUtil.isEmpty(getCollationName())) {
+            result = HashCodeUtil.hashCode(result, getCollationName());
+        }
+        if (!CoreStringUtil.isEmpty(getDatatype())) {
+            result = HashCodeUtil.hashCode(result, getDatatype());
+        }
+        if (!CoreStringUtil.isEmpty(getDefaultValue())) {
+            result = HashCodeUtil.hashCode(result, getDefaultValue());
+        }
+        if (!CoreStringUtil.isEmpty(getFormat())) {
+            result = HashCodeUtil.hashCode(result, getFormat());
+        }
+        if (!CoreStringUtil.isEmpty(getMaximumValue())) {
+            result = HashCodeUtil.hashCode(result, getMaximumValue());
+        }
+        if (!CoreStringUtil.isEmpty(getMinimumValue())) {
+            result = HashCodeUtil.hashCode(result, getMinimumValue());
+        }
+        if (!CoreStringUtil.isEmpty(getNativeType())) {
+            result = HashCodeUtil.hashCode(result, getNativeType());
+        }
+        if (!CoreStringUtil.isEmpty(getNullable())) {
+            result = HashCodeUtil.hashCode(result, getNullable());
+        }
+        if (!CoreStringUtil.isEmpty(getSearchability())) {
+            result = HashCodeUtil.hashCode(result, getSearchability());
+        }
+        
+        result = HashCodeUtil.hashCode(result, getDistinctValueCount());
+        result = HashCodeUtil.hashCode(result, getLength());
+        result = HashCodeUtil.hashCode(result, getNullValueCount());
+        result = HashCodeUtil.hashCode(result, getPrecision());
+        result = HashCodeUtil.hashCode(result, getRadix());
+        result = HashCodeUtil.hashCode(result, getScale());
+        result = HashCodeUtil.hashCode(result, isAutoIncremented());
+        result = HashCodeUtil.hashCode(result, isCaseSensitive());
+        result = HashCodeUtil.hashCode(result, isCurrency());
+        result = HashCodeUtil.hashCode(result, isLengthFixed());
+        result = HashCodeUtil.hashCode(result, isSelectable());
+        result = HashCodeUtil.hashCode(result, isSigned());
+        result = HashCodeUtil.hashCode(result, isUpdateable());
+
+        return result;
+    }    
+	
 }

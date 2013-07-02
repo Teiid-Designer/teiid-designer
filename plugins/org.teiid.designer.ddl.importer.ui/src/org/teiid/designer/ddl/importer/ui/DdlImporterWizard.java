@@ -1,51 +1,40 @@
 package org.teiid.designer.ddl.importer.ui;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
-import org.teiid.designer.compare.DifferenceReport;
-import org.teiid.designer.compare.ui.wizard.IDifferencingWizard;
-import org.teiid.designer.compare.ui.wizard.ShowDifferencesPage;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.ddl.importer.DdlImporter;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.wizard.AbstractWizard;
 import org.teiid.designer.ui.common.wizard.IPersistentWizardPage;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 
 /**
- * 
+ * Wizard Imports DDL and generates a Relational Model
  */
-public class DdlImporterWizard extends Wizard implements IDifferencingWizard {
+public class DdlImporterWizard extends AbstractWizard implements IImportWizard {
 
     DdlImporter importer;
     private DdlImporterPage srcPg;
+    private DdlImportDifferencesPage diffPage;
 
     /**
-     * 
+     * DdlImporterWizard constructor
      */
     public DdlImporterWizard() {
-        setWindowTitle(DdlImporterUiI18n.WIZARD_TITLE);
-        setDefaultPageImageDescriptor(DdlImporterUiPlugin.imageDescriptor("importWizard75x58.gif")); //$NON-NLS-1$
+        super(DdlImporterUiPlugin.singleton(), DdlImporterUiI18n.WIZARD_TITLE, DdlImporterUiPlugin.imageDescriptor("importWizard75x58.gif"));  //$NON-NLS-1$
+        
         final IDialogSettings pluginSettings = DdlImporterUiPlugin.singleton().getDialogSettings();
         final String sectionName = DdlImporterWizard.class.getSimpleName();
         IDialogSettings section = pluginSettings.getSection(sectionName);
@@ -61,58 +50,13 @@ public class DdlImporterWizard extends Wizard implements IDifferencingWizard {
     @Override
     public void addPages() {
         addPage(srcPg);
-        addPage(new ShowDifferencesPage(this));
-    }
-
-    private void createDifferenceReport( final int totalWork ) throws InterruptedException, InvocationTargetException {
-        if (importer.getChangeReport() != null) return;
-        final List<String> msgs = new ArrayList<String>();
-        new ProgressMonitorDialog(getShell()).run(true, true, new IRunnableWithProgress() {
-
-            @Override
-            public void run( final IProgressMonitor monitor ) {
-                monitor.beginTask(DdlImporterUiI18n.IMPORTING_DDL_MSG, 100);
-                importer.importDdl(msgs, monitor, totalWork);
-                monitor.done();
-            }
-        });
-        if (!msgs.isEmpty()
-            && new MessageDialog(getShell(), DdlImporterUiI18n.CONFIRM_DIALOG_TITLE, null, DdlImporterUiI18n.CONTINUE_IMPORT_MSG,
-                                 MessageDialog.CONFIRM, new String[] {IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL},
-                                 SWT.NONE) {
-
-                @Override
-                protected Control createCustomArea( final Composite parent ) {
-                    final org.eclipse.swt.widgets.List list = new org.eclipse.swt.widgets.List(parent, SWT.BORDER | SWT.V_SCROLL
-                                                                                                       | SWT.H_SCROLL);
-                    list.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-                    list.setItems(msgs.toArray(new String[msgs.size()]));
-                    return list;
-                }
-
-                @Override
-                protected final int getShellStyle() {
-                    return SWT.SHEET;
-                }
-            }.open() != Window.OK) importer.undoImport();
+        addPage(diffPage);
     }
 
     /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.compare.ui.wizard.IDifferencingWizard#getDifferenceReports()
+     * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
+     * @since 4.0
      */
-    @Override
-    public List<DifferenceReport> getDifferenceReports() {
-        try {
-            createDifferenceReport(100);
-        } catch (final Exception error) {
-            error.printStackTrace();
-            WidgetUtil.showError(error);
-        }
-        return Collections.singletonList(importer.getChangeReport());
-    }
-
     @Override
     public void init( final IWorkbench workbench,
                       final IStructuredSelection selection ) {
@@ -129,14 +73,40 @@ public class DdlImporterWizard extends Wizard implements IDifferencingWizard {
         IProject[] projectArray = projects.toArray(new IProject[0]);
         
         importer = new DdlImporter(projectArray);
+        
+        // First Page defines source DDL and target model
         srcPg = new DdlImporterPage(importer, projectArray, finalSelection);
+        
+        // Second Page for presentation of differences - allows user selection
+        diffPage = new DdlImportDifferencesPage(importer);
+        
+    }
+    
+    /**
+     * @see org.eclipse.jface.wizard.IWizard#canFinish()
+     * @since 4.0
+     */
+    @Override
+    public boolean canFinish() {
+        boolean result = false;
+        IWizardPage currentPage = getContainer().getCurrentPage();
+
+        if (currentPage == this.diffPage) {
+            result = currentPage.isPageComplete();
+        } 
+        return result;
     }
 
+    /**
+     * @see org.eclipse.jface.wizard.IWizard#performFinish()
+     * @since 4.0
+     */
     @Override
-    public boolean performFinish() {
+    public boolean finish() {
         try {
-            createDifferenceReport(50);
-            if (importer.getChangeReport() == null) return false;
+        	// Use the importer to process the difference report, generating the model
+            if (importer.getDifferenceReport() == null) return false;
+            
             new ProgressMonitorDialog(getShell()).run(false, false, new IRunnableWithProgress() {
 
                 @Override

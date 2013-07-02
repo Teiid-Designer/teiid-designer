@@ -14,6 +14,8 @@ import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.designer.HashCodeUtil;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalPlugin;
@@ -29,6 +31,9 @@ public class RelationalPrimaryKey extends RelationalReference {
 
     private Collection<RelationalColumn> columns;
     
+    /**
+     * RelationalPrimaryKey constructor
+     */
     public RelationalPrimaryKey( ) {
         super();
         setType(TYPES.PK);
@@ -37,7 +42,8 @@ public class RelationalPrimaryKey extends RelationalReference {
     }
     
     /**
-     * @param name
+     * RelationalPrimaryKey constructor
+     * @param name the primary key name
      */
     public RelationalPrimaryKey( String name ) {
         super(name);
@@ -60,6 +66,10 @@ public class RelationalPrimaryKey extends RelationalReference {
         handleInfoChanged();
     }
     
+    /**
+     * Add a column to this PK
+     * @param column the column
+     */
     public void addColumn(RelationalColumn column) {
     	if( this.columns.add(column) ) {
     		//column.setParent(this);
@@ -67,6 +77,10 @@ public class RelationalPrimaryKey extends RelationalReference {
     	} 
     }
     
+    /**
+     * The the parent table
+     * @return the table
+     */
     public RelationalTable getTable() {
     	if( getParent() != null ) {
     		return (RelationalTable)getParent();
@@ -75,6 +89,10 @@ public class RelationalPrimaryKey extends RelationalReference {
     	return null;
     }
     
+    /**
+     * Set properties
+     * @param props the properties
+     */
     public void setProperties(Properties props) {
         for( Object key : props.keySet() ) {
             String keyStr = (String)key;
@@ -127,4 +145,55 @@ public class RelationalPrimaryKey extends RelationalReference {
 		}
 		return sb.toString();
 	}
+	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals( final Object object ) {
+		if (!super.equals(object)) {
+			return false;
+		}
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
+        if (getClass() != object.getClass())
+            return false;
+        final RelationalPrimaryKey other = (RelationalPrimaryKey)object;
+
+        // Columns
+        Collection<RelationalColumn> thisColumns = getColumns();
+        Collection<RelationalColumn> thatColumns = other.getColumns();
+
+        if (thisColumns.size() != thatColumns.size()) {
+            return false;
+        }
+        
+        if (!thisColumns.isEmpty() && !thisColumns.equals(thatColumns)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+
+        Collection<RelationalColumn> cols = getColumns();
+        for(RelationalColumn col: cols) {
+            result = HashCodeUtil.hashCode(result, col);
+        }
+                
+        return result;
+    }    
+
 }

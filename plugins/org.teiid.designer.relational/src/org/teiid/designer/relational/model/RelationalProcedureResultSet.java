@@ -12,19 +12,22 @@ import java.util.Properties;
 
 /**
  * 
- *
  * @since 8.0
  */
 public class RelationalProcedureResultSet extends RelationalTable {
 
     
+    /**
+     * RelationalProcedureResultSet constructor
+     */
     public RelationalProcedureResultSet() {
         super();
         setType(TYPES.RESULT_SET);
     }
     
     /**
-     * @param name
+     * RelationalProcedureResultSet constructor
+     * @param name the resultset name
      */
     public RelationalProcedureResultSet( String name ) {
         super(name);
@@ -140,4 +143,5 @@ public class RelationalProcedureResultSet extends RelationalTable {
             } 
         }
     }
+        
 }

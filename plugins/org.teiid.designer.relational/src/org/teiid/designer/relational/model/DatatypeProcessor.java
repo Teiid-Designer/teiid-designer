@@ -57,6 +57,9 @@ public class DatatypeProcessor {
     
     private EObject objectDatatype;
     
+    /**
+     * DatatypeProcessor
+     */
     public DatatypeProcessor() {
         super();
         this.datatypeManager = ModelerCore.getWorkspaceDatatypeManager();
@@ -65,9 +68,8 @@ public class DatatypeProcessor {
     /**
      * For a given datatype name or 'identifier', returns an <code>EObject</code> runtime datatype
      * 
-     * @param identifier
-     * @return
-     * @throws ModelerCoreException
+     * @param identifier the string identifier
+     * @return the EObject
      */
     public EObject findDatatype( final String identifier ) {
         String convertedTypeName = identifier;
