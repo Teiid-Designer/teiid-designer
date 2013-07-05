@@ -17,6 +17,7 @@
 		<module>org.teiid.datatools.connectivity</module>
 		<module>org.teiid.datatools.connectivity.model</module>
 		<module>org.teiid.datatools.connectivity.ui</module>
+		<module>org.teiid.datatools.connectivity.ui.flatfile</module>
 		<module>org.teiid.core.designer</module>
 		<module>org.teiid.designer</module>
 		<module>org.teiid.designer.advisor.ui</module>
