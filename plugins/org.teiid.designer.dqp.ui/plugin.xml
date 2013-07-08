@@ -46,6 +46,12 @@
             categoryId="dqpUiPreferenceCategory"
             class="org.teiid.designer.runtime.ui.preferences.AutoCreateDataSourcePreferenceContributor">
       </preference>
+      <!-- Teiid Importer Timeout Preference -->
+      <preference
+            id="teiidImporterTimeoutPreferenceContributor"
+            categoryId="dqpUiPreferenceCategory"
+            class="org.teiid.designer.runtime.ui.preferences.TeiidImporterTimeoutPreferenceContributor">
+      </preference>
   </extension>
 <!-- Actions contributed to the object/model generation -->
    <extension
