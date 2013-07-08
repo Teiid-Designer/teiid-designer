@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent.EventType;
@@ -165,12 +166,20 @@ public final class ImportManager implements IExecutionConfigurationListener {
         monitor.worked(10);
         workRemaining -= 10;
 
-        // Wait until vdb is done loading, up to 60 sec
+        // Wait until vdb is done loading, up to timeout sec
+        String timeoutStr = DqpPlugin.getInstance().getPreferences().get(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
+        int timeoutSec = 0;
+        try {
+			timeoutSec = Integer.parseInt(timeoutStr);
+		} catch (NumberFormatException ex1) {
+			timeoutSec = VDB_LOADING_TIMEOUT_SEC;
+		}
+        
         boolean finishedLoading = false;
         try {
-            finishedLoading = waitForVDBLoad(vdbName,VDB_LOADING_TIMEOUT_SEC,monitor,workRemaining);
+            finishedLoading = waitForVDBLoad(vdbName,timeoutSec,monitor,workRemaining);
         } catch (Exception ex) {
-            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingError, VDB_LOADING_TIMEOUT_SEC, vdbName));
+            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingError, timeoutSec, vdbName));
             return resultStatus;
         }
         
