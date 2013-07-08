@@ -11,6 +11,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.swing.text.html.HTML;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
@@ -28,6 +30,8 @@ import org.teiid.designer.common.xsd.XsdHeaderReader;
 import org.teiid.designer.core.ModelEditorImpl;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.ContainerImpl;
+import org.teiid.designer.core.util.StringConstants;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.core.xmi.ModelImportInfo;
@@ -440,6 +444,10 @@ public class VdbResourceFinder {
 			if (resourceLocation.endsWith(workspaceUri))
 				return fileResource;
 			resourceLocation = resrcLocation.toString();
+			//Check for backslash vs slash
+			resourceLocation = resourceLocation.replaceAll("/", "\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
+			///Windows fix for spaces in workspace path
+			resourceLocation = resourceLocation.replaceAll(StringUtilities.SPACE, "%20"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (resourceLocation.endsWith(workspaceUri))
 				return fileResource;
 		}
