@@ -354,8 +354,8 @@ public class EmfModelGenerator {
         	pkList.add(new DeferredPair(pk,baseTable));
         }
         
-        RelationalUniqueConstraint uc = tableRef.getUniqueContraint();
-        if( uc != null){
+        Collection<RelationalUniqueConstraint> ucs = tableRef.getUniqueConstraints();
+        for(RelationalUniqueConstraint uc: ucs) {
         	ucList.add(new DeferredPair(uc,baseTable));
         }
         
