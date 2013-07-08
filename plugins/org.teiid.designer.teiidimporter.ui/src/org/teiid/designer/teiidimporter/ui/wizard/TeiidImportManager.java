@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.util.CoreStringUtil;
@@ -39,6 +40,7 @@ import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.ddl.importer.DdlImporter;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.importer.ImportManager;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
@@ -177,7 +179,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
                 @Override
                 public void run( IProgressMonitor monitor ) throws InvocationTargetException {
                     try {
-                        monitor.beginTask(Messages.TeiidImportManager_deployVdbMsg, 100); 
+                        monitor.beginTask(NLS.bind(Messages.TeiidImportManager_deployVdbMsg, getTimeoutPrefSecs()), 100); 
                         vdbDeploymentStatus = getServerImportManager().deployDynamicVdb(IMPORT_VDB_NAME,dataSourceName,translatorName,monitor); 
                     } catch (Throwable e) {
                         throw new InvocationTargetException(e);
@@ -200,6 +202,16 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         }
         
         return vdbDeploymentStatus;
+    }
+
+    private String getTimeoutPrefSecs() {
+        String timeoutStr = DqpPlugin.getInstance().getPreferences().get(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
+        try {
+			Integer.parseInt(timeoutStr);
+		} catch (NumberFormatException ex1) {
+			timeoutStr = PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT;
+		}
+        return timeoutStr;
     }
     
     /**

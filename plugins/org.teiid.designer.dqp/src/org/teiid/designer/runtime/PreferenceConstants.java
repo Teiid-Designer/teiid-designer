@@ -39,6 +39,16 @@ public interface PreferenceConstants {
     boolean PREVIEW_ENABLED_DEFAULT = true;
 
     /**
+     * The name of the preference indicating Teiid Importer timeout value (in Secs)
+     */
+    String TEIID_IMPORTER_TIMEOUT_SEC = PLUGIN_ID + ".preferences.TeiidImporterTimeoutSec"; //$NON-NLS-1$
+
+    /**
+     * The default value for the {@link #TEIID_IMPORTER_TIMEOUT_SEC} preference. Default value is {@value} .
+     */
+    String TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT = "120"; //$NON-NLS-1$
+
+    /**
      * The name of the preference indicating if Preview VDBs and their associated data sources will be deleted from Teiid
      * instances.
      */
