@@ -26,13 +26,16 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.teiid.core.designer.util.Base64;
@@ -42,6 +45,7 @@ import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
 import org.teiid.designer.core.util.KeyInValueHashMap;
 import org.teiid.designer.core.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.importer.ImportManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
@@ -70,6 +74,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
     private enum RuntimeState {
         INVALID,
         STARTED,
+        RESTORING,
         SHUTTING_DOWN,
         SHUTDOWN
     }
@@ -540,6 +545,8 @@ public final class TeiidServerManager implements ITeiidServerManager {
 
     @Override
     public IStatus restoreState() {
+        this.state = RuntimeState.RESTORING;
+
         if (this.stateLocationPath != null) {
             if (stateFileExists()) {
                 try {
@@ -709,6 +716,8 @@ public final class TeiidServerManager implements ITeiidServerManager {
             }
         }
 
+        this.state = RuntimeState.STARTED;
+
         // do nothing of there is no save location or state file does not exist
         return Status.OK_STATUS;
     }
@@ -768,13 +777,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
 
         if (teiidServerVersionListeners != null && ! getDefaultServerVersion().equals(oldServerVersion)) {
             // Server version change has occurred so close all editors and notify server version listeners
-            for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
-                for (IWorkbenchPage page : window.getPages()) {
-                    // TODO
-                    // This should not be so broad!!
-                    page.closeAllEditors(true);
-                }
-            }
+            closeEditors();
 
             for (ITeiidServerVersionListener listener : teiidServerVersionListeners) {
                 listener.versionChanged(getDefaultServerVersion());
@@ -782,6 +785,37 @@ public final class TeiidServerManager implements ITeiidServerManager {
         }
 
         notifyListeners(ExecutionConfigurationEvent.createSetDefaultServerEvent(oldDefaultServer, this.defaultServer));
+    }
+
+    /**
+     * Close editors associated with modelling projects
+     */
+    private void closeEditors() {
+        if (RuntimeState.RESTORING == state) {
+            // Avoid closing editors on startup since the default server is simply being assigned
+            return;
+        }
+
+        for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+            for (IWorkbenchPage page : window.getPages()) {
+                IEditorReference[] editorReferences = page.getEditorReferences();
+                for (IEditorReference editorRef : editorReferences) {
+                    IEditorInput input;
+                    try {
+                        input = editorRef.getEditorInput();
+                        IResource resource = (IResource) input.getAdapter(IResource.class);
+
+                        // Only close those editors associated with modelling projects
+                        // rather than blindly closing all editors
+                        if (resource != null && DotProjectUtils.isModelerProject(resource.getProject())) {
+                            page.closeEditor(editorRef.getEditor(false), true);
+                        }
+                    } catch (PartInitException ex) {
+                        DqpPlugin.Util.log(ex);
+                    }
+                }
+            }
+        }
     }
 
     @Override
