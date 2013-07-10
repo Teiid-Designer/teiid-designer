@@ -24,6 +24,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -111,11 +112,6 @@ public final class TeiidServerManager implements EventManager {
     private static final String JDBC_TAG = "jdbc"; //$NON-NLS-1$
 
     /**
-     * The attribute used to persist a server's URL.
-     */
-    private static final String URL_ATTR = "url"; //$NON-NLS-1$
-
-    /**
      * The attribute used to persist a server's login user.
      */
     private static final String USER_ATTR = "user"; //$NON-NLS-1$
@@ -185,16 +181,6 @@ public final class TeiidServerManager implements EventManager {
     private final CopyOnWriteArrayList<IExecutionConfigurationListener> listeners;
 
     /**
-     * The manager responsible for the maintenace of the Preview VDBs,
-     */
-    private final PreviewManager previewManager;
-
-    /**
-     * The manager responsible for the handling of the Import Server and functionality,
-     */
-    private final ImportManager importManager;
-
-    /**
      * The path where the server registry is persisted or <code>null</code> if not persisted.
      */
     private final String stateLocationPath;
@@ -243,30 +229,29 @@ public final class TeiidServerManager implements EventManager {
      */
     public TeiidServerManager( String stateLocationPath, IPasswordProvider passwordProvider, 
                                IServersProvider parentServersProvider, ISecureStorageProvider secureStorageProvider ) {
+        CoreArgCheck.isNotNull(stateLocationPath);
+        CoreArgCheck.isNotNull(passwordProvider);
+        CoreArgCheck.isNotNull(parentServersProvider);
+        CoreArgCheck.isNotNull(secureStorageProvider);
+
         this.teiidServers = new KeyInValueHashMap<String, ITeiidServer>(new TeiidServerKeyValueAdapter());
         this.stateLocationPath = stateLocationPath;
         this.parentServersProvider = parentServersProvider;
         this.secureStorageProvider = secureStorageProvider;
         this.listeners = new CopyOnWriteArrayList<IExecutionConfigurationListener>();
 
-        // construct Preview VDB Manager
-        PreviewManager tempPreviewManager = null;
+        PreviewManager previewManager = PreviewManager.getInstance();
+        previewManager.setPasswordProvider(passwordProvider);
+        addListener(previewManager);
 
-        if (stateLocationPath != null) {
-            try {
-                tempPreviewManager = new PreviewManager();
-                tempPreviewManager.setPasswordProvider(passwordProvider);
-                ModelerCore.getWorkspace().addResourceChangeListener(tempPreviewManager);
-                addListener(tempPreviewManager);
-            } catch (Exception e) {
-                Util.log(IStatus.ERROR, e, Util.getString("serverManagerErrorConstructingPreviewManager")); //$NON-NLS-1$
-            }
+        addListener(ImportManager.getInstance());
+
+        // restore registry
+        final IStatus status = restoreState();
+        if (status.getSeverity() == IStatus.ERROR) {
+            throw new IllegalStateException(new CoreException(status));
         }
 
-        this.previewManager = tempPreviewManager;
-        this.importManager = new ImportManager();
-        addListener(this.importManager);
-        this.importManager.setPasswordProvider(passwordProvider);
         this.state = RuntimeState.STARTED;
     }
 
@@ -311,20 +296,6 @@ public final class TeiidServerManager implements EventManager {
      */
     public ITeiidServer getDefaultServer() {
         return defaultServer;
-    }
-
-    /**
-     * @return the preview VDB manager (may be <code>null</code> if preview not enabled because of no state space folder)
-     */
-    public PreviewManager getPreviewManager() {
-        return this.previewManager;
-    }
-    
-    /**
-     * @return the Import VDB manager (may be <code>null</code> if preview not enabled because of no state space folder)
-     */
-    public ImportManager getImportManager() {
-        return this.importManager;
     }
 
     /**
@@ -758,18 +729,6 @@ public final class TeiidServerManager implements EventManager {
             if (monitor != null) monitor.subTask(Util.getString("serverManagerSavingServerRegistryTask")); //$NON-NLS-1$
 
             saveState();
-
-            // shutdown PreviewManager
-            if (this.previewManager != null) {
-                ModelerCore.getWorkspace().removeResourceChangeListener(this.previewManager);
-
-                try {
-                    this.previewManager.shutdown(monitor);
-                } catch (Exception e) {
-                    IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("errorOnPreviewManagerShutdown"), e); //$NON-NLS-1$
-                    Util.log(status);
-                }
-            }
         } finally {
             this.state = RuntimeState.SHUTDOWN;
         }

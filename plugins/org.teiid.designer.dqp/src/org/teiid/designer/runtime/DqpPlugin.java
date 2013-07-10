@@ -33,6 +33,7 @@ import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.extension.rest.RestModelExtensionAssistant;
 import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants;
+import org.teiid.designer.runtime.preview.PreviewManager;
 
 
 /**
@@ -311,6 +312,9 @@ public class DqpPlugin extends Plugin {
             if (serverMgr != null) {
                 this.serverMgr.shutdown(null);
             }
+
+            // shutdown PreviewManager
+            PreviewManager.getInstance().shutdown(null);
         } finally {
             super.stop(context);
         }

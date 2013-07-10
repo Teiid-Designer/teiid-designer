@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -39,8 +38,6 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.ddl.importer.DdlImporter;
 import org.teiid.designer.metamodels.core.ModelType;
-import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.importer.ImportManager;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
@@ -324,15 +321,15 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         
         return sb.toString();
     }
-    
+
     /**
      * Get the server ImportManager instance
      * @return the ImportManager
      */
     public ImportManager getServerImportManager() {
-        return DqpPlugin.getInstance().getServerManager().getImportManager();
+        return ImportManager.getInstance();
     }
-    
+
     /**
      * Determine if the VDB is Deployed
      * @return 'true' if deployed, 'false' if not.

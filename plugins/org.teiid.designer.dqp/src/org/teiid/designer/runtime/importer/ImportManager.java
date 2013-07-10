@@ -14,14 +14,11 @@ import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent.EventType;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent.TargetType;
@@ -46,7 +43,21 @@ public final class ImportManager implements IExecutionConfigurationListener {
      * The Teiid server being used for importers (may be <code>null</code>).
      */
     private volatile AtomicReference<ITeiidServer> importServer = new AtomicReference<ITeiidServer>();
-	private IPasswordProvider passwordProvider;
+
+	private static ImportManager instance;
+
+	/**
+	 * @return singleton instance
+	 */
+	public static ImportManager getInstance() {
+	    if (instance == null) {
+	        instance = new ImportManager();
+	    }
+
+	    return instance;
+	}
+
+	private ImportManager() {}
 
     /**
      * {@inheritDoc}
@@ -58,14 +69,6 @@ public final class ImportManager implements IExecutionConfigurationListener {
         if (event.getEventType().equals(EventType.DEFAULT) && event.getTargetType().equals(TargetType.SERVER)) {
             setImportServer(event.getUpdatedServer());
         }
-    }
-    
-    /**
-     * Set the password provider
-     * @param passwordProvider the password provider
-     */
-    public void setPasswordProvider( IPasswordProvider passwordProvider ) {
-        this.passwordProvider = passwordProvider;
     }
 
     private void setImportServer( ITeiidServer teiidServer ) {
