@@ -45,10 +45,12 @@ class DdlImporterUiI18n {
 
     static final String DIFFERENCE_PAGE_TITLE = i18n("differencePage.title"); //$NON-NLS-1$
     static final String DIFFERENCE_PAGE_DESCRIPTION = i18n("differencePage.description"); //$NON-NLS-1$
-    static final String DIFFERENCE_PAGE_IMPORT_SELECTIONS_LABEL = i18n("differencePage.importSelectionsLabel"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_IMPORT_TREE_GROUP_TITLE = i18n("differencePage.importTreeGroupTitle"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_IMPORT_MESSAGES_GROUP_TITLE = i18n("differencePage.importMessagesGroupTitle"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_PARSE_ERROR_DDL_GROUP_TITLE = i18n("differencePage.parseErrorDDLGroupTitle"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_PARSE_ERROR_TITLE = i18n("differencePage.parseErrorTitle"); //$NON-NLS-1$
     static final String DIFFERENCE_PAGE_DDLIMPORT_ERROR_MSG = i18n("differencePage.ddlImportErrorMsg"); //$NON-NLS-1$
-    static final String DIFFERENCE_PAGE_CONFIRM_DIALOG_TITLE = i18n("differencePage.confirmDialogTitle"); //$NON-NLS-1$
-    static final String DIFFERENCE_PAGE_CONTINUE_IMPORT_MSG = i18n("differencePage.continueImportMsg"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_PARSE_ERROR_MSG = i18n("differencePage.parseErrorMsg"); //$NON-NLS-1$
     
     static final String DIFFERENCE_PAGE_CREATELIST_LABEL = i18n("differencePage.createListLabel"); //$NON-NLS-1$
     static final String DIFFERENCE_PAGE_DELETELIST_LABEL = i18n("differencePage.deleteListLabel"); //$NON-NLS-1$
@@ -57,6 +59,8 @@ class DdlImporterUiI18n {
     static final String DIFFERENCE_PAGE_NO_DIFFERENCE_REPORT_MSG = i18n("differencePage.noDiffReportErrorMsg"); //$NON-NLS-1$
     static final String DIFFERENCE_PAGE_NO_DIFFERENCE_OPERATIONS_MSG = i18n("differencePage.noDiffOperationsErrorMsg"); //$NON-NLS-1$
     static final String DIFFERENCE_PAGE_NO_DIFFERENCE_OPERATIONS_SELECTED_MSG = i18n("differencePage.noDiffOperationsSelectedErrorMsg"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_IMPORT_COMPLETED_WITH_MESSAGES_MSG = i18n("differencePage.importCompletedWithMessages"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_SEE_IMPORT_MESSAGES_MSG = i18n("differencePage.seeImportMessagesMsg"); //$NON-NLS-1$
     
     private DdlImporterUiI18n() {
     }
