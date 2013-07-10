@@ -47,4 +47,23 @@ public interface TeiidDDLConstants {
 		public static final String CREATE_TRIGGER_ON = "CREATE TRIGGER ON";//$NON-NLS-1$
 		public static final String FOREIGN_TABLE = "FOREIGN TABLE";//$NON-NLS-1$
 		public static final String UDT = "UDT";//$NON-NLS-1$
+		public static final String AGGREGATE_PROP = "AGGREGATE"; //$NON-NLS-1$
+		public static final String ALLOWS_DISTINCT_PROP = "ALLOWS-DISTINCT"; //$NON-NLS-1$
+		public static final String ALLOWS_ORDER_BY_PROP = "ALLOWS-ORDERBY"; //$NON-NLS-1$
+		public static final String ANALYTIC_PROP = "ANALYTIC"; //$NON-NLS-1$
+		public static final String DECOMPOSABLE_PROP = "DECOMPOSABLE"; //$NON-NLS-1$
+		public static final String NON_PREPARED_PROP = "NON-PREPARED"; //$NON-NLS-1$
+		public static final String NULL_ON_NULL_PROP = "NULL-ON-NULL"; //$NON-NLS-1$
+		public static final String USES_DISTINCT_ROWS_PROP = "USES-DISTINCT-ROWS"; //$NON-NLS-1$
+		public static final String VARARGS_PROP = "VARARGS"; //$NON-NLS-1$
+		public static final String FUNCTION_CATEGORY_PROP = "FUNCTION-CATEGORY"; //$NON-NLS-1$
+		public static final String DETERMINISM_PROP = "DETERMINISM"; //$NON-NLS-1$
+		public static final String NATIVE_QUERY_PROP = "NATIVE-QUERY"; //$NON-NLS-1$
+		public static final String DETERMINISM_OPT_NONDETERMINISTIC = "NONDETERMINISTIC"; //$NON-NLS-1$
+		public static final String DETERMINISM_OPT_COMMAND_DETERMINISTIC = "COMMAND_DETERMINISTIC"; //$NON-NLS-1$
+		public static final String DETERMINISM_OPT_SESSION_DETERMINISTIC = "SESSION_DETERMINISTIC"; //$NON-NLS-1$
+		public static final String DETERMINISM_OPT_USER_DETERMINISTIC = "USER_DETERMINISTIC"; //$NON-NLS-1$
+		public static final String DETERMINISM_OPT_VDB_DETERMINISTIC = "VDB_DETERMINISTIC"; //$NON-NLS-1$
+		public static final String DETERMINISM_OPT_DETERMINISTIC = "DETERMINISTIC"; //$NON-NLS-1$
+
 }

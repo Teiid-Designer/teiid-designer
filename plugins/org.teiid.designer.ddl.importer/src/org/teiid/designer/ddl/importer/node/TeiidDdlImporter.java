@@ -27,8 +27,6 @@ import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ddl.importer.DdlImporterI18n;
 import org.teiid.designer.ddl.importer.TeiidDDLConstants;
-import org.teiid.designer.relational.RelationalConstants.PROCEDURE_EXT_PROPERTIES;
-import org.teiid.designer.relational.RelationalConstants.TYPES;
 import org.teiid.designer.relational.model.RelationalAccessPattern;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalForeignKey;
@@ -260,10 +258,7 @@ public class TeiidDdlImporter extends StandardImporter {
 		for (AstNode child : procedureNode) {
 			if (is(child, TeiidDdlLexicon.CreateProcedure.PARAMETER)) {
 				createProcedureParameter(child, procedure);
-
-				// TODO: Determine how to handle teiidddl:result, ddl:defaultOption, ddl:statementOption
 			} else if(is(child, TeiidDdlLexicon.CreateProcedure.RESULT_COLUMNS)) {
-				// TODO: determine how to handle Table flag property
 				RelationalProcedureResultSet result = getFactory().createProcedureResultSet();
 				procedure.setResultSet(result);
 				initialize(result, procedureNode);
@@ -432,13 +427,10 @@ public class TeiidDdlImporter extends StandardImporter {
 	 * @param relationalReference the RelationalReference
 	 */
 	private void processOptions(List<AstNode> optionNodes, RelationalReference relationalReference) {
-		// process the standard teiid options
+		// process the standard teiid options.  Recognized Options are removed from the list as they are processed.
 		processTeiidStandardOptions(optionNodes,relationalReference);
 
-		// Add default Teiid Extensions prior to processing the extension options
-		addDefaultTeiidExtensions(relationalReference);
-
-		// save Extension Options - they are created in 'importFinalize' after model is created.
+		// Add the remaining Options as extension properties.
 		processTeiidExtensionOptions(optionNodes,relationalReference);
 	}
 
@@ -458,10 +450,7 @@ public class TeiidDdlImporter extends StandardImporter {
 			processTeiidColumnOptions(optionNodes,(RelationalColumn)relationalReference);
 		} else if(relationalReference instanceof RelationalProcedure) {
 			processTeiidProcedureOptions(optionNodes,(RelationalProcedure)relationalReference);
-		} else if(relationalReference instanceof RelationalParameter) {
-			processTeiidProcedureParameterOptions(optionNodes,(RelationalParameter)relationalReference);
-		}
-		//ETC
+		} 
 	}
 
 	/**
@@ -480,7 +469,6 @@ public class TeiidDdlImporter extends StandardImporter {
 				if(!CoreStringUtil.isEmpty(optionValueStr)) {
 					if(optionName.equalsIgnoreCase(TeiidDDLConstants.ANNOTATION)) {
 						entity.setDescription(optionValueStr);
-						//getImporterModel().addDescription(entity, optionValueStr, DescriptionOperation.PREPEND);
 						nodeIter.remove();
 					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.UUID)) {
 						// entity.setUUID();
@@ -542,12 +530,69 @@ public class TeiidDdlImporter extends StandardImporter {
 			Object optionValue = optionNode.getProperty(StandardDdlLexicon.VALUE);
 			if(!CoreStringUtil.isEmpty(optionName)) {
 				String optionValueStr = (String)optionValue;
+				// If any function properties are present, the setFuntion boolean is also set
 				if(!CoreStringUtil.isEmpty(optionValueStr)) {
 					if(optionName.equalsIgnoreCase(TeiidDDLConstants.UPDATECOUNT)) {
-						//procedure.setUpdateCount(getUpdateCount(optionValueStr));
 						procedure.setUpdateCount(optionValueStr);
+						nodeIter.remove();
 					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.CATEGORY)) {
+						procedure.setFunctionCategory(optionValueStr);
 						procedure.setFunction(true);
+						nodeIter.remove();
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.AGGREGATE_PROP)) {
+						procedure.setAggregate(isTrue(optionValueStr));
+						procedure.setFunction(true);
+						nodeIter.remove();
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.ALLOWS_DISTINCT_PROP)) {
+						procedure.setAllowsDistinct(isTrue(optionValueStr));
+						procedure.setFunction(true);
+						nodeIter.remove();
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.ALLOWS_ORDER_BY_PROP)) {
+						procedure.setAllowsOrderBy(isTrue(optionValueStr));
+						procedure.setFunction(true);
+						nodeIter.remove();
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.ANALYTIC_PROP)) {
+						procedure.setAnalytic(isTrue(optionValueStr));
+						procedure.setFunction(true);
+						nodeIter.remove();
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.DECOMPOSABLE_PROP)) {
+						procedure.setDecomposable(isTrue(optionValueStr));
+						procedure.setFunction(true);
+						nodeIter.remove();
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.NON_PREPARED_PROP)) {
+						procedure.setNonPrepared(isTrue(optionValueStr));
+						nodeIter.remove();
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.NULL_ON_NULL_PROP)) {
+						procedure.setReturnsNullOnNull(isTrue(optionValueStr));
+						procedure.setFunction(true);
+						nodeIter.remove();
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.USES_DISTINCT_ROWS_PROP)) {
+						procedure.setUseDistinctRows(isTrue(optionValueStr));
+						procedure.setFunction(true);
+						nodeIter.remove();
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.VARARGS_PROP)) {
+						procedure.setVariableArguments(isTrue(optionValueStr));
+						procedure.setFunction(true);
+						nodeIter.remove();
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.DETERMINISM_PROP)) {
+						procedure.setDeterministic(isDeterministic(optionValueStr));
+						procedure.setFunction(true);
+						nodeIter.remove();
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.NATIVE_QUERY_PROP)) {
+						procedure.setNativeQuery(optionValueStr);
+						nodeIter.remove();
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.FUNCTION_CATEGORY_PROP)) {
+						procedure.setFunctionCategory(optionValueStr);
+						procedure.setFunction(true);
+						nodeIter.remove();
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.JAVA_CLASS)) {
+						procedure.setJavaClassName(optionValueStr);
+						procedure.setFunction(true);
+						nodeIter.remove();
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.JAVA_METHOD)) {
+						procedure.setJavaMethodName(optionValueStr);
+						procedure.setFunction(true);
+						nodeIter.remove();
 					}
 				}
 			}
@@ -601,8 +646,11 @@ public class TeiidDdlImporter extends StandardImporter {
 					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.NULL_VALUE_COUNT)) {
 						column.setNullValueCount(Integer.parseInt(optionValueStr));
 						nodeIter.remove();
-					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.DISTINCT_VALUES)) {
-						//column.setDistinctValueCount(value);
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.RADIX)) {
+						column.setRadix(Integer.parseInt(optionValueStr));
+						nodeIter.remove();
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.CHAR_OCTET_LENGTH)) {
+						column.setCharacterOctetLength(Integer.parseInt(optionValueStr));
 						nodeIter.remove();
 					}
 				}
@@ -611,13 +659,27 @@ public class TeiidDdlImporter extends StandardImporter {
 	}
 
 	/**
-	 * Handle the OPTION keys that may be set on ProcedureParameters for Teiid DDL
-	 * @param optionNodes the list of statementOptions for a procedure parameter
-	 * @param procParam the ProcedureParameter
+	 * Get the deterministic boolean from the DETERMINISM option string
+	 * @param determinismStr
+	 * @return 'true' if deterministic, 'false' if not.
 	 */
-	private void processTeiidProcedureParameterOptions(List<AstNode> optionNodes, RelationalParameter procParam) {
+	private boolean isDeterministic(String determinismStr) {
+		if(TeiidDDLConstants.DETERMINISM_OPT_NONDETERMINISTIC.equalsIgnoreCase(determinismStr)) {
+			return false;
+		} else if(TeiidDDLConstants.DETERMINISM_OPT_COMMAND_DETERMINISTIC.equalsIgnoreCase(determinismStr)) {
+			return false;
+		} else if(TeiidDDLConstants.DETERMINISM_OPT_SESSION_DETERMINISTIC.equalsIgnoreCase(determinismStr)) {
+			return false;
+		} else if(TeiidDDLConstants.DETERMINISM_OPT_USER_DETERMINISTIC.equalsIgnoreCase(determinismStr)) {
+			return false;
+		} else if(TeiidDDLConstants.DETERMINISM_OPT_VDB_DETERMINISTIC.equalsIgnoreCase(determinismStr)) {
+			return false;
+		} else if(TeiidDDLConstants.DETERMINISM_OPT_DETERMINISTIC.equalsIgnoreCase(determinismStr)) {
+			return true;
+		}
+		return false;
 	}
-
+	
 	/**
 	 * Save the Extension Option name-value info to the importerModel
 	 * @param optionNodes the list of statement option AstNodes
@@ -640,43 +702,4 @@ public class TeiidDdlImporter extends StandardImporter {
 		}
 	}
 	
-	/**
-	 * Add the default Teiid Extensions for relational objects
-	 * @param relationalRef the relational ref
-	 */
-	private void addDefaultTeiidExtensions(RelationalReference relationalRef) {
-		if(relationalRef.getType()==TYPES.TABLE) {
-//			relationalRef.addExtensionProperty(getPropWithoutNS(BASE_TABLE_EXT_PROPERTIES.NATIVE_QUERY), EMPTY_STR);
-		} else if(relationalRef.getType()==TYPES.PROCEDURE) {
-			relationalRef.addExtensionProperty(getPropWithoutNS(PROCEDURE_EXT_PROPERTIES.AGGREGATE), Boolean.FALSE.toString());
-			relationalRef.addExtensionProperty(getPropWithoutNS(PROCEDURE_EXT_PROPERTIES.ALLOWS_DISTINCT), Boolean.FALSE.toString());
-			relationalRef.addExtensionProperty(getPropWithoutNS(PROCEDURE_EXT_PROPERTIES.ALLOWS_ORDER_BY), Boolean.FALSE.toString());
-			relationalRef.addExtensionProperty(getPropWithoutNS(PROCEDURE_EXT_PROPERTIES.ANALYTIC), Boolean.FALSE.toString());
-			relationalRef.addExtensionProperty(getPropWithoutNS(PROCEDURE_EXT_PROPERTIES.DECOMPOSABLE), Boolean.FALSE.toString());
-			relationalRef.addExtensionProperty(getPropWithoutNS(PROCEDURE_EXT_PROPERTIES.NON_PREPARED), Boolean.FALSE.toString());
-			relationalRef.addExtensionProperty(getPropWithoutNS(PROCEDURE_EXT_PROPERTIES.NULL_ON_NULL), Boolean.FALSE.toString());
-			relationalRef.addExtensionProperty(getPropWithoutNS(PROCEDURE_EXT_PROPERTIES.USES_DISTINCT_ROWS), Boolean.FALSE.toString());
-			relationalRef.addExtensionProperty(getPropWithoutNS(PROCEDURE_EXT_PROPERTIES.VARARGS), Boolean.FALSE.toString());
-			relationalRef.addExtensionProperty(getPropWithoutNS(PROCEDURE_EXT_PROPERTIES.DETERMINISTIC), Boolean.FALSE.toString());
-//			relationalRef.addExtensionProperty(getPropWithoutNS(PROCEDURE_EXT_PROPERTIES.NATIVE_QUERY), EMPTY_STR);
-//			relationalRef.addExtensionProperty(PROCEDURE_EXT_PROPERTIES.FUNCTION_CATEGORY, EMPTY_STR);
-//			relationalRef.addExtensionProperty(PROCEDURE_EXT_PROPERTIES.JAVA_CLASS, EMPTY_STR);
-//			relationalRef.addExtensionProperty(PROCEDURE_EXT_PROPERTIES.JAVA_METHOD, EMPTY_STR);
-//			relationalRef.addExtensionProperty(PROCEDURE_EXT_PROPERTIES.UDF_JAR_PATH, EMPTY_STR);
-		}
-	}
-	
-	private String getPropWithoutNS(String propWithNS) {
-		String result = null;
-		if(propWithNS!=null) {
-			int indx = propWithNS.indexOf(':');
-			if(indx!=-1) {
-				result = propWithNS.substring(indx+1);
-			} else {
-				result = propWithNS;
-			}
-		}
-		return result;
-	}
-
 }
