@@ -14,6 +14,7 @@ import junit.framework.TestCase;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 public class NameUtilTest extends TestCase {
@@ -45,7 +46,11 @@ public class NameUtilTest extends TestCase {
         ITeiidServer teiidServer = mock(ITeiidServer.class);
         when(teiidServer.getServerVersion()).thenReturn(version);
 
-        ModelerCore.setDefaultServer(teiidServer);
+        ITeiidServerManager teiidServerManager = mock(ITeiidServerManager.class);
+        when(teiidServerManager.getDefaultServer()).thenReturn(teiidServer);
+        when(teiidServerManager.getDefaultServerVersion()).thenReturn(version);
+
+        ModelerCore.setTeiidServerManager(teiidServerManager);
     }
 
     /*

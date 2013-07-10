@@ -14,6 +14,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 /**
@@ -65,7 +66,7 @@ public class TeiidServerFactory {
      * @param serverManager
      * @param options
      */
-    private void processOptions(ITeiidServer teiidServer, TeiidServerManager serverManager, ServerOptions[] options) {
+    private void processOptions(ITeiidServer teiidServer, ITeiidServerManager serverManager, ServerOptions[] options) {
         List<ServerOptions> optionList = Collections.emptyList(); 
         if (options != null)
             optionList = Arrays.asList(options);
@@ -107,7 +108,7 @@ public class TeiidServerFactory {
      * @return new {@link ITeiidServer}
      */
     public ITeiidServer createTeiidServer(ITeiidServerVersion serverVersion, 
-                                                               TeiidServerManager serverManager,
+                                                               ITeiidServerManager serverManager,
                                                                IServer parentServer,
                                                                String adminPort,
                                                                String adminUserName,

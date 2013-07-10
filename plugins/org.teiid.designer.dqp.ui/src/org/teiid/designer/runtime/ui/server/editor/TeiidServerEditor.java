@@ -42,13 +42,13 @@ import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.IServersProvider;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
@@ -66,7 +66,7 @@ public class TeiidServerEditor extends EditorPart {
      */
     private boolean dirty = false;
     
-    private TeiidServerManager serverManager;
+    private ITeiidServerManager serverManager;
     
     private ITeiidServer teiidServer;
     

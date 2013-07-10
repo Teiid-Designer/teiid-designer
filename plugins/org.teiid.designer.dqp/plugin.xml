@@ -32,5 +32,11 @@
             class="org.teiid.designer.runtime.DqpPluginStartup">
       </startup>
    </extension>
+   <extension
+         point="org.teiid.designer.spi.teiidServerManager">
+      <serverManager
+            class="org.teiid.designer.runtime.TeiidServerManager">
+      </serverManager>
+   </extension>
 
 </plugin>

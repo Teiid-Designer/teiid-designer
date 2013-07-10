@@ -19,10 +19,10 @@ import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidServerFactory;
 import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 
 /**
@@ -33,7 +33,7 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 public class TeiidServerAdapterFactory implements IAdapterFactory {
     
     private Object lock = new Object();
-    private TeiidServerManager serverManager;
+    private ITeiidServerManager serverManager;
     
     @Override
     public Class[] getAdapterList() {
@@ -56,7 +56,7 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
         return null;
     }
     
-    private TeiidServerManager getTeiidServerManager() {
+    private ITeiidServerManager getTeiidServerManager() {
         if (serverManager == null)
             serverManager = DqpPlugin.getInstance().getServerManager();
         

@@ -37,10 +37,10 @@ import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidParentServerListener;
 import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -280,7 +280,7 @@ public final class ServerPage extends WizardPage {
     /**
      * @return the server manager obtained from the wizard
      */
-    private TeiidServerManager getServerManager() {
+    private ITeiidServerManager getServerManager() {
         return ((ServerWizard) getWizard()).getServerManager();
     }
     

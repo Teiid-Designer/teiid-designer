@@ -17,8 +17,8 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
@@ -63,7 +63,7 @@ public class NewServerAction extends Action implements IHandler {
             shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         }
 
-        TeiidServerManager teiidServerManager = DqpPlugin.getInstance().getServerManager();
+        ITeiidServerManager teiidServerManager = DqpPlugin.getInstance().getServerManager();
         ServerWizard wizard = new ServerWizard(teiidServerManager);      
         WizardDialog dialog = new WizardDialog(this.shell, wizard) {
             /**

@@ -23,8 +23,8 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.IDescriptionProvider;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder;
@@ -52,7 +52,7 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
      */
     private static Pattern pattern = Pattern.compile("[\\\n\\\t]+"); //$NON-NLS-1$
     
-    private TeiidServerManager serverMgr;
+    private ITeiidServerManager serverMgr;
 
     /**
      * Servers that a connection can't be established. Value is the last time establishing a connection was tried.
@@ -143,7 +143,7 @@ public class TeiidServerLabelProvider extends ColumnLabelProvider implements ILi
     /**
      * @return the server manager (never <code>null</code>)
      */
-    private TeiidServerManager getServerManager() {
+    private ITeiidServerManager getServerManager() {
         if (this.serverMgr == null) {
             this.serverMgr = DqpPlugin.getInstance().getServerManager();
         }

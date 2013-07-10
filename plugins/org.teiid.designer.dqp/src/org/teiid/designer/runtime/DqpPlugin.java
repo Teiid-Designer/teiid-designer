@@ -10,9 +10,7 @@ package org.teiid.designer.runtime;
 import java.util.ResourceBundle;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.DefaultScope;
@@ -26,7 +24,7 @@ import org.teiid.core.designer.event.IChangeNotifier;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.designer.ExtensionRegistryUtils;
 import org.teiid.designer.IExtensionRegistryCallback;
-import org.teiid.datatools.connectivity.ConnectivityUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.core.workspace.ModelWorkspaceNotification;
 import org.teiid.designer.core.workspace.ModelWorkspaceNotificationAdapter;
@@ -36,6 +34,7 @@ import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.extension.rest.RestModelExtensionAssistant;
 import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants;
 import org.teiid.designer.runtime.preview.PreviewManager;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 
 
 /**
@@ -93,7 +92,7 @@ public class DqpPlugin extends Plugin {
     /**
      * The Teiid server registry.
      */
-    private TeiidServerManager serverMgr;
+    private ITeiidServerManager serverMgr;
 
     /**
      * Provider of the {@link IServer}s collection
@@ -104,8 +103,6 @@ public class DqpPlugin extends Plugin {
      * The password provider to be used in the server manager's preview manager
      */
     private IPasswordProvider passwordProvider;
-
-    private TeiidParentServerListener serverStateListener;
 
     /**
      * Obtains the current plugin preferences values.
@@ -129,6 +126,7 @@ public class DqpPlugin extends Plugin {
 
     /**
      * @return the <code>designer.dqp</code> plugin's runtime workspace path or the test runtime path
+     *
      * @since 6.0.0
      */
     public IPath getRuntimePath() {
@@ -142,7 +140,7 @@ public class DqpPlugin extends Plugin {
     /**
      * @return the server manager
      */
-    public TeiidServerManager getServerManager() {
+    public ITeiidServerManager getServerManager() {
         if (serverMgr == null) {
             
             /*
@@ -269,24 +267,9 @@ public class DqpPlugin extends Plugin {
                          PreferenceConstants.PREVIEW_TEIID_CLEANUP_ENABLED_DEFAULT);
 
     }
-    
-    
 
-    private void initializeServerRegistry() throws CoreException {
-        String restoreRegistryPath = getRuntimePath().toFile().getAbsolutePath();
-        this.serverMgr = new TeiidServerManager(restoreRegistryPath, passwordProvider, 
-                                                getServersProvider(), ConnectivityUtil.getSecureStorageProvider());
-
-        // restore registry
-        final IStatus status = this.serverMgr.restoreState();
-
-        if (!status.isOK()) {
-            Util.log(status);
-        }
-
-        if (status.getSeverity() == IStatus.ERROR) {
-            throw new CoreException(status);
-        }
+    private void initializeServerRegistry() {
+        this.serverMgr = ModelerCore.getTeiidServerManager();
     }
 
     /**

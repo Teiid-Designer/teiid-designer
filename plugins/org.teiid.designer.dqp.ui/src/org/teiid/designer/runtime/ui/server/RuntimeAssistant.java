@@ -19,9 +19,9 @@ import org.osgi.service.prefs.BackingStoreException;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 
 
 /**
@@ -130,7 +130,7 @@ public final class RuntimeAssistant {
     /**
      * @return the server manager (never <code>null</code>)
      */
-    private static TeiidServerManager getServerManager() {
+    private static ITeiidServerManager getServerManager() {
         return DqpPlugin.getInstance().getServerManager();
     }
 
@@ -168,7 +168,7 @@ public final class RuntimeAssistant {
      * Run the set default server action
      */
     public static void runSetDefaultServerAction () {
-        SetDefaultServerAction action = new SetDefaultServerAction(getServerManager());
+        SetDefaultServerAction action = new SetDefaultServerAction();
         action.run();
     }
 

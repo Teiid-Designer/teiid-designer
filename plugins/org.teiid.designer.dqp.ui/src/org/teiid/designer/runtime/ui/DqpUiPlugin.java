@@ -26,10 +26,10 @@ import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbCleanupJob;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.ui.server.editor.TeiidServerEditor;
 import org.teiid.designer.runtime.ui.server.editor.TeiidServerEditorInput;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
@@ -182,7 +182,7 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
             public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException {
                 try {
                     if (DqpPlugin.getInstance().isServerManagerStarted()) {
-                        TeiidServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
+                        ITeiidServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
                         serverMgr.shutdown(monitor);
                     }
 
