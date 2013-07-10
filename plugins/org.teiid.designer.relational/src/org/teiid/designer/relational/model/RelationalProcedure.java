@@ -51,17 +51,17 @@ public class RelationalProcedure extends RelationalReference {
      */
     public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
     
-    private boolean function;
-    private boolean nonPrepared;
-    private boolean deterministic;
-    private boolean returnsNullOnNull;
-    private boolean variableArguments;
-    private boolean aggregate;
-    private boolean allowsDistinct;
-    private boolean allowsOrderBy;
-    private boolean analytic;
-    private boolean decomposable;
-    private boolean useDistinctRows;
+    private boolean function = false;
+    private boolean nonPrepared = false;
+    private boolean deterministic = false;
+    private boolean returnsNullOnNull = false;
+    private boolean variableArguments = false;
+    private boolean aggregate = false;
+    private boolean allowsDistinct = false;
+    private boolean allowsOrderBy = false;
+    private boolean analytic = false;
+    private boolean decomposable = false;
+    private boolean useDistinctRows = false;
     private String nativeQuery;
     private String javaClass;
     private String javaMethod;

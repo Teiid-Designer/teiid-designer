@@ -985,12 +985,12 @@ public class EmfModelGenerator {
     
     /**
      * Adds the RelationalReference - EObject pair to the deferred processing list, if there are
-     * extension properties or a description to add.
+     * extension properties or a description to add.  Also RelationalProcedure are deferred to process extensions
      * @param relRef the RelationalReference
      * @param eObj the EObject
      */
     private void updateDeferredList(RelationalReference relRef, EObject eObj) {
-        if(!relRef.getExtensionProperties().isEmpty() || !CoreStringUtil.isEmpty(relRef.getDescription())) {
+        if(!relRef.getExtensionProperties().isEmpty() || !CoreStringUtil.isEmpty(relRef.getDescription()) || relRef instanceof RelationalProcedure) {
         	deferredProcessingList.add(new DeferredPair(relRef, eObj));      
         }
     }
@@ -1040,9 +1040,15 @@ public class EmfModelGenerator {
 	 * appropriate extension properties to the model.
 	 * @param modelResource the ModelResource
 	 * @param relationalEntity the RelationalReference
+	 * @param eObject the EObject
 	 * 
 	 */
 	private void processExtensionProperties(ModelResource modelResource, RelationalReference relationalEntity, EObject eObject) {
+		// RelationalProcedure has fields which are transferred to extension properties
+		if(relationalEntity.getType()==TYPES.PROCEDURE) {
+			processProcedureExtensionProperties(modelResource,(RelationalProcedure)relationalEntity,eObject);
+		}
+		
 		Properties extensionProperties = relationalEntity.getExtensionProperties();
 		
 		Iterator<Object> keyIter = extensionProperties.keySet().iterator();
@@ -1054,20 +1060,106 @@ public class EmfModelGenerator {
 	    	ModelObjectExtensionAssistant assistant = getModelExtensionAssistant(eObject.getClass().getName(),propName);
 	    	if(assistant!=null) {
 	    		// Ensure that the Model supports the MED
-	    		try {
-	    			applyMedIfNecessary(modelResource,assistant);
-	    		} catch (Exception e) {
-	                RelationalPlugin.Util.log(IStatus.ERROR, Messages.emfModelGenerator_errorApplyingMedToModel);
-	    		}
-	    		String namespacedId = null;
-	    		try {
-	    			namespacedId = assistant.getNamespacePrefix()+':'+propName;
-					assistant.setPropertyValue(eObject, namespacedId, propValue);
-				} catch (Exception ex) {
-	                RelationalPlugin.Util.log(IStatus.ERROR,ex, 
-	                    	NLS.bind(Messages.emfModelGenerator_errorSettingPropertyValue, namespacedId));
-				}
+	    		applyMedIfNecessary(modelResource,assistant);
+	    		
+	    		// Set the property value via the assistant
+	    		setPropertyValue(assistant,eObject,propName,propValue);
 	    	}
+		}
+	}
+	
+    /**
+	 * Process the RelationalProcedure, converting values to EMF extension properties
+	 * @param modelResource the ModelResource
+	 * @param relationalProcedure the RelationalProcedure
+	 * @param eObject the EObject
+	 * 
+	 */
+	private void processProcedureExtensionProperties(ModelResource modelResource, RelationalProcedure relationalProcedure, EObject eObject) {
+		RelationalModelExtensionAssistant relationalExtensionAssistant = getRelationalExtensionAssistant();
+		
+		String nativeQuery = relationalProcedure.getNativeQuery();
+		if(!CoreStringUtil.isEmpty(nativeQuery)) {
+			setPropertyValue(relationalExtensionAssistant,eObject,RelationalConstants.PROCEDURE_EXT_PROPERTIES.NATIVE_QUERY,nativeQuery);
+		}
+		
+		boolean isNonPrepared = relationalProcedure.isNonPrepared();
+		setPropertyValue(relationalExtensionAssistant,eObject,RelationalConstants.PROCEDURE_EXT_PROPERTIES.NON_PREPARED,String.valueOf(isNonPrepared));
+		
+		// Functions have many additional extension properties
+		boolean isFunction = relationalProcedure.isFunction();
+		if(isFunction) {
+			String functionCategory = relationalProcedure.getFunctionCategory();
+			if(!CoreStringUtil.isEmpty(functionCategory)) {
+				setPropertyValue(relationalExtensionAssistant,eObject,RelationalConstants.PROCEDURE_EXT_PROPERTIES.FUNCTION_CATEGORY,functionCategory);
+			}
+
+			String javaClass = relationalProcedure.getJavaClassName();
+			if(!CoreStringUtil.isEmpty(javaClass)) {
+				setPropertyValue(relationalExtensionAssistant,eObject,RelationalConstants.PROCEDURE_EXT_PROPERTIES.JAVA_CLASS,javaClass);
+			}
+
+			String javaMethod = relationalProcedure.getJavaMethodName();
+			if(!CoreStringUtil.isEmpty(javaMethod)) {
+				setPropertyValue(relationalExtensionAssistant,eObject,RelationalConstants.PROCEDURE_EXT_PROPERTIES.JAVA_METHOD,javaMethod);
+			}
+			
+			boolean isVariableArgs = relationalProcedure.isVariableArguments();
+			setPropertyValue(relationalExtensionAssistant,eObject,RelationalConstants.PROCEDURE_EXT_PROPERTIES.VARARGS,String.valueOf(isVariableArgs));
+			
+			boolean isNullOnNull = relationalProcedure.isReturnsNullOnNull();
+			setPropertyValue(relationalExtensionAssistant,eObject,RelationalConstants.PROCEDURE_EXT_PROPERTIES.NULL_ON_NULL,String.valueOf(isNullOnNull));
+			
+			boolean isDeterministic = relationalProcedure.isDeterministic();
+			setPropertyValue(relationalExtensionAssistant,eObject,RelationalConstants.PROCEDURE_EXT_PROPERTIES.DETERMINISTIC,String.valueOf(isDeterministic));
+			
+			// Additional Properties for Aggregate 'true'
+			boolean isAggregate = relationalProcedure.isAggregate();
+			if(isAggregate) {
+				setPropertyValue(relationalExtensionAssistant,eObject,RelationalConstants.PROCEDURE_EXT_PROPERTIES.AGGREGATE,String.valueOf(isAggregate));
+				
+				boolean isAnalytic = relationalProcedure.isAnalytic();
+				setPropertyValue(relationalExtensionAssistant,eObject,RelationalConstants.PROCEDURE_EXT_PROPERTIES.ANALYTIC,String.valueOf(isAnalytic));
+				
+				boolean isAllowsOrderBy = relationalProcedure.isAllowsOrderBy();
+				setPropertyValue(relationalExtensionAssistant,eObject,RelationalConstants.PROCEDURE_EXT_PROPERTIES.ALLOWS_ORDER_BY,String.valueOf(isAllowsOrderBy));
+				
+				boolean isUseDistinctRows = relationalProcedure.isUseDistinctRows();
+				setPropertyValue(relationalExtensionAssistant,eObject,RelationalConstants.PROCEDURE_EXT_PROPERTIES.USES_DISTINCT_ROWS,String.valueOf(isUseDistinctRows));
+				
+				boolean isAllowsDistinct = relationalProcedure.isAllowsDistinct();
+				setPropertyValue(relationalExtensionAssistant,eObject,RelationalConstants.PROCEDURE_EXT_PROPERTIES.ALLOWS_DISTINCT,String.valueOf(isAllowsDistinct));
+				
+				boolean isDecomposable = relationalProcedure.isDecomposable();
+				setPropertyValue(relationalExtensionAssistant,eObject,RelationalConstants.PROCEDURE_EXT_PROPERTIES.DECOMPOSABLE,String.valueOf(isDecomposable));
+			}
+
+		}
+		
+	}
+	
+    /**
+	 * Set a property value via the supplied assistant.  the propId should NOT be namespaced
+	 * @param assistant the ModelObjectExtensionAssistant
+	 * @param eObject the EObject
+	 * @param propId the property name
+	 * @param propValue the property value
+	 * 
+	 */
+	private void setPropertyValue(ModelObjectExtensionAssistant assistant, EObject eObject, String propId, String propValue) {
+		// Check if the propId is already namespaced, otherwise prepend the assistant's namespace prefix
+		String namespacedId = null;
+		if(propId.indexOf(':') != -1) {
+			namespacedId = propId;
+		} else {
+			namespacedId = assistant.getNamespacePrefix()+':'+propId;
+		}
+
+		try {
+			assistant.setPropertyValue(eObject, namespacedId, propValue);
+		} catch (Exception ex) {
+            RelationalPlugin.Util.log(IStatus.ERROR,ex, 
+                	NLS.bind(Messages.emfModelGenerator_errorSettingPropertyValue, namespacedId));
 		}
 	}
 	
@@ -1077,10 +1169,14 @@ public class EmfModelGenerator {
 	 * @param assistant the ModelObjectExtensionAssistant
 	 * @throws Exception exception if there's a problem applying the MED
 	 */
-	private void applyMedIfNecessary(final ModelResource modelResource, ModelObjectExtensionAssistant assistant) throws Exception {
+	private void applyMedIfNecessary(final ModelResource modelResource, ModelObjectExtensionAssistant assistant) {
 		if (modelResource != null && !modelResource.isReadOnly()) {
-			if(!assistant.supportsMyNamespace(modelResource)) {
-				assistant.saveModelExtensionDefinition(modelResource);
+			try{
+				if(!assistant.supportsMyNamespace(modelResource)) {
+					assistant.saveModelExtensionDefinition(modelResource);
+				}
+			} catch (Exception e) {
+				RelationalPlugin.Util.log(IStatus.ERROR, Messages.emfModelGenerator_errorApplyingMedToModel);
 			}
 		}
 	}
@@ -1148,7 +1244,7 @@ public class EmfModelGenerator {
 	 * Add the RelationalExtension to the supplied ModelResource, if it has not already been added.
 	 * @param modelResource
 	 */
-    private static void addRelationalExtensionAssistant(ModelResource modelResource) {
+    private void addRelationalExtensionAssistant(ModelResource modelResource) {
         final RelationalModelExtensionAssistant assistant = getRelationalExtensionAssistant();
 
         try {
@@ -1162,7 +1258,7 @@ public class EmfModelGenerator {
 	 * Get the RelationalModelExtensionAssistant from the MED registry
 	 * @param modelResource
 	 */
-    private static RelationalModelExtensionAssistant getRelationalExtensionAssistant() {
+    private RelationalModelExtensionAssistant getRelationalExtensionAssistant() {
     	final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
         final String prefix = RelationalModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
         final RelationalModelExtensionAssistant assistant = (RelationalModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
