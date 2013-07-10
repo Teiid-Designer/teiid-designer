@@ -29,6 +29,7 @@ import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
+import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbCleanupJob;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.connection.PreviewMissingPasswordDialog;
@@ -189,6 +190,9 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
                         TeiidServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
                         serverMgr.shutdown(monitor);
                     }
+
+                    // shutdown PreviewManager
+                    PreviewManager.getInstance().shutdown(monitor);
                 } catch (InterruptedException e) {
                     monitor.setCanceled(true);
                     throw e;

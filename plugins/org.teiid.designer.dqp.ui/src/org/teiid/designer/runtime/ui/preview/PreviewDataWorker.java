@@ -222,8 +222,7 @@ public class PreviewDataWorker {
         	return;
         }
         
-        final PreviewManager previewManager = getServerManager().getPreviewManager();
-        assert (previewManager != null) : "PreviewManager is null"; //$NON-NLS-1$
+        final PreviewManager previewManager = PreviewManager.getInstance();
 
         ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
         IRunnableWithProgress runnable = new IRunnableWithProgress() {

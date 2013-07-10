@@ -20,6 +20,7 @@ import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.TeiidServerManager;
+import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 
 
@@ -137,7 +138,7 @@ public final class RuntimeAssistant {
      * @return <code>true</code> if the preview preference is enabled
      */
     private static boolean isPreviewEnabled() {
-        return getServerManager().getPreviewManager().isPreviewEnabled();
+        return PreviewManager.getInstance().isPreviewEnabled();
     }
 
     /**

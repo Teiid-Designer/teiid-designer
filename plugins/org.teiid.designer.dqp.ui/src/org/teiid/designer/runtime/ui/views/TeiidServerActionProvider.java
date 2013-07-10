@@ -172,8 +172,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
      * @return <code>true</code> if preview is enabled
      */
     private boolean isPreviewEnabled() {
-        PreviewManager previewManager = getServerManager().getPreviewManager();
-        return ((previewManager != null) && previewManager.isPreviewEnabled());
+        return PreviewManager.getInstance().isPreviewEnabled();
     }
 
     /**
