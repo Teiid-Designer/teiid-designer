@@ -12,9 +12,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -22,17 +20,21 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.teiid.core.designer.I18n;
+import org.teiid.designer.ddl.importer.DdlErrorMessage;
 import org.teiid.designer.ddl.importer.DdlImporter;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.compare.DifferenceReport;
@@ -40,6 +42,7 @@ import org.teiid.designer.relational.compare.OperationList;
 import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
+import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.widget.DefaultTreeViewerController;
@@ -54,10 +57,17 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
     private static final int PANEL_GRID_SPAN = 3;
     		
     private final DdlImporter importer;
+	private Composite stackPanel;
+	private Composite differencesPanel;
+	private Composite parseErrorPanel;
+	private StackLayout stackLayout;
     private CheckboxTreeController controller;
     private TreeViewer treeViewer;
     private Tree tree;
     boolean treeExpanded = false;
+    private StyledTextEditor ddlContentsArea;
+    private List<String> importMessages = new ArrayList<String>();
+    private org.eclipse.swt.widgets.List messagesList;
     
     /**
      * DdlImportDifferencesPage Constructor
@@ -80,42 +90,98 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
         final Composite panel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1, PANEL_GRID_SPAN);
         setControl(panel);
         
-        // Checkbox tree - shows proposed changes
-        createCheckboxTreeComposite(panel, DdlImporterUiI18n.DIFFERENCE_PAGE_IMPORT_SELECTIONS_LABEL); 
+        // Stack Layout - swap between parse error page and differences page
+    	stackPanel = new Composite(panel, SWT.NONE | SWT.FILL);
+    	stackLayout = new StackLayout();
+    	stackLayout.marginWidth = 0;
+    	stackLayout.marginHeight = 0;
+    	stackPanel.setLayout(stackLayout);
+    	stackPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+    	
+        // Differences Panel 
+    	createDifferencesPanel(stackPanel); 
+    	
+    	// Parse Error Panel
+    	createParseErrorPanel(stackPanel);
     }
-
+    
     /**
-     * create the checkbox tree Composite
+     * create the Differences tree Composite
      * 
      * @param parent the parent composite
-     * @param title the group title
      */
-    private void createCheckboxTreeComposite( Composite parent,
-                                              String title ) {
-        Composite checkBoxTreeComposite = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH);
-        GridLayout layout = new GridLayout(1, false);
-        checkBoxTreeComposite.setLayout(layout);
+    private void createDifferencesPanel( Composite parent ) {
+    	differencesPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH);
+    	GridLayout layout = new GridLayout(1, false);
+    	differencesPanel.setLayout(layout);
 
+    	SashForm splitter = WidgetFactory.createSplitter(differencesPanel, SWT.VERTICAL);
+    	GridData gid = new GridData();
+    	gid.grabExcessHorizontalSpace = gid.grabExcessVerticalSpace = true;
+    	gid.horizontalAlignment = gid.verticalAlignment = GridData.FILL;
+    	splitter.setLayoutData(gid);
+
+
+    	// --------------------------
+    	// Group for checkbox tree
+    	// --------------------------
+    	Group treeGroup = WidgetFactory.createGroup(splitter, DdlImporterUiI18n.DIFFERENCE_PAGE_IMPORT_TREE_GROUP_TITLE, GridData.FILL_BOTH, 1, 1);
+
+    	// ----------------------------
+    	// TreeViewer
+    	// ----------------------------
+    	this.controller = new CheckboxTreeController();
+    	this.treeViewer = WidgetFactory.createTreeViewer(treeGroup, SWT.SINGLE | SWT.CHECK, GridData.FILL_BOTH, controller);
+
+    	this.tree = this.treeViewer.getTree();
+
+    	tree.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+    	this.treeViewer.setContentProvider(new CheckboxTreeContentProvider());
+    	this.treeViewer.setLabelProvider(new CheckboxTreeLabelProvider());
+
+    	this.treeViewer.setInput(null);
+
+    	// --------------------------
+    	// Group for Import Messages
+    	// --------------------------
+    	Group messageGroup = WidgetFactory.createGroup(splitter, DdlImporterUiI18n.DIFFERENCE_PAGE_IMPORT_MESSAGES_GROUP_TITLE, GridData.FILL_BOTH, 1, 1);
+
+    	messagesList = new org.eclipse.swt.widgets.List(messageGroup, SWT.BORDER | SWT.V_SCROLL	| SWT.H_SCROLL);
+    	messagesList.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+    	// position the splitter
+    	splitter.setWeights(new int[] {10, 3});
+    	splitter.layout();
+    }
+    
+    /**
+     * create the Panel to display parse errors
+     * 
+     * @param parent the parent composite
+     */
+    private void createParseErrorPanel( Composite parent ) {
+    	parseErrorPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH);
+    	GridLayout layout = new GridLayout(1, false);
+    	parseErrorPanel.setLayout(layout);
+
+    	Group ddlGroup = WidgetFactory.createGroup(parseErrorPanel, DdlImporterUiI18n.DIFFERENCE_PAGE_PARSE_ERROR_DDL_GROUP_TITLE, GridData.FILL_BOTH, 1, 1);
+
+    	Composite ddlPanel = WidgetFactory.createPanel(ddlGroup, SWT.NONE, GridData.FILL_BOTH);
+    	ddlPanel.setLayout(layout);
+
+    	// --------------------------
+        // Group for Parse Errors
         // --------------------------
-        // Group for checkbox tree
-        // --------------------------
-        Group group = WidgetFactory.createGroup(checkBoxTreeComposite, title, GridData.FILL_BOTH, 1, 2);
-
-        // ----------------------------
-        // TreeViewer
-        // ----------------------------
-        this.controller = new CheckboxTreeController();
-        this.treeViewer = WidgetFactory.createTreeViewer(group, SWT.SINGLE | SWT.CHECK, GridData.FILL_BOTH, controller);
-
-        this.tree = this.treeViewer.getTree();
-        //tree.addListener(SWT.Selection, this);
-
-        tree.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        this.treeViewer.setContentProvider(new CheckboxTreeContentProvider());
-        this.treeViewer.setLabelProvider(new CheckboxTreeLabelProvider());
-
-        this.treeViewer.setInput(null);
+        int messageAreaStyle = SWT.READ_ONLY | SWT.V_SCROLL | SWT.WRAP;
+        GridData gridData = new GridData(GridData.FILL_BOTH);
+        gridData.horizontalAlignment = GridData.FILL;
+        gridData.verticalAlignment = GridData.FILL;
+        gridData.grabExcessHorizontalSpace = true;
+        gridData.grabExcessVerticalSpace = true;
+        ddlContentsArea = StyledTextEditor.createReadOnlyEditor(ddlPanel, messageAreaStyle);
+        ddlContentsArea.setLayoutData(gridData);
+        ddlContentsArea.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
     }
 
     /**
@@ -149,49 +215,51 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
         
         // If the page is being shown, import the DDL and generate the difference report 
         if(visible) {
+        	importMessages.clear();
         	// Perform the DDL Import
-        	final List<String> msgs = new ArrayList<String>();
         	try {
         		new ProgressMonitorDialog(getShell()).run(true, true, new IRunnableWithProgress() {
 
         			@Override
         			public void run( final IProgressMonitor monitor ) {
         				monitor.beginTask(DdlImporterUiI18n.IMPORTING_DDL_MSG, 100);
-        				importer.importDdl(msgs, monitor, 100);
+        				importer.importDdl(importMessages, monitor, 100);
         				monitor.done();
         			}
         		});
         	} catch (Exception ex) {
         		DdlImporterUiPlugin.UTIL.log(IStatus.ERROR,ex,DdlImporterUiI18n.DIFFERENCE_PAGE_DDLIMPORT_ERROR_MSG);
-        		msgs.add(DdlImporterUiI18n.DIFFERENCE_PAGE_DDLIMPORT_ERROR_MSG);
+        		importMessages.add(DdlImporterUiI18n.DIFFERENCE_PAGE_DDLIMPORT_ERROR_MSG);
         	}
         	
-            // Errors Encountered - confirm with user whether to continue
-        	boolean importCancelled = false;
-            if (!msgs.isEmpty()
-                && new MessageDialog(getShell(), DdlImporterUiI18n.DIFFERENCE_PAGE_CONFIRM_DIALOG_TITLE, null, DdlImporterUiI18n.DIFFERENCE_PAGE_CONTINUE_IMPORT_MSG,
-                                     MessageDialog.CONFIRM, new String[] {IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL},
-                                     SWT.NONE) {
+        	// Hard Failure (eg parse error) will show the error page
+        	if(importer.hasFailureMessage()) {
+    			this.stackLayout.topControl = parseErrorPanel;
+    			this.setTitle(DdlImporterUiI18n.DIFFERENCE_PAGE_PARSE_ERROR_TITLE);
+    			
+    			this.ddlContentsArea.setText(importer.getDdlString());
+    			DdlErrorMessage failedMessage = importer.getFailureMessage();
+    			// Get the offSet of the error if set
+    			int offset = failedMessage.getIndex();
+    			// Highlight the problem line if possible
+    			if(offset>-1) {
+    				StyledText styledText = ddlContentsArea.getTextWidget();
+        			int line = styledText.getLineAtOffset(offset);
+        			if(line>-1) {
+        				int startIndx = styledText.getOffsetAtLine(line);
+        				int endIndx = styledText.getOffsetAtLine(line+1);
+        				styledText.setSelection(startIndx, endIndx);
+        			}
+    			}
+                String msg = I18n.format(DdlImporterUiI18n.DIFFERENCE_PAGE_PARSE_ERROR_MSG,failedMessage.getMessage());
+    	        setErrorMessage(msg);
 
-                    @Override
-                    protected Control createCustomArea( final Composite parent ) {
-                        final org.eclipse.swt.widgets.List list = new org.eclipse.swt.widgets.List(parent, SWT.BORDER | SWT.V_SCROLL
-                                                                                                           | SWT.H_SCROLL);
-                        list.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-                        list.setItems(msgs.toArray(new String[msgs.size()]));
-                        return list;
-                    }
-
-                    @Override
-                    protected final int getShellStyle() {
-                        return SWT.SHEET;
-                    }
-                }.open() != Window.OK) {
-            	importer.undoImport();
-            	importCancelled=true;
-            }
-        	
-            if(!importCancelled) {
+    			importer.undoImport();
+    		// Show differences page
+    		} else {
+    			this.stackLayout.topControl = differencesPanel;
+    			this.setTitle(DdlImporterUiI18n.DIFFERENCE_PAGE_TITLE);
+    			
             	// Set the checkbox tree roots (create,delete,update)
             	List<OperationList> rootList = new ArrayList<OperationList>();
             	DifferenceReport diffReport = this.importer.getDifferenceReport();
@@ -206,28 +274,55 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
             	this.treeViewer.setInput(rootList);
             	this.treeViewer.expandToLevel(2);
             	this.setAllNodesSelected(true);
-            }
-        	validate();
+            	
+        		messagesList.setItems(importMessages.toArray(new String[importMessages.size()]));
+
+        		validate();
+    		}
+    		        		
+    		this.stackPanel.layout();
+
         }
     }
 
-    void validate() {
+    /**
+     * validate the Differences Page
+     */
+    void validate( ) {
         setErrorMessage(null);
+
+        StringBuffer errMessageBuffer = new StringBuffer();
         
-        // Potentially set an error message here - if nothing is selected
+        // Determine if there are any importer messages to show
+        boolean hasImportMessages = importMessages.isEmpty() ? false : true;
+        
         DifferenceReport diffReport = importer.getDifferenceReport();
+        
+        // No DifferenceReport to show
         if(diffReport==null) {
-        	setErrorMessage(DdlImporterUiI18n.DIFFERENCE_PAGE_NO_DIFFERENCE_REPORT_MSG);
+        	errMessageBuffer.append(DdlImporterUiI18n.DIFFERENCE_PAGE_NO_DIFFERENCE_REPORT_MSG);
         } else {
+        	// DifferenceReport has no operations
         	if(!diffReport.hasOperations()) {
-            	setErrorMessage(DdlImporterUiI18n.DIFFERENCE_PAGE_NO_DIFFERENCE_OPERATIONS_MSG);
+            	errMessageBuffer.append(DdlImporterUiI18n.DIFFERENCE_PAGE_NO_DIFFERENCE_OPERATIONS_MSG);
+            // DifferenceReport has nothing selected
         	} else if(!diffReport.hasSelectedOperations()) {
-            	setErrorMessage(DdlImporterUiI18n.DIFFERENCE_PAGE_NO_DIFFERENCE_OPERATIONS_SELECTED_MSG);
+            	errMessageBuffer.append(DdlImporterUiI18n.DIFFERENCE_PAGE_NO_DIFFERENCE_OPERATIONS_SELECTED_MSG);
         	}
         }
         
-        // Set the 'ok' message
-        if (getErrorMessage() == null) {
+        // Set error message if an error was found
+        if(errMessageBuffer.length()>0) {
+        	if(hasImportMessages) {
+        		errMessageBuffer.append('\n'+DdlImporterUiI18n.DIFFERENCE_PAGE_SEE_IMPORT_MESSAGES_MSG);
+        	}
+        	setErrorMessage(errMessageBuffer.toString());
+        // Set information message if only import messages are found
+        } else if(hasImportMessages) {
+        	setMessage(DdlImporterUiI18n.DIFFERENCE_PAGE_IMPORT_COMPLETED_WITH_MESSAGES_MSG);
+        // Set description to finish
+        } else {
+        	setMessage(null);
             setDescription(DdlImporterUiI18n.DIFFERENCE_PAGE_DESCRIPTION);
         }
     }
