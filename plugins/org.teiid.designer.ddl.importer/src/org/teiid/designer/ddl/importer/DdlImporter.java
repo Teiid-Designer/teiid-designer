@@ -22,6 +22,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
+import org.modeshape.common.text.ParsingException;
+import org.modeshape.common.text.Position;
 import org.modeshape.sequencer.ddl.DdlParsers;
 import org.modeshape.sequencer.ddl.StandardDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
@@ -60,6 +62,8 @@ public class DdlImporter {
 	private IFile modelFile;
     private DifferenceReport diffReport;
     private ModelResource model;
+    private String ddlString;
+    private DdlErrorMessage failedMessage; 
 
     private DdlImporterManager importManager = new DdlImporterManager();
 
@@ -113,7 +117,9 @@ public class DdlImporter {
     }
 
     void importDdl(FileReader reader, List<String> messages, IProgressMonitor monitor, int totalWork ) throws Exception {
-
+    	ddlString = null;
+    	failedMessage = null;
+    	
         int workUnit = totalWork / 3;
 
         // ------------------------------------------------------------------------------
@@ -130,11 +136,29 @@ public class DdlImporter {
         // Use specified parser if it has been set
         AstNode rootNode = null;
         DdlParsers parsers = new DdlParsers();
-        if(!CoreStringUtil.isEmpty(specifiedParser)) {
-        	rootNode = parsers.parseUsing(builder.toString(),specifiedParser);
-        // No DDL parser is specified - user DdlParsers which will score the best fit
-        } else {
-            rootNode = parsers.parse(builder.toString(), ddlFileName);
+        ddlString = builder.toString();
+        try {
+        	if(!CoreStringUtil.isEmpty(specifiedParser)) {
+        		rootNode = parsers.parseUsing(ddlString,specifiedParser);
+        		// No DDL parser is specified - user DdlParsers which will score the best fit
+        	} else {
+        		rootNode = parsers.parse(ddlString, ddlFileName);
+        	}
+        // If parsing exception is encountered, throw DdlImportException
+        } catch (ParsingException e) {
+        	failedMessage = new DdlErrorMessage(e.getMessage());
+        	Position position = e.getPosition();
+        	failedMessage.setIsParse(true);
+        	failedMessage.setColNumber(position.getColumn());
+        	failedMessage.setLineNumber(position.getLine());
+        	failedMessage.setIndex(position.getIndexInContent());
+        	if(!CoreStringUtil.isEmpty(specifiedParser)) {
+        		failedMessage.setParserId(specifiedParser);
+        	} else if(rootNode!=null) {
+                String parserId = (String) rootNode.getProperty(StandardDdlLexicon.PARSER_ID);
+            	failedMessage.setParserId(parserId);
+        	}
+        	return;
         }
         String parserId = (String) rootNode.getProperty(StandardDdlLexicon.PARSER_ID);
 
@@ -178,6 +202,30 @@ public class DdlImporter {
         monitor.worked(workUnit);
     }
 
+    /**
+     * @return the 'true' if has a failure mesage
+     */
+    public boolean hasFailureMessage() {
+    	if(this.failedMessage!=null) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+    /**
+     * @return the failure message
+     */
+    public DdlErrorMessage getFailureMessage() {
+    	return this.failedMessage;
+    }
+
+    /**
+     * @return the last ddl string
+     */
+    public String getDdlString() {
+    	return ddlString;
+    }
+    
     /**
      * @return differenceReport
      */
