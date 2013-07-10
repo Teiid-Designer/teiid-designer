@@ -419,4 +419,10 @@
          </or>
       </definition>
    </extension>
+   <extension
+         point="org.teiid.designer.spi.teiidPasswordProvider">
+      <passwordProvider
+            class="org.teiid.designer.runtime.ui.connection.ConnectionPasswordProvider">
+      </passwordProvider>
+   </extension>
 </plugin>

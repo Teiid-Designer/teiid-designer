@@ -7,9 +7,9 @@
  */
 package org.teiid.designer.runtime;
 
-import java.io.IOException;
 import java.util.ResourceBundle;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -24,6 +24,8 @@ import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.event.IChangeNotifier;
 import org.teiid.core.designer.util.PluginUtilImpl;
+import org.teiid.designer.ExtensionRegistryUtils;
+import org.teiid.designer.IExtensionRegistryCallback;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.core.workspace.ModelWorkspaceNotification;
@@ -58,6 +60,9 @@ public class DqpPlugin extends Plugin {
      */
     private static final String I18N_NAME = PACKAGE_ID + ".i18n"; //$NON-NLS-1$
 
+    /**
+     * The source bindings file name
+     */
     public static final String SOURCE_BINDINGS_FILE_NAME = "SourceBindings.xml"; //$NON-NLS-1$
     
     private static IPath runtimePath;
@@ -103,18 +108,27 @@ public class DqpPlugin extends Plugin {
     private TeiidParentServerListener serverStateListener;
 
     /**
-     * Obtains the current plubin preferences values. <strong>This method should be used instead of
-     * {@link Plugin#getPluginPreferences()}.</strong>
-     * 
+     * Obtains the current plugin preferences values.
+     *
      * @return the preferences (never <code>null</code>)
      */
     public IEclipsePreferences getPreferences() {
-        return new InstanceScope().getNode(PLUGIN_ID);
+        return this.getPreferences(PLUGIN_ID);
     }
-    
+
+    /**
+     * Obtains the current plugin preferences values for the given plugin id
+     *
+     * @param pluginId
+     *
+     * @return the preferences (never <code>null</code>) for the given plugin id
+     */
+    public IEclipsePreferences getPreferences(String pluginId) {
+        return InstanceScope.INSTANCE.getNode(pluginId);
+    }
+
     /**
      * @return the <code>designer.dqp</code> plugin's runtime workspace path or the test runtime path
-     * @throws IOException if an error occurs obtaining the path
      * @since 6.0.0
      */
     public IPath getRuntimePath() {
@@ -167,14 +181,52 @@ public class DqpPlugin extends Plugin {
      * @return the password provider
      */
     public IPasswordProvider getPasswordProvider() {
+
+        if (passwordProvider == null) {
+            IExtensionRegistryCallback<IPasswordProvider> callback = new IExtensionRegistryCallback<IPasswordProvider>() {
+
+                @Override
+                public String getExtensionPointId() {
+                    return IPasswordProvider.PASSWORD_PROVIDER_EXTENSION_POINT_ID;
+                }
+
+                @Override
+                public String getElementId() {
+                    return IPasswordProvider.PASSWORD_PROVIDER_ELEMENT_ID;
+                }
+
+                @Override
+                public String getAttributeId() {
+                    return CLASS_ATTRIBUTE_ID;
+                }
+
+                @Override
+                public boolean isSingle() {
+                    return true;
+                }
+
+                @Override
+                public void process(IPasswordProvider instance, IConfigurationElement element) {
+                    if (passwordProvider != null) {
+                        /*
+                         * Programming error since the password provider extension should only be
+                         * implemented once.
+                         */
+                        throw new IllegalStateException();
+                    }
+
+                    passwordProvider = instance;
+                }
+            };
+
+            try {
+                ExtensionRegistryUtils.createExtensionInstances(callback);
+            } catch (Exception ex) {
+                throw new IllegalStateException(ex);
+            }
+        }
+
         return passwordProvider;
-    }
-    
-    /**
-     * @param passwordProvider
-     */
-    public void setPasswordProvider(IPasswordProvider passwordProvider) {
-        this.passwordProvider = passwordProvider;
     }
     
     /**
@@ -207,7 +259,7 @@ public class DqpPlugin extends Plugin {
     }
 
     private void initializeDefaultPreferences() {
-        IEclipsePreferences prefs = new DefaultScope().getNode(DqpPlugin.getInstance().getBundle().getSymbolicName());
+        IEclipsePreferences prefs = DefaultScope.INSTANCE.getNode(DqpPlugin.getInstance().getBundle().getSymbolicName());
 
         // initialize the Teiid cleanup enabled preference
         prefs.putBoolean(PreferenceConstants.PREVIEW_ENABLED, PreferenceConstants.PREVIEW_ENABLED_DEFAULT);
