@@ -1058,7 +1058,7 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     private String getMetaclassShortName(String metaclass) {
-        return AbstractMetaclassNameProvider.getLabel(metaclassName);
+        return AbstractMetaclassNameProvider.getLabel(metaclass);
     }
 
     ModelExtensionPropertyDefinition getPropertyDefinition() {

@@ -42,6 +42,8 @@ class DdlImporterUiI18n {
     static final String PROJECT_MSG_PART = i18n("projectMsgPart"); //$NON-NLS-1$
     static final String UPDATE_MSG_PART = i18n("updateMsgPart"); //$NON-NLS-1$
     static final String WIZARD_TITLE = i18n("wizardTitle"); //$NON-NLS-1$
+    static final String IMPORT_COMPLETED_WITH_WARNINGS_TITLE = i18n("importCompletedWithWarningsTitle"); //$NON-NLS-1$
+    static final String IMPORT_COMPLETED_WITH_WARNINGS_MESSAGE = i18n("importCompletedWithWarningsMessage"); //$NON-NLS-1$
 
     static final String DIFFERENCE_PAGE_TITLE = i18n("differencePage.title"); //$NON-NLS-1$
     static final String DIFFERENCE_PAGE_DESCRIPTION = i18n("differencePage.description"); //$NON-NLS-1$
