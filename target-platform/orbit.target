@@ -3,7 +3,7 @@
 
 <target name="jbt-orbit" sequenceNumber="4">
   <locations>
-    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <repository location="http://download.jboss.org/jbosstools/updates/requirements/orbit/S20130427215344/"/>
       <unit id="org.apache.poi" version="3.9.0.v201303080712"/>
     </location>

@@ -156,4 +156,14 @@ Including: Connection management, VDB creation and management and Data Preview/V
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="org.jboss.tools.foundation.security.linux"
+         os="linux"
+         ws="gtk"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
 </feature>
