@@ -1,0 +1,141 @@
+/*
+ * JBoss, Home of Professional Open Source.
+*
+* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+*
+* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+*/
+package org.teiid.designer.runtime.spi;
+
+import java.util.Collection;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.wst.server.core.IServer;
+import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
+import org.teiid.designer.DesignerSPIPlugin;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+
+/**
+ *
+ */
+public interface ITeiidServerManager extends EventManager {
+
+    /**
+     * Default server version property id
+     */
+    String DEFAULT_TEIID_SERVER_VERSION_ID = "defaultTeiidServerVersion"; //$NON-NLS-1$
+
+    /**
+     * Extension Point ID
+     */
+    String TEIID_SERVER_MANAGER_EXTENSION_POINT_ID = DesignerSPIPlugin.PLUGIN_ID + ".teiidServerManager"; //$NON-NLS-1$
+
+    /**
+     * Extension Point Element ID
+     */
+    String TEIID_SERVER_MANAGER_ELEMENT_ID = "serverManager"; //$NON-NLS-1$
+
+    /**
+     * Get the implementation of the {@link ISecureStorageProvider} used by
+     * this server manager.
+     * 
+     * @return implementation of {@link ISecureStorageProvider}
+     */
+    ISecureStorageProvider getSecureStorageProvider();
+
+    /**
+     * Registers the specified <code>PersistedServer</code>.
+     * 
+     * @param teiidServer the server being added (never <code>null</code>)
+     * @return a status indicating if the server was added to the registry
+     */
+    IStatus addServer(ITeiidServer teiidServer);
+
+    /**
+     * @return defaultServer
+     */
+    ITeiidServer getDefaultServer();
+
+    /**
+     * @param id the id of the server being requested (never <code>null</code> )
+     * @return the requested server or <code>null</code> if not found in the registry
+     */
+    ITeiidServer getServer(String id);
+
+    /**
+     * @param parentServer the parent server of the requested teiid server
+     * @return the requested server or <code>null</code> if not found in the registry
+     */
+    ITeiidServer getServer(IServer parentServer);
+
+    /**
+     * @return an unmodifiable collection of registered servers (never <code>null</code>)
+     */
+    Collection<ITeiidServer> getServers();
+
+    /**
+     * Get the targeted teiid server version
+     *
+     * @return teiid server version
+     */
+    ITeiidServerVersion getDefaultServerVersion();
+
+    /**
+     * Is this server the default
+     * 
+     * @param teiidServer
+     * 
+     * @return true if this server is the default, false otherwise.
+     */
+    boolean isDefaultServer(ITeiidServer teiidServer);
+
+    /**
+     * @param teiidServer the server being tested (never <code>null</code>)
+     * @return <code>true</code> if the server has been registered
+     */
+    boolean isRegistered(ITeiidServer teiidServer);
+
+    /**
+     * @param teiidServer the server being removed (never <code>null</code>)
+     * @return a status indicating if the specified segetUrlrver was removed from the registry (never <code>null</code>)
+     */
+    IStatus removeServer(ITeiidServer teiidServer);
+
+    /**
+     * @param teiidServer Sets defaultServer to the specified value. May be null.
+     */
+    void setDefaultServer(ITeiidServer teiidServer);
+
+    /**
+     * Try and restore the manager's prior state
+     *
+     * @return a status indicating if the previous session state was restored successfully
+     */
+    IStatus restoreState();
+
+    /**
+     * Saves the {@link ITeiidServer} registry to the file system and performs any other tasks
+     * needed to shutdown. Shutdown may take a bit of time so it is advised to pass in a monitor
+     * and, if needed, show the user a dialog that blocks until the monitor is finished.
+     * 
+     * @param monitor the progress monitor (may be <code>null</code>)
+     * @throws Exception 
+     */
+    void shutdown( IProgressMonitor monitor ) throws Exception;
+
+    /**
+     * Add a listener to be notified in the event the default server
+     * version is changed
+     * 
+     * @param listener
+     */
+    void addTeiidServerVersionListener(ITeiidServerVersionListener listener);
+
+    /**
+     * Remove a listener no longer interested in listening
+     * to changes is server version
+     * 
+     * @param listener
+     */
+    void removeTeiidServerVersionListener(ITeiidServerVersionListener listener);
+}

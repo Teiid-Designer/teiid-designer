@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime.ui.actions;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -18,8 +17,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.vdb.ExecuteVdbDialog;
@@ -153,7 +152,7 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
     	worker.processForDTP(teiidServer, vdbName);
 	}
     
-    private static TeiidServerManager getServerManager() {
+    private static ITeiidServerManager getServerManager() {
         return DqpPlugin.getInstance().getServerManager();
     }
 

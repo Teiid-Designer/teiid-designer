@@ -275,11 +275,6 @@ public final class PreviewManager extends JobChangeAdapter
     }
 
     /**
-     * The preview context (never <code>null</code>).
-     */
-    private final PreviewContext context;
-
-    /**
      * A flag indicating if preview is enabled. This will match the value of preferenced
      * {@link PreferenceConstants#PREVIEW_ENABLED}.
      */
@@ -310,20 +305,26 @@ public final class PreviewManager extends JobChangeAdapter
     private boolean retryOnNextRefreshOfServer;
 
     /**
-     * Constructs a <code>PreviewManager</code> using the default {@link PreviewContext}.
-     * 
-     * @throws Exception if there is a problem initializing the preview feature
+     * Singleton instance of the preview manager
      */
-    public PreviewManager() throws Exception {
-        this(null);
+    private static PreviewManager instance;
+
+    /**
+     * @return singleton instance
+     */
+    public static PreviewManager getInstance() {
+        if (instance == null)
+            instance = new PreviewManager();
+
+        return instance;
     }
 
     /**
-     * @param context the preview context (may be <code>null</code>)
+     * Constructs a <code>PreviewManager</code> using the default {@link PreviewContext}.
+     *
      * @throws Exception if there is a problem initializing the preview feature
      */
-    public PreviewManager( PreviewContext context ) throws Exception {
-        this.context = (context == null) ? this : context;
+    private PreviewManager() {
         startup();
     }
 
@@ -406,9 +407,9 @@ public final class PreviewManager extends JobChangeAdapter
     private Job createDeleteDeployedPreviewVdbJob( IPath pvdbPath ) {
         // delete deployed PVDB
         IFile pvdbFile = getFile(pvdbPath);
-        String jndiName = this.context.getPreviewVdbJndiName(pvdbPath);
-        Job job = new DeleteDeployedPreviewVdbJob(this.context.getPreviewVdbDeployedName(pvdbPath),
-                                                  getPreviewVdbVersion(pvdbFile), jndiName, this.context, getPreviewServer());
+        String jndiName = this.getPreviewVdbJndiName(pvdbPath);
+        Job job = new DeleteDeployedPreviewVdbJob(this.getPreviewVdbDeployedName(pvdbPath),
+                                                  getPreviewVdbVersion(pvdbFile), jndiName, this, getPreviewServer());
         return job;
     }
 
@@ -498,7 +499,7 @@ public final class PreviewManager extends JobChangeAdapter
         IConnectionInfoHelper helper = new ConnectionInfoHelper();
 
         if (helper.hasConnectionInfo(modelResource)) {
-            String jndiName = this.context.getPreviewVdbJndiName(previewVdb.getFile().getFullPath());
+            String jndiName = this.getPreviewVdbJndiName(previewVdb.getFile().getFullPath());
             // create data source on server if we need to
             if (!getPreviewServer().dataSourceExists(jndiName)) {
                 getOrCreateDataSource(model, jndiName);
@@ -544,18 +545,18 @@ public final class PreviewManager extends JobChangeAdapter
     private void fileDeleted( IFile file ) {
         if (ModelUtil.isModelFile(file.getFullPath())) {
             try {
-                IFile pvdbFile = this.context.getPreviewVdb(file);
+                IFile pvdbFile = this.getPreviewVdb(file);
 
                 // if the Preview VDB exists then the associated model was selected and deleted by user
                 if ((pvdbFile != null) && pvdbFile.exists()) {
-                    DeletePreviewVdbJob job = new DeletePreviewVdbJob(this.context, file);
+                    DeletePreviewVdbJob job = new DeletePreviewVdbJob(this, file);
                     job.addJobChangeListener(this);
                     job.schedule();
                 } else {
                     // Preview VDB doesn't exist so user must've deleted a folder. Just delete the deployed PVDB.
                     Job job = new DeleteDeployedPreviewVdbJob(getPreviewVdbDeployedName(pvdbFile),
                                                               getPreviewVdbVersion(pvdbFile), getPreviewVdbJndiName(pvdbFile),
-                                                              this.context, getPreviewServer());
+                                                              this, getPreviewServer());
                     job.schedule();
                 }
             } catch (Exception e) {
@@ -596,10 +597,10 @@ public final class PreviewManager extends JobChangeAdapter
                 // do a check to make sure the PVDB still exists
                 if (pvdbFile.exists()) {
                     if (!onlyThoseNeedingToBeDeployed) {
-                        pvdbsToDeploy.add(this.context.getPreviewVdb(status.getFile()));
+                        pvdbsToDeploy.add(this.getPreviewVdb(status.getFile()));
                     } else {
                         if (needsToBeDeployed(pvdbFile)) {
-                            pvdbsToDeploy.add(this.context.getPreviewVdb(pvdbFile));
+                            pvdbsToDeploy.add(this.getPreviewVdb(pvdbFile));
                         }
                     }
                 } else {
@@ -694,7 +695,7 @@ public final class PreviewManager extends JobChangeAdapter
     }
 
     private String getPreviewVdbDeployedName( IFile pvdb ) {
-        return this.context.getPreviewVdbDeployedName(pvdb.getFullPath());
+        return this.getPreviewVdbDeployedName(pvdb.getFullPath());
     }
 
     /**
@@ -708,7 +709,7 @@ public final class PreviewManager extends JobChangeAdapter
     }
 
     private String getPreviewVdbJndiName( IFile pvdb ) {
-        return this.context.getPreviewVdbJndiName(pvdb.getFullPath());
+        return this.getPreviewVdbJndiName(pvdb.getFullPath());
     }
 
     /**
@@ -890,7 +891,7 @@ public final class PreviewManager extends JobChangeAdapter
 
             if (!pvdbPaths.isEmpty()) {
                 CompositePreviewJob batchJob = new CompositePreviewJob(NLS.bind(Messages.DeleteOrphanedPreviewVdbsJob,
-                                                                                project.getName()), this.context,
+                                                                                project.getName()), this,
                                                                        getPreviewServer());
                 Collection<PreviewVdbStatus> statuses = null;
 
@@ -926,12 +927,12 @@ public final class PreviewManager extends JobChangeAdapter
 
                     if (delete) {
                         // delete PVDB if there is no associated model
-                        DeletePreviewVdbJob deletePvdbJob = new DeletePreviewVdbJob(modelFile, this.context);
+                        DeletePreviewVdbJob deletePvdbJob = new DeletePreviewVdbJob(modelFile, this);
                         batchJob.add(deletePvdbJob);
                     } else {
                         // Make sure PVDB is synchronized. One way a PVDB won't be synchronized is if the model was dirty when
                         // the project was closed and the user saved the file as part of the project being closed.
-                        UpdatePreviewVdbJob updatePvdbJob = new UpdatePreviewVdbJob(modelFile, getPreviewServer(), this.context);
+                        UpdatePreviewVdbJob updatePvdbJob = new UpdatePreviewVdbJob(modelFile, getPreviewServer(), this);
                         updatePvdbJob.addJobChangeListener(new JobChangeAdapter() {
                             
                             @Override
@@ -991,18 +992,11 @@ public final class PreviewManager extends JobChangeAdapter
      */
     private void handlePreviewVdbUpdated( UpdatePreviewVdbJob job ) {
         IFile changedModel = job.getModel();
-        IFile pvdbFile = this.context.getPreviewVdb(changedModel);
+        IFile pvdbFile = this.getPreviewVdb(changedModel);
 
         // change deploy status if necessary
         if ((job.getPreviewServer() != null) && !needsToBeDeployed(pvdbFile)) {
             setNeedsToBeDeployedStatus(pvdbFile, true);
-//
-//            // delete deployed PVDB
-//            Job deleteDeployedPvdbJob = new DeleteDeployedPreviewVdbJob(getPreviewVdbDeployedName(pvdbFile),
-//                                                                        getPreviewVdbVersion(pvdbFile),
-//                                                                        getPreviewVdbJndiName(pvdbFile), this.context,
-//                                                                        job.getPreviewServer());
-//            deleteDeployedPvdbJob.schedule();
         }
     }
 
@@ -1040,7 +1034,7 @@ public final class PreviewManager extends JobChangeAdapter
         assert isPreviewableResource(model) : "model is not previewable: " + model; //$NON-NLS-1$
 
         try {
-            ModelChangedJob job = new ModelChangedJob(model, this.context, getPreviewServer());
+            ModelChangedJob job = new ModelChangedJob(model, this, getPreviewServer());
             job.addChildJobChangeListener(this);
             job.schedule(500); // delay to let auto build start
         } catch (Exception e) {
@@ -1110,7 +1104,7 @@ public final class PreviewManager extends JobChangeAdapter
      */
     private void modelProjectOpened( IProject project ) {
         try {
-            ModelProjectOpenedJob job = new ModelProjectOpenedJob(project, this.context);
+            ModelProjectOpenedJob job = new ModelProjectOpenedJob(project, this);
             job.addChildJobChangeListener(this);
             job.addJobChangeListener(this);
             job.schedule(1000); // delay to let build start
@@ -1211,7 +1205,7 @@ public final class PreviewManager extends JobChangeAdapter
         ModelResource model = ModelUtil.getModel(objectToPreview);
         IFile modelToPreview = (IFile)model.getCorrespondingResource();
         IProject currentModelProject = modelToPreview.getProject();
-        IFile pvdbFile = this.context.getPreviewVdb(modelToPreview);
+        IFile pvdbFile = this.getPreviewVdb(modelToPreview);
         Vdb pvdb = new Vdb(pvdbFile, true, monitor);
         projectPreviewVdbName = getPreviewProjectVdbName(currentModelProject);
 
@@ -1246,7 +1240,7 @@ public final class PreviewManager extends JobChangeAdapter
             // make sure all connection information is valid
             if (model.getModelType() == ModelType.PHYSICAL_LITERAL) {
                 monitor.subTask(NLS.bind(Messages.PreviewSetupConnectionInfoTask, model.getItemName()));
-                IStatus status = this.context.ensureConnectionInfoIsValid(pvdb, previewServer);
+                IStatus status = this.ensureConnectionInfoIsValid(pvdb, previewServer);
 
                 // save if necessary
                 if (pvdb.isModified()) {
@@ -1319,7 +1313,7 @@ public final class PreviewManager extends JobChangeAdapter
 
                 if (!error) {
                     monitor.subTask(NLS.bind(Messages.PreviewSetupConnectionInfoTask, name));
-                    status = this.context.ensureConnectionInfoIsValid(projectModelPvdb, previewServer);
+                    status = this.ensureConnectionInfoIsValid(projectModelPvdb, previewServer);
 
                     // save if necessary
                     boolean wasSaved = false;
@@ -1593,7 +1587,7 @@ public final class PreviewManager extends JobChangeAdapter
 
                 DeletePreviewVdbJob deletePvdbJob;
                 try {
-                    deletePvdbJob = new DeletePreviewVdbJob(modelFile, context);
+                    deletePvdbJob = new DeletePreviewVdbJob(modelFile, this);
                     jobs.add(deletePvdbJob);
                     previewVdbsDeleted = true;
                 } catch (Exception ex) {
@@ -1607,7 +1601,7 @@ public final class PreviewManager extends JobChangeAdapter
              */
             if (previewVdbsDeleted) {
                 try {
-                    ModelProjectOpenedJob job = new ModelProjectOpenedJob(project, context);
+                    ModelProjectOpenedJob job = new ModelProjectOpenedJob(project, this);
                     jobs.add(job);
                 } catch (Exception ex) {
                     Util.log(ex);
@@ -1619,7 +1613,7 @@ public final class PreviewManager extends JobChangeAdapter
     }
 
     private void setPreviewServer( ITeiidServer teiidServer ) {
-        final PreviewContext previewContext = this.context;
+        final PreviewContext previewContext = this;
         final ITeiidServer oldServer = getPreviewServer();
         final ITeiidServerVersion oldServerVersion = oldServer == null ? null : oldServer.getServerVersion();
 
@@ -1708,6 +1702,7 @@ public final class PreviewManager extends JobChangeAdapter
     public void shutdown( IProgressMonitor monitor ) throws Exception {
         try {
             // remove listeners
+            ModelerCore.getWorkspace().removeResourceChangeListener(this);
             ModelerCore.getModelContainer().getChangeNotifier().removeListener(this);
             IEclipsePreferences prefs = DqpPlugin.getInstance().getPreferences();
             prefs.removePreferenceChangeListener(this);
@@ -1724,7 +1719,7 @@ public final class PreviewManager extends JobChangeAdapter
                 for (ITeiidVdb vdb : getPreviewServer().getVdbs()) {
                     if (vdb.isPreviewVdb()) {
                         Job job = new DeleteDeployedPreviewVdbJob(vdb.getName(), vdb.getVersion(),
-                                                                  getPreviewVdbJndiName(vdb.getName()), this.context,
+                                                                  getPreviewVdbJndiName(vdb.getName()), this,
                                                                   getPreviewServer());
                         jobs.add(job);
                     }
@@ -1761,9 +1756,15 @@ public final class PreviewManager extends JobChangeAdapter
     /**
      * Tasks done when first constructed.
      */
-    private void startup() throws Exception {
+    private void startup() {
         // add listeners
-        ModelerCore.getModelContainer().getChangeNotifier().addListener(this);
+        try {
+            ModelerCore.getModelContainer().getChangeNotifier().addListener(this);
+        } catch (Exception e) {
+            Util.log(IStatus.ERROR, e, Util.getString("serverManagerErrorConstructingPreviewManager")); //$NON-NLS-1$
+        }
+
+        ModelerCore.getWorkspace().addResourceChangeListener(this);
         IEclipsePreferences prefs = DqpPlugin.getInstance().getPreferences();
         prefs.addPreferenceChangeListener(this);
 

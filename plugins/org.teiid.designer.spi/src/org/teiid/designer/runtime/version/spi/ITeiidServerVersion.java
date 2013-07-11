@@ -12,39 +12,39 @@ package org.teiid.designer.runtime.version.spi;
  */
 public interface ITeiidServerVersion {
     
-    public static final String DOT = ".";  //$NON-NLS-1$
+    String DOT = ".";  //$NON-NLS-1$
     
-    public static final String WILDCARD = "x"; //$NON-NLS-1$
+    String WILDCARD = "x"; //$NON-NLS-1$
     
-    public static final String ZERO = "0"; //$NON-NLS-1$
+    String ZERO = "0"; //$NON-NLS-1$
 
-    public static final String ONE = "1"; //$NON-NLS-1$
+    String ONE = "1"; //$NON-NLS-1$
 
-    public static final String TWO = "2"; //$NON-NLS-1$
+    String TWO = "2"; //$NON-NLS-1$
 
-    public static final String THREE = "3"; //$NON-NLS-1$
+    String THREE = "3"; //$NON-NLS-1$
 
-    public static final String FOUR = "4"; //$NON-NLS-1$
+    String FOUR = "4"; //$NON-NLS-1$
 
-    public static final String FIVE = "5"; //$NON-NLS-1$
+    String FIVE = "5"; //$NON-NLS-1$
 
-    public static final String SIX = "6"; //$NON-NLS-1$
+    String SIX = "6"; //$NON-NLS-1$
 
-    public static final String SEVEN = "7"; //$NON-NLS-1$
+    String SEVEN = "7"; //$NON-NLS-1$
 
-    public static final String EIGHT = "8"; //$NON-NLS-1$
+    String EIGHT = "8"; //$NON-NLS-1$
 
-    public static final String NINE = "9"; //$NON-NLS-1$
+    String NINE = "9"; //$NON-NLS-1$
 
     /**
      * Default teiid 8 server version
      */
-    public static final String DEFAULT_TEIID_8_SERVER_ID = EIGHT + DOT + ZERO + DOT + ZERO;
+    String DEFAULT_TEIID_8_SERVER_ID = EIGHT + DOT + FOUR + DOT + ZERO;
 
     /**
      * Default teiid 7 server version
      */
-    public static final String DEFAULT_TEIID_7_SERVER_ID = SEVEN + DOT + SEVEN + DOT + ZERO;
+    String DEFAULT_TEIID_7_SERVER_ID = SEVEN + DOT + SEVEN + DOT + ZERO;
     
     
     /**

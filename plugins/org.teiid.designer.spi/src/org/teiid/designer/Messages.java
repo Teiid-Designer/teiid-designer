@@ -23,6 +23,8 @@ public class Messages extends NLS {
     public static String invalidTargetTypeForGetUpdatedServerMethod;
 
     public static String NoExecutionAdminFactory;
+
+    public static String NoRegisteredExtension;
     
     static {
         // initialize resource bundle

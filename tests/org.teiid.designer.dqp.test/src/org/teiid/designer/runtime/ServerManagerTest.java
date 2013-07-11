@@ -255,7 +255,6 @@ public class ServerManagerTest {
 
         this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()), 
                                           null, serversProvider, new DefaultStorageProvider());
-        this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(2));
 
         ITeiidServerVersion serverVersion = new TeiidServerVersion("8.1.2");
