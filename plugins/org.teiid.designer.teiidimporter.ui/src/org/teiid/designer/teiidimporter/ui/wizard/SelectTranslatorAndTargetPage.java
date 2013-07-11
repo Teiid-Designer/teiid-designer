@@ -414,10 +414,8 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
     
     // Handler for ModelText changes
     void handleTargetModelTextChanged() {
-        String newName = ""; //$NON-NLS-1$
-        if( this.targetModelFileText.getText() != null && this.targetModelFileText.getText().length() > -1 ) {
-            newName = this.targetModelFileText.getText();
-            this.importManager.setTargetModelName(newName);
+        if( !CoreStringUtil.isEmpty(this.targetModelFileText.getText()) ) {
+           this.importManager.setTargetModelName(this.targetModelFileText.getText());
         }
 
         validatePage();
@@ -571,7 +569,7 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
      * Sets target model info section
      */
     private void setTargetModelInfoText() {
-        String targetModelName = importManager.getTargetModelName();
+        String targetModelName = this.targetModelFileText.getText();
         if(targetModelName==null || targetModelName.trim().length()==0) {
             this.targetModelInfoText.setText(Messages.SelectTranslatorPage_SrcModelUndefined);
         } else {
