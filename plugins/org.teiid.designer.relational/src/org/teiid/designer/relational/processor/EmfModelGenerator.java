@@ -10,13 +10,16 @@ package org.teiid.designer.relational.processor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
@@ -25,6 +28,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.extension.AbstractMetaclassNameProvider;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.extension.ExtensionPlugin;
@@ -107,6 +111,9 @@ public class EmfModelGenerator {
     
 	private Map<String, Collection<ModelObjectExtensionAssistant>> classNameToMedAssistantsMap = new HashMap<String,Collection<ModelObjectExtensionAssistant>>();
 
+	private Set<String> propsWithNoAssistant = new HashSet<String>();
+	private Set<String> metaclassesWithNoAssistant = new HashSet<String>();
+	
 	/**
 	 * EMF Model Generator execute
      * @param diffReport the difference report
@@ -118,12 +125,8 @@ public class EmfModelGenerator {
      */
 	public IStatus execute(DifferenceReport diffReport, ModelResource targetModelResource, IProgressMonitor progressMonitor, int totalWork) throws ModelerCoreException {
 
-		pkList.clear();
-		fkList.clear();
-		apList.clear();
-		ucList.clear();
-		indexList.clear();
-		deferredProcessingList.clear();
+        // Clear lists prior to execution
+        clearLists();
 
 		int workUnit = totalWork / 5;
 
@@ -214,15 +217,48 @@ public class EmfModelGenerator {
 			}
 		}
 		progressMonitor.worked(workUnit);
+		
+		// Build a return status based on errors found
+        MultiStatus multiStatus = new MultiStatus(RelationalPlugin.PLUGIN_ID, IStatus.OK, Messages.emfModelGenerator_modelGenerationSuccess, null);
 
-		pkList.clear();
+        if(!this.propsWithNoAssistant.isEmpty()) {
+        	StringBuffer sb = new StringBuffer();
+        	Iterator iter = this.propsWithNoAssistant.iterator();
+        	while(iter.hasNext()) {
+        		String prop = (String)iter.next();
+        		sb.append(prop);
+        		if(iter.hasNext()) sb.append(","); //$NON-NLS-1$
+        	}
+        	multiStatus.add(new Status(IStatus.WARNING, RelationalPlugin.PLUGIN_ID, 0, NLS.bind(Messages.emfModelGenerator_warningAssistantForPropertyNotFound, sb.toString()), null));
+        } else if(!this.metaclassesWithNoAssistant.isEmpty()) {
+        	StringBuffer sb = new StringBuffer();
+        	Iterator iter = this.metaclassesWithNoAssistant.iterator();
+        	while(iter.hasNext()) {
+        		String prop = (String)iter.next();
+        		sb.append(prop);
+        		if(iter.hasNext()) sb.append(","); //$NON-NLS-1$
+        	}
+        	multiStatus.add(new Status(IStatus.WARNING, RelationalPlugin.PLUGIN_ID, 0, NLS.bind(Messages.emfModelGenerator_warningAssistantForMetaclassNotFound, sb.toString()), null));
+        } 
+        
+        // Clear lists on completion
+		clearLists();
+		
+		return multiStatus;
+	}
+    
+	/**
+	 * Clear the lists used during execution
+	 */
+	private void clearLists() {
+        pkList.clear();
 		fkList.clear();
 		apList.clear();
 		ucList.clear();
 		indexList.clear();
 		deferredProcessingList.clear();
-
-		return new Status(IStatus.OK, RelationalPlugin.PLUGIN_ID, 0, Messages.emfModelGenerator_modelGenerationSuccess, null);
+		propsWithNoAssistant.clear();
+		metaclassesWithNoAssistant.clear();
 	}
     
     /**
@@ -1208,8 +1244,8 @@ public class EmfModelGenerator {
 
         // no assistants found that have properties defined for the model object type
         if (assistants.isEmpty()) {
-            RelationalPlugin.Util.log(IStatus.ERROR, 
-                	NLS.bind(Messages.emfModelGenerator_warningAssistantForMetaclassNotFound, eObjectClassName));
+        	String metaclassShortName = getMetaclassShortName(eObjectClassName);
+        	metaclassesWithNoAssistant.add(metaclassShortName);
             return null;
         }
 
@@ -1223,12 +1259,15 @@ public class EmfModelGenerator {
             }
         }
     
-        RelationalPlugin.Util.log(IStatus.ERROR, 
-            	NLS.bind(Messages.emfModelGenerator_warningAssistantForPropertyNotFound, propId));
+    	this.propsWithNoAssistant.add(propId);
         return null;
     }
         
-	/**
+    private String getMetaclassShortName(String metaclass) {
+        return AbstractMetaclassNameProvider.getLabel(metaclass);
+    }
+
+    /**
 	 *  Determine if the ModelExtensionDefinition has a propertyId that matches the supplied property
 	 * @param med the ModelExtensionDefinition 
 	 * @param metaclassName the extended metaclass name

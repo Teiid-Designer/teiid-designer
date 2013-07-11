@@ -64,8 +64,9 @@ public class DdlImporter {
     private ModelResource model;
     private String ddlString;
     private DdlErrorMessage failedMessage; 
+    private IStatus importStatus;
 
-    private DdlImporterManager importManager = new DdlImporterManager();
+	private DdlImporterManager importManager = new DdlImporterManager();
 
     /**
      * DdlImporter constructor
@@ -80,13 +81,6 @@ public class DdlImporter {
      */
     public String ddlFileName() {
         return ddlFileName;
-    }
-
-    private void handleStatus(IStatus status ) {
-        if (!status.isOK()) {
-            if (status.getException() != null) throw CoreModelerPlugin.toRuntimeException(status.getException());
-            throw new RuntimeException(status.getMessage());
-        }
     }
 
     /**
@@ -220,6 +214,13 @@ public class DdlImporter {
     }
 
     /**
+	 * @return the importStatus
+	 */
+	public IStatus getImportStatus() {
+		return this.importStatus;
+	}
+
+    /**
      * @return the last ddl string
      */
     public String getDdlString() {
@@ -269,8 +270,7 @@ public class DdlImporter {
             }
             
             // Update the model, based on difference report
-            IStatus importStatus = EmfModelGenerator.INSTANCE.execute(diffReport, model, monitor, totalWork);
-            handleStatus(importStatus);
+            importStatus = EmfModelGenerator.INSTANCE.execute(diffReport, model, monitor, totalWork);
 
             // Save model
             model.save(monitor, false);

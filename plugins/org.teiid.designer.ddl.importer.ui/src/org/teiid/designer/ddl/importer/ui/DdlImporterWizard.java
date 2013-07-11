@@ -1,10 +1,15 @@
 package org.teiid.designer.ddl.importer.ui;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -15,6 +20,7 @@ import org.eclipse.ui.IWorkbench;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.ddl.importer.DdlImporter;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.widget.ListMessageDialog;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
 import org.teiid.designer.ui.common.wizard.IPersistentWizardPage;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
@@ -117,10 +123,20 @@ public class DdlImporterWizard extends AbstractWizard implements IImportWizard {
                     monitor.done();
                 }
             });
-            // // Select model in workspace
-            // UiUtil.getViewPart(UiConstants.Extensions.Explorer.VIEW).getSite().getSelectionProvider().setSelection(new
-            // StructuredSelection(
-            // importer.modelFile()));
+            // Show Warning Dialog if the importer finished, but with warnings
+            IStatus importStatus = importer.getImportStatus();
+            if(importStatus!=null && importStatus.getSeverity()==IStatus.WARNING) {
+            	if(importStatus instanceof MultiStatus) {
+                	final List<String> msgs = new ArrayList<String>(importStatus.getChildren().length);
+                	for( int i=0; i<importStatus.getChildren().length; i++) {
+                		msgs.add(importStatus.getChildren()[i].getMessage());
+                	}
+                	ListMessageDialog.openInformation(getShell(), DdlImporterUiI18n.IMPORT_COMPLETED_WITH_WARNINGS_TITLE, null, DdlImporterUiI18n.IMPORT_COMPLETED_WITH_WARNINGS_MESSAGE, msgs , null);
+            	} else {
+            		MessageDialog.openWarning(getShell(), DdlImporterUiI18n.IMPORT_COMPLETED_WITH_WARNINGS_TITLE, importStatus.getMessage());
+            	}
+            	return true;
+            } 
         } catch (final InterruptedException error) {
             return false;
         } catch (final Exception error) {
@@ -133,4 +149,5 @@ public class DdlImporterWizard extends AbstractWizard implements IImportWizard {
             if (pg instanceof IPersistentWizardPage) ((IPersistentWizardPage)pg).saveSettings();
         return true;
     }
+    
 }
