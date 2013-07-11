@@ -27,9 +27,6 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.jface.action.Action;
@@ -110,7 +107,6 @@ import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidServer;
-import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.ui.PluginConstants;
@@ -286,16 +282,6 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         public void configurationChanged(ExecutionConfigurationEvent event) {
             setDefaultServerText(ModelerCore.getDefaultServerName());
             setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
-        }
-    };
-
-    /* Listen for changes to the default server version preference */
-    private IPreferenceChangeListener preferenceChangeListener = new IPreferenceChangeListener() {
-        @Override
-        public void preferenceChange(PreferenceChangeEvent event) {
-            if (ITeiidServerManager.DEFAULT_TEIID_SERVER_VERSION_ID.equals(event.getKey())) {
-                setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
-            }
         }
     };
 
@@ -499,9 +485,6 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         /* Listen for changes to the default server */
         ModelerCore.addTeiidServerVersionListener(teiidServerVersionListener);
         addExecutionConfigurationListener(ModelerCore.getDefaultServerEventManager());
-
-        IEclipsePreferences prefs = UiPlugin.getDefault().getPreferences();
-        prefs.addPreferenceChangeListener(preferenceChangeListener);
     }
 
     /**
@@ -725,10 +708,6 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     public void dispose() {
         // Remove listeners
         ModelerCore.removeTeiidServerVersionListener(teiidServerVersionListener);
-
-        IEclipsePreferences prefs = UiPlugin.getDefault().getPreferences();
-        if (prefs != null)
-            prefs.removePreferenceChangeListener(preferenceChangeListener);
 
         // unhook the selection listeners from the seleciton service
         getViewSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(getModelObjectSelectionListener());

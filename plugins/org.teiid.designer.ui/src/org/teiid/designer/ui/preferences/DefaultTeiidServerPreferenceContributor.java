@@ -2,7 +2,9 @@ package org.teiid.designer.ui.preferences;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -11,8 +13,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
@@ -31,6 +38,8 @@ public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferen
 
     private static final String PREFIX = I18nUtil.getPropertyPrefix(DefaultTeiidServerPreferenceContributor.class);
 
+    private Shell shell;
+
     private Combo versionCombo;
 
     /**
@@ -40,6 +49,7 @@ public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferen
      */
     @Override
 	public void createPreferenceEditor( Composite parent ) {
+        shell = parent.getShell();
         Composite panel = new Composite(parent, SWT.NONE);
         GridLayoutFactory.fillDefaults().numColumns(2).applyTo(panel);
 
@@ -129,6 +139,16 @@ public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferen
         return true;
     }
 
+    private boolean hasOpenEditors() {
+        for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+            for (IWorkbenchPage page : window.getPages()) {
+                if (page.getEditorReferences().length > 0)
+                    return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -139,6 +159,19 @@ public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferen
         // persist value
         String versionString = versionCombo.getText();
         ITeiidServerVersion version = new TeiidServerVersion(versionString);
+
+        if (versionString.equals(getPreferenceStoreValue(false)))
+            return true; // same value - no change
+
+        if (ModelerCore.getTeiidServerManager().getDefaultServer() == null && hasOpenEditors()) {
+            // No default server and open editors so modelling diagrams may close which could surprise!
+            boolean changeVersion = MessageDialog.openQuestion(shell,
+                                                                        Util.getStringOrKey(PREFIX + "versionChangeQuestionTitle"), //$NON-NLS-1$
+                                                                        Util.getStringOrKey(PREFIX + "versionChangeQuestionMessage")); //$NON-NLS-1$
+
+            if (! changeVersion)
+                return false;
+        }
 
         try {
             for (ITeiidServerVersion regVersion : TeiidRuntimeRegistry.getInstance().getRegisteredServerVersions()) {
@@ -195,6 +228,7 @@ public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferen
             items.add(ITeiidServerVersion.DEFAULT_TEIID_8_SERVER_ID);
         }
 
+        Collections.sort(items, Collections.reverseOrder());
         versionCombo.setItems(items.toArray(new String[0]));
         versionCombo.setText(value);
     }
