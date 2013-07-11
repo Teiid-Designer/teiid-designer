@@ -29,6 +29,7 @@ public class RelationalColumn extends RelationalReference {
     public static final String KEY_AUTO_INCREMENTED = "AUTOINCREMENTED"; //$NON-NLS-1$
     public static final String KEY_CASE_SENSITIVE = "CASESENSITIVE"; //$NON-NLS-1$
     public static final String KEY_CHARACTER_SET_NAME = "CHARACTERSETNAME"; //$NON-NLS-1$
+    public static final String KEY_CHARACTER_OCTET_LENGTH = "CHARACTEROCTETLENGTH"; //$NON-NLS-1$
     public static final String KEY_COLLATION_NAME = "COLLATIONNAME"; //$NON-NLS-1$
     public static final String KEY_CURRENCY = "CURRENCY"; //$NON-NLS-1$
     public static final String KEY_DEFAULT_VALUE = "DEFAULTVALUE"; //$NON-NLS-1$
@@ -53,6 +54,7 @@ public class RelationalColumn extends RelationalReference {
     public static final boolean DEFAULT_AUTO_INCREMENTED = false;
     public static final boolean DEFAULT_CASE_SENSITIVE = true;
     public static final String DEFAULT_CHARACTER_SET_NAME = null;
+    public static final int DEFAULT_CHARACTER_OCTET_LENGTH = 0;
     public static final String DEFAULT_COLLATION_NAME = null;
     public static final boolean DEFAULT_CURRENCY = false;
     public static final String DEFAULT_DEFAULT_VALUE = null;
@@ -90,7 +92,8 @@ public class RelationalColumn extends RelationalReference {
     private int precision;
     private int scale;
     private int radix;
-    private boolean signed;
+    private int characterOctetLength;
+	private boolean signed;
     private String  searchability = DEFAULT_SEARCHABILITY;
     private boolean selectable = DEFAULT_SELECTABLE;
     private boolean updateable = DEFAULT_UPDATEABLE;
@@ -342,7 +345,22 @@ public class RelationalColumn extends RelationalReference {
     public void setRadix( int radix ) {
         this.radix = radix;
     }
+    
     /**
+	 * @return the characterOctetLength
+	 */
+	public int getCharacterOctetLength() {
+		return this.characterOctetLength;
+	}
+
+	/**
+	 * @param characterOctetLength the characterOctetLength to set
+	 */
+	public void setCharacterOctetLength(int characterOctetLength) {
+		this.characterOctetLength = characterOctetLength;
+	}
+
+	/**
      * @return signed
      */
     public boolean isSigned() {
@@ -511,6 +529,7 @@ public class RelationalColumn extends RelationalReference {
         
         if( !(getDistinctValueCount()==other.getDistinctValueCount()) ||  
             !(getLength()==other.getLength()) ||
+            !(getCharacterOctetLength()==other.getCharacterOctetLength()) ||
             !(getNullValueCount()==other.getNullValueCount()) ||
             !(getPrecision()==other.getPrecision()) ||
             !(getRadix()==other.getRadix()) ||
@@ -571,6 +590,7 @@ public class RelationalColumn extends RelationalReference {
         
         result = HashCodeUtil.hashCode(result, getDistinctValueCount());
         result = HashCodeUtil.hashCode(result, getLength());
+        result = HashCodeUtil.hashCode(result, getCharacterOctetLength());
         result = HashCodeUtil.hashCode(result, getNullValueCount());
         result = HashCodeUtil.hashCode(result, getPrecision());
         result = HashCodeUtil.hashCode(result, getRadix());
