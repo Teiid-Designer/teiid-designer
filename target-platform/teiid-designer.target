@@ -2,10 +2,10 @@
 <target name="teiid-designer" sequenceNumber="4">
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-      <repository location="http://download.jboss.org/jbosstools/updates/integration/kepler/core/locus/1.0.0.CR2"/>
-      <unit id="org.jboss.tools.locus.jcip.annotations" version="1.0.0.CR1-v20130705-1455-B5"/>
-      <unit id="org.jboss.tools.locus.mockito" version="1.9.5.Final_patched_TEIIDDES-1681-v20130705-1455-B5"/>
-      <unit id="org.jboss.tools.locus.sf.saxon" version="9.2.1.5j-Final-v20130705-1455-B5"/>
+      <repository location="http://download.jboss.org/jbosstools/updates/integration/kepler/core/locus/0.0.1.v20130507-2028-B7"/>
+      <unit id="org.jboss.tools.locus.jcip.annotations" version="1.0.0.Final-v20130507-2028-B7"/>
+      <unit id="org.jboss.tools.locus.mockito" version="1.9.5.Final_patched_TEIIDDES-1681-v20130507-2028-B7"/>
+      <unit id="org.jboss.tools.locus.sf.saxon" version="9.2.1.5j-Final-v20130507-2028-B7"/>
     </location>
   
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
