@@ -7,19 +7,23 @@
 */
 package org.teiid.designer.ddl.importer.node;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.modeshape.sequencer.ddl.StandardDdlLexicon;
 import org.modeshape.sequencer.ddl.dialect.oracle.OracleDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
+import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalIndex;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalParameter;
 import org.teiid.designer.relational.model.RelationalProcedure;
 import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.model.RelationalSchema;
+import org.teiid.designer.relational.model.RelationalTable;
 
 /**
  *
@@ -85,14 +89,15 @@ public class OracleImporter extends StandardImporter {
     protected Map<AstNode,RelationalReference> createObject(AstNode node, RelationalModel model, RelationalSchema schema) throws Exception {
       	Map<AstNode,RelationalReference> deferredMap = new HashMap<AstNode,RelationalReference>();
 
-        if (is(node, OracleDdlLexicon.TYPE_CREATE_INDEX_STATEMENT)) {
+        if (is(node, OracleDdlLexicon.TYPE_CREATE_TABLE_INDEX_STATEMENT)) {
       		deferredMap.put(node, null);
         } else if (is(node, OracleDdlLexicon.TYPE_CREATE_PROCEDURE_STATEMENT)) {
             createProcedure(node, model);
         } else if (is(node, OracleDdlLexicon.TYPE_CREATE_FUNCTION_STATEMENT)) {
             createProcedure(node, model).setFunction(true);
-        } else
+        } else {
             return super.createObject(node, model, schema);
+        }
 
         return deferredMap;
     }
@@ -105,10 +110,11 @@ public class OracleImporter extends StandardImporter {
      */
     @Override
 	protected void createDeferredObjects(Map<AstNode,RelationalReference> deferredNodes, RelationalModel model) throws Exception {
+		Collection<RelationalReference> allRefs = model.getAllReferences();
 
     	Set<AstNode> astNodes = deferredNodes.keySet();
     	for(AstNode node:astNodes) {
-            if (is(node, OracleDdlLexicon.TYPE_CREATE_INDEX_STATEMENT)) {
+            if (is(node, OracleDdlLexicon.TYPE_CREATE_TABLE_INDEX_STATEMENT)) {
                 RelationalIndex index = getFactory().createIndex();
                 Info info = createInfo(node, model);
                 if (info.getSchema() == null)
@@ -119,8 +125,28 @@ public class OracleImporter extends StandardImporter {
                 initialize(index, node, info.getName());
 
                 Object prop = node.getProperty(OracleDdlLexicon.UNIQUE_INDEX);
-                if (prop != null)
-                    index.setUnique((Boolean)prop);
+                if (prop != null) index.setUnique((Boolean)prop);
+                
+                // Get Table referenced
+                String tableName = (String)node.getProperty(OracleDdlLexicon.TABLE_NAME);
+				RelationalTable table = find(RelationalTable.class, tableName, node, null, allRefs);
+
+				// Get columns referenced and add them to the index
+				if(table!=null) {
+					List<AstNode> childNodes = node.getChildren();
+					for(AstNode child : childNodes) {
+						if(is(child, StandardDdlLexicon.TYPE_COLUMN_REFERENCE)) {
+							try {
+								RelationalColumn col = find(RelationalColumn.class, child, table, allRefs);
+								if(col!=null) {
+									index.getColumns().add(col);
+								}
+							} catch (EntityNotFoundException error) {
+								addProgressMessage(error.getMessage());
+							}
+						}
+					}
+				}
             }
     	}
     }
