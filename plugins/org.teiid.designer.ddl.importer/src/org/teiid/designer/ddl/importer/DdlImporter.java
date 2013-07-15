@@ -63,7 +63,6 @@ public class DdlImporter {
     private DifferenceReport diffReport;
     private ModelResource model;
     private String ddlString;
-    private DdlErrorMessage failedMessage; 
     private IStatus importStatus;
 
 	private DdlImporterManager importManager = new DdlImporterManager();
@@ -84,11 +83,10 @@ public class DdlImporter {
     }
 
     /**
-     * @param messages
      * @param monitor
      * @param totalWork
      */
-    public void importDdl(final List<String> messages, final IProgressMonitor monitor, final int totalWork ) {
+    public void importDdl(final IProgressMonitor monitor, final int totalWork ) {
         OperationUtil.perform(new Unreliable() {
 
             private FileReader reader = null;
@@ -105,14 +103,14 @@ public class DdlImporter {
             @Override
             public void tryToDo() throws Exception {
                 reader = new FileReader(ddlFileName());
-                importDdl(reader, messages, monitor, totalWork);
+                importDdl(reader, monitor, totalWork);
             }
         });
     }
 
-    void importDdl(FileReader reader, List<String> messages, IProgressMonitor monitor, int totalWork ) throws Exception {
+    void importDdl(FileReader reader, IProgressMonitor monitor, int totalWork ) throws Exception {
     	ddlString = null;
-    	failedMessage = null;
+    	importManager.getImportMessages().clear();
     	
         int workUnit = totalWork / 3;
 
@@ -140,17 +138,18 @@ public class DdlImporter {
         	}
         // If parsing exception is encountered, throw DdlImportException
         } catch (ParsingException e) {
-        	failedMessage = new DdlErrorMessage(e.getMessage());
+        	String parseMessage = e.getMessage();
+        	importManager.getImportMessages().setParseErrorMessage(parseMessage);
         	Position position = e.getPosition();
-        	failedMessage.setIsParse(true);
-        	failedMessage.setColNumber(position.getColumn());
-        	failedMessage.setLineNumber(position.getLine());
-        	failedMessage.setIndex(position.getIndexInContent());
+        	importManager.getImportMessages().setHasParseError(true);
+        	importManager.getImportMessages().setParseErrorColNumber(position.getColumn());
+        	importManager.getImportMessages().setParseErrorLineNumber(position.getLine());
+        	importManager.getImportMessages().setParseErrorIndex(position.getIndexInContent());
         	if(!CoreStringUtil.isEmpty(specifiedParser)) {
-        		failedMessage.setParserId(specifiedParser);
+            	importManager.getImportMessages().setParserId(specifiedParser);
         	} else if(rootNode!=null) {
                 String parserId = (String) rootNode.getProperty(StandardDdlLexicon.PARSER_ID);
-            	failedMessage.setParserId(parserId);
+                importManager.getImportMessages().setParserId(parserId);
         	}
         	return;
         }
@@ -172,7 +171,6 @@ public class DdlImporter {
         RelationalModel targetRelationalModel = importManager.getObjectFactory().createRelationalModel(model);
         
         importManager.setProgressMonitor(monitor);
-        importManager.setProgressMessages(messages);
 
         DdlNodeImporter nodeImporter = DdlNodeImporterRegistry.getInstance().getRegistered(parserId.toUpperCase());
         if (nodeImporter == null)
@@ -199,18 +197,38 @@ public class DdlImporter {
     /**
      * @return the 'true' if has a failure mesage
      */
-    public boolean hasFailureMessage() {
-    	if(this.failedMessage!=null) {
-    		return true;
-    	}
-    	return false;
+    public boolean hasParseError() {
+    	return importManager.getImportMessages().hasParseError();
     }
     
     /**
      * @return the failure message
      */
-    public DdlErrorMessage getFailureMessage() {
-    	return this.failedMessage;
+    public String getParseErrorMessage() {
+    	return importManager.getImportMessages().getParseErrorMessage();
+    }
+    
+    /**
+     * @return the failure message
+     */
+    public int getParseErrorIndex() {
+    	return importManager.getImportMessages().getParseErrorIndex();
+    }
+    
+    /**
+     * Add a progress message
+     * @param message the progress message
+     */
+    public void addProgressMessage(String message) {
+    	importManager.getImportMessages().addProgressMessage(message);
+    }
+    
+    /**
+     * Get all messages from the import manager
+     * @return list of all messages
+     */
+    public List<String> getAllMessages() {
+    	return importManager.getImportMessages().getAllMessages();
     }
 
     /**
