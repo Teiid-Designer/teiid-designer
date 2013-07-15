@@ -12,7 +12,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -34,7 +33,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.teiid.core.designer.I18n;
-import org.teiid.designer.ddl.importer.DdlErrorMessage;
 import org.teiid.designer.ddl.importer.DdlImporter;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.compare.DifferenceReport;
@@ -66,7 +64,6 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
     private Tree tree;
     boolean treeExpanded = false;
     private StyledTextEditor ddlContentsArea;
-    private List<String> importMessages = new ArrayList<String>();
     private org.eclipse.swt.widgets.List messagesList;
     
     /**
@@ -85,7 +82,7 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
      */
     @Override
     public void createControl( final Composite parent ) {
-        final IDialogSettings settings = getDialogSettings();
+        //final IDialogSettings settings = getDialogSettings();
 
         final Composite panel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1, PANEL_GRID_SPAN);
         setControl(panel);
@@ -215,7 +212,6 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
         
         // If the page is being shown, import the DDL and generate the difference report 
         if(visible) {
-        	importMessages.clear();
         	// Perform the DDL Import
         	try {
         		new ProgressMonitorDialog(getShell()).run(true, true, new IRunnableWithProgress() {
@@ -223,24 +219,24 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
         			@Override
         			public void run( final IProgressMonitor monitor ) {
         				monitor.beginTask(DdlImporterUiI18n.IMPORTING_DDL_MSG, 100);
-        				importer.importDdl(importMessages, monitor, 100);
+        				importer.importDdl(monitor, 100);
         				monitor.done();
         			}
         		});
         	} catch (Exception ex) {
         		DdlImporterUiPlugin.UTIL.log(IStatus.ERROR,ex,DdlImporterUiI18n.DIFFERENCE_PAGE_DDLIMPORT_ERROR_MSG);
-        		importMessages.add(DdlImporterUiI18n.DIFFERENCE_PAGE_DDLIMPORT_ERROR_MSG);
+        		importer.addProgressMessage(DdlImporterUiI18n.DIFFERENCE_PAGE_DDLIMPORT_ERROR_MSG);
         	}
         	
         	// Hard Failure (eg parse error) will show the error page
-        	if(importer.hasFailureMessage()) {
+        	if(importer.hasParseError()) {
     			this.stackLayout.topControl = parseErrorPanel;
     			this.setTitle(DdlImporterUiI18n.DIFFERENCE_PAGE_PARSE_ERROR_TITLE);
     			
     			this.ddlContentsArea.setText(importer.getDdlString());
-    			DdlErrorMessage failedMessage = importer.getFailureMessage();
+    			String parseErrorMessage = importer.getParseErrorMessage();
     			// Get the offSet of the error if set
-    			int offset = failedMessage.getIndex();
+    			int offset = importer.getParseErrorIndex();
     			// Highlight the problem line if possible
     			if(offset>-1) {
     				StyledText styledText = ddlContentsArea.getTextWidget();
@@ -251,7 +247,7 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
         				styledText.setSelection(startIndx, endIndx);
         			}
     			}
-                String msg = I18n.format(DdlImporterUiI18n.DIFFERENCE_PAGE_PARSE_ERROR_MSG,failedMessage.getMessage());
+                String msg = I18n.format(DdlImporterUiI18n.DIFFERENCE_PAGE_PARSE_ERROR_MSG,parseErrorMessage);
     	        setErrorMessage(msg);
 
     			importer.undoImport();
@@ -275,7 +271,8 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
             	this.treeViewer.expandToLevel(2);
             	this.setAllNodesSelected(true);
             	
-        		messagesList.setItems(importMessages.toArray(new String[importMessages.size()]));
+            	List<String> progressMessages = this.importer.getAllMessages();
+        		messagesList.setItems(progressMessages.toArray(new String[progressMessages.size()]));
 
         		validate();
     		}
@@ -294,7 +291,7 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
         StringBuffer errMessageBuffer = new StringBuffer();
         
         // Determine if there are any importer messages to show
-        boolean hasImportMessages = importMessages.isEmpty() ? false : true;
+        boolean hasImportMessages = importer.getAllMessages().isEmpty() ? false : true;
         
         DifferenceReport diffReport = importer.getDifferenceReport();
         

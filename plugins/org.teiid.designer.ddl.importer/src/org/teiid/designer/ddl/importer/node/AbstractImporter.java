@@ -59,7 +59,15 @@ public abstract class AbstractImporter implements DdlNodeImporter {
      * @param message
      */
     protected void addProgressMessage(String message) {
-        importManager.getProgressMessages().add(message);
+        importManager.getImportMessages().addProgressMessage(message);
+    }
+    
+    /**
+     * Increments count of unhandled instances of a particular type
+     * @param typeStr
+     */
+    protected void incrementUnhandledNodeType(String typeStr) {
+    	importManager.getImportMessages().incrementUnhandledNodeType(typeStr);
     }
 
     /**

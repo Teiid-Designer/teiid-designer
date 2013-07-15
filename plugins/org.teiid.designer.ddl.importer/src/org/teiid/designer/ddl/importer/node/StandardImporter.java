@@ -10,6 +10,7 @@ package org.teiid.designer.ddl.importer.node;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -582,6 +583,17 @@ public class StandardImporter extends AbstractImporter {
 
 		} else if (is(node, StandardDdlLexicon.TYPE_ALTER_TABLE_STATEMENT)) {
 			deferredMap.put(node, null);
+		// Unhandled node - get the mixin type and increment the count
+		} else {
+			StringBuffer sb = new StringBuffer();
+			List<String> mixins = node.getMixins();
+			Iterator<String> iter = mixins.iterator();
+			while(iter.hasNext()) {
+				String mixin = iter.next();
+				sb.append(mixin);
+				if(iter.hasNext()) sb.append(","); //$NON-NLS-1$
+			}
+			getImporterManager().getImportMessages().incrementUnhandledNodeType(sb.toString());
 		}
 		return deferredMap;
 	}
