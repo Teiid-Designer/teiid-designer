@@ -7,9 +7,6 @@
 */
 package org.teiid.designer.ddl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -31,8 +28,8 @@ public class DdlImporterManager {
 
     private IProgressMonitor monitor;
 
-    private List<String> messages;
-
+    private ImportMessages importMessages;
+    
     private boolean optToCreateModelEntitiesForUnsupportedDdl;
 
     private boolean optToSetModelEntityDescription;
@@ -104,25 +101,17 @@ public class DdlImporterManager {
     }
 
     /**
-     * @param messages progress messages
-     */
-    public void setProgressMessages(List<String> messages) {
-        this.messages = messages;
-    }
-
-    /**
-     * Get the progress monitor
+     * Get the ImportMessages 
      *
-     * @return {@link IProgressMonitor}
+     * @return the import messages
      */
-    public List<String> getProgressMessages() {
-        if (messages == null) {
-            messages = new ArrayList<String>();
-        }
-
-        return messages;
+    public ImportMessages getImportMessages() {
+    	if(this.importMessages==null) {
+    		this.importMessages = new ImportMessages();
+    	}
+    	return this.importMessages;
     }
-
+    
     /**
      * @return the factory
      */
