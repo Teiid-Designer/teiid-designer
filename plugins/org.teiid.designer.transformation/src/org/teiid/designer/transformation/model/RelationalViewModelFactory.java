@@ -60,18 +60,7 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
      * @throws ModelWorkspaceException error thrown when problem creating new model
      */
     public ModelResource createRelationalViewModel( IPath location, String modelName) throws ModelWorkspaceException {
-        ModelWorkspaceItem mwItem = null;
-        if( location.segmentCount() == 1 ) {
-        	// Project for ONE segment
-        	mwItem = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(location.makeAbsolute(), IResource.PROJECT);
-        } else {
-        	mwItem = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(location.makeAbsolute(), IResource.FOLDER);
-        }
-        
-        IProject project = mwItem.getResource().getProject();
-        IPath relativeModelPath = mwItem.getPath().removeFirstSegments(1).append(modelName);
-        final IFile modelFile = project.getFile( relativeModelPath );
-        final ModelResource resrc = ModelerCore.create( modelFile );
+    	final ModelResource resrc = ModelerCore.createModelResource(location, modelName);
         resrc.getModelAnnotation().setPrimaryMetamodelUri( RELATIONAL_PACKAGE_URI );
         resrc.getModelAnnotation().setModelType(ModelType.VIRTUAL_LITERAL);
         ModelerCore.getModelEditor().getAllContainers(resrc.getEmfResource());

@@ -70,25 +70,14 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     }
     
     public ModelResource createRelationalModel( IPath location, String modelName) throws ModelWorkspaceException {
-        ModelWorkspaceItem mwItem = null;
-        if( location.segmentCount() == 1 ) {
-        	// Project for ONE segment
-        	mwItem = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(location.makeAbsolute(), IResource.PROJECT);
-        } else {
-        	mwItem = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(location.makeAbsolute(), IResource.FOLDER);
-        }
-        
-        IProject project = mwItem.getResource().getProject();
-        IPath relativeModelPath = mwItem.getPath().removeFirstSegments(1).append(modelName);
-        final IFile modelFile = project.getFile( relativeModelPath );
-        final ModelResource resrc = ModelerCore.create( modelFile );
+    	final ModelResource resrc = ModelerCore.createModelResource(location, modelName);
         resrc.getModelAnnotation().setPrimaryMetamodelUri( RELATIONAL_PACKAGE_URI );
         resrc.getModelAnnotation().setModelType(ModelType.PHYSICAL_LITERAL);
         ModelUtilities.initializeModelContainers(resrc, "Create Model Containers", this); //$NON-NLS-1$ 
         
         return resrc;
     }
-    
+
     public boolean addMissingProcedure(ModelResource modelResource, String specificProcedure) throws ModelerCoreException{
     	if( modelResource != null ) {
     		if( specificProcedure.equalsIgnoreCase(ALL_PROCEDURES)) {
