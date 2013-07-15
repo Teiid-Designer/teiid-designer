@@ -29,6 +29,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
@@ -2255,4 +2256,30 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
             throw new RuntimeException(ex);
         }
     }
+    
+    /**
+     * This method will generate a ModelResource based on IPath and and name
+	 * @param location
+	 * @param modelName
+	 * @return
+     * @since 8.2
+	 */
+	public static ModelResource createModelResource(IPath location, String modelName) {
+		IResource resource;
+		IProject project;
+		resource = ModelerCore.getWorkspace().getRoot().findMember(location);
+        
+        if( location.segmentCount() == 1 ) {
+        	//We already have the project
+        	project = (IProject)resource;
+        } else {
+        	//Get the project for a folder(s)
+        	project = resource.getProject();
+        }
+        	
+        IPath relativeModelPath = resource.getFullPath().removeFirstSegments(1).append(modelName);
+        final IFile modelFile = project.getFile( relativeModelPath );
+        final ModelResource resrc = ModelerCore.create( modelFile );
+		return resrc;
+	}
 }
