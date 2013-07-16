@@ -37,7 +37,7 @@ import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
 import org.teiid.designer.roles.DataRole;
-import org.teiid.designer.roles.ui.NewDataRoleWizard;
+import org.teiid.designer.roles.ui.wizard.DataRoleWizard;
 import org.teiid.designer.ui.common.table.DefaultTableProvider;
 import org.teiid.designer.ui.common.table.TableAndToolBar;
 import org.teiid.designer.ui.common.table.TextColumnProvider;
@@ -174,14 +174,15 @@ public class DataRolesPanel {
                                                    vdbDataRole.getMappedRoleNames(), vdbDataRole.getPermissions());
 
                 final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
-                final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, dataPolicy);
+                //final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, dataPolicy);
+                final DataRoleWizard wizard = new DataRoleWizard(tempContainer, dataPolicy, vdbEditor.getVdb().getAllowedLanguages());
 
                 wizard.init(iww.getWorkbench(), new StructuredSelection(vdbEditor.getVdb().getModelEntries()));
                 final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
                 final int rc = dialog.open();
                 if (rc == Window.OK) {
                     // Get the Data Policy
-                    DataRole dp = wizard.getDataRole();
+                    DataRole dp = wizard.getFinalDataRole();
                     if (dp != null) {
                         vdbEditor.getVdb().removeDataPolicy(vdbDataRole);
                         vdbEditor.getVdb().addDataPolicy(dp, new NullProgressMonitor());
@@ -397,14 +398,15 @@ public class DataRolesPanel {
                 }
 
                 final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
-                final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, null);
+                //final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, null);
+                final DataRoleWizard wizard = new DataRoleWizard(tempContainer, null, vdbEditor.getVdb().getAllowedLanguages());
 
                 wizard.init(iww.getWorkbench(), new StructuredSelection(vdbEditor.getVdb().getModelEntries()));
                 final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
                 final int rc = dialog.open();
                 if (rc == Window.OK) {
                     // Get the Data Policy
-                    DataRole dp = wizard.getDataRole();
+                    DataRole dp = wizard.getFinalDataRole();
                     if (dp != null) {
                     	vdbEditor.getVdb().addDataPolicy(dp, new NullProgressMonitor());
                     }
@@ -526,5 +528,12 @@ public class DataRolesPanel {
 
             }
         });
+    }
+    
+    /**
+     * convenience method to refresh the viewer
+     */
+    public void refresh() {
+    	dataRolesGroup.getTable().getViewer().refresh();
     }
 }

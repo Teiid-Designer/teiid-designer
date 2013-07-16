@@ -30,7 +30,7 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
-import org.teiid.designer.roles.ui.DataRoleResolver;
+import org.teiid.designer.roles.ui.wizard.DataRoleResolver;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbDataRole;
 import org.teiid.designer.vdb.VdbEntry;

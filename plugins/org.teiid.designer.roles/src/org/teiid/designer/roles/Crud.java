@@ -88,22 +88,22 @@ public class Crud {
 	}
 	
 	public static Crud.Type getCrudType(int value ) {
-		if( value == 1 ) {
+		if( value == 2 ) {
 			return Crud.Type.CREATE;
 		}
-		if( value == 2 ) {
+		if( value == 3 ) {
 			return Crud.Type.READ;
 		}
-		if( value == 3 ) {
+		if( value == 4 ) {
 			return Crud.Type.UPDATE;
 		}
-		if( value == 4 ) {
+		if( value == 5 ) {
 			return Crud.Type.DELETE;
 		}
-		if( value == 5 ) {
+		if( value == 6 ) {
 			return Crud.Type.EXECUTE;
 		}
-		if( value == 6 ) {
+		if( value == 7 ) {
 			return Crud.Type.ALTER;
 		}
 		return null;
