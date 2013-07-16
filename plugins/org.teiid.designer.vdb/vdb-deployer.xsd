@@ -114,22 +114,37 @@
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element name="description" type="xs:string" minOccurs="0"/>
-                            <xs:element name="permission" minOccurs="1" maxOccurs="unbounded">
+                            <xs:element name="permission" minOccurs="0" maxOccurs="unbounded">
                                 <xs:complexType>
                                     <xs:sequence>                            
-							             <xs:element name="resource-name" type="xs:string"/>
-							             <xs:choice>
-											<xs:sequence>
-	                                             <xs:element name="allow-create" type="xs:boolean" minOccurs="0"/>
-									             <xs:element name="allow-read" type="xs:boolean" minOccurs="0"/>
-									             <xs:element name="allow-update" type="xs:boolean" minOccurs="0"/>
-									             <xs:element name="allow-delete" type="xs:boolean" minOccurs="0"/>
-									             <xs:element name="allow-execute" type="xs:boolean" minOccurs="0"/>
-									             <xs:element name="allow-alter" type="xs:boolean" minOccurs="0"/>	
-									             <xs:element name="condition" type="xs:string" minOccurs="0"/>
-											</xs:sequence>
-											<xs:element name="allow-language" type="xs:boolean" minOccurs="0"/>
-							             </xs:choice>
+							            <xs:element name="resource-name" type="xs:string"/>
+										<xs:sequence>
+                                             <xs:element name="allow-create" type="xs:boolean" minOccurs="0"/>
+								             <xs:element name="allow-read" type="xs:boolean" minOccurs="0"/>
+								             <xs:element name="allow-update" type="xs:boolean" minOccurs="0"/>
+								             <xs:element name="allow-delete" type="xs:boolean" minOccurs="0"/>
+								             <xs:element name="allow-execute" type="xs:boolean" minOccurs="0"/>
+								             <xs:element name="allow-alter" type="xs:boolean" minOccurs="0"/>	
+								             <xs:element name="condition" minOccurs="0">
+								             	<xs:complexType>
+								             		<xs:simpleContent>
+     														<xs:extension base="xs:string">
+       														<xs:attribute name="constraint" type="xs:boolean" default="true"/>
+       													</xs:extension>
+   													</xs:simpleContent>
+   												</xs:complexType>
+								             </xs:element>
+								             <xs:element name="mask" minOccurs="0">
+								             	<xs:complexType>
+								             		<xs:simpleContent>
+     														<xs:extension base="xs:string">
+       														<xs:attribute name="order" type="xs:string"/>
+       													</xs:extension>
+   													</xs:simpleContent>
+   												</xs:complexType>
+								             </xs:element>
+								             <xs:element name="allow-language" type="xs:boolean" minOccurs="0"/>
+										</xs:sequence>
                                    </xs:sequence>      
                                 </xs:complexType>
                             </xs:element>                                                                      
@@ -168,10 +183,14 @@
 		</xs:unique>
 	</xs:element>
 	<xs:complexType name="property">
-		<xs:annotation>
-			<xs:documentation> property</xs:documentation>
-		</xs:annotation>
-		<xs:attribute name="name" type="xs:string" use="required"/>
-		<xs:attribute name="value" type="xs:string" use="required"/>
+		<xs:simpleContent>
+			<xs:annotation>
+				<xs:documentation> property</xs:documentation>
+			</xs:annotation>
+			<xs:extension base="xs:string">
+				<xs:attribute name="name" type="xs:string" use="required"/>
+				<xs:attribute name="value" type="xs:string"/>
+			</xs:extension>
+		</xs:simpleContent>
 	</xs:complexType>
 </xs:schema>

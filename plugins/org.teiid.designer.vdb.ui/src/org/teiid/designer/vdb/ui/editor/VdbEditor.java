@@ -12,6 +12,8 @@ import static org.teiid.designer.vdb.Vdb.Event.CLOSED;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
+import static org.teiid.designer.vdb.Vdb.Event.DATA_POLICY_ADDED;
+import static org.teiid.designer.vdb.Vdb.Event.DATA_POLICY_REMOVED;
 import static org.teiid.designer.vdb.ui.preferences.VdbPreferenceConstants.SYNCHRONIZE_WITHOUT_WARNING;
 
 import java.beans.PropertyChangeEvent;
@@ -498,7 +500,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             pnlRoles.setLayout(new GridLayout());
             pnlRoles.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             rolesTab.setControl(pnlRoles);
-            new DataRolesPanel(pnlRoles, this);
+            dataRolesPanel = new DataRolesPanel(pnlRoles, this);
         }
 
         { // properties tab
@@ -1890,6 +1892,9 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             modelsGroup.getTable().getViewer().refresh();
             otherFilesGroup.getTable().getViewer().refresh();
             modelsGroup.getTable().getViewer().getTable().redraw(); // needed to update the synchronized image
+        }
+        if( DATA_POLICY_ADDED.equals(property) || DATA_POLICY_REMOVED.equals(property) ) {
+        	dataRolesPanel.refresh();
         }
         boolean syncChanged = false;
         for (VdbEntry entry : vdb.getEntries()) {

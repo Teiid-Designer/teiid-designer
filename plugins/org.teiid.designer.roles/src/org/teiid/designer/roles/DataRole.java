@@ -7,9 +7,11 @@
  */
 package org.teiid.designer.roles;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -59,6 +61,10 @@ public class DataRole {
 		this.permissionsMap = new HashMap<String, Permission>();
 		
 		setPermissions(dataRole.getPermissions());
+	}
+	
+	public Map<String, Permission> getPermissionsMap() {
+		return this.permissionsMap;
 	}
 
 	public boolean allowCreateTempTables() {
@@ -121,11 +127,118 @@ public class DataRole {
 		this.permissionsMap.put(permission.getTargetName(), permission);
 	}
 	
+	public void removePermission(Permission permission) {
+		CoreArgCheck.isNotNull(permission, "permission"); //$NON-NLS-1$
+		this.permissionsMap.remove(permission);
+	}
+	
 	public boolean isAnyAuthenticated() {
 		return this.anyAuthenticated;
 	}
 	
 	public void setAnyAuthenticated(boolean value) {
 		this.anyAuthenticated = value;
+	}
+	
+	public List<String> getAllowedLanguages() {
+		List<String> allowedLanguages = new ArrayList<String>(10);
+		
+		for( Permission perm : getPermissions()) {
+			if( perm.isAllowLanguage() ) {
+				allowedLanguages.add(perm.getTargetName());
+			}
+		}
+		
+		return allowedLanguages;
+	}
+	
+	public void addAllowedLanguage(String language) {
+		Permission perm = new Permission(language, false, false, false, false, false, false);
+		perm.setAllowLanguage(true);
+		addPermission(perm);
+	}
+	
+	public void removeAllowedLanguage(String language) {
+		this.permissionsMap.remove(language);
+	}
+	
+	public List<Permission> getPermissionsWithRowBasedSecurity() {
+		List<Permission> perms = new ArrayList<Permission>(10);
+		
+		for( Permission perm : getPermissions()) {
+			if( perm.getCondition() != null ) {
+				perms.add(perm);
+			}
+		}
+		
+		return perms;
+	}
+	
+	public Permission getPermission(String targetName) {
+		return this.permissionsMap.get(targetName);
+	}
+	
+	public List<Permission> getPermissionsWithColumnMasking() {
+		List<Permission> perms = new ArrayList<Permission>(10);
+		
+		for( Permission perm : getPermissions()) {
+			if( perm.getMask() != null ) {
+				perms.add(perm);
+			}
+		}
+		
+		return perms;
+	}
+	
+	public void removeRowBasedSecurity(Permission permission) {
+		permission.setCondition(null);
+		permission.setConstraint(true);
+	}
+	
+	public void removeColumnMask(Permission permission) {
+		permission.setMask(null);
+		permission.setOrder(0);
+	}
+	
+	public void removeColumnMask(String targetName) {
+		Permission existingPerm = this.permissionsMap.get(targetName);
+		if( existingPerm != null ) {
+			existingPerm.setMask(null);
+			existingPerm.setOrder(0);
+		}
+	}
+	
+	public void setColumnMask(String targetName, String mask, int order) {
+		Permission existingPerm = this.permissionsMap.get(targetName);
+		if( existingPerm == null ) {
+			existingPerm = new Permission(
+					targetName, 
+					new Crud(Boolean.FALSE, 
+							Boolean.FALSE, 
+							Boolean.FALSE, 
+							Boolean.FALSE, 
+							Boolean.FALSE,
+							Boolean.FALSE));
+			this.permissionsMap.put(targetName, existingPerm);
+		}
+		existingPerm.setMask(mask);
+		existingPerm.setOrder(order);
+	}
+	
+	public void setRowsBasedSecurity(String targetName, String condition, boolean constraint) {
+		Permission existingPerm = this.permissionsMap.get(targetName);
+		if( existingPerm == null ) {
+			existingPerm = new Permission(
+					targetName, 
+					new Crud(Boolean.FALSE, 
+							Boolean.FALSE, 
+							Boolean.FALSE, 
+							Boolean.FALSE, 
+							Boolean.FALSE,
+							Boolean.FALSE));
+			this.permissionsMap.put(targetName, existingPerm);
+		}
+		existingPerm.setCondition(condition);
+		existingPerm.setConstraint(constraint);
 	}
 }

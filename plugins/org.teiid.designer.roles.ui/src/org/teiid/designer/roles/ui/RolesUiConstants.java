@@ -33,5 +33,11 @@ public interface RolesUiConstants {
         public static final String UNCHECKED_BOX_ICON = PC.CVIEW16 + "unchecked_box.png"; //$NON-NLS-1$
         public static final String GRAY_CHECKED_BOX_ICON = PC.CVIEW16 + "gray_checked_box.png"; //$NON-NLS-1$
         public static final String GRAY_UNCHECKED_BOX_ICON = PC.CVIEW16 + "gray_unchecked_box.png"; //$NON-NLS-1$
+        public static final String GRAY_BOX_ICON = PC.CVIEW16 + "gray_box.png"; //$NON-NLS-1$
+        public static final String WHITE_BOX_ICON = PC.CVIEW16 + "white_box.png"; //$NON-NLS-1$
+        public static final String BLUE_BOX_ICON = PC.CVIEW16 + "blue_box.png"; //$NON-NLS-1$
+        public static final String GREEN_BOX_ICON = PC.CVIEW16 + "green_box.png"; //$NON-NLS-1$
+        
+        
     }
 }

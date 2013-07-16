@@ -30,11 +30,11 @@ public final class RolesUiPlugin extends AbstractUiPlugin {
 
     private static final String I18N_NAME = PLUGIN_ID + ".i18n"; //$NON-NLS-1$
 
-    static final PluginUtil UTIL = new PluginUtilImpl(PLUGIN_ID, I18N_NAME, ResourceBundle.getBundle(I18N_NAME));
+    public static final PluginUtil UTIL = new PluginUtilImpl(PLUGIN_ID, I18N_NAME, ResourceBundle.getBundle(I18N_NAME));
 
     private static RolesUiPlugin plugin;
 
-    static RolesUiPlugin getInstance() {
+    public static RolesUiPlugin getInstance() {
         return plugin;
     }
 
