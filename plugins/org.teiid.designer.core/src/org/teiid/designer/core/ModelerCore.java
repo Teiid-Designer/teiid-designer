@@ -11,12 +11,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.core.resources.IFile;
@@ -29,6 +27,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
@@ -44,9 +43,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMLMapImpl;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.xsd.XSDPlugin;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
@@ -65,6 +61,8 @@ import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.core.designer.util.Stopwatch;
+import org.teiid.designer.ExtensionRegistryUtils;
+import org.teiid.designer.IExtensionRegistryCallback;
 import org.teiid.designer.WorkspaceUUIDService;
 import org.teiid.designer.core.ModelerCore.EXTENSION_POINT.EOBJECT_MATCHER_FACTORY;
 import org.teiid.designer.core.container.Container;
@@ -105,9 +103,9 @@ import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.type.IDataTypeManagerService;
 
 /**
@@ -116,11 +114,6 @@ import org.teiid.designer.type.IDataTypeManagerService;
  * @since 8.0
  */
 public class ModelerCore extends Plugin implements DeclarativeTransactionManager {
-
-	/**
-     * Default server version property id
-     */
-    public static final String DEFAULT_TEIID_SERVER_VERSION_ID = "defaultTeiidServerVersion"; //$NON-NLS-1$
 
     /**
 	 * Options for whether to register an item with this class' registry
@@ -359,9 +352,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     // rules.
     private static boolean IGNORE_VALIDATION_PREFERNCES_ON_BUILD = false;
 
-    private static ITeiidServer defaultTeiidServer = null;
-
-    private static Set<ITeiidServerVersionListener> teiidServerVersionListeners;
+    private static ITeiidServerManager teiidServerManager = null;
 
     /**
      * Add all model resource sets known through the EXTERNAL_RESOURCE_SET extension to the specified container
@@ -2076,7 +2067,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return
      */
     public static boolean hasDefaultTeiidServer() {
-        return defaultTeiidServer != null;
+        return getTeiidServerManager().getDefaultServer() != null;
     }
 
     /**
@@ -2085,6 +2076,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return teiid server version
      */
     public static String getDefaultServerName() {
+        ITeiidServer defaultTeiidServer = getTeiidServerManager().getDefaultServer();
         if (defaultTeiidServer == null) {
             return Util.getString(I18N_PREFIX + "noDefaultServer"); //$NON-NLS-1$
         }
@@ -2098,11 +2090,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return event manager
      */
     public static EventManager getDefaultServerEventManager() {
-        if (defaultTeiidServer == null) {
-            return null;
-        }
-
-        return defaultTeiidServer.getEventManager();
+        return getTeiidServerManager();
     }
 
     /**
@@ -2113,7 +2101,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      */
     public static Event createDefaultTeiidServerEvent() {
         Event event = new Event();
-        event.data = defaultTeiidServer;
+        event.data = getTeiidServerManager().getDefaultServer();
 
         return event;
     }
@@ -2124,16 +2112,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return teiid server version
      */
     public static ITeiidServerVersion getTeiidServerVersion() {
-        if (defaultTeiidServer == null) {
-            // Preference is stored in the ui plugin which we do not have a dependency on so have to
-            // get at the preference in this way. Not great but alternative is to try and save the property
-            // in this plugin's properties and not really worth it.
-            IEclipsePreferences preferences = getPreferences("org.teiid.designer.ui");
-            String versionString = preferences.get(DEFAULT_TEIID_SERVER_VERSION_ID, ITeiidServerVersion.DEFAULT_TEIID_8_SERVER_ID);
-            return new TeiidServerVersion(versionString);
-        }
-        
-        return defaultTeiidServer.getServerVersion();
+        return getTeiidServerManager().getDefaultServerVersion();
     }
 
     /**
@@ -2143,10 +2122,10 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @param listener
      */
     public static void addTeiidServerVersionListener(ITeiidServerVersionListener listener) {
-        if (teiidServerVersionListeners == null)
-            teiidServerVersionListeners = new HashSet<ITeiidServerVersionListener>();
-        
-        teiidServerVersionListeners.add(listener);
+        if (getTeiidServerManager() == null)
+            throw new IllegalStateException();
+
+        getTeiidServerManager().addTeiidServerVersionListener(listener);
     }
     
     /**
@@ -2156,56 +2135,12 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @param listener
      */
     public static void removeTeiidServerVersionListener(ITeiidServerVersionListener listener) {
-        if (teiidServerVersionListeners == null)
-            return;
-        
-        teiidServerVersionListeners.remove(listener);
+        if (getTeiidServerManager() == null)
+            throw new IllegalStateException();
+
+        getTeiidServerManager().removeTeiidServerVersionListener(listener);
     }
-    
-    /**
-     * Set the version of the targeted teiid server
-     * 
-     * @param defaultServer
-     */
-    public static void setDefaultServer(ITeiidServer defaultServer) {
-        if (defaultTeiidServer != null && defaultTeiidServer.equals(defaultServer))
-            return;
 
-        ITeiidServerVersion oldServerVersion = defaultTeiidServer != null ? defaultTeiidServer.getServerVersion() : null;
-        ITeiidServerVersion newServerVersion = defaultServer != null ? defaultServer.getServerVersion() : null;
-
-        defaultTeiidServer = defaultServer;
-
-        if (teiidServerVersionListeners != null) {
-            for (ITeiidServerVersionListener listener : teiidServerVersionListeners) {
-                listener.serverChanged(defaultServer);
-            }
-        }
-
-        /* 
-         * Compare the versions of the server.
-         * 
-         * Only if the server version has changed should the model editors be closed
-         * and server version listeners notified.
-         */
-        if (oldServerVersion != null && oldServerVersion.equals(newServerVersion))
-            return;
-
-        // Server version change has occurred so close all editors and notify server version listeners
-        for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
-            for (IWorkbenchPage page : window.getPages()) {
-                page.closeAllEditors(true);
-            }
-        }
-
-        if (teiidServerVersionListeners == null)
-            return;
-
-        for (ITeiidServerVersionListener listener : teiidServerVersionListeners) {
-            listener.versionChanged(getTeiidServerVersion());
-        }
-    }
-    
     /**
      * Get the teiid data type manager service for the
      * targeted teiid server. The targeted teiid server
@@ -2215,7 +2150,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      */
     public static IDataTypeManagerService getTeiidDataTypeManagerService() {
         try {
-            return TeiidRuntimeRegistry.getInstance().getDataTypeManagerService(getTeiidServerVersion());
+            return TeiidRuntimeRegistry.getInstance().getDataTypeManagerService(getTeiidServerManager().getDefaultServerVersion());
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -2230,7 +2165,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      */
     public static IQueryService getTeiidQueryService() {
         try {
-            return TeiidRuntimeRegistry.getInstance().getQueryService(getTeiidServerVersion());
+            return TeiidRuntimeRegistry.getInstance().getQueryService(getTeiidServerManager().getDefaultServerVersion());
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -2261,4 +2196,69 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         final ModelResource resrc = ModelerCore.create( modelFile );
 		return resrc;
 	}
+
+    /**
+     * @return the teiidServerManager
+     */
+    public static ITeiidServerManager getTeiidServerManager() {
+
+        if (teiidServerManager == null) {
+            IExtensionRegistryCallback<ITeiidServerManager> callback = new IExtensionRegistryCallback<ITeiidServerManager>() {
+
+                @Override
+                public String getExtensionPointId() {
+                    return ITeiidServerManager.TEIID_SERVER_MANAGER_EXTENSION_POINT_ID;
+                }
+
+                @Override
+                public String getElementId() {
+                    return ITeiidServerManager.TEIID_SERVER_MANAGER_ELEMENT_ID;
+                }
+
+                @Override
+                public String getAttributeId() {
+                    return CLASS_ATTRIBUTE_ID;
+                }
+
+                @Override
+                public boolean isSingle() {
+                    return true;
+                }
+
+                @Override
+                public void process(ITeiidServerManager instance, IConfigurationElement element) {
+                    CoreArgCheck.isNotNull(instance);
+
+                    if (teiidServerManager != null) {
+                        /*
+                         * Programming error since the teiid server manager extension should only be
+                         * implemented once.
+                         */
+                        throw new IllegalStateException();
+                    }
+
+                    teiidServerManager = instance;
+                    teiidServerManager.restoreState();
+                }
+            };
+
+            try {
+                ExtensionRegistryUtils.createExtensionInstances(callback);
+            } catch (Exception ex) {
+                throw new IllegalStateException(ex);
+            }
+        }
+
+        return teiidServerManager;
+    }
+
+    /**
+     * This should only be called in rare circumstances such as unit testing
+     * where the extension point is not available
+     *
+     * @param teiidServerManager the teiidServerManager to set
+     */
+    public static void setTeiidServerManager(ITeiidServerManager teiidServerManager) {
+        ModelerCore.teiidServerManager = teiidServerManager;
+    }
 }

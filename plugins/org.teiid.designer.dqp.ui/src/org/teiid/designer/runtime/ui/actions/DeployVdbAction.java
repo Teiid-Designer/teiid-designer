@@ -31,8 +31,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.vdb.DeployVdbDialog;
@@ -228,7 +228,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
         return true;
     }
 
-    private static TeiidServerManager getServerManager() {
+    private static ITeiidServerManager getServerManager() {
         return DqpPlugin.getInstance().getServerManager();
     }
 

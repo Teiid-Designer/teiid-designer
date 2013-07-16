@@ -72,12 +72,12 @@ import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -592,7 +592,7 @@ public class PreviewDataWorker {
 		return sql;
 	}
 	
-    private TeiidServerManager getServerManager() {
+    private ITeiidServerManager getServerManager() {
         return DqpPlugin.getInstance().getServerManager();
     }
     

@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
@@ -21,10 +20,9 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
-import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -43,11 +41,6 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
     // ===========================================================================================================================
 
     /**
-     * The server manager used to create and edit servers.
-     */
-    private TeiidServerManager teiidServerManager;
-
-    /**
      * The servers being deleted (never <code>null</code>).
      */
     private ITeiidServer selectedServer;
@@ -62,24 +55,6 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
             setToolTipText(UTIL.getString("setDefaultServerActionToolTip")); //$NON-NLS-1$
             setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SET_DEFAULT_SERVER_ICON));
         }
-        setServerManager(getServerManager());
-    }
-    
-    /**
-     * @param teiidServerManager the server manager to use when creating and editing servers
-     */
-    public SetDefaultServerAction( TeiidServerManager teiidServerManager ) {
-        this();
-        setServerManager(teiidServerManager);
-    }
-    
-    /**
-     * Set the ServerManager
-     * @param serverManager the server manager
-     */
-    private void setServerManager(TeiidServerManager serverManager) {
-        CoreArgCheck.isNotNull(serverManager, "serverManager"); //$NON-NLS-1$
-    	this.teiidServerManager = serverManager;
     }
 
     // ===========================================================================================================================
@@ -110,14 +85,14 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
         if(RuntimeAssistant.selectServerWasCancelled()) return;
         
         if (selectedServer == null) {
-        	this.teiidServerManager.setDefaultServer(null);
+            getServerManager().setDefaultServer(null);
             String title = UTIL.getString("defaultServerChangedTitle"); //$NON-NLS-1$
             String message = UTIL.getString("defaultServerChangedMessage", "No Default"); //$NON-NLS-1$ //$NON-NLS-2$
             MessageDialog.openInformation(getShell(), title, message);
         	return;
         }
         
-        ITeiidServer currentDefaultServer = this.teiidServerManager.getDefaultServer();
+        ITeiidServer currentDefaultServer = this.getServerManager().getDefaultServer();
         
         /*
          * If a server version change is occurring then tell the user and ask them if its
@@ -149,7 +124,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
     	/*
     	 * Set the default teiid server
     	 */
-        this.teiidServerManager.setDefaultServer(this.selectedServer);
+        this.getServerManager().setDefaultServer(this.selectedServer);
         
         /*
          * If the new default server is connected then reconnect it to 
@@ -178,7 +153,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
     /**
      * @return the server manager
      */
-    private TeiidServerManager getServerManager() {
+    private ITeiidServerManager getServerManager() {
         return DqpPlugin.getInstance().getServerManager();
     }
 
@@ -193,7 +168,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
     }
     
     private boolean changeOfServerVersion() {
-        ITeiidServer currentDefaultServer = this.teiidServerManager.getDefaultServer();
+        ITeiidServer currentDefaultServer = this.getServerManager().getDefaultServer();
         if (currentDefaultServer == null)
             return true;
         
@@ -222,10 +197,10 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
         this.selectedServer = teiidServer;
         
         // No default server selected so display the action to allow it
-        if (teiidServerManager.getDefaultServer() == null)
+        if (getServerManager().getDefaultServer() == null)
             return true;
         
-        if (! this.selectedServer.equals(this.teiidServerManager.getDefaultServer()))
+        if (! this.selectedServer.equals(this.getServerManager().getDefaultServer()))
             return true;
 
         return false;

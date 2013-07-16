@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="teiidRuntimeClient" name="Teiid Runtime Client" schema="schema/teiidRuntimeClient.exsd"/>
+   <extension-point id="teiidServerManager" name="Teiid Server Manager" schema="schema/teiidServerManager.exsd"/>
    <extension-point id="teiidPasswordProvider" name="Teiid Password Provider" schema="schema/teiidPasswordProvider.exsd"/>
 
 </plugin>
