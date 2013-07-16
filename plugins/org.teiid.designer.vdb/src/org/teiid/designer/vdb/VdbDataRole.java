@@ -21,7 +21,9 @@ import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
 import org.teiid.designer.vdb.Vdb.Event;
+import org.teiid.designer.vdb.manifest.ConditionElement;
 import org.teiid.designer.vdb.manifest.DataRoleElement;
+import org.teiid.designer.vdb.manifest.MaskElement;
 import org.teiid.designer.vdb.manifest.PermissionElement;
 
 
@@ -72,9 +74,37 @@ public class VdbDataRole {
     	 
          this.description.set(element.getDescription() == null ? StringUtilities.EMPTY_STRING : element.getDescription());
     	 
-         for( PermissionElement perm : element.getPermissions()) {
-    		 permissions.add(new Permission(perm.getResourceName(), 
-    				 	perm.isCreate(), perm.isRead(), perm.isUpdate(), perm.isDelete(), perm.isExecute(), perm.isAlter()));
+         for( PermissionElement pe : element.getPermissions()) {
+        	 boolean allow = false;
+        	 
+        	 if( pe != null ) {
+        		 allow = pe.isAllowLanguage();
+        	 }
+        	 
+        	 Permission permission = new Permission(pe.getResourceName(), 
+        			 pe.isCreate(), pe.isRead(), pe.isUpdate(), pe.isDelete(), pe.isExecute(), pe.isAlter());
+ 				 
+        	 ConditionElement condition = pe.getCondition();
+        	 if( condition != null )  {
+        		 permission.setCondition(condition.getSql());
+        		 if( !condition.getConstraint()) {
+        			 permission.setConstraint(condition.getConstraint());
+        		 }
+        	 }
+        	 
+        	 MaskElement mask = pe.getMask();
+        	 if( mask != null )  {
+        		 permission.setMask(mask.getSql());
+        		 if( mask.getOrder() != null) {
+        			 permission.setOrder(Integer.valueOf(mask.getOrder()));
+        		 }
+        	 }
+        	 
+        	 if( allow ) {
+        		 permission.setAllowLanguage(true);
+        	 }
+        	 
+    		 permissions.add(permission);
     	 }
     	 
     	 mappedRoleNames = new ArrayList(element.getMappedRoleNames());

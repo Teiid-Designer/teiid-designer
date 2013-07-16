@@ -5,7 +5,7 @@
       <preference
             id="autoWillToggleChildrenPreferenceContributor"
             categoryId="dqpUiPreferenceCategory"
-            class="org.teiid.designer.roles.ui.AutoWillToggleChildrenPreferenceContributor">
+            class="org.teiid.designer.roles.ui.preferences.AutoWillToggleChildrenPreferenceContributor">
       </preference>
    </extension>
 

@@ -5,12 +5,12 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.roles.ui;
+package org.teiid.designer.roles.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
@@ -41,6 +42,9 @@ import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.metamodels.xml.XmlDocument;
 import org.teiid.designer.roles.Crud;
 import org.teiid.designer.roles.Permission;
+import org.teiid.designer.roles.ui.Messages;
+import org.teiid.designer.roles.ui.RolesUiConstants;
+import org.teiid.designer.roles.ui.RolesUiPlugin;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
@@ -59,6 +63,10 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
     private static final Image GRAY_CHECKED_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.GRAY_CHECKED_BOX_ICON);
     private static final Image GRAY_UNCHECKED_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.GRAY_UNCHECKED_BOX_ICON);
     
+    private static final Image GRAY_STATUS_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.GRAY_BOX_ICON);
+    private static final Image WHITE_STATUS_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.WHITE_BOX_ICON);
+    private static final Image BLUE_STATUS_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.BLUE_BOX_ICON);
+    
     private static final int CHECKED = 0;
     private static final int UNCHECKED = 1;
     private static final int GRAY_CHECKED = 2;
@@ -70,9 +78,9 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 
     private Resource[] resources;
 
-    public DataRolesModelTreeProvider( Map<Object, Permission> permissionsMap ) {
+    public DataRolesModelTreeProvider( ) {
         super();
-        handler = new PermissionHandler(this, permissionsMap);
+        handler = new PermissionHandler(this);
     }
 
     @Override
@@ -134,6 +142,12 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 
         return children;
     }
+    
+    
+    @Override
+	public boolean hasChildren( Object parentElement) {
+    	return getChildren(parentElement).length > 0;
+    }
 
     @Override
 	public Image getColumnImage(Object element, int columnIndex) {
@@ -141,6 +155,8 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 
         if (columnIndex == 0) {
             return getImage(element);
+        } else if( columnIndex == 1 ) {
+        	return getSecurityStatusImage(element);
         }
 
         Crud.Type crudType = Crud.getCrudType(columnIndex);
@@ -168,7 +184,7 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
             boolean hasDifferentChildValue = false;
 			// If the permission is defined by a parent value, then we assume that this element has a NULL value and we need to determine
             // if any children below the element has a permission crud value not equal to the parent.
-            if (isParent || getChildren(element).length > 0 ) {
+            if (isParent || hasChildren(element) ) {
                 hasDifferentChildValue = handler.hasChildWithDifferentCrudValue(perm, element, crudType);
             }
 
@@ -294,6 +310,27 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
         }
         return null;
     }
+    
+    private Image getSecurityStatusImage(Object target) {
+    	Permission perm = this.handler.getPermission(target);
+    	if( perm != null ) {
+	    	if( perm.getCondition() != null || perm.getMask() != null ) {
+	    		// Has security
+	    		return BLUE_STATUS_BOX;
+	    	}
+	    	if( allowsSecurity(target) ) {
+	    		// Has basic CRUD
+	    		return WHITE_STATUS_BOX;
+	    	} else {
+	    		return GRAY_STATUS_BOX;
+	    	}
+    	} else if( allowsSecurity(target) ){
+    		return WHITE_STATUS_BOX;
+    	}
+    	
+    	return GRAY_STATUS_BOX;
+    	
+    }
 
     /**
      * Returns a string target name for the specified element
@@ -389,10 +426,7 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
         return StringUtilities.EMPTY_STRING;
     }
 
-    @Override
-    public boolean hasChildren( Object element ) {
-        return getChildren(element).length > 0;
-    }
+    
 
     @Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
@@ -450,5 +484,93 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
                                     Crud.Type crudType ) {
         return handler.getToggleStatus(element, crudType);
     }
+    
+    public void loadPermissions(Collection<Permission> permissions) {
+        this.handler.loadPermissions(permissions);
+    }
+    
+    public Collection<Permission> getPermissions() {
+    	return this.handler.getPermissions();
+    }
+    
+	public List<Permission> getPermissionsWithRowBasedSecurity() {
+		return this.handler.getPermissionsWithRowBasedSecurity();
+	}
+	
+	public Permission getPermission(String targetName) {
+		return this.handler.getPermission(targetName);
+	}
+	
+	public Permission getPermission(Object element) {
+		return this.handler.getPermission(element);
+	}
+	
+	public List<Permission> getPermissionsWithColumnMasking() {
+		return handler.getPermissionsWithColumnMasking();
+	}
+	
+	public void removeRowBasedSecurity(Permission permission) {
+		this.handler.removeRowBasedSecurity(permission);
+	}
+	
+	public void setRowsBasedSecurity(String targetName, String condition, boolean constraint) {
+		this.handler.setRowsBasedSecurity(targetName, condition, constraint);
+	}
+	
+	public void removeColumnMask(Permission permission) {
+		this.handler.removeColumnMask(permission);
+	}
+	
+	public void removeColumnMask(String targetName) {
+		this.handler.removeColumnMask(targetName);
+	}
+	
+	public void setColumnMask(String targetName, String mask, int order) {
+		this.handler.setColumnMask(targetName, mask, order);
+	}
+	
+	public List<String> getAllowedLanguages() {
+		return this.handler.getAllowedLanguages();
+	}
+	
+	public void addAllowedLanguage(String language) {
+		this.handler.addAllowedLanguage(language);
+	}
+	
+	public void removeAllowedLanguage(String language) {
+		this.handler.removeAllowedLanguage(language);
+	}
+	
+	public Permission createPermission(Object target) {
+		String targetName = getTargetName(target);
+		Permission perm = new Permission(targetName, new Crud(null, null, null, null, null, null));
+		this.handler.addPermission(target, perm);
+		return perm;
+	}
+	
+	public boolean allowsSecurity(Object target) {
+		return allowsMasking(target) || allowsCondition(target);
+	}
+	
+	public boolean allowsMasking(Object target) {
+		return target instanceof Column;
+	}
+	
+	public boolean allowsCondition(Object target) {
+		return target instanceof Column || target instanceof Table || target instanceof View || target instanceof Procedure;
+	}
+	
+	public String getSecurityDialogMessage(Object target) {
+		if( target instanceof Column ) {
+			return NLS.bind(Messages.setSecurityValuesFor_0_message, Messages.column);
+		} else if( target instanceof Table ) {
+			return NLS.bind(Messages.setSecurityValuesFor_0_message, Messages.table);
+		} else if( target instanceof View ) {
+			return NLS.bind(Messages.setSecurityValuesFor_0_message, Messages.view);
+		} else if( target instanceof Procedure ) {
+			return NLS.bind(Messages.setSecurityValuesFor_0_message, Messages.procedure);
+		}
+		return StringUtilities.EMPTY_STRING;
+	}
 
 }

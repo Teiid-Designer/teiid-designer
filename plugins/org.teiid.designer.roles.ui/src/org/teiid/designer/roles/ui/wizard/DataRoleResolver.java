@@ -1,4 +1,4 @@
-package org.teiid.designer.roles.ui;
+package org.teiid.designer.roles.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;

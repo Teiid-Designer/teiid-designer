@@ -28,4 +28,6 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.103.0,4.0.0)",
  org.teiid.designer.metamodels.transformation;bundle-version="8.1.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.teiid.designer.roles.ui
+Export-Package: org.teiid.designer.roles.ui,
+ org.teiid.designer.roles.ui.wizard,
+ org.teiid.designer.roles.ui.wizard.panels

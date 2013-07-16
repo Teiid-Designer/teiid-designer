@@ -5,10 +5,12 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.roles.ui;
+package org.teiid.designer.roles.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
@@ -19,6 +21,7 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.roles.Crud;
 import org.teiid.designer.roles.Crud.Type;
+import org.teiid.designer.roles.ui.RolesUiPlugin;
 import org.teiid.designer.roles.Permission;
 import org.teiid.designer.transformation.util.TransformationHelper;
 
@@ -28,12 +31,12 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 public class PermissionHandler {
 
     private DataRolesModelTreeProvider tree;
-    private Map<Object, Permission> permissionsMap;
+    private Map<Object, Permission> objectsToPermissionsMap;
 
-	public PermissionHandler(DataRolesModelTreeProvider tree, Map<Object, Permission> permissionsMap) {
+	public PermissionHandler(DataRolesModelTreeProvider tree) {
         super();
         this.tree = tree;
-        this.permissionsMap = permissionsMap;
+        this.objectsToPermissionsMap = new HashMap<Object, Permission>();
     }
 
     /*
@@ -45,14 +48,16 @@ public class PermissionHandler {
     private void cleanUpPermissions( Object changedElement ) {
 
         // walk the tree,
-        Permission perm = permissionsMap.get(changedElement);
-        if (perm == null || perm.isPrimary()) {
+        Permission perm = objectsToPermissionsMap.get(changedElement);
+        if (perm == null || perm.isPrimary() || perm.isAllowLanguage()) {
             return;
         }
 
         if (perm.isNullCrud()) {
-            // System.out.println(" Removing Stale Permission for: " + perm.getTargetName());
-            permissionsMap.remove(changedElement); // stalePermissionKeys.add(changedElement);
+        	if( perm.getCondition() == null && perm.getMask() == null ) {
+	            // System.out.println(" Removing Stale Permission for: " + perm.getTargetName());
+	            objectsToPermissionsMap.remove(changedElement);
+        	}
         } else {
             boolean sameCreate = false;
             boolean sameRead = false;
@@ -61,7 +66,7 @@ public class PermissionHandler {
             boolean sameExecute = false;
             boolean sameAlter = false;
             
-            // look at all 4 CRUD values and their Parent Perms and if they are the same as the CRUD value
+            // look at all 6 CRUD values and their Parent Perms and if they are the same as the CRUD value
             Permission parentPerm = getFirstParentPermission(changedElement, Crud.Type.CREATE);
             if (parentPerm != null) {
 				if( (perm.getCRUDValue(Crud.Type.CREATE) == parentPerm.getCRUDValue(Crud.Type.CREATE)) ||
@@ -112,10 +117,15 @@ public class PermissionHandler {
                 }
             }
 
+            
             if (sameCreate && sameRead && sameUpdate && sameDelete && sameExecute && sameAlter) {
-                // System.out.println(" Removing Stale Permission for: " + perm.getTargetName());
-                permissionsMap.remove(changedElement);
-                // stalePermissionKeys.add(changedElement);
+            	if( perm.getCondition() != null || perm.getMask() != null ) {
+            		// null out all crud values
+            		perm.setCRUD(null,null,null,null,null,null);
+            	} else {
+            		// System.out.println(" Removing Stale Permission for: " + perm.getTargetName());
+            		objectsToPermissionsMap.remove(changedElement);
+            	}
             }
         }
     }
@@ -126,7 +136,7 @@ public class PermissionHandler {
 	private void getChildPermissions(Object parent, Collection<Permission> allChildPermissions) {
 
         for (Object child : tree.getChildren(parent)) {
-            Permission perm = this.permissionsMap.get(child);
+            Permission perm = this.objectsToPermissionsMap.get(child);
             if (perm != null) {
                 allChildPermissions.add(perm);
             }
@@ -140,7 +150,7 @@ public class PermissionHandler {
      */
 	private void getChildrenWithPermission(Object parent, Collection<Object> childrenWithPermission) {
         for (Object child : tree.getChildren(parent)) {
-            Permission perm = this.permissionsMap.get(child);
+            Permission perm = this.objectsToPermissionsMap.get(child);
             if (perm != null) {
                 childrenWithPermission.add(child);
             }
@@ -155,11 +165,11 @@ public class PermissionHandler {
      * @return
      */
 	public Permission getExistingPermission(Object element, Crud.Type crudType) {
-        Permission perm = this.permissionsMap.get(element);
+        Permission perm = this.objectsToPermissionsMap.get(element);
         if (perm == null || perm.getCRUDValue(crudType) == null) {
             Object parent = tree.getParent(element);
             while (parent != null && (perm == null || perm.getCRUDValue(crudType) == null)) {
-                perm = this.permissionsMap.get(parent);
+                perm = this.objectsToPermissionsMap.get(parent);
                 parent = tree.getParent(parent);
             }
         }
@@ -174,7 +184,7 @@ public class PermissionHandler {
      * @return parent permission. may be null
      */
 	public Permission getParentPermission(Object element, Crud.Type crudType) {
-		Permission perm = this.permissionsMap.get(element);
+		Permission perm = this.objectsToPermissionsMap.get(element);
 		if (perm != null &&  perm.getCRUDValue(crudType) != null) {
 			return perm;
 		}
@@ -184,13 +194,13 @@ public class PermissionHandler {
 	
 	private Permission getModelPermssion(Object element) {
 		if( element instanceof Resource ) {
-			return this.permissionsMap.get(element);
+			return this.objectsToPermissionsMap.get(element);
 		}
 		
         Object parent = tree.getParent(element);
         while (parent != null ) {
         	if( parent instanceof Resource ) {
-        		return this.permissionsMap.get(parent);
+        		return this.objectsToPermissionsMap.get(parent);
         	}
             parent = tree.getParent(parent);
         }
@@ -219,14 +229,14 @@ public class PermissionHandler {
         Permission perm = null;
         Object parent = tree.getParent(element);
         while (parent != null && (perm == null || perm.getCRUDValue(crudType) == null)) {
-            perm = this.permissionsMap.get(parent);
+            perm = this.objectsToPermissionsMap.get(parent);
             parent = tree.getParent(parent);
         }
         return perm;
     }
 
     public Permission getPermission( Object element ) {
-        return this.permissionsMap.get(element);
+        return this.objectsToPermissionsMap.get(element);
     }
 
     /**
@@ -241,27 +251,27 @@ public class PermissionHandler {
         getChildPermissions(parent, childPermissions);
 
         for (Permission perm : childPermissions) {
-            Boolean value = perm.getCRUDValue(type);
-            if (value != null && value != parentValue) {
-                return true;
+            Boolean childValue = perm.getCRUDValue(type);
+            if( childValue != null && parentPermission.childCrudValueIsDifferent(parentValue, childValue)) {
+            	return true;
             }
         }
         return false;
     }
 
     public boolean hasPermissions() {
-        return !this.permissionsMap.isEmpty();
+        return !this.objectsToPermissionsMap.isEmpty();
     }
 
 	public void addPermission(Object key, Permission perm) {
-        if (!this.permissionsMap.containsKey(key)) {
-            this.permissionsMap.put(key, perm);
+        if (!this.objectsToPermissionsMap.containsKey(key)) {
+            this.objectsToPermissionsMap.put(key, perm);
         }
     }
 	
 	private void disableNearestParentPermission(Object element, Crud.Type crudType) {
 		Object firstParent = tree.getParent(element);
-		Permission perm = this.permissionsMap.get(firstParent);
+		Permission perm = this.objectsToPermissionsMap.get(firstParent);
 		
 		if( perm != null && perm.getCRUDValue(crudType) != null && perm.getCRUDValue(crudType) == Boolean.FALSE ) {
 			perm.setCRUDValue(true, crudType);
@@ -270,7 +280,7 @@ public class PermissionHandler {
             Object parent = tree.getParent(firstParent);
             
             while (parent != null && !(parent instanceof Resource) && permiss == null) {
-            	permiss = this.permissionsMap.get(parent);
+            	permiss = this.objectsToPermissionsMap.get(parent);
                 parent = tree.getParent(parent);
                 if( permiss != null && permiss.getCRUDValue(crudType) == Boolean.FALSE ) {
                 	perm.setCRUDValue(true, crudType);
@@ -282,7 +292,7 @@ public class PermissionHandler {
 	
 	private boolean hasParentPermission(Object element, Crud.Type crudType) {
 		Object firstParent = tree.getParent(element);
-		Permission perm = this.permissionsMap.get(firstParent);
+		Permission perm = this.objectsToPermissionsMap.get(firstParent);
 		
 		if( (perm == null || perm.getCRUDValue(crudType) == null)) {
 			return false;
@@ -294,7 +304,7 @@ public class PermissionHandler {
             Object parent = tree.getParent(firstParent);
             
             while (parent != null && !(parent instanceof Resource) && (permiss == null || permiss.getCRUDValue(crudType) == null)) {
-            	permiss = this.permissionsMap.get(parent);
+            	permiss = this.objectsToPermissionsMap.get(parent);
                 parent = tree.getParent(parent);
                 if( permiss != null && permiss.getCRUDValue(crudType) == Boolean.FALSE ) {
                 	return true;
@@ -307,10 +317,10 @@ public class PermissionHandler {
 	
 	@SuppressWarnings("unused")
 	private Permission togglePermissionValue(Object element, boolean newValue, Crud.Type crudType) {
-		Permission permission = this.permissionsMap.get(element);
+		Permission permission = this.objectsToPermissionsMap.get(element);
 		if( permission == null ) {
 			permission = new Permission(tree.getTargetName(element), new Crud(null, null, null, null, null, null));
-			this.permissionsMap.put(element, permission);
+			this.objectsToPermissionsMap.put(element, permission);
 			permission.setCRUDValue(newValue, crudType);
 		} else {
 			permission.toggleCRUDValue(crudType);
@@ -325,7 +335,9 @@ public class PermissionHandler {
 	        getChildPermissions(element, childPermissions);
 	
 	        for (Permission perm : childPermissions) {
-	            perm.setCRUDValue(parentValue, crudType);
+	        	if( perm.getCRUDValue(crudType) != null ) {
+	        		perm.setCRUDValue(parentValue, crudType);
+	        	}
 	        }
 		}
 		
@@ -358,7 +370,7 @@ public class PermissionHandler {
     			
     			modelPermission = new Permission(tree.getTargetName(modelElement), targetCrud);
     			modelPermission.setCRUDValue(true, crudType);
-                this.permissionsMap.put(modelElement, modelPermission);
+                this.objectsToPermissionsMap.put(modelElement, modelPermission);
     		} else {
     			modelPermission.setCRUDValue(true, crudType);
     		}
@@ -411,7 +423,7 @@ public class PermissionHandler {
             Object parent = tree.getParent(workingElem);
             if (parent != null && !haveSameStatus(parent, workingElem, crudType)) {
                 // Get parent permission directly
-                Permission parentPerm = this.permissionsMap.get(parent);
+                Permission parentPerm = this.objectsToPermissionsMap.get(parent);
                 Permission elementPerm = getExistingPermission(workingElem, crudType);
                 Boolean elementStatus = elementPerm.getCRUDValue(crudType);
                 // Paren permission is null means the crud was inherited, so add an override
@@ -419,7 +431,7 @@ public class PermissionHandler {
                     Crud targetCrud = new Crud(null, null, null, null, null, null);
                     Permission newParentPermission = new Permission(tree.getTargetName(parent), targetCrud);
                     newParentPermission.setCRUDValue(elementStatus, crudType);
-                    this.permissionsMap.put(parent, newParentPermission);
+                    this.objectsToPermissionsMap.put(parent, newParentPermission);
                 } else {
                     parentPerm.setCRUDValue(elementStatus, crudType);
                 }
@@ -448,12 +460,12 @@ public class PermissionHandler {
 				if( child == element ) {
 					continue;
 				}
-				Permission existingPermission = this.permissionsMap.get(child);
+				Permission existingPermission = this.objectsToPermissionsMap.get(child);
 				if( existingPermission == null ) {
 					Crud childCrud = new Crud(null, null, null, null, null, null);
 					Permission newPermission = new Permission(tree.getTargetName(child), childCrud);
 					newPermission.setCRUDValue(false, crudType);
-					this.permissionsMap.put(child, newPermission);
+					this.objectsToPermissionsMap.put(child, newPermission);
 				} else {
 					existingPermission.setCRUDValue(false, crudType);
 				}
@@ -550,7 +562,7 @@ public class PermissionHandler {
      * Determine if element 'isPrimary'
      */
     private boolean isPrimary( Object element ) {
-        Permission perm = permissionsMap.get(element);
+        Permission perm = objectsToPermissionsMap.get(element);
         if (perm != null && perm.isPrimary()) {
             return true;
         }
@@ -610,4 +622,120 @@ public class PermissionHandler {
 
         return false;
     }
+    
+    public void loadPermissions(Collection<Permission> permissions) {
+        for (Permission perm : permissions) {
+        	if( perm.isAllowLanguage() ) {
+        		this.objectsToPermissionsMap.put(perm.getTargetName(), perm);
+        	} else {
+	            Object obj = tree.getPermissionTargetObject(perm);
+	            if (obj != null) {
+	                if (obj instanceof Resource) {
+	                    perm.setPrimary(true);
+	                }
+	                // load the actual object to permission into map
+	                this.objectsToPermissionsMap.put(obj, perm);
+	            }
+        	}
+        }
+    }
+    
+    public Collection<Permission> getPermissions() {
+    	return this.objectsToPermissionsMap.values();
+    }
+    
+	public List<Permission> getPermissionsWithRowBasedSecurity() {
+		List<Permission> perms = new ArrayList<Permission>(10);
+		
+		for( Permission perm : getPermissions()) {
+			if( perm.getCondition() != null ) {
+				perms.add(perm);
+			}
+		}
+		
+		return perms;
+	}
+	
+	public Permission getPermission(String targetName) {
+		for( Permission perm : objectsToPermissionsMap.values()) {
+			if( perm.getTargetName().equals(targetName) ) {
+				return perm;
+			}
+		}
+		return null;
+	}
+	
+	public List<Permission> getPermissionsWithColumnMasking() {
+		List<Permission> perms = new ArrayList<Permission>(10);
+		
+		for( Permission perm : getPermissions()) {
+			if( perm.getMask() != null ) {
+				perms.add(perm);
+			}
+		}
+		
+		return perms;
+	}
+	
+	public void removeRowBasedSecurity(Permission permission) {
+		permission.setCondition(null);
+		permission.setConstraint(true);
+	}
+	
+	public void removeColumnMask(Permission permission) {
+		permission.setMask(null);
+		permission.setOrder(0);
+	}
+	
+	public void removeColumnMask(String targetName) {
+		Permission existingPerm = getPermission(targetName);
+		if( existingPerm != null ) {
+			existingPerm.setMask(null);
+			existingPerm.setOrder(0);
+		}
+	}
+	
+	public void setColumnMask(String targetName, String mask, int order) {
+		Permission existingPerm = getPermission(targetName);
+		if( existingPerm == null ) {
+			existingPerm = new Permission(targetName, new Crud(null, null, null, null, null, null));
+			this.objectsToPermissionsMap.put(targetName, existingPerm);
+		}
+		existingPerm.setMask(mask);
+		existingPerm.setOrder(order);
+	}
+	
+	public void setRowsBasedSecurity(String targetName, String condition, boolean constraint) {
+		Permission existingPerm = getPermission(targetName);
+		if( existingPerm == null ) {
+			existingPerm = new Permission(targetName, new Crud(null, null, null, null, null, null));
+
+			this.objectsToPermissionsMap.put(targetName, existingPerm);
+		}
+		existingPerm.setCondition(condition);
+		existingPerm.setConstraint(constraint);
+	}
+	
+	public List<String> getAllowedLanguages() {
+		List<String> allowedLanguages = new ArrayList<String>(10);
+		
+		for( Permission perm : getPermissions()) {
+			if( perm.isAllowLanguage() ) {
+				allowedLanguages.add(perm.getTargetName());
+			}
+		}
+		
+		return allowedLanguages;
+	}
+	
+	public void addAllowedLanguage(String language) {
+		Permission perm = new Permission(language, false, false, false, false, false, false);
+		perm.setAllowLanguage(true);
+		this.objectsToPermissionsMap.put(language, perm);
+	}
+	
+	public void removeAllowedLanguage(String language) {
+		this.objectsToPermissionsMap.remove(language);
+	}
+
 }

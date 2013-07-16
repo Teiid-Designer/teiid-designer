@@ -46,11 +46,21 @@ public class PermissionElement implements Serializable {
     
     @XmlElement( name = "allow-alter")
     private Boolean alter;
+
+    @XmlElement( name = "condition", type = ConditionElement.class )
+    private ConditionElement condition;
+    
+    @XmlElement( name = "mask", type = MaskElement.class )
+    private MaskElement mask;
+    
+    @XmlElement( name = "allow-language", required = false)
+    private Boolean allowLanguage = Boolean.FALSE;
     
     /**
      * Used by JAXB when loading a VDB
      */
     public PermissionElement() {
+    	super();
     }
     
     /**
@@ -60,12 +70,34 @@ public class PermissionElement implements Serializable {
     public PermissionElement(Permission permission) {
         super();
         this.resource_name = permission.getTargetName();
-        this.create = permission.isCreateAllowed();
-        this.read = permission.isReadAllowed();
-        this.update = permission.isUpdateAllowed();
-        this.delete = permission.isDeleteAllowed();
-        this.execute = permission.isExecuteAllowed();
-        this.alter = permission.isAlterAllowed();
+        
+        if( !permission.isAllowLanguage() ) {
+	        this.create = permission.isCreateAllowed();
+	        this.read = permission.isReadAllowed();
+	        this.update = permission.isUpdateAllowed();
+	        this.delete = permission.isDeleteAllowed();
+	        this.execute = permission.isExecuteAllowed();
+	        this.alter = permission.isAlterAllowed();
+	        
+	        if( permission.getCondition() != null && permission.getCondition().length() > 0 ) {
+	        	condition = new ConditionElement(permission.getCondition(), permission.isConstraint());
+	        }
+	        
+	        if( permission.getMask() != null && permission.getMask().length() > 0 ) {
+	        	mask = new MaskElement(permission.getMask(), permission.getOrder());
+	        }
+	        this.allowLanguage = null;
+        } else {
+			this.allowLanguage = Boolean.TRUE;
+			this.create = null;
+			this.read = null;
+			this.update = null;
+			this.delete = null;
+			this.execute = null;
+			this.alter = null;
+			this.condition = null;
+			this.mask = null;
+		}
     }
     
     
@@ -118,6 +150,30 @@ public class PermissionElement implements Serializable {
 	public Boolean isAlter() {
 		return alter;
 	}
+	
+	/**
+	 * 
+	 * @return the condition
+	 */
+	public ConditionElement getCondition() {
+		return this.condition;
+	}
+	
+	/**
+	 * 
+	 * @return the condition
+	 */
+	public MaskElement getMask() {
+		return this.mask;
+	}
+	
+	/**
+	 * @return if permission allows alter
+	 */
+	public Boolean isAllowLanguage() {
+		return allowLanguage;
+	}
+    
 }
 
 /*

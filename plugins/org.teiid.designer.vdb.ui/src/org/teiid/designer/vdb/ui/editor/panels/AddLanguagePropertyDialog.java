@@ -34,7 +34,7 @@ import org.teiid.designer.core.util.StringUtilities;
 /**
  *
  */
-public class AddLanguagePropertyDialog  extends MessageDialog {
+public class AddLanguagePropertyDialog extends MessageDialog {
 
     private static final String PREFIX = I18nUtil.getPropertyPrefix(AddLanguagePropertyDialog.class);
 
