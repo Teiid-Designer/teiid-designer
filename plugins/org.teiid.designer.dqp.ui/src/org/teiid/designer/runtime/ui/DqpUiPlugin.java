@@ -16,7 +16,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
@@ -27,11 +26,10 @@ import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServerManager;
-import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
+import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbCleanupJob;
 import org.teiid.designer.runtime.spi.ITeiidServer;
-import org.teiid.designer.runtime.ui.connection.PreviewMissingPasswordDialog;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.ui.server.editor.TeiidServerEditor;
 import org.teiid.designer.runtime.ui.server.editor.TeiidServerEditorInput;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
@@ -150,8 +148,6 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
         super.start(context);
         // Initialize logging/i18n/debugging utility
         ((PluginUtilImpl)UTIL).initializePlatformLogger(this);
-
-        DqpPlugin.getInstance().setPasswordProvider(new PasswordProvider());
     }
 
     @Override
@@ -186,9 +182,12 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
             public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException {
                 try {
                     if (DqpPlugin.getInstance().isServerManagerStarted()) {
-                        TeiidServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
+                        ITeiidServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
                         serverMgr.shutdown(monitor);
                     }
+
+                    // shutdown PreviewManager
+                    PreviewManager.getInstance().shutdown(monitor);
                 } catch (InterruptedException e) {
                     monitor.setCanceled(true);
                     throw e;
@@ -209,42 +208,6 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
         }
     }
     
-    class PasswordProvider implements IPasswordProvider {
-       
-        /**
-         * {@inheritDoc}
-         *
-         * @see org.teiid.designer.runtime.connection.spi.IPasswordProvider#getPassword(java.lang.String, java.lang.String)
-         */
-        @Override
-        public String getPassword( final String modelName,
-                                   final String profileName ) {
-            final String[] password = new String[1];
-
-            UiUtil.runInSwtThread(new Runnable() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see java.lang.Runnable#run()
-                 */
-                @Override
-                public void run() {
-                    String message = DqpUiConstants.UTIL.getString("PasswordProvider.missingPasswordMessage", //$NON-NLS-1$
-                                                                   new Object[] {modelName, profileName});
-                    
-                    Shell workbenchShell = UiUtil.getWorkbenchShellOnlyIfUiThread();
-                    PreviewMissingPasswordDialog dialog = new PreviewMissingPasswordDialog(workbenchShell, message);
-
-                    if (dialog.open() == Window.OK) {
-                        password[0] = dialog.getPassword();
-                    }
-                }
-            },
-                                  false);
-            return password[0];
-        }
-    }
-
     /**
      * Open the {@link TeiidServerEditor} for the given {@link ITeiidServer}
      * 

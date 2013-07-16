@@ -15,11 +15,13 @@ import org.eclipse.wst.server.core.IServer;
 import org.junit.Before;
 import org.junit.Test;
 import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.HostProvider;
 import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 /**
@@ -47,7 +49,10 @@ public class ServerTest {
         this.jdbcInfo = mock(ITeiidJdbcInfo.class);
         this.eventMgr = mock(EventManager.class);
         this.parentServer = mock(IServer.class);
-        
+
+        ITeiidServerManager teiidServerManager = mock(ITeiidServerManager.class);
+        ModelerCore.setTeiidServerManager(teiidServerManager);
+
         this.teiidServer = new TeiidServer(serverVersion, adminInfo, jdbcInfo, eventMgr, parentServer);
     }
 

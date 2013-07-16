@@ -8,9 +8,7 @@
 package org.teiid.designer.runtime.ui.vdb;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -18,8 +16,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.common.util.UiUtil;
@@ -102,7 +100,7 @@ public class ExecuteVdbAction extends Action {
     	return vdb.isSynchronized();
     }
 
-    private static TeiidServerManager getServerManager() {
+    private static ITeiidServerManager getServerManager() {
         return DqpPlugin.getInstance().getServerManager();
     }
 	

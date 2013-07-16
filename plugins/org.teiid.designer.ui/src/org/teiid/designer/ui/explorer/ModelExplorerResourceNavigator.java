@@ -110,6 +110,7 @@ import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.ui.PluginConstants;
@@ -263,8 +264,10 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             if (defaultServerLink == null)
                 return;
 
-            setDefaultServerText(server.getDisplayName());
-            addExecutionConfigurationListener(server.getEventManager());
+            setDefaultServerText(ModelerCore.getDefaultServerName());
+
+            if (server != null)
+                addExecutionConfigurationListener(server.getEventManager());
         }
 
         @Override
@@ -290,7 +293,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     private IPreferenceChangeListener preferenceChangeListener = new IPreferenceChangeListener() {
         @Override
         public void preferenceChange(PreferenceChangeEvent event) {
-            if (ModelerCore.DEFAULT_TEIID_SERVER_VERSION_ID.equals(event.getKey())) {
+            if (ITeiidServerManager.DEFAULT_TEIID_SERVER_VERSION_ID.equals(event.getKey())) {
                 setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
             }
         }

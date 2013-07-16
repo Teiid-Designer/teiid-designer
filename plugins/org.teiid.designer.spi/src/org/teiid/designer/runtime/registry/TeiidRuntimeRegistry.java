@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime.registry;
 
 import java.sql.Driver;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -85,7 +84,7 @@ public class TeiidRuntimeRegistry extends AbstractExtensionRegistry<ITeiidServer
     public IExecutionAdmin getExecutionAdmin(ITeiidServer teiidServer) throws Exception {
         IExecutionAdminFactory factory = search(teiidServer.getServerVersion());
         if (factory == null)
-            throw new Exception("No ExecutionAdmin factory registered for teiid server version " + teiidServer.getServerVersion()); //$NON-NLS-1$
+            throw new Exception(NLS.bind(Messages.NoExecutionAdminFactory, teiidServer.getServerVersion()));
         
         return factory.createExecutionAdmin(teiidServer);
     }

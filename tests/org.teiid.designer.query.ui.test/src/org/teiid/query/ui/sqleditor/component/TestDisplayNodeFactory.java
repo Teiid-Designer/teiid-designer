@@ -66,6 +66,7 @@ import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.query.sql.symbol.IScalarSubquery;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 
@@ -257,7 +258,11 @@ public class TestDisplayNodeFactory extends TestCase {
         ITeiidServer teiidServer = mock(ITeiidServer.class);
         when(teiidServer.getServerVersion()).thenReturn(version);
 
-        ModelerCore.setDefaultServer(teiidServer);
+        ITeiidServerManager teiidServerManager = mock(ITeiidServerManager.class);
+        when(teiidServerManager.getDefaultServer()).thenReturn(teiidServer);
+        when(teiidServerManager.getDefaultServerVersion()).thenReturn(version);
+
+        ModelerCore.setTeiidServerManager(teiidServerManager);
         IQueryService queryService = ModelerCore.getTeiidQueryService();
         factory = queryService.createQueryFactory();
         parser = queryService.getQueryParser();

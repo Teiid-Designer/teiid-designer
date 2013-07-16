@@ -12,16 +12,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
+import org.teiid.designer.IExtensionRegistryCallback;
+import org.teiid.designer.ExtensionRegistryUtils;
 
 /**
  * @param <K> 
  * @param <V>
  */
 public abstract class AbstractExtensionRegistry<K, V> {
-
-    private static final String CLASS_ATTRIBUTE_ID = "class"; //$NON-NLS-1$
 
     private Map<K, V> extensions = new HashMap<K, V>();
 
@@ -36,16 +34,35 @@ public abstract class AbstractExtensionRegistry<K, V> {
     }
 
     private void load() throws Exception {
-        IExtensionRegistry extRegistry = Platform.getExtensionRegistry();
-        IConfigurationElement[] extensions = extRegistry.getConfigurationElementsFor(extPointId);
+        IExtensionRegistryCallback<V> callback = new IExtensionRegistryCallback<V>() {
 
-        for (IConfigurationElement element : extensions) {
-            if (elementId != null && !elementId.equals(element.getName()))
-                continue;
-            
-            V extension = (V) element.createExecutableExtension(CLASS_ATTRIBUTE_ID);
-            register(element, extension);
-        }
+            @Override
+            public String getExtensionPointId() {
+                return extPointId;
+            }
+
+            @Override
+            public String getElementId() {
+                return elementId;
+            }
+
+            @Override
+            public String getAttributeId() {
+                return CLASS_ATTRIBUTE_ID;
+            }
+
+            @Override
+            public boolean isSingle() {
+                return false;
+            }
+
+            @Override
+            public void process(V instance, IConfigurationElement element) {
+                register(element, instance);
+            }
+        };
+
+        ExtensionRegistryUtils.createExtensionInstances(callback);
     }
     
     protected abstract void register(IConfigurationElement configurationElement, V extension);

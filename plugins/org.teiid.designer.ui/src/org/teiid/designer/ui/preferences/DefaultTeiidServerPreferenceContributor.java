@@ -13,9 +13,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.ui.UiConstants;
@@ -27,7 +27,7 @@ import org.teiid.designer.ui.UiPlugin;
  */
 public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferencePageContributor, UiConstants {
 
-    private static final String PREF_ID = ModelerCore.DEFAULT_TEIID_SERVER_VERSION_ID;
+    private static final String PREF_ID = ITeiidServerManager.DEFAULT_TEIID_SERVER_VERSION_ID;
 
     private static final String PREFIX = I18nUtil.getPropertyPrefix(DefaultTeiidServerPreferenceContributor.class);
 
