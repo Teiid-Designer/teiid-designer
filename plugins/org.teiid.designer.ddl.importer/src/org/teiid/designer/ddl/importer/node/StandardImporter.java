@@ -55,16 +55,24 @@ public class StandardImporter extends AbstractImporter {
 
 		protected void init(AstNode node, RelationalModel model) throws Exception {
 			String name = node.getName();
-			int ndx = name.indexOf('.');
-			if (ndx < 0) {
+			int ndx = name.lastIndexOf('.');
+			if (ndx >= 0) {
 				schema = null;
-				this.name = name;
+				this.name = removeLeadingTrailingTicks(name.substring(ndx+1));
 			} else {
-				//                schema = find(RelationalSchema.class, name.substring(0, ndx), node, null, model);
-				//                this.name = name.substring(ndx + 1);
+				schema = null;
+				this.name = removeLeadingTrailingTicks(name);
 			}
 		}
 
+		protected String removeLeadingTrailingTicks(String name) {
+			String resultName = name;
+			if(name!=null && name.length()>2 & name.startsWith("`") && name.endsWith("`")) { //$NON-NLS-1$ //$NON-NLS-2$
+				resultName = name.substring(1, name.length()-1);
+			}
+			return resultName;
+		}
+		
 		/**
 		 * @return the name
 		 */
@@ -152,7 +160,12 @@ public class StandardImporter extends AbstractImporter {
 	 * @throws CoreException
 	 */
 	protected <T extends RelationalReference> T find(Class<T> type, AstNode node, RelationalReference parent, Collection<RelationalReference> allModelRefs) throws EntityNotFoundException, CoreException {
-		return find(type, node.getName(), node, parent, allModelRefs);
+		String nodeName = node.getName();
+		int indx = nodeName.lastIndexOf('.');
+		if(indx>=0) {
+			nodeName = nodeName.substring(indx+1);
+		}
+		return find(type, nodeName, node, parent, allModelRefs);
 	}
 
 	/**
@@ -385,13 +398,13 @@ public class StandardImporter extends AbstractImporter {
 
 	/**
 	 * Create a PrimaryKey
-	 * @param node the AstNode representing the key
+	 * @param node the AstNode representing the primary key
 	 * @param table the parent Table
 	 * @param allRefs the Collection of all RelationalReference objects in the model
 	 *
 	 * @throws CoreException
 	 */
-	protected void createKey(AstNode node, RelationalTable table, Collection<RelationalReference> allRefs) throws CoreException {
+	protected void createPrimaryKey(AstNode node, RelationalTable table, Collection<RelationalReference> allRefs) throws CoreException {
 		String type = node.getProperty(StandardDdlLexicon.CONSTRAINT_TYPE).toString();
 		if (DdlConstants.PRIMARY_KEY.equals(type)) {
 			RelationalPrimaryKey key = getFactory().createPrimaryKey();
@@ -412,7 +425,20 @@ public class StandardImporter extends AbstractImporter {
 					}
 				}
 			}
-		} else if (DdlConstants.FOREIGN_KEY.equals(type)) {
+		}
+	}
+	
+	/**
+	 * Create a Constraint
+	 * @param node the AstNode representing the constraint
+	 * @param table the parent Table
+	 * @param allRefs the Collection of all RelationalReference objects in the model
+	 *
+	 * @throws CoreException
+	 */
+	protected void createConstraint(AstNode node, RelationalTable table, Collection<RelationalReference> allRefs) throws CoreException {
+		String type = node.getProperty(StandardDdlLexicon.CONSTRAINT_TYPE).toString();
+		if (DdlConstants.FOREIGN_KEY.equals(type)) {
 			RelationalForeignKey key = getFactory().createForeignKey();
 			initializeFK(table.getForeignKeys(), key, node);
 			table.getForeignKeys().add(key);
@@ -438,17 +464,20 @@ public class StandardImporter extends AbstractImporter {
 
 			RelationalPrimaryKey primaryKey = foreignTable.getPrimaryKey();
 			Collection<RelationalColumn> primaryKeyColumns = primaryKey.getColumns();
-			if (foreignColumns.isEmpty())
+			if (foreignColumns.isEmpty()) {
 				key.setUniqueKeyName(primaryKey.getName());
-
-			if (primaryKeyColumns.containsAll(foreignColumns) && primaryKeyColumns.size() == foreignColumns.size())
+				key.setUniqueKeyTableName(foreignTable.getName());
+			}
+			if (primaryKeyColumns.containsAll(foreignColumns) && primaryKeyColumns.size() == foreignColumns.size()) {
 				key.setUniqueKeyName(primaryKey.getName());
-			else {
+				key.setUniqueKeyTableName(foreignTable.getName());
+			} else {
 				for (Object obj : foreignTable.getUniqueConstraints()) {
 					RelationalUniqueConstraint uniqueKey = (RelationalUniqueConstraint)obj;
 					Collection<RelationalColumn> uniqueKeyColumns = uniqueKey.getColumns();
 					if (uniqueKeyColumns.containsAll(foreignColumns) && uniqueKeyColumns.size() == foreignColumns.size()) {
 						key.setUniqueKeyName(uniqueKey.getName());
+						key.setUniqueKeyTableName(foreignTable.getName());
 						break;
 					}
 				}
@@ -607,16 +636,31 @@ public class StandardImporter extends AbstractImporter {
 	protected void createDeferredObjects(Map<AstNode,RelationalReference> deferredNodes, RelationalModel model) throws Exception {
 		Collection<RelationalReference> allRefs = model.getAllReferences();
 
+		// Make first pass to create the PKs
 		Set<AstNode> astNodes = deferredNodes.keySet();
 		for(AstNode node:astNodes) {
 			if (is(node, StandardDdlLexicon.TYPE_TABLE_CONSTRAINT)) {
 				RelationalTable table = (RelationalTable)deferredNodes.get(node);
-				createKey(node, table, allRefs);
+				createPrimaryKey(node, table, allRefs);
 			} else if (is(node, StandardDdlLexicon.TYPE_ALTER_TABLE_STATEMENT)) {
 				RelationalTable table = find(RelationalTable.class, node, null, allRefs);
 				for (AstNode node1 : node) {
 					if (is(node1, StandardDdlLexicon.TYPE_ADD_TABLE_CONSTRAINT_DEFINITION)) 
-						createKey(node1, table, allRefs);
+						createPrimaryKey(node1, table, allRefs);
+				}
+			}
+		}
+
+		// Second pass create other constraints
+		for(AstNode node:astNodes) {
+			if (is(node, StandardDdlLexicon.TYPE_TABLE_CONSTRAINT)) {
+				RelationalTable table = (RelationalTable)deferredNodes.get(node);
+				createConstraint(node, table, allRefs);
+			} else if (is(node, StandardDdlLexicon.TYPE_ALTER_TABLE_STATEMENT)) {
+				RelationalTable table = find(RelationalTable.class, node, null, allRefs);
+				for (AstNode node1 : node) {
+					if (is(node1, StandardDdlLexicon.TYPE_ADD_TABLE_CONSTRAINT_DEFINITION)) 
+						createConstraint(node1, table, allRefs);
 					else if (is(node1, StandardDdlLexicon.TYPE_ADD_COLUMN_DEFINITION))
 						createColumn(node1, table);
 				}

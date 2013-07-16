@@ -62,15 +62,15 @@ public class TeiidDdlImporter extends StandardImporter {
 		@Override
 		protected void init(AstNode node, RelationalModel model) throws Exception {
 			String name = node.getName();
-			int ndx = name.indexOf('.');
+			int ndx = name.lastIndexOf('.');
 			if (ndx >= 0) {
 				this.schema = null;
-				this.name = name.substring(ndx + 1);
+				this.name = removeLeadingTrailingTicks(name.substring(ndx + 1));
 			} else
 				super.init(node, model);
 		}
 	}
-
+	
 	@Override
 	protected TeiidInfo createInfo(AstNode node, RelationalModel model) throws Exception {
 		return new TeiidInfo(node, model);
