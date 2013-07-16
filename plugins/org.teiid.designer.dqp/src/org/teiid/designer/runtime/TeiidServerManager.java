@@ -31,6 +31,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -82,6 +85,11 @@ public final class TeiidServerManager implements ITeiidServerManager {
     // ===========================================================================================================================
     // Constants
     // ===========================================================================================================================
+
+    /**
+     * Designer UI plugin id
+     */
+    private static final String DESIGNER_UI_PLUGIN_ID = "org.teiid.designer.ui"; //$NON-NLS-1$
 
     /**
      * The attribute used to persist a server's custom label. May not exist if server is not using a custom label.
@@ -233,6 +241,33 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     private ISecureStorageProvider secureStorageProvider;
 
+    /* Listen for changes to the default server version preference */
+    private IPreferenceChangeListener preferenceChangeListener = new IPreferenceChangeListener() {
+        @Override
+        public void preferenceChange(PreferenceChangeEvent event) {
+            if (! ITeiidServerManager.DEFAULT_TEIID_SERVER_VERSION_ID.equals(event.getKey()))
+                return;
+
+            if (getDefaultServer() != null) {
+                // Default server exists so this preference is superceded by this server
+                return;
+            }
+
+           if (getDefaultServerVersion().equals(event.getNewValue()))
+               return;
+
+           // Server version change has occurred so close all editors and notify server version listeners
+           closeEditors();
+
+           if (teiidServerVersionListeners == null)
+               return;
+
+           for (ITeiidServerVersionListener listener : teiidServerVersionListeners) {
+               listener.versionChanged(getDefaultServerVersion());
+           }
+        }
+    };
+
     // ===========================================================================================================================
     // Constructors
     // ===========================================================================================================================
@@ -272,6 +307,9 @@ public final class TeiidServerManager implements ITeiidServerManager {
         addListener(previewManager);
 
         addListener(ImportManager.getInstance());
+
+        IEclipsePreferences preferences = DqpPlugin.getInstance().getPreferences(DESIGNER_UI_PLUGIN_ID);
+        preferences.addPreferenceChangeListener(preferenceChangeListener);
 
         this.state = RuntimeState.STARTED;
     }
@@ -374,7 +412,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
             // Preference is stored in the ui plugin which we do not have a dependency on so have to
             // get at the preference in this way. Not great but alternative is to try and save the property
             // in this plugin's properties and not really worth it.
-            IEclipsePreferences preferences = DqpPlugin.getInstance().getPreferences("org.teiid.designer.ui"); //$NON-NLS-1$
+            IEclipsePreferences preferences = DqpPlugin.getInstance().getPreferences(DESIGNER_UI_PLUGIN_ID);
             String versionString = preferences.get(DEFAULT_TEIID_SERVER_VERSION_ID, ITeiidServerVersion.DEFAULT_TEIID_8_SERVER_ID);
             return new TeiidServerVersion(versionString);
         }
@@ -796,26 +834,37 @@ public final class TeiidServerManager implements ITeiidServerManager {
             return;
         }
 
-        for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
-            for (IWorkbenchPage page : window.getPages()) {
-                IEditorReference[] editorReferences = page.getEditorReferences();
-                for (IEditorReference editorRef : editorReferences) {
-                    IEditorInput input;
-                    try {
-                        input = editorRef.getEditorInput();
-                        IResource resource = (IResource) input.getAdapter(IResource.class);
+        Display display = PlatformUI.getWorkbench().getDisplay();
+        if (display == null)
+            return;
 
-                        // Only close those editors associated with modelling projects
-                        // rather than blindly closing all editors
-                        if (resource != null && DotProjectUtils.isModelerProject(resource.getProject())) {
-                            page.closeEditor(editorRef.getEditor(false), true);
+        // Ensure that this is performed on the UI thread
+        display.asyncExec(new Runnable() {
+            @Override
+            public void run() {
+
+                for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+                    for (IWorkbenchPage page : window.getPages()) {
+                        IEditorReference[] editorReferences = page.getEditorReferences();
+                        for (IEditorReference editorRef : editorReferences) {
+                            IEditorInput input;
+                            try {
+                                input = editorRef.getEditorInput();
+                                IResource resource = (IResource)input.getAdapter(IResource.class);
+
+                                // Only close those editors associated with modelling projects
+                                // rather than blindly closing all editors
+                                if (resource != null && DotProjectUtils.isModelerProject(resource.getProject())) {
+                                    page.closeEditor(editorRef.getEditor(true), true);
+                                }
+                            } catch (PartInitException ex) {
+                                DqpPlugin.Util.log(ex);
+                            }
                         }
-                    } catch (PartInitException ex) {
-                        DqpPlugin.Util.log(ex);
                     }
                 }
             }
-        }
+        });
     }
 
     @Override
@@ -827,6 +876,10 @@ public final class TeiidServerManager implements ITeiidServerManager {
             this.state = RuntimeState.SHUTTING_DOWN;
 
             if (monitor != null) monitor.subTask(Util.getString("serverManagerSavingServerRegistryTask")); //$NON-NLS-1$
+
+            IEclipsePreferences preferences = DqpPlugin.getInstance().getPreferences(DESIGNER_UI_PLUGIN_ID);
+            if (preferences != null)
+                preferences.removePreferenceChangeListener(preferenceChangeListener);
 
             saveState();
         } finally {
