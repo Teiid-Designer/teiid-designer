@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -24,26 +26,36 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.teiid.core.designer.util.Base64;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
-import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.KeyInValueHashMap;
 import org.teiid.designer.core.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.importer.ImportManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
-import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
+import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.w3c.dom.Document;
@@ -57,11 +69,12 @@ import org.w3c.dom.NodeList;
  *
  * @since 8.0
  */
-public final class TeiidServerManager implements EventManager {
+public final class TeiidServerManager implements ITeiidServerManager {
 
     private enum RuntimeState {
         INVALID,
         STARTED,
+        RESTORING,
         SHUTTING_DOWN,
         SHUTDOWN
     }
@@ -109,11 +122,6 @@ public final class TeiidServerManager implements EventManager {
      * The tag used when persisting jdbc connection info.
      */
     private static final String JDBC_TAG = "jdbc"; //$NON-NLS-1$
-
-    /**
-     * The attribute used to persist a server's URL.
-     */
-    private static final String URL_ATTR = "url"; //$NON-NLS-1$
 
     /**
      * The attribute used to persist a server's login user.
@@ -185,16 +193,6 @@ public final class TeiidServerManager implements EventManager {
     private final CopyOnWriteArrayList<IExecutionConfigurationListener> listeners;
 
     /**
-     * The manager responsible for the maintenace of the Preview VDBs,
-     */
-    private final PreviewManager previewManager;
-
-    /**
-     * The manager responsible for the handling of the Import Server and functionality,
-     */
-    private final ImportManager importManager;
-
-    /**
      * The path where the server registry is persisted or <code>null</code> if not persisted.
      */
     private final String stateLocationPath;
@@ -208,6 +206,11 @@ public final class TeiidServerManager implements EventManager {
      * The default server.
      */
     private ITeiidServer defaultServer;
+
+    /**
+     * Listener to the default server version
+     */
+    private Set<ITeiidServerVersionListener> teiidServerVersionListeners;
 
     /**
      * Lock used for when accessing the server registry.
@@ -235,6 +238,16 @@ public final class TeiidServerManager implements EventManager {
     // ===========================================================================================================================
 
     /**
+     * Create default instance
+     */
+    public TeiidServerManager() {
+        this(DqpPlugin.getInstance().getRuntimePath().toFile().getAbsolutePath(),
+                DqpPlugin.getInstance().getPasswordProvider(),
+                DqpPlugin.getInstance().getServersProvider(),
+                ConnectivityUtil.getSecureStorageProvider());
+    }
+
+    /**
      * @param stateLocationPath the directory where the {@link ITeiidServer} registry} is persisted (may be <code>null</code> if
      *        persistence is not desired)
      * @param passwordProvider 
@@ -243,30 +256,23 @@ public final class TeiidServerManager implements EventManager {
      */
     public TeiidServerManager( String stateLocationPath, IPasswordProvider passwordProvider, 
                                IServersProvider parentServersProvider, ISecureStorageProvider secureStorageProvider ) {
+        CoreArgCheck.isNotNull(stateLocationPath);
+        CoreArgCheck.isNotNull(passwordProvider);
+        CoreArgCheck.isNotNull(parentServersProvider);
+        CoreArgCheck.isNotNull(secureStorageProvider);
+
         this.teiidServers = new KeyInValueHashMap<String, ITeiidServer>(new TeiidServerKeyValueAdapter());
         this.stateLocationPath = stateLocationPath;
         this.parentServersProvider = parentServersProvider;
         this.secureStorageProvider = secureStorageProvider;
         this.listeners = new CopyOnWriteArrayList<IExecutionConfigurationListener>();
 
-        // construct Preview VDB Manager
-        PreviewManager tempPreviewManager = null;
+        PreviewManager previewManager = PreviewManager.getInstance();
+        previewManager.setPasswordProvider(passwordProvider);
+        addListener(previewManager);
 
-        if (stateLocationPath != null) {
-            try {
-                tempPreviewManager = new PreviewManager();
-                tempPreviewManager.setPasswordProvider(passwordProvider);
-                ModelerCore.getWorkspace().addResourceChangeListener(tempPreviewManager);
-                addListener(tempPreviewManager);
-            } catch (Exception e) {
-                Util.log(IStatus.ERROR, e, Util.getString("serverManagerErrorConstructingPreviewManager")); //$NON-NLS-1$
-            }
-        }
+        addListener(ImportManager.getInstance());
 
-        this.previewManager = tempPreviewManager;
-        this.importManager = new ImportManager();
-        addListener(this.importManager);
-        this.importManager.setPasswordProvider(passwordProvider);
         this.state = RuntimeState.STARTED;
     }
 
@@ -280,6 +286,7 @@ public final class TeiidServerManager implements EventManager {
      * 
      * @return implementation of {@link ISecureStorageProvider}
      */
+    @Override
     public ISecureStorageProvider getSecureStorageProvider() {
         return secureStorageProvider;
     }
@@ -301,6 +308,7 @@ public final class TeiidServerManager implements EventManager {
      * @param teiidServer the server being added (never <code>null</code>)
      * @return a status indicating if the server was added to the registry
      */
+    @Override
     public IStatus addServer( ITeiidServer teiidServer ) {
         CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
         return internalAddServer(teiidServer, true);
@@ -309,28 +317,16 @@ public final class TeiidServerManager implements EventManager {
     /**
      * @return defaultServer
      */
+    @Override
     public ITeiidServer getDefaultServer() {
         return defaultServer;
-    }
-
-    /**
-     * @return the preview VDB manager (may be <code>null</code> if preview not enabled because of no state space folder)
-     */
-    public PreviewManager getPreviewManager() {
-        return this.previewManager;
-    }
-    
-    /**
-     * @return the Import VDB manager (may be <code>null</code> if preview not enabled because of no state space folder)
-     */
-    public ImportManager getImportManager() {
-        return this.importManager;
     }
 
     /**
      * @param id the id of the server being requested (never <code>null</code> )
      * @return the requested server or <code>null</code> if not found in the registry
      */
+    @Override
     public ITeiidServer getServer( String id ) {
         CoreArgCheck.isNotNull(id, "id"); //$NON-NLS-1$
 
@@ -341,6 +337,7 @@ public final class TeiidServerManager implements EventManager {
      * @param parentServer the parent server of the requested teiid server
      * @return the requested server or <code>null</code> if not found in the registry
      */
+    @Override
     public ITeiidServer getServer( IServer parentServer) {
         CoreArgCheck.isNotNull(parentServer, "parentServer"); //$NON-NLS-1$
 
@@ -356,6 +353,7 @@ public final class TeiidServerManager implements EventManager {
     /**
      * @return an unmodifiable collection of registered servers (never <code>null</code>)
      */
+    @Override
     public Collection<ITeiidServer> getServers() {
         try {
             this.serverLock.readLock().lock();
@@ -363,6 +361,25 @@ public final class TeiidServerManager implements EventManager {
         } finally {
             this.serverLock.readLock().unlock();
         }
+    }
+
+    /**
+     * Get the targeted teiid server version
+     *
+     * @return teiid server version
+     */
+    @Override
+    public ITeiidServerVersion getDefaultServerVersion() {
+        if (this.defaultServer == null) {
+            // Preference is stored in the ui plugin which we do not have a dependency on so have to
+            // get at the preference in this way. Not great but alternative is to try and save the property
+            // in this plugin's properties and not really worth it.
+            IEclipsePreferences preferences = DqpPlugin.getInstance().getPreferences("org.teiid.designer.ui"); //$NON-NLS-1$
+            String versionString = preferences.get(DEFAULT_TEIID_SERVER_VERSION_ID, ITeiidServerVersion.DEFAULT_TEIID_8_SERVER_ID);
+            return new TeiidServerVersion(versionString);
+        }
+
+        return defaultServer.getServerVersion();
     }
 
     /**
@@ -437,7 +454,7 @@ public final class TeiidServerManager implements EventManager {
                 if (this.teiidServers.isEmpty())
                     setDefaultServer(null);
                 else
-                    setDefaultServer(this.teiidServers.get(0));
+                    setDefaultServer(this.teiidServers.values().iterator().next());
             }
 
         } finally {
@@ -463,6 +480,7 @@ public final class TeiidServerManager implements EventManager {
      * 
      * @return true if this server is the default, false otherwise.
      */
+    @Override
     public boolean isDefaultServer( ITeiidServer teiidServer ) {
         CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
         if (this.defaultServer == null) {
@@ -475,6 +493,7 @@ public final class TeiidServerManager implements EventManager {
      * @param teiidServer the server being tested (never <code>null</code>)
      * @return <code>true</code> if the server has been registered
      */
+    @Override
     public boolean isRegistered( ITeiidServer teiidServer ) {
         CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
 
@@ -518,15 +537,16 @@ public final class TeiidServerManager implements EventManager {
      * @param teiidServer the server being removed (never <code>null</code>)
      * @return a status indicating if the specified segetUrlrver was removed from the registry (never <code>null</code>)
      */
+    @Override
     public IStatus removeServer( ITeiidServer teiidServer ) {
         CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
         return internalRemoveServer(teiidServer, true);
     }
 
-    /**
-     * @return a status indicating if the previous session state was restored successfully
-     */
+    @Override
     public IStatus restoreState() {
+        this.state = RuntimeState.RESTORING;
+
         if (this.stateLocationPath != null) {
             if (stateFileExists()) {
                 try {
@@ -696,6 +716,8 @@ public final class TeiidServerManager implements EventManager {
             }
         }
 
+        this.state = RuntimeState.STARTED;
+
         // do nothing of there is no save location or state file does not exist
         return Status.OK_STATUS;
     }
@@ -722,32 +744,81 @@ public final class TeiidServerManager implements EventManager {
     /**
      * @param teiidServer Sets defaultServer to the specified value. May be null.
      */
+    @Override
     public void setDefaultServer( ITeiidServer teiidServer ) {
-        boolean notify = false;
-        if (teiidServer != null) {
-            notify = !teiidServer.equals(this.defaultServer);
-        } else {
-            notify = defaultServer != null;
+
+        if (this.defaultServer == null && teiidServer == null) {
+            // Both are null so no point in continuing
+            return;
+        }
+
+        if (defaultServer != null && defaultServer.equals(teiidServer)) {
+            // New server is the same as the old server
+            return;
         }
 
         ITeiidServer oldDefaultServer = this.defaultServer;
         this.defaultServer = teiidServer;
-        
-        ModelerCore.setDefaultServer(defaultServer);
 
-        if (notify) {
-            notifyListeners(ExecutionConfigurationEvent.createSetDefaultServerEvent(oldDefaultServer, this.defaultServer));
+        if (teiidServerVersionListeners != null) {
+            // Notify the server version listeners that the server has changed
+            for (ITeiidServerVersionListener listener : teiidServerVersionListeners) {
+                listener.serverChanged(defaultServer);
+            }
         }
+
+        /*
+         * Compare the versions of the server.
+         *
+         * Only if the server version has changed should the model editors be closed
+         * and server version listeners notified.
+         */
+        ITeiidServerVersion oldServerVersion = oldDefaultServer != null ? oldDefaultServer.getServerVersion() : null;
+
+        if (teiidServerVersionListeners != null && ! getDefaultServerVersion().equals(oldServerVersion)) {
+            // Server version change has occurred so close all editors and notify server version listeners
+            closeEditors();
+
+            for (ITeiidServerVersionListener listener : teiidServerVersionListeners) {
+                listener.versionChanged(getDefaultServerVersion());
+            }
+        }
+
+        notifyListeners(ExecutionConfigurationEvent.createSetDefaultServerEvent(oldDefaultServer, this.defaultServer));
     }
 
     /**
-     * Saves the {@link ITeiidServer} registry to the file system, shuts down the {@link PreviewManager}, and performs any other tasks
-     * needed to shutdown. Shutdown may take a bit of time so it is advised to pass in a monitor and, if needed, show the user a
-     * dialog that blocks until the monitor is finished.
-     * 
-     * @param monitor the progress monitor (may be <code>null</code>)
-     * @throws Exception 
+     * Close editors associated with modelling projects
      */
+    private void closeEditors() {
+        if (RuntimeState.RESTORING == state) {
+            // Avoid closing editors on startup since the default server is simply being assigned
+            return;
+        }
+
+        for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+            for (IWorkbenchPage page : window.getPages()) {
+                IEditorReference[] editorReferences = page.getEditorReferences();
+                for (IEditorReference editorRef : editorReferences) {
+                    IEditorInput input;
+                    try {
+                        input = editorRef.getEditorInput();
+                        IResource resource = (IResource) input.getAdapter(IResource.class);
+
+                        // Only close those editors associated with modelling projects
+                        // rather than blindly closing all editors
+                        if (resource != null && DotProjectUtils.isModelerProject(resource.getProject())) {
+                            page.closeEditor(editorRef.getEditor(false), true);
+                        }
+                    } catch (PartInitException ex) {
+                        DqpPlugin.Util.log(ex);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
     public void shutdown( IProgressMonitor monitor ) throws Exception {
         // return if already being shutdown
         if ((this.state == RuntimeState.SHUTTING_DOWN) || (this.state == RuntimeState.SHUTDOWN)) return;
@@ -758,18 +829,6 @@ public final class TeiidServerManager implements EventManager {
             if (monitor != null) monitor.subTask(Util.getString("serverManagerSavingServerRegistryTask")); //$NON-NLS-1$
 
             saveState();
-
-            // shutdown PreviewManager
-            if (this.previewManager != null) {
-                ModelerCore.getWorkspace().removeResourceChangeListener(this.previewManager);
-
-                try {
-                    this.previewManager.shutdown(monitor);
-                } catch (Exception e) {
-                    IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("errorOnPreviewManagerShutdown"), e); //$NON-NLS-1$
-                    Util.log(status);
-                }
-            }
         } finally {
             this.state = RuntimeState.SHUTDOWN;
         }
@@ -922,5 +981,21 @@ public final class TeiidServerManager implements EventManager {
 
         // unexpected problem removing server from registry
         return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("serverManagerRegistryUpdateRemoveError", status.getMessage())); //$NON-NLS-1$
+    }
+
+    @Override
+    public void addTeiidServerVersionListener(ITeiidServerVersionListener listener) {
+        if (teiidServerVersionListeners == null)
+            teiidServerVersionListeners = new HashSet<ITeiidServerVersionListener>();
+
+        teiidServerVersionListeners.add(listener);
+    }
+
+    @Override
+    public void removeTeiidServerVersionListener(ITeiidServerVersionListener listener) {
+        if (teiidServerVersionListeners == null)
+            return;
+
+        teiidServerVersionListeners.remove(listener);
     }
 }

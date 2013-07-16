@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -324,15 +323,15 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         
         return sb.toString();
     }
-    
+
     /**
      * Get the server ImportManager instance
      * @return the ImportManager
      */
     public ImportManager getServerImportManager() {
-        return DqpPlugin.getInstance().getServerManager().getImportManager();
+        return ImportManager.getInstance();
     }
-    
+
     /**
      * Determine if the VDB is Deployed
      * @return 'true' if deployed, 'false' if not.

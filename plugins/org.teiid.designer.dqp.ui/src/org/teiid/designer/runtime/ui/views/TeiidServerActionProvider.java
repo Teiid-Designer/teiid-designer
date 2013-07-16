@@ -32,7 +32,6 @@ import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
@@ -162,18 +161,10 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     }
     
     /**
-     * @return the server manager
-     */
-    private TeiidServerManager getServerManager() {
-        return DqpPlugin.getInstance().getServerManager();
-    }
-    
-    /**
      * @return <code>true</code> if preview is enabled
      */
     private boolean isPreviewEnabled() {
-        PreviewManager previewManager = getServerManager().getPreviewManager();
-        return ((previewManager != null) && previewManager.isPreviewEnabled());
+        return PreviewManager.getInstance().isPreviewEnabled();
     }
 
     /**
@@ -318,7 +309,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         this.createDataSourceAction.setEnabled(true);
 
         // the edit action is only enabled when one server is selected
-        this.setDefaultServerAction = new SetDefaultServerAction(getServerManager());
+        this.setDefaultServerAction = new SetDefaultServerAction();
         viewer.addSelectionChangedListener(this.setDefaultServerAction);
     }
     

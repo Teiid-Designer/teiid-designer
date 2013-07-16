@@ -8,9 +8,12 @@
 package org.teiid.designer.diagram.ui.editor;
 
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
+import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.diagram.ui.DiagramUiConstants;
 import org.teiid.designer.metamodels.diagram.Diagram;
 
@@ -40,6 +43,11 @@ public class DiagramEditorInput implements IEditorInput, DiagramUiConstants {
     
     @Override
 	public Object getAdapter(Class key) {
+        if (IResource.class.isAssignableFrom(key)) {
+            Resource eResource = getDiagram().eResource();
+            return WorkspaceResourceFinderUtil.findIResource(eResource);
+        }
+
         return null;
     }
     

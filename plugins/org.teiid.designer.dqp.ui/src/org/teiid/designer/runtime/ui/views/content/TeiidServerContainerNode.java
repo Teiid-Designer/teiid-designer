@@ -13,9 +13,9 @@ import java.util.Collections;
 import java.util.List;
 import org.eclipse.wst.server.core.IServer;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -31,7 +31,7 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
     private ITeiidServer teiidServer;
     private TeiidServerContentProvider provider;
     private TeiidErrorNode error;
-    private TeiidServerManager serverManager;
+    private ITeiidServerManager serverManager;
     
     /**
      * @param server

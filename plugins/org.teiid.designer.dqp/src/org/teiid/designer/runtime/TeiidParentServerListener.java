@@ -15,6 +15,7 @@ import org.eclipse.wst.server.core.ServerEvent;
 import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 
 /**
  * Singleton listener for monitoring both the {@link IServer}s'
@@ -57,7 +58,7 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
     public void serverChanged(IServer server) {
         if (sleep) return;
         
-        TeiidServerManager serverManager = DqpPlugin.getInstance().getServerManager();
+        ITeiidServerManager serverManager = DqpPlugin.getInstance().getServerManager();
         
         for (ITeiidServer teiidServer : serverManager.getServers()) {
             if (! server.equals(teiidServer.getParent()))
@@ -87,7 +88,7 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
         
         server.removeServerListener(this);
         
-        TeiidServerManager serverManager = DqpPlugin.getInstance().getServerManager();
+        ITeiidServerManager serverManager = DqpPlugin.getInstance().getServerManager();
         
         // Tidy up the server manager by removing the related teiid server
         for (ITeiidServer teiidServer : serverManager.getServers()) {

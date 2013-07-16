@@ -11,7 +11,7 @@ import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.Wizard;
-import org.teiid.designer.runtime.TeiidServerManager;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
@@ -34,7 +34,7 @@ public final class ServerWizard extends Wizard {
     /**
      * The manager in charge of the server registry.
      */
-    private final TeiidServerManager teiidServerManager;
+    private final ITeiidServerManager teiidServerManager;
 
     // ===========================================================================================================================
     // Constructors
@@ -45,7 +45,7 @@ public final class ServerWizard extends Wizard {
      * 
      * @param teiidServerManager the server manager in charge of the server registry (never <code>null</code>)
      */
-    public ServerWizard( TeiidServerManager teiidServerManager ) {
+    public ServerWizard( ITeiidServerManager teiidServerManager ) {
         this.page = new ServerPage();
         this.teiidServerManager = teiidServerManager;
 
@@ -93,7 +93,7 @@ public final class ServerWizard extends Wizard {
     /**
      * @return the server manager (never <code>null</code>)
      */
-    protected TeiidServerManager getServerManager() {
+    protected ITeiidServerManager getServerManager() {
         return this.teiidServerManager;
     }
     
