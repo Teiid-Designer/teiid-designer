@@ -475,6 +475,10 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
                         }
                     }
                 }
+            	if(dataObj instanceof RelationalReference) {
+            		boolean isChecked = item.getChecked();
+            		((RelationalReference)dataObj).setChecked(isChecked);
+            	}
                 if (!isItemCheckable(item)) {
                     item.setGrayed(true);
                     item.setChecked(false);
@@ -507,18 +511,29 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
          */
         @Override
         public void itemExpanded( final TreeExpansionEvent event ) {
-            if (treeExpanded) {
-                super.itemExpanded(event);
-            } else {
-            	// Do a length check on selection to avoid Array Index OOB exception
-            	if( ((TreeViewer)event.getTreeViewer()).getTree().getSelection().length > 0 ) {
-	                final TreeItem item = ((TreeViewer)event.getTreeViewer()).getTree().getSelection()[0];
-	                if (item.getData() != null) {
-	                    updateChildren(item, false);
-	                }
-	                treeExpanded = true;
-            	}
-            }
+        	// Do a length check on selection to avoid Array Index OOB exception
+        	if( ((TreeViewer)event.getTreeViewer()).getTree().getSelection().length > 0 ) {
+        		final TreeItem item = ((TreeViewer)event.getTreeViewer()).getTree().getSelection()[0];
+        		if (item.getData() != null) {
+        			checkRequiredChildren(item);
+        		}
+        	}
+        }
+        
+        /**
+         * Set the checked states of the tree nodes based on data checked state
+         * @param item the tree item
+         */
+        public void checkRequiredChildren( TreeItem item ) {
+        	final TreeItem[] children = item.getItems();
+        	for (int ndx = children.length; --ndx >= 0;) {
+        		final TreeItem child = children[ndx];
+        		Object childData = child.getData();
+        		if (childData != null && childData instanceof RelationalReference) {
+        			boolean isChecked = ((RelationalReference)childData).isChecked();
+        			WidgetUtil.setChecked(child, isChecked, false, this);
+        		}
+        	}
         }
 
         @Override
