@@ -118,12 +118,20 @@ public class DesignerPropertiesUtil {
 
     public static void setProjectName( Properties properties,
                                        String projectName ) {
-        properties.put(IPropertiesContext.KEY_PROJECT_NAME, projectName);
+    	if( projectName == null ) {
+    		properties.remove(IPropertiesContext.KEY_PROJECT_NAME);
+    	} else {
+    		properties.put(IPropertiesContext.KEY_PROJECT_NAME, projectName);
+    	}
     }
     
     public static void setProjectStatus( Properties properties,
             String status ) {
-    	properties.put(IPropertiesContext.KEY_PROJECT_STATUS, status);
+    	if( status == null ) {
+    		properties.remove(IPropertiesContext.KEY_PROJECT_STATUS);
+    	} else {
+    		properties.put(IPropertiesContext.KEY_PROJECT_STATUS, status);
+    	}
 	}
 
     public static void setVdbName( Properties properties,

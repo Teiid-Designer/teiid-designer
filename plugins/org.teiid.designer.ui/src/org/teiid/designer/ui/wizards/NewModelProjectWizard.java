@@ -147,6 +147,7 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
             
             if( designerProperties != null ) {
                 DesignerPropertiesUtil.setProjectName(designerProperties, project.getName());
+                DesignerPropertiesUtil.setProjectStatus(this.designerProperties, IPropertiesContext.OPEN_PROJECTS_EXIST);
             }
             
             createFolders(project);

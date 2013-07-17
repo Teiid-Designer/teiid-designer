@@ -39,8 +39,8 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
     TeiidXmlImportOptionsPage optionsPage;
     
     TeiidXmlImportSourcePage sourcePage;
-    
-    private Properties designerProperties;
+//    
+//    private Properties designerProperties;
     
 	/**
 	 * 
@@ -83,9 +83,9 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 		}, false);
 		
         // Update Properties to include the created source and view Models
-		if( this.designerProperties != null ) {
-            DesignerPropertiesUtil.setSourceModelName(this.designerProperties, getFileInfo().getSourceModelName());
-            DesignerPropertiesUtil.setViewModelName(this.designerProperties, getFileInfo().getViewModelName());
+		if( getDesignerProperties() != null ) {
+            DesignerPropertiesUtil.setSourceModelName(getDesignerProperties(), getFileInfo().getSourceModelName());
+            DesignerPropertiesUtil.setViewModelName(getDesignerProperties(), getFileInfo().getViewModelName());
 		}
 
 		return true;
@@ -98,21 +98,22 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 		getFileInfo().setFileMode(option);
 	}
 	
-	@Override
-	public void setProperties(Properties properties) {
-    	this.designerProperties = properties;
-	}
+//	@Override
+//	public void setProperties(Properties properties) {
+//    	this.designerProperties = properties;
+//	}
 	
 	@Override
 	protected void updateForProperties() {
-		if( this.designerProperties == null || this.designerProperties.isEmpty() ) {
+		Properties desProps = getDesignerProperties();
+		if( desProps == null || desProps.isEmpty() ) {
 			return;
 		}
 
         // Check for Sources and View Folder from property definitions
-		IContainer project = DesignerPropertiesUtil.getProject(designerProperties);
-        IContainer srcFolderResrc = DesignerPropertiesUtil.getSourcesFolder(this.designerProperties);
-        IContainer viewFolderResrc = DesignerPropertiesUtil.getViewsFolder(this.designerProperties);
+		IContainer project = DesignerPropertiesUtil.getProject(getDesignerProperties());
+        IContainer srcFolderResrc = DesignerPropertiesUtil.getSourcesFolder(desProps);
+        IContainer viewFolderResrc = DesignerPropertiesUtil.getViewsFolder(desProps);
         if (srcFolderResrc != null) {
             getFileInfo().setSourceModelLocation(srcFolderResrc.getFullPath());
         } else if( project != null ) {
@@ -125,16 +126,16 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
         }
     	
         // Get Connection Profile from property definitions
-        String profileName = DesignerPropertiesUtil.getConnectionProfileName(this.designerProperties);
+        String profileName = DesignerPropertiesUtil.getConnectionProfileName(desProps);
 		if( profileName != null && !profileName.isEmpty() ) {
             // Set properties - needs later to determine the connection profile
-            sourcePage.setDesignerProperties(this.designerProperties);
+            sourcePage.setDesignerProperties(desProps);
 		}
 		
-		this.optionsPage.setDesignerProperties(this.designerProperties);
+		this.optionsPage.setDesignerProperties(desProps);
 		
     	if( !openProjectExists()) {
-			DesignerPropertiesUtil.setProjectStatus(this.designerProperties, IPropertiesContext.NO_OPEN_PROJECT);
+			DesignerPropertiesUtil.setProjectStatus(desProps, IPropertiesContext.NO_OPEN_PROJECT);
 		}
 	}
 }

@@ -9,6 +9,7 @@ package org.teiid.designer.advisor.ui.views.guides;
 
 import java.util.Properties;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -42,6 +43,9 @@ import org.teiid.designer.advisor.ui.actions.AdvisorActionProvider;
 import org.teiid.designer.advisor.ui.actions.AdvisorGuides;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
+import org.teiid.designer.ui.viewsupport.IPropertiesContext;
+import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 import org.teiid.designer.ui.viewsupport.PropertiesContextManager;
 
 
@@ -240,6 +244,35 @@ public class TeiidGuidesSection  implements AdvisorUiConstants {
     private void launchGuidesAction(String actionId) {
     	String guideId = actionGroupCombo.getText();
     	Properties properties = propertiesManager.getProperties(guideId);
+    	
+    	if( properties != null && !properties.isEmpty()) {
+    		cleanProperties(properties);
+    	}
+    	
     	AdvisorActionFactory.executeAction(actionId, properties, true);
+    }
+    
+    private void cleanProperties(Properties properties) {
+    	// check project properties and re-set if project closed or no open projects
+    	
+    	boolean openModelProjects = !ModelerUiViewUtils.getOpenModelProjects().isEmpty();
+    	
+    	// if open model projects....
+    	if( openModelProjects ) {
+    		// check for existing project name
+    		String projName = DesignerPropertiesUtil.getProjectName(properties);
+    		if( projName != null ) {
+    			// check if project exists
+	    		IProject proj = DesignerPropertiesUtil.getProject(properties);
+	    		if( proj != null && !proj.isOpen() ) {
+	    			// project is not open, so set to null
+	    			DesignerPropertiesUtil.setProjectName(properties, null);
+	    		}
+    		} 
+    		DesignerPropertiesUtil.setProjectStatus(properties, IPropertiesContext.OPEN_PROJECTS_EXIST);
+    	} else {
+    		DesignerPropertiesUtil.setProjectName(properties, null);
+    		DesignerPropertiesUtil.setProjectStatus(properties, IPropertiesContext.NO_OPEN_PROJECT);
+    	}
     }
 }

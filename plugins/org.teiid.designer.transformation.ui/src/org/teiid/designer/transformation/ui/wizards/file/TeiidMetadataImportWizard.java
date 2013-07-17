@@ -199,6 +199,10 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
 		
 	}
 	
+	public Properties getDesignerProperties() {
+		return this.designerProperties;
+	}
+	
 	protected boolean openProjectExists() {
 		return this.openProjectExists;
 	}

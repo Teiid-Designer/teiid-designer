@@ -261,6 +261,7 @@ public class DefineModelProjectDialog extends TitleAreaDialog implements
 			DesignerPropertiesUtil.setProjectName(this.designerProperties, pName);
 			
 			if( this.project != null ) {
+				DesignerPropertiesUtil.setProjectStatus(this.designerProperties, IPropertiesContext.OPEN_PROJECTS_EXIST);
 				// Check for source and view folders
 				try {
 

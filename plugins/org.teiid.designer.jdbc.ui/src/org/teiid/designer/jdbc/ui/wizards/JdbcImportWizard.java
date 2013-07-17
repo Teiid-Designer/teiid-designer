@@ -958,11 +958,6 @@ public class JdbcImportWizard extends AbstractWizard
     			srcPg.selectConnectionProfile(profileName);
     		}
     	}
-    	
-    	if( this.designerProperties != null && !this.openProjectExists) {
-			DesignerPropertiesUtil.setProjectStatus(this.designerProperties, IPropertiesContext.NO_OPEN_PROJECT);
-		}
-    	
     }
 
     /**

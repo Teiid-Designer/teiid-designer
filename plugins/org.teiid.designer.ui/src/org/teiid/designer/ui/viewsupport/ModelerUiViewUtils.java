@@ -7,8 +7,11 @@
  */
 package org.teiid.designer.ui.viewsupport;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Properties;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
@@ -24,6 +27,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.wizards.IWizardDescriptor;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelProject;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
@@ -34,6 +38,7 @@ import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.explorer.ModelExplorerResourceNavigator;
+import org.teiid.designer.ui.wizards.NewModelProjectWizard;
 
 
 /** 
@@ -246,7 +251,7 @@ public class ModelerUiViewUtils {
 	        		if(properties!=null) {
 	        		    openProjectStatus = DesignerPropertiesUtil.getProjectStatus(properties);
 	        		}
-	        		if( openProjectStatus == null || !IPropertiesContext.NO_OPEN_PROJECT.equalsIgnoreCase(openProjectStatus) ){
+	        		if( wizard instanceof NewModelProjectWizard || openProjectStatus == null || !IPropertiesContext.NO_OPEN_PROJECT.equalsIgnoreCase(openProjectStatus) ){
 		        		wd.setTitle(wizard.getWindowTitle());
 		        		wd.open();
 	        		}
@@ -284,21 +289,38 @@ public class ModelerUiViewUtils {
 	 * @return true if one or more projects exists and are open
 	 */
 	public static boolean workspaceHasOpenModelProjects() {
-		try {
-			ModelProject[] mProjects = ModelWorkspaceManager.getModelWorkspaceManager().getModelWorkspace().getModelProjects();
-			
-			for( ModelProject proj : mProjects) {
-				if( proj.isOpen() ) {
-					return true;
-				}
-			}
-		} catch (ModelWorkspaceException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		}
 		
-		return false;
+		return ! getOpenModelProjects().isEmpty();
+//		try {
+//			ModelProject[] mProjects = ModelWorkspaceManager.getModelWorkspaceManager().getModelWorkspace().getModelProjects();
+//			
+//			for( ModelProject proj : mProjects) {
+//				if( proj.isOpen() ) {
+//					return true;
+//				}
+//			}
+//		} catch (ModelWorkspaceException ex) {
+//			// TODO Auto-generated catch block
+//			ex.printStackTrace();
+//		}
+//		
+//		return false;
 	}
+	
+    
+    public static Collection<IProject> getOpenModelProjects() {
+    	IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+    	
+    	Collection<IProject> openModelProjects = new ArrayList<IProject>();
+    	
+    	for( IProject proj : allProjects ) {
+    		if( proj.isOpen() && ModelerCore.hasModelNature(proj) ) {
+    			openModelProjects.add(proj);
+    		}
+    	}
+    	
+    	return openModelProjects;
+    }
 	
 	/**
 	 * Simple method to query user for a new Teiid Model Project
