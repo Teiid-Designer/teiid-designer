@@ -44,7 +44,7 @@ public interface RestModelExtensionConstants {
          */
         @Override
         public String getNamespacePrefix() {
-            return "rest"; //$NON-NLS-1$
+            return "REST"; //$NON-NLS-1$
         }
 
         /**
@@ -66,12 +66,12 @@ public interface RestModelExtensionConstants {
         /**
          * The property definition identifer for the rest method.
          */
-        String REST_METHOD = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "restMethod"); //$NON-NLS-1$
+        String REST_METHOD = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "METHOD"); //$NON-NLS-1$
 
         /**
          * The property definition identifier for the URI.
          */
-        String URI = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "uri"); //$NON-NLS-1$
+        String URI = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "URI"); //$NON-NLS-1$
         
         /**
          * The property definition identifier for the CHARSET.

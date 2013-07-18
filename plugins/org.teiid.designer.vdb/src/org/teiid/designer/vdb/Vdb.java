@@ -147,6 +147,7 @@ public final class Vdb {
     private final boolean preview;
     private final int version;
     private int queryTimeout = DEFAULT_TIMEOUT;
+    private boolean autoGenerateRESTWAR;
     
     private VdbModelBuilder builder;
     private Map<String, Set<String>> modelToImportVdbMap = new HashMap<String, Set<String>>();
@@ -733,6 +734,14 @@ public final class Vdb {
     }
 
     /**
+     * @return the auto generate REST WAR value for this VDB
+     * @since 8.2
+     */
+    public boolean isAutoGenerateRESTWAR() {
+        return autoGenerateRESTWAR;
+    }
+    
+    /**
      * @return <code>true</code> if all model entries in this VDB are either synchronized with their associated models or no
      *         associated model exists..
      */
@@ -995,6 +1004,17 @@ public final class Vdb {
     	setModified(this, Event.QUERY_TIMEOUT, oldTimeout, valueInSeconds);
     }
 
+    /**
+     * @param autoGenerateRESTWAR Sets autoGenerateRESTWAR to the specified value.
+     * @since 8.2
+     */
+    public final void setAutoGenerateRESTWAR( boolean autoGenerateRESTWAR ) {
+    	final boolean oldValue = this.autoGenerateRESTWAR;
+    	if( oldValue == autoGenerateRESTWAR ) return;
+    	this.autoGenerateRESTWAR = autoGenerateRESTWAR;
+    	setModified(this, Event.AUTO_GENERATE_REST_WAR, oldValue, autoGenerateRESTWAR);
+    }
+
     private final void synchronize( final Collection<VdbEntry> entries,
                                     final IProgressMonitor monitor ) {
         for (final VdbEntry entry : entries)
@@ -1206,6 +1226,14 @@ public final class Vdb {
         public static final String QUERY_TIMEOUT = "queryTimeout"; //$NON-NLS-1$
         
         /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when auto-generate REST WAR
+         * is changed.
+         * @since 8.2
+         * 
+         */
+        public static final String AUTO_GENERATE_REST_WAR = "autoGenerateRESTWAR"; //$NON-NLS-1$
+        
+        /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a general property
          * is changed.
          */
@@ -1230,6 +1258,11 @@ public final class Vdb {
         /**
          */
         public static final String QUERY_TIMEOUT = "query-timeout"; //$NON-NLS-1$
+        
+        /**
+         */
+        public static final String AUTO_GENERATE_REST_WAR = "{http://teiid.org/rest}auto-generate"; //$NON-NLS-1$
+        
         /**
          * 
          */
