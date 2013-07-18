@@ -1513,7 +1513,7 @@ public final class PreviewManager extends JobChangeAdapter
                         IProject project = (IProject)kidResource;
 
                         if (ModelerCore.hasModelNature(project) && project.isOpen()) {
-                            if (ResourceChangeUtilities.isOpened(kidDelta) ) {
+                            if (ResourceChangeUtilities.isOpened(kidDelta) || ResourceChangeUtilities.isDescriptionChanged(kidDelta) ) {
                                 modelProjectOpened(project);
                             } else if (ResourceChangeUtilities.isChanged(kidDelta)) {
                                 modelProjectChanged(kidDelta);

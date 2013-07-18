@@ -220,6 +220,14 @@ public class ResourceChangeUtilities {
 
         return (theDelta.getFlags() & IResourceDelta.OPEN) != 0;
     }
+    
+    public static boolean isDescriptionChanged( IResourceDelta theDelta ) {
+        if (theDelta == null) {
+            return false;
+        }
+
+        return (theDelta.getFlags() & IResourceDelta.DESCRIPTION) != 0;
+    }
 
     public static boolean isProject( IResourceDelta theDelta ) {
         if (theDelta == null) {
