@@ -214,11 +214,9 @@ final class EditMetaclassDialog extends FormDialog {
             errorMsg = Messages.metaclassDialogMessage;
             // Error Message present - disable OK button and show message
         } else {
-            if (this.btnOk.isEnabled()) {
-                this.btnOk.setEnabled(false);
-            }
+        	this.btnOk.setEnabled(true);
 
-            imageType = IMessageProvider.ERROR;
+            imageType = IMessageProvider.NONE;
         }
 
         this.scrolledForm.setMessage(errorMsg, imageType);
