@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -256,7 +257,13 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         // ----------------------------------------
         WidgetFactory.createLabel(panel, GridData.VERTICAL_ALIGN_CENTER, DdlImporterUiI18n.DDL_FILE_LABEL);
         String[] ddlFileHistory = settings.getArray(HISTORY_SETTING);
-        ddlFileCombo = WidgetFactory.createCombo(panel, SWT.NONE, GridData.FILL_HORIZONTAL, Arrays.asList(ddlFileHistory), new LabelProvider(), false) ;
+        List<String> historyList = null;
+        if(ddlFileHistory!=null) {
+        	historyList = Arrays.asList(ddlFileHistory);
+        } else {
+        	historyList = Collections.emptyList();
+        }
+        ddlFileCombo = WidgetFactory.createCombo(panel, SWT.NONE, GridData.FILL_HORIZONTAL, historyList, new LabelProvider(), false) ;
         ddlFileCombo.addModifyListener(new ModifyListener() {
 
             @Override
