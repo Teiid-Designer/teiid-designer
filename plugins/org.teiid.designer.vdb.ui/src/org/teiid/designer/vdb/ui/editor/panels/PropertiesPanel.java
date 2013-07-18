@@ -129,6 +129,21 @@ public class PropertiesPanel {
 			}
 		});
     	
+    	Label autGenRESTLabel = new Label(propertiesGroup, SWT.NONE);
+    	autGenRESTLabel.setText(i18n("autoGenerateRESTWAR")); //$NON-NLS-1$
+		final Button autoGenRESTCheckbox =  WidgetFactory.createCheckBox(propertiesGroup); 
+		autoGenRESTCheckbox.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetDefaultSelected( SelectionEvent e ) {
+            	vdbEditor.getVdb().setAutoGenerateRESTWAR(((Button)e.getSource()).getSelection());
+            }
+
+            @Override
+            public void widgetSelected( SelectionEvent e ) {
+            	vdbEditor.getVdb().setAutoGenerateRESTWAR(((Button)e.getSource()).getSelection());
+            }
+        });
+		
     	{
     		Group languageGroup = WidgetFactory.createGroup(propertiesGroup, prefixedI18n("allowedLanguages"), SWT.FILL, 2, 1);  //$NON-NLS-1$
     		GridData gd_2 = new GridData(GridData.FILL_VERTICAL);

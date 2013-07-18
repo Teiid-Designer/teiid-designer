@@ -104,6 +104,10 @@ public class VdbElement implements Serializable {
         	}
         }
         
+        if (vdb.isAutoGenerateRESTWAR()){
+        	getProperties().add(new PropertyElement(Vdb.Xml.AUTO_GENERATE_REST_WAR, Boolean.TRUE.toString()));
+        }
+        
         for( String key : vdb.getGeneralProperties().keySet()) {
         	String value = vdb.getGeneralProperties().get(key);
         	getProperties().add(new PropertyElement(key, value));
