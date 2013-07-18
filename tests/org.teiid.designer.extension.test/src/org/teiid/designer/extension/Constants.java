@@ -49,10 +49,10 @@ public interface Constants {
     String[] SALESFORCE_METACLASS_1_PROP_IDS = new String[] { "custom", "calculated", "defaultedOnCreate", "picklistValues" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     String REST_MED_FILE_NAME = TESTDATA + File.separatorChar + "rest" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
-    String REST_MED_PREFIX = "rest"; //$NON-NLS-1$
-    String REST_MED_URI = "http://www.jboss.org/teiiddesigner/ext/rest/2012"; //$NON-NLS-1$
+    String REST_MED_PREFIX = "REST"; //$NON-NLS-1$
+    String REST_MED_URI = "http://teiid.org/rest"; //$NON-NLS-1$
     String[] REST_MED_METACLASSES = new String[] { PROCEDURE_METACLASS_NAME };
-    String[] REST_METACLASS_0_PROP_IDS = new String[] { "restMethod", "uri" }; //$NON-NLS-1$ //$NON-NLS-2$
+    String[] REST_METACLASS_0_PROP_IDS = new String[] { "METHOD", "URI" }; //$NON-NLS-1$ //$NON-NLS-2$
 
     String RELATIONAL_MED_FILE_NAME = TESTDATA + File.separatorChar + "relational" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
     String RELATIONAL_MED_PREFIX = "relational"; //$NON-NLS-1$
