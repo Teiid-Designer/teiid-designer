@@ -173,7 +173,7 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
             return new TeiidServerVersion(result.asString());
         } catch (Exception ex) {
             DqpPlugin.Util.log(IStatus.ERROR, ex, "Failed to get teiid jdbc port, defaulting to " + ITeiidJdbcInfo.DEFAULT_PORT); //$NON-NLS-1$
-            return new TeiidServerVersion(ITeiidServerVersion.DEFAULT_TEIID_8_SERVER_ID);
+            return TeiidServerVersion.DEFAULT_TEIID_8_SERVER;
         }
     }    
 }

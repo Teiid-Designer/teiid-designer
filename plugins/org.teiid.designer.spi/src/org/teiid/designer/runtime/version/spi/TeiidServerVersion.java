@@ -7,8 +7,14 @@
 */
 package org.teiid.designer.runtime.version.spi;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.DesignerSPIPlugin;
 import org.teiid.designer.Messages;
+import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 
 
 /**
@@ -28,7 +34,23 @@ public class TeiidServerVersion implements ITeiidServerVersion {
      */
     public static final ITeiidServerVersion DEFAULT_TEIID_7_SERVER = new TeiidServerVersion(DEFAULT_TEIID_7_SERVER_ID);
 
+    /**
+     * The default preferred server
+     */
+    public static final ITeiidServerVersion DEFAULT_TEIID_SERVER = DEFAULT_TEIID_8_SERVER;
+
+    /**
+     * Collection of the default teiid server version identifiers
+     */
+    public static Collection<String> DEFAULT_TEIID_SERVER_IDS = null;
     
+    static {
+        List<String> ids = new ArrayList<String>();
+        ids.add(DEFAULT_TEIID_7_SERVER_ID);
+        ids.add(DEFAULT_TEIID_8_SERVER_ID);
+        DEFAULT_TEIID_SERVER_IDS = Collections.unmodifiableCollection(ids);
+    }
+
     private String versionString = ZERO + DOT + ZERO + DOT + ZERO;
 
     private final String majorVersion;
@@ -82,6 +104,44 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         else {
             majorVersion = tokens[0];
         }
+    }
+
+    /**
+     * Get the ultimate default server version. This is the provided
+     * as the default server version IF the user has not configured
+     * a server connection nor set the default server preference.
+     *
+     * This attempts to derive the latest version of server from
+     * the installed client runtimes but if none, returns the
+     * hardcoded default value.
+     *
+     * @return {@link ITeiidServerVersion} default version
+     */
+    public static ITeiidServerVersion deriveUltimateDefaultServerVersion() {
+        ITeiidServerVersion lastGaspDefault = TeiidServerVersion.DEFAULT_TEIID_SERVER;
+
+        Collection<ITeiidServerVersion> serverVersions = null;
+        try {
+            serverVersions = TeiidRuntimeRegistry.getInstance().getRegisteredServerVersions();
+        } catch (Exception ex) {
+            DesignerSPIPlugin.log(ex);
+            return lastGaspDefault;
+        }
+
+        if (serverVersions == null || serverVersions.isEmpty())
+            return lastGaspDefault;
+
+        if (serverVersions.size() == 1)
+            return serverVersions.iterator().next();
+
+        // Find the latest server version by sorting the registered client runtime versions
+        List<String> items = new ArrayList<String>(serverVersions.size());
+        for (ITeiidServerVersion serverVersion : serverVersions) {
+            items.add(serverVersion.toString());
+        }
+        Collections.sort(items, Collections.reverseOrder());
+
+        return new TeiidServerVersion(items.get(0));
     }
 
     @Override

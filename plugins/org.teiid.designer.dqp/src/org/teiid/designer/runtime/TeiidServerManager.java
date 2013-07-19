@@ -413,7 +413,8 @@ public final class TeiidServerManager implements ITeiidServerManager {
             // get at the preference in this way. Not great but alternative is to try and save the property
             // in this plugin's properties and not really worth it.
             IEclipsePreferences preferences = DqpPlugin.getInstance().getPreferences(DESIGNER_UI_PLUGIN_ID);
-            String versionString = preferences.get(DEFAULT_TEIID_SERVER_VERSION_ID, ITeiidServerVersion.DEFAULT_TEIID_8_SERVER_ID);
+            ITeiidServerVersion defaultVersion = TeiidServerVersion.deriveUltimateDefaultServerVersion();
+            String versionString = preferences.get(DEFAULT_TEIID_SERVER_VERSION_ID, defaultVersion.toString());
             return new TeiidServerVersion(versionString);
         }
 

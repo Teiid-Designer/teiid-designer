@@ -102,7 +102,7 @@ public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferen
         }
 
         if (StringUtilities.isEmpty(value)) {
-            value = ITeiidServerVersion.DEFAULT_TEIID_8_SERVER_ID;
+            value = TeiidServerVersion.deriveUltimateDefaultServerVersion().toString();
         }
 
         return value;
@@ -224,8 +224,7 @@ public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferen
             }
         } catch (Exception ex) {
             Util.log(ex);
-            items.add(ITeiidServerVersion.DEFAULT_TEIID_7_SERVER_ID);
-            items.add(ITeiidServerVersion.DEFAULT_TEIID_8_SERVER_ID);
+            items.addAll(TeiidServerVersion.DEFAULT_TEIID_SERVER_IDS);
         }
 
         Collections.sort(items, Collections.reverseOrder());
