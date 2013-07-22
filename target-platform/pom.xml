@@ -68,7 +68,6 @@
 										</item>
 									</sourceTargetArtifacts>
 									<sourceTargetFiles>
-										<item>locus.target</item>
 										<item>orbit.target</item>
 									</sourceTargetFiles>
 									<outputFile>teiid-designer.target</outputFile>
