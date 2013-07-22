@@ -31,3 +31,4 @@ Export-Package: org.teiid.datatools.connectivity.spi,
  org.teiid.designer.validator,
  org.teiid.designer.xml
 Bundle-Activator: org.teiid.designer.DesignerSPIPlugin
+Bundle-ActivationPolicy: lazy
