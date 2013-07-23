@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?>
-<target name="teiid-designer" sequenceNumber="4">
+<!-- 
+   Mirrored third-party and Eclipse dependencies for the JBoss Tools Integration Stack.
+--><target name="integration-stack-base-target" sequenceNumber="7">
   <locations>
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-      <repository location="http://download.jboss.org/jbosstools/updates/requirements/orbit/S20130427215344/"/>
-      <unit id="org.apache.poi" version="3.9.0.v201303080712"/>
-    </location>
-  
 
     <!-- JBoss Tools Locus - objects not in Eclipse Orbit -->
     <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
@@ -117,6 +114,14 @@
       <repository location="http://download.jboss.org/jbosstools/updates/requirements/springide/3.2.0.201303060654-RELEASE-e4.3/"/>
     </location>
 
+    <!-- Teiid -->
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+      <unit id="org.apache.poi" version="3.9.0.v201303080712"/>
+      <unit id="org.codehaus.jackson.core" version="1.6.0.v20101005-0925"/>
+      <unit id="org.codehaus.jackson.mapper" version="1.6.0.v20101005-0925"/>
+      <repository location="http://download.jboss.org/jbosstools/updates/requirements/orbit/R20130517111416/"/>
+    </location>
+
     <!-- JBoss Tools Core Tests -->
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 
@@ -146,6 +151,7 @@
       <unit id="org.jboss.tools.common.verification.feature.feature.group" version="0.0.0"/>
       <unit id="org.jboss.tools.forge.feature.feature.group" version="0.0.0"/>
       <unit id="org.jboss.tools.foundation.feature.feature.group" version="0.0.0"/>
+      <unit id="org.jboss.tools.foundation.security.linux.feature.feature.group" version="0.0.0"/>
       <unit id="org.jboss.tools.jmx.feature.feature.group" version="0.0.0"/>
       <unit id="org.jboss.tools.jsf.feature.feature.group" version="0.0.0"/>
       <unit id="org.jboss.tools.jst.feature.feature.group" version="0.0.0"/>
@@ -178,7 +184,7 @@
       <unit id="org.hibernate.eclipse.feature.feature.group" version="0.0.0"/>
       <unit id="org.mozilla.xulrunner.feature.feature.group" version="0.0.0"/>
 
-      <repository location="http://download.jboss.org/jbosstools/updates/development/kepler/"/>
+      <repository location="http://download.jboss.org/jbosstools/updates/stable/kepler/"/>
     </location>
 
   
@@ -627,5 +633,4 @@
     
 
   </locations>
-  <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 </target>
