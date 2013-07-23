@@ -10,8 +10,74 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	<artifactId>org.teiid.designer.modelgenerator.salesforce</artifactId> 
 	<version>8.2.0-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
+    <properties>
+        <version.org.jboss.teiid.connectors.salesforce-api>8.4.0.Final</version.org.jboss.teiid.connectors.salesforce-api>
+    </properties>
+    <profiles>
+        <profile>
+            <!--
+                Profile that must be manually invoked to download and copy in
+                the source jars. Don't want the source in the build hence not
+                enabled by default.
+             -->
+            <id>download-sources</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-dependencies-src</id>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.jboss.teiid.connectors</groupId>
+                                            <artifactId>salesforce-api</artifactId>
+                                            <version>${version.org.jboss.teiid.connectors.salesforce-api}</version>
+                                            <classifier>sources</classifier>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <skip>false</skip>
+                                    <stripVersion>true</stripVersion>
+                                    <outputDirectory>${project.basedir}/libsrc</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.jboss.teiid.connectors</groupId>
+                                    <artifactId>salesforce-api</artifactId>
+                                    <version>${version.org.jboss.teiid.connectors.salesforce-api}</version>
+                                </artifactItem>
+                            </artifactItems>
+                            <skip>false</skip>
+                            <stripVersion>true</stripVersion>
+                            <outputDirectory>${project.basedir}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-compiler-plugin</artifactId>
@@ -24,5 +90,63 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                 </configuration>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse
+                    m2e settings only. It has no influence on the Maven build itself. -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.apache.maven.plugins
+                                        </groupId>
+                                        <artifactId>
+                                            maven-dependency-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [2.4,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>copy</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
+    <repositories>
+        <repository>
+            <id>jboss-public-repository</id>
+            <name>JBoss Public Maven Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.teiid.connectors</groupId>
+            <artifactId>salesforce-api</artifactId>
+        </dependency>
+    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jboss.teiid.connectors</groupId>
+                <artifactId>salesforce-api</artifactId>
+                <version>${version.org.jboss.teiid.connectors.salesforce-api}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

@@ -25,7 +25,9 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.8.0,4.0.0)",
  javax.servlet;bundle-version="3.0.0",
  javax.wsdl;bundle-version="[1.6.2,2.0.0)",
  org.teiid.designer.extension;bundle-version="[8.1.0,9.0.0)",
- org.teiid.designer.spi;bundle-version="[8.1.0,9.0.0)"
+ org.teiid.designer.spi;bundle-version="[8.1.0,9.0.0)",
+ javax.xml.soap;bundle-version="[1.3.0,2.0.0)",
+ org.apache.commons.httpclient;bundle-version="[3.1.0,4.0.0)"
 Bundle-ActivationPolicy: lazy
 Export-Package: com.sforce.soap.partner;x-friends:="org.teiid.designer.modelgenerator.salesforce.test",
  org.teiid.designer.modelgenerator.salesforce,
@@ -37,7 +39,5 @@ Export-Package: com.sforce.soap.partner;x-friends:="org.teiid.designer.modelgene
  org.teiid.designer.modelgenerator.salesforce.model.impl,
  org.teiid.designer.modelgenerator.salesforce.util
 Bundle-ClassPath: .,
- salesforce-api-7.4.1.jar,
- commons-httpclient-3.0.1.jar,
- saaj.jar
+ lib/salesforce-api.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
