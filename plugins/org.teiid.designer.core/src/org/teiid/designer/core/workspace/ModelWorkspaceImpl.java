@@ -287,7 +287,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
                         item = item.getChild(segment);
                         if (item == null) {
                             break;
-                        } else if (item.getPath().equals(path)) {
+                        } else if (item.getPath().makeRelative().equals(path.makeRelative())) {
                             return item;
                         }
                     }
