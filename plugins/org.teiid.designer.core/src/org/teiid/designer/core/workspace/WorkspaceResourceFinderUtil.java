@@ -1137,7 +1137,7 @@ public class WorkspaceResourceFinderUtil {
     public static class FileResourceCollectorVisitor implements IResourceVisitor {
         private final List resources;
 
-        private final ResourceFilter resourceFilter;
+        protected ResourceFilter resourceFilter;
 
         /**
          * Create a new default instance with an 'accept everything filter'
@@ -1236,7 +1236,7 @@ public class WorkspaceResourceFinderUtil {
          * Create a default instance which will simply find all vdb files
          */
         public VdbResourceCollectorVisitor() {
-            this.optionalName = null;
+            this(null);
         }
 
         /**
@@ -1246,15 +1246,21 @@ public class WorkspaceResourceFinderUtil {
          */
         public VdbResourceCollectorVisitor(String vdbName) {
             this.optionalName = vdbName;
+            this.resourceFilter = new VdbResourceFilter();
         }
 
         @Override
         public boolean visit(IResource resource) {
-            if (! resource.exists() || resource.getType() != IResource.FILE || getResourceFilter().accept(resource)) 
-                return false;
+            /*
+             * Always needs to return true since the search will not recurse into
+             * projects and folders!
+             *
+             * However, we only add the resource if its a vdb, which is determined via the
+             * resource filter.
+             */
 
-            if (! ModelUtil.isVdbArchiveFile(resource))
-                return false;
+            if (! resource.exists() || resource.getType() != IResource.FILE || ! getResourceFilter().accept(resource)) 
+                return true;
 
             if (optionalName == null) {// no optional name specified
                 addResource(resource);

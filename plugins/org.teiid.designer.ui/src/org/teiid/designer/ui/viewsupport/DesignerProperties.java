@@ -310,7 +310,8 @@ public class DesignerProperties extends Properties {
         VdbResourceCollectorVisitor visitor = new VdbResourceCollectorVisitor(vdbName);
         WorkspaceResourceFinderUtil.getProjectFileResources(visitor);
 
-        return visitor.getFileResources().iterator().next();
+        Collection<IFile> vdbs = visitor.getFileResources();
+        return vdbs.isEmpty() ? null : vdbs.iterator().next();
     }
 
     /**
