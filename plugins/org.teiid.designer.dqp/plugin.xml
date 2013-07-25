@@ -17,6 +17,13 @@
       </extensionDefinition>
    </extension>
    <extension
+         point="org.teiid.designer.extension.modelExtensionProvider">
+      <extensionDefinition
+            className="org.teiid.designer.runtime.extension.odata.ODataModelExtensionAssistant"
+            path="odata.mxd">
+      </extensionDefinition>
+   </extension>
+   <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
             adaptableType="org.eclipse.wst.server.core.IServer"
