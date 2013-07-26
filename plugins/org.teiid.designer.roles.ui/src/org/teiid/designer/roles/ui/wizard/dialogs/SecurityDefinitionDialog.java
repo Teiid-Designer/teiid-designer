@@ -111,7 +111,7 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
 	        label.setToolTipText(Messages.constraintButtonTooltip);
 
 	        this.constraintButton = new Button(innerPanel, SWT.CHECK);
-	        this.constraintButton.setText(Messages.constraint);
+//	        this.constraintButton.setText(Messages.constraint);
 	        if( isEdit ) {
 	        	this.constraintButton.setSelection(this.constraint);
 	        } else {

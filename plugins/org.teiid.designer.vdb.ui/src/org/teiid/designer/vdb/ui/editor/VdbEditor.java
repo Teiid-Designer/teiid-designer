@@ -9,11 +9,11 @@ package org.teiid.designer.vdb.ui.editor;
 
 import static org.teiid.designer.core.util.StringConstants.EMPTY_STRING;
 import static org.teiid.designer.vdb.Vdb.Event.CLOSED;
+import static org.teiid.designer.vdb.Vdb.Event.DATA_POLICY_ADDED;
+import static org.teiid.designer.vdb.Vdb.Event.DATA_POLICY_REMOVED;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
-import static org.teiid.designer.vdb.Vdb.Event.DATA_POLICY_ADDED;
-import static org.teiid.designer.vdb.Vdb.Event.DATA_POLICY_REMOVED;
 import static org.teiid.designer.vdb.ui.preferences.VdbPreferenceConstants.SYNCHRONIZE_WITHOUT_WARNING;
 
 import java.beans.PropertyChangeEvent;
@@ -21,6 +21,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,6 +46,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -62,6 +64,7 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -96,6 +99,7 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.common.widget.ButtonProvider;
 import org.teiid.designer.ui.common.widget.DefaultContentProvider;
+import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.properties.extension.VdbFileDialogUtil;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
@@ -175,6 +179,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     TableAndToolBar<VdbEntry> udfJarsGroup;
     private Button synchronizeAllButton;
     Button showImportVdbsButton;
+    Label validationDateTimeLabel;
+    Label validationVersionLabel;
     private PropertyChangeListener vdbListener;
 
     DataRolesPanel dataRolesPanel;
@@ -1216,7 +1222,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         }
 
         Composite extraButtonPanel = WidgetFactory.createPanel(pnlTop);
-        extraButtonPanel.setLayout(new GridLayout(2, false));
+        extraButtonPanel.setLayout(new GridLayout(6, false));
         { // synchronize button
         	
             synchronizeAllButton = WidgetFactory.createButton(extraButtonPanel, i18n("synchronizeAllButton"), //$NON-NLS-1$
@@ -1325,6 +1331,32 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 }
             });
             showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+        }
+        
+        { // Validatin Info
+        	Color blueColor = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE);
+        	Label label1 = WidgetFactory.createLabel(extraButtonPanel, "  " + i18n("lastValidated") + " : "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(label1);
+        	
+        	String dateTimeString = i18n("undefined"); //$NON-NLS-1$
+        	if( getVdb().getValidationDateTime() != null ) {
+        		dateTimeString = getVdb().getValidationDateTime().toString();
+        	}
+        	this.validationDateTimeLabel = WidgetFactory.createLabel(extraButtonPanel, dateTimeString);
+        	validationDateTimeLabel.setForeground(blueColor);
+        	validationDateTimeLabel.setText(dateTimeString);
+        	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(validationDateTimeLabel);
+        	
+        	Label label3 = WidgetFactory.createLabel(extraButtonPanel, "    " + i18n("teiidRuntimeVersion") + " : "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(label3);
+        	
+        	String versionString = i18n("undefined"); //$NON-NLS-1$
+        	if( getVdb().getValidationVersion() != null ) {
+        		versionString = getVdb().getValidationVersion();
+        	}
+        	validationVersionLabel = WidgetFactory.createLabel(extraButtonPanel, versionString);
+        	validationVersionLabel.setForeground(blueColor);
+        	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(validationVersionLabel);
         }
         
         // Set Vdb input on Udf and Other files tab.
@@ -1765,6 +1797,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
      */
     @Override
     public void doSave( final IProgressMonitor monitor ) {
+    	vdb.setValidationDateTime(new Date());
+    	vdb.setValidationVersion(ModelerCore.getTeiidServerVersion().toString());
         vdb.save(monitor);
         try {
             vdb.getFile().getParent().refreshLocal(IResource.DEPTH_INFINITE, monitor);
@@ -1910,6 +1944,17 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             }
         }
         synchronizeAllButton.setEnabled(syncChanged);
+    	String dateTimeString = i18n("undefined"); //$NON-NLS-1$
+    	if( getVdb().getValidationDateTime() != null ) {
+    		dateTimeString = getVdb().getValidationDateTime().toString();
+    	}
+    	this.validationDateTimeLabel.setText(dateTimeString);
+    	String validationString = i18n("undefined"); //$NON-NLS-1$
+    	if( getVdb().getValidationVersion() != null ) {
+    		validationString = getVdb().getValidationVersion();
+    	}
+    	this.validationVersionLabel.setText(validationString);
+    	
         firePropertyChange(IEditorPart.PROP_DIRTY);
     }
 

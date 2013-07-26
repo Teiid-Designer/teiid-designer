@@ -12,10 +12,14 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,6 +57,7 @@ import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.VdbModelBuilder;
+import org.teiid.designer.core.util.DateUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.roles.DataRole;
@@ -148,6 +153,8 @@ public final class Vdb {
     private final int version;
     private int queryTimeout = DEFAULT_TIMEOUT;
     private boolean autoGenerateRESTWAR;
+    private Date validateDateTime;
+    private String validationVersion;
     
     private VdbModelBuilder builder;
     private Map<String, Set<String>> modelToImportVdbMap = new HashMap<String, Set<String>>();
@@ -176,6 +183,8 @@ public final class Vdb {
         final boolean[] previewable = new boolean[1];
         final int[] vdbVersion = new int[1];
         final int[] queryTimeout = new int[1];
+        final String[] valDateTime = new String[1];
+        final String[] valVersion = new String[1];
 
         OperationUtil.perform(new Unreliable() {
 
@@ -229,6 +238,10 @@ public final class Vdb {
                             	for( String lang : langs ) {
                             		allowedLanguages.add(lang);
                             	}
+                            } else if (Xml.VALIDATION_DATETIME.equals(name)) { 
+                            	valDateTime[0] = value;
+                            } else if (Xml.VALIDATION_VERSION.equals(name)) { 
+                                valVersion[0] = value;
                             } else {
                             	generalPropertiesMap.put(name, value);
                             }
@@ -267,6 +280,16 @@ public final class Vdb {
         this.preview = previewable[0];
         this.version = vdbVersion[0];
         this.queryTimeout = queryTimeout[0];
+        if( valDateTime[0] != null ) {
+        	try {
+                SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+				this.validateDateTime = format.parse(valDateTime[0]); //new Date(valDateTime[0]); //DateUtil.convertStringToDate(valDateTime[0]);
+			} catch (ParseException ex) {
+				// TODO Auto-generated catch block
+				ex.printStackTrace();
+			}
+        }
+        this.validationVersion = valVersion[0];
     }
 
     /**
@@ -742,6 +765,20 @@ public final class Vdb {
     }
     
     /**
+     * @return the VDB validation version
+     */
+    public String getValidationVersion() {
+        return validationVersion;
+    }
+    
+    /**
+     * @return the VDB validation date-time
+     */
+    public Date getValidationDateTime() {
+        return validateDateTime;
+    }
+    
+    /**
      * @return <code>true</code> if all model entries in this VDB are either synchronized with their associated models or no
      *         associated model exists..
      */
@@ -1014,6 +1051,27 @@ public final class Vdb {
     	this.autoGenerateRESTWAR = autoGenerateRESTWAR;
     	setModified(this, Event.AUTO_GENERATE_REST_WAR, oldValue, autoGenerateRESTWAR);
     }
+    
+    /**
+     * @param valVersion Sets validatationVersion to the specified value.
+     */
+    public final void setValidationVersion( String valVersion ) {
+    	final String oldVersion = this.validationVersion;
+    	if( StringUtilities.equals(oldVersion, valVersion)) return;
+    	this.validationVersion = valVersion;
+    	setModified(this, Event.GENERAL_PROPERTY, oldVersion, valVersion);
+    }
+    
+    
+    /**
+     * @param dateTime Sets validatationDateTime to the specified value.
+     */
+    public final void setValidationDateTime( Date dateTime ) {
+    	final Date oldDateTime = this.validateDateTime;
+    	if( oldDateTime != null && oldDateTime.equals(dateTime)) return;
+    	this.validateDateTime = dateTime;
+    	setModified(this, Event.GENERAL_PROPERTY, oldDateTime, dateTime);
+    }
 
     private final void synchronize( final Collection<VdbEntry> entries,
                                     final IProgressMonitor monitor ) {
@@ -1267,5 +1325,13 @@ public final class Vdb {
          * 
          */
         public static final String ALLOWED_LANGUAGES = "allowed-languages"; //$NON-NLS-1$
+        
+        /**
+         */
+        public static final String VALIDATION_DATETIME = "validationDateTime"; //$NON-NLS-1$
+        
+        /**
+         */
+        public static final String VALIDATION_VERSION = "validationVersion"; //$NON-NLS-1$
     }
 }

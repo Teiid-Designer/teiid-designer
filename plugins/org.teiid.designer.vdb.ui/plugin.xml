@@ -117,6 +117,13 @@
           <attribute name="missingModel" value="true"/>
        </markerResolutionGenerator> 
 	</extension>
+	<extension point="org.eclipse.ui.ide.markerResolution"> 
+	   <markerResolutionGenerator 
+	      class="org.teiid.designer.vdb.ui.build.VdbDifferentServerVersionResolutionGenerator" 
+	      markerType="org.teiid.designer.vdb.ui.vdbMarker"> 
+          <attribute name="differentValidationVersion" value="true"/>
+       </markerResolutionGenerator> 
+	</extension>
 	  <extension
          point="org.teiid.designer.core.refactorModelHandler">
       <refactorHandler

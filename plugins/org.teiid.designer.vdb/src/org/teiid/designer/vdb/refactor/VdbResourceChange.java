@@ -72,7 +72,7 @@ public class VdbResourceChange extends ResourceChange {
         }
 
         // Synchronise will add the new resource
-        VdbUtil.synchronizeVdb(vdbFile, false);
+        VdbUtil.synchronizeVdb(vdbFile, false, true);
 
         // This should clean up and remove old resources
         Vdb actualVdb = new Vdb(vdbFile, monitor);

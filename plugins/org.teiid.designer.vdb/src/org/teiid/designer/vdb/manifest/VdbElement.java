@@ -108,6 +108,16 @@ public class VdbElement implements Serializable {
         	getProperties().add(new PropertyElement(Vdb.Xml.AUTO_GENERATE_REST_WAR, Boolean.TRUE.toString()));
         }
         
+        if (vdb.getValidationDateTime() != null) {
+        	String dateTimeString = vdb.getValidationDateTime().toString();
+        	getProperties().add(new PropertyElement(Vdb.Xml.VALIDATION_DATETIME, dateTimeString));
+        }
+        
+        if (vdb.getValidationVersion() != null) {
+        	String versionString = vdb.getValidationVersion();
+        	getProperties().add(new PropertyElement(Vdb.Xml.VALIDATION_VERSION, versionString));
+        }
+        
         for( String key : vdb.getGeneralProperties().keySet()) {
         	String value = vdb.getGeneralProperties().get(key);
         	getProperties().add(new PropertyElement(key, value));

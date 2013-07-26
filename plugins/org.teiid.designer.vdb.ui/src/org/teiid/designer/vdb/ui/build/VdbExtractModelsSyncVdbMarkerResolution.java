@@ -70,7 +70,7 @@ public class VdbExtractModelsSyncVdbMarkerResolution implements IMarkerResolutio
 	}
 
 	void fixVdb(IFile theVdb) {
-		VdbUtil.synchronizeVdb(theVdb, true);
+		VdbUtil.synchronizeVdb(theVdb, true, true);
 	}
 
 	/**

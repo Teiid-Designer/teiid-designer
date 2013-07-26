@@ -53,6 +53,8 @@ public class VdbBuilder extends IncrementalProjectBuilder {
 	public static final String MISSING_MODEL = "missingModel"; //$NON-NLS-1$
 	@SuppressWarnings("javadoc")
 	public static final String TOO_MANY_SOURCES = "tooManySources"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String DIFFERENT_VALIDATION_VERSION = "differentValidationVersion"; //$NON-NLS-1$
 	
     private enum MarkerType {
     	DEFAULT,
@@ -61,8 +63,8 @@ public class VdbBuilder extends IncrementalProjectBuilder {
     	NAME_CHANGED, 
     	MISSING_UUID,
     	MISSING_MODEL,
-    	TOO_MANY_SOURCES;
-
+    	TOO_MANY_SOURCES,
+    	DIFFERENT_VALIDATION_VERSION;
     }
     
     /**
@@ -167,6 +169,9 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
     				if( iStatus.getMessage().indexOf("multiple sources defined") > 0 ) { //$NON-NLS-1$
     					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.TOO_MANY_SOURCES);
     				}
+    				if( iStatus.getMessage().indexOf("runtime validation version") > 0 ) { //$NON-NLS-1$
+    					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.DIFFERENT_VALIDATION_VERSION);
+    				}
     			} break;
     			case IStatus.ERROR: {
     				createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.DEFAULT);
@@ -207,6 +212,8 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
 			attributes.put(MISSING_UUID, true);
 		} else if (markerType == MarkerType.MISSING_MODEL) {
 			attributes.put(MISSING_MODEL, true);
+		} else if (markerType == MarkerType.DIFFERENT_VALIDATION_VERSION) {
+			attributes.put(DIFFERENT_VALIDATION_VERSION, true);
 		}
 		
 		attributes.put(IMarker.LOCATION, file.getName());

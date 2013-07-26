@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -325,8 +326,21 @@ public class VdbUtil {
 		
 		if (theVdbFile.exists()) {
 			VdbElement manifest = VdbUtil.getVdbManifest(theVdbFile);
-			Vdb theVdb = new Vdb(theVdbFile, new NullProgressMonitor());
+			Vdb theVdb = new Vdb(theVdbFile, new NullProgressMonitor());	
 			if (manifest != null) {
+				// Check the validation version of the VDB against current Default server
+				
+				String serverVersion = ModelerCore.getTeiidServerVersion().toString();
+				if( serverVersion != null ) {
+					String validationVersion = theVdb.getValidationVersion();
+					if( validationVersion != null ) {
+						if( !validationVersion.equals(serverVersion) ) {
+							statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID, 
+									VdbPlugin.UTIL.getString("vdbValidationWarning_differentValidationVersions", validationVersion, serverVersion)) ); //$NON-NLS-1$
+						}
+					}
+				}
+				
 				for (ModelElement model : manifest.getModels()) {
 					String modelName = model.getName();
 					String modelUuid = getUuid(model);
@@ -675,7 +689,7 @@ public class VdbUtil {
      * @param theVdb the VDB
      * @param extractMissingModels
      */
-    public static void synchronizeVdb(final IFile theVdb, boolean extractMissingModels) {
+    public static void synchronizeVdb(final IFile theVdb, boolean extractMissingModels, boolean updateValidationVersion) {
         if (! theVdb.exists())
             return;
 
@@ -808,6 +822,11 @@ public class VdbUtil {
         }
 
         actualVDB.synchronize(new NullProgressMonitor());
+        
+        if( updateValidationVersion ) {
+	        actualVDB.setValidationDateTime(new Date());
+	        actualVDB.setValidationVersion(ModelerCore.getTeiidServerVersion().toString());
+        }
 
         actualVDB.save(new NullProgressMonitor());
         try {
