@@ -2483,10 +2483,17 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         String nameInSource = convertedName;
         if( !ignoreFullyQualifiedName ) {
         	nameInSource = computeNameInSource(entity, name, node, context, forceSetNameInSource, problems);
-        }
-        if (nameInSource != null) {
-        	
-            entity.setNameInSource(convertName(nameInSource, context));
+        	if(nameInSource!=null) {
+        		entity.setNameInSource(nameInSource);
+        	}
+        } else {
+        	if(nameInSource!=null) {
+            	String quoteStr = getQuoteString(context,problems);
+            	if( quoteStr != null && quoteStr.length() > 0 ) {
+            		nameInSource = quoteStr + nameInSource + quoteStr;
+            	}
+        		entity.setNameInSource(nameInSource);
+        	}
         }
         
         final JdbcImportSettings settings = context.getJdbcImportSettings();
