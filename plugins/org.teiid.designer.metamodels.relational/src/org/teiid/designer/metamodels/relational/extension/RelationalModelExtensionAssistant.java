@@ -49,7 +49,8 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
         JAVA_CLASS(getPropertyId("java-class")), //$NON-NLS-1$
         JAVA_METHOD(getPropertyId("java-method")), //$NON-NLS-1$
         FUNCTION_CATEGORY(getPropertyId("function-category")), //$NON-NLS-1$
-        UDF_JAR_PATH(getPropertyId("udfJarPath")); //$NON-NLS-1$
+        UDF_JAR_PATH(getPropertyId("udfJarPath")), //$NON-NLS-1$
+        ALLOW_JOIN(getPropertyId("allow-join")); //$NON-NLS-1$
 
         public static boolean same(final PropertyName propName,
                                    final String value) {

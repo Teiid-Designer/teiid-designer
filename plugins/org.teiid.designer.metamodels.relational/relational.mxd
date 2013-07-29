@@ -62,4 +62,9 @@
             <p:display locale="en">Native Query</p:display>
         </p:property>
     </p:extendedMetaclass>
+    <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ForeignKeyImpl">
+        <p:property advanced="false" defaultValue="true" index="true" masked="false" name="allow-join" required="false" type="boolean">
+            <p:display locale="en">Allow Join</p:display>
+        </p:property>
+    </p:extendedMetaclass>
 </modelExtension>
