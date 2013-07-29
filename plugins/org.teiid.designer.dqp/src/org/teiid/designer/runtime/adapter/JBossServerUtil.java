@@ -8,9 +8,12 @@
 package org.teiid.designer.runtime.adapter;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.ide.eclipse.as.core.server.internal.JBossServer;
+import org.teiid.designer.runtime.DqpPlugin;
 
 /**
  *
@@ -30,18 +33,37 @@ public class JBossServerUtil {
         if (!serverStarted(parentServer)) 
             return false;
 
+        return isHostConnected(jbossServer.getHost(), jbossServer.getJBossWebPort());
+    }
+
+    /**
+     * @param jbossServer
+     * @return
+     */
+    protected static boolean isHostConnected(String host, int port) {
         Socket socket = null;
+        InetSocketAddress endPoint = new InetSocketAddress(host, port);
+
+        if (endPoint.isUnresolved()) {
+            DqpPlugin.Util.log(IStatus.WARNING, DqpPlugin.Util.getString("jbossServerConnectionFailureMessage", endPoint)); //$NON-NLS-1$
+            return false;
+        }
+
         try {
-            socket = new Socket(jbossServer.getHost(), jbossServer.getJBossWebPort());
+            socket = new Socket();
+            socket.connect(endPoint, 1024);
+
             return true;
         } catch (Exception ex) {
+            // Connection failed - no need to log exception
             return false;
-            
         } finally {
-            if (socket != null) {
+            if (socket != null && socket.isConnected()) {
                 try {
                     socket.close();
-                } catch (IOException e) {
+                    socket = null;
+                } catch (IOException ex) {
+                    DqpPlugin.Util.log(IStatus.WARNING, ex, DqpPlugin.Util.getString("jbossServerConnectionFailureMessage", endPoint)); //$NON-NLS-1$
                 }
             }
         }

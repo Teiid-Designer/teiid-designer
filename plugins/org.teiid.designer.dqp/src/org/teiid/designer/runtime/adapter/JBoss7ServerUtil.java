@@ -45,7 +45,6 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
 
     private static final String PORT = ModelDescriptionConstants.PORT;
     
-    
     /**
      * @param server
      * @param jboss7Server
@@ -72,18 +71,10 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
         if (! serverStarted(jboss7Server.getServer()))
             return false;
         
-        // Request that finds the name of the server
-        ModelNode request = new ModelNode();
-        request.get(OP).set(READ_ATTRIBUTE_OPERATION);
-        request.get(NAME).set(NAME);
-        
-        try {
-            executeRequest(parentServer, jboss7Server, request);
-            return true;
-        } catch (Exception ex) {
-            // No need to log the exception
-            return false;
-        }
+        String host = jboss7Server.getHost();
+        int port = jboss7Server.getManagementPort();
+
+        return isHostConnected(host, port);
     }
     
     /**
