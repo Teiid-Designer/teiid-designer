@@ -60,6 +60,7 @@ import org.teiid.designer.jdbc.JdbcImportSettings;
 import org.teiid.designer.jdbc.JdbcPlugin;
 import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.jdbc.SourceNames;
+import org.teiid.designer.jdbc.metadata.Includes;
 import org.teiid.designer.jdbc.metadata.JdbcDatabase;
 import org.teiid.designer.jdbc.metadata.JdbcNode;
 import org.teiid.designer.jdbc.relational.JdbcImporter;
@@ -115,6 +116,8 @@ public class JdbcImportOptionsPage extends WizardPage implements
     private static final String CHANGE_CASE_GROUP = getString("changeCaseGroup"); //$NON-NLS-1$
     private static final String FULLY_QUALIFIED_CHECKBOX = getString("fullyQualifiedNamesCheckBox"); //$NON-NLS-1$
     private static final String FULLY_QUALIFIED_CHECKBOX_TOOLTIP = getString("fullyQualifiedNamesCheckBox.tooltip"); //$NON-NLS-1$
+    private static final String CALCULATE_COSTING_CHECKBOX = getString("calculateCostingCheckBox"); //$NON-NLS-1$
+    private static final String CALCULATE_COSTING_CHECKBOX_TOOLTIP = getString("calculateCostingCheckBox.tooltip"); //$NON-NLS-1$
     private static final String INCLUDE_CATALOG_CHECKBOX = getString("includeCatalogCheckBox"); //$NON-NLS-1$
     private static final String INCLUDE_CATALOG_CHECKBOX_TOOLTIP = getString("includeCatalogCheckBox.tooltip"); //$NON-NLS-1$
     private static final String MODEL_OBJECT_NAMES_GROUP = getString("modelObjectNamesGroup"); //$NON-NLS-1$
@@ -157,13 +160,12 @@ public class JdbcImportOptionsPage extends WizardPage implements
     private Group changeCaseGroup;
     private Text nameText, folderText;
     private Button updateCheckBox, fullyQualifiedNamesCheckBox, includeCatalogCheckBox, modifyCaseCheckBox,
-    	uppercaseButton, lowercaseButton, virtualModelBox;
+    	uppercaseButton, lowercaseButton, virtualModelBox, calculateCostingCheckBox;
     private boolean initd;
     private IContainer folder;
     private boolean usesHiddenProject = false;
     private IFile selectedModel;
     private boolean isVirtual = false;
-    private boolean isVdbSourceModel = false;
     
     private JdbcImporter importer;
 
@@ -273,6 +275,17 @@ public class JdbcImportOptionsPage extends WizardPage implements
         
         WidgetFactory.createLabel(mainPanel, "  "); //$NON-NLS-1$
         
+        this.calculateCostingCheckBox = WidgetFactory.createCheckBox(mainPanel, CALCULATE_COSTING_CHECKBOX, 0, 1);
+        this.calculateCostingCheckBox.setToolTipText(CALCULATE_COSTING_CHECKBOX_TOOLTIP);
+        this.calculateCostingCheckBox.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+            	calculateCostingCheckBox();
+            }
+        });
+        this.calculateCostingCheckBox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+
         this.includeCatalogCheckBox = WidgetFactory.createCheckBox(mainPanel, INCLUDE_CATALOG_CHECKBOX, 0, 1);
         this.includeCatalogCheckBox.setToolTipText(INCLUDE_CATALOG_CHECKBOX_TOOLTIP);
         this.includeCatalogCheckBox.addSelectionListener(new SelectionAdapter() {
@@ -355,6 +368,9 @@ public class JdbcImportOptionsPage extends WizardPage implements
         // wizard.
         final JdbcImportSettings importSettings = wizard.getSource().getImportSettings();
         try {
+            final Includes incls = ((JdbcImportWizard)getWizard()).getDatabase().getIncludes();
+            dlgSettings.put(CALCULATE_COSTING_CHECKBOX, incls.isCalculateCosting());
+        	
             final DatabaseMetaData metadata = wizard.getDatabase().getDatabaseMetaData();
             dlgSettings.put(metadata.getCatalogTerm(), importSettings.isCreateCatalogsInModel());
             dlgSettings.put(metadata.getSchemaTerm(), importSettings.isCreateSchemasInModel());
@@ -388,7 +404,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
     public void setVisible(final boolean visible) {
         if (visible) {
             // Wrap in transaction so it doesn't result in Significant Undoable
-            boolean started = ModelerCore.startTxn(false, false, "Initializing Optioin Settings", this); //$NON-NLS-1$
+            boolean started = ModelerCore.startTxn(false, false, "Initializing Option Settings", this); //$NON-NLS-1$
             boolean succeeded = false;
             try {
                 initializeInTransaction();
@@ -462,7 +478,6 @@ public class JdbcImportOptionsPage extends WizardPage implements
 	        name = wizard.getModelName();
 	        
         }
-        final String finalName = name;
         this.nameText.setText(name);
         try {
             // Save object selections from previous page
@@ -492,6 +507,14 @@ public class JdbcImportOptionsPage extends WizardPage implements
                 } catch (SQLException e) {
                     JdbcPlugin.Util.log(e);
                 }
+                
+                final IDialogSettings dlgSettings = getDialogSettings();
+                boolean calcCosting = true;
+                if(dlgSettings!=null) {
+                	calcCosting = dlgSettings.getBoolean(CALCULATE_COSTING_CHECKBOX);
+                }
+                calculateCostingCheckBox.setSelection(calcCosting);
+                ((JdbcImportWizard)getWizard()).getDatabase().getIncludes().setCalculateCosting(calcCosting);
                 
                 if( supportsCatalogs ) {
                 	includeCatalogCheckBox.setSelection(supportsCatalogs);
@@ -808,7 +831,16 @@ public class JdbcImportOptionsPage extends WizardPage implements
         }
     }
     
-    
+    /**
+     * @since 8.2
+     */
+    void calculateCostingCheckBox() {
+    	boolean isChecked = this.calculateCostingCheckBox.getSelection();
+    	((JdbcImportWizard)getWizard()).getDatabase().getIncludes().setCalculateCosting(isChecked);
+        final IDialogSettings dlgSettings = getDialogSettings();
+        if(dlgSettings!=null) dlgSettings.put(CALCULATE_COSTING_CHECKBOX, isChecked);
+    }
+
     /**
      * @since 4.0
      */

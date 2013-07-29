@@ -46,6 +46,11 @@ public interface Includes {
     public final boolean DEFAULT_UNIQUE_INDEXES = false;
 
     /**
+     * The default is to calculate costing on import
+     */
+    public final boolean DEFAULT_CALCULATE_COSTING = true;
+
+    /**
      * Return the {@link JdbcDatabase} object that contains this node.
      * @return the database; may not be null
      */
@@ -140,5 +145,17 @@ public interface Includes {
      * @param uniqueOnly true if only unique indexes should be included, or false if all indexes should be included.
      */
     public void setUniqueIndexesOnly( boolean uniqueOnly );
+
+    /**
+     * Determine if costing information is to be calculated
+     * @return true if costing should be calculated, false if not.
+     */
+    public boolean isCalculateCosting();
+
+    /**
+     * Set whether to calculate costing information
+     * @param enableCosting true if calculating costing information, false if not.
+     */
+    public void setCalculateCosting( boolean enableCosting );
 
 }
