@@ -36,6 +36,7 @@ import org.eclipse.emf.mapping.Mapping;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.Stopwatch;
 import org.teiid.designer.compare.DifferenceDescriptor;
@@ -81,6 +82,8 @@ import org.teiid.designer.jdbc.metadata.impl.GetIndexesRequest;
 import org.teiid.designer.jdbc.metadata.impl.GetPrimaryKeyRequest;
 import org.teiid.designer.jdbc.metadata.impl.GetProcedureParametersRequest;
 import org.teiid.designer.jdbc.relational.ContextImpl;
+import org.teiid.designer.jdbc.relational.CostAnalyzer;
+import org.teiid.designer.jdbc.relational.CostAnalyzerFactory;
 import org.teiid.designer.jdbc.relational.JdbcRelationalPlugin;
 import org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants;
 import org.teiid.designer.jdbc.relational.RelationalModelProcessor;
@@ -109,6 +112,7 @@ import org.teiid.designer.metamodels.relational.UniqueConstraint;
 import org.teiid.designer.metamodels.relational.UniqueKey;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.RelationalStringNameRule;
 import org.teiid.designer.metamodels.relational.util.RelationalTypeMapping;
+import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 
 /**
  * RelationalModelProcessorImpl
@@ -136,6 +140,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
     private static final int UNITS_PHASE_5 = 10000;
     private static final int UNITS_PHASE_6 = 1000;
     private static final int UNITS_PHASE_7 = 1000;
+    private static final int UNITS_PHASE_8 = 5000;
 
     /**
      * @since 4.0
@@ -716,11 +721,14 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
     protected void performExecute( final Context context,
                                    final List problems ) {
 
+    	// Determine if costing info is to be calculated
+    	boolean calculateCosting = context.getJdbcDatabase().getIncludes().isCalculateCosting();
+    	
         // Start the progress monitor tasks ...
         final Object[] taskNameParams = new Object[] {context.getJdbcDatabase().getName()};
         final String taskName = org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.Progress_main_task_name", taskNameParams); //$NON-NLS-1$
         final int numUnits = UNITS_PHASE_0 + UNITS_PHASE_1 + UNITS_PHASE_2 + UNITS_PHASE_3 + UNITS_PHASE_4 + UNITS_PHASE_5
-                             + UNITS_PHASE_6 + UNITS_PHASE_7;
+                             + UNITS_PHASE_6 + UNITS_PHASE_7 + (calculateCosting ? UNITS_PHASE_8 : 0);
         final IProgressMonitor monitor = context.getProgressMonitor();
         monitor.beginTask(null, numUnits);
         monitor.setTaskName(taskName);
@@ -967,6 +975,17 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             }
             processModelInformation(context, problems);
             monitor.worked(UNITS_PHASE_7);
+            
+            // ----------------------------------------------------------------------------------------
+            // Phase 8: Calculate Costing if selected
+            // ----------------------------------------------------------------------------------------
+            // First check if cancelled
+            if (monitor.isCanceled()) {
+                throw new UserCancelledException();
+            }
+            if(calculateCosting) {
+            	processCostingInfo(context, problems);
+            }
 
         } catch (JdbcException e) {
             final IStatus status = new Status(IStatus.ERROR,
@@ -997,6 +1016,34 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         }
     }
 
+    /**
+     * Sets the costing info for the import
+     * @param context the Context
+     * @param problems the problems list
+     */
+    protected void processCostingInfo( final Context context, final List problems ) throws Exception {
+
+        final Resource resource = context.getResource();
+        final JdbcSource source = context.getJdbcImportSettings().getSource();
+    	if (source != null) {
+    		CostAnalyzerFactory analyzerFactory = CostAnalyzerFactory.getCostAnalyzerFactory();
+    		final List emfTables = RelationalUtil.findTables(resource);
+    		final Map tblStats = analyzerFactory.createTableInfos(emfTables);
+ 
+    		final IProgressMonitor monitor = context.getProgressMonitor();
+    		
+    		CostAnalyzer costAnalyzer = analyzerFactory.getCostAnalyzer(source,source.getPassword());
+
+    		// Collect the statistics
+			costAnalyzer.collectStatistics(tblStats, monitor);
+
+			// Populate the column stats
+    		if (!context.getProgressMonitor().isCanceled()) {
+    			analyzerFactory.populateEmfColumnStatistics(emfTables, tblStats);
+    		}    	
+    	}
+    }
+    
     /**
      * @param context
      * @param problems
@@ -2490,7 +2537,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         	if(nameInSource!=null) {
             	String quoteStr = getQuoteString(context,problems);
             	if( quoteStr != null && quoteStr.length() > 0 ) {
-            		nameInSource = quoteStr + nameInSource + quoteStr;
+            		nameInSource = quoteStr + CoreStringUtil.replaceAll(nameInSource,quoteStr,quoteStr+quoteStr) + quoteStr;
             	}
         		entity.setNameInSource(nameInSource);
         	}
