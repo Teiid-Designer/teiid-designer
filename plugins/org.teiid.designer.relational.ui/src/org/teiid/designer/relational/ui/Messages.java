@@ -127,6 +127,7 @@ public class Messages extends NLS {
 	public static String newIndexMessage;
 	public static String createIndexTitle;
 	public static String editIndexTitle;
+	public static String includeResultSetTooltip;
     		
     static {
         NLS.initializeMessages("org.teiid.designer.relational.ui.messages", Messages.class); //$NON-NLS-1$

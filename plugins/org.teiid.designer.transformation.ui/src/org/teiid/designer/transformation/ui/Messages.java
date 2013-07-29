@@ -142,6 +142,7 @@ public class Messages extends NLS {
 	public static String newIndexMessage;
 	public static String createIndexTitle;
 	public static String editIndexTitle;
+	public static String includeResultSetTooltip;
 
     public static String sqlTemplateDialogTitle;
     public static String sqlTemplateDialogTitleMessage;

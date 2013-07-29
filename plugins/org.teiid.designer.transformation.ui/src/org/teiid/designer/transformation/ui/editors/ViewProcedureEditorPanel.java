@@ -190,6 +190,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
         if( this.getRelationalReference().getResultSet() == null ) {
         	if( WidgetUtil.widgetValueChanged(includeResultSetCB, false)) {
         		this.includeResultSetCB.setSelection(false);
+        		this.addColumnButton.setEnabled(false);
         	}
         	
         	this.resultSetNameText.setEnabled(false);
@@ -235,6 +236,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
         this.includeResultSetCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.includeResultSetCB);
         this.includeResultSetCB.setText(Messages.includeLabel);
+        this.includeResultSetCB.setToolTipText(Messages.includeResultSetTooltip);
         this.includeResultSetCB.addSelectionListener(new SelectionAdapter() {
             /**            		
              * {@inheritDoc}
@@ -300,6 +302,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 			}
     		
 		});
+    	this.addColumnButton.setEnabled(false);
     	
     	deleteColumnButton = new Button(buttonPanel, SWT.PUSH);
     	deleteColumnButton.setText(Messages.deleteLabel);
@@ -1000,8 +1003,19 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
     }
 	
 	private void setUiState() {
-		if( ! this.getRelationalReference().isFunction() )
-		    return;
+		if( ! this.getRelationalReference().isFunction() ) {
+			if( this.addColumnButton != null && this.includeResultSetCB != null ) {
+				boolean enable = this.includeResultSetCB.getSelection();
+				this.addColumnButton.setEnabled(enable);
+				if( !enable ) {
+					this.deleteColumnButton.setEnabled(false);
+					this.downColumnButton.setEnabled(false);
+					this.upColumnButton.setEnabled(false);
+				}
+			}
+			
+			return;
+		}
 
         boolean functionState = true;
         this.deterministicCB.setEnabled(functionState);
@@ -1018,6 +1032,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
         this.analyticCB.setEnabled(aggregateState);
         this.decomposableCB.setEnabled(aggregateState);
         this.useDistinctRowsCB.setEnabled(aggregateState);
+        
 	}
 
 	@Override

@@ -180,6 +180,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 	        if( this.getRelationalReference().getResultSet() == null ) {
 	        	if( WidgetUtil.widgetValueChanged(includeResultSetCB, false)) {
 	        		this.includeResultSetCB.setSelection(false);
+	        		this.addColumnButton.setEnabled(false);
 	        	}
 	        	
 	        	this.resultSetNameText.setEnabled(false);
@@ -226,6 +227,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
         this.includeResultSetCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.includeResultSetCB);
         this.includeResultSetCB.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.INCLUDE));
+        this.includeResultSetCB.setToolTipText(Messages.includeResultSetTooltip);
         this.includeResultSetCB.addSelectionListener(new SelectionAdapter() {
             /**            		
              * {@inheritDoc}
@@ -291,6 +293,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 			}
     		
 		});
+    	this.addColumnButton.setEnabled(false);
     	
     	deleteColumnButton = new Button(buttonPanel, SWT.PUSH);
     	deleteColumnButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DELETE));
@@ -995,6 +998,16 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
                 if (this.useDistinctRowsCB != null)
                     this.useDistinctRowsCB.setEnabled(aggregateState);
             }
+		} else {
+			if( this.addColumnButton != null && this.includeResultSetCB != null ) {
+				boolean enable = this.includeResultSetCB.getSelection();
+				this.addColumnButton.setEnabled(enable);
+				if( !enable ) {
+					this.deleteColumnButton.setEnabled(false);
+					this.downColumnButton.setEnabled(false);
+					this.upColumnButton.setEnabled(false);
+				}
+			}
 		}
 	}
 	
