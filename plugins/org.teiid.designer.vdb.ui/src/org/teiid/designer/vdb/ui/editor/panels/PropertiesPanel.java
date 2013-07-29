@@ -160,6 +160,18 @@ public class PropertiesPanel {
             		this.allowedLanguagesViewer.add(value);
             }
             
+            this.allowedLanguagesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+                 */
+                @Override
+                public void selectionChanged( SelectionChangedEvent event ) {
+                    handleLanguageSelected();
+                }
+            });
+            
             Composite toolbarPanel = WidgetFactory.createPanel(languageGroup, SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 2);
             
             this.addLanguageButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
@@ -191,6 +203,8 @@ public class PropertiesPanel {
     			public void widgetDefaultSelected(SelectionEvent e) {
     			}
     		});
+            
+            this.removeLanguageButton.setEnabled(false);
     	}
     	
         Composite pnlUserProperties = WidgetFactory.createGroup(panel, prefixedI18n("userDefined"), SWT.FILL, 1, 1);  //$NON-NLS-1$
@@ -291,7 +305,7 @@ public class PropertiesPanel {
              */
             @Override
             public void selectionChanged( SelectionChangedEvent event ) {
-                //handlePropertySelected(event);
+                handlePropertySelected();
             }
         });
 
@@ -330,8 +344,19 @@ public class PropertiesPanel {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
+        this.removePropertyButton.setEnabled(false);
         
         this.propertiesViewer.setInput(this);
+	}
+	
+	void handleLanguageSelected() {
+		boolean hasSelection = !this.allowedLanguagesViewer.getSelection().isEmpty();
+		this.removeLanguageButton.setEnabled(hasSelection);
+	}
+
+	void handlePropertySelected() {
+		boolean hasSelection = !this.propertiesViewer.getSelection().isEmpty();
+		this.removePropertyButton.setEnabled(hasSelection);
 	}
 	
     private String getSelectedLanguage() {

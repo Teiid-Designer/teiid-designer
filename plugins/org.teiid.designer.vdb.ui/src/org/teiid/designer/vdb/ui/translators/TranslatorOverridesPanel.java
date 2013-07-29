@@ -259,6 +259,8 @@ public final class TranslatorOverridesPanel extends Composite {
     			}
     		});
             
+            this.editTranslatorButton.setEnabled(false);
+            
             this.deleteTranslatorButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
             this.deleteTranslatorButton.setImage(VdbUiPlugin.singleton.getImage(REMOVE_TRANSLATOR));
             this.deleteTranslatorButton.setToolTipText(Util.getString(PREFIX + "removeTranslatorAction.toolTip")); //$NON-NLS-1$
@@ -275,6 +277,8 @@ public final class TranslatorOverridesPanel extends Composite {
     				
     			}
     		});
+            
+            this.deleteTranslatorButton.setEnabled(false);
             
             this.translatorsViewer.addDoubleClickListener(new IDoubleClickListener() {
             	
