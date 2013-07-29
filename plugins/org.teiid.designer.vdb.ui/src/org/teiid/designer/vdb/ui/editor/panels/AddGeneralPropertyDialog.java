@@ -7,7 +7,6 @@
 */
 package org.teiid.designer.vdb.ui.editor.panels;
 
-import static org.teiid.designer.vdb.VdbPlugin.UTIL;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Util;
 
 import java.util.HashSet;
@@ -233,18 +232,24 @@ public class AddGeneralPropertyDialog  extends MessageDialog {
     public static String validateName( String proposedName ) {
         // must have a name
         if (StringUtilities.isEmpty(proposedName)) {
-            return UTIL.getString(PREFIX + "emptyPropertyName"); //$NON-NLS-1$
+            return Util.getString(PREFIX + "emptyPropertyName"); //$NON-NLS-1$
         }
 
         // make sure only letters
         for (char c : proposedName.toCharArray()) {
-            if (!Character.isLetter(c) && !Character.isDigit(c) ) {
-                return UTIL.getString(PREFIX + "invalidPropertyName"); //$NON-NLS-1$
+            if ( ! isValidChar(c)) {
+                return Util.getString(PREFIX + "invalidPropertyName"); //$NON-NLS-1$
             }
         }
 
         // valid name
         return null;
+    }
+    
+    private static boolean isValidChar(char c) {
+    	if((Character.isLetter(c) || Character.isDigit(c)) || c == '-') return true;
+    	
+    	return false;
     }
     
     /**
@@ -254,7 +259,7 @@ public class AddGeneralPropertyDialog  extends MessageDialog {
     public static String validateValue( String proposedValue ) {
         // must have a value
         if (StringUtilities.isEmpty(proposedValue)) {
-            return UTIL.getString(PREFIX + "emptyPropertyValue"); //$NON-NLS-1$
+            return Util.getString(PREFIX + "emptyPropertyValue"); //$NON-NLS-1$
         }
 
         // valid
