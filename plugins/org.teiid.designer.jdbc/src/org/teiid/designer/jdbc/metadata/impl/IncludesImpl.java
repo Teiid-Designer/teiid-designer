@@ -29,10 +29,11 @@ public class IncludesImpl implements Includes {
     private boolean procedures  = DEFAULT_INCLUDE_PROCEDURES;
     private boolean approximateIndexes = DEFAULT_APPROXIMATE_INDEXES;
     private boolean uniqueIndexes = DEFAULT_UNIQUE_INDEXES;
+    private boolean calculateCosting = DEFAULT_CALCULATE_COSTING;
 
     /**
      * Construct an instance of IncludesImpl.
-     * 
+     * @param database the JdbcDatabase
      */
     public IncludesImpl( final JdbcDatabase database ) {
         super();
@@ -158,6 +159,22 @@ public class IncludesImpl implements Includes {
     @Override
 	public void setUniqueIndexesOnly(boolean b) {
         uniqueIndexes = b;
+    }
+    
+    /* (non-Javadoc)
+     * @See org.teiid.designer.jdbc.metadata.Includes#setCalculateCosting(boolean)
+     */
+    @Override
+	public void setCalculateCosting( boolean enableCosting ) {
+        calculateCosting = enableCosting;
+    }
+
+    /* (non-Javadoc)
+     * @See org.teiid.designer.jdbc.metadata.Includes#isCalculateCosting()
+     */
+    @Override
+	public boolean isCalculateCosting() {
+        return calculateCosting;
     }
 
 }

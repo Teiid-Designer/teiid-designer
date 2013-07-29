@@ -8,7 +8,6 @@
 package org.teiid.designer.jdbc.ui.actions;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -39,15 +38,10 @@ import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.jdbc.JdbcUtil;
 import org.teiid.designer.jdbc.relational.CostAnalyzer;
 import org.teiid.designer.jdbc.relational.CostAnalyzerFactory;
-import org.teiid.designer.jdbc.relational.impl.ColumnStatistics;
 import org.teiid.designer.jdbc.relational.impl.TableStatistics;
 import org.teiid.designer.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 import org.teiid.designer.jdbc.ui.ModelerJdbcUiConstants;
 import org.teiid.designer.jdbc.ui.ModelerJdbcUiPlugin;
-import org.teiid.designer.metamodels.relational.Catalog;
-import org.teiid.designer.metamodels.relational.Column;
-import org.teiid.designer.metamodels.relational.Schema;
-import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
@@ -158,7 +152,8 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
             final JdbcSource source = JdbcUtil.findJdbcSource(resource);
             if (source != null) {
                 final List emfTables = RelationalUtil.findTables(resource);
-                final Map tblStats = createTableInfos(emfTables);
+                final CostAnalyzerFactory analyzerFactory = CostAnalyzerFactory.getCostAnalyzerFactory();
+                final Map tblStats = analyzerFactory.createTableInfos(emfTables);
                 if (tblStats != null && tblStats.size() > 0) {
                     CostAnalysisDialog dialog = new CostAnalysisDialog(
                                                                        shell,
@@ -175,14 +170,13 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
                                 try {
                                     monitor.beginTask(InternalModelerJdbcUiPluginConstants.Util.getString("JdbcCostAnalysisAction.taskDescription"), calculateNumberOfWorkIncrements(tblStats.values())); //$NON-NLS-1$
 
-                                    CostAnalyzer costAnalyzer = CostAnalyzerFactory.getCostAnalyzerFactory().getCostAnalyzer(source,
-                                                                                                                             password);
+                                    CostAnalyzer costAnalyzer = analyzerFactory.getCostAnalyzer(source,password);
                                     // log output to standard out
                                     // costAnalyzer.setOutputStream(System.out);
                                     costAnalyzer.collectStatistics(tblStats, monitor);
 
                                     if (!monitor.isCanceled()) {
-                                        populateEmfColumnStatistics(emfTables, tblStats);
+                                    	analyzerFactory.populateEmfColumnStatistics(emfTables, tblStats);
                                     }
 
                                     monitor.done();
@@ -234,78 +228,6 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
             numWorkInc += tblStat.getColumnStats().size();
         }
         return numWorkInc;
-    }
-
-    /**
-     * @param emfTables the list of emf tables in this jdbc source physical relational model
-     * @param tableInfos the map of value objects containing the newly-computed column statistics
-     * @since 4.3
-     */
-    void populateEmfColumnStatistics( List emfTables,
-                                      Map tableInfos ) {
-        for (Iterator itTable = emfTables.iterator(); itTable.hasNext();) {
-            Table emfTable = (Table)itTable.next();
-            if (emfTable.getNameInSource() != null) {
-                TableStatistics tableInfo = (TableStatistics)tableInfos.get(unQualifyName(emfTable.getNameInSource()));
-                if (tableInfo != null) {
-                    emfTable.setCardinality(tableInfo.getCardinality());
-                    Map columnInfos = tableInfo.getColumnStats();
-                    for (Iterator itColumn = emfTable.getColumns().iterator(); itColumn.hasNext();) {
-                        Column emfColumn = (Column)itColumn.next();
-                        if (emfColumn.getNameInSource() != null) {
-                            ColumnStatistics columnInfo = (ColumnStatistics)columnInfos.get(unQualifyName(emfColumn.getNameInSource()));
-                            if (columnInfo != null) {
-                                emfColumn.setMinimumValue(columnInfo.getMin());
-                                emfColumn.setMaximumValue(columnInfo.getMax());
-                                emfColumn.setNullValueCount(columnInfo.getNumNullValues());
-                                emfColumn.setDistinctValueCount(columnInfo.getNumDistinctValues());
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Takes a list of emf table objects and breaks them down into the CostAnalyzer's TableInfo and ColumnInfo objects. NOTE: The
-     * keys used to populate the table and column info maps are the "name in source" field values, not the emf object names of the
-     * perspective objects.
-     * 
-     * @param emfTables
-     * @since 4.3
-     */
-    private Map createTableInfos( List emfTables ) {
-        if (emfTables != null) {
-            Map tableInfos = new HashMap();
-            for (Iterator tblIt = emfTables.iterator(); tblIt.hasNext();) {
-                Table emfTable = (Table)tblIt.next();
-                if (emfTable.getNameInSource() != null) {
-                    Catalog catalog = emfTable.getCatalog();
-                    String catalogName = catalog == null || catalog.getNameInSource() == null ? null : unQualifyName(catalog.getNameInSource());
-                    Schema schema = emfTable.getSchema();
-                    String schemaName = schema == null || schema.getNameInSource() == null ? null : unQualifyName(schema.getNameInSource());
-                    String tblName = emfTable.getNameInSource();
-                    TableStatistics tableInfo = new TableStatistics(catalogName, schemaName, tblName);
-                    Map columnInfos = tableInfo.getColumnStats();
-                    for (Iterator colIt = emfTable.getColumns().iterator(); colIt.hasNext();) {
-                        Column emfColumn = (Column)colIt.next();
-                        if (emfColumn.getNameInSource() != null) {
-                            String colName = unQualifyName(emfColumn.getNameInSource());
-                            ColumnStatistics columnInfo = new ColumnStatistics(colName);
-                            columnInfos.put(colName, columnInfo);
-                        }
-                    }
-                    tableInfos.put(unQualifyName(tblName), tableInfo);
-                }
-            }
-            return tableInfos;
-        }
-        return null;
-    }
-
-    private String unQualifyName( String qualifiedName ) {
-        return qualifiedName.substring(qualifiedName.lastIndexOf('.') + 1, qualifiedName.length());
     }
 
     class CostAnalysisDialog extends InputDialog {
