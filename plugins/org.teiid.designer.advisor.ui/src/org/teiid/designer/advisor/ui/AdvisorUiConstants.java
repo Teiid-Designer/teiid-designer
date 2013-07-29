@@ -59,6 +59,7 @@ public interface AdvisorUiConstants {
 	
 	String[] ASPECT_MODEL_DATA_SOURCES = {
 			COMMAND_IDS.IMPORT_DDL,
+			COMMAND_IDS.IMPORT_TEIID_CONNECTION_DDL,
 			COMMAND_IDS.IMPORT_FLAT_FILE,
 			COMMAND_IDS.IMPORT_XML_FILE,
 			COMMAND_IDS.IMPORT_XML_FILE_URL,
@@ -133,6 +134,7 @@ public interface AdvisorUiConstants {
 		// When 
 		String IMPORT_JDBC = "org.teiid.designer.importJdbcCommand";  //$NON-NLS-1$
 		String IMPORT_DDL = "org.teiid.designer.importDdlCommand";  //$NON-NLS-1$
+		String IMPORT_TEIID_CONNECTION_DDL = "org.teiid.designer.importTeiidConnectionDdlCommand";  //$NON-NLS-1$
 		String IMPORT_SALESFORCE = "org.teiid.designer.importSalesforceCommand";  //$NON-NLS-1$
 		String IMPORT_FLAT_FILE = "org.teiid.designer.importFlatFileCommand";  //$NON-NLS-1$
 		String IMPORT_XML_FILE = "org.teiid.designer.importXmlFileCommand";  //$NON-NLS-1$
@@ -184,6 +186,7 @@ public interface AdvisorUiConstants {
 		String EDIT_TEIID_SERVER = "org.teiid.designer.runtime.editTeiidServer"; //$NON-NLS-1$
 		String CREATE_DATA_SOURCE = "org.teiid.designer.runtime.createDataSource"; //$NON-NLS-1$
 		String SET_DEFAULT_TEIID_SERVER = "org.teiid.designer.runtime.setDefaultTeiidServer";  //$NON-NLS-1$
+		String SET_CONNECTION_PROFILE="org.teiid.designer.datatools.ui.actions.SetConnectionProfileAction";  //$NON-NLS-1$
 		
 	}
 	
@@ -192,6 +195,7 @@ public interface AdvisorUiConstants {
 		// When 
 		String IMPORT_JDBC = "Create relational source model from your JDBC source metadata";  //$NON-NLS-1$
 		String IMPORT_DDL = "Create relational source model from a local DDL file";  //$NON-NLS-1$
+		String IMPORT_TEIID_CONNECTION_DDL = "Create relational source model from Teiid data source connection DDL";  //$NON-NLS-1$
 		String IMPORT_SALESFORCE = "Create relational source model defined by your Salesforce metadata";  //$NON-NLS-1$
 		String IMPORT_FLAT_FILE = "Create view table to query a flat file source";  //$NON-NLS-1$
 		String IMPORT_XML_FILE = "Create view table to query your local or remote URL XML file source";  //$NON-NLS-1$
@@ -248,11 +252,13 @@ public interface AdvisorUiConstants {
 		String EDIT_TEIID_SERVER = "Edit the properties of an existing Teiid server"; //$NON-NLS-1$
 		String CREATE_DATA_SOURCE = "Create a data source (i.e. -ds.xml) on your Teiid server from source models or source connections in your workspace"; //$NON-NLS-1$
 		String SET_DEFAULT_TEIID_SERVER = "Select a teiid server as the default server, used to select the correct runtime client and for previewing models"; //$NON-NLS-1$
+		String SET_CONNECTION_PROFILE = "Set connection profile on a relational source model"; //$NON-NLS-1$
 	}
 	
 	interface COMMAND_LABELS {
 		String IMPORT_JDBC = Messages.CreateSourceModelFromJdbcSource;
 		String IMPORT_DDL = Messages.CreateSourceModelFromDdlFile;
+		String IMPORT_TEIID_CONNECTION_DDL = Messages.CreateSourceModelFromTeiidConnectionDdl;
 		String IMPORT_SALESFORCE = Messages.CreateSourceModelFromSalesforceDataSource;
 		String IMPORT_FLAT_FILE = Messages.ConsumeLocalFlatFileDataSource;
 		String IMPORT_XML_FILE = Messages.ConsumeXmlFileSource;
@@ -305,11 +311,13 @@ public interface AdvisorUiConstants {
 		String EDIT_TEIID_SERVER = Messages.EditTeiidServer;
 		String CREATE_DATA_SOURCE = Messages.CreateDataSource;
 		String SET_DEFAULT_TEIID_SERVER = Messages.SetDefaultTeiidServer;
+		String SET_CONNECTION_PROFILE = Messages.SetConnectionProfile;
 	}
 	
 	interface COMMAND_LABELS_SHORT {
 		String IMPORT_JDBC = Messages.CreateSourceModelFromJdbcSource_Short;
 		String IMPORT_DDL = Messages.CreateSourceModelFromDdlFile_Short;
+		String IMPORT_TEIID_CONNECTION_DDL = Messages.CreateSourceModelFromTeiidConnectionDdl_Short;
 		String IMPORT_SALESFORCE = Messages.CreateSourceModelFromSalesforceDataSource_Short; 
 		String IMPORT_FLAT_FILE = Messages.ConsumeLocalFlatFileDataSource_Short;
 		String IMPORT_XML_FILE = Messages.ConsumeXmlFileSource_Short;
@@ -361,6 +369,7 @@ public interface AdvisorUiConstants {
 		String EDIT_TEIID_SERVER = Messages.EditTeiidServer_Short;
 		String CREATE_DATA_SOURCE = Messages.CreateDataSource;
 		String SET_DEFAULT_TEIID_SERVER = Messages.SetDefaultTeiidServer_Short;
+		String SET_CONNECTION_PROFILE = Messages.SetConnectionProfile_Short;
 	}
 
 	interface MODEL_IDS {
@@ -509,6 +518,7 @@ public interface AdvisorUiConstants {
         String HELP_ICON = CTOOL16 + "linkto_help.gif"; //$NON-NLS-1$
         String PROBLEMS_VIEW = CTOOL16 + "problems_view.gif"; //$NON-NLS-1$
         String NEW_MODEL = CTOOL16 + "newmodel_wiz.gif"; //$NON-NLS-1$
+        String IMPORT_TEIID_CONNECTION_DDL = CTOOL16 + "import-teiid-connection.png"; //$NON-NLS-1$
         // --------------------------------------------------------------------------------
 	}
 	

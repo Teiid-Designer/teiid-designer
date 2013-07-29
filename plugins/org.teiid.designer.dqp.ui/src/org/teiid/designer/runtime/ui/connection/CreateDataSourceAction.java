@@ -18,6 +18,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
@@ -27,6 +28,7 @@ import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.dialog.AbstractPasswordDialog;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -102,19 +104,26 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
 
             ITeiidServer teiidServer = cachedServer;
             if (teiidServer == null) {
-                if (DqpPlugin.getInstance().getServerManager().getDefaultServer() == null) {
-                    MessageDialog.openConfirm(iww.getShell(), getString("noServer.title"), //$NON-NLS-1$
-                                              getString("noServer.message")); //$NON-NLS-1$
-                    return;
-                } else if (DqpPlugin.getInstance().getServerManager().getDefaultServer().isConnected()) {
-                    teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
-                } else {
-                    MessageDialog.openConfirm(iww.getShell(), getString("noServerConnection.title"), //$NON-NLS-1$
-                                              getString("noServerConnection.message")); //$NON-NLS-1$
-                    return;
-                }
-
-                teiidServer.connect();
+            	if( RuntimeAssistant.ensureServerConnection(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+            			getString("noServer.message") ) ) { //$NON-NLS-1$
+            		teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+            		teiidServer.connect();	
+            	} else {
+            		return;
+            	}
+//                if (DqpPlugin.getInstance().getServerManager().getDefaultServer() == null) {
+//                    MessageDialog.openConfirm(iww.getShell(), getString("noServer.title"), //$NON-NLS-1$
+//                                              getString("noServer.message")); //$NON-NLS-1$
+//                    return;
+//                } else if (DqpPlugin.getInstance().getServerManager().getDefaultServer().isConnected()) {
+//                    teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+//                } else {
+//                    MessageDialog.openConfirm(iww.getShell(), getString("noServerConnection.title"), //$NON-NLS-1$
+//                                              getString("noServerConnection.message")); //$NON-NLS-1$
+//                    return;
+//                }
+//
+//                teiidServer.connect();
             }
 
             Collection<ModelResource> relationalModels = getRelationalModelsWithConnections();

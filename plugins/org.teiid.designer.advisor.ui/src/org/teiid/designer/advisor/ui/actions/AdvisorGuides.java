@@ -20,6 +20,7 @@ public class AdvisorGuides implements AdvisorUiConstants {
 	Map<String, AdvisorActionInfo[]> actionInfoMap;
 	
 	public static final String MODEL_JDBC_SOURCE = Messages.ModelJdbcSource;
+	public static final String MODEL_TEIID_DATA_SOURCE = Messages.ModelTeiidDataSourceDDL;
 	public static final String MODEL_FLAT_FILE_SOURCE = Messages.ModelFlatFileSource;
 	public static final String MODEL_REMOTE_XML_SOURCE = Messages.ModelRemoteXmlFileSource;
 	public static final String MODEL_LOCAL_XML_SOURCE = Messages.ModelLocalXmlFileSource;
@@ -97,6 +98,29 @@ public class AdvisorGuides implements AdvisorUiConstants {
 
         infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
 		actionInfoMap.put(TEIID_SERVER_ACTIONS, infoArray);
+		
+		// =============================================================================
+		//
+		//		Create project
+		//	**	Create Data Source (Optional)
+		//		Assign REST properties (MED)
+		//		Create VDB with view model
+		//	**	Deploy VDB
+		//	**	Generate DS for VDB
+		//		Generate REST WAR
+		//		Deploy REST WAR
+		// =============================================================================
+		
+		infoList = new ArrayList<AdvisorActionInfo>();
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.CREATE_DATA_SOURCE));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.IMPORT_TEIID_CONNECTION_DDL));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.SET_CONNECTION_PROFILE));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_VDB));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EXECUTE_VDB));
+        infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
+		actionInfoMap.put(MODEL_TEIID_DATA_SOURCE, infoArray);
 		
 		// =============================================================================
 		// Create REST Web services WAR file

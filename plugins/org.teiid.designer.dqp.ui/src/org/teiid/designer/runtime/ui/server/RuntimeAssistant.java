@@ -180,8 +180,8 @@ public final class RuntimeAssistant {
         assert (getServer() != null);
 
         if (!getServer().isConnected()) {
-            MessageDialog.openError(shell, UTIL.getString(PREFIX + "teiidNotConnectedTitle"), //$NON-NLS-1$
-                                    UTIL.getString(PREFIX + "teiidNotConnectedMsg", getServer().getHost())); //$NON-NLS-1$
+            MessageDialog.openWarning(shell, UTIL.getString(PREFIX + "teiidNotConnectedTitle"), //$NON-NLS-1$
+                                    UTIL.getString(PREFIX + "teiidNotConnectedMsg", getServer().getDisplayName())); // getServer().getHost())); //$NON-NLS-1$
             return false;
         }
 

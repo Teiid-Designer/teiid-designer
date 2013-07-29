@@ -27,6 +27,7 @@ public class ImportMetadataAction extends Action implements AdvisorUiConstants {
 	public static final String WSDL_TO_RELATIONAL = "org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ImportWsdlSoapWizardID"; //$NON-NLS-1$
 	public static final String SALESFORCE_TO_RELATIONAL = "SalesforceToRelationalImportWizard"; //$NON-NLS-1$
 	public static final String DDL_TO_RELATIONAL = "org.teiid.designer.ddl.importer.ui.ddlImportWizard"; //$NON-NLS-1$
+	public static final String TEIID_CONNECTION_DDL_TO_RELATIONAL = "teiidImportWizard"; //$NON-NLS-1$
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS
     // /////////////////////////////////////////////////////////////////////////////////////////////

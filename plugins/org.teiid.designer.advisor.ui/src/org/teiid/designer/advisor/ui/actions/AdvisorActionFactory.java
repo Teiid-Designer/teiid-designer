@@ -13,13 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.datatools.connectivity.IProfileListener;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.datatools.connectivity.db.generic.ui.wizard.NewJDBCFilteredCPWizard;
@@ -39,6 +38,7 @@ import org.eclipse.ui.cheatsheets.OpenCheatSheetAction;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.Messages;
+import org.teiid.designer.datatools.ui.actions.SetConnectionProfileAction;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
@@ -58,7 +58,7 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 /**
  * Factory intended to provide high-level access to actions and their handlers for Teiid Designer Advisor framework
  */
-public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChangeListener {
+public class AdvisorActionFactory implements AdvisorUiConstants {
 	static boolean actionsLoaded = false;
 	
     static final String EXT_PT = "cheatSheetContent"; //$NON-NLS-1$
@@ -73,6 +73,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	static Collection<IAction> cheatSheetActions;
 	
 	static IAction ACTION_IMPORT_DDL;
+	static IAction ACTION_IMPORT_TEIID_CONNECTION_DDL;
 	static IAction ACTION_IMPORT_FLAT_FILE;
 	static IAction ACTION_IMPORT_JDBC;
 	static IAction ACTION_IMPORT_SALESFORCE;
@@ -153,6 +154,11 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         		COMMAND_LABELS.IMPORT_XML_FILE_URL, 
         		COMMAND_LABELS_SHORT.IMPORT_XML_FILE_URL,
         		COMMAND_DESC.IMPORT_XML_FILE_URL);
+        addActionHandler(
+        		COMMAND_IDS.IMPORT_TEIID_CONNECTION_DDL, 
+        		COMMAND_LABELS.IMPORT_TEIID_CONNECTION_DDL, 
+        		COMMAND_LABELS_SHORT.IMPORT_TEIID_CONNECTION_DDL,
+        		COMMAND_DESC.IMPORT_TEIID_CONNECTION_DDL);
         addActionHandler(
         		COMMAND_IDS.CREATE_CONNECTION_FLAT_FILE, 
         		COMMAND_LABELS.CREATE_CONNECTION_FLAT_FILE, 
@@ -325,6 +331,11 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
                 COMMAND_LABELS.DEPLOY_WAR,
                 COMMAND_LABELS_SHORT.DEPLOY_WAR,
                 COMMAND_DESC.DEPLOY_WAR);
+        addActionHandler(
+        		COMMAND_IDS.SET_CONNECTION_PROFILE, 
+        		COMMAND_LABELS.SET_CONNECTION_PROFILE, 
+        		COMMAND_LABELS_SHORT.SET_CONNECTION_PROFILE,
+        		COMMAND_DESC.SET_CONNECTION_PROFILE);
         
         addActionHandler(
         		CHEAT_SHEET_IDS.MODEL_FROM_JDBC_SOURCE, 
@@ -441,6 +452,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_WSDL_TO_WS)) {
 			launchWizard(ImportMetadataAction.WSDL_TO_WEB_SERVICE, properties, synchronous);
+			 return;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_TEIID_CONNECTION_DDL)) {
+			 launchWizard(ImportMetadataAction.TEIID_CONNECTION_DDL_TO_RELATIONAL, properties, synchronous);
 			 return;
 		}
 		
@@ -629,6 +644,13 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 			action.run();
 	        return;
 		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.SET_CONNECTION_PROFILE)) {
+            SetConnectionProfileAction action = new SetConnectionProfileAction();
+            action.setProperties(properties);
+            action.setConnectionProfile();
+            return;
+        }
 
 
 		if( id.equalsIgnoreCase(CHEAT_SHEET_IDS.CONSUME_SOAP_SERVICE) ||
@@ -682,6 +704,9 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_WSDL_TO_WS)) {
 			return Images.IMPORT_WSDL;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_TEIID_CONNECTION_DDL)) {
+			return Images.IMPORT_TEIID_CONNECTION_DDL;
 		}
 		
 		// NEW MODEL OPTIONS
@@ -833,6 +858,9 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		if(	id.equalsIgnoreCase(CHEAT_SHEET_IDS.MULTI_SOURCE_VDB) ) {
 			return CHEAT_SHEET_IMAGE_IDS.MULTI_SOURCE_VDB;
 		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.SET_CONNECTION_PROFILE) ) {
+			return Images.NEW_CONNECTION_PROFILE;
+		}
 
 		return null;
 	}
@@ -868,11 +896,6 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		}
 		
 		ProfileManager.getInstance().removeProfileListener(listener);
-	}
-
-	@Override
-	public void propertyChange(PropertyChangeEvent event) {
-		
 	}
 
 	public static void addActionsLibraryToMenu(IMenuManager manager) {
@@ -925,6 +948,9 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		// IMPORT OPTIONS
 		if( commandId.equalsIgnoreCase(COMMAND_IDS.IMPORT_DDL)) {
 			 return ACTION_IMPORT_DDL;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.IMPORT_TEIID_CONNECTION_DDL)) {
+			 return ACTION_IMPORT_TEIID_CONNECTION_DDL;
 		}
 		if( commandId.equalsIgnoreCase(COMMAND_IDS.IMPORT_FLAT_FILE)) {
 			return ACTION_IMPORT_FLAT_FILE;
@@ -1068,6 +1094,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         }
 		
 		ACTION_IMPORT_DDL = createAction(COMMAND_IDS.IMPORT_DDL);
+		ACTION_IMPORT_TEIID_CONNECTION_DDL = createAction(COMMAND_IDS.IMPORT_TEIID_CONNECTION_DDL);
 		ACTION_IMPORT_FLAT_FILE = createAction(COMMAND_IDS.IMPORT_FLAT_FILE);
 		ACTION_IMPORT_JDBC = createAction(COMMAND_IDS.IMPORT_JDBC);
 		ACTION_IMPORT_SALESFORCE = createAction(COMMAND_IDS.IMPORT_SALESFORCE);

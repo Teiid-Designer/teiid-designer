@@ -15,11 +15,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.datatools.connectivity.drivers.DriverInstance;
 import org.eclipse.datatools.connectivity.drivers.DriverManager;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -41,6 +43,7 @@ import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
+import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 
 
@@ -51,6 +54,9 @@ public class SetConnectionProfileAction extends SortableSelectionAction {
     private static final String label = DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.title"); //$NON-NLS-1$
 
     private static final String NO_PROFILE_PROVIDER_FOUND_KEY = "NoProfileProviderFound"; //$NON-NLS-1$
+    
+    private Properties designerProperties;
+    private IConnectionProfile connectionProfile;
 
     /**
      * @since 5.0
@@ -100,18 +106,7 @@ public class SetConnectionProfileAction extends SortableSelectionAction {
                 succeeded = true;
             }
         } catch (Exception e) {
-        	String msg = e.getMessage();
-        	if( msg !=  null && msg.equalsIgnoreCase(NO_PROFILE_PROVIDER_FOUND_KEY) ) {
-        		MessageDialog.openWarning(getShell(),
-	                                    DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.noProvileProviderTitle"), //$NON-NLS-1$
-	                                    DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.noProvileProviderMessage")); //$NON-NLS-1$
-        	} else {
-	            MessageDialog.openError(getShell(),
-	                                    DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.exceptionMessage"), e.getMessage()); //$NON-NLS-1$
-	            IStatus status = new Status(IStatus.ERROR, DatatoolsUiConstants.PLUGIN_ID,
-	                                        DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.exceptionMessage"), e); //$NON-NLS-1$
-	            DatatoolsUiConstants.UTIL.log(status);
-        	}
+        	logException(e);
 
             return;
         } finally {
@@ -124,6 +119,21 @@ public class SetConnectionProfileAction extends SortableSelectionAction {
                 }
             }
         }
+    }
+    
+    private void logException(Exception e) {
+    	String msg = e.getMessage();
+    	if( msg !=  null && msg.equalsIgnoreCase(NO_PROFILE_PROVIDER_FOUND_KEY) ) {
+    		MessageDialog.openWarning(getShell(),
+                                    DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.noProvileProviderTitle"), //$NON-NLS-1$
+                                    DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.noProvileProviderMessage")); //$NON-NLS-1$
+    	} else {
+            MessageDialog.openError(getShell(),
+                                    DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.exceptionMessage"), e.getMessage()); //$NON-NLS-1$
+            IStatus status = new Status(IStatus.ERROR, DatatoolsUiConstants.PLUGIN_ID,
+                                        DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.exceptionMessage"), e); //$NON-NLS-1$
+            DatatoolsUiConstants.UTIL.log(status);
+    	}
     }
 
     /**
@@ -152,6 +162,47 @@ public class SetConnectionProfileAction extends SortableSelectionAction {
 
         return false;
     }
+    
+    public boolean setConnectionProfile() {
+    	ISelection selection = getSelection();
+    	
+    	if( selection == null || selection.isEmpty() ) {
+    		// Tell user they have not yet import to create their Source model yet.
+    		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), 
+    				DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.sourceModelUndefined.title"),  //$NON-NLS-1$
+    						DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.sourceModelUndefined.title")); //$NON-NLS-1$
+    		return false;
+    	}
+        IFile modelFile = (IFile)SelectionUtilities.getSelectedObjects(selection).get(0);
+        
+    	if( this.connectionProfile == null ) {
+            SelectConnectionProfileDialog dialog = new SelectConnectionProfileDialog(Display.getCurrent().getActiveShell());
+
+            dialog.open();
+
+            if (dialog.getReturnCode() == Window.OK) {
+                Object[] result = dialog.getResult();
+                if (result != null && result.length == 1) {
+                	this.connectionProfile = (IConnectionProfile)result[0];
+                }
+            }
+    	}
+
+        if( this.connectionProfile != null ) {
+            try {
+				updateJdbcSourceAndConnectionInfo(modelFile, this.connectionProfile);
+			} catch (Exception e) {
+				logException(e);
+				return false;
+			}
+
+            return true;
+        }
+    	
+    	return false;
+    }
+    
+    
 
     /**
      * @see org.teiid.designer.ui.actions.ISelectionAction#isApplicable(org.eclipse.jface.viewers.ISelection)
@@ -312,6 +363,25 @@ public class SetConnectionProfileAction extends SortableSelectionAction {
             }
         }
         return jdbcSource;
+    }
+    
+    public boolean setProperties(Properties properties) {
+    	this.designerProperties = properties;
+
+    	if( properties != null ) {
+    		String profileName = DesignerPropertiesUtil.getConnectionProfileName(designerProperties);
+	    	if( profileName != null ) {
+	    		this.connectionProfile = ProfileManager.getInstance().getProfileByName(profileName);
+	    	}
+	    	
+	    	IFile model = DesignerPropertiesUtil.getSourceModel(this.designerProperties);
+	    	if( model != null ) {
+	    		this.setSelection(new StructuredSelection(model));
+	    		return true;
+	    	}
+    	}
+    	
+    	return false;
     }
 
 
