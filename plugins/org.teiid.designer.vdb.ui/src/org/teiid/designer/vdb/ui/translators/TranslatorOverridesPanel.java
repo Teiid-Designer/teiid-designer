@@ -430,6 +430,7 @@ public final class TranslatorOverridesPanel extends Composite {
     				
     			}
     		});
+            this.addPropertyButton.setEnabled(false);
             
             this.restorePropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
             this.restorePropertyButton.setEnabled(false);
