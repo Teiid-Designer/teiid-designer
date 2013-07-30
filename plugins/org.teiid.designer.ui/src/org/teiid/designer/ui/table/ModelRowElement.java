@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.ui.table;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EFactory;
@@ -25,6 +28,7 @@ import org.teiid.designer.core.ObjectExtension;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.properties.ModelObjectPropertySource;
+import org.teiid.designer.ui.properties.extension.ModelExtensionPropertyDescriptor;
 import org.teiid.designer.ui.properties.udp.ExtensionPropertyDescriptor;
 import org.teiid.designer.ui.properties.udp.ExtensionPropertySource;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
@@ -43,22 +47,49 @@ public class ModelRowElement {
     
     /** the PropertySource for this EObject, obtained from the EMF PropertySourceProvider */ 
     private IPropertySource propertySource;
+    private Map propIdDescriptorMap; // key=property ID, value=IPropertyDescriptor
     
     /**
      * Construct an instance of ModelRowElement representing the specified modelObject.
-     * @param modelObject
-     * @param tableModel
+     * @param modelObject the model object
+     * @param tableModel the table model
      */
     public ModelRowElement(EObject modelObject, ModelObjectTableModel tableModel) {
         this.modelObject = modelObject;
         this.tableModel = tableModel;
         this.propertySource = tableModel.getPropertySource(modelObject);
+        setModelExtensionPropertyIdDescriptorMap();
+    }
+    
+    /**
+     * Populates a map with the ModelExtensionProperyDescriptors for setting values on the extension properties.  The ModelObjectTableModel handles
+     * other properties, but it's method does not work with the Extension Properties.  They need the unique ModelExtensionPropertyDescriptor to set
+     * the extension properties
+     */
+    private void setModelExtensionPropertyIdDescriptorMap() {
+    	propIdDescriptorMap = new HashMap();
+    	IPropertyDescriptor[] properties = this.propertySource.getPropertyDescriptors();
+    	for (int i = 0; i < properties.length; ++i) {
+    		Object id = properties[i].getId();
+        	if(id instanceof ModelExtensionPropertyDescriptor) {
+                propIdDescriptorMap.put(((ModelExtensionPropertyDescriptor) id).getPropDefnId(), properties[i]);
+        	}
+    	}
+    }
+    
+    /**
+     * Gets the <code>IPropertyDescriptor</code> for the given property identifier.
+     * @param thePropertyDefnId the identifier of the descriptor being requested
+     * @return the descriptor or <code>null</code> if not found
+     */
+    private IPropertyDescriptor getModelExtensionPropertyDescriptor(String thePropertyDefnId) {
+        return (IPropertyDescriptor)propIdDescriptorMap.get(thePropertyDefnId);
     }
 
     /**
      * Get the true Object value for the modelObject property that can be used in a cell editor.
-     * @param propertyID
-     * @return
+     * @param propertyID the property id
+     * @return the value object
      */
     public final Object getValueObject(String propertyID) {
         if ( propertyID.equals(UiConstants.LOCATION_KEY) ) {
@@ -68,8 +99,9 @@ public class ModelRowElement {
             // return this object's description
             return ModelObjectUtilities.getDescription(modelObject);
         } else { 
-            // get the value from the PropertySource
-            Object value = propertySource.getPropertyValue(tableModel.getPropertyId(propertyID)); 
+        	// get the value from the PropertySource. 
+        	Object propId = getPropertyId(propertyID);
+            Object value = propertySource.getPropertyValue(propId); 
             
             if ( value instanceof ItemPropertyDescriptor.PropertyValueWrapper ) {
                 value = ((ItemPropertyDescriptor.PropertyValueWrapper) value).getEditableValue(this.modelObject); 
@@ -81,9 +113,9 @@ public class ModelRowElement {
     /**
      * Determine if the proposed value is invalid and, if so, return an error message that
      * can be displayed to the user.
-     * @param propertyID
-     * @param value
-     * @return
+     * @param propertyID the property id
+     * @param value the proposed value
+     * @return the invalid value message
      */
     public final String getInvalidValueMessage(String propertyID, Object value) {
         String result = null;
@@ -150,9 +182,9 @@ public class ModelRowElement {
     /**
      * Determine if the proposed value is invalid and, if so, return an error message that
      * can be displayed to the user.
-     * @param propertyID
-     * @param value
-     * @return
+     * @param propertyID the property id
+     * @param value the property value
+     * @return the column error message
      */
     public final String getReferenceColumnMessage(String propertyID, Object value) {
         String result = null;
@@ -184,9 +216,9 @@ public class ModelRowElement {
     /**
      * Determine if the proposed value is invalid and, if so, return an error message that
      * can be displayed to the user.
-     * @param propertyID
-     * @param value
-     * @return
+     * @param propertyID the property descriptor
+     * @param value the value
+     * @return the invalid value message
      */
     public final String getInvalidValueMessage(ExtensionPropertyDescriptor propertyID, Object value) {
         String result = null;
@@ -204,7 +236,8 @@ public class ModelRowElement {
 
     /**
      * Get the value for the modelObject for the specified propertyID.
-     * @return
+     * @param propertyID the property id
+     * @param value the value
      */
     public final void setValue(String propertyID, Object value){
         if ( propertyID.equals(UiConstants.DESCRIPTION_KEY) ) {
@@ -244,14 +277,17 @@ public class ModelRowElement {
                     }
                 }
                     
-                Object currentValue = propertySource.getPropertyValue(tableModel.getPropertyId(propertyID));
+                // Get the property Id.  
+                Object propId = getPropertyId(propertyID);
+                // Get current Value from propertySource
+                Object currentValue = propertySource.getPropertyValue(propId);
                 if ( currentValue == null ) {
                     if ( value != null ) {
-                        propertySource.setPropertyValue(tableModel.getPropertyId(propertyID), value);
+                        propertySource.setPropertyValue(propId, value);
                     }
                 } else {
                     if ( ! currentValue.equals(value) ) {
-                        propertySource.setPropertyValue(tableModel.getPropertyId(propertyID), value);
+                        propertySource.setPropertyValue(propId, value);
                     }
                 }                        
 
@@ -266,8 +302,9 @@ public class ModelRowElement {
     }
 
     /**
-     * Get the value for the modelObject for the specified propertyID.
-     * @return
+     * Set the value for the modelObject for the specified propertyID.
+     * @param descriptor the property descriptor
+     * @param value the new property value
      */
     public final void setValue(ExtensionPropertyDescriptor descriptor, Object value){
         try {  
@@ -284,7 +321,8 @@ public class ModelRowElement {
 
     /**
      * Get string representation of the value for the modelObject for the indexed property.
-     * @return
+     * @param index the column index
+     * @return the value object
      */
     public final Object getValue(int index){
         Object result = null;
@@ -299,7 +337,11 @@ public class ModelRowElement {
         } else if (tableModel.isDescriptionColumn(propertyId)) {
             result = ModelObjectUtilities.getDescription(modelObject);
         } else {
-            IPropertyDescriptor descriptor = this.tableModel.getPropertyDescriptor(propertyId);
+        	IPropertyDescriptor descriptor = getPropertyDescriptor(propertyId);
+        	// if the propertyId is a ModelExtensionProperty, get the propId from the descriptor
+        	if(propertyId instanceof ModelExtensionPropertyDescriptor) {
+        		propertyId = descriptor.getId();
+        	}
             result = descriptor.getLabelProvider().getText(propertySource.getPropertyValue(propertyId));
         }
         
@@ -307,9 +349,39 @@ public class ModelRowElement {
     }
     
     /**
+     * Convenience method for obtaining the PropertyDescriptor from the propertyId object
+     * @param propertyId the property id object
+     * @return the property descriptor
+     */
+    public final IPropertyDescriptor getPropertyDescriptor(Object propertyId) {
+    	IPropertyDescriptor descriptor = this.tableModel.getPropertyDescriptor(propertyId);
+    	// if the propertyId is a ModelExtensionProperty, get the descriptor from this ModelRowElement
+    	if(propertyId instanceof ModelExtensionPropertyDescriptor) {
+    		descriptor = getModelExtensionPropertyDescriptor(((ModelExtensionPropertyDescriptor)propertyId).getPropDefnId());
+    	} 
+
+    	return descriptor;
+    }
+    
+    /**
+     * Convenience method for obtaining the PropertyId object from the propertyId string
+     * @param propertyId the property id string
+     * @return the property id
+     */
+    public final Object getPropertyId(String propertyId) {
+        Object propId = tableModel.getPropertyId(propertyId);
+    	if(propId instanceof ModelExtensionPropertyDescriptor) {
+    		IPropertyDescriptor descriptor = getModelExtensionPropertyDescriptor(((ModelExtensionPropertyDescriptor)propId).getPropDefnId());
+    		propId = descriptor.getId();
+    	}
+
+    	return propId;
+    }
+    
+    /**
      * Convenience method for obtaining a propertyID for a column index.
-     * @param index
-     * @return
+     * @param index the column index
+     * @return the property id
      */
     public final Object getPropertyIdForColumn(int index) {
         return tableModel.getPropertyIdAtIndex(index);
@@ -317,7 +389,7 @@ public class ModelRowElement {
 
     /**
      * Get the EObject represented by this row.
-     * @return
+     * @return the ModelObject for this row
      */
     public EObject getModelObject() {
         return modelObject;
