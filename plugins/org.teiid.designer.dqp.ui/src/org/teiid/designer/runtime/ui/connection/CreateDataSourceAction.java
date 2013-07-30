@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -132,41 +131,41 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
             wizard.init(iww.getWorkbench(), new StructuredSelection());
             final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
             final int rc = dialog.open();
-            if (rc == Window.OK) {
-                // Need to check if the connection needs a password
+            if (rc != Window.OK)
+                return;
 
-                TeiidDataSourceInfo info = wizard.getTeiidDataSourceInfo();
-                Properties props = info.getProperties();
-                IConnectionInfoProvider provider = info.getConnectionInfoProvider();
-                boolean cancelledPassword = false;
-                if (null != provider.getDataSourcePasswordPropertyKey() && props.get(provider.getDataSourcePasswordPropertyKey()) == null) {
-                    if (provider.requiresPassword(provider.getConnectionProfile(modelResource))) {
-            
-	                    int result = new AbstractPasswordDialog(iww.getShell(), getString("passwordTitle"), null) { //$NON-NLS-1$
-	                        @SuppressWarnings( "synthetic-access" )
-	                        @Override
-	                        protected boolean isPasswordValid( final String password ) {
-	                            pwd = password;
-	                            return true;
-	                        }
-	                    }.open();
-	                    if (result == Window.OK) {
-	                        props.put(provider.getDataSourcePasswordPropertyKey(), this.pwd);
-	                    } else {
-	                    	cancelledPassword = true;
-	                    }
+            // Need to check if the connection needs a password
+
+            TeiidDataSourceInfo info = wizard.getTeiidDataSourceInfo();
+            Properties props = info.getProperties();
+            IConnectionInfoProvider provider = info.getConnectionInfoProvider();
+            boolean cancelledPassword = false;
+            if (null != provider.getDataSourcePasswordPropertyKey() && props.get(provider.getDataSourcePasswordPropertyKey()) == null) {
+                if (info.requiresPassword()) {
+
+                    int result = new AbstractPasswordDialog(iww.getShell(), getString("passwordTitle"), null) { //$NON-NLS-1$
+                        @SuppressWarnings( "synthetic-access" )
+                        @Override
+                        protected boolean isPasswordValid( final String password ) {
+                            pwd = password;
+                            return true;
+                        }
+                    }.open();
+                    if (result == Window.OK) {
+                        props.put(provider.getDataSourcePasswordPropertyKey(), this.pwd);
+                    } else {
+                        cancelledPassword = true;
                     }
                 }
-
-                if( !cancelledPassword) {
-	                teiidServer.getOrCreateDataSource(info.getDisplayName(),
-	                                                     info.getJndiName(),
-	                                                     provider.getDataSourceType(),
-	                                                     props);
-                }
-
             }
-            // createDataSource(modelFile);
+
+            if( !cancelledPassword) {
+                teiidServer.getOrCreateDataSource(info.getDisplayName(),
+                                                  info.getJndiName(),
+                                                  provider.getDataSourceType(),
+                                                  props);
+            }
+
         } catch (Exception e) {
             if (modelResource != null) {
                 MessageDialog.openError(getShell(),

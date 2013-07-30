@@ -21,6 +21,7 @@ public class TeiidDataSourceInfo {
     private String jndiName;
     private Properties properties;
     private IConnectionInfoProvider connectionInfoProvider;
+    private boolean requiresPassword;
 
     public TeiidDataSourceInfo() {
 
@@ -31,16 +32,19 @@ public class TeiidDataSourceInfo {
      * @param jndiName
      * @param properties
      * @param connectionInfoProvider
+     * @param requiresPassword
      */
     public TeiidDataSourceInfo( String displayName,
                                 String jndiName,
                                 Properties properties,
-                                IConnectionInfoProvider connectionInfoProvider) {
+                                IConnectionInfoProvider connectionInfoProvider,
+                                boolean requiresPassword) {
         super();
         this.displayName = displayName;
         this.jndiName = jndiName;
         this.properties = properties;
         this.connectionInfoProvider = connectionInfoProvider;
+        this.requiresPassword = requiresPassword;
     }
 
     /**
@@ -99,4 +103,17 @@ public class TeiidDataSourceInfo {
         this.connectionInfoProvider = connectionInfoProvider;
     }
 
+    /**
+     * @return the requiresPassword
+     */
+    public boolean requiresPassword() {
+        return this.requiresPassword;
+    }
+
+    /**
+     * @param requiresPassword the requiresPassword to set
+     */
+    public void setRequiresPassword(boolean requiresPassword) {
+        this.requiresPassword = requiresPassword;
+    }
 }

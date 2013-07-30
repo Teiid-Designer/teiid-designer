@@ -119,6 +119,8 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
 
     ConnectionProfileWorker profileWorker;
 
+    private boolean connRequiresPassword = false;
+
     /**
      * @since 4.0
      */
@@ -482,7 +484,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
 
     public TeiidDataSourceInfo getTeiidDataSourceInfo() {
         TeiidDataSourceInfo info = new TeiidDataSourceInfo(dataSourceName, dataSourceName, teiidDataSourceProperties,
-                                                           currentProvider);
+                                                           currentProvider, connRequiresPassword);
         return info;
     }
 
@@ -526,6 +528,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
                         currentProvider = provider;
                         IConnectionProfile modelCP = provider.getConnectionProfile(selectedModelResource);
                         props = provider.getTeiidRelatedProperties(modelCP);
+                        connRequiresPassword = provider.requiresPassword(provider.getConnectionProfile(selectedModelResource));
                     }
                 } catch (ModelWorkspaceException e) {
                     DqpUiConstants.UTIL.log(e);
@@ -539,6 +542,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
                 if (provider != null) {
                     currentProvider = provider;
                     props = provider.getTeiidRelatedProperties(profileWorker.getConnectionProfile());
+                    connRequiresPassword = provider.requiresPassword(profileWorker.getConnectionProfile());
                 }
             } catch (ModelWorkspaceException e) {
                 DqpUiConstants.UTIL.log(e);

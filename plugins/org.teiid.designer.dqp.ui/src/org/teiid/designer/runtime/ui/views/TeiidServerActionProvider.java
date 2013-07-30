@@ -422,34 +422,29 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 if (teiidServerConnected) {
                     manager.add(this.disconnectAction);
                 }
-            
-                if (teiidServerConnected) {
-                    manager.add(this.createDataSourceAction);
-                }
-                
+
                 manager.add(new Separator());
                 manager.add(this.editServerAction);
                 manager.add(new Separator());
-                
+
+                if (teiidServerConnected && selection instanceof DataSourcesFolder) {
+                    manager.add(this.createDataSourceAction);
+                }
             }
-            
+
             if (RuntimeAssistant.adapt(selection, ITeiidDataSource.class) != null) {
+                // If we have a legitimate teiid data source then the server must be connected
                 manager.add(this.deleteDataSourceAction);                
                 manager.add(new Separator());
-                
             }
-            
+
             if (RuntimeAssistant.adapt(selection, ITeiidVdb.class) != null) {
+             // If we have a legitimate teiid vdb then the server must be connected
                 ITeiidVdb teiidVdb = RuntimeAssistant.adapt(selection, ITeiidVdb.class);
                 this.executeVdbAction.setEnabled(teiidVdb.isActive());
                 manager.add(this.executeVdbAction);
                 manager.add(new Separator());
                 manager.add(this.undeployVdbAction);
-                
-            }
-            
-            if (selection instanceof DataSourcesFolder) {
-                manager.add(this.createDataSourceAction);
             }
             
         } else {
@@ -459,6 +454,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             
             for (Object obj : selectedObjs) {
                 if (RuntimeAssistant.adapt(obj, ITeiidDataSource.class) == null) {
+                 // If we have legitimate teiid data sources then the server must be connected
                     allDataSources = false;
                     break;
                 }
@@ -470,6 +466,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             boolean allVdbs = true;
             for (Object obj : selectedObjs) {
                 if (RuntimeAssistant.adapt(obj, ITeiidVdb.class) == null) {
+                 // If we have legitimate teiid vdbs then the server must be connected
                     allVdbs = false;
                     break;
                 }
