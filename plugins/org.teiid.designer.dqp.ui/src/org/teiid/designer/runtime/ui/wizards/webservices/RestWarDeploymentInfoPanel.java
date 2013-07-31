@@ -9,7 +9,6 @@ package org.teiid.designer.runtime.ui.wizards.webservices;
 
 import java.util.Collections;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -32,14 +31,12 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.DqpUiStringUtil;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
-import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.viewsupport.DesignerProperties;
 
 
@@ -235,7 +232,7 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
         WidgetFactory.createLabel(pnlContents, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, this.WARFILELOCATION);
 
         // WAR file save location textfield
-        this.txfWarFileDeploymentLocation = WidgetFactory.createTextField(pnlContents, GridData.FILL_HORIZONTAL, 2);
+        this.txfWarFileDeploymentLocation = WidgetFactory.createTextField(pnlContents, GridData.FILL_HORIZONTAL, 1);
         text = getString("warFileSaveLocationTooltip"); //$NON-NLS-1$
         this.txfWarFileDeploymentLocation.setToolTipText(text);
 
@@ -415,10 +412,8 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
         this.txfJNDIName.setText(WarDataserviceModel.getInstance().getJndiNameDefault());
         this.targetVersionCombo.setText(_82_or_greater);
         this.engineJarFileLocation.setText(""); //$NON-NLS-1$
-        this.engineJarFileLocation.setEnabled(true);
         this.commonCoreJarFileLocation.setText(""); //$NON-NLS-1$
-        this.commonCoreJarFileLocation.setEnabled(true);
-        
+        handleVersionSelected();
     }
 
     void handleWarBrowseSourceSelected() {
@@ -429,7 +424,7 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
         String selectedUnit = folderDialog.open();
 
         if (selectedUnit != null) {
-            this.engineJarFileLocation.setText(selectedUnit);
+            this.txfWarFileDeploymentLocation.setText(selectedUnit);
         }
     }
     
@@ -468,12 +463,16 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
 
     	boolean version82_OrGreater = false;
     	if (this.targetVersionCombo.getText().equals(getString("82Text"))){ //$NON-NLS-1$
-    		version82_OrGreater=true;
-    		this.engineJarFileLocation.setEnabled(true);
-    		this.commonCoreJarFileLocation.setEnabled(true);
+            version82_OrGreater = true;
+            this.engineJarFileLocation.setEnabled(true);
+            this.selectEngineJar.setEnabled(true);
+            this.commonCoreJarFileLocation.setEnabled(true);
+            this.selectCommonCoreJar.setEnabled(true);
     	}else{
-    		this.engineJarFileLocation.setEnabled(false);
-    		this.commonCoreJarFileLocation.setEnabled(false);
+            this.engineJarFileLocation.setEnabled(false);
+            this.selectEngineJar.setEnabled(false);
+            this.commonCoreJarFileLocation.setEnabled(false);
+            this.selectCommonCoreJar.setEnabled(false);
     	}
         RestWarDataserviceModel.getInstance().setVersion82_OrGreater(version82_OrGreater);
     }
