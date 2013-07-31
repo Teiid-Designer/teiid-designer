@@ -173,6 +173,14 @@ public final class RuntimeAssistant {
     }
 
     /**
+     * Run the refresh server action
+     */
+    public static void runRefreshServerAction () {
+        RefreshServerAction action = new RefreshServerAction();
+        action.run();
+    }
+
+    /**
      * @param shell the shell where the dialog is displayed if necessary
      * @return <code>true</code> if connection exists
      */

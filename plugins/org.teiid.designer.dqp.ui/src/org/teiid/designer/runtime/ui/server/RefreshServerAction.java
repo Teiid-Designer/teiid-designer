@@ -8,14 +8,13 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
-import org.teiid.designer.runtime.TeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
-import org.teiid.designer.runtime.ui.views.content.ITeiidResourceNode;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
@@ -27,14 +26,16 @@ import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
  */
 public final class RefreshServerAction extends BaseSelectionListenerAction {
 
-    private Display display;
+    /**
+     * The currently selected server
+     */
+    private ITeiidServer selectedServer;
 
     /**
-     * @param display 
+     * Create new instance
      */
-    public RefreshServerAction(Display display) {
+    public RefreshServerAction() {
         super(UTIL.getString("serverRefreshActionText")); //$NON-NLS-1$
-        this.display = display;
         setToolTipText(UTIL.getString("serverRefreshActionToolTip")); //$NON-NLS-1$
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.REFRESH_ICON));
     }
@@ -46,21 +47,46 @@ public final class RefreshServerAction extends BaseSelectionListenerAction {
      */
     @Override
     public void run() {
-        IStructuredSelection sselection = getStructuredSelection();
-        final ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(sselection);
-        if (teiidServer == null)
+
+        /*
+         * Since this action can now be run from the RuntimeAssistant then
+         * selectedServer may be null. In which case, need to ask the user
+         * which server to be selected
+         */
+        if(this.selectedServer == null && !RuntimeAssistant.hasAvailableServers()) {
+            String title = UTIL.getString("noServerAvailableTitle"); //$NON-NLS-1$
+            String message = UTIL.getString("noServerAvailableMessage"); //$NON-NLS-1$
+            MessageDialog.openError(getShell(), title, message);
             return;
-        
-        UiBusyIndicator.showWhile(display, new Runnable() {
+        }
+        else if (this.selectedServer == null) {
+            this.selectedServer = RuntimeAssistant.selectServer(getShell(), false);
+            if(RuntimeAssistant.selectServerWasCancelled()) return;
+        }
+
+        if (selectedServer == null) {
+            String title = UTIL.getString("noServerAvailableTitle"); //$NON-NLS-1$
+            String message = UTIL.getString("serverRefreshNoServer"); //$NON-NLS-1$
+            MessageDialog.openInformation(getShell(), title, message);
+            return;
+        }
+
+        UiBusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
 
             @Override
             public void run() {
-                teiidServer.reconnect();
+                selectedServer.reconnect();
                 
-                if (teiidServer.getConnectionError() != null)
-                    WidgetUtil.showError(teiidServer.getConnectionError());
+                if (selectedServer.getConnectionError() != null)
+                    WidgetUtil.showError(selectedServer.getConnectionError());
+                else
+                    WidgetUtil.showNotification(UTIL.getString("serverRefreshServerSuccessful")); //$NON-NLS-1$
             }
         });
+    }
+
+    private static Shell getShell() {
+        return DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
     }
 
     /**
@@ -71,18 +97,21 @@ public final class RefreshServerAction extends BaseSelectionListenerAction {
     @Override
     protected boolean updateSelection( IStructuredSelection selection ) {
         
-        if (selection.size() != 1)
+     // disable if empty selection
+        if (selection.size() != 1) {
+            return false;
+        }
+        
+        // reset selected server collection
+        ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
+
+        // enable only if selected object is server
+        if (teiidServer == null)
             return false;
         
-        ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selection);
-        if (teiidServer != null && teiidServer.isParentConnected())
-            return true;
-        
-        Object element = selection.getFirstElement();
-        if (RuntimeAssistant.adapt(element, ITeiidResourceNode.class) != null)
-            return true;
-        
-        return false;
+        this.selectedServer = teiidServer;
+
+        return true;
     }
 
 }

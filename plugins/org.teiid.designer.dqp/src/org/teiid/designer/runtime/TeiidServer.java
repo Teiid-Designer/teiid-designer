@@ -235,12 +235,14 @@ public class TeiidServer implements ITeiidServer {
                 // Refresh is implied in the getting of the admin object since it will
                 // automatically load and refresh.
                 connect();
+            } else {
+                throw new Exception(DqpPlugin.Util.getString("serverParentNotConnectedErrorMsg")); //$NON-NLS-1$
             }
-            
+
             setConnectionError(null);
         } catch (Exception e) {
             DqpPlugin.Util.log(e);
-            String msg = DqpPlugin.Util.getString("serverReconnectErrorMsg", this); //$NON-NLS-1$
+            String msg = DqpPlugin.Util.getString("serverReconnectErrorMsg", this) + "\n" + e.getLocalizedMessage(); //$NON-NLS-1$ //$NON-NLS-2$
             setConnectionError(msg);
         }
     }
