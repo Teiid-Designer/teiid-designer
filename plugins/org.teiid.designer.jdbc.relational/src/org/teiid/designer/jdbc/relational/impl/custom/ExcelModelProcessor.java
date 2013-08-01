@@ -104,7 +104,7 @@ public class ExcelModelProcessor extends RelationalModelProcessorImpl {
             }
 
             // Build a map of the columns by their name so they can be found much more quickly ...
-            final Map columnsByName = createColumnMapKeyedByNames(table);
+            final Map columnsByName = createColumnMapKeyedByNames(table,tableNode,context,problems);
 
             // Go through the results
             boolean hasPrimaryKey = false;

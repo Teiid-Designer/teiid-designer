@@ -1563,7 +1563,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             }
 
             // Build a map of the columns by their name so they can be found much more quickly ...
-            final Map columnsByName = createColumnMapKeyedByNames(table);
+            final Map columnsByName = createColumnMapKeyedByNames(table,tableNode,context,problems);
 
             // Go through the results
             String pkName = null;
@@ -1657,7 +1657,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             }
 
             // Build a map of the columns by their name so they can be found much more quickly ...
-            final Map columnsByName = createColumnMapKeyedByNames(table);
+            final Map columnsByName = createColumnMapKeyedByNames(table,tableNode,context,problems);
 
             // Go through the results and assemble the rows that go with each foreign key
             // According to the JDBC spec, these rows are to be ordered by the KEY_SEQ
@@ -1741,7 +1741,9 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                                      fkSpec.pkCatalog,
                                                      fkSpec.pkSchema,
                                                      fkSpec.pkTable,
-                                                     columnNamesForPk);
+                                                     columnNamesForPk,
+                                                     context,
+                                                     problems);
                 if (ukey != null || includeIncompleteFKs) {
                     final ForeignKey fk = factory.createForeignKey();
                     fk.setTable((BaseTable)table);
@@ -1771,7 +1773,9 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                        final String catalogName,
                                        final String schemaName,
                                        final String tableName,
-                                       final List columnNames ) {
+                                       final List columnNames,
+                                       final Context context,
+                                       final List<String> problems) {
         // Build a path ...
         IPath path = new Path("/"); //$NON-NLS-1$
         if (catalogName != null && catalogName.trim().length() != 0) {
@@ -1828,14 +1832,14 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                         final BaseTable baseTable = (BaseTable)table;
                         // See if the primary key is a match ...
                         final PrimaryKey pk = baseTable.getPrimaryKey();
-                        if (isUniqueyMatch(pk, columnNames, tableNode)) {
+                        if (isUniqueyMatch(pk, columnNames, tableNode, context, problems)) {
                             return pk;
                         }
                         // Iterate through the unique keys ...
                         final Iterator iter = ((BaseTable)table).getUniqueConstraints().iterator();
                         while (iter.hasNext()) {
                             final UniqueConstraint constraint = (UniqueConstraint)iter.next();
-                            if (isUniqueyMatch(constraint, columnNames, tableNode)) {
+                            if (isUniqueyMatch(constraint, columnNames, tableNode, context, problems)) {
                                 return constraint;
                             }
                         }
@@ -1846,17 +1850,27 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         return null; // no match found
     }
 
-    protected Map createColumnMapKeyedByNames( final Table table ) {
+    protected Map createColumnMapKeyedByNames( final Table table, final JdbcTable tableNode, final Context context, final List problems ) {
+        String quoteStr = getQuoteString(context, problems);
+
         // Build a map of the columns by their name so they can be found much more quickly ...
         final Map columnsByName = new HashMap();
         final Iterator iter = table.getColumns().iterator();
         while (iter.hasNext()) {
+        	String mapName = null;
             final Column column = (Column)iter.next();
-            String columnName = column.getNameInSource();
-            if (columnName == null || columnName.trim().length() == 0) {
-                columnName = column.getName();
+            String columnNIS = column.getNameInSource();
+            if(columnNIS == null || columnNIS.trim().length()==0) {
+            	mapName = convertName(column.getName(),context);
+            } else {
+            	if(quoteStr!=null) {
+                	mapName =  tableNode.getUnqualifiedName(columnNIS).replaceAll(quoteStr, StringUtilities.EMPTY_STRING);
+            	} else {
+            		mapName = tableNode.getUnqualifiedName(columnNIS);
+            	}
+            	mapName = convertName(mapName, context);
             }
-            columnsByName.put(columnName, column);
+            columnsByName.put(mapName, column);
         }
         return columnsByName;
     }
@@ -1881,7 +1895,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             indexes = new LinkedList();
 
             // Build a map of the columns by their name so they can be found much more quickly ...
-            final Map columnsByName = createColumnMapKeyedByNames(table);
+            final Map columnsByName = createColumnMapKeyedByNames(table,tableNode,context,problems);
 
             // Go through the results and assemble the rows that go with each index
             // According to the JDBC spec, these rows are to be ordered by
@@ -2092,7 +2106,9 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
 
     private boolean isUniqueyMatch( final UniqueKey ukey,
                                     final List columnNames,
-                                    final JdbcTable tableNode ) {
+                                    final JdbcTable tableNode,
+                                    final Context context,
+                                    List problems) {
         if (ukey == null) {
             return false;
         }
@@ -2100,15 +2116,25 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         if (ukeyColumns.size() != columnNames.size()) {
             return false;
         }
+        String quoteStr = getQuoteString(context,problems);
+        
         // Go through the columns and see if the names correlate ...
         final Iterator iter = ukeyColumns.iterator();
         final Iterator nameIter = columnNames.iterator();
         while (iter.hasNext()) {
             final Column ukColumn = (Column)iter.next();
             final String columnName = (String)nameIter.next();
-            String ukColumnName = ukColumn.getNameInSource();
-            if (ukColumnName == null || ukColumnName.trim().length() == 0) {
-                ukColumnName = ukColumn.getName();
+            String ukColumnNIS = ukColumn.getNameInSource();
+            String ukColumnName = null;
+            if (ukColumnNIS == null || ukColumnNIS.trim().length() == 0) {
+                ukColumnName = convertName(ukColumn.getName(),context);
+            } else {
+            	if(quoteStr!=null) {
+            		ukColumnName =  tableNode.getUnqualifiedName(ukColumnNIS).replaceAll(quoteStr, StringUtilities.EMPTY_STRING);
+            	} else {
+            		ukColumnName = tableNode.getUnqualifiedName(ukColumnNIS);
+            	}
+            	ukColumnName = convertName(ukColumnName, context);
             }
             if (!ukColumnName.equals(columnName)) {
                 return false;
