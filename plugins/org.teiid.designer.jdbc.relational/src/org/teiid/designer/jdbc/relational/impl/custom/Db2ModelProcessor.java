@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.teiid.designer.jdbc.metadata.JdbcDatabase;
+import org.teiid.designer.jdbc.relational.impl.Context;
 import org.teiid.designer.jdbc.relational.impl.RelationalModelProcessorImpl;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.relational.RelationalFactory;
@@ -70,11 +71,13 @@ public class Db2ModelProcessor extends RelationalModelProcessorImpl {
                                       String catalogName,
                                       String schemaName,
                                       String tableName,
-                                      List columnNames) {
+                                      List columnNames,
+                                      Context context,
+                                      List<String> problems) {
         // Per defect 13227, the getImportedKeys and getExportedKeys returns a non-null value in the
         // 'catalog' column, even though DatabaseMetaData returns 'false' for supportsCatalogs.
         // Therefore, as a workaround, ignore the catalog name when supportsCatalogs is false ...
-        return super.findUniqueKey(dbNode, nodesToModelObjects, catalogName, schemaName, tableName, columnNames);
+        return super.findUniqueKey(dbNode, nodesToModelObjects, catalogName, schemaName, tableName, columnNames, context, problems);
     }
 
     /** 
