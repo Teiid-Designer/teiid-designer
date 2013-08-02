@@ -158,6 +158,8 @@ public class Messages  extends NLS {
     public static String SetConnectionProfile_Short;
     public static String SetDefaultTeiidServer;
     public static String SetDefaultTeiidServer_Short;
+    public static String RefreshTeiidServer;
+    public static String RefreshTeiidServer_Short;
     public static String SourceModeling;
     
     public static String TeiidActionsManager;

@@ -102,11 +102,15 @@ import org.teiid.core.designer.event.EventObjectListener;
 import org.teiid.core.designer.event.EventSourceException;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.ParentServerMonitor;
+import org.teiid.designer.core.ParentServerMonitor.IParentServerMonitorListener;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
+import org.teiid.designer.runtime.spi.ITeiidServerManager.RuntimeState;
 import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.ui.PluginConstants;
@@ -130,6 +134,7 @@ import org.teiid.designer.ui.common.actions.ActionService;
 import org.teiid.designer.ui.common.actions.ExtendedMenuManager;
 import org.teiid.designer.ui.common.actions.GlobalActionsMap;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
@@ -246,6 +251,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     private IPartListener partListener;
 
     private FormToolkit toolkit;
+    private Composite contentsPanel;
     private Section defaultServerSection;
     private Composite defaultServerSectionBody;
     private Hyperlink changeDefaultServerLink;
@@ -286,6 +292,62 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     };
 
     /**
+     * Required since the server version cannot be loaded on startup due to
+     * the TeiidServerManager needing to wait for the ServerCore to initialise
+     * first.
+     */
+    private class ServerVersionLoadingThread extends Thread {
+
+        public ServerVersionLoadingThread() {
+            super(ModelExplorerResourceNavigator.this + "." + ServerVersionLoadingThread.class.getSimpleName()); //$NON-NLS-1$
+            setDaemon(true);
+        }
+
+        @Override
+        public void run() {
+            ITeiidServerManager serverManager = ModelerCore.getTeiidServerManager();
+            while(serverManager.getState() != RuntimeState.STARTED) {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException ex) {
+                    Util.log(ex);
+                }
+            }
+
+            UiUtil.runInSwtThread(new Runnable() {
+                @Override
+                public void run() {
+                    setDefaultServerText(ModelerCore.getDefaultServerName());
+                    setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
+
+                    /* Listen for changes to the default server */
+                    ModelerCore.addTeiidServerVersionListener(teiidServerVersionListener);
+                    addExecutionConfigurationListener(ModelerCore.getDefaultServerEventManager());
+                }
+            }, true);
+
+        }
+    }
+
+    /**
+     * This view is opened when eclipse is started and as such requires the instance of the
+     * TeiidServerManager for the default server. However, the TeiidServerManager is not
+     * available until after the ServerCore has been initialised. Thus, we need to wait for the
+     * ServerCore to initialise and the TeiidServerManager to restore.
+     *
+     * Therefore, delay the loading of the server version. This listener will listen for initialisation
+     * of ServerCore then launch a thread, which waits for restoration of the TeiidServerManager.
+     * Only then is the version set.
+     */
+    IParentServerMonitorListener parentServerMonitorListener = new IParentServerMonitorListener() {
+        @Override
+        public void serversInitialised() {
+            ServerVersionLoadingThread thread = new ServerVersionLoadingThread();
+            thread.start();
+        }
+    };
+
+    /**
      * Construct an instance of ModelExplorerResourceNavigator.
      */
     public ModelExplorerResourceNavigator() {
@@ -305,16 +367,16 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         toolkit = new FormToolkit(parent.getDisplay());
 
         /* Panel to hold the viewer and server status panel */
-        Composite panel = toolkit.createComposite(parent);
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(panel);
-        GridLayoutFactory.fillDefaults().applyTo(panel);
+        contentsPanel = toolkit.createComposite(parent);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(contentsPanel);
+        GridLayoutFactory.fillDefaults().applyTo(contentsPanel);
 
         /* Create viewer */
-        super.createPartControl(panel);
+        super.createPartControl(contentsPanel);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(getTreeViewer().getTree());
 
         /* Create status panel */
-        createServerStatusPanel(panel);
+        createServerStatusPanel(contentsPanel);
 
         // Create selection helper
         new ModelExplorerSelectionHelper(getTreeViewer());
@@ -477,14 +539,67 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         GridLayoutFactory.fillDefaults().numColumns(3).applyTo(defaultServerSectionBody);
         defaultServerSectionBody.setBackground(bkgdColor);
 
-        setDefaultServerText(ModelerCore.getDefaultServerName());
-        setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
+        /*
+         * Default Server Name
+         */
+        toolkit.createLabel(defaultServerSectionBody, getString("defaultServerPrefix")); //$NON-NLS-1$
+
+        defaultServerLink = toolkit.createHyperlink(defaultServerSectionBody, "", SWT.NONE); //$NON-NLS-1$
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(defaultServerLink);
+        defaultServerLink.addHyperlinkListener(new HyperlinkAdapter() {
+            @Override
+            public void linkActivated(HyperlinkEvent e) {
+                //open the servers view
+                IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                try {
+                    window.getActivePage().showView("org.eclipse.wst.server.ui.ServersView"); //$NON-NLS-1$
+
+                    // Need to fetch the default server again since the parameter in the
+                    // parent method does not remain assigned becoming null
+                    if (! ModelerCore.hasDefaultTeiidServer()) {
+                        // No default server so most likely no servers at all so open the new server wizard
+                        IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+                        handlerService.executeCommand("org.teiid.designer.dqp.ui.newServerAction", null); //$NON-NLS-1$
+                    } else {
+                        //  defaultServer is a valid server so open the editServer editor
+                        IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+
+                        // Load the default server into an event's data in order to
+                        // make it available to the command's handler.
+                        Event event = ModelerCore.createDefaultTeiidServerEvent();
+                        handlerService.executeCommand("org.teiid.designer.dqp.ui.editServerAction", event); //$NON-NLS-1$
+                    }
+
+                } catch (Exception ex) {
+                    UiConstants.Util.log(ex);
+                }
+            }
+        });
+
+        // configure link to change default server
+        changeDefaultServerLink = toolkit.createHyperlink(defaultServerSectionBody, getString("changeServerLinkText"), SWT.NONE); //$NON-NLS-1$
+        changeDefaultServerLink.addHyperlinkListener(new HyperlinkAdapter() {
+            @Override
+            public void linkActivated(HyperlinkEvent e) {
+                try {
+                    // No default server so most likely no servers at all so open the new server wizard
+                    IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+                    handlerService.executeCommand("org.teiid.designer.dqp.ui.setDefaultServerAction", null); //$NON-NLS-1$
+                } catch (Exception ex) {
+                    UiConstants.Util.log(ex);
+                }
+            }
+        });
+
+        /*
+         * Default Server Version
+         */
+        defaultServerVersionLabel = toolkit.createLabel(defaultServerSectionBody, ""); //$NON-NLS-1$
+        GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(defaultServerVersionLabel);
 
         defaultServerSection.setClient(defaultServerSectionBody);
 
-        /* Listen for changes to the default server */
-        ModelerCore.addTeiidServerVersionListener(teiidServerVersionListener);
-        addExecutionConfigurationListener(ModelerCore.getDefaultServerEventManager());
+        ParentServerMonitor.getInstance().addParentServerListener(parentServerMonitorListener);
     }
 
     /**
@@ -506,73 +621,18 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
      * @param serverName name of the server or a noDefaultServer message
      */
     private void setDefaultServerText(String serverName) {
-        if (defaultServerLink == null) {
-            toolkit.createLabel(defaultServerSectionBody, getString("defaultServerPrefix")); //$NON-NLS-1$
+        if(defaultServerSectionBody.isDisposed() || defaultServerLink.isDisposed())
+            return;
 
-            defaultServerLink = toolkit.createHyperlink(defaultServerSectionBody, serverName, SWT.NONE);
-            GridDataFactory.fillDefaults().grab(true, false).applyTo(defaultServerLink);
+        Display display = defaultServerSectionBody.getDisplay();
+        final String hyperlinkText = serverName;
+        display.asyncExec(new Runnable() {
 
-            defaultServerLink.addHyperlinkListener(new HyperlinkAdapter() {
-
-                @Override
-                public void linkActivated(HyperlinkEvent e) {
-                    //open the servers view
-                    IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-                    try {
-                        window.getActivePage().showView("org.eclipse.wst.server.ui.ServersView"); //$NON-NLS-1$
-
-                        // Need to fetch the default server again since the parameter in the
-                        // parent method does not remain assigned becoming null
-                        if (! ModelerCore.hasDefaultTeiidServer()) {
-                            // No default server so most likely no servers at all so open the new server wizard
-                            IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
-                            handlerService.executeCommand("org.teiid.designer.dqp.ui.newServerAction", null); //$NON-NLS-1$
-                        } else {
-                            //  defaultServer is a valid server so open the editServer editor
-                            IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
-
-                            // Load the default server into an event's data in order to
-                            // make it available to the command's handler.
-                            Event event = ModelerCore.createDefaultTeiidServerEvent();
-                            handlerService.executeCommand("org.teiid.designer.dqp.ui.editServerAction", event); //$NON-NLS-1$
-                        }
-
-                    } catch (Exception ex) {
-                        UiConstants.Util.log(ex);
-                    }
-                }
-            });
-            
-            // configure link to change default server
-            changeDefaultServerLink = toolkit.createHyperlink(defaultServerSectionBody, getString("changeServerLinkText"), SWT.NONE); //$NON-NLS-1$
-
-            changeDefaultServerLink.addHyperlinkListener(new HyperlinkAdapter() {
-
-                @Override
-                public void linkActivated(HyperlinkEvent e) {
-                	try {
-                        // No default server so most likely no servers at all so open the new server wizard
-                        IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
-                        handlerService.executeCommand("org.teiid.designer.dqp.ui.setDefaultServerAction", null); //$NON-NLS-1$
-                	} catch (Exception ex) {
-                		UiConstants.Util.log(ex);
-                	}
-                }
-            });
-
-        } else {
-        	if( defaultServerSectionBody.isDisposed() || defaultServerLink.isDisposed() ) return;
-        	
-            Display display = defaultServerSectionBody.getDisplay();
-            final String hyperlinkText = serverName;
-            display.asyncExec(new Runnable() {
-
-                @Override
-                public void run() {
-                	defaultServerLink.setText(hyperlinkText);
-                }
-            });
-        }
+            @Override
+            public void run() {
+                defaultServerLink.setText(hyperlinkText);
+            }
+        });
     }
 
     private void setDefaultServerVersionText(ITeiidServerVersion teiidServerVersion) {
@@ -582,19 +642,14 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         if (defaultServerSectionBody == null || defaultServerSectionBody.isDisposed())
             return;
 
-        if (defaultServerVersionLabel == null) {
-            defaultServerVersionLabel = toolkit.createLabel(defaultServerSectionBody, labelText);
-            GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(defaultServerVersionLabel);
-        } else {
-            Display display = defaultServerSectionBody.getDisplay();
-            display.asyncExec(new Runnable() {
+        Display display = defaultServerSectionBody.getDisplay();
+        display.asyncExec(new Runnable() {
 
-                @Override
-                public void run() {
-                    defaultServerVersionLabel.setText(labelText);
-                }
-            });
-        }
+            @Override
+            public void run() {
+                defaultServerVersionLabel.setText(labelText);
+            }
+        });
     }
 
     /**
@@ -708,6 +763,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     public void dispose() {
         // Remove listeners
         ModelerCore.removeTeiidServerVersionListener(teiidServerVersionListener);
+
+        ParentServerMonitor.getInstance().removeParentServerListener(parentServerMonitorListener);
 
         // unhook the selection listeners from the seleciton service
         getViewSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(getModelObjectSelectionListener());

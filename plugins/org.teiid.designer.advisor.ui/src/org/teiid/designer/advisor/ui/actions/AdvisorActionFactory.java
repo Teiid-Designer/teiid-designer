@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -106,6 +105,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 	static IAction ACTION_EDIT_TEIID_SERVER;
 	static IAction ACTION_CREATE_DATA_SOURCE;
 	static IAction ACTION_SET_DEFAULT_TEIID_SERVER;
+	static IAction ACTION_REFRESH_TEIID_SERVER;
 	static IAction ACTION_NEW_TEIID_MODEL_PROJECT;
 	static IAction ACTION_DEFINE_TEIID_MODEL_PROJECT;
 	static IAction ACTION_DEFINE_VIEW_TABLE;
@@ -289,6 +289,11 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
                 COMMAND_LABELS.SET_DEFAULT_TEIID_SERVER, 
                 COMMAND_LABELS_SHORT.SET_DEFAULT_TEIID_SERVER,
                 COMMAND_DESC.SET_DEFAULT_TEIID_SERVER);
+        addActionHandler(
+                         COMMAND_IDS.REFRESH_TEIID_SERVER,
+                         COMMAND_LABELS.REFRESH_TEIID_SERVER,
+                         COMMAND_LABELS_SHORT.REFRESH_TEIID_SERVER,
+                         COMMAND_DESC.REFRESH_TEIID_SERVER);
         addActionHandler(
         		COMMAND_IDS.NEW_TEIID_MODEL_PROJECT, 
         		COMMAND_LABELS.NEW_TEIID_MODEL_PROJECT, 
@@ -621,7 +626,12 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
             RuntimeAssistant.runSetDefaultServerAction();
             return;
         }
-		
+
+        if (id.equalsIgnoreCase(COMMAND_IDS.REFRESH_TEIID_SERVER)) {
+            RuntimeAssistant.runRefreshServerAction();
+            return;
+        }
+
 		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_SOURCE)) {
 			DefineSourceAction action = new DefineSourceAction(properties);
 			action.run();
@@ -808,6 +818,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 		if (id.equalsIgnoreCase(COMMAND_IDS.SET_DEFAULT_TEIID_SERVER)) {
 		    return Images.SET_DEFAULT_TEIID_SERVER;
 		}
+
+        if (id.equalsIgnoreCase(COMMAND_IDS.REFRESH_TEIID_SERVER)) {
+            return Images.REFRESH_TEIID_SERVER;
+        }
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE)) {
 			return Images.NEW_VIRTUAL_TABLE_ICON;
@@ -1070,7 +1084,11 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 		if( commandId.equalsIgnoreCase(COMMAND_IDS.SET_DEFAULT_TEIID_SERVER)) {
             return ACTION_SET_DEFAULT_TEIID_SERVER;
         }
-		
+
+        if (commandId.equalsIgnoreCase(COMMAND_IDS.REFRESH_TEIID_SERVER)) {
+            return ACTION_REFRESH_TEIID_SERVER;
+        }
+
 		return null;
 	}
 	
@@ -1126,6 +1144,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 		ACTION_EDIT_TEIID_SERVER = createAction(COMMAND_IDS.EDIT_TEIID_SERVER);
 		ACTION_CREATE_DATA_SOURCE = createAction(COMMAND_IDS.CREATE_DATA_SOURCE);
 		ACTION_SET_DEFAULT_TEIID_SERVER = createAction(COMMAND_IDS.SET_DEFAULT_TEIID_SERVER);
+		ACTION_REFRESH_TEIID_SERVER = createAction(COMMAND_IDS.REFRESH_TEIID_SERVER);
 		ACTION_NEW_TEIID_MODEL_PROJECT = createAction(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT);
 		ACTION_DEFINE_TEIID_MODEL_PROJECT = createAction(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT);
 		

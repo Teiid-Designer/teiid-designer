@@ -41,7 +41,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
     // ===========================================================================================================================
 
     /**
-     * The servers being deleted (never <code>null</code>).
+     * The currently selected server
      */
     private ITeiidServer selectedServer;
 
@@ -74,16 +74,17 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
          * selectedServer may be null. In which case, need to ask the user
          * which server to be selected
          */
-    	if(!RuntimeAssistant.hasAvailableServers()) {
+        if (this.selectedServer == null && !RuntimeAssistant.hasAvailableServers()) {
             String title = UTIL.getString("noServerAvailableTitle"); //$NON-NLS-1$
             String message = UTIL.getString("noServerAvailableMessage"); //$NON-NLS-1$
             MessageDialog.openError(getShell(), title, message);
             return;
-    	}
-    	
-        this.selectedServer = RuntimeAssistant.selectServer(getShell(),true);
-        if(RuntimeAssistant.selectServerWasCancelled()) return;
-        
+        }
+        else if (this.selectedServer == null) {
+            this.selectedServer = RuntimeAssistant.selectServer(getShell(), true);
+            if (RuntimeAssistant.selectServerWasCancelled()) return;
+        }
+
         if (selectedServer == null) {
             getServerManager().setDefaultServer(null);
             String title = UTIL.getString("defaultServerChangedTitle"); //$NON-NLS-1$
