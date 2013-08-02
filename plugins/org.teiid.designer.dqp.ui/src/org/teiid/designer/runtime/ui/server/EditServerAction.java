@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.common.util.UiUtil;
@@ -103,7 +104,7 @@ public final class EditServerAction extends BaseSelectionListenerAction implemen
             return;
         }
 
-        DqpUiPlugin.editTeiidServer(serverBeingEdited);
+        ServerUIPlugin.editServer(serverBeingEdited.getParent());
     }
 
     /**

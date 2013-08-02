@@ -461,9 +461,8 @@ public final class ServerPage extends WizardPage {
         // Add server to the registry
         status = getServerManager().addServer(teiidServer);
         
-        // Server has not been started so open the editors for the user to review
+        // Server has not been started so open the editor for the user to review
         ServerUIPlugin.editServer(teiidServer.getParent());
-        DqpUiPlugin.editTeiidServer(teiidServer);
         
         return status;
     }

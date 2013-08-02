@@ -21,6 +21,36 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 public interface ITeiidServerManager extends EventManager {
 
     /**
+     * State of the server manager
+     */
+    public enum RuntimeState {
+        /**
+         * State when the instance is first constructed
+         */
+        INVALID,
+
+        /**
+         * State when the instance is fully restored and ready to be used
+         */
+        STARTED,
+
+        /**
+         * State when the instance is restoring server configurations
+         */
+        RESTORING,
+
+        /**
+         * State when the instance is in the process of shutting down
+         */
+        SHUTTING_DOWN,
+
+        /**
+         * State when the instance has fully shutdown
+         */
+        SHUTDOWN
+    }
+
+    /**
      * Default server version property id
      */
     String DEFAULT_TEIID_SERVER_VERSION_ID = "defaultTeiidServerVersion"; //$NON-NLS-1$
@@ -74,6 +104,11 @@ public interface ITeiidServerManager extends EventManager {
     Collection<ITeiidServer> getServers();
 
     /**
+     * @return the state
+     */
+    RuntimeState getState();
+
+    /**
      * Get the targeted teiid server version
      *
      * @return teiid server version
@@ -108,10 +143,8 @@ public interface ITeiidServerManager extends EventManager {
 
     /**
      * Try and restore the manager's prior state
-     *
-     * @return a status indicating if the previous session state was restored successfully
      */
-    IStatus restoreState();
+    void restoreState();
 
     /**
      * Saves the {@link ITeiidServer} registry to the file system and performs any other tasks

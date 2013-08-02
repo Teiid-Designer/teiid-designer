@@ -130,7 +130,15 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                 ITeiidServer queryServer = factory.adaptServer(parentServer,
                                                                ServerOptions.NO_CHECK_SERVER_REGISTRY);
                 
-                teiidServer.update(queryServer);
+                if (queryServer != null)
+                    teiidServer.update(queryServer);
+                else {
+                    // If the query server is null then this is not a Teiid-enabled JBoss Server but
+                    // a TeiidServer was cached in the registry, presumably due to an adaption
+                    // being made while the server was not started. Since we now know better, we
+                    // can correct the registry.
+                    DqpPlugin.getInstance().getServerManager().removeServer(teiidServer);
+                }
 
                 try {
                     teiidServer.reconnect();
