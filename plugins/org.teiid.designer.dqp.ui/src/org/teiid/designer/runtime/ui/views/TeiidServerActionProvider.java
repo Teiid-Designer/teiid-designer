@@ -273,7 +273,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         // the shell used for dialogs that the actions display
         Shell shell = this.actionSite.getViewSite().getShell();
         // the reconnect action tries to ping a selected server
-        this.refreshAction = new RefreshServerAction(shell.getDisplay());
+        this.refreshAction = new RefreshServerAction();
         viewer.addSelectionChangedListener(this.refreshAction);
         
         // the disconnect action clears the server's object cache, closes connection and null's admin references.

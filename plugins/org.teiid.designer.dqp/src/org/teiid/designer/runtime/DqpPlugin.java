@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.PluginUtil;
@@ -90,11 +89,6 @@ public class DqpPlugin extends Plugin {
     }
 
     /**
-     * The Teiid server registry.
-     */
-    private ITeiidServerManager serverMgr;
-
-    /**
      * Provider of the {@link IServer}s collection
      */
     private IServersProvider serversProvider;
@@ -141,36 +135,7 @@ public class DqpPlugin extends Plugin {
      * @return the server manager
      */
     public ITeiidServerManager getServerManager() {
-        if (serverMgr == null) {
-            
-            /*
-             * Server manager init requires restoring its state dependent on
-             * the server provider which may not have been inited. To ensure
-             * that latter is inited avoid initing prior to the workbench initialization 
-             */
-            if (PlatformUI.getWorkbench().isStarting()) {
-                try {
-                    throw new Exception("Programming Error: Server Manager should not be instantiated prior to the workbench"); //$NON-NLS-1$
-                } catch (Exception ex) {
-                    Util.log(ex);
-                }
-            }
-            
-            try {
-                initializeServerRegistry();
-            } catch (final Exception e) {
-                throw new RuntimeException(e.getLocalizedMessage(), e);
-            }
-        }
-        
-        return this.serverMgr;
-    }
-
-    /**
-     * @return <code>true</code> if the server manager has been started
-     */
-    public boolean isServerManagerStarted() {
-        return (this.serverMgr != null);
+        return ModelerCore.getTeiidServerManager();
     }
 
     /**
@@ -268,10 +233,6 @@ public class DqpPlugin extends Plugin {
 
     }
 
-    private void initializeServerRegistry() {
-        this.serverMgr = ModelerCore.getTeiidServerManager();
-    }
-
     /**
      * Option names can be found in the <code>.debug</code> file and in {@link DebugConstants}.
      * 
@@ -324,10 +285,6 @@ public class DqpPlugin extends Plugin {
             }
         };
         ModelWorkspaceManager.getModelWorkspaceManager().addNotificationListener(this.workspaceListener);
-        
-        // Initialize teiid parent server state listener
-        getServersProvider().addServerStateListener(TeiidParentServerListener.getInstance());
-        getServersProvider().addServerLifecycleListener(TeiidParentServerListener.getInstance());
     }
 
     /**
@@ -344,8 +301,8 @@ public class DqpPlugin extends Plugin {
         getServersProvider().removeServerLifecycleListener(TeiidParentServerListener.getInstance());
         
         try {
-            if (serverMgr != null) {
-                this.serverMgr.shutdown(null);
+            if (getServerManager() != null) {
+                getServerManager().shutdown(null);
             }
 
             // shutdown PreviewManager

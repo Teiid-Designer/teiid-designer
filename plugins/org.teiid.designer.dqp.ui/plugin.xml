@@ -325,15 +325,6 @@
             name="%editServerCommand.label">
       </command>
    </extension>
-   <extension point="org.eclipse.ui.editors">
-      <editor
-            class="org.teiid.designer.runtime.ui.server.editor.TeiidServerEditor"
-            default="false"
-            extensions="teiidserver"
-            icon="icons/full/obj16/connectorBinding.gif"
-            id="org.teiid.designer.runtime.ui.server.editor.TeiidServerEditor"
-            name="%teiidServerEditor.title"/>
-   </extension>
    <extension point="org.eclipse.ui.elementFactories">
   <factory id="org.teiid.designer.runtime.ui.server.editor.input.factory"
     class="org.teiid.designer.runtime.ui.server.editor.TeiidServerEditorInputFactory"/>
@@ -424,5 +415,14 @@
       <passwordProvider
             class="org.teiid.designer.runtime.ui.connection.ConnectionPasswordProvider">
       </passwordProvider>
+   </extension>
+   <extension
+         point="org.eclipse.wst.server.ui.editorPages">
+      <page
+            class="org.teiid.designer.runtime.ui.server.editor.TeiidServerEditor"
+            id="org.teiid.designer.dqp.ui.TeiidServerPage"
+            name="Teiid Server"
+            typeIds="%AllJBTTeiidServerTypes">
+      </page>
    </extension>
 </plugin>

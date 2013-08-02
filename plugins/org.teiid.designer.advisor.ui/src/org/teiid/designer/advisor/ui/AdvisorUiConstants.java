@@ -186,6 +186,7 @@ public interface AdvisorUiConstants {
 		String EDIT_TEIID_SERVER = "org.teiid.designer.runtime.editTeiidServer"; //$NON-NLS-1$
 		String CREATE_DATA_SOURCE = "org.teiid.designer.runtime.createDataSource"; //$NON-NLS-1$
 		String SET_DEFAULT_TEIID_SERVER = "org.teiid.designer.runtime.setDefaultTeiidServer";  //$NON-NLS-1$
+		String REFRESH_TEIID_SERVER = "org.teiid.designer.runtime.refreshDefaultTeiidServer";  //$NON-NLS-1$
 		String SET_CONNECTION_PROFILE="org.teiid.designer.datatools.ui.actions.SetConnectionProfileAction";  //$NON-NLS-1$
 		
 	}
@@ -252,6 +253,7 @@ public interface AdvisorUiConstants {
 		String EDIT_TEIID_SERVER = "Edit the properties of an existing Teiid server"; //$NON-NLS-1$
 		String CREATE_DATA_SOURCE = "Create a data source (i.e. -ds.xml) on your Teiid server from source models or source connections in your workspace"; //$NON-NLS-1$
 		String SET_DEFAULT_TEIID_SERVER = "Select a teiid server as the default server, used to select the correct runtime client and for previewing models"; //$NON-NLS-1$
+		String REFRESH_TEIID_SERVER = "Refresh the connection to the selected teiid server"; //$NON-NLS-1$
 		String SET_CONNECTION_PROFILE = "Set connection profile on a relational source model"; //$NON-NLS-1$
 	}
 	
@@ -311,6 +313,7 @@ public interface AdvisorUiConstants {
 		String EDIT_TEIID_SERVER = Messages.EditTeiidServer;
 		String CREATE_DATA_SOURCE = Messages.CreateDataSource;
 		String SET_DEFAULT_TEIID_SERVER = Messages.SetDefaultTeiidServer;
+		String REFRESH_TEIID_SERVER = Messages.RefreshTeiidServer;
 		String SET_CONNECTION_PROFILE = Messages.SetConnectionProfile;
 	}
 	
@@ -369,6 +372,7 @@ public interface AdvisorUiConstants {
 		String EDIT_TEIID_SERVER = Messages.EditTeiidServer_Short;
 		String CREATE_DATA_SOURCE = Messages.CreateDataSource;
 		String SET_DEFAULT_TEIID_SERVER = Messages.SetDefaultTeiidServer_Short;
+		String REFRESH_TEIID_SERVER = Messages.RefreshTeiidServer_Short;
 		String SET_CONNECTION_PROFILE = Messages.SetConnectionProfile_Short;
 	}
 
@@ -445,7 +449,8 @@ public interface AdvisorUiConstants {
 	    String NEW_TEIID_SERVER = CTOOL16 + "new-teiid-server.png"; //$NON-NLS-1$
 	    String EDIT_TEIID_SERVER = CTOOL16 + "edit-teiid-server.png"; //$NON-NLS-1$
 	    String SET_DEFAULT_TEIID_SERVER = CTOOL16 + "default_server.gif"; //$NON-NLS-1$
-	    
+	    String REFRESH_TEIID_SERVER = CTOOL16 + "refresh-server.gif"; //$NON-NLS-1$
+
 	    String DATA_SOURCE_EXPLORER_VIEW = CTOOL16 + "data-source-explorer-view.gif";  //$NON-NLS-1$
 	    String NEW_CONNECTION_PROFILE = CTOOL16 + "new-connection-profile.gif";  //$NON-NLS-1$
 	    String IMPORT = CTOOL16 + "import.gif";  //$NON-NLS-1$
