@@ -11,7 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -71,7 +70,11 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
 
     /**
      * @param parent
-     * @param title
+     * @param theVdb
+     * @param restProcedureMap
+     * @param initialStatus
+     * @param designerProperties
+     *
      * @since 7.4
      */
     public RestWarDeploymentInfoDialog( Shell parent,
@@ -94,6 +97,9 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // INSTANCE METHODS
     // /////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * @param isEnable
+     */
     public void setOkButtonEnable( boolean isEnable ) {
         if (okButton != null) {
             okButton.setEnabled(isEnable);
@@ -299,10 +305,16 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
         RestWarDataserviceModel.getInstance().setIncludeJars(true);
     }
 
+    /**
+     * @param name
+     */
     public void setWarFileName( String name ) {
         warFileName = name;
     }
 
+    /**
+     * @return war file name
+     */
     public String getWarFileName() {
         return warFileName;
     }

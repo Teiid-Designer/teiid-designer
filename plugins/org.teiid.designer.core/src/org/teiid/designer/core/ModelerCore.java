@@ -26,8 +26,8 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
@@ -102,6 +102,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManagerSaveParticipant;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 import org.teiid.designer.runtime.spi.EventManager;
+import org.teiid.designer.runtime.spi.IExecutionAdminFactory;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
@@ -2071,9 +2072,9 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     }
 
     /**
-     * Get the targeted teiid server version
+     * Get the targeted teiid server name
      * 
-     * @return teiid server version
+     * @return teiid server name
      */
     public static String getDefaultServerName() {
         ITeiidServer defaultTeiidServer = getTeiidServerManager().getDefaultServer();
@@ -2113,6 +2114,21 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      */
     public static ITeiidServerVersion getTeiidServerVersion() {
         return getTeiidServerManager().getDefaultServerVersion();
+    }
+
+    /**
+     * Get the default teiid runtime client's plugin path
+     *
+     * @return string of OS specific path
+     */
+    public static String getTeiidRuntimePath() throws Exception {
+        ITeiidServerVersion version = getTeiidServerVersion();
+
+        IExecutionAdminFactory adminFactory = TeiidRuntimeRegistry.getInstance().getExecutionAdminFactory(version);
+        if (adminFactory == null)
+            throw new Exception(Util.getString("ModelerCore.cannotFindTeiidClientRuntimePath"));
+
+        return adminFactory.getRuntimePluginPath();
     }
 
     /**
