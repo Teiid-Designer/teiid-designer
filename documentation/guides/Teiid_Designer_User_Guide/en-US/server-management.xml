@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!-- ####### SERVER MANAGEMENT CHAPTER ######################################## -->
+
+<chapter id="server-management-chapter">
+	<title>Server Management</title>
+
+    <para>Teiid Designer is a design-time tool that allows setting up and testing deployable VDB artifacts. In order
+    	to deploy and test these VDB's a running application server is required that contains an installed Teiid submodule.
+    	This section describes how to set up, connect and maintain your servers and describes the various aspects of what 
+    	features in Teiid Designer are enabled by this connection and how you can leverage these capabilities.
+    </para>
+    
+    <!-- ####### SERVER SETUP ######################################## -->
+    <section id="server-setup-section">
+        <title>Server Set-up</title>
+        <para>
+            ... Describe setting up a new application server containing an installed Teiid submodule... 
+        </para>
+        <section id="multi-version-support-section">
+	        <title>Teiid Version Support</title>
+	        <para>
+	            ... Describe setting up and managing older Teiid server versions. 
+	        </para>
+        </section>
+    </section>
+    
+    
+    <!-- ####### ARTIFACTS AN DEPLOYMENT ######################################## -->
+    <section id="artifacts-and-deployment-section">
+        <title>Artifacts and Deployment</title>
+        <para>
+            ... Describe what deployable artifacts (Data sources, VDBs, WARS) can be managed and how/where these actions
+            are exposed in Designer. 
+        </para>
+    </section>
+    
+    <!-- ####### DESIGN TIME TESTING ######################################## -->
+    <section id="design-time-testing-section">
+        <title>Design-time Testing</title>
+        <para>
+            ... Describe both the Preview Data concept and Execute VDB concept... 
+        </para>
+    </section>
+</chapter>
+    

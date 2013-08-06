@@ -2225,8 +2225,9 @@
 				through a single, uniform API. A <emphasis role="bold">VDB</emphasis> contains models, which define the structural 
 				characteristics of data sources, views, and Web services. The <emphasis role="bold">VDB Editor</emphasis>, provides 
 				the means to manage the contents of the <emphasis role="bold">VDB</emphasis> as well as its deployable (validation) state.</para>
-			<para>The VDB Editor, shown below, contains a upper and lower panels. The upper panel contains the Models tab and an Other Files tab. The 
-			lower panel contains tabs for managing Data Roles, the VDB Description and Translator Overrides.</para>
+			<para>The VDB Editor, shown below, contains a upper and lower panels. The upper panel contains tabs for managing your 
+			VDB's Models, UDF (User Defined Functions) jars and Other Files you wish to include in your VDB. The 
+			lower panel contains tabs for managing Data Roles, VDB Properties, Description and Translator Overrides. </para>
 			<figure>
 				<title>VDB Editor</title>
 				<mediaobject>
@@ -2242,9 +2243,9 @@
 				in GUI tools.</para>
 			<para>In order for a VDB to be fully queryable the "Source Name", "Translator" and "JNDI Names" must 
 				have valid values and represent deployed artifacts on your Teiid server.</para>
-			<para>If you have Designer runtime plugins installed, and have a Teiid server running, you can 
-				select a source model in the VDB Editor and right-click select "Change Translator" or 
-				"Change JNDI Data Source" which will allow you to select any applicable artifacts on your server.</para>
+			<para>If you have Designer runtime plugins installed, you have a default Teiid server instance defined 
+				and connected,  the translator and JNDI table cells will contain drop-down lists of available translator 
+				and JNDI names available on that server.</para>
 			<figure>
 				<title>Change Translator or Data Source Actions</title>
 				<mediaobject>

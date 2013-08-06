@@ -578,6 +578,7 @@
                 <listitem>Modelling from a JDBC Data Source</listitem>
                 <listitem>Modelling from a Local XML File Source</listitem>
                 <listitem>Modelling from a Remote XML File Source</listitem>
+                <listitem>Modelling from a Teiid Data Source (deployed on server)</listitem>
                 <listitem>Connecting to a Teiid Server</listitem>
             </itemizedlist>
         </section>

@@ -264,5 +264,73 @@
 			</imageobject>
 		</mediaobject>
 	</section>
+	<section id="vdb-security">
+		<title>Security and Data Access</title>
+		<para>You have some options on defining your data access security for your VDB via the VDB Editor 
+			(See the <xref linkend="vdb-editor-section" /> section).</para>
+		<para>The first level is provided by the model visibility 
+			check-box in the Models section (Spyglass column). If unchecked, that model and it's contents will not be 
+			returned by the Teiid runtime with the standard JDBC metadata.
+		</para>
+		<para>The next level of security is provided defining permissions for your data roles which can be managed via 
+			the lower panel in the VDB Editor. For a unique data role, each model and most objects within that model 
+			can have specific values of data access including:
+			<itemizedlist>
+				<listitem><para>Security (Row-based condition and column masking)</para></listitem>
+				<listitem><para>Create</para></listitem>
+				<listitem><para>Read</para></listitem>
+				<listitem><para>Update</para></listitem>
+				<listitem><para>Delete</para></listitem>
+				<listitem><para>Execute</para></listitem>
+				<listitem><para>Alter</para></listitem>
+ 			</itemizedlist>
+		</para>
+		<para> The image below is an example of the <emphasis role="bold">Permissions</emphasis> defined for a data role.</para>
+		<figure>
+			<title>Permissions Section</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/models-tab-with-security-column.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>Double-clicking the <emphasis role="bold">Security</emphasis> box for a table or column will launch the 
+			<emphasis role="bold">Model Object Security Definition</emphasis> dialog where you can define applicable values. 
+			In order to edit or remove security, select the <emphasis role="bold">Conditions</emphasis> or 
+			<emphasis role="bold">Masking</emphasis> tabs and use the <emphasis role="bold">Edit</emphasis> or 
+			<emphasis role="bold">Remove</emphasis> buttons.
+		</para>
+		<figure>
+			<title>Security Definition Dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/model-object-security-definition-dialog.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>The <emphasis role="bold">Conditions</emphasis> and <emphasis role="bold">Masks</emphasis> tabs in the
+			 <emphasis role="bold">Permissions</emphasis> section allow management (add, remove and edit) of these values
+			for your model objects.
+		</para>
+		<figure>
+			<title>Row-based Security Tab</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/row-based-security-tab.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<figure>
+			<title>Column Basking Tab</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/column-mask-tab.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<note>
+			<para>For more details and examples of data roles and permissions, see the Teiid documentation.</para>
+        </note>
+	</section>
 	
 </chapter>
