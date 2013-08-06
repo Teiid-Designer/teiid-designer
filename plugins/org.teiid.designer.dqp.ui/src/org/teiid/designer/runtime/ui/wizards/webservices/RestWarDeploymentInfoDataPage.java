@@ -10,14 +10,12 @@ package org.teiid.designer.runtime.ui.wizards.webservices;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Composite;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.TeiidDesignerException;
-import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilder;
 import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilderFactory;
@@ -55,7 +53,7 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
     @Override
     protected void validatePage() {
 
-        boolean isValid = validateContext() && validateJNDI() && validateWARFileFolder() && validateJarLocations() && validateEngineJarLocation() && validateCommonCoreJarLocation() ;
+        boolean isValid = validateContext() && validateJNDI() && validateWARFileFolder();
 
         if (!isValid) {
             setDialogMessage(status);
@@ -121,55 +119,6 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
 
         RestWarDataserviceModel.getInstance().setJndiNameDefault(text);
         this.settings.put(this.JNDI_NAME, text);
-
-        return true;
-    }
-    
-    /**
-     * validate JNDI
-     * 
-     * @return boolean
-     * @since 7.4
-     */
-    private boolean validateJarLocations() {
-
-      
-        
-        if (this.targetVersionCombo.getText().equals(_82_or_greater) &&
-         	   ((this.engineJarFileLocation.getText()==null || this.engineJarFileLocation.getText().trim().equals(StringUtilities.EMPTY_STRING)) ||
-         	   (this.commonCoreJarFileLocation.getText()==null || this.commonCoreJarFileLocation.getText().trim().equals(StringUtilities.EMPTY_STRING)))){
-        	 	ERROR_MESSAGE = getString("jarLocationError");//$NON-NLS-1$
-        	 	createStatus(IStatus.ERROR, ERROR_MESSAGE, InternalModelerWarUiConstants.VALIDATEJARLOCATION);
-        	 	return false;
-        }
-
-        return true;
-    }
-    
-    /**
-     * validate Engine jar location
-     * 
-     * @return boolean
-     * @since 8.1
-     */
-    private boolean validateEngineJarLocation() {
-
-        
-    	RestWarDataserviceModel.getInstance().setEngineJarLocation(this.engineJarFileLocation.getText());
-
-        return true;
-    }
-    
-    /**
-     * validate Engine jar location
-     * 
-     * @return boolean
-     * @since 8.1
-     */
-    private boolean validateCommonCoreJarLocation() {
-
-        
-    	RestWarDataserviceModel.getInstance().setCommonCoreJarLocation(this.commonCoreJarFileLocation.getText());
 
         return true;
     }

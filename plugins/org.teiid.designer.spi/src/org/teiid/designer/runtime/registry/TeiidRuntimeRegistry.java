@@ -74,6 +74,22 @@ public class TeiidRuntimeRegistry extends AbstractExtensionRegistry<ITeiidServer
     }
 
     /**
+     * Get an {@link IExecutionAdminFactory} applicable for the given server version
+     *
+     * @param teiidServerVersion
+     *
+     * @return instance of {@link IExecutionAdminFactory}
+     * @throws Exception
+     */
+    public IExecutionAdminFactory getExecutionAdminFactory(ITeiidServerVersion teiidServerVersion) throws Exception {
+        IExecutionAdminFactory factory = search(teiidServerVersion);
+        if (factory == null)
+            throw new Exception(NLS.bind(Messages.NoExecutionAdminFactory, teiidServerVersion));
+
+        return factory;
+    }
+
+    /**
      * Get an {@link IExecutionAdmin} applicable for the given server
      * 
      * @param teiidServer
@@ -82,13 +98,10 @@ public class TeiidRuntimeRegistry extends AbstractExtensionRegistry<ITeiidServer
      * @throws Exception 
      */
     public IExecutionAdmin getExecutionAdmin(ITeiidServer teiidServer) throws Exception {
-        IExecutionAdminFactory factory = search(teiidServer.getServerVersion());
-        if (factory == null)
-            throw new Exception(NLS.bind(Messages.NoExecutionAdminFactory, teiidServer.getServerVersion()));
-        
+        IExecutionAdminFactory factory = getExecutionAdminFactory(teiidServer.getServerVersion());
         return factory.createExecutionAdmin(teiidServer);
     }
-    
+
     /**
      * Get the teiid data type manager service
      * 

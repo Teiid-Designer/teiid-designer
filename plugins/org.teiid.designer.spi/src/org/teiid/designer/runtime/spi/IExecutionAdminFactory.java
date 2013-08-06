@@ -47,4 +47,11 @@ public interface IExecutionAdminFactory {
      * @return instance of {@link IQueryService}
      */
     IQueryService getQueryService();
+
+    /**
+     * Get the location of this class' parent plugin
+     *
+     * @return OS specific path to the plugin location
+     */
+    String getRuntimePluginPath();
 }

@@ -16,7 +16,6 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.DiagnosticCollector;
@@ -35,7 +33,6 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
-
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -45,6 +42,9 @@ import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.TempDirectory;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.webservice.WebServicePlugin;
 import org.teiid.designer.webservice.util.AntTasks;
 
@@ -60,7 +60,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
     private List<String> models = new ArrayList<String>();
     private Map<String, List<RestProcedure>> modelMapOfProcedures = new HashMap<String, List<RestProcedure>>();
     File webXmlFile = null;
-    public static String newline = System.getProperty("line.separator"); //$NON-NLS-1$
+    private static String newline = System.getProperty("line.separator"); //$NON-NLS-1$
 
     // =============================================================
     // Constants
@@ -435,7 +435,11 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
                            true);
             File resourceJavaFile = new File(resourceJavaFilePath);
             resources.add(resourceJavaFile);
-            if ((Boolean)properties.get(WebArchiveBuilderConstants.PROPERTY_8_2_OR_HIGHER)){
+
+            ITeiidServerVersion version = ModelerCore.getTeiidServerVersion();
+            boolean greaterThan82 = new TeiidServerVersion("8.2.0").isGreaterThan(version); //$NON-NLS-1$
+
+            if (greaterThan82) {
             	teiidProviderJavaFile = "TeiidRSProviderPost"; //$NON-NLS-1$
             }else{
             	teiidProviderJavaFile = "TeiidRSProviderPre"; //$NON-NLS-1$
@@ -476,31 +480,17 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             String pathToJar3 = webInfLibDirectory.getCanonicalPath() + File.separator + "jackson-mapper-asl-1.8.3.jar"; //$NON-NLS-1$
             String pathToJar4 = webInfLibDirectory.getCanonicalPath() + File.separator + "json-1.0.jar"; //$NON-NLS-1$
             String pathToJar5 = webInfLibDirectory.getCanonicalPath() + File.separator + "jaxrs-api-2.2.0.GA.jar"; //$NON-NLS-1$
-            String engineJar = null;
-            String commonCoreJar = null;
-            
-            if ((Boolean)properties.get(WebArchiveBuilderConstants.PROPERTY_8_2_OR_HIGHER)){
-            	engineJar = ((String)properties.get(WebArchiveBuilderConstants.PROPERTY_ENGINE_JAR));
-            	commonCoreJar = ((String)properties.get(WebArchiveBuilderConstants.PROPERTY_COMMON_CORE_JAR));
-            }
 
-            File jar1 = new File(pathToJar1);
-            File jar2 = new File(pathToJar2);
-            File jar3 = new File(pathToJar3);
-            File jar4 = new File(pathToJar4);
-            File jar5 = new File(pathToJar5);
-            File engineJarFile = null;
-            File commonCoreJarFile = null;
-            List<File> classPaths = null;
-            
-            if (engineJar!=null){
-            	engineJarFile = new File(engineJar);
-            	commonCoreJarFile = new File(commonCoreJar);
-            	classPaths = Arrays.asList(jar1, jar2, jar3, jar4, jar5, engineJarFile, commonCoreJarFile);
-            }else{
-            	classPaths = Arrays.asList(jar1, jar2, jar3, jar4, jar5);
-            }
-            
+            List<File> classPaths = new ArrayList<File>();
+            classPaths.add(new File(pathToJar1));
+            classPaths.add(new File(pathToJar2));
+            classPaths.add(new File(pathToJar3));
+            classPaths.add(new File(pathToJar4));
+            classPaths.add(new File(pathToJar5));
+
+            String runtimePath = ModelerCore.getTeiidRuntimePath();
+            classPaths.add(new File(runtimePath));
+
             fileManager.setLocation(StandardLocation.CLASS_PATH, classPaths);
 
             List<File> sourceFileList = new ArrayList<File>();
@@ -570,7 +560,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
                                   RestProcedure restProcedure ) {
         commonRestMethodLogic(sb, restProcedure, ""); //$NON-NLS-1$
         if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
-            sb.append("\tparameterMap = getInputs(is);" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            sb.append("\tparameterMap = getInputs(is);" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         // Gen return and execute
