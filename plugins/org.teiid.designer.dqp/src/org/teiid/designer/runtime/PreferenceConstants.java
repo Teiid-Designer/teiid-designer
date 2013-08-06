@@ -59,4 +59,14 @@ public interface PreferenceConstants {
      */
     boolean PREVIEW_TEIID_CLEANUP_ENABLED_DEFAULT = true;
 
+    /**
+     * The name of the preference indicating if Preview is allowed to delete RA sources from Teiid instances.
+     */
+    String PREVIEW_DELETE_RA_SOURCES_ENABLED = PLUGIN_ID + ".preferences.PreviewDeleteRASourcesEnabled"; //$NON-NLS-1$
+
+    /**
+     * The default value for the {@link #PREVIEW_DELETE_RA_SOURCES_ENABLED} preference. Default value is {@value} .
+     */
+    boolean PREVIEW_DELETE_RA_SOURCES_ENABLED_DEFAULT = false;
+
 }

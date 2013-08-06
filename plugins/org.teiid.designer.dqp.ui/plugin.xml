@@ -36,6 +36,12 @@
       </preference>
       <!-- Enable Teiid Preview Cleanup Preference -->
       <preference
+            id="enablePreviewDeleteRASourcesPreferenceContributor"
+            categoryId="dqpUiPreferenceCategory"
+            class="org.teiid.designer.runtime.ui.preferences.EnablePreviewDeleteRASourcesPreferenceContributor">
+      </preference>
+      <!-- Enable Preview Delete of RA Sources Preference -->
+      <preference
             id="enableTeiidPreviewCleanupPreferenceContributor"
             categoryId="dqpUiPreferenceCategory"
             class="org.teiid.designer.runtime.ui.preferences.EnableTeiidPreviewCleanupPreferenceContributor">
