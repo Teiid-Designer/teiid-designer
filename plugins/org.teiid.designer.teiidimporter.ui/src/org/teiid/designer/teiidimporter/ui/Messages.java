@@ -65,6 +65,7 @@ public class Messages extends NLS {
     public static String dataSourcePanel_deleteSourceDialogTitle;
     public static String dataSourcePanel_deleteSourceDialogMsg;
     public static String dataSourcePanel_driverTooltipPrefix;
+    public static String dataSourcePanel_dataSourceDeployErrorTryRestartMsg;
     
     public static String dataSourceDriversPanelAddHyperlinkTxt;
     public static String dataSourceDriversPanelErrorNoSelection;
