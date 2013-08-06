@@ -9,6 +9,9 @@
 package org.teiid.designer.runtime.preview.jobs;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
+
+import java.util.Properties;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -16,9 +19,10 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.core.util.StringUtilities;
-import org.teiid.designer.runtime.TeiidServer;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
+import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 
 /**
@@ -29,6 +33,9 @@ import org.teiid.designer.runtime.spi.ITeiidServer;
  */
 public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob {
 
+	private static final String CLASS_NAME_KEY = "class-name"; //$NON-NLS-1$
+	private static final String RESRC_ADAPTER_VALUE = ".resource.adapter."; //$NON-NLS-1$
+	
     /**
      * The data source name (never <code>null</code> or empty).
      */
@@ -96,41 +103,66 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
             return Status.CANCEL_STATUS;
         }
 
-        // delete data source from server
+        // check RA Source delete preference
+        boolean allowRASourceDeletes = DqpPlugin.getInstance().getPreferences().getBoolean(PREVIEW_DELETE_RA_SOURCES_ENABLED,
+        		PREVIEW_DELETE_RA_SOURCES_ENABLED_DEFAULT);
+        // Determine if this is RA source
+        boolean isRASource = isResourceAdapterSource(teiidServer,this.jndiName);
+        // Delete DataSource if not a Resource Adapter
         IStatus deleteDataSourceErrorStatus = null;
-
-        try {
-            if (teiidServer.dataSourceExists(this.jndiName)) {
-                teiidServer.deleteDataSource(this.jndiName);
-            }
-        } catch (Exception e) {
-            ++errors;
-            deleteDataSourceErrorStatus = new Status(IStatus.ERROR, PLUGIN_ID,
-                                                     NLS.bind(Messages.DeleteDeployedPreviewVdbJobError, this.pvdbName), e);
+        if( !isRASource || (isRASource && allowRASourceDeletes) ) {
+        	try {
+        		if (teiidServer.dataSourceExists(this.jndiName)) {
+        			teiidServer.deleteDataSource(this.jndiName);
+        		}
+        	} catch (Exception e) {
+        		++errors;
+        		deleteDataSourceErrorStatus = new Status(IStatus.ERROR, PLUGIN_ID,
+        				NLS.bind(Messages.DeleteDeployedPreviewVdbJobError, this.pvdbName), e);
+        	}
         }
 
-        // no problems
-        if (errors == 0) {
-            return new Status(IStatus.INFO, PLUGIN_ID, NLS.bind(Messages.DeleteDeployedPreviewVdbJobSuccessfullyCompleted,
-                                                                this.pvdbName));
+        // Handle Delete Errors
+        if ( !isRASource || (isRASource && allowRASourceDeletes) ) {
+        	if(errors == 2) {
+        		IStatus[] statuses = new IStatus[2];
+        		statuses[0] = deleteVdbErrorStatus;
+        		statuses[1] = deleteDataSourceErrorStatus;
+        		return new MultiStatus(PLUGIN_ID, IStatus.OK, statuses, NLS.bind(Messages.DeleteDeployedPreviewVdbJobError,
+        				this.pvdbName), null);
+        		// just couldn't delete VDB
+        	} else if (deleteVdbErrorStatus != null) {
+        		throw new CoreException(deleteVdbErrorStatus);
+        	}
+        } else if (deleteVdbErrorStatus != null) {
+    		throw new CoreException(deleteVdbErrorStatus);
         }
 
-        // couldn't delete PVDB or data source
-        if (errors == 2) {
-            IStatus[] statuses = new IStatus[2];
-            statuses[0] = deleteVdbErrorStatus;
-            statuses[1] = deleteDataSourceErrorStatus;
-            return new MultiStatus(PLUGIN_ID, IStatus.OK, statuses, NLS.bind(Messages.DeleteDeployedPreviewVdbJobError,
-                                                                             this.pvdbName), null);
-        }
-
-        // just couldn't delete VDB
-        if (deleteVdbErrorStatus != null) {
-            throw new CoreException(deleteVdbErrorStatus);
-        }
-
-        // just couldn't delete data source
-        throw new CoreException(deleteDataSourceErrorStatus);
+        return new Status(IStatus.INFO, PLUGIN_ID, NLS.bind(Messages.DeleteDeployedPreviewVdbJobSuccessfullyCompleted,
+                this.pvdbName));
     }
 
+    private boolean isResourceAdapterSource(ITeiidServer teiidServer, String sourceJndiName) {
+    	boolean isRASource = false;
+    	
+    	// Get the DataSource
+    	ITeiidDataSource dataSource;
+		try {
+			dataSource = teiidServer.getDataSource(this.jndiName);
+		} catch (Exception ex) {
+			return false;
+		}
+		
+		if(dataSource!=null) {
+			// Get DataSource Properties.  If DataSource has class-name property containing ".resource.adapter." its RA source
+			Properties props = dataSource.getProperties();
+			if(props.containsKey(CLASS_NAME_KEY)) {
+				String propValue = props.getProperty(CLASS_NAME_KEY);
+				if(propValue!=null && propValue.indexOf(RESRC_ADAPTER_VALUE)>-1) {
+					isRASource = true;
+				}
+			}
+		}
+    	return isRASource;
+    }
 }

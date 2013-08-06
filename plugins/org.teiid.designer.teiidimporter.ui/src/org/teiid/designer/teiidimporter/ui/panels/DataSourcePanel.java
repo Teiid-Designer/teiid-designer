@@ -293,7 +293,12 @@ public final class DataSourcePanel extends Composite implements UiConstants {
             
             // If create failed, show Error Dialog
             if(!createStatus.isOK()) {
-                ErrorDialog.openError(Display.getCurrent().getActiveShell(),Messages.dataSourcePanel_createErrorTitle, createStatus.getMessage(), createStatus); 
+            	String message = createStatus.getMessage();
+            	if(message.startsWith("TEIID70006 JBAS014749")) {  //$NON-NLS-1$
+                    ErrorDialog.openError(Display.getCurrent().getActiveShell(),Messages.dataSourcePanel_createErrorTitle, Messages.dataSourcePanel_dataSourceDeployErrorTryRestartMsg, createStatus); 
+            	} else {
+            		ErrorDialog.openError(Display.getCurrent().getActiveShell(),Messages.dataSourcePanel_createErrorTitle, message, createStatus); 
+            	}
             }
             
             // Refresh the table and select the just-deployed template
