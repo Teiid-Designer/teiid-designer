@@ -223,4 +223,50 @@ public class TeiidServerVersion implements ITeiidServerVersion {
     public boolean isSevenServer() {
         return ITeiidServerVersion.SEVEN.equals(getMajor());
     }
+
+    @Override
+    public boolean isGreaterThan(ITeiidServerVersion otherVersion) {
+        int myMajor = Integer.parseInt(getMajor());
+        int otherMajor = Integer.parseInt(otherVersion.getMajor());
+        if (myMajor < otherMajor)
+            return false;
+
+        if (hasWildCards() || otherVersion.hasWildCards())
+            return false;
+
+        int myMinor = Integer.parseInt(getMinor());
+        int otherMinor = Integer.parseInt(otherVersion.getMinor());
+        if (myMinor < otherMinor)
+            return false;
+
+        int myMicro = Integer.parseInt(getMicro());
+        int otherMicro = Integer.parseInt(otherVersion.getMicro());
+        if (myMicro < otherMicro)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public boolean isLessThan(ITeiidServerVersion otherVersion) {
+        int myMajor = Integer.parseInt(getMajor());
+        int otherMajor = Integer.parseInt(otherVersion.getMajor());
+        if (myMajor > otherMajor)
+            return false;
+
+        if (hasWildCards() || otherVersion.hasWildCards())
+            return false;
+
+        int myMinor = Integer.parseInt(getMinor());
+        int otherMinor = Integer.parseInt(otherVersion.getMinor());
+        if (myMinor > otherMinor)
+            return false;
+
+        int myMicro = Integer.parseInt(getMicro());
+        int otherMicro = Integer.parseInt(otherVersion.getMicro());
+        if (myMicro > otherMicro)
+            return false;
+
+        return true;
+    }
 }

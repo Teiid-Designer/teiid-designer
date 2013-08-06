@@ -82,4 +82,30 @@ public interface ITeiidServerVersion {
      * @return true is version is 7
      */
     boolean isSevenServer();
+
+    /**
+     * Is this version greater than the given version
+     *
+     * Wildcards will cause the result to return false since either
+     * this or otherVersion could be the greater depending on the
+     * value given to the wildcard.
+     *
+     * @param otherVersion
+     *
+     * @return true if this version is greater. False otherwise.
+     */
+    boolean isGreaterThan(ITeiidServerVersion otherVersion);
+
+    /**
+     * Is this version less than the given version
+     *
+     * Wildcards will cause the result to return false since either
+     * this or otherVersion could be the lesser depending on the
+     * value given to the wildcard.
+     *
+     * @param otherVersion
+     *
+     * @return true if this version is less. False otherwise.
+     */
+    boolean isLessThan(ITeiidServerVersion otherVersion);
 }
