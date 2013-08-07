@@ -785,7 +785,6 @@ public final class TeiidServerManager implements ITeiidServerManager {
             @Override
             public void serversInitialised() {
                 restoreStateInternal();
-                parentServersProvider.removeServerInitialisedListener(this);
             }
         };
 

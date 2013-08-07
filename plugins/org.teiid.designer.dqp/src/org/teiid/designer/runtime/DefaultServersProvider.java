@@ -10,6 +10,7 @@ package org.teiid.designer.runtime;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
 import org.eclipse.wst.server.core.IServerListener;
@@ -60,8 +61,11 @@ public class DefaultServersProvider implements IServersProvider {
             }
 
             synchronized(listenerLock) {
-                for (IServersInitialiseListener listener : listeners) {
+                Iterator<IServersInitialiseListener> iterator = listeners.iterator();
+                while(iterator.hasNext()) {
+                    IServersInitialiseListener listener = iterator.next();
                     listener.serversInitialised();
+                    iterator.remove();
                 }
             }
         }
