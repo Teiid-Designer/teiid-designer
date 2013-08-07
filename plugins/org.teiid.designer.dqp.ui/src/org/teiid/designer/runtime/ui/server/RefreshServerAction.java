@@ -8,10 +8,15 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
@@ -24,7 +29,7 @@ import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
  *
  * @since 8.0
  */
-public final class RefreshServerAction extends BaseSelectionListenerAction {
+public final class RefreshServerAction extends BaseSelectionListenerAction implements IHandler {
 
     /**
      * The currently selected server
@@ -38,6 +43,7 @@ public final class RefreshServerAction extends BaseSelectionListenerAction {
         super(UTIL.getString("serverRefreshActionText")); //$NON-NLS-1$
         setToolTipText(UTIL.getString("serverRefreshActionToolTip")); //$NON-NLS-1$
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.REFRESH_ICON));
+        setId("org.teiid.designer.server.refresh"); //$NON-NLS-1$
     }
 
     /**
@@ -112,6 +118,29 @@ public final class RefreshServerAction extends BaseSelectionListenerAction {
         this.selectedServer = teiidServer;
 
         return true;
+    }
+
+    @Override
+    public Object execute(ExecutionEvent event) {
+        ISelection currentSelection = HandlerUtil.getCurrentSelection(event);
+        this.selectedServer = RuntimeAssistant.getServerFromSelection(currentSelection);
+        run();
+        return null;
+    }
+
+    @Override
+    public void addHandlerListener(IHandlerListener handlerListener) {
+        // Not required
+    }
+
+    @Override
+    public void dispose() {
+        // Not required
+    }
+
+    @Override
+    public void removeHandlerListener(IHandlerListener handlerListener) {
+        // Not required
     }
 
 }

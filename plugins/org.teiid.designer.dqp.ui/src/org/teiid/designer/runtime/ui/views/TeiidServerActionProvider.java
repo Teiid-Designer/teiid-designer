@@ -13,7 +13,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -319,20 +318,10 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     @Override
     public void fillActionBars(IActionBars actionBars) {
         actionBars.setGlobalActionHandler(ICommonActionConstants.OPEN, editServerAction);
-        fillLocalToolBar(actionBars.getToolBarManager());
         fillLocalPullDown(actionBars.getMenuManager());
         actionBars.updateActionBars();
     }
-    
-    private void fillLocalToolBar( IToolBarManager manager ) {
-        manager.removeAll();
-        
-        manager.add(this.newServerAction);
-        manager.add(this.refreshAction);
-        manager.add(new Separator());
-        manager.add(this.collapseAllAction);
-    }
-    
+
     private void fillLocalPullDown( IMenuManager menuMgr ) {
         menuMgr.removeAll();
         menuMgr.removeMenuListener(enablePreviewActionListener);

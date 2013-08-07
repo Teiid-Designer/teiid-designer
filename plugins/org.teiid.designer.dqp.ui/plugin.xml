@@ -303,9 +303,9 @@
             allPopups="false"
             locationURI="toolbar:org.eclipse.wst.server.ui.ServersView">
          <command
-               commandId="org.teiid.designer.dqp.ui.newServerAction"
-               icon="icons/full/ctool16/new-teiid-server.png"
-               label="%newJbossTeiidServerCommand.label"
+               commandId="org.teiid.designer.dqp.ui.refreshServerAction"
+               icon="icons/full/ctool16/refresh.gif"
+               label="%refreshTeiidServerCommand.label"
                style="push">
          </command>
       </menuContribution>
@@ -313,10 +313,10 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="org.teiid.designer.runtime.ui.server.NewServerAction"
-            description="%newTeiidServerAction.description"
-            id="org.teiid.designer.dqp.ui.newServerAction"
-            name="%newJbossTeiidServerCommand.label">
+            defaultHandler="org.teiid.designer.runtime.ui.server.RefreshServerAction"
+            description="%refreshTeiidServerAction.description"
+            id="org.teiid.designer.dqp.ui.refreshServerAction"
+            name="%refreshTeiidServerCommand.label">
       </command>
       <command
             defaultHandler="org.teiid.designer.runtime.ui.server.SetDefaultServerAction" 
