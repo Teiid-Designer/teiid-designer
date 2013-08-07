@@ -10,12 +10,10 @@ package org.teiid.designer.vdb.ui.build;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.PLUGIN_ID;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Util;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -32,6 +30,8 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.texteditor.MarkerUtilities;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.runtime.spi.ITeiidServerManager.RuntimeState;
 import org.teiid.designer.vdb.VdbConstants;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.Messages;
@@ -89,9 +89,13 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
      */
 	@Override
 	protected IProject[] build(int kind, Map<String, String> args, IProgressMonitor monitor) throws CoreException {
-		// TODO Auto-generated method stub
-        IProject project = getProject();
-        
+	    if (ModelerCore.getTeiidServerManager().getState() != RuntimeState.STARTED) {
+	        // Not ready to do any validation as still loading bits 'n pieces
+	        return null;
+	    }
+
+	    IProject project = getProject();
+
         // don't do anything if project is closed or doesn't exist
         if ((project == null) || !project.isAccessible()) {
             return null;
@@ -105,33 +109,34 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
         Collection<IFile> vdbFilesToBuild = visitor.getVdbFiles();
         monitor.beginTask(Messages.vdbBuildTaskName, (vdbFilesToBuild.size() + vdbFilesToBuild.size()));
 
-        if (!vdbFilesToBuild.isEmpty()) {
-            MultiStatus status = new MultiStatus(PLUGIN_ID, IStatus.ERROR, Messages.vdbFilesBuildProblemMsg, null);
+        if (vdbFilesToBuild.isEmpty())
+            return null;
 
-            for (IFile vdbFile : vdbFilesToBuild) {
-                monitor.subTask(NLS.bind(Messages.vdbBuildSubTaskName, vdbFile.getName()));
+        MultiStatus status = new MultiStatus(PLUGIN_ID, IStatus.ERROR, Messages.vdbFilesBuildProblemMsg, null);
 
-                try {
-                    if (vdbFile.exists()) {
-                    	vdbFile.deleteMarkers(VdbUiConstants.VdbIds.PROBLEM_MARKER, true, IResource.DEPTH_INFINITE); // clear markers
-                        refreshVdbFileMarkers(vdbFile); // create VDB-related problem markers
-                    }
-                } catch (Exception e) {
-                    IStatus vdbStatus = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.vdblFileBuildErrorMsg,
-                                                                                        vdbFile.getName()), e);
-                    status.add(vdbStatus);
-                } finally {
-                    if (monitor.isCanceled()) {
-                        throw new OperationCanceledException();
-                    }
+        for (IFile vdbFile : vdbFilesToBuild) {
+            monitor.subTask(NLS.bind(Messages.vdbBuildSubTaskName, vdbFile.getName()));
 
-                    monitor.worked(1);
+            try {
+                if (vdbFile.exists()) {
+                    vdbFile.deleteMarkers(VdbUiConstants.VdbIds.PROBLEM_MARKER, true, IResource.DEPTH_INFINITE); // clear markers
+                    refreshVdbFileMarkers(vdbFile); // create VDB-related problem markers
                 }
-            }
+            } catch (Exception e) {
+                IStatus vdbStatus = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.vdblFileBuildErrorMsg,
+                                                                                        vdbFile.getName()), e);
+                status.add(vdbStatus);
+            } finally {
+                if (monitor.isCanceled()) {
+                    throw new OperationCanceledException();
+                }
 
-            if (!status.isOK()) {
-                Util.log(status);
+                monitor.worked(1);
             }
+        }
+
+        if (!status.isOK()) {
+            Util.log(status);
         }
 
         // no other projects need also be rebuilt because this project was built

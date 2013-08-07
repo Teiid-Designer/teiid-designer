@@ -42,8 +42,6 @@ import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.command.ServerCommand;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.editor.ServerResourceCommandManager;
-import org.teiid.designer.core.ParentServerMonitor;
-import org.teiid.designer.core.ParentServerMonitor.IParentServerMonitorListener;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.IServersProvider;
 import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
@@ -244,25 +242,6 @@ public class TeiidServerEditor extends EditorPart {
             
         }
     }
-
-
-    /**
-     * This editor can be opened when eclipse is started and as such requires the instance of the
-     * TeiidServerManager. However, the TeiidServerManager is not available until after the
-     * ServerCore has been initialised. Thus, we need to wait for the ServerCore to initialise and the
-     * TeiidServerManager to restore.
-     * 
-     * Therefore, delay the loading of the teiid server. This listener will listen for initialisation
-     * of ServerCore then launch a thread, which waits for restoration of the TeiidServerManager.
-     * Only then is the teiid server fetched and the contents of the editor populated.
-     */
-    IParentServerMonitorListener parentServerMonitorListener = new IParentServerMonitorListener() {
-        @Override
-        public void serversInitialised() {
-            LoadingThread thread = new LoadingThread();
-            thread.start();
-        }
-    };
     
     @Override
     public void init(IEditorSite site, IEditorInput input) {
@@ -295,7 +274,8 @@ public class TeiidServerEditor extends EditorPart {
         progressBar = new ProgressBar(form.getBody(), SWT.SMOOTH | SWT.INDETERMINATE);
         GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true,  true).applyTo(progressBar);
         
-        ParentServerMonitor.getInstance().addParentServerListener(parentServerMonitorListener);
+        LoadingThread thread = new LoadingThread();
+        thread.start();
     }
 
     /**
@@ -601,8 +581,7 @@ public class TeiidServerEditor extends EditorPart {
     @Override
     public void dispose() {
         getServerManager().removeListener(excutionConfigListener);
-        ParentServerMonitor.getInstance().removeParentServerListener(parentServerMonitorListener);
-        
+
         IServersProvider serversProvider = DqpPlugin.getInstance().getServersProvider();
         serversProvider.removeServerLifecycleListener(serverLifecycleListener);
         

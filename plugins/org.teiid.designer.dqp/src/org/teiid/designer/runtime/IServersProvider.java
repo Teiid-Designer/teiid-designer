@@ -21,6 +21,39 @@ import org.eclipse.wst.server.core.ServerCore;
 public interface IServersProvider {
 
     /**
+     * Interface for listening for completed initialisation of
+     * this servers provider
+     */
+    public static interface IServersInitialiseListener {
+
+        /**
+         * Called when the servers have been initialised
+         */
+        void serversInitialised();
+    }
+
+    /**
+     * Is this server provider initialised
+     *
+     * @return true if initialiased
+     */
+    boolean isInitialised();
+
+    /**
+     * Add a listener that will be notified when the server provider is initialised
+     *
+     * @param listener
+     */
+    void addServerInitialisedListener(IServersInitialiseListener listener);
+
+    /**
+     * Remove a server initialised listener
+     *
+     * @param listener
+     */
+    void removeServerInitialisedListener(IServersInitialiseListener listener);
+
+    /**
      * @param serversListener
      */
     void addServerLifecycleListener(IServerLifecycleListener serversListener);
@@ -36,12 +69,12 @@ public interface IServersProvider {
     IServer[] getServers();
 
     /**
-     * @param teiidParentServerStateListener
+     * @param serverStateListener
      */
     void addServerStateListener(IServerListener serverStateListener);
 
     /**
-     * @param teiidParentServerStateListener
+     * @param serverStateListener
      */
     void removeServerStateListener(IServerListener serverStateListener);
 }

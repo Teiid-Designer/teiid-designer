@@ -70,7 +70,22 @@ public class ServerManagerTest {
                 }
             }
         }
-        
+
+        @Override
+        public boolean isInitialised() {
+            return true;
+        }
+
+        @Override
+        public void addServerInitialisedListener(IServersInitialiseListener listener) {
+            // do nothing
+        }
+
+        @Override
+        public void removeServerInitialisedListener(IServersInitialiseListener listener) {
+            // do nothing
+        }
+
         @Override
         public void removeServerLifecycleListener(IServerLifecycleListener serversListener) {
             // do nothing
@@ -123,6 +138,8 @@ public class ServerManagerTest {
 
         String stateLocationPath = System.getProperty("java.io.tmpdir");
         this.mgr = new TeiidServerManager(stateLocationPath, passwordProvider, serversProvider, new DefaultStorageProvider());
+        // State must be set to started
+        this.mgr.restoreState();
     }
     
         

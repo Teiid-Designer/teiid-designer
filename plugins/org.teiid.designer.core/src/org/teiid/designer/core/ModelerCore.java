@@ -356,6 +356,11 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     private static ITeiidServerManager teiidServerManager = null;
 
     /**
+     * mutex lock for initialisation of the TeiidServerManager
+     */
+    private static Object mutexObject = new Object();
+
+    /**
      * Add all model resource sets known through the EXTERNAL_RESOURCE_SET extension to the specified container
      * 
      * @param container
@@ -2214,57 +2219,70 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
 	}
 
     /**
+     * Get (and if necessary initialise) the {@link ITeiidServerManager}
+     *
      * @return the teiidServerManager
      */
     public static ITeiidServerManager getTeiidServerManager() {
 
-        if (teiidServerManager == null) {
-            IExtensionRegistryCallback<ITeiidServerManager> callback = new IExtensionRegistryCallback<ITeiidServerManager>() {
+        /*
+         * Several threads at startup can be calling this not least to wait on its
+         * restoration and its possible that more than 1 thread could try to
+         * create a new instance. Needs to be synchronized.
+         *
+         * Need to watch for request on the UI thread that may cause deadlocks.
+         */
+        synchronized (mutexObject) {
 
-                @Override
-                public String getExtensionPointId() {
-                    return ITeiidServerManager.TEIID_SERVER_MANAGER_EXTENSION_POINT_ID;
-                }
+            if (teiidServerManager == null) {
 
-                @Override
-                public String getElementId() {
-                    return ITeiidServerManager.TEIID_SERVER_MANAGER_ELEMENT_ID;
-                }
+                IExtensionRegistryCallback<ITeiidServerManager> callback = new IExtensionRegistryCallback<ITeiidServerManager>() {
 
-                @Override
-                public String getAttributeId() {
-                    return CLASS_ATTRIBUTE_ID;
-                }
-
-                @Override
-                public boolean isSingle() {
-                    return true;
-                }
-
-                @Override
-                public void process(ITeiidServerManager instance, IConfigurationElement element) {
-                    CoreArgCheck.isNotNull(instance);
-
-                    if (teiidServerManager != null) {
-                        /*
-                         * Programming error since the teiid server manager extension should only be
-                         * implemented once.
-                         */
-                        throw new IllegalStateException();
+                    @Override
+                    public String getExtensionPointId() {
+                        return ITeiidServerManager.TEIID_SERVER_MANAGER_EXTENSION_POINT_ID;
                     }
 
-                    teiidServerManager = instance;
-                    teiidServerManager.restoreState();
-                }
-            };
+                    @Override
+                    public String getElementId() {
+                        return ITeiidServerManager.TEIID_SERVER_MANAGER_ELEMENT_ID;
+                    }
 
-            try {
-                ExtensionRegistryUtils.createExtensionInstances(callback);
-            } catch (Exception ex) {
-                throw new IllegalStateException(ex);
+                    @Override
+                    public String getAttributeId() {
+                        return CLASS_ATTRIBUTE_ID;
+                    }
+
+                    @Override
+                    public boolean isSingle() {
+                        return true;
+                    }
+
+                    @Override
+                    public void process(ITeiidServerManager instance,
+                                        IConfigurationElement element) {
+                        CoreArgCheck.isNotNull(instance);
+
+                        if (teiidServerManager != null) {
+                            /*
+                             * Programming error since the teiid server manager extension should only be
+                             * implemented once.
+                             */
+                            throw new IllegalStateException();
+                        }
+
+                        teiidServerManager = instance;
+                        teiidServerManager.restoreState();
+                    }
+                };
+
+                try {
+                    ExtensionRegistryUtils.createExtensionInstances(callback);
+                } catch (Exception ex) {
+                    throw new IllegalStateException(ex);
+                }
             }
         }
-
         return teiidServerManager;
     }
 

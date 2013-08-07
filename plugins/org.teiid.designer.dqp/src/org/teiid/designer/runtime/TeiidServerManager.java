@@ -45,12 +45,11 @@ import org.teiid.core.designer.util.Base64;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
-import org.teiid.designer.core.ParentServerMonitor;
-import org.teiid.designer.core.ParentServerMonitor.IParentServerMonitorListener;
 import org.teiid.designer.core.util.KeyInValueHashMap;
 import org.teiid.designer.core.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.DotProjectUtils;
+import org.teiid.designer.runtime.IServersProvider.IServersInitialiseListener;
 import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.importer.ImportManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
@@ -304,13 +303,17 @@ public final class TeiidServerManager implements ITeiidServerManager {
 
         IEclipsePreferences preferences = DqpPlugin.getInstance().getPreferences(DESIGNER_UI_PLUGIN_ID);
         preferences.addPreferenceChangeListener(preferenceChangeListener);
-
-        this.state = RuntimeState.STARTED;
     }
 
     // ===========================================================================================================================
     // Methods
     // ===========================================================================================================================
+
+    private void checkStarted() {
+        if (! RuntimeState.STARTED.equals(state))
+            throw new RuntimeException(
+                                       "Programming error: The TeiidServerManager is being used before it has been initialised"); //$NON-NLS-1$
+    }
 
     /**
      * Get the implementation of the {@link ISecureStorageProvider} used by
@@ -320,30 +323,9 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     @Override
     public ISecureStorageProvider getSecureStorageProvider() {
-        return secureStorageProvider;
-    }
-    
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.runtime.spi.EventManager#addListener(org.teiid.designer.runtime.spi.IExecutionConfigurationListener)
-     */
-    @Override
-    public boolean addListener( IExecutionConfigurationListener listener ) {
-        CoreArgCheck.isNotNull(listener, "listener"); //$NON-NLS-1$
-        return this.listeners.addIfAbsent(listener);
-    }
+        checkStarted();
 
-    /**
-     * Registers the specified <code>PersistedServer</code>.
-     * 
-     * @param teiidServer the server being added (never <code>null</code>)
-     * @return a status indicating if the server was added to the registry
-     */
-    @Override
-    public IStatus addServer( ITeiidServer teiidServer ) {
-        CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
-        return internalAddServer(teiidServer, true);
+        return secureStorageProvider;
     }
 
     /**
@@ -351,6 +333,8 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     @Override
     public ITeiidServer getDefaultServer() {
+        checkStarted();
+
         return defaultServer;
     }
 
@@ -360,6 +344,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     @Override
     public ITeiidServer getServer( String id ) {
+        checkStarted();
         CoreArgCheck.isNotNull(id, "id"); //$NON-NLS-1$
 
         return teiidServers.get(id);
@@ -371,6 +356,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     @Override
     public ITeiidServer getServer( IServer parentServer) {
+        checkStarted();
         CoreArgCheck.isNotNull(parentServer, "parentServer"); //$NON-NLS-1$
 
         for (ITeiidServer teiidServer : getServers()) {
@@ -387,6 +373,8 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     @Override
     public Collection<ITeiidServer> getServers() {
+        checkStarted();
+
         try {
             this.serverLock.readLock().lock();
             return Collections.unmodifiableCollection(this.teiidServers.values());
@@ -395,13 +383,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
         }
     }
 
-    /**
-     * Get the targeted teiid server version
-     *
-     * @return teiid server version
-     */
-    @Override
-    public ITeiidServerVersion getDefaultServerVersion() {
+    private ITeiidServerVersion getDefaultServerVersionInternal() {
         if (this.defaultServer == null) {
             // Preference is stored in the ui plugin which we do not have a dependency on so have to
             // get at the preference in this way. Not great but alternative is to try and save the property
@@ -413,6 +395,17 @@ public final class TeiidServerManager implements ITeiidServerManager {
         }
 
         return defaultServer.getServerVersion();
+    }
+
+    /**
+     * Get the targeted teiid server version
+     *
+     * @return teiid server version
+     */
+    @Override
+    public ITeiidServerVersion getDefaultServerVersion() {
+        checkStarted();
+        return getDefaultServerVersionInternal();
     }
 
     @Override
@@ -440,15 +433,16 @@ public final class TeiidServerManager implements ITeiidServerManager {
      * @param notifyListeners indicates if registry listeners should be notified
      * @return a status indicating if the server was added to the registry
      */
-    private IStatus internalAddServer( ITeiidServer teiidServer,
-                                       boolean notifyListeners ) {
+    private IStatus addServerInternal( ITeiidServer teiidServer, boolean notifyListeners ) {
+        CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
+
         boolean added = false;
         ITeiidServer defaultServer = null;
 
         try {
             this.serverLock.writeLock().lock();
 
-            if (!isRegistered(teiidServer)) {
+            if (!isRegisteredInternal(teiidServer)) {
                 if (teiidServers.isEmpty()) {
                     defaultServer = teiidServer;
                 }
@@ -463,7 +457,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
                 notifyListeners(ExecutionConfigurationEvent.createAddServerEvent(teiidServer));
             }
             if( defaultServer != null ) {
-            	setDefaultServer(defaultServer);
+                setDefaultServerInternal(defaultServer);
             }
             return Status.OK_STATUS;
         }
@@ -473,12 +467,24 @@ public final class TeiidServerManager implements ITeiidServerManager {
     }
 
     /**
+     * Registers the specified <code>PersistedServer</code>.
+     *
+     * @param teiidServer the server being added (never <code>null</code>)
+     * @return a status indicating if the server was added to the registry
+     */
+    @Override
+    public IStatus addServer( ITeiidServer teiidServer ) {
+        checkStarted();
+
+        return addServerInternal(teiidServer, true);
+    }
+
+    /**
      * @param teiidServer the server being removed
      * @param notifyListeners indicates if registry listeners should be notified
      * @return a status indicating if the specified server was removed from the registry
      */
-    private IStatus internalRemoveServer( ITeiidServer teiidServer,
-                                          boolean notifyListeners ) {
+    private IStatus removeServerInternal( ITeiidServer teiidServer, boolean notifyListeners ) {
         boolean removed = false;
 
         try {
@@ -490,9 +496,9 @@ public final class TeiidServerManager implements ITeiidServerManager {
             if (teiidServer.equals(getDefaultServer())) {
                 // If no servers left, set defaultServer to null
                 if (this.teiidServers.isEmpty())
-                    setDefaultServer(null);
+                    setDefaultServerInternal(null);
                 else
-                    setDefaultServer(this.teiidServers.values().iterator().next());
+                    setDefaultServerInternal(this.teiidServers.values().iterator().next());
             }
 
         } finally {
@@ -512,6 +518,18 @@ public final class TeiidServerManager implements ITeiidServerManager {
     }
 
     /**
+     * @param teiidServer the server being removed (never <code>null</code>)
+     * @return a status indicating if the specified segetUrlrver was removed from the registry (never <code>null</code>)
+     */
+    @Override
+    public IStatus removeServer( ITeiidServer teiidServer ) {
+        checkStarted();
+        CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
+
+        return removeServerInternal(teiidServer, true);
+    }
+
+    /**
      * Is this server the default
      * 
      * @param teiidServer
@@ -520,11 +538,22 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     @Override
     public boolean isDefaultServer( ITeiidServer teiidServer ) {
+        checkStarted();
         CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
+
         if (this.defaultServer == null) {
             return false;
         }
         return this.defaultServer.equals(teiidServer);
+    }
+
+    private boolean isRegisteredInternal(ITeiidServer teiidServer) {
+        try {
+            this.serverLock.readLock().lock();
+            return this.teiidServers.containsValue(teiidServer);
+        } finally {
+            this.serverLock.readLock().unlock();
+        }
     }
 
     /**
@@ -533,14 +562,9 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     @Override
     public boolean isRegistered( ITeiidServer teiidServer ) {
+        checkStarted();
         CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
-
-        try {
-            this.serverLock.readLock().lock();
-            return this.teiidServers.containsValue(teiidServer);
-        } finally {
-            this.serverLock.readLock().unlock();
-        }
+        return isRegisteredInternal(teiidServer);
     }
 
     /**
@@ -560,47 +584,23 @@ public final class TeiidServerManager implements ITeiidServerManager {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.runtime.spi.EventManager#removeListener(org.teiid.designer.runtime.spi.IExecutionConfigurationListener)
-     */
-    @Override
-    public boolean removeListener( IExecutionConfigurationListener listener ) {
-        CoreArgCheck.isNotNull(listener, "listener"); //$NON-NLS-1$
-        return this.listeners.remove(listener);
-    }
+    private IServer findParentServer(String host, String parentServerId, ITeiidAdminInfo teiidAdminInfo) throws OrphanedTeiidServerException {
+        IServer[] servers = parentServersProvider.getServers();
+        for (IServer server : servers) {
+            if (! host.equals(server.getHost()))
+                continue;
 
-    /**
-     * @param teiidServer the server being removed (never <code>null</code>)
-     * @return a status indicating if the specified segetUrlrver was removed from the registry (never <code>null</code>)
-     */
-    @Override
-    public IStatus removeServer( ITeiidServer teiidServer ) {
-        CoreArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
-        return internalRemoveServer(teiidServer, true);
-    }
+            if (parentServerId != null && ! server.getId().equals(parentServerId)) {
+                // Double checks against the parent server id only if a parent server id was
+                // save. In the case of the old registry format, this was not possible so host
+                // comparison is sufficient
+                continue;
+            }
 
-    @Override
-    public void restoreState() {
-        this.state = RuntimeState.RESTORING;
-
-        if (ParentServerMonitor.getInstance().isServerCoreInitialised()) {
-            restoreStateInternal();
-            return;
+            return server;
         }
 
-        // Not yet initialised so install a listener to await the initialisation
-        IParentServerMonitorListener listener = new IParentServerMonitorListener() {
-
-            @Override
-            public void serversInitialised() {
-                restoreStateInternal();
-                ParentServerMonitor.getInstance().removeParentServerListener(this);
-            }
-        };
-
-        ParentServerMonitor.getInstance().addParentServerListener(listener);
+        throw new OrphanedTeiidServerException(teiidAdminInfo);
     }
 
     private void restoreStateInternal() {
@@ -757,10 +757,10 @@ public final class TeiidServerManager implements ITeiidServerManager {
                                                                                 parentServer);
                 teiidServer.setCustomLabel(customLabel);
 
-                addServer(teiidServer);
+               addServerInternal(teiidServer, true);
 
                 if (previewServer) {
-                    setDefaultServer(teiidServer);
+                    setDefaultServerInternal(teiidServer);
                 }
             }
         } catch (Exception e) {
@@ -769,32 +769,30 @@ public final class TeiidServerManager implements ITeiidServerManager {
             this.state = RuntimeState.STARTED;
         }
     }
-    
-    private IServer findParentServer(String host, String parentServerId, ITeiidAdminInfo teiidAdminInfo) throws OrphanedTeiidServerException {
-        IServer[] servers = parentServersProvider.getServers();
-        for (IServer server : servers) {
-            if (! host.equals(server.getHost()))
-                continue;
-            
-            if (parentServerId != null && ! server.getId().equals(parentServerId)) {
-                // Double checks against the parent server id only if a parent server id was
-                // save. In the case of the old registry format, this was not possible so host
-                // comparison is sufficient
-                continue;
-            }
-            
-            return server;
+
+    @Override
+    public void restoreState() {
+        this.state = RuntimeState.RESTORING;
+
+        if (parentServersProvider.isInitialised()) {
+            restoreStateInternal();
+            return;
         }
-       
-        throw new OrphanedTeiidServerException(teiidAdminInfo);
+
+        // Not yet initialised so install a listener to await the initialisation
+        IServersInitialiseListener listener = new IServersInitialiseListener() {
+
+            @Override
+            public void serversInitialised() {
+                restoreStateInternal();
+                parentServersProvider.removeServerInitialisedListener(this);
+            }
+        };
+
+        parentServersProvider.addServerInitialisedListener(listener);
     }
 
-    /**
-     * @param teiidServer Sets defaultServer to the specified value. May be null.
-     */
-    @Override
-    public void setDefaultServer( ITeiidServer teiidServer ) {
-
+    private void setDefaultServerInternal(ITeiidServer teiidServer) {
         if (this.defaultServer == null && teiidServer == null) {
             // Both are null so no point in continuing
             return;
@@ -823,16 +821,25 @@ public final class TeiidServerManager implements ITeiidServerManager {
          */
         ITeiidServerVersion oldServerVersion = oldDefaultServer != null ? oldDefaultServer.getServerVersion() : null;
 
-        if (teiidServerVersionListeners != null && ! getDefaultServerVersion().equals(oldServerVersion)) {
+        if (teiidServerVersionListeners != null && ! getDefaultServerVersionInternal().equals(oldServerVersion)) {
             // Server version change has occurred so close all editors and notify server version listeners
             closeEditors();
 
             for (ITeiidServerVersionListener listener : teiidServerVersionListeners) {
-                listener.versionChanged(getDefaultServerVersion());
+                listener.versionChanged(getDefaultServerVersionInternal());
             }
         }
 
         notifyListeners(ExecutionConfigurationEvent.createSetDefaultServerEvent(oldDefaultServer, this.defaultServer));
+    }
+
+    /**
+     * @param teiidServer Sets defaultServer to the specified value. May be null.
+     */
+    @Override
+    public void setDefaultServer( ITeiidServer teiidServer ) {
+        checkStarted();
+        setDefaultServerInternal(teiidServer);
     }
 
     /**
@@ -901,96 +908,101 @@ public final class TeiidServerManager implements ITeiidServerManager {
         if (this.stateLocationPath == null)
             return; // no persistence
         
-        if (!getServers().isEmpty()) {
-            try {
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder docBuilder = factory.newDocumentBuilder();
-                Document doc = docBuilder.newDocument();
+        if (teiidServers.isEmpty()) {
+            if (stateFileExists()) {
+                // delete current registry file since all servers have been deleted
+                try {
+                    new File(getStateFileName()).delete();
+                } catch (Exception e) {
+                    IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
+                                                Util.getString("errorDeletingServerRegistryFile", getStateFileName())); //$NON-NLS-1$
+                    Util.log(status);
+                }
+            }
 
-                // create root element
-                Element root = doc.createElement(SERVERS_TAG);
-                doc.appendChild(root);
+            return;
+        }
 
-                for (ITeiidServer teiidServer : getServers()) {
-                    Element serverElement = doc.createElement(SERVER_TAG);
-                    root.appendChild(serverElement);
-                    
-                    { // Server Version
-                        serverElement.setAttribute(SERVER_VERSION, teiidServer.getServerVersion().toString());
-                    }
-                    
-                    { // Host
-                        serverElement.setAttribute(HOST_ATTR, teiidServer.getHost());
-                    }
-                    
-                    { // Parent Server Id
-                        serverElement.setAttribute(PARENT_SERVER_ID, teiidServer.getParent().getId());
-                    }
-                    
-                    { // CUSTOM LABEL
-                        if (!StringUtilities.isEmpty(teiidServer.getCustomLabel())) {
-                            serverElement.setAttribute(CUSTOM_LABEL_ATTR, teiidServer.getCustomLabel());
-                        }
-                    }
-                    
-                    { // ADMIN CONNECTION INFO
-                        Element adminElement = doc.createElement(ADMIN_TAG);
-                        serverElement.appendChild(adminElement);
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = factory.newDocumentBuilder();
+            Document doc = docBuilder.newDocument();
 
-                        adminElement.setAttribute(PORT_ATTR, teiidServer.getTeiidAdminInfo().getPort());
-                        adminElement.setAttribute(USER_ATTR, teiidServer.getTeiidAdminInfo().getUsername());
-                        
-                        /* password is saved in the eclipse secure storage */
-                        
-//                        if( teiidServer.getTeiidAdminInfo().getPassword() != null) {
-//                        	adminElement.setAttribute(PASSWORD_ATTR, Base64.encodeBytes(teiidServer.getTeiidAdminInfo().getPassword().getBytes()));
-//                        }
-                        
-                        adminElement.setAttribute(SECURE_ATTR, Boolean.toString(teiidServer.getTeiidAdminInfo().isSecure()));
-                    }
-                    
-                    { // JDBC CONNECTION INFO
-                        Element jdbcElement = doc.createElement(JDBC_TAG);
-                        serverElement.appendChild(jdbcElement);
+            // create root element
+            Element root = doc.createElement(SERVERS_TAG);
+            doc.appendChild(root);
 
-                        jdbcElement.setAttribute(JDBC_PORT_ATTR, teiidServer.getTeiidJdbcInfo().getPort());
-                        jdbcElement.setAttribute(JDBC_USER_ATTR, teiidServer.getTeiidJdbcInfo().getUsername());
-                        
-                        /* password is saved in the eclipse secure storage */
-                        
-//                        if( teiidServer.getTeiidJdbcInfo().getPassword() != null) {
-//                        	jdbcElement.setAttribute(JDBC_PASSWORD_ATTR, Base64.encodeBytes(teiidServer.getTeiidJdbcInfo().getPassword().getBytes()));
-//                        }
-                        
-                        jdbcElement.setAttribute(JDBC_SECURE_ATTR, Boolean.toString(teiidServer.getTeiidJdbcInfo().isSecure()));
-                    }
+            Collection<ITeiidServer> servers = teiidServers.values();
+            for (ITeiidServer teiidServer : servers) {
+                Element serverElement = doc.createElement(SERVER_TAG);
+                root.appendChild(serverElement);
                     
-                    if ((getDefaultServer() != null) && (getDefaultServer().equals(teiidServer))) {
-                        serverElement.setAttribute(DEFAULT_ATTR, Boolean.toString(true));
+                { // Server Version
+                    serverElement.setAttribute(SERVER_VERSION, teiidServer.getServerVersion().toString());
+                }
+                    
+                { // Host
+                    serverElement.setAttribute(HOST_ATTR, teiidServer.getHost());
+                }
+                    
+                { // Parent Server Id
+                    serverElement.setAttribute(PARENT_SERVER_ID, teiidServer.getParent().getId());
+                }
+                    
+                { // CUSTOM LABEL
+                    if (!StringUtilities.isEmpty(teiidServer.getCustomLabel())) {
+                        serverElement.setAttribute(CUSTOM_LABEL_ATTR, teiidServer.getCustomLabel());
                     }
                 }
+                    
+                { // ADMIN CONNECTION INFO
+                    Element adminElement = doc.createElement(ADMIN_TAG);
+                    serverElement.appendChild(adminElement);
 
-                DOMSource source = new DOMSource(doc);
-                StreamResult resultXML = new StreamResult(new FileOutputStream(getStateFileName()));
-                TransformerFactory transFactory = TransformerFactory.newInstance();
-                Transformer transformer = transFactory.newTransformer();
-                transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2"); //$NON-NLS-1$ //$NON-NLS-2$ 
-                transformer.transform(source, resultXML);
-            } catch (Exception e) {
-                IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
-                                            Util.getString("errorSavingServerRegistry", getStateFileName())); //$NON-NLS-1$
-                Util.log(status);
+                    adminElement.setAttribute(PORT_ATTR, teiidServer.getTeiidAdminInfo().getPort());
+                    adminElement.setAttribute(USER_ATTR, teiidServer.getTeiidAdminInfo().getUsername());
+                        
+                    /* password is saved in the eclipse secure storage */
+                        
+//                 if( teiidServer.getTeiidAdminInfo().getPassword() != null) {
+//                     	adminElement.setAttribute(PASSWORD_ATTR, Base64.encodeBytes(teiidServer.getTeiidAdminInfo().getPassword().getBytes()));
+//                 }
+                        
+                    adminElement.setAttribute(SECURE_ATTR, Boolean.toString(teiidServer.getTeiidAdminInfo().isSecure()));
+                }
+                    
+                { // JDBC CONNECTION INFO
+                    Element jdbcElement = doc.createElement(JDBC_TAG);
+                    serverElement.appendChild(jdbcElement);
+
+                    jdbcElement.setAttribute(JDBC_PORT_ATTR, teiidServer.getTeiidJdbcInfo().getPort());
+                    jdbcElement.setAttribute(JDBC_USER_ATTR, teiidServer.getTeiidJdbcInfo().getUsername());
+                        
+                    /* password is saved in the eclipse secure storage */
+                        
+//                 if( teiidServer.getTeiidJdbcInfo().getPassword() != null) {
+//                     	jdbcElement.setAttribute(JDBC_PASSWORD_ATTR, Base64.encodeBytes(teiidServer.getTeiidJdbcInfo().getPassword().getBytes()));
+//                 }
+                        
+                    jdbcElement.setAttribute(JDBC_SECURE_ATTR, Boolean.toString(teiidServer.getTeiidJdbcInfo().isSecure()));
+                }
+                    
+                if ((defaultServer != null) && (defaultServer.equals(teiidServer))) {
+                    serverElement.setAttribute(DEFAULT_ATTR, Boolean.toString(true));
+                }
             }
-        } else if (stateFileExists()) {
-            // delete current registry file since all servers have been deleted
-            try {
-                new File(getStateFileName()).delete();
-            } catch (Exception e) {
-                IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
-                                            Util.getString("errorDeletingServerRegistryFile", getStateFileName())); //$NON-NLS-1$
-                Util.log(status);
-            }
+
+            DOMSource source = new DOMSource(doc);
+            StreamResult resultXML = new StreamResult(new FileOutputStream(getStateFileName()));
+            TransformerFactory transFactory = TransformerFactory.newInstance();
+            Transformer transformer = transFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2"); //$NON-NLS-1$ //$NON-NLS-2$ 
+            transformer.transform(source, resultXML);
+        } catch (Exception e) {
+            IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
+                                        Util.getString("errorSavingServerRegistry", getStateFileName())); //$NON-NLS-1$
+            Util.log(status);
         }
     }
 
@@ -1008,8 +1020,8 @@ public final class TeiidServerManager implements ITeiidServerManager {
      * @param updatedServer the new version of the server being put in the server registry (never <code>null</code>)
      * @return a status indicating if the server was updated in the registry (never <code>null</code>)
      */
-    public IStatus updateServer( ITeiidServer replacedServer,
-                                 ITeiidServer updatedServer ) {
+    public IStatus updateServer( ITeiidServer replacedServer, ITeiidServer updatedServer ) {
+        checkStarted();
         CoreArgCheck.isNotNull(replacedServer, "previousServerVersion"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(updatedServer, "newServerVersion"); //$NON-NLS-1$
 
@@ -1017,10 +1029,10 @@ public final class TeiidServerManager implements ITeiidServerManager {
 
         try {
             this.serverLock.writeLock().lock();
-            status = internalRemoveServer(replacedServer, false);
+            status = removeServerInternal(replacedServer, false);
 
             if (status.isOK()) {
-                status = internalAddServer(updatedServer, false);
+                status = addServerInternal(updatedServer, false);
 
                 if (status.isOK()) {
                     // all good so notify listeners
@@ -1029,7 +1041,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
                 }
 
                 // unexpected problem adding new version of server to registry so add old one back
-                IStatus undoRemoveServerStatus = internalAddServer(replacedServer, false);
+                IStatus undoRemoveServerStatus = addServerInternal(replacedServer, false);
 
                 if (undoRemoveServerStatus.getSeverity() == IStatus.ERROR) {
                     Util.log(undoRemoveServerStatus);
@@ -1044,6 +1056,28 @@ public final class TeiidServerManager implements ITeiidServerManager {
 
         // unexpected problem removing server from registry
         return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("serverManagerRegistryUpdateRemoveError", status.getMessage())); //$NON-NLS-1$
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.runtime.spi.EventManager#addListener(org.teiid.designer.runtime.spi.IExecutionConfigurationListener)
+     */
+    @Override
+    public boolean addListener( IExecutionConfigurationListener listener ) {
+        CoreArgCheck.isNotNull(listener, "listener"); //$NON-NLS-1$
+        return this.listeners.addIfAbsent(listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.runtime.spi.EventManager#removeListener(org.teiid.designer.runtime.spi.IExecutionConfigurationListener)
+     */
+    @Override
+    public boolean removeListener( IExecutionConfigurationListener listener ) {
+        CoreArgCheck.isNotNull(listener, "listener"); //$NON-NLS-1$
+        return this.listeners.remove(listener);
     }
 
     @Override

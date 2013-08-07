@@ -102,8 +102,6 @@ import org.teiid.core.designer.event.EventObjectListener;
 import org.teiid.core.designer.event.EventSourceException;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.ParentServerMonitor;
-import org.teiid.designer.core.ParentServerMonitor.IParentServerMonitorListener;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
@@ -328,24 +326,6 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
 
         }
     }
-
-    /**
-     * This view is opened when eclipse is started and as such requires the instance of the
-     * TeiidServerManager for the default server. However, the TeiidServerManager is not
-     * available until after the ServerCore has been initialised. Thus, we need to wait for the
-     * ServerCore to initialise and the TeiidServerManager to restore.
-     *
-     * Therefore, delay the loading of the server version. This listener will listen for initialisation
-     * of ServerCore then launch a thread, which waits for restoration of the TeiidServerManager.
-     * Only then is the version set.
-     */
-    IParentServerMonitorListener parentServerMonitorListener = new IParentServerMonitorListener() {
-        @Override
-        public void serversInitialised() {
-            ServerVersionLoadingThread thread = new ServerVersionLoadingThread();
-            thread.start();
-        }
-    };
 
     /**
      * Construct an instance of ModelExplorerResourceNavigator.
@@ -599,7 +579,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
 
         defaultServerSection.setClient(defaultServerSectionBody);
 
-        ParentServerMonitor.getInstance().addParentServerListener(parentServerMonitorListener);
+        ServerVersionLoadingThread thread = new ServerVersionLoadingThread();
+        thread.start();
     }
 
     /**
@@ -763,8 +744,6 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     public void dispose() {
         // Remove listeners
         ModelerCore.removeTeiidServerVersionListener(teiidServerVersionListener);
-
-        ParentServerMonitor.getInstance().removeParentServerListener(parentServerMonitorListener);
 
         // unhook the selection listeners from the seleciton service
         getViewSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(getModelObjectSelectionListener());

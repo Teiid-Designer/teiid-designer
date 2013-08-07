@@ -293,4 +293,10 @@
             modelObjectType="EMF">
       </factory>
    </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.teiid.designer.core.ModelerCoreStartup">
+      </startup>
+   </extension>
 </plugin>

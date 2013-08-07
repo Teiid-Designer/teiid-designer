@@ -34,12 +34,6 @@
       </factory>
    </extension>
    <extension
-         point="org.eclipse.ui.startup">
-      <startup
-            class="org.teiid.designer.runtime.DqpPluginStartup">
-      </startup>
-   </extension>
-   <extension
          point="org.teiid.designer.spi.teiidServerManager">
       <serverManager
             class="org.teiid.designer.runtime.TeiidServerManager">
