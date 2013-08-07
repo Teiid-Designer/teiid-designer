@@ -17,7 +17,7 @@
       <unit id="org.springframework.osgi.extender" version="1.2.1"/>
       <unit id="org.springframework.osgi.extensions.annotations" version="1.2.1"/>
       <unit id="org.springframework.osgi.io" version="1.2.1"/>
-      <repository location="http://download.jboss.org/jbosstools/updates/integration/locus/"/>
+      <repository location="http://download.jboss.org/jbosstools/updates/integration/locus/1.1.0.CI"/>
     </location>
 
     <!-- Eclipse Graphiti -->
