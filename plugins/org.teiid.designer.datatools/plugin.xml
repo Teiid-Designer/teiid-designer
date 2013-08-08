@@ -128,7 +128,7 @@
 					value="ModeShape" required="true" visible="true" />
 				<property generated="false"
 					id="org.eclipse.datatools.connectivity.db.version" name="Version"
-					value="2.2" required="true" visible="true" />
+					value="3.4" required="true" visible="true" />
 				<property generated="false"
 					id="org.eclipse.datatools.connectivity.db.URL" name="Connection URL"
 					value="jdbc:jcr:http://localhost:8080/modeshape-rest/" required="true"
@@ -151,8 +151,8 @@
           file="src/org/teiid/designer/datatools/profiles/modeshape/database/modeshapeDB.xmi"
           product="ModeShape"
           productDisplayString="ModeShape"
-          version="2.2"
-          versionDisplayString="2.2">
+          version="3.4"
+          versionDisplayString="3.4">
     </definition>
  </extension>
  <extension
