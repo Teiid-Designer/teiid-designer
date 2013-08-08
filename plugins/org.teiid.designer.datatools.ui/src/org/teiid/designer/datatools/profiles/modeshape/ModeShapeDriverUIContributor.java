@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileConstants;
@@ -16,7 +15,6 @@ import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -49,8 +47,6 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
     private static final String SSL_BTN_UI_ = DatatoolsUiConstants.UTIL.getString("Common.SSL_BTN_UI_"); //$NON-NLS-1$
     
     private static final String TEIID_BTN_UI_ = DatatoolsUiConstants.UTIL.getString("Common.TEIID_BTN_UI_"); //$NON-NLS-1$
-
-    private static final String BROWSE_BUTTON_LBL_UI_ = DatatoolsUiConstants.UTIL.getString("Common.BROWSE_BUTTON_LBL_UI_"); //$NON-NLS-1$
     
     private static final String SAVE_PASSWORD_LBL_UI_ = DatatoolsUiConstants.UTIL.getString("Common.SAVE_PASSWORD_LBL_UI_"); //$NON-NLS-1$
 
@@ -78,7 +74,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
     
 	private boolean isReadOnly = false;
 	
-	private ScrolledComposite parentComposite;
+	private Composite parentComposite;
 
 	private Label hostLabel;
 
@@ -131,15 +127,15 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
                 additionalStyles = SWT.READ_ONLY;
             }
 
-            parentComposite = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
-            parentComposite.setExpandHorizontal(true);
-            parentComposite.setExpandVertical(true);
+            parentComposite = new Composite(parent, SWT.NONE);
             parentComposite.setLayout(new GridLayout());
+            parentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
             TabFolder tabComposite = new TabFolder(parentComposite, SWT.TOP);
+            tabComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
             // add general tab
-            TabItem generalTab = new TabItem(tabComposite, SWT.None);
+            TabItem generalTab = new TabItem(tabComposite, SWT.NONE);
             generalTab.setText(ConnectivityUIPlugin.getDefault().getResourceString("CommonDriverUIContributor.generaltab")); //$NON-NLS-1$
 
             Composite baseComposite = new Composite(tabComposite, SWT.NULL);
@@ -158,7 +154,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             gd = new GridData();
             gd.horizontalAlignment = GridData.FILL;
             gd.verticalAlignment = GridData.BEGINNING;
-            gd.horizontalSpan = 3;
+            gd.horizontalSpan = 2;
             gd.grabExcessHorizontalSpace = true;
             hostText.setLayoutData(gd);
 
@@ -173,7 +169,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             gd.horizontalAlignment = GridData.FILL;
             gd.verticalAlignment = GridData.BEGINNING;
             gd.grabExcessHorizontalSpace = true;
-            gd.horizontalSpan = 3;
+            gd.horizontalSpan = 2;
             portText.setLayoutData(gd);
             
             usernameLabel = new Label(baseComposite, SWT.NONE);
@@ -187,7 +183,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             gd.horizontalAlignment = GridData.FILL;
             gd.verticalAlignment = GridData.BEGINNING;
             gd.grabExcessHorizontalSpace = true;
-            gd.horizontalSpan = 3;
+            gd.horizontalSpan = 2;
             usernameText.setLayoutData(gd);
 
             passwordLabel = new Label(baseComposite, SWT.NONE);
@@ -201,13 +197,12 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             gd.horizontalAlignment = GridData.FILL;
             gd.verticalAlignment = GridData.BEGINNING;
             gd.grabExcessHorizontalSpace = true;
-            gd.horizontalSpan = 3;
+            gd.horizontalSpan = 2;
             passwordText.setLayoutData(gd);
 
             reposLabel = new Label(baseComposite, SWT.NONE);
             reposLabel.setText(PATH_LBL_UI_);
             gd = new GridData();
-            gd.horizontalSpan = 3;
             gd.verticalAlignment = GridData.BEGINNING;
             reposLabel.setLayoutData(gd);
 
@@ -228,15 +223,13 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             gd.horizontalAlignment = GridData.FILL;
             gd.verticalAlignment = GridData.BEGINNING;
             gd.grabExcessHorizontalSpace = true;
-            gd.horizontalSpan = 2;
             reposCombo.setLayoutData(gd);
 
             reposBrowseButton = new Button(baseComposite, SWT.BUTTON1);
-            reposBrowseButton.setText(BROWSE_BUTTON_LBL_UI_);
+            reposBrowseButton.setText(DatatoolsUiConstants.UTIL.getString("Common.REFRESH_BUTTON_LBL_UI_")); //$NON-NLS-1$
             gd = new GridData();
             gd.horizontalAlignment = GridData.CENTER;
             gd.verticalAlignment = GridData.BEGINNING;
-            gd.horizontalSpan = 1;
             gd.grabExcessHorizontalSpace = false;
             reposBrowseButton.setLayoutData(gd);
             reposBrowseButton.setEnabled(false);
@@ -270,18 +263,10 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             gd.verticalAlignment = GridData.BEGINNING;
             urlLabel.setLayoutData(gd);
 
-            urlText = new Text(baseComposite, SWT.MULTI | SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
-            gd = new GridData();
-            gd.horizontalAlignment = GridData.FILL;
-            gd.verticalAlignment = GridData.BEGINNING;
-            gd.grabExcessHorizontalSpace = true;
+            urlText = new Text(baseComposite, SWT.MULTI | SWT.BORDER | SWT.READ_ONLY | SWT.WRAP);
+            gd = new GridData(SWT.FILL, SWT.FILL, true, true);
             gd.horizontalSpan = 2;
-            gd.widthHint = 190;
-            gd.heightHint = 90;
             urlText.setLayoutData(gd);
-
-            parentComposite.setContent(tabComposite);
-            parentComposite.setMinSize(tabComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
             initialize();
         }
@@ -470,6 +455,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
 
         updateURL();
         addListeners();
+        updateBrowseButtonEnablement();
         setConnectionInformation();
     }
 	@SuppressWarnings({ "unchecked" })
