@@ -739,13 +739,6 @@ public class JdbcImportWizard extends AbstractWizard
                 // Moved this call to AFTER the MODEL TYPE has been set.
                 ModelUtilities.initializeModelContainers(resrc, "Jdbc Import", this); //$NON-NLS-1$
 
-                // If connection profile is cached, which it should, go ahead and inject the data into the
-                // model resource.
-                if (this.connectionProfile != null) {
-                    IConnectionInfoProvider provider = new JDBCConnectionInfoProvider();
-                    provider.setConnectionInfo(resrc, this.connectionProfile);
-                }
-
                 if( this.isVdbSourceModel && srcPg.isTeiidConnection() ) {
                 	// Inject VDB source model properties: locked = TRUE, vdb-name = "xxxx" , vdb-version = "y"
                 	ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
@@ -771,11 +764,6 @@ public class JdbcImportWizard extends AbstractWizard
                                                                                       getDatabase(),
                                                                                       ppProcessorPack.getJdbcSource().getImportSettings(),
                                                                                       monitor);
-                // Reset the connection profile, since it may have changed
-                if (this.connectionProfile != null) {
-                    IConnectionInfoProvider provider = new JDBCConnectionInfoProvider();
-                    provider.setConnectionInfo(ppProcessorPack.getModelResource(), this.connectionProfile);
-                }
             }
             sWatch.stop();
 
@@ -815,6 +803,12 @@ public class JdbcImportWizard extends AbstractWizard
 
                 sWatch.stop();
                 sWatch.start(true);
+
+                // Inject the connectionProfile into the ModelResource
+                if (this.connectionProfile != null) {
+                    IConnectionInfoProvider provider = new JDBCConnectionInfoProvider();
+                    provider.setConnectionInfo(ppProcessorPack.getModelResource(), this.connectionProfile);
+                }
 
                 // Check if Virtual, then re-set ModelType
                 if( isVirtual ) {

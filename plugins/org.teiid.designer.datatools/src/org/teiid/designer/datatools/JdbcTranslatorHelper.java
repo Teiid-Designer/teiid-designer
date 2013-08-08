@@ -84,6 +84,10 @@ public class JdbcTranslatorHelper {
 				return DB2;
 			}
 			
+			if( vendor.toUpperCase().startsWith(MODESHAPE.toUpperCase()) ) {
+				return MODESHAPE;
+			}
+
 			if( vendor.toUpperCase().startsWith(MYSQL.toUpperCase()) ) {
 				if( version != null && version.startsWith("5")) { //$NON-NLS-1$
 					return MYSQL5;
