@@ -234,6 +234,11 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     private ISecureStorageProvider secureStorageProvider;
 
+    /**
+     * The provider used for asking the user for passwords should they be necessary.
+     */
+    private IPasswordProvider passwordProvider;
+
     /* Listen for changes to the default server version preference */
     private IPreferenceChangeListener preferenceChangeListener = new IPreferenceChangeListener() {
         @Override
@@ -293,16 +298,8 @@ public final class TeiidServerManager implements ITeiidServerManager {
         this.stateLocationPath = stateLocationPath;
         this.parentServersProvider = parentServersProvider;
         this.secureStorageProvider = secureStorageProvider;
+        this.passwordProvider = passwordProvider;
         this.listeners = new CopyOnWriteArrayList<IExecutionConfigurationListener>();
-
-        PreviewManager previewManager = PreviewManager.getInstance();
-        previewManager.setPasswordProvider(passwordProvider);
-        addListener(previewManager);
-
-        addListener(ImportManager.getInstance());
-
-        IEclipsePreferences preferences = DqpPlugin.getInstance().getPreferences(DESIGNER_UI_PLUGIN_ID);
-        preferences.addPreferenceChangeListener(preferenceChangeListener);
     }
 
     // ===========================================================================================================================
@@ -603,18 +600,33 @@ public final class TeiidServerManager implements ITeiidServerManager {
         throw new OrphanedTeiidServerException(teiidAdminInfo);
     }
 
+    /**
+     * Initialise those managers and listeners under the control of the server manager
+     * that may well rely on it.
+     */
+    private void initialiseManagers() {
+        PreviewManager previewManager = PreviewManager.getInstance();
+        previewManager.setPasswordProvider(passwordProvider);
+        addListener(previewManager);
+
+        addListener(ImportManager.getInstance());
+
+        IEclipsePreferences preferences = DqpPlugin.getInstance().getPreferences(DESIGNER_UI_PLUGIN_ID);
+        preferences.addPreferenceChangeListener(preferenceChangeListener);
+    }
+
     private void restoreStateInternal() {
 
         // Initialize teiid parent server state listener
         parentServersProvider.addServerStateListener(TeiidParentServerListener.getInstance());
         parentServersProvider.addServerLifecycleListener(TeiidParentServerListener.getInstance());
 
-        if (this.stateLocationPath == null || ! stateFileExists()) {
-            this.state = RuntimeState.STARTED;
-            return;
-        }
-
         try {
+            if (this.stateLocationPath == null || ! stateFileExists()) {
+                // Started will be called from the finally clause.
+                return;
+            }
+
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = factory.newDocumentBuilder();
             Document doc = docBuilder.parse(new File(getStateFileName()));
@@ -767,6 +779,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
             Util.log(e);
         } finally {
             this.state = RuntimeState.STARTED;
+            initialiseManagers();
         }
     }
 
