@@ -24,11 +24,17 @@ public class RestWarDataserviceModel {
     private String vdbLocation;
     private String jndiName;
     private boolean includeJars;
+    private String securityType;
+    private String securityRealm;
+    private String securityRole;
 
     private String warFilenameDefault;
     private String contextNameDefault;
     private String jndiNameDefault;
     private boolean includeJarsDefault;
+    private String securityTypeDefault;
+    private String securityRealmDefault;
+    private String securityRoleDefault;
 
     private IFile theVdb;
     private Map<String, List<RestProcedure>> restProcedureMap;
@@ -68,6 +74,30 @@ public class RestWarDataserviceModel {
     }
 
     /**
+     * @return Returns securityType value.
+     * @since 8.2
+     */
+    public String getSecurityType() {
+        return this.securityType;
+    }
+
+    /**
+     * @return Returns securityRealm value.
+     * @since 8.2
+     */
+    public String getSecurityRealm() {
+        return this.securityRealm;
+    }
+
+    /**
+     * @return Returns securityRole value.
+     * @since 8.2
+     */
+    public String getSecurityRole() {
+        return this.securityRole;
+    }
+    
+    /**
      * @return Returns the contextName.
      * @since 7.4
      */
@@ -97,6 +127,77 @@ public class RestWarDataserviceModel {
      */
     public void setWarFileLocation( String warFilename ) {
         this.warFilename = warFilename;
+    }
+    
+    /**
+     * @param securityType The SecurityType to set.
+     * @since 8.2
+     */
+    public void setSecurityTypeDefault( String securityTypeDefault ) {
+        this.securityTypeDefault = securityTypeDefault;
+        this.securityType = securityTypeDefault;
+
+    }
+    
+    /**
+     * @return Returns the securityTypeDefault.
+     * @since 8.2
+     */
+    public String getSecurityTypeDefault() {
+        return this.securityTypeDefault;
+    }
+
+    /**
+     * @return Returns the securityRealmDefault.
+     * @since 8.2
+     */
+    public String getSecurityRealmDefault() {
+        return this.securityRealmDefault;
+    }
+
+    /**
+     * @return Returns the securityRoleDefault.
+     * @since 8.2
+     */
+    public String getSecurityRoleDefault() {
+        return this.securityRoleDefault;
+    }
+
+    /**
+     * @param securityRealmDefault The securityRealmDefault to set.
+     * @since 8.2
+     */
+    public void setSecurityRealmDefault( String securityRealmDefault ) {
+        this.securityRealmDefault = securityRealmDefault;
+        this.securityRealm = securityRealmDefault;
+
+    }
+
+    /**
+     * @param securityRoleDefault The securityRoleDefault to set.
+     * @since 8.2
+     */
+    public void setSecurityRoleDefault( String securityRoleDefault ) {
+        this.securityRoleDefault = securityRoleDefault;
+        this.securityRole = securityRoleDefault;
+
+    }
+
+    /**
+     * @param securityRealm The SecurityRealm to set.
+     * @since 8.2
+     */
+    public void setSecurityRealm( String securityRealm ) {
+        this.securityRealm = securityRealm;
+    }
+
+    /**
+     * @param securityRole The SecurityRole to set.
+     * @since 8.2
+     */
+    public void setSecurityRole( String securityRole ) {
+        this.securityRole = securityRole;
+
     }
 
     /**
@@ -267,7 +368,10 @@ public class RestWarDataserviceModel {
         properties.put(WebArchiveBuilderConstants.PROPERTY_VDB_FILE_NAME, this.getVdbFile().getLocation().toOSString());
         properties.put(WebArchiveBuilderConstants.PROPERTY_INCLUDE_RESTEASY_JARS, this.isIncludeJars());
         properties.put(WebArchiveBuilderConstants.PROPERTY_VDB_REST_PROCEDURES, this.getRestProcedureMap());
-
+        properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE, this.getSecurityType());
+        properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM, this.getSecurityRealm());
+        properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_ROLE, this.getSecurityRole());
+         
         return properties;
     }
 
