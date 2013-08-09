@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.DiagnosticCollector;
@@ -33,6 +34,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
+
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,6 +45,7 @@ import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.TempDirectory;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.runtime.ui.wizards.webservices.WarDeploymentInfoPanel;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.webservice.WebServicePlugin;
@@ -60,7 +63,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
     private List<String> models = new ArrayList<String>();
     private Map<String, List<RestProcedure>> modelMapOfProcedures = new HashMap<String, List<RestProcedure>>();
     File webXmlFile = null;
-    private static String newline = System.getProperty("line.separator"); //$NON-NLS-1$
+    public static String newline = System.getProperty("line.separator"); //$NON-NLS-1$
 
     // =============================================================
     // Constants
@@ -205,6 +208,12 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             monitor.subTask(TASK_COPYING_FILES);
             // Copy the Web files.
             getWebFiles(contextDirectory, webInfDirectory);
+            
+            if (properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE).equals(WarDeploymentInfoPanel.BASIC)) {
+                // Replace the variables in the jboss-web.xml file.
+                replaceJBossWebXmlVariables(webInfDirectoryName,
+                                            properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM));
+            }
 
             // Replace the variables in the web.xml file.
             replaceWebXmlVariables(webInfDirectoryName, properties, contextName);
@@ -359,6 +368,27 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
         final File webAppsDirectory = new File(webAppsDirectoryName);
         FileUtils.copyRecursively(webAppsDirectory, contextDirectory, null, false);
     }
+    
+    /**
+     * Replace the variables in the web.xml file with their appropriate values.
+     * 
+     * @param webInfDirectoryName
+     * @param properties
+     * @param contextName
+     * @since 8.2
+     */
+    protected void replaceJBossWebXmlVariables( String webInfDirectoryName,
+                                                String securityDomain) {
+
+        // Replace variables in the jboss-web.xml file.
+        File jbossWebXmlFile = new File(webInfDirectoryName + File.separator + "jboss-web.xml"); //$NON-NLS-1$
+
+        String securityDomainNode = "<security-domain>java:/jaas/" + securityDomain + "</security-domain>"; //$NON-NLS-1$ //$NON-NLS-2$
+
+        AntTasks.replace(jbossWebXmlFile,
+                         "<!--<security-domain>java:/jaas/teiid-security</security-domain>-->", securityDomainNode); //$NON-NLS-1$
+        
+    }
 
     /**
      * Replace the variables in the web.xml file with their appropriate values.
@@ -375,6 +405,18 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
         // Replace variables in the web.xml file.
         webXmlFile = new File(webInfDirectoryName + File.separator + "web.xml"); //$NON-NLS-1$
 
+        // Update for Basic Auth if HTTPBasic security is selected
+        if (properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE).equals(WarDeploymentInfoPanel.BASIC)) {
+            String realm = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM);
+            String role = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_ROLE);
+
+            AntTasks.replace(webXmlFile, "<!--<security-constraint>", "\t<security-constraint>"); //$NON-NLS-1$ //$NON-NLS-2$
+            AntTasks.replace(webXmlFile, "${realmName}", realm); //$NON-NLS-1$
+            AntTasks.replace(webXmlFile, "${roleName}", role); //$NON-NLS-1$
+            AntTasks.replace(webXmlFile, "</login-config>-->", "</login-config>"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        
+        AntTasks.replace(webXmlFile, "${warname}", contextName); //$NON-NLS-1$
         AntTasks.replace(webXmlFile, "${contextName}", contextName); //$NON-NLS-1$
     }
 
