@@ -432,36 +432,17 @@
             <itemizedlist>
                 <listitem>
                     <para>
-                        Select the <emphasis role="bold">New...</emphasis> action in the Server view or click 
-                        the <emphasis role="bold">New Teiid Instance</emphasis> button, 
-                        <inlinemediaobject>
-                            <imageobject>
-                                <imagedata fileref="images/icons/new-teiid-server.png"/>
-                            </imageobject>
-                        </inlinemediaobject> , in the toolbar.
+                        Select the <emphasis role="bold">New...</emphasis> action in the Server view and this will launch the JBoss
+                        Server wizard. Configuring the JBoss Server instance (with Teiid installed) will enable connection to the
+                        Teiid Server.
                     </para>
                 </listitem>
                 <listitem>
-                    <para>This will launch the <emphasis role="bold">New Teiid Instance</emphasis> dialog shown below.</para>
-                    <figure id="ui-reference-new-teiid-instance-dialog-image">
-                        <title>New Teiid Instance Dialog</title>
-                        <mediaobject>
-                            <imageobject>
-                                <imagedata fileref="images/screencaps/new-teiid-instance-dialog.png"/>
-                            </imageobject>
-                        </mediaobject>
-                    </figure>
-                </listitem>
-                <listitem>
-                    <para>Enter a unique display name for your Teiid instance.</para>
-                </listitem>
-                <listitem>
-                    <para>Select the <emphasis role="bold">New...</emphasis> button in 
-                        the  <emphasis role="bold">JBoss Server</emphasis> section to launch 
-                        the <emphasis role="bold">New Server</emphasis> wizard. Select 
-                        the <emphasis role="bold">JBoss AS 7.1.1</emphasis> server type
-                        under the  <emphasis role="bold">JBoss Community</emphasis> category and 
-                        click <emphasis role="bold">Next&gt;</emphasis>.</para>
+                    <para>
+                        In the <emphasis role="bold">New Server</emphasis> wizard. Select the 
+                        <emphasis role="bold">JBoss AS 7.1.1</emphasis> server type under the
+                        <emphasis role="bold">JBoss Community</emphasis> category and click 
+                        <emphasis role="bold">Next&gt;</emphasis>.
                         <figure id="ui-reference-new-jboss-server-wizard-image">
                             <title>New Server Dialog</title>
                             <mediaobject>
@@ -470,6 +451,7 @@
                                 </imageobject>
                             </mediaobject>
                         </figure>
+                    </para>
                 </listitem>
                 <listitem>
                     <para>On the <emphasis role="bold">JBoss Runtime</emphasis> page, click the 
@@ -502,14 +484,14 @@
                 </listitem>
                 <listitem>
                     <para>Click <emphasis role="bold">Finish</emphasis> and your new Teiid server configuration
-                        will be opened in a <emphasis role="bold">Teiid Editor</emphasis> for viewing.
+                        will be opened in the <emphasis role="bold">JBoss / Teiid Editor</emphasis> for viewing.
                         In this editor you can test both Teiid admin and JDBC connections. 
                     </para>
                     <figure id="ui-reference-teiid-editor-image">
                         <title>Teiid Editor</title>
                         <mediaobject>
                             <imageobject>
-                                <imagedata fileref="images/screencaps/teiid-server-editor.png"/>
+                                <imagedata fileref="images/screencaps/server-view-teiid-editor.png"/>
                             </imageobject>
                         </mediaobject>
                     </figure>
@@ -522,15 +504,6 @@
 				<para>
 					<inlinemediaobject>
 								<imageobject>
-									<imagedata fileref="images/icons/new-teiid-server.png"/>
-								</imageobject>
-							</inlinemediaobject> <emphasis role="bold">New Teiid Instance</emphasis> - Create a new instance of a running Teiid server
-				</para>
-			</listitem>
-			  <listitem>
-				<para>
-					<inlinemediaobject>
-								<imageobject>
 									<imagedata fileref="images/icons/edit-teiid-server.png"/>
 								</imageobject>
 							</inlinemediaobject> <emphasis role="bold">Teiid Server Properties</emphasis> - View and edit properties of an existing Teiid instance
@@ -539,30 +512,21 @@
 			  <listitem>
 				<para>
 					<inlinemediaobject>
-								<imageobject>
-									<imagedata fileref="images/icons/refresh.png"/>
-			 					</imageobject>
-							</inlinemediaobject><emphasis role="bold">Reconnect</emphasis> - Reconnect and refresh contents of the selected Teiid instance
+                        <imageobject>
+					       <imagedata fileref="images/icons/refresh.png"/>
+                        </imageobject>
+                    </inlinemediaobject><emphasis role="bold">Reconnect</emphasis> - Reconnect and refresh contents of the selected Teiid instance
 				</para>
 			</listitem>
-			  <listitem>
-				<para>
-					<inlinemediaobject>
-								<imageobject>
-									<imagedata fileref="images/icons/delete-teiid-server.png"/>
-								</imageobject>
-							</inlinemediaobject> <emphasis role="bold">Delete</emphasis> - Disconnect and delete the selected Teiid instance
-				</para>
-			</listitem>
-			  </itemizedlist>
+            </itemizedlist>
 			  <itemizedlist>
 			  <listitem>
 				<para>
-					<inlinemediaobject>
-								<imageobject>
-									<imagedata fileref="images/icons/run-vdb.png"/>
-								</imageobject>
-							</inlinemediaobject> <emphasis role="bold">Execute VDB</emphasis> - Creates a JDBC Teiid connection profile and opens the Data Tools Database Development perspective
+                    <inlinemediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/icons/run-vdb.png"/>
+                         </imageobject>
+                    </inlinemediaobject> <emphasis role="bold">Execute VDB</emphasis> - Creates a JDBC Teiid connection profile and opens the Data Tools Database Development perspective
 				</para>
 			</listitem>
 			  <listitem>

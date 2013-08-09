@@ -2,46 +2,90 @@
 
 
 <!-- ####### SERVER MANAGEMENT CHAPTER ######################################## -->
-
 <chapter id="server-management-chapter">
 	<title>Server Management</title>
 
     <para>Teiid Designer is a design-time tool that allows setting up and testing deployable VDB artifacts. In order
-    	to deploy and test these VDB's a running application server is required that contains an installed Teiid submodule.
+    	to deploy and test these VDB's a running <ulink url="http://www.jboss.org">JBoss</ulink> application server 
+        is required that contains an installed <ulink url="https://www.jboss.org/teiid">Teiid</ulink> submodule.
     	This section describes how to set up, connect and maintain your servers and describes the various aspects of what 
     	features in Teiid Designer are enabled by this connection and how you can leverage these capabilities.
     </para>
     
     <!-- ####### SERVER SETUP ######################################## -->
     <section id="server-setup-section">
-        <title>Server Set-up</title>
+        <title>Setting up a Server</title>
         <para>
-            ... Describe setting up a new application server containing an installed Teiid submodule... 
+            Teiid is installed as a component of JBoss hence connection to a Teiid Server requires the setting up and
+            configuration of its parent JBoss Server. This is achieved using the Server View, see 
+            <xref linkend="server-view"/>, displayed as part of the Teiid Designer perspective. The detailed procedures 
+            for creating a JBoss Server configuration can be found in the documentation provided at 
+            <ulink url="http://www.jboss.org/tools/docs/reference"/>. Thus, brief steps are only outlined here.
+        </para>
+        <para>
+            If no servers have been previously created then the Server View will display a new server hyperlink.
+            To create a new JBoss Server configuration, click the hyperlink.
+            <figure id="server-view-no-servers">
+                <title>Server View with no created servers</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/server-view-no-servers.png" />
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </para>
+        <para>
+            Navigate through the wizard, configuring the details of the JBoss Server including its Runtime location, 
+            hostname and whether its externally managed. The final property determines whether the server is instantiated
+            within the IDE or whether it is installed and started independently. Should the latter be the case then the
+            Server View merely assumes connection to the independent server.
+            <figure id="server-view-single-server">
+                <title>Server View with a single server</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/server-view-with-teiid.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            As illustrated, the server has been installed with a Teiid Server and on clicking the green start button, Designer 
+            has successfully connected to the server, resulting in the display of the Teiid Server's configuration.
+        </para>
+        <para>
+            JBoss Tools provides an editor for the configuration of the JBoss Server. In addition, Designer provides an extra tab
+            to this editor that displays the configuration of the Teiid Server. Only a few options can be modified since most of
+            the configuration is determined by the parent JBoss Server. This editor can be displayed by double-clicking on any
+            node in the JBoss Server tree.
+            <figure id="server-view-configuration-editor">
+                <title>Editor for Configuring the Teiid Server</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/server-view-teiid-editor.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
         </para>
         <section id="multi-version-support-section">
 	        <title>Teiid Version Support</title>
 	        <para>
-	            ... Describe setting up and managing older Teiid server versions. 
-	        </para>
+	            Teiid Designer is bundled with 3 versions of the Teiid Client Runtime, notably:
+                <itemizedlist>
+                    <listitem>
+                        <para>Version 7.7 - supports Teiid Server 7.7 version installed on JBoss Server 5.1;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Version 8.3 - supports Teiid Server 8.0, 8.1, 8.2 and 8.3 versions installed on JBoss Server 7;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Version 8.4 - supports Teiid Server 8.4, installed on JBoss Server 7.1.1, 7.2 and EAP 6.1.</para>
+                    </listitem>
+                </itemizedlist>
+                This allows multiple client runtime support from within a single installation of Teiid Designer. However, in order
+                to facilitate this support it is necessary for a default server to be chosen by the user. The setting of the default
+                server can be performed from the Teiid Server section of the Guides View or the Servers view, as described in 
+                <xref linkend="server-version-definition"/>. Care should be taken to ensure that any new models are created against
+                the correct version of server to ensure functionality and internal architecture is correct.
+            </para>
         </section>
-    </section>
-    
-    
-    <!-- ####### ARTIFACTS AN DEPLOYMENT ######################################## -->
-    <section id="artifacts-and-deployment-section">
-        <title>Artifacts and Deployment</title>
-        <para>
-            ... Describe what deployable artifacts (Data sources, VDBs, WARS) can be managed and how/where these actions
-            are exposed in Designer. 
-        </para>
-    </section>
-    
-    <!-- ####### DESIGN TIME TESTING ######################################## -->
-    <section id="design-time-testing-section">
-        <title>Design-time Testing</title>
-        <para>
-            ... Describe both the Preview Data concept and Execute VDB concept... 
-        </para>
     </section>
 </chapter>
     
