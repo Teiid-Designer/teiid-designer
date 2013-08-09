@@ -41,7 +41,6 @@ import org.teiid.designer.runtime.ui.actions.ExecuteVDBAction;
 import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
 import org.teiid.designer.runtime.ui.server.DisconnectFromServerAction;
 import org.teiid.designer.runtime.ui.server.EditServerAction;
-import org.teiid.designer.runtime.ui.server.NewServerAction;
 import org.teiid.designer.runtime.ui.server.RefreshServerAction;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.server.SetDefaultServerAction;
@@ -66,11 +65,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
      * Collapses all tree nodes.
      */
     private IAction collapseAllAction;
-    
-    /**
-     * Add a new jboss / teiid server
-     */
-    private NewServerAction newServerAction;
 
     /**
      * Edits a server's properties.
@@ -282,9 +276,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         // the edit action is only enabled when one server is selected
         this.editServerAction = new EditServerAction(shell);
         viewer.addSelectionChangedListener(this.editServerAction);
-
-        // the new server action is always enabled
-        this.newServerAction = new NewServerAction(shell);
         
         this.createDataSourceAction = new Action() {
 
@@ -382,7 +373,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         manager.removeAll();
         
         manager.add(new Separator());
-        manager.add(newServerAction);
         manager.add(refreshAction);
         manager.add(new Separator());
         
