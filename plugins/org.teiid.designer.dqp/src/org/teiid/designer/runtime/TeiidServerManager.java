@@ -621,6 +621,8 @@ public final class TeiidServerManager implements ITeiidServerManager {
         parentServersProvider.addServerStateListener(TeiidParentServerListener.getInstance());
         parentServersProvider.addServerLifecycleListener(TeiidParentServerListener.getInstance());
 
+        ITeiidServer defaultServer = null;
+
         try {
             if (this.stateLocationPath == null || ! stateFileExists()) {
                 // Started will be called from the finally clause.
@@ -772,7 +774,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
                addServerInternal(teiidServer, true);
 
                 if (previewServer) {
-                    setDefaultServerInternal(teiidServer);
+                    defaultServer = teiidServer;
                 }
             }
         } catch (Exception e) {
@@ -780,6 +782,10 @@ public final class TeiidServerManager implements ITeiidServerManager {
         } finally {
             this.state = RuntimeState.STARTED;
             initialiseManagers();
+
+            // Set the default server. Doing this here will allow the managers to detect the change
+            // and initialise accordingly
+            setDefaultServerInternal(defaultServer);
         }
     }
 
@@ -807,11 +813,6 @@ public final class TeiidServerManager implements ITeiidServerManager {
     private void setDefaultServerInternal(ITeiidServer teiidServer) {
         if (this.defaultServer == null && teiidServer == null) {
             // Both are null so no point in continuing
-            return;
-        }
-
-        if (defaultServer != null && defaultServer.equals(teiidServer)) {
-            // New server is the same as the old server
             return;
         }
 

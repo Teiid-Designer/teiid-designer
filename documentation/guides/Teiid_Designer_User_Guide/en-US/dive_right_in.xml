@@ -302,7 +302,7 @@
                 <para><emphasis role="bold">Preview Data</emphasis></para>
                 <para>
                     All execution capabilities in Designer (Preview Data, VDB execution) require you to connect to a 
-                    running Teiid Server.  See <xref linkend="servers-view" /> for instructions on establishing a Teiid Server connection.
+                    running Teiid Server.  See <xref linkend="server-management-chapter" /> for instructions on establishing a Teiid Server connection.
                     Once you are connected to a Teiid Server, you can proceed with the following steps.   
                 </para>
                 <para>
