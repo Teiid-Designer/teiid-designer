@@ -148,7 +148,7 @@ public class PreviewDataWorker {
         	}
     	}
 
-    	// make sure preview is enabled and that there is a Teiid server
+    	// make sure preview is enabled and that there is a Teiid Instance
     	if (!RuntimeAssistant.ensurePreviewEnabled(getShell())) {
     	    return false;
     	}

@@ -51,7 +51,7 @@ public interface ITeiidServerManager extends EventManager {
     }
 
     /**
-     * Default server version property id
+     * Default teiid instance version property id
      */
     String DEFAULT_TEIID_SERVER_VERSION_ID = "defaultTeiidServerVersion"; //$NON-NLS-1$
 
@@ -93,7 +93,7 @@ public interface ITeiidServerManager extends EventManager {
     ITeiidServer getServer(String id);
 
     /**
-     * @param parentServer the parent server of the requested teiid server
+     * @param parentServer the parent server of the requested Teiid Instance
      * @return the requested server or <code>null</code> if not found in the registry
      */
     ITeiidServer getServer(IServer parentServer);
@@ -109,9 +109,9 @@ public interface ITeiidServerManager extends EventManager {
     RuntimeState getState();
 
     /**
-     * Get the targeted teiid server version
+     * Get the targeted Teiid Instance version
      *
-     * @return teiid server version
+     * @return Teiid Instance version
      */
     ITeiidServerVersion getDefaultServerVersion();
 
@@ -157,7 +157,7 @@ public interface ITeiidServerManager extends EventManager {
     void shutdown( IProgressMonitor monitor ) throws Exception;
 
     /**
-     * Add a listener to be notified in the event the default server
+     * Add a listener to be notified in the event the default teiid instance
      * version is changed
      * 
      * @param listener

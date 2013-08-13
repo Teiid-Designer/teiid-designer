@@ -144,7 +144,7 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
      * @param parentServer
      * @param jboss7Server 
      * 
-     * @return runtime version of the teiid server
+     * @return runtime version of the Teiid Instance
      */
     public static ITeiidServerVersion getTeiidRuntimeVersion(IServer parentServer, JBoss7Server jboss7Server) {
         if (! serverStarted(parentServer))

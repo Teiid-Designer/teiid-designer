@@ -107,7 +107,7 @@ public class TeiidServer implements ITeiidServer {
     private final String id;
 
     /**
-     * The parent {@link IServer} of this teiid server
+     * The parent {@link IServer} of this Teiid Instance
      */
     private IServer parentServer;
 
@@ -499,8 +499,11 @@ public class TeiidServer implements ITeiidServer {
      */
     @Override
     public String toString() {
-        String txt = Util.getString("serverToStringWithNoCustomLabel", getUrl(), getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
-        
+        String txt = Util.getString("serverToStringWithNoCustomLabel", //$NON-NLS-1$
+                                    getUrl(),
+                                    getTeiidAdminInfo().getUsername(),
+                                    parentServer.getName());
+
         if (this.customLabel != null) {
             txt = Util.getString("serverToStringWithCustomLabel", this.customLabel, txt); //$NON-NLS-1$
         }

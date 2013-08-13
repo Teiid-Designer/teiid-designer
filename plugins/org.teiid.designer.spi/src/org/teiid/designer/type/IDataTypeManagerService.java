@@ -42,7 +42,7 @@ public interface IDataTypeManagerService {
     }
     
     /**
-     * Types of data source supported by teiid servers
+     * Types of data source supported by teiid instances
      */
     enum DataSourceTypes {
         JDBC,
@@ -160,7 +160,7 @@ public interface IDataTypeManagerService {
     boolean canTransform(String sourceTypeName, String targetTypeName);
 
     /**
-     * Get the teiid server specific name of the data source type
+     * Get the teiid instance specific name of the data source type
      *  
      * @param dataSourceType
      * 

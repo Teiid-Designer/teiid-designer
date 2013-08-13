@@ -21,11 +21,11 @@ public interface ITeiidJdbcInfo extends ITeiidConnectionInfo {
      */
     public static final boolean DEFAULT_SECURE = false;
     /**
-     * The default username for the teiid server
+     * The default username for the Teiid Instance
      */
     public static final String DEFAULT_JDBC_USERNAME = "user"; //$NON-NLS-1$
     /**
-     * The default password for the teiid server
+     * The default password for the Teiid Instance
      */
     public static final String DEFAULT_JDBC_PASSWORD = "user"; //$NON-NLS-1$
 

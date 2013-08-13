@@ -164,7 +164,7 @@ public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferen
             return true; // same value - no change
 
         if (ModelerCore.getTeiidServerManager().getDefaultServer() == null && hasOpenEditors()) {
-            // No default server and open editors so modelling diagrams may close which could surprise!
+            // No default teiid instance and open editors so modelling diagrams may close which could surprise!
             boolean changeVersion = MessageDialog.openQuestion(shell,
                                                                         Util.getStringOrKey(PREFIX + "versionChangeQuestionTitle"), //$NON-NLS-1$
                                                                         Util.getStringOrKey(PREFIX + "versionChangeQuestionMessage")); //$NON-NLS-1$

@@ -110,7 +110,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
         }
         
         /*
-         * If old default server is connected, ask user if they wish to disconnect it.
+         * If old default teiid instance is connected, ask user if they wish to disconnect it.
          */
         boolean disconnectOldDefault = false;
         if( currentDefaultServer!=null && currentDefaultServer.isConnected() ) {
@@ -123,12 +123,12 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
     	}
     	
     	/*
-    	 * Set the default teiid server
+    	 * Set the default Teiid Instance
     	 */
         this.getServerManager().setDefaultServer(this.selectedServer);
         
         /*
-         * If the new default server is connected then reconnect it to 
+         * If the new default teiid instance is connected then reconnect it to 
          * clear out any caches.
          */
         if( this.selectedServer.isConnected() ) {
@@ -197,7 +197,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
         
         this.selectedServer = teiidServer;
         
-        // No default server selected so display the action to allow it
+        // No default teiid instance selected so display the action to allow it
         if (getServerManager().getDefaultServer() == null)
             return true;
         

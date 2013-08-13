@@ -138,7 +138,7 @@ public final class UdfManager implements IResourceChangeListener {
         // register to receive resource events so that we can notify listeners when a function model changes
         ModelerCore.getWorkspace().addResourceChangeListener(this);
         
-        // register as a listener for when the default server version is modified
+        // register as a listener for when the default teiid instance version is modified
         ModelerCore.addTeiidServerVersionListener(teiidServerVersionListener);
 
         // Register ModelResources that 1) are type function model or 2) are type relational, containing a procedure with function=true

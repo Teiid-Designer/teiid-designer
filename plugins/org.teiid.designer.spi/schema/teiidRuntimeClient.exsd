@@ -68,7 +68,7 @@
    <element name="version">
       <annotation>
          <documentation>
-            The versions of the teiid server that this factory supports
+            The versions of the teiid instance that this factory supports
          </documentation>
       </annotation>
       <complexType>

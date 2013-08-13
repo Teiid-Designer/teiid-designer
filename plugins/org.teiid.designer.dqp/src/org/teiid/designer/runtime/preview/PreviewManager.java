@@ -112,7 +112,7 @@ import org.teiid.designer.vdb.VdbUtil;
  * For each previewable model in the workspace, an associated Preview VDB will be maintained. This PVDB will be hidden from the
  * user but will be contained within the workspace. When a model is changed, the PVDB is automatically synchronized. When a model
  * is deleted, the PVDB is also deleted. Upon preview of a model object, the PVDB of that model, along with any dependent models
- * will be deployed to the designated preview Teiid server (if there is one). Deploying of the PVDBs is only done if necessary.
+ * will be deployed to the designated preview Teiid Instance (if there is one). Deploying of the PVDBs is only done if necessary.
  *
  * @since 8.0
  */
@@ -281,7 +281,7 @@ public final class PreviewManager extends JobChangeAdapter
     private boolean previewEnabled = true;
 
     /**
-     * The Teiid server being used for preview (may be <code>null</code>).
+     * The Teiid Instance being used for preview (may be <code>null</code>).
      */
     private volatile AtomicReference<ITeiidServer> previewServer = new AtomicReference<ITeiidServer>();
 
@@ -299,7 +299,7 @@ public final class PreviewManager extends JobChangeAdapter
 
     /**
      * Tracking flag for signalling that the preview manager should try
-     * to update the preview vdbs on the teiid server. Turned on if vdb
+     * to update the preview vdbs on the Teiid Instance. Turned on if vdb
      * update originally fails and the server is not connected.
      */
     private boolean retryOnNextRefreshOfServer;
@@ -587,7 +587,7 @@ public final class PreviewManager extends JobChangeAdapter
             this.statusLock.readLock().unlock();
         }
 
-        // statuses could be null at startup when the default server is being set
+        // statuses could be null at startup when the default teiid instance is being set
         if ((statuses != null) && !statuses.isEmpty()) {
             Collection<PreviewVdbStatus> missingPvdbs = new ArrayList<PreviewVdbStatus>();
 
@@ -1597,7 +1597,7 @@ public final class PreviewManager extends JobChangeAdapter
 
             /*
              * If any preview vdbs of this project are to be deleted then they also
-             * need to be recreated against the new default server so add an appropriate job.
+             * need to be recreated against the new default teiid instance so add an appropriate job.
              */
             if (previewVdbsDeleted) {
                 try {
@@ -1694,7 +1694,7 @@ public final class PreviewManager extends JobChangeAdapter
     }
 
     /**
-     * Shutdowns the <code>PreviewManager</code>. This will remove any Preview VDBs from the default Teiid server.
+     * Shutdowns the <code>PreviewManager</code>. This will remove any Preview VDBs from the default Teiid Instance.
      * 
      * @param monitor the progress monitor (may be <code>null</code>)
      * @throws Exception if issues result from shutting down this class

@@ -23,8 +23,8 @@ import org.teiid.designer.runtime.preview.PreviewContext;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 
 /**
- * The <code>TeiidPreviewVdbJob</code> class are jobs that either deploy Preview VDBs to a Teiid server or remove Preview VDBs
- * from a Teiid Server. If the preview server is <code>null</code> the job will not run.
+ * The <code>TeiidPreviewVdbJob</code> class are jobs that either deploy Preview VDBs to a Teiid Instance or remove Preview VDBs
+ * from a Teiid Instance. If the preview server is <code>null</code> the job will not run.
  *
  * @since 8.0
  */
@@ -109,7 +109,7 @@ public abstract class TeiidPreviewVdbJob extends Job implements PreferenceConsta
      */
     @Override
     protected final IStatus run( IProgressMonitor monitor ) {
-        assert (getPreviewServer() != null) : "Teiid server is null"; //$NON-NLS-1$
+        assert (getPreviewServer() != null) : "Teiid Instance is null"; //$NON-NLS-1$
 
         // add job start message
         if (DqpPlugin.getInstance().isDebugOptionEnabled(DebugConstants.PREVIEW_JOB_START)) {
@@ -162,7 +162,7 @@ public abstract class TeiidPreviewVdbJob extends Job implements PreferenceConsta
     }
 
     /**
-     * This method will not be called if there is no preview Teiid server.
+     * This method will not be called if there is no preview Teiid Instance.
      * 
      * @param monitor the monitor to use for tracking job progress (may be <code>null</code>)
      * @return the results of the job (may not be <code>null</code>)

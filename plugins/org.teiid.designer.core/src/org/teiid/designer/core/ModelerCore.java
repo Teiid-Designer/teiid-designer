@@ -2068,7 +2068,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     }
 
     /**
-     * Has a default server been set
+     * Has a default teiid instance been set
      *
      * @return
      */
@@ -2077,9 +2077,9 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     }
 
     /**
-     * Get the targeted teiid server name
+     * Get the targeted Teiid Instance name
      * 
-     * @return teiid server name
+     * @return Teiid Instance name
      */
     public static String getDefaultServerName() {
         ITeiidServer defaultTeiidServer = getTeiidServerManager().getDefaultServer();
@@ -2091,7 +2091,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
 
     /**
      * Get the {@link EventManager} associated with the default
-     * server or null if there is no default server set.
+     * server or null if there is no default teiid instance set.
      *
      * @return event manager
      */
@@ -2101,7 +2101,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
 
     /**
      * Create an SWT {@link Event} that encapsulates the
-     * default teiid server as its data object
+     * default Teiid Instance as its data object
      *
      * @return an event
      */
@@ -2113,9 +2113,9 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     }
 
     /**
-     * Get the targeted teiid server version
+     * Get the targeted Teiid Instance version
      *
-     * @return teiid server version
+     * @return Teiid Instance version
      */
     public static ITeiidServerVersion getTeiidServerVersion() {
         return getTeiidServerManager().getDefaultServerVersion();
@@ -2137,7 +2137,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     }
 
     /**
-     * Add a listener to be notified in the event the default server
+     * Add a listener to be notified in the event the default teiid instance
      * version is changed
      * 
      * @param listener
@@ -2164,7 +2164,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
 
     /**
      * Get the teiid data type manager service for the
-     * targeted teiid server. The targeted teiid server
+     * targeted Teiid Instance. The targeted Teiid Instance
      * can be changed using {@link #setDefaultServer(ITeiidServerVersion)}
      *  
      * @return
@@ -2179,7 +2179,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     
     /**
      * Get the teiid query service for the
-     * targeted teiid server. The targeted teiid server
+     * targeted Teiid Instance. The targeted Teiid Instance
      * can be changed using {@link #setDefaultServer(ITeiidServerVersion)}
      * 
      * @return
@@ -2265,7 +2265,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
 
                         if (teiidServerManager != null) {
                             /*
-                             * Programming error since the teiid server manager extension should only be
+                             * Programming error since the Teiid Instance manager extension should only be
                              * implemented once.
                              */
                             throw new IllegalStateException();

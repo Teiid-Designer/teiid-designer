@@ -22,7 +22,7 @@ public interface ITeiidServerVersionListener {
     void serverChanged(ITeiidServer server);
 
     /**
-     * Version of teiid server has been changed
+     * Version of Teiid Instance has been changed
      * 
      * @param version
      */

@@ -34,7 +34,7 @@ public class TeiidServerFactory {
         ADD_TO_REGISTRY,
         
         /**
-         * Connect the client to the teiid server
+         * Connect the client to the Teiid Instance
          */
         CONNECT,
         
@@ -80,7 +80,7 @@ public class TeiidServerFactory {
         }
         
         if (optionList.contains(ServerOptions.CONNECT)) {
-            // Connect this teiid server
+            // Connect this Teiid Instance
             try {
                 teiidServer.connect();
             } catch (Exception ex) {

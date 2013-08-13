@@ -237,7 +237,7 @@ public interface ModelExtensionPropertyDefinition extends Cloneable, PropertyDef
     void setType( Type runtimeType );
 
     /**
-     * @return <code>true</code> if this property should be indexed for use by the Teiid server
+     * @return <code>true</code> if this property should be indexed for use by the Teiid Instance
      */
     boolean shouldBeIndexed();
 

@@ -29,7 +29,7 @@ import org.teiid.designer.ui.common.widget.MessageLabel;
 
 
 /**
- * Provides dialog for selecting a Translator from existing Teiid Servers.
+ * Provides dialog for selecting a Translator from existing Teiid Instances.
  * 
  *
  * @since 8.0
