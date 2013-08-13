@@ -51,7 +51,9 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
         DqpPlugin.getInstance().getServerManager();
         
         server.addServerListener(this);
-        factory.adaptServer(server, ServerOptions.ADD_TO_REGISTRY);
+
+        // New server added so add a teiid instance, even though it is not currently connected
+        factory.adaptServer(server, ServerOptions.NO_CHECK_CONNECTION, ServerOptions.ADD_TO_REGISTRY);
     }
     
     @Override
