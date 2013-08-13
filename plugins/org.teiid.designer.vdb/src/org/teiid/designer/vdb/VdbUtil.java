@@ -328,7 +328,7 @@ public class VdbUtil {
 			VdbElement manifest = VdbUtil.getVdbManifest(theVdbFile);
 			Vdb theVdb = new Vdb(theVdbFile, new NullProgressMonitor());	
 			if (manifest != null) {
-				// Check the validation version of the VDB against current Default server
+				// Check the validation version of the VDB against current Default teiid instance
 				
 				String serverVersion = ModelerCore.getTeiidServerVersion().toString();
 				if( serverVersion != null ) {

@@ -121,7 +121,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
      */
     @Override
     public void run() {
-    	// Make sure default server is connected
+    	// Make sure default teiid instance is connected
     	if(!checkForConnectedServer()) return;
 
     	ITeiidServer teiidServer = getServerManager().getDefaultServer();
@@ -152,7 +152,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
      * Ask the user to select the vdb and deploy it
      */
     public void queryUserAndRun() {
-    	// Make sure default server is connected
+    	// Make sure default teiid instance is connected
     	if(!checkForConnectedServer()) return;
     	
         ITeiidServer teiidServer = getServerManager().getDefaultServer();
@@ -213,8 +213,8 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     }
 
     /*
-     * Check that the default server is connected.  Show dialog if it is not.
-     * @return 'true' if default server is connected, 'false' if not.
+     * Check that the default teiid instance is connected.  Show dialog if it is not.
+     * @return 'true' if default teiid instance is connected, 'false' if not.
      */
     private boolean checkForConnectedServer() {
         ITeiidServer teiidServer = getServerManager().getDefaultServer();

@@ -51,7 +51,7 @@ public interface ITeiidServerManager extends EventManager {
     }
 
     /**
-     * Default server version property id
+     * Default teiid instance version property id
      */
     String DEFAULT_TEIID_SERVER_VERSION_ID = "defaultTeiidServerVersion"; //$NON-NLS-1$
 
@@ -157,7 +157,7 @@ public interface ITeiidServerManager extends EventManager {
     void shutdown( IProgressMonitor monitor ) throws Exception;
 
     /**
-     * Add a listener to be notified in the event the default server
+     * Add a listener to be notified in the event the default teiid instance
      * version is changed
      * 
      * @param listener

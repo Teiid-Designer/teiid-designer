@@ -107,9 +107,9 @@ public class TeiidServerVersion implements ITeiidServerVersion {
     }
 
     /**
-     * Get the ultimate default server version. This is the provided
-     * as the default server version IF the user has not configured
-     * a server connection nor set the default server preference.
+     * Get the ultimate default teiid instance version. This is the provided
+     * as the default teiid instance version IF the user has not configured
+     * a server connection nor set the default teiid instance preference.
      *
      * This attempts to derive the latest version of server from
      * the installed client runtimes but if none, returns the

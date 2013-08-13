@@ -82,7 +82,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     private DisconnectFromServerAction disconnectAction;
 
     /**
-     * Sets the selected Server as the default server for preview and execution
+     * Sets the selected Server as the default teiid instance for preview and execution
      */
     private SetDefaultServerAction setDefaultServerAction;
 

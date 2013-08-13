@@ -587,7 +587,7 @@ public final class PreviewManager extends JobChangeAdapter
             this.statusLock.readLock().unlock();
         }
 
-        // statuses could be null at startup when the default server is being set
+        // statuses could be null at startup when the default teiid instance is being set
         if ((statuses != null) && !statuses.isEmpty()) {
             Collection<PreviewVdbStatus> missingPvdbs = new ArrayList<PreviewVdbStatus>();
 
@@ -1597,7 +1597,7 @@ public final class PreviewManager extends JobChangeAdapter
 
             /*
              * If any preview vdbs of this project are to be deleted then they also
-             * need to be recreated against the new default server so add an appropriate job.
+             * need to be recreated against the new default teiid instance so add an appropriate job.
              */
             if (previewVdbsDeleted) {
                 try {

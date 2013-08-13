@@ -171,7 +171,7 @@ public class ServerManagerTest {
         // generate event
         this.mgr.addServer(this.server1);
 
-        // test to make sure listener was called twice (once for adding server, once for setting default server)
+        // test to make sure listener was called twice (once for adding server, once for setting default teiid instance)
         verify(listener, times(2)).configurationChanged((ExecutionConfigurationEvent) anyObject());
     }
 

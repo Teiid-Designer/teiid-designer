@@ -2068,7 +2068,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     }
 
     /**
-     * Has a default server been set
+     * Has a default teiid instance been set
      *
      * @return
      */
@@ -2091,7 +2091,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
 
     /**
      * Get the {@link EventManager} associated with the default
-     * server or null if there is no default server set.
+     * server or null if there is no default teiid instance set.
      *
      * @return event manager
      */
@@ -2137,7 +2137,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     }
 
     /**
-     * Add a listener to be notified in the event the default server
+     * Add a listener to be notified in the event the default teiid instance
      * version is changed
      * 
      * @param listener

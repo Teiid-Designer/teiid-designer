@@ -165,7 +165,7 @@ public final class RuntimeAssistant {
     }
     
     /**
-     * Run the set default server action
+     * Run the set default teiid instance action
      */
     public static void runSetDefaultServerAction () {
         SetDefaultServerAction action = new SetDefaultServerAction();

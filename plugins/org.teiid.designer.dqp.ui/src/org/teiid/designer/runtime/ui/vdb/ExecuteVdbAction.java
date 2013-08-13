@@ -80,8 +80,8 @@ public class ExecuteVdbAction extends Action {
 	}
 	
     /*
-     * Check that the default server is connected.  Show dialog if it is not.
-     * @return 'true' if default server is connected, 'false' if not.
+     * Check that the default teiid instance is connected.  Show dialog if it is not.
+     * @return 'true' if default teiid instance is connected, 'false' if not.
      */
     private boolean checkForConnectedServer() {
         ITeiidServer teiidServer = getServerManager().getDefaultServer();

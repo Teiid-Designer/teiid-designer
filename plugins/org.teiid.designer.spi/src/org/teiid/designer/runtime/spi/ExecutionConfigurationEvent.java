@@ -121,7 +121,7 @@ public final class ExecutionConfigurationEvent {
     }
 
     /**
-     * When changing the default server, this returns the old default server.
+     * When changing the default teiid instance, this returns the old default teiid instance.
      * 
      * @return the server involved in the event (may be <code>null</code>)
      * @throws IllegalStateException if method is called for a connector event
@@ -158,7 +158,7 @@ public final class ExecutionConfigurationEvent {
     }
 
     /**
-     * When changing the default server, this returns the new default server.
+     * When changing the default teiid instance, this returns the new default teiid instance.
      * 
      * @return the updated server involved in the event (may be <code>null</code>)
      * @throws IllegalStateException if method is called for a connector event
