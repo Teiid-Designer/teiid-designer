@@ -69,7 +69,7 @@ public class VdbDeployer {
         MONITOR_CANCELLED,
 
         /**
-         * Indicates there are missing translator names or translator names that are not on the current Teiid server.
+         * Indicates there are missing translator names or translator names that are not on the current Teiid Instance.
          */
         TRANSLATOR_PROBLEM;
 
@@ -88,7 +88,7 @@ public class VdbDeployer {
         }
     }
 
-    private final ITeiidServer teiidServer; // the current Teiid server
+    private final ITeiidServer teiidServer; // the current Teiid Instance
     private final boolean autoCreateDsOnServer; // indicates if data source should be auto-created on server without asking user
     private Exception error; // non-null if error caught while deploying
     private final Shell shell;
@@ -100,14 +100,14 @@ public class VdbDeployer {
      * @param vdbBeingDeployed the VDB being deployed (may not be <code>null</code>)
      * @param defaultServer the server (may not be <code>null</code>)
      * @param shouldAutoCreateDataSourceOnServer indicates if data sources that match the default name should be auto-created if
-     *        they don't exist on Teiid server
+     *        they don't exist on Teiid Instance
      */
     public VdbDeployer( Shell shell,
                         Vdb vdbBeingDeployed,
                         ITeiidServer defaultServer,
                         boolean shouldAutoCreateDataSourceOnServer ) {
         CoreArgCheck.isNotNull(vdbBeingDeployed, "Vdb is null"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(defaultServer, "Default Teiid Server is null"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(defaultServer, "Default Teiid Instance is null"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(shell, "Shell is null"); //$NON-NLS-1$
 
         this.teiidServer = defaultServer;
@@ -131,7 +131,7 @@ public class VdbDeployer {
     }
 
     /**
-     * Deploy the selected VDB to the default Teiid server.
+     * Deploy the selected VDB to the default Teiid Instance.
      * 
      * @param monitor the progress monitor (can be <code>null</code>)
      */

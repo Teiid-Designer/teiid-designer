@@ -30,7 +30,7 @@ import org.teiid.designer.vdb.Vdb;
 
 
 /**
- * Provides dialog for selecting a JNDI Data Source from existing Teiid Servers.
+ * Provides dialog for selecting a JNDI Data Source from existing Teiid Instances.
  *
  * @since 8.0
  */

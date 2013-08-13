@@ -15,7 +15,6 @@ import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.preferences.VdbPreferenceConstants.SYNCHRONIZE_WITHOUT_WARNING;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -25,7 +24,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -1731,7 +1729,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         // Add selection changed listener so if a Physical Source model is selected, the applicable menu actions are
         // retrieved via the SourceHandler extension point and interface.
-        // This allows changing Translator and JNDI names via existing deployed objects on Teiid Servers that are
+        // This allows changing Translator and JNDI names via existing deployed objects on Teiid Instances that are
         // connected in the user's workspace.
         final TableViewer viewer = modelsGroup.getTable().getViewer();
         final MenuManager menuManager = new MenuManager();

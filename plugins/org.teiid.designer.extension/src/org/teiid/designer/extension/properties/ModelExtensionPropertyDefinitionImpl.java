@@ -73,7 +73,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      *            empty). Default value is {@value #ADVANCED_DEFAULT}.
      * @param masked <code>true</code> string if this property value must be masked (can be <code>null</code> or empty). Default
      *            value is {@value #MASKED_DEFAULT}.
-     * @param index <code>true</code> string if this property should be indexed for use by the Teiid server (can be
+     * @param index <code>true</code> string if this property should be indexed for use by the Teiid Instance (can be
      *            <code>null</code> or empty). Default value is {@value #INDEX_DEFAULT}.
      * @param allowedValues the allowed property values (can be <code>null</code> or empty)
      * @param descriptions the one or more translations of the property description (can be <code>null</code> or empty)

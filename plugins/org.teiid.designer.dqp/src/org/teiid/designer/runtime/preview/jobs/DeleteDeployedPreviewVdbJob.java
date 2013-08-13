@@ -26,7 +26,7 @@ import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 
 /**
- * The <code>DeleteDeployedPreviewVdbJob</code> deletes a Preview VDB from a Teiid server and also deletes its associated JNDI
+ * The <code>DeleteDeployedPreviewVdbJob</code> deletes a Preview VDB from a Teiid Instance and also deletes its associated JNDI
  * name.
  *
  * @since 8.0

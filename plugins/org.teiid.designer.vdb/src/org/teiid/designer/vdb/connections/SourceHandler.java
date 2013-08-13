@@ -8,7 +8,6 @@
 package org.teiid.designer.vdb.connections;
 
 import java.util.Properties;
-
 import org.teiid.core.designer.properties.PropertyDefinition;
 
 /**
@@ -48,7 +47,7 @@ public interface SourceHandler {
     String[] getDataSourceNames();
 
     /**
-     * @return the translator types available on the current Teiid server that can be overridden (can be <code>null</code> or empty)
+     * @return the translator types available on the current Teiid instance that can be overridden (can be <code>null</code> or empty)
      */
     String[] getTranslatorTypes();
 

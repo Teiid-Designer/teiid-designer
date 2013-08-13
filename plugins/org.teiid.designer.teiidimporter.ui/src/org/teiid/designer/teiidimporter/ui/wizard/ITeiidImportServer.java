@@ -22,14 +22,14 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 public interface ITeiidImportServer {
 
     /**
-     * Get the display name for the teiid server
+     * Get the display name for the teiid instance
      * @return the server display name
      * @throws Exception
      */
     String getDisplayName() throws Exception;
     
     /**
-     * Removes the data source from the teiid server (if exists)
+     * Removes the data source from the teiid instance (if exists)
      * 
      * @param jndiName the source jndi name
      * @throws Exception if failer in deleting data source on server
@@ -37,7 +37,7 @@ public interface ITeiidImportServer {
      void deleteDataSource(String jndiName) throws Exception;
 
      /**
-      * Deploys a driver (jar or rar) to the related Teiid server
+      * Deploys a driver (jar or rar) to the related Teiid instance
       * 
       * @param jarOrRarFile the file to deploy
       * 
@@ -113,8 +113,8 @@ public interface ITeiidImportServer {
      void undeployDynamicVdb(String vdbName) throws Exception;
      
      /**
-      * Get the Teiid Server Version
-      * @return the Teiid Server version
+      * Get the Teiid Instance Version
+      * @return the Teiid Instance version
       * @throws Exception
       */
      ITeiidServerVersion getTeiidServerVersion() throws Exception;

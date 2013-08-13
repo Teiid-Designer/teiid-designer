@@ -57,7 +57,7 @@ public interface IExecutionAdmin {
      boolean dataSourceExists(String name) throws Exception;
 
     /**
-     * Removes the data source from the teiid server (if exists)
+     * Removes the data source from the Teiid Instance (if exists)
      * 
      * @param jndiName the source jndi name
      * @throws Exception if failer in deleting data source on server
@@ -65,7 +65,7 @@ public interface IExecutionAdmin {
      void deleteDataSource(String jndiName) throws Exception;
 
     /**
-     * Deploys the VDB (IFile) to the related Teiid server
+     * Deploys the VDB (IFile) to the related Teiid Instance
      * 
      * @param vdbFile the vdb file
      * 
@@ -217,7 +217,7 @@ public interface IExecutionAdmin {
      String getAdminDriverPath() throws Exception;
      
      /**
-      * Get the teiid server driver for the given class
+      * Get the Teiid Instance driver for the given class
       * 
      * @param driverClass 
       * 
@@ -228,7 +228,7 @@ public interface IExecutionAdmin {
      Driver getTeiidDriver(String driverClass) throws Exception;
      
      /**
-      * Deploys the Dynamic VDB (InputStream) to the related Teiid server
+      * Deploys the Dynamic VDB (InputStream) to the related Teiid Instance
       * 
       * @param deploymentName the vdb deploymentName
       * @param inStream the VDB InputStream
@@ -245,7 +245,7 @@ public interface IExecutionAdmin {
      void undeployDynamicVdb(String vdbName) throws Exception;
 
      /**
-      * Deploys a driver (jar or rar) to the related Teiid server
+      * Deploys a driver (jar or rar) to the related Teiid Instance
       * 
       * @param driverFile the file to deploy
       * 

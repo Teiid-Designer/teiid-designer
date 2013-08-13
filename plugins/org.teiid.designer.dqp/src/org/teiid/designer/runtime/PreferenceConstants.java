@@ -19,7 +19,7 @@ public interface PreferenceConstants {
 
     /**
      * The name of the preference indicating if, during VDB execution, if a data source should be auto-created if it doesn't exist
-     * on the current Teiid server. This will only happen if the data source name matches the default name.
+     * on the current Teiid Instance. This will only happen if the data source name matches the default name.
      */
     String AUTO_CREATE_DATA_SOURCE = PLUGIN_ID + ".preferences.AutoCreateDataSource"; //$NON-NLS-1$
 

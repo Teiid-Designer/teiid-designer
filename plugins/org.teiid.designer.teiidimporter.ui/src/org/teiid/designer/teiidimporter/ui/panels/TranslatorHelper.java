@@ -2,7 +2,6 @@ package org.teiid.designer.teiidimporter.ui.panels;
 
 import java.util.Collection;
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
@@ -246,7 +245,7 @@ public class TranslatorHelper implements UiConstants {
 	/**
 	 * Test whether the version is 8.4 or higher.  (.rar deployments were changed in 8.4)
 	 * We assume false, and may not be able to determine - if wildcards are used.
-	 * @param teiidVersion the Teiid Server version
+	 * @param teiidVersion the Teiid Instance version
 	 * @return 'true' if the version is 8.4 or higher, 'false' if lower or unknown
 	 */
 	public static boolean isTeiid84OrHigher(ITeiidServerVersion teiidVersion) {

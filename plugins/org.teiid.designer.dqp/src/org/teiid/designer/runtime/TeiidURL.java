@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
- * Class defines the URL in the Teiid Server.
+ * Class defines the URL in the Teiid Instance.
  * 
  * @since 8.0
  */

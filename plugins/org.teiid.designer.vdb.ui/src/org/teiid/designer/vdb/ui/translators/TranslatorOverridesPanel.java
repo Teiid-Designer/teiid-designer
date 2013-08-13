@@ -550,7 +550,7 @@ public final class TranslatorOverridesPanel extends Composite {
         TranslatorOverride translatorOverride = null;
         String[] translatorTypes = getTranslatorTypes();
 
-        // if no default server or server not connected then there won't be any translators
+        // if no default teiid instance or server not connected then there won't be any translators
         if (translatorTypes == null) {
             AddTranslatorOverrideDialog dialog = new AddTranslatorOverrideDialog(getShell(), getTranslatorOverrideNames());
 
@@ -752,7 +752,7 @@ public final class TranslatorOverridesPanel extends Composite {
                     }
                 }
             } else {
-                // no properties found for server so remove all without values (no default server, server is down)
+                // no properties found for server so remove all without values (no default teiid instance, server is down)
                 if (currentProps.length != 0) {
                     for (TranslatorOverrideProperty property : currentProps) {
                         if (!property.hasOverridenValue()) {

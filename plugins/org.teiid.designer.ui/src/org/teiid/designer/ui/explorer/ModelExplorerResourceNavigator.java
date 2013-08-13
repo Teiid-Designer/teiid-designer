@@ -256,7 +256,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     private Hyperlink defaultServerLink;
     private Label defaultServerVersionLabel;
 
-    /* Listen for change in default server */
+    /* Listen for change in default teiid instance */
     private ITeiidServerVersionListener teiidServerVersionListener = new ITeiidServerVersionListener() {
 
         @Override
@@ -279,7 +279,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         }
     };
 
-    /* Listen for configuration changes to existing default server */
+    /* Listen for configuration changes to existing default teiid instance */
     private IExecutionConfigurationListener execConfigurationListener = new IExecutionConfigurationListener() {
 
         @Override
@@ -318,7 +318,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                     setDefaultServerText(ModelerCore.getDefaultServerName());
                     setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
 
-                    /* Listen for changes to the default server */
+                    /* Listen for changes to the default teiid instance */
                     ModelerCore.addTeiidServerVersionListener(teiidServerVersionListener);
                     addExecutionConfigurationListener(ModelerCore.getDefaultServerEventManager());
                 }
@@ -520,7 +520,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         defaultServerSectionBody.setBackground(bkgdColor);
 
         /*
-         * Default Server Name
+         * Default Instance Name
          */
         toolkit.createLabel(defaultServerSectionBody, getString("defaultServerPrefix")); //$NON-NLS-1$
 
@@ -534,17 +534,17 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                 try {
                     window.getActivePage().showView("org.eclipse.wst.server.ui.ServersView"); //$NON-NLS-1$
 
-                    // Need to fetch the default server again since the parameter in the
+                    // Need to fetch the default teiid instance again since the parameter in the
                     // parent method does not remain assigned becoming null
                     if (! ModelerCore.hasDefaultTeiidServer()) {
-                        // No default server so most likely no servers at all so open the new server wizard
+                        // No default teiid instance so most likely no servers at all so open the new server wizard
                         IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
                         handlerService.executeCommand("org.teiid.designer.dqp.ui.newServerAction", null); //$NON-NLS-1$
                     } else {
                         //  defaultServer is a valid server so open the editServer editor
                         IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
 
-                        // Load the default server into an event's data in order to
+                        // Load the default teiid instance into an event's data in order to
                         // make it available to the command's handler.
                         Event event = ModelerCore.createDefaultTeiidServerEvent();
                         handlerService.executeCommand("org.teiid.designer.dqp.ui.editServerAction", event); //$NON-NLS-1$
@@ -556,13 +556,13 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             }
         });
 
-        // configure link to change default server
+        // configure link to change default teiid instance
         changeDefaultServerLink = toolkit.createHyperlink(defaultServerSectionBody, getString("changeServerLinkText"), SWT.NONE); //$NON-NLS-1$
         changeDefaultServerLink.addHyperlinkListener(new HyperlinkAdapter() {
             @Override
             public void linkActivated(HyperlinkEvent e) {
                 try {
-                    // No default server so most likely no servers at all so open the new server wizard
+                    // No default teiid instance so most likely no servers at all so open the new server wizard
                     IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
                     handlerService.executeCommand("org.teiid.designer.dqp.ui.setDefaultServerAction", null); //$NON-NLS-1$
                 } catch (Exception ex) {
@@ -572,7 +572,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         });
 
         /*
-         * Default Server Version
+         * Default Instance Version
          */
         defaultServerVersionLabel = toolkit.createLabel(defaultServerSectionBody, ""); //$NON-NLS-1$
         GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(defaultServerVersionLabel);
@@ -597,7 +597,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     }
 
     /**
-     * Called by a number of different methods to update the default server name text field.
+     * Called by a number of different methods to update the default teiid instance name text field.
      *
      * @param serverName name of the server or a noDefaultServer message
      */

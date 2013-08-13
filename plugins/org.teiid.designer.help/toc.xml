@@ -15,7 +15,7 @@
          <topic label="What Are Models?" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/intro-chapter.html#what-are-models"/>
          <topic label="How is a Model Defined?" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/intro-chapter.html#model-defined"/>
          <topic label="Guiding through the process" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/intro-chapter.html#guiding-through-the-process"/>
-         <topic label="Targeting the Right Teiid Server" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/intro-chapter.html#intro-to-multiple-teiid-clients"/>
+         <topic label="Targeting the Right Teiid Instance" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/intro-chapter.html#intro-to-multiple-teiid-clients"/>
          <topic label="Model Classes and Types" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/intro-chapter.html#model-classes-and-types"/>
          <topic label="The Virtual Database" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/intro-chapter.html#the-virtual-database">
             <topic label="VDB Content and Structure" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/intro-chapter.html#vdb-content-and-structure"/>
@@ -29,9 +29,9 @@
       </topic>
    </topic>
    <topic label="Dive Right In!" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/dive-right-in-chapter.html">
-      <topic label="Targeting the Teiid Server" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/dive-right-in-chapter.html#targeting-the-teiid-server-section">
+      <topic label="Targeting the Teiid Instance" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/dive-right-in-chapter.html#targeting-the-teiid-server-section">
          <topic label="Server Version Preference" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/dive-right-in-chapter.html#server-version-preference"/>
-         <topic label="Defining a Teiid Server" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/dive-right-in-chapter.html#server-version-definition"/>
+         <topic label="Defining a Teiid Instance" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/dive-right-in-chapter.html#server-version-definition"/>
          <topic label="Server Version Status Panel" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/dive-right-in-chapter.html#server-version-status-panel"/>
       </topic>
       <topic label="Guide Example" href="http://docs.jboss.org/teiid/designer/8.1/user-guide/en-US/html/dive-right-in-chapter.html#guide-examples-section">

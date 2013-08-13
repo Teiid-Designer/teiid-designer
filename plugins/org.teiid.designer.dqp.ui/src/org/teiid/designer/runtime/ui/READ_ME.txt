@@ -1,4 +1,4 @@
-The runtime ui plugin is intended to handle the UI components for communicating with the Teiid Server.
+The runtime ui plugin is intended to handle the UI components for communicating with the Teiid Instance.
 
 This org.teiid.designer.dqp.ui plugin has yet to be fully refactored.
 

@@ -427,7 +427,7 @@
       <page
             class="org.teiid.designer.runtime.ui.server.editor.TeiidServerEditor"
             id="org.teiid.designer.dqp.ui.TeiidServerPage"
-            name="Teiid Server"
+            name="Teiid Instance"
             typeIds="%AllJBTTeiidServerTypes">
       </page>
    </extension>

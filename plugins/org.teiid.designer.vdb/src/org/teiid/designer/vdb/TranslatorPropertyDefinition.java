@@ -8,7 +8,6 @@
 package org.teiid.designer.vdb;
 
 import static org.teiid.designer.vdb.VdbPlugin.UTIL;
-
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
@@ -16,7 +15,7 @@ import org.teiid.designer.core.util.StringUtilities;
 
 
 /**
- * A property definition that either represents one that exists on the current Teiid default server or one that does not. If it does
+ * A property definition that either represents one that exists on the current default Teiid Instance or one that does not. If it does
  * not exist on the current server, or a current server does not exist, this definition will either be one that the user created or
  * one that was initially found on a server.
  *
@@ -67,7 +66,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
     private String defaultValue;
 
     /**
-     * Used when a Teiid server property is found.
+     * Used when a Teiid instance property is found.
      */
     private PropertyDefinition delegate;
 
@@ -77,7 +76,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
     private String id;
 
     /**
-     * @param delegate a property definition from a Teiid server (may not be <code>null</code>)
+     * @param delegate a property definition from a Teiid instance (may not be <code>null</code>)
      * @throws IllegalArgumentException if <code>delegate</code> is <code>null</code>
      */
     public TranslatorPropertyDefinition( PropertyDefinition delegate ) {
@@ -279,7 +278,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
     }
 
     /**
-     * Marks this definition as being one not found on the current default Teiid server.
+     * Marks this definition as being one not found on the current default Teiid instance.
      * 
      * @param defaultValue the default value (may not be <code>null</code> or empty)
      * @throws IllegalArgumentException if <code>defaultValue</code> is <code>null</code> or empty

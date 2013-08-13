@@ -69,7 +69,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * The <code>ServerManager</code> class manages the creation, deletion, and editing of servers hosting Teiid servers.
+ * The <code>ServerManager</code> class manages the creation, deletion, and editing of servers hosting Teiid Instances.
  *
  * @since 8.0
  */
@@ -204,12 +204,12 @@ public final class TeiidServerManager implements ITeiidServerManager {
     private final KeyInValueHashMap<String, ITeiidServer> teiidServers;
 
     /**
-     * The default server.
+     * The default teiid instance.
      */
     private ITeiidServer defaultServer;
 
     /**
-     * Listener to the default server version
+     * Listener to the default teiid instance version
      */
     private Set<ITeiidServerVersionListener> teiidServerVersionListeners;
 
@@ -239,7 +239,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     private IPasswordProvider passwordProvider;
 
-    /* Listen for changes to the default server version preference */
+    /* Listen for changes to the default teiid instance version preference */
     private IPreferenceChangeListener preferenceChangeListener = new IPreferenceChangeListener() {
         @Override
         public void preferenceChange(PreferenceChangeEvent event) {
@@ -247,7 +247,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
                 return;
 
             if (getDefaultServer() != null) {
-                // Default server exists so this preference is superceded by this server
+                // Default teiid instance exists so this preference is superceded by this server
                 return;
             }
 
@@ -348,7 +348,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
     }
 
     /**
-     * @param parentServer the parent server of the requested teiid server
+     * @param parentServer the parent server of the requested Teiid Instance
      * @return the requested server or <code>null</code> if not found in the registry
      */
     @Override
@@ -395,9 +395,9 @@ public final class TeiidServerManager implements ITeiidServerManager {
     }
 
     /**
-     * Get the targeted teiid server version
+     * Get the targeted Teiid Instance version
      *
-     * @return teiid server version
+     * @return Teiid Instance version
      */
     @Override
     public ITeiidServerVersion getDefaultServerVersion() {
@@ -640,7 +640,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
                 ITeiidJdbcInfo teiidJdbcInfo = null;
                 Node serverNode = servers.item(i);
 
-                // server attributes (host, custom label, default server)
+                // server attributes (host, custom label, default teiid instance)
                 NamedNodeMap serverAttributeMap = serverNode.getAttributes();
 
                 if (serverAttributeMap == null) {
@@ -677,7 +677,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
                     customLabel = customLabelNode.getNodeValue();
                 }
 
-                // default server attribute
+                // default teiid instance attribute
                 Node defaultServerNode = serverAttributeMap.getNamedItem(DEFAULT_ATTR);
 
                 if (defaultServerNode != null) {
@@ -759,7 +759,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
                 try {
                     parentServer = findParentServer(host, parentServerId, teiidAdminInfo);
                 } catch (OrphanedTeiidServerException ex) {
-                    // Cannot add the teiid server since it has no parent
+                    // Cannot add the Teiid Instance since it has no parent
                     continue;
                 }
 
@@ -783,7 +783,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
             this.state = RuntimeState.STARTED;
             initialiseManagers();
 
-            // Set the default server. Doing this here will allow the managers to detect the change
+            // Set the default teiid instance. Doing this here will allow the managers to detect the change
             // and initialise accordingly
             setDefaultServerInternal(defaultServer);
         }
@@ -860,7 +860,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     private void closeEditors() {
         if (RuntimeState.RESTORING == state) {
-            // Avoid closing editors on startup since the default server is simply being assigned
+            // Avoid closing editors on startup since the default teiid instance is simply being assigned
             return;
         }
 

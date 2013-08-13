@@ -31,11 +31,11 @@ public interface ITeiidAdminInfo extends ITeiidConnectionInfo {
     public static final boolean DEFAULT_SECURE = true;
     
     /**
-     * The default username for the teiid server
+     * The default username for the Teiid Instance
      */
     public static final String DEFAULT_ADMIN_USERNAME = "admin"; //$NON-NLS-1$
     /**
-     * The default password for the teiid server
+     * The default password for the Teiid Instance
      */
     public static final String DEFAULT_ADMIN_PASSWORD = "admin"; //$NON-NLS-1$
 

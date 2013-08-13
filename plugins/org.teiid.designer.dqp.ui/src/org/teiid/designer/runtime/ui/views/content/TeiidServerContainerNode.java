@@ -175,7 +175,7 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
     }
 
     /**
-     * Get this container's teiid server
+     * Get this container's Teiid Instance
      * 
      * @return {@link ITeiidServer}
      */
