@@ -499,8 +499,11 @@ public class TeiidServer implements ITeiidServer {
      */
     @Override
     public String toString() {
-        String txt = Util.getString("serverToStringWithNoCustomLabel", getUrl(), getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
-        
+        String txt = Util.getString("serverToStringWithNoCustomLabel", //$NON-NLS-1$
+                                    getUrl(),
+                                    getTeiidAdminInfo().getUsername(),
+                                    parentServer.getName());
+
         if (this.customLabel != null) {
             txt = Util.getString("serverToStringWithCustomLabel", this.customLabel, txt); //$NON-NLS-1$
         }
