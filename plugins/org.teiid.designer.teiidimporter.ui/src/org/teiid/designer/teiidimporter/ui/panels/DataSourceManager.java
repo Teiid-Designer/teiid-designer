@@ -364,7 +364,7 @@ public class DataSourceManager implements UiConstants {
     /**
      * Determine if this is a 'rar' type driver that is deployed with Teiid
      * @param driverName the name of the driver
-     * @param teiidVersion the teiid server version
+     * @param teiidVersion the teiid instance version
      * @return 'true' if the driver is a rar driver, 'false' if not.
      */
     private boolean isRarDriver(String driverName, ITeiidServerVersion teiidVersion) {

@@ -123,7 +123,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
     	}
     	
     	/*
-    	 * Set the default teiid server
+    	 * Set the default Teiid Instance
     	 */
         this.getServerManager().setDefaultServer(this.selectedServer);
         

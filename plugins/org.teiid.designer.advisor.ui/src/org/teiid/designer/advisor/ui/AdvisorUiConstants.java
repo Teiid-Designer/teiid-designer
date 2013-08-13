@@ -235,10 +235,10 @@ public interface AdvisorUiConstants {
 		String DEFINE_SOURCE = "Define Source Model by importing from your data source"; //$NON-NLS-1$
 		
 		String CREATE_VDB = "Create a new VDB"; //$NON-NLS-1$
-		String EXECUTE_VDB = "Test a VDB by deploying to Teiid Server, connecting to it via JDBC and executing queries against it via Datatools' SQL Scrapbook"; //$NON-NLS-1$
+		String EXECUTE_VDB = "Test a VDB by deploying to Teiid Instance, connecting to it via JDBC and executing queries against it via Datatools' SQL Scrapbook"; //$NON-NLS-1$
 		String PREVIEW_DATA = "Perform a test query on a table or procedure"; //$NON-NLS-1$
 		String EDIT_VDB = "Select and open a VDB for editing"; //$NON-NLS-1$
-		String DEPLOY_VDB = "Deploy a VDB to your Teiid server"; //$NON-NLS-1$
+		String DEPLOY_VDB = "Deploy a VDB to your Teiid Instance"; //$NON-NLS-1$
 		String DEFINE_VDB = "Define VDB by selecting existing or creating new VDB";  //$NON-NLS-1$
 		
 		String GENERATE_REST_WAR = "Generate a REST WAR file"; //$NON-NLS-1$
@@ -249,11 +249,11 @@ public interface AdvisorUiConstants {
 				"\t2) Select your WAR file in the Model Explorer view\n" + //$NON-NLS-1$
 				"\t3) Right-click select 'Mark as Deployable'"; //$NON-NLS-1$
 		
-		String NEW_TEIID_SERVER = "Create new Teiid server"; //$NON-NLS-1$
-		String EDIT_TEIID_SERVER = "Edit the properties of an existing Teiid server"; //$NON-NLS-1$
-		String CREATE_DATA_SOURCE = "Create a data source (i.e. -ds.xml) on your Teiid server from source models or source connections in your workspace"; //$NON-NLS-1$
-		String SET_DEFAULT_TEIID_SERVER = "Select a teiid server as the default server, used to select the correct runtime client and for previewing models"; //$NON-NLS-1$
-		String REFRESH_TEIID_SERVER = "Refresh the connection to the selected teiid server"; //$NON-NLS-1$
+		String NEW_TEIID_SERVER = "Configure new JBoss Server"; //$NON-NLS-1$
+		String EDIT_TEIID_SERVER = "Edit the properties of an existing Teiid Instance"; //$NON-NLS-1$
+		String CREATE_DATA_SOURCE = "Create a data source (i.e. -ds.xml) on your Teiid Instance from source models or source connections in your workspace"; //$NON-NLS-1$
+		String SET_DEFAULT_TEIID_SERVER = "Select a teiid instance as the default instance, used to select the correct runtime client and for previewing models"; //$NON-NLS-1$
+		String REFRESH_TEIID_SERVER = "Refresh the connection to the selected teiid instance"; //$NON-NLS-1$
 		String SET_CONNECTION_PROFILE = "Set connection profile on a relational source model"; //$NON-NLS-1$
 	}
 	

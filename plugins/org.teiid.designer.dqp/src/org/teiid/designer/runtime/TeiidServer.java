@@ -107,7 +107,7 @@ public class TeiidServer implements ITeiidServer {
     private final String id;
 
     /**
-     * The parent {@link IServer} of this teiid server
+     * The parent {@link IServer} of this Teiid Instance
      */
     private IServer parentServer;
 

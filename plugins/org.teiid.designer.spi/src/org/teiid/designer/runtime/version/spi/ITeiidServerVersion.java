@@ -8,7 +8,7 @@
 package org.teiid.designer.runtime.version.spi;
 
 /**
- * Parent marker interface for teiid server version information
+ * Parent marker interface for teiid instance version information
  */
 public interface ITeiidServerVersion {
     

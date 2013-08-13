@@ -10,7 +10,6 @@ package org.teiid.designer.vdb.ui.editor.panels;
 import java.io.File;
 import java.util.Collection;
 import java.util.Set;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -506,7 +505,7 @@ public class DataRolesPanel {
 
         // Add selection changed listener so if a Physical Source model is selected, the applicable menu actions are
         // retrieved via the SourceHandler extension point and interface.
-        // This allows changing Translator and JNDI names via existing deployed objects on Teiid Servers that are
+        // This allows changing Translator and JNDI names via existing deployed objects on Teiid Instances that are
         // connected in the user's workspace.
         final TableViewer dataRolesViewer = dataRolesGroup.getTable().getViewer();
         final MenuManager dataRolesMenuManager = new MenuManager();

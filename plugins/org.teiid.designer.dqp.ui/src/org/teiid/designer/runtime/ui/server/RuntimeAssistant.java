@@ -25,7 +25,7 @@ import org.teiid.designer.runtime.spi.ITeiidServerManager;
 
 
 /**
- * The <code>RuntimeAssistant<code> ensures that the preview preference is enabled and that a default Teiid server exists.
+ * The <code>RuntimeAssistant<code> ensures that the preview preference is enabled and that a default Teiid Instance exists.
  *
  * @since 8.0
  */
@@ -38,11 +38,11 @@ public final class RuntimeAssistant {
     private static boolean selectServerCancelled = false;
 
     /**
-     * If the preview preference is disabled or a Teiid server does not exist, a dialog is shown asking the user if they want to
+     * If the preview preference is disabled or a Teiid Instance does not exist, a dialog is shown asking the user if they want to
      * enable preview and create a server.
      * 
      * @param shell the shell used to display dialog if necessary
-     * @return <code>true</code> if preview is enabled, a Teiid server exists, and a connection to the server has been made
+     * @return <code>true</code> if preview is enabled, a Teiid Instance exists, and a connection to the server has been made
      */
     public static boolean ensurePreviewEnabled( Shell shell ) {
         boolean previewEnabled = isPreviewEnabled();
@@ -96,12 +96,12 @@ public final class RuntimeAssistant {
     }
 
     /**
-     * If a Teiid server does not exist, a dialog is shown asking the user if they want to create a server.
+     * If a Teiid Instance does not exist, a dialog is shown asking the user if they want to create a server.
      * 
      * @param shell the shell used to display dialog if necessary
      * @param dialogMessage the localized question to ask the user if they want to create a new Teiid instance in order to continue
      *            on with task
-     * @return <code>true</code> if a Teiid server exists and can be connected to
+     * @return <code>true</code> if a Teiid Instance exists and can be connected to
      */
     public static boolean ensureServerConnection( Shell shell,
                                                   String dialogMessage ) {
@@ -121,7 +121,7 @@ public final class RuntimeAssistant {
     }
 
     /**
-     * @return the default Teiid server (can be <code>null</code>)
+     * @return the default Teiid Instance (can be <code>null</code>)
      */
     private static ITeiidServer getServer() {
         return getServerManager().getDefaultServer();
@@ -142,7 +142,7 @@ public final class RuntimeAssistant {
     }
 
     /**
-     * @return <code>true</code> if a default Teiid server exists
+     * @return <code>true</code> if a default Teiid Instance exists
      */
     private static boolean previewServerExists() {
         return (getServerManager().getDefaultServer() != null);

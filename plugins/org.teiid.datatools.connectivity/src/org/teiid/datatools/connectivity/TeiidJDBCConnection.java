@@ -93,7 +93,7 @@ public class TeiidJDBCConnection extends JDBCConnection {
          *
          * Using the database version id, attempt to acquire the driver
          * from the teiid client runtimes. This no longer requires using
-         * the default teiid server (which has to be connected).
+         * the default teiid instance (which has to be connected).
          */
         String teiidVersion = props.getProperty(IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID);
         if (teiidVersion != null) {

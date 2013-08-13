@@ -47,9 +47,9 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
     public void serverAdded(IServer server) {
         if (sleep) return;
         
-        // Initialise the teiid server manager is not already initialised
+        // Initialise the Teiid Instance manager is not already initialised
         DqpPlugin.getInstance().getServerManager();
-        
+
         server.addServerListener(this);
 
         // New server added so add a teiid instance, even though it is not currently connected
@@ -77,7 +77,7 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
         }
         
         /*
-         * We have a parent server with no teiid server attached
+         * We have a parent server with no Teiid Instance attached
          * This may be intentional if the parent server is not teiid
          * enabled but should check just in case.
          */
@@ -92,7 +92,7 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
         
         ITeiidServerManager serverManager = DqpPlugin.getInstance().getServerManager();
         
-        // Tidy up the server manager by removing the related teiid server
+        // Tidy up the server manager by removing the related Teiid Instance
         for (ITeiidServer teiidServer : serverManager.getServers()) {
             if (server.equals(teiidServer.getParent())) {
                 serverManager.removeServer(teiidServer);

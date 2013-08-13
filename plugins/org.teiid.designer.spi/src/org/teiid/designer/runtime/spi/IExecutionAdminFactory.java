@@ -35,7 +35,7 @@ public interface IExecutionAdminFactory {
     IDataTypeManagerService getDataTypeManagerService();
 
     /**
-     * Get the {@link Driver} for the Teiid Server
+     * Get the {@link Driver} for the Teiid Instance
      *
      * @return the driver
      */

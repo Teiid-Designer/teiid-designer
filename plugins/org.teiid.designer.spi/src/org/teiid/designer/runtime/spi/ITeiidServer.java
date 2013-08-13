@@ -39,7 +39,7 @@ public interface ITeiidServer extends IExecutionAdmin, HostProvider {
     ITeiidJdbcInfo getTeiidJdbcInfo();
     
     /**
-     * An appropriate name for this teiid server
+     * An appropriate name for this Teiid Instance
      * 
      * @return {@link #getCustomLabel()} if available otherwise {@link #getUrl()}
      */

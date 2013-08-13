@@ -69,7 +69,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * The <code>ServerManager</code> class manages the creation, deletion, and editing of servers hosting Teiid servers.
+ * The <code>ServerManager</code> class manages the creation, deletion, and editing of servers hosting Teiid Instances.
  *
  * @since 8.0
  */
@@ -348,7 +348,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
     }
 
     /**
-     * @param parentServer the parent server of the requested teiid server
+     * @param parentServer the parent server of the requested Teiid Instance
      * @return the requested server or <code>null</code> if not found in the registry
      */
     @Override
@@ -395,9 +395,9 @@ public final class TeiidServerManager implements ITeiidServerManager {
     }
 
     /**
-     * Get the targeted teiid server version
+     * Get the targeted Teiid Instance version
      *
-     * @return teiid server version
+     * @return Teiid Instance version
      */
     @Override
     public ITeiidServerVersion getDefaultServerVersion() {
@@ -759,7 +759,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
                 try {
                     parentServer = findParentServer(host, parentServerId, teiidAdminInfo);
                 } catch (OrphanedTeiidServerException ex) {
-                    // Cannot add the teiid server since it has no parent
+                    // Cannot add the Teiid Instance since it has no parent
                     continue;
                 }
 

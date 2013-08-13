@@ -93,7 +93,7 @@ public interface ITeiidServerManager extends EventManager {
     ITeiidServer getServer(String id);
 
     /**
-     * @param parentServer the parent server of the requested teiid server
+     * @param parentServer the parent server of the requested Teiid Instance
      * @return the requested server or <code>null</code> if not found in the registry
      */
     ITeiidServer getServer(IServer parentServer);
@@ -109,9 +109,9 @@ public interface ITeiidServerManager extends EventManager {
     RuntimeState getState();
 
     /**
-     * Get the targeted teiid server version
+     * Get the targeted Teiid Instance version
      *
-     * @return teiid server version
+     * @return Teiid Instance version
      */
     ITeiidServerVersion getDefaultServerVersion();
 

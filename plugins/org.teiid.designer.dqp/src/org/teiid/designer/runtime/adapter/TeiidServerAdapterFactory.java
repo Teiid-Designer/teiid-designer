@@ -87,7 +87,7 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
     
     /**
      * Adapt the older JBoss Server to an {@link ITeiidServer} only if
-     * JB is started and contains a teiid server
+     * JB is started and contains a Teiid Instance
      * 
      * @param jbossServer
      * @param options
@@ -102,12 +102,12 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
             optionList = Arrays.asList(options);
         
         /* 
-         * In some cases we want to return a new teiid server even if its in the registry
-         * Such teiid server instances should be disposed of and not kept around.
+         * In some cases we want to return a new Teiid Instance even if its in the registry
+         * Such Teiid Instances should be disposed of and not kept around.
          */
         if (! optionList.contains(ServerOptions.NO_CHECK_SERVER_REGISTRY)) {
             // No specific option specifying we should not check the registry so check
-            // and return any teiid server found that fits the url
+            // and return any Teiid Instance found that fits the url
          
             
             teiidServer = getTeiidServerManager().getServer(parentServer);
@@ -138,7 +138,7 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
 
     /**
      * Adapt the JBoss 7 server to an {@link ITeiidServer} only if
-     * JB is started and contains a teiid server.
+     * JB is started and contains a Teiid Instance.
      * 
      * @param parentServer
      * @param jboss7Server
@@ -154,12 +154,12 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
             optionList = Arrays.asList(options);
         
         /* 
-         * In some cases we want to return a new teiid server even if its in the registry
-         * Such teiid server instances should be disposed of and not kept around.
+         * In some cases we want to return a new Teiid Instance even if its in the registry
+         * Such Teiid Instances should be disposed of and not kept around.
          */
         if (! optionList.contains(ServerOptions.NO_CHECK_SERVER_REGISTRY)) {
             // No specific option specifying we should not check the registry so check
-            // and return any teiid server found that fits the url
+            // and return any Teiid Instance found that fits the url
          
             
             teiidServer = getTeiidServerManager().getServer(parentServer);

@@ -41,7 +41,7 @@ public final class ImportManager implements IExecutionConfigurationListener {
     private static final int VDB_LOADING_TIMEOUT_SEC = 120;
     
     /**
-     * The Teiid server being used for importers (may be <code>null</code>).
+     * The Teiid Instance being used for importers (may be <code>null</code>).
      */
     private volatile AtomicReference<ITeiidServer> importServer = new AtomicReference<ITeiidServer>();
 
@@ -364,7 +364,7 @@ public final class ImportManager implements IExecutionConfigurationListener {
     }
 
     /**
-     * Get the Teiid server data sources
+     * Get the Teiid Instance data sources
      * @return the collection of Data Sources
      * @throws Exception the exception
      */
@@ -438,7 +438,7 @@ public final class ImportManager implements IExecutionConfigurationListener {
     
     /**
      * Return the version of the current import server - null if not defined or not connected
-     * @return the teiid server version
+     * @return the Teiid Instance version
      */
     public ITeiidServerVersion getServerVersion() {
         ITeiidServer importServer = getImportServer();

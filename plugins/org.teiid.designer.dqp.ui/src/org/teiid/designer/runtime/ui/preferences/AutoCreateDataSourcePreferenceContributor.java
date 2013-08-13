@@ -25,7 +25,7 @@ import org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor;
 
 /**
  * The <code>AutoCreateDataSourcePreferenceContributor</code> is the UI that manages the preference that controls if a data source
- * is automatically created on the current Teiid server if the name of the data source matches the default name.
+ * is automatically created on the current Teiid Instance if the name of the data source matches the default name.
  *
  * @since 8.0
  */

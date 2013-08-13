@@ -242,9 +242,9 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     }
     
 	/**
-	 * Deploy the given vdb to the given teiid server
+	 * Deploy the given vdb to the given Teiid Instance
 	 * 
-	 * @param teiidServer the Teiid Server instance
+	 * @param teiidServer the Teiid Instance
 	 * @param vdbOrVdbFile the VDB
 	 * @param doCreateDataSource 'true' to create corresponding datasource, 'false' if not.
 	 */

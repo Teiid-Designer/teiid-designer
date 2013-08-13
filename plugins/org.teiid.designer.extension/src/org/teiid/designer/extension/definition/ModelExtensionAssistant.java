@@ -106,7 +106,7 @@ public class ModelExtensionAssistant implements ExtensionConstants {
      * @param advanced <code>true</code> string if this property should only be shown to advances users (cannot be <code>null</code>
      *            or empty)
      * @param masked <code>true</code> string if this property value must be masked (cannot be <code>null</code> or empty)
-     * @param index <code>true</code> string if this property value must be indexed for use by the Teiid server (cannot be
+     * @param index <code>true</code> string if this property value must be indexed for use by the Teiid Instance (cannot be
      *            <code>null</code> or empty)
      * @param allowedValues the allowed property values (can be <code>null</code> or empty)
      * @param descriptions the one or more translations of the property description (can be <code>null</code> or empty)

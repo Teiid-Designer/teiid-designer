@@ -279,7 +279,7 @@ public class TeiidServerEditor extends EditorPart {
     }
 
     /**
-     * Populates the editor with the teiid server's properties
+     * Populates the editor with the Teiid Instance's properties
      */
     private void createContents() {
         progressBar.dispose();
@@ -484,7 +484,7 @@ public class TeiidServerEditor extends EditorPart {
         blueForeground(portLabel);
         
         if (isSevenServer()) {
-            // Only if teiid server is version 7 will the port be editable since subsequent 
+            // Only if Teiid Instance is version 7 will the port be editable since subsequent 
             // versions the port can be gathered from the server
             jdbcPort = toolkit.createText(composite, teiidServer.getTeiidJdbcInfo().getPort());
             GridDataFactory.fillDefaults().grab(true, false).applyTo(jdbcPort);
@@ -600,7 +600,7 @@ public class TeiidServerEditor extends EditorPart {
         if (teiidServer == null)
             return;
 
-        // Overwrite the properties of the teiid server
+        // Overwrite the properties of the Teiid Instance
         teiidServer.setCustomLabel(customNameText.getText());
         
         ITeiidAdminInfo adminInfo = teiidServer.getTeiidAdminInfo();
