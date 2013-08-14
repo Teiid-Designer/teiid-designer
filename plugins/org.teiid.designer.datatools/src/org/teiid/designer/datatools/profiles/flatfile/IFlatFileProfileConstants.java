@@ -47,6 +47,7 @@ public interface IFlatFileProfileConstants {
 	String SECOND_LINE_DATATYPE = "FlatFileSecondLineDataType"; //$NON-NLS-1$
 	
 	String HOME_KEY = "HOME"; //$NON-NLS-1$
+	String URI_KEY = "URI"; //$NON-NLS-1$
 	String DELIMTYPE_KEY = "DELIMTYPE"; //$NON-NLS-1$
 	String CHARSET_KEY = "CHARSET"; //$NON-NLS-1$
 	String INCLTYPELINE_KEY = "INCLTYPELINE"; //$NON-NLS-1$
