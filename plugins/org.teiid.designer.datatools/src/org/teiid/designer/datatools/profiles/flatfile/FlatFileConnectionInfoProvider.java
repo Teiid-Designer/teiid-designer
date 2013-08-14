@@ -1,5 +1,6 @@
 package org.teiid.designer.datatools.profiles.flatfile;
 
+import java.io.File;
 import java.util.Properties;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.designer.core.ModelerCore;
@@ -47,7 +48,14 @@ public class FlatFileConnectionInfoProvider  extends ConnectionInfoHelper implem
         	connectionProps.put(IFlatFileProfileConstants.TEIID_PARENT_DIRECTORY_KEY, baseProps.get(IFlatFileProfileConstants.HOME_URL));
         } else if( baseProps.getProperty(IFlatFileProfileConstants.HOME_KEY) != null ) {
         	connectionProps.put(IFlatFileProfileConstants.TEIID_PARENT_DIRECTORY_KEY, baseProps.get(IFlatFileProfileConstants.HOME_KEY));
-        } 
+        } else if( baseProps.getProperty(IFlatFileProfileConstants.URI_KEY) != null ) {
+        	String uri = baseProps.getProperty(IFlatFileProfileConstants.URI_KEY);
+        	// Get Parent Folder path using file path
+        	String parentPath = getFileParentDir(uri);
+        	if(parentPath!=null) {
+            	connectionProps.put(IFlatFileProfileConstants.TEIID_PARENT_DIRECTORY_KEY, parentPath);
+        	}
+        }
 
         connectionProps.setProperty(FILE_CLASSNAME, FILE_CONNECTION_FACTORY);
         return connectionProps;
@@ -65,6 +73,16 @@ public class FlatFileConnectionInfoProvider  extends ConnectionInfoHelper implem
 		if (null != result) {
 			connectionProps.setProperty(CONNECTION_NAMESPACE
 					+ IFlatFileProfileConstants.HOME_URL, result);
+		} else {
+			result = props.getProperty(IFlatFileProfileConstants.URI_KEY);
+			if(null != result) {
+	        	// Get Parent Folder path using file path
+	        	String parentPath = getFileParentDir(result);
+	        	if(parentPath!=null) {
+					connectionProps.setProperty(CONNECTION_NAMESPACE
+							+ IFlatFileProfileConstants.HOME_URL, parentPath);
+	        	}
+			}
 		}
 
 		result = props.getProperty(IFlatFileProfileConstants.DELIMTYPE_KEY);
@@ -101,6 +119,20 @@ public class FlatFileConnectionInfoProvider  extends ConnectionInfoHelper implem
 
 	}
 
+	private String getFileParentDir(String filePath) {
+		String dirPath = null;
+		if(filePath != null) {
+			File aFile = new File(filePath);
+			if(aFile.exists() && aFile.isFile()) {
+				File dirFile = aFile.getParentFile();
+				if(dirFile!=null && dirFile.exists() && dirFile.isDirectory()) {
+					dirPath = dirFile.getAbsolutePath();
+				}
+			}
+		}
+		return dirPath;
+	}
+	
 	@Override
 	public Properties getCommonProfileProperties(IConnectionProfile profile) {
 		return super.getCommonProfileProperties(profile);

@@ -76,7 +76,6 @@ import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
-import org.teiid.designer.datatools.profiles.xml.IXmlProfileConstants;
 import org.teiid.designer.datatools.ui.actions.EditConnectionProfileAction;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.metamodels.relational.Procedure;
@@ -133,6 +132,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	//		CHARSET=UTF-8
 	
 	private static final String HOME = "HOME"; //$NON-NLS-1$
+	private static final String URI = "URI"; //$NON-NLS-1$
 	private static final String INCLTYPELINE = "INCLTYPELINE"; //$NON-NLS-1$
 	private static final String INCLCOLUMNNAME = "INCLCOLUMNNAME"; //$NON-NLS-1$
 	private static final String VALUE_YES = "YES"; //$NON-NLS-1$
@@ -151,6 +151,8 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	
 	//private static final String SCHEMA_LIST_PROPERTY_KEY = "SCHEMAFILELIST";  //$NON-NLS-1$
 	private static final String FILE_LIST_PROPERTY_KEY = "FILELIST";  //$NON-NLS-1$ //home/blafond/TestDesignerFolder/example files/xml/employee_info.xml
+
+	private static final String UNKNOWN_FOLDER = getString("unknownFolderText"); //$NON-NLS-1$
 	
 	private static String getString(final String id) {
 		return Util.getString(I18N_PREFIX + id);
@@ -562,17 +564,8 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 				if (profile.getName().equalsIgnoreCase(cpName)) {
 					setConnectionProfile(profile);
 					Properties props = profile.getBaseProperties();
-					String home = (String) props.get(HOME);
-					if (home != null) {
-						this.profileInfo.home = home;
-						String location = home;
-						if (location.length() > 60) {
-							int len = location.length();
-							location = "..." + location.substring(len - 60, len); //$NON-NLS-1$
-						}
-						this.dataFileFolderText.setText(location);
-						this.dataFileFolderText.setToolTipText(home);
-					}
+					setDataFolderLocation(props);
+					
 					String charset = (String) props.get(CHARSET);
 					if (charset != null) {
 					    this.profileInfo.charset = charset;
@@ -609,12 +602,11 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		this.editCPButton.setEnabled(getConnectionProfile() != null);
 	}
 	
-	private void setDataFolderLocation() {
-		IConnectionProfile profile = getConnectionProfile();
-		if(profile!=null) {
-			Properties props = profile.getBaseProperties();
-			String home = (String) props.get(IXmlProfileConstants.TEIID_PARENT_DIRECTORY_KEY);
+	private void setDataFolderLocation(Properties profileBaseProps) {
+		if(profileBaseProps!=null) {
+			String home = (String) profileBaseProps.get(HOME);
 			if (home != null) {
+				this.profileInfo.home = home;
 				String location = home;
 				if (location.length() > 60) {
 					int len = location.length();
@@ -623,15 +615,24 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 				this.dataFileFolderText.setText(location);
 				this.dataFileFolderText.setToolTipText(home);
 			} else {
-				String URL = (String) props.get(IXmlProfileConstants.URL_PROP_ID);
-				if( URL != null ) {
-					String location = URL;
-					if (location.length() > 60) {
-						int len = location.length();
-						location = "..." + location.substring(len - 60, len); //$NON-NLS-1$
+				String uri = (String) profileBaseProps.get(URI);
+				if( uri != null ) {
+					String location = null;
+					File aFile = new File(uri);
+					if(aFile.exists() && aFile.isFile()) {
+						File parentDir = aFile.getParentFile();
+						if(parentDir!=null && parentDir.exists() && parentDir.isDirectory()) {
+							location = parentDir.getAbsolutePath();
+							this.profileInfo.home = location;
+						}
 					}
-					this.dataFileFolderText.setText(location);
-					this.dataFileFolderText.setToolTipText(URL);
+					if(location==null) {
+						this.dataFileFolderText.setText(UNKNOWN_FOLDER);
+						this.dataFileFolderText.setToolTipText(getString("unknownFolderTooltip")); //$NON-NLS-1$
+					} else {
+						this.dataFileFolderText.setText(location);
+						this.dataFileFolderText.setToolTipText(location);
+					}
 				} else {
 					this.dataFileFolderText.setText(EMPTY_STRING);
 					this.dataFileFolderText.setToolTipText(EMPTY_STRING);
@@ -665,10 +666,22 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		if (getConnectionProfile() != null) {
 			if( this.info.isFlatFileMode() ) {
 				File folder = getFolderForConnectionProfile();
-				if (folder != null && folder.exists() && folder.isDirectory()) {
-					// ================= OLD WAY =======================
+				File file = getFileForConnectionProfile();
+				if (hasExistingFileOrFolder(file,folder)) {
 					fileParsingStatus = Status.OK_STATUS;
-					fileViewer.setInput(folder);
+					if(file!=null && file.exists() && file.isFile()) {
+						TeiidMetadataFileInfo fileInfo = this.info.getFileInfo(file);
+						if (fileInfo == null) {
+							fileInfo = new TeiidMetadataFileInfo(file);
+							this.info.addFileInfo(fileInfo);
+						}
+						fileViewer.setInput(file);
+						fileViewer.getTable().select(0);
+						fileViewer.getTable().getItem(0).setChecked(true);
+						info.setDoProcess(fileInfo.getDataFile(), true);
+					} else {
+						fileViewer.setInput(folder);
+					}
 					TableItem[] items = fileViewer.getTable().getItems();
 					for (TableItem item : items) {
 						Object data = item.getData();
@@ -688,6 +701,11 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 						column.pack();
 						column.setWidth(column.getWidth() + 4);
 					}
+				// Unrecognized selection in CP
+				} else {
+					this.fileViewer.setInput(null);
+					this.dataFileFolderText.setText(UNKNOWN_FOLDER);
+					this.dataFileFolderText.setToolTipText(getString("unknownFolderTooltip")); //$NON-NLS-1$
 				}
 			} else {
 				File theXmlFile = getFileForConnectionProfile();
@@ -766,6 +784,16 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 			}
 		}
 	}
+		
+	private boolean hasExistingFileOrFolder(File theFile, File theFolder) {
+		if (theFolder != null && theFolder.exists() && theFolder.isDirectory()) {
+			return true;
+		}
+		if (theFile != null && theFile.exists() && theFile.isFile()) {
+			return true;
+		}
+		return false;
+	}
 	
     /**
      * If the path begins with a "/", we need to strip off since this will be changed to an underscore and create an invalid model
@@ -793,9 +821,19 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	private File getFolderForConnectionProfile() {
 		if (getConnectionProfile() != null) {
 			Properties props = getConnectionProfile().getBaseProperties();
+			// For folder definition, the HOME property will be set
 			String home = (String) props.get(HOME);
 			if (home != null) {
 				return new File(home);
+			}
+			
+			// Home property not set - look for individual URI
+			String fileURI = (String) props.get(URI);
+			if(fileURI != null) {
+				File aFile = new File(fileURI);
+				if(aFile.exists() && aFile.isFile()) {
+					return aFile.getParentFile();
+				}
 			}
 		}
 
@@ -808,6 +846,13 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 			String fileListValue = (String) props.get(FILE_LIST_PROPERTY_KEY);
 			if (fileListValue != null) {
 				return new File(fileListValue);
+			}
+			String fileUriValue = (String) props.get(URI);
+			if(fileUriValue != null) {
+				File uriFile = new File(fileUriValue);
+				if(uriFile.exists() && uriFile.isFile()) {
+					return uriFile;
+				}
 			}
 		}
 
@@ -1098,6 +1143,12 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	private boolean validatePage() {
 		
 		setSourceHelpMessage();
+		
+		String folderText = this.dataFileFolderText.getText();
+		if(folderText!=null && folderText.equals(UNKNOWN_FOLDER)) {
+            setThisPageComplete(getString("unknownFolderErrorMsg"), ERROR); //$NON-NLS-1$
+			return false;
+		}
 		
 		// Check for model file selected
 		boolean fileSelected = false;
