@@ -561,7 +561,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             @Override
             public void linkActivated(HyperlinkEvent e) {
                 try {
-                    // No default teiid instance so most likely no servers at all so open the new server wizard
+                    // Set the default server
                     IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
                     handlerService.executeCommand("org.teiid.designer.dqp.ui.setDefaultServerAction", null); //$NON-NLS-1$
                 } catch (Exception ex) {

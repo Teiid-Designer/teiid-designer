@@ -223,6 +223,9 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
 
 	@Override
 	public Object execute(ExecutionEvent event) {
+	    // This will be called from the handler service so the selected server is likely to be out-of-date
+	    // so we need the dialog box to pop up to allow server selection.
+	    selectedServer = null;
         run();
         return null;
 	}
