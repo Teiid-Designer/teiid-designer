@@ -1623,6 +1623,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 			loadFileListViewer();
 			fileNameColumn.getColumn().pack();
 			synchronizeUI();
+			validatePage();
 		}
 	}
 	
