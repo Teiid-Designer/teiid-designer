@@ -576,6 +576,11 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     @Override
     public void notifyListeners( ExecutionConfigurationEvent event ) {
+        if (RuntimeState.SHUTTING_DOWN.equals(getState()) || RuntimeState.SHUTDOWN.equals(getState())) {
+            // Since we are shutting down then everything is being saved and no reason to notify UI
+            return;
+        }
+
         for (IExecutionConfigurationListener l : this.listeners) {
             try {
                 l.configurationChanged(event);
