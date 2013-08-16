@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.texteditor.MarkerUtilities;
+import org.teiid.designer.core.builder.AbstractTeiidProjectBuilder;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.ModelExtensionAssistantAggregator;
@@ -46,7 +47,7 @@ import org.teiid.designer.extension.ui.UiConstants.ExtensionIds;
  * The <code>ModelExtensionDefinitionBuilder</code> is a project builder that creates resource problem markers for Model Extension
  * Definition (MED) files (*.mxd).
  */
-public final class ModelExtensionDefinitionBuilder extends IncrementalProjectBuilder {
+public final class ModelExtensionDefinitionBuilder extends AbstractTeiidProjectBuilder {
 
     private static final boolean VISIT_MODELS = true; // turns visiting off for model files
     private static final String SAX_ERR_PREFIX = "cvc-"; //$NON-NLS-1$
@@ -65,7 +66,7 @@ public final class ModelExtensionDefinitionBuilder extends IncrementalProjectBui
      *      org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
-    protected IProject[] build( int kind,
+    protected IProject[] buildInternal( int kind,
                                 Map<String, String> args,
                                 IProgressMonitor monitor ) throws CoreException {
         IProject project = getProject();

@@ -109,6 +109,11 @@ public interface ITeiidServerManager extends EventManager {
     RuntimeState getState();
 
     /**
+     * @return true if manager is started
+     */
+    boolean isStarted();
+
+    /**
      * Get the targeted Teiid Instance version
      *
      * @return Teiid Instance version

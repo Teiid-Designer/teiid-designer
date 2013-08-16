@@ -10,7 +10,6 @@ package org.teiid.designer.core.workspace;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
@@ -24,6 +23,8 @@ import org.teiid.designer.core.ModelerCore;
  * @since 8.0
  */
 public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Openable, InternalOpenable {
+
+    private Object openLock = new Object();
 
     /**
      * Construct an instance of OpenableImpl.
@@ -119,34 +120,42 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
      */
     @Override
 	public void openWhenClosed( final IProgressMonitor pm ) throws ModelWorkspaceException {
-        try {
+        synchronized(openLock) {
 
-            if (ModelWorkspaceManager.VERBOSE) {
-                System.out.println("OPENING Item (" + Thread.currentThread() + "): " + this.toStringWithAncestors()); //$NON-NLS-1$//$NON-NLS-2$
+            // If a thread has had to wait before acquiring the lock then another thread may well
+            // have already opened this Openable so check again if it is opened.
+            if (isOpen())
+                return;
+
+            try {
+
+                if (ModelWorkspaceManager.VERBOSE) {
+                    System.out.println("OPENING Item (" + Thread.currentThread() + "): " + this.toStringWithAncestors()); //$NON-NLS-1$//$NON-NLS-2$
+                }
+
+                // 1) Parent must be open - open the parent if necessary
+                openParent(pm);
+
+                // 2) create the new element info
+                OpenableModelWorkspaceItemInfo info = createItemInfo();
+
+                // 3) build the structure of the openable
+                buildStructure(info, pm);
+
+                // 4) anything special
+                opening(info);
+
+                if (ModelWorkspaceManager.VERBOSE) {
+                    System.out.println("-> Package cache size = " + ModelWorkspaceManager.getModelWorkspaceManager().cache.pkgSize()); //$NON-NLS-1$
+                }
+
+                // if any problems occuring openning the element, ensure that it's info
+                // does not remain in the cache (some elements, pre-cache their info
+                // as they are being opened).
+            } catch (ModelWorkspaceException e) {
+                ModelWorkspaceManager.getModelWorkspaceManager().removeInfo(this);
+                throw e;
             }
-
-            // 1) Parent must be open - open the parent if necessary
-            openParent(pm);
-
-            // 2) create the new element info
-            OpenableModelWorkspaceItemInfo info = createItemInfo();
-
-            // 3) build the structure of the openable
-            buildStructure(info, pm);
-
-            // 4) anything special
-            opening(info);
-
-            if (ModelWorkspaceManager.VERBOSE) {
-                System.out.println("-> Package cache size = " + ModelWorkspaceManager.getModelWorkspaceManager().cache.pkgSize()); //$NON-NLS-1$
-            }
-
-            // if any problems occuring openning the element, ensure that it's info
-            // does not remain in the cache (some elements, pre-cache their info
-            // as they are being opened).
-        } catch (ModelWorkspaceException e) {
-            ModelWorkspaceManager.getModelWorkspaceManager().removeInfo(this);
-            throw e;
         }
     }
 

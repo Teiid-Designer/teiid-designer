@@ -108,7 +108,6 @@ import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
-import org.teiid.designer.runtime.spi.ITeiidServerManager.RuntimeState;
 import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.ui.PluginConstants;
@@ -304,9 +303,9 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         @Override
         public void run() {
             ITeiidServerManager serverManager = ModelerCore.getTeiidServerManager();
-            while(serverManager.getState() != RuntimeState.STARTED) {
+            while(! serverManager.isStarted()) {
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     Util.log(ex);
                 }

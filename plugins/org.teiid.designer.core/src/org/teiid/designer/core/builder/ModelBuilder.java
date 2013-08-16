@@ -22,7 +22,6 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.teiid.core.designer.ModelerCoreException;
@@ -43,7 +42,7 @@ import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
  *
  * @since 8.0
  */
-public class ModelBuilder extends IncrementalProjectBuilder implements IgnorableNotificationSource {
+public class ModelBuilder extends AbstractTeiidProjectBuilder implements IgnorableNotificationSource {
 
     /**
      * @see org.eclipse.core.resources.IncrementalProjectBuilder#clean(org.eclipse.core.runtime.IProgressMonitor)
@@ -78,7 +77,7 @@ public class ModelBuilder extends IncrementalProjectBuilder implements Ignorable
      * @see org.eclipse.core.resources.IncrementalProjectBuilder#build(int, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
-    protected IProject[] build( final int kind,
+    protected IProject[] buildInternal( final int kind,
                                 final Map args,
                                 final IProgressMonitor monitor ) throws CoreException {
 

@@ -52,7 +52,6 @@ import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
-import org.teiid.designer.runtime.spi.ITeiidServerManager.RuntimeState;
 import org.teiid.designer.ui.common.util.UiUtil;
 
 /**
@@ -225,9 +224,9 @@ public class TeiidServerEditor extends EditorPart {
 
         @Override
         public void run() {
-            while(getServerManager().getState() != RuntimeState.STARTED) {
+            while(! getServerManager().isStarted()) {
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     UTIL.log(ex);
                 }

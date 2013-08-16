@@ -410,6 +410,11 @@ public final class TeiidServerManager implements ITeiidServerManager {
         return this.state;
     }
 
+    @Override
+    public boolean isStarted() {
+        return RuntimeState.STARTED.equals(this.state);
+    }
+
     /**
      * @return the name of the state file that the server registry is persisted to or <code>null</code>
      */

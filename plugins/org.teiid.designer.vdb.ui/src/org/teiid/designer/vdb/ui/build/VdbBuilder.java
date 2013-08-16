@@ -21,7 +21,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IResourceVisitor;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -30,8 +29,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.texteditor.MarkerUtilities;
-import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.runtime.spi.ITeiidServerManager.RuntimeState;
+import org.teiid.designer.core.builder.AbstractTeiidProjectBuilder;
 import org.teiid.designer.vdb.VdbConstants;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.Messages;
@@ -40,7 +38,7 @@ import org.teiid.designer.vdb.ui.VdbUiConstants;
 /**
  *
  */
-public class VdbBuilder extends IncrementalProjectBuilder {
+public class VdbBuilder extends AbstractTeiidProjectBuilder {
 	@SuppressWarnings("javadoc")
 	public static final String WRONG_PATH = "wrongPath"; //$NON-NLS-1$
 	@SuppressWarnings("javadoc")
@@ -80,7 +78,7 @@ public enum Currency {
 Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutorial.html#ixzz2MJdMYTAM
 
     	*/
-	
+
     /**
      * {@inheritDoc}
      * 
@@ -88,12 +86,7 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
      *      org.eclipse.core.runtime.IProgressMonitor)
      */
 	@Override
-	protected IProject[] build(int kind, Map<String, String> args, IProgressMonitor monitor) throws CoreException {
-	    if (ModelerCore.getTeiidServerManager().getState() != RuntimeState.STARTED) {
-	        // Not ready to do any validation as still loading bits 'n pieces
-	        return null;
-	    }
-
+	protected IProject[] buildInternal(int kind, Map<String, String> args, IProgressMonitor monitor) throws CoreException {
 	    IProject project = getProject();
 
         // don't do anything if project is closed or doesn't exist
