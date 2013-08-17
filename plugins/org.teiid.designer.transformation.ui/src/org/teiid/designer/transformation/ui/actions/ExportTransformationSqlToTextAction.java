@@ -51,7 +51,10 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
     private static final String EXPORT_DEFAULT_FILENAME = "ExportTransformationSqlToTextAction.exportDefaultFile.text"; //$NON-NLS-1$
     private static final String EXPORT_DEFAULT_FILEEXT = "ExportTransformationSqlToTextAction.exportDefaultExtension.text"; //$NON-NLS-1$
 
-    private static final char DELIMETER = '|';
+    private static final String DELIMETER = "|"; //$NON-NLS-1$
+    private static final String SPACE = " "; //$NON-NLS-1$
+    private static final String LEFT_BRACKET = "[ "; //$NON-NLS-1$
+    private static final String RIGHT_BRACKET = " ]"; //$NON-NLS-1$
 
     /**
      * @since 5.0
@@ -190,7 +193,11 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
         int initBufferSize = nTransforms * 200;
         StringBuffer sb = new StringBuffer(initBufferSize);
         String relativeTablePath = null;
-        Collection invalidQueries = new ArrayList();
+        boolean hasMissingSelects = false;
+        boolean hasMissingInserts = false;
+        boolean hasMissingUpdates = false;
+        boolean hasMissingDeletes = false;
+        
         for (Iterator iter = transformations.iterator(); iter.hasNext();) {
             Object obj = iter.next();
             String rowString = null;
@@ -206,7 +213,7 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
                         sb.append(rowString);
                     }
                 } else {
-                    invalidQueries.add(relativeTablePath);
+                	hasMissingSelects = true;
                 }
 
                 // Now check if updates allowed
@@ -221,7 +228,7 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
                                 sb.append(rowString);
                             }
                         } else {
-                            invalidQueries.add(relativeTablePath);
+                        	hasMissingInserts = true;
                         }
                     }
                     if (TransformationHelper.supportsUpdate((EObject)obj, null)) {
@@ -233,7 +240,7 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
                                 sb.append(rowString);
                             }
                         } else {
-                            invalidQueries.add(relativeTablePath);
+                            hasMissingUpdates = true;
                         }
                     }
                     if (TransformationHelper.supportsDelete((EObject)obj, null)) {
@@ -245,16 +252,39 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
                                 sb.append(rowString);
                             }
                         } else {
-                            invalidQueries.add(relativeTablePath);
+                            hasMissingDeletes = true;
                         }
                     }
                 }
             }
         }
 
-        if (!invalidQueries.isEmpty()) {
-            UiConstants.Util.log(IStatus.ERROR,
-                                 UiConstants.Util.getString("ExportTransformationSqlToTextAction.exportQueryProblem", modelResource.getItemName()));//$NON-NLS-1$ 
+        // If operations are missing, specify in the error message
+        if(hasMissingSelects || hasMissingInserts || hasMissingUpdates || hasMissingDeletes) {
+        	int count = 0;
+        	StringBuffer msgBuff = new StringBuffer(UiConstants.Util.getString("ExportTransformationSqlToTextAction.exportQueryProblem", modelResource.getItemName())); //$NON-NLS-1$
+        	msgBuff.append(SPACE+LEFT_BRACKET); 
+        	if(hasMissingSelects) {
+        		msgBuff.append(ISQLConstants.SQL_TYPE_SELECT_STRING);
+        		count++;
+        	}
+        	if(hasMissingInserts) {
+        		if(count>0) msgBuff.append(SPACE+DELIMETER+SPACE);
+        		msgBuff.append(ISQLConstants.SQL_TYPE_INSERT_STRING);
+        		count++;
+        	}
+        	if(hasMissingUpdates) {
+        		if(count>0) msgBuff.append(SPACE+DELIMETER+SPACE);
+        		msgBuff.append(ISQLConstants.SQL_TYPE_UPDATE_STRING);
+        		count++;
+        	}
+        	if(hasMissingDeletes) {
+        		if(count>0) msgBuff.append(SPACE+DELIMETER+SPACE);
+        		msgBuff.append(ISQLConstants.SQL_TYPE_DELETE_STRING);
+        		count++;
+        	}
+        	msgBuff.append(RIGHT_BRACKET);
+        	UiConstants.Util.log(IStatus.ERROR,msgBuff.toString());
         }
 
         return sb.toString();
