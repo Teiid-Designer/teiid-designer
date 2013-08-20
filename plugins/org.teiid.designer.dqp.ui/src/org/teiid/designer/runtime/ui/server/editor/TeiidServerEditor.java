@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime.ui.server.editor;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+import java.util.Properties;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -42,6 +43,8 @@ import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.command.ServerCommand;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.editor.ServerResourceCommandManager;
+import org.teiid.designer.core.loading.ComponentLoadingManager;
+import org.teiid.designer.core.loading.IManagedLoading;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.IServersProvider;
 import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
@@ -57,7 +60,7 @@ import org.teiid.designer.ui.common.util.UiUtil;
 /**
  * @since 8.0
  */
-public class TeiidServerEditor extends EditorPart {
+public class TeiidServerEditor extends EditorPart implements IManagedLoading {
 
     /**
      * Identifier of this editor
@@ -136,7 +139,7 @@ public class TeiidServerEditor extends EditorPart {
                             break;
                         case REMOVE:
                             disposeContents();
-                            createContents();
+                            manageLoad(new Properties());
                             break;
                         case DEFAULT:
                         case ADD:
@@ -215,33 +218,6 @@ public class TeiidServerEditor extends EditorPart {
         }
     };
 
-    private class LoadingThread extends Thread {
-
-        public LoadingThread() {
-            super(TeiidServerEditor.this + "." + LoadingThread.class.getSimpleName()); //$NON-NLS-1$
-            setDaemon(true);
-        }
-
-        @Override
-        public void run() {
-            while(! getServerManager().isStarted()) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    UTIL.log(ex);
-                }
-            }
-
-            UiUtil.runInSwtThread(new Runnable() {
-                @Override
-                public void run() {
-                    createContents();
-                }
-            }, true);
-            
-        }
-    }
-    
     @Override
     public void init(IEditorSite site, IEditorInput input) {
         setSite(site);
@@ -272,49 +248,58 @@ public class TeiidServerEditor extends EditorPart {
 
         progressBar = new ProgressBar(form.getBody(), SWT.SMOOTH | SWT.INDETERMINATE);
         GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true,  true).applyTo(progressBar);
-        
-        LoadingThread thread = new LoadingThread();
-        thread.start();
+
+        ComponentLoadingManager manager = ComponentLoadingManager.getInstance();
+        manager.manageLoading(this);
     }
 
     /**
      * Populates the editor with the Teiid Instance's properties
      */
-    private void createContents() {
-        progressBar.dispose();
+    @Override
+    public void manageLoad(Properties args) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                progressBar.dispose();
 
-        contentsPanel = toolkit.createComposite(form.getBody());
-        GridLayoutFactory.fillDefaults().numColumns(1).spacing(10, 0).applyTo(contentsPanel);
-        GridDataFactory.fillDefaults().grab(true,  true).applyTo(contentsPanel);
+                contentsPanel = toolkit.createComposite(form.getBody());
+                GridLayoutFactory.fillDefaults().numColumns(1).spacing(10, 0).applyTo(contentsPanel);
+                GridDataFactory.fillDefaults().grab(true, true).applyTo(contentsPanel);
 
-        IServersProvider serversProvider = DqpPlugin.getInstance().getServersProvider();
-        serversProvider.addServerLifecycleListener(serverLifecycleListener);
+                IServersProvider serversProvider = DqpPlugin.getInstance().getServersProvider();
+                serversProvider.addServerLifecycleListener(serverLifecycleListener);
 
-        getServerManager().addListener(excutionConfigListener);
+                getServerManager().addListener(excutionConfigListener);
 
-        TeiidServerAdapterFactory adapterFactory = new TeiidServerAdapterFactory();
-        if (parentServer.getServerState() == IServer.STATE_STARTED)
-            // If server is started we can be more adventurous in what to display since we can ask
-            // the server whether teiid has been installed.
-            teiidServer = adapterFactory.adaptServer(parentServer, ServerOptions.ADD_TO_REGISTRY);
-        else {
-            // Cannot ask a lot except whether the server is a JBoss Server
-            teiidServer = adapterFactory.adaptServer(parentServer, ServerOptions.NO_CHECK_CONNECTION, ServerOptions.ADD_TO_REGISTRY);
-        }
+                TeiidServerAdapterFactory adapterFactory = new TeiidServerAdapterFactory();
+                if (parentServer.getServerState() == IServer.STATE_STARTED)
+                    // If server is started we can be more adventurous in what to display since we can ask
+                    // the server whether teiid has been installed.
+                    teiidServer = adapterFactory.adaptServer(parentServer, ServerOptions.ADD_TO_REGISTRY);
+                else {
+                    // Cannot ask a lot except whether the server is a JBoss Server
+                    teiidServer = adapterFactory.adaptServer(parentServer,
+                                                             ServerOptions.NO_CHECK_CONNECTION,
+                                                             ServerOptions.ADD_TO_REGISTRY);
+                }
 
-        if (teiidServer != null) {
-            // insert sections
-            createOverviewSection(contentsPanel);
-            createAdminSection(contentsPanel);
-            createJDBCSection(contentsPanel);
-        }
-        else {
-            Label noTeiidLabel = toolkit.createLabel(contentsPanel, UTIL.getString("TeiidServerEditor.noTeiidServer")); //$NON-NLS-1$
-            blueForeground(noTeiidLabel);
-            GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true,  true).applyTo(noTeiidLabel);
-        }
+                if (teiidServer != null) {
+                    // insert sections
+                    createOverviewSection(contentsPanel);
+                    createAdminSection(contentsPanel);
+                    createJDBCSection(contentsPanel);
+                } else {
+                    Label noTeiidLabel = toolkit.createLabel(contentsPanel, UTIL.getString("TeiidServerEditor.noTeiidServer")); //$NON-NLS-1$
+                    blueForeground(noTeiidLabel);
+                    GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true,  true).applyTo(noTeiidLabel);
+                }
 
-        form.reflow(true);
+                form.reflow(true);
+            }
+        };
+
+        UiUtil.runInSwtThread(runnable, true);
     }
 
     private void disposeContents() {

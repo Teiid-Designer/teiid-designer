@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -33,11 +34,14 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.EditorPart;
+import org.teiid.designer.core.loading.ComponentLoadingManager;
+import org.teiid.designer.core.loading.IManagedLoading;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.diagram.Diagram;
 import org.teiid.designer.metamodels.webservice.WebServicePackage;
 import org.teiid.designer.ui.UiConstants;
+import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.editors.AbstractModelEditorPageActionBarContributor;
 import org.teiid.designer.ui.editors.INavigationSupported;
@@ -55,7 +59,8 @@ import org.teiid.designer.webservice.ui.util.WebServiceUiUtil;
  * 
  * @since 8.0
  */
-public final class OperationEditorPage extends EditorPart implements ModelEditorPage, INavigationSupported {
+public final class OperationEditorPage extends EditorPart
+    implements ModelEditorPage, INavigationSupported, IManagedLoading {
 
     public static final String PACKAGE_DIAGRAM_TYPE_ID = "packageDiagramType"; //$NON-NLS-1$
 
@@ -120,6 +125,27 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
         return true;
     }
 
+    @Override
+    public void manageLoad(Properties args) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                // Add listener to update UI appropriately as tabs are selected
+                ((CTabFolder) ctrl.getParent()).addSelectionListener(new SelectionAdapter() {
+
+                    @Override
+                    public void widgetSelected( SelectionEvent event ) {
+                        updateUi(((CTabItem)event.item).getControl());
+                    }
+                });
+
+                updateUi(selectedCtrl);
+            }
+        };
+
+        UiUtil.runInSwtThread(runnable, true);
+    }
+
     /**
      * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      * @since 5.0.1
@@ -129,14 +155,10 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
         // System.out.println("OperationEditorPage.createPartControl()"); //$NON-NLS-1$
         // Set page's control for use later
         this.selectedCtrl = this.ctrl = parent;
-        // Add listener to update UI appropriately as tabs are selected
-        ((CTabFolder)parent.getParent()).addSelectionListener(new SelectionAdapter() {
 
-            @Override
-            public void widgetSelected( SelectionEvent event ) {
-                updateUi(((CTabItem)event.item).getControl());
-            }
-        });
+        // Manages the loading of the editor dependent upon the restoration of the ITeiidServerManager
+        ComponentLoadingManager manager = ComponentLoadingManager.getInstance();
+        manager.manageLoading(this);
     }
 
     /**
