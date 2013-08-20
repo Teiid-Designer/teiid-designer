@@ -14,6 +14,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -49,6 +52,9 @@ public class Activator extends AbstractUIPlugin {
     public void start( BundleContext context ) throws Exception {
         super.start(context);
         plugin = this;
+        
+        // initialize preferences
+        initializeDefaultPreferences();
     }
 
     /*
@@ -130,5 +136,36 @@ public class Activator extends AbstractUIPlugin {
         plugin.getLog().log(status);
     }
 
+    /**
+     * Obtains the current plugin preferences values.
+     *
+     * @return the preferences (never <code>null</code>)
+     */
+    public IEclipsePreferences getPreferences() {
+        return this.getPreferences(PLUGIN_ID);
+    }
+
+    /**
+     * Obtains the current plugin preferences values for the given plugin id
+     *
+     * @param pluginId
+     *
+     * @return the preferences (never <code>null</code>) for the given plugin id
+     */
+    public IEclipsePreferences getPreferences(String pluginId) {
+        return InstanceScope.INSTANCE.getNode(pluginId);
+    }
+    
+    private void initializeDefaultPreferences() {
+        IEclipsePreferences prefs = DefaultScope.INSTANCE.getNode(getDefault().getBundle().getSymbolicName());
+
+        // initialize the Teiid cleanup enabled preference
+        prefs.putBoolean(PreferenceConstants.TEIID_QUERYPLANS_ENABLED, PreferenceConstants.TEIID_QUERYPLANS_ENABLED_DEFAULT);
+
+        // initialize the Teiid cleanup enabled preference
+        prefs.putBoolean(PreferenceConstants.TEIID_QUERYPLANS_ENABLED,
+                         PreferenceConstants.TEIID_QUERYPLANS_ENABLED_DEFAULT);
+
+    }
 
 }

@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
@@ -33,8 +35,10 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.ViewPart;
+import org.osgi.service.prefs.BackingStoreException;
 import org.teiid.datatools.connectivity.ui.Activator;
 import org.teiid.datatools.connectivity.ui.Messages;
+import org.teiid.datatools.connectivity.ui.PreferenceConstants;
 
 /**
  * ExecutionPlanView
@@ -42,7 +46,7 @@ import org.teiid.datatools.connectivity.ui.Messages;
  * @since 8.0
  */
 
-public class ExecutionPlanView extends ViewPart {
+public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.IPreferenceChangeListener {
     public static final String VIEW_ID = "views.executionPlanView"; //$NON-NLS-1$
 
     private static final String IMPORT_PLAN_IMG = "icons/import_from_file.gif"; //$NON-NLS-1$
@@ -56,6 +60,7 @@ public class ExecutionPlanView extends ViewPart {
     private StyledText planTextArea;
 
     private Label panelDescriptionLabel;
+    private Label panelPlansEnabledLabel;
     private String planString;
 
     private IAction saveToFileAction;
@@ -155,10 +160,9 @@ public class ExecutionPlanView extends ViewPart {
         // --------------------------------------------
         // Panel for selected Object display
         // --------------------------------------------
-
-        // Model Object Name
-        panelDescriptionLabel = new Label(mainPanel, GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.GRAB_HORIZONTAL);
-        panelDescriptionLabel.setText(Messages.getString(PREFIX + "emptyPanelText")); //$NON-NLS-1$
+        
+        // Panel containing descripton and preference controls
+        createDescriptionPanel(mainPanel);
 
         SashForm splitter = new SashForm(mainPanel, SWT.VERTICAL);
         GridData gd = new GridData();
@@ -178,6 +182,23 @@ public class ExecutionPlanView extends ViewPart {
         createPlanViewerGroup(splitter);
 
         splitter.setWeights(new int[] {25, 75});
+        
+        IEclipsePreferences prefs = Activator.getDefault().getPreferences();
+        prefs.addPreferenceChangeListener(this);
+
+    }
+    
+    private String getPlansEnabledText() {
+        boolean showPlan = Activator.getDefault().getPreferences().getBoolean(PreferenceConstants.TEIID_QUERYPLANS_ENABLED, PreferenceConstants.TEIID_QUERYPLANS_ENABLED_DEFAULT);
+
+        StringBuffer sb = new StringBuffer(Messages.getString(PREFIX + "queryPlansEnabledLabel")); //$NON-NLS-1$
+
+        if(showPlan) {
+        	sb.append(" "+Messages.getString(PREFIX + "queryPlansEnabledStateText")); //$NON-NLS-1$ //$NON-NLS-2$
+        } else {
+        	sb.append(" "+Messages.getString(PREFIX + "queryPlansDisabledStateText")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        return sb.toString();
     }
 
     /*
@@ -213,8 +234,8 @@ public class ExecutionPlanView extends ViewPart {
 
         TabFolder tabFolder = new TabFolder(planViewerGroup, SWT.TOP);
         tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
-        createPlanTextTab(tabFolder);
         createPlanTreeTab(tabFolder);
+        createPlanTextTab(tabFolder);
     }
 
     /*
@@ -293,6 +314,59 @@ public class ExecutionPlanView extends ViewPart {
         planTreeViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 
         return treeViewerPanel;
+    }
+    
+    private void createDescriptionPanel( Composite parent ) {
+        Composite descPanel = new Composite(parent, SWT.NONE);
+        GridLayout gridLayout = new GridLayout();
+        gridLayout.numColumns = 3;
+        descPanel.setLayout(gridLayout);
+        descPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        GridData gd = new GridData();
+        gd.horizontalAlignment = GridData.FILL;
+        gd.verticalAlignment = GridData.BEGINNING;
+        gd.grabExcessHorizontalSpace = true;
+        gd.horizontalSpan = 1;
+
+        // DescriptionLabel
+        panelDescriptionLabel = new Label(descPanel, SWT.NONE);
+        panelDescriptionLabel.setLayoutData(gd);
+        panelDescriptionLabel.setText(Messages.getString(PREFIX + "emptyPanelText")); //$NON-NLS-1$
+        
+        // Plan preferences label
+        panelPlansEnabledLabel = new Label(descPanel, SWT.NONE);
+        GridData gd2 = new GridData();
+        gd2.horizontalAlignment = GridData.END;
+        gd2.verticalAlignment = GridData.BEGINNING;
+        gd2.grabExcessHorizontalSpace = false;
+        gd2.horizontalSpan = 1;
+        panelPlansEnabledLabel.setLayoutData(gd2);
+        panelPlansEnabledLabel.setText(getPlansEnabledText()); 
+        
+        Button changeButton = new Button(descPanel, SWT.PUSH);
+        GridData gd3 = new GridData();
+        gd3.horizontalAlignment = GridData.END;
+        gd3.verticalAlignment = GridData.BEGINNING;
+        gd3.grabExcessHorizontalSpace = false;
+        gd3.horizontalSpan = 1;
+        changeButton.setLayoutData(gd3);
+        changeButton.setText(Messages.getString(PREFIX + "changePrefButton.text")); //$NON-NLS-1$
+        changeButton.setToolTipText(Messages.getString(PREFIX + "changePrefButton.tooltip")); //$NON-NLS-1$
+        changeButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( SelectionEvent theEvent ) {
+            	IEclipsePreferences prefs = Activator.getDefault().getPreferences();
+                boolean currentSetting = prefs.getBoolean(PreferenceConstants.TEIID_QUERYPLANS_ENABLED, PreferenceConstants.TEIID_QUERYPLANS_ENABLED_DEFAULT);
+                prefs.putBoolean(PreferenceConstants.TEIID_QUERYPLANS_ENABLED, !currentSetting);
+
+                // save
+                try {
+                    prefs.flush();
+                } catch (BackingStoreException e) {
+                }
+            }
+        });
     }
 
     /*
@@ -579,5 +653,17 @@ public class ExecutionPlanView extends ViewPart {
         }
 
     }
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener#preferenceChange(org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent)
+	 */
+	@Override
+	public void preferenceChange(PreferenceChangeEvent event) {
+		// Updates the PlansEnabled text on Preference change
+        if(!panelPlansEnabledLabel.isDisposed()) {
+        	panelPlansEnabledLabel.setText(getPlansEnabledText()); 
+            panelPlansEnabledLabel.getParent().layout();
+        }
+	}
 
 }
