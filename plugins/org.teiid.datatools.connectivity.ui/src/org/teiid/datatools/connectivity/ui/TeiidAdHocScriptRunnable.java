@@ -115,7 +115,10 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
                 //try-catch block is used to catch exception considering some database (avaki) can't use this method.
                 try
                 {
-                    _stmt.execute("SET SHOWPLAN DEBUG"); //$NON-NLS-1$
+                    boolean showPlan = Activator.getDefault().getPreferences().getBoolean(PreferenceConstants.TEIID_QUERYPLANS_ENABLED, PreferenceConstants.TEIID_QUERYPLANS_ENABLED_DEFAULT);
+                    if(showPlan) {
+                    	_stmt.execute("SET SHOWPLAN DEBUG"); //$NON-NLS-1$
+                    }
                     _stmt.setMaxFieldSize(16384);
                 }
                 catch (Exception e)

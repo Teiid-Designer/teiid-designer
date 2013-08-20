@@ -429,16 +429,18 @@ public class SqlTablePanel extends Composite {
             sortButton.setText(UNSORT_BUTTON_TEXT);
         }
 
-        // always enable the sortButton
+        // Button enablements based on table content
         if (tableIsEmpty) {
             removeButton.setEnabled(false);
             clearButton.setEnabled(false);
             sortButton.setEnabled(false);
-            if (isReadOnly) {
-                addButton.setEnabled(true);
-            }
         } else {
             removeButton.setEnabled(table.getSelectionIndices().length > 0);
+        }
+        
+        // Disable Add button if nothing to add
+        if(this.availableSymbolNames==null || this.availableSymbolNames.isEmpty()) {
+        	addButton.setEnabled(false);
         }
     }
 
@@ -689,6 +691,7 @@ public class SqlTablePanel extends Composite {
 
     public void setAvailableSymbolNames( List availableSymbolNames ) {
         this.availableSymbolNames = new ArrayList(availableSymbolNames);
+        setButtonStates();
     }
 
     public void preDispose( boolean allowCreateAttributes ) {
