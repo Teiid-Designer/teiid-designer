@@ -63,9 +63,7 @@ public class SqlLabelProvider
 	public Image getColumnImage(Object element, int columnIndex) {
         Image image = null;
         if(columnIndex==0) {
-            if(element instanceof IExpressionSymbol) {
-                image = UiPlugin.getDefault().getImage(FUNCTION_ICON);
-            } else if(element instanceof IExpression) {
+            if(element instanceof IExpression) {
                 // Defect 23945 - added private method to get image for multiple types
                 // of SQL symbols
                 image = getImageForSymbol((IExpression)element);
@@ -90,6 +88,9 @@ public class SqlLabelProvider
         // AggregateSymbol
         } else if ( seSymbol instanceof IAggregateSymbol ) {
             result = UiPlugin.getDefault().getImage(FUNCTION_ICON);
+        // Constant
+        } else if ( seSymbol instanceof IConstant ) {
+            result = UiPlugin.getDefault().getImage(CONSTANT_ICON);
         // ExpressionSymbol
         } else if ( seSymbol instanceof IExpressionSymbol ) {
             IExpression expression = ((IExpressionSymbol)seSymbol).getExpression();
