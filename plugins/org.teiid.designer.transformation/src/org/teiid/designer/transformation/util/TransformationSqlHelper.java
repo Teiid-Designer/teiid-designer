@@ -1309,7 +1309,9 @@ public class TransformationSqlHelper implements ISQLConstants {
                 } else {
                     symbolName = (showExpression) ? symbol.toString() : getQueryService().getSymbolShortName(symbol);
                 }
-                // Not IExpression symbol, use short name
+            } else if (symbol instanceof IConstant) {
+                symbolName = (showExpression) ? symbol.toString() : getQueryService().getSymbolShortName(symbol);
+            // Not IExpression symbol, use short name
             } else {
                 symbolName = getQueryService().getSymbolShortName(symbol);
             }

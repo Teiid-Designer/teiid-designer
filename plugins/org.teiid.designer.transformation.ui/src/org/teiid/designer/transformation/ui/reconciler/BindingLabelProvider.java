@@ -104,6 +104,9 @@ public class BindingLabelProvider extends ModelExplorerLabelProvider
         // AggregateSymbol
         } else if ( seSymbol instanceof IAggregateSymbol ) {
             result = UiPlugin.getDefault().getImage(FUNCTION_ICON);
+        // Constant
+        } else if ( seSymbol instanceof IConstant) {
+        	result = UiPlugin.getDefault().getImage(CONSTANT_ICON);
         // ExpressionSymbol
         } else if ( seSymbol instanceof IExpressionSymbol ) {
             IExpression expression = ((IExpressionSymbol)seSymbol).getExpression();
