@@ -35,11 +35,10 @@
               <goal>generate-repository-facade</goal>
             </goals>
             <configuration>
-              <!--
               <associateSites>
-                <site>http://download.jboss.org/jbosstools/updates/kepler/</site>
+                <site>http://download.jboss.org/jbosstools/updates/webtools/kepler/</site>
+                <site>http://download.jboss.org/jbosstools/updates/requirements/orbit/R20130517111416/</site>
               </associateSites>
-              -->
               <siteTemplateFolder>${siteTemplateFolder}</siteTemplateFolder>
               <symbols>
                 <update.site.name>${update.site.name}</update.site.name>
