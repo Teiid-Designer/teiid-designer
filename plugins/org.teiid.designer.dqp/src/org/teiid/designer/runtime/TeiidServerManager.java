@@ -239,6 +239,13 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     private IPasswordProvider passwordProvider;
 
+    /**
+     * Flag indicating whether other open editors should be closed when the default server
+     * is changed. Will be set to true when the manager is fully started and AFTER the default
+     * server initially set to avoid closing editors from the previous session.
+     */
+    private boolean closeEditorsOnDefaultServerChange = false;
+
     /* Listen for changes to the default teiid instance version preference */
     private IPreferenceChangeListener preferenceChangeListener = new IPreferenceChangeListener() {
         @Override
@@ -796,6 +803,10 @@ public final class TeiidServerManager implements ITeiidServerManager {
             // Set the default teiid instance. Doing this here will allow the managers to detect the change
             // and initialise accordingly
             setDefaultServerInternal(defaultServer);
+
+            // Set the default server for the first time so set the close editors flag to true, ensuring that
+            // editors will be subsequently be closed when the default server version is changed.
+            closeEditorsOnDefaultServerChange = true;
         }
     }
 
@@ -869,7 +880,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
      * Close editors associated with modelling projects
      */
     private void closeEditors() {
-        if (RuntimeState.RESTORING == state) {
+        if (RuntimeState.RESTORING == state || ! closeEditorsOnDefaultServerChange) {
             // Avoid closing editors on startup since the default teiid instance is simply being assigned
             return;
         }
