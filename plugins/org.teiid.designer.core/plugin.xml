@@ -59,6 +59,22 @@
       <priority> 1 </priority>
    </extension>
 
+   <extension
+         id="systemVirtualResource"
+         name="systemVirtualResource"
+         point="org.teiid.designer.core.externalResource">
+      <resourceName>
+         System/SYSADMIN.xmi
+      </resourceName>
+      <resourceUrl>
+         System.vdb
+      </resourceUrl>
+      <internalUri>
+         http://www.metamatrix.com/models/SYSADMIN.xmi
+      </internalUri>
+      <priority> 1 </priority>
+   </extension>
+
 <!-- Metamodel extensions -->
    <extension
          point="org.teiid.designer.core.resourceValidator">
