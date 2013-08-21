@@ -36,7 +36,6 @@
 		<module>org.teiid.designer.dqp.ui</module>
 		<module>org.teiid.designer.extension</module>
 		<module>org.teiid.designer.extension.ui</module>
-		<module>org.teiid.designer.help</module>
 		<module>org.teiid.designer.jdbc</module>
 		<module>org.teiid.designer.jdbc.relational</module>
 		<module>org.teiid.designer.jdbc.ui</module>
