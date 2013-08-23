@@ -8,8 +8,11 @@
 package org.teiid.designer.ui.common.viewsupport;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.ui.common.UiConstants;
 
 /**
  * ClosedProjectFilter
@@ -27,8 +30,17 @@ public class ClosedProjectFilter extends ViewerFilter {
                           Object theElement) {
         boolean result = true;
         
+        // Only find and check projects that open, are Modeler-based AND not hidden projects
         if (theElement instanceof IResource) {
-            result = ((IResource)theElement).getProject().isOpen();
+        	try {
+        		IResource res = (IResource)theElement;
+	            result = res.getProject().isOpen() &&
+	            		 (res.getProject().getNature(ModelerCore.NATURE_ID) != null) &&
+	            		 (res.getProject().getNature(ModelerCore.HIDDEN_PROJECT_NATURE_ID) == null);
+	        } catch (final CoreException err) {
+	            UiConstants.Util.log(err);
+	            return false;
+	        }
         }
 
         return result;
