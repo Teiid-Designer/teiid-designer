@@ -7,7 +7,10 @@
 */
 package org.teiid.designer.runtime.ui.views;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -18,6 +21,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
@@ -29,6 +33,7 @@ import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.preview.PreviewManager;
@@ -39,6 +44,7 @@ import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.actions.ExecuteVDBAction;
 import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
+import org.teiid.designer.runtime.ui.dialogs.ClearPreviewArtifactsOptionsDialog;
 import org.teiid.designer.runtime.ui.server.DisconnectFromServerAction;
 import org.teiid.designer.runtime.ui.server.EditServerAction;
 import org.teiid.designer.runtime.ui.server.RefreshServerAction;
@@ -46,6 +52,7 @@ import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.server.SetDefaultServerAction;
 import org.teiid.designer.runtime.ui.views.content.DataSourcesFolder;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.common.util.UiUtil;
 
 /**
  * @since 8.0
@@ -99,6 +106,8 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     private IAction showPreviewDataSourcesAction;
     
     private IAction enablePreviewAction;
+    
+    private IAction clearPreviewArtifactsAction;
 
     private final TeiidServerPreviewOptionContributor previewOptionContributor;
 
@@ -277,9 +286,64 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         this.editServerAction = new EditServerAction(shell);
         viewer.addSelectionChangedListener(this.editServerAction);
         
-        this.createDataSourceAction = new Action() {
+        this.clearPreviewArtifactsAction = new Action() {
 
             @Override
+            public void run() {
+                ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
+                
+                if (teiidServer != null && teiidServer.isConnected()) {
+                    // TODO: Open Clear Preview Artifacts dialog
+                	//  Contains "VDBs" and/or "Data Sources" check-boxes
+                	// OK or Cancel buttons
+                	
+            		Shell shell = UiUtil.getWorkbenchWindowOnlyIfUiThread().getShell();
+            		ClearPreviewArtifactsOptionsDialog dialog = new ClearPreviewArtifactsOptionsDialog(shell);
+
+            		dialog.open();
+
+            		if (dialog.getReturnCode() == Window.OK) {
+            			String workspaceUuid = ModelerCore.workspaceUuid().toString();
+            			
+            			if( dialog.doClearVdbs() ) {
+            				try {
+            					Collection<ITeiidVdb> vdbs = new ArrayList<ITeiidVdb>(teiidServer.getVdbs());
+            					for( ITeiidVdb vdb : vdbs ) {
+            						if( vdb.getName().contains(workspaceUuid) ) {
+            							teiidServer.undeployVdb(vdb.getName());
+            						}
+            					}
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								DqpUiConstants.UTIL.log(IStatus.WARNING,
+                                        e,
+                                        getString("errorClearingPreviewVdbs", teiidServer.getDisplayName())); //$NON-NLS-1$
+							}
+            			}
+            			if( dialog.doClearDataSources() ) {
+            				try {
+								Collection<ITeiidDataSource> dataSources = new ArrayList<ITeiidDataSource>(teiidServer.getDataSources());
+            					for( ITeiidDataSource ds : dataSources ) {
+            						if( ds.getName().contains(workspaceUuid) ) {
+            							teiidServer.deleteDataSource(ds.getName());
+            						}
+            					}
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								DqpUiConstants.UTIL.log(IStatus.WARNING,
+                                        e,
+                                        getString("errorClearingPreviewDataSources", teiidServer.getDisplayName())); //$NON-NLS-1$
+							}
+            			}
+            		}
+                }
+            }
+        };
+        this.clearPreviewArtifactsAction.setText(getString("clearPreviewArtifacts")); //$NON-NLS-1$
+        this.clearPreviewArtifactsAction.setEnabled(true);
+        
+        this.createDataSourceAction = new Action() {
+        	@Override
             public void run() {
                 ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
                 
@@ -292,12 +356,12 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 }
             }
         };
-
+        
         this.createDataSourceAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SOURCE_BINDING_ICON));
         this.createDataSourceAction.setText(getString("createDataSourceAction.text")); //$NON-NLS-1$
         this.createDataSourceAction.setToolTipText(getString("createDataSourceAction.tooltip")); //$NON-NLS-1$
         this.createDataSourceAction.setEnabled(true);
-
+        
         // the edit action is only enabled when one server is selected
         this.setDefaultServerAction = new SetDefaultServerAction();
         viewer.addSelectionChangedListener(this.setDefaultServerAction);
@@ -361,6 +425,8 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         menuMgr.add(showPreviewVdbsAction);
         menuMgr.add(showPreviewDataSourcesAction);
         menuMgr.add(enablePreviewAction);
+        menuMgr.add(new Separator());
+        menuMgr.add(clearPreviewArtifactsAction);
     }
     
     /* (non-Javadoc)
@@ -425,6 +491,8 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 manager.add(new Separator());
                 manager.add(this.undeployVdbAction);
             }
+            manager.add(new Separator());
+            manager.add(clearPreviewArtifactsAction);
             
         } else {
             // More than 1 selected object
