@@ -11,6 +11,7 @@ package org.teiid.designer.ui.actions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
@@ -22,6 +23,7 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect;
 import org.teiid.designer.metamodels.relational.aspects.sql.ProcedureParameterAspect;
+import org.teiid.designer.transformation.aspects.validation.InputParameterAspect;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -104,16 +106,10 @@ public class SetDatatypeModelingAction extends SortableSelectionAction  {
                 result = false;
             if( result ) {
                 mmAspect = ModelObjectUtilities.getSqlAspect(nextEObj);
-                if( mmAspect == null || !(mmAspect instanceof SqlColumnAspect) ) {
-                    result = false;
+                if( mmAspect != null && mmAspect instanceof SqlColumnAspect ) {
+                    result = ((SqlColumnAspect)mmAspect).canSetDatatype();
                 } else {
-                    // --------------------
-                    // Defect 22275 - Needed to do one more check to see if the aspect supports setting datatype.
-                    // XML Document attributes do have a sqlColumnAspect but don't support datatypes
-                    // --------------------
-                    if( !((SqlColumnAspect)mmAspect).canSetDatatype() ) {
-                        result = false;
-                    }
+                    result = false;
                 }
             }
         }
@@ -132,16 +128,10 @@ public class SetDatatypeModelingAction extends SortableSelectionAction  {
                 result = false;
             if( result ) {
                 mmAspect = ModelObjectUtilities.getSqlAspect(nextEObj);
-                if( mmAspect == null || !(mmAspect instanceof ProcedureParameterAspect) ) {
-                    result = false;
+                if( mmAspect != null && mmAspect instanceof ProcedureParameterAspect ) {
+                    result = ((ProcedureParameterAspect)mmAspect).canSetDatatype();
                 } else {
-                    // --------------------
-                    // Defect 22275 - Needed to do one more check to see if the aspect supports setting datatype.
-                    // XML Document attributes do have a sqlColumnAspect but don't support datatypes
-                    // --------------------
-                    if( !((ProcedureParameterAspect)mmAspect).canSetDatatype() ) {
-                        result = false;
-                    }
+                    result = false;
                 }
             }
         }
@@ -160,8 +150,10 @@ public class SetDatatypeModelingAction extends SortableSelectionAction  {
                 result = false;
             if( result ) {
                 mmAspect = ModelObjectUtilities.getSqlAspect(nextEObj);
-                if( mmAspect == null ) {
-                    result = false;
+                if( mmAspect != null && mmAspect instanceof InputParameterAspect) {
+                    result = true;
+                } else {
+                	result = false;
                 }
             }
         }
