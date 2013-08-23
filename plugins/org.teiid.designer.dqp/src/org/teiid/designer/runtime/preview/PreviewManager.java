@@ -401,6 +401,9 @@ public final class PreviewManager extends JobChangeAdapter
                 // Swallow this exception since it should have already been
                 // reported when the application was started.
             }
+        // Vdb Removed
+        } else if (event.getEventType().equals(EventType.REMOVE) && event.getTargetType().equals(TargetType.VDB)) {
+        	resetAllDeployedStatuses();
         }
     }
 
