@@ -161,7 +161,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 		super.setVisible(visible);
 
 		if (visible) {
-			if( info.isFlatFileMode() ) {
+			if( info.isFlatFileLocalMode() || info.isFlatFileUrlMode() ) {
 				for (TeiidMetadataFileInfo theFileInfo : info.getFileInfos()) {
 					if (theFileInfo.doProcess()) {
 						this.fileInfo = theFileInfo;
@@ -504,7 +504,9 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 	private void synchronizeUI() {
 		synchronizing = true;
 
-		selectedFileText.setText(fileInfo.getDataFile().getName());
+		java.io.File dataFile = fileInfo.getDataFile();
+		String fileName = dataFile.getName();
+		selectedFileText.setText(fileName);
 
 		if (this.info.getViewModelLocation() != null) {
 			viewModelContainerText.setText(this.info.getViewModelLocation().makeRelative().toString());
@@ -513,8 +515,8 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 		}
 
 		if (this.info.getViewModelName() != null) {
-			this.viewModelFilePath = this.info.getViewModelLocation();
-			this.viewModelFileText.setText(this.info.getViewModelName());
+			String viewModelName = this.info.getViewModelName();
+			this.viewModelFileText.setText(viewModelName);
 		} else {
 			this.viewModelFileText.setText(StringUtilities.EMPTY_STRING);
 		}

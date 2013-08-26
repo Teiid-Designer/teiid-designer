@@ -152,10 +152,8 @@ public class URLHelper {
                                                    final String userName,
                                                    final String password,
                                                    final boolean verifyHostname ) throws MalformedURLException, IOException {
-        String nextLine;
         URLConnection urlConn = null;
         InputStreamReader inStream = null;
-        BufferedReader buff = null;
         FileWriter fw = null;
         BufferedWriter bw = null;
         try {
@@ -173,14 +171,10 @@ public class URLHelper {
                 }
             });
             inStream = new InputStreamReader(urlConn.getInputStream());
-            buff = new BufferedReader(inStream);
+            int c;
+        	while ((c = inStream.read()) != -1){  
+	             bw.write(c);}  
 
-            // Read and print the lines from index.html
-            while (true) {
-                nextLine = buff.readLine();
-                if (nextLine != null) bw.write(nextLine);
-                else break;
-            }
         } finally {
             if (inStream != null) inStream.close();
             if (bw != null) bw.close();

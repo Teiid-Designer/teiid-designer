@@ -48,8 +48,8 @@ public class FlatFileConnectionInfoProvider  extends ConnectionInfoHelper implem
         	connectionProps.put(IFlatFileProfileConstants.TEIID_PARENT_DIRECTORY_KEY, baseProps.get(IFlatFileProfileConstants.HOME_URL));
         } else if( baseProps.getProperty(IFlatFileProfileConstants.HOME_KEY) != null ) {
         	connectionProps.put(IFlatFileProfileConstants.TEIID_PARENT_DIRECTORY_KEY, baseProps.get(IFlatFileProfileConstants.HOME_KEY));
-        } else if( baseProps.getProperty(IFlatFileProfileConstants.URI_KEY) != null ) {
-        	String uri = baseProps.getProperty(IFlatFileProfileConstants.URI_KEY);
+        } else if( baseProps.getProperty(IFlatFileProfileConstants.ODA_URI_KEY) != null ) {
+        	String uri = baseProps.getProperty(IFlatFileProfileConstants.ODA_URI_KEY);
         	// Get Parent Folder path using file path
         	String parentPath = getFileParentDir(uri);
         	if(parentPath!=null) {
@@ -74,7 +74,7 @@ public class FlatFileConnectionInfoProvider  extends ConnectionInfoHelper implem
 			connectionProps.setProperty(CONNECTION_NAMESPACE
 					+ IFlatFileProfileConstants.HOME_URL, result);
 		} else {
-			result = props.getProperty(IFlatFileProfileConstants.URI_KEY);
+			result = props.getProperty(IFlatFileProfileConstants.ODA_URI_KEY);
 			if(null != result) {
 	        	// Get Parent Folder path using file path
 	        	String parentPath = getFileParentDir(result);

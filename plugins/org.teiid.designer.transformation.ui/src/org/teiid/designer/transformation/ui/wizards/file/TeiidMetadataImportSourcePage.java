@@ -76,6 +76,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
+import org.teiid.designer.datatools.profiles.flatfile.IFlatFileProfileConstants;
+import org.teiid.designer.datatools.profiles.xml.IXmlProfileConstants;
 import org.teiid.designer.datatools.ui.actions.EditConnectionProfileAction;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.metamodels.relational.Procedure;
@@ -114,7 +116,6 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataImportSourcePage.class);
 
 	private static final String TITLE = getString("title"); //$NON-NLS-1$
-	private static final String XML_TITLE = getString("xmlTitle"); //$NON-NLS-1$
 	private static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
 
 	private static final String FLAT_FILE_SOURCE_LABEL = getString("sourceLabel"); //$NON-NLS-1$
@@ -142,13 +143,13 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	private static final String DOT_XML = ".XML"; //$NON-NLS-1$
 	private static final String FILTER_INIT = "*.*"; //$NON-NLS-1$
-	private static final String DOT_XML_LOWER = ".xml"; //$NON-NLS-1$
+	private static final String DOT_TXT_LOWER = ".txt"; //$NON-NLS-1$
 	
 	private static final String GET_TEXT_FILES = "getTextFiles"; //$NON-NLS-1$
 
 	private static final String ODA_FLAT_FILE_ID = "org.eclipse.datatools.connectivity.oda.flatfile"; //$NON-NLS-1$
-	private static final String ODA_XML_FILE_ID = "org.eclipse.datatools.enablement.oda.xml";  //$NON-NLS-1$
-	
+	private static final String FLAT_FILE_URL_ID = IFlatFileProfileConstants.FILE_URL_CONNECTION_PROFILE_ID;
+			
 	//private static final String SCHEMA_LIST_PROPERTY_KEY = "SCHEMAFILELIST";  //$NON-NLS-1$
 	private static final String FILE_LIST_PROPERTY_KEY = "FILELIST";  //$NON-NLS-1$ //home/blafond/TestDesignerFolder/example files/xml/employee_info.xml
 
@@ -261,19 +262,11 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 				GridData.FILL_HORIZONTAL, (ArrayList) this.connectionProfiles,
 				null, // this.src,
 				this.srcLabelProvider, true);
-		this.srcCombo.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(final ModifyEvent event) {
-				//profileModified();
-				//fileViewer.refresh();
-			}
-		});
 		this.srcCombo.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				profileModified();
+				profileSelectionChanged();
 				fileViewer.refresh();
 
 			}
@@ -316,7 +309,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	 */
 	private void createFolderContentsListGroup(Composite parent) {
 		String groupLabel = getString("folderContentsGroup"); //$NON-NLS-1$
-		if (!info.isFlatFileMode()) {
+		if (!info.isFlatFileLocalMode()) {
 			groupLabel = getString("folderXmlContentsGroup"); //$NON-NLS-1$
 		}
 
@@ -436,7 +429,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 							
 							if (tableItem.getData() instanceof File) {
 								fileViewer.getTable().setSelection(new TableItem[] { tableItem });
-								if (info.isFlatFileMode()) {
+								if (info.isFlatFileLocalMode()) {
 									if( wasChecked ) {
 										for( TableItem item : fileViewer.getTable().getItems()) {
 											if( item != tableItem ) {
@@ -480,11 +473,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 
 		// create columns
 		fileNameColumn = new TableViewerColumn(this.fileViewer, SWT.LEFT);
-		if (this.info.isFlatFileMode()) {
-			fileNameColumn.getColumn().setText(getString("dataFileNameColumn")); //$NON-NLS-1$
-		} else {
-			fileNameColumn.getColumn().setText(getString("xmlDataFileNameColumn")); //$NON-NLS-1$
-		}
+		fileNameColumn.getColumn().setText(getString("dataFileNameColumn")); //$NON-NLS-1$
 		fileNameColumn.setLabelProvider(new DataFileContentColumnLabelProvider());
 		fileNameColumn.getColumn().pack();
 	}
@@ -557,7 +546,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         
 	}
 
-	void profileModified() {
+	void profileSelectionChanged() {
 		if (this.srcCombo.getSelectionIndex() > -1) {
 			String cpName = this.srcCombo.getItem(this.srcCombo.getSelectionIndex());
 			for (IConnectionProfile profile : this.connectionProfiles) {
@@ -634,8 +623,19 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 						this.dataFileFolderText.setToolTipText(location);
 					}
 				} else {
-					this.dataFileFolderText.setText(EMPTY_STRING);
-					this.dataFileFolderText.setToolTipText(EMPTY_STRING);
+					String url = (String) profileBaseProps.get(IFlatFileProfileConstants.URL_PROP_ID);
+					if( url != null ) {
+						String location = url;
+						if (location.length() > 60) {
+							int len = location.length();
+							location = "..." + location.substring(len - 60, len); //$NON-NLS-1$
+						}
+						this.dataFileFolderText.setText(location);
+						this.dataFileFolderText.setToolTipText(url);
+					} else {
+						this.dataFileFolderText.setText(EMPTY_STRING);
+						this.dataFileFolderText.setToolTipText(EMPTY_STRING);
+					}
 				}
 			}
 		} else {
@@ -664,7 +664,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 
 	private void loadFileListViewer() {
 		if (getConnectionProfile() != null) {
-			if( this.info.isFlatFileMode() ) {
+			if( this.info.isFlatFileLocalMode() ) {
 				File folder = getFolderForConnectionProfile();
 				File file = getFileForConnectionProfile();
 				if (hasExistingFileOrFolder(file,folder)) {
@@ -675,6 +675,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 							fileInfo = new TeiidMetadataFileInfo(file);
 							this.info.addFileInfo(fileInfo);
 						}
+						fileInfo.setIsUrl(false);
 						fileViewer.setInput(file);
 						fileViewer.getTable().select(0);
 						fileViewer.getTable().getItem(0).setChecked(true);
@@ -707,25 +708,14 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 					this.dataFileFolderText.setText(UNKNOWN_FOLDER);
 					this.dataFileFolderText.setToolTipText(getString("unknownFolderTooltip")); //$NON-NLS-1$
 				}
+			// -----------------------------
+			// FlatFile Remote Mode
+			// -----------------------------
 			} else {
-				File theXmlFile = getFileForConnectionProfile();
 				String urlString = getUrlStringForConnectionProfile();
 				
-				if( theXmlFile != null && theXmlFile.exists() ) {
-					fileViewer.setInput(theXmlFile);
-					TeiidXmlFileInfo fileInfo = this.info.getXmlFileInfo(theXmlFile);
-					if (fileInfo == null) {
-						fileInfo = new TeiidXmlFileInfo(theXmlFile);
-						this.info.addXmlFileInfo(fileInfo);
-					}
-					fileParsingStatus = fileInfo.getParsingStatus();
-					if( fileParsingStatus.getSeverity() == IStatus.ERROR ) {
-			            MessageDialog.openError(this.getShell(), 
-			            		getString("parsingErrorTitle"),  //$NON-NLS-1$
-			            		fileParsingStatus.getMessage());
-					}
-				} else if( urlString != null && urlString.trim().length() > 0 ) {
-					File xmlFile = null;
+				if( urlString != null && urlString.trim().length() > 0 ) {
+					File theFile = null;
 					// Clears the viewer
 					// This will be the case if No XML is defined and URL version exists OR if nothing is defined in CP
 					fileViewer.setInput("no input"); //$NON-NLS-1$
@@ -752,7 +742,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 				        if( resolved ) {
 				        	try {
 				                String filePath = formatPath(newUrl);
-				                xmlFile = URLHelper.createFileFromUrl(newUrl, CoreStringUtil.createFileName(filePath), DOT_XML_LOWER);
+				                theFile = URLHelper.createFileFromUrl(newUrl, CoreStringUtil.createFileName(filePath), DOT_TXT_LOWER);
 				            } catch (MalformedURLException theException) {
 				            	Util.log(theException);
 				            } catch (IOException theException) {
@@ -761,19 +751,20 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 				        }
 			        }
 			        
-			        if( xmlFile != null && xmlFile.exists() ) {
-			        	fileViewer.setInput(xmlFile);
-						TeiidXmlFileInfo fileInfo = this.info.getXmlFileInfo(xmlFile);
+			        if( theFile != null && theFile.exists() ) {
+						fileParsingStatus = Status.OK_STATUS;
+						TeiidMetadataFileInfo fileInfo = this.info.getFileInfo(theFile);
 						if (fileInfo == null) {
-							fileInfo = new TeiidXmlFileInfo(xmlFile);
-							this.info.addXmlFileInfo(fileInfo);
+							fileInfo = new TeiidMetadataFileInfo(theFile);
+							this.info.addFileInfo(fileInfo);
 						}
-						fileParsingStatus = fileInfo.getParsingStatus();
-						if( fileParsingStatus.getSeverity() == IStatus.ERROR ) {
-				            MessageDialog.openError(this.getShell(), 
-				            		getString("parsingErrorTitle"),  //$NON-NLS-1$
-				            		fileParsingStatus.getMessage());
-						}
+						fileInfo.setIsUrl(true);
+						fileInfo.setFileUrl(urlString);
+						fileInfo.setCharSet(this.profileInfo.charset);
+						fileViewer.setInput(theFile);
+						fileViewer.getTable().select(0);
+						fileViewer.getTable().getItem(0).setChecked(true);
+						info.setDoProcess(fileInfo.getDataFile(), true);
 			        }
 				} else {
 					fileViewer.setInput(null);
@@ -866,22 +857,22 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 			if (fileListValue != null) {
 				return fileListValue;
 			}
+			String url = (String) props.get(IFlatFileProfileConstants.URL_PROP_ID);
+			if(url != null) {
+				return url;
+			}
 		}
 
 		return null;
 	}
 
-	void profileChanged() {
-		profileModified();
-	}
-
 	void createNewConnectionProfile() {
 		INewWizard wiz = null;
 		
-		if( this.info.isFlatFileMode() ) {
+		if( this.info.isFlatFileLocalMode() ) {
             wiz = new NewTeiidFilteredCPWizard(ODA_FLAT_FILE_ID);
 		} else {
-            wiz = new NewTeiidFilteredCPWizard(ODA_XML_FILE_ID);
+            wiz = new NewTeiidFilteredCPWizard(FLAT_FILE_URL_ID);
 		}
 
         WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
@@ -907,7 +898,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		for (String item : this.srcCombo.getItems()) {
 			if (item != null && item.equalsIgnoreCase(profile.getName())) {
 				this.srcCombo.select(index);
-				profileModified();
+				profileSelectionChanged();
 				break;
 			}
 			index++;
@@ -946,7 +937,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 
 				ProfileManager.getInstance().removeProfileListener(listener);
 
-				profileModified();
+				profileSelectionChanged();
 			} else {
 				// Remove the listener if the dialog is canceled
 				ProfileManager.getInstance().removeProfileListener(listener);
@@ -1033,6 +1024,19 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     void synchronizeUI(){
     	synchronizing = true;
     	
+    	if(this.info.isFlatFileUrlMode() || this.info.isFlatFileLocalMode()) {
+    		setFlatFileModelNames();
+        } else {
+        	String fileName = EMPTY_STRING;
+        	for(TeiidXmlFileInfo xmlFileInfo : this.info.getXmlFileInfos() ) {
+        		if( xmlFileInfo.doProcess() ) {
+        			fileName = xmlFileInfo.getDataFile().getName();
+        			break;
+        		}
+        	}
+        	this.selectedFileText.setText(fileName);
+        }
+    	
         if( this.info.getSourceModelLocation() != null ) {
         	this.sourceModelContainerText.setText(this.info.getSourceModelLocation().makeRelative().toString());
         } else {
@@ -1045,39 +1049,29 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         } else {
         	this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
         }
-        
-        // Get selected Data file
-        if( this.info.isFlatFileMode() ) {
-        	String fileName = EMPTY_STRING;
-        	String fileName_wo_extension = null;
-        	for(TeiidMetadataFileInfo tmFileInfo : this.info.getFileInfos() ) {
-        		if( tmFileInfo.doProcess() ) {
-        			fileName = tmFileInfo.getDataFile().getName();
-        			IPath path = new Path(fileName);
-        			fileName_wo_extension = path.removeFileExtension().toString();
-        			
-        			break;
-        		}
-        	}
-        	this.selectedFileText.setText(fileName);
-        	if( fileName_wo_extension != null && (this.info.getSourceModelName() == null || this.info.getSourceModelName().length() == 0) ) {
-        		this.info.setSourceModelName(fileName_wo_extension + "_source"); //$NON-NLS-1$
-        	}
-        	if( fileName_wo_extension != null && (this.info.getViewModelName() == null || this.info.getViewModelName().length() == 0) ) {
-        		this.info.setViewModelName(fileName_wo_extension + "_view"); //$NON-NLS-1$
-        	}
-        } else {
-        	String fileName = EMPTY_STRING;
-        	for(TeiidXmlFileInfo xmlFileInfo : this.info.getXmlFileInfos() ) {
-        		if( xmlFileInfo.doProcess() ) {
-        			fileName = xmlFileInfo.getDataFile().getName();
-        			break;
-        		}
-        	}
-        	this.selectedFileText.setText(fileName);
-        }
-        
+                
         synchronizing = false;
+    }
+    
+    private void setFlatFileModelNames() {
+    	String fileName = EMPTY_STRING;
+    	String fileName_wo_extension = null;
+    	for(TeiidMetadataFileInfo tmFileInfo : this.info.getFileInfos() ) {
+    		if( tmFileInfo.doProcess() ) {
+    			fileName = tmFileInfo.getDataFile().getName();
+    			IPath path = new Path(fileName);
+    			fileName_wo_extension = path.removeFileExtension().toString();
+    			
+    			break;
+    		}
+    	}
+    	this.selectedFileText.setText(fileName);
+    	if( fileName_wo_extension != null && (this.info.getSourceModelName() == null || this.info.getSourceModelName().length() == 0) ) {
+    		this.info.setSourceModelName(fileName_wo_extension + "_source"); //$NON-NLS-1$
+    	}
+    	if( fileName_wo_extension != null && (this.info.getViewModelName() == null || this.info.getViewModelName().length() == 0) ) {
+    		this.info.setViewModelName(fileName_wo_extension + "_view"); //$NON-NLS-1$
+    	}
     }
 
     private boolean sourceModelExists() {
@@ -1116,24 +1110,22 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		}
 		if (cpIndex > -1) {
 			srcCombo.select(cpIndex);
-            profileModified();
+            profileSelectionChanged();
 		}
 	}
 
 	private void refreshConnectionProfiles() {
 		this.connectionProfiles = new ArrayList<IConnectionProfile>();
-		if( this.info.isFlatFileMode() ) {
+
+		if( this.info.isFlatFileLocalMode() ) {
 			final IConnectionProfile[] tempProfiles = profileManager.getProfilesByCategory(ODA_FLAT_FILE_ID);
 			for (final IConnectionProfile profile : tempProfiles) {
 				connectionProfiles.add(profile);
 			}
-		} else {
-			final IConnectionProfile[] tempProfiles = profileManager.getProfilesByCategory(ODA_XML_FILE_ID);
+		} else if( this.info.isFlatFileUrlMode() ) {
+			final IConnectionProfile[] tempProfiles = profileManager.getProfilesByCategory(IXmlProfileConstants.TEIID_CATEGORY);
 			for (final IConnectionProfile profile : tempProfiles) {
-				// Check to see that this XML file is a File-based string?
-				Properties props = profile.getBaseProperties();
-				String fileListValue = (String) props.get(FILE_LIST_PROPERTY_KEY);
-				if (fileListValue != null) {
+				if(profile.getProviderId().equalsIgnoreCase(FLAT_FILE_URL_ID)) {
 					connectionProfiles.add(profile);
 				}
 			}
@@ -1159,10 +1151,8 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 			}
 		}
 		if( !fileSelected ) {
-            if (info.isFlatFileMode()) {
+            if (info.isFlatFileLocalMode()||info.isFlatFileUrlMode()) {
                 setThisPageComplete(getString("noDataFilesSelected"), ERROR);//$NON-NLS-1$
-            } else {
-                setThisPageComplete(getString("noXmlDataFilesSelected"), ERROR);//$NON-NLS-1$
             }
 			return false;
 		}
@@ -1611,14 +1601,27 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		super.setVisible(visible);
 		
 		if( visible ) {
-			this.fileContentProvider.setIsFlatFileContent(this.info.isFlatFileMode());
-			if (this.info.isFlatFileMode()) {
-				this.setTitle(TITLE);
-				this.fileNameColumn.getColumn().setText(getString("dataFileNameColumn")); //$NON-NLS-1$
-			} else {
-				this.setTitle(XML_TITLE);
-				this.fileNameColumn.getColumn().setText(getString("xmlDataFileNameColumn")); //$NON-NLS-1$
+			this.fileContentProvider.setIsFlatFileContent(true);
+
+			this.setTitle(TITLE);
+			this.fileNameColumn.getColumn().setText(getString("dataFileNameColumn")); //$NON-NLS-1$
+			
+			// If current profile is invalid for this page, it is reset.
+			// this may happen if user toggle between local and remote xml...
+			IConnectionProfile currentProfile = getConnectionProfile();
+			if(currentProfile==null) {
+				this.fileViewer.setInput(null);
+	    		this.info.setSourceModelName(null);
+	    		setSourceHelpMessage();
+			} else if(!isValidProfileForPage(currentProfile)) {
+				setConnectionProfile(null);
+				this.fileViewer.setInput(null);
+	    		this.info.setSourceModelName(null);
+	    		setSourceHelpMessage();
 			}
+						
+			refreshConnectionProfiles();
+			resetCPComboItems();
 			
 			loadFileListViewer();
 			fileNameColumn.getColumn().pack();
@@ -1627,6 +1630,15 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		}
 	}
 	
+	private boolean isValidProfileForPage(IConnectionProfile profile) {
+		boolean isValid = false;
+		if( this.info.isFlatFileLocalMode() && profile.getProviderId().equalsIgnoreCase(ODA_FLAT_FILE_ID)) {
+			isValid=true;
+		} else if( this.info.isFlatFileUrlMode() && profile.getProviderId().equalsIgnoreCase(FLAT_FILE_URL_ID)) {
+			isValid=true;
+		}
+		return isValid;
+	}
 	
 	private boolean isKnownTextFileExtension(File file) {
 	    IPath filePath = new Path(file.getPath());

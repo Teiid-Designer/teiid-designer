@@ -30,6 +30,9 @@ import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.flatfile.FlatFileConnectionInfoProvider;
+import org.teiid.designer.datatools.profiles.flatfile.FlatFileUrlConnectionInfoProvider;
+import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
+import org.teiid.designer.datatools.profiles.ws.WSConnectionInfoProvider;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.editors.ModelEditor;
@@ -159,8 +162,19 @@ public class TeiidMetadataImportProcessor implements UiConstants {
     protected void addConnectionProfileInfoToModel(ModelResource sourceModel, IConnectionProfile profile) throws ModelWorkspaceException {
     	// Inject the connection profile info into the model
     	if (profile != null) {
-            IConnectionInfoProvider provider = new FlatFileConnectionInfoProvider();
-            provider.setConnectionInfo(sourceModel, profile);
+    		IConnectionInfoProvider provider = null;
+    		if( getInfo().isFlatFileLocalMode() ) {
+    			provider = new FlatFileConnectionInfoProvider();
+    		} else if( getInfo().isFlatFileUrlMode() ) {
+    			if( IWSProfileConstants.TEIID_WS_CONNECTION_PROFILE_ID.equalsIgnoreCase(profile.getProviderId()) ) {
+    				provider = new WSConnectionInfoProvider();
+    			} else {
+    				provider = new FlatFileUrlConnectionInfoProvider();
+    			}
+    		}
+    		if( provider != null ) {
+    			provider.setConnectionInfo(sourceModel, profile);
+    		}
         }
     }
 	
@@ -356,7 +370,11 @@ public class TeiidMetadataImportProcessor implements UiConstants {
                 boolean isDirty = editor.isDirty();
                 FlatFileRelationalModelFactory factory = new FlatFileRelationalModelFactory();
                 
-                factory.addMissingProcedure(mr, FlatFileRelationalModelFactory.GET_TEXT_FILES);
+                if(info.isFlatFileLocalMode() || info.isXmlLocalFileMode()) {
+                	factory.addMissingProcedure(mr, FlatFileRelationalModelFactory.GET_TEXT_FILES);
+                } else if(info.isFlatFileUrlMode()) {
+                	factory.addMissingProcedure(mr, FlatFileRelationalModelFactory.INVOKE_HTTP);
+                }
                 
                 mr.save(null, true);
                 
