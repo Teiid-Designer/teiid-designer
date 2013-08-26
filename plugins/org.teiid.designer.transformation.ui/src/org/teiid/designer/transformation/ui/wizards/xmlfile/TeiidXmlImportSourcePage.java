@@ -247,14 +247,6 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 				GridData.FILL_HORIZONTAL, (ArrayList) this.connectionProfiles,
 				null, // this.src,
 				this.srcLabelProvider, true);
-		this.srcCombo.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(final ModifyEvent event) {
-				// profileModified();
-				// fileViewer.refresh();
-			}
-		});
 		this.srcCombo.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -1466,10 +1458,9 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		super.setVisible(visible);
 
 		if (visible) {
-			{
-				this.setTitle(XML_TITLE);
-				this.fileNameColumn.getColumn().setText(getString("xmlDataFileNameColumn")); //$NON-NLS-1$
-			}
+			this.setTitle(XML_TITLE);
+			this.fileNameColumn.getColumn().setText(getString("xmlDataFileNameColumn")); //$NON-NLS-1$
+
 			// If current profile is invalid for this page, it is reset.
 			// this may happen if user toggle between local and remote xml...
 			IConnectionProfile currentProfile = getConnectionProfile();

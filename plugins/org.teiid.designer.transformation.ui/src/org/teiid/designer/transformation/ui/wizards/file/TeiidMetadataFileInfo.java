@@ -145,6 +145,10 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 	 * The  <code>Collection</code> of <code>TeiidColumnInfo</code> objects parsed from the defined header information.
 	 */
 	private List<ITeiidColumnInfo> columnInfoList;
+
+	private boolean isUrl = false;
+	private String fileUrl;
+	private String charSet;
 	
 	private boolean ignoreReload = false;
  
@@ -420,8 +424,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 		}
 		
 		loaded = true;
-	}
-	
+	}	
+
 	private Collection<String> getRowsFromLine(String str) {
 		Collection<String> strings = new ArrayList<String>();
 		String theString = str;
@@ -933,5 +937,32 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
     public String getCharset() {
         return this.charset;
     }
+
+	public void setIsUrl(boolean value) {
+		this.isUrl = value;
+	}
+	
+	@Override
+    public boolean isUrl() {
+		return this.isUrl;
+	}
+	
+	public void setFileUrl(String theUrlValue) {
+		this.fileUrl = theUrlValue;
+	}
+	
+	@Override
+    public String getFileUrl() {
+		return this.fileUrl;
+	}
+	
+	public void setCharSet(String theCharSet) {
+		this.charSet = theCharSet;
+	}
+	
+	@Override
+    public String getCharSet() {
+		return this.charSet;
+	}
     
 }

@@ -1,5 +1,7 @@
 package org.teiid.designer.datatools.profiles.flatfile;
 
+import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
+
 /**
  * @since 8.0
  */
@@ -47,11 +49,15 @@ public interface IFlatFileProfileConstants {
 	String SECOND_LINE_DATATYPE = "FlatFileSecondLineDataType"; //$NON-NLS-1$
 	
 	String HOME_KEY = "HOME"; //$NON-NLS-1$
-	String URI_KEY = "URI"; //$NON-NLS-1$
+	String ODA_URI_KEY = "URI"; //$NON-NLS-1$
 	String DELIMTYPE_KEY = "DELIMTYPE"; //$NON-NLS-1$
 	String CHARSET_KEY = "CHARSET"; //$NON-NLS-1$
 	String INCLTYPELINE_KEY = "INCLTYPELINE"; //$NON-NLS-1$
 	String INCLCOLUMNNAME_KEY = "INCLCOLUMNNAME"; //$NON-NLS-1$
 	
 	String TEIID_PARENT_DIRECTORY_KEY = "ParentDirectory"; //$NON-NLS-1$
+	
+    String URL_PROP_ID = "URL"; //$NON-NLS-1$
+	String WS_ENDPOINT_KEY = IWSProfileConstants.END_POINT_URI_PROP_ID;
+	String FILE_URL_CONNECTION_PROFILE_ID = "org.teiid.designer.datatools.profiles.flatfile.fileurl"; //$NON-NLS-1$
 }
