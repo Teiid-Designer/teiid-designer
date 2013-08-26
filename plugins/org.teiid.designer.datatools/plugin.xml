@@ -104,6 +104,17 @@
             name="XML Local File Source"/>
    </extension>
 
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+      <category
+            id="org.teiid.designer.import.category"
+            name="%teiidImporterConnectionsCategory"/>
+      <connectionProfile
+            category="org.teiid.designer.import.category"
+            id="org.teiid.designer.datatools.profiles.flatfile.fileurl"
+            name="Flat File URL Source"/>
+   </extension>
+
 	<extension point="org.eclipse.datatools.connectivity.driverExtension">
 		<category parentCategory="org.eclipse.datatools.connectivity.db.driverCategory"
 			id="org.teiid.designer.datatools.connectivity.driver.modeShapeCategory"
@@ -174,7 +185,7 @@
             profile="org.teiid.designer.datatools.profiles.modeshape.ModeShapeConnectionProfile"/>
    </extension>
    
-<extension
+   <extension
        id="org.teiid.designer.datatools.profiles.flatfile.ConnectionInfoProvider"
        name="%flatFileConnectionInfoProvider"
        point="org.teiid.designer.datatools.ConnectionInfoProvider">
@@ -183,6 +194,15 @@
             class="org.teiid.designer.datatools.profiles.flatfile.FlatFileConnectionInfoProvider"/>
    </extension>
    
+   <extension
+       id="org.teiid.designer.datatools.profiles.flatfileurl.ConnectionInfoProvider"
+       name="%flatFileUrlConnectionInfoProvider"
+       point="org.teiid.designer.datatools.ConnectionInfoProvider">
+       <ConnectionInfoProvider
+            profile="org.teiid.designer.datatools.profiles.flatfile.fileurl"
+            class="org.teiid.designer.datatools.profiles.flatfile.FlatFileUrlConnectionInfoProvider"/>
+   </extension>
+
    <extension
        id="org.teiid.designer.datatools.profiles.xmlfile.ConnectionInfoProvider"
        name="%xmlFileConnectionInfoProvider"

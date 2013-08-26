@@ -146,6 +146,23 @@ public interface ITeiidMetadataFileInfo extends ITeiidFileInfo, ISQLConstants {
     String getDataFileFilter();
     
     /**
+     * 
+     * @return 'true' if remote url file, 'false' otherwise
+     */
+    boolean isUrl();
+
+    /**
+     * 
+     * @return url string if this is a remote file
+     */
+    String getFileUrl();
+
+	/**
+	 * @return the char set if this is a remote file
+	 */
+	String getCharSet();
+
+	/**
      * Returns the current generated SQL string based on an unknown relational model name
      * @return the generated SQL string
      */
