@@ -220,8 +220,12 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
         }
         result.setProperty(IWSProfileConstants.WSDL_URI_PROP_ID, urlText.getText());
         result.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, credentialsComposite.getSecurityOption().name());
-        result.setProperty(ICredentialsCommon.USERNAME_PROP_ID, credentialsComposite.getUserName());
-        result.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, credentialsComposite.getPassword());
+        if( credentialsComposite.getUserName() != null ) {
+        	result.setProperty(ICredentialsCommon.USERNAME_PROP_ID, credentialsComposite.getUserName());
+        }
+        if( credentialsComposite.getPassword() != null) {
+        	result.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, credentialsComposite.getPassword());
+        }
         result.setProperty(IWSProfileConstants.END_POINT_URI_PROP_ID, endPointText.getText());
 
         return result;
