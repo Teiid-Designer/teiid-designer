@@ -2,8 +2,10 @@ package org.teiid.datatools.views;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -17,6 +19,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -39,6 +42,7 @@ import org.osgi.service.prefs.BackingStoreException;
 import org.teiid.datatools.connectivity.ui.Activator;
 import org.teiid.datatools.connectivity.ui.Messages;
 import org.teiid.datatools.connectivity.ui.PreferenceConstants;
+import org.teiid.datatools.connectivity.ui.plan.ExecutionPlanConverter;
 
 /**
  * ExecutionPlanView
@@ -47,6 +51,10 @@ import org.teiid.datatools.connectivity.ui.PreferenceConstants;
  */
 
 public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.IPreferenceChangeListener {
+
+    /**
+     * View ID of this view
+     */
     public static final String VIEW_ID = "views.executionPlanView"; //$NON-NLS-1$
 
     private static final String IMPORT_PLAN_IMG = "icons/import_from_file.gif"; //$NON-NLS-1$
@@ -55,6 +63,7 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
     private static final String EXECUTION_PLAN_HELP_ID = "org.teiid.designer.runtime.ui.executionPlanOverview"; //$NON-NLS-1$
     private static final String PREFIX = "ExecutionPlanView."; //$NON-NLS-1$
 
+    private Browser visualisation;
     private StyledText sqlTextArea;
     private TreeViewer planTreeViewer;
     private StyledText planTextArea;
@@ -66,8 +75,8 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
     private IAction saveToFileAction;
     private IAction readFromFileAction;
 
-    Button expandAll;
-    Button collapseAll;
+    private Button expandAll;
+    private Button collapseAll;
 
     /**
      * The constructor.
@@ -234,14 +243,27 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
 
         TabFolder tabFolder = new TabFolder(planViewerGroup, SWT.TOP);
         tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        createPlanHTMLTab(tabFolder);
         createPlanTreeTab(tabFolder);
         createPlanTextTab(tabFolder);
     }
 
     /*
+     * Create the Execution Plan HTML Tab
+     */
+    private void createPlanHTMLTab(TabFolder folderParent) {
+        Composite tabPanel = createHTMLViewerPanel(folderParent);
+        TabItem planHTMLTab = new TabItem(folderParent, SWT.NONE);
+
+        planHTMLTab.setControl(tabPanel);
+        planHTMLTab.setText(Messages.getString(PREFIX + "planViewerHTMLTab.name")); //$NON-NLS-1$
+    }
+
+    /*
      * Create the Execution Plan Text Tab
      */
-    void createPlanTextTab( TabFolder folderParent ) {
+    private void createPlanTextTab( TabFolder folderParent ) {
         Composite tabPanel = createTextViewerPanel(folderParent);
         TabItem planTextTab = new TabItem(folderParent, SWT.NONE);
 
@@ -252,12 +274,20 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
     /*
      * Create the Execution Plan TreeView Tab
      */
-    void createPlanTreeTab( TabFolder folderParent ) {
+    private void createPlanTreeTab( TabFolder folderParent ) {
         Composite tabPanel = createTreeViewerPanel(folderParent);
         TabItem planTreeTab = new TabItem(folderParent, SWT.NONE);
 
         planTreeTab.setControl(tabPanel);
         planTreeTab.setText(Messages.getString(PREFIX + "planViewerTreeTab.name")); //$NON-NLS-1$
+    }
+
+    /*
+     * Create the Panel which defines the plan text view tab
+     */
+    private Composite createHTMLViewerPanel( Composite parent ) {
+        visualisation = new Browser(parent, SWT.NONE);
+        return visualisation;
     }
 
     /*
@@ -428,7 +458,7 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
     /**
      * Save the current Execution Plan xml to a file.
      */
-    public void handleSavePlanToFile() {
+    private void handleSavePlanToFile() {
         Shell shell = Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
         // Shell shell = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
         FileDialog dlg = new FileDialog(shell, SWT.SAVE);
@@ -471,7 +501,7 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
     /**
      * Save the current Execution Plan xml to a file.
      */
-    public void handleReadPlanFromFile() {
+    private void handleReadPlanFromFile() {
         Shell shell = Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
         // Shell shell = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
         FileDialog dlg = new FileDialog(shell, SWT.OPEN);
@@ -519,15 +549,42 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
         }
     }
 
+    private void displayNoExecPlanMessage() {
+        try {
+            File noPlanFile = new File(ExecutionPlanConverter.TEMP_DIRECTORY, "NoExecutionPlan.html");  //$NON-NLS-1$
+            if (! noPlanFile.exists()) {
+                noPlanFile.createNewFile();
+                PrintWriter writer = new PrintWriter(noPlanFile);
+                writer.println(ExecutionPlanConverter.NO_EXECUTION_PLAN_HTML);
+                writer.flush();
+                writer.close();
+            }
+            noPlanFile.deleteOnExit();
+            
+            visualisation.setUrl(noPlanFile.toURI().toURL().toString());
+        } catch (IOException ex) {
+            Activator.log(ex);
+        }
+    }
+
+    private void displayHTMLExecPlan(String execPlan) {
+        try {
+            ExecutionPlanConverter converter = new ExecutionPlanConverter();
+            String url = converter.convert(execPlan);
+            visualisation.setUrl(url);
+        } catch (Exception ex) {
+            Activator.log(ex);
+            displayNoExecPlanMessage();
+        }
+    }
+
     /**
      * Update the state of the ExecutionPlan panel
      * @param description the text description for the panel
      * @param sql the SQL to display
      * @param planStr the ExecutionPlan text
      */
-    public void updateContents( String description,
-                                String sql,
-                                String planStr ) {
+    public void updateContents( String description, String sql, String planStr ) {
         this.planString = planStr;
         // Update the Object Name Label
         if(description!=null) {
@@ -543,6 +600,13 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
             sqlTextArea.setText(""); //$NON-NLS-1$
         }
 
+        // Update the browser visualisation
+        if (planStr != null) {
+            displayHTMLExecPlan(planStr);
+        } else {
+            displayNoExecPlanMessage();
+        }
+        
         // Update the Text area
         if (planStr != null) {
             planTextArea.setText(planStr);
