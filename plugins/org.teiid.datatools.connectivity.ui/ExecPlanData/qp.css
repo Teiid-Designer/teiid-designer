@@ -1,0 +1,386 @@
+﻿.qp-root {
+	padding-bottom: 500px;
+}
+
+div.qp-node {
+	background-color: #FFFFCC;
+	margin: 2px;
+	padding: 2px;
+	border: 1px solid black;
+	font-size: 11px;
+	line-height: normal;
+}
+
+.qp-node {
+	position: relative;
+	white-space: nowrap;
+}
+
+.qp-node>div {
+	font-family: Monospace;
+	text-align: center;
+}
+
+div[class|='qp-icon'] {
+	height: 32px;
+	width: 32px;
+	margin-left: auto;
+	margin-right: auto;
+	background-repeat: no-repeat;
+}
+
+.qp-tt {
+	position: absolute;
+	display: none;
+	z-index: 1;
+	white-space: normal;
+	top: 4em;
+	left: 2em;
+	border: 1px solid black;
+	background-color: #FFFFEE;
+	padding: 2px;
+}
+
+.qp-tt div {
+	font-family: Sans-serif;
+	text-align: left;
+}
+
+.qp-tt table {
+	border-width: 0px;
+	border-spacing: 0px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width: 100%;
+	font-family: Sans-serif;
+	text-align: left;
+}
+
+.qp-tt-header {
+	text-align: center;
+	font-weight: bold;
+	font-size: 14px;
+	white-space: nowrap;
+}
+
+.qp-tt table {
+	white-space: nowrap;
+}
+
+.qp-tt table caption {
+	text-align: left;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.qp-tt td {
+	text-align: right;
+	padding-left: 10px;
+	font-size: 11px;
+	font-weight: normal;
+	border-bottom: solid 1px Black;
+	padding: 1px;
+}
+
+.qp-tt th {
+	text-align: left;
+	font-size: 11px;
+	font-weight: normal;
+	border-bottom: solid 1px Black;
+	padding: 1px 10px 1px 1px;
+}
+
+div.qp-node:hover .qp-tt {
+	display: block;
+}
+
+.qp-tr {
+	display: table;
+	padding-right: 100px;
+}
+
+.qp-tr>div {
+	display: table-cell;
+	padding-left: 15px;
+}
+
+.qp-query {
+	white-space: wrap;
+	padding-left: 1px;
+	padding-right: 5px;
+}
+
+.qp-query div {
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.qp-bold {
+	font-weight: bold;
+	font-size: 14px;
+}
+
+/* Icons */
+.qp-icon-catchall {
+	background-image: url('images/help.png')
+}
+
+.qp-icon-AbortProcessing {
+	background-image: url('images/cog_error.png')
+}
+
+.qp-icon-Access {
+	background-image: url('images/table.png')
+}
+
+.qp-icon-AddComment {
+	background-image: url('images/comment_add.png')
+}
+
+.qp-icon-Add {
+	background-image: url('images/add.png')
+}
+
+.qp-icon-ArrayTable {
+	background-image: url('images/table_split.png')
+}
+
+.qp-icon-Assignment {
+	background-image: url('images/balance.png')
+}
+
+.qp-icon-Block {
+	background-image: url('images/box.png')
+}
+
+.qp-icon-Branching {
+	background-image: url('images/arrow_divide.png')
+}
+
+.qp-icon-CreateCursor {
+	background-image: url('images/control_cursor_add.png')
+}
+
+.qp-icon-CriteriaCondition {
+	background-image: url('images/database_edit.png')
+}
+
+.qp-icon-CrossJoin {
+	background-image: url('images/sql_join.png')
+}
+
+.qp-icon-Element {
+	background-image: url('images/tag.png')
+}
+
+.qp-icon-EndBlock {
+	background-image: url('images/box_down.png')
+}
+
+.qp-icon-EndDocument {
+	background-image: url('images/document_comment_below.png')
+}
+
+.qp-icon-EnhancedSortMergeJoinStrategy {
+	background-image: url('images/sql_join.png')
+}
+
+.qp-icon-Error {
+	background-image: url('images/table_error.png')
+}
+
+.qp-icon-ExecDynamicSql {
+	background-image: url('images/sql.png')
+}
+
+.qp-icon-ExecSql {
+	background-image: url('images/sql.png')
+}
+
+.qp-icon-ExecStagingTable {
+	background-image: url('images/table_lightening.png')
+}
+
+.qp-icon-ForEachRowPlan {
+	background-image: url('images/table_tab.png')
+}
+
+.qp-icon-Grouping {
+	background-image: url('images/category_group.png')
+}
+
+.qp-icon-If {
+	background-image: url('images/map_magnify.png')
+}
+
+.qp-icon-InitializeDocument {
+	background-image: url('images/blueprint.png')
+}
+
+.qp-icon-InnerJoin {
+	background-image: url('images/sql_join_inner.png')
+}
+
+.qp-icon-InsertPlanExecution {
+	background-image: url('images/page_whit_gear.png')
+}
+
+.qp-icon-Limit {
+	background-image: url('images/limit-bandwith_usage.png')
+}
+
+.qp-icon-ListNestedSortComparator {
+	background-image: url('images/sort_go.png')
+}
+
+.qp-icon-Loop {
+	background-image: url('images/arror_repeat.png')
+}
+
+.qp-icon-MergeJoinStrategy {
+	background-image: url('images/sql_join_outer.png')
+}
+
+.qp-icon-MoveCursor {
+	background-image: url('images/control_cursor_blue.png')
+}
+
+.qp-icon-MoveDoc {
+	background-image: url('images/document_move.png')
+}
+
+.qp-icon-NestedLoopJoinStrategy {
+	background-image: url('images/sql_join_outer.png')
+}
+
+.qp-icon-NestedTableJoinStrategy {
+	background-image: url('images/sql_join_left.png')
+}
+
+.qp-icon-Null {
+	background-image: url('images/no_requirements.png')
+}
+
+.qp-icon-ObjectTable {
+	background-image: url('images/table_gear.png')
+}
+
+.qp-icon-PlanExecution {
+	background-image: url('images/page_white_gear.png')
+}
+
+.qp-icon-PlanExecutor {
+	background-image: url('images/page_gear.png')
+}
+
+.qp-icon-ProcedurePlan {
+	background-image: url('images/report.png')
+}
+
+.qp-icon-Program {
+	background-image: url('images/application_xp_terminal.png')
+}
+
+.qp-icon-ProgramUtil {
+	background-image: url('images/control_panel.png')
+}
+
+.qp-icon-Project {
+	background-image: url('images/book.png')
+}
+
+.qp-icon-ProjectInto {
+	background-image: url('images/book_open.png')
+}
+
+.qp-icon-RecurseProgramCondition {
+	background-image: url('images/report_stack.png')
+}
+
+.qp-icon-RelationalStatistics {
+	background-image: url('images/table_chart.png')
+}
+
+.qp-icon-RelationalUtil {
+	background-image: url('images/table_sheet.png')
+}
+
+.qp-icon-RelationalPlan {
+	background-image: url('images/table.png')
+}
+
+.qp-icon-RelationalPlanExecutor {
+	background-image: url('images/script_gear.png')
+}
+
+.qp-icon-Repeated {
+	background-image: url('images/control_repeat.png')
+}
+
+.qp-icon-Return {
+	background-image: url('images/routing_turn_u.png')
+}
+
+.qp-icon-Select {
+	background-image: url('images/table_select_row.png')
+}
+
+.qp-icon-SortingFilter {
+	background-image: url('images/sort_delete.png')
+}
+
+.qp-icon-Sort {
+	background-image: url('images/sort_alphabel.png')
+}
+
+.qp-icon-SortUtility {
+	background-image: url('images/sort_columns.png')
+}
+
+.qp-icon-SourceState {
+	background-image: url('images/investment_menu_quality.png')
+}
+
+.qp-icon-SubqueryAwareEvaluator {
+	background-image: url('images/server_stanchion.png')
+}
+
+.qp-icon-TextTable {
+	background-image: url('images/table_edit.png')
+}
+
+.qp-icon-TupleSourceValueIterator {
+	background-image: url('images/table_insert.png')
+}
+
+.qp-icon-UnionAll {
+	background-image: url('images/table_relationship.png')
+}
+
+.qp-icon-While {
+	background-image: url('images/arrow_rotate_clockwise.png')
+}
+
+.qp-icon-WindowFunctionProject {
+	background-image: url('images/book.png')
+}
+
+.qp-icon-XMLContext {
+	background-image: url('images/script_code.png')
+}
+
+.qp-icon-XMLPlan {
+	background-image: url('images/script_code_red.png') */
+}
+
+.qp-icon-XMLProcessorEnvironment {
+	background-image: url('images/tag.png')
+}
+
+.qp-icon-XMLTable {
+	background-image: url('images/xml_table.png')
+}
+
+.qp-icon-XMLValueTranslator {
+	background-image: url('images/tag.png')
+}

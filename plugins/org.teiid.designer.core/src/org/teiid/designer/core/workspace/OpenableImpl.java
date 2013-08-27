@@ -24,8 +24,6 @@ import org.teiid.designer.core.ModelerCore;
  */
 public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Openable, InternalOpenable {
 
-    private Object openLock = new Object();
-
     /**
      * Construct an instance of OpenableImpl.
      */
@@ -120,7 +118,7 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
      */
     @Override
 	public void openWhenClosed( final IProgressMonitor pm ) throws ModelWorkspaceException {
-        synchronized(openLock) {
+        synchronized(ModelWorkspaceManager.getModelWorkspaceManager()) {
 
             // If a thread has had to wait before acquiring the lock then another thread may well
             // have already opened this Openable so check again if it is opened.

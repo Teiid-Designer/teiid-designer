@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+==
+== Script to resolve the plugin's lib directory dependencies
+== and generate the SQLParser sources using javacc
+==
+== Note. This has to build both the target platform and the
+==       spi plugin in order to satisfy the dependencies of
+==       this plugin (even though we are not actually
+==       compiling it!)
+==
+-->
+
+<project name="generate-exec-plan-zip" default="generate">
+
+	<property name="GIT-HOME" location="../../" />
+
+	<property name="SRC-DIR" location="ExecPlanData"/>
+	<property name="DEST-ZIP" location="${SRC-DIR}/exec-plan-data.zip"/>
+	
+	
+	<import file="${GIT-HOME}/scripts/build-common.xml" />
+
+	<!--
+	   Test whether the zip is already present
+	-->
+	<target name="check-zip">
+
+		<filelist id="my.zip" dir="lib" files="${DEST-ZIP}" />
+		<restrict id="missing.zip">
+			<filelist refid="my.zip" />
+			<not>
+				<exists />
+			</not>
+		</restrict>
+
+		<property name="missing.zip" refid="missing.zip" />
+		<condition property="zip-present" value="true">
+			<length string="${missing.zip}" length="0" />
+		</condition>
+	</target>
+
+	<!--
+	   Check whether the zip has already been created. If not present then the
+	   'should-generate' property be set to the 'true'
+	-->
+	<target name="check-work" depends="check-zip">
+		<condition property="should-generate" value="true">
+			<or>
+				<isfalse value="${zip-present}" />
+			</or>
+		</condition>
+	</target>
+
+	<target name="nothing-todo" unless="should-generate">
+		<echo message="Project source generation is up-to-date" />
+	</target>
+
+	<target name="generate" depends="check-work, nothing-todo" if="should-generate">
+
+		<echo message="=== Generating zip file of execution plan payload data ===" />
+		<zip destfile="${DEST-ZIP}" update="true">
+		    <fileset dir="${SRC-DIR}">
+		        <include name="**/*"/>
+			  	<exclude name="**/qp.xslt"/>
+			</fileset>
+		</zip>
+	</target>
+</project>
