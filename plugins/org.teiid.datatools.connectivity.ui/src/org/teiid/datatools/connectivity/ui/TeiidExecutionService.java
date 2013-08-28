@@ -18,7 +18,7 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 /**
  * @since 8.0
  */
-public class TeiidExcecutionService extends ExecutionService {
+public class TeiidExecutionService extends ExecutionService {
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.datatools.sqltools.core.services.ExecutionService#createCallableSQLResultRunnable(java.sql.Connection, org.eclipse.debug.core.ILaunchConfiguration, boolean, org.eclipse.datatools.sqltools.editor.core.connection.IConnectionTracker, org.eclipse.datatools.sqltools.core.DatabaseIdentifier)

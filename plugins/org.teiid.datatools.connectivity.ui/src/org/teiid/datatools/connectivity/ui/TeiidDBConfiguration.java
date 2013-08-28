@@ -55,7 +55,7 @@ public class TeiidDBConfiguration extends SQLDevToolsConfiguration {
 	 */
 	@Override
 	public ExecutionService getExecutionService() {
-		return new TeiidExcecutionService();
+		return new TeiidExecutionService();
 	}
 	
 	/**
