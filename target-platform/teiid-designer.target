@@ -87,10 +87,10 @@
 
     <!-- BPEL -->
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.bpel.common.feature.feature.group" version="1.0.3.v20130509-1351-CI"/>
-      <unit id="org.eclipse.bpel.feature.feature.group" version="1.0.3.v20130509-1351-CI"/>
-      <unit id="org.eclipse.bpel.apache.ode.runtime.feature.feature.group" version="1.0.3.v20130509-1351-CI"/>
-      <repository location="http://download.jboss.org/jbosstools/updates/requirements/bpel/1.0.3.v20130509-1351-CI/"/>
+      <unit id="org.eclipse.bpel.common.feature.feature.group" version="1.0.3.v20130816-0854-CI"/>
+      <unit id="org.eclipse.bpel.feature.feature.group" version="1.0.3.v20130816-0854-CI"/>
+      <unit id="org.eclipse.bpel.apache.ode.runtime.feature.feature.group" version="1.0.3.v20130816-0854-CI"/>
+      <repository location="http://download.jboss.org/jbosstools/updates/requirements/bpel/1.0.3.v20130816-0854-CI/"/>
     </location>
 
     <!-- FuseIDE -->
@@ -190,7 +190,7 @@
     <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <!-- don't forget to increment these files when moving up a version:
         build.xml, *.target*, publish.sh, target2p2mirror.xml -->
-      <repository location="http://download.jboss.org/jbosstools/targetplatforms/jbosstoolstarget/4.30.5.CR1/REPO/"/>
+      <repository location="http://download.jboss.org/jbosstools/targetplatforms/jbosstoolstarget/4.30.5.Final/REPO/"/>
 
       <!-- for these IUs we need multiple versions -->
       <unit id="javax.wsdl" version="1.6.2.v201012040545"/>
