@@ -30,6 +30,48 @@
       %license
    </license>
 
+   <requires>
+      <import plugin="org.eclipse.ui" version="3.103.0" match="compatible"/>
+      <import plugin="org.eclipse.core.runtime" version="3.8.0" match="compatible"/>
+      <import plugin="org.eclipse.datatools.connectivity" version="1.2.5" match="compatible"/>
+      <import plugin="org.eclipse.datatools.connectivity.sqm.core" version="1.2.5" match="compatible"/>
+      <import plugin="org.eclipse.datatools.sqltools.parsers.sql" version="1.0.2" match="compatible"/>
+      <import plugin="org.eclipse.datatools.connectivity.sqm.server.ui" version="1.1.100" match="compatible"/>
+      <import plugin="org.teiid.datatools.connectivity.model" version="8.1.0" match="compatible"/>
+      <import plugin="org.eclipse.equinox.security" version="1.1.100" match="compatible"/>
+      <import plugin="org.teiid.designer.spi" version="8.1.0" match="compatible"/>
+      <import plugin="org.eclipse.datatools.modelbase.dbdefinition"/>
+      <import plugin="org.eclipse.datatools.modelbase.sql"/>
+      <import plugin="org.eclipse.emf.common"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.eclipse.emf.ecore.xmi"/>
+      <import plugin="org.eclipse.datatools.connectivity.ui" version="1.2.3" match="compatible"/>
+      <import plugin="org.eclipse.datatools.help" version="1.5.0" match="compatible"/>
+      <import plugin="org.eclipse.datatools.sqltools.plan" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.datatools.sqltools.editor.core.ui" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.datatools.sqltools.sqleditor" version="1.0.2" match="compatible"/>
+      <import plugin="org.eclipse.datatools.sqltools.data.core" version="1.2.1" match="compatible"/>
+      <import plugin="org.eclipse.datatools.sqltools.sql" version="1.0.1" match="compatible"/>
+      <import plugin="org.teiid.datatools.connectivity" version="8.1.0" match="compatible"/>
+      <import plugin="org.eclipse.datatools.sqltools.result.ui" version="1.1.2" match="compatible"/>
+      <import plugin="org.eclipse.datatools.connectivity.sqm.core.ui" version="1.2.2" match="compatible"/>
+      <import plugin="org.eclipse.ui.navigator" version="3.5.200" match="compatible"/>
+      <import plugin="org.eclipse.emf.ecore" version="2.8.0" match="compatible"/>
+      <import plugin="org.eclipse.datatools.modelbase.sql" version="1.0.5" match="compatible"/>
+      <import plugin="org.eclipse.debug.core" version="3.7.100" match="compatible"/>
+      <import plugin="org.eclipse.datatools.sqltools.editor.core" version="1.0.2" match="compatible"/>
+      <import plugin="org.eclipse.datatools.sqltools.routineeditor" version="1.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.ui" version="8.2.0" match="compatible"/>
+      <import plugin="org.teiid.designer.ui.common" version="8.2.0" match="compatible"/>
+      <import plugin="org.jboss.tools.locus.sf.saxon" version="9.2.1" match="compatible"/>
+      <import plugin="org.apache.xerces"/>
+      <import plugin="org.eclipse.core.runtime.compatibility" version="3.2.200" match="compatible"/>
+      <import plugin="org.eclipse.core.resources" version="3.8.0" match="compatible"/>
+      <import plugin="org.eclipse.wst.server.core" version="1.4.0" match="compatible"/>
+      <import plugin="org.teiid.datatools.connectivity.ui" version="8.2.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.datatools.connectivity.oda.flatfile.ui" version="3.1.7" match="compatible"/>
+   </requires>
+
    <plugin
          id="org.teiid.datatools.connectivity"
          download-size="0"
