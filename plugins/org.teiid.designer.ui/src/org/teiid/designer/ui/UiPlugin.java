@@ -10,13 +10,11 @@ package org.teiid.designer.ui;
 import static org.teiid.designer.ui.UiConstants.TableEditorAttributes.COLUMN_ORDER;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
@@ -41,7 +39,6 @@ import org.teiid.designer.ui.common.AbstractUiPlugin;
 import org.teiid.designer.ui.common.PreferenceKeyAndDefaultValue;
 import org.teiid.designer.ui.common.actions.ActionService;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
-import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.editors.ModelEditorProjectListener;
 import org.teiid.designer.ui.event.ModelResourceEvent;
 import org.teiid.designer.ui.favorites.EObjectModelerCache;
@@ -78,12 +75,6 @@ public final class UiPlugin extends AbstractUiPlugin implements PluginConstants,
     // The previous selection in this plugin's workbench
     ISelection cachedSelection = null;
 
-    // ImageDescriptors
-    ImageDescriptor errorDecoratorImage;
-    ImageDescriptor warningDecoratorImage;
-    ImageDescriptor extensionDecoratorImage;
-    ImageDescriptor previewableDecoratorImage;
-
     private final ModelEditorProjectListener projectListener = new ModelEditorProjectListener();
     private EObjectPropertiesOrderPreferences eObjectPropertiesOrderPreferences;
 
@@ -98,6 +89,26 @@ public final class UiPlugin extends AbstractUiPlugin implements PluginConstants,
      */
     public UiPlugin() {
         UiPlugin.plugin = this;
+    }
+
+    private void addToRegistry(ImageRegistry registry, final String imagePath) {
+        registry.put(imagePath, getImageDescriptor(imagePath));
+    }
+
+    @Override
+    protected void initializeImageRegistry(ImageRegistry registry) {
+        super.initializeImageRegistry(registry);
+
+        /*
+         * Initilialise these descriptors since they are required frequently and from app start
+         */
+        addToRegistry(registry, Images.EDIT_DOCUMENT_ICON);
+        addToRegistry(registry, Images.TEIID_SERVER_DEFAULT_ICON);
+        addToRegistry(registry, Images.TEIID_SERVER_DISCONNECTED_ICON);
+        addToRegistry(registry, Images.ERROR_DECORATOR);
+        addToRegistry(registry, Images.WARNING_DECORATOR);
+        addToRegistry(registry, Images.EXTENSION_DECORATOR);
+        addToRegistry(registry, Images.PREVIEWABLE_DECORATOR);
     }
 
     /**
@@ -150,7 +161,8 @@ public final class UiPlugin extends AbstractUiPlugin implements PluginConstants,
     }
 
     public ImageDescriptor getErrorDecoratorImage() {
-        return errorDecoratorImage;
+        ImageRegistry imageRegistry = plugin.getImageRegistry();
+        return imageRegistry.getDescriptor(Images.ERROR_DECORATOR);
     }
 
     public EventBroker getEventBroker() {
@@ -185,15 +197,18 @@ public final class UiPlugin extends AbstractUiPlugin implements PluginConstants,
     }
 
     public ImageDescriptor getWarningDecoratorImage() {
-        return warningDecoratorImage;
+        ImageRegistry imageRegistry = plugin.getImageRegistry();
+        return imageRegistry.getDescriptor(Images.WARNING_DECORATOR);
     }
     
     public ImageDescriptor getExtensionDecoratorImage() {
-        return extensionDecoratorImage;
+        ImageRegistry imageRegistry = plugin.getImageRegistry();
+        return imageRegistry.getDescriptor(Images.EXTENSION_DECORATOR);
     }
 
     public ImageDescriptor getPreviewableDecoratorImage() {
-        return previewableDecoratorImage;
+        ImageRegistry imageRegistry = plugin.getImageRegistry();
+        return imageRegistry.getDescriptor(Images.PREVIEWABLE_DECORATOR);
     }
 
     /**
@@ -228,66 +243,6 @@ public final class UiPlugin extends AbstractUiPlugin implements PluginConstants,
 
         // Initialize logging/i18n utility
         ((PluginUtilImpl)Util).initializePlatformLogger(this);
-
-        // // Test widget listener
-        // getWorkbench().addWindowListener(new IWindowListener() {
-        //
-        // @Override
-        // public void windowActivated( final IWorkbenchWindow window ) {
-        // Display.getCurrent().addFilter(SWT.MouseDown, new Listener() {
-        //
-        // @Override
-        // public void handleEvent( final Event event ) {
-        // final StringBuilder builder = new StringBuilder();
-        // if (event.widget instanceof Control) {
-        // Control control = (Control)event.widget;
-        // for (Composite parent = control.getParent(); parent != null; parent = control.getParent()) {
-        // final Control[] children = parent.getChildren();
-        // for (int ndx = 0, len = children.length; ndx < len; ++ndx)
-        // if (children[ndx] == control) {
-        // if (builder.length() > 0) builder.insert(0, '.');
-        // builder.insert(0, ']');
-        // builder.insert(0, ndx);
-        // builder.insert(0, '[');
-        // builder.insert(0, control.getClass().getSimpleName());
-        // }
-        // control = parent;
-        // }
-        //                            builder.insert(0, "."); //$NON-NLS-1$
-        // builder.insert(0, control.getClass().getSimpleName());
-        // }
-        // System.out.println(builder);
-        // }
-        // });
-        // }
-        //
-        // @Override
-        // public void windowClosed( final IWorkbenchWindow window ) {
-        // }
-        //
-        // @Override
-        // public void windowDeactivated( final IWorkbenchWindow window ) {
-        // }
-        //
-        // @Override
-        // public void windowOpened( final IWorkbenchWindow window ) {
-        // }
-        // });
-
-        try {
-            UiUtil.runInSwtThread(new Runnable() {
-
-                @Override
-				public void run() {
-                    UiPlugin.this.errorDecoratorImage = getImageDescriptor(Images.ERROR_DECORATOR);
-                    UiPlugin.this.warningDecoratorImage = getImageDescriptor(Images.WARNING_DECORATOR);
-                    UiPlugin.this.extensionDecoratorImage = getImageDescriptor(Images.EXTENSION_DECORATOR);
-                    UiPlugin.this.previewableDecoratorImage = getImageDescriptor(Images.PREVIEWABLE_DECORATOR);
-                }
-            }, true);
-        } catch (final Throwable err) {
-            throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, 0, err.getLocalizedMessage(), err));
-        }
 
         // Initialize product customizer
         try {

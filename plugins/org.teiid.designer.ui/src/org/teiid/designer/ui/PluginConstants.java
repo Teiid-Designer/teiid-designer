@@ -117,6 +117,8 @@ public interface PluginConstants {
         String CLEAR_DOCUMENT_ICON = CVIEW16 + "clear-document.png";  //$NON-NLS-1$
         String EDIT_EXTENSION_PROPERTIES_ICON = CVIEW16 + "edit-extension-properties.png"; //$NON-NLS-1$
 
+        String TEIID_SERVER_DEFAULT_ICON = CVIEW16 + "teiid-server-default.png"; //$NON-NLS-1$
+        String TEIID_SERVER_DISCONNECTED_ICON = CVIEW16 + "teiid-server-disconnected.png"; //$NON-NLS-1$
     }
 
     // ======================================================================================================

@@ -2089,6 +2089,14 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         return defaultTeiidServer.getDisplayName();
     }
 
+    public static boolean isDefaultServerConnected() {
+        ITeiidServer defaultTeiidServer = getTeiidServerManager().getDefaultServer();
+        if (defaultTeiidServer == null) {
+            return false;
+        }
+        return defaultTeiidServer.isConnected();
+    }
+
     /**
      * Get the {@link EventManager} associated with the default
      * server or null if there is no default teiid instance set.

@@ -62,6 +62,7 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -87,6 +88,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IGotoMarker;
@@ -251,9 +253,10 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     private Composite contentsPanel;
     private Section defaultServerSection;
     private Composite defaultServerSectionBody;
-    private Hyperlink changeDefaultServerLink;
+    private ImageHyperlink changeDefaultServerLink;
     private Hyperlink defaultServerLink;
     private Label defaultServerVersionLabel;
+    private Label defaultServerStatusLabel;
 
     /* Listen for change in default teiid instance */
     private ITeiidServerVersionListener teiidServerVersionListener = new ITeiidServerVersionListener() {
@@ -263,7 +266,13 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             if (defaultServerLink == null)
                 return;
 
-            setDefaultServerText(ModelerCore.getDefaultServerName());
+            UiUtil.runInSwtThread(new Runnable() {
+                @Override
+                public void run() {
+                    setDefaultServerText(ModelerCore.getDefaultServerName());
+                    setDefaultServerStatusIcon(ModelerCore.isDefaultServerConnected());
+                }
+            }, true);
 
             if (server != null)
                 addExecutionConfigurationListener(server.getEventManager());
@@ -283,8 +292,14 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
 
         @Override
         public void configurationChanged(ExecutionConfigurationEvent event) {
-            setDefaultServerText(ModelerCore.getDefaultServerName());
-            setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
+            UiUtil.runInSwtThread(new Runnable() {
+                @Override
+                public void run() {
+                    setDefaultServerText(ModelerCore.getDefaultServerName());
+                    setDefaultServerStatusIcon(ModelerCore.isDefaultServerConnected());
+                    setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
+                }
+            }, true);
         }
     };
 
@@ -315,6 +330,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                 @Override
                 public void run() {
                     setDefaultServerText(ModelerCore.getDefaultServerName());
+                    setDefaultServerStatusIcon(ModelerCore.isDefaultServerConnected());
                     setDefaultServerVersionText(ModelerCore.getTeiidServerVersion());
 
                     /* Listen for changes to the default teiid instance */
@@ -515,7 +531,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
 
         defaultServerSectionBody = new Composite(defaultServerSection, SWT.NONE);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(defaultServerSectionBody);
-        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(defaultServerSectionBody);
+        GridLayoutFactory.fillDefaults().numColumns(3).equalWidth(true).applyTo(defaultServerSectionBody);
         defaultServerSectionBody.setBackground(bkgdColor);
 
         /*
@@ -523,7 +539,23 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
          */
         toolkit.createLabel(defaultServerSectionBody, getString("defaultServerPrefix")); //$NON-NLS-1$
 
-        defaultServerLink = toolkit.createHyperlink(defaultServerSectionBody, "", SWT.NONE); //$NON-NLS-1$
+        /*
+         * Parent panel for the server instance status icon and display name
+         */
+        Composite serverDetailsPanel = toolkit.createComposite(defaultServerSectionBody);
+        GridDataFactory.fillDefaults().grab(true, true).span(2, 1).applyTo(serverDetailsPanel);
+        GridLayoutFactory.fillDefaults().numColumns(2).applyTo(serverDetailsPanel);
+
+        /*
+         * Default Instance status icon (initially blank)
+         */
+        defaultServerStatusLabel = toolkit.createLabel(serverDetailsPanel, "", SWT.NONE); //$NON-NLS-1$
+        GridDataFactory.fillDefaults().grab(false, false).applyTo(defaultServerStatusLabel);
+
+        /*
+         * Default Instance display name (initially blank)
+         */
+        defaultServerLink = toolkit.createHyperlink(serverDetailsPanel, "", SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().grab(true, false).applyTo(defaultServerLink);
         defaultServerLink.addHyperlinkListener(new HyperlinkAdapter() {
             @Override
@@ -555,8 +587,19 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             }
         });
 
-        // configure link to change default teiid instance
-        changeDefaultServerLink = toolkit.createHyperlink(defaultServerSectionBody, getString("changeServerLinkText"), SWT.NONE); //$NON-NLS-1$
+        /*
+         * Default Instance version
+         */
+        defaultServerVersionLabel = toolkit.createLabel(defaultServerSectionBody, ""); //$NON-NLS-1$
+        GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(defaultServerVersionLabel);
+
+        /*
+         * Configure link to change default instance. Displayed as an edit iimage icon.
+         */
+        changeDefaultServerLink = toolkit.createImageHyperlink(defaultServerSectionBody, SWT.NONE);
+        GridDataFactory.fillDefaults().grab(false, false).align(SWT.END, SWT.CENTER).applyTo(changeDefaultServerLink);
+        changeDefaultServerLink.setImage(UiPlugin.getDefault().getImage(PluginConstants.Images.EDIT_DOCUMENT_ICON));
+        changeDefaultServerLink.setToolTipText(getString("changeServerLinkTooltip")); //$NON-NLS-1$
         changeDefaultServerLink.addHyperlinkListener(new HyperlinkAdapter() {
             @Override
             public void linkActivated(HyperlinkEvent e) {
@@ -570,14 +613,12 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             }
         });
 
-        /*
-         * Default Instance Version
-         */
-        defaultServerVersionLabel = toolkit.createLabel(defaultServerSectionBody, ""); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(defaultServerVersionLabel);
-
         defaultServerSection.setClient(defaultServerSectionBody);
 
+        /*
+         * Delay the loading of the default instance details until the server manager has been
+         * properly restored and has the STARTED status.
+         */
         ServerVersionLoadingThread thread = new ServerVersionLoadingThread();
         thread.start();
     }
@@ -613,6 +654,28 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                 defaultServerLink.setText(hyperlinkText);
             }
         });
+    }
+
+    /**
+     * Updates the default server's status icon.
+     *
+     * @param serverConnected
+     */
+    private void setDefaultServerStatusIcon(boolean serverConnected) {
+        Image newImage = null;
+        String tooltip = null;
+        if (serverConnected) {
+            newImage = UiPlugin.getDefault().getImage(PluginConstants.Images.TEIID_SERVER_DEFAULT_ICON);
+            tooltip = getString("connectedDefaultServerTooltip"); //$NON-NLS-1$
+        } else {
+            newImage = UiPlugin.getDefault().getImage(PluginConstants.Images.TEIID_SERVER_DISCONNECTED_ICON);
+            tooltip = getString("disconnectedDefaultServerTooltip"); //$NON-NLS-1$
+        }
+
+        defaultServerStatusLabel.setImage(newImage);
+        defaultServerStatusLabel.setToolTipText(tooltip);
+        defaultServerStatusLabel.getParent().layout(true);
+        defaultServerSectionBody.layout(true);
     }
 
     private void setDefaultServerVersionText(ITeiidServerVersion teiidServerVersion) {
