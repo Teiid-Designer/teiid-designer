@@ -8,81 +8,58 @@
     <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="org.apache.servicemix.bundles.aopalliance" version="1.0.0.3"/>
 
-      <unit id="org.jboss.tools.locus.jcip.annotations" version="1.0.0.Final-v20130729-2113-B39"/>
-      <unit id="org.jboss.tools.locus.mockito" version="1.9.5.Final_patched_TEIIDDES-1681-v20130729-2113-B39"/>
-      <unit id="org.jboss.tools.locus.sf.saxon" version="9.2.1.5j-Final-v20130729-2113-B39"/>
+      <unit id="org.jboss.tools.locus.jcip.annotations" version="1.0.0.Final-v20130820-2112-B41"/>
+      <unit id="org.jboss.tools.locus.mockito" version="1.9.5.Final_patched_TEIIDDES-1681-v20130820-2112-B41"/>
+      <unit id="org.jboss.tools.locus.sf.saxon" version="9.2.1.5j-Final-v20130820-2112-B41"/>
 
       <unit id="org.springframework.aspects" version="3.1.4.RELEASE"/>
       <unit id="org.springframework.osgi.core" version="1.2.1"/>
       <unit id="org.springframework.osgi.extender" version="1.2.1"/>
       <unit id="org.springframework.osgi.extensions.annotations" version="1.2.1"/>
       <unit id="org.springframework.osgi.io" version="1.2.1"/>
-      <repository location="http://download.jboss.org/jbosstools/updates/integration/locus/1.1.0.CI"/>
+      <repository location="http://download.jboss.org/jbosstools/updates/integration/locus/1.1.0.Alpha1-B41/"/>
     </location>
 
-    <!-- Eclipse Graphiti -->
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+      <!-- Eclipse Graphiti -->
       <unit id="org.eclipse.graphiti.feature.feature.group" version="0.10.0.v20130612-0936"/>
       <unit id="org.eclipse.graphiti.export.feature.feature.group" version="0.10.0.v20130612-0936"/>
-      <repository location="http://download.jboss.org/jbosstools/updates/requirements/kepler/201306260900-R/"/>
-    </location>
 
-    <!-- Eclipse EMF -->
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+      <!-- Eclipse EMF -->
       <unit id="org.eclipse.emf.compare.feature.group" version="2.1.0.201306101322"/>
       <unit id="org.eclipse.emf.compare.ide.ui.feature.group" version="2.1.0.201306101322"/>
       <!-- the rcp feature is not in the kepler mirror -->
       <unit id="org.eclipse.emf.compare.rcp" version="2.1.0.201306101322"/>
       <unit id="org.eclipse.emf.compare.rcp.ui" version="3.0.0.201306101322"/>
-      <repository location="http://download.jboss.org/jbosstools/updates/requirements/kepler/201306260900-R/"/>
-    </location>
 
-    <!-- Eclipse EMF/OCL -->
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+      <!-- Eclipse EMF/OCL + deps like EMF Query and UML2 -->
       <unit id="org.eclipse.emf.validation.ocl.feature.group" version="1.7.0.201306111341"/>
       <unit id="org.eclipse.emf.query.ocl.feature.group" version="1.7.0.201306111332"/>
+      <unit id="org.eclipse.emf.query.feature.group" version="1.7.0.201306111332"/>
+      <unit id="org.eclipse.uml2.feature.group" version="4.1.0.v20130610-0712"/>
 
-       <!-- dependent features --> 
-       <unit id="org.eclipse.emf.query.feature.group" version="1.7.0.201306111332"/>
-       <unit id="org.eclipse.uml2.feature.group" version="4.1.0.v20130610-0712"/>
-      <repository location="http://download.jboss.org/jbosstools/updates/requirements/kepler/201306260900-R/"/>
-    </location>
-
-    <!-- Google Guava : Eclipse EMF -->
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+      <!-- Google Guava : Eclipse EMF -->
       <unit id="com.google.guava" version="12.0.0.v201212092141"/>
-      <repository location="http://download.jboss.org/jbosstools/updates/requirements/kepler/201306260900-R/"/>
-    </location>
 
-    <!-- Eclipse Zest : ESB -->
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+      <!-- Eclipse Zest : ESB -->
       <unit id="org.eclipse.zest.feature.group" version="1.5.0.201305060205"/>
-      <repository location="http://download.jboss.org/jbosstools/updates/requirements/kepler/201306260900-R/"/>
-    </location>
 
-    <!-- Eclipse OCL/ALL -->
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+      <!-- Eclipse OCL/ALL -->
       <unit id="org.eclipse.ocl.all.feature.group" version="4.1.0.v20130610-1317"/>
-      <repository location="http://download.jboss.org/jbosstools/updates/requirements/kepler/201306260900-R/"/>
-    </location>
 
-    <!-- javax.ws.rs : Fuse -->
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+      <!-- javax.ws.rs : Fuse -->
       <unit id="javax.ws.rs" version="1.1.1.v20101004-1200"/>
       <repository location="http://download.jboss.org/jbosstools/updates/requirements/kepler/201306260900-R/"/>
     </location>
 
-    <!-- BPMN2 - Feature -->
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.bpmn2.feature.feature.group" version="0.7.0.201304230617"/>
-      <repository location="http://download.jboss.org/jbosstools/updates/requirements/bpmn2-modeler/0.2.6.201305221604_S20130423_kepler/"/>
-    </location>
+      <!-- BPMN2 - Feature -->
+      <unit id="org.eclipse.bpmn2.feature.feature.group" version="0.7.0.201308220617"/>
 
-    <!-- BPMN2 - Modeler -->
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.bpmn2.modeler.feature.feature.group" version="0.2.6.201306192132"/>
-      <unit id="org.eclipse.bpmn2.modeler.jboss.runtime.feature.feature.group" version="0.2.6.201306192132"/>
-      <repository location="http://download.jboss.org/jbosstools/updates/requirements/bpmn2-modeler/0.2.6.201306192132_S20130619_kepler/"/>
+      <!-- BPMN2 - Modeler -->
+      <unit id="org.eclipse.bpmn2.modeler.feature.feature.group" version="0.2.7.201308301511"/>
+      <unit id="org.eclipse.bpmn2.modeler.jboss.runtime.feature.feature.group" version="0.2.7.201308301511"/>
+      <repository location="http://download.jboss.org/jbosstools/updates/requirements/bpmn2-modeler/0.2.7.201308301511_0.7.0.201308220617_kepler/"/>
     </location>
 
     <!-- BPEL -->
@@ -116,7 +93,7 @@
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 
       <!-- Required by BPEL -->
-      <unit id="org.jboss.tools.tests" version="0.0.0"/>
+      <unit id="org.jboss.tools.tests" version="3.5.0.Final-v20130717-0450-B102"/>
       <repository location="http://download.jboss.org/jbosstools/updates/nightly/coretests/4.1.kepler/"/>
     </location>
 
