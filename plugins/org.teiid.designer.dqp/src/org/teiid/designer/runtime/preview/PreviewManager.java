@@ -93,7 +93,6 @@ import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent.EventType;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
-import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -404,6 +403,13 @@ public final class PreviewManager extends JobChangeAdapter
         // Vdb Removed
         } else if (event.getEventType().equals(EventType.REMOVE) && event.getTargetType().equals(TargetType.VDB)) {
         	resetAllDeployedStatuses();
+        } else if (event.getEventType().equals(EventType.CONNECTED)) {
+            try {
+                // Clear up the server's previews on refreshing the client connection
+                cleanServer(new NullProgressMonitor(), event.getServer());
+            } catch (Exception ex) {
+                DqpPlugin.Util.log(ex);
+            }
         }
     }
 
@@ -504,8 +510,9 @@ public final class PreviewManager extends JobChangeAdapter
         if (helper.hasConnectionInfo(modelResource)) {
             String jndiName = this.getPreviewVdbJndiName(previewVdb.getFile().getFullPath());
             // create data source on server if we need to
-            if (!getPreviewServer().dataSourceExists(jndiName)) {
-                getOrCreateDataSource(model, jndiName);
+            if (!previewServer.dataSourceExists(jndiName)) {
+                TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
+                factory.createDataSource(previewServer, model, jndiName, true, this.passwordProvider);
             }
 
             if (!jndiName.equals(getSourceJndiName(modelEntry)) ) {
@@ -658,17 +665,6 @@ public final class PreviewManager extends JobChangeAdapter
         }
         return fullVdbName;
     	
-    }
-
-    /**
-     * @param model the model file
-     * @param jndiName the jndi name
-     * @return the ITeiidDataSource instance
-     * @throws Exception if issues result from getting data source
-     */
-    public ITeiidDataSource getOrCreateDataSource( IFile model, String jndiName ) throws Exception {
-        TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
-        return factory.createDataSource(getPreviewServer(), model, jndiName, true, this.passwordProvider);
     }
 
     ITeiidServer getPreviewServer() {
@@ -1616,7 +1612,6 @@ public final class PreviewManager extends JobChangeAdapter
     }
 
     private void setPreviewServer( ITeiidServer teiidServer ) {
-        final PreviewContext previewContext = this;
         final ITeiidServer oldServer = getPreviewServer();
         final ITeiidServerVersion oldServerVersion = oldServer == null ? null : oldServer.getServerVersion();
 
@@ -1634,36 +1629,12 @@ public final class PreviewManager extends JobChangeAdapter
 
         // cleanup old server if it can be reached
         if ((oldServer != null && oldServer.isConnected())) {
-            PreviewContext oldContext = new PreviewContext() {
-
-                @Override
-                public IStatus ensureConnectionInfoIsValid( Vdb previewVdb,
-                                                            ITeiidServer previewServer ) throws Exception {
-                    return previewContext.ensureConnectionInfoIsValid(previewVdb, oldServer);
-                }
-
-                @Override
-                public IFile getPreviewVdb( IResource projectOrModel ) {
-                    return previewContext.getPreviewVdb(projectOrModel);
-                }
-
-                @Override
-                public String getPreviewVdbDeployedName( IPath pvdbPath ) {
-                    return previewContext.getPreviewVdbDeployedName(pvdbPath);
-                }
-
-                @Override
-                public String getPreviewVdbJndiName( IPath pvdbPath ) {
-                    return previewContext.getPreviewVdbJndiName(pvdbPath);
-                }
-            };
-
             // delete all Preview VDBs on old server
             for (IProject project : DotProjectUtils.getOpenModelProjects()) {
                 for (IFile pvdbFile : findProjectPvdbs(project, false)) {
                     Job deleteDeployedPvdbJob = new DeleteDeployedPreviewVdbJob(getPreviewVdbDeployedName(pvdbFile),
                                                                                     getPreviewVdbVersion(pvdbFile),
-                                                                                    getPreviewVdbJndiName(pvdbFile), oldContext,
+                                                                                    getPreviewVdbJndiName(pvdbFile), this,
                                                                                     oldServer);
                     jobs.add(deleteDeployedPvdbJob);
                 }
@@ -1697,6 +1668,78 @@ public final class PreviewManager extends JobChangeAdapter
     }
 
     /**
+     * @param monitor
+     * @param instance
+     *
+     * @throws CoreException
+     * @throws Exception
+     * @throws InterruptedException
+     */
+    private void cleanServer(IProgressMonitor monitor, ITeiidServer instance) throws CoreException, Exception, InterruptedException {
+        IEclipsePreferences prefs = DqpPlugin.getInstance().getPreferences();
+
+        if (instance == null) {
+            // Nothing to do
+            return;
+        }
+
+        if (! instance.isConnected()) {
+            // Nothing we can do
+            return;
+        }
+
+        if (! prefs.getBoolean(PreferenceConstants.PREVIEW_TEIID_CLEANUP_ENABLED,
+                                    PreferenceConstants.PREVIEW_TEIID_CLEANUP_ENABLED_DEFAULT)) {
+            // Nothing the user wants us to do!
+            return;
+        }
+
+        // cleanup PVDs if necessary
+        Collection<Job> jobs = new ArrayList<Job>();
+
+        for (ITeiidVdb vdb : instance.getVdbs()) {
+            if (! vdb.isPreviewVdb())
+                continue;
+
+            Job job = new DeleteDeployedPreviewVdbJob(vdb.getName(),
+                                                      vdb.getVersion(),
+                                                      getPreviewVdbJndiName(vdb.getName()),
+                                                      this, instance);
+            jobs.add(job);
+        }
+
+        if ((monitor != null) && monitor.isCanceled()) {
+            // Interrupted and abort!
+            return;
+        }
+
+        if (jobs.isEmpty()) {
+            // Nothing to do
+            return;
+        }
+
+        CountDownLatch latch = new CountDownLatch(jobs.size());
+        IJobChangeListener shutdownJobListener = new ShutdownJobListener(latch, monitor);
+
+        for (Job job : jobs) {
+            job.addJobChangeListener(shutdownJobListener);
+            job.schedule();
+
+            if (monitor.isCanceled()) {
+                break;
+            }
+        }
+
+        if ((monitor != null) && monitor.isCanceled()) {
+            // Interrupted and abort!
+            return;
+        }
+
+        monitor.subTask(NLS.bind(Messages.PreviewShutdownTeiidCleanupTask, jobs.size()));
+        latch.await(); // wait until all cleanup jobs are finished
+    }
+
+    /**
      * Shutdowns the <code>PreviewManager</code>. This will remove any Preview VDBs from the default Teiid Instance.
      * 
      * @param monitor the progress monitor (may be <code>null</code>)
@@ -1710,45 +1753,11 @@ public final class PreviewManager extends JobChangeAdapter
             IEclipsePreferences prefs = DqpPlugin.getInstance().getPreferences();
             prefs.removePreferenceChangeListener(this);
 
-            // cleanup PVDs if necessary
-            if ((getPreviewServer() != null)
-                && isPreviewEnabled()
-                && getPreviewServer().isConnected()
-                && prefs.getBoolean(PreferenceConstants.PREVIEW_TEIID_CLEANUP_ENABLED,
-                                    PreferenceConstants.PREVIEW_TEIID_CLEANUP_ENABLED_DEFAULT)) {
-
-                Collection<Job> jobs = new ArrayList<Job>();
-
-                for (ITeiidVdb vdb : getPreviewServer().getVdbs()) {
-                    if (vdb.isPreviewVdb()) {
-                        Job job = new DeleteDeployedPreviewVdbJob(vdb.getName(), vdb.getVersion(),
-                                                                  getPreviewVdbJndiName(vdb.getName()), this,
-                                                                  getPreviewServer());
-                        jobs.add(job);
-                    }
-
-                    if ((monitor != null) && monitor.isCanceled()) {
-                        break;
-                    }
-                }
-
-                if ((monitor != null) && !monitor.isCanceled() && !jobs.isEmpty()) {
-                    CountDownLatch latch = new CountDownLatch(jobs.size());
-                    IJobChangeListener shutdownJobListener = new ShutdownJobListener(latch, monitor);
-
-                    for (Job job : jobs) {
-                        job.addJobChangeListener(shutdownJobListener);
-                        job.schedule();
-
-                        if (monitor.isCanceled()) {
-                            break;
-                        }
-                    }
-
-                    if (!monitor.isCanceled()) monitor.subTask(NLS.bind(Messages.PreviewShutdownTeiidCleanupTask, jobs.size()));
-                    latch.await(); // wait until all cleanup jobs are finished
-                }
-            }
+            if (isPreviewEnabled())
+                cleanServer(monitor, getPreviewServer());
+        }
+        catch (Exception ex) {
+            throw ex;
         } finally {
             // make sure shutdown is not called more than once
             this.previewEnabled = false;

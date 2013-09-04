@@ -219,6 +219,8 @@ public class TeiidServer implements ITeiidServer {
             if (admin != null)
                 this.admin.connect();
             
+            getEventManager().notifyListeners(ExecutionConfigurationEvent.createServerConnectedEvent(this));
+
             notifyRefresh();
         }
     }
