@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.eclipse.wst.server.core.IServer;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
@@ -119,7 +120,14 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
                             continue;
 
                         // Either we are showing preview data source or dataSource is not a preview
-                        filteredDataSources.add(dataSource);
+                        // Check if preview data source name contains this workspace UUID
+                        if( dataSource.isPreview()) {
+                        	if( dataSource.getName().contains(ModelerCore.workspaceUuid().toString())) {
+                        		filteredDataSources.add(dataSource);
+                        	}
+                        } else {
+                        	filteredDataSources.add(dataSource);
+                        }
                     }
 
                     if (!filteredDataSources.isEmpty()) {
@@ -141,8 +149,16 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
                         if (! provider.isShowPreviewVDBs() && vdb.isPreviewVdb())
                             continue;
 
-                        // Either we are showing preview data source or dataSource is not a preview
-                        filteredVdbs.add(vdb);
+                        // Either we are showing preview vdb or VDB is not a preview
+                        // Check if preview VDB's name contains this workspace UUID
+                        if( vdb.isPreviewVdb() ) { 
+                        	if( vdb.getName().contains(ModelerCore.workspaceUuid().toString())) {
+                        		filteredVdbs.add(vdb);
+                        	}
+                        } else {
+                        	filteredVdbs.add(vdb);
+                        }
+                        
                     }
 
                     if (!filteredVdbs.isEmpty()) {
