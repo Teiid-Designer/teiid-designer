@@ -1698,14 +1698,17 @@ public final class PreviewManager extends JobChangeAdapter
         Collection<Job> jobs = new ArrayList<Job>();
 
         for (ITeiidVdb vdb : instance.getVdbs()) {
-            if (! vdb.isPreviewVdb())
+            if (! vdb.isPreviewVdb()) {
                 continue;
-
-            Job job = new DeleteDeployedPreviewVdbJob(vdb.getName(),
-                                                      vdb.getVersion(),
-                                                      getPreviewVdbJndiName(vdb.getName()),
-                                                      this, instance);
-            jobs.add(job);
+            }
+            
+            if( vdb.getName().contains(ModelerCore.workspaceUuid().toString())) {
+	            Job job = new DeleteDeployedPreviewVdbJob(vdb.getName(),
+	                                                      vdb.getVersion(),
+	                                                      getPreviewVdbJndiName(vdb.getName()),
+	                                                      this, instance);
+	            jobs.add(job);
+            }
         }
 
         if ((monitor != null) && monitor.isCanceled()) {
