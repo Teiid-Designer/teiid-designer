@@ -110,8 +110,12 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
                 return false;
             }
         }
+    	ITeiidServer teiidServer = getServerManager().getDefaultServer();
+        if (teiidServer != null) {
+            return true;
+        }
 
-        return true;
+        return false;
     }
 
     /**

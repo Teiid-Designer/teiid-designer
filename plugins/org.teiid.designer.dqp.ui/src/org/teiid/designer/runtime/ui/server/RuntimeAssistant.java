@@ -47,6 +47,7 @@ public final class RuntimeAssistant {
     public static boolean ensurePreviewEnabled( Shell shell ) {
         boolean previewEnabled = isPreviewEnabled();
         boolean previewServerExists = previewServerExists();
+        boolean serverCreatedNotStarted = false;
 
         // dialog message (null if preview preference enabled and server exists)
         String msg = null;
@@ -77,6 +78,8 @@ public final class RuntimeAssistant {
             // if necessary create new server
             if (!previewServerExists) {
                 runNewServerAction(shell);
+                // if new server created it won't be started, so cache creation status
+                serverCreatedNotStarted = previewServerExists();
             }
         }
 
@@ -92,7 +95,8 @@ public final class RuntimeAssistant {
         }
 
         // abort preview if server is not connected
-        return serverConnectionExists(shell);
+        // If server was created and not started (see above) then this call will not try to connect and be a no-op call
+        return serverConnectionExists(shell, serverCreatedNotStarted);
     }
 
     /**
@@ -101,10 +105,12 @@ public final class RuntimeAssistant {
      * @param shell the shell used to display dialog if necessary
      * @param dialogMessage the localized question to ask the user if they want to create a new Teiid instance in order to continue
      *            on with task
+     * @param ignoreFailedConnection used to ignore a failed connection and not present a warning dialog.
      * @return <code>true</code> if a Teiid Instance exists and can be connected to
      */
     public static boolean ensureServerConnection( Shell shell,
-                                                  String dialogMessage ) {
+                                                  String dialogMessage,
+    											  boolean ignoreFailedConnection) {
         if (!previewServerExists()) {
             if (MessageDialog.openQuestion(shell, UTIL.getString(PREFIX + "confirmCreateTeiidInstanceTitle"), dialogMessage)) { //$NON-NLS-1$
                 runNewServerAction(shell);
@@ -117,7 +123,7 @@ public final class RuntimeAssistant {
         }
 
         // abort preview if server is not connected
-        return serverConnectionExists(shell);
+        return serverConnectionExists(shell, ignoreFailedConnection);
     }
 
     /**
@@ -182,14 +188,17 @@ public final class RuntimeAssistant {
 
     /**
      * @param shell the shell where the dialog is displayed if necessary
+     * @param ignoreFailedConnection ignore the failed connection and do not display warning dialog.
      * @return <code>true</code> if connection exists
      */
-    private static boolean serverConnectionExists( Shell shell ) {
+    private static boolean serverConnectionExists( Shell shell, boolean ignoreFailedConnection) {
         assert (getServer() != null);
 
         if (!getServer().isConnected()) {
-            MessageDialog.openWarning(shell, UTIL.getString(PREFIX + "teiidNotConnectedTitle"), //$NON-NLS-1$
-                                    UTIL.getString(PREFIX + "teiidNotConnectedMsg", getServer().getDisplayName())); // getServer().getHost())); //$NON-NLS-1$
+        	if( !ignoreFailedConnection ) {
+	            MessageDialog.openWarning(shell, UTIL.getString(PREFIX + "teiidNotConnectedTitle"), //$NON-NLS-1$
+	                                    UTIL.getString(PREFIX + "teiidNotConnectedMsg", getServer().getDisplayName())); // getServer().getHost())); //$NON-NLS-1$
+        	}
             return false;
         }
 

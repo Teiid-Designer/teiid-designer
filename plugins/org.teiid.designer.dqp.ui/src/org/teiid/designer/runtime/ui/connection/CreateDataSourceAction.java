@@ -87,43 +87,46 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
     @Override
     public void run() {
         final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
-        // A) get the selected model and extract a "ConnectionProfileInfo" from it using the ConnectionProfileInfoHandler
 
-        // B) Use ConnectionProfileHandler.getConnectionProfile(connectionProfileInfo) to query the user to
-        // select a ConnectionProfile (or create new one)
-
-        // C) Get the resulting ConnectionProfileInfo from the dialog and re-set the model's connection info
-        // via the ConnectionProfileInfoHandler
         ModelResource modelResource = null;
         if (!getSelection().isEmpty()) {
             IFile modelFile = (IFile)SelectionUtilities.getSelectedObjects(getSelection()).get(0);
             modelResource = ModelUtilities.getModelResource(modelFile);
         }
         try {
-
+        	// Check Server status. If none defined, query to create or cancel.
+        	
             ITeiidServer teiidServer = cachedServer;
             if (teiidServer == null) {
-            	if( RuntimeAssistant.ensureServerConnection(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-            			getString("noServer.message") ) ) { //$NON-NLS-1$
-            		teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
-            		teiidServer.connect();	
+            	teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+            	if( teiidServer == null ) {
+	            	if( RuntimeAssistant.ensureServerConnection(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+	            			getString("noServer.message"), true) ) { //$NON-NLS-1$
+	            		teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+	            		teiidServer.connect();	
+	            	} else {
+	            		// User has cancelled this action or decided not to create a new server
+	            		return;
+	            	}
             	} else {
-            		return;
+            		if( RuntimeAssistant.ensureServerConnection(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+	            			getString("noServer.message"), false) ) { //$NON-NLS-1$
+	            		teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+	            		teiidServer.connect();	
+	            	} else {
+	            		// User has cancelled this action or decided not to create a new server
+	            		return;
+	            	}
             	}
-//                if (DqpPlugin.getInstance().getServerManager().getDefaultServer() == null) {
-//                    MessageDialog.openConfirm(iww.getShell(), getString("noServer.title"), //$NON-NLS-1$
-//                                              getString("noServer.message")); //$NON-NLS-1$
-//                    return;
-//                } else if (DqpPlugin.getInstance().getServerManager().getDefaultServer().isConnected()) {
-//                    teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
-//                } else {
-//                    MessageDialog.openConfirm(iww.getShell(), getString("noServerConnection.title"), //$NON-NLS-1$
-//                                              getString("noServerConnection.message")); //$NON-NLS-1$
-//                    return;
-//                }
-//
-//                teiidServer.connect();
             }
+            
+            // A) get the selected model and extract a "ConnectionProfileInfo" from it using the ConnectionProfileInfoHandler
+
+            // B) Use ConnectionProfileHandler.getConnectionProfile(connectionProfileInfo) to query the user to
+            // select a ConnectionProfile (or create new one)
+
+            // C) Get the resulting ConnectionProfileInfo from the dialog and re-set the model's connection info
+            // via the ConnectionProfileInfoHandler
 
             Collection<ModelResource> relationalModels = getRelationalModelsWithConnections();
             final CreateDataSourceWizard wizard = new CreateDataSourceWizard(teiidServer, relationalModels, modelResource);

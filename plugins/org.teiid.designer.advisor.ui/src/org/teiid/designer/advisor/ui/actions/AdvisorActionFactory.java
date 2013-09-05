@@ -603,7 +603,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_DATA_SOURCE)) {
             // make sure there is a Teiid connection
             if (RuntimeAssistant.ensureServerConnection(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-            		Messages.CreateDataSource_NoServerMessage)) {
+            		Messages.CreateDataSource_NoServerMessage, false)) {
             	try {
 					ITeiidServer teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
 					

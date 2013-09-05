@@ -77,10 +77,10 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
             if (obj instanceof IFile) {
                 String extension = ((IFile)obj).getFileExtension();
                 if (extension != null && extension.equals("vdb")) { //$NON-NLS-1$
-//                    ITeiidServer teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
-//                    if (teiidServer != null) {
+                	ITeiidServer teiidServer = getServerManager().getDefaultServer();
+                    if (teiidServer != null) {
                         return true;
-//                    }
+                    }
                 }
             }
         }
