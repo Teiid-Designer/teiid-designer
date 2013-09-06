@@ -82,6 +82,11 @@ public class WSDLSchemaExtractor {
             inputStream = urlConn.getInputStream();
         }
         else {
+        	// if the uri file string starts with 'file:', remove it
+        	int indx = wsdlUriString.indexOf("file:");  //$NON-NLS-1$
+        	if(indx!=-1) {
+        		wsdlUriString = wsdlUriString.substring(indx+5);
+        	}
             File testWsdl = new File(wsdlUriString);
             uri = URI.createFileURI(testWsdl.getCanonicalPath().toString());
         }
