@@ -79,6 +79,9 @@ public class TeiidDataSourceInfo {
      * @return properties
      */
     public Properties getProperties() {
+    	if( properties == null ) {
+    		this.properties = new Properties();
+    	}
         return properties;
     }
 

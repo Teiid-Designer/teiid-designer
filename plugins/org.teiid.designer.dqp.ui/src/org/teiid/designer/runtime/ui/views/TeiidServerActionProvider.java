@@ -44,6 +44,7 @@ import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.actions.ExecuteVDBAction;
 import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
+import org.teiid.designer.runtime.ui.connection.CreateVdbDataSourceAction;
 import org.teiid.designer.runtime.ui.dialogs.ClearPreviewArtifactsOptionsDialog;
 import org.teiid.designer.runtime.ui.server.DisconnectFromServerAction;
 import org.teiid.designer.runtime.ui.server.EditServerAction;
@@ -108,6 +109,8 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     private IAction enablePreviewAction;
     
     private IAction clearPreviewArtifactsAction;
+    
+    private Action createVdbDataSourceAction;
 
     private final TeiidServerPreviewOptionContributor previewOptionContributor;
 
@@ -362,6 +365,36 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         this.createDataSourceAction.setToolTipText(getString("createDataSourceAction.tooltip")); //$NON-NLS-1$
         this.createDataSourceAction.setEnabled(true);
         
+        this.createVdbDataSourceAction = new Action() {
+        	@Override
+            public void run() {
+                ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
+                if (teiidServer != null && teiidServer.isConnected()) {
+	                // Assume a VDB is selected
+	                List<Object> selectedObjs = getSelectedObjects();
+	                if (selectedObjs.size() == 1) {
+	                    Object selection = selectedObjs.get(0);
+	                    if (RuntimeAssistant.adapt(selection, ITeiidVdb.class) != null) {
+	                        // If we have a legitimate teiid vdb then the server must be connected
+	                        ITeiidVdb teiidVdb = RuntimeAssistant.adapt(selection, ITeiidVdb.class);
+	                        if( teiidVdb != null ) {
+			                    CreateVdbDataSourceAction action = new CreateVdbDataSourceAction(teiidVdb.getName());
+			                    action.setTeiidServer(teiidServer);
+			                    action.setSelection(new StructuredSelection());
+			                    action.setEnabled(true);
+			                    action.run();
+	                        }
+		                }
+                    }
+                }
+            }
+        };
+        
+        this.createVdbDataSourceAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SOURCE_BINDING_ICON));
+        this.createVdbDataSourceAction.setText("Create VDB Data Source"); //getString("createDataSourceAction.text")); //$NON-NLS-1$
+        this.createVdbDataSourceAction.setToolTipText(getString("createDataSourceAction.tooltip")); //$NON-NLS-1$
+        this.createVdbDataSourceAction.setEnabled(true);
+        
         // the edit action is only enabled when one server is selected
         this.setDefaultServerAction = new SetDefaultServerAction();
         viewer.addSelectionChangedListener(this.setDefaultServerAction);
@@ -439,12 +472,13 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         manager.removeAll();
         
         manager.add(new Separator());
-        manager.add(refreshAction);
-        manager.add(new Separator());
         
         if (selectedObjs == null || selectedObjs.isEmpty()) {
+            manager.add(refreshAction);
+            manager.add(new Separator());
             // Other plug-ins can contribute there actions here
             manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+            
             return;
         }
         
@@ -488,6 +522,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 ITeiidVdb teiidVdb = RuntimeAssistant.adapt(selection, ITeiidVdb.class);
                 this.executeVdbAction.setEnabled(teiidVdb.isActive());
                 manager.add(this.executeVdbAction);
+                manager.add(this.createVdbDataSourceAction);
                 manager.add(new Separator());
                 manager.add(this.undeployVdbAction);
             }
@@ -521,7 +556,8 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             if (allVdbs) {
                 manager.add(this.undeployVdbAction);
             }
-
+            manager.add(refreshAction);
+            manager.add(new Separator());
             manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
         }
     }
