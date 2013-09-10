@@ -64,7 +64,7 @@
 										<artifactItem>
 											<groupId>org.jboss.tools.integration-stack</groupId>
 											<artifactId>target-platform</artifactId>
-											<version>4.1.4.Final</version>
+											<version>4.1.5.Alpha1</version>
 											<classifier>base</classifier>
 											<type>target</type>
 											<overWrite>true</overWrite>
