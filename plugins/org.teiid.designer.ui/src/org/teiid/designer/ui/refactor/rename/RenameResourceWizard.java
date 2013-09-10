@@ -93,7 +93,7 @@ public class RenameResourceWizard extends RefactoringWizard {
             }
 
             // check the name
-            char[] validChars = new char[] { '.' };
+            char[] validChars = new char[] { '.', '_' };
             final ValidationResultImpl result = new ValidationResultImpl(newName);
             CoreValidationRulesUtil.validateStringNameChars(result, newName, validChars); 
             if (result.hasProblems()) {
