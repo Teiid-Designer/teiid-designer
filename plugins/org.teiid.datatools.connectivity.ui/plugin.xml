@@ -94,15 +94,4 @@
             type="org.teiid.datatools.models.teiidsqlmodel.Document">
       </contributor>
    </extension>
-   
-<!-- Preferences -->
-  <extension point="org.teiid.designer.ui.generalPreferenceContributor">
-      <!-- Enable QueryPlans Preference -->
-      <preference
-            id="enableQueryPlanPreferenceContributor"
-            categoryId="dqpUiPreferenceCategory"
-            class="org.teiid.datatools.connectivity.ui.preferences.EnableQueryPlanPreferenceContributor">
-      </preference>
-  </extension>
-   
 </plugin>

@@ -5,10 +5,9 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.datatools.connectivity.ui.preferences;
+package org.teiid.designer.runtime.ui.preferences;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -62,7 +61,7 @@ public class EnableQueryPlanPreferenceContributor implements IGeneralPreferenceP
 
     /**
      * Obtains the <code>IEclipsePreferences</code> where this preference is being persisted.
-     * 
+     *
      * @return the preferences
      */
     private IEclipsePreferences getPreferences() {
@@ -131,14 +130,6 @@ public class EnableQueryPlanPreferenceContributor implements IGeneralPreferenceP
         IEclipsePreferences prefs = getPreferences();
         boolean enable = prefs.getBoolean(PreferenceConstants.TEIID_QUERYPLANS_ENABLED, PreferenceConstants.TEIID_QUERYPLANS_ENABLED_DEFAULT);
         this.chkEnabled.setSelection(enable);
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#setPreferencePage(org.eclipse.jface.preference.PreferencePage)
-     */
-    public void setPreferencePage( PreferencePage preferencePage ) {
     }
 
     /**

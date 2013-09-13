@@ -52,6 +52,12 @@
             categoryId="dqpUiPreferenceCategory"
             class="org.teiid.designer.runtime.ui.preferences.TeiidImporterTimeoutPreferenceContributor">
       </preference>
+      <!-- Enable QueryPlans Preference -->
+      <preference
+            id="enableQueryPlanPreferenceContributor"
+            categoryId="dqpUiPreferenceCategory"
+            class="org.teiid.designer.runtime.ui.preferences.EnableQueryPlanPreferenceContributor">
+      </preference>
   </extension>
 <!-- Actions contributed to the object/model generation -->
    <extension
@@ -334,10 +340,6 @@
             name="%editServerCommand.label">
       </command>
    </extension>
-   <extension point="org.eclipse.ui.elementFactories">
-  <factory id="org.teiid.designer.runtime.ui.server.editor.input.factory"
-    class="org.teiid.designer.runtime.ui.server.editor.TeiidServerEditorInputFactory"/>
-</extension>
    <extension
          point="org.eclipse.core.runtime.adapters">
       <factory

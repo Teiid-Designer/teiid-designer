@@ -2,13 +2,10 @@
 
 <!--
 ==
-== Script to resolve the plugin's lib directory dependencies
-== and generate the SQLParser sources using javacc
-==
-== Note. This has to build both the target platform and the
-==       spi plugin in order to satisfy the dependencies of
-==       this plugin (even though we are not actually
-==       compiling it!)
+== Script to generate the execution plan data zip
+== from the ExecPlanData directory. This avoids the
+== need of storing a zip in the codebase but is
+== more efficient at extracting during runtime.
 ==
 -->
 
