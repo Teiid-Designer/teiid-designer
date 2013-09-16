@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import org.eclipse.core.commands.operations.IUndoContext;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
@@ -70,6 +71,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IActionDelegate;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISelectionListener;
@@ -92,6 +94,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IGotoMarker;
+import org.eclipse.ui.ide.ResourceUtil;
 import org.eclipse.ui.operations.UndoActionHandler;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.PluginTransfer;
@@ -1619,6 +1622,41 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
 
             super.handleKeyPressed(event);
         }
+    }
+
+    @Override
+    protected void editorActivated(IEditorPart editor) {
+        if (!isLinkingEnabled()) {
+            return;
+        }
+
+        IFile file = ResourceUtil.getFile(editor.getEditorInput());
+        if (file == null)
+            return;
+
+        ISelection newSelection = new StructuredSelection(file);
+        TreeViewer treeViewer = getTreeViewer();
+        ISelection oldSelection = treeViewer.getSelection();
+
+        if (oldSelection.equals(newSelection)) {
+            treeViewer.getTree().showSelection();
+            return;
+        }
+
+        if (oldSelection instanceof IStructuredSelection && !oldSelection.isEmpty()) {
+            IStructuredSelection sSelection = (IStructuredSelection) oldSelection;
+            /*
+             * If the current selection is in any way a sub-compoment of the new selected file,
+             * eg. a table or transformation diagram, then don't select the file as this is just
+             * an annoying waste of time.
+             */
+            for (Object element : sSelection.toArray()) {
+                if (file.equals(ResourceUtil.getFile(element)))
+                    return;
+            }
+        }
+
+        treeViewer.setSelection(newSelection, true);
     }
 
     protected class ShowImportsAction extends Action {
