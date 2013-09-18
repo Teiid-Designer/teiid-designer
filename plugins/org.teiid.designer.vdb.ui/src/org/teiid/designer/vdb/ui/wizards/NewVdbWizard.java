@@ -701,17 +701,32 @@ public final class NewVdbWizard extends AbstractWizard
 	}
 	
 	private void updateForProperties() {
-    	if( this.folder == null && this.designerProperties != null) {
-            // Get Project from Properties - if it exists.
-            IProject project = DesignerPropertiesUtil.getProject(this.designerProperties);
-            if (project != null) {
-                this.folder = project;
-                this.folderText.setText(this.folder.getFullPath().makeRelative().toString());
-                if (CoreStringUtil.isEmpty(nameText.getText())) {
-                    nameText.setFocus();
-                }
-            }
-    	}
+		if( this.designerProperties != null ) {
+	    	if( this.folder == null ) {
+	            // Get Project from Properties - if it exists.
+	            IProject project = DesignerPropertiesUtil.getProject(this.designerProperties);
+	            if (project != null) {
+	                this.folder = project;
+	                this.folderText.setText(this.folder.getFullPath().makeRelative().toString());
+	                if (CoreStringUtil.isEmpty(nameText.getText())) {
+	                    nameText.setFocus();
+	                }
+	            }
+	    	}
+	    	
+	    	// Check the properties for view or source model names
+	    	IFile viewModel = DesignerPropertiesUtil.getViewModel(this.designerProperties);
+	    	if( viewModel != null ) {
+	    		// Add to VDB
+	    		addModels(new IFile[] {viewModel});
+	    	}
+	    	
+	    	IFile sourceModel = DesignerPropertiesUtil.getSourceModel(this.designerProperties);
+	    	if( sourceModel != null ) {
+	    		// Add to VDB
+	    		addModels(new IFile[] {sourceModel});
+	    	}
+		}
 		
     	if( this.designerProperties != null && !this.openProjectExists) {
 			DesignerPropertiesUtil.setProjectStatus(this.designerProperties, IPropertiesContext.NO_OPEN_PROJECT);

@@ -809,7 +809,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	void resetCPComboItems() {
 		if (this.srcCombo != null) {
 			WidgetUtil.setComboItems(this.srcCombo,
-					(ArrayList) this.connectionProfiles, this.srcLabelProvider,
+					this.connectionProfiles, this.srcLabelProvider,
 					true);
 		}
 	}
@@ -829,7 +829,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 				setConnectionProfile(listener.getChangedProfile());
 				this.refreshConnectionProfiles();
 				WidgetUtil.setComboItems(this.srcCombo,
-						(ArrayList) this.connectionProfiles,
+						this.connectionProfiles,
 						this.srcLabelProvider, true);
 
 				WidgetUtil.setComboText(this.srcCombo, getConnectionProfile(),this.srcLabelProvider);
@@ -1423,12 +1423,16 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 			boolean doSelect = false;
 			if (element instanceof IResource) {
 				// If the project is closed, dont show
-				boolean projectOpen = ((IResource) element).getProject()
-						.isOpen();
+				boolean projectOpen = ((IResource) element).getProject().isOpen();
+				
 				if (projectOpen) {
 					// Show open projects
 					if (element instanceof IProject) {
-						doSelect = true;
+		                try {
+		                	doSelect = ((IProject)element).hasNature(ModelerCore.NATURE_ID);
+		                } catch (CoreException e) {
+		                    UiConstants.Util.log(e);
+		                }
 					} else if (element instanceof IContainer) {
 						doSelect = true;
 						// Show webservice model files, and not .xsd files

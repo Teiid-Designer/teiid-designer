@@ -9,11 +9,13 @@ package org.teiid.designer.teiidimporter.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -250,6 +252,12 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
                     this.importManager.setTranslatorName(null);
                 }
             }
+            
+            // Set source model location
+            if( importManager.getTargetModelLocation() != null ) {
+            	this.targetModelContainerText.setText(this.importManager.getTargetModelLocation().makeRelative().toString());
+            }
+            
             validatePage();
             getControl().setVisible(visible);
         } else {
@@ -405,7 +413,6 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
             this.targetModelFileText.setText(this.importManager.getTargetModelName());
         } else {
             this.targetModelFileText.setText(StringUtilities.EMPTY_STRING);
-            this.targetModelContainerText.setText(StringUtilities.EMPTY_STRING);
         }
         
         // Validate the page
@@ -592,8 +599,12 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
                 boolean projectOpen = ((IResource)element).getProject().isOpen();
                 if (projectOpen) {
                     // Show open projects
-                    if (element instanceof IProject) {
-                        doSelect = true;
+                    if (element instanceof IProject ) {
+		                try {
+		                	doSelect = ((IProject)element).hasNature(ModelerCore.NATURE_ID);
+		                } catch (CoreException e) {
+		                	UTIL.log(e);
+		                }
                     } else if (element instanceof IContainer) {
                         doSelect = true;
                         // Show webservice model files, and not .xsd files

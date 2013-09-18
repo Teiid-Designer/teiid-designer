@@ -172,6 +172,9 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	 * @return viewModelName the view relational model name
 	 */
 	public String getViewModelName() {
+		if( this.viewModelName != null && !this.viewModelName.toUpperCase().endsWith(".XMI") ) { //$NON-NLS-1$
+			return this.viewModelName + ".xmi"; //$NON-NLS-1$
+		}
         return this.viewModelName;
 	}
 	

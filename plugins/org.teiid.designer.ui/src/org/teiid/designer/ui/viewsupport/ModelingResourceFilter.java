@@ -83,7 +83,9 @@ public class ModelingResourceFilter extends CompositeViewerFilter implements UiC
                 boolean result = false;
 
                 try {
-                    result = ((IProject)element).isOpen() && !((IProject)element).hasNature(ModelerCore.HIDDEN_PROJECT_NATURE_ID);
+                    result = ((IProject)element).isOpen() && 
+                    		!((IProject)element).hasNature(ModelerCore.HIDDEN_PROJECT_NATURE_ID) &&
+                    		((IProject)element).hasNature(ModelerCore.NATURE_ID);
                 } catch (CoreException e) {
                     UiConstants.Util.log(e);
                 }

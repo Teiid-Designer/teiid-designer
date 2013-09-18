@@ -336,7 +336,6 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
         	this.viewModelFileText.setText(this.info.getViewModelName());
         } else {
         	this.viewModelFileText.setText(StringUtilities.EMPTY_STRING);
-        	this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
         }
 
 		validatePage();
@@ -588,7 +587,11 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 				if (projectOpen) {
 					// Show open projects
 					if (element instanceof IProject) {
-						doSelect = true;
+						try {
+		                	doSelect = ((IProject)element).hasNature(ModelerCore.NATURE_ID);
+		                } catch (CoreException e) {
+		                	ModelerCore.Util.log(e);
+		                }
 					} else if (element instanceof IContainer) {
 						doSelect = true;
 						// Show webservice model files, and not .xsd files

@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -997,7 +998,6 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         	this.sourceModelFileText.setText(this.info.getSourceModelName());
         } else {
         	this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
-        	this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
         }
         
         this.info.setSourceModelExists(sourceModelExists());
@@ -1505,12 +1505,14 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	class DefaultFilterMatcher implements FilterMatcher {
 		private StringMatcher fMatcher;
 
+		@Override
 		public void setFilter(String pattern, boolean ignoreCase,
 				boolean ignoreWildCards) {
 			fMatcher = new StringMatcher(pattern + '*', ignoreCase,
 					ignoreWildCards);
 		}
 
+		@Override
 		public boolean match(Object element) {
 			return fMatcher.match(element.toString());
 		}
@@ -1572,7 +1574,11 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
                 if (projectOpen) {
                     // Show open projects
                     if (element instanceof IProject) {
-                        doSelect = true;
+                    	try {
+		                	doSelect = ((IProject)element).hasNature(ModelerCore.NATURE_ID);
+		                } catch (CoreException e) {
+		                	ModelerCore.Util.log(e);
+		                }
                     } else if (element instanceof IContainer) {
                         doSelect = true;
                         // Show webservice model files, and not .xsd files

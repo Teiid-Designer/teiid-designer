@@ -10,6 +10,7 @@ package org.teiid.designer.ui.viewsupport;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -348,10 +349,13 @@ public class DesignerPropertiesUtil {
         IProject project = DesignerPropertiesUtil.getProject(properties);
         if (project != null) {
             // Construct path to target model
-            IPath targetModelPath = new Path("").makeAbsolute(); //$NON-NLS-1$
+            IPath targetModelPath = project.getProjectRelativePath();
             if (viewsFolder != null && targetModelName != null && !viewsFolder.isEmpty() && !targetModelName.isEmpty()) {
                 targetModelPath = targetModelPath.append(viewsFolder).append(targetModelName);
                 targetPreviewModel = project.getFile(targetModelPath);
+            } else {
+            	targetModelPath = targetModelPath.append(targetModelName);
+            	targetPreviewModel = project.getFile(targetModelName);
             }
         }
         return targetPreviewModel;

@@ -1368,7 +1368,7 @@ public abstract class ModelUtilities implements UiConstants {
         FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor() {
            @Override
             public boolean visit(IResource resource) {
-               if (! resource.exists() || resource.getType() != IResource.FILE || ! getResourceFilter().accept(resource)) 
+               if (! resource.exists() || ! getResourceFilter().accept(resource) )
                    return false;
 
                IPath path = resource.getFullPath();

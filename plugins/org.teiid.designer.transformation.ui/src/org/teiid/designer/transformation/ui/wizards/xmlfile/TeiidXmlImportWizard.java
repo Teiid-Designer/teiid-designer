@@ -86,6 +86,12 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 		if( getDesignerProperties() != null ) {
             DesignerPropertiesUtil.setSourceModelName(getDesignerProperties(), getFileInfo().getSourceModelName());
             DesignerPropertiesUtil.setViewModelName(getDesignerProperties(), getFileInfo().getViewModelName());
+            // Should be one info object
+            if( ! getFileInfo().getXmlFileInfos().isEmpty() && getFileInfo().getXmlFileInfos().size() == 1 ) {
+	            TeiidXmlFileInfo info = this.getFileInfo().getXmlFileInfos().iterator().next();
+	            DesignerPropertiesUtil.setPreviewTargetModelName(getDesignerProperties(), getFileInfo().getViewModelName());
+	            DesignerPropertiesUtil.setPreviewTargetObjectName(getDesignerProperties(), info.getViewTableName());
+            }
 		}
 
 		return true;

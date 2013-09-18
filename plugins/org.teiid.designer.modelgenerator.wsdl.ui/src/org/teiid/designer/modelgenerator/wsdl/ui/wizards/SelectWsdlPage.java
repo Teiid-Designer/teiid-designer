@@ -1053,7 +1053,11 @@ public class SelectWsdlPage extends WizardPage
 				if (projectOpen) {
 					// Show open projects
 					if (element instanceof IProject) {
-						doSelect = true;
+						try {
+		                	doSelect = ((IProject)element).hasNature(ModelerCore.NATURE_ID);
+		                } catch (CoreException e) {
+		                	ModelerCore.Util.log(e);
+		                }
 					} else if (element instanceof IContainer) {
 						doSelect = true;
 						// Show webservice model files, and not .xsd files
