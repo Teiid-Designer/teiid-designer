@@ -47,26 +47,6 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 public class TeiidServer implements ITeiidServer {
 
     // ===========================================================================================================================
-    // Class Methods
-    // ===========================================================================================================================
-
-    /**
-     * @param thisObj an object being compared (may be <code>null</code>)
-     * @param thatObj the other object being compared (may be <code>null</code>)
-     * @return <code>true</code> if both objects are <code>null</code> or both are not <code>null</code> and equal
-     */
-    private static boolean equivalent( Object thisObj,
-                                       Object thatObj ) {
-        // true if both objects are null
-        if (thisObj == null) {
-            return (thatObj == null);
-        }
-
-        if (thatObj == null) return false;
-        return thisObj.equals(thatObj);
-    }
-
-    // ===========================================================================================================================
     // Fields
     // ===========================================================================================================================
 
@@ -110,14 +90,6 @@ public class TeiidServer implements ITeiidServer {
      * The parent {@link IServer} of this Teiid Instance
      */
     private IServer parentServer;
-
-    /**
-     * Internal flag to ensure {@link #notifyRefresh()} does not
-     * send any signals to listeners. Should always be called in pairs,
-     * ie. turn off -> do work -> turn on
-     */
-    private boolean notifyListeners = true;
-
 
     // ===========================================================================================================================
     // Constructors
@@ -216,9 +188,22 @@ public class TeiidServer implements ITeiidServer {
         if (this.admin == null) {
             this.admin = TeiidRuntimeRegistry.getInstance().getExecutionAdmin(this);
             
-            if (admin != null)
-                this.admin.connect();
-            
+            if (admin != null) {
+                /*
+                 * Avoid the refresh listener being fired prematurely by the admin client.
+                 * Want to fire the refresh ourselves using {#notifyRefresh} at the end
+                 * of this function.
+                 */
+                getEventManager().permitListeners(false);
+                try {
+                    this.admin.connect();
+                } catch (Exception ex) {
+                    throw ex;
+                } finally {
+                    getEventManager().permitListeners(true);
+                }
+            }
+
             getEventManager().notifyListeners(ExecutionConfigurationEvent.createServerConnectedEvent(this));
 
             notifyRefresh();
@@ -229,9 +214,9 @@ public class TeiidServer implements ITeiidServer {
     public void reconnect() {
         try {
             // Call disconnect() first to clear out Server & admin caches
-            notifyListeners = false;
+            getEventManager().permitListeners(false);
             disconnect();
-            notifyListeners = true;
+            getEventManager().permitListeners(true);
             
             if (isParentConnected()) {
                 // Refresh is implied in the getting of the admin object since it will
@@ -366,9 +351,6 @@ public class TeiidServer implements ITeiidServer {
 
     @Override
     public void notifyRefresh() {
-        if (! notifyListeners)
-            return;
-        
         if (this.admin != null) {
             getEventManager().notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(this));
         } else {
@@ -701,7 +683,7 @@ public class TeiidServer implements ITeiidServer {
         connect();
         return admin.getDataSourceProperties(name);
     }
-    
+
     @Deprecated
     @Override
     public void mergeVdbs( String sourceVdbName, int sourceVdbVersion, 

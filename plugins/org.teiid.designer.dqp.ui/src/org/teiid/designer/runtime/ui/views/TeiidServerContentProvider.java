@@ -17,10 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import net.jcip.annotations.GuardedBy;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -35,9 +31,9 @@ import org.eclipse.wst.server.core.IServer;
 import org.jboss.tools.as.wst.server.ui.xpl.ServerToolTip;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent.EventType;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidServer;
-import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.views.content.AbstractTeiidFolder;
 import org.teiid.designer.runtime.ui.views.content.DataSourcesFolder;
@@ -60,8 +56,8 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 public class TeiidServerContentProvider implements ICommonContentProvider {
 
     /** Represents a pending request in the tree. */
-    private static final String LOAD_ELEMENT_JOB = DqpUiConstants.UTIL.getString(TeiidServerContentProvider.class.getSimpleName() + ".jobName"); //$NON-NLS-1$
     private static final Object PENDING = new Object();
+    private static final Object REFRESH = new Object();
 
     private ConcurrentMap<ITeiidContainerNode, Object> pendingUpdates = new ConcurrentHashMap<ITeiidContainerNode, Object>();
     private transient TreeViewer viewer;
@@ -75,18 +71,19 @@ public class TeiidServerContentProvider implements ICommonContentProvider {
     private boolean showVDBs = true;
     private boolean showDataSources = true;
     private boolean showTranslators = true;
-    
+
     private class RefreshThread extends Thread {
         
         private boolean die = false;
-        
+
+        private boolean busy = false;
+
         private LinkedBlockingQueue<Object> queue = new LinkedBlockingQueue<Object>();
         
         public RefreshThread() {
             super(TeiidServerContentProvider.this + "." + RefreshThread.class.getSimpleName()); //$NON-NLS-1$
             setDaemon(true);
         }
-        
 
         /**
          * End the thread
@@ -95,114 +92,146 @@ public class TeiidServerContentProvider implements ICommonContentProvider {
             die = true;
         }
         
-        public void refresh() {
+        public void scheduleRefresh() {
             if (die)
                 return;
-            
-            queue.add(new Object());
+
+            queue.add(REFRESH);
         }
-        
+
+        public void schedulePending() {
+            if (die)
+                return;
+
+            queue.add(PENDING);
+        }
+
         @Override
         public void run() {
             while (! Thread.currentThread().isInterrupted() && ! die) {
                 try {
-                    if (pendingUpdates.size() == 0) {
-                        queue.take();
-                        
-                        // Successfully taken from the queue so do the refresh
-                        doRefreshWork();
+                    if (! busy) {
+                        Object queueObject = queue.take();
+
+                        if (PENDING.equals(queueObject))
+                            loadPending();
+                        else if (REFRESH.equals(queueObject))
+                            loadRefresh();
                     }
-                    
+
                     Thread.yield();
-                } catch (InterruptedException inte) {
-                    Thread.currentThread().interrupt();
-                }
+              } catch (InterruptedException inte) {
+                  Thread.currentThread().interrupt();
+              }
             }
         }
-        
-        private void doRefreshWork() {
-            UiUtil.runInSwtThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (viewer.getTree().isDisposed())
-                        return;
 
-                    TreePath[] expandedElements = viewer.getExpandedTreePaths();
+        private void loadPending() {
+            busy = true;
 
-                    // Refresh the viewer
-                    viewer.refresh();
-
-                    // Re-expand the viewer
-                    reExpand(expandedElements);
+            final List<ITeiidContainerNode> updated = new ArrayList<ITeiidContainerNode>(pendingUpdates.size());
+            for (ITeiidContainerNode node : pendingUpdates.keySet()) {
+                try {
+                    node.load();
+                    updated.add(node);
+                } catch (Exception e) {
                 }
+            }
 
-            }, false);
-        }
-    }
-    
-    /**
-     * Loads content for specified nodes, then refreshes the content in the
-     * tree.
-     */
-    private Job loadElementJob = new Job(LOAD_ELEMENT_JOB) {
-        
-        @Override
-        public boolean shouldRun() {
-            return pendingUpdates.size() > 0;
-        }
+            if (viewer == null) {
+                pendingUpdates.keySet().clear();
+            } else {
 
-        @Override
-        protected IStatus run(final IProgressMonitor monitor) {
-            monitor.beginTask(LOAD_ELEMENT_JOB, IProgressMonitor.UNKNOWN);
-            try {
-                final List<ITeiidContainerNode> updated = new ArrayList<ITeiidContainerNode>(pendingUpdates.size());
-                for (ITeiidContainerNode node : pendingUpdates.keySet()) {
-                    try {
-                        node.load();
-                        updated.add(node);
-                    } catch (Exception e) {
-                    }
-                    if (monitor.isCanceled()) {
-                        pendingUpdates.keySet().removeAll(updated);
-                        return Status.CANCEL_STATUS;
-                    }
-                }
-                
-                if (viewer == null) {
-                    pendingUpdates.keySet().clear();
-                } else {
-                    
-                    UiUtil.runInSwtThread(new Runnable() {
-                        
-                        @Override
-                        public void run() {
+                UiUtil.runInSwtThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
                             if (viewer.getControl().isDisposed())
                                 return;
-                            
+
                             for (Object node : updated) {
                                 pendingUpdates.remove(node);
                                 viewer.refresh(node);
-                                
+
                                 if (node instanceof ITeiidResourceNode) {
                                     viewer.setExpandedState(node, true);
                                     viewer.expandToLevel(node, 2);
                                 }
                             }
+                        } finally {
+                            busy = false;
                         }
-                    }, true);
-                }
-            } finally {
-                monitor.done();
+                    }
+                }, true);
             }
-            return Status.OK_STATUS;
         }
-    };
-    
+
+        private void loadRefresh() {
+            busy = true;
+
+            UiUtil.runInSwtThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (viewer.getTree().isDisposed())
+                            return;
+
+                        ITeiidResourceNode trn = null;
+                        for (TreePath o : viewer.getExpandedTreePaths()) {
+                            Object element = o.getLastSegment();
+
+                            if (isTeiidResourceNode(element)) {
+                                trn = (ITeiidResourceNode) element;
+                                break;
+                            }
+
+                            Object[] children = getChildren(element);
+                            for (Object child : children) {
+                                if (isTeiidResourceNode(child)) {
+                                    trn = (ITeiidResourceNode) child;
+                                    break;
+                                }
+                            }
+
+                            if (isTeiidResourceNode(trn)) {
+                                break;
+                            }
+                        }
+
+                        // Refresh the viewer
+                        viewer.refresh();
+
+                        if (trn != null) {
+                            viewer.setExpandedState(trn, true);
+                            viewer.expandToLevel(trn, 2);
+                        }
+
+                        // Refresh the Model Explorer too
+                        ModelerUiViewUtils.refreshModelExplorerResourceNavigatorTree();
+
+                    } finally {
+                        busy = false;
+                    }
+                }
+
+            }, false);
+        }
+    }
+
     private IExecutionConfigurationListener configListener = new IExecutionConfigurationListener() {
         
         @Override
         public void configurationChanged( final ExecutionConfigurationEvent event ) {
-            refreshThread.refresh();
+           if(EventType.CONNECTED.equals(event.getEventType())) {
+               /*
+                * This event is followed straight-after by a refresh event.
+                * No point in refresh twice for performance reasons.
+                */
+               return;
+           }
+
+           refreshThread.scheduleRefresh();
         }
     };
 
@@ -218,9 +247,7 @@ public class TeiidServerContentProvider implements ICommonContentProvider {
                 if (viewer == null || viewer.isBusy())
                     return;
 
-                TreePath[] expandedElements = viewer.getExpandedTreePaths();
-                viewer.refresh();
-                reExpand(expandedElements);
+                refreshThread.scheduleRefresh();
             }
         }
     };
@@ -326,7 +353,7 @@ public class TeiidServerContentProvider implements ICommonContentProvider {
             List<? extends ITeiidContentNode<?>> children = container.getChildren();
             if (children == null) {
                 pendingUpdates.putIfAbsent(container, PENDING);
-                loadElementJob.schedule();
+                refreshThread.schedulePending();
                 return new Object[] { PENDING };
             }
             return children.toArray();
@@ -426,53 +453,6 @@ public class TeiidServerContentProvider implements ICommonContentProvider {
     }
 
     /**
-     * Re-expand the tree if it was previously expanded.
-     *
-     * If the TeiidResourceNode is expanded then we will need to
-     * re-expand it since it has now been refreshed.
-     *
-     * If not found, then the node was never expanded so nothing
-     * need be done.
-     *
-     * Requires the current selection prior to a refresh in order to try and
-     * re-apply it once the nodes have been re-expanded.
-     */
-    private void reExpand(TreePath[] expandedElements) {
-        ITeiidResourceNode trn = null;
-
-        for (TreePath o : expandedElements) {
-            Object element = o.getLastSegment();
-
-            if (isTeiidResourceNode(element)) {
-                trn = (ITeiidResourceNode) element;
-                break;
-            }
-
-            Object[] children = getChildren(element);
-            for (Object child : children) {
-                if (isTeiidResourceNode(child)) {
-                    trn = (ITeiidResourceNode) child;
-                    break;
-                }
-            }
-
-            if (isTeiidResourceNode(trn)) {
-                break;
-            }
-        }
-
-        // Re-expand the TeiidResourceNode if
-        // it was expanded previously
-        if (trn != null) {
-            viewer.setExpandedState(trn, true);
-            viewer.expandToLevel(trn, 2);
-        }
-
-        // Refresh the Model Explorer too
-        ModelerUiViewUtils.refreshModelExplorerResourceNavigatorTree();
-    }
-
-    /**
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
      *      java.lang.Object)
      * @since 4.2
@@ -522,7 +502,6 @@ public class TeiidServerContentProvider implements ICommonContentProvider {
     @Override
     public void dispose() {
         viewer = null;
-        loadElementJob.cancel();
         pendingUpdates.clear();
         
         DqpPlugin.getInstance().getServerManager().removeListener(configListener);

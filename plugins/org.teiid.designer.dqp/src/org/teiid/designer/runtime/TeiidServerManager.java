@@ -246,6 +246,13 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     private boolean closeEditorsOnDefaultServerChange = false;
 
+    /**
+     * Internal flag to stop signals being sent to listeners.
+     * Should always be called in pairs,
+     * ie. turn off -> do work -> turn on
+     */
+    private boolean notifyListeners = true;
+
     /* Listen for changes to the default teiid instance version preference */
     private IPreferenceChangeListener preferenceChangeListener = new IPreferenceChangeListener() {
         @Override
@@ -578,11 +585,24 @@ public final class TeiidServerManager implements ITeiidServerManager {
 
     /**
      * {@inheritDoc}
+     *
+     * @see org.teiid.designer.runtime.spi.EventManager#notifyListeners(org.teiid.designer.runtime.spi.ExecutionConfigurationEvent)
+     */
+    @Override
+    public void permitListeners(boolean enable) {
+        this.notifyListeners = enable;
+    }
+
+    /**
+     * {@inheritDoc}
      * 
      * @see org.teiid.designer.runtime.spi.EventManager#notifyListeners(org.teiid.designer.runtime.spi.ExecutionConfigurationEvent)
      */
     @Override
     public void notifyListeners( ExecutionConfigurationEvent event ) {
+        if (!notifyListeners)
+            return;
+
         if (RuntimeState.SHUTTING_DOWN.equals(getState()) || RuntimeState.SHUTDOWN.equals(getState())) {
             // Since we are shutting down then everything is being saved and no reason to notify UI
             return;

@@ -24,6 +24,13 @@ public interface EventManager {
     boolean addListener( IExecutionConfigurationListener listener );
 
     /**
+     * Enable / disable the listeners in the event manager
+     *
+     * @param enable
+     */
+    void permitListeners(boolean enable);
+
+    /**
      * @param event the event the registry listeners are to process
      */
     void notifyListeners( ExecutionConfigurationEvent event );
@@ -52,6 +59,10 @@ public interface EventManager {
         @Override
         public boolean removeListener( IExecutionConfigurationListener listener ) {
             return true;
+        }
+
+        @Override
+        public void permitListeners(boolean enable) {
         }
         
     };
