@@ -77,19 +77,15 @@ public class TeiidServer implements ITeiidServer {
     private String customLabel;
 
     /**
-     * The host this server connects to (never empty or <code>null</code>).
-     */
-    private String host;
-
-    /**
      * The unique id of this server
      */
     private final String id;
 
     /**
      * The parent {@link IServer} of this Teiid Instance
+     * (never empty or <code>null</code>).
      */
-    private IServer parentServer;
+    private final IServer parentServer;
 
     // ===========================================================================================================================
     // Constructors
@@ -118,8 +114,6 @@ public class TeiidServer implements ITeiidServer {
         CoreArgCheck.isTrue(! parentServer.getClass().getSimpleName().equals("ServerWorkingCopy"), "TeiidServer parent should not be a working copy");  //$NON-NLS-1$//$NON-NLS-2$
         
         this.serverVersion = serverVersion;
-        
-        this.host = parentServer.getHost();
         
         this.teiidAdminInfo = adminInfo;
         this.teiidAdminInfo.setHostProvider(this);
@@ -164,9 +158,6 @@ public class TeiidServer implements ITeiidServer {
         if (this.id == null) {
             if (other.id != null) return false;
         } else if (!this.id.equals(other.id)) return false;
-        if (this.host == null) {
-            if (other.host != null) return false;
-        } else if (!this.host.equals(other.host)) return false;
         if (this.parentServer == null) {
             if (other.parentServer != null) return false;
         } else if (!this.parentServer.equals(other.parentServer)) return false;
@@ -269,11 +260,13 @@ public class TeiidServer implements ITeiidServer {
 
     @Override
     public String getHost() {
-        if (this.host == null) {
-            return HostProvider.DEFAULT_HOST;
+        String host = this.parentServer.getHost();
+
+        if (host == null) {
+            host = HostProvider.DEFAULT_HOST;
         }
 
-        return this.host;
+        return host;
     }
 
     @Override
@@ -296,7 +289,6 @@ public class TeiidServer implements ITeiidServer {
         int result = 1;
         result = prime * result + ((this.admin == null) ? 0 : this.admin.hashCode());
         result = prime * result + ((this.eventManager == null) ? 0 : this.eventManager.hashCode());
-        result = prime * result + ((this.host == null) ? 0 : this.host.hashCode());
         result = prime * result + ((this.parentServer == null) ? 0 : this.parentServer.hashCode());
         result = prime * result + ((this.teiidAdminInfo == null) ? 0 : this.teiidAdminInfo.hashCode());
         result = prime * result + ((this.teiidJdbcInfo == null) ? 0 : this.teiidJdbcInfo.hashCode());
@@ -627,9 +619,9 @@ public class TeiidServer implements ITeiidServer {
     @Override
     public void update(ITeiidServer otherServer) {
         CoreArgCheck.isNotNull(otherServer);
-        
+
         serverVersion = new TeiidServerVersion(otherServer.getServerVersion().toString());
-        
+
         getTeiidAdminInfo().setAll(otherServer.getTeiidAdminInfo());
         getTeiidJdbcInfo().setAll(otherServer.getTeiidJdbcInfo());  
     }
