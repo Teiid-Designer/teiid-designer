@@ -10,10 +10,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
-import org.teiid.designer.metamodels.core.AnnotationContainer;
-import org.teiid.designer.metamodels.core.ModelAnnotation;
-import org.teiid.designer.metamodels.diagram.DiagramContainer;
-import org.teiid.designer.metamodels.transformation.TransformationContainer;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
 
@@ -104,7 +100,7 @@ public class DataRoleResolver {
 	    		fragmentPath = fragmentPath.append(path.segment(i));
 	    	}
 	    	
-	    	obj = getChildOfResource(resource, fragmentPath);
+	    	obj = ModelerCore.getModelEditor().findObjectByPath(resource, fragmentPath);
 	    }
 		
 		if( obj == null ) {
@@ -112,21 +108,5 @@ public class DataRoleResolver {
 		}
 		
 		return true;
-	}
-	
-	private EObject getChildOfResource(Resource resource, IPath childPath) {
-		for( EObject eObj : resource.getContents()) {
-			if( eObj instanceof AnnotationContainer || eObj instanceof TransformationContainer ||
-				eObj instanceof DiagramContainer || eObj instanceof ModelAnnotation ) {
-				// Do nothing
-			} else {
-				if(ModelerCore.getModelEditor().getModelRelativePath(eObj).equals(childPath) ) {
-					return eObj;
-				} else {
-					continue;
-				}
-			}
-		}
-		return null;
 	}
 }
