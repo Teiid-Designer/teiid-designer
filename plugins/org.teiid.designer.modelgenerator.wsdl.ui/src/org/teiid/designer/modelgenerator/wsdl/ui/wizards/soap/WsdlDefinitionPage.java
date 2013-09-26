@@ -67,7 +67,6 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.widget.Label;
 
-
 /**
  * @since 8.0
  */
@@ -304,10 +303,10 @@ public class WsdlDefinitionPage extends WizardPage
 		GridLayoutFactory.fillDefaults().numColumns(4).applyTo(endPointGroup);
 		endPointGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		Label endPointNameLabel = WidgetFactory.createLabel(endPointGroup, "End Point Name");
-		endPointNameLabel.setToolTipText("End Point blah");
+		Label endPointNameLabel = WidgetFactory.createLabel(endPointGroup, Messages.WsdlDefinitionPage_endPointNameLabel_label);
+		endPointNameLabel.setToolTipText(Messages.WsdlDefinitionPage_endPointNameTextField_tooltip);
 		GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(endPointNameLabel);
-        
+
 		endPointNameText = new Text(endPointGroup, SWT.BORDER | SWT.SINGLE);
 		endPointNameText.setToolTipText(Messages.WsdlDefinitionPage_endPointNameTextField_tooltip);
 		endPointNameText.setForeground(endPointGroup.getDisplay().getSystemColor(SWT.COLOR_DARK_BLUE));
@@ -315,7 +314,7 @@ public class WsdlDefinitionPage extends WizardPage
 		endPointNameText.setEditable(false);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(endPointNameText);
 		
-		Label endPointURILabel = WidgetFactory.createLabel(endPointGroup, "End Point URI");
+		Label endPointURILabel = WidgetFactory.createLabel(endPointGroup, Messages.WsdlDefinitionPage_endPointURILabel_label);
 		GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(endPointURILabel);
         
 		endPointURIText = new Text(endPointGroup, SWT.BORDER | SWT.SINGLE);
@@ -666,7 +665,6 @@ public class WsdlDefinitionPage extends WizardPage
 			}
 		}
 
-		//refreshUiFromManager();
 		if( profileChanged ) {
 			this.operationsPanel.notifyWsdlChanged();
 		}
