@@ -7,6 +7,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
+import org.teiid.designer.ui.common.UiConstants.ConnectionProfileIds;
 
 /**
  * Lookup the translator name given the IConnectionProfile
@@ -17,14 +18,6 @@ public class TranslatorHelper implements UiConstants {
 	public static final String VENDOR_KEY = "org.eclipse.datatools.connectivity.db.vendor";  //$NON-NLS-1$
 	public static final String VERSION_KEY = "org.eclipse.datatools.connectivity.db.version";  //$NON-NLS-1$
 
-	public static final String PROVIDER_ID_SALESFORCE = "org.teiid.designer.datatools.salesforce.connectionProfile"; //$NON-NLS-1$
-    public final static String PROVIDER_ID_JDBC = "org.eclipse.datatools.connectivity.db.category"; //$NON-NLS-1$
-    public static final String PROVIDER_ID_ODA_FLAT_FILE_ID = "org.eclipse.datatools.connectivity.oda.flatfile"; //$NON-NLS-1$
-    public static final String PROVIDER_ID_MODESHAPE = "org.teiid.designer.datatools.profiles.modeshape.ModeShapeConnectionProfile"; //$NON-NLS-1$
-    public static final String PROVIDER_ID_FILE_LOCAL = "org.teiid.designer.datatools.profiles.xml.localfile"; //$NON-NLS-1$
-    public static final String PROVIDER_ID_XML_FILE_URL = "org.teiid.designer.datatools.profiles.xml.fileurl"; //$NON-NLS-1$
-    public static final String PROVIDER_ID_WS = "org.teiid.designer.datatools.profiles.ws.WSConnectionProfile"; //$NON-NLS-1$
-    public static final String PROVIDER_ID_LDAP = "org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"; //$NON-NLS-1$
 
     public static final String TEIID_FILE_DRIVER = "teiid-connector-file.rar"; //$NON-NLS-1$
     public static final String TEIID_GOOGLE_DRIVER = "teiid-connector-google.rar"; //$NON-NLS-1$
@@ -336,9 +329,9 @@ public class TranslatorHelper implements UiConstants {
 		
 		String providerId = connectionProfile.getProviderId();
 		if(providerId!=null) {
-		    if(providerId.equalsIgnoreCase(PROVIDER_ID_SALESFORCE)) {
+		    if(providerId.equalsIgnoreCase(ConnectionProfileIds.CATEGORY_SALESFORCE_CONNECTION)) {
 		        return SALESFORCE;
-		    } else if(providerId.equalsIgnoreCase(PROVIDER_ID_LDAP)) {
+		    } else if(providerId.equalsIgnoreCase(ConnectionProfileIds.CATEGORY_LDAP_CONNECTION)) {
 		        return LDAP;
 		    }
 		}

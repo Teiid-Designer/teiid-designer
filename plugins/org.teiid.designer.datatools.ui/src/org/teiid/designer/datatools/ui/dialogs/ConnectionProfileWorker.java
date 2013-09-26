@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IProfileListener;
 import org.eclipse.datatools.connectivity.ProfileManager;
@@ -35,11 +34,6 @@ import org.teiid.designer.datatools.ui.actions.EditConnectionProfileAction;
  * @since 8.0
  */
 public class ConnectionProfileWorker {
-
-	public final static String CATEGORY_JDBC = "org.eclipse.datatools.connectivity.db.category"; //$NON-NLS-1$
-	public final static String CATEGORY_WS_ODA = "org.eclipse.datatools.enablement.oda.ws"; //$NON-NLS-1$
-	public final static String CATEGORY_WS = "org.teiid.designer.datatools.profiles.ws.WSSoapConnectionProfile"; //$NON-NLS-1$
-	public static final String CATEGORY_TEIID_IMPORT = "org.teiid.designer.import.category"; //$NON-NLS-1$
 
 	private String categoryID;
 	private IConnectionProfile selectedProfile;

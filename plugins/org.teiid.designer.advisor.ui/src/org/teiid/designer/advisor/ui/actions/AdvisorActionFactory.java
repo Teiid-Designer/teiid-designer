@@ -48,6 +48,7 @@ import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
 import org.teiid.designer.runtime.ui.preview.PreviewDataAction;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.vdb.ExecuteVdbAction;
+import org.teiid.designer.ui.common.UiConstants.ConnectionProfileIds;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.viewsupport.IPropertiesContext;
@@ -494,39 +495,39 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 
         // CONNECTIONPROFILE OPTIONS
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_JDBC)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_JDBC, properties);
+			createConnection(ConnectionProfileIds.CATEGORY_JDBC, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_FLAT_FILE)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_ODA_FLAT_FILE_ID, properties);
+			createConnection(ConnectionProfileIds.CATEGORY_ODA_FLAT_FILE_ID, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_LDAP)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_LDAP_CONNECTION, properties);
+			createConnection(ConnectionProfileIds.CATEGORY_LDAP_CONNECTION, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_MODESHAPE)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_MODESHAPE, properties);
+			createConnection(ConnectionProfileIds.CATEGORY_MODESHAPE, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_SALESFORCE)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_SALESFORCE_CONNECTION, properties);
+			createConnection(ConnectionProfileIds.CATEGORY_SALESFORCE_CONNECTION, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_WS_CONNECTION, properties);
+			createConnection(ConnectionProfileIds.CATEGORY_WS_CONNECTION, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE_ODA)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_ODA_WS_ID, properties);
+			createConnection(ConnectionProfileIds.CATEGORY_WS_SOAP, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_XML_FILE_LOCAL)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_XML_FILE_LOCAL, properties);
+			createConnection(ConnectionProfileIds.CATEGORY_XML_FILE_LOCAL, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_XML_FILE_URL)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_XML_FILE_URL, properties);
+			createConnection(ConnectionProfileIds.CATEGORY_XML_FILE_URL, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL)) {
@@ -901,7 +902,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 		IProfileListener listener = new PropertiesProfileChangedListener(properties);
 		ProfileManager.getInstance().addProfileListener(listener);
 		
-		if( id.equalsIgnoreCase(CONNECTION_PROFILE_IDS.CATEGORY_JDBC) ) {
+		if( id.equalsIgnoreCase(ConnectionProfileIds.CATEGORY_JDBC) ) {
 			NewJDBCFilteredCPWizard wiz = new NewJDBCFilteredCPWizard();
 			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection(), properties, true);
 		} else {

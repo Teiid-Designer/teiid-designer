@@ -60,6 +60,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.WsdlOperationsPanel;
+import org.teiid.designer.ui.common.UiConstants.ConnectionProfileIds;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -193,7 +194,7 @@ public class WsdlDefinitionPage extends WizardPage
 		// create main container
 		//
 
-		this.profileWorker = new ConnectionProfileWorker(this.getShell(), ConnectionProfileWorker.CATEGORY_WS, this);
+		this.profileWorker = new ConnectionProfileWorker(this.getShell(), ConnectionProfileIds.CATEGORY_WS_SOAP, this);
 
 		final int COLUMNS = 1;
 		Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);

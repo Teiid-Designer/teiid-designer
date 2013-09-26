@@ -73,6 +73,7 @@ import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
 import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
+import org.teiid.designer.ui.common.UiConstants.ConnectionProfileIds;
 import org.teiid.designer.ui.common.dialog.FolderSelectionDialog;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -219,7 +220,7 @@ public class SelectWsdlPage extends WizardPage
         // create main container
         //
 
-    	this.profileWorker = new ConnectionProfileWorker(this.getShell(), ConnectionProfileWorker.CATEGORY_WS_ODA, this);
+        this.profileWorker = new ConnectionProfileWorker(this.getShell(), ConnectionProfileIds.CATEGORY_WS_ODA, this);
     	
         final int COLUMNS = 1;
         Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);
