@@ -8,7 +8,6 @@
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels;
 
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -32,11 +31,11 @@ import org.teiid.core.designer.event.IChangeNotifier;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
-import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -61,11 +60,13 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 	private Text viewModelContainerText;
 	private Text viewModelHelpText;
 	
-	IConnectionInfoHelper connectionInfoHelper;
+	private IConnectionInfoHelper connectionInfoHelper;
 	
-	final WSDLImportWizardManager importManager;
-	
-	boolean refreshing = false;
+	private final WSDLImportWizardManager importManager;
+
+	private ModelWorkspaceManager modelWorkspaceManager = ModelWorkspaceManager.getModelWorkspaceManager();
+
+	private boolean refreshing = false;
 
 	public ImportOptionsPanel(Composite parent, WSDLImportWizardManager importManager) {
 		super();
@@ -349,7 +350,7 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 			return false;
 		}
 
-		return ModelGeneratorWsdlUiUtil.modelExists(importManager.getViewModelLocation().getFullPath().toOSString(),
+		return modelWorkspaceManager.modelExists(importManager.getViewModelLocation().getFullPath().toOSString(),
 			this.viewModelFileText.getText());
 	}
 
@@ -358,7 +359,7 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 			return false;
 		}
 
-		return ModelGeneratorWsdlUiUtil.modelExists(importManager.getSourceModelLocation().getFullPath().toOSString(),
+		return modelWorkspaceManager.modelExists(importManager.getSourceModelLocation().getFullPath().toOSString(),
 			this.sourceModelFileText.getText());
 	}
 
@@ -435,7 +436,7 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 		}
 
 		try {
-			IResource sourceModel = ModelGeneratorWsdlUiUtil.getModelFile(
+			IResource sourceModel = ModelUtilities.getModelFile(
 				this.importManager.getSourceModelLocation().getFullPath().toOSString(), this.sourceModelFileText.getText());
 
 			ModelResource smr = ModelUtilities.getModelResourceForIFile((IFile) sourceModel, false);
@@ -458,7 +459,7 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
         }
 
         try {
-            IResource sourceModel = ModelGeneratorWsdlUiUtil.getModelFile(this.importManager.getSourceModelLocation().getFullPath().toOSString(),
+            IResource sourceModel = ModelUtilities.getModelFile(this.importManager.getSourceModelLocation().getFullPath().toOSString(),
                                                                           this.sourceModelFileText.getText());
 
             ModelResource smr = ModelUtilities.getModelResourceForIFile((IFile)sourceModel, false);
@@ -482,7 +483,7 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 		}
 
 		try {
-			IResource sourceModel = ModelGeneratorWsdlUiUtil.getModelFile(
+			IResource sourceModel = ModelUtilities.getModelFile(
 				this.importManager.getSourceModelLocation().getFullPath().toOSString(), this.sourceModelFileText.getText());
 
 			ModelResource smr = ModelUtilities.getModelResourceForIFile((IFile) sourceModel, false);

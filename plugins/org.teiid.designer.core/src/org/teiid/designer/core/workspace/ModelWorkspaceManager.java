@@ -28,6 +28,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
@@ -37,6 +38,7 @@ import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.IOperation;
+import org.teiid.core.designer.util.ResourceNameUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.index.IndexUtil;
@@ -850,6 +852,24 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
         }
 
         return result;
+    }
+
+    public boolean modelExists(String containerPath, String modelName) {
+        if (containerPath == null) {
+            return false;
+        }
+
+        IPath modelPath = new Path(containerPath).append(modelName);
+        if (!modelPath.toString().toLowerCase().endsWith(ResourceNameUtil.XMI_FILE_EXTENSION)) {
+            modelPath = modelPath.addFileExtension(ResourceNameUtil.XMI_FILE_EXTENSION);
+        }
+
+        ModelWorkspaceItem item = findModelWorkspaceItem(modelPath, IResource.FILE);
+        if (item != null) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

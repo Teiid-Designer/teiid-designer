@@ -66,6 +66,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.widget.Label;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * @since 8.0
@@ -563,8 +564,8 @@ public class WsdlDefinitionPage extends WizardPage
 
 			for (int i = 0; i < selectedObjects.length; i++) {
 				if (selectedObjects[i] instanceof IFile) {
-					if (ModelGeneratorWsdlUiUtil.isWsdlFile((IFile) selectedObjects[i])
-						|| ModelGeneratorWsdlUiUtil.isModelFile((IFile) selectedObjects[i])) {
+					if (ModelUtilities.isWsdlFile((IFile) selectedObjects[i])
+						|| ModelUtilities.isModelFile((IFile) selectedObjects[i])) {
 						// Convert the IFile object to a File object
 						File fNew = ((IFile) selectedObjects[i]).getLocation().toFile();
 						if (fNew != null) {
@@ -574,11 +575,11 @@ public class WsdlDefinitionPage extends WizardPage
 							} catch (MalformedURLException err) {
 								// exception will leave uri null
 							}
-							if (ModelGeneratorWsdlUiUtil.isWsdlFile((IFile) selectedObjects[i])) {
+							if (ModelUtilities.isWsdlFile((IFile) selectedObjects[i])) {
 								this.importManager.setUriSource(WSDLImportWizardManager.WORKSPACE_SOURCE);
 								this.importManager.setWSDLFileUri(uriStr);
 								break;
-							} else if (ModelGeneratorWsdlUiUtil.isModelFile((IFile) selectedObjects[i])) {
+							} else if (ModelUtilities.isModelFile((IFile) selectedObjects[i])) {
 								this.importManager.setViewModelName(uriStr.substring(uriStr.lastIndexOf('/') + 1));
 								break;
 							}

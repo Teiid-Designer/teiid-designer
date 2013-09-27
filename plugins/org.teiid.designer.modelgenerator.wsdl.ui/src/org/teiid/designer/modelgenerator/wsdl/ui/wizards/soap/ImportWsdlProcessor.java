@@ -11,7 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -48,7 +47,6 @@ import org.teiid.designer.modelgenerator.wsdl.model.Operation;
 import org.teiid.designer.modelgenerator.wsdl.model.Port;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
-import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.query.proc.wsdl.IWsdlAttributeInfo;
 import org.teiid.designer.transformation.model.RelationalViewModelFactory;
@@ -328,7 +326,7 @@ public class ImportWsdlProcessor {
     		if( generator.doOverwriteExistingProcedures() ) {
     			Collection<EObject> deleteList = new ArrayList<EObject>();
     			if( generator.wrapperExists() ) {
-    				EObject wrapper = ModelGeneratorWsdlUiUtil.getExistingEObject(
+    				EObject wrapper = ModelUtilities.getExistingEObject(
     					this.importManager.getViewModelLocation().getFullPath().toString(), 
     					this.importManager.getViewModelName(), 
     					generator.getWrapperProcedureName());
@@ -336,14 +334,14 @@ public class ImportWsdlProcessor {
     					deleteList.add(wrapper);
     				}
     			}
-    			EObject request = ModelGeneratorWsdlUiUtil.getExistingEObject(
+    			EObject request = ModelUtilities.getExistingEObject(
     				this.importManager.getViewModelLocation().getFullPath().toString(), 
     				this.importManager.getViewModelName(), 
     				generator.getRequestProcedureName());
     			if( request != null ) {
     				deleteList.add(request);
     			}
-    			EObject response = ModelGeneratorWsdlUiUtil.getExistingEObject(
+    			EObject response = ModelUtilities.getExistingEObject(
     				this.importManager.getViewModelLocation().getFullPath().toString(), 
     				this.importManager.getViewModelName(), 
     				generator.getResponseProcedureName());

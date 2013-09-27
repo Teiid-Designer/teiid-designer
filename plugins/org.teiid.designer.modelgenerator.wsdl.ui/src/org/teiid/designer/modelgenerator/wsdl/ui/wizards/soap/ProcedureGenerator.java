@@ -18,12 +18,12 @@ import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStr
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
-import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.query.IProcedureService;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.query.proc.wsdl.IWsdlWrapperInfo;
 import org.teiid.designer.query.sql.ISQLConstants;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
 /** This class provides state information for the create and extract procedures that will be generated during
@@ -161,11 +161,11 @@ public class ProcedureGenerator implements IWsdlWrapperInfo, ISQLConstants, Mode
 		String validResponseName = getResponseInfo().getDefaultProcedureName();
 		
 		if( !overwriteExistingProcedures ) {
-			validRequestName = ModelGeneratorWsdlUiUtil.getUniqueName(
+			validRequestName = ModelUtilities.getUniqueName(
 				this.importManager.getViewModelLocation().getFullPath().toString(), 
 				getViewModelName(), validRequestName,false, false);
 			
-			validResponseName = ModelGeneratorWsdlUiUtil.getUniqueName(
+			validResponseName = ModelUtilities.getUniqueName(
 				this.importManager.getViewModelLocation().getFullPath().toString(), 
 				getViewModelName(), validResponseName,false, false);
 		}
@@ -174,7 +174,7 @@ public class ProcedureGenerator implements IWsdlWrapperInfo, ISQLConstants, Mode
 		
 		String validWrapperName = getWrapperProcedureName();
 		if( !overwriteExistingProcedures && validWrapperName.equals(getDefaultWrapperProcedureName()) ) {
-			validWrapperName = ModelGeneratorWsdlUiUtil.getUniqueName(
+			validWrapperName = ModelUtilities.getUniqueName(
 				this.importManager.getViewModelLocation().getFullPath().toString(), 
 				getViewModelName(), validWrapperName,false, false);
 		}
@@ -255,7 +255,7 @@ public class ProcedureGenerator implements IWsdlWrapperInfo, ISQLConstants, Mode
 		
 		// Check for existing wrapper procedure
 		if( this.importManager.viewModelExists() ) {
-			this.wrapperExists = ModelGeneratorWsdlUiUtil.eObjectExists(
+			this.wrapperExists = ModelUtilities.eObjectExists(
 				this.importManager.getViewModelLocation().getFullPath().toString(), 
 				this.importManager.getViewModelName(), 
 				this.wrapperProcedureName);

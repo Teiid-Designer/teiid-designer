@@ -84,6 +84,7 @@ import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
@@ -824,8 +825,8 @@ public class SelectWsdlPage extends WizardPage
 
             for (int i = 0; i < selectedObjects.length; i++) {
                 if (selectedObjects[i] instanceof IFile) {
-                    if (ModelGeneratorWsdlUiUtil.isWsdlFile((IFile)selectedObjects[i])
-                        || ModelGeneratorWsdlUiUtil.isModelFile((IFile)selectedObjects[i])) {
+                    if (ModelUtilities.isWsdlFile((IFile)selectedObjects[i])
+                        || ModelUtilities.isModelFile((IFile)selectedObjects[i])) {
                         // Convert the IFile object to a File object
                         File fNew = ((IFile)selectedObjects[i]).getLocation().toFile();
                         if (fNew != null) {
@@ -835,11 +836,11 @@ public class SelectWsdlPage extends WizardPage
                             } catch (MalformedURLException err) {
                                 // exception will leave uri null
                             }
-                            if (ModelGeneratorWsdlUiUtil.isWsdlFile((IFile)selectedObjects[i])) {
+                            if (ModelUtilities.isWsdlFile((IFile)selectedObjects[i])) {
                                 this.importManager.setUriSource(WSDLImportWizardManager.WORKSPACE_SOURCE);
                                 this.importManager.setWSDLFileUri(uriStr);
                                 break;
-                            } else if (ModelGeneratorWsdlUiUtil.isModelFile((IFile)selectedObjects[i])) {
+                            } else if (ModelUtilities.isModelFile((IFile)selectedObjects[i])) {
                                 this.importManager.setViewModelName(uriStr.substring(uriStr.lastIndexOf('/') + 1));
                                 break;
                             }
