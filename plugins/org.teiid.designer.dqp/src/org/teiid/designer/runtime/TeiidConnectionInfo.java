@@ -250,8 +250,7 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
                                      getHostProvider().getHost(),
                                      getPort(),
                                      isSecure(),
-                                     getUsername(),
-                                     getPassword());
+                                     getUsername());
     }
     
     /**
