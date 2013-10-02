@@ -18,6 +18,8 @@ import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.BaseTable;
+import org.teiid.designer.metamodels.relational.Column;
+import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.runtime.extension.odata.ODataModelExtensionConstants.PropertyIds;
 
@@ -60,10 +62,18 @@ public class ODataModelExtensionAssistant extends EmfModelObjectExtensionAssista
 		// make sure there is a property definition first
 		final ModelExtensionPropertyDefinition propDefn = super.getPropertyDefinition(modelObject, propId);
 
-		if (propDefn != null) {
-			// must be table in a physical model
-			if ((modelObject instanceof BaseTable) && ModelUtil.isPhysical(modelObject)) {
-				if (PropertyIds.ENTITY_ALIAS.equals(propId) || PropertyIds.ENTITY_TYPE.equals(propId)) {
+		// must be table in a physical model
+		if (propDefn != null && ModelUtil.isPhysical(modelObject)) {
+			if (modelObject instanceof BaseTable) {
+				if (PropertyIds.LINK_TABLES.equals(propId) || PropertyIds.ENTITY_TYPE.equals(propId)) {
+					return propDefn;
+				}
+			} else if (modelObject instanceof Column) {
+				if (PropertyIds.JOIN_COLUMN.equals(propId) || PropertyIds.COMPLEX_TYPE.equals(propId) || PropertyIds.COLUMN_GROUP.equals(propId)) {
+					return propDefn;
+				}
+			} else if (modelObject instanceof Procedure) {
+				if (PropertyIds.HTTP_METHOD.equals(propId) || PropertyIds.ENTITY_TYPE.equals(propId)) {
 					return propDefn;
 				}
 			}

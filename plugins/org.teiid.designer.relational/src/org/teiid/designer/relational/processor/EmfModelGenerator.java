@@ -1249,21 +1249,75 @@ public class EmfModelGenerator {
             return null;
         }
 
-        // find the assistant for the property
-        for (ModelExtensionAssistant assistant : assistants) {
-        	// Prepend the assistant namespace to the propertyId, since it doesnt have one
-        	String namespacedId = assistant.getNamespacePrefix()+':'+propId;
+        // If property is namespaced, get the assistant with matching namespace
+        if(isNamespaced(propId)) {
+        	ModelObjectExtensionAssistant matchingAssistant = getAssistantWithNamespace(getExtensionPropertyNamespace(propId),assistants);
+        	if(matchingAssistant!=null) return matchingAssistant;
+        } else {
+        	// find the assistant for the property
+        	for (ModelExtensionAssistant assistant : assistants) {
+        		// Prepend the assistant namespace to the propertyId, since it doesnt have one
+        		String namespacedId = assistant.getNamespacePrefix()+':'+propId;
 
-        	if(hasMatchingPropertyName(assistant.getModelExtensionDefinition(), eObjectClassName, namespacedId)) {
-                return ((assistant instanceof ModelObjectExtensionAssistant) ? (ModelObjectExtensionAssistant)assistant : null);
-            }
+        		if(hasMatchingPropertyName(assistant.getModelExtensionDefinition(), eObjectClassName, namespacedId)) {
+        			return ((assistant instanceof ModelObjectExtensionAssistant) ? (ModelObjectExtensionAssistant)assistant : null);
+        		}
+        	}
         }
     
     	this.propsWithNoAssistant.add(propId);
         return null;
     }
-        
-    private String getMetaclassShortName(String metaclass) {
+	
+	/**
+	 * Get the ModelExtensionAssistant matching the supplied namespace
+	 * @param namespace the namespace
+	 * @param assistants the list of assistants
+	 * @return the assistant which matches the supplied namespace
+	 * 
+	 */
+	private ModelObjectExtensionAssistant getAssistantWithNamespace( String namespace, Collection<ModelObjectExtensionAssistant> assistants ) {
+		ModelObjectExtensionAssistant result = null;
+		for(ModelObjectExtensionAssistant assistant: assistants) {
+			if(assistant.getNamespacePrefix().equalsIgnoreCase(namespace)) {
+				result = assistant;
+				break;
+			}
+		}
+        return result;
+    }
+	
+    /**
+	 * Get the Namespace from the extension property name.  The propertyName may or may not be namespaced.
+	 * If it's not a null is returned
+	 * @param propName the extension property name, including namespace
+	 * @return the namespace, if present.  'null' if not namespaced
+	 */
+	private String getExtensionPropertyNamespace(String propName) {
+		String namespace = null;
+		if(!CoreStringUtil.isEmpty(propName)) {
+			int index = propName.indexOf(':');
+			if(index!=-1) {
+				namespace = propName.substring(0,index);
+			}
+		}
+		return namespace;
+	}
+	
+    /**
+	 * Determine if the property name has a leading namespace
+	 * @param propName the extension property name, including namespace
+	 * @return 'true' if a namespace is present, 'false' if not.
+	 */
+	private boolean isNamespaced(String propName) {
+		boolean isNamespaced = false;
+		if(!CoreStringUtil.isEmpty(propName)) {
+			isNamespaced = propName.indexOf(':') != -1;
+		}
+		return isNamespaced;
+	}
+
+	private String getMetaclassShortName(String metaclass) {
         return AbstractMetaclassNameProvider.getLabel(metaclass);
     }
 

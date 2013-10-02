@@ -47,18 +47,43 @@ public interface ODataModelExtensionConstants {
      * The fully qualified extension property definition identifiers.
      */
     interface PropertyIds {
-
-        /**
-         * The property definition identifier for the entityalias.
-         * @since 8.2
-         */
-        String ENTITY_ALIAS = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "EntityAlias"); //$NON-NLS-1$
         
         /**
-         * The property definition identifier for the entitytype.
+         * The property definition identifier for the LinkTables.
+         * @since 8.3
+         */
+        String LINK_TABLES = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "LinkTables"); //$NON-NLS-1$
+
+        /**
+         * The property definition identifier for the HttpMethod.
+         * @since 8.3
+         */
+        String HTTP_METHOD = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "HttpMethod"); //$NON-NLS-1$
+
+        /**
+         * The property definition identifier for the JoinColumn.
+         * @since 8.3
+         */
+        String JOIN_COLUMN = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "JoinColumn"); //$NON-NLS-1$
+
+        /**
+         * The property definition identifier for the EntityType.
          * @since 8.2
          */
         String ENTITY_TYPE = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "EntityType"); //$NON-NLS-1$
+
+        /**
+         * The property definition identifier for the ComplexType.
+         * @since 8.3
+         */
+        String COMPLEX_TYPE = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "ComplexType"); //$NON-NLS-1$
+
+        /**
+         * The property definition identifier for the ColumnGroup.
+         * @since 8.3
+         */
+        String COLUMN_GROUP = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "ColumnGroup"); //$NON-NLS-1$
+
     }
 
 }
