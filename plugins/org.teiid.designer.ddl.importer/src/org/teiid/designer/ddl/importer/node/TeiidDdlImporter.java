@@ -47,6 +47,17 @@ import org.teiid.designer.relational.model.RelationalUniqueConstraint;
  */
 public class TeiidDdlImporter extends StandardImporter {
 
+	private static final String NS_TEIID_ODATA = "teiid_odata"; //$NON-NLS-1$
+	private static final String NS_TEIID_WEBSERVICE= "teiid_ws"; //$NON-NLS-1$
+	private static final String NS_TEIID_MONGO = "teiid_mongo"; //$NON-NLS-1$
+	private static final String NS_TEIID_SALESFORCE = "teiid_sf"; //$NON-NLS-1$
+	private static final String NS_TEIID_RELATIONAL = "teiid_rel"; //$NON-NLS-1$
+	private static final String NS_DESIGNER_ODATA = "odata"; //$NON-NLS-1$
+	private static final String NS_DESIGNER_WEBSERVICE= "ws"; //$NON-NLS-1$
+	private static final String NS_DESIGNER_MONGO = "mongo"; //$NON-NLS-1$
+	private static final String NS_DESIGNER_SALESFORCE = "salesforce"; //$NON-NLS-1$
+	private static final String NS_DESIGNER_RELATIONAL = "relational"; //$NON-NLS-1$
+	
 	private class TeiidInfo extends Info {
 
 		/**
@@ -693,6 +704,10 @@ public class TeiidDdlImporter extends StandardImporter {
 			String optionName = optionNode.getName();
 			Object optionValue = optionNode.getProperty(StandardDdlLexicon.VALUE);
 			if(!CoreStringUtil.isEmpty(optionName)) {
+				// Translate incoming Teiid-namespaced ExtProps into the equivalent Designer MED NS
+				if(isNamespaced(optionName)) {
+					optionName = translateNamespacedOptionName(optionName);
+				}
 				String optionValueStr = (String)optionValue;
 				if(!CoreStringUtil.isEmpty(optionValueStr)) {
 					relationalEntity.addExtensionProperty(optionName, optionValueStr);
@@ -701,5 +716,92 @@ public class TeiidDdlImporter extends StandardImporter {
 			nodeIter.remove();
 		}
 	}
+	
+    /**
+	 * Translate a namespaced extension property name, translating teiid namespaces to designer MED namespaces
+	 * @param namespacedPropName the extension property name, including namespace
+	 * @return the equivalent designer-namespaced PropName.
+	 */
+	private String translateNamespacedOptionName(String namespacedPropName) {
+		if(isNamespaced(namespacedPropName)) {
+			// Get the namespace and convert to designer equivalent
+			String propNs = getExtensionPropertyNamespace(namespacedPropName);
+			String designerNs = translateTeiidNSToDesignerNS(propNs);
+			
+			// Get name portion of incoming name
+			String propName = getExtensionPropertyName(namespacedPropName);
+			
+			// return reassembled namespaced name
+			return designerNs+':'+propName;
+		}
+		return namespacedPropName;
+	}
+
+    /**
+	 * Get the Namespace from the extension property name.  The propertyName may or may not be namespaced.
+	 * If it's not a null is returned
+	 * @param propName the extension property name, including namespace
+	 * @return the namespace, if present.  'null' if not namespaced
+	 */
+	private String getExtensionPropertyNamespace(String propName) {
+		String namespace = null;
+		if(!CoreStringUtil.isEmpty(propName)) {
+			int index = propName.indexOf(':');
+			if(index!=-1) {
+				namespace = propName.substring(0,index);
+			}
+		}
+		return namespace;
+	}
+	
+    /**
+	 * Get the Name from the extension property name.  If its not namespaced, just return the name.  Otherwise strip off the namespace
+	 * @param propName the extension property name, with or without namespace
+	 * @return the name without namespace, if present.
+	 */
+	private String getExtensionPropertyName(String propName) {
+		String name = propName;
+		if(isNamespaced(propName)) {
+			int index = propName.indexOf(':');
+			name = propName.substring(index+1);
+		}
+		return name;
+	}
+	
+    /**
+	 * Determine if the property name has a leading namespace
+	 * @param propName the extension property name, including namespace
+	 * @return 'true' if a namespace is present, 'false' if not.
+	 */
+	private boolean isNamespaced(String propName) {
+		boolean isNamespaced = false;
+		if(!CoreStringUtil.isEmpty(propName)) {
+			isNamespaced = propName.indexOf(':') != -1;
+		}
+		return isNamespaced;
+	}
+	
+	/**
+	 * Translate a Teiid ExtensionProperty namespace into the Designer equivalent.
+	 * @param teiidNamespace
+	 * @return the designer MED namespace equivalent
+	 */
+	private String translateTeiidNSToDesignerNS(String teiidNamespace) {
+		String designerNS = teiidNamespace;
+		if(NS_TEIID_ODATA.equals(teiidNamespace)) {
+			designerNS = NS_DESIGNER_ODATA; 
+		} else if(NS_TEIID_RELATIONAL.equals(teiidNamespace)) {
+			designerNS = NS_DESIGNER_RELATIONAL;
+		} else if(NS_TEIID_WEBSERVICE.equals(teiidNamespace)) {
+			designerNS = NS_DESIGNER_WEBSERVICE;
+		} else if(NS_TEIID_SALESFORCE.equals(teiidNamespace)) {
+			designerNS = NS_DESIGNER_SALESFORCE;
+		} else if(NS_TEIID_MONGO.equals(teiidNamespace)) {
+			designerNS = NS_DESIGNER_MONGO;
+		} 
+		return designerNS;
+	}
+	
+        
 	
 }
