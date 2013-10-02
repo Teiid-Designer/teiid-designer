@@ -10,8 +10,27 @@
     <p:modelType>PHYSICAL</p:modelType>
 
 	<p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.BaseTableImpl">
-		<p:property name="EntityAlias" type="string" advanced="false" index="true" masked="false" required="false">
-			<p:display locale="en_US">Entity Alias</p:display>
+		<p:property name="EntityType" type="string" advanced="false" index="true" masked="false" required="false">
+			<p:display locale="en_US">Entity Type</p:display>
+		</p:property>
+		<p:property name="LinkTables" type="string" advanced="false" index="true" masked="false" required="false">
+			<p:display locale="en_US">Link Tables</p:display>
+		</p:property>
+	</p:extendedMetaclass>
+	<p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ColumnImpl">
+		<p:property name="JoinColumn" type="string" advanced="false" index="true" masked="false" required="false">
+			<p:display locale="en_US">Join Column</p:display>
+		</p:property>
+		<p:property name="ComplexType" type="string" advanced="false" index="true" masked="false" required="false">
+			<p:display locale="en_US">Complex Type</p:display>
+		</p:property>
+		<p:property name="ColumnGroup" type="string" advanced="false" index="true" masked="false" required="false">
+			<p:display locale="en_US">Column Group</p:display>
+		</p:property>
+	</p:extendedMetaclass>
+	<p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ProcedureImpl">
+		<p:property name="HttpMethod" type="string" advanced="false" index="true" masked="false" required="false">
+			<p:display locale="en_US">Http Method</p:display>
 		</p:property>
 		<p:property name="EntityType" type="string" advanced="false" index="true" masked="false" required="false">
 			<p:display locale="en_US">Entity Type</p:display>
