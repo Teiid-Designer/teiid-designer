@@ -73,7 +73,6 @@ public class RelationalProcedure extends RelationalReference {
     private List<RelationalParameter> parameters;
     private RelationalProcedureResultSet resultSet;
     
-    
     /**
      * RelationalProcedure constructor
      */
@@ -523,6 +522,77 @@ public class RelationalProcedure extends RelationalReference {
             }
         }
     }
+    
+	@Override
+	public void handleInfoChanged() {
+		super.handleInfoChanged();
+		
+		// Set extension properties here??
+		
+		if( this.isFunction() ) {
+			if( this.functionCategory != null ) {
+				getExtensionProperties().put(FUNCTION_CATEGORY, this.functionCategory );
+			} else getExtensionProperties().remove(FUNCTION_CATEGORY);
+			
+			if( this.javaClass != null ) {
+				getExtensionProperties().put(JAVA_CLASS, this.javaClass );
+			} else getExtensionProperties().remove(JAVA_CLASS);
+			
+			if( this.javaMethod != null ) {
+				getExtensionProperties().put(JAVA_METHOD, this.javaMethod );
+			} else getExtensionProperties().remove(JAVA_METHOD);
+			
+			if( this.udfJarPath != null ) {
+				getExtensionProperties().put(UDF_JAR_PATH, this.udfJarPath );
+			} else getExtensionProperties().remove(UDF_JAR_PATH);
+			
+			getExtensionProperties().put(AGGREGATE, Boolean.toString(this.isAggregate()) );
+			
+			getExtensionProperties().put(VARARGS, Boolean.toString(this.isVariableArguments()) );
+			
+			getExtensionProperties().put(DETERMINISTIC, Boolean.toString(this.isDeterministic()) );
+			
+			getExtensionProperties().put(NULL_ON_NULL, Boolean.toString(this.isReturnsNullOnNull()) );
+			
+			// If aggregate == FALSE 
+			if( this.isAggregate() ) {
+				getExtensionProperties().remove(ANALYTIC);
+				getExtensionProperties().remove(ALLOWS_ORDER_BY);
+				getExtensionProperties().remove(USES_DISTINCT_ROWS);
+				getExtensionProperties().remove(DECOMPOSABLE);
+				getExtensionProperties().remove(ALLOWS_DISTINCT);
+			} else {
+				getExtensionProperties().put(ANALYTIC, Boolean.toString(this.isAnalytic()));
+				getExtensionProperties().put(ALLOWS_ORDER_BY, Boolean.toString(this.isAllowsOrderBy()));
+				getExtensionProperties().put(USES_DISTINCT_ROWS, Boolean.toString(this.isUseDistinctRows()));
+				getExtensionProperties().put(DECOMPOSABLE, Boolean.toString(this.isDecomposable()));
+				getExtensionProperties().put(ALLOWS_DISTINCT, Boolean.toString(this.isAllowsDistinct()));
+			}
+			
+			getExtensionProperties().remove(NATIVE_QUERY);
+		} else {
+			if( this.nativeQuery != null ) {
+				getExtensionProperties().put(NATIVE_QUERY, this.nativeQuery );
+			} else getExtensionProperties().remove(NATIVE_QUERY);
+			
+			getExtensionProperties().put(NON_PREPARED, Boolean.toString(this.isNonPrepared()));
+			
+	        // make sure model object does not have these extension properties for when function is false
+			getExtensionProperties().remove(DETERMINISTIC);
+			getExtensionProperties().remove(JAVA_CLASS);
+			getExtensionProperties().remove(JAVA_METHOD);
+			getExtensionProperties().remove(FUNCTION_CATEGORY);
+			getExtensionProperties().remove(UDF_JAR_PATH);
+			getExtensionProperties().remove(VARARGS);
+			getExtensionProperties().remove(NULL_ON_NULL);
+			getExtensionProperties().remove(AGGREGATE);
+			getExtensionProperties().remove(ANALYTIC);
+			getExtensionProperties().remove(ALLOWS_ORDER_BY);
+			getExtensionProperties().remove(USES_DISTINCT_ROWS);
+			getExtensionProperties().remove(DECOMPOSABLE);
+			getExtensionProperties().remove(ALLOWS_DISTINCT);
+		}
+	} 
     
 	@Override
 	public void validate() {

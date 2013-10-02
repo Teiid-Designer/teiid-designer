@@ -37,6 +37,7 @@ public class RelationalForeignKey extends RelationalReference {
     public static final String DEFAULT_PRIMARY_KEY_MULTIPLICITY = MULTIPLICITY.ONE;
     public static final String DEFAULT_UNIQUE_KEY_NAME = null;
     public static final String DEFAULT_UNIQUE_KEY_TABLE_NAME = null;
+    public static final boolean DEFAULT_ALLOW_JOIN = true;
     
     
     private Collection<RelationalColumn> columns;
@@ -44,6 +45,7 @@ public class RelationalForeignKey extends RelationalReference {
     private String  primaryKeyMultiplicity;
     private String   uniqueKeyName;
     private String   uniqueKeyTableName;
+    private boolean allowJoin = DEFAULT_ALLOW_JOIN;
     
     /**
      * RelationalForeignKey constructor
@@ -76,6 +78,7 @@ public class RelationalForeignKey extends RelationalReference {
     	clonedFK.setUniqueKeyName(getUniqueKeyName());
     	clonedFK.setUniqueKeyTableName(getUniqueKeyTableName());
     	clonedFK.setModelType(getModelType());
+    	clonedFK.setAllowJoin(isAllowJoin());
     	for( RelationalColumn col : getColumns() ) {
     		clonedFK.addColumn(col);
     	}
@@ -124,7 +127,10 @@ public class RelationalForeignKey extends RelationalReference {
      * @param foreignKeyMultiplicity Sets foreignKeyMultiplicity to the specified value.
      */
     public void setForeignKeyMultiplicity( String foreignKeyMultiplicity ) {
-        this.foreignKeyMultiplicity = foreignKeyMultiplicity;
+        if( foreignKeyMultiplicity == null || this.foreignKeyMultiplicity == null || !this.foreignKeyMultiplicity.equals(foreignKeyMultiplicity) ) {
+        	this.foreignKeyMultiplicity = foreignKeyMultiplicity;
+        	handleInfoChanged();
+        } 
     }
     /**
      * @return primaryKeyMultiplicity
@@ -136,7 +142,10 @@ public class RelationalForeignKey extends RelationalReference {
      * @param primaryKeyMultiplicity Sets primaryKeyMultiplicity to the specified value.
      */
     public void setPrimaryKeyMultiplicity( String primaryKeyMultiplicity ) {
-        this.primaryKeyMultiplicity = primaryKeyMultiplicity;
+        if( primaryKeyMultiplicity == null || this.primaryKeyMultiplicity == null || !this.primaryKeyMultiplicity.equals(primaryKeyMultiplicity) ) {
+        	this.primaryKeyMultiplicity = primaryKeyMultiplicity;
+        	handleInfoChanged();
+        } 
     }
     /**
      * @return uniqueKeyName
@@ -148,7 +157,10 @@ public class RelationalForeignKey extends RelationalReference {
      * @param uniqueKeyName Sets uniqueKeyName to the specified value.
      */
     public void setUniqueKeyName( String uniqueKeyName ) {
-        this.uniqueKeyName = uniqueKeyName;
+        if( uniqueKeyName == null || this.uniqueKeyName == null || !this.uniqueKeyName.equals(uniqueKeyName) ) {
+        	this.uniqueKeyName = uniqueKeyName;
+        	handleInfoChanged();
+        }
     }
     
     /**
@@ -162,7 +174,10 @@ public class RelationalForeignKey extends RelationalReference {
      * @param uniqueKeyTableName Sets uniqueKeyTableName to the specified value.
      */
     public void setUniqueKeyTableName( String uniqueKeyTableName ) {
-        this.uniqueKeyTableName = uniqueKeyTableName;
+        if( uniqueKeyTableName == null || this.uniqueKeyTableName == null || !this.uniqueKeyTableName.equals(uniqueKeyTableName) ) {
+        	this.uniqueKeyTableName = uniqueKeyTableName;
+        	handleInfoChanged();
+        }
     }
     
     /**
@@ -174,6 +189,22 @@ public class RelationalForeignKey extends RelationalReference {
     	}
     	
     	return null;
+    }
+    
+    /**
+     * @return allowJoin
+     */
+    public boolean isAllowJoin() {
+        return allowJoin;
+    }
+    /**
+     * @param allowJoin
+     */
+    public void setAllowJoin( boolean allowJoin ) {
+        if( this.allowJoin != allowJoin ) {
+        	this.allowJoin = allowJoin;
+        	handleInfoChanged();
+        }
     }
 
     /**
@@ -206,6 +237,18 @@ public class RelationalForeignKey extends RelationalReference {
             }
         }
     }
+    
+	@Override
+	public void handleInfoChanged() {
+		super.handleInfoChanged();
+		
+		// Set extension properties here
+		
+		if( !this.allowJoin ) {
+			getExtensionProperties().put(ALLOW_JOIN, Boolean.toString(this.isAllowJoin()) );
+		} else getExtensionProperties().remove(ALLOW_JOIN);
+			
+	}
     
 	@Override
 	public void validate() {

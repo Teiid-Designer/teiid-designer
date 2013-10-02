@@ -21,6 +21,7 @@ import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionConstants;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.RelationalPlugin;
@@ -31,7 +32,7 @@ import org.teiid.designer.relational.RelationalPlugin;
  *
  * @since 8.0
  */
-public class RelationalReference implements RelationalConstants {
+public class RelationalReference implements RelationalConstants, RelationalModelExtensionConstants.PropertyKeysNoPrefix {
 	public static final String KEY_NAME = "NAME"; //$NON-NLS-1$
     public static final String KEY_NAME_IN_SOURCE = "NAMEINSOURCE"; //$NON-NLS-1$
     public static final String KEY_DESCRIPTION = "DESCRIPTION"; //$NON-NLS-1$

@@ -41,6 +41,7 @@ public class RelationalTable extends RelationalReference {
     public static final String DEFAULT_MATERIALIZED_TABLE = null; 
     public static final boolean DEFAULT_SUPPORTS_UPDATE = true; 
     public static final boolean DEFAULT_SYSTEM = false;
+
     
     public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
 
@@ -476,6 +477,18 @@ public class RelationalTable extends RelationalReference {
 			
 			this.columns = newColumns;
 		}
+	}
+	
+	@Override
+	public void handleInfoChanged() {
+		super.handleInfoChanged();
+		
+		// Set extension properties here??
+		
+		if( this.nativeQuery != null ) {
+			getExtensionProperties().put(NATIVE_QUERY, this.nativeQuery );
+		} else getExtensionProperties().remove(NATIVE_QUERY);
+			
 	}
 	
 	@Override

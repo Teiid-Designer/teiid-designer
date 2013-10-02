@@ -17,6 +17,7 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.relational.ForeignKey;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.relational.Table;
@@ -124,6 +125,16 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
                 }
 
                 // EObject should not have the native query property definition
+                return null;
+            }
+            
+            // must be a procedure in a physical model to have these properties
+            if (PropertyName.same(PropertyName.ALLOW_JOIN, propId)) {
+                if ((modelObject instanceof ForeignKey) && isPhysical) {
+                    return propDefn;
+                }
+
+                // EObject should not have these property definitions
                 return null;
             }
 

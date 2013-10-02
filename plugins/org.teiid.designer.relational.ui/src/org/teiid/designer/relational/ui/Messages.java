@@ -108,6 +108,8 @@ public class Messages extends NLS {
 	public static String javaMethodLabel;
 	public static String udfJarPathLabel;
 	public static String functionCategoryLabel;
+	public static String allowJoinLabel;
+	public static String allowJoinTooltip;
 
 	public static String validationOkCreateObject;
 	public static String selectColumnsTitle;

@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
@@ -51,7 +50,6 @@ import org.teiid.designer.relational.RelationalPlugin;
  */
 public class RelationalReferenceFactory implements RelationalConstants {
 
-    @SuppressWarnings("javadoc")
 	public static RelationalReferenceFactory INSTANCE = new RelationalReferenceFactory();
     
 	private ModelExtensionAssistantAggregator medAggregator = ExtensionPlugin.getInstance().getModelExtensionAssistantAggregator();

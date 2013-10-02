@@ -36,6 +36,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -91,6 +92,7 @@ public class EditForeignKeyDialog extends TitleAreaDialog {
     TableViewer theColumnDataViewer;
     Combo uniqueKeyMultiCombo;
     Combo foreignKeyMultiCombo;
+    Button allowJoinButton;
     
     Set<RelationalColumn> selectedColumns = new HashSet<RelationalColumn>();
     
@@ -272,6 +274,25 @@ public class EditForeignKeyDialog extends TitleAreaDialog {
             }
         });
         WidgetUtil.setComboItems(this.uniqueKeyMultiCombo, MULTIPLICITY_LIST, multipicityLP, true);
+        
+        this.allowJoinButton = new Button(composite, SWT.CHECK);
+        this.allowJoinButton.setText(Messages.allowJoinLabel);
+        this.allowJoinButton.setToolTipText(Messages.allowJoinTooltip);
+        this.allowJoinButton.setSelection(editedFK.isAllowJoin());
+        this.allowJoinButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				editedFK.setAllowJoin(allowJoinButton.getSelection());
+				validate();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
         
     	Group keysGroup = WidgetFactory.createGroup(dialogComposite, Messages.selectPrimaryKeyOrUniqueConstraint, SWT.NONE, 2, 2);
     	keysGroup.setLayout(new GridLayout(2, false));

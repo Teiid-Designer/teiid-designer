@@ -58,5 +58,26 @@ public interface RelationalModelExtensionConstants {
         String UDF_JAR_PATH = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "udfJarPath"); //$NON-NLS-1$
 
     }
+    
+    interface PropertyKeysNoPrefix {
+        String JAVA_CLASS = "java-class"; //$NON-NLS-1$
+        String JAVA_METHOD = "java-method"; //$NON-NLS-1$
+        String FUNCTION_CATEGORY = "function-category"; //$NON-NLS-1$
+        String UDF_JAR_PATH = "udfJarPath"; //$NON-NLS-1$
+        String VARARGS = "varargs"; //$NON-NLS-1$
+        String NULL_ON_NULL= "null-on-null"; //$NON-NLS-1$
+        String DETERMINISTIC= "deterministic"; //$NON-NLS-1$
+        String AGGREGATE= "aggregate"; //$NON-NLS-1$
+        
+        String ALLOWS_ORDER_BY = "allows-orderby"; //$NON-NLS-1$
+        String ALLOWS_DISTINCT = "allows-distinct"; //$NON-NLS-1$
+        String ANALYTIC = "analytic"; //$NON-NLS-1$
+        String DECOMPOSABLE= "decomposable"; //$NON-NLS-1$
+        String NATIVE_QUERY = "native-query"; //$NON-NLS-1$
+        String NON_PREPARED = "non-prepared"; //$NON-NLS-1$
+        String USES_DISTINCT_ROWS = "uses-distinct-rows"; //$NON-NLS-1$
+        String ALLOW_JOIN = "allow-join"; //$NON-NLS-1$
+
+    }
 
 }

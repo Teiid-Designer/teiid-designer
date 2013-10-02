@@ -18,7 +18,6 @@ import java.util.Properties;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -31,8 +30,6 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
-import org.teiid.designer.core.workspace.ModelWorkspaceItem;
-import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
@@ -261,7 +258,7 @@ public class RelationalModelFactory implements RelationalConstants {
             } break;
             case TYPES.TABLE: {
                 newEObject = createBaseTable(relationalRef, modelResource);
-                modelResource.getEmfResource().getContents().add(newEObject);
+                //modelResource.getEmfResource().getContents().add(newEObject);
                 //applyTableExtensionProperties((RelationalTable)obj, (BaseTable)baseTable, false);
                 
                 // In the case of the new object wizards, users can create Indexes while creating a table
@@ -270,15 +267,17 @@ public class RelationalModelFactory implements RelationalConstants {
                 	EObject newIndex = createIndex(index, modelResource);
                 	modelResource.getEmfResource().getContents().add(newIndex);
                 }
+
             } break;
             case TYPES.VIEW: {
             	newEObject = createView(relationalRef, modelResource);
                 modelResource.getEmfResource().getContents().add(newEObject);
+
             } break;
             case TYPES.PROCEDURE: {
             	newEObject = createProcedure(relationalRef, modelResource);
                 modelResource.getEmfResource().getContents().add(newEObject);
-                //applyProcedureExtensionProperties((RelationalProcedure)obj,(Procedure) procedure);
+
             } break;
             case TYPES.INDEX: {
                 indexes.add((RelationalIndex)relationalRef);
@@ -303,7 +302,7 @@ public class RelationalModelFactory implements RelationalConstants {
      * @param modelResource the model resource
      * @return the new object
      */
-    public EObject createBaseTable( final RelationalReference ref, ModelResource modelResource) {
+    public EObject createBaseTable( final RelationalReference ref, ModelResource modelResource) throws ModelWorkspaceException {
         CoreArgCheck.isInstanceOf(RelationalTable.class, ref);
 
         RelationalTable tableRef = (RelationalTable)ref;
@@ -315,6 +314,8 @@ public class RelationalModelFactory implements RelationalConstants {
         baseTable.setNameInSource(tableRef.getNameInSource());
         baseTable.setSystem(tableRef.isSystem());
         baseTable.setCardinality(tableRef.getCardinality());
+        
+        modelResource.getEmfResource().getContents().add(baseTable);
         
         // Set Description
         if( tableRef.getDescription() != null ) {
@@ -357,7 +358,7 @@ public class RelationalModelFactory implements RelationalConstants {
      * @param modelResource the model resource
      * @return the new object
      */
-    public EObject createView( final RelationalReference ref, ModelResource modelResource) {
+    public EObject createView( final RelationalReference ref, ModelResource modelResource) throws ModelWorkspaceException {
         CoreArgCheck.isInstanceOf(RelationalView.class, ref);
 
         RelationalView viewRef = (RelationalView)ref;
@@ -368,6 +369,8 @@ public class RelationalModelFactory implements RelationalConstants {
         view.setMaterialized(viewRef.isMaterialized());
         view.setNameInSource(viewRef.getNameInSource());
         view.setSystem(viewRef.isSystem());
+        
+        modelResource.getEmfResource().getContents().add(view);
         
         // Set Description
         if( viewRef.getDescription() != null ) {
@@ -697,7 +700,7 @@ public class RelationalModelFactory implements RelationalConstants {
      * @param modelResource the  model resource
      * @return the object
      */
-    public EObject createProcedure( final RelationalReference ref, ModelResource modelResource) {
+    public EObject createProcedure( final RelationalReference ref, ModelResource modelResource) throws ModelWorkspaceException {
         CoreArgCheck.isInstanceOf(RelationalProcedure.class, ref);
 
         RelationalProcedure procedureRef = (RelationalProcedure)ref;
@@ -708,7 +711,7 @@ public class RelationalModelFactory implements RelationalConstants {
         procedure.setFunction(procedureRef.isFunction());
         procedure.setUpdateCount(getUpdateCount(procedureRef.getUpdateCount()));
         
-
+        modelResource.getEmfResource().getContents().add(procedure);
         
         // Set Description
         if( procedureRef.getDescription() != null ) {
@@ -910,7 +913,7 @@ public class RelationalModelFactory implements RelationalConstants {
      * @param modelResource the model resource
      * @return the index object
      */
-    public EObject createIndex( RelationalReference ref, ModelResource modelResource) {
+    public EObject createIndex( RelationalReference ref, ModelResource modelResource) throws ModelWorkspaceException {
         CoreArgCheck.isInstanceOf(RelationalIndex.class, ref);
         
         RelationalIndex indexRef = (RelationalIndex)ref;
@@ -922,6 +925,8 @@ public class RelationalModelFactory implements RelationalConstants {
         index.setAutoUpdate(indexRef.isAutoUpdate());
         index.setNullable(indexRef.isNullable());
         index.setUnique(indexRef.isUnique());
+        
+        modelResource.getEmfResource().getContents().add(index);
         
         // Set Description
         if( indexRef.getDescription() != null ) {
