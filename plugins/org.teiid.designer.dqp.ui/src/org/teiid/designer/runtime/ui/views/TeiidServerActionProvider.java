@@ -10,7 +10,6 @@ package org.teiid.designer.runtime.ui.views;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -286,7 +285,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         viewer.addSelectionChangedListener(this.disconnectAction);
 
         // the edit action is only enabled when one server is selected
-        this.editServerAction = new EditServerAction(shell);
+        this.editServerAction = new EditServerAction();
         viewer.addSelectionChangedListener(this.editServerAction);
         
         this.clearPreviewArtifactsAction = new Action() {

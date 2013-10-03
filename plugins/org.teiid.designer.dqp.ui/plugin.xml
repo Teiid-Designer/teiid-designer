@@ -339,6 +339,12 @@
             id="org.teiid.designer.dqp.ui.editServerAction"
             name="%editServerCommand.label">
       </command>
+      <command
+            defaultHandler="org.teiid.designer.runtime.ui.server.NewServerAction"
+            description="%newServerAction.description"
+            id="org.teiid.designer.dqp.ui.newServerAction"
+            name="%newServerCommand.label">
+      </command>
    </extension>
    <extension
          point="org.eclipse.core.runtime.adapters">

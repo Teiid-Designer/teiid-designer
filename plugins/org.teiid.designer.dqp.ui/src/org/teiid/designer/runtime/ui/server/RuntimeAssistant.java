@@ -166,7 +166,7 @@ public final class RuntimeAssistant {
      * @param shell the shell used to run the new server wizard
      */
     public static void runEditServerAction( Shell shell ) {
-        EditServerAction action = new EditServerAction(shell);
+        EditServerAction action = new EditServerAction();
         action.run();
     }
     

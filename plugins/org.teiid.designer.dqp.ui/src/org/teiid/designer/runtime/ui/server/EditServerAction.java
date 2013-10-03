@@ -20,7 +20,6 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
-import org.teiid.designer.ui.common.util.UiUtil;
 
 
 /**
@@ -39,11 +38,6 @@ public final class EditServerAction extends BaseSelectionListenerAction implemen
      */
 	private ITeiidServer serverBeingEdited = null;
 
-    /**
-     * The shell used to display the dialog that edits and creates servers.
-     */
-    private final Shell shell;
-
     // ===========================================================================================================================
     // Constructors
     // ===========================================================================================================================
@@ -60,20 +54,6 @@ public final class EditServerAction extends BaseSelectionListenerAction implemen
         setToolTipText(UTIL.getString("editServerActionToolTip")); //$NON-NLS-1$
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiPlugin.Images.EDIT_SERVER_ICON));
         setEnabled(true);
-
-        // Will throw a RuntimeException if there is no workbench window and thus no shell
-        this.shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
-    }
-    
-    /**
-     * @param shell the parent shell used to display the dialog
-     */
-    public EditServerAction(Shell shell) {
-        super(UTIL.getString("editServerActionText")); //$NON-NLS-1$
-        setToolTipText(UTIL.getString("editServerActionToolTip")); //$NON-NLS-1$
-        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiPlugin.Images.EDIT_SERVER_ICON));
-        setEnabled(false);
-        this.shell = shell;
     }
     
     // ===========================================================================================================================
@@ -92,7 +72,7 @@ public final class EditServerAction extends BaseSelectionListenerAction implemen
         // a server to edit accordingly
         if(this.serverBeingEdited == null) {
             // Choose Server to Edit
-            serverBeingEdited = RuntimeAssistant.selectServer(this.shell, false);
+            serverBeingEdited = RuntimeAssistant.selectServer(getShell(), false);
             if(RuntimeAssistant.selectServerWasCancelled())
                 return;
         }
@@ -100,11 +80,15 @@ public final class EditServerAction extends BaseSelectionListenerAction implemen
         if( serverBeingEdited == null ) {
             String title = UTIL.getString("noServerAvailableTitle"); //$NON-NLS-1$
             String message = UTIL.getString("noServerAvailableMessage"); //$NON-NLS-1$
-            MessageDialog.openError(this.shell, title, message);
+            MessageDialog.openError(getShell(), title, message);
             return;
         }
 
         ServerUIPlugin.editServer(serverBeingEdited.getParent());
+    }
+
+    private static Shell getShell() {
+        return DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
     }
 
     /**
