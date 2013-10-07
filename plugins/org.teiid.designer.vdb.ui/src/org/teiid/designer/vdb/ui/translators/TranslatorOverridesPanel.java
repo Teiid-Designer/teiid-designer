@@ -249,7 +249,7 @@ public final class TranslatorOverridesPanel extends Composite {
     			
     			@Override
     			public void widgetSelected(SelectionEvent e) {
-    				handleTranslatorRemoved();
+    				handleEditTranslatorOverride();
     			}
 
     			@Override
