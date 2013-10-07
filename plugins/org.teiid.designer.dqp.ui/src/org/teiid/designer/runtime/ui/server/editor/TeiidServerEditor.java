@@ -517,7 +517,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
     }
 
     private void refreshDisplayValues() {
-        if (teiidServer == null)
+        if (teiidServer == null || form.isDisposed())
             return;
 
         customNameText.setText(teiidServer.getCustomLabel() != null ? teiidServer.getCustomLabel() : ""); //$NON-NLS-1$
