@@ -133,6 +133,10 @@ public interface RelationalConstants {
         public static final String NATIVE_QUERY = "relational:native-query"; //$NON-NLS-1$
     }
     
+    class FOREIGN_KEY_EXT_PROPERTIES {
+        public static final String ALLOW_JOIN = "relational:allow-join"; //$NON-NLS-1$
+    }
+    
     class PROCEDURE_EXT_PROPERTIES {
         public static final String AGGREGATE = "relational:aggregate"; //$NON-NLS-1$
         public static final String ALLOWS_ORDER_BY = "relational:allows-orderby"; //$NON-NLS-1$
