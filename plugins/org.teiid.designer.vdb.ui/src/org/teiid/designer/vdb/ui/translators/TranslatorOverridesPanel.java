@@ -439,7 +439,7 @@ public final class TranslatorOverridesPanel extends Composite {
             this.restorePropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
             this.restorePropertyButton.setEnabled(false);
             this.restorePropertyButton.setImage(VdbUiPlugin.singleton.getImage(EDIT));
-            this.restorePropertyButton.setToolTipText(Util.getString(PREFIX + "restorePropertyAction.toolTip")); //$NON-NLS-1$
+            this.restorePropertyButton.setToolTipText(Util.getString(PREFIX + "restorePropertyDefaultAction.toolTip")); //$NON-NLS-1$
             this.restorePropertyButton.addSelectionListener(new SelectionListener() {
     			
     			@Override
