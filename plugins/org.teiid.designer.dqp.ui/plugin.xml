@@ -234,9 +234,14 @@
             name="%servers.navigatorContent.name"
             priority="lowest">
          <triggerPoints>
-            <instanceof
+            <and>
+                <instanceof
                   value="org.eclipse.wst.server.core.IServer">
-            </instanceof>
+                </instanceof>
+                <adapt
+                  type="org.teiid.designer.runtime.spi.ITeiidServer">
+                </adapt>
+            </and>
          </triggerPoints>
          <possibleChildren>
             <reference
