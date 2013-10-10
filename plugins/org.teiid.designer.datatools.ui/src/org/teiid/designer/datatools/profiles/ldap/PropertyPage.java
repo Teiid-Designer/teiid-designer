@@ -1,7 +1,6 @@
 package org.teiid.designer.datatools.profiles.ldap;
 
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ui.wizards.ProfileDetailsPropertyPage;
 import org.eclipse.datatools.help.ContextProviderDelegate;
@@ -32,6 +31,8 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements IContext
     private Text passwordText;
     private Label urlLabel;
     private Text urlText;
+    private Label rootDNSuffixLabel;
+    private Text rootDNSuffixText;
     private Text contextFactoryText;
     private Label contextFactoryLabel;
 
@@ -126,6 +127,22 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements IContext
         gd.horizontalSpan = 1;
         urlText.setLayoutData(gd);
 
+        rootDNSuffixLabel = new Label(scrolled, SWT.NONE);
+        rootDNSuffixLabel.setText(UTIL.getString("LDAP.RootDNSufix.Label")); //$NON-NLS-1$
+        rootDNSuffixLabel.setToolTipText(UTIL.getString("LDAP.RootDNSufix.ToolTip")); //$NON-NLS-1$
+        gd = new GridData();
+        gd.verticalAlignment = GridData.BEGINNING;
+        rootDNSuffixLabel.setLayoutData(gd);
+
+        rootDNSuffixText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
+        rootDNSuffixText.setToolTipText(UTIL.getString("LDAP.RootDNSufix.ToolTip")); //$NON-NLS-1$
+        gd = new GridData();
+        gd.horizontalAlignment = GridData.FILL;
+        gd.verticalAlignment = GridData.BEGINNING;
+        gd.grabExcessHorizontalSpace = true;
+        gd.horizontalSpan = 1;
+        rootDNSuffixText.setLayoutData(gd);
+
         contextFactoryLabel = new Label(scrolled, SWT.NONE);
         contextFactoryLabel.setText(UTIL.getString("Common.Context.Factory.Label")); //$NON-NLS-1$
         contextFactoryLabel.setToolTipText(UTIL.getString("Common.Context.Factory.ToolTip")); //$NON-NLS-1$
@@ -173,6 +190,13 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements IContext
                 validate();
             }
         });
+        rootDNSuffixText.addModifyListener(new ModifyListener() {
+
+            @Override
+            public void modifyText( ModifyEvent e ) {
+                validate();
+            }
+        });
         contextFactoryText.addModifyListener(new ModifyListener() {
 
             @Override
@@ -196,6 +220,10 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements IContext
         }
         if (null == urlText.getText() || urlText.getText().isEmpty()) {
             errorMessage = UTIL.getString("Common.URL.Error.Message"); //$NON-NLS-1$
+            valid = false;
+        }
+        if (null == rootDNSuffixText.getText() || rootDNSuffixText.getText().isEmpty()) {
+            errorMessage = UTIL.getString("LDAP.RootDNSufix.Error.Message"); //$NON-NLS-1$
             valid = false;
         }
         if (null == contextFactoryText.getText() || contextFactoryText.getText().isEmpty()) {
@@ -222,6 +250,9 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements IContext
         if (null != props.get(ILdapProfileConstants.URL_PROP_ID)) {
             urlText.setText((String)props.get(ILdapProfileConstants.URL_PROP_ID));
         }
+        if (null != props.get(ILdapProfileConstants.ROOT_DN_SUFFIX_PROP_ID)) {
+            rootDNSuffixText.setText((String)props.get(ILdapProfileConstants.ROOT_DN_SUFFIX_PROP_ID));
+        }
         if (null != props.get(ILdapProfileConstants.CONTEXT_FACTORY)) {
             contextFactoryText.setText((String)props.get(ILdapProfileConstants.CONTEXT_FACTORY));
         }
@@ -241,6 +272,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements IContext
         result.setProperty(ILdapProfileConstants.USERNAME_PROP_ID, usernameText.getText());
         result.setProperty(ILdapProfileConstants.PASSWORD_PROP_ID, passwordText.getText());
         result.setProperty(ILdapProfileConstants.URL_PROP_ID, urlText.getText());
+        result.setProperty(ILdapProfileConstants.ROOT_DN_SUFFIX_PROP_ID, rootDNSuffixText.getText());
         result.setProperty(ILdapProfileConstants.CONTEXT_FACTORY, contextFactoryText.getText());
         return result;
     }
