@@ -73,6 +73,9 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
      * @return {@link ITeiidServer} or null
      */
     public ITeiidServer adaptServer(final IServer server, ServerOptions... options) {
+        if (! getTeiidServerManager().isStarted())
+            return null;
+
         JBoss7Server jb7 = (JBoss7Server) server.loadAdapter(JBoss7Server.class, null);
         if (jb7 != null) {
             return adaptJBoss7Server(server, jb7, options);
