@@ -7,6 +7,8 @@
 */
 package org.teiid.designer.modelgenerator.ldap.ui.wizards.impl;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.naming.directory.Attribute;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapAttributeNode;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapEntryNode;
@@ -21,6 +23,12 @@ public class LdapAttributeNode implements ILdapAttributeNode {
     private final String id;
 
     private final ILdapEntryNode associatedEntry;
+
+    private int nullValueCount;
+
+    private Set<Object> values = new HashSet<Object>();
+
+    private int maxValueLength = 0;
 
     /**
      * @param associatedEntry
@@ -56,6 +64,42 @@ public class LdapAttributeNode implements ILdapAttributeNode {
     @Override
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    @Override
+    public void incrementNullValueCount() {
+        ++nullValueCount;
+    }
+
+    @Override
+    public int getNullValueCount() {
+        if (nullValueCount == 0)
+            return -1; // Supposed to return this for no null values
+
+        return this.nullValueCount;
+    }
+
+    @Override
+    public void addValue(Object value) {
+        if (value == null)
+            return;
+
+        boolean added = values.add(value);
+        if(added)
+            maxValueLength = Math.max(maxValueLength, value.toString().length());
+    }
+
+    @Override
+    public int getDistinctValueCount() {
+        return values.size();
+    }
+
+    @Override
+    public int getMaximumValueLength() {
+        if (maxValueLength == 0)
+            return DEFAULT_VALUE_LENGTH;
+
+        return maxValueLength ;
     }
 
     @Override

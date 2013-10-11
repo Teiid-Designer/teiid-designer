@@ -39,8 +39,6 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  * The Model Builder for creating the physical model for LDAP services.
  */
 public class RelationalModelBuilder {
-//    private final LdapImportWizardManager importManager;
-
     private RelationalFactory factory;
 
     private DatatypeManager datatypeManager;
@@ -85,14 +83,15 @@ public class RelationalModelBuilder {
             entryTable.getColumns().add(attrColumn);
             attrColumn.setName(attribute.getLabel());
             attrColumn.setNameInSource(attribute.getId());
-            attrColumn.setLength(32768);
+            attrColumn.setNullValueCount(attribute.getNullValueCount());
+            attrColumn.setDistinctValueCount(attribute.getDistinctValueCount());
+            attrColumn.setLength(attribute.getMaximumValueLength());
+
+            attrColumn.setType(datatypeManager.getBuiltInDatatype(DatatypeConstants.BuiltInNames.STRING));
             attrColumn.setNullable(NullableType.NULLABLE_UNKNOWN_LITERAL);
             attrColumn.setCaseSensitive(true);
             attrColumn.setRadix(0);
             attrColumn.setSigned(false);
-            attrColumn.setDistinctValueCount(0);
-            attrColumn.setNullValueCount(0);
-            attrColumn.setType(datatypeManager.getBuiltInDatatype(DatatypeConstants.BuiltInNames.STRING));
         }
     }
 
