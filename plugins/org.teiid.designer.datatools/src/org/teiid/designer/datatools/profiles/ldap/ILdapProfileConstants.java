@@ -19,5 +19,6 @@ public interface ILdapProfileConstants {
     String USERNAME_PROP_ID = "LdapAdminUserDN"; //$NON-NLS-1$
     String URL_PROP_ID = "LdapUrl"; //$NON-NLS-1$
     String CONTEXT_FACTORY = "LdapContextFactory"; //$NON-NLS-1$
+    String ROOT_DN_SUFFIX_PROP_ID = "LdapRootDNSuffix"; //$NON-NLS-1$
 
 }
