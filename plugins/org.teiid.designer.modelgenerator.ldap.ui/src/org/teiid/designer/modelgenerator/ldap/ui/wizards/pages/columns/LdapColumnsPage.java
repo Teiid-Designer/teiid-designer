@@ -33,6 +33,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -58,6 +59,8 @@ public class LdapColumnsPage extends WizardPage
     implements IChangeListener, ModelGeneratorLdapUiConstants, ModelGeneratorLdapUiConstants.Images,
     ModelGeneratorLdapUiConstants.HelpContexts {
 
+    private static final String NULL_STRING = ""; //$NON-NLS-1$
+
     private static final int[] SPLITTER_WEIGHTS = new int[] {30, 70};
 
     private final LdapImportWizardManager importManager;
@@ -72,6 +75,12 @@ public class LdapColumnsPage extends WizardPage
     private Text columnNameText;
 
     private Text columnSourceNameText;
+
+    private Text columnDVCountText;
+
+    private Text columnNVCountText;
+
+    private Text columnMaxValueText;
 
     private boolean synchronising;
 
@@ -109,10 +118,16 @@ public class LdapColumnsPage extends WizardPage
             columnNameText.setText(attributeNode.getLabel());
             columnNameText.setEditable(true);
             columnSourceNameText.setText(attributeNode.getId());
+            columnDVCountText.setText(Integer.toString(attributeNode.getDistinctValueCount()));
+            columnNVCountText.setText(Integer.toString(attributeNode.getNullValueCount()));
+            columnMaxValueText.setText(Integer.toString(attributeNode.getMaximumValueLength()));
         } else {
-            columnNameText.setText(""); //$NON-NLS-1$
+            columnNameText.setText(NULL_STRING);
             columnNameText.setEditable(false);
-            columnSourceNameText.setText(""); //$NON-NLS-1$
+            columnSourceNameText.setText(NULL_STRING);
+            columnDVCountText.setText(NULL_STRING);
+            columnNVCountText.setText(NULL_STRING);
+            columnMaxValueText.setText(NULL_STRING);
         }
     }
 
@@ -158,6 +173,16 @@ public class LdapColumnsPage extends WizardPage
 
             treeItemChecked(treeItem, false);
         }
+    }
+
+    private void setNonEditable(Text control) {
+        if (control == null)
+            return;
+
+        Display display = control.getDisplay();
+        control.setForeground(display.getSystemColor(SWT.COLOR_DARK_BLUE));
+        control.setBackground(display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        control.setEditable(false);
     }
 
     @Override
@@ -270,8 +295,8 @@ public class LdapColumnsPage extends WizardPage
 
         detailsView.setContent(detailsGroup);
 
-        Label tableNameLabel = new Label(detailsGroup, SWT.NONE);
-        tableNameLabel.setText(getString("detailColumnNameLabel")); //$NON-NLS-1$
+        Label columnNameLabel = new Label(detailsGroup, SWT.NONE);
+        columnNameLabel.setText(getString("detailColumnNameLabel")); //$NON-NLS-1$
 
         columnNameText = new Text(detailsGroup, SWT.BORDER | SWT.SINGLE);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(columnNameText);
@@ -297,14 +322,33 @@ public class LdapColumnsPage extends WizardPage
             }
         });
 
-        Label tableSourceNameLabel = new Label(detailsGroup, SWT.NONE);
-        tableSourceNameLabel.setText(getString("detailColumnSourceNameLabel")); //$NON-NLS-1$
+        Label columnSourceNameLabel = new Label(detailsGroup, SWT.NONE);
+        columnSourceNameLabel.setText(getString("detailColumnSourceNameLabel")); //$NON-NLS-1$
 
         columnSourceNameText = new Text(detailsGroup, SWT.BORDER | SWT.SINGLE);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(columnSourceNameText);
-        columnSourceNameText.setForeground(columnSourceNameText.getDisplay().getSystemColor(SWT.COLOR_DARK_BLUE));
-        columnSourceNameText.setBackground(columnSourceNameText.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-        columnSourceNameText.setEditable(false);
+        setNonEditable(columnSourceNameText);
+
+        Label columnDVCountLabel = new Label(detailsGroup, SWT.NONE);
+        columnDVCountLabel.setText(getString("detailColumnDVCountLabel")); //$NON-NLS-1$
+
+        columnDVCountText = new Text(detailsGroup, SWT.BORDER | SWT.SINGLE);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(columnDVCountText);
+        setNonEditable(columnDVCountText);
+
+        Label columnNVCountLabel = new Label(detailsGroup, SWT.NONE);
+        columnNVCountLabel.setText(getString("detailColumnNVCountLabel")); //$NON-NLS-1$
+
+        columnNVCountText = new Text(detailsGroup, SWT.BORDER | SWT.SINGLE);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(columnNVCountText);
+        setNonEditable(columnNVCountText);
+
+        Label maxValueLabel = new Label(detailsGroup, SWT.NONE);
+        maxValueLabel.setText(getString("detailMaxValueLabel")); //$NON-NLS-1$
+
+        columnMaxValueText = new Text(detailsGroup, SWT.BORDER | SWT.SINGLE);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(columnMaxValueText);
+        setNonEditable(columnMaxValueText);
 
         this.splitter.setWeights(SPLITTER_WEIGHTS);
 
