@@ -1,11 +1,11 @@
 /*
  * JBoss, Home of Professional Open Source.
- *
- * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
- *
- * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
- */
-package org.teiid.designer.runtime.extension.odata;
+*
+* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+*
+* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+*/
+package org.teiid.designer.runtime.extension.mongodb;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.EObject;
@@ -17,18 +17,13 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.BaseTable;
-import org.teiid.designer.metamodels.relational.Column;
-import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
-import org.teiid.designer.runtime.extension.odata.ODataModelExtensionConstants.PropertyIds;
+import org.teiid.designer.runtime.extension.mongodb.MongoDBModelExtensionConstants.PropertyIds;
 
 /**
- * ODataModelExtensionAssistant
- * The assistant for handling OData extension properties
  *
- * @since 8.2
  */
-public class ODataModelExtensionAssistant extends EmfModelObjectExtensionAssistant {
+public class MongoDBModelExtensionAssistant  extends EmfModelObjectExtensionAssistant {
 
 	/**
 	 * Saves the relational MED to a model if necessary.
@@ -64,15 +59,7 @@ public class ODataModelExtensionAssistant extends EmfModelObjectExtensionAssista
 		// must be table in a physical model
 		if (propDefn != null && ModelUtil.isPhysical(modelObject)) {
 			if (modelObject instanceof BaseTable) {
-				if (PropertyIds.LINK_TABLES.equals(propId) || PropertyIds.ENTITY_TYPE.equals(propId)) {
-					return propDefn;
-				}
-			} else if (modelObject instanceof Column) {
-				if (PropertyIds.JOIN_COLUMN.equals(propId) || PropertyIds.COMPLEX_TYPE.equals(propId) || PropertyIds.COLUMN_GROUP.equals(propId)) {
-					return propDefn;
-				}
-			} else if (modelObject instanceof Procedure) {
-				if (PropertyIds.HTTP_METHOD.equals(propId) || PropertyIds.ENTITY_TYPE.equals(propId)) {
+				if (PropertyIds.MERGE.equals(propId) || PropertyIds.EMBEDDABLE.equals(propId)) {
 					return propDefn;
 				}
 			}
