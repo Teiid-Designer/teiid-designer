@@ -8,7 +8,6 @@
 package org.teiid.designer.ui.common;
 
 import java.util.ResourceBundle;
-
 import org.eclipse.ui.PlatformUI;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
@@ -95,7 +94,30 @@ public interface UiConstants {
         String UI = PlatformUI.PLUGIN_ID;
         String UI_IDE = "org.eclipse.ui.ide"; //$NON-NLS-1$
     }
-    
+
+    interface ConnectionProfileIds {
+        String ECLIPSE = "org.eclipse"; //$NON-NLS-1$
+        String DESIGNER = "org.teiid.designer"; //$NON-NLS-1$
+        String DATATOOLS = ".datatools"; //$NON-NLS-1$
+        String CONNECTIVITY = ".connectivity"; //$NON-NLS-1$
+        String PROFILES = ".profiles"; //$NON-NLS-1$
+
+        String CATEGORY_JDBC = ECLIPSE + DATATOOLS + CONNECTIVITY + ".db.category"; //$NON-NLS-1$
+
+        String CATEGORY_WS_ODA = ECLIPSE + DATATOOLS + ".enablement.oda.ws"; //$NON-NLS-1$
+        String CATEGORY_WS_SOAP = DESIGNER + DATATOOLS + PROFILES + ".ws.WSSoapConnectionProfile"; //$NON-NLS-1$
+        String CATEGORY_WS_CONNECTION = DESIGNER + DATATOOLS + PROFILES + ".ws.WSConnectionProfile"; //$NON-NLS-1$
+
+        String CATEGORY_ODA_FLAT_FILE_ID = ECLIPSE + DATATOOLS + CONNECTIVITY + ".oda.flatfile"; //$NON-NLS-1$
+        String CATEGORY_MODESHAPE = DESIGNER + DATATOOLS + PROFILES + ".modeshape.ModeShapeConnectionProfile"; //$NON-NLS-1$
+        String CATEGORY_XML_FILE_LOCAL = DESIGNER + DATATOOLS + PROFILES + ".xml.localfile"; //$NON-NLS-1$
+        String CATEGORY_XML_FILE_URL = DESIGNER + DATATOOLS + PROFILES + ".xml.fileurl"; //$NON-NLS-1$
+        String CATEGORY_LDAP_CONNECTION = DESIGNER + DATATOOLS + PROFILES + ".ldap.LDAPConnectionProfile"; //$NON-NLS-1$
+        String CATEGORY_SALESFORCE_CONNECTION = DESIGNER + DATATOOLS + ".salesforce.connectionProfile"; //$NON-NLS-1$
+
+        String CATEGORY_TEIID_IMPORT = DESIGNER + DATATOOLS + ".import.category"; //$NON-NLS-1$
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // EXTENSION POINTS INTERFACE
     ///////////////////////////////////////////////////////////////////////////////////////////////

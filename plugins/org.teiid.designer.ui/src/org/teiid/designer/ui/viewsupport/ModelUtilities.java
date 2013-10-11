@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
@@ -48,6 +49,8 @@ import org.teiid.designer.core.search.runtime.ResourceImportRecord;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ModelWorkspaceItem;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil.FileResourceCollectorVisitor;
 import org.teiid.designer.extension.ExtensionPlugin;
@@ -58,6 +61,7 @@ import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelImport;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
+import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionAssistant;
 import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionConstants;
 import org.teiid.designer.ui.PluginConstants;
@@ -277,12 +281,23 @@ public abstract class ModelUtilities implements UiConstants {
         if (theResource instanceof IFile) {
             String ext = ((IFile)theResource).getFileExtension();
 
-            if ((ext != null) && ext.equals(ResourceNameUtil.WSDL_FILE_EXTENSION)) {
+            if ((ext != null) && ext.equalsIgnoreCase(ResourceNameUtil.WSDL_FILE_EXTENSION)) {
                 result = true;
             }
         }
 
         return result;
+    }
+
+    /**
+     * Indicates if the specified file system file is a WSDL.
+     * @param theFile the file being checked
+     * @return <code>true</code>if a WSDL file; <code>false</code> otherwise.
+     * @since 4.2
+     */
+    public static boolean isWsdlFile(final File theFile) {
+        String name = theFile.getName();
+        return name.toLowerCase().endsWith(ResourceNameUtil.DOT_WSDL_FILE_EXTENSION);
     }
 
     /**
@@ -341,6 +356,34 @@ public abstract class ModelUtilities implements UiConstants {
         
         // all model projects and model project members are selected
         return true;
+    }
+
+    /**
+     * Get the representative {@link IFile} from the given container path and model name.
+     *
+     * @param containerPath
+     * @param modelName
+     *
+     * @return {@link IFile} of the model
+     *
+     * @throws ModelWorkspaceException
+     */
+    public static IFile getModelFile(String containerPath, String modelName) throws ModelWorkspaceException {
+        if (containerPath == null || modelName == null) {
+            return null;
+        }
+
+        IPath modelPath = new Path(containerPath).append(modelName);
+        if (!modelPath.toString().toLowerCase().endsWith(DOT_MODEL_FILE_EXTENSION)) {
+            modelPath = modelPath.addFileExtension(MODEL_FILE_EXTENSION);
+        }
+
+        ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
+        if (item != null) {
+            return (IFile) item.getCorrespondingResource();
+        }
+
+        return null;
     }
 
     /**
@@ -1800,5 +1843,109 @@ public abstract class ModelUtilities implements UiConstants {
     	}
     	
     	return false;
+    }
+
+    /**
+     * Retrieve a valid unique name based on the given target name.
+     *
+     * @param containerPath
+     * @param modelName
+     * @param targetName
+     * @param isTable
+     * @param overwrite
+     *
+     * @return unique model name
+     */
+    public static String getUniqueName(String containerPath, String modelName, String targetName, boolean isTable, boolean overwrite) {
+        String uniqueName = targetName;
+
+        try {
+            IFile modelFile = getModelFile(containerPath, modelName);
+            if( modelFile != null ) {
+                ModelResource mr = getModelResourceForIFile(modelFile, false);
+                if( mr != null ) {
+                    uniqueName = getUniqueName(mr, targetName, isTable, overwrite);
+                }
+            }
+        } catch (ModelWorkspaceException ex ) {
+            UiConstants.Util.log(ex);
+        }
+
+        return uniqueName;
+    }
+
+    /**
+     * Retrieve a valid unique name based on the given target name.
+     *
+     * @param mr
+     * @param targetName
+     * @param isTable
+     * @param overwrite
+     *
+     * @return unique model name
+     */
+    public static String getUniqueName(ModelResource mr, String targetName, boolean isTable, boolean overwrite) {
+        String uniqueName = targetName;
+
+        if( mr != null && !overwrite ) {
+            RelationalStringNameValidator nameValidator = new RelationalStringNameValidator(isTable, true);
+            try {
+                // Load the name validator with EObject names
+                for( Object eObj : mr.getEObjects() ) {
+                    String name = ModelerCore.getModelEditor().getName((EObject)eObj);
+                    nameValidator.addExistingName(name);
+                }
+
+                uniqueName = nameValidator.createValidUniqueName(targetName);
+            } catch (ModelWorkspaceException ex) {
+                UiConstants.Util.log(ex);
+            }
+        }
+
+        return uniqueName;
+    }
+
+    /**
+     * Does a child {@link EObject} with the given name exist in the model
+     * denoted by the given path and model name.
+     *
+     * @param containerPath
+     * @param modelName
+     * @param childName
+     *
+     * @return true if object exists, false otherwise.
+     */
+    public static boolean eObjectExists(String containerPath, String modelName, String childName) {
+        return getExistingEObject(containerPath, modelName, childName) != null ? true : false;
+    }
+
+    /**
+     * Get the child {@link EObject} with the given name in the model
+     * denoted by the given path and model name.
+     *
+     * @param containerPath
+     * @param modelName
+     * @param childName
+     *
+     * @return the child object or null if it does not exist in the model
+     */
+    public static EObject getExistingEObject(String containerPath, String modelName, String childName) {
+        try {
+            IFile modelFile = ModelUtilities.getModelFile(containerPath, modelName);
+            if( modelFile != null ) {
+                ModelResource mr = ModelUtilities.getModelResourceForIFile(modelFile, false);
+                if( mr != null ) {
+                    for( Object eObj : mr.getEObjects() ) {
+                        String name = ModelerCore.getModelEditor().getName((EObject)eObj);
+                        if( name.equals(childName) ) {
+                            return (EObject)eObj;
+                        }
+                    }
+                }
+            }
+        } catch (ModelWorkspaceException ex ) {
+            UiConstants.Util.log(ex);
+        }
+        return null;
     }
 }

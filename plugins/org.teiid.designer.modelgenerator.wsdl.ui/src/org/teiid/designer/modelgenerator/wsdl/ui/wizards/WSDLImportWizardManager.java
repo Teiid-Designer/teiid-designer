@@ -19,17 +19,18 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.core.designer.event.IChangeListener;
 import org.teiid.core.designer.event.IChangeNotifier;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 import org.teiid.designer.modelgenerator.wsdl.WSDLReader;
 import org.teiid.designer.modelgenerator.wsdl.model.Model;
 import org.teiid.designer.modelgenerator.wsdl.model.ModelGenerationException;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
 import org.teiid.designer.modelgenerator.wsdl.model.Port;
-import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ImportManagerValidator;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureGenerator;
 import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * WSDL Import Manager - Business Object for interacting with GUI
@@ -314,8 +315,9 @@ public class WSDLImportWizardManager implements IChangeNotifier {
 			setSourceModelName(serviceName + ".xmi"); //$NON-NLS-1$
 			setViewModelName(serviceName + "View.xmi");  //$NON-NLS-1$
 			if( this.viewModelLocation != null ) {
-    			this.sourceModelExists = ModelGeneratorWsdlUiUtil.modelExists(this.sourceModelLocation.getFullPath().toOSString(), this.sourceModelName);
-    			this.viewModelExists = ModelGeneratorWsdlUiUtil.modelExists(this.viewModelLocation.getFullPath().toOSString(), this.viewModelName);
+			    ModelWorkspaceManager manager = ModelWorkspaceManager.getModelWorkspaceManager();
+			    this.sourceModelExists = manager.modelExists(this.sourceModelLocation.getFullPath().toOSString(), this.sourceModelName);
+			    this.viewModelExists = manager.modelExists(this.viewModelLocation.getFullPath().toOSString(), this.viewModelName);
 			}
 		} else {
 			this.sourceModelName = null;
@@ -367,24 +369,24 @@ public class WSDLImportWizardManager implements IChangeNotifier {
 		if( this.viewModelExists) {
     		for( ProcedureGenerator generator : this.procedureGenerators.values() ) {
     			if( !generator.doOverwriteExistingProcedures()  ) {
-    				String validRequestName = ModelGeneratorWsdlUiUtil.getUniqueName(
-    					getViewModelLocation().getFullPath().toString(), 
-    					getViewModelName(), 
-    					generator.getRequestInfo().getDefaultProcedureName(),
-    					false, false);
-    				generator.getRequestInfo().setProcedureName(validRequestName);
-    				String validResponseName = ModelGeneratorWsdlUiUtil.getUniqueName(
-    					getViewModelLocation().getFullPath().toString(), 
-    					getViewModelName(), 
-    					generator.getResponseInfo().getDefaultProcedureName(),
-    					false, false);
-    				generator.getResponseInfo().setProcedureName(validResponseName);
-    				String validWrapperName = ModelGeneratorWsdlUiUtil.getUniqueName(
-    					getViewModelLocation().getFullPath().toString(), 
-    					getViewModelName(), 
-    					generator.getDefaultWrapperProcedureName(),
-    					false, false);
-    				generator.setWrapperProcedureName(validWrapperName);
+                    String validRequestName = ModelUtilities.getUniqueName(getViewModelLocation().getFullPath().toString(),
+                                                                           getViewModelName(),
+                                                                           generator.getRequestInfo().getDefaultProcedureName(),
+                                                                           false,
+                                                                           false);
+                    generator.getRequestInfo().setProcedureName(validRequestName);
+                    String validResponseName = ModelUtilities.getUniqueName(getViewModelLocation().getFullPath().toString(),
+                                                                            getViewModelName(),
+                                                                            generator.getResponseInfo().getDefaultProcedureName(),
+                                                                            false,
+                                                                            false);
+                    generator.getResponseInfo().setProcedureName(validResponseName);
+                    String validWrapperName = ModelUtilities.getUniqueName(getViewModelLocation().getFullPath().toString(),
+                                                                           getViewModelName(),
+                                                                           generator.getDefaultWrapperProcedureName(),
+                                                                           false,
+                                                                           false);
+                    generator.setWrapperProcedureName(validWrapperName);
     			}
     		}
 		} else {

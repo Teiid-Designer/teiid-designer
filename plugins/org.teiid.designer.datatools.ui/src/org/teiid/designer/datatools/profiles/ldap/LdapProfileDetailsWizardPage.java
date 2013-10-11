@@ -43,19 +43,17 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
     private Text passwordText;
     private Label urlLabel;
     private Text urlText;
+    private Label rootDNSuffixLabel;
+    private Text rootDNSuffixText;
     private Label contextFactoryLabel;
     private Text contextFactoryText;
 
     /**
-     * @param wizardPageName
+     * @param pageName
      */
     public LdapProfileDetailsWizardPage( String pageName ) {
         super(pageName, UTIL.getString("LdapProfileDetailsWizardPage.Name"), //$NON-NLS-1$
               AbstractUIPlugin.imageDescriptorFromPlugin(DatatoolsUiConstants.PLUGIN_ID, "icons/ldap.gif")); //$NON-NLS-1$
-        // TODO: image
-        /*)
-        */
-
     }
 
     /**
@@ -157,6 +155,22 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
         gd.horizontalSpan = 1;
         urlText.setLayoutData(gd);
 
+        rootDNSuffixLabel = new Label(scrolled, SWT.NONE);
+        rootDNSuffixLabel.setText(UTIL.getString("LDAP.RootDNSufix.Label")); //$NON-NLS-1$
+        rootDNSuffixLabel.setToolTipText(UTIL.getString("LDAP.RootDNSufix.ToolTip")); //$NON-NLS-1$
+        gd = new GridData();
+        gd.verticalAlignment = GridData.BEGINNING;
+        rootDNSuffixLabel.setLayoutData(gd);
+
+        rootDNSuffixText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
+        rootDNSuffixText.setToolTipText(UTIL.getString("LDAP.RootDNSufix.ToolTip")); //$NON-NLS-1$
+        gd = new GridData();
+        gd.horizontalAlignment = GridData.FILL;
+        gd.verticalAlignment = GridData.BEGINNING;
+        gd.grabExcessHorizontalSpace = true;
+        gd.horizontalSpan = 1;
+        rootDNSuffixText.setLayoutData(gd);
+
         contextFactoryLabel = new Label(scrolled, SWT.NONE);
         contextFactoryLabel.setText(UTIL.getString("Common.Context.Factory.Label")); //$NON-NLS-1$
         contextFactoryLabel.setToolTipText(UTIL.getString("Common.Context.Factory.ToolTip")); //$NON-NLS-1$
@@ -199,6 +213,7 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
         usernameText.addListener(SWT.Modify, this);
         passwordText.addListener(SWT.Modify, this);
         urlText.addListener(SWT.Modify, this);
+        rootDNSuffixText.addListener(SWT.Modify, this);
         contextFactoryText.addListener(SWT.Modify, this);
     }
 
@@ -221,6 +236,10 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
         if (event.widget == urlText) {
             Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
             properties.setProperty(ILdapProfileConstants.URL_PROP_ID, urlText.getText());
+        }
+        if (event.widget == rootDNSuffixText) {
+            Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
+            properties.setProperty(ILdapProfileConstants.ROOT_DN_SUFFIX_PROP_ID, rootDNSuffixText.getText());
         }
         if (event.widget == contextFactoryText) {
             Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
@@ -252,6 +271,12 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
         if (null == properties.get(ILdapProfileConstants.URL_PROP_ID)
             || properties.get(ILdapProfileConstants.URL_PROP_ID).toString().isEmpty()) {
             setErrorMessage(UTIL.getString("Common.URL.Error.Message")); //$NON-NLS-1$
+            setPingButtonEnabled(false);
+            return;
+        }
+        if (null == properties.get(ILdapProfileConstants.ROOT_DN_SUFFIX_PROP_ID)
+            || properties.get(ILdapProfileConstants.ROOT_DN_SUFFIX_PROP_ID).toString().isEmpty()) {
+            setErrorMessage(UTIL.getString("LDAP.RootDNSufix.Error.Message")); //$NON-NLS-1$
             setPingButtonEnabled(false);
             return;
         }
@@ -317,6 +342,7 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
         List result = super.getSummaryData();
         result.add(new String[] {UTIL.getString("Common.Username.Label"), usernameText.getText()}); //$NON-NLS-1$
         result.add(new String[] {UTIL.getString("Common.URL.Label"), urlText.getText()}); //$NON-NLS-1$
+        result.add(new String[] {UTIL.getString("LDAP.RootDNSufix.Label"), rootDNSuffixText.getText()}); //$NON-NLS-1$
         result.add(new String[] {UTIL.getString("Common.Context.Factory.Label"), contextFactoryText.getText()}); //$NON-NLS-1$
         return result;
     }

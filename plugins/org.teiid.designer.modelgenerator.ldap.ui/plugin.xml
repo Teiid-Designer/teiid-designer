@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+   <!-- Eclipse Import Wizards -->
+   <extension
+         point="org.eclipse.ui.importWizards">
+         <wizard
+            icon="icons/full/ctool16/import_ldap_wiz.gif"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapImportWizard"
+            name="%importLdapWizard.name"
+            id="org.teiid.designer.modelgenerator.ldap.ui.wizards.ImportLdapWizardID">
+         <description>
+            %importLdapWizard.description
+         </description>
+      </wizard>
+   </extension>
+</plugin>
