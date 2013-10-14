@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -48,6 +49,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
@@ -306,6 +308,7 @@ public final class TranslatorOverridesPanel extends Composite {
             this.txtDescription = new Text(pnlOverrides, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
             this.txtDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
             ((GridData)this.txtDescription.getLayoutData()).heightHint = 35;
+            ((GridData)this.txtDescription.getLayoutData()). horizontalSpan = 2;
             this.txtDescription.setToolTipText(Util.getString(PREFIX + "txtTranslatorDescription.toolTip")); //$NON-NLS-1$
             this.txtDescription.setEnabled(false);
             this.txtDescription.addModifyListener(new ModifyListener() {
@@ -416,7 +419,7 @@ public final class TranslatorOverridesPanel extends Composite {
             //
             // add toolbar below the table
             //
-            Composite toolbarPanel = WidgetFactory.createPanel(pnlOverrides, SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 3);
+            Composite toolbarPanel = WidgetFactory.createPanel(pnlOverrides, SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 4);
             
             this.addPropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
             this.addPropertyButton.setImage(VdbUiPlugin.singleton.getImage(ADD));
@@ -471,6 +474,12 @@ public final class TranslatorOverridesPanel extends Composite {
     				
     			}
     		});
+            
+        	org.teiid.designer.ui.common.widget.Label noteLabel = 
+        			WidgetFactory.createLabel(toolbarPanel, Util.getString(PREFIX + "overridePropertiesNoteLabel")); //$NON-NLS-1$
+        	noteLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(noteLabel);
+        	noteLabel.setToolTipText(Util.getString(PREFIX + "overridePropertiesNoteTooltip"));  //$NON-NLS-1$
 
         }
 
