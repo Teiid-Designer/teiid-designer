@@ -80,7 +80,7 @@
                     <row>
                         <entry>LDAP/ActiveDirectory</entry>
                         <entry>ldap</entry>
-                        <entry>use DDL importer or perform modeling manually</entry>
+                        <entry>LDAP Importer</entry>
                     </row>
                     <row>
                         <entry>LoopBack</entry>

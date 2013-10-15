@@ -102,13 +102,13 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Metadata Modeling > JDBC Database >> Source Model</emphasis>  and click <emphasis role="bold">Next></emphasis>
+								<emphasis role="bold">Teiid Designer > JDBC Database >> Source Model</emphasis>  and click <emphasis role="bold">Next></emphasis>
 							</para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - Select existing or previous 
 								connection profile from the drop-down selector or press <emphasis role="bold">New...</emphasis> button to launch 
-								the <emphasis role="bold">New Connection Profile</emphasis> dialog (See Eclispe Data Tools documentation) 
+								the <emphasis role="bold">New Connection Profile</emphasis> dialog (See Eclipse Data Tools documentation)
 								or <emphasis role="bold">Edit...</emphasis> to modify/change an existing connection profile prior to selection.
                              </para>
                              <note>
@@ -356,7 +356,7 @@ FROM
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - Select existing or previous 
 								connection profile from the drop-down selector or press <guibutton>New...</guibutton> button to launch 
-								the <guilabel>New Connection Profile</guilabel> dialog (See Eclispe Data Tools documentation) 
+								the <guilabel>New Connection Profile</guilabel> dialog (See Eclipse Data Tools documentation)
 								or <guibutton>Edit...</guibutton> to modify/change an existing connection profile prior to selection.
                             </para>
                             <note>
@@ -582,7 +582,7 @@ FROM
 						<listitem>
 							<para><emphasis role="bold">Step 4 </emphasis> - Select existing or previous 
 								connection profile from the drop-down selector or press <guibutton>New...</guibutton> button to launch 
-								the <guilabel>New Connection Profile</guilabel> dialog (See Eclispe Data Tools documentation) 
+								the <guilabel>New Connection Profile</guilabel> dialog (See Eclipse Data Tools documentation)
 								or <guibutton>Edit...</guibutton> to modify/change an existing connection profile prior to selection.</para>
 							<para>After selecting a <emphasis role="bold">Connection Profile</emphasis>, 
 								the XML data file from the connection profile will be displayed in the <emphasis role="bold">Available Data Files</emphasis> panel. 
@@ -688,7 +688,7 @@ FROM
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - Select existing or previous 
 								connection profile from the drop-down selector or press <guibutton>New...</guibutton> button to launch 
-								the <guilabel>New Connection Profile</guilabel> dialog (See Eclispe Data Tools documentation) 
+								the <guilabel>New Connection Profile</guilabel> dialog (See Eclipse Data Tools documentation)
 								or <guibutton>Edit...</guibutton> to modify/change an existing connection profile prior to selection.
                             </para>
                             <note>
@@ -1634,15 +1634,15 @@ FROM
 		</section>
 	</section>
 	
-	<!-- ####### XSD SCHEMA IMPORTER ######################################### -->
+	<!-- ####### XML SCHEMA IMPORTER ######################################### -->
 	
 	<section id="xsd-schema-import-section">
-		<title>XSD Schema File</title>
+		<title>Import from an XML Schema File</title>
 		<para></para>
 		<itemizedlist>
 			<listitem>
 				<para>
-					You can import <emphasis role="bold">XML Schema</emphasis> file (XSD) files using the steps below.
+					You can import an <emphasis role="bold">XML Schema</emphasis> file (XSD) files using the steps below.
 					<itemizedlist>
 						<listitem>
 							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
@@ -1655,29 +1655,29 @@ FROM
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Metadata Modeling > XSD Schemas </emphasis>  and click <emphasis role="bold">Next></emphasis>
+								<emphasis role="bold">Teiid Designer > XML Schemas </emphasis>  and click <emphasis role="bold">Next></emphasis>
 							</para>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 3 </emphasis> - Select either <emphasis role="bold">Import XSD Schemas from file system</emphasis>
-							 or <emphasis role="bold">Import XSD Schemas via URL</emphasis> and click <emphasis role="bold">Next ></emphasis></para>
+							<para><emphasis role="bold">Step 3 </emphasis> - Select either <emphasis role="bold">Import XML Schemas from file system</emphasis>
+							 or <emphasis role="bold">Import XML Schemas via URL</emphasis> and click <emphasis role="bold">Next ></emphasis></para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 4a </emphasis> - If importing from file system, the 
-								<emphasis role="bold">Import XSD Files</emphasis> dialog is displayed. Click on the 
+								<emphasis role="bold">Import XML Files</emphasis> dialog is displayed. Click on the 
 								<emphasis role="bold">Browse</emphasis> button to find the directory that contains 
-								the XSD file(s) you wish to import.</para>
+								the XML file(s) you wish to import.</para>
 								<itemizedlist>
 									<listitem>
-										<para>To select all of the XSD files in the directory, click the checkbox next to the folder in the left panel.
+										<para>To select all of the XML files in the directory, click the checkbox next to the folder in the left panel.
 										</para>
 									</listitem>
 									<listitem>
-										<para>To select individual XSD files, click the checkboxes next to the files you want in the right panel</para>
+										<para>To select individual XML files, click the checkboxes next to the files you want in the right panel</para>
 									</listitem>
 								</itemizedlist>
 							<figure>
-								<title>Select XSD From File System</title>
+								<title>Select XML From File System</title>
 								<mediaobject>
 									<imageobject>
 										<imagedata fileref="images/screencaps/import-xml-schema-page-2a.png"/>
@@ -1707,7 +1707,7 @@ FROM
 								</inlinemediaobject>. Enter a valid schema URL. Click OK. Schema will be validated 
 								and resulting entry added to the list of XML Schema URLs.</para>
 							<figure>
-								<title>Add XSD Schema URLs</title>
+								<title>Add XML Schema URLs</title>
 								<mediaobject>
 									<imageobject>
 										<imagedata fileref="images/screencaps/import-xml-schema-url-page-2.png"/>
@@ -1716,7 +1716,7 @@ FROM
 							</figure>
 							<para>The schema URL is now displayed in the XML Schema URLs list.</para>
 							<figure>
-								<title>Add XSD Schema URLs</title>
+								<title>Add XML Schema URLs</title>
 								<mediaobject>
 									<imageobject>
 										<imagedata fileref="images/screencaps/import-xml-schema-url-page-3.png"/>
@@ -1732,9 +1732,228 @@ FROM
 			</listitem>
 		</itemizedlist>
 		<note>
-			<para>XSD files may have dependent files. This importer will determine these dependencies 
+			<para>XML files may have dependent files. This importer will determine these dependencies
 				and import these as well if Add Dependent Schema Files is checked</para>
 		</note>
 	</section>
-	
+
+    <!-- ####### LDAP IMPORTER ######################################### -->
+
+    <section id="ldap-import-section">
+        <title>Import From an LDAP Server</title>
+        <para>
+            The Lightweight Directory Access Protocol, or LDAP, is a network protocol for accessing directory
+            services over TCP/IP. A directory contains a collection of related data, organized hierarchically in a tree
+            format. Each node in the tree is a directory entry, and each entry consists of a set of attribute-value pairs.
+            Each directory entry has a unique identifier, known as its Distinguished Name (DN). The DN consists of a
+            Relative Distinguished Name (RDN), constructed from an attribute from the entry itself, followed by the
+            parent entry’s DN.
+        </para>
+        <para>
+            In Teiid Designer, an LDAP Server can be modelled by doing the following:
+            <itemizedlist>
+                <listitem>LDAP subtrees are represented as if they were tables in a relational database.</listitem>
+                <listitem>Each node in the subtree is represented as a row in the table.</listitem>
+                <listitem>Each attribute of the given node can be represented as a column in the table.</listitem>
+                <listitem>The RDN (or DN) can be used to represent a primary key.</listitem>
+            </itemizedlist>
+        </para>
+        <para>
+            The LDAP metadata is modeled using the relational metamodel. Each table in the relational model
+            represents a directory entry while each row in the table represents a child entry of the directory entry.
+            Each column of the table represents an attribute of the child entry that may exist. In general, each
+            table and column defines the LDAP-specific information in the property “Name In Source”. This
+            allows the connector to identify the attribute or Base DN name within the data source, ie. within LDAP.
+            The actual name of the table and column can differ from the name in source, allowing for more
+            descriptive labelling in models and queries.
+        </para>
+        <itemizedlist>
+            <listitem>
+               <para>The relational source model can be created from LDAP data using the steps below.</para>
+                    <itemizedlist>
+                        <listitem>
+                            <para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis>
+                                choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
+                                    <imageobject>
+                                        <imagedata fileref="images/icons/import-wiz.png"/>
+                                    </imageobject>
+                                </inlinemediaobject> in the toolbar or select a project, folder or
+                                model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
+                        </listitem>
+                        <listitem>
+                            <para><emphasis role="bold">Step 2 </emphasis> - Select the import option
+                                <emphasis role="bold">Teiid Designer > LDAP Service >> Source Model</emphasis>  and click <emphasis role="bold">Next></emphasis>
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para><emphasis role="bold">Step 3 </emphasis> - Select an existing or previous
+                                LDAP connection profile from the drop-down selector or press <emphasis role="bold">New...</emphasis> button to launch
+                                the <emphasis role="bold">New Connection Profile</emphasis> dialog (See Eclipse Data Tools documentation)
+                                or <emphasis role="bold">Edit...</emphasis> to modify/change an existing connection profile prior to selection.
+                            </para>
+                            <note>
+                                Information required for a new connection:
+                                <itemizedlist>
+                                    <listitem>Connection Username / password - an administrator account to browse the ldap tree, eg. cn=Manager,dc=birds-of-prey,dc=org</listitem>
+                                    <listitem>Connection URL, eg. ldap://falcon:389</listitem>
+                                    <listitem>Principal Distinguished Name (DN) Suffix - the root DN of the ldap tree</listitem>
+                                    <listitem>An LDAP Connection Factory implementation class, eg. com.sun.jndi.ldap.LdapCtxFactory</listitem>
+                                </itemizedlist>
+                            </note>
+                            <para>
+                                Selection of the connection profile populates the LDAP Service URL and DN Suffix fields. The remaining
+                                requirements for the wizard page is the choosing of a suitable model file as the destination of the
+                                imported tables. If the selection is an existing model then the wizard will merge the new tables with
+                                the model's current content.
+                                <figure>
+                                    <title>LDAP Definition Wizard Page</title>
+                                    <mediaobject>
+                                        <imageobject>
+                                            <imagedata fileref="images/screencaps/import-ldap-definition-page.png"/>
+                                        </imageobject>
+                                    </mediaobject>
+                                </figure>
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para><emphasis role="bold">Step 4 </emphasis> - After selecting a <emphasis>Connection Profile</emphasis>,
+                                click <emphasis role="bold">Next></emphasis>
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para><emphasis role="bold">Step 5 </emphasis> - On the <emphasis role="bold">Select LDAP Entries to be
+                                modelled as tables</emphasis> page, select the LDAP entries from the tree to be created as tables in
+                                the source model. Entries are selected by the ticking of their respective checkboxes in the tree. The
+                                highlighting of an entry displays the following attributes:
+                                <itemizedlist>
+                                    <listitem>Table Name -  this is the table's label and can be modified to a more readable value</listitem>
+                                    <listitem>
+                                        Table Source Name - the fully qualified entry name. This is not editable in the wizard and should
+                                        remain unchanged in the subsequently created source model
+                                    </listitem>
+                                    <listitem>
+                                        Table Source Name Suffix - an additional suffix can be added that further limits the scope of the
+                                        table's search criteria. The suffix is in the format of <emphasis>?search_scope?objectClass_name</emphasis>
+                                        where search_scope is one of OBJECT_SCOPE (first and only one entry returned),
+                                        ONELEVEL_SCOPE (only entries directly below the selected entry are returned) or
+                                        SUBTREE_SCOPE (recursively return all entries below the selected entry) and
+                                        objectClass_name is the name of a specific type of objectClass in the LDAP tree, eg. return only
+                                        the 'inetOrgPerson' entries. Both criteria are optional (but the '?'s are not) so it is possible
+                                        to have a suffix such as <emphasis>? ? inetOrgPerson</emphasis>.
+                                    </listitem>
+                                </itemizedlist>
+                                Click <emphasis role="bold">Next></emphasis>.
+                            </para>
+                            <figure>
+                                <title>Select LDAP entries to be modelled as tables page</title>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata fileref="images/screencaps/import-ldap-table-page.png"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </figure>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <emphasis role="bold">Step 6 </emphasis> - The <emphasis role="bold">Select the LDAP Attributes
+                                to be modelled as columns</emphasis> page displays the previously selected LDAP entries and the
+                                attributes of their <emphasis>child</emphasis> entries. The purpose of a selected attribute is
+                                to be created as a column in the relevant source model table. Attributes are selected by the
+                                ticking of their respective checkboxes in the tree. The highlighting of an attribute displays
+                                the following properties:
+                                <itemizedlist>
+                                    <listitem>Column Name -  this is the column's label and can be modified to a more readable value</listitem>
+                                    <listitem>
+                                        Column Source Name - the real LDAP attribute name. This is not editable in the wizard and should
+                                        remain unchanged in the subsequently created source model
+                                    </listitem>
+                                    <listitem>
+                                        Column Distinct Value Count - The number of distinct values assigned to the specific attribute
+                                        in the LDAP service. This value is useful in optimising queries using the source model. This is not
+                                        editable in the wizard and should remain unchanged in the subsequently created source model.
+                                    </listitem>
+                                    <listitem>
+                                        Column Null Value Count - The number of entries where the specific attribute has no value assigned
+                                        in the LDAP service. This value is useful in optimising queries using the source model. This is not
+                                        editable in the wizard and should remain unchanged in the subsequently created source model.
+                                    </listitem>
+                                    <listitem>
+                                        Column Length - The maximum length of existing values assigned to the attribute in the LDAP service.
+                                        This value is assigned as the maximum length of the column. This is not editable in the wizard but can
+                                        be edited in the source model later should this be required.
+                                    </listitem>
+                                </itemizedlist>
+                                Click <emphasis role="bold">Finish></emphasis>.
+                                <figure>
+                                    <title>Select the LDAP Attributes to be modelled as columns page</title>
+                                    <mediaobject>
+                                        <imageobject>
+                                            <imagedata fileref="images/screencaps/import-ldap-columns-page.png"/>
+                                        </imageobject>
+                                    </mediaobject>
+                                </figure>
+                            </para>
+                        </listitem>
+                    </itemizedlist>
+            </listitem>
+        </itemizedlist>
+        <para>
+            Once the wizard has completed, the new source model will be created.
+        </para>
+        <figure>
+            <title>Example of an LDAP source model</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="images/screencaps/import-ldap-source-model.png"/>
+                </imageobject>
+            </mediaobject>
+        </figure>
+        <para>
+            The LDAP connector also provides an update capability. However, additional modeling requirements are
+            imposed beyond those required for read-only access. The additional requirements are described below.
+            <itemizedlist>
+                <listitem>
+                    <emphasis>Supports Update</emphasis> table property - to enable updates, each source model table must have this
+                    property set to 'true';
+                </listitem>
+                <listitem>
+                    <emphasis>Updateable</emphasis> column property - to enable updates, each column in the source model table
+                    must have this property set to 'true';
+                </listitem>
+                <listitem>
+                    Additional required columns:
+                    <itemizedlist>
+                        <listitem>
+                            <emphasis>DN</emphasis> - for all update types (INSERT, UPDATE, and DELETE), the distinguished name
+                            must be modeled as a column, setting the <emphasis>name in source</emphasis> to <emphasis>dn</emphasis>.
+                            For UPDATE and DELETE capability, the DN must be specified in the criteria clause while for INSERT, the
+                            DN must be one of the column values to be set.
+                        </listitem>
+                        <listitem>
+                            <emphasis>objectClass</emphasis> - for INSERT, the objectclass must be modelled as a column, setting the
+                            <emphasis>name in source</emphasis> to <emphasis>objectClass</emphasis>. It must also be one of the
+                            column values to be set.
+                        </listitem>
+                        <listitem>
+                            <emphasis>additional</emphasis> - each entry defined in the LDAP directory’s schema may also have
+                            one or more additional required columns. This is dependent on the LDAP server implementatation so
+                            consult the LDAP documentation accordingly.
+                        </listitem>
+                    </itemizedlist>
+                </listitem>
+            </itemizedlist>
+        </para>
+        <para>
+            A selection of example queries:
+            <itemizedlist>
+                <listitem>SELECT * FROM LdapModel.People</listitem>
+                <listitem><literallayout>INSERT INTO LdapModel.People (dn, sn, objectclass, Name)
+VALUES ('cn=JoeYoung,ou=people,dc=example,dc=org','Young','person', 'Joe Young')</literallayout></listitem>
+                <listitem><literallayout>UPDATE LdapModel.People SET PhoneNumber='(314) 299-2999'
+WHERE DN='cn=JoeYoung,ou=people,dc=example,dc=org'</literallayout></listitem>
+                <listitem><literallayout>DELETE FROM LdapModel.People
+WHERE DN='cn=JoeYoung,ou=people,dc=example,dc=org'</literallayout></listitem>
+            </itemizedlist>
+        </para>
+    </section>
 </chapter>
