@@ -174,7 +174,7 @@ public class DeleteResourcesWizard extends RefactoringWizard {
             projectLocationsLabel.setLayoutData(labelData);
             projectLocationsLabel.setText(resources.size() == 1 ?
                 RefactorResourcesUtils.getString("DeleteRefactoring.projectLocation") :  //$NON-NLS-1$
-                    RefactorResourcesUtils.getString("DeleteRefactoring.project_locations")); //$NON-NLS-1$
+                    RefactorResourcesUtils.getString("DeleteRefactoring.projectLocations")); //$NON-NLS-1$
 
             int style = SWT.MULTI | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL;
             if (resources.size() != 1) style |= SWT.BORDER;
