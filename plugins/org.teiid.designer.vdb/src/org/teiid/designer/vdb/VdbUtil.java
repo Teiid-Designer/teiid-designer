@@ -10,7 +10,6 @@ package org.teiid.designer.vdb;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,14 +24,12 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
-
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -580,12 +577,13 @@ public class VdbUtil {
      * @return true if successful, false if not
      */
     private static boolean extractFileFromVdbToSameProject(final IFile zipFile, final String zipEntryFullPath, IPath projectRelativeTargetFolder) {
-        String zipFilePath = zipFile.getRawLocation().toOSString();
-        String projectFilePath = ModelerCore.getWorkspace().getRoot().getRawLocation() + zipFile.getProject().getFullPath().toOSString();
         ZipInputStream zin = null;
         boolean result = false;
 
         try {
+            String zipFilePath = ModelUtil.getLocation(zipFile).toOSString();
+            String projectFilePath = ModelUtil.getLocation(ModelerCore.getWorkspace().getRoot()) + zipFile.getProject().getFullPath().toOSString();
+
             FileInputStream fin = new FileInputStream(zipFilePath);
             BufferedInputStream bin = new BufferedInputStream(fin);
             zin = new ZipInputStream(bin);
@@ -612,9 +610,7 @@ public class VdbUtil {
                     break;
                 }
             }
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
             if( zin != null ) {
@@ -688,6 +684,7 @@ public class VdbUtil {
 	/**
      * @param theVdb the VDB
      * @param extractMissingModels
+	 * @param updateValidationVersion
      */
     public static void synchronizeVdb(final IFile theVdb, boolean extractMissingModels, boolean updateValidationVersion) {
         if (! theVdb.exists())

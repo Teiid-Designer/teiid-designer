@@ -13,7 +13,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -1168,8 +1167,17 @@ public class CopyFilesAndFoldersOperation implements UiConstants {
         }
         IWorkspace workspace = destination.getWorkspace();
         IResource linkHandle = createLinkedResourceHandle(destination, source);
-        IStatus locationStatus = workspace.validateLinkLocation(linkHandle, source.getRawLocation());
+        IPath location = null;
+        try {
+            location = ModelUtil.getLocation(source);
+        } catch (CoreException ex) {
+            displayError(UiConstants.Util.getString("CopyFilesAndFoldersOperation.internalError", //$NON-NLS-1$
+                                                    new Object[] {ex.getMessage()}));
+            return null;
+        }
 
+        // location will never be null if an exception has not been thrown
+        IStatus locationStatus = workspace.validateLinkLocation(linkHandle, location);
         if (locationStatus.getSeverity() == IStatus.ERROR) {
             return locationStatus.getMessage();
         }

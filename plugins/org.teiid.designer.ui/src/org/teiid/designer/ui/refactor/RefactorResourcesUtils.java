@@ -321,7 +321,7 @@ public class RefactorResourcesUtils {
             optionList = Arrays.asList(options);
         }
 
-        String resourcePath = resource.getRawLocation().makeAbsolute().toOSString();
+        String resourcePath = ModelUtil.getLocation(resource).makeAbsolute().toOSString();
         
         if (resource instanceof IFolder) {
             IFolder folder = (IFolder) resource;
@@ -393,7 +393,7 @@ public class RefactorResourcesUtils {
      * @throws Exception
      */
     public static TextFileChange calculateTextChanges(IFile file, Collection<PathPair> pathPairs) throws Exception {
-        File nativeFile = file.getRawLocation().makeAbsolute().toFile();
+        File nativeFile = ModelUtil.getLocation(file).makeAbsolute().toFile();
         if (nativeFile == null || ! nativeFile.exists())
             throw new Exception(getString("ResourcesRefactoring.fileNotFoundError", file.getFullPath())); //$NON-NLS-1$
 
@@ -447,13 +447,13 @@ public class RefactorResourcesUtils {
      * @throws Exception
      */
     public static Set<PathPair> calculateImportChanges(IFile file, String destination, Set<IResource> refactorResources) throws Exception {
-        File nativeFile = file.getRawLocation().makeAbsolute().toFile();
+        File nativeFile = ModelUtil.getLocation(file).makeAbsolute().toFile();
         if (nativeFile == null || ! nativeFile.exists())
             throw new Exception(getString("ResourcesRefactoring.fileNotFoundError", file.getFullPath())); //$NON-NLS-1$
 
         Set<String> refactorResourcePaths = new HashSet<String>();
         for (IResource resource : refactorResources) {
-            File nativeRes = resource.getRawLocation().makeAbsolute().toFile();
+            File nativeRes = ModelUtil.getLocation(resource).makeAbsolute().toFile();
             refactorResourcePaths.add(nativeRes.getCanonicalPath());
         }
 
@@ -529,7 +529,7 @@ public class RefactorResourcesUtils {
         if (sourceName.equals(targetName))
             return;
         
-        File nativeFile = file.getRawLocation().makeAbsolute().toFile();
+        File nativeFile = ModelUtil.getLocation(file).makeAbsolute().toFile();
         if (nativeFile == null || ! nativeFile.exists())
             throw new Exception(getString("ResourcesRefactoring.fileNotFoundError", file.getFullPath())); //$NON-NLS-1$
 

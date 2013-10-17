@@ -84,7 +84,7 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
                 return;
             }
 
-            IPath relatedFilePath = relatedFile.getRawLocation().makeAbsolute();
+            IPath relatedFilePath = ModelUtil.getLocation(relatedFile).makeAbsolute();
             IPath relatedParentPath = relatedFilePath.removeLastSegments(1);
 
             // Convert the path pair to a pair of relative paths
@@ -186,8 +186,8 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
         clearChanges();
 
         RefactoringStatus status = new RefactoringStatus();
-        String destinationPath = destination.getRawLocation().makeAbsolute().toOSString();
         try {
+            String destinationPath = ModelUtil.getLocation(destination).makeAbsolute().toOSString();
             progressMonitor.beginTask(RefactorResourcesUtils.getString("MoveRefactoring.finalConditions"), 2); //$NON-NLS-1$
 
             Set<PathPair> pathPairs = RefactorResourcesUtils.calculateResourceMoves(getResources(), destinationPath, RefactorResourcesUtils.Option.EXCLUDE_FOLDERS);

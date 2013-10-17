@@ -16,7 +16,6 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.Checksum;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -340,29 +339,28 @@ public class ModelBufferImpl implements ModelBuffer {
                 this.lastFileSize = 0;
                 this.lastChecksum = 0;
             } else {
-                final IPath rawLocation = file.getRawLocation();
-                if (rawLocation != null) {
-                    final File rawFile = new File(rawLocation.toString());
-                    if (rawFile.exists()) {
-                        this.lastFileSize = rawFile.length();
-                        InputStream stream = null;
-                        try {
+                InputStream stream = null;
+                try {
+                    final IPath rawLocation = ModelUtil.getLocation(file);
+                    if (rawLocation != null) {
+                        final File rawFile = new File(rawLocation.toString());
+                        if (rawFile.exists()) {
+                            this.lastFileSize = rawFile.length();
                             stream = new FileInputStream(rawFile);
                             final InputStream buffer = new BufferedInputStream(stream);
                             final Checksum checksum = ChecksumUtil.computeChecksum(buffer);
                             this.lastChecksum = checksum.getValue();
-                        } catch (IOException err) {
-                            ModelerCore.Util.log(err);
-                        } finally {
-                            if (stream != null) {
-                                try {
-                                    stream.close();
-                                } catch (IOException err1) {
-                                    // Ignore; cant' do anything anyway
-                                }
-                            }
                         }
-
+                    }
+                } catch (Exception err) {
+                    ModelerCore.Util.log(err);
+                } finally {
+                    if (stream != null) {
+                        try {
+                            stream.close();
+                        } catch (IOException err1) {
+                            // Ignore; cant' do anything anyway
+                        }
                     }
                 }
             }

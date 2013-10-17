@@ -61,13 +61,9 @@ import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
-import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.Procedure;
-import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionAssistant;
-import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionConstants;
 import org.teiid.designer.metamodels.xsd.XsdUtil;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.ui.PluginConstants;
@@ -889,9 +885,14 @@ public abstract class ModelObjectUtilities {
             if (u != null && u.isFile()) {
                 // compare paths:
                 IPath pth = new Path(u.device(), u.path());
-                if (pth.equals(res.getRawLocation())) {
-                    return true;
-                } // endif -- path equal
+                try {
+                    if (pth.equals(ModelUtil.getLocation(res))) {
+                        return true;
+                    } // endif -- path equal
+                } catch (CoreException ex) {
+                    // resource has no location so eObject cannot be in the resource
+                    UiConstants.Util.log(ex);
+                }
             } // endif -- URI is file
         } // endif -- modelResource not null
 

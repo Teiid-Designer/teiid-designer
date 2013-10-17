@@ -112,7 +112,7 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
         return VdbUiConstants.Util.getString(I18N_PREFIX + SEPARATOR + id, object);
     }
 
-    private final String initialContainerFieldValue = ModelerCore.getWorkspace().getRoot().getRawLocation().toString();
+    private final String initialContainerFieldValue = getDefaultFolder().toString();
     // widgets
     Combo fileSystemSourceNameField;
     private Button fileSystemSourceBrowseButton;

@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.Checksum;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -256,7 +255,7 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
                     }
                     // Compare the file sizes ...
                     boolean fileSizeDifference = false;
-                    final IPath rawLocation = iResource.getRawLocation();
+                    final IPath rawLocation = ModelUtil.getLocation(iResource);
                     if (rawLocation != null) {
                         final File rawFile = new File(rawLocation.toString());
                         if (rawFile.exists()) {
@@ -297,7 +296,7 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
                     }
                 }
             }
-        } catch (ModelWorkspaceException e) {
+        } catch (Exception e) {
             // ModelerCore.Util.log(err); // okay to eat, since no buffer, nothing to unload/reload?
         }
     }
@@ -946,7 +945,7 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
                         // The file has been changed on the file system by something other than this ModelBuffer ...
 
                         // Check the file size ...
-                        final IPath rawLocation = resource.getRawLocation();
+                        final IPath rawLocation = ModelUtil.getLocation(resource);
                         long fileSize = 0;
                         if (rawLocation != null) {
                             final File rawFile = new File(rawLocation.toString());
@@ -998,7 +997,7 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
                     }
                 }
             }
-        } catch (ModelWorkspaceException err) {
+        } catch (Exception err) {
             // ModelerCore.Util.log(err); // okay to eat, since no buffer, nothing to unload/reload?
         }
         return reloaded;

@@ -443,13 +443,14 @@ public class WorkspaceResourceFinderUtil {
      * @return the IResource[] references of dependent resources
      */
     public static List<IFile> getDependentResources( final IResource iResource ) {
-        if (iResource == null || getWorkspace() == null) return Collections.emptyList();
-
-        final File iResourceFile = iResource.getRawLocation().toFile();
-        if (!iResourceFile.exists()) return Collections.emptyList();
+        if (iResource == null || getWorkspace() == null)
+            return Collections.emptyList();
 
         final List<IFile> result = new ArrayList();
         try {
+            final File iResourceFile = ModelUtil.getLocation(iResource).toFile();
+            if (!iResourceFile.exists())
+                return Collections.emptyList();
 
             // Get the header information from the XSD file
             if (ModelUtil.isXsdFile(iResource)) {
@@ -865,8 +866,14 @@ public class WorkspaceResourceFinderUtil {
             if (!ModelUtil.isVdbArchiveFile(fileResource))
                 continue;
 
-            final File vdbFile = fileResource.getRawLocation().toFile();
-            if (! vdbFile.exists())
+            File vdbFile = null;
+            try {
+                vdbFile = ModelUtil.getLocation(fileResource).toFile();
+            } catch (CoreException ex) {
+                ModelerCore.Util.log(ex);
+            }
+
+            if (vdbFile == null || ! vdbFile.exists())
                 continue;
 
             if (vdbContainsResource(vdbFile, resource.getFullPath().makeAbsolute()))

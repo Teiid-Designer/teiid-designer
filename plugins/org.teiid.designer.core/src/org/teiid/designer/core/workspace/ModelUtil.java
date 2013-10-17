@@ -470,6 +470,37 @@ public class ModelUtil {
     }
 
     /**
+     * Determines the location of the given {@link IResource}.
+     * It first tries {@link IResource#getRawLocation()} and if
+     * null then tries {@link IResource#getLocation()}.
+     *
+     * @param resource
+     *
+     * @return {@link IPath} of resource location
+     *
+     * @throws CoreException if location cannot be determined
+     */
+    public static IPath getLocation(final IResource resource) throws CoreException {
+        if (resource == null) {
+            String message = getString("location.nullResource"); //$NON-NLS-1$
+            IStatus errStatus = new Status(IStatus.ERROR, ModelerCore.PLUGIN_ID, message);
+            throw new CoreException(errStatus);
+        }
+
+        IPath location = resource.getRawLocation();
+        if (location == null)
+            location = resource.getLocation();
+
+        if (location == null) {
+            String message = getString("location.indeterminateResource", resource.getName()); //$NON-NLS-1$
+            IStatus errStatus = new Status(IStatus.ERROR, ModelerCore.PLUGIN_ID, message);
+            throw new CoreException(errStatus);
+        }
+
+        return location;
+    }
+
+    /**
      * Method returns a relative path URI value between a baseResourceURI and an importedResourceURI
      * 
      * @param baseResourceURI

@@ -13,12 +13,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -400,8 +400,9 @@ public class VdbModelBuilder {
                             resource = mResource.getEmfResource();
                         } else {
                             // Force a load if it not already loaded.
-                            if (iResource.getRawLocation() != null) {
-                                final URI uri = URI.createFileURI(iResource.getRawLocation().toString());
+                            IPath location = ModelUtil.getLocation(iResource);
+                            if (location != null) {
+                                final URI uri = URI.createFileURI(location.toString());
                                 resource = ModelerCore.getModelContainer().getResource(uri, true);
                                 if (resource != null) {
                                     resource.setModified(false);

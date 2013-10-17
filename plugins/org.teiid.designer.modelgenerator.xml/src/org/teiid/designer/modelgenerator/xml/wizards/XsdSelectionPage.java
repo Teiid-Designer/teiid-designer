@@ -55,6 +55,7 @@ import org.eclipse.xsd.XSDSchema;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.modelgenerator.xml.IUiConstants;
 import org.teiid.designer.modelgenerator.xml.Util;
 import org.teiid.designer.modelgenerator.xml.XmlImporterUiPlugin;
@@ -181,6 +182,13 @@ public abstract class XsdSelectionPage extends AbstractWizardPage {
     /** The selected XSD files table viewer. */
     private TableViewer viewer;
 
+    /**
+     * Create new instance
+     *
+     * @param importWizard
+     * @param prefix
+     * @param util
+     */
     public XsdSelectionPage( XsdAsRelationalImportWizard importWizard,
                              String prefix,
                              PluginUtil util ) {
@@ -774,7 +782,13 @@ public abstract class XsdSelectionPage extends AbstractWizardPage {
             throw new IllegalArgumentException(msg);
         }
 
-        URI uri = URI.createFileURI(theFile.getRawLocation().toString());
+        URI uri;
+        try {
+            uri = URI.createFileURI(ModelUtil.getLocation(theFile).toString());
+        } catch (CoreException ex) {
+            throw new IllegalStateException(ex);
+        }
+
         addResourceURI(theFile, uri);
     }
 

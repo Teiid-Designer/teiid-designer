@@ -991,7 +991,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
             if (resourceItem != null && resourceItem instanceof ModelResourceImpl) ((ModelResourceImpl)resourceItem).removeEmfResource();
 
             // remove XMIHeader from cache
-            this.FileToxmlHeaderMap.remove(resource.getRawLocation().toOSString());
+            this.FileToxmlHeaderMap.remove(ModelUtil.getLocation(resource).toOSString());
         }
 
         if (resource.exists() && resource.isAccessible() && resourceType != IResource.FILE) {

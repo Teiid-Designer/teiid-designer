@@ -21,7 +21,7 @@ import org.teiid.core.designer.event.EventObjectListener;
 import org.teiid.core.designer.event.EventSourceException;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.udf.UdfManager;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
 import org.teiid.designer.ui.common.actions.ActionService;
@@ -101,8 +101,9 @@ public final class UdfUiPlugin extends AbstractUiPlugin implements EventObjectLi
         ModelResourceEvent event = (ModelResourceEvent)obj;
         if( ModelIdentifier.isFunctionModel(event.getModelResource())) {
 
-        	try {
-        	final IPath path = ((IFile)event.getModelResource().getCorrespondingResource()).getRawLocation();
+            try {
+                IFile file = (IFile) event.getModelResource().getCorrespondingResource();
+                final IPath path = ModelUtil.getLocation(file);
 	        	if( path != null ) {
 			        if (event.getType() == ModelResourceEvent.RELOADED || event.getType() == ModelResourceEvent.ADDED) {
 			        	if( !event.getModelResource().isOpen() ) {
@@ -118,14 +119,15 @@ public final class UdfUiPlugin extends AbstractUiPlugin implements EventObjectLi
 	        	} else {
 	        		UdfUiPlugin.UTIL.log(IStatus.ERROR, "Error registering function model: " + event.getModelResource().getItemName()); //$NON-NLS-1$
 	        	}
-        	} catch(ModelWorkspaceException ex) {
+            } catch(Exception ex) {
         		UdfUiPlugin.UTIL.log(ex);
         	}
         } else if( ModelIdentifier.isRelationalSourceModel(event.getModelResource()) ) {
         	// Only need to notify UdfManager if the changed resource is a Physical/source model.
         	// Relational View, XML view, WS view and XSD models do NOT and will not contain functions.
-        	try {
-        	final IPath path = ((IFile)event.getModelResource().getCorrespondingResource()).getRawLocation();
+            try {
+                IFile file = (IFile) event.getModelResource().getCorrespondingResource();
+                final IPath path = ModelUtil.getLocation(file);
 	        	if( path != null ) {
 			        if (event.getType() == ModelResourceEvent.RELOADED || event.getType() == ModelResourceEvent.ADDED) {
 			        	if( !event.getModelResource().isOpen() ) {
@@ -140,7 +142,7 @@ public final class UdfUiPlugin extends AbstractUiPlugin implements EventObjectLi
 	        	} else {
 	        		UdfUiPlugin.UTIL.log(IStatus.ERROR, "Error registering function model: " + event.getModelResource().getItemName()); //$NON-NLS-1$
 	        	}
-        	} catch(ModelWorkspaceException ex) {
+            } catch(Exception ex) {
         		UdfUiPlugin.UTIL.log(ex);
         	}
         }

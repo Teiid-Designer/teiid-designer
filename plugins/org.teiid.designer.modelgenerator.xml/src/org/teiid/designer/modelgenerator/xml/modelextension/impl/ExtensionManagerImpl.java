@@ -21,6 +21,7 @@ import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.CoreFactory;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
@@ -158,7 +159,15 @@ public abstract class ExtensionManagerImpl implements ExtensionManager {
         cntr.getPackageRegistry().put(ExtensionPackage.eNS_URI, ExtensionPackage.eINSTANCE);
 
         IFile extensionFile = targetModelLocation.getProject().getFile(new Path(validateFileName(getModelFileName())));
-        String extPath = extensionFile.getRawLocation().toOSString();
+        String extPath;
+        try {
+            extPath = ModelUtil.getLocation(extensionFile).toOSString();
+        } catch (CoreException ex) {
+            ModelerCoreException mbe = new ModelerCoreException();
+            mbe.initCause(ex);
+            throw mbe;
+        }
+
         URI fileURI = URI.createFileURI(extPath);
         Resource xPkg = cntr.getResource(fileURI, true);
         EList resources = xPkg.getContents();

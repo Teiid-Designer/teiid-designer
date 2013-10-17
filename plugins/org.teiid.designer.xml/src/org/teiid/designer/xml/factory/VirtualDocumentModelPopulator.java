@@ -72,6 +72,7 @@ public class VirtualDocumentModelPopulator implements IDocumentsAndFragmentsPopu
 
     /**
      * Construct an instance of VirtualDocumentModelPopulator.
+     * @param schemaModel
      */
     public VirtualDocumentModelPopulator( IFile schemaModel ) {
         this.schemaModel = schemaModel;
@@ -80,6 +81,7 @@ public class VirtualDocumentModelPopulator implements IDocumentsAndFragmentsPopu
 
     /**
      * Construct an instance of VirtualDocumentModelPopulator.
+     * @param initialRootElements
      */
     public VirtualDocumentModelPopulator( List initialRootElements ) {
         // Let's set the schema model
@@ -105,7 +107,7 @@ public class VirtualDocumentModelPopulator implements IDocumentsAndFragmentsPopu
     private void populateLists() {
         try {
             // Read the models ...
-            final URI uri = URI.createFileURI(schemaModel.getRawLocation().toString());
+            final URI uri = URI.createFileURI(ModelUtil.getLocation(schemaModel).toString());
             Resource resource = ModelerCore.getModelContainer().getResource(uri, true);
             for (Iterator iter = resource.getContents().iterator(); iter.hasNext();) {
                 Object obj = iter.next();
@@ -238,7 +240,7 @@ public class VirtualDocumentModelPopulator implements IDocumentsAndFragmentsPopu
 
         // Ensure that the XSD resource used to build the XML document model is fully resolved
         try {
-            final URI uri = URI.createFileURI(schemaModel.getRawLocation().toString());
+            final URI uri = URI.createFileURI(ModelUtil.getLocation(schemaModel).toString());
             Resource xsdResource = ModelerCore.getModelContainer().getResource(uri, true);
             if (xsdResource != null) {
                 XsdUtil.resolveSchemaDirectives(xsdResource);

@@ -9,6 +9,7 @@ package org.teiid.designer.ui.viewsupport;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IStatusLineManager;
@@ -19,6 +20,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDParticle;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ui.UiConstants;
 
 
@@ -97,9 +99,14 @@ implements ISelectionChangedListener, UiConstants {
         
     private String formatResourceMessage(IResource element) {
         IContainer parent= element.getParent();
-        if (parent != null && parent.getType() != IResource.ROOT)
-            //return element.getFullPath() + " class = " + element.getClass().getName();
-            return element.getRawLocation().toString();
+        if (parent != null && parent.getType() != IResource.ROOT) {
+            try {
+                return ModelUtil.getLocation(element).toString();
+            } catch (CoreException ex) {
+                UiConstants.Util.log(ex);
+                return ex.getLocalizedMessage();
+            }
+        }
         return element.getName() + Util.getString("StatusBarUpdater._class____4") + element.getClass().getName(); //$NON-NLS-1$
     }   
 }

@@ -57,7 +57,7 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
         public void indexFile(IResource resource, IFile relatedFile, RefactoringStatus status) throws Exception {
             RefactorResourcesUtils.unloadModelResource(relatedFile);
 
-            IPath relatedFilePath = relatedFile.getRawLocation().makeAbsolute();
+            IPath relatedFilePath = ModelUtil.getLocation(relatedFile).makeAbsolute();
             IPath relatedParentPath = relatedFilePath.removeLastSegments(1);
 
             // Convert the path pair to a pair of relative paths
@@ -173,7 +173,7 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
     }
 
     @Override
-    public RefactoringStatus checkFinalConditions(IProgressMonitor progressMonitor) throws OperationCanceledException {
+    public RefactoringStatus checkFinalConditions(IProgressMonitor progressMonitor) throws CoreException, OperationCanceledException {
         /* Clear changes in case we are going back then forward in the wizard */
         clearChanges();
 
@@ -182,7 +182,9 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
             progressMonitor.beginTask(RefactorResourcesUtils.getString("RenameRefactoring.finalConditions"), 2); //$NON-NLS-1$
 
             for (IResource resource : getResources()) {
-                IPath absPath = resource.getRawLocation().makeAbsolute();
+                IPath location = ModelUtil.getLocation(resource);
+                IPath absPath = location.makeAbsolute();
+
                 IPath parentFolder = absPath.removeLastSegments(1);
                 IPath destination = parentFolder.append(getNewResourceName());
                 PathPair absPathPair = new PathPair(absPath.toOSString(), destination.toOSString());
