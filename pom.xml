@@ -17,6 +17,7 @@
 		<module>plugins</module>
 		<module>features</module>
 		<module>tests</module>
+		<module>test-aggregate</module>
 		<module>site</module>
 	</modules>
 
