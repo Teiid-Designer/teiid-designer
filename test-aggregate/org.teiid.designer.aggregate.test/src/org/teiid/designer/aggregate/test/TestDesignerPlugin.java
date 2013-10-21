@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.test;
+package org.teiid.designer.aggregate.test;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
@@ -17,7 +17,7 @@ import org.teiid.designer.ui.common.UiConstants;
 
 public class TestDesignerPlugin extends Plugin {
     
-    private static String ID = "org.teiid.designer.test"; //$NON-NLS-1$
+    private static String ID = TestDesignerPlugin.class.getPackage().getName();
     
     private static TestDesignerPlugin instance;
     
