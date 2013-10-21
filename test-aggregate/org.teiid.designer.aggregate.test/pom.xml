@@ -44,6 +44,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                 <artifactId>tycho-surefire-plugin</artifactId>
                 <version>${tychoVersion}</version>
                 <configuration>
+                    <systemProperties>
+                        <property>
+                            <name>usage_reporting_enabled</name>
+                            <value>false</value>
+                        </property>
+                    </systemProperties>
                     <showEclipseLog>true</showEclipseLog>
                     <dependencies>
                         <dependency>

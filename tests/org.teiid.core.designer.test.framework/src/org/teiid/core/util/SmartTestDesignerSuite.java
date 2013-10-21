@@ -213,8 +213,8 @@ public class SmartTestDesignerSuite extends TestSuite {
             file = URIUtil.toFile(URIUtil.toURI(fileURL));
         }
         catch (Exception ex) {
-            Assert.fail("Unable to open the data file \"" + path + "\""); //$NON-NLS-1$ //$NON-NLS-2$
             ex.printStackTrace();
+            Assert.fail("Unable to open the data file \"" + path + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         }
         
         return file.getAbsolutePath();
