@@ -1,4 +1,4 @@
-package org.teiid772server.test;
+package org.teiid772.server.test;
 
 
 import org.junit.runner.RunWith;

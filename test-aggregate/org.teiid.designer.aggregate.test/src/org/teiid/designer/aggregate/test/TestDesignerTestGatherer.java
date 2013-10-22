@@ -9,8 +9,11 @@ package org.teiid.designer.aggregate.test;
 
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
@@ -49,6 +52,10 @@ public class TestDesignerTestGatherer extends TestCase {
 
     private static Map<String, URL> testCache = new HashMap<String, URL>();
 
+    private static Map<String, Integer> testsInPackage = new HashMap<String, Integer>();
+
+    private static Map<String, Integer> testsInClass = new HashMap<String, Integer>();
+
     /**
      * Assemble a junit 3 test suite
      *
@@ -66,20 +73,29 @@ public class TestDesignerTestGatherer extends TestCase {
             if (Platform.isFragment(bundle)) {
                 // Ignore test fragments since AllTests classes loaded from their
                 // host bundles
+                System.out.println("Ignoring Test fragment " + bundle.getSymbolicName() + " since it is accessible from its host bundle");
                 continue;
             }
 
             if (bundle.getSymbolicName().contains(TEST)) {
                 // Ignore the test framework plugins
+                System.out.println("Ignoring Test framework plugin " + bundle.getSymbolicName());
                 continue;
             }
 
             if (!bundle.getSymbolicName().matches(BUNDLE_FILTER)) {
+                System.out.println("Ignoring non-teiid plugin " + bundle.getSymbolicName());
                 continue;
             }
 
             collectTests(aggregateSuite, bundle);
         }
+
+        System.out.println("=== Number of Tests found per Class ==="); //$NON-NLS-1$
+        outputCounts(testsInClass);
+
+        System.out.println("=== Number of Tests found per Package ==="); //$NON-NLS-1$
+        outputCounts(testsInPackage);
 
         if (aggregateSuite.countTestCases() == 0) {
             aggregateSuite.addTest(TestSuite.warning("Cannot find any tests conforming to the filter " + BUNDLE_FILTER)); //$NON-NLS-1$
@@ -96,8 +112,11 @@ public class TestDesignerTestGatherer extends TestCase {
 
         Enumeration<URL> entries = bundle.findEntries(BUNDLE_ROOT, ALL_TESTS_CLASS, true);
         if (entries == null || !entries.hasMoreElements()) {
+            System.out.println("No AllTest class found in plugin " + bundle.getSymbolicName());
             return;
         }
+
+        System.out.println("Collecting Tests for " + bundle.getSymbolicName() + PACKAGE_SEPARATOR + TEST); //$NON-NLS-1$
 
         TestSuite suite = new TestSuite(bundle.getSymbolicName() + PACKAGE_SEPARATOR + TEST);
 
@@ -143,6 +162,44 @@ public class TestDesignerTestGatherer extends TestCase {
     }
 
     /**
+     * @param counts
+     */
+    private static void outputCounts(Map<String, Integer> counts) {
+        int total = 0;
+        List<String> outLines = new ArrayList<String>();
+        for (Map.Entry<String, Integer> entry : counts.entrySet()) {
+            outLines.add(entry.getKey() + "\t\t\t" + entry.getValue()); //$NON-NLS-1$
+            total += entry.getValue();
+        }
+
+        Collections.sort(outLines);
+
+        System.out.println();
+        for (String outLine : outLines) {
+            System.out.println(outLine);
+        }
+
+        System.out.println("Total Number of Tests = " + total); //$NON-NLS-1$
+        System.out.println();
+    }
+
+    private static void count(Class<?> testClass, int noTestCases) {
+        String className = testClass.getCanonicalName();
+        Integer classCount = testsInClass.get(className);
+        if (classCount == null) {
+            classCount = 0;
+        }
+        testsInClass.put(className, (classCount + noTestCases));
+
+        String pkgName = testClass.getPackage().getName();
+        Integer pkgCount = testsInPackage.get(pkgName);
+        if (pkgCount == null) {
+            pkgCount = 0;
+        }
+        testsInPackage.put(pkgName, (pkgCount + noTestCases));
+    }
+
+    /**
      * Such classes do not extend {@link TestCase} and simply use the Test annotation
      * to denote their tests.
      *
@@ -156,6 +213,8 @@ public class TestDesignerTestGatherer extends TestCase {
 
         JUnit4TestAdapter testAdapter = new JUnit4TestAdapter(klazz);
         suite.addTest(testAdapter);
+
+        count(klazz, testAdapter.countTestCases());
     }
 
     /**
@@ -183,10 +242,16 @@ public class TestDesignerTestGatherer extends TestCase {
             // to use these.
             Method declaredMethod = suiteKlazz.getDeclaredMethod("suite"); //$NON-NLS-1$
             Object object = declaredMethod.invoke(suiteKlazz, new Object[0]);
-            suite.addTest((Test) object);
+            Test testCase = (Test) object;
+            suite.addTest(testCase);
+
+            count(suiteKlazz, testCase.countTestCases());
         }
         catch (Exception noSuchMethodException) {
-            suite.addTestSuite(suiteKlazz);
+            TestSuite testSuite = new TestSuite(suiteKlazz);
+            suite.addTest(testSuite);
+
+            count(suiteKlazz, testSuite.countTestCases());
         }
     }
 
