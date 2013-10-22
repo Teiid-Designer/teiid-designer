@@ -297,8 +297,11 @@ public class DqpPlugin extends Plugin {
      */
     @Override
     public void stop( final BundleContext context ) throws Exception {
-        getServersProvider().removeServerStateListener(TeiidParentServerListener.getInstance());
-        getServersProvider().removeServerLifecycleListener(TeiidParentServerListener.getInstance());
+        if (getServersProvider().isInitialised()) {
+            // If server is no longer initialised then no need to remove the listeners
+            getServersProvider().removeServerStateListener(TeiidParentServerListener.getInstance());
+            getServersProvider().removeServerLifecycleListener(TeiidParentServerListener.getInstance());
+        }
         
         try {
             if (getServerManager() != null) {
