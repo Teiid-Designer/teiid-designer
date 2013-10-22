@@ -498,7 +498,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
                 ResultSet resultSet = metadata.getCatalogs();
                 while( resultSet.next() ) {
                     final String catalogName = resultSet.getString(1);
-                    if( catalogName.length() > 0 ) {
+                    if( catalogName!=null && catalogName.length() > 0 ) {
                         supportsCatalogs = true;
                     }
                 } 
