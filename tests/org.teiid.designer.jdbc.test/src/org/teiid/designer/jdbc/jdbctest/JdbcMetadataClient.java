@@ -461,7 +461,9 @@ public class JdbcMetadataClient {
             try {
                 while( resultSet.next() ) {
                     final String name = resultSet.getString(1);
-                    this.catalogs.add(name);
+                    if(name!=null && name.length()>0) {
+                    	this.catalogs.add(name);
+                    }
                 }
             } finally {
                 if ( resultSet != null ) {

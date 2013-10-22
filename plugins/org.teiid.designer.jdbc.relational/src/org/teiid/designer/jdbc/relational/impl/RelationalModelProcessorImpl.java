@@ -2714,7 +2714,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
 		        	int i = 0;
 		        	while( cats.next() ) {
 		                final String catalogName = cats.getString(i+1);
-		                if( catalogName.length() > 0 ) {
+		                if( catalogName!=null && catalogName.length() > 0 ) {
 		                	String matchStr = catalogName + '.';
 		                	if( quoteStr != null ) {
 		                		matchStr = quoteStr + catalogName + quoteStr + '.';

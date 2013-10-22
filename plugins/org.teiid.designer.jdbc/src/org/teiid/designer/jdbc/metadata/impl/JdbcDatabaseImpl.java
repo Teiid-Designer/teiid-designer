@@ -290,7 +290,7 @@ public class JdbcDatabaseImpl extends JdbcNodeImpl implements JdbcDatabase, Inte
                 resultSet = metadata.getCatalogs();
                 while (resultSet.next()) {
                     final String catalogName = resultSet.getString(1);
-                    if (catalogName.length() > 0) {
+                    if (catalogName!=null && catalogName.length() > 0) {
                         children.add(new JdbcCatalogImpl(this, catalogName));
                     }
                 }
