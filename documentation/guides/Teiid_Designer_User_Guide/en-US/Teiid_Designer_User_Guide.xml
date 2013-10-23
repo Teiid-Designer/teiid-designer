@@ -9,6 +9,7 @@
   <xi:include href="importers.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="editingmodelobjects.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="metadataspecificmodeling.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="user-defined-functions.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="editmodelsandprojects.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="managing-vdbs.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="testmodels.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />

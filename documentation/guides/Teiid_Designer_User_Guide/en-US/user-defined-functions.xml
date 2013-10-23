@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!-- ####### USER DEfINED FUNCTIONS CHAPTER ######################################## -->
+<chapter id="user-defined-functions-chapter">
+	<title>User Defined Functions</title>
+
+    <para>Teiid Designer enables users to extend Teiid's scalar or aggregate function library via modeling and 
+    	definition of custom or User Defined Functions(UDFs).
+	</para>
+	<para>The following are used to define a UDF.
+		<itemizedlist>
+			<listitem>
+		    	<para><emphasis role="bold">Function Name</emphasis> - When you create the function name, keep these requirements in mind:</para>
+		    	<itemizedlist>
+			        <listitem>
+			            <para>You cannot overload existing Teiid System functions.</para>
+			        </listitem>
+			        <listitem>
+			            <para>The function name must be unique among user-defined functions in its model for the number 
+			            of arguments. You can use the same function name for different numbers of types of arguments. 
+			            Hence, you can overload your user-defined functions.</para>
+			        </listitem>
+			        <listitem>
+			            <para>The function name cannot contain the '.' character.</para>
+			        </listitem>
+			        <listitem>
+			            <para>The function name cannot exceed 255 characters.</para>
+			        </listitem>
+		        </itemizedlist>
+	 		</listitem>
+	 		<listitem>
+	    		<emphasis role="bold">Input Parameters</emphasis>- defines a type specific signature list. All arguments are considered required.
+			</listitem>
+			<listitem>
+			    <emphasis role="bold">Return Type</emphasis>- the expected type of the returned scalar value.
+			</listitem>
+			<listitem>
+			    <emphasis role="bold">Pushdown</emphasis> - can be one of REQUIRED, NEVER, ALLOWED. Indicates the expected pushdown behavior. 
+			    If NEVER or ALLOWED are specified then a Java implementation of the function should be supplied. 
+			    If REQUIRED is used, then user must extend the Translator for the source and add this function to 
+			    its pushdown function library.
+			</listitem>
+			<listitem>
+			    <emphasis role="bold">invocationClass/invocationMethod</emphasis>- optional properties indicating the method to invoke when the UDF 
+			    is not pushed down.
+			</listitem>
+			<listitem>
+			    <emphasis role="bold">Deterministic</emphasis> - if the method will always return the same result for the same input parameters. 
+			    Defaults to false. It is important to mark the function as deterministic if it returns the same 
+			    value for the same inputs as this will lead to better performance. See also the Relational 
+			    extension boolean metadata property "deterministic" and the DDL OPTION property "determinism". 
+			    Defaults to false. It is important to mark the function as deterministic if it returns the same 
+			    value for the same inputs as this will lead to better performance. See also the Relational 
+			    extension boolean metadata property "deterministic" and the DDL OPTION property "determinism".
+			</listitem>
+		</itemizedlist>
+		<para>
+			Even Pushdown required functions need to be added as a UDF to allow Teiid to properly parse and resolve the function. Pushdown scalar functions differ from normal user-defined functions in that no code is provided for evaluation in the engine. An exception will be raised if a pushdown required function cannot be evaluated by the appropriate source.
+		</para>
+    </para>
+    
+ 
+    <section id="new-function-wizard-section">
+	    <title>Modeling your functions</title>
+	    <para>
+			Teiid Designer provides a new object wizard to assist in modeling your UDF. Simply right-click select a model and 
+			right-click select <emphasis role="bold">New > Procedure</emphasis> action. In the wizard there will be an option
+			to specify the functions's jar location on your file system, as well as the java class and java method.
+			(See <xref linkend="create-relational-procedure-wizard-section"/> for further information)
+	    </para>
+	    <para>If creating a function by other means, you'll need to select the procedure and edit the different properties for the
+	    	procedure in the Properties view.
+	    	<figure>
+                <title>VDB UDF Jar Files</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/function-properties-example.png" />
+                    </imageobject>
+                </mediaobject>
+            </figure>
+	    </para>
+    </section>
+    <section id="using-your-function-in-transformation-section">
+	    <title>Utilizing your UDFs in transformations</title>
+	    <para>
+			Once you've modeled your functions you can use your function calls in your transformation SQL. These functions
+			will be accessible through the Transformation Editor's expression builder wizard, just like any other built-in
+			function. (See <xref linkend="using-expression-builder-section"/> for further information)
+	    </para>
+    </section>
+    <section id="vdb-with-functions-section">
+	    <title>Including functions in your VDB</title>
+	    <para>
+			In order for Teiid to become aware of your functions, the actual code must be deployed on your server and available
+			to your Teiid submodule. Your Teiid Designer workspace is aware of any models containing functions and their referenced
+			jars and class info.  When a source model containing UDFs is added to a VDB, the jar containing the defined function will be
+			added to your VDB and visible in the VDB Editor's UDF Jars tab.
+			<figure>
+                <title>VDB UDF Jar Files</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/vdb-editor-udf-jars-tab.png" />
+                    </imageobject>
+                </mediaobject>
+            </figure>
+	    </para>
+    </section>
+</chapter>
+    
