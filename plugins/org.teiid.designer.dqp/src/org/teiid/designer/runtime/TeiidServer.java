@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.sql.Driver;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import org.eclipse.core.resources.IFile;
@@ -529,6 +530,18 @@ public class TeiidServer implements ITeiidServer {
                                                  String typeName,
                                                  Properties properties) throws Exception {
         connect();
+        CoreArgCheck.isNotNull(displayName, "displayName"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(jndiName, "jndiName"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(typeName, "typeName"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(properties, "properties"); //$NON-NLS-1$
+
+        for (Entry<Object, Object> entry : properties.entrySet()) {
+            Object value = entry.getValue();
+            String errorMsg = "No value for the connection property '" + entry.getKey() + "'"; //$NON-NLS-1$ //$NON-NLS-2$
+            CoreArgCheck.isNotNull(value, errorMsg);
+            CoreArgCheck.isNotEmpty(value.toString(), errorMsg);
+        }
+
         return admin.getOrCreateDataSource(displayName, jndiName, typeName, properties);
     }
 
