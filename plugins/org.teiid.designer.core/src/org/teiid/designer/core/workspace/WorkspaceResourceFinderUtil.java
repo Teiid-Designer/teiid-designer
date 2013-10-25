@@ -1213,14 +1213,20 @@ public class WorkspaceResourceFinderUtil {
 
         @Override
         public boolean visit(IResource resource) {
-            if (! resource.exists() || resource.getType() != IResource.FILE || getResourceFilter().accept(resource)) 
-                return false;
+            /*
+             * Always needs to return true since the search will not recurse into
+             * projects and folders!
+             *
+             * However, we only add the resource if it matches the name.
+             */
+            if (! resource.exists() || resource.getType() != IResource.FILE || ! getResourceFilter().accept(resource)) 
+                return true;
 
             IPath path = resource.getFullPath();
             // Do not process file names staring with '.' since these
             // are considered reserved for Eclipse specific files
             if (path.lastSegment().charAt(0) == '.')
-                return false;
+                return true;
 
             if (removeExtension)
                 path = path.removeFileExtension();
