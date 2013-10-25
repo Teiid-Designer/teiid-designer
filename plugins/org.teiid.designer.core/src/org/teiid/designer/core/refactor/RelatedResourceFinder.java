@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResourceFilter;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 
 /**
@@ -71,7 +72,19 @@ public class RelatedResourceFinder {
                     dependentResources = new HashSet<IFile>();
 
                     for (int idx = 0; idx < resources.length; idx++) {
-                        dependentResources.addAll(findDependentResources(resources[idx]));
+                        IResource depResource = resources[idx];
+
+                        /*
+                         * Add this resource (if a model file) since it is a dependency
+                         * of the container.
+                         */
+                        if (ModelUtil.isModelFile(depResource.getFullPath()))
+                            dependentResources.add((IFile) depResource);
+
+                        /*
+                         * Add the dependent resource's dependencies too
+                         */
+                        dependentResources.addAll(findDependentResources(depResource));
                     }
                 } // endif
             } else {
@@ -109,6 +122,12 @@ public class RelatedResourceFinder {
                 IResource[] resources = folder.members();
 
                 for (int idx = 0; idx < resources.length; idx++) {
+                    /*
+                     * Don't add this resource to the collection since the members of the folder
+                     * are dependent on the container and NOT dependencies of the container,
+                     * ie. member contained by (dependent) on parent container rather than
+                     *     container contains (association not dependency) on members.
+                     */
                     dependencyResources.addAll(findDependencyResources(resources[idx]));
                 }
 

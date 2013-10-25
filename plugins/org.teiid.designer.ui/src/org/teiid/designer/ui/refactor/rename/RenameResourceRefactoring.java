@@ -8,6 +8,7 @@
 package org.teiid.designer.ui.refactor.rename;
 
 import java.util.Collections;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -72,8 +73,11 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
                 RefactorResourcesUtils.calculateSQLChanges(relatedFile, relativePathPair, textFileChange);
             }
 
-            if (addTextChange(relatedFile, textFileChange)) {
-                // Calculate the effect on any vdbs containing this modified related file
+            if (addTextChange(relatedFile, textFileChange) || getResource() instanceof IContainer) {
+                /*
+                 * Calculate the effect on any vdbs containing this related file. File has either been
+                 * modified or had its path changed due to the resource being renamed.
+                 */
                 RefactorResourcesUtils.calculateRelatedVdbResources(relatedFile, status, this);
             }
         }
@@ -81,7 +85,26 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
         @Override
         public void indexVdb(IResource resource, IFile vdbFile, RefactoringStatus status) {
             IPath oldResourcePath = resource.getFullPath();
-            IPath newResourcePath = oldResourcePath.removeLastSegments(1).append(getNewResourceName());
+            IPath newResourcePath = null;
+            if (getResource().equals(resource)) {
+                newResourcePath = oldResourcePath.removeLastSegments(1).append(getNewResourceName());
+            } else if (getResource().getFullPath().isPrefixOf(oldResourcePath)) {
+                /*
+                 * resource being renamed is a parent container of this resource
+                 */
+                IPath oldRResPath = getResource().getFullPath();
+                IPath newRResPath = oldRResPath.removeLastSegments(1).append(getNewResourceName());
+
+                int segmentCount = oldRResPath.matchingFirstSegments(oldResourcePath);
+                newResourcePath = oldResourcePath.removeFirstSegments(segmentCount);
+                newResourcePath = newRResPath.append(newResourcePath);
+            } else {
+                /*
+                 * resource being renamed is not on the path of this resource hence
+                 * the old resource path will be also the new resource path
+                 */
+                newResourcePath = oldResourcePath;
+            }
             addVdbChange(vdbFile, oldResourcePath, newResourcePath);
         }
     }
@@ -226,7 +249,7 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
     @Override
     public Change createChange(IProgressMonitor progressMonitor) throws OperationCanceledException, CoreException {
         try {
-            progressMonitor.beginTask(RefactorResourcesUtils.getString("MoveRefactoring.creatingChange"), 1); //$NON-NLS-1$
+            progressMonitor.beginTask(RefactorResourcesUtils.getString("RenameRefactoring.creatingChange"), 1); //$NON-NLS-1$
             CompositeChange change = new RenameResourceCompositeChange( getName(), 
                                                                                                                       getChanges().toArray(new Change[0]),
                                                                                                                       newName,

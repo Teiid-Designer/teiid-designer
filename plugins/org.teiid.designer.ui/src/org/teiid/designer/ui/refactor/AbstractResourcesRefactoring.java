@@ -41,15 +41,15 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
 
     private Map<IResource, Collection<Change>> changes = new LinkedHashMap<IResource, Collection<Change>>();
 
-    private final KeyInValueHashMap<IFile, VdbResourceChange> vdbChanges;
+    private final KeyInValueHashMap<String, VdbResourceChange> vdbChanges;
     
     private String name;
 
-    private class VdbResourceChangeAdapter implements KeyFromValueAdapter<IFile, VdbResourceChange> {
+    private class VdbResourceChangeAdapter implements KeyFromValueAdapter<String, VdbResourceChange> {
 
         @Override
-        public IFile getKey(VdbResourceChange value) {
-            return value.getVdb();
+        public String getKey(VdbResourceChange value) {
+            return value.getParentFolder() + value.getVdbName();
         }
     }
 
@@ -73,7 +73,7 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
         super();
         this.name = name;
         this.resources = resources;
-        this.vdbChanges = new KeyInValueHashMap<IFile, VdbResourceChange>(new VdbResourceChangeAdapter());
+        this.vdbChanges = new KeyInValueHashMap<String, VdbResourceChange>(new VdbResourceChangeAdapter());
     }
 
     @Override
@@ -131,7 +131,7 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
     protected abstract void checkResource(IResource resource, IProgressMonitor progressMonitor, RefactoringStatus status);
     
     protected void addVdbChange(VdbResourceChange change) {
-        VdbResourceChange mappedChange = vdbChanges.get(change.getVdb());
+        VdbResourceChange mappedChange = vdbChanges.get(change.getParentFolder() + change.getVdbName());
         if (mappedChange == null) {
             vdbChanges.add(change);
             return;
@@ -141,7 +141,7 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
     }
     
     protected void addVdbChange(IFile vdbFile, IPath invalidResourcePath, IPath newResourcePath) {
-        VdbResourceChange change = vdbChanges.get(vdbFile);
+        VdbResourceChange change = vdbChanges.get(vdbFile.getParent().getName() + vdbFile.getName());
         if (change == null) {
             change = new VdbResourceChange(vdbFile);
         }

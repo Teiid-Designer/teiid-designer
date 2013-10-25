@@ -413,6 +413,11 @@ public class RefactorResourcesUtils {
 
             while ((line = reader.readLine()) != null) {
                 for (PathPair pathPair : pathPairs) {
+                    if (pathPair.getSourcePath().equals(pathPair.getTargetPath())) {
+                        /* Absolutely nothing to do since the replacement is the same as the change */
+                        continue;
+                    }
+
                     int lineOffset = line.indexOf(pathPair.getSourcePath());
                     if (lineOffset < 0) continue;
 

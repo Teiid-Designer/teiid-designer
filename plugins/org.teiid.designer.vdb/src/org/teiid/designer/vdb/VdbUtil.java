@@ -42,6 +42,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.ChecksumUtil;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
 import org.teiid.designer.core.ModelerCore;
@@ -736,8 +737,9 @@ public class VdbUtil {
                 }
             } else {
                 // Find my model name
+                IPath modelPath = new Path(model.getPath());
                 Collection<IFile> resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(model.getName()
-                                                                                                 + ModelUtil.DOT_EXTENSION_XMI,
+                                                                                                 + CoreStringUtil.Constants.DOT + modelPath.getFileExtension(),
                                                                                                  theProject);
                 if (resources.size() == 1) {
                     resource = resources.iterator().next();
