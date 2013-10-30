@@ -239,20 +239,21 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
             // Copy the Web files.
             getWebFiles(contextDirectory, webInfDirectory);
 
-            if (properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE).equals(WarDeploymentInfoPanel.BASIC)) {
+            // Encapsulate the security properties in order to ensure they are valid
+            SecurityCredentials securityCredentials = new SecurityCredentials(properties);
+            if (securityCredentials.hasType(WarDeploymentInfoPanel.BASIC)) {
                 // Replace the variables in the jboss-web.xml file.
-                replaceJBossWebXmlVariables(webInfDirectoryName,
-                                            properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM));
+                replaceJBossWebXmlVariables(webInfDirectoryName, securityCredentials.getSecurityRealm());
             }
 
             // Replace the variables in the web.xml file.
-            replaceWebXmlVariables(webInfDirectoryName, properties, contextName);
+            replaceWebXmlVariables(webInfDirectoryName, securityCredentials, contextName);
             // Replace the variables in the jbossws-cxf.xml file.
-            replaceJBossWSCXFVariables(webInfDirectoryName, properties);
+            replaceJBossWSCXFVariables(webInfDirectoryName, properties, securityCredentials);
             // Create properties file and write to classes root.
             createPropertiesFile(webInfClassesDirectory, properties);
             // Create and compile Provider files (one per port).
-            createProviderJavaClasses(webInfLibDirectory, webInfClassesDirectory, properties);
+            createProviderJavaClasses(webInfLibDirectory, webInfClassesDirectory, properties, securityCredentials);
 
             monitor.worked(10);
 
@@ -330,11 +331,11 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         return fileExists;
     }
 
-    protected static String getString( final String id ) {
+    private static String getString( final String id ) {
         return WebServicePlugin.Util.getString(I18N_PREFIX + id);
     }
 
-    protected static String getString( final String id,
+    private static String getString( final String id,
                                        final Object[] params ) {
         return WebServicePlugin.Util.getString(I18N_PREFIX + id, params);
     }
@@ -407,23 +408,23 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
      * @param webInfDirectoryName
      * @param properties
      * @param contextName
+     *
+     * @throws Exception
+     *
      * @since 7.1
      */
-    protected void replaceWebXmlVariables( String webInfDirectoryName,
-                                           Properties properties,
-                                           String contextName ) {
+    private void replaceWebXmlVariables( String webInfDirectoryName,
+                                           SecurityCredentials securityCredentials,
+                                           String contextName ) throws Exception {
 
         // Replace variables in the web.xml file.
         File webXmlFile = new File(webInfDirectoryName + File.separator + "web.xml"); //$NON-NLS-1$
 
         // Update for Basic Auth if HTTPBasic security is selected
-        if (properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE).equals(WarDeploymentInfoPanel.BASIC)) {
-            String realm = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM);
-            String role = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_ROLE);
-
+        if (securityCredentials.hasType(WarDeploymentInfoPanel.BASIC)) {
             AntTasks.replace(webXmlFile, "<!--<security-constraint>", "\t<security-constraint>"); //$NON-NLS-1$ //$NON-NLS-2$
-            AntTasks.replace(webXmlFile, "${realmName}", realm); //$NON-NLS-1$
-            AntTasks.replace(webXmlFile, "${roleName}", role); //$NON-NLS-1$
+            AntTasks.replace(webXmlFile, "${realmName}", securityCredentials.getSecurityRealm()); //$NON-NLS-1$
+            AntTasks.replace(webXmlFile, "${roleName}", securityCredentials.getSecurityRole()); //$NON-NLS-1$
             AntTasks.replace(webXmlFile, "</login-config>-->", "</login-config>"); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
             AntTasks.replace(webXmlFile, "<!--${basic_auth}-->", CoreStringUtil.Constants.EMPTY_STRING); //$NON-NLS-1$
@@ -437,11 +438,11 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
      * Replace the variables in the web.xml file with their appropriate values.
      * 
      * @param webInfDirectoryName
-     * @param properties
-     * @param contextName
+     * @param securityDomain
+     *
      * @since 7.1
      */
-    protected void replaceJBossWebXmlVariables( String webInfDirectoryName,
+    private void replaceJBossWebXmlVariables( String webInfDirectoryName,
                                                 String securityDomain ) {
 
         // Replace variables in the jboss-web.xml file.
@@ -458,17 +459,18 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
      * 
      * @param webInfDirectoryName
      * @param properties
+     * @param securityCredentials
      * @since 7.1
      */
-    protected void replaceJBossWSCXFVariables( String webInfDirectoryName,
-                                               Properties properties ) {
+    private void replaceJBossWSCXFVariables( String webInfDirectoryName,
+                                               Properties properties, SecurityCredentials securityCredentials ) {
 
         // Replace variables in the jbossws-cxf.xml file.
         File jbossWSCxfXMLFile = new File(webInfDirectoryName + File.separator + "jbossws-cxf.xml"); //$NON-NLS-1$
 
-        AntTasks.replace(jbossWSCxfXMLFile, "${jaxws.endpoint}", createEndpointTags(properties, getPorts())); //$NON-NLS-1$
+        AntTasks.replace(jbossWSCxfXMLFile, "${jaxws.endpoint}", createEndpointTags(properties, securityCredentials, getPorts())); //$NON-NLS-1$
 
-        if (isWSSecurity(properties)) {
+        if (securityCredentials.hasType(WarDeploymentInfoPanel.WSSE)) {
             AntTasks.replace(jbossWSCxfXMLFile, "<!--<bean ", "<bean "); //$NON-NLS-1$ //$NON-NLS-2$
             AntTasks.replace(jbossWSCxfXMLFile, "</bean>-->", "</bean>"); //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -482,7 +484,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
      * @param properties
      * @since 7.1
      */
-    protected void createPropertiesFile( File webInfClassesDirectory,
+    private void createPropertiesFile( File webInfClassesDirectory,
                                          Properties properties ) throws IOException {
 
         // Create teiidsoap.properties file
@@ -512,15 +514,17 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
     }
 
     /**
-	 * Create the WSProvider java classes (one for each port)
-	 * 
-	 * @param webInfClassesDirectory
-	 * @param properties
-	 * @since 7.1
-	 */
-	protected void createProviderJavaClasses( File webInfLibDirectory,
+     * Create the WSProvider java classes (one for each port)
+     *
+     * @param webInfClassesDirectory
+     * @param properties
+     * @param securityCredentials
+     * @since 7.1
+     */
+	private void createProviderJavaClasses( File webInfLibDirectory,
 	                                          File webInfClassesDirectory,
-	                                          Properties properties ) throws IOException {
+	                                          Properties properties,
+	                                          SecurityCredentials securityCredentials ) throws IOException {
 	
 	    String pathToProviders = "/org" + File.separator + "teiid" + File.separator + "soap" + File.separator + "provider"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	    String pathToCallback = "/org" + File.separator + "teiid" + File.separator + "soap" + File.separator + "wsse"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -556,7 +560,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 	    File usernameCallback = new File(webInfClassesDirectory.getCanonicalPath() + pathToCallback + File.separator
 	                                     + "UsernamePasswordCallback.java"); //$NON-NLS-1$
 	
-	    if (isWSSecurity(properties)) {
+	    if (securityCredentials.hasType(WarDeploymentInfoPanel.WSSE)) {
 	        AntTasks.replace(usernameCallback,
 	                         "${username}", (String)properties.get(WebArchiveBuilderConstants.PROPERTY_SECURITY_USERNAME)); //$NON-NLS-1$
 	        AntTasks.replace(usernameCallback,
@@ -579,7 +583,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 	        List<File> sourceFileList = new ArrayList<File>();
 	        sourceFileList.add(soapPlugin);
 	        sourceFileList.add(teiidProvider);
-	        if (isWSSecurity(properties)) {
+	        if (securityCredentials.hasType(WarDeploymentInfoPanel.WSSE)) {
 	            sourceFileList.add(usernameCallback);
 	        }
 	        for (File providerClass : portProviders) {
@@ -597,12 +601,9 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 	    }
 	}
 
-    private boolean isWSSecurity( Properties properties ) {
-        return properties.get(WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE).equals(WarDeploymentInfoPanel.WSSE);
-    }
-
     private boolean isUseMTOM( Properties properties ) {
-        return properties.get(WebArchiveBuilderConstants.PROPERTY_USE_MTOM).equals(Boolean.TRUE);
+        Object useMotem = properties.get(WebArchiveBuilderConstants.PROPERTY_USE_MTOM);
+        return useMotem == null ? false : useMotem.equals(Boolean.TRUE);
     }
 
     /**
@@ -802,8 +803,8 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         return servletTags.toString();
     }
 
-    private String createEndpointTags( Properties properties,
-                                       List<String> tags ) {
+    private String createEndpointTags( Properties properties, SecurityCredentials securityCredentials,
+                                                                 List<String> tags ) {
 
         final String contextName = (String)properties.get(WebArchiveBuilderConstants.PROPERTY_CONTEXT_NAME);
         final String tns = (String)properties.get(WebArchiveBuilderConstants.PROPERTY_WSDL_TNS);
@@ -824,7 +825,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
             endpointTags.append(contextName).append("\""); //$NON-NLS-1$ 
             endpointTags.append(implementor).append(port).append("\"").append(wsdlLocation).append(wsdlFilename).append("\""); //$NON-NLS-1$ //$NON-NLS-2$
             endpointTags.append(namespace).append(tns).append("\">\n"); //$NON-NLS-1$
-            if (isWSSecurity(properties)) {
+            if (securityCredentials.hasType(WarDeploymentInfoPanel.WSSE)) {
                 endpointTags.append(wsseInterceptor1).append(wsseInterceptor2);
             }
             if (isUseMTOM(properties)) {

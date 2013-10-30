@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime.ui.wizards.webservices;
 
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilderConstants;
 
@@ -529,11 +528,22 @@ public class WarDataserviceModel {
         properties.put(WebArchiveBuilderConstants.PROPERTY_WAR_PORT, this.getPort());
         properties.put(WebArchiveBuilderConstants.PROPERTY_WSDL_TNS, this.getTns());
         properties.put(WebArchiveBuilderConstants.PROPERTY_JNDI_NAME, this.getJndiName());
-        properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE, this.getSecurityType());
-        properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM, this.getSecurityRealm());
-        properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_ROLE, this.getSecurityRole());
-        properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_USERNAME, this.getSecurityUsername());
-        properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_PASSWORD, this.getSecurityPassword());
+
+        if (this.getSecurityType() != null)
+            properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE, this.getSecurityType());
+
+        if (this.getSecurityRealm() != null)
+            properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM, this.getSecurityRealm());
+
+        if (this.getSecurityRole() != null)
+            properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_ROLE, this.getSecurityRole());
+
+        if (this.getSecurityUsername() != null)
+            properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_USERNAME, this.getSecurityUsername());
+
+        if (this.getSecurityPassword() != null)
+            properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_PASSWORD, this.getSecurityPassword());
+
         properties.put(WebArchiveBuilderConstants.PROPERTY_USE_MTOM, this.getUseMtom());
 
         return properties;

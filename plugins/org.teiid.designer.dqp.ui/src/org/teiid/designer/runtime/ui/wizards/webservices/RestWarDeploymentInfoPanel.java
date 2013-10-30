@@ -138,24 +138,28 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements
 				}
 			}
 
-			  // Security Realm Name
+            // Security type
+            text = (this.settings.get(SECURITY_TYPE) == null ? RestWarDataserviceModel.getInstance().getSecurityType() : this.settings.get(SECURITY_TYPE));
+            if (text != null && text.equals(BASIC)) {
+                this.basicSecurityButton.setSelection(true);
+                this.noSecurityButton.setSelection(false);
+                basicSecurityButtonSelected();
+            } else {
+                this.noSecurityButton.setSelection(true);
+                this.basicSecurityButton.setSelection(false);
+                noSecurityButtonSelected();
+            }
+
+            // Security Realm Name
             text = (this.settings.get(SECURITY_REALM) == null ? RestWarDataserviceModel.getInstance().getSecurityRealm() : this.settings.get(SECURITY_REALM));
-            txfSecurityRealm.setText(text);
+            if (text != null)
+                txfSecurityRealm.setText(text);
 
             // Security Role Name
             text = (this.settings.get(SECURITY_ROLE) == null ? RestWarDataserviceModel.getInstance().getSecurityRole() : this.settings.get(SECURITY_ROLE));
-            txfSecurityRole.setText(text);
+            if (text != null)
+                txfSecurityRole.setText(text);
 
-            // Security type
-            text = (this.settings.get(SECURITY_TYPE) == null ? RestWarDataserviceModel.getInstance().getSecurityType() : this.settings.get(SECURITY_TYPE));
-
-            if (text.equals(BASIC)) {
-                this.basicSecurityButton.setSelection(true);
-                this.noSecurityButton.setSelection(false);
-            } else {
-            	this.noSecurityButton.setSelection(true);
-            	this.basicSecurityButton.setSelection(false);
-            }
 		} catch (RuntimeException err) {
 			DqpUiConstants.UTIL.log(err);
 		}
@@ -389,6 +393,8 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements
 		this.txfWarFileDeploymentLocation.addModifyListener(modifyListener);
 		this.txfContext.addModifyListener(modifyListener);
 		this.txfJNDIName.addModifyListener(modifyListener);
+		this.txfSecurityRealm.addModifyListener(modifyListener);
+		this.txfSecurityRole.addModifyListener(modifyListener);
 	}
 
 	protected void setWarFileNameInDialog() {
@@ -396,11 +402,11 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements
 	}
 
 	void restoreDefaultButtonPressed() {
-		this.txfWarFileDeploymentLocation.setText(WarDataserviceModel
+		this.txfWarFileDeploymentLocation.setText(RestWarDataserviceModel
 				.getInstance().getWarFilenameDefault());
-		this.txfContext.setText(WarDataserviceModel.getInstance()
+		this.txfContext.setText(RestWarDataserviceModel.getInstance()
 				.getContextNameDefault());
-		this.txfJNDIName.setText(WarDataserviceModel.getInstance()
+		this.txfJNDIName.setText(RestWarDataserviceModel.getInstance()
 				.getJndiNameDefault());
 	}
 	
@@ -412,6 +418,8 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements
             this.txfSecurityRole.setText(CoreStringUtil.Constants.EMPTY_STRING);
             this.txfSecurityRole.setEnabled(false);
         }
+
+        validatePage();
     }
 
     /**
@@ -427,6 +435,8 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements
             RestWarDataserviceModel.getInstance().setSecurityRoleDefault("MyRole"); //$NON-NLS-1$
             this.txfSecurityRole.setEnabled(true);
         }
+
+        validatePage();
     }
 
 

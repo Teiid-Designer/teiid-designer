@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.DiagnosticCollector;
@@ -34,7 +33,6 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
-
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -208,15 +206,16 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             monitor.subTask(TASK_COPYING_FILES);
             // Copy the Web files.
             getWebFiles(contextDirectory, webInfDirectory);
-            
-            if (properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE).equals(WarDeploymentInfoPanel.BASIC)) {
+
+            // Encapsulate the security properties in order to ensure they are valid
+            SecurityCredentials securityCredentials = new SecurityCredentials(properties);
+            if (securityCredentials.hasType(WarDeploymentInfoPanel.BASIC)) {
                 // Replace the variables in the jboss-web.xml file.
-                replaceJBossWebXmlVariables(webInfDirectoryName,
-                                            properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM));
+                replaceJBossWebXmlVariables(webInfDirectoryName, securityCredentials.getSecurityRealm());
             }
 
             // Replace the variables in the web.xml file.
-            replaceWebXmlVariables(webInfDirectoryName, properties, contextName);
+            replaceWebXmlVariables(webInfDirectoryName, securityCredentials, contextName);
             // Create properties file and write to classes root.
             createPropertiesFile(webInfClassesDirectory, properties);
             // Create and compile Provider files (one per port).
@@ -298,11 +297,11 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
         return fileExists;
     }
 
-    protected static String getString( final String id ) {
+    private static String getString( final String id ) {
         return WebServicePlugin.Util.getString(I18N_PREFIX + id);
     }
 
-    protected static String getString( final String id,
+    private static String getString( final String id,
                                        final Object[] params ) {
         return WebServicePlugin.Util.getString(I18N_PREFIX + id, params);
     }
@@ -377,8 +376,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
      * @param contextName
      * @since 8.2
      */
-    protected void replaceJBossWebXmlVariables( String webInfDirectoryName,
-                                                String securityDomain) {
+    private void replaceJBossWebXmlVariables( String webInfDirectoryName, String securityDomain) {
 
         // Replace variables in the jboss-web.xml file.
         File jbossWebXmlFile = new File(webInfDirectoryName + File.separator + "jboss-web.xml"); //$NON-NLS-1$
@@ -396,23 +394,23 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
      * @param webInfDirectoryName
      * @param properties
      * @param contextName
+     *
+     * @throws Exception
+     *
      * @since 7.4
      */
-    protected void replaceWebXmlVariables( String webInfDirectoryName,
-                                           Properties properties,
-                                           String contextName ) {
+    private void replaceWebXmlVariables( String webInfDirectoryName,
+                                           SecurityCredentials securityCredentials,
+                                           String contextName ) throws Exception {
 
         // Replace variables in the web.xml file.
         webXmlFile = new File(webInfDirectoryName + File.separator + "web.xml"); //$NON-NLS-1$
 
         // Update for Basic Auth if HTTPBasic security is selected
-        if (properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE).equals(WarDeploymentInfoPanel.BASIC)) {
-            String realm = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM);
-            String role = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_ROLE);
-
+        if (securityCredentials.hasType(WarDeploymentInfoPanel.BASIC)) {
             AntTasks.replace(webXmlFile, "<!--<security-constraint>", "\t<security-constraint>"); //$NON-NLS-1$ //$NON-NLS-2$
-            AntTasks.replace(webXmlFile, "${realmName}", realm); //$NON-NLS-1$
-            AntTasks.replace(webXmlFile, "${roleName}", role); //$NON-NLS-1$
+            AntTasks.replace(webXmlFile, "${realmName}", securityCredentials.getSecurityRealm()); //$NON-NLS-1$
+            AntTasks.replace(webXmlFile, "${roleName}", securityCredentials.getSecurityRole()); //$NON-NLS-1$
             AntTasks.replace(webXmlFile, "</login-config>-->", "</login-config>"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         
@@ -427,7 +425,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
      * @param properties
      * @since 7.4
      */
-    protected void createPropertiesFile( File webInfClassesDirectory,
+    private void createPropertiesFile( File webInfClassesDirectory,
                                          Properties properties ) throws IOException {
 
         // Create teiidsoap.properties file
@@ -459,7 +457,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
      * @throws Exception
      * @since 7.4
      */
-    protected void createResourceJavaClasses( File webInfLibDirectory,
+    private void createResourceJavaClasses( File webInfLibDirectory,
                                               File webInfClassesDirectory,
                                               Properties properties ) throws Exception {
 

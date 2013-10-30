@@ -368,10 +368,16 @@ public class RestWarDataserviceModel {
         properties.put(WebArchiveBuilderConstants.PROPERTY_VDB_FILE_NAME, this.getVdbFile().getLocation().toOSString());
         properties.put(WebArchiveBuilderConstants.PROPERTY_INCLUDE_RESTEASY_JARS, this.isIncludeJars());
         properties.put(WebArchiveBuilderConstants.PROPERTY_VDB_REST_PROCEDURES, this.getRestProcedureMap());
-        properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE, this.getSecurityType());
-        properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM, this.getSecurityRealm());
-        properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_ROLE, this.getSecurityRole());
-         
+
+        if (this.getSecurityType() != null)
+            properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE, this.getSecurityType());
+
+        if (this.getSecurityRealm() != null)
+            properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM, this.getSecurityRealm());
+
+        if (this.getSecurityRole() != null)
+            properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_ROLE, this.getSecurityRole());
+
         return properties;
     }
 

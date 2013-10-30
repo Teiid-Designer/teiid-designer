@@ -35,7 +35,9 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
      * @param parent
      * @param dialog
      * @param theVdb
-     * @param theVdbContext
+     * @param initialStatus
+     * @param designerProperties
+     *
      * @since 7.4
      */
     public RestWarDeploymentInfoDataPage( Composite parent,
@@ -53,7 +55,8 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
     @Override
     protected void validatePage() {
 
-        boolean isValid = validateContext() && validateJNDI() && validateWARFileFolder();
+        boolean isValid = validateContext() && validateJNDI() && validateWARFileFolder() &&
+                                       validateSecurityRole() && validateSecurityRealm();
 
         if (!isValid) {
             setDialogMessage(status);
@@ -182,7 +185,57 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
 
         return true;
     }
-    
+
+    /**
+     * validate target security realm
+     *
+     * @return boolean
+     * @since 7.1
+     */
+    private boolean validateSecurityRealm() {
+
+        String text = txfSecurityRealm.getText();
+        if (this.basicSecurityButton.getSelection()) {
+
+            if (text == null || text.length() == 0) {
+                ERROR_MESSAGE = getString("securityRealmMessage");//$NON-NLS-1$
+                createStatus(IStatus.ERROR, ERROR_MESSAGE, InternalModelerWarUiConstants.VALIDATEREALM);
+                return false;
+            }
+
+        }
+
+        RestWarDataserviceModel.getInstance().setSecurityRealmDefault(text);
+        this.settings.put(this.SECURITY_REALM, text);
+
+        return true;
+    }
+
+    /**
+     * validate target security role
+     *
+     * @return boolean
+     * @since 7.1
+     */
+    private boolean validateSecurityRole() {
+
+        String text = txfSecurityRole.getText();
+        if (this.basicSecurityButton.getSelection()) {
+
+            if (text == null || text.length() == 0) {
+                ERROR_MESSAGE = getString("securityRoleMessage");//$NON-NLS-1$
+                createStatus(IStatus.ERROR, ERROR_MESSAGE, InternalModelerWarUiConstants.VALIDATEREALM);
+                return false;
+            }
+
+        }
+
+        RestWarDataserviceModel.getInstance().setSecurityRoleDefault(text);
+        this.settings.put(this.SECURITY_ROLE, text);
+
+        return true;
+    }
+
     /**
      * Test whether it's possible to read and write files in the specified directory. 
      * @param dirPath Name of the directory to test

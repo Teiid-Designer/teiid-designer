@@ -519,6 +519,7 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
     void handleMtomButtonSelected() {
         boolean selection = this.mtomButton.getSelection();
         WarDataserviceModel.getInstance().setUseMtom(selection);
+        validatePage();
     }
 
     /**
@@ -536,6 +537,8 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
             this.txfSecurityPassword.setText(CoreStringUtil.Constants.EMPTY_STRING);
             this.txfSecurityPassword.setEnabled(false);
         }
+
+        validatePage();
     }
 
     /**
@@ -555,6 +558,8 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
             this.txfSecurityPassword.setText(CoreStringUtil.Constants.EMPTY_STRING);
             this.txfSecurityPassword.setEnabled(false);
         }
+
+        validatePage();
     }
 
     /**
