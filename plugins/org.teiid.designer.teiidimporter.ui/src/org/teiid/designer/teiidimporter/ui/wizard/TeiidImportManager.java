@@ -30,6 +30,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -237,6 +238,35 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
 //            model.save(new NullProgressMonitor(), false);
 //        }
 //    }
+    
+    /**
+     * Inject the translator name into the target model annotation.
+     * @param monitor the progress monitor
+     */
+    private boolean injectTranslatorIntoTarget(final IProgressMonitor monitor) {
+        if( this.targetModelLocation == null ) {
+            return false;
+        }
+        
+        IPath modelPath = new Path(targetModelLocation.toOSString()).append(this.targetModelName);
+        if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
+            modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
+        }
+        
+        IResource targetModel = ModelerCore.getWorkspace().getRoot().getFile(modelPath);
+        ModelResource targetModelResc = ModelUtilities.getModelResourceForIFile((IFile)targetModel, false);
+        if( targetModelResc!=null && this.translatorName!=null) {
+            connectionInfoHelper.setTranslatorName(targetModelResc, this.translatorName);
+            try {
+            	targetModelResc.save(monitor, false);
+            } catch (Exception error) {
+                throw CoreModelerPlugin.toRuntimeException(error);
+            }
+            return true;
+        }
+       
+        return false;
+    }
     
     /**
      * Return the schema DDL for the currently deployed dynamic import VDB
@@ -644,6 +674,10 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
                     monitor.beginTask(Messages.TeiidImportManager_ImportingMsg, 100);
                     monitor.worked(50);
                     ddlImporter.save(monitor, 50);
+                    // Inject translator name into target
+                    if(translatorName!=null) {
+                    	injectTranslatorIntoTarget(monitor);
+                    }
                     monitor.done();
                 }
             });
