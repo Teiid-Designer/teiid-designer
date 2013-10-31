@@ -316,15 +316,15 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
             }
         });
         
-        // Initial selection is 'TEIID'
-        int teiidIndx = dialectCombo.indexOf(TEIID_DIALECT);
-        dialectCombo.select(teiidIndx);
-        selectDialect(TEIID_DIALECT);
+        // Initial selection - 'auto-select'
+        selectDialect(null);
+   
+        // 'Auto-select' checkbox is checked initially
         autoSelectDialectCheckBox = WidgetFactory.createCheckBox(dialectPanel,
         		DdlImporterUiI18n.AUTO_SELECT_DIALECT_CHECKBOX,
         		0,
         		1,
-        		false);
+        		true);
         autoSelectDialectCheckBox.addSelectionListener(new SelectionAdapter() {
 
         	@Override
@@ -332,7 +332,9 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         		autoSelectDialectChanged();
         	}
         });
-
+        
+        // Disable Combo initially - auto-select is checked
+        dialectCombo.setEnabled(false);
         
         // ----------------------------------------
         // Model Folder controls
@@ -534,8 +536,16 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
     	} else {
     		this.dialectCombo.setEnabled(true);
             int comboIndx = dialectCombo.getSelectionIndex();
-            String dialect = dialectCombo.getItem(comboIndx);
-            selectDialect(dialect);
+            // No Combo selection - default to SQL_92
+            if(comboIndx==-1) {
+                int teiidIndx = dialectCombo.indexOf(SQL92_DIALECT);
+                dialectCombo.select(teiidIndx);
+                selectDialect(SQL92_DIALECT);
+            // Set dialect to Combo selection
+            } else {
+            	String dialect = dialectCombo.getItem(comboIndx);
+            	selectDialect(dialect);
+            }
     	}
     }
 
