@@ -11,6 +11,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -23,6 +25,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.ddl.importer.ui.DdlImportDifferencesPage;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -183,6 +186,13 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
     @Override
     public void setVisible( boolean visible ) {
         if (visible) {
+        	// When this page is show, ensure that differences page is set incomplete.
+        	IWizard wizard = getWizard();
+        	IWizardPage differencesPage = wizard.getPage("DdlImportDifferencesPage"); //$NON-NLS-1$
+        	if(differencesPage instanceof DdlImportDifferencesPage) {
+        		((DdlImportDifferencesPage)differencesPage).setPageComplete(false);
+        	}
+        	
             if(importManager.isVdbDeployed()) {
                 String ddl = importManager.getDdl();
                 if(ddl==null) ddl=EMPTY;
