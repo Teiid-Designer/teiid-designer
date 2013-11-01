@@ -31,6 +31,7 @@ public class TranslatorHelper implements UiConstants {
     public static final String TEIID_LDAP_DRIVER_84UP = "ldap"; //$NON-NLS-1$
     public static final String TEIID_SALESORCE_DRIVER_84UP = "salesforce"; //$NON-NLS-1$
     public static final String TEIID_WEBSERVICE_DRIVER_84UP = "webservice"; //$NON-NLS-1$
+    public static final String TEIID_MONGODB_DRIVER_84UP = "mongodb"; //$NON-NLS-1$
     public static final String TEIID_FILE_DRIVER_DISPLAYNAME = "FlatFile"; //$NON-NLS-1$
     public static final String TEIID_GOOGLE_DRIVER_DISPLAYNAME = "Google"; //$NON-NLS-1$
     public static final String TEIID_INFINISPAN_DRIVER_DISPLAYNAME = "Infinispan"; //$NON-NLS-1$
@@ -44,6 +45,7 @@ public class TranslatorHelper implements UiConstants {
     public static final String TEIID_LDAP_CLASS = "org.teiid.resource.adapter.ldap.LDAPManagedConnectionFactory"; //$NON-NLS-1$
     public static final String TEIID_SALESORCE_CLASS = "org.teiid.resource.adapter.salesforce.SalesForceManagedConnectionFactory"; //$NON-NLS-1$
     public static final String TEIID_WEBSERVICE_CLASS = "org.teiid.resource.adapter.ws.WSManagedConnectionFactory"; //$NON-NLS-1$
+    public static final String TEIID_MONGODB_CLASS = "org.teiid.resource.adapter.mongodb.MongoDBManagedConnectionFactory"; //$NON-NLS-1$
     
     public static final String ACCESS = "access"; //$NON-NLS-1$
     public static final String DB2 = "db2"; //$NON-NLS-1$
@@ -66,6 +68,7 @@ public class TranslatorHelper implements UiConstants {
     public static final String MAP_CACHE = "map-cache"; //$NON-NLS-1$
     public static final String METAMATRIX = "metamatrix"; //$NON-NLS-1$
     public static final String MODESHAPE = "modeshape"; //$NON-NLS-1$
+    public static final String MONGODB = "mongodb"; //$NON-NLS-1$
     public static final String MYSQL = "mysql"; //$NON-NLS-1$
     public static final String MYSQL5 = "mysql5"; //$NON-NLS-1$
     public static final String NETEZZA = "netezza"; //$NON-NLS-1$
@@ -154,38 +157,56 @@ public class TranslatorHelper implements UiConstants {
         	if(driverName.equals(TEIID_WEBSERVICE_DRIVER_84UP) && translatorNames.contains(WS)) {
         		return WS;
         	}
+        	
+        	if(driverName.equals(TEIID_MONGODB_DRIVER_84UP) && translatorNames.contains(MONGODB)) {
+        		return MONGODB;
+        	}
         }
         
-        if(driverName.startsWith("derby")) { //$NON-NLS-1$
+        // Attempt name matching to guess any drivers that are not built in.
+        String driverNameLC = driverName.toLowerCase();
+        if(driverNameLC.startsWith("derby")) { //$NON-NLS-1$
             return DERBY;
         }
         
-        if(driverName.startsWith("mysql")) { //$NON-NLS-1$
+        if(driverNameLC.startsWith("mysql")) { //$NON-NLS-1$
             return MYSQL;
         }
 
-        if(driverName.startsWith("ojdbc")) { //$NON-NLS-1$
+        if(driverNameLC.startsWith("ojdbc")) { //$NON-NLS-1$
             return ORACLE;
         }
         
-        if(driverName.startsWith("db2")) { //$NON-NLS-1$
+        if(driverNameLC.startsWith("db2")) { //$NON-NLS-1$
             return DB2;
         }
         
-        if(driverName.startsWith("postgresql")) { //$NON-NLS-1$
+        if(driverNameLC.startsWith("postgresql")) { //$NON-NLS-1$
             return POSTGRESQL;
         }
 
-        if(driverName.startsWith("sqljdbc")) { //$NON-NLS-1$
+        if(driverNameLC.startsWith("sqljdbc")) { //$NON-NLS-1$
             return SQLSERVER;
         }
         
-        if(driverName.startsWith("teiid")) { //$NON-NLS-1$
+        if(driverNameLC.startsWith("teiid")) { //$NON-NLS-1$
             return TEIID;
         }
         
-        if(driverName.startsWith("modeshape")) { //$NON-NLS-1$
+        if(driverNameLC.startsWith("modeshape")) { //$NON-NLS-1$
             return MODESHAPE;
+        }
+        
+        if(driverNameLC.startsWith("ifxjdbc")) { //$NON-NLS-1$
+            return INFORMIX;
+        }
+        
+        if(driverNameLC.startsWith("iijdbc")) { //$NON-NLS-1$
+            return INGRES;
+        }
+        
+        if(driverNameLC.contains("hive")) { //$NON-NLS-1$
+            return HIVE;
         }
 
         return JDBC_ANSI; 
@@ -229,6 +250,8 @@ public class TranslatorHelper implements UiConstants {
 					driverName = TranslatorHelper.TEIID_SALESORCE_DRIVER_84UP;
 				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_WEBSERVICE_CLASS)) {
 					driverName = TranslatorHelper.TEIID_WEBSERVICE_DRIVER_84UP;
+				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_MONGODB_CLASS)) {
+					driverName = TranslatorHelper.TEIID_MONGODB_DRIVER_84UP;
 				}
 			}
 		}
