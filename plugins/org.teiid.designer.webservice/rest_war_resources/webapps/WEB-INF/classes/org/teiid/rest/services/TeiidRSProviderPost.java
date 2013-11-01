@@ -41,54 +41,37 @@ import org.teiid.rest.RestPlugin;
 public class TeiidRSProviderPost {
 
     protected WebServiceContext webServiceContext;
-   
 
     private static Logger logger = Logger.getLogger("org.teiid.rest"); //$NON-NLS-1$
-
-    private static Properties properties = new Properties();
 
     @javax.annotation.Resource
     protected void setWebServiceContext( WebServiceContext wsc ) {
         webServiceContext = wsc;
-        loadProperties();
     }
 
-    public DataSource getDataSource() throws NamingException {
+    public DataSource getDataSource(String jndiName) throws NamingException {
 
         InitialContext ctx;
         DataSource ds = null;
         ctx = new InitialContext();
-        ds = (DataSource)ctx.lookup(properties.getProperty("jndiName")); //$NON-NLS-1$
+        ds = (DataSource)ctx.lookup(jndiName); //$NON-NLS-1$
         return ds;
     }
 
     public InputStream execute( String procedureName,
-                           Map<String, String> parameterMap, String charSet) throws WebApplicationException {
+                           Map<String, String> parameterMap, String charSet, Properties properties) throws WebApplicationException {
 
     	Connection conn = null;
     	PreparedStatement statement = null;
     	ResultSet set = null;
     	Object result = null;
     	InputStream resultStream = null;
-        // Load
-        try {
-            // Get the inputStream
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("teiidrest.properties"); //$NON-NLS-1$
-
-            // load the inputStream using the Properties
-            properties.load(inputStream);
-
-        } catch (IOException e1) {
-            String msg = RestPlugin.Util.getString("TeiidRSProvider.1"); //$NON-NLS-1$
-            logger.logrb(Level.SEVERE, "TeiidRSProvider", "execute", RestPlugin.PLUGIN_ID, msg, new Throwable(e1)); //$NON-NLS-1$ //$NON-NLS-2$
-            createWebApplicationException(e1, e1.getMessage());
-        }
-
+     
         String responseString = null;
 
         try {
 
-            DataSource ds = getDataSource();
+            DataSource ds = getDataSource(properties.getProperty("jndiName"));
             conn = ds.getConnection();
             boolean noParm = false;
             if (parameterMap.isEmpty()) {
@@ -200,23 +183,6 @@ public class TeiidRSProviderPost {
     protected void createWebApplicationException( final Exception e,
                                                   final String faultSoapPluginString ) throws WebApplicationException {
         throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-    }
-
-    private void loadProperties() {
-        try {
-            // Get the inputStream
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("teiidrest.properties"); //$NON-NLS-1$
-
-            properties = new Properties();
-
-            // load the inputStream using the Properties
-            properties.load(inputStream);
-
-        } catch (IOException e) {
-            String msg = RestPlugin.Util.getString("TeiidRSProvider.1"); //$NON-NLS-1$
-            logger.logrb(Level.SEVERE, "TeiidRSProvider", "loadProperties", RestPlugin.PLUGIN_ID, msg, new Throwable(e)); //$NON-NLS-1$ //$NON-NLS-2$
-            throw new RuntimeException(e);
-        }
     }
 
 }
