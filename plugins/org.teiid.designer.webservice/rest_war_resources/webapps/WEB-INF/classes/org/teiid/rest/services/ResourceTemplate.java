@@ -57,12 +57,27 @@ ${path}
 public class ${className}{
 
     ${TeiidRSProvider} teiidProvider = new ${TeiidRSProvider}();
-    Map<String, String> parameterMap = new LinkedHashMap<String, String>();
-    private static Properties properties = new Properties();
-    private static Logger logger = Logger.getLogger("org.teiid.rest"); //$NON-NLS-1$
+    private final static Logger logger = Logger.getLogger("org.teiid.rest"); //$NON-NLS-1$
+    private final static Properties properties;
+
+    static {
+    	try {
+            // Get the inputStream
+            InputStream inputStream = ${className}.class.getClassLoader().getResourceAsStream("teiidrest.properties"); //$NON-NLS-1$
+
+            properties = new Properties();
+
+            // load the inputStream using the Properties
+            properties.load(inputStream);
+
+        } catch (IOException e) {
+            String msg = RestPlugin.Util.getString("TeiidRSProvider.1"); //$NON-NLS-1$
+            logger.logrb(Level.SEVERE, "TeiidWSProvider", "loadProperties", RestPlugin.PLUGIN_ID, msg, new Throwable(e)); //$NON-NLS-1$ //$NON-NLS-2$
+            throw new RuntimeException(e);
+        }
+    }
 
     public ${className}() {
-        loadProperties();
     }
 
     ${httpMethods}
@@ -94,13 +109,13 @@ public class ${className}{
     }
 
     protected Map<String, String> getJSONInputs( InputStream is, String charset ) {
-        Map parameters;
-        try {
+    	Map<String, String> parameters = getParameterMap();
+    	 
+    	try {
             String jsonString = convertStreamToString(is, charset);
 
             // Do this to validate the JSON string. If we don't blow up, then we are good.
             new JSONObject(jsonString);
-
             parameters = convertJSONStringToMap(jsonString);
         } catch (Exception e) {
             throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
@@ -142,6 +157,7 @@ public class ${className}{
 
     public Map<String, String> convertJSONStringToMap( String jsonString ) {
 
+    	Map<String, String> parameters = getParameterMap();
         ObjectMapper mapper = new ObjectMapper();
         JsonFactory factory = mapper.getJsonFactory();
         JsonParser jp = null;
@@ -165,7 +181,7 @@ public class ${className}{
                 String fieldname = jp.getCurrentName();
                 jp.nextToken(); // move to value, or START_OBJECT/START_ARRAY
                 String value = jp.getText();
-                parameterMap.put(fieldname, value);
+                parameters.put(fieldname, value);
             }
         } catch (JsonParseException e) {
             throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
@@ -173,24 +189,7 @@ public class ${className}{
             throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
         }
 
-        return parameterMap;
-    }
-
-    private void loadProperties() {
-        try {
-            // Get the inputStream
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("teiidrest.properties"); //$NON-NLS-1$
-
-            properties = new Properties();
-
-            // load the inputStream using the Properties
-            properties.load(inputStream);
-
-        } catch (IOException e) {
-            String msg = RestPlugin.Util.getString("TeiidRSProvider.1"); //$NON-NLS-1$
-            logger.logrb(Level.SEVERE, "TeiidWSProvider", "loadProperties", RestPlugin.PLUGIN_ID, msg, new Throwable(e)); //$NON-NLS-1$ //$NON-NLS-2$
-            throw new RuntimeException(e);
-        }
+        return parameters;
     }
 
     /**
@@ -213,5 +212,12 @@ public class ${className}{
 
         return jsonString;
     }
+    
+    private Map<String, String> getParameterMap( ) {
+	
+    	return new LinkedHashMap<String, String>();
+	 
+    }
+	
 }
 

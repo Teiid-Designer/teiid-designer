@@ -604,7 +604,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
         }
 
         // Gen return and execute
-        sb.append("\treturn convertStreamToString(teiidProvider.execute(\"" + restProcedure.getFullyQualifiedProcedureName() + "\", parameterMap, \"" + restProcedure.getCharSet() + "\"), \"" + restProcedure.getCharSet() + "\");" + newline //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-4
+        sb.append("\treturn convertStreamToString(teiidProvider.execute(\"" + restProcedure.getFullyQualifiedProcedureName() + "\", parameterMap, \"" + restProcedure.getCharSet() + "\", properties), \"" + restProcedure.getCharSet() + "\");" + newline //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-4
                   + "}" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
@@ -620,7 +620,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
         }
 
         // Gen return and execute
-        sb.append("\tString result = convertStreamToString(teiidProvider.execute(\"" + restProcedure.getFullyQualifiedProcedureName() + "\", parameterMap, \"" + restProcedure.getCharSet() + "\"), \"" + restProcedure.getCharSet() + "\");" + newline //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        sb.append("\tString result = convertStreamToString(teiidProvider.execute(\"" + restProcedure.getFullyQualifiedProcedureName() + "\", parameterMap, \"" + restProcedure.getCharSet() + "\", properties), \"" + restProcedure.getCharSet() + "\");" + newline //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                   + "\t"); //$NON-NLS-1$
         sb.append("\tString json = convertXMLToJSON(result);" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
         sb.append("\treturn json;" + newline + "\t" + "}" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -696,7 +696,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             sb.append(" ) { " + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         // Gen setting of parameter(s)
-        sb.append("\tparameterMap.clear();" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+        sb.append("\tMap<String, String> parameterMap = getParameterMap();" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
         //We will always consider header parameters first, so the supporting procedure knows the correct order
         if (headerParamList.size() > 0) {
             for (String param : headerParamList) {
