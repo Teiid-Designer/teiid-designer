@@ -44,7 +44,7 @@ public interface SourceHandler {
     /**
      * @return the data source names (can be <code>null</code>)
      */
-    String[] getDataSourceNames();
+    String[] getDataSourceJndiNames();
 
     /**
      * @return the translator types available on the current Teiid instance that can be overridden (can be <code>null</code> or empty)

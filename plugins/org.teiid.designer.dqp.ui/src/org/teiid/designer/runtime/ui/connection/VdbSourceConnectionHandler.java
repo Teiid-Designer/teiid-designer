@@ -22,6 +22,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
@@ -46,6 +47,8 @@ import org.teiid.designer.vdb.connections.VdbSourceConnection;
 public class VdbSourceConnectionHandler implements SourceHandler {
     static final String PREFIX = I18nUtil.getPropertyPrefix(VdbSourceConnectionHandler.class);
 
+    private static final String JNDI_PROPERTY_KEY = "jndi-name"; //$NON-NLS-1$
+    
     private static SelectTranslatorAction selectTranslatorAction;
 
     private static SelectJndiDataSourceAction selectJndiDataSourceAction;
@@ -221,7 +224,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
      * @see org.teiid.designer.vdb.connections.SourceHandler#getDataSourceNames()
      */
     @Override
-    public String[] getDataSourceNames() {
+    public String[] getDataSourceJndiNames() {
         ITeiidServer defaultServer = getDefaultServer();
 
         if ((defaultServer != null) && defaultServer.isConnected()) {
@@ -236,15 +239,19 @@ public class VdbSourceConnectionHandler implements SourceHandler {
             }
 
             if (dataSources != null) {
-                Collection<String> dataSourceNames = new ArrayList<String>();
+                Collection<String> dataSourceJndiNames = new ArrayList<String>();
 
                 for (ITeiidDataSource dataSource : dataSources) {
                     if (!dataSource.isPreview()) {
-                        dataSourceNames.add(dataSource.getName());
+                        String sourceJndiName = dataSource.getPropertyValue(JNDI_PROPERTY_KEY);
+                        if(CoreStringUtil.isEmpty(sourceJndiName)) {
+                        	sourceJndiName=dataSource.getName();
+                        }
+                        dataSourceJndiNames.add(sourceJndiName);
                     }
                 }
 
-                return dataSourceNames.toArray(new String[dataSourceNames.size()]);
+                return dataSourceJndiNames.toArray(new String[dataSourceJndiNames.size()]);
             }
         }
 

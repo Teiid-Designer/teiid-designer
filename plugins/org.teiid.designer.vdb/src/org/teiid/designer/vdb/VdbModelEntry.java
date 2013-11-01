@@ -82,9 +82,9 @@ public final class VdbModelEntry extends VdbEntry {
     
     /**
      * @param path the model path (may not be <code>null</code>)
-     * @return the default name to use as the JNDI name (never <code>null</code>)
+     * @return the default name to use as the source name (never <code>null</code>)
      */
-    public static String createDefaultJndiName(IPath path) {
+    public static String createDefaultSourceName(IPath path) {
         return path.removeFileExtension().lastSegment();
     }
 
@@ -135,10 +135,11 @@ public final class VdbModelEntry extends VdbEntry {
             // if (emfModel.getModelAnnotation().getDescription() != null)
             // description.set(emfModel.getModelAnnotation().getDescription());
             if (ModelUtil.isPhysical(model)) {
-                final String defaultName = createDefaultJndiName(name);
+                final String defaultName = createDefaultSourceName(name);
                 final ConnectionInfoHelper helper = new ConnectionInfoHelper();
                 String translator = helper.getTranslatorName(mr);
                 if( translator == null ) translator = EMPTY_STR;
+                // Defaults the jndiName to match the sourceName.
                 sourceInfo.add(defaultName, defaultName, translator);
                 Properties translatorProps = helper.getTranslatorProperties(mr);
                 if( !translatorProps.isEmpty() ) {

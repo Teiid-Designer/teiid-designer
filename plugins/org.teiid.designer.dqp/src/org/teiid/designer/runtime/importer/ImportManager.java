@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
@@ -38,6 +39,7 @@ public final class ImportManager implements IExecutionConfigurationListener {
 
     private static final String DYNAMIC_VDB_SUFFIX = "-vdb.xml";  //$NON-NLS-1$
     private static final String IMPORT_SRC_MODEL = "SrcModel";  //$NON-NLS-1$
+    private static final String JNDI_PROPERTY_KEY = "jndi-name";  //$NON-NLS-1$
     private static final int VDB_LOADING_TIMEOUT_SEC = 120;
     
     /**
@@ -104,23 +106,23 @@ public final class ImportManager implements IExecutionConfigurationListener {
     }
     
     /**
-     * Get the dataSource with the specified JNDI Name. 
-     * @param jndiName datasource JNDI name
+     * Get the dataSource with the specified Name.  The supplied name is the 'pool-name' property specified on the datasource. 
+     * @param sourceName datasource name
      * @return the DataSource
      * @throws Exception the exception
      */
-    private ITeiidDataSource getDataSource( String jndiName ) throws Exception {
-        return getImportServer().getDataSource(jndiName);
+    private ITeiidDataSource getDataSource( String sourceName ) throws Exception {
+        return getImportServer().getDataSource(sourceName);
     }
 
     /**
      * @param vdbName name to use for the VDB
-     * @param sourceJndiName the dataSource to use for the import
+     * @param sourceName the dataSource to use for the import
      * @param translatorName the name of the translator
      * @param monitor the progress monitor
      * @return status of the deployment
      */
-    public IStatus deployDynamicVdb(String vdbName, String sourceJndiName, String translatorName, IProgressMonitor monitor) {
+    public IStatus deployDynamicVdb(String vdbName, String sourceName, String translatorName, IProgressMonitor monitor) {
     	// Work remaining for progress monitor
     	int workRemaining = 100;
     	
@@ -133,15 +135,20 @@ public final class ImportManager implements IExecutionConfigurationListener {
         String importSourceModel = vdbName+IMPORT_SRC_MODEL; 
         
         // Get the DataSource
+        ITeiidDataSource dataSource;
         try {
-            getDataSource(sourceJndiName);
+            dataSource = getDataSource(sourceName);
         } catch (Exception ex) {
-            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerGetDatasourceError, sourceJndiName));
+            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerGetDatasourceError, sourceName));
             return resultStatus;
         }
         monitor.worked(10);
         workRemaining -= 10;
         
+        String sourceJndiName = dataSource.getPropertyValue(JNDI_PROPERTY_KEY);
+        if(CoreStringUtil.isEmpty(sourceJndiName)) {
+        	sourceJndiName=sourceName;
+        }
         // Get Dynamic VDB string
         String dynamicVdbString = createDynamicVdb(vdbName,1,translatorName,importSourceModel,sourceJndiName);
 

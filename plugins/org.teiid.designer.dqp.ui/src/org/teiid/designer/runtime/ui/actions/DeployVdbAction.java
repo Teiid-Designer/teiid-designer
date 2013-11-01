@@ -309,6 +309,8 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 					message = UTIL.getString(I18N_PREFIX + "vdbFailedToDeploy", deployer.getVdbName()); //$NON-NLS-1$
 				} else if (VdbDeployer.DeployStatus.TRANSLATOR_PROBLEM == status) {
 					message = UTIL.getString(I18N_PREFIX + "translatorDoesNotExistOnServer", deployer.getVdbName()); //$NON-NLS-1$
+				} else if (VdbDeployer.DeployStatus.SOURCE_CONNECTION_INFO_PROBLEM == status) {
+					message = UTIL.getString(I18N_PREFIX + "sourceMissingConnectionInfo", deployer.getVdbName()); //$NON-NLS-1$
 				} else if (VdbDeployer.DeployStatus.EXCEPTION == status) {
 					throw deployer.getException(); // let catch block below
 													// handle

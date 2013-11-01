@@ -16,8 +16,11 @@ public class JdbcTranslatorHelper {
 	public static final String POSTGRES = "postgres"; //$NON-NLS-1$
 	public static final String POSTGRESQL = "postgresql"; //$NON-NLS-1$
 	public static final String ACCESS = "access"; //$NON-NLS-1$
+	public static final String HIVE = "hive"; //$NON-NLS-1$
 	public static final String HSQL = "hsql"; //$NON-NLS-1$
+	public static final String INGRES = "ingres"; //$NON-NLS-1$
 	public static final String ORACLE = "oracle"; //$NON-NLS-1$
+	public static final String MONGODB = "mongodb"; //$NON-NLS-1$
 	public static final String MYSQL5 = "mysql5"; //$NON-NLS-1$
 	public static final String JDBC_SIMPLE = "jdbc-simple"; //$NON-NLS-1$
 	public static final String JDBC_ANSI = "jdbc-ansi"; //$NON-NLS-1$
@@ -96,6 +99,31 @@ public class JdbcTranslatorHelper {
 			}
 		}
 		
+		return JDBC_SIMPLE;
+	}
+	
+    /**
+     * Attempts to determine a translator name from the provided driverClassName
+     * @param driverClassName the driver name
+     * @return the translator name (never <code>null</code>)
+     */
+	public static String getTranslatorFromDriverName(String driverClassName) {
+		if(driverClassName==null) return JDBC_SIMPLE;
+		
+		// Attempt name matching for any drivers that are not built-in
+		
+		if(driverClassName.equals("com.ingres.jdbc.IngresDriver")) { //$NON-NLS-1$ 
+			return INGRES;
+		}
+		
+		if(driverClassName.equals("org.apache.hive.jdbc.HiveDriver") || driverClassName.equals("org.apache.hadoop.hive.jdbc.HiveDriver")) { //$NON-NLS-1$ //$NON-NLS-2$
+			return HIVE;
+		}
+		
+		if(driverClassName.equals("net.sf.mongodb_jdbc_driver.MongoDbDriver")) { //$NON-NLS-1$
+			return MONGODB;
+		}
+
 		return JDBC_SIMPLE;
 	}
 	

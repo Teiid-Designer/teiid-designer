@@ -17,6 +17,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidDataSourceFactory;
@@ -71,7 +74,12 @@ public class VdbDeployer {
         /**
          * Indicates there are missing translator names or translator names that are not on the current Teiid Instance.
          */
-        TRANSLATOR_PROBLEM;
+        TRANSLATOR_PROBLEM,
+        
+        /**
+         * Indicates one or more sources has missing connection info.
+         */
+        SOURCE_CONNECTION_INFO_PROBLEM;
 
         /**
          * @return <code>true</code> if status indicates the VDB was successfully depoloyed
@@ -84,7 +92,7 @@ public class VdbDeployer {
          * @return <code>true</code> if status is an error
          */
         public boolean isError() {
-            return ((this == CREATE_DATA_SOURCE_FAILED) || (this == DEPLOY_VDB_FAILED) || (this == EXCEPTION) || (this == TRANSLATOR_PROBLEM));
+            return ((this == CREATE_DATA_SOURCE_FAILED) || (this == DEPLOY_VDB_FAILED) || (this == EXCEPTION) || (this == TRANSLATOR_PROBLEM) || this == SOURCE_CONNECTION_INFO_PROBLEM);
         }
     }
 
@@ -174,9 +182,18 @@ public class VdbDeployer {
                         this.status = DeployStatus.TRANSLATOR_PROBLEM;
                         break; // translator problems are fatal (deployment will fail)
                     }
+                    
+                    IFile model = modelEntry.findFileInWorkspace();
+
+                    // Check that Source Model has Connection Info
+                    if (!hasConnectionInfo(model)) {  
+                    	this.status = DeployStatus.SOURCE_CONNECTION_INFO_PROBLEM;
+                    	break;
+                    }
 
                     // check DS
                     monitor.subTask(UTIL.getString(PREFIX + "checkModelDataSourceTask", modelName)); //$NON-NLS-1$
+                    String sourceName = modelEntry.getSourceInfo().getSource(0).getName();
                     String jndiName = modelEntry.getSourceInfo().getSource(0).getJndiName();
 
                     // DS is empty
@@ -186,12 +203,12 @@ public class VdbDeployer {
                     }
 
                     // DS not found on server
-                    if (!teiidServer.dataSourceExists(jndiName)) {
+                    if (!teiidServer.dataSourceExists(sourceName)) {
 
                         // auto-create if user did not change the default DS name
-                        String defaultName = VdbModelEntry.createDefaultJndiName(modelEntry.getName());
+                        String defaultName = VdbModelEntry.createDefaultSourceName(modelEntry.getName());
 
-                        if (jndiName.equals(defaultName) && this.autoCreateDsOnServer) {
+                        if (sourceName.equals(defaultName) && this.autoCreateDsOnServer) {
                             autoCreate = true; // create without asking user
                         }
 
@@ -228,8 +245,6 @@ public class VdbDeployer {
                             }
                         }
 
-                        IFile model = modelEntry.findFileInWorkspace();
-
                         // TODO must also be able to create DS even if model not found in workspace
                         // if model found in workspace create data source on server
                         if ((autoCreate || createOnServer) && (model != null)) {
@@ -238,7 +253,7 @@ public class VdbDeployer {
                             TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
                             if (factory.createDataSource(teiidServer,
                                                                  model,
-                                                                 jndiName,
+                                                                 sourceName,
                                                                  false,
                                                                  DqpPlugin.getInstance().getPasswordProvider()) == null) {
                                 this.status = DeployStatus.CREATE_DATA_SOURCE_FAILED;
@@ -285,6 +300,24 @@ public class VdbDeployer {
         } finally {
             monitor.done();
         }
+    }
+    
+    /*
+     * Method to test whether the supplied source model has connection info
+     * @param modelFile the supplied model file
+     * @return 'true' if the modelResource has connection info, 'false' if not.
+     */
+    private boolean hasConnectionInfo(IFile modelFile) {
+    	boolean hasConnInfo = true;
+    	// Try to get the ConnectionInfoProvider.  Exception is thrown if the provider cannot be obtained (no connection info)
+    	try {
+			ModelResource modelResource = ModelUtil.getModelResource(modelFile, true);
+			ConnectionInfoProviderFactory manager = new ConnectionInfoProviderFactory();
+			manager.getProvider(modelResource);
+		} catch (Exception ex) {
+			hasConnInfo = false;
+		}
+    	return hasConnInfo;
     }
 
     /**

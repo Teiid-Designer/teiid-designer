@@ -59,10 +59,10 @@ public interface IExecutionAdmin {
     /**
      * Removes the data source from the Teiid Instance (if exists)
      * 
-     * @param jndiName the source jndi name
-     * @throws Exception if failer in deleting data source on server
+     * @param dsName the data source name
+     * @throws Exception if failure in deleting data source on server
      */
-     void deleteDataSource(String jndiName) throws Exception;
+     void deleteDataSource(String dsName) throws Exception;
 
     /**
      * Deploys the VDB (IFile) to the related Teiid Instance
@@ -100,15 +100,19 @@ public interface IExecutionAdmin {
      Set<String> getDataSourceTypeNames() throws Exception;
 
     /**
-     * @param displayName the JNDI display name
-     * @param jndiName the JNDI name
+     * Get the specified DataSource, or create one if it does not exist.  When the datasource is create thru the admin API,
+     * it is given a JNDI name which is the same as the sourceName.  For example if dsName 'mySource' is supplied, then the 
+     * JNDI name is set as 'java:/mySource' (java context is added).  When the sources created by any other user are retrieved 
+     * from the server, however, it is not guaranteed that the dsName and jndi name will match.
+     * @param displayName the data source display name
+     * @param dsName the data source name
      * @param typeName the translator type name
      * @param properties the list of teiid-related connection properties
      * @return true if data source is created. false if it already exists
      * @throws Exception if data source creation fails
      */
      ITeiidDataSource getOrCreateDataSource(String displayName,
-                                                          String jndiName,
+                                                          String dsName,
                                                           String typeName,
                                                           Properties properties) throws Exception;
 

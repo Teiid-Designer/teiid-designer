@@ -538,21 +538,21 @@ public class ModelDetailsPanel {
          */
         @Override
         protected String[] refreshItems( Object element ) {
-            List<String> dsNameList = new ArrayList<String>();
+            List<String> dsJndiNameList = new ArrayList<String>();
             
-            // get the available datasource names from the server
-            String[] dsNames = SourceHandlerExtensionManager.getVdbConnectionFinder().getDataSourceNames();
+            // get the available datasource JNDI names from the server
+            String[] dsJndiNames = SourceHandlerExtensionManager.getVdbConnectionFinder().getDataSourceJndiNames();
 
 
-            // Copy dsNames into List for sorting
-            if (dsNames != null) {
-                dsNameList.addAll(Arrays.asList(dsNames));
+            // Copy dsJndiNames into List for sorting
+            if (dsJndiNames != null) {
+                dsJndiNameList.addAll(Arrays.asList(dsJndiNames));
             }
 
             // Sort names in alpha order
-            Collections.sort(dsNameList);
+            Collections.sort(dsJndiNameList);
             
-            return dsNameList.toArray(new String[dsNameList.size()]);
+            return dsJndiNameList.toArray(new String[dsJndiNameList.size()]);
         }
 
         /**
