@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.xsd.XSDSchema;
 import org.jdom.Namespace;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -89,8 +88,10 @@ public class ModelImpl implements Model {
     
     @Override
 	public Operation[] getModelableOperations(String portName) {
-    	Map<String, Operation> existingMap = modelableOperationsMaps.get(portName);
-    	
+        Map<String, Operation> existingMap = modelableOperationsMaps.get(portName);
+        if (existingMap == null)
+            return new Operation[0];
+
     	int nValues = existingMap.values().size();
     	List<Operation> ops = new ArrayList<Operation>(existingMap.values());
     	Collections.sort(ops, new OperationComparator());

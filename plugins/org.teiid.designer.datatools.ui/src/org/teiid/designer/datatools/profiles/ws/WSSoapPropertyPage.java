@@ -50,6 +50,14 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
 
     private Text endPointText;
 
+    private Label endPointNameLabel;
+
+    private Text endPointNameText;
+
+    private Label bindingTypeLabel;
+
+    private Text bindingTypeText;
+
     /**
      * Create a new default instance
      */
@@ -135,6 +143,38 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
         gd.horizontalSpan = 1;
         endPointText.setLayoutData(gd);
 
+        endPointNameLabel = new Label(scrolled, SWT.NONE);
+        endPointNameLabel.setText(UTIL.getString("WSSoapPropertyPage.endPointNameName")); //$NON-NLS-1$
+        endPointNameLabel.setToolTipText(UTIL.getString("WSSoapPropertyPage.endPointName.ToolTip")); //$NON-NLS-1$
+        gd = new GridData();
+        gd.verticalAlignment = GridData.BEGINNING;
+        endPointNameLabel.setLayoutData(gd);
+
+        endPointNameText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
+        endPointNameText.setToolTipText(UTIL.getString("WSSoapPropertyPage.endPointName.ToolTip")); //$NON-NLS-1$
+        gd = new GridData();
+        gd.horizontalAlignment = GridData.FILL;
+        gd.verticalAlignment = GridData.BEGINNING;
+        gd.grabExcessHorizontalSpace = true;
+        gd.horizontalSpan = 1;
+        endPointNameText.setLayoutData(gd);
+
+        bindingTypeLabel = new Label(scrolled, SWT.NONE);
+        bindingTypeLabel.setText(UTIL.getString("WSSoapPropertyPage.endPointBindingLabel")); //$NON-NLS-1$
+        bindingTypeLabel.setToolTipText(UTIL.getString("WSSoapPropertyPage.endPointBinding.ToolTip")); //$NON-NLS-1$
+        gd = new GridData();
+        gd.verticalAlignment = GridData.BEGINNING;
+        bindingTypeLabel.setLayoutData(gd);
+
+        bindingTypeText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
+        bindingTypeText.setToolTipText(UTIL.getString("WSSoapPropertyPage.endPointBinding.ToolTip")); //$NON-NLS-1$
+        gd = new GridData();
+        gd.horizontalAlignment = GridData.FILL;
+        gd.verticalAlignment = GridData.BEGINNING;
+        gd.grabExcessHorizontalSpace = true;
+        gd.horizontalSpan = 1;
+        bindingTypeText.setLayoutData(gd);
+
         initControls();
         addlisteners();
     }
@@ -151,6 +191,8 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
 
         urlText.addListener(SWT.Modify, listener);
         endPointText.addListener(SWT.Modify, listener);
+        endPointNameText.addListener(SWT.Modify, listener);
+        bindingTypeText.addListener(SWT.Modify, listener);
 
         credentialsComposite.addSecurityOptionListener(SWT.Modify, listener);
         credentialsComposite.addUserNameListener(SWT.Modify, listener);
@@ -167,6 +209,16 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
 
         if (valid && (null == endPointText.getText() || endPointText.getText().isEmpty())) {
             errorMessage = UTIL.getString("Common.EndPoint.Error.Message"); //$NON-NLS-1$
+            valid = false;
+        }
+
+        if (valid && (null == endPointNameText.getText() || endPointNameText.getText().isEmpty())) {
+            errorMessage = UTIL.getString("Common.EndPointName.Error.Message"); //$NON-NLS-1$
+            valid = false;
+        }
+
+        if (valid && (null == bindingTypeText.getText() || bindingTypeText.getText().isEmpty())) {
+            errorMessage = UTIL.getString("Common.EndPointBinding.Error.Message"); //$NON-NLS-1$
             valid = false;
         }
 
@@ -205,6 +257,16 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
         if (null != endPoint) {
             endPointText.setText(endPoint);
         }
+
+        String endPointName = props.getProperty(IWSProfileConstants.END_POINT_NAME_PROP_ID);
+        if (null != endPointName) {
+            endPointNameText.setText(endPointName);
+        }
+
+        String bindingType = props.getProperty(IWSProfileConstants.SOAP_BINDING);
+        if (null != bindingType) {
+            bindingTypeText.setText(bindingType);
+        }
     }
 
     /**
@@ -216,8 +278,10 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
     protected Properties collectProperties() {
         Properties result = super.collectProperties();
         if (null == result) {
-            result = new Properties();
+            IConnectionProfile profile = getConnectionProfile();
+            result = (Properties) profile.getBaseProperties().clone();
         }
+
         result.setProperty(IWSProfileConstants.WSDL_URI_PROP_ID, urlText.getText());
         result.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, credentialsComposite.getSecurityOption().name());
         if( credentialsComposite.getUserName() != null ) {
@@ -226,7 +290,10 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
         if( credentialsComposite.getPassword() != null) {
         	result.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, credentialsComposite.getPassword());
         }
+
         result.setProperty(IWSProfileConstants.END_POINT_URI_PROP_ID, endPointText.getText());
+        result.setProperty(IWSProfileConstants.END_POINT_NAME_PROP_ID, endPointNameText.getText());
+        result.setProperty(IWSProfileConstants.SOAP_BINDING, bindingTypeText.getText());
 
         return result;
     }

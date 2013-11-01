@@ -110,6 +110,8 @@ public final class WidgetUtil implements
     
     public static final int TEXT_COLOR_DEFAULT = 0;
     public static final int TEXT_COLOR_BLUE = 1;
+
+    private static final String EMPTY_STR = ""; //$NON-NLS-1$
     
 
     // ============================================================================================================================
@@ -898,6 +900,24 @@ public final class WidgetUtil implements
         }
         // Set text on Combo
         combo.setText(text);
+    }
+
+    /**
+     * Set the value of a {@link Text}'s text safely.
+     * If the textValue is null then an empty string
+     * is set instead.
+     *
+     * @param text widget
+     * @param textValue value to be set as text
+     */
+    public static void setText(Text text, String textValue) {
+        if (text == null)
+            return;
+
+        if (textValue == null)
+            textValue = EMPTY_STR;
+
+        text.setText(textValue);
     }
 
     /**
