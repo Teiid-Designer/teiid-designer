@@ -10,6 +10,7 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -86,8 +87,6 @@ public class WsdlDefinitionPage extends WizardPage
 
 	/** <code>IDialogSetting</code>s key for saved dialog Y position. */
 	private static final String DIALOG_Y = "dialogY"; //$NON-NLS-1$
-
-	private static final String EMPTY_STR = ""; //$NON-NLS-1$
 
 	/** Source radio buttons and validate button */
 	private Button buttonValidateWSDL;
@@ -235,6 +234,9 @@ public class WsdlDefinitionPage extends WizardPage
 
 			@Override
 			public String getText(final Object source) {
+			    if (source == null)
+			        return ""; //$NON-NLS-1$
+
 				return ((IConnectionProfile) source).getName();
 			}
 		};
@@ -337,7 +339,7 @@ public class WsdlDefinitionPage extends WizardPage
 				IConnectionProfile currentProfile = importManager.getConnectionProfile();
 				IConnectionProfile profile = profileWorker.getProfile(name);
 				boolean profileChanged = true;
-				if (currentProfile != null && (currentProfile.getName() == profile.getName())) {
+				if (currentProfile != null && (currentProfile.getName().equals(profile.getName()))) {
 					profileChanged = false;
 				}
 
@@ -471,9 +473,9 @@ public class WsdlDefinitionPage extends WizardPage
 			if (null == connectionProfilesCombo.getItems() || 0 == connectionProfilesCombo.getItems().length) {
 				if (profileWorker.getProfiles().isEmpty()) {
 					setErrorMessage(Messages.WsdlDefinitionPage_no_profile_match);
-					wsdlURIText.setText(EMPTY_STR);
-					endPointNameText.setText(EMPTY_STR);
-					endPointURIText.setText(EMPTY_STR);
+					WidgetUtil.setText(wsdlURIText, null);
+					WidgetUtil.setText(endPointNameText, null);
+					WidgetUtil.setText(endPointURIText, null);
 					buttonValidateWSDL.setEnabled(false);
 					return;
 				}
@@ -497,9 +499,10 @@ public class WsdlDefinitionPage extends WizardPage
 				return;
 			}
 			Properties props = profile.getBaseProperties();
-			wsdlURIText.setText(props.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID));
-			endPointNameText.setText(props.getProperty(IWSProfileConstants.END_POINT_NAME_PROP_ID));
-			endPointURIText.setText(ConnectionInfoHelper.readEndPointProperty(props));
+			WidgetUtil.setText(wsdlURIText, props.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID));
+			WidgetUtil.setText(endPointNameText, props.getProperty(IWSProfileConstants.END_POINT_NAME_PROP_ID));
+			WidgetUtil.setText(endPointURIText, ConnectionInfoHelper.readEndPointProperty(props));
+
 			updateWidgetEnablements();
 			setErrorMessage(null);
 			setMessage(Messages.WsdlDefinitionPage_select_profile);
@@ -512,8 +515,9 @@ public class WsdlDefinitionPage extends WizardPage
 	public void profileChanged(IConnectionProfile profile) {
 		resetCPComboItems();
 
-		selectConnectionProfile(profile.getName());
-		
+		String profileName = profile != null ? profile.getName() : null;
+		selectConnectionProfile(profileName);
+
 		setConnectionProfileInternal(profile);
 
 		notifyChanged();
@@ -523,6 +527,16 @@ public class WsdlDefinitionPage extends WizardPage
 	 * Performs validation and sets the page status.
 	 */
 	public void setPageStatus() {
+        // Check connection profile status
+        IStatus connProfileStatus = this.importManager.getValidator().getConnectionProfileStatus();
+
+        if (connProfileStatus.getSeverity() != IStatus.OK) {
+            WizardUtil.setPageComplete(this,
+                                       this.importManager.getValidator().getPrimaryMessage(connProfileStatus),
+                                       WizardUtil.getMessageSeverity(connProfileStatus.getSeverity()));
+            return;
+        }
+
 		// Validate the source WSDL Selection
 		boolean sourceValid = validateSourceSelection();
 		if (!sourceValid) {
@@ -623,7 +637,7 @@ public class WsdlDefinitionPage extends WizardPage
 
 	void resetCPComboItems() {
 		if (connectionProfilesCombo != null) {
-			ArrayList profileList = new ArrayList();
+			List<IConnectionProfile> profileList = new ArrayList<IConnectionProfile>();
 			for (IConnectionProfile prof : profileWorker.getProfiles()) {
 				profileList.add(prof);
 			}
@@ -666,9 +680,11 @@ public class WsdlDefinitionPage extends WizardPage
 			}
 		}
 
-		if( profileChanged ) {
-			this.operationsPanel.notifyWsdlChanged();
-		}
+		/*
+		 * Want to revalidate the operations even if the connection
+		 * profile is the same since its properties may have been edited
+		 */
+		this.operationsPanel.notifyWsdlChanged();
 		return profileChanged;
 	}
 	

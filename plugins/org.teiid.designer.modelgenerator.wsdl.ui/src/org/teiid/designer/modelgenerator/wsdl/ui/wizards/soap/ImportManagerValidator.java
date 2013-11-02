@@ -9,19 +9,23 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
+import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 
 
@@ -35,6 +39,7 @@ public class ImportManagerValidator {
 	public static final DatatypeManager datatypeManager = ModelerCore.getWorkspaceDatatypeManager();
 	
 	WSDLImportWizardManager manager;
+	IStatus connectionProfileStatus;
 	IStatus operationsStatus;
 	IStatus modelsStatus;
 	Map<ProcedureGenerator, IStatus> proceduresStatusMap;
@@ -46,16 +51,31 @@ public class ImportManagerValidator {
 	}
 
 	public void validate() {
+	    connectionProfileStatus = validateConnectionProfile();
+
 		modelsStatus = validateResourceInfo();
 		
 		operationsStatus = validateProcedures();
 	}
-	
+
+    public IStatus getConnectionProfileStatus() {
+        if (this.connectionProfileStatus == null)
+            validate();
+
+        return this.connectionProfileStatus;
+    }
+
 	public IStatus getOperationsStatus() {
+        if (this.operationsStatus == null)
+            validate();
+
 		return this.operationsStatus;
 	}
 	
 	public IStatus getModelsStatus() {
+        if (this.modelsStatus == null)
+            validate();
+
 		return this.modelsStatus;
 	}
 	
@@ -100,25 +120,52 @@ public class ImportManagerValidator {
 		
 		return status;
 	}
-	
+
+	private IStatus validateConnectionProfile() {
+	    MultiStatus status = new MultiStatus(ProcedureGenerator.PLUGIN_ID, 0, null, null);
+
+	    IConnectionProfile connectionProfile = manager.getConnectionProfile();
+	    if (connectionProfile == null) {
+	        status.add(createStatus(IStatus.ERROR, Messages.Status_ConnectionProfileMissing));
+	        return status;
+	    }
+
+	    Properties properties = connectionProfile.getBaseProperties();
+	    String[] expectedProperties = {
+	        IWSProfileConstants.END_POINT_NAME_PROP_ID,
+	        IWSProfileConstants.END_POINT_URI_PROP_ID,
+	        IWSProfileConstants.SOAP_BINDING,
+	        ICredentialsCommon.SECURITY_TYPE_ID
+	    };
+
+	    for (String propertyKey : expectedProperties) {
+	        if(properties.get(propertyKey) == null) {
+	            status.add(createStatus(IStatus.ERROR, NLS.bind(Messages.Status_ConnectionProfilePropertyMissing, propertyKey)));
+	            break;
+	        }
+	    }
+
+	    return status;
+	}
+
 	private IStatus validateResourceInfo() {
 		MultiStatus status = new MultiStatus(ProcedureGenerator.PLUGIN_ID, 0, null, null);
-		
+
 		// Validate Source location & model name
 		if (this.manager.getSourceModelLocation() == null ) {
 			status.add(createStatus(IStatus.ERROR, Messages.Status_SourceModelLocationUndefined));
 		}
-		
+
+		IStatus nameStatus = null;
 		if (CoreStringUtil.isEmpty(this.manager.getSourceModelName()) ) {
 			status.add(createStatus(IStatus.ERROR, Messages.Status_SourceModelNameUndefined));
+		} else {
+		    nameStatus = ModelNameUtil.validate(this.manager.getSourceModelName(), ModelerCore.MODEL_FILE_EXTENSION, ModelNameUtil.IGNORE_CASE );
+		    if (nameStatus.getSeverity() == IStatus.ERROR) {
+		        status.add(nameStatus);
+		    }
 		}
-		
 
-        IStatus nameStatus = ModelNameUtil.validate(this.manager.getSourceModelName(), ModelerCore.MODEL_FILE_EXTENSION, ModelNameUtil.IGNORE_CASE );
-        if (nameStatus.getSeverity() == IStatus.ERROR) {
-			status.add(nameStatus);
-		}
-		
 		// Validate View location & model name
 		if (this.manager.getViewModelLocation() == null ) {
 			status.add(createStatus(IStatus.ERROR, Messages.Status_ViewModelLocationUndefined));
@@ -127,12 +174,13 @@ public class ImportManagerValidator {
 		if (CoreStringUtil.isEmpty(this.manager.getViewModelName()) ) {
 			status.add(createStatus(IStatus.ERROR, Messages.Status_ViewModelNameUndefined));
 		}
-		
-		nameStatus = ModelNameUtil.validate(this.manager.getViewModelName(), ModelerCore.MODEL_FILE_EXTENSION, ModelNameUtil.IGNORE_CASE );
-        if (nameStatus.getSeverity() == IStatus.ERROR) {
-			status.add(nameStatus);
-        }
-		
+		else {
+		    nameStatus = ModelNameUtil.validate(this.manager.getViewModelName(), ModelerCore.MODEL_FILE_EXTENSION, ModelNameUtil.IGNORE_CASE );
+		    if (nameStatus.getSeverity() == IStatus.ERROR) {
+		        status.add(nameStatus);
+		    }
+		}
+
 		if( status.isOK() ) {
 			if( this.manager.doGenerateDefaultProcedures() ) {
 				return createStatus(IStatus.OK, Messages.Status_AllOkClickFinishToGenerateProcedures);

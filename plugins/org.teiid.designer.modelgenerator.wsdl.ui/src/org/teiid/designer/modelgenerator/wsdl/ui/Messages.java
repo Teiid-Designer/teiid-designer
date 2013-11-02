@@ -14,7 +14,6 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages  extends NLS {
 
-
     public static String Add;
     public static String AddAsNewColumn;
     public static String AddAsNewElement;
@@ -127,7 +126,9 @@ public class Messages  extends NLS {
     public static String Status_ViewModelNameCannotBeNullOrEmpty;
     public static String Statis_ViewModelAlreadyExists;
     public static String Status_ViewModelDoesNotExistAndWillBeCreated;
-    
+    public static String Status_ConnectionProfileMissing;
+    public static String Status_ConnectionProfilePropertyMissing;
+
     public static String Error_Creating_0_Model_1_FromWsdl;
     public static String Error_DeterminingSourceModelHas_0_Procedure;
     public static String Error_DeterminingSourceModelHasProfile;

@@ -56,6 +56,9 @@ public class TeiidDataSourceFactory {
          ModelResource modelResource = ModelUtil.getModelResource(model, true);
          ConnectionInfoProviderFactory manager = new ConnectionInfoProviderFactory();
          IConnectionInfoProvider connInfoProvider = manager.getProvider(modelResource);
+         if (connInfoProvider == null)
+             return null;
+
          IConnectionProfile modelConnectionProfile = connInfoProvider.getConnectionProfile(modelResource);
          
          if (modelConnectionProfile == null)

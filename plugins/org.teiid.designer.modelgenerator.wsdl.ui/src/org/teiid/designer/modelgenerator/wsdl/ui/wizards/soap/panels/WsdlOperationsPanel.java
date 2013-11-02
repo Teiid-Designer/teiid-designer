@@ -44,14 +44,15 @@ import org.teiid.designer.modelgenerator.wsdl.model.Fault;
 import org.teiid.designer.modelgenerator.wsdl.model.Model;
 import org.teiid.designer.modelgenerator.wsdl.model.ModelGenerationException;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
-import org.teiid.designer.modelgenerator.wsdl.model.Port;
 import org.teiid.designer.modelgenerator.wsdl.model.WSDLElement;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.WsdlDefinitionPage;
+import org.teiid.designer.query.proc.wsdl.model.IPort;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.common.widget.Label;
 
@@ -379,41 +380,42 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
             public void run() {
 
                 panelStatus = Status.OK_STATUS;
-		try {
+                try {
                     wsdlModel = importManager.getWSDLModel();
-		} catch (ModelGenerationException e) {
+                } catch (ModelGenerationException e) {
                     wsdlModel = null;
-			Status exStatus = new Status(IStatus.ERROR, PLUGIN_ID, 0,
-				Messages.WsdlOperationsPage_dialog_wsdlParseError_msg, e);
+                    Status exStatus = new Status(IStatus.ERROR, PLUGIN_ID, 0,
+                                                 Messages.WsdlOperationsPage_dialog_wsdlParseError_msg, e);
                     Shell shell = parentComposite.getShell();
-			ErrorDialog.openError(shell, null, Messages.WsdlOperationsPage_dialog_wsdlParseError_title, exStatus);
+                    ErrorDialog.openError(shell, null, Messages.WsdlOperationsPage_dialog_wsdlParseError_title, exStatus);
                     panelStatus = exStatus;
                     operationsViewer.getTable().clearAll();
                     operationsViewer.setInput(new Object());
                 }
-                
+
                 // Set the default binding label
                 Properties properties = importManager.getConnectionProfile().getBaseProperties();
                 String binding = properties.getProperty(IWSProfileConstants.SOAP_BINDING);
                 if (binding == null)
-                    binding = Port.SOAP11;
-                
-                defaultBindingText.setText(binding);
-                    
+                    binding = IPort.SOAP11;
+
+                WidgetUtil.setText(defaultBindingText, binding);
+
                 // Populate the operations table
-                if( wsdlModel != null ) {
-                    String portName = properties.getProperty(IWSProfileConstants.END_POINT_NAME_PROP_ID);
-                    Operation[] operations = wsdlModel.getModelableOperations(portName);
-                    operationsViewer.setInput(new OperationsContainer(operations));
-                    operationsViewer.refresh(true);
+                String portName = properties.getProperty(IWSProfileConstants.END_POINT_NAME_PROP_ID);
+                Operation[] operations = new Operation[0];
+                if (wsdlModel != null && portName != null) {
+                    operations = wsdlModel.getModelableOperations(portName);
                 }
-                
+                operationsViewer.setInput(new OperationsContainer(operations));
+                operationsViewer.refresh(true);
+
                 importManager.setSelectedOperations(new ArrayList());
-		setAllNodesSelected(true);
-		updateImportManager();
+                setAllNodesSelected(true);
+                updateImportManager();
             }
         });
-	}
+    }
 	
 	private void handleDefaultServiceModeSelected() {
 		this.importManager.setTranslatorDefaultServiceMode(this.defaultServiceModeCombo.getText());
