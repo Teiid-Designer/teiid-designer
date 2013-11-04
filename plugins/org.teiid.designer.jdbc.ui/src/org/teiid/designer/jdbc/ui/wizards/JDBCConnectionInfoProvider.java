@@ -86,8 +86,10 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
             connectionProps.put(CONNECTION_NAMESPACE + PROFILE_ID_KEY, connectionProfile.getProviderId());
             Properties baseProps = connectionProfile.getBaseProperties();
 
+            String driverClassName = null;
             boolean enoughProps = true;
             if (baseProps.get(DRIVER_CLASS_KEY) != null) {
+            	driverClassName = baseProps.get(DRIVER_CLASS_KEY).toString();
                 connectionProps.put(CONNECTION_NAMESPACE + DRIVER_CLASS, baseProps.get(DRIVER_CLASS_KEY));
             } else {
                 enoughProps = false;
@@ -128,7 +130,12 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
             getHelper().removeProperties(modelResource, JDBCCONNECTION_NAMESPACE);
 
             // Add JDBC translator
-            connectionProps.put(TRANSLATOR_NAMESPACE + TRANSLATOR_NAME_KEY, JdbcTranslatorHelper.getTranslator(connectionProfile));
+            String translatorName = JdbcTranslatorHelper.getTranslator(connectionProfile);
+            // If could not determine specific translator, try match using driver name
+            if(translatorName.equals("jdbc-simple")) {  //$NON-NLS-1$
+            	translatorName = JdbcTranslatorHelper.getTranslatorFromDriverName(driverClassName);
+            }
+            connectionProps.put(TRANSLATOR_NAMESPACE + TRANSLATOR_NAME_KEY, translatorName);
 
             // Add new connection properties
             getHelper().setProperties(modelResource, connectionProps);
