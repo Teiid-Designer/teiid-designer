@@ -394,7 +394,7 @@
          </menu>
          <action
                label="%refreshModelAction.label"
-               icon="platform:/plugin/org.teiid.designer.jdbc.ui/icons/full/ctool16/jdbc_import.gif"
+               icon="icons/full/ctool16/refresh_model.gif"
                helpContextId="refreshAction.helpContext"
                tooltip="%refreshModelAction.tooltip"
                class="org.teiid.designer.ui.actions.RefreshAction"
