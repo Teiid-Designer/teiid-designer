@@ -21,7 +21,6 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.metamodels.core.ModelType;
-import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidDataSourceFactory;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.vdb.TranslatorOverride;
@@ -254,8 +253,7 @@ public class VdbDeployer {
                             if (factory.createDataSource(teiidServer,
                                                                  model,
                                                                  sourceName,
-                                                                 false,
-                                                                 DqpPlugin.getInstance().getPasswordProvider()) == null) {
+                                                                 false) == null) {
                                 this.status = DeployStatus.CREATE_DATA_SOURCE_FAILED;
                                 break; // don't try again to create a DS
                             }

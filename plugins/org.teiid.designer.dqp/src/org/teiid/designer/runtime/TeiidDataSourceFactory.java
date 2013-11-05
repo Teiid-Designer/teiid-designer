@@ -7,10 +7,15 @@
 */
 package org.teiid.designer.runtime;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
+import org.teiid.designer.ExtensionRegistryUtils;
+import org.teiid.designer.IExtensionRegistryCallback;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
@@ -25,6 +30,53 @@ import org.teiid.designer.runtime.spi.ITeiidServer;
 public class TeiidDataSourceFactory {
 
     /**
+     * Get the password provider if one has been set
+     *
+     * @return the password provider
+     * @throws Exception
+     */
+    public IPasswordProvider getPasswordProvider() throws Exception {
+
+        final List<IPasswordProvider> passwordProviders = new ArrayList<IPasswordProvider>();
+        IExtensionRegistryCallback<IPasswordProvider> callback = new IExtensionRegistryCallback<IPasswordProvider>() {
+
+            @Override
+            public String getExtensionPointId() {
+                return IPasswordProvider.PASSWORD_PROVIDER_EXTENSION_POINT_ID;
+            }
+
+            @Override
+            public String getElementId() {
+                return IPasswordProvider.PASSWORD_PROVIDER_ELEMENT_ID;
+            }
+
+            @Override
+            public String getAttributeId() {
+                return CLASS_ATTRIBUTE_ID;
+            }
+
+            @Override
+            public boolean isSingle() {
+                return true;
+            }
+
+            @Override
+            public void process(IPasswordProvider instance, IConfigurationElement element) {
+                passwordProviders.add(instance);
+            }
+        };
+
+        ExtensionRegistryUtils.createExtensionInstances(callback);
+
+        if (passwordProviders.isEmpty()) {
+            DqpPlugin.Util.log("No password provider implementation installed."); //$NON-NLS-1$
+            return null;
+        }
+
+        return passwordProviders.get(0);
+    }
+
+    /**
      * 
      * Create a data source for the given server. If a data source with the given
      * jndi name already exists then this is returned.
@@ -33,7 +85,6 @@ public class TeiidDataSourceFactory {
      * @param model
      * @param jndiName
      * @param previewVdb
-     * @param passwordProvider
      * 
      * @return a data source with the given jndi name
      * 
@@ -42,16 +93,15 @@ public class TeiidDataSourceFactory {
     public ITeiidDataSource createDataSource( ITeiidServer teiidServer, 
                                                    IFile model,
                                                    String jndiName,
-                                                   boolean previewVdb,
-                                                   IPasswordProvider passwordProvider ) throws Exception {
+                                                   boolean previewVdb) throws Exception {
   
          // first check to see if DS with that name already exists
          ITeiidDataSource dataSource = teiidServer.getDataSource(jndiName);
 
          if (dataSource != null) {
              return dataSource;
-         }        
-         
+         }
+
          // need to create a DS
          ModelResource modelResource = ModelUtil.getModelResource(model, true);
          ConnectionInfoProviderFactory manager = new ConnectionInfoProviderFactory();
@@ -96,7 +146,8 @@ public class TeiidDataSourceFactory {
                      }
                  }
 
-                 if ((pwd == null) && (passwordProvider != null)) {
+                 IPasswordProvider passwordProvider = getPasswordProvider();
+                if ((pwd == null) && (passwordProvider != null)) {
                      pwd = passwordProvider.getPassword(modelResource.getItemName(), modelConnectionProfile.getName());
                  }
              }

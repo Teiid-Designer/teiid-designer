@@ -50,7 +50,6 @@ import org.teiid.designer.core.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.runtime.IServersProvider.IServersInitialiseListener;
-import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.importer.ImportManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
@@ -235,11 +234,6 @@ public final class TeiidServerManager implements ITeiidServerManager {
     private ISecureStorageProvider secureStorageProvider;
 
     /**
-     * The provider used for asking the user for passwords should they be necessary.
-     */
-    private IPasswordProvider passwordProvider;
-
-    /**
      * Flag indicating whether other open editors should be closed when the default server
      * is changed. Will be set to true when the manager is fully started and AFTER the default
      * server initially set to avoid closing editors from the previous session.
@@ -289,7 +283,6 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     public TeiidServerManager() {
         this(DqpPlugin.getInstance().getRuntimePath().toFile().getAbsolutePath(),
-                DqpPlugin.getInstance().getPasswordProvider(),
                 DqpPlugin.getInstance().getServersProvider(),
                 ConnectivityUtil.getSecureStorageProvider());
     }
@@ -297,14 +290,12 @@ public final class TeiidServerManager implements ITeiidServerManager {
     /**
      * @param stateLocationPath the directory where the {@link ITeiidServer} registry} is persisted (may be <code>null</code> if
      *        persistence is not desired)
-     * @param passwordProvider 
      * @param parentServersProvider 
      * @param secureStorageProvider 
      */
-    public TeiidServerManager( String stateLocationPath, IPasswordProvider passwordProvider, 
-                               IServersProvider parentServersProvider, ISecureStorageProvider secureStorageProvider ) {
+    public TeiidServerManager( String stateLocationPath, IServersProvider parentServersProvider,
+                                                     ISecureStorageProvider secureStorageProvider ) {
         CoreArgCheck.isNotNull(stateLocationPath);
-        CoreArgCheck.isNotNull(passwordProvider);
         CoreArgCheck.isNotNull(parentServersProvider);
         CoreArgCheck.isNotNull(secureStorageProvider);
 
@@ -312,7 +303,6 @@ public final class TeiidServerManager implements ITeiidServerManager {
         this.stateLocationPath = stateLocationPath;
         this.parentServersProvider = parentServersProvider;
         this.secureStorageProvider = secureStorageProvider;
-        this.passwordProvider = passwordProvider;
         this.listeners = new CopyOnWriteArrayList<IExecutionConfigurationListener>();
     }
 
@@ -643,7 +633,6 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     private void initialiseManagers() {
         PreviewManager previewManager = PreviewManager.getInstance();
-        previewManager.setPasswordProvider(passwordProvider);
         addListener(previewManager);
 
         addListener(ImportManager.getInstance());

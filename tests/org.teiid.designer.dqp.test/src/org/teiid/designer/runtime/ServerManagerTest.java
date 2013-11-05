@@ -31,7 +31,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
-import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.HostProvider;
@@ -128,16 +127,13 @@ public class ServerManagerTest {
     @Mock
     private ITeiidServer server1;
 
-    @Mock
-    private IPasswordProvider passwordProvider;
-
     @Before
     public void beforeEach() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(server1.getServerVersion()).thenReturn(TeiidServerVersion.DEFAULT_TEIID_8_SERVER);
 
         String stateLocationPath = System.getProperty("java.io.tmpdir");
-        this.mgr = new TeiidServerManager(stateLocationPath, passwordProvider, serversProvider, new DefaultStorageProvider());
+        this.mgr = new TeiidServerManager(stateLocationPath, serversProvider, new DefaultStorageProvider());
         // State must be set to started
         this.mgr.restoreState();
     }
@@ -277,7 +273,7 @@ public class ServerManagerTest {
         MockObjectFactory.createModelContainer();
 
         this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()), 
-                                          passwordProvider, serversProvider, new DefaultStorageProvider());
+                                                                       serversProvider, new DefaultStorageProvider());
         this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(2));
 

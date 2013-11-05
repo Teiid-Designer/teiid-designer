@@ -81,7 +81,6 @@ import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.TeiidDataSourceFactory;
-import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.preview.jobs.CompositePreviewJob;
 import org.teiid.designer.runtime.preview.jobs.CreatePreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.DeleteDeployedPreviewVdbJob;
@@ -121,12 +120,9 @@ public final class PreviewManager extends JobChangeAdapter
     PreviewContext {
 
     private static final String PROJECT_VDB_SUFFIX = "_project"; //$NON-NLS-1$
-
-    private IPasswordProvider passwordProvider;
     
     String projectPreviewVdbName = null;
-    
-    
+
     /**
      * @param targetVdb the version of the source VDB
      * @param modelPreviewVdbs list of preview vdbs for models in the project
@@ -512,7 +508,7 @@ public final class PreviewManager extends JobChangeAdapter
             // create data source on server if we need to
             if (!previewServer.dataSourceExists(jndiName)) {
                 TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
-                factory.createDataSource(previewServer, model, jndiName, true, this.passwordProvider);
+                factory.createDataSource(previewServer, model, jndiName, true);
             }
 
             if (!jndiName.equals(getSourceJndiName(modelEntry)) ) {
@@ -1544,13 +1540,6 @@ public final class PreviewManager extends JobChangeAdapter
         if( status != null ) {
         	status.setDeploy(deploy);
         }
-    }
-
-    /**
-     * @param passwordProvider the password provider
-     */
-    public void setPasswordProvider( IPasswordProvider passwordProvider ) {
-        this.passwordProvider = passwordProvider;
     }
 
     /**

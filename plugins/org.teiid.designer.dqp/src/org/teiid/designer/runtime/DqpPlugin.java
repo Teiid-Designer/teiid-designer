@@ -9,7 +9,6 @@ package org.teiid.designer.runtime;
 
 import java.util.ResourceBundle;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
@@ -21,8 +20,6 @@ import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.event.IChangeNotifier;
 import org.teiid.core.designer.util.PluginUtilImpl;
-import org.teiid.designer.ExtensionRegistryUtils;
-import org.teiid.designer.IExtensionRegistryCallback;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.core.workspace.ModelWorkspaceNotification;
@@ -136,60 +133,6 @@ public class DqpPlugin extends Plugin {
      */
     public ITeiidServerManager getServerManager() {
         return ModelerCore.getTeiidServerManager();
-    }
-
-    /**
-     * Get the password provider if one has been set
-     * 
-     * @return the password provider
-     */
-    public IPasswordProvider getPasswordProvider() {
-
-        if (passwordProvider == null) {
-            IExtensionRegistryCallback<IPasswordProvider> callback = new IExtensionRegistryCallback<IPasswordProvider>() {
-
-                @Override
-                public String getExtensionPointId() {
-                    return IPasswordProvider.PASSWORD_PROVIDER_EXTENSION_POINT_ID;
-                }
-
-                @Override
-                public String getElementId() {
-                    return IPasswordProvider.PASSWORD_PROVIDER_ELEMENT_ID;
-                }
-
-                @Override
-                public String getAttributeId() {
-                    return CLASS_ATTRIBUTE_ID;
-                }
-
-                @Override
-                public boolean isSingle() {
-                    return true;
-                }
-
-                @Override
-                public void process(IPasswordProvider instance, IConfigurationElement element) {
-                    if (passwordProvider != null) {
-                        /*
-                         * Programming error since the password provider extension should only be
-                         * implemented once.
-                         */
-                        throw new IllegalStateException();
-                    }
-
-                    passwordProvider = instance;
-                }
-            };
-
-            try {
-                ExtensionRegistryUtils.createExtensionInstances(callback);
-            } catch (Exception ex) {
-                throw new IllegalStateException(ex);
-            }
-        }
-
-        return passwordProvider;
     }
     
     /**
