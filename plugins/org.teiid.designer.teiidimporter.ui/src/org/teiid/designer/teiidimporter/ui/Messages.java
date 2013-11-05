@@ -86,7 +86,8 @@ public class Messages extends NLS {
     public static String selectDataSourcePage_dataSourceGroupText;
     public static String selectDataSourcePage_dataSourcePropertiesGroupText;
     public static String selectDataSourcePage_NoSourceSelectedMsg;
-
+    public static String selectDataSourcePage_CannotImportSourceTypeMsg;
+    
     public static String SelectTranslatorPage_title;
     public static String SelectTranslatorPage_dsNameLabel;
     public static String SelectTranslatorPage_dsTypeLabel;
