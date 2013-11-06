@@ -124,7 +124,7 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
      */
     private boolean checkForConnectedServer() {
         ITeiidServer teiidServer = getServerManager().getDefaultServer();
-        if(!teiidServer.isConnected()) {
+        if(teiidServer==null || !teiidServer.isConnected()) {
     		Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
     		String title = UTIL.getString("ActionRequiresServer.title"); //$NON-NLS-1$
     		String msg = UTIL.getString("ActionRequiresServer.msg"); //$NON-NLS-1$
