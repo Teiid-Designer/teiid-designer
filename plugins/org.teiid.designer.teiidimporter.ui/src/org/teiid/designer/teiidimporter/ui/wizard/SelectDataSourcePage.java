@@ -7,12 +7,17 @@
  */
 package org.teiid.designer.teiidimporter.ui.wizard;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.panels.DataSourcePanel;
@@ -34,6 +39,14 @@ public class SelectDataSourcePage extends AbstractWizardPage
 
     private static final String EMPTY_STR = ""; //$NON-NLS-1$
     private static final String SERVER_PREFIX = "Server: "; //$NON-NLS-1$
+    
+    // Source types that cannot be imported with this wizard
+    private static final List<String> DISALLOWED_SOURCES;
+    static {
+    	DISALLOWED_SOURCES = new ArrayList<String>();
+    	DISALLOWED_SOURCES.add("ldap");  //$NON-NLS-1$
+    	DISALLOWED_SOURCES.add("mongodb"); //$NON-NLS-1$
+    }
 
     private TeiidImportManager importManager;
 
@@ -120,6 +133,10 @@ public class SelectDataSourcePage extends AbstractWizardPage
         return this.importManager.getDataSourceName();
     }
     
+    private String getSelectedDataSourceDriverName() {
+        return this.importManager.getDataSourceDriverName();
+    }
+    
     @Override
     public void setVisible( boolean visible ) {
         if (visible) {
@@ -140,7 +157,16 @@ public class SelectDataSourcePage extends AbstractWizardPage
             setThisPageComplete(Messages.selectDataSourcePage_NoSourceSelectedMsg, ERROR);
             return false;
         }
-        
+         
+        // The importer cannot be used for some types - the DDL cannot be generated.  Manual modeling is required.
+        String selectedDataSourceDriverName = getSelectedDataSourceDriverName();
+        if(!CoreStringUtil.isEmpty(selectedDataSourceDriverName)) {
+        	String driverNameLC = selectedDataSourceDriverName.toLowerCase();
+        	if(DISALLOWED_SOURCES.contains(driverNameLC)) {  
+                setThisPageComplete( NLS.bind(Messages.selectDataSourcePage_CannotImportSourceTypeMsg, driverNameLC) , ERROR);
+                return false;        		
+        	}
+        }
         setThisPageComplete(EMPTY_STR, NONE);
         return true;
     }

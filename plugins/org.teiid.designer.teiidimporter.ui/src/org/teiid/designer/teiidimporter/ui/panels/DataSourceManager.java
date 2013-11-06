@@ -379,7 +379,8 @@ public class DataSourceManager implements UiConstants {
      		} else  {
     			if(   driverName.equals(TranslatorHelper.TEIID_FILE_DRIVER_84UP) || driverName.equals(TranslatorHelper.TEIID_GOOGLE_DRIVER_84UP)
     			   || driverName.equals(TranslatorHelper.TEIID_INFINISPAN_DRIVER_84UP) || driverName.equals(TranslatorHelper.TEIID_LDAP_DRIVER_84UP)
-    			   || driverName.equals(TranslatorHelper.TEIID_SALESORCE_DRIVER_84UP) || driverName.equals(TranslatorHelper.TEIID_WEBSERVICE_DRIVER_84UP)) {
+    			   || driverName.equals(TranslatorHelper.TEIID_SALESORCE_DRIVER_84UP) || driverName.equals(TranslatorHelper.TEIID_WEBSERVICE_DRIVER_84UP)
+    			   || driverName.equals(TranslatorHelper.TEIID_MONGODB_DRIVER_84UP)) {
     				isRarDriver = true;
     			}
     		}
