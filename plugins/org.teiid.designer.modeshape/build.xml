@@ -58,20 +58,23 @@
 	</target>
 
 	<target name="generate" depends="check-work, nothing-todo" if="should-generate">
-
 		<echo message="Generating from maven ..." />
 
 		<!-- Build the target platform and install it -->
 		<echo message="=== Installing target platform ===" />
 		<mvn dir="${GIT-HOME}/target-platform" args="install" />
 
-		<!-- Build the spi dependency and install it -->
-		<echo message="=== Installing the spi plugin dependency ===" />
-		<mvn dir="${GIT-HOME}/plugins/org.teiid.designer.spi" args="install" />
-
-		<!-- Call the process sources goal and generate using javacc -->
+		<!-- Call the process sources goal -->
 		<echo message="=== Generating external libraries and sources ===" />
 		<mvn dir="." args="process-sources -P download-sources" />
 
 	</target>
+
+	<target name="clean">
+
+		<echo message="Removing libraries from lib directories" />
+	    <mvn dir="." args="clean" />
+
+	</target>
+
 </project>
