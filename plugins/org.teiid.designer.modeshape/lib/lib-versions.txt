@@ -1,0 +1,2 @@
+modeshape-common-3.3.5.GA-redhat-2.jar
+modeshape-sequencer-ddl-3.3.5.GA-redhat-2.jar
