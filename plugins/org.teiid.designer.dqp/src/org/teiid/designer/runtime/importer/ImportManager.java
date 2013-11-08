@@ -11,6 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -19,6 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.designer.common.xml.XmlUtil;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
@@ -119,10 +121,11 @@ public final class ImportManager implements IExecutionConfigurationListener {
      * @param vdbName name to use for the VDB
      * @param sourceName the dataSource to use for the import
      * @param translatorName the name of the translator
+     * @param modelPropertyMap the Map of optional model properties
      * @param monitor the progress monitor
      * @return status of the deployment
      */
-    public IStatus deployDynamicVdb(String vdbName, String sourceName, String translatorName, IProgressMonitor monitor) {
+    public IStatus deployDynamicVdb(String vdbName, String sourceName, String translatorName, Map<String,String> modelPropertyMap, IProgressMonitor monitor) {
     	// Work remaining for progress monitor
     	int workRemaining = 100;
     	
@@ -150,7 +153,7 @@ public final class ImportManager implements IExecutionConfigurationListener {
         	sourceJndiName=sourceName;
         }
         // Get Dynamic VDB string
-        String dynamicVdbString = createDynamicVdb(vdbName,1,translatorName,importSourceModel,sourceJndiName);
+        String dynamicVdbString = createDynamicVdb(vdbName,1,translatorName,importSourceModel,sourceJndiName,modelPropertyMap);
 
         // If an import VDB with the supplied name exists, undeploy it first
         ITeiidVdb deployedImportVdb;
@@ -263,9 +266,14 @@ public final class ImportManager implements IExecutionConfigurationListener {
      * Create a new, blank deployment for the provided vdbName and version
      * @param vdbName name of the VDB
      * @param vdbVersion the VDB version
+     * @param translatorName the translator
+     * @param datasourceName the dataSource name
+     * @param datasourceJndeName the dataSource jndi name
+     * @param modelProps the model properties
      * @return the VDB deployment string
      */
-    private String createDynamicVdb(String vdbName, int vdbVersion,  String translatorName, String datasourceName, String datasourceJndiName) {
+    private String createDynamicVdb(String vdbName, int vdbVersion,  String translatorName, String datasourceName, String datasourceJndiName, 
+    		                        Map<String,String> modelProps) {
         StringBuffer sb = new StringBuffer();
         String deploymentName = vdbName+DYNAMIC_VDB_SUFFIX;
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"); //$NON-NLS-1$
@@ -274,6 +282,11 @@ public final class ImportManager implements IExecutionConfigurationListener {
         sb.append("<property name=\"UseConnectorMetadata\" value=\"true\" />"); //$NON-NLS-1$
         sb.append("<property name=\"deployment-name\" value=\""+deploymentName+"\" />"); //$NON-NLS-1$ //$NON-NLS-2$
         sb.append("<model name=\""+datasourceName+"\" type=\"PHYSICAL\" visible=\"true\">"); //$NON-NLS-1$ //$NON-NLS-2$
+        Set<String> propNames = modelProps.keySet();
+        for(String propName : propNames) {
+        	String propValue = XmlUtil.escapeCharacterData(modelProps.get(propName));
+            sb.append("<property name=\""+propName+"\" value=\""+propValue+"\" />"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        }
         sb.append("<source name=\""+datasourceName+"\" translator-name=\""+translatorName+"\" connection-jndi-name=\""+datasourceJndiName+"\" />"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         sb.append("</model>"); //$NON-NLS-1$
         sb.append("</vdb>"); //$NON-NLS-1$

@@ -92,7 +92,8 @@ public class Messages extends NLS {
     public static String SelectTranslatorPage_dsNameLabel;
     public static String SelectTranslatorPage_dsTypeLabel;
     public static String SelectTranslatorPage_translatorLabel;
-    public static String SelectTranslatorPage_SrcModelDefnGroup;
+    public static String SelectTranslatorPage_SrcDefnGroup;
+    public static String SelectTranslatorPage_TgtModelDefnGroup;
     public static String SelectTranslatorPage_Location;
     public static String SelectTranslatorPage_Browse;
     public static String SelectTranslatorPage_Name;
@@ -128,6 +129,23 @@ public class Messages extends NLS {
     public static String dataSourceManager_deleteCreateInterruptedMsg;
     public static String dataSourceManager_copyOk;
     public static String dataSourceManager_copyInterruptedMsg;
+
+    public static String ImportPropertiesPanel_groupTitle;
+    public static String ImportPropertiesPanel_name;
+    public static String ImportPropertiesPanel_value;
+    public static String ImportPropertiesPanel_addNewPropertyButton_tooltip;
+    public static String ImportPropertiesPanel_removePropertyButton_tooltip;
+
+    public static String AddGeneralPropertyDialog_title;
+    public static String AddGeneralPropertyDialog_message;
+    public static String AddGeneralPropertyDialog_lblName_text;
+    public static String AddGeneralPropertyDialog_txtName_toolTip;
+    public static String AddGeneralPropertyDialog_lblValue_text;
+    public static String AddGeneralPropertyDialog_txtValue_toolTip;
+    public static String AddGeneralPropertyDialog_customPropertyAlreadyExists;
+    public static String AddGeneralPropertyDialog_emptyPropertyName;
+    public static String AddGeneralPropertyDialog_invalidPropertyName;
+    public static String AddGeneralPropertyDialog_emptyPropertyValue;
     
     static {
         NLS.initializeMessages("org.teiid.designer.teiidimporter.ui.messages", Messages.class); //$NON-NLS-1$
