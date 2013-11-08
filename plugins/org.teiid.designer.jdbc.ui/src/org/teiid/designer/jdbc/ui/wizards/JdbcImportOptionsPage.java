@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -160,7 +159,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
     private Group changeCaseGroup;
     private Text nameText, folderText;
     private Button updateCheckBox, fullyQualifiedNamesCheckBox, includeCatalogCheckBox, modifyCaseCheckBox,
-    	uppercaseButton, lowercaseButton, virtualModelBox, calculateCostingCheckBox;
+        uppercaseButton, lowercaseButton, virtualModelBox, calculateCostingCheckBox, browseSelectedModelBtn;
     private boolean initd;
     private IContainer folder;
     private boolean usesHiddenProject = false;
@@ -214,9 +213,9 @@ public class JdbcImportOptionsPage extends WizardPage implements
         });
 
         // add browse button to allow selecting a model in the workspaced to update
-        Button btn = WidgetFactory.createButton(modelGroup, BROWSE_BUTTON);
-        btn.setToolTipText(getString("browseModelButton.tip")); //$NON-NLS-1$
-        btn.addSelectionListener(new SelectionAdapter() {
+        browseSelectedModelBtn = WidgetFactory.createButton(modelGroup, BROWSE_BUTTON);
+        browseSelectedModelBtn.setToolTipText(getString("browseModelButton.tip")); //$NON-NLS-1$
+        browseSelectedModelBtn.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
@@ -423,7 +422,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
         
         if( this.importer.isVdbSourceModel() ) {
     	// Need to 
-    	// 1) Make the "model name" field non-editable
+        // 1) Make the "model name" field non-editable and browse button disabled
         	
     	// 2) Disable the "make virtual" checkbox
     	// 3) Diable the "catalog & fully qualified boxes
@@ -434,6 +433,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
         	}
         	this.virtualModelBox.setSelection(false);
         	this.virtualModelBox.setEnabled(false);
+            this.browseSelectedModelBtn.setEnabled(false);
         	this.updateCheckBox.setSelection(false);
         	this.updateCheckBox.setEnabled(false);
            	this.fullyQualifiedNamesCheckBox.setSelection(false);
@@ -445,6 +445,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
         } else {
         	this.nameText.setEditable(true);
         	this.virtualModelBox.setEnabled(true);
+            this.browseSelectedModelBtn.setEnabled(true);
         	this.updateCheckBox.setEnabled(true);
         	this.fullyQualifiedNamesCheckBox.setEnabled(true);
         	this.includeCatalogCheckBox.setEnabled(true);
