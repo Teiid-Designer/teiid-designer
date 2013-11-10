@@ -14,6 +14,8 @@ import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import org.eclipse.core.resources.IFile;
@@ -69,6 +71,8 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     private String dataSourceName = null;
     private String dataSourceDriverName = null;
     private Properties dataSourceProps = null;
+    private Map<String,String> optionalImportProps = new HashMap<String,String>();
+    
     IStatus vdbDeploymentStatus = null;
     private ConnectionInfoHelper connectionInfoHelper = new ConnectionInfoHelper();
     private DdlImporter ddlImporter;
@@ -152,6 +156,32 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     }
     
     /**
+     * Add Optional Import Property
+     * @param name the optional property name
+     * @param value the optional property value
+     */
+    public void addOptionalImportProperty(String name, String value) {
+    	this.optionalImportProps.put(name,value);
+    	this.vdbDeploymentStatus = null;
+    }
+    
+    /**
+     * Remove Optional Import Property
+     * @param name the optional property name
+     */
+    public void removeOptionalImportProperty(String name) {
+        this.optionalImportProps.remove(name);
+        this.vdbDeploymentStatus = null;
+    }
+    
+    /**
+     * @return the optional properties map
+     */
+    public Map<String,String> getOptionalImportProps() {
+        return this.optionalImportProps;
+    }
+
+    /**
      * Determine if the Importer Server is Valid
      * @return 'true' if we have a valid server, 'false' if not.
      */
@@ -168,6 +198,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
  
         final String translatorName = getTranslatorName();
         final String dataSourceName = getDataSourceName();
+        final Map<String,String> optionalImportPropMap = getOptionalImportProps();
         boolean infoGood = false;
         if(translatorName!=null && dataSourceName!=null) {
             infoGood=true;
@@ -180,7 +211,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
                 public void run( IProgressMonitor monitor ) throws InvocationTargetException {
                     try {
                         monitor.beginTask(NLS.bind(Messages.TeiidImportManager_deployVdbMsg, getTimeoutPrefSecs()), 100); 
-                        vdbDeploymentStatus = getServerImportManager().deployDynamicVdb(IMPORT_VDB_NAME,dataSourceName,translatorName,monitor); 
+                        vdbDeploymentStatus = getServerImportManager().deployDynamicVdb(IMPORT_VDB_NAME,dataSourceName,translatorName,optionalImportPropMap,monitor); 
                     } catch (Throwable e) {
                         throw new InvocationTargetException(e);
                     } finally {

@@ -46,6 +46,7 @@ import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
+import org.teiid.designer.teiidimporter.ui.panels.ImportPropertiesPanel;
 import org.teiid.designer.teiidimporter.ui.panels.TranslatorHelper;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -112,6 +113,9 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
 
         // Group for selection of the Connections
         createDataSourceAndTranslatorPanel(pnl);
+        
+        // Panel for Optional Properties
+        new ImportPropertiesPanel(pnl, importManager, 4);
                 
         // Group for Selection of target Source Model
         createTargetModelGroup(pnl);
@@ -126,18 +130,20 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
      * @param parent the parent Composite
      */
     private void createDataSourceAndTranslatorPanel(Composite parent) {
-        Composite outerPanel = new Composite(parent,SWT.NONE);
-        
-        outerPanel.setLayout(new GridLayout(2, false));
-        outerPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        // -------------------------------------
+        // Create the Source Definition Group
+        // -------------------------------------
+        Group sourceGroup = WidgetFactory.createGroup(parent, Messages.SelectTranslatorPage_SrcDefnGroup, SWT.NONE, 1);
+        sourceGroup.setLayout(new GridLayout(2, false));
+        sourceGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         // -------------------------------------
         // DataSource Name
         // -------------------------------------
-        Label dsNameLabel = new Label(outerPanel,SWT.NONE);
+        Label dsNameLabel = new Label(sourceGroup,SWT.NONE);
         dsNameLabel.setText(Messages.SelectTranslatorPage_dsNameLabel);
         
-        dataSourceNameText = new Text(outerPanel, SWT.BORDER | SWT.SINGLE);
+        dataSourceNameText = new Text(sourceGroup, SWT.BORDER | SWT.SINGLE);
         dataSourceNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         String dsName = this.importManager.getDataSourceName();
         if(dsName!=null) dataSourceNameText.setText(dsName);
@@ -147,10 +153,10 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
         // -----------------------
         // DataSource Driver Name
         // -----------------------
-        Label dsDriverLabel = new Label(outerPanel,SWT.NONE);
+        Label dsDriverLabel = new Label(sourceGroup,SWT.NONE);
         dsDriverLabel.setText(Messages.SelectTranslatorPage_dsTypeLabel);            
 
-        dataSourceDriverText = new Text(outerPanel, SWT.BORDER | SWT.SINGLE);
+        dataSourceDriverText = new Text(sourceGroup, SWT.BORDER | SWT.SINGLE);
         dataSourceDriverText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         String dsDriver = this.importManager.getDataSourceDriverName();
         if(dsDriver!=null) dataSourceDriverText.setText(dsDriver);
@@ -161,12 +167,12 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
         // Combo for Translator selection
         // -------------------------------------
 
-        Label translatorLabel = new Label(outerPanel,SWT.NONE);
+        Label translatorLabel = new Label(sourceGroup,SWT.NONE);
         translatorLabel.setText(Messages.SelectTranslatorPage_translatorLabel);
         
         refreshTranslators();
         
-        this.translatorNameCombo = WidgetFactory.createCombo(outerPanel,
+        this.translatorNameCombo = WidgetFactory.createCombo(sourceGroup,
                                                                  SWT.READ_ONLY,
                                                                  GridData.FILL_HORIZONTAL,
                                                                  translatorNames.toArray());
@@ -275,7 +281,7 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
         // -------------------------------------
         // Create the Model Definition Group
         // -------------------------------------
-        Group sourceGroup = WidgetFactory.createGroup(parent, Messages.SelectTranslatorPage_SrcModelDefnGroup, SWT.NONE, 1);
+        Group sourceGroup = WidgetFactory.createGroup(parent, Messages.SelectTranslatorPage_TgtModelDefnGroup, SWT.NONE, 1);
         sourceGroup.setLayout(new GridLayout(3, false));
         sourceGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 

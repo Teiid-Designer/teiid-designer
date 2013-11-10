@@ -30,6 +30,8 @@ public interface UiConstants {
         
         String IMPORT_TEIID_METADATA = FOLDER + "importTeiidMetadataWiz.gif"; //$NON-NLS-1$
         String RESET_PROPERTY = FOLDER + "restore-default-value.png";  //$NON-NLS-1$
+        String ADD_PROPERTY = FOLDER + "add_property.png";  //$NON-NLS-1$
+        String REMOVE_PROPERTY = FOLDER + "remove_property.png";  //$NON-NLS-1$
     }
     
 }
