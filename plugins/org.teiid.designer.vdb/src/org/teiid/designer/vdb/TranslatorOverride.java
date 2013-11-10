@@ -73,7 +73,7 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
 
         // make sure only letters, digits, or dash
         for (char c : proposedType.toCharArray()) {
-            if (!Character.isLetter(c)) {
+            if (!Character.isLetterOrDigit(c) && c != '-') {
                 return UTIL.getString(PREFIX + "invalidTranslatorType", proposedType); //$NON-NLS-1$
             }
         }
