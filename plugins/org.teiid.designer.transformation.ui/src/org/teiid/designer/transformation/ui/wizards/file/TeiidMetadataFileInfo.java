@@ -15,7 +15,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
@@ -243,10 +246,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 		
 		//loadHeader();
 		
-		String fileName = getDataFile().getName();
-		if(fileName.toLowerCase().endsWith(".txt")) { //$NON-NLS-1$
-			fileName = fileName.substring(0, fileName.length()-4);
-		}
+		IPath filePath = new Path(getDataFile().getName());
+		String fileName = filePath.removeFileExtension().lastSegment();
 		setViewTableName(fileName + "View"); //$NON-NLS-1$
 	}
 

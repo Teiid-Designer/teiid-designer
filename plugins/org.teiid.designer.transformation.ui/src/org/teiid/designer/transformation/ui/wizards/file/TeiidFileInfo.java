@@ -8,7 +8,10 @@
 package org.teiid.designer.transformation.ui.wizards.file;
 
 import java.io.File;
+
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.query.proc.ITeiidFileInfo;
 
@@ -56,6 +59,7 @@ public abstract class TeiidFileInfo implements ITeiidFileInfo {
 	 * 
 	 * @return dataFile the teiid-formatted data <code>File</code>
 	 */
+	@Override
 	public File getDataFile() {
 		return this.dataFile;
 	}
@@ -111,10 +115,8 @@ public abstract class TeiidFileInfo implements ITeiidFileInfo {
 	}
 	
 	public String getModelNameWithoutExtension(String fullModelName) {
-		String modelName = fullModelName;
-		if( modelName.toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
-			modelName = modelName.substring(0, modelName.length()-4);
-		}
+		IPath filePath = new Path(fullModelName);
+		String modelName = filePath.removeFileExtension().lastSegment();
 		return modelName;
 	}
 	
