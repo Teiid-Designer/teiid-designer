@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -81,8 +82,8 @@ public class MoveResourcesWizard extends RefactoringWizard {
             return (MoveResourcesRefactoring) super.getRefactoring();
         }
 
-        private RefactoringStatus createErrorStatus(String key, Object... args) {
-            return RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString(key, args));
+        private RefactoringStatus createErrorStatus(String msg) {
+            return RefactoringStatus.createFatalErrorStatus(msg);
         }
 
         private boolean verifyResourcesProject(Collection<IResource> resources) {
@@ -104,7 +105,8 @@ public class MoveResourcesWizard extends RefactoringWizard {
 
         private void verifyDestination(Object selection) {
             if (! (selection instanceof IContainer)) {
-                setPageComplete(createErrorStatus("MoveRefactoring.destinationNotFolder")); //$NON-NLS-1$
+                String msg = RefactorResourcesUtils.getString("MoveRefactoring.destinationNotFolder"); //$NON-NLS-1$
+                setPageComplete(createErrorStatus(msg));
                 return;
             }
                 
@@ -116,7 +118,8 @@ public class MoveResourcesWizard extends RefactoringWizard {
                 // Not open or a non-model project
                 try {
                     if (! project.isOpen() || project.getNature(ModelerCore.NATURE_ID) == null) {
-                        setPageComplete(createErrorStatus("MoveRefactoring.destinationProjectNotOpen")); //$NON-NLS-1$
+                        String msg = RefactorResourcesUtils.getString("MoveRefactoring.destinationProjectNotOpen"); //$NON-NLS-1$
+                        setPageComplete(createErrorStatus(msg));
                         return;
                     }
                 } catch (CoreException ex) {
@@ -129,7 +132,10 @@ public class MoveResourcesWizard extends RefactoringWizard {
             RefactoringStatus status = new RefactoringStatus();
             RefactorResourcesUtils.checkResourceExists(destination, status);
             RefactorResourcesUtils.checkResourceSynched(destination, status);
-            RefactorResourcesUtils.checkResourceWritable(destination, status);
+
+            String readOnlyStatusMsg = RefactorResourcesUtils.getString("ResourcesRefactoring.readOnlyResourceError",  //$NON-NLS-1$
+                                                                 destination.getName());
+            RefactorResourcesUtils.checkResourceWritable(destination, status, IStatus.ERROR, readOnlyStatusMsg);
             if (! status.isOK()) {
                 setPageComplete(createErrorStatus(status.getEntryWithHighestSeverity().getMessage()));
                 return;
@@ -137,18 +143,21 @@ public class MoveResourcesWizard extends RefactoringWizard {
 
             List<IResource> resources = getRefactoring().getResources();
             if (! verifyResourcesProject(resources)) {
-                setPageComplete(createErrorStatus("MoveRefactoring.resourcesNotInSameProject")); //$NON-NLS-1$
+                String msg = RefactorResourcesUtils.getString("MoveRefactoring.resourcesNotInSameProject"); //$NON-NLS-1$
+                setPageComplete(createErrorStatus(msg));
                 return;
             }
             
             for (IResource resource : resources) {
                 if (! resource.getProject().equals(destination.getProject())) {
-                    setPageComplete(createErrorStatus("MoveRefactoring.destinationNotSameProject")); //$NON-NLS-1$
+                    String msg = RefactorResourcesUtils.getString("MoveRefactoring.destinationNotSameProject"); //$NON-NLS-1$
+                    setPageComplete(createErrorStatus(msg));
                     return;
                 }
                 
                 if (resource.getParent().equals(destination)) {
-                    setPageComplete(createErrorStatus("MoveRefactoring.destinationSame")); //$NON-NLS-1$
+                    String msg = RefactorResourcesUtils.getString("MoveRefactoring.destinationSame"); //$NON-NLS-1$
+                    setPageComplete(createErrorStatus(msg));
                     return;
                 }
 
@@ -158,7 +167,8 @@ public class MoveResourcesWizard extends RefactoringWizard {
                     // destination cannot be beneath target
                     final String resourcePath = folderResource.getFullPath().toString() + '/';
                     if (destinationPath.startsWith(resourcePath)) {
-                        setPageComplete(createErrorStatus("MoveRefactoring.destinationSubFolder")); //$NON-NLS-1$
+                        String msg = RefactorResourcesUtils.getString("MoveRefactoring.destinationSubFolder"); //$NON-NLS-1$
+                        setPageComplete(createErrorStatus(msg));
                         return;
                     }
                 }
@@ -170,7 +180,8 @@ public class MoveResourcesWizard extends RefactoringWizard {
                 final String proposedPath = destinationPath + '/' + resource.getName();
                 final IWorkspaceRoot workspaceRoot = resource.getWorkspace().getRoot();
                 if (workspaceRoot.findMember(proposedPath) != null) {
-                    setPageComplete(createErrorStatus("MoveRefactoring.nameClash", resource.getName())); //$NON-NLS-1$
+                    String msg = RefactorResourcesUtils.getString("MoveRefactoring.nameClash", resource.getName()); //$NON-NLS-1$
+                    setPageComplete(createErrorStatus(msg));
                     return;
                 }
             }

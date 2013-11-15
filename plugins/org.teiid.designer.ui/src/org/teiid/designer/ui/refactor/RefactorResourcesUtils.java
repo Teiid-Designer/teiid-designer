@@ -47,11 +47,9 @@ import org.teiid.designer.core.refactor.PathPair;
 import org.teiid.designer.core.refactor.RefactorModelExtensionManager;
 import org.teiid.designer.core.refactor.RelatedResourceFinder;
 import org.teiid.designer.core.refactor.RelatedResourceFinder.Relationship;
-import org.teiid.designer.core.refactor.ResourceStatusList;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelResourceImpl;
 import org.teiid.designer.core.workspace.ModelUtil;
-import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.util.UiUtil;
@@ -820,11 +818,22 @@ public class RefactorResourcesUtils {
      *
      * @param resource
      * @param status
+     * @param statusLevel
+     * @param statusMsg
      *
      */
-    public static void checkResourceWritable(IResource resource, RefactoringStatus status) {
+    public static void checkResourceWritable(IResource resource, RefactoringStatus status, int statusLevel, String statusMsg) {
         if (ModelUtil.isIResourceReadOnly(resource)) {
-            status.merge(RefactoringStatus.createFatalErrorStatus(getString("ResourcesRefactoring.readOnlyResourceError", resource.getName()))); //$NON-NLS-1$
+            switch (statusLevel) {
+                case IStatus.INFO:
+                    status.merge(RefactoringStatus.createInfoStatus(statusMsg));
+                    break;
+                case IStatus.WARNING:
+                    status.merge(RefactoringStatus.createWarningStatus(statusMsg));
+                    break;
+                default:
+                    status.merge(RefactoringStatus.createFatalErrorStatus(statusMsg));
+            }
         }
     }
 
@@ -836,9 +845,11 @@ public class RefactorResourcesUtils {
      *
      * @param resource
      * @param status
+     * @param statusLevel
+     * @param statusMsg
      *
      */
-    public static void checkModelResourceWritable(IResource resource, RefactoringStatus status) {
+    public static void checkModelResourceWritable(IResource resource, RefactoringStatus status, int statusLevel, String statusMsg) {
         try {
             ModelResource modelResource = ModelUtil.getModel(resource);
             if (modelResource == null) {
@@ -847,21 +858,15 @@ public class RefactorResourcesUtils {
             }
 
             if (modelResource.isReadOnly()) {
-                status.merge(RefactoringStatus.createFatalErrorStatus(getString("ResourcesRefactoring.readOnlyResourceError", resource.getName()))); //$NON-NLS-1$
-                return;
-            }
-
-            RelatedResourceFinder finder = new RelatedResourceFinder(resource);
-            Collection<IFile> relatedFiles = finder.findRelatedResources(Relationship.ALL);
-
-            for (IFile relatedFile : relatedFiles) {
-                try {
-                    modelResource = ModelUtil.getModel(relatedFile);
-                    if (modelResource != null && modelResource.isReadOnly()) {
-                        status.merge(RefactoringStatus.createWarningStatus(getString("ResourcesRefactoring.readOnlyRelatedResourceError", modelResource.getItemName()))); //$NON-NLS-1$
-                    }
-                } catch (ModelWorkspaceException err) {
-                    ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
+                switch (statusLevel) {
+                    case IStatus.INFO:
+                        status.merge(RefactoringStatus.createInfoStatus(statusMsg));
+                        break;
+                    case IStatus.WARNING:
+                        status.merge(RefactoringStatus.createWarningStatus(statusMsg));
+                        break;
+                    default:
+                        status.merge(RefactoringStatus.createFatalErrorStatus(statusMsg));
                 }
             }
         } catch (Exception err) {
@@ -938,17 +943,13 @@ public class RefactorResourcesUtils {
 
         // Determine dependent resources
         Collection<IFile> searchResults = finder.findRelatedResources(relationship);
-        ResourceStatusList statusList = new ResourceStatusList(searchResults);
+        if (searchResults == null)
+            return;
 
-        for (IStatus problem : statusList.getProblems()) {
-            status.merge(RefactoringStatus.create(problem));
-        }
-
-        for (IFile file : statusList.getResourceList()) {
+        for (IFile file : searchResults) {
             try {
-
                 callback.checkValidFile(file, status);
-                if (! status.isOK()) {
+                if (status.getSeverity() > IStatus.WARNING) {
                     return;
                 }
 
