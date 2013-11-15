@@ -541,9 +541,7 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
                 
                 if (!hasValidValue) {
                     image = errorImage;
-                } else {
-                    image = null;
-                }
+                } 
             }
 
             return image;
