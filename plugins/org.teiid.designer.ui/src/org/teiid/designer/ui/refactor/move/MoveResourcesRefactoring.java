@@ -128,13 +128,23 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
 
     @Override
     protected void checkResource(IResource resource, IProgressMonitor progressMonitor, RefactoringStatus status) {
+        String readOnlyStatusMsg;
+
+        if (getResources().contains(resource)) {
+            readOnlyStatusMsg = RefactorResourcesUtils.getString("ResourcesRefactoring.readOnlyResourceError",  //$NON-NLS-1$
+                                                                 resource.getName());
+        } else {
+            readOnlyStatusMsg = RefactorResourcesUtils.getString("ResourcesRefactoring.readOnlyRelatedResourceError",  //$NON-NLS-1$
+                                                                 resource.getName());
+        }
+
         RefactorResourcesUtils.checkResourceExists(resource, status);
         if (!status.isOK()) return;
 
         RefactorResourcesUtils.checkResourceSynched(resource, status);
         if (!status.isOK()) return;
 
-        RefactorResourcesUtils.checkResourceWritable(resource, status);
+        RefactorResourcesUtils.checkResourceWritable(resource, status, IStatus.ERROR, readOnlyStatusMsg);
         if (!status.isOK()) return;
 
         RefactorResourcesUtils.checkResourceIsNotProject(resource, status);
@@ -143,7 +153,7 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
         RefactorResourcesUtils.checkExtensionManager(resource, RefactorType.MOVE, progressMonitor, status);
         if (!status.isOK()) return;
 
-        RefactorResourcesUtils.checkModelResourceWritable(resource, status);
+        RefactorResourcesUtils.checkModelResourceWritable(resource, status, IStatus.ERROR, readOnlyStatusMsg);
         if (!status.isOK()) return;
 
         RefactorResourcesUtils.checkSavedResource(resource, status);

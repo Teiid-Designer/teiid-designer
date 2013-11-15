@@ -126,6 +126,7 @@ public abstract class AbstractResourcesRefactoring extends Refactoring {
      * implementation of createInitialConditions and when testing dependencies.
      *
      * @param resource
+     * @param progressMonitor
      * @param status
      */
     protected abstract void checkResource(IResource resource, IProgressMonitor progressMonitor, RefactoringStatus status);

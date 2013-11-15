@@ -117,24 +117,37 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
 
     @Override
     protected void checkResource(IResource resource, IProgressMonitor progressMonitor, RefactoringStatus status) {
+        int readOnlyStatusLevel;
+        String readOnlyStatusMsg;
+
+        if (getResources().contains(resource)) {
+            readOnlyStatusLevel = IStatus.WARNING;
+            readOnlyStatusMsg = RefactorResourcesUtils.getString("ResourcesRefactoring.readOnlyResourceError",  //$NON-NLS-1$
+                                                                 resource.getName());
+        } else {
+            readOnlyStatusLevel = IStatus.ERROR;
+            readOnlyStatusMsg = RefactorResourcesUtils.getString("ResourcesRefactoring.readOnlyRelatedResourceError",  //$NON-NLS-1$
+                                                                 resource.getName());
+        }
+
         RefactorResourcesUtils.checkResourceExists(resource, status);
-        if (!status.isOK()) return;
+        if (status.getSeverity() > IStatus.WARNING) return;
 
         RefactorResourcesUtils.checkResourceSynched(resource, status);
-        if (!status.isOK()) return;
+        if (status.getSeverity() > IStatus.WARNING) return;
 
         if (resource instanceof IProject)
             checkProjectReadOnly((IProject) resource, status);
         else
-            RefactorResourcesUtils.checkResourceWritable(resource, status);
+            RefactorResourcesUtils.checkResourceWritable(resource, status, readOnlyStatusLevel, readOnlyStatusMsg);
 
-        if (!status.isOK()) return;
+        if (status.getSeverity() > IStatus.WARNING) return;
 
         RefactorResourcesUtils.checkExtensionManager(resource, RefactorType.DELETE, progressMonitor, status);
-        if (!status.isOK()) return;
+        if (status.getSeverity() > IStatus.WARNING) return;
 
-        RefactorResourcesUtils.checkModelResourceWritable(resource, status);
-        if (!status.isOK()) return;
+        RefactorResourcesUtils.checkModelResourceWritable(resource, status, readOnlyStatusLevel, readOnlyStatusMsg);
+        if (status.getSeverity() > IStatus.WARNING) return;
 
         RefactorResourcesUtils.checkSavedResource(resource, status);
     }
@@ -157,7 +170,7 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
 
             for (IResource resource : getResources()) {
                 checkResource(resource, progressMonitor, status);
-                if (! status.isOK()) break;
+                if (status.getSeverity() > IStatus.WARNING) break;
 
                 // Check validity of related resources
                 IResourceCallback callback = new AbstractResourceCallback() {

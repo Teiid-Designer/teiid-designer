@@ -18,7 +18,6 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 
 /**
@@ -77,13 +76,6 @@ public abstract class AbstractRefactorAction implements IWorkbenchWindowActionDe
         }
 
         List<IResource> resources = SelectionUtilities.getSelectedIResourceObjects(selection);
-
-        for (IResource resource : resources) {
-            if (ModelUtil.isIResourceReadOnly(resource)) {
-                action.setEnabled(false);
-                return;
-            }
-        }
 
         action.setEnabled(true);
         selectedResources = resources;
