@@ -34,12 +34,18 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
         if (StringUtilities.isEmpty(proposedName)) {
             return UTIL.getString(PREFIX + "emptyPropertyName"); //$NON-NLS-1$
         }
-
-        // make sure only letters
+        
+        // Make sure is a valid java identifier
+        int i = 0;
         for (char c : proposedName.toCharArray()) {
-            if (!Character.isLetter(c)) {
+        	if(i==0) {
+        		if(!Character.isJavaIdentifierStart(c)) {
+                    return UTIL.getString(PREFIX + "invalidPropertyName", proposedName); //$NON-NLS-1$
+        		}
+        	} else if (!Character.isJavaIdentifierPart(c)) {
                 return UTIL.getString(PREFIX + "invalidPropertyName", proposedName); //$NON-NLS-1$
             }
+        	i++;
         }
 
         // valid name

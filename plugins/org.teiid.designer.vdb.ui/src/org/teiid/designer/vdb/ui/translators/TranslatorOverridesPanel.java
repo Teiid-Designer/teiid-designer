@@ -12,6 +12,7 @@ import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.EDIT_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.EDIT;
+import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.RESTORE_DEFAULT_VALUE;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE_TRANSLATOR;
 
@@ -80,7 +81,7 @@ public final class TranslatorOverridesPanel extends Composite {
     
     Button addPropertyButton;
     Button deletePropertyButton;
-    Button restorePropertyButton;
+    Button editPropertyButton;
     
     Button addTranslatorButton;
     Button deleteTranslatorButton;
@@ -439,15 +440,15 @@ public final class TranslatorOverridesPanel extends Composite {
     		});
             this.addPropertyButton.setEnabled(false);
             
-            this.restorePropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
-            this.restorePropertyButton.setEnabled(false);
-            this.restorePropertyButton.setImage(VdbUiPlugin.singleton.getImage(EDIT));
-            this.restorePropertyButton.setToolTipText(Util.getString(PREFIX + "restorePropertyDefaultAction.toolTip")); //$NON-NLS-1$
-            this.restorePropertyButton.addSelectionListener(new SelectionListener() {
+            this.editPropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
+            this.editPropertyButton.setEnabled(false);
+            this.editPropertyButton.setImage(VdbUiPlugin.singleton.getImage(EDIT));
+            this.editPropertyButton.setToolTipText(Util.getString(PREFIX + "editPropertyAction.toolTip")); //$NON-NLS-1$
+            this.editPropertyButton.addSelectionListener(new SelectionListener() {
     			
     			@Override
     			public void widgetSelected(SelectionEvent e) {
-    				handleRestorePropertyDefaultValue();
+    				handleEditProperty();
     			}
 
     			@Override
@@ -531,13 +532,46 @@ public final class TranslatorOverridesPanel extends Composite {
 
     void handleAddProperty() {
         assert (!this.translatorsViewer.getSelection().isEmpty());
-
-        AddPropertyDialog dialog = new AddPropertyDialog(getShell(), getSelectedTranslator().getPropertyNames());
+        
+        AddPropertyDialog dialog = new AddPropertyDialog(getShell(), Util.getString("AddPropertyDialog.addTitle"), getSelectedTranslator().getPropertyNames(), null);  //$NON-NLS-1$
 
         if (dialog.open() == Window.OK) {
             // update model
             TranslatorOverride translator = getSelectedTranslator();
             TranslatorOverrideProperty property = dialog.getProperty();
+            translator.addProperty(property);
+
+            // update UI from model
+            this.propertiesViewer.refresh();
+
+            // select the new property
+            TranslatorPropertyDefinition propDefn = property.getDefinition();
+
+            for (TranslatorOverrideProperty prop : translator.getProperties()) {
+                if (prop.getDefinition().equals(propDefn)) {
+                    this.propertiesViewer.setSelection(new StructuredSelection(prop), true);
+                    break;
+                }
+            }
+        }
+    }
+    
+    void handleEditProperty() {
+        assert (!this.propertiesViewer.getSelection().isEmpty());
+        
+        IStructuredSelection ssel = (IStructuredSelection)this.propertiesViewer.getSelection();
+        if (ssel.isEmpty()) {
+        }
+        
+        TranslatorOverrideProperty overrideProp = (TranslatorOverrideProperty)ssel.getFirstElement();
+        
+        AddPropertyDialog dialog = new AddPropertyDialog(getShell(), Util.getString("AddPropertyDialog.editTitle"), getSelectedTranslator().getPropertyNames(), overrideProp); //$NON-NLS-1$
+
+        if (dialog.open() == Window.OK) {
+            // update model
+            TranslatorOverride translator = getSelectedTranslator();
+            TranslatorOverrideProperty property = dialog.getProperty();
+            translator.removeProperty(overrideProp.getDefinition().getId());
             translator.addProperty(property);
 
             // update UI from model
@@ -627,8 +661,8 @@ public final class TranslatorOverridesPanel extends Composite {
                 this.deletePropertyButton.setEnabled(false);
             }
 
-            if (this.restorePropertyButton.isEnabled()) {
-                this.restorePropertyButton.setEnabled(false);
+            if (this.editPropertyButton.isEnabled()) {
+                this.editPropertyButton.setEnabled(false);
             }
         } else {
             TranslatorOverrideProperty prop = (TranslatorOverrideProperty)selection.getFirstElement();
@@ -643,8 +677,8 @@ public final class TranslatorOverridesPanel extends Composite {
             // only enable restore default value if it has overridden value
             enable = prop.hasOverridenValue();
 
-            if (this.restorePropertyButton.isEnabled() != enable) {
-                this.restorePropertyButton.setEnabled(enable);
+            if (this.editPropertyButton.isEnabled() != enable) {
+                this.editPropertyButton.setEnabled(enable);
             }
         }
     }
@@ -656,7 +690,7 @@ public final class TranslatorOverridesPanel extends Composite {
         prop.setValue(null);
         // TODO this needs to dirty VDB
         this.propertiesViewer.refresh(prop);
-        this.restorePropertyButton.setEnabled(false);
+        this.editPropertyButton.setEnabled(false);
     }
 
     void handleTranslatorRemoved() {
@@ -815,15 +849,11 @@ public final class TranslatorOverridesPanel extends Composite {
             String overridenValue = property.getOverriddenValue();
             Image image = null;
 
-            if (this.nameColumn) {
-                if (property.isCustom()) {
-                    image = VdbUiPlugin.singleton.getImage(EDIT_TRANSLATOR);
-                }
-            } else {
+            if (!this.nameColumn) {
                 if (property.getDefinition().isValidValue(overridenValue) == null) {
                     if (property.hasOverridenValue()) {
                         if (!property.isCustom() || !property.getDefinition().getDefaultValue().equals(overridenValue)) {
-                            image = VdbUiPlugin.singleton.getImage(EDIT_TRANSLATOR);
+                            image = VdbUiPlugin.singleton.getImage(RESTORE_DEFAULT_VALUE);
                         }
                     }
                 } else {

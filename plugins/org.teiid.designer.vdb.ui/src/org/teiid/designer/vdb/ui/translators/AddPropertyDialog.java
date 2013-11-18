@@ -44,18 +44,31 @@ public class AddPropertyDialog extends MessageDialog {
     private final List<String> existingNames;
     private String name;
     private String value;
+    private TranslatorOverrideProperty transOverrideProperty;
+    private String editingName = null;
 
     /**
+     * Dialog to Add or Edit a property override
      * @param parentShell the parent shell (may be <code>null</code>)
+     * @param title the dialog title
      * @param existingPropertyNames the existing property names (can be <code>null</code>)
+     * @param transOverrideProperty if supplied, will be edited.
      */
     public AddPropertyDialog( Shell parentShell,
-                              List<String> existingPropertyNames ) {
-        super(parentShell, Util.getString(PREFIX + "title"), null, //$NON-NLS-1$
+    		                  String title,
+                              List<String> existingPropertyNames,
+                              TranslatorOverrideProperty transOverrideProperty) {
+        super(parentShell, title, null, 
                 Util.getString(PREFIX + "message"), MessageDialog.INFORMATION, //$NON-NLS-1$
                 new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 
         this.existingNames = (existingPropertyNames == null) ? new ArrayList<String>(0) : existingPropertyNames;
+        this.transOverrideProperty = transOverrideProperty;
+        if(this.transOverrideProperty!=null) {
+        	this.editingName = this.transOverrideProperty.getDefinition().getId();
+        	this.name = this.editingName;
+        	this.value = this.transOverrideProperty.getDefinition().getDefaultValue();
+        }
     }
 
     /**
@@ -97,6 +110,9 @@ public class AddPropertyDialog extends MessageDialog {
         Text txtName = new Text(pnl, SWT.BORDER);
         txtName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         txtName.setToolTipText(Util.getString(PREFIX + "txtName.toolTip")); //$NON-NLS-1$
+        if(this.transOverrideProperty!=null) {
+        	txtName.setText(this.transOverrideProperty.getDefinition().getId());
+        }
         txtName.addModifyListener(new ModifyListener() {
             /**
              * {@inheritDoc}
@@ -116,6 +132,9 @@ public class AddPropertyDialog extends MessageDialog {
         Text txtValue = new Text(pnl, SWT.BORDER);
         txtValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         txtValue.setToolTipText(Util.getString(PREFIX + "txtValue.toolTip")); //$NON-NLS-1$
+        if(this.transOverrideProperty!=null) {
+        	txtValue.setText(this.transOverrideProperty.getDefinition().getDefaultValue());
+        }
         txtValue.addModifyListener(new ModifyListener() {
             /**
              * {@inheritDoc}
@@ -202,8 +221,10 @@ public class AddPropertyDialog extends MessageDialog {
             // make sure property ID doesn't already exist
             for (String existingName : this.existingNames) {
                 if (existingName.equals(this.name)) {
-                    errorMsg = Util.getString(PREFIX + "customPropertyAlreadyExists", this.name); //$NON-NLS-1$
-                    break;
+                	if(this.editingName==null || !this.editingName.equals(this.name)) {
+                		errorMsg = Util.getString(PREFIX + "customPropertyAlreadyExists", this.name); //$NON-NLS-1$
+                		break;
+                	}
                 }
             }
         }
