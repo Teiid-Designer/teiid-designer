@@ -1446,14 +1446,14 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             jdbcType = Types.BINARY;
         }
 
-        // First look up by type code ...
-        result = findType(jdbcType, problems);
+        // First look up by name
+        result = findType(typeName, problems);
         if (result != null) {
             return result;
         }
 
-        // Still haven't found one, so look it up by name ...
-        result = findType(typeName, problems);
+        // Still haven't found one, so look it up by typeCode ...
+        result = findType(jdbcType, problems);
         return result;
     }
 
