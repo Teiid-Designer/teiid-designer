@@ -90,11 +90,10 @@ public class ExecuteVdbWorker implements VdbConstants {
 			if (teiidServer != null) {
 				IStatus connectStatus = teiidServer.ping();
 				if (connectStatus.isOK()) {
+					// Deploy the VDB
+                    DeployVdbAction.deployVdb(teiidServer, selectedVdb);
+                    
 				    String vdbName = selectedVdb.getFullPath().removeFileExtension().lastSegment();
-                    if (! teiidServer.hasVdb(vdbName)) {
-                        DeployVdbAction.deployVdb(teiidServer, selectedVdb);
-                    }
-
                     if (teiidServer.isVdbActive(vdbName)) {
                         executeVdb(DqpPlugin.getInstance().getServerManager().getDefaultServer(), vdbName);
                     } else if (teiidServer.isVdbLoading(vdbName)) {
