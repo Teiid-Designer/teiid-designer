@@ -91,7 +91,7 @@ public interface ISQLConstants {
     String DVARS = "DVARS"; //$NON-NLS-1$
     
     String DEFAULT_DELIMITER = ",";
-    String DEFAULT_QUOTE = "'";
+    String DEFAULT_QUOTE = "\"";
     String DEFAULT_ESCAPE = "\\";
     
     String HEADER = "HEADER"; //$NON-NLS-1$

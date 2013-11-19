@@ -519,7 +519,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 			while( strTokeniser.hasMoreTokens() ) {
 				String nextTok = strTokeniser.nextToken().trim();
 				// Check for d_quoted column names
-				if( nextTok.startsWith("" + getQuote()) ) { //$NON-NLS-1$
+				if( nextTok.startsWith("'") || nextTok.startsWith("\"")) { //$NON-NLS-1$ //$NON-NLS-2$
 					nextTok = nextTok.substring(1, nextTok.length()-1);
 				}
 				if( nextTok != null && nextTok.length() > 0 ) {
