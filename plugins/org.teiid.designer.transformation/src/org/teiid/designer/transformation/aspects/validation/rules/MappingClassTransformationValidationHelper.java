@@ -220,16 +220,22 @@ public class MappingClassTransformationValidationHelper {
                                 MappingClassColumn childCol = (MappingClassColumn)childColumns.get(i);
                                 if (!rootCol.getName().equalsIgnoreCase(childCol.getName())) {
                                     // Mismatch column name between mapping class {0} and {1}
-                                    String msg = TransformationPlugin.Util.getString("MappingClassTransformationRule.Mismatch_Number_Column_Name_{0}_AND_{1}_2", rootMappingClass.getName(), mc.getName()); //$NON-NLS-1$
+                                	String rootColName = rootMappingClass.getName() + "." + rootCol.getName(); //$NON-NLS-1$
+                                	String childColName = mc.getName() + "." + childCol.getName(); //$NON-NLS-1$
+                                    String msg = TransformationPlugin.Util.getString("MappingClassTransformationRule.Mismatch_Number_Column_Name_{0}_AND_{1}_2", rootColName, childColName); //$NON-NLS-1$
                                     ValidationProblem errorProblem = new ValidationProblemImpl(0, IStatus.ERROR, msg);
                                     validationResult.addProblem(errorProblem);
+                                    break;
                                 }
 
                                 if (rootCol.getType() != childCol.getType()) {
                                     // Mismatch column type between mapping class {0} and {1}
-                                    String msg = TransformationPlugin.Util.getString("MappingClassTransformationRule.Mismatch_Column_Type_{0}_AND_{1}_3", rootMappingClass.getName(), mc.getName()); //$NON-NLS-1$                                        
+                                	String rootColName = rootMappingClass.getName() + "." + rootCol.getName(); //$NON-NLS-1$
+                                	String childColName = mc.getName() + "." + childCol.getName(); //$NON-NLS-1$
+                                    String msg = TransformationPlugin.Util.getString("MappingClassTransformationRule.Mismatch_Column_Type_{0}_AND_{1}_3", rootColName, childColName); //$NON-NLS-1$                                        
                                     ValidationProblem errorProblem = new ValidationProblemImpl(0, IStatus.ERROR, msg);
                                     validationResult.addProblem(errorProblem);
+                                    break;
                                 }
                             }
                         }
