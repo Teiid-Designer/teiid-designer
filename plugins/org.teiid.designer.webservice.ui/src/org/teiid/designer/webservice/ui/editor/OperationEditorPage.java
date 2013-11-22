@@ -373,7 +373,7 @@ public final class OperationEditorPage extends EditorPart
             Rectangle rect = parent.computeTrim(0, 0, 0, 0);
             hgt += rect.y + rect.height; // rect.y will be negative; add this to remove top margin
             // Find splitter that separates editor pages from the object editor
-            if (parent instanceof SashForm) {
+            if (parent instanceof SashForm && !parent.isDisposed()) {
                 SashForm splitter = (SashForm)parent;
                 // Turn off painting while manipulating the UI
                 splitter.setRedraw(false);

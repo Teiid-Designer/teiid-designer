@@ -341,22 +341,26 @@ public class DesignerPropertiesUtil {
      */
     public static IFile getPreviewTargetModel( Properties properties ) {
         String targetModelName = DesignerPropertiesUtil.getPreviewTargetModelName(properties);
-        String viewsFolder = DesignerPropertiesUtil.getViewsFolderName(properties);
-
+    	
         IFile targetPreviewModel = null;
+        
+        if( targetModelName != null ) {
+	        String viewsFolder = DesignerPropertiesUtil.getViewsFolderName(properties);
 
-        // Get the target Project (must be open)
-        IProject project = DesignerPropertiesUtil.getProject(properties);
-        if (project != null) {
-            // Construct path to target model
-            IPath targetModelPath = new Path("");  //$NON-NLS-1$
-            if (viewsFolder != null && targetModelName != null && !viewsFolder.isEmpty() && !targetModelName.isEmpty()) {
-                targetModelPath = targetModelPath.append(viewsFolder).append(targetModelName);
-                targetPreviewModel = project.getFile(targetModelPath);
-            } else {
-            	targetModelPath = targetModelPath.append(targetModelName);
-            	targetPreviewModel = project.getFile(targetModelName);
-            }
+	
+	        // Get the target Project (must be open)
+	        IProject project = DesignerPropertiesUtil.getProject(properties);
+	        if (project != null) {
+	            // Construct path to target model
+	            IPath targetModelPath = new Path("");  //$NON-NLS-1$
+	            if (viewsFolder != null && targetModelName != null && !viewsFolder.isEmpty() && !targetModelName.isEmpty()) {
+	                targetModelPath = targetModelPath.append(viewsFolder).append(targetModelName);
+	                targetPreviewModel = project.getFile(targetModelPath);
+	            } else {
+	            	targetModelPath = targetModelPath.append(targetModelName);
+	            	targetPreviewModel = project.getFile(targetModelName);
+	            }
+	        }
         }
         return targetPreviewModel;
     }
