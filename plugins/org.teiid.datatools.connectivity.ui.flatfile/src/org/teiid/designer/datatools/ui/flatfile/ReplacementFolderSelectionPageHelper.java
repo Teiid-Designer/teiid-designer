@@ -705,8 +705,12 @@ public class ReplacementFolderSelectionPageHelper
             if ( fileURIChoice.getSelection( ) )
                 ResourceLocator.validateFileURI( fileURIValue, ri );
             /* Only if home folder checkbox is selected do we validate the home folder */
-            else if ( homeFolderChoice.getSelection( ) && homeFolderCheckBox.getSelection())
-                ResourceLocator.validateHomeFolder( folderLocationValue );
+            else if ( homeFolderChoice.getSelection( ) && homeFolderCheckBox.getSelection()) {
+                File locFile = new File(folderLocationValue);
+                if (! locFile.exists())
+                    throw new InvalidResourceException(InvalidResourceException.ERROR_INVALID_RESOURCE,
+                                                       Messages.getString("error.invalidFlatFilePath")); //$NON-NLS-1$
+            }
         }
         catch ( InvalidResourceException ex )
         {
