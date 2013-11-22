@@ -2267,8 +2267,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
                     }
 
                     @Override
-                    public void process(ITeiidServerManager instance,
-                                        IConfigurationElement element) {
+                    public void process(ITeiidServerManager instance, IConfigurationElement element) {
                         CoreArgCheck.isNotNull(instance);
 
                         if (teiidServerManager != null) {
@@ -2279,8 +2278,14 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
                             throw new IllegalStateException();
                         }
 
+                        /*
+                         * Need to assign the new instance to the singleton here prior to
+                         * its restoration since the saved server instances use it,
+                         * eg. notifying listeners. This scenario is not protected by the
+                         * synchronized mutexObject since it would be the same thread.
+                         */
                         teiidServerManager = instance;
-                        teiidServerManager.restoreState();
+                        instance.restoreState();
                     }
                 };
 

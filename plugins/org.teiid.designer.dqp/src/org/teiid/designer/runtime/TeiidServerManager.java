@@ -650,6 +650,8 @@ public final class TeiidServerManager implements ITeiidServerManager {
         ITeiidServer defaultServer = null;
 
         try {
+            this.notifyListeners = false;
+
             if (this.stateLocationPath == null || ! stateFileExists()) {
                 // Started will be called from the finally clause.
                 return;
@@ -806,6 +808,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
         } catch (Exception e) {
             Util.log(e);
         } finally {
+            this.notifyListeners = true;
             this.state = RuntimeState.STARTED;
             initialiseManagers();
 
