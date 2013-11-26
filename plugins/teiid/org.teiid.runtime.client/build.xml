@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+==
+== Script to resolve the plugin's lib directory dependencies
+== and generate the SQLParser sources using javacc
+==
+== Note. This has to build both the target platform and the
+==       spi plugin in order to satisfy the dependencies of
+==       this plugin (even though we are not actually
+==       compiling it!)
+==
+-->
+
+<project name="generate-libs" default="generate">
+
+	<property name="GIT-HOME" location="../../.." />
+
+	<import file="${GIT-HOME}/scripts/build-common.xml" />
+
+	<!-- Location of the generated SQLParser class -->
+	<property name="sqlParser" location="src/org/teiid/runtime/client/parser/SQLParser.java" />
+
+	<target name="clean">
+
+	    <echo message="Removing generated files ..." />
+	    <mvn dir="." args="clean" />
+
+	</target>
+	
+	<target name="generate">
+
+		<echo message="Generating from maven ..." />
+
+		<!-- Build the target platform and install it -->
+		<echo message="=== Installing target platform ===" />
+		<mvn dir="${GIT-HOME}/target-platform" args="install" />
+
+		<!-- Build the spi dependency and install it -->
+		<echo message="=== Installing the spi plugin dependency ===" />
+		<mvn dir="${GIT-HOME}/plugins/org.teiid.designer.spi" args="install" />
+
+		<!-- Call the process sources goal and generate using javacc -->
+		<echo message="=== Generating parser ===" />
+		<mvn dir="." args="process-sources" />
+
+	</target>
+</project>
