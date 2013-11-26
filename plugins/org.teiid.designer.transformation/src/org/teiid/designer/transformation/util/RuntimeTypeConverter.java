@@ -246,7 +246,7 @@ public class RuntimeTypeConverter {
     private boolean isCompatible( String theFirstType,
                                         String theSecondType ) {
         IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
-        return (theFirstType.equals(theSecondType) || service.canTransform(theFirstType, theSecondType));
+        return (theFirstType.equals(theSecondType) || service.isTransformable(theFirstType, theSecondType));
     }
 
     /**
