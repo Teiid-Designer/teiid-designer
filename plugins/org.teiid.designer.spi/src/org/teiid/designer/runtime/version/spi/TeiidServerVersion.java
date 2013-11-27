@@ -118,18 +118,18 @@ public class TeiidServerVersion implements ITeiidServerVersion {
      * @return {@link ITeiidServerVersion} default version
      */
     public static ITeiidServerVersion deriveUltimateDefaultServerVersion() {
-        ITeiidServerVersion lastGaspDefault = TeiidServerVersion.DEFAULT_TEIID_SERVER;
+        ITeiidServerVersion lastTestedDefault = TeiidServerVersion.DEFAULT_TEIID_SERVER;
 
         Collection<ITeiidServerVersion> serverVersions = null;
         try {
             serverVersions = TeiidRuntimeRegistry.getInstance().getRegisteredServerVersions();
         } catch (Exception ex) {
             DesignerSPIPlugin.log(ex);
-            return lastGaspDefault;
+            return lastTestedDefault;
         }
 
         if (serverVersions == null || serverVersions.isEmpty())
-            return lastGaspDefault;
+            return lastTestedDefault;
 
         if (serverVersions.size() == 1)
             return serverVersions.iterator().next();
@@ -137,6 +137,14 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         // Find the latest server version by sorting the registered client runtime versions
         List<String> items = new ArrayList<String>(serverVersions.size());
         for (ITeiidServerVersion serverVersion : serverVersions) {
+            /*
+             * Do not offer unreleased and untested versions by default.
+             * Does not stop the user choosing such versions but avoids
+             * displaying them up-front.
+             */
+            if (serverVersion.isGreaterThan(lastTestedDefault))
+                continue;
+
             items.add(serverVersion.toString());
         }
         Collections.sort(items, Collections.reverseOrder());
@@ -226,47 +234,63 @@ public class TeiidServerVersion implements ITeiidServerVersion {
 
     @Override
     public boolean isGreaterThan(ITeiidServerVersion otherVersion) {
-        int myMajor = Integer.parseInt(getMajor());
-        int otherMajor = Integer.parseInt(otherVersion.getMajor());
-        if (myMajor < otherMajor)
-            return false;
+        try {
+            int myMajor = Integer.parseInt(getMajor());
+            int otherMajor = Integer.parseInt(otherVersion.getMajor());
+            if (myMajor > otherMajor)
+                return true;
 
-        if (hasWildCards() || otherVersion.hasWildCards())
-            return false;
+            if (getMinor().equals(WILDCARD) || otherVersion.getMinor().equals(WILDCARD))
+                return false;
 
-        int myMinor = Integer.parseInt(getMinor());
-        int otherMinor = Integer.parseInt(otherVersion.getMinor());
-        if (myMinor < otherMinor)
-            return false;
+            int myMinor = Integer.parseInt(getMinor());
+            int otherMinor = Integer.parseInt(otherVersion.getMinor());
+            if (myMinor > otherMinor)
+                return true;
 
-        int myMicro = Integer.parseInt(getMicro());
-        int otherMicro = Integer.parseInt(otherVersion.getMicro());
-        if (myMicro < otherMicro)
-            return false;
+            if (getMicro().equals(WILDCARD) || otherVersion.getMicro().equals(WILDCARD))
+                return false;
 
-        return true;
+            int myMicro = Integer.parseInt(getMicro());
+            int otherMicro = Integer.parseInt(otherVersion.getMicro());
+            if (myMicro > otherMicro)
+                return true;
+        }
+        catch (Exception ex) {
+            DesignerSPIPlugin.log(ex);
+        }
+
+        return false;
     }
 
     @Override
     public boolean isLessThan(ITeiidServerVersion otherVersion) {
-        int myMajor = Integer.parseInt(getMajor());
-        int otherMajor = Integer.parseInt(otherVersion.getMajor());
-        if (myMajor > otherMajor)
-            return false;
+        try {
+            int myMajor = Integer.parseInt(getMajor());
+            int otherMajor = Integer.parseInt(otherVersion.getMajor());
+            if (myMajor < otherMajor)
+                return true;
 
-        if (hasWildCards() || otherVersion.hasWildCards())
-            return false;
+            if (getMinor().equals(WILDCARD) || otherVersion.getMinor().equals(WILDCARD))
+                return false;
 
-        int myMinor = Integer.parseInt(getMinor());
-        int otherMinor = Integer.parseInt(otherVersion.getMinor());
-        if (myMinor > otherMinor)
-            return false;
+            int myMinor = Integer.parseInt(getMinor());
+            int otherMinor = Integer.parseInt(otherVersion.getMinor());
+            if (myMinor < otherMinor)
+                return true;
 
-        int myMicro = Integer.parseInt(getMicro());
-        int otherMicro = Integer.parseInt(otherVersion.getMicro());
-        if (myMicro > otherMicro)
-            return false;
+            if (getMicro().equals(WILDCARD) || otherVersion.getMicro().equals(WILDCARD))
+                return false;
 
-        return true;
+            int myMicro = Integer.parseInt(getMicro());
+            int otherMicro = Integer.parseInt(otherVersion.getMicro());
+            if (myMicro < otherMicro)
+                return true;
+        }
+        catch (Exception ex) {
+            DesignerSPIPlugin.log(ex);
+        }
+
+        return false;
     }
 }
