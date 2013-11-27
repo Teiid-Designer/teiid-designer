@@ -1926,7 +1926,7 @@ public final class PreviewManager extends JobChangeAdapter
         public void done( IJobChangeEvent event ) {
             this.latch.countDown();
             if (this.latch.getCount() == 0) {
-                if (serverDeleted) {
+                if (serverDeleted && this.teiidServer != null) {
                     this.teiidServer.disconnect();
                 }
             }
