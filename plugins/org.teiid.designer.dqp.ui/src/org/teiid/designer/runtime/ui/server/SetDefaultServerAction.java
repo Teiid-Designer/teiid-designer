@@ -94,6 +94,34 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
         }
         
         ITeiidServer currentDefaultServer = this.getServerManager().getDefaultServer();
+        if (currentDefaultServer != null && currentDefaultServer.equals(selectedServer)) {
+            /*
+             * Selected is the same as current so nothing more to do
+             */
+
+            String title = UTIL.getString("defaultServerUnchangedTitle"); //$NON-NLS-1$
+            String message = null;
+            if (getServerManager().getServers().size() == 1) {
+                /*
+                 * User would not have been shown a server selection chooser
+                 * since only one server is available. In this case, the server
+                 * unchanged message should be clarified slightly.
+                 */
+                message = UTIL.getString("defaultServerUnchangedMessage1Server", //$NON-NLS-1$
+                                                            currentDefaultServer.getDisplayName());
+            }
+            else {
+                /*
+                 * More than 1 server so the user actively chose to keep this server rather
+                 * than change it
+                 */
+                message = UTIL.getString("defaultServerUnchangedMessageMultiServer", //$NON-NLS-1$
+                                                            currentDefaultServer.getDisplayName());
+            }
+
+            MessageDialog.openInformation(getShell(), title, message);
+            return;
+        }
         
         /*
          * If a server version change is occurring then tell the user and ask them if its
