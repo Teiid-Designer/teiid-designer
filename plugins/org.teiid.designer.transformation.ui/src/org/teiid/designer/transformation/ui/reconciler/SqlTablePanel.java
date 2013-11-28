@@ -736,8 +736,6 @@ public class SqlTablePanel extends Composite {
                                                     UiConstants.Util.getString("SqlTablePanel.myMessageDialog.groupTitle"), //$NON-NLS-1$
                                                     GridData.FILL_BOTH);
             group.setLayoutData(new GridData(GridData.FILL_BOTH));
-            GridLayout layout = new GridLayout();
-            group.setLayout(layout);
             group.getBorderWidth();
 
             if (allowCreateAttributes) {

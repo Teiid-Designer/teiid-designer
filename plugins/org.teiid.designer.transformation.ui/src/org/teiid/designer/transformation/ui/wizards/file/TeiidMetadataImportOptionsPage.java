@@ -356,7 +356,6 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     
     private void createDelimitedFileOptionsGroup(Composite parent) {
     	Group theGroup = WidgetFactory.createGroup(parent, "Format Options", SWT.NONE, 1, 2); //$NON-NLS-1$
-    	theGroup.setLayout(new GridLayout(2, false));
 	  	GridData groupGD = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 	  	groupGD.heightHint=210;
 	  	theGroup.setLayoutData(groupGD);
@@ -516,7 +515,6 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     
     private void createDelimitedFileContentsGroup(Composite parent) {
     	Group theGroup = WidgetFactory.createGroup(parent, getString("fileContentsGroup"), SWT.NONE, 1, 4); //$NON-NLS-1$
-    	theGroup.setLayout(new GridLayout(4, false));
     	GridData groupGD = new GridData(GridData.FILL_BOTH);
     	groupGD.heightHint = GROUP_HEIGHT_190;
     	groupGD.widthHint = 400;
@@ -563,7 +561,6 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     
     private void createDelimitedColumnInfoGroup(Composite parent) {
     	Group theGroup = WidgetFactory.createGroup(parent, getString("columnInfoGroup"), SWT.NONE, 2, 4); //$NON-NLS-1$
-    	theGroup.setLayout(new GridLayout(4, true));
     	GridData groupGD = new GridData(GridData.FILL_BOTH);
     	groupGD.heightHint = 140;
     	theGroup.setLayoutData(groupGD);
@@ -732,7 +729,6 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     
     private void createFixedFileOptionsGroup(Composite parent) {
     	Group theGroup = WidgetFactory.createGroup(parent, "Format Options", SWT.NONE, 1, 2); //$NON-NLS-1$
-    	theGroup.setLayout(new GridLayout(2, false));
 	  	GridData groupGD = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 	  	groupGD.heightHint=GROUP_HEIGHT_190;
 	  	theGroup.setLayoutData(groupGD);
@@ -798,7 +794,6 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     
     private void createFixedFileContentsGroup(Composite parent) {
     	Group theGroup = WidgetFactory.createGroup(parent, getString("fileContentsGroup"), SWT.NONE, 1, 4); //$NON-NLS-1$
-    	theGroup.setLayout(new GridLayout(4, false));
     	GridData groupGD = new GridData(GridData.FILL_BOTH);
     	groupGD.heightHint = GROUP_HEIGHT_190;
     	groupGD.widthHint = 400;
@@ -878,7 +873,6 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     private void createFixedColumnsOptionsGroup(Composite parent) {
 	  	
 	  	Group theGroup = WidgetFactory.createGroup(parent, getString("columnOptionsGroup"), SWT.NONE, 1, 1); //$NON-NLS-1$
-	  	theGroup.setLayout(new GridLayout(1, false));
 	  	GridData groupGD = new GridData();
 	  	groupGD.heightHint=GROUP_HEIGHT_160;
 	  	theGroup.setLayoutData(groupGD);
@@ -983,7 +977,6 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     
     private void createFixedColumnInfoGroup(Composite parent) {
     	Group columnInfoGroup = WidgetFactory.createGroup(parent, getString("columnInfoGroup"), SWT.NONE, 1, 1); //$NON-NLS-1$
-    	columnInfoGroup.setLayout(new GridLayout(1, false));
     	GridData gd = new GridData(GridData.FILL_BOTH);
     	gd.heightHint = GROUP_HEIGHT_160;
     	columnInfoGroup.setLayoutData(gd);
@@ -1065,7 +1058,6 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     
     private void createSqlGroup(Composite parent) {
     	Group textTableOptionsGroup = WidgetFactory.createGroup(parent, getString("textTableOptionsGroup"), SWT.NONE, 2, 1); //$NON-NLS-1$
-    	textTableOptionsGroup.setLayout(new GridLayout(1, false));
     	GridData gd = new GridData(GridData.FILL_BOTH);
     	gd.heightHint = 120;
     	gd.horizontalSpan = 2;

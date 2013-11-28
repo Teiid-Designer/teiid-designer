@@ -73,7 +73,6 @@ public class EditDescriptionDialog extends Dialog implements KeyListener {
         final Composite dlgPanel = (Composite)super.createDialogArea(parent);
         
         Group descGroup = WidgetFactory.createGroup(dlgPanel, DESRIPTION_TEXT, SWT.NONE);
-        descGroup.setLayout(new GridLayout());
         descGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
         
         Composite innerPanel = new Composite(descGroup, SWT.NONE);

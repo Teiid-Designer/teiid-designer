@@ -156,7 +156,6 @@ public final class CreateDataSourcePanel extends Composite implements UiConstant
      */
     private void createDataSourceDriversPanel(Composite parent, int visibleTableRows) {
         Group dsDriversGroup = WidgetFactory.createGroup(parent, Messages.createDataSourcePanel_driversGroupTxt, SWT.NONE); 
-        dsDriversGroup.setLayout(new GridLayout(1, false));
         dsDriversGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         this.driversPanel = new DataSourceDriversPanel(dsDriversGroup,visibleTableRows,teiidImportServer);
@@ -172,7 +171,6 @@ public final class CreateDataSourcePanel extends Composite implements UiConstant
      */
     private void createDataSourcePropertiesGroup(Composite parent) {
         Group dsPropertiesGroup = WidgetFactory.createGroup(parent, Messages.createDataSourcePanel_dataSourcePropertiesGroupTxt, SWT.NONE); 
-        dsPropertiesGroup.setLayout(new GridLayout(1, false));
         GridData propertiesGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         propertiesGridData.heightHint=250;
         propertiesGridData.minimumHeight=250;

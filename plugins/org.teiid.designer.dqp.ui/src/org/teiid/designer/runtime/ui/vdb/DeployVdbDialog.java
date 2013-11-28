@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime.ui.vdb;
 
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -160,8 +159,7 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 		});
 		
 		OPTIONS_WIDGETS : {
-			Group restGroup = WidgetFactory.createGroup(panel, UTIL.getString(PREFIX + "options"), SWT.FILL); //$NON-NLS-1$
-			restGroup.setLayout(new GridLayout(2, false));
+			Group restGroup = WidgetFactory.createGroup(panel, UTIL.getString(PREFIX + "options"), SWT.FILL, 1, 2); //$NON-NLS-1$
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.horizontalSpan=4;
 			restGroup.setLayoutData(gd);

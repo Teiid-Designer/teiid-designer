@@ -10,7 +10,6 @@ package org.teiid.designer.teiidimporter.ui.panels;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -32,7 +31,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -75,7 +73,6 @@ public class ImportPropertiesPanel {
      */
 	private void createPanel(Composite parent) {
     	Composite panel = WidgetFactory.createGroup(parent, Messages.ImportPropertiesPanel_groupTitle, SWT.FILL, 1, 1); 
-    	panel.setLayout(new GridLayout(1, false));
     	panel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
         this.propertiesViewer = new TableViewer(panel, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));

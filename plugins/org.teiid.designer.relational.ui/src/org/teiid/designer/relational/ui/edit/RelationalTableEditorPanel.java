@@ -1698,7 +1698,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
             GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
 
         	Group columnsGroup = WidgetFactory.createGroup(composite, Messages.selectColumnsTitle, SWT.NONE, 1, 2);
-        	GridLayoutFactory.fillDefaults().numColumns(2).applyTo(columnsGroup);
         	GridDataFactory.fillDefaults().grab(true, true).applyTo(columnsGroup);
 
     		Table table = new Table(columnsGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.CHECK);

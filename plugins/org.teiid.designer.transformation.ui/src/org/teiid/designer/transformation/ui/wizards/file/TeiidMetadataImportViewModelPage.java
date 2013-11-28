@@ -185,8 +185,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 	}
 
 	private void createViewModelGroup(Composite parent) {
-		Group viewGroup = WidgetFactory.createGroup(parent,getString("viewModelDefinitionGroup"), SWT.NONE, 2); //$NON-NLS-1$
-		viewGroup.setLayout(new GridLayout(3, false));
+		Group viewGroup = WidgetFactory.createGroup(parent,getString("viewModelDefinitionGroup"), SWT.NONE, 2, 3); //$NON-NLS-1$
 		GridData gd_vg = new GridData(GridData.FILL_HORIZONTAL);
 		gd_vg.horizontalSpan = 2;
 		viewGroup.setLayoutData(gd_vg);
@@ -241,7 +240,6 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 		new Label(viewGroup, SWT.NONE);
 
 		Group helpGroup = WidgetFactory.createGroup(viewGroup, getString("modelStatus"), SWT.NONE | SWT.BORDER_DASH, 2); //$NON-NLS-1$
-		helpGroup.setLayout(new GridLayout(1, false));
 		helpGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		{

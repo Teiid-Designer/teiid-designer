@@ -68,7 +68,9 @@ public class XmlLocalFileProfileDetailsWizardPage  extends ConnectionProfileDeta
 
         Group group = new Group(parent, SWT.BORDER);
         group.setText(UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$
-        group.setLayout(new FillLayout());
+        FillLayout fillLayout = new FillLayout();
+        fillLayout.marginHeight = 10;
+        group.setLayout(fillLayout);
         group.setFont(JFaceResources.getBannerFont());
 
         scrolled = new Composite(group, SWT.SCROLL_PAGE);

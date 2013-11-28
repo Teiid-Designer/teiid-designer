@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.source.VerticalRuler;
 import org.eclipse.jface.viewers.CellEditor;
@@ -976,10 +975,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
      * The SQL Display area portion of the SQL Tab
      */
     private void createSqlGroup( Composite parent ) {
-        Group textTableOptionsGroup = new Group(parent, SWT.NONE);
-        textTableOptionsGroup.setFont(JFaceResources.getBannerFont());
-        textTableOptionsGroup.setText(Messages.sqlDefinitionLabel);
-        GridLayoutFactory.fillDefaults().applyTo(textTableOptionsGroup);
+        Group textTableOptionsGroup = WidgetFactory.createGroup(parent, Messages.sqlDefinitionLabel);
         GridDataFactory.fillDefaults().grab(true, true).span(2, 1).applyTo(textTableOptionsGroup);
 
         ColorManager colorManager = new ColorManager();

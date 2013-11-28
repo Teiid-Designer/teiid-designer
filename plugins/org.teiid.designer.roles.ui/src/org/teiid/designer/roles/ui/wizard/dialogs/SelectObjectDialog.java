@@ -73,8 +73,7 @@ public class SelectObjectDialog extends ElementTreeSelectionDialog implements IS
         GridData panelData = new GridData(GridData.FILL_BOTH);
         panel.setLayoutData(panelData);
 
-        Group selectedGroup = WidgetFactory.createGroup(panel, "Selected Column", GridData.FILL_HORIZONTAL); //$NON-NLS-1$
-        selectedGroup.setLayout(new GridLayout(2, false));
+        Group selectedGroup = WidgetFactory.createGroup(panel, "Selected Column", GridData.FILL_HORIZONTAL, 1, 2); //$NON-NLS-1$
 
         this.columnNameText = WidgetFactory.createTextField(selectedGroup, GridData.FILL_HORIZONTAL, Messages.undefined);
         GridData data = new GridData(GridData.FILL_HORIZONTAL);

@@ -10,7 +10,6 @@ package org.teiid.designer.transformation.ui.reconciler.datatype;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -316,12 +315,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         
         // Panel to display selection details
         SELECTION_STATUS_PANEL : {
-	        Composite selectionPanel = WidgetFactory.createGroup(tablePanel, Messages.datatypeReconciler_selectionPanelInfoLabel);
-			// ------------------------------
-			// Set layout for the Composite
-			// ------------------------------
-	        selectionPanel.setLayout(new GridLayout());
-			((GridLayout)selectionPanel.getLayout()).numColumns = 2;
+	        Composite selectionPanel = WidgetFactory.createGroup(tablePanel, Messages.datatypeReconciler_selectionPanelInfoLabel, 1, 2);
 			selectionPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 			((GridData)selectionPanel.getLayoutData()).minimumHeight = 80;
 			

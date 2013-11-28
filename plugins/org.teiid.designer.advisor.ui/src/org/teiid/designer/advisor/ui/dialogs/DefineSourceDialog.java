@@ -8,7 +8,6 @@
 package org.teiid.designer.advisor.ui.dialogs;
 
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -137,7 +136,6 @@ public class DefineSourceDialog  extends TitleAreaDialog implements IChangeListe
 		
 		IMPORT_OPTIONS_WIDGETS: {
 	        Group theGroup = WidgetFactory.createGroup(panel, Messages.ImportSourceOptions, SWT.NONE, 1, 1);
-	    	theGroup.setLayout(new GridLayout(1, false));
 	    	theGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	        
 	        this.importJdbcButton = WidgetFactory.createRadioButton(theGroup, COMMAND_LABELS.IMPORT_JDBC , SWT.NONE, 1, true);

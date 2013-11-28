@@ -76,7 +76,6 @@ public class WrapperProcedurePanel {
 
 		SQL_TEXT_VIEWER: {
 			Group group = WidgetFactory.createGroup(parent,Messages.GeneratedSQLStatement, SWT.NONE, 2);
-			group.setLayout(new GridLayout(1, false));
 			GridData gd = new GridData(GridData.FILL_BOTH);
 			group.setLayoutData(gd);
 			

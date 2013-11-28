@@ -547,12 +547,10 @@ public final class WsdlSelectionPage extends AbstractWizardPage
         pnl.setLayout(new GridLayout(COLUMNS, false));
 
         // options group
-        Group optionsGroup = WidgetFactory.createGroup(pnl, getString("targetLocationGroup.text"), SWT.NONE); //$NON-NLS-1$
+        Group optionsGroup = WidgetFactory.createGroup(pnl, getString("targetLocationGroup.text"), SWT.NONE, 1, 2); //$NON-NLS-1$
 
         GridData gdRadioGroup = new GridData(GridData.FILL_HORIZONTAL);
         optionsGroup.setLayoutData(gdRadioGroup);
-
-        optionsGroup.setLayout(new GridLayout(2, false));
 
         // --------------------------------------------
         // Composite for Workspace Folder Location Selection

@@ -9,11 +9,9 @@ package org.teiid.designer.vdb.ui.editor.panels;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -208,7 +206,6 @@ public class PropertiesPanel {
     	}
     	
         Composite pnlUserProperties = WidgetFactory.createGroup(panel, prefixedI18n("userDefined"), SWT.FILL, 1, 1);  //$NON-NLS-1$
-        pnlUserProperties.setLayout(new GridLayout(1, false));
         pnlUserProperties.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         this.propertiesViewer = new TableViewer(pnlUserProperties, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));

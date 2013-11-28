@@ -246,8 +246,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		// ----------- Connection Profile SOURCE Panel
 		// ---------------------------------
 		// ---------------------------------------------------------------------------
-		Group profileGroup = WidgetFactory.createGroup(parent, FLAT_FILE_SOURCE_LABEL, SWT.NONE, 2);
-		profileGroup.setLayout(new GridLayout(3, false));
+		Group profileGroup = WidgetFactory.createGroup(parent, FLAT_FILE_SOURCE_LABEL, SWT.NONE, 2, 3);
 		profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		refreshConnectionProfiles();
@@ -480,8 +479,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	}
 	
 	private void createSourceModelGroup(Composite parent) {
-    	Group sourceGroup = WidgetFactory.createGroup(parent, getString("sourceModelDefinitionGroup"), SWT.NONE, 1); //$NON-NLS-1$
-    	sourceGroup.setLayout(new GridLayout(3, false));
+    	Group sourceGroup = WidgetFactory.createGroup(parent, getString("sourceModelDefinitionGroup"), SWT.NONE, 1, 3); //$NON-NLS-1$
     	sourceGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         Label locationLabel = new Label(sourceGroup, SWT.NULL);
@@ -532,7 +530,6 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     	new Label(sourceGroup, SWT.NONE);
     	
         Group helpGroup = WidgetFactory.createGroup(sourceGroup, getString("modelStatus"), SWT.NONE | SWT.BORDER_DASH,2); //$NON-NLS-1$
-        helpGroup.setLayout(new GridLayout(1, false));
         helpGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	
         {        	

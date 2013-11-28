@@ -189,7 +189,6 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
     
     private void createXmlTableSqlGroup(Composite parent) {
     	Group xmlTableOptionsGroup = WidgetFactory.createGroup(parent, Messages.GeneratedSQLStatement, SWT.NONE, 1);
-    	xmlTableOptionsGroup.setLayout(new GridLayout(1, false));
     	GridData gd = new GridData(GridData.FILL_BOTH);
     	gd.heightHint = 100;
     	xmlTableOptionsGroup.setLayoutData(gd);

@@ -87,8 +87,7 @@ public class ColumnsInfoPanel {
 	}
 	
 	private void init(Composite parent) {
-    	Group columnInfoGroup = WidgetFactory.createGroup(parent, Messages.ColumnInfo, SWT.NONE, 2);
-    	columnInfoGroup.setLayout(new GridLayout(2, false));
+    	Group columnInfoGroup = WidgetFactory.createGroup(parent, Messages.ColumnInfo, SWT.NONE, 2, 2);
     	GridData gd = new GridData(GridData.FILL_BOTH);
     	gd.horizontalSpan = 1;
     	columnInfoGroup.setLayoutData(gd);

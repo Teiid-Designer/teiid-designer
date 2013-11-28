@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -295,7 +294,6 @@ public class EditForeignKeyDialog extends TitleAreaDialog {
 		});
         
     	Group keysGroup = WidgetFactory.createGroup(dialogComposite, Messages.selectPrimaryKeyOrUniqueConstraint, SWT.NONE, 2, 2);
-    	keysGroup.setLayout(new GridLayout(2, false));
     	GridData gd = new GridData(GridData.FILL_BOTH);
     	gd.heightHint = 140;
     	gd.widthHint = 500;
@@ -464,7 +462,6 @@ public class EditForeignKeyDialog extends TitleAreaDialog {
 		this.keyViewer.setInput(keys);
 		
     	Group theColumnsGroup = WidgetFactory.createGroup(dialogComposite, Messages.selectColumnReferencesToFK, SWT.NONE, 1, 1);
-    	theColumnsGroup.setLayout(new GridLayout(1, false));
     	gd = new GridData(GridData.FILL_BOTH);
     	gd.heightHint = 120;
     	gd.widthHint = 500;

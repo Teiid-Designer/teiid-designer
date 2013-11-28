@@ -71,7 +71,6 @@ public class TeiidXmlConnectionOptionsDialog extends Dialog implements UiConstan
         mainPanel.setLayoutData(gd);
         
 		Group mainGroup = WidgetFactory.createGroup(mainPanel,getString("xmlProfileOptions"), SWT.BORDER); //$NON-NLS-1$
-		mainGroup.setLayout(new GridLayout());
 		mainGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		this.xmlUrlOptionButton = WidgetFactory.createRadioButton(mainGroup,getString("xmlUrlProfileOption"), true); //$NON-NLS-1$

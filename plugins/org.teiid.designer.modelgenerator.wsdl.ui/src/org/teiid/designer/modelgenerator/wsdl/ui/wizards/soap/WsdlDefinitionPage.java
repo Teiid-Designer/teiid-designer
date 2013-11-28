@@ -23,7 +23,6 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -226,8 +225,7 @@ public class WsdlDefinitionPage extends WizardPage
 		pnl.setLayout(new GridLayout(COLUMNS, false));
 
 		// ================================================================================
-		Group profileGroup = WidgetFactory.createGroup(pnl, Messages.WsdlDefinitionPage_profileLabel_text, SWT.NONE, 2);
-		profileGroup.setLayout(new GridLayout(3, false));
+		Group profileGroup = WidgetFactory.createGroup(pnl, Messages.WsdlDefinitionPage_profileLabel_text, SWT.NONE, 2, 3);
 		profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		profileLabelProvider = new LabelProvider() {
@@ -277,8 +275,7 @@ public class WsdlDefinitionPage extends WizardPage
 		});
 
 		// options group
-		Group wsdlURIGroup = WidgetFactory.createGroup(pnl, Messages.WsdlDefinitionPage_wsdlLabel_text, SWT.FILL, 2);
-		wsdlURIGroup.setLayout(new GridLayout(2, false));
+		Group wsdlURIGroup = WidgetFactory.createGroup(pnl, Messages.WsdlDefinitionPage_wsdlLabel_text, SWT.FILL, 2, 2);
 		wsdlURIGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		// Workspace textfield
@@ -302,8 +299,7 @@ public class WsdlDefinitionPage extends WizardPage
 		buttonValidateWSDL.addListener(SWT.Selection, this);
 		
 		// End point
-		Group endPointGroup = WidgetFactory.createGroup(pnl, Messages.WsdlDefinitionPage_endPointLabel_text, SWT.FILL, 2);
-		GridLayoutFactory.fillDefaults().numColumns(4).applyTo(endPointGroup);
+		Group endPointGroup = WidgetFactory.createGroup(pnl, Messages.WsdlDefinitionPage_endPointLabel_text, SWT.FILL, 2, 4);
 		endPointGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		Label endPointNameLabel = WidgetFactory.createLabel(endPointGroup, Messages.WsdlDefinitionPage_endPointNameLabel_label);

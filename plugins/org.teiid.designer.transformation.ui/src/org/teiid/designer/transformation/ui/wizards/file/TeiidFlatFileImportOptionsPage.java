@@ -77,7 +77,6 @@ public class TeiidFlatFileImportOptionsPage extends AbstractWizardPage implement
         descriptionText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 		
 		Group mainGroup = WidgetFactory.createGroup(mainPanel,getString("fileOptionsGroup"), SWT.BORDER); //$NON-NLS-1$
-		mainGroup.setLayout(new GridLayout());
 		mainGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		this.localFileOptionButton = WidgetFactory.createRadioButton(mainGroup,getString("localFileOption"), true); //$NON-NLS-1$

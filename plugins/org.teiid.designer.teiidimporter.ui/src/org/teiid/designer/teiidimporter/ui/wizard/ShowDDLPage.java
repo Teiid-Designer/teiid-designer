@@ -84,7 +84,6 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
      */
     private void createDDLDisplayGroup( Composite parent ) {
         Group theGroup = WidgetFactory.createGroup(parent, Messages.ShowDDLPage_DDLContentsGroup, SWT.NONE, 1, 1);
-        theGroup.setLayout(new GridLayout(1, false));
         GridData groupGD = new GridData(GridData.FILL_BOTH);
         groupGD.heightHint = GROUP_HEIGHT_190;
         groupGD.widthHint = 400;

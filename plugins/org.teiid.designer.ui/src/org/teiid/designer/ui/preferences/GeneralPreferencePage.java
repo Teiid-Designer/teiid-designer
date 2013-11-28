@@ -82,7 +82,6 @@ public final class GeneralPreferencePage extends PreferencePage
     private Group constructGroup( Composite theParent,
                                   String theName ) {
         Group result = WidgetFactory.createGroup(theParent, theName, GridData.FILL_HORIZONTAL);
-        result.setLayout(new GridLayout());
         result.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         result.setText(theName);
 

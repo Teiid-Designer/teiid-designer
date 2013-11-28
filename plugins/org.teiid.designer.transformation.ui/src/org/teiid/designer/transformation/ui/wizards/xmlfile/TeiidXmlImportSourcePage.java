@@ -232,8 +232,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		// ---------------------------------
 		// ---------------------------------------------------------------------------
 		Group profileGroup = WidgetFactory.createGroup(parent,
-				FLAT_FILE_SOURCE_LABEL, SWT.NONE, 2);
-		profileGroup.setLayout(new GridLayout(3, false));
+				FLAT_FILE_SOURCE_LABEL, SWT.NONE, 2, 3);
 		profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		this.srcLabelProvider = new LabelProvider() {
@@ -394,8 +393,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	}
 
 	private void createSourceModelGroup(Composite parent) {
-		Group sourceGroup = WidgetFactory.createGroup(parent,getString("sourceModelDefinitionGroup"), SWT.NONE, 1); //$NON-NLS-1$
-		sourceGroup.setLayout(new GridLayout(3, false));
+		Group sourceGroup = WidgetFactory.createGroup(parent,getString("sourceModelDefinitionGroup"), SWT.NONE, 1, 3); //$NON-NLS-1$
 		sourceGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Label locationLabel = new Label(sourceGroup, SWT.NULL);
@@ -447,7 +445,6 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 
 		Group helpGroup = WidgetFactory.createGroup(sourceGroup,
 				getString("modelStatus"), SWT.NONE | SWT.BORDER_DASH, 2); //$NON-NLS-1$
-		helpGroup.setLayout(new GridLayout(1, false));
 		helpGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		{

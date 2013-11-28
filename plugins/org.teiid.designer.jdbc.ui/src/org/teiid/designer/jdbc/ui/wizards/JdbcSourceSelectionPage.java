@@ -200,8 +200,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         // ---------------------------------------------------------------------------
         // ----------- Connection Profile SOURCE Panel ---------------------------------
         // ---------------------------------------------------------------------------
-        Group profileGroup = WidgetFactory.createGroup(pg, SOURCE_LABEL, SWT.NONE, 2);
-        profileGroup.setLayout(new GridLayout(PROFILE_COLUMN_COUNT, false));
+        Group profileGroup = WidgetFactory.createGroup(pg, SOURCE_LABEL, SWT.NONE, 2, PROFILE_COLUMN_COUNT);
         profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         
         ArrayList sourceList = new ArrayList(this.mgr.getJdbcSources().size());
@@ -256,7 +255,6 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         // ----------- JDBC Metadata Processor Panel ---------------------------------
         // ---------------------------------------------------------------------------
         Group processorPanel = WidgetFactory.createGroup(pg, getString("processorCombo"), SWT.NONE, 1); //$NON-NLS-1$
-        processorPanel.setLayout(new GridLayout(1, false));
         processorPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         
         Collection<String> processors = JdbcModelProcessorManager.getMetadataProcessorNames();

@@ -96,8 +96,7 @@ public class CredentialsPage extends AbstractWizardPage
         setControl(pnl);
         
         // ================================================================================
-        Group profileGroup = WidgetFactory.createGroup(pnl, getString("profileLabel.text"), SWT.NONE, 2); //$NON-NLS-1$
-        profileGroup.setLayout(new GridLayout(3, false));
+        Group profileGroup = WidgetFactory.createGroup(pnl, getString("profileLabel.text"), SWT.NONE, 2, 3); //$NON-NLS-1$
         profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         profileLabelProvider = new LabelProvider() {
@@ -155,12 +154,10 @@ public class CredentialsPage extends AbstractWizardPage
         
         // ================================================================================
         // properties group
-        Group propertiesGroup = WidgetFactory.createGroup(pnl, getString("properties.label"), SWT.NONE, 2); //$NON-NLS-1$
+        Group propertiesGroup = WidgetFactory.createGroup(pnl, getString("properties.label"), SWT.NONE, 2, 2); //$NON-NLS-1$
 
         GridData gdCredentialsGroup = new GridData(GridData.FILL_HORIZONTAL);
         propertiesGroup.setLayoutData(gdCredentialsGroup);
-
-        propertiesGroup.setLayout(new GridLayout(2, false));
         
         // URL
         CLabel urlLabel = new CLabel(propertiesGroup, SWT.NONE);

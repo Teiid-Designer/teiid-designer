@@ -9,7 +9,6 @@ package org.teiid.designer.teiidimporter.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -133,8 +132,7 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
         // -------------------------------------
         // Create the Source Definition Group
         // -------------------------------------
-        Group sourceGroup = WidgetFactory.createGroup(parent, Messages.SelectTranslatorPage_SrcDefnGroup, SWT.NONE, 1);
-        sourceGroup.setLayout(new GridLayout(2, false));
+        Group sourceGroup = WidgetFactory.createGroup(parent, Messages.SelectTranslatorPage_SrcDefnGroup, SWT.NONE, 1, 2);
         sourceGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         // -------------------------------------
@@ -281,8 +279,7 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
         // -------------------------------------
         // Create the Model Definition Group
         // -------------------------------------
-        Group sourceGroup = WidgetFactory.createGroup(parent, Messages.SelectTranslatorPage_TgtModelDefnGroup, SWT.NONE, 1);
-        sourceGroup.setLayout(new GridLayout(3, false));
+        Group sourceGroup = WidgetFactory.createGroup(parent, Messages.SelectTranslatorPage_TgtModelDefnGroup, SWT.NONE, 1, 3);
         sourceGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         // -----------------------
@@ -354,7 +351,6 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
         
         // Info area - shows model selection status
         Group infoGroup = WidgetFactory.createGroup(sourceGroup, Messages.SelectTranslatorPage_ModelStatus, SWT.NONE | SWT.BORDER_DASH,2);
-        infoGroup.setLayout(new GridLayout(1, false));
         infoGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         
         // Text box for info message

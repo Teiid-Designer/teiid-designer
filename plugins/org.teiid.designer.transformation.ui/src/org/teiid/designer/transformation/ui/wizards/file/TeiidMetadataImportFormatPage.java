@@ -208,8 +208,7 @@ public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements
 	}
     
     private void createColumnOptionsRadioGroup(Composite parent ) {
-    	Group theGroup = WidgetFactory.createGroup(parent, getString("columnsFormatGroup"), SWT.NONE, 1, 1); //$NON-NLS-1$
-    	theGroup.setLayout(new GridLayout(2, true));
+    	Group theGroup = WidgetFactory.createGroup(parent, getString("columnsFormatGroup"), SWT.NONE, 1, 2); //$NON-NLS-1$
     	theGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	
     	// delimitedColumnsRB, fixedWidthColumnsRB;
@@ -270,8 +269,7 @@ public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements
     }
     
     private void createFilePreviewOptionsGroup(Composite parent ) {
-    	Group theGroup = WidgetFactory.createGroup(parent, getString("filePreviewOptionsGroup"), SWT.NONE, 1, 3); //$NON-NLS-1$
-    	theGroup.setLayout(new GridLayout(5, false));
+    	Group theGroup = WidgetFactory.createGroup(parent, getString("filePreviewOptionsGroup"), SWT.NONE, 1, 5); //$NON-NLS-1$
     	theGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	
     	Label numberLinesInFileLabel = new Label(theGroup, SWT.NONE);
@@ -330,7 +328,6 @@ public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements
     
     private void createFileContentsGroup(Composite parent) {
     	Group theGroup = WidgetFactory.createGroup(parent, getString("fileContentsGroup"), SWT.NONE, 1, 4); //$NON-NLS-1$
-    	theGroup.setLayout(new GridLayout(4, false));
     	GridData groupGD = new GridData(GridData.FILL_BOTH);
     	groupGD.heightHint = GROUP_HEIGHT_190;
     	groupGD.widthHint = 400;

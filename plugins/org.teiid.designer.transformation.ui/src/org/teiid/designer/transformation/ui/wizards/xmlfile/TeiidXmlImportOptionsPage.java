@@ -78,7 +78,6 @@ public class TeiidXmlImportOptionsPage extends AbstractWizardPage implements
 		
 
 		Group mainGroup = WidgetFactory.createGroup(mainPanel,getString("xmlOptionsGroup"), SWT.BORDER); //$NON-NLS-1$
-		mainGroup.setLayout(new GridLayout());
 		mainGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		this.xmlFileOptionButton = WidgetFactory.createRadioButton(mainGroup,getString("localXmlFileOption"), true); //$NON-NLS-1$

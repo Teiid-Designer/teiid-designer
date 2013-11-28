@@ -9,7 +9,6 @@ package org.teiid.designer.transformation.ui.wizards.xmlfile.panels;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -22,7 +21,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.teiid.designer.query.proc.ITeiidXmlFileInfo;
@@ -69,7 +67,6 @@ public class XmlFileContentsGroup {
 	
 	private void createPanel(Composite parent) {
     	Group fileContentsGroup = WidgetFactory.createGroup(parent, Messages.XmlFileContents, SWT.NONE, 1, 4);
-    	fileContentsGroup.setLayout(new GridLayout(4, false));
     	GridData gd = new GridData(GridData.FILL_BOTH);
     	gd.heightHint = 400;
     	fileContentsGroup.setLayoutData(gd);

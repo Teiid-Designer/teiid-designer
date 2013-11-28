@@ -404,7 +404,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 	private void createRequestSqlGroup(Composite parent) {
 		Group group = WidgetFactory.createGroup(parent,Messages.GeneratedSQLStatement, SWT.NONE, 2);
-		group.setLayout(new GridLayout(1, false));
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 2;
 		group.setLayoutData(gd);
@@ -525,7 +524,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	
 	private void createResponseSqlGroup(Composite parent) {
 		Group group = WidgetFactory.createGroup(parent, Messages.GeneratedSQLStatement, SWT.NONE, 2);
-		group.setLayout(new GridLayout(1, false));
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 2;
 		group.setLayoutData(gd);

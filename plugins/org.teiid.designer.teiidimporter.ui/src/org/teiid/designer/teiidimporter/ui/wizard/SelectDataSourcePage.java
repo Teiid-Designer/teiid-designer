@@ -9,7 +9,6 @@ package org.teiid.designer.teiidimporter.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -104,7 +103,6 @@ public class SelectDataSourcePage extends AbstractWizardPage
      */
     private void createDataSourcesGroup(Composite parent) {
         Group dataSourcesGroup = WidgetFactory.createGroup(parent, Messages.selectDataSourcePage_dataSourceGroupText, SWT.NONE); 
-        dataSourcesGroup.setLayout(new GridLayout(1, false));
         dataSourcesGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         
         int visibleRows = 5;
@@ -119,7 +117,6 @@ public class SelectDataSourcePage extends AbstractWizardPage
      */
     private void createDataSourceDetailsGroup(Composite parent) {
         Group dsPropertiesGroup = WidgetFactory.createGroup(parent, Messages.selectDataSourcePage_dataSourcePropertiesGroupText, SWT.NONE); 
-        dsPropertiesGroup.setLayout(new GridLayout(1, false));
         dsPropertiesGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         this.propertiesPanel = new DataSourcePropertiesPanel(dsPropertiesGroup,importManager,true,false,null);

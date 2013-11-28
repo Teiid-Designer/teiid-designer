@@ -17,7 +17,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.xsd.impl.XSDAttributeUseImpl;
@@ -53,7 +52,6 @@ public class RequestSchemaContentsGroup {
 
 	private void createPanel(Composite parent) {
 		Group schemaContentsGroup = WidgetFactory.createGroup(parent, Messages.SchemaContents, SWT.NONE, 1, 4);
-		schemaContentsGroup.setLayout(new GridLayout(4, false));
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 1;
 		gd.heightHint = 120;

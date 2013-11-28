@@ -71,18 +71,14 @@ public class ColumnsInfoPanel {
 	}
 
 	private void init(Composite parent) {
-		Group columnInfoGroup = WidgetFactory.createGroup(parent, Messages.ColumnInfo, SWT.NONE, 2);
-		columnInfoGroup.setLayout(new GridLayout(2, false));
-		GridData gd = new GridData(GridData.FILL_BOTH);
-		gd.horizontalSpan = 1;
-		columnInfoGroup.setLayoutData(gd);
+		Group columnInfoGroup = WidgetFactory.createGroup(parent, Messages.ColumnInfo, SWT.NONE, 1, 2);
 
 		Label prefixLabel = new Label(columnInfoGroup, SWT.NONE);
 		prefixLabel.setText(Messages.RootPath);
 		prefixLabel.setToolTipText(Messages.RootPathTooltip);
 
 		rootPathText = WidgetFactory.createTextField(columnInfoGroup, SWT.NONE);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.minimumWidth = 50;
 		gd.horizontalSpan = 1;
 		gd.grabExcessHorizontalSpace = true;

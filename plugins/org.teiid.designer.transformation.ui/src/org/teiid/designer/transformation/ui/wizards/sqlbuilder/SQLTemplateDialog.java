@@ -132,7 +132,6 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
      */
     private void createSqlTemplateOptionsGroup( Composite parent ) {
         Group theGroup = WidgetFactory.createGroup(parent, Messages.sqlTemplateDialogOptionsGroup, SWT.NONE, 1, 2);
-    	theGroup.setLayout(new GridLayout(2, false));
     	theGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
     	
         // **********************************
@@ -414,7 +413,6 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
      */
     private void createSqlGroup( Composite parent ) {
         Group textTableOptionsGroup = WidgetFactory.createGroup(parent, Messages.sqlTemplateDialogSqlAreaGroup, SWT.NONE, 2, 1);
-        textTableOptionsGroup.setLayout(new GridLayout(1, false));
         GridData gd = new GridData(GridData.FILL_BOTH);
         gd.heightHint = 120;
         gd.horizontalSpan = 2;

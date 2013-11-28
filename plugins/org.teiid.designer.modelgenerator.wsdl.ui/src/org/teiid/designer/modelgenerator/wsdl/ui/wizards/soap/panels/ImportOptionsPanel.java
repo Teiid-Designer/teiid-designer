@@ -20,7 +20,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -81,10 +80,7 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 		this.connectionInfoHelper = new ConnectionInfoHelper();
 		
 		SOURCE_MODEL_INFO : {
-    		Group group = WidgetFactory.createGroup(parent, Messages.SourceModelDefinition, GridData.FILL_HORIZONTAL, 1);
-    
-    		group.setLayout(new GridLayout(3, false));
-    		
+    		Group group = WidgetFactory.createGroup(parent, Messages.SourceModelDefinition, GridData.FILL_HORIZONTAL, 1, 3);
     		Label locationLabel = new Label(group, SWT.NULL);
     		locationLabel.setText(Messages.Location);
     
@@ -140,8 +136,7 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
     		
     		SOURCE_HELP : {
         		Group helpGroup = WidgetFactory.createGroup(group,
-    				Messages.Status, SWT.NONE | SWT.BORDER_DASH, 3); 
-        		helpGroup.setLayout(new GridLayout(1, false));
+    				Messages.Status, SWT.NONE | SWT.BORDER_DASH, 3);
         		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         		gd.horizontalSpan = 3;
         		helpGroup.setLayoutData(gd);
@@ -158,10 +153,7 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 		}
 
 		VIEW_MODEL_INFO : {
-			Group group = WidgetFactory.createGroup(parent, Messages.ViewModelDefinition, GridData.FILL_HORIZONTAL, 1);
-			
-    		group.setLayout(new GridLayout(3, false));
-    		
+			Group group = WidgetFactory.createGroup(parent, Messages.ViewModelDefinition, GridData.FILL_HORIZONTAL, 1, 3);
     		Label locationLabel = new Label(group, SWT.NULL);
     		locationLabel.setText(Messages.Location);
     
@@ -219,7 +211,6 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
     		VIEW_HELP : {
         		Group helpGroup = WidgetFactory.createGroup(group,
     				Messages.Status, SWT.NONE | SWT.BORDER_DASH, 3); 
-        		helpGroup.setLayout(new GridLayout(1, false));
         		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         		gd.horizontalSpan = 3;
         		helpGroup.setLayoutData(gd);

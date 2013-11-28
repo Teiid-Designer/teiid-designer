@@ -202,8 +202,6 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		// Group for checkbox table
 		// --------------------------
 		Group group = WidgetFactory.createGroup(parent, title, GridData.FILL_BOTH, 1, 2);
-		GridLayout gridLayout = new GridLayout(2, false);
-		group.setLayout(gridLayout);
 
 		// ----------------------------
 		// Select/DeSelect Buttons

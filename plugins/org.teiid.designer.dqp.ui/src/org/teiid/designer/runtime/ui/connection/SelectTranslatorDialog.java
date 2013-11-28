@@ -59,8 +59,7 @@ public class SelectTranslatorDialog extends ElementTreeSelectionDialog implement
         GridData panelData = new GridData(GridData.FILL_BOTH);
         panel.setLayoutData(panelData);
 
-        Group selectedGroup = WidgetFactory.createGroup(panel, "Selected Translator", GridData.FILL_HORIZONTAL); //$NON-NLS-1$
-        selectedGroup.setLayout(new GridLayout(2, false));
+        Group selectedGroup = WidgetFactory.createGroup(panel, "Selected Translator", GridData.FILL_HORIZONTAL, 1, 2); //$NON-NLS-1$
 
         this.translatorNameText = WidgetFactory.createTextField(selectedGroup, GridData.FILL_HORIZONTAL, UNDEFINED);
         GridData data = new GridData(GridData.FILL_HORIZONTAL);

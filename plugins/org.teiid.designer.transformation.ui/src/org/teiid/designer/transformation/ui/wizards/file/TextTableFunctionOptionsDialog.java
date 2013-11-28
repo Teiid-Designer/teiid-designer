@@ -110,8 +110,7 @@ public class TextTableFunctionOptionsDialog  extends TitleAreaDialog {
     
     @SuppressWarnings("unused")
 	private void createOptionsGroup(Composite parent) {
-    	Group theGroup = WidgetFactory.createGroup(parent, getString("teiidTextTableGroup"), SWT.NONE); //$NON-NLS-1$
-    	theGroup.setLayout(new GridLayout(2, false));
+    	Group theGroup = WidgetFactory.createGroup(parent, getString("teiidTextTableGroup"), SWT.NONE, 1, 2); //$NON-NLS-1$
     	GridData groupGD = new GridData(GridData.FILL_HORIZONTAL);
     	groupGD.horizontalSpan = 1;
     	theGroup.setLayoutData(groupGD);

@@ -125,13 +125,11 @@ public class ModelSelectionPage extends AbstractWizardPage
 
     private void createTargetModelControls( Composite pnl ) {
         // target model group
-        Group optionsGroup = WidgetFactory.createGroup(pnl, SWT.FILL);
+        Group optionsGroup = WidgetFactory.createGroup(pnl, null, SWT.FILL, 1, 3);
         optionsGroup.setText(getString("targetModelGroup.text")); //$NON-NLS-1$
 
         GridData gData = new GridData(GridData.FILL_HORIZONTAL);
         optionsGroup.setLayoutData(gData);
-
-        optionsGroup.setLayout(new GridLayout(3, false));
 
         // --------------------------------------------
         // Composite for Model Selection
@@ -229,7 +227,6 @@ public class ModelSelectionPage extends AbstractWizardPage
         optionsGroup.setText(getString("importOptionsGroup.text")); //$NON-NLS-1$
         GridData gData = new GridData(SWT.FILL, SWT.FILL, true, true);
         optionsGroup.setLayoutData(gData);
-        optionsGroup.setLayout(new GridLayout(1, false));
 
         final ScrolledComposite c1 = new ScrolledComposite(optionsGroup, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FILL);
         c1.setLayout(new GridLayout());

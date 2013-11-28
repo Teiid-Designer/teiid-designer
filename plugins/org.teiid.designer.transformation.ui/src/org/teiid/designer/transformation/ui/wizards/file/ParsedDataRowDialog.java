@@ -85,8 +85,7 @@ public class ParsedDataRowDialog extends TitleAreaDialog {
         gridData.widthHint = 500;
         composite.setLayoutData(gridData);
         
-    	Group columnsGroup = WidgetFactory.createGroup(parent, UiConstants.Util.getString("ParsedDataRowDialog.columnsGroup"), SWT.NONE, 1, 1); //$NON-NLS-1$
-    	columnsGroup.setLayout(new GridLayout(2, false));
+    	Group columnsGroup = WidgetFactory.createGroup(parent, UiConstants.Util.getString("ParsedDataRowDialog.columnsGroup"), SWT.NONE, 1, 2); //$NON-NLS-1$
     	GridData gd = new GridData(GridData.FILL_BOTH);
     	gd.heightHint = 280;
     	gd.widthHint = 500;

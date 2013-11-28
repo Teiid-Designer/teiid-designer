@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -35,13 +35,11 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.ViewForm;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -475,11 +473,34 @@ public final class WidgetFactory implements
         final GridData gridData = new GridData(gridStyle);
         gridData.horizontalSpan = span;
         group.setLayoutData(gridData);
-        group.setLayout(new GridLayout(columns, false));
+
+        GridLayoutFactory gridLayoutFactory = GridLayoutFactory.fillDefaults()
+                                                                                                          .numColumns(columns)
+                                                                                                          .equalWidth(false);
+        Font bannerFont = JFaceResources.getBannerFont();
+        group.setFont(bannerFont);
+
+        /*
+         * An issue exists on some linux distiros, eg. Fedora, (but not on other's, 
+         * eg. Ubuntu), that stops Groups rendering correctly with a title when using
+         * group.setText(). The title is overlapped in part by the internal content of
+         * the group. Investigation indicates it is tied to the use of grid layout as the
+         * layout of the group. Indeed, the issue does not occur in other uses of
+         * group where fill layout is used.
+         * 
+         * This works around the issue by setting extended margins on the group. By
+         * giving the top margin a value of '10', it seems to ensure that the layout of
+         * the title is correctly observed resulting in no overlap. The only downside is
+         * that resizing the parent dialog/panel will result in a slight jump-down of the
+         * contents leaving a space of '10' between it and the title. However, rarely
+         * would a user resize a dialog so this is a minor irritation.
+         */
         if (name != null) {
-            group.setFont(JFaceResources.getBannerFont());
+            gridLayoutFactory = gridLayoutFactory.margins(2, 10);
             group.setText(name);
         }
+
+        gridLayoutFactory.applyTo(group);
         return group;
     }
 

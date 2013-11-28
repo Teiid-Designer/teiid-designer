@@ -19,7 +19,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -84,10 +83,7 @@ public class SourceModelPanel implements IChangeListener, ModelGeneratorLdapUiCo
         this.connectionInfoHelper = new ConnectionInfoHelper();
 
         SOURCE_MODEL_INFO: {
-            Group group = WidgetFactory.createGroup(parent, getString("sourceModelDefinition"), GridData.FILL_HORIZONTAL, 1); //$NON-NLS-1$
-
-            group.setLayout(new GridLayout(3, false));
-
+            Group group = WidgetFactory.createGroup(parent, getString("sourceModelDefinition"), GridData.FILL_HORIZONTAL, 1, 3); //$NON-NLS-1$
             Label locationLabel = new Label(group, SWT.NULL);
             locationLabel.setText(getString("location")); //$NON-NLS-1$
 

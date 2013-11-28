@@ -871,7 +871,6 @@ public class RelationalModelTextImporterMainPage extends WizardDataTransferPage 
             createMessageArea(composite);
             
             Group optionsGroup = WidgetFactory.createGroup(parent, OVERWRITE_OPTIONS, SWT.BORDER | SWT.FILL);   
-            optionsGroup.setLayout(new GridLayout());
             optionsGroup.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
             
             { // ========================= OPTIONS ============================
@@ -916,7 +915,6 @@ public class RelationalModelTextImporterMainPage extends WizardDataTransferPage 
             }
             
             Group duplicateObjectsGroup = WidgetFactory.createGroup(parent, OVERWRITE_DUPLICATE_OBJECTS, SWT.FILL);
-            duplicateObjectsGroup.setLayout(new GridLayout());
             duplicateObjectsGroup.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
             
             listViewer = CheckboxTableViewer.newCheckList(duplicateObjectsGroup, SWT.BORDER);

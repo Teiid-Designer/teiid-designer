@@ -261,8 +261,7 @@ public class SelectWsdlPage extends WizardPage
         pnl.setLayout(new GridLayout(COLUMNS, false));
 
         // ================================================================================
-        Group profileGroup = WidgetFactory.createGroup(pnl, getString("profileLabel.text"), SWT.NONE, 2); //$NON-NLS-1$
-        profileGroup.setLayout(new GridLayout(3, false));
+        Group profileGroup = WidgetFactory.createGroup(pnl, getString("profileLabel.text"), SWT.NONE, 2, 3); //$NON-NLS-1$
         profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         profileLabelProvider = new LabelProvider() {
@@ -313,8 +312,7 @@ public class SelectWsdlPage extends WizardPage
         });
         
         // options group
-        Group optionsGroup = WidgetFactory.createGroup(pnl, getString("wsdlLabel.text"), SWT.FILL,  2); //$NON-NLS-1$
-        optionsGroup.setLayout(new GridLayout(2, false));
+        Group optionsGroup = WidgetFactory.createGroup(pnl, getString("wsdlLabel.text"), SWT.FILL,  2, 2); //$NON-NLS-1$
         optionsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         // Workspace textfield
@@ -363,12 +361,10 @@ public class SelectWsdlPage extends WizardPage
         pnl.setLayout(new GridLayout(COLUMNS, false));
 
         // options group
-        Group optionsGroup = WidgetFactory.createGroup(pnl, getString("targetLocationGroup.text"),SWT.NONE); //$NON-NLS-1$
+        Group optionsGroup = WidgetFactory.createGroup(pnl, getString("targetLocationGroup.text"),SWT.NONE, 1, 2); //$NON-NLS-1$
 
         GridData gdRadioGroup = new GridData(GridData.FILL_HORIZONTAL);
         optionsGroup.setLayoutData(gdRadioGroup);
-
-        optionsGroup.setLayout(new GridLayout(2, false));
 
         // --------------------------------------------
         // Composite for Model Location Selection
@@ -402,8 +398,7 @@ public class SelectWsdlPage extends WizardPage
     }
     
 	private void createSourceModelGroup(Composite parent) {
-		Group sourceGroup = WidgetFactory.createGroup(parent,"Source Model Definition", SWT.NONE, 1); //$NON-NLS-1$
-		sourceGroup.setLayout(new GridLayout(3, false));
+		Group sourceGroup = WidgetFactory.createGroup(parent,"Source Model Definition", SWT.NONE, 1, 3); //$NON-NLS-1$
 		sourceGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Label locationLabel = new Label(sourceGroup, SWT.NULL);
@@ -457,7 +452,6 @@ public class SelectWsdlPage extends WizardPage
 
 		Group helpGroup = WidgetFactory.createGroup(sourceGroup,
 				"Model Status", SWT.NONE | SWT.BORDER_DASH, 2); //$NON-NLS-1$
-		helpGroup.setLayout(new GridLayout(1, false));
 		helpGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		{

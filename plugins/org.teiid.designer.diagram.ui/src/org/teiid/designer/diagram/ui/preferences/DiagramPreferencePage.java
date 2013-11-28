@@ -114,9 +114,6 @@ public class DiagramPreferencePage extends PreferencePage
         routersGroup.setText(routersHdr);
         GridData routersGroupGridData = new GridData(GridData.FILL_HORIZONTAL);
         routersGroup.setLayoutData(routersGroupGridData);
-        GridLayout routersLayout = new GridLayout();
-        routersGroup.setLayout(routersLayout);
-        routersLayout.numColumns = 2;
 
         Label routerLabel = new Label(routersGroup, SWT.NONE);
         String routerStr = Util.getString("DiagramPrefPage.defaultRouter"); //$NON-NLS-1$

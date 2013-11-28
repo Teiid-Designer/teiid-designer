@@ -1183,7 +1183,6 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
      */
     private void createSqlGroup( Composite parent ) {
         Group textTableOptionsGroup = WidgetFactory.createGroup(parent, Messages.sqlDefinitionLabel, SWT.NONE, 2, 1);
-        GridLayoutFactory.fillDefaults().applyTo(textTableOptionsGroup);
         GridDataFactory.fillDefaults().grab(true, true).span(2, 1).applyTo(textTableOptionsGroup);
 
         ColorManager colorManager = new ColorManager();
@@ -1659,7 +1658,6 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
             GridDataFactory.fillDefaults().grab(true, true).applyTo(composite);
             
         	Group columnsGroup = WidgetFactory.createGroup(composite, Messages.selectColumnsTitle, SWT.NONE, 1, 2);
-        	GridLayoutFactory.fillDefaults().numColumns(2).applyTo(columnsGroup);
         	GridDataFactory.fillDefaults().grab(true, true).applyTo(columnsGroup);
 
     		Table table = new Table(columnsGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.CHECK);

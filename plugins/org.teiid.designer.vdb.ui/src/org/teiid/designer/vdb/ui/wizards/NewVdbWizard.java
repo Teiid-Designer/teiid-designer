@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -431,8 +430,7 @@ public final class NewVdbWizard extends AbstractWizard
         }
         
         MODELS_GROUP : {
-	        Group group = WidgetFactory.createGroup(mainPanel, getString("selectedModelsGroupTitle"), GridData.FILL_BOTH, COLUMN_COUNT, COLUMN_COUNT); //$NON-NLS-1$
-	        group.setLayout(new GridLayout(2, false));
+	        Group group = WidgetFactory.createGroup(mainPanel, getString("selectedModelsGroupTitle"), GridData.FILL_BOTH, COLUMN_COUNT, 2); //$NON-NLS-1$
 	    	GridData gd = new GridData(GridData.FILL_BOTH);
 	    	gd.heightHint = 200;
 	    	gd.horizontalSpan = 3;

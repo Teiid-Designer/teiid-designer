@@ -195,8 +195,7 @@ class IntroductionPanel extends Composite implements IUiConstants, IUiConstants.
         });
 
         final int columnCount = 3;
-        final Group catalogGroup = WidgetFactory.createGroup(this, INCLUDE_GROUP, GridData.HORIZONTAL_ALIGN_FILL, columnCount);
-        catalogGroup.setLayout(new GridLayout(2, false));
+        final Group catalogGroup = WidgetFactory.createGroup(this, INCLUDE_GROUP, GridData.HORIZONTAL_ALIGN_FILL, columnCount, 2);
 
         CLabel catLabel = new CLabel(catalogGroup, SWT.WRAP);
         catLabel.setText(CATALOG_DESC);

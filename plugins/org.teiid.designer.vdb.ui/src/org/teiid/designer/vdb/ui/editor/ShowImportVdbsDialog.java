@@ -64,7 +64,6 @@ public class ShowImportVdbsDialog extends Dialog {
         gridLayout.numColumns = 1;
         
     	Group theGroup = WidgetFactory.createGroup(mainPanel, getString("vdbNames"), SWT.NONE, 1, 4); //$NON-NLS-1$
-    	theGroup.setLayout(new GridLayout(4, false));
     	GridData groupGD = new GridData(GridData.FILL_BOTH);
     	groupGD.heightHint = 200;
     	groupGD.widthHint = 400;

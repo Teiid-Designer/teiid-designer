@@ -161,10 +161,6 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
         // panelGD.grabExcessVerticalSpace = true;
         searchMessagePanel.setLayoutData(panelGD);
 
-        GridLayout layout = new GridLayout();
-        layout.numColumns = 1;
-        searchMessagePanel.setLayout(layout);
-
         this.messageLabel = WidgetFactory.createLabel(searchMessagePanel, SWT.NULL | SWT.FILL);
 
         this.messageLabel.setText(" "); //$NON-NLS-1$
@@ -176,11 +172,6 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
 
         // Create SEARCH RESULTS GROUP ---------------------------------------
         Composite searchResultsPanel = WidgetFactory.createGroup(this, RESULTS_TITLE, SWT.NULL | SWT.FILL);
-
-        GridLayout layout_3 = new GridLayout();
-        layout_3.numColumns = 1;
-        layout_3.makeColumnsEqualWidth = true;
-        searchResultsPanel.setLayout(layout_3);
         searchResultsPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         this.sqlMessageLabel = WidgetFactory.createLabel(searchResultsPanel, SWT.NULL | SWT.FILL);
@@ -214,10 +205,6 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
         fFindField.addModifyListener(this);
 
         sqlTextPanel = WidgetFactory.createGroup(this, SQL_TEXT, SWT.NULL | SWT.FILL);
-        GridLayout layout_4 = new GridLayout();
-        layout_4.numColumns = 1;
-        layout_4.makeColumnsEqualWidth = true;
-        sqlTextPanel.setLayout(layout_4);
         GridData pnlGD = new GridData(GridData.FILL_BOTH);
         pnlGD.grabExcessHorizontalSpace = true;
         sqlTextPanel.setLayoutData(pnlGD);
@@ -272,16 +259,12 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
      */
     private Composite createInputPanel( Composite parent ) {
 
-        Composite panel = WidgetFactory.createGroup(parent, INPUT, SWT.NULL | SWT.FILL);
+        Composite panel = WidgetFactory.createGroup(parent, INPUT, SWT.NULL | SWT.FILL, 1, 2);
         panel.setSize(300, 400);
         GridData panelGD = new GridData(GridData.FILL_HORIZONTAL);
         panelGD.grabExcessHorizontalSpace = true;
         // panelGD.grabExcessVerticalSpace = true;
         panel.setLayoutData(panelGD);
-
-        GridLayout layout = new GridLayout();
-        layout.numColumns = 2;
-        panel.setLayout(layout);
 
         Label findLabel = new Label(panel, SWT.LEFT);
         findLabel.setText(FIND);

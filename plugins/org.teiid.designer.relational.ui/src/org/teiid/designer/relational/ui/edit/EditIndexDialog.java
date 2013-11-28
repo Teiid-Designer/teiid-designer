@@ -9,7 +9,6 @@ package org.teiid.designer.relational.ui.edit;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -267,7 +266,6 @@ public class EditIndexDialog extends TitleAreaDialog {
 		}
 
 		Group theColumnsGroup = WidgetFactory.createGroup(dialogComposite, Messages.selectColumnReferencesForIndex, SWT.NONE, 1, 1);
-		theColumnsGroup.setLayout(new GridLayout(1, false));
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.heightHint = 120;
 		gd.widthHint = 500;

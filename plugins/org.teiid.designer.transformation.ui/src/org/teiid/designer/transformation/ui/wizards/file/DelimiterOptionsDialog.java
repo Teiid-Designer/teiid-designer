@@ -110,7 +110,6 @@ public class DelimiterOptionsDialog  extends TitleAreaDialog {
     private void createDelimitedColumnsOptionsGroup(Composite parent) {
     	
     	Group theGroup = WidgetFactory.createGroup(parent, "Delimeter Options"/*getString("fileFormatOptionsGroup")*/, SWT.NONE, 1, 2); //$NON-NLS-1$
-    	theGroup.setLayout(new GridLayout(2, false));
     	theGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
     	
     	//commaCB, spaceCB, tabCB, semicolonCB, barCB, otherDelimiterCB;
