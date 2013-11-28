@@ -540,7 +540,7 @@ public class RefactorResourcesUtils {
         BufferedReader reader = null;
         String line;
         int docOffset = 0;
-        char[] prefixChars = { ' ', ',', ';', '\t', '\n' };
+        char[] prefixChars = { ' ', ',', ';', '\t', '\n', '(' };
         
         try {
             reader = new BufferedReader(new FileReader(nativeFile));
