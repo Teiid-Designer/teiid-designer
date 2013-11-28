@@ -9,7 +9,10 @@ package org.teiid.designer.modelgenerator.ldap.ui.wizards.pages.definition;
 
 import java.util.ArrayList;
 import java.util.Properties;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -395,8 +398,27 @@ public class LdapDefinitionPage extends WizardPage
                     return;
                 }
             } finally {
-                if (status != null && status.isOK())
-                    connectionProfile.disconnect();
+                if (status != null && status.isOK()) {
+                    /*
+                     * This has the potential to deadlock the UI due to disconnect
+                     * creating a job itself that joins to the JobManager. By putting
+                     * this inside its own job, at least it locks up the worker thread
+                     * rather than the UI thread.
+                     */
+                    Job job = new Job("Disconnect connection profile") { //$NON-NLS-1$
+                        @Override
+                        protected IStatus run(IProgressMonitor monitor) {
+                            IConnectionProfile connProfile = importManager.getConnectionProfile();
+                            if (connProfile != null)
+                                connProfile.disconnect();
+
+                            return Status.OK_STATUS;
+                        }
+                    };
+                    job.setSystem(true);
+                    job.setUser(false);
+                    job.schedule();
+                }
             }
         }
 
