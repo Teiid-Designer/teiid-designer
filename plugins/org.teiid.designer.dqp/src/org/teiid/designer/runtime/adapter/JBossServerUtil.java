@@ -7,7 +7,6 @@
 */
 package org.teiid.designer.runtime.adapter;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import org.eclipse.core.runtime.IStatus;
@@ -28,8 +27,9 @@ public class JBossServerUtil {
      * @param jbossServer
      * 
      * @return true if server can be connected
+     * @throws Exception
      */
-    public static boolean isJBossServerConnected(IServer parentServer, JBossServer jbossServer) {
+    public static boolean isJBossServerConnected(IServer parentServer, JBossServer jbossServer) throws Exception {
         if (!serverStarted(parentServer)) 
             return false;
 
@@ -39,8 +39,9 @@ public class JBossServerUtil {
     /**
      * @param jbossServer
      * @return
+     * @throws Exception
      */
-    protected static boolean isHostConnected(String host, int port) {
+    protected static boolean isHostConnected(String host, int port) throws Exception {
         Socket socket = null;
         InetSocketAddress endPoint = new InetSocketAddress(host, port);
 
@@ -54,17 +55,10 @@ public class JBossServerUtil {
             socket.connect(endPoint, 1024);
 
             return true;
-        } catch (Exception ex) {
-            // Connection failed - no need to log exception
-            return false;
         } finally {
             if (socket != null && socket.isConnected()) {
-                try {
-                    socket.close();
-                    socket = null;
-                } catch (IOException ex) {
-                    DqpPlugin.Util.log(IStatus.WARNING, ex, DqpPlugin.Util.getString("jbossServerConnectionFailureMessage", endPoint)); //$NON-NLS-1$
-                }
+                socket.close();
+                socket = null;
             }
         }
     }
@@ -76,8 +70,9 @@ public class JBossServerUtil {
      * @param jbossServer
      * 
      * @return true is server has teiid support, false otherwise
+     * @throws Exception
      */
-    public static boolean isTeiidServer(IServer parentServer, JBossServer jbossServer) {
+    public static boolean isTeiidServer(IServer parentServer, JBossServer jbossServer) throws Exception {
         if (!serverStarted(parentServer)) 
             return false;
 

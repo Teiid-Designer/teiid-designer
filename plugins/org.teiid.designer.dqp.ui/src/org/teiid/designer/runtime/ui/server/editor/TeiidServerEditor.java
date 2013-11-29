@@ -272,16 +272,20 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
 
                 getServerManager().addListener(excutionConfigListener);
 
-                TeiidServerAdapterFactory adapterFactory = new TeiidServerAdapterFactory();
-                if (parentServer.getServerState() == IServer.STATE_STARTED)
-                    // If server is started we can be more adventurous in what to display since we can ask
-                    // the server whether teiid has been installed.
-                    teiidServer = adapterFactory.adaptServer(parentServer, ServerOptions.ADD_TO_REGISTRY);
-                else {
-                    // Cannot ask a lot except whether the server is a JBoss Server
-                    teiidServer = adapterFactory.adaptServer(parentServer,
+                try {
+                    TeiidServerAdapterFactory adapterFactory = new TeiidServerAdapterFactory();
+                    if (parentServer.getServerState() == IServer.STATE_STARTED)
+                        // If server is started we can be more adventurous in what to display since we can ask
+                        // the server whether teiid has been installed.
+                        teiidServer = adapterFactory.adaptServer(parentServer, ServerOptions.ADD_TO_REGISTRY);
+                    else {
+                        // Cannot ask a lot except whether the server is a JBoss Server
+                        teiidServer = adapterFactory.adaptServer(parentServer,
                                                              ServerOptions.NO_CHECK_CONNECTION,
                                                              ServerOptions.ADD_TO_REGISTRY);
+                    }
+                } catch (Exception ex) {
+                    DqpPlugin.handleException(ex);
                 }
 
                 if (teiidServer != null) {

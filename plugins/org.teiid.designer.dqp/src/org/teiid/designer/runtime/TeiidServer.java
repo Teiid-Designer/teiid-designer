@@ -178,26 +178,26 @@ public class TeiidServer implements ITeiidServer {
         }
         
         if (this.admin == null) {
-            this.admin = TeiidRuntimeRegistry.getInstance().getExecutionAdmin(this);
+            try {
+                this.admin = TeiidRuntimeRegistry.getInstance().getExecutionAdmin(this);
             
-            if (admin != null) {
-                /*
-                 * Avoid the refresh listener being fired prematurely by the admin client.
-                 * Want to fire the refresh ourselves using {#notifyRefresh} at the end
-                 * of this function.
-                 */
-                getEventManager().permitListeners(false);
-                try {
+                if (admin != null) {
+                    /*
+                     * Avoid the refresh listener being fired prematurely by the admin client.
+                     * Want to fire the refresh ourselves using {#notifyRefresh} at the end
+                     * of this function.
+                     */
+                    getEventManager().permitListeners(false);
+
                     this.admin.connect();
-                } catch (Exception ex) {
-                    throw ex;
-                } finally {
-                    getEventManager().permitListeners(true);
                 }
+            } catch (Exception ex) {
+                throw ex;
+            } finally {
+                getEventManager().permitListeners(true);
             }
 
             getEventManager().notifyListeners(ExecutionConfigurationEvent.createServerConnectedEvent(this));
-
             notifyRefresh();
         }
     }
@@ -207,8 +207,13 @@ public class TeiidServer implements ITeiidServer {
         try {
             // Call disconnect() first to clear out Server & admin caches
             getEventManager().permitListeners(false);
-            disconnect();
-            getEventManager().permitListeners(true);
+            try {
+                disconnect();
+            } catch (Exception ex) {
+                throw ex;
+            } finally {
+                getEventManager().permitListeners(true);
+            }
             
             if (isParentConnected()) {
                 // Refresh is implied in the getting of the admin object since it will
@@ -219,6 +224,11 @@ public class TeiidServer implements ITeiidServer {
             }
 
             setConnectionError(null);
+        } catch (IllegalArgumentException e) {
+            DqpPlugin.Util.log(e);
+            String msg = DqpPlugin.Util.getString("serverReconnectErrorMsg", this) + "\n" +  //$NON-NLS-1$ //$NON-NLS-2$
+                                        DqpPlugin.Util.getString("serverAdminInitError"); //$NON-NLS-1$
+            setConnectionError(msg);
         } catch (Exception e) {
             DqpPlugin.Util.log(e);
             String msg = DqpPlugin.Util.getString("serverReconnectErrorMsg", this) + "\n" + e.getLocalizedMessage(); //$NON-NLS-1$ //$NON-NLS-2$
@@ -317,8 +327,13 @@ public class TeiidServer implements ITeiidServer {
         if(this.parentServer == null || this.parentServer.getServerState() != IServer.STATE_STARTED)
             return false;
         
-        TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory(); 
-        return factory.isParentServerConnected(parentServer);
+        try {
+            TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
+            return factory.isParentServerConnected(parentServer);
+        } catch (Exception ex) {
+            DqpPlugin.Util.log(ex);
+            return false;
+        }
     }
     
     /**
