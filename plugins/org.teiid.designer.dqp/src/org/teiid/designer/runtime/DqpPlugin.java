@@ -10,11 +10,16 @@ package org.teiid.designer.runtime;
 import java.util.ResourceBundle;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.server.core.IServer;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.PluginUtil;
@@ -26,7 +31,6 @@ import org.teiid.designer.core.workspace.ModelWorkspaceNotification;
 import org.teiid.designer.core.workspace.ModelWorkspaceNotificationAdapter;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
-import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.extension.rest.RestModelExtensionAssistant;
 import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants;
 import org.teiid.designer.runtime.preview.PreviewManager;
@@ -89,11 +93,6 @@ public class DqpPlugin extends Plugin {
      * Provider of the {@link IServer}s collection
      */
     private IServersProvider serversProvider;
-    
-    /**
-     * The password provider to be used in the server manager's preview manager
-     */
-    private IPasswordProvider passwordProvider;
 
     /**
      * Obtains the current plugin preferences values.
@@ -279,4 +278,62 @@ public class DqpPlugin extends Plugin {
         }
     }
 
+    private static Display getDisplay() {
+        return (Display.getCurrent() == null ? Display.getDefault() : Display.getCurrent());
+    }
+
+    /**
+     * @param operation The operation to be executed in the SWT thread.
+     * @param asynchronous True if the operation should be run asynchronously, meaning the calling thread will not be blocked.
+     */
+    private static void runInSwtThread( final Runnable operation, final boolean asynchronous ) {
+        Display display = getDisplay();
+        if (Thread.currentThread() != display.getThread()) {
+            if (asynchronous) {
+                display.asyncExec(operation);
+            } else {
+                display.syncExec(operation);
+            }
+        } else {
+            operation.run();
+        }
+    }
+
+    /**
+     * Convey the given exception to the user.
+     *
+     * @param ex
+     */
+    public static void handleException(final Exception ex) {
+        /**
+         * TODO
+         * Not ideal as we are calling a UI dialog in a technically non-UI plugin.
+         * However, it already depends on org.eclipse.ui so free to use this stuff
+         * and displaying an error dialog is crucial to the user.
+         */
+
+        Util.log(ex);
+
+        Runnable runnable = new Runnable() {
+
+            @Override
+            public void run() {
+                String title = Util.getString("TeiidParentServerListener.initTeiidServerException.title"); //$NON-NLS-1$
+                String message = Util.getString("TeiidParentServerListener.initTeiidServerException.message"); //$NON-NLS-1$
+                String reason = Util.getString("TeiidParentServerListener.initTeiidServerException.reason"); //$NON-NLS-1$
+
+                MultiStatus multiStatus = new MultiStatus(PLUGIN_ID, 0, reason, null);
+                Throwable throwable = ex;
+                do {
+                    Status status = new Status(IStatus.ERROR, PLUGIN_ID, " * " + throwable.getLocalizedMessage()); //$NON-NLS-1$
+                    multiStatus.add(status);
+                    throwable = throwable.getCause();
+                } while (throwable != null);
+
+                ErrorDialog.openError(getDisplay().getActiveShell(), title, message, multiStatus);
+            }
+        };
+
+        runInSwtThread(runnable, true);
+    }
 }

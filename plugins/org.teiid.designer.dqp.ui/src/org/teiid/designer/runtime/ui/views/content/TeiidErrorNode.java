@@ -50,4 +50,9 @@ public class TeiidErrorNode extends TeiidContentNode<ITeiidContainerNode<?>> {
     public ITeiidServer getTeiidServer() {
         return teiidServer;
     }
+
+    @Override
+    public String toString() {
+        return text;
+    }
 }

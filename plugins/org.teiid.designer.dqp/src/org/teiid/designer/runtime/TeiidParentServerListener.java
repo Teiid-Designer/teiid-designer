@@ -7,7 +7,6 @@
 */
 package org.teiid.designer.runtime;
 
-import static org.teiid.designer.runtime.DqpPlugin.Util;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
 import org.eclipse.wst.server.core.IServerListener;
@@ -42,7 +41,7 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
     private boolean sleep;
     
     private TeiidParentServerListener() {}
-    
+
     @Override
     public void serverAdded(IServer server) {
         if (sleep) return;
@@ -53,35 +52,43 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
         server.addServerListener(this);
 
         // New server added so add a teiid instance, even though it is not currently connected
-        factory.adaptServer(server, ServerOptions.NO_CHECK_CONNECTION, ServerOptions.ADD_TO_REGISTRY);
+        try {
+            factory.adaptServer(server, ServerOptions.NO_CHECK_CONNECTION, ServerOptions.ADD_TO_REGISTRY);
+        } catch (final Exception ex) {
+            DqpPlugin.handleException(ex);
+        }
     }
-    
+
     @Override
     public void serverChanged(IServer server) {
         if (sleep) return;
         
         ITeiidServerManager serverManager = DqpPlugin.getInstance().getServerManager();
+
+        try {
+            for (ITeiidServer teiidServer : serverManager.getServers()) {
+                if (! server.equals(teiidServer.getParent()))
+                    continue;
+
+                ITeiidServer newTeiidServer = factory.adaptServer(server, ServerOptions.NO_CHECK_SERVER_REGISTRY, ServerOptions.NO_CHECK_CONNECTION);
+            
+                // Cannot use updateServer as it replaces rather than modified the existing server
+                // and references in editor will thus hang on to the old defunct version
+                teiidServer.update(newTeiidServer);
+                teiidServer.notifyRefresh();
+
+                return;
+            }
         
-        for (ITeiidServer teiidServer : serverManager.getServers()) {
-            if (! server.equals(teiidServer.getParent()))
-                continue;
-            
-            ITeiidServer newTeiidServer = factory.adaptServer(server, ServerOptions.NO_CHECK_SERVER_REGISTRY, ServerOptions.NO_CHECK_CONNECTION);
-            
-            // Cannot use updateServer as it replaces rather than modified the existing server
-            // and references in editor will thus hang on to the old defunct version
-            teiidServer.update(newTeiidServer);
-            teiidServer.notifyRefresh();
-            
-            return;
+            /*
+             * We have a parent server with no Teiid Instance attached
+             * This may be intentional if the parent server is not teiid
+             * enabled but should check just in case.
+             */
+            factory.adaptServer(server, ServerOptions.ADD_TO_REGISTRY);
+        } catch (Exception ex) {
+            DqpPlugin.handleException(ex);
         }
-        
-        /*
-         * We have a parent server with no Teiid Instance attached
-         * This may be intentional if the parent server is not teiid
-         * enabled but should check just in case.
-         */
-        factory.adaptServer(server, ServerOptions.ADD_TO_REGISTRY);
     }
    
     @Override
@@ -116,39 +123,39 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
         int state = event.getState();
         IServer parentServer = event.getServer();
 
-        if (state == IServer.STATE_STOPPING || state == IServer.STATE_STOPPED) {
-            ITeiidServer teiidServer = factory.adaptServer(parentServer);
-            if (teiidServer != null)
-                teiidServer.disconnect();
+        try {
+            if (state == IServer.STATE_STOPPING || state == IServer.STATE_STOPPED) {
+                ITeiidServer teiidServer = factory.adaptServer(parentServer);
+                if (teiidServer != null)
+                    teiidServer.disconnect();
             
-        } else if (state == IServer.STATE_STARTED) {
+            } else if (state == IServer.STATE_STARTED) {
 
-            ITeiidServer teiidServer = factory.adaptServer(parentServer, ServerOptions.ADD_TO_REGISTRY);
-            if (teiidServer != null && teiidServer.isParentConnected()) {
-                /*
-                * Update all the settings since the server has been started and a 
-                * proper set of queries can take place.
-                */
-                ITeiidServer queryServer = factory.adaptServer(parentServer,
+                ITeiidServer teiidServer = factory.adaptServer(parentServer, ServerOptions.ADD_TO_REGISTRY);
+                if (teiidServer != null && teiidServer.isParentConnected()) {
+                    /*
+                     * Update all the settings since the server has been started and a
+                     * proper set of queries can take place.
+                     */
+                    ITeiidServer queryServer = factory.adaptServer(parentServer,
                                                                ServerOptions.NO_CHECK_SERVER_REGISTRY);
-                
-                if (queryServer != null)
-                    teiidServer.update(queryServer);
-                else {
-                    // If the query server is null then this is not a Teiid-enabled JBoss Server but
-                    // a TeiidServer was cached in the registry, presumably due to an adaption
-                    // being made while the server was not started. Since we now know better, we
-                    // can correct the registry.
-                    DqpPlugin.getInstance().getServerManager().removeServer(teiidServer);
-                }
 
-                try {
+                    if (queryServer != null)
+                        teiidServer.update(queryServer);
+                    else {
+                        // If the query server is null then this is not a Teiid-enabled JBoss Server but
+                        // a TeiidServer was cached in the registry, presumably due to an adaption
+                        // being made while the server was not started. Since we now know better, we
+                        // can correct the registry.
+                        DqpPlugin.getInstance().getServerManager().removeServer(teiidServer);
+                    }
+
                     teiidServer.reconnect();
-                } catch (Exception ex) {
-                    Util.log(ex);
-                }
                 
+                }
             }
+        } catch (Exception ex) {
+            DqpPlugin.handleException(ex);
         }
     }
 

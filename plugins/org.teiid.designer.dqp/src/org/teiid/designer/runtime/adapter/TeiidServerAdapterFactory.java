@@ -71,8 +71,9 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
      * @param options 
      * 
      * @return {@link ITeiidServer} or null
+     * @throws Exception
      */
-    public ITeiidServer adaptServer(final IServer server, ServerOptions... options) {
+    public ITeiidServer adaptServer(final IServer server, ServerOptions... options) throws Exception {
         if (! getTeiidServerManager().isStarted())
             return null;
 
@@ -96,8 +97,9 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
      * @param options
      * 
      * @return
+     * @throws Exception
      */
-    private ITeiidServer adaptJBossServer(IServer parentServer, JBossServer jbossServer, ServerOptions... options) {
+    private ITeiidServer adaptJBossServer(IServer parentServer, JBossServer jbossServer, ServerOptions... options) throws Exception {
         ITeiidServer teiidServer = null;
         
         List<ServerOptions> optionList = Collections.emptyList(); 
@@ -147,9 +149,10 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
      * @param jboss7Server
      * @param options
      * 
+     * @throws Exception
      * @return
      */
-    private ITeiidServer adaptJBoss7Server(IServer parentServer, JBoss7Server jboss7Server, ServerOptions... options) {
+    private ITeiidServer adaptJBoss7Server(IServer parentServer, JBoss7Server jboss7Server, ServerOptions... options) throws Exception {
         ITeiidServer teiidServer = null;
         
         List<ServerOptions> optionList = Collections.emptyList(); 
@@ -201,8 +204,10 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
      * @param options
      * 
      * @return new {@link ITeiidServer}
+     * @throws Exception
      */
-    private ITeiidServer createJboss7TeiidServer(final IServer parentServer, final JBoss7Server jboss7Server, ServerOptions... options) {
+    private ITeiidServer createJboss7TeiidServer(final IServer parentServer, final JBoss7Server jboss7Server, ServerOptions... options) 
+            throws Exception {
         TeiidServerFactory factory = new TeiidServerFactory();
         ITeiidServer teiidServer = factory.createTeiidServer(JBoss7ServerUtil.getTeiidRuntimeVersion(parentServer, jboss7Server),
                                                                                         getTeiidServerManager(),
@@ -260,8 +265,9 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
      * @param server
      * 
      * @return true if connected
+     * @throws Exception
      */
-    public boolean isParentServerConnected(IServer server) {
+    public boolean isParentServerConnected(IServer server) throws Exception {
         if (server.getServerState() != IServer.STATE_STARTED)
             return false;
         
