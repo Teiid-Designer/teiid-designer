@@ -8,14 +8,12 @@
 package org.teiid.designer.runtime.adapter;
 
 import java.util.List;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.dmr.ModelNode;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.jboss.ide.eclipse.as.core.server.v7.management.AS7ManagementDetails;
 import org.jboss.ide.eclipse.as.management.core.JBoss7ManagerUtil;
 import org.jboss.ide.eclipse.as.management.core.ModelDescriptionConstants;
-import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
@@ -50,6 +48,7 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
      * @param jboss7Server
      * @param request
      * @return
+     * @throws Exception
      */
     private static ModelNode executeRequest(IServer parentServer, JBoss7Server jboss7Server, ModelNode request) throws Exception {
         String requestString = request.toJSONString(true);
@@ -66,8 +65,9 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
      * @param jboss7Server
      * 
      * @return true is server can be connected
+     * @throws Exception
      */
-    public static boolean isJBossServerConnected(IServer parentServer, JBoss7Server jboss7Server) {
+    public static boolean isJBossServerConnected(IServer parentServer, JBoss7Server jboss7Server) throws Exception {
         if (! serverStarted(jboss7Server.getServer()))
             return false;
         
@@ -84,27 +84,23 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
      * @param jboss7Server
      * 
      * @return true is server has teiid support, false otherwise
+     * @throws Exception
      */
-    public static boolean isTeiidServer(IServer parentServer, JBoss7Server jboss7Server) {
+    public static boolean isTeiidServer(IServer parentServer, JBoss7Server jboss7Server) throws Exception {
         if (! serverStarted(parentServer))
             return false;
         
         ModelNode request = new ModelNode();
         request.get(OP).set(READ_CHILDREN_NAMES_OPERATION);
         request.get(CHILD_TYPE).set(SUBSYSTEM);
-        
-        try {
-            ModelNode result = executeRequest(parentServer, jboss7Server, request);
 
-            List<ModelNode> subsystems = result.asList();
-            for (ModelNode subsystem : subsystems) {
-                if (subsystem.asString().equals("teiid")) { //$NON-NLS-1$
-                    return true;
-                }
+        ModelNode result = executeRequest(parentServer, jboss7Server, request);
+
+        List<ModelNode> subsystems = result.asList();
+        for (ModelNode subsystem : subsystems) {
+            if (subsystem.asString().equals("teiid")) { //$NON-NLS-1$
+                return true;
             }
-        } catch (Exception ex) {
-            // Failed to connect to the server
-            DqpPlugin.Util.log(IStatus.WARNING, DqpPlugin.Util.getString("jbossServerConnectionFailureMessage", jboss7Server)); //$NON-NLS-1$
         }
         
         return false;
@@ -117,8 +113,9 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
      * @param parentServer
      * @param jboss7Server
      * @return the port number as a string
+     * @throws Exception
      */
-    public static String getJdbcPort(IServer parentServer, JBoss7Server jboss7Server) {
+    public static String getJdbcPort(IServer parentServer, JBoss7Server jboss7Server) throws Exception {
         if (! serverStarted(parentServer))
             return ITeiidJdbcInfo.DEFAULT_PORT;
         
@@ -131,13 +128,8 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
         request.get(OP_ADDR).set(address);
         request.get(NAME).set(PORT);
         
-        try {
-            ModelNode result = executeRequest(parentServer, jboss7Server, request);
-            return result.asString();
-        } catch (Exception ex) {
-            DqpPlugin.Util.log(IStatus.ERROR, ex, "Failed to get teiid jdbc port, defaulting to " + ITeiidJdbcInfo.DEFAULT_PORT); //$NON-NLS-1$
-            return ITeiidJdbcInfo.DEFAULT_PORT;
-        }
+        ModelNode result = executeRequest(parentServer, jboss7Server, request);
+        return result.asString();
     }
 
     /**
@@ -145,8 +137,9 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
      * @param jboss7Server 
      * 
      * @return runtime version of the Teiid Instance
+     * @throws Exception
      */
-    public static ITeiidServerVersion getTeiidRuntimeVersion(IServer parentServer, JBoss7Server jboss7Server) {
+    public static ITeiidServerVersion getTeiidRuntimeVersion(IServer parentServer, JBoss7Server jboss7Server) throws Exception {
         if (! serverStarted(parentServer))
             return TeiidServerVersion.DEFAULT_TEIID_8_SERVER;
         
@@ -159,12 +152,7 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
         request.get(OP_ADDR).set(address);
         request.get(NAME).set("runtime-version"); //$NON-NLS-1$
         
-        try {
-            ModelNode result = executeRequest(parentServer, jboss7Server, request);
-            return new TeiidServerVersion(result.asString());
-        } catch (Exception ex) {
-            DqpPlugin.Util.log(IStatus.ERROR, ex, "Failed to get teiid jdbc port, defaulting to " + ITeiidJdbcInfo.DEFAULT_PORT); //$NON-NLS-1$
-            return TeiidServerVersion.DEFAULT_TEIID_8_SERVER;
-        }
+        ModelNode result = executeRequest(parentServer, jboss7Server, request);
+        return new TeiidServerVersion(result.asString());
     }    
 }
