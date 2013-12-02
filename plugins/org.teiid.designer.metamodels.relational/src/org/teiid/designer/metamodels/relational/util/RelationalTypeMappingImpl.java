@@ -128,16 +128,10 @@ public class RelationalTypeMappingImpl implements RelationalTypeMapping {
 	public EObject getDatatype( final String jdbcTypeName ) throws ModelerCoreException {
     	EObject result = null;
         if (jdbcTypeName != null) {
-        	// Look for direct match to Built-in types first
-        	result = this.datatypeManager.getBuiltInDatatype(jdbcTypeName);
-
-        	// No direct match, so look for jdbc type
-        	if(result == null) {
-            	Integer typeCode = SQL_TYPE_MAPPING.get(jdbcTypeName.toUpperCase());
-    	        if (typeCode != null) {
-    	        	result = getDatatype(typeCode);
-    	        }
-        	}
+        	Integer typeCode = SQL_TYPE_MAPPING.get(jdbcTypeName.toUpperCase());
+	        if (typeCode != null) {
+	        	result = getDatatype(typeCode);
+	        }
         }
         if (result == null) {
             result = findDatatype(DatatypeConstants.BuiltInNames.OBJECT);

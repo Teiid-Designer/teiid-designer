@@ -733,7 +733,10 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         }
 
         public JdbcSource getJdbcSource() {
-            return mgr.getJdbcSource(latestProfile);
+        	if(latestProfile!=null) {
+        		return mgr.getJdbcSource(latestProfile);
+        	}
+        	return null;
         }
     }
 }
