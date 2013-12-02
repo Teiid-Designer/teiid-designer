@@ -81,8 +81,13 @@ public final class RefreshServerAction extends BaseSelectionListenerAction imple
 
             @Override
             public void run() {
+                if (! selectedServer.isParentConnected()) {
+                    WidgetUtil.showError(UTIL.getString("serverRefreshParentNotConnected", selectedServer.getParent())); //$NON-NLS-1$
+                    return;
+                }
+
                 selectedServer.reconnect();
-                
+
                 if (selectedServer.getConnectionError() != null)
                     WidgetUtil.showError(selectedServer.getConnectionError());
                 else
