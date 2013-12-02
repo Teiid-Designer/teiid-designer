@@ -137,18 +137,19 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		//		Generate REST WAR
 		//		Deploy REST WAR
 		// =============================================================================
-		infoList = new ArrayList<AdvisorActionInfo>();
-		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT));
-		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_SOURCE));
-		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_VIEW_TABLE));
-		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
-		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_VDB));
-		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEPLOY_VDB));
-		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.GENERATE_REST_WAR));
-		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEPLOY_WAR));
-
-        infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
-		actionInfoMap.put(CREATE_REST_WAR, infoArray);
+//		infoList = new ArrayList<AdvisorActionInfo>();
+//		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT));
+//		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_SOURCE));
+//		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_VIEW_TABLE));
+//		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_VIEW_PROCEDURE));
+//		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
+//		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_VDB));
+//		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEPLOY_VDB));
+//		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.GENERATE_REST_WAR));
+//		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEPLOY_WAR));
+//
+//        infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
+//		actionInfoMap.put(CREATE_REST_WAR, infoArray);
 		
 		// =============================================================================
 		//		JBossWS-CXF (SOAP) War actions set:

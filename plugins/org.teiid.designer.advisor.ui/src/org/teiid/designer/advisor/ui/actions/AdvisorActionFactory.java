@@ -316,6 +316,11 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
                 COMMAND_LABELS_SHORT.DEFINE_VIEW_TABLE,
                 COMMAND_DESC.DEFINE_VIEW_TABLE);
         addActionHandler(
+        		COMMAND_IDS.DEFINE_VIEW_PROCEDURE,
+                COMMAND_LABELS.DEFINE_VIEW_PROCEDURE,
+                COMMAND_LABELS_SHORT.DEFINE_VIEW_PROCEDURE,
+                COMMAND_DESC.DEFINE_VIEW_PROCEDURE);
+        addActionHandler(
         		COMMAND_IDS.NEW_OBJECT_REST_PROCEDURE,
                 COMMAND_LABELS.NEW_OBJECT_REST_PROCEDURE,
                 COMMAND_LABELS_SHORT.NEW_OBJECT_REST_PROCEDURE,
@@ -489,6 +494,12 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
         // NEW OBJECT OPTIONS
         if (id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VIEW_TABLE)) {
         	DefineViewTableAction action = new DefineViewTableAction(properties);
+            action.run();
+            return;
+        }
+        
+        if (id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VIEW_PROCEDURE)) {
+        	DefineViewProcedureAction action = new DefineViewProcedureAction(properties);
             action.run();
             return;
         }
@@ -830,6 +841,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VIEW_TABLE)) {
 			return Images.NEW_VIRTUAL_TABLE_ICON;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VIEW_PROCEDURE)) {
+			return Images.NEW_VIRTUAL_PROCEDURE_ICON;
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_REST_PROCEDURE)) {
