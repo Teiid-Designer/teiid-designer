@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -678,7 +679,10 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
                 ILanguageObject langObj = expressionBuilder.getLanguageObject();
                 // Function needs to have descriptor and types set
                 if(langObj instanceof IFunction) {
-                	syncFunction((IFunction)langObj);
+                	boolean result = syncFunction((IFunction)langObj);
+                	if( !result ) {
+                		return;
+                	}
                 }
 
                 // Do the unbind
@@ -710,7 +714,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
      * The FunctionDescriptor is set, as well as the return type - if possible.
      * @param function the supplied Function
      */
-    private void syncFunction(IFunction function) {
+    private boolean syncFunction(IFunction function) {
         IFunctionLibrary<IFunctionForm, IFunctionDescriptor> functionLibrary = UdfManager.getInstance().getFunctionLibrary();
 
         // Get the function name and arg types
@@ -718,6 +722,14 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
         IExpression[] args = function.getArgs();
         Class[] types = new Class[args.length];
         for(int i=0; i<args.length; i++) {
+        	if( args[i].getType() == null ) {
+        		// Put up a message dialog and bail
+        		MessageDialog.openWarning(getCurrentShell(), 
+        				UiConstants.Util.getString("ReconcilerPanel.nestedFunctionTitle"),  //$NON-NLS-1$
+        				UiConstants.Util.getString("ReconcilerPanel.nestedFunctionMessage")); //$NON-NLS-1$
+        		return false;
+        		
+        	}
         	types[i] = args[i].getType();
         }
         
@@ -729,6 +741,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
         	function.setFunctionDescriptor(fd);
         	function.setType(fd.getReturnType());
         }
+        
+        return true;
     }
 
     /**
