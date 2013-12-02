@@ -657,7 +657,7 @@ public class RelationalProcedure extends RelationalReference {
 				}
 			} else {
 				// Check for null category, class or method name
-				if( this.javaClass == null || this.javaClass.trim().length() == 0 ) {
+				if( this.functionCategory == null || this.functionCategory.trim().length() == 0 ) {
 					setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID,
 							Messages.validate_categoryUndefinedForUDF ));
 					return;
@@ -667,7 +667,7 @@ public class RelationalProcedure extends RelationalReference {
 							Messages.validate_javaClassUndefinedForUDF ));
 					return;
 				}
-				if( this.javaClass == null || this.javaClass.trim().length() == 0 ) {
+				if( this.javaMethod == null || this.javaMethod.trim().length() == 0 ) {
 					setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID,
 							Messages.validate_javaMethodUndefinedForUDF ));
 					return;
