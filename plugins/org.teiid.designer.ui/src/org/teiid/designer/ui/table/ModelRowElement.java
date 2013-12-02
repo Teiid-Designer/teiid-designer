@@ -338,11 +338,13 @@ public class ModelRowElement {
             result = ModelObjectUtilities.getDescription(modelObject);
         } else {
         	IPropertyDescriptor descriptor = getPropertyDescriptor(propertyId);
-        	// if the propertyId is a ModelExtensionProperty, get the propId from the descriptor
-        	if(propertyId instanceof ModelExtensionPropertyDescriptor) {
-        		propertyId = descriptor.getId();
+        	if( descriptor != null ) {
+	        	// if the propertyId is a ModelExtensionProperty, get the propId from the descriptor
+	        	if(propertyId instanceof ModelExtensionPropertyDescriptor) {
+	        		propertyId = descriptor.getId();
+	        	}
+	            result = descriptor.getLabelProvider().getText(propertySource.getPropertyValue(propertyId));
         	}
-            result = descriptor.getLabelProvider().getText(propertySource.getPropertyValue(propertyId));
         }
         
         return result;

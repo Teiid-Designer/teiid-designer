@@ -114,7 +114,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 		TabFolder tabFolder = createTabFolder(parent);
 		createGeneralPropertiesTab(tabFolder);
 		createParametersTab(tabFolder);
-		if( !this.getRelationalReference().isSourceFunction() ) {
+		if( !this.getRelationalReference().isSourceFunction() && !this.getRelationalReference().isFunction() ) {
 			createResultSetTab(tabFolder);
 		}
 		createDescriptionTab(tabFolder);
@@ -176,7 +176,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
         parametersTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.PARAMETER, getRelationalReference().getModelType(), maxStatus));
         
         // Result Set Tab
-        if( !this.getRelationalReference().isSourceFunction() ) {
+        if( !this.getRelationalReference().isSourceFunction() && !this.getRelationalReference().isFunction()) {
 	        if( this.getRelationalReference().getResultSet() == null ) {
 	        	if( WidgetUtil.widgetValueChanged(includeResultSetCB, false)) {
 	        		this.includeResultSetCB.setSelection(false);
@@ -1027,7 +1027,11 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 		if( currentStatus.isOK() ) {
 			setStatus(Status.OK_STATUS);
 		} else {
+			if( currentStatus.getSeverity() == IStatus.ERROR ) {
+				setCanFinish(false);
+			}
 			setStatus(currentStatus);
+
 		}
 		
 	}
