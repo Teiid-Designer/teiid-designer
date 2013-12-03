@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -170,15 +171,13 @@ public class ModelDetailsPanel {
         bindingsTab.setToolTipText(Messages.modelDetailsPanel_sourceBindingDefinitionTooltip);
 
 		Composite sourceBindingsGroup = new Composite(tabFolder, SWT.NONE);
-		sourceBindingsGroup.setLayout(new GridLayout(2, false));
-		sourceBindingsGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		sourceBindingsGroup.setLayout(new GridLayout(1, false));
+		sourceBindingsGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
 		bindingsTab.setControl(sourceBindingsGroup);
         
 		SOURCE_BINDING_PANEL : {
 
-			// 2 columns
-			// Options Panel at top that spans both columns
-			Composite subPanel_1 = WidgetFactory.createPanel(sourceBindingsGroup, SWT.NONE, GridData.FILL_BOTH, 2, 4);
+			Composite subPanel_1 = WidgetFactory.createPanel(sourceBindingsGroup, SWT.NONE, GridData.FILL_HORIZONTAL, 1, 4);
 			subPanel_1.setLayout(new GridLayout(4, false));
 			// Options panel contains: multi-source check-box, add column checkbox and source name alias label + text entry box
 			multiSourceCB = WidgetFactory.createButton(subPanel_1, Messages.modelDetailsPanel_multiSourceLabel, SWT.NONE, 1, SWT.CHECK);
@@ -229,16 +228,20 @@ public class ModelDetailsPanel {
 				}
 			});
 			
-			// Vertical Buttons panel for ADD and DELETE buttons
-			Composite leftToolbarPanel = new Composite(sourceBindingsGroup, SWT.NONE);
+			Composite lowerPanel = WidgetFactory.createPanel(sourceBindingsGroup, SWT.NONE, GridData.FILL_BOTH, 2, 1);
+			lowerPanel.setLayout(new GridLayout(2, false));
+	        GridData gridData = new GridData(GridData.FILL_BOTH | GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING); 
+	        gridData.grabExcessHorizontalSpace = true;
+	        gridData.grabExcessVerticalSpace = true;
+	        lowerPanel.setLayoutData(gridData);
+
+	        // Vertical Buttons panel for ADD and DELETE buttons
+			Composite leftToolbarPanel = WidgetFactory.createPanel(lowerPanel, SWT.NONE, GridData.FILL_VERTICAL);
 			GridLayout tbGL = new GridLayout();
 			tbGL.marginHeight = 0;
 			tbGL.marginWidth = 0;
 			tbGL.verticalSpacing = 2;
 			leftToolbarPanel.setLayout(tbGL);
-			GridData ltpGD = new GridData(GridData.FILL_VERTICAL);
-			ltpGD.heightHint = 100;
-			leftToolbarPanel.setLayoutData(ltpGD);
 
 			addButton = new Button(leftToolbarPanel, SWT.PUSH);
 			addButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ADD));
@@ -250,8 +253,12 @@ public class ModelDetailsPanel {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					int numSources = selectedVdbModelEntry.getSourceInfo().getSources().size();
-					String newName = "Name_" + numSources; //$NON-NLS-1$
-					selectedVdbModelEntry.getSourceInfo().add(newName, "JNDI_NAME", "TRANSLATOR_NAME"); //$NON-NLS-1$ //$NON-NLS-2$
+					boolean added = false;
+					while(!added) {
+						String newName = "Name_" + numSources; //$NON-NLS-1$
+						added = selectedVdbModelEntry.getSourceInfo().add(newName, "JNDI_NAME", "TRANSLATOR_NAME"); //$NON-NLS-1$ //$NON-NLS-2$
+						if(!added) numSources++;
+					}
 					refreshModelDetails();
 				}
 
@@ -278,17 +285,20 @@ public class ModelDetailsPanel {
 			});
 			// Table containing Source  binding NAME, TRANSLATOR NAME, JNDI NAME
 			BINDING_TABLE : {
-		    	Table table = new Table(sourceBindingsGroup, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
-		        table.setHeaderVisible(true);
-		        table.setLinesVisible(true);
-		        table.setLayout(new TableLayout());
-		    	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-		    	//gd.heightHint = 80;
-		    	table.setLayoutData(gd);
+		        // Create Table Viewer
+		        int tableStyle = SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER;
+		        bindingsViewer = new TableViewer(lowerPanel, tableStyle);
 
-		        bindingsViewer = new TableViewer(table);
-		        bindingsViewer.getControl().setLayoutData(gd);
-		        
+		        Table table = bindingsViewer.getTable();
+		        table.setLayout(new TableLayout());
+
+		        final GridData tblGD = new GridData(GridData.FILL_BOTH); 
+		        tblGD.grabExcessHorizontalSpace = true;
+		        tblGD.grabExcessVerticalSpace = true;
+		        table.setLayoutData(tblGD);
+		        table.setHeaderVisible(true);
+		        table.setLinesVisible(true);		        
+
 		        // create columns
 		        TableViewerColumn column = new TableViewerColumn(bindingsViewer, SWT.LEFT);
 		        column.getColumn().setText(Messages.modelDetailsPanel_sourceNameLabel + "                      "); //$NON-NLS-1$
@@ -377,7 +387,7 @@ public class ModelDetailsPanel {
     		addColumnCB.setEnabled(enable);
     		columnAliasText.setEnabled(enable);
     		addButton.setEnabled(enable);
-    		deleteButton.setEnabled(selectedVdbModelEntry.getSourceInfo().getSourceCount() > 1);
+    		deleteButton.setEnabled(selectedVdbModelEntry.getSourceInfo().getSourceCount() > 1 && !bindingsViewer.getSelection().isEmpty());
     		columnAliaslabel.setEnabled(enable);
     		if( enable ) {
     			columnAliasText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
@@ -496,7 +506,11 @@ public class ModelDetailsPanel {
             }
 
             ((VdbSource)element).setTranslatorName(newValue);
+                        
             refreshModelDetails();
+            
+            // cause a selection event to be fired so that actions can set their enablement
+            bindingsViewer.setSelection(new StructuredSelection(element));
         }
     }
 
@@ -567,7 +581,11 @@ public class ModelDetailsPanel {
                 newValue = ""; //$NON-NLS-1$
             }
             ((VdbSource)element).setJndiName(newValue);
+            
             refreshModelDetails();
+            
+            // cause a selection event to be fired so that actions can set their enablement
+            bindingsViewer.setSelection(new StructuredSelection(element));
         }
     }
     
@@ -630,10 +648,38 @@ public class ModelDetailsPanel {
 				String oldValue = ((VdbSource)element).getName();
 				String newValue = (String)value;
 				if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-					((VdbSource)element).setName(newValue);
+					// Ensure the name is unique
+					String newName = ensureUniqueName(newValue, (VdbSource)element);
+					
+					((VdbSource)element).setName(newName);
 					refreshModelDetails();
+		            
+		            // cause a selection event to be fired so that actions can set their enablement
+		            bindingsViewer.setSelection(new StructuredSelection(element));
 				}
 			}
+		}
+		
+		/*
+		 * Cannot have duplicate names.  If user tries duplicate, add a suffix
+		 */
+		private String ensureUniqueName(String name, VdbSource currentSource) {
+			String uniqueName = name;
+			List<String> otherSourceNames = new ArrayList<String>();
+        	for( VdbSource vdbSource : selectedVdbModelEntry.getSourceInfo().getSources() ) {
+        		if(!vdbSource.equals(currentSource)) {
+        			otherSourceNames.add(vdbSource.getName().toLowerCase());
+        		}
+        	}
+        	boolean isUnique = false;
+        	int i = 1;  //Suffix added to make unique
+        	while(!isUnique) {
+        		isUnique = !otherSourceNames.contains(uniqueName.toLowerCase());
+        		if(!isUnique) {
+        			uniqueName += i;
+        		}
+        	}
+			return uniqueName;
 		}
 
 	}

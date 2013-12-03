@@ -14,7 +14,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
-import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSource;
 
 /**
