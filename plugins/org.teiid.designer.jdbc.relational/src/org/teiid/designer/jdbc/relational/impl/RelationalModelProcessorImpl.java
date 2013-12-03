@@ -1445,15 +1445,25 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             //for mysql a long may also be a valid representation
             jdbcType = Types.BINARY;
         }
+        
+    	// First try direct match to Built-in types
+    	try {
+			result = this.datatypeManager.getBuiltInDatatype(typeName);
+		} catch (ModelerCoreException ex) {
+            JdbcPlugin.Util.log(ex);
+		}
+    	if(result != null) {
+    		return result;
+    	}
 
-        // First look up by name
-        result = findType(typeName, problems);
+        // Look up by type code ...
+        result = findType(jdbcType, problems);
         if (result != null) {
             return result;
         }
 
-        // Still haven't found one, so look it up by typeCode ...
-        result = findType(jdbcType, problems);
+        // Still haven't found one, so look it up by name ...
+        result = findType(typeName, problems);
         return result;
     }
 
