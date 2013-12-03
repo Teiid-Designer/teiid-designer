@@ -470,6 +470,9 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         packModelsGroup();
         
         showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+        
+        udfJarsGroup.getTable().getViewer().refresh();
+        otherFilesGroup.getTable().getViewer().refresh();
     }
     
     /*

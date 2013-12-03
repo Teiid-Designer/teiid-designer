@@ -12,7 +12,6 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,7 +56,6 @@ import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.VdbModelBuilder;
-import org.teiid.designer.core.util.DateUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.roles.DataRole;
@@ -282,7 +280,7 @@ public final class Vdb {
         this.queryTimeout = queryTimeout[0];
         if( valDateTime[0] != null ) {
         	try {
-                SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+                SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy"); //$NON-NLS-1$
 				this.validateDateTime = format.parse(valDateTime[0]); //new Date(valDateTime[0]); //DateUtil.convertStringToDate(valDateTime[0]);
 			} catch (ParseException ex) {
 				// TODO Auto-generated catch block
