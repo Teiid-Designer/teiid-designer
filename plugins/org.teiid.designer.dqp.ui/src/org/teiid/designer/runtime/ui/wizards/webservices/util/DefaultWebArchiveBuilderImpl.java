@@ -220,10 +220,9 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
            //  Create the WEB-INF/wsdl directory.
             final String webInfWsdlDirectoryName = webInfDirectoryName + File.separator + "wsdl"; //$NON-NLS-1$
             final File webInfWsdlDirectory = new File(webInfWsdlDirectoryName);
-            webInfWsdlDirectory.mkdir();
             // Create the classes directory.
             final String webInfClassesDirectoryName = webInfDirectoryName + File.separator + "classes"; //$NON-NLS-1$
-            // Create the WEB-INF/wsdl directory.
+            // Create the WEB-INF/lib directory.
             final String webInfLibDirectoryName = webInfDirectoryName + File.separator + "lib"; //$NON-NLS-1$
             final File webInfClassesDirectory = new File(webInfClassesDirectoryName);
             final File webInfLibDirectory = new File(webInfLibDirectoryName);
@@ -233,11 +232,11 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 
             monitor.subTask(TASK_CREATING_WSDL_FILE);
             // Create WSDL file
-            generateWsdl(properties, webInfWsdlDirectory);
+            boolean containsGlobalDataTypes = generateWsdl(properties, webInfWsdlDirectory);
 
             monitor.subTask(TASK_COPYING_FILES);
             // Copy the Web files.
-            getWebFiles(contextDirectory, webInfDirectory);
+            getWebFiles(contextDirectory, webInfDirectory, containsGlobalDataTypes);
 
             // Encapsulate the security properties in order to ensure they are valid
             SecurityCredentials securityCredentials = new SecurityCredentials(properties);
@@ -393,13 +392,21 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
      * @since 7.1
      */
     private void getWebFiles( File contextDirectory,
-                              File webInfDirectory ) throws Exception {
+                              File webInfDirectory,
+                              boolean containsGlobalDataTypes) throws Exception {
 
         // Copy all of the Web files
         final String webLibPath = getWebLibDirectoryPath();
         final String webAppsDirectoryName = webLibPath + File.separator + "webapps"; //$NON-NLS-1$
         final File webAppsDirectory = new File(webAppsDirectoryName);
         FileUtils.copyRecursively(webAppsDirectory, contextDirectory, null, false);
+        
+        //Delete builtInDataType.xsd if not applicable to this service
+        if (!containsGlobalDataTypes){
+        	File builtInDataTypeSchemaFile = new File(webInfDirectory.getPath() + "/wsdl/" + DatatypeConstants.DATATYPES_MODEL_FILE_NAME); //$NON-NLS-1$
+        	boolean deleted = builtInDataTypeSchemaFile.delete();
+        }
+       
     }
 
     /**
@@ -655,7 +662,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         }
     }
 
-    public void generateWsdl( Properties properties,
+    public boolean generateWsdl( Properties properties,
                               File webinfWsdlFolder) throws IOException, CoreException {
 
         BasicWsdlGenerator wsdlGenerator = new BasicWsdlGenerator();
@@ -670,6 +677,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         String vdbFileName = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_VDB_FILE_NAME);
         IPath vdbPath = new Path(vdbFileName);
         IFile vdbFile = ModelerCore.getWorkspace().getRoot().getFile(vdbPath);
+        boolean hasGlobalDataType = false;
         
     	VdbResourceFinder vdbResourceFinder = new VdbResourceFinder(vdbFile);
         
@@ -693,15 +701,13 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 
                         // Check for an import of the global data types schema
                         if (containsGlobalDataTypeImport(xsdSchema)) {
-                            // Copy the builtInDataTypes.xsd file to the war
-                            Resource builtInDataypesResource = ModelerSdtPlugin.getBuiltInTypesResource();
-                            FileUtils.copy(new File(builtInDataypesResource.getURI().path()), webinfWsdlFolder, true);
+                        	hasGlobalDataType = true;
                             // Copy iResource to classesFolder and WEB-INF/wsdl
                             File xsd = new File(fullFilePath);
                             FileUtils.copy(xsd, webinfWsdlFolder, true);
                             // Get handle to new file in wsdl folder
                             File xsdCopy = new File(webinfWsdlFolder.getPath() + "/" + fileNameWithExtension); //$NON-NLS-1$
-                            // Replace the schemaLocation of the global data
+                           // Replace the schemaLocation of the global data
                             // types schema import with the relative path to xsd
                             AntTasks.replace(xsdCopy,
                                     		 "schemaLocation=\"http://www.metamatrix.com/metamodels/SimpleDatatypes-instance\"", //$NON-NLS-1$
@@ -751,6 +757,8 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         } catch (CoreException e) {
             throw new RuntimeException(e.getMessage());
         }
+        
+        return hasGlobalDataType;
 
     }
 
