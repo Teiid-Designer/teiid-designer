@@ -72,9 +72,15 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
 
                 ITeiidServer newTeiidServer = factory.adaptServer(server, ServerOptions.NO_CHECK_SERVER_REGISTRY, ServerOptions.NO_CHECK_CONNECTION);
             
-                // Cannot use updateServer as it replaces rather than modified the existing server
-                // and references in editor will thus hang on to the old defunct version
-                teiidServer.update(newTeiidServer);
+                /*
+                 * Cannot use updateServer as it replaces rather than modifies the existing server
+                 * and references in editor will thus hang on to the old defunct version.
+                 *
+                 * Only update the settings which may have been queried from the server.
+                 */
+                teiidServer.getTeiidAdminInfo().setAll(newTeiidServer.getTeiidAdminInfo());
+                teiidServer.getTeiidJdbcInfo().setPort(newTeiidServer.getTeiidJdbcInfo().getPort());
+
                 teiidServer.notifyRefresh();
 
                 return;
@@ -140,8 +146,14 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                     ITeiidServer queryServer = factory.adaptServer(parentServer,
                                                                ServerOptions.NO_CHECK_SERVER_REGISTRY);
 
-                    if (queryServer != null)
-                        teiidServer.update(queryServer);
+                    if (queryServer != null) {
+                        /*
+                         * Updates those settings that may have been successfully queried from the
+                         * contacted server.
+                         */
+                        teiidServer.getTeiidAdminInfo().setAll(queryServer.getTeiidAdminInfo());
+                        teiidServer.getTeiidJdbcInfo().setPort(queryServer.getTeiidJdbcInfo().getPort());
+                    }
                     else {
                         // If the query server is null then this is not a Teiid-enabled JBoss Server but
                         // a TeiidServer was cached in the registry, presumably due to an adaption
